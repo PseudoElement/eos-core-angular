@@ -15,6 +15,8 @@ import { UserRestComponent } from '../eos-rest/clman/user.component';
 import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
 import { LoginComponent } from './login/login.component';
+
+import { ParametersSystemComponent } from '../eos-parameters/parametersSystem/parametersSystem.component';
 /// import { environment } from 'environments/environment';
 
 const routes: Routes = [{
@@ -116,6 +118,11 @@ const routes: Routes = [{
     canActivate: [AuthorizedGuard],
     component: UserRestComponent,
     data: { title: 'user page' }
+}, {
+    path: 'parameters',
+    canActivate: [AuthorizedGuard],
+    component: ParametersSystemComponent,
+    data: { title: 'parametersSystem page'}
 }, {
     path: '',
     redirectTo: '/desk/system',
