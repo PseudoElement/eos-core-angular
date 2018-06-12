@@ -1,3 +1,9 @@
-<div class="eos-parametersSystem">
-	<h1>Парамтры системы. Заглушка</h1>
+<div class="eos-parameters-system">
+    <button *ngFor="let item of modulesTab" class="param btn block xl-font" tooltip="{{item.title}}" routerLink="/test" placement="bottom"
+        containerClass="tooltip-info">
+        <span class="icon-wrapper">
+            <span class="icon eos-icon eos-icon-dept-blue"></span>
+        </span>
+        <span class="text">{{item.title}}</span>
+    </button>
 </div>
