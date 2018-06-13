@@ -1,5 +1,5 @@
 <div class="eos-parameters-system">
-    <button *ngFor="let item of modulesTab" class="param btn block xl-font" tooltip="{{item.title}}" routerLink="/test" placement="bottom"
+    <button *ngFor="let item of modulesTab" class="param btn block xl-font" tooltip="{{item.title}}" [routerLink]="['/parameters', item.url]" placement="bottom"
         containerClass="tooltip-info">
         <span class="icon-wrapper">
             <span class="icon eos-icon eos-icon-dept-blue"></span>

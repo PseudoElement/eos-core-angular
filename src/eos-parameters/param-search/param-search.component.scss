@@ -1,0 +1,21 @@
+.eos-param-search {
+    color: red;
+}
+
+.node-marker {
+    width: $item-width;
+    text-align: center;
+    .checkbox,
+    .checkbox-inline {
+        line-height: 32px;
+        input[type='checkbox'] + span {
+            margin: 0;
+        }
+    }
+}
+eos-node-field {
+    margin-right: $grid-gutter-width / 2;
+    & + eos-node-field {
+        margin-left: $grid-gutter-width / 2;
+    }
+}
