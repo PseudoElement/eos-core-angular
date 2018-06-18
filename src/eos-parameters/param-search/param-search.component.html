@@ -7,14 +7,15 @@
     <br>элемент</ng-template>
 
 
-<!-- <div class="node-marker pull-left">
+<div class="node-marker pull-left">
     <label class="checkbox">
-    <input type="checkbox">
+    <input type="checkbox" [(ngModel)]="checked">
     <span></span>
     </label>
-</div> -->
-
-
+</div>
+<br>
+<div>{{checked}}</div>
+<button (click)="getDataDb1()">getData1</button>
 
 
 <!-- <div class="node-marker pull-left">
