@@ -1,4 +1,5 @@
 <div class="eos-param-search">
+    <eos-param-header [title]="titleHeader"></eos-param-header>
     <h1>Param Search</h1>
 </div>
 <ng-template #markTemp>Снять
@@ -9,14 +10,24 @@
 
 <div class="node-marker pull-left">
     <label class="checkbox">
-    <input type="checkbox" [(ngModel)]="checked">
-    <span></span>
+        <input type="checkbox" [(ngModel)]="checked">
+        <span></span>
     </label>
 </div>
 <br>
 <div>{{checked}}</div>
 <button (click)="getDataDb1()">getData1</button>
+<hr>
+<label class="radio">
+    <input type="radio" name="rad1" value="one" [(ngModel)]="radioCheck">
+    <span></span>
+</label>
+<label class="radio">
+    <input type="radio" name="rad1" value="two" [(ngModel)]="radioCheck">
+    <span></span>
+</label>
 
+<p>{{radioCheck}}</p>
 
 <!-- <div class="node-marker pull-left">
     <label class="checkbox" [tooltip]="checked ? markTemp : notMarkTemp" containerClass="tooltip-info"

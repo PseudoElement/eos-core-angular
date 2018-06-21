@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 
 @Injectable()
-export class EosParameters {
+export class EosParametersApiServ {
     constructor(private apiSrv: PipRX) {
-        this.apiSrv = apiSrv;
     }
 
     getData(query?: any): Promise<any[]> {
