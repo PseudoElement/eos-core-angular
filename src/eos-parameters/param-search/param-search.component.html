@@ -2,13 +2,13 @@
     <eos-param-header [title]="titleHeader"></eos-param-header>
     <h1>Param Search</h1>
 </div>
-<ng-template #markTemp>Снять
-    <br>пометку</ng-template>
-<ng-template #notMarkTemp>Пометить
-    <br>элемент</ng-template>
 
+<button class="btn btn-primary-full" (click)="setData()">Записать</button>
 
-<div class="node-marker pull-left">
+<br>
+<br>
+
+<div class="node-marker">
     <label class="checkbox">
         <input type="checkbox" [(ngModel)]="checked">
         <span></span>
@@ -16,8 +16,14 @@
 </div>
 <br>
 <div>{{checked}}</div>
-<button (click)="getDataDb1()">getData1</button>
+<button class="btn btn-primary" (click)="getDataDb1()">getData1</button>
 <hr>
+
+
+
+
+
+
 <label class="radio">
     <input type="radio" name="rad1" value="one" [(ngModel)]="radioCheck">
     <span></span>

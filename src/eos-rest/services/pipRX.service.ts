@@ -224,7 +224,7 @@ export class PipRX extends PipeUtils {
                 // 'DataServiceVersion': '1.0', //todo: add in Allowed-Headers in OPTIONS response
                 'Accept': 'multipart/mixed',
                 'Content-Type': 'multipart/mixed;boundary=' + BATCH_BOUNDARY,
-                'MaxDataServiceVersion': '3.0'
+                // 'MaxDataServiceVersion': '3.0'
             })
         });
 

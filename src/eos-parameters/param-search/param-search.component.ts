@@ -15,8 +15,16 @@ export class ParamSearchComponent {
     query3 = { USER_PARMS: { criteries: { PARM_NAME: 'MAX_LOGIN_ATTEMPTS' } } };
     query = this.query3;
 
+    setParm = [
+        { method: 'POST', requestUri: 'SYS_PARMS_Update?PARM_NAME=\'REG_CHECK_EDIT\'&PARM_VALUE=\'YES\'' }
+    ];
+
     constructor(private ApiServ: EosParametersApiServ) {}
     getDataDb1() {
         this.ApiServ.getData(this.query).then(data => console.dir(data));
+    }
+
+    setData() {
+        this.ApiServ.setData(this.setParm).then(data => console.dir(data));
     }
 }
