@@ -13,8 +13,11 @@ import { ParamOtherComponent } from './param-other/param-other.component';
 import { ParamSearchComponent } from './param-search/param-search.component';
 import { ParamHeaderComponent } from './param-header/header.component';
 
+
 /*  Service  */
 import { EosParametersApiServ } from './core/eos-parameters-descriptor.service';
+import { EosCommonModule } from 'eos-common/eos-common.module';
+
 
 @NgModule({
     declarations: [
@@ -22,9 +25,10 @@ import { EosParametersApiServ } from './core/eos-parameters-descriptor.service';
         ParamWebComponent,
         ParamOtherComponent,
         ParamSearchComponent,
-        ParamHeaderComponent
+        ParamHeaderComponent,
     ],
-    imports: [BrowserModule, TooltipModule.forRoot(), AppRoutingModule, FormsModule, ReactiveFormsModule],
+    imports: [BrowserModule, TooltipModule.forRoot(), AppRoutingModule, FormsModule, ReactiveFormsModule,
+        EosCommonModule],
     providers: [EosParametersApiServ]
 })
 export class EosParametersModule {}

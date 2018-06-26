@@ -179,7 +179,7 @@ export class PipRX extends PipeUtils {
     private _odataGet<T>(urls: string[], req: IRequest): Observable<T[]> {
         const _options = Object.assign({}, this._options, {
             headers: new Headers({
-                'MaxDataServiceVersion': '3.0',
+                // 'MaxDataServiceVersion': '3.0',
                 'Accept': 'application/json;odata=light;q=1,application/json;odata=minimalmetadata;'
             })
         });
