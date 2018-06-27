@@ -1,11 +1,6 @@
 <div class="param-wrap">
     <div class="param">
         <eos-param-header [title]="titleHeader"></eos-param-header>
-
-
-        <div class="eos-param-other">
-            <h1>Param WEB</h1>
-        </div>
     </div>
 </div>
 
@@ -14,19 +9,49 @@
 
 
 
-<!-- <div class="form">
+<div class="form">
     <div class="row">
         <div class="col-sm-6">
-            <div class="form-item" *ngFor="let ctrl of inputs">
+            <div class="form-item">
                 <div class="form-group">
                     <eos-dynamic-input
-                        [input]="ctrl"
-                        [form]="form"
-                        [readonly]="false"
-                    ></eos-dynamic-input>
+                    [input]="inputs['rec.APPSRV_CRYPTO_ACTIVEX']"
+                    [form]="form"
+                    [readonly]="false"></eos-dynamic-input>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="form-group">
+                    <eos-dynamic-input
+                    [input]="inputs['rec.APPSRV_CRYPTO_INITSTR']"
+                    [form]="form"
+                    [readonly]="false"></eos-dynamic-input>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="form-group">
+                    <eos-dynamic-input
+                    [input]="inputs['rec.APPSRV_PKI_ACTIVEX']"
+                    [form]="form"
+                    [readonly]="false"></eos-dynamic-input>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="form-group">
+                    <eos-dynamic-input
+                    [input]="inputs['rec.APPSRV_PKI_INITSTR']"
+                    [form]="form"
+                    [readonly]="false"></eos-dynamic-input>
+                </div>
+            </div>
+            <div class="form-item">
+                <div class="form-group">
+                    <eos-dynamic-input
+                    [input]="inputs['rec.STORAGE']"
+                    [form]="form"
+                    [readonly]="false"></eos-dynamic-input>
                 </div>
             </div>
         </div>
     </div>
-</div> -->
-
+</div>

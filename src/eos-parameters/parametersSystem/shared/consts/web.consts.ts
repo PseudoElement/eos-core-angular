@@ -1,41 +1,34 @@
-import { IBaseInput } from 'eos-common/interfaces';
+import { IParametersDescriptor } from '../interfaces/parameters.interfaces';
 
-// import { IParamBese } from 'eos-parameters/interfaces/parameters.interfaces';
-
-export const WEB_PARAM = {
+export const WEB_PARAM: IParametersDescriptor = {
     id: 'web',
     apiInstance: 'USER_PARMS',
     title: 'WEB',
-    fields: <IBaseInput[]>[
+    fields: [
         {
             key: 'APPSRV_CRYPTO_ACTIVEX',
-            controlType: 'string',
-            label: 'Название объекта',
-            // value: 'test',
-            hideLabel: false,
+            type: 'string',
+            title: 'Название объекта',
         },
         {
             key: 'APPSRV_CRYPTO_INITSTR',
-            controlType: 'string',
-            label: 'Строка инициализации',
-            hideLabel: false,
+            type: 'string',
+            title: 'Строка инициализации',
         },
         {
             key: 'APPSRV_PKI_ACTIVEX',
-            controlType: 'string',
-            label: 'Название объекта',
-            hideLabel: false,
+            type: 'string',
+            title: 'Название объекта',
         },
         {
             key: 'APPSRV_PKI_INITSTR',
-            controlType: 'string',
-            label: 'Строка инициализации',
-            hideLabel: false,
+            type: 'string',
+            title: 'Строка инициализации',
         },
         {
-            controlType: 'buttons',
-            label: 'Хранилища сертификатов',
-            hideLabel: true,
+            key: 'STORAGE',
+            type: 'buttons',
+            title: 'Хранилища сертификатов',
             options: [{ value: 1, title: 'Хранилища сертификатов'}]
         }
     ]
