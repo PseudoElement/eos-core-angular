@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EosParametersApiServ } from '../core/eos-parameters-descriptor.service';
+import { EosParametersApiServ } from '../shared/service/eos-parameters-descriptor.service';
 
 @Component({
     templateUrl: 'param-search.component.html'

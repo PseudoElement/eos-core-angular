@@ -17,9 +17,9 @@ import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
 import { LoginComponent } from './login/login.component';
 
 import { ParametersSystemComponent } from '../eos-parameters/parametersSystem/parametersSystem.component';
-import { ParamWebComponent } from '../eos-parameters/param-web/param-web.component';
-import { ParamOtherComponent } from '../eos-parameters/param-other/param-other.component';
-import { ParamSearchComponent } from '../eos-parameters/param-search/param-search.component';
+import { ParamWebComponent } from '../eos-parameters/parametersSystem/param-web/param-web.component';
+import { ParamOtherComponent } from '../eos-parameters/parametersSystem/param-other/param-other.component';
+import { ParamSearchComponent } from '../eos-parameters/parametersSystem/param-search/param-search.component';
 /// import { environment } from 'environments/environment';
 
 const routes: Routes = [
