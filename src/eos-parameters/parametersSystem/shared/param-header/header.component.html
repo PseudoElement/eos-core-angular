@@ -3,7 +3,16 @@
         <span class="header__text">{{title}}</span>
     </div>
     <div class="header__button-wrap">
-        <button class="btn btn-primary header__button">ОТМЕНИТЬ</button>
-        <button class="btn btn-primary-full header__button">СОХРАНИТЬ</button>
+        <button
+            class="btn btn-primary header__button"
+            (click)="cancel()"
+            >ОТМЕНИТЬ
+        </button>
+        <button
+            class="btn btn-primary-full header__button"
+            (click)="submit()"
+            [disabled]="statusBtnSub"
+            >СОХРАНИТЬ
+        </button>
     </div>
 </div>

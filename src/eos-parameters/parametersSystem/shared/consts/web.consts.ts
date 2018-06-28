@@ -24,12 +24,12 @@ export const WEB_PARAM: IParametersDescriptor = {
             key: 'APPSRV_PKI_INITSTR',
             type: 'string',
             title: 'Строка инициализации',
-        },
-        {
-            key: 'STORAGE',
-            type: 'buttons',
-            title: 'Хранилища сертификатов',
-            options: [{ value: 1, title: 'Хранилища сертификатов'}]
         }
+        // {
+        //     key: 'STORAGE',
+        //     type: 'buttons',
+        //     title: 'Хранилища сертификатов',
+        //     options: [{ value: 1, title: 'Хранилища сертификатов'}]
+        // }
     ]
 };

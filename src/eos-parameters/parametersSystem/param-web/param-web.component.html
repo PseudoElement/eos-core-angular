@@ -1,15 +1,15 @@
 <div class="param-wrap">
     <div class="param">
-        <eos-param-header [title]="titleHeader"></eos-param-header>
+        <eos-param-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="form ? form.invalid : true"
+        ></eos-param-header>
     </div>
 </div>
 
-
-
-
-
-
-<div class="form">
+<div class="form container-fluid" *ngIf="inputs">
     <div class="row">
         <div class="col-sm-6">
             <div class="form-item">
@@ -28,6 +28,8 @@
                     [readonly]="false"></eos-dynamic-input>
                 </div>
             </div>
+        </div>
+        <div class="col-sm-6">
             <div class="form-item">
                 <div class="form-group">
                     <eos-dynamic-input
@@ -44,14 +46,12 @@
                     [readonly]="false"></eos-dynamic-input>
                 </div>
             </div>
-            <div class="form-item">
-                <div class="form-group">
-                    <eos-dynamic-input
-                    [input]="inputs['rec.STORAGE']"
-                    [form]="form"
-                    [readonly]="false"></eos-dynamic-input>
-                </div>
-            </div>
         </div>
+
     </div>
+    <!-- <div class="form-item">
+        <div class="form-group">
+            <eos-dynamic-input [input]="inputs['rec.STORAGE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
+    </div> -->
 </div>
