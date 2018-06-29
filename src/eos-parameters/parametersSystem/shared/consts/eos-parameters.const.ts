@@ -1,9 +1,9 @@
 export const EOS_PARAMETERS_TAB = [{
     title: 'Работа с РК',
-    url: 'work-with-rc'
+    url: 'rc'
 }, {
     title: 'Работа с РКПД',
-    url: 'work-with-prjrc'
+    url: 'prj-rc'
 }, {
     title: 'Аутентификация',
     url: 'authentication'

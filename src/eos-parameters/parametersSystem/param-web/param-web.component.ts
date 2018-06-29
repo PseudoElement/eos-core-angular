@@ -23,27 +23,34 @@ export class ParamWebComponent implements OnInit {
         private _paramApiSrv: EosParametersApiServ
     ) {
         this.prepInpets = this.getOblectInputFields(this.param.fields);
-        this._paramApiSrv.getData(this.getInputFields(this.prepInpets._list)).then(data => {
+        this._paramApiSrv.getData(this.getObjQueryInputsField(this.prepInpets._list)).then(data => {
             this.data = this.convData(data);
             this.inputs = this._dataSrv.getInputs(this.prepInpets, this.data);
             this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
-            console.dir(this.form);
+            // tslint:disable-next-line:no-shadowed-variable
+            this.form.valueChanges.subscribe(data => console.dir(data)); // подписка на изменения
+            // console.dir(this.form);
         });
     }
 
     ngOnInit() {
-        console.log('OnInit');
+        // console.log('OnInit');
     }
 
     submit() {
         console.log('submit');
         // console.dir(this.createObjRequest(this.prepInpets._list, this.form.value));
-        this._paramApiSrv.setData(this.createObjRequest(this.prepInpets._list, this.form.value))
+        this._paramApiSrv
+            .setData(this.createObjRequest(this.prepInpets._list, this.form.value))
             .then(data => console.dir(data));
     }
 
     cancel() {
         console.log(this.form);
+    }
+
+    testClick(event) {
+        console.dir(event);
     }
 
     private getOblectInputFields(fields) {
@@ -62,18 +69,8 @@ export class ParamWebComponent implements OnInit {
         return inputs;
     }
 
-    private getInputFields(inputs: Array<any>) {
-        const query = {
-            USER_PARMS: {
-                criteries: {
-                    PARM_NAME: '',
-                    ISN_USER_OWNER: '-99'
-                }
-            }
-        };
-        const inputsStr = inputs.join('||');
-        query.USER_PARMS.criteries.PARM_NAME = inputsStr;
-        return query;
+    private getObjQueryInputsField(inputs: Array<any>) {
+        return { USER_PARMS: { criteries: { PARM_NAME: inputs.join('||'), ISN_USER_OWNER: '-99' } } };
     }
 
     private convData(data: Array<any>) {
@@ -89,8 +86,7 @@ export class ParamWebComponent implements OnInit {
         list.forEach(item => {
             req.push({
                 method: 'POST',
-                requestUri:
-                    'SYS_PARMS_Update?PARM_NAME=\'' + item + '\'&PARM_VALUE=\'' + value['rec.' + item] + '\''
+                requestUri: 'SYS_PARMS_Update?PARM_NAME=\'' + item + '\'&PARM_VALUE=\'' + value['rec.' + item] + '\''
             });
         });
         return req;
@@ -98,5 +94,4 @@ export class ParamWebComponent implements OnInit {
 }
 
 
-// requestUri:
-// 'SYS_PARMS_Update?PARM_NAME="' + item + '"&PARM_VALUE="' + value['rec.' + item] + '"'
+// requestUri: "SYS_PARMS_Update?PARM_NAME='" + item + "'&PARM_VALUE='" + value['rec.' + item] + "'";
