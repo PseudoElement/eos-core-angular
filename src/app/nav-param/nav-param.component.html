@@ -1,6 +1,17 @@
 <div class="eos-nav-param block">
-    <eos-sandwich class="left-sandwich" [isLeft]="true"></eos-sandwich>
+    <span class="eos-sandwich">
+        <button class="btn sandwich" (click)="changeState()" [ngClass]="{'active': isWide }">
+            <span class="icon eos-icon small" [ngClass]="{'eos-icon-menu-white': isWide, 'eos-icon-menu-blue': !isWide}"></span>
+        </button>
+    </span>
+
     <span class="pull-right">
         <eos-pushpin [hidden]="false" [infoOpened]="true"></eos-pushpin>
     </span>
+
+    <div class="list">
+        <ul class="list-group">
+            <li class="list-group-item"></li>
+        </ul>
+    </div>
 </div>

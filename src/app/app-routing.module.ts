@@ -166,7 +166,7 @@ const routes: Routes = [
                 canActivate: [AuthorizedGuard],
                 data: {
                     showNav: true,
-                    showSandwichInBreadcrumb: true }
+                }
             },
             {
                 path: 'other',
