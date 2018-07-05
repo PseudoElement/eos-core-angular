@@ -164,7 +164,9 @@ const routes: Routes = [
                 pathMatch: 'full',
                 component: ParamWebComponent,
                 canActivate: [AuthorizedGuard],
-                data: { showNav: true }
+                data: {
+                    showNav: true,
+                    showSandwichInBreadcrumb: true }
             },
             {
                 path: 'other',

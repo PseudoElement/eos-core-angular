@@ -1,3 +1,19 @@
-p {
-    color: red;
+.eos-nav-param {
+        height: $breadcrumbs-height;
+    border-bottom: 1px solid transparent;
+    border-radius: 0;
+    position: relative;
+
+    .pushpin {
+        width: $item-width;
+        height: $item-height - 2px;
+        position: relative;
+        right: 0;
+        background: $block-color-main-theme;
+        transition: right 0.3s;
+    }
+
+    .pushpin:focus {
+        border: none;
+    }
 }
