@@ -17,6 +17,7 @@ import { ParamAuthenticationComponent } from './parametersSystem/param-authentic
 import { ParamFielsComponent } from './parametersSystem/param-files/param-files.component';
 import { ParamPrjRcComponent } from './parametersSystem/param-prj-rc/param-prj-rc.component';
 import { ParamRcComponent } from './parametersSystem/param-rc/param-rc.component';
+import { NavParamComponent } from './parametersSystem/shared/nav-param/nav-param.component';
 
 
 
@@ -27,6 +28,7 @@ import { EosCommonModule } from 'eos-common/eos-common.module';
 
 @NgModule({
     declarations: [
+        NavParamComponent,
         ParametersSystemComponent,
         ParamWebComponent,
         ParamOtherComponent,

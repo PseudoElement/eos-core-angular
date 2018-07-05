@@ -4,7 +4,4 @@ import { Component } from '@angular/core';
     selector: 'eos-nav-param',
     templateUrl: 'nav-param.component.html'
 })
-
-export class NavParamComponent {
-
-}
+export class NavParamComponent {}

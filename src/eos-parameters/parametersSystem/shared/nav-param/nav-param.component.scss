@@ -1,5 +1,5 @@
 .eos-nav-param {
-        height: $breadcrumbs-height;
+    height: $breadcrumbs-height;
     border-bottom: 1px solid transparent;
     border-radius: 0;
     position: relative;
@@ -10,10 +10,10 @@
         position: relative;
         right: 0;
         background: $block-color-main-theme;
-        transition: right 0.3s;
-    }
+        transition: right .3s;
 
-    .pushpin:focus {
-        border: none;
+        :focus {
+            border: none;
+        }
     }
 }
