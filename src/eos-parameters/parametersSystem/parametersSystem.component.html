@@ -1,4 +1,20 @@
-<div class="eos-parameters-system">
+<ul class="list-group">
+    <li
+        *ngFor="let item of modulesTab"
+        class="list-group-item"
+        tooltip="{{item.title}}"
+        placement="bottom"
+        [routerLink]="['/parameters', item.url]"
+    >{{item.title}}</li>
+</ul>
+
+
+
+
+
+     <!-- box-shadow: 0 10px 5px 0 rgba(0, 0, 0, 0.15); -->
+
+<!-- <div class="eos-parameters-system">
     <button *ngFor="let item of modulesTab" class="param btn block xl-font" tooltip="{{item.title}}" [routerLink]="['/parameters', item.url]" placement="bottom"
         containerClass="tooltip-info">
         <span class="icon-wrapper">
@@ -6,4 +22,4 @@
         </span>
         <span class="text">{{item.title}}</span>
     </button>
-</div>
+</div> -->

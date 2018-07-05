@@ -163,7 +163,8 @@ const routes: Routes = [
                 path: 'web',
                 pathMatch: 'full',
                 component: ParamWebComponent,
-                canActivate: [AuthorizedGuard]
+                canActivate: [AuthorizedGuard],
+                data: { showNav: true }
             },
             {
                 path: 'other',
