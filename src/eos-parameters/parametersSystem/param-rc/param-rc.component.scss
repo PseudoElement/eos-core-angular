@@ -1,3 +1,15 @@
-h1 {
-    color: red;
+.radio {
+    display: inline-block;
+    margin-left: 20px;
+
+    span {
+        // display: inline-block;
+        // margin-right: -10px;
+    }
+
+    input[type="radio"] + span {
+        margin: 0;
+    }
 }
+
+

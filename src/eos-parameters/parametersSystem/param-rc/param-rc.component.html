@@ -2,8 +2,20 @@
     <div class="param">
         <eos-param-header [title]="titleHeader">
         </eos-param-header>
-        <div class="eos-param-other">
-            <h1>Param RC</h1>
-        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <span>Ввод отчётов только исполнителем поручений</span>
+        <label class="radio">
+            <input type="radio" name="radio1" value="YES" [(ngModel)]="radioCheck">
+            <span></span>
+        </label>
+        <span>Да</span>
+        <label class="radio">
+            <input type="radio" name="radio1" value="NO" [(ngModel)]="radioCheck">
+            <span></span>
+        </label>
+        <span>Нет</span>
     </div>
 </div>

@@ -5,4 +5,5 @@ import { Component } from '@angular/core';
 })
 export class ParamRcComponent {
     titleHeader = 'Дочерный компонент  rc';
+    radioCheck = 'YES';
 }
