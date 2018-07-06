@@ -6,6 +6,7 @@ import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-conver
 import { InputControlService } from 'eos-common/services/input-control.service';
 
 @Component({
+    selector: 'eos-param-web',
     templateUrl: 'param-web.component.html'
 })
 export class ParamWebComponent extends BaseParamComponent {

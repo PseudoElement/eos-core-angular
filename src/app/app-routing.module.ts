@@ -17,14 +17,6 @@ import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
 import { LoginComponent } from './login/login.component';
 
 import { ParametersSystemComponent } from '../eos-parameters/parametersSystem/parametersSystem.component';
-import { ParamWebComponent } from '../eos-parameters/parametersSystem/param-web/param-web.component';
-import { ParamOtherComponent } from '../eos-parameters/parametersSystem/param-other/param-other.component';
-import { ParamSearchComponent } from '../eos-parameters/parametersSystem/param-search/param-search.component';
-import { ParamContextRcComponent } from 'eos-parameters/parametersSystem/param-context-rc/param-context-rc.component';
-import { ParamAuthenticationComponent } from 'eos-parameters/parametersSystem/param-authentication/param-authentication.component';
-import { ParamFielsComponent } from 'eos-parameters/parametersSystem/param-files/param-files.component';
-import { ParamPrjRcComponent } from 'eos-parameters/parametersSystem/param-prj-rc/param-prj-rc.component';
-import { ParamRcComponent } from 'eos-parameters/parametersSystem/param-rc/param-rc.component';
 /// import { environment } from 'environments/environment';
 
 const routes: Routes = [
@@ -154,61 +146,21 @@ const routes: Routes = [
         canActivate: [AuthorizedGuard],
         children: [
             {
-                path: '',
+                path: ':id',
                 pathMatch: 'full',
                 component: ParametersSystemComponent,
-                canActivate: [AuthorizedGuard]
-            },
-            {
-                path: 'web',
-                pathMatch: 'full',
-                component: ParamWebComponent,
                 canActivate: [AuthorizedGuard],
                 data: {
-                    showNav: true,
+                    showNav: true
                 }
             },
             {
-                path: 'other',
-                pathMatch: 'full',
-                component: ParamOtherComponent,
-                canActivate: [AuthorizedGuard]
-            },
-            {
-                path: 'search',
-                pathMatch: 'full',
-                component: ParamSearchComponent,
-                canActivate: [AuthorizedGuard]
-            },
-            {
-                path: 'context-rc',
-                pathMatch: 'full',
-                component: ParamContextRcComponent,
-                canActivate: [AuthorizedGuard]
-            },
-            {
-                path: 'authentication',
-                pathMatch: 'full',
-                component: ParamAuthenticationComponent,
-                canActivate: [AuthorizedGuard]
-            },
-            {
-                path: 'files',
-                pathMatch: 'full',
-                component: ParamFielsComponent,
-                canActivate: [AuthorizedGuard]
-            },
-            {
-                path: 'prj-rc',
-                pathMatch: 'full',
-                component: ParamPrjRcComponent,
-                canActivate: [AuthorizedGuard]
-            },
-            {
-                path: 'rc',
-                pathMatch: 'full',
-                component: ParamRcComponent,
-                canActivate: [AuthorizedGuard]
+                path: '',
+                component: ParametersSystemComponent,
+                canActivate: [AuthorizedGuard],
+                data: {
+                    showNav: true
+                }
             },
             {
                 path: '**',

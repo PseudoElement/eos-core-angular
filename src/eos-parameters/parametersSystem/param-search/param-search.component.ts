@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { EosParametersApiServ } from '../shared/service/eos-parameters-descriptor.service';
 
 @Component({
+    selector: 'eos-param-search',
     templateUrl: 'param-search.component.html'
 })
 export class ParamSearchComponent {

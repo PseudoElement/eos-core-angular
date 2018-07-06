@@ -1,25 +1,29 @@
-<ul class="list-group">
-    <li
-        *ngFor="let item of modulesTab"
-        class="list-group-item"
-        tooltip="{{item.title}}"
-        placement="bottom"
-        [routerLink]="['/parameters', item.url]"
-    >{{item.title}}</li>
-</ul>
-
-
-
-
-
-     <!-- box-shadow: 0 10px 5px 0 rgba(0, 0, 0, 0.15); -->
-
-<!-- <div class="eos-parameters-system">
-    <button *ngFor="let item of modulesTab" class="param btn block xl-font" tooltip="{{item.title}}" [routerLink]="['/parameters', item.url]" placement="bottom"
-        containerClass="tooltip-info">
-        <span class="icon-wrapper">
-            <span class="icon eos-icon eos-icon-dept-blue"></span>
-        </span>
-        <span class="text">{{item.title}}</span>
-    </button>
-</div> -->
+<ng-container [ngSwitch]="paramId">
+    <ng-container *ngSwitchCase="'web'">
+        <eos-param-web></eos-param-web>
+    </ng-container>
+    <ng-container *ngSwitchCase="'other'">
+         <eos-param-other></eos-param-other>
+    </ng-container>
+    <ng-container *ngSwitchCase="'search'">
+         <eos-param-search></eos-param-search>
+    </ng-container>
+    <ng-container *ngSwitchCase="'context-rc'">
+         <eos-param-context-rc></eos-param-context-rc>
+    </ng-container>
+    <ng-container *ngSwitchCase="'authentication'">
+         <eos-param-authentication></eos-param-authentication>
+    </ng-container>
+    <ng-container *ngSwitchCase="'files'">
+         <eos-param-files></eos-param-files>
+    </ng-container>
+    <ng-container *ngSwitchCase="'prj-rc'">
+         <eos-param-prj-rc></eos-param-prj-rc>
+    </ng-container>
+    <ng-container *ngSwitchCase="'rc'">
+         <eos-param-rc></eos-param-rc>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+        <eos-param-rc></eos-param-rc>
+    </ng-container>
+</ng-container>
