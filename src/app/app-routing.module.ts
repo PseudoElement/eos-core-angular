@@ -149,23 +149,14 @@ const routes: Routes = [
                 path: ':id',
                 pathMatch: 'full',
                 component: ParametersSystemComponent,
-                canActivate: [AuthorizedGuard],
                 data: {
                     showNav: true
                 }
             },
             {
                 path: '',
-                component: ParametersSystemComponent,
-                canActivate: [AuthorizedGuard],
-                data: {
-                    showNav: true
-                }
-            },
-            {
-                path: '**',
-                component: ParametersSystemComponent,
-                canActivate: [AuthorizedGuard]
+                redirectTo: 'rc',
+                pathMatch: 'full'
             }
         ]
     },
