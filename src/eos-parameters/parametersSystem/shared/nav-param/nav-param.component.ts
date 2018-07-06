@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
     templateUrl: 'nav-param.component.html'
 })
 export class NavParamComponent {
+    infoOpened: boolean;
     isWide = false;
     changeState() {
         this.isWide = !this.isWide;

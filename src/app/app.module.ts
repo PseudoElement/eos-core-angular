@@ -17,7 +17,6 @@ import { EosDictionariesModule } from '../eos-dictionaries/eos-dictionaries.modu
 import { EosRestModule } from '../eos-rest/eos-rest.module';
 
 import { EosParametersModule } from '../eos-parameters/eos-parameters.module';
-import { NavParamComponent } from './nav-param/nav-param.component';
 
 import { AppComponent } from './app.component';
 import { BreadcrumbsComponent } from './breadcrumb/breadcrumb.component';
@@ -50,7 +49,6 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 
 @NgModule({
     declarations: [
-        NavParamComponent,
         AppComponent,
         BreadcrumbsComponent,
         DesktopComponent,
