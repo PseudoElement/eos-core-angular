@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { EOS_PARAMETERS_TAB } from '../consts/eos-parameters.const';
 
 @Component({
     selector: 'eos-nav-param',
     templateUrl: 'nav-param.component.html'
 })
 export class NavParamComponent {
-    infoOpened: boolean;
+    listParams = EOS_PARAMETERS_TAB;
     isWide = false;
     changeState() {
         this.isWide = !this.isWide;

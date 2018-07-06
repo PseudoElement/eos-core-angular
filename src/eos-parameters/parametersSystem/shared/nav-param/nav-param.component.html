@@ -10,9 +10,13 @@
         <!-- <eos-pushpin [hidden]="varr2" [infoOpened]="varr1"></eos-pushpin> -->
     </span>
 
-    <div class="list">
+    <div [ngClass]="{'list-show' : isWide}" class="list">
         <ul class="list-group">
-            <li class="list-group-item"></li>
+            <li
+                class="list-group-item"
+                *ngFor="let param of listParams"
+                 [routerLink]="['/parameters', param.url]"
+            >{{param.title}}</li>
         </ul>
     </div>
 </div>
