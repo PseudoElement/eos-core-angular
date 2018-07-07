@@ -12,7 +12,7 @@ export interface IParamInput {
     length?: number;
 }
 
-export interface IParametersDescriptor {
+export interface IBaseParameters {
     id: string;
     apiInstance: string;
     title: string;

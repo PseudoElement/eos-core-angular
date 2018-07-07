@@ -149,6 +149,7 @@ const routes: Routes = [
                 path: ':id',
                 pathMatch: 'full',
                 component: ParametersSystemComponent,
+                canDeactivate: [CanDeactivateGuard],
                 data: {
                     showNav: true
                 }

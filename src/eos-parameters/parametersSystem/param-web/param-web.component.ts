@@ -16,17 +16,35 @@ export class ParamWebComponent extends BaseParamComponent {
         private _paramApiSrv: EosParametersApiServ
     ) {
         super(WEB_PARAM);
+        this.paramApiSrv = this._paramApiSrv;
+        this.dataSrv = this._dataSrv;
+        this.inputCtrlSrv = this._inputCtrlSrv;
         this._paramApiSrv
             .getData(this.queryObj)
             .then(data => {
-                this.dataDb = data;
-                console.log(this.dataDb);
-                this.data = this.convData(data);
-                console.log(this.data);
-                this.inputs = this._dataSrv.getInputs(this.prepInputs, this.data);
+                this.data = data;
+                // console.log(this.dataDb);
+                this.prepareData = this.convData(data);
+                // console.log(this.data);
+                this.inputs = this._dataSrv.getInputs(this.prepInputs, this.prepareData);
                 this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
-                this.form.valueChanges.subscribe((dataa: any) => console.log(dataa));
-                this.form.statusChanges.subscribe(dataa => console.log(dataa));
+                // this.form.valueChanges.subscribe((dataa: any) => console.log(dataa));
+                // this.form.statusChanges.subscribe(dataa => console.log(dataa));
+                this.subscriptions.push(
+                    this.form.valueChanges
+                        .subscribe((newVal) => {
+                            // console.log(newVal);
+                            this.newData = newVal;
+                            const changed = false;
+                            // Object.keys(newVal).forEach((path) => {
+                            //     if (this.changeByPath(path, newVal[path])) {
+                            //         changed = true;
+                            //     }
+                            // });
+                            this.formChanged.emit(!changed);
+                        })
+                );
+                // console.log(this.subscriptions);
             })
             .catch(data => console.log(data));
     }
@@ -43,7 +61,7 @@ export class ParamWebComponent extends BaseParamComponent {
     }
 
     cancel() {
-        console.log(this.form);
+        console.log('Cancel', this.form);
     }
 
 }

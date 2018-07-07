@@ -1,6 +1,6 @@
-import { IParametersDescriptor } from '../interfaces/parameters.interfaces';
+import { IBaseParameters } from '../interfaces/parameters.interfaces';
 
-export const WEB_PARAM: IParametersDescriptor = {
+export const WEB_PARAM: IBaseParameters = {
     id: 'web',
     apiInstance: 'USER_PARMS',
     title: 'WEB',
