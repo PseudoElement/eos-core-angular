@@ -65,6 +65,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                         this._currentFormStatus = status;
                     })
                 );
+                // console.log(this.subscriptions);
             })
             .catch(data => console.log(data));
     }
