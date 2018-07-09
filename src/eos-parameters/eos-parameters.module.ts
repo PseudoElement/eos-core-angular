@@ -22,7 +22,7 @@ import { NavParamComponent } from './parametersSystem/shared/nav-param/nav-param
 
 
 /*  Service  */
-import { EosParametersApiServ } from './parametersSystem/shared/service/eos-parameters-descriptor.service';
+import { EosParametersDescriptionServ } from './parametersSystem/shared/service/eos-parameters-descriptor.service';
 import { EosCommonModule } from 'eos-common/eos-common.module';
 
 
@@ -38,7 +38,7 @@ import { EosCommonModule } from 'eos-common/eos-common.module';
         ParamAuthenticationComponent,
         ParamFielsComponent,
         ParamPrjRcComponent,
-        ParamRcComponent,
+        ParamRcComponent
     ],
     imports: [
         BrowserModule,
@@ -48,7 +48,7 @@ import { EosCommonModule } from 'eos-common/eos-common.module';
         ReactiveFormsModule,
         EosCommonModule
     ],
-    providers: [EosParametersApiServ],
+    providers: [EosParametersDescriptionServ],
     exports: [NavParamComponent]
 })
 export class EosParametersModule {}

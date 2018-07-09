@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 
 @Injectable()
-export class EosParametersApiServ {
+export class EosParametersDescriptionServ {
     constructor(private apiSrv: PipRX) {}
 
     getData(query?: any): Promise<any[]> {
         return this.apiSrv
         .read(query)
         .then((data: any[]) => {
-            this.prepareForEdit(data);
+            // this.prepareForEdit(data);
             return data;
         });
     }
@@ -20,7 +20,7 @@ export class EosParametersApiServ {
         });
     }
 
-    protected prepareForEdit(records: any[]): any[] {
-        return records.map((record) => this.apiSrv.entityHelper.prepareForEdit(record));
-    }
+    // protected prepareForEdit(records: any[]): any[] {
+    //     return records.map((record) => this.apiSrv.entityHelper.prepareForEdit(record));
+    // }
 }

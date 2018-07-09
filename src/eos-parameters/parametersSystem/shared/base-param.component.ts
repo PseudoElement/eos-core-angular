@@ -2,7 +2,7 @@ import { FormGroup } from '@angular/forms';
 import { E_FIELD_TYPE, IBaseParameters } from '../shared/interfaces/parameters.interfaces';
 import { Output, EventEmitter, OnDestroy, OnInit, Input } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
-import { EosParametersApiServ } from './service/eos-parameters-descriptor.service';
+import { EosParametersDescriptionServ } from './service/eos-parameters-descriptor.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosUtils } from 'eos-common/core/utils';
@@ -12,7 +12,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     @Output() formChanged = new EventEmitter();
     @Output() formInvalid = new EventEmitter();
     constParam: IBaseParameters;
-    paramApiSrv: EosParametersApiServ;
+    paramApiSrv: EosParametersDescriptionServ;
     dataSrv: EosDataConvertService;
     inputCtrlSrv: InputControlService;
     titleHeader;

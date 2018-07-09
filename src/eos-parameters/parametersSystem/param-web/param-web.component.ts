@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { WEB_PARAM } from '../shared/consts/web.consts';
 import { BaseParamComponent } from '../shared/base-param.component';
-import { EosParametersApiServ } from '../shared/service/eos-parameters-descriptor.service';
+import { EosParametersDescriptionServ } from '../shared/service/eos-parameters-descriptor.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
 
@@ -13,7 +13,7 @@ export class ParamWebComponent extends BaseParamComponent {
     constructor(
         private _dataSrv: EosDataConvertService,
         private _inputCtrlSrv: InputControlService,
-        private _paramApiSrv: EosParametersApiServ
+        private _paramApiSrv: EosParametersDescriptionServ
     ) {
         super(WEB_PARAM);
         this.paramApiSrv = this._paramApiSrv;

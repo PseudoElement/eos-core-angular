@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EosParametersApiServ } from '../shared/service/eos-parameters-descriptor.service';
+import { EosParametersDescriptionServ } from '../shared/service/eos-parameters-descriptor.service';
 
 @Component({
     selector: 'eos-param-search',
@@ -21,7 +21,7 @@ export class ParamSearchComponent {
 
     setParm = [{ method: 'POST', requestUri: 'SYS_PARMS_Update?PARM_NAME=\'REG_CHECK_EDIT\'&PARM_VALUE=\'YES\'' }];
 
-    constructor(private ApiServ: EosParametersApiServ) {}
+    constructor(private ApiServ: EosParametersDescriptionServ) {}
     getDataDb1() {
         this.ApiServ.getData(this.query4).then(data => console.dir(data));
     }
