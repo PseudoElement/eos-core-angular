@@ -19,34 +19,7 @@ export class ParamWebComponent extends BaseParamComponent {
         this.paramApiSrv = this._paramApiSrv;
         this.dataSrv = this._dataSrv;
         this.inputCtrlSrv = this._inputCtrlSrv;
-        this._paramApiSrv
-            .getData(this.queryObj)
-            .then(data => {
-                this.data = data;
-                // console.log(this.dataDb);
-                this.prepareData = this.convData(data);
-                // console.log(this.data);
-                this.inputs = this._dataSrv.getInputs(this.prepInputs, this.prepareData);
-                this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
-                // this.form.valueChanges.subscribe((dataa: any) => console.log(dataa));
-                // this.form.statusChanges.subscribe(dataa => console.log(dataa));
-                this.subscriptions.push(
-                    this.form.valueChanges
-                        .subscribe((newVal) => {
-                            // console.log(newVal);
-                            this.newData = newVal;
-                            const changed = false;
-                            // Object.keys(newVal).forEach((path) => {
-                            //     if (this.changeByPath(path, newVal[path])) {
-                            //         changed = true;
-                            //     }
-                            // });
-                            this.formChanged.emit(!changed);
-                        })
-                );
-                // console.log(this.subscriptions);
-            })
-            .catch(data => console.log(data));
+        this.init();
     }
 
     // ngOnInit() {
@@ -54,15 +27,15 @@ export class ParamWebComponent extends BaseParamComponent {
     // }
 
     submit() {
-        this._paramApiSrv
-            .setData(this.createObjRequest(this.prepInputs._list, this.form.value))
-            .then(data => console.dir(data))
-            .catch(data => console.log(data));
+        if (this.newData) {
+            this._paramApiSrv
+                .setData(this.createObjRequest())
+                .then(data => console.dir(data))
+                .catch(data => console.log(data));
+        }
     }
 
     cancel() {
-        console.log('Cancel', this.form);
+        this.init(); // нужно реализовать без запоса на базу
     }
-
 }
-

@@ -1,4 +1,4 @@
-import { Component, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { ActivatedRoute } from '../../../node_modules/@angular/router';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
@@ -7,7 +7,7 @@ import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
     // selector: 'eos-parameters-system',
     templateUrl: 'parametersSystem.component.html'
 })
-export class ParametersSystemComponent implements OnChanges {
+export class ParametersSystemComponent implements OnChanges, OnInit {
     disableSave = false;
     isChanged: boolean;
     paramId: string;
@@ -20,11 +20,17 @@ export class ParametersSystemComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         console.log('Changes param system', changes);
     }
+    ngOnInit() {
+        // console.log(!this.isChanged, this.disableSave);
+    }
     canDeactivate(_nextState?: any): boolean | Promise<boolean> {
         return this._askForSaving();
     }
     recordChanged(isChanged: boolean) {
         this.isChanged = isChanged;
+    }
+    turnOffSave(val: boolean) {
+        this.disableSave = val;
     }
 
     private _askForSaving(): Promise<boolean> {
@@ -33,7 +39,7 @@ export class ParametersSystemComponent implements OnChanges {
                 .confirm(Object.assign({}, CONFIRM_SAVE_ON_LEAVE, { confirmDisabled: this.disableSave }))
                 .then(doSave => {
                     if (doSave) { // тут нужно сохранить
-                        return true;
+                        return true; // временная заглушка
                         // const _data = this.cardEditRef.getNewData();
                         // return this._save(_data).then(node => !!node);
                     } else {

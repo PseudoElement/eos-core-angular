@@ -1,13 +1,16 @@
 import { FormGroup } from '@angular/forms';
 import { E_FIELD_TYPE, IBaseParameters } from '../shared/interfaces/parameters.interfaces';
-import { Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { Output, EventEmitter, OnDestroy, OnInit, Input } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
 import { EosParametersApiServ } from './service/eos-parameters-descriptor.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
+import { EosUtils } from 'eos-common/core/utils';
 
 export class BaseParamComponent implements OnDestroy, OnInit {
+    @Input() btnDisabled;
     @Output() formChanged = new EventEmitter();
+    @Output() formInvalid = new EventEmitter();
     constParam: IBaseParameters;
     paramApiSrv: EosParametersApiServ;
     dataSrv: EosDataConvertService;
@@ -21,16 +24,49 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     form: FormGroup;
     queryObj;
     subscriptions: Subscription[] = [];
+    private _currentFormStatus;
     constructor(paramModel) {
         this.constParam = paramModel;
-        this.init();
     }
     ngOnDestroy() {
-        // console.log('Destroy');
         this.unsubscribe();
     }
     ngOnInit() {
         this.formChanged.emit(false);
+    }
+    init() {
+        this.titleHeader = this.constParam.title;
+        this.prepInputs = this.getObjectInputFields(this.constParam.fields);
+        this.queryObj = this.getObjQueryInputsField(this.prepInputs._list);
+        this.paramApiSrv
+            .getData(this.queryObj)
+            .then(data => {
+                this.data = data;
+                this.prepareData = this.convData(data);
+                this.inputs = this.dataSrv.getInputs(this.prepInputs, this.prepareData);
+                this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+                this.subscriptions.push(
+                    this.form.valueChanges.debounceTime(700).subscribe(newVal => {
+                        let changed = false;
+                        Object.keys(newVal).forEach(path => {
+                            if (this.changeByPath(path, newVal[path])) {
+                                changed = true;
+                            }
+                        });
+                        // console.log('newData', this.newData, '\nprepData', this.prepareData, '\nformValue', newVal);
+                        this.formChanged.emit(changed);
+                    })
+                );
+                this.subscriptions.push(
+                    this.form.statusChanges.subscribe(status => {
+                        if (this._currentFormStatus !== status) {
+                            this.formInvalid.emit(status === 'INVALID');
+                        }
+                        this._currentFormStatus = status;
+                    })
+                );
+            })
+            .catch(data => console.log(data));
     }
     convData(data: Array<any>) {
         const d = {};
@@ -44,23 +80,18 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         return { USER_PARMS: { criteries: { PARM_NAME: inputs.join('||'), ISN_USER_OWNER: '-99' } } };
     }
 
-    createObjRequest(list: any[], value): any[] {
+    createObjRequest(): any[] {
         const req = [];
-        list.forEach(item => {
-            req.push({
-                method: 'POST',
-                requestUri: 'SYS_PARMS_Update?PARM_NAME=\'' + item + '\'&PARM_VALUE=\'' + value['rec.' + item] + '\''
-
-            });
-        });
+        for (const key in this.newData.rec) {
+            if (key) {
+                req.push({
+                    method: 'POST',
+                    requestUri: `SYS_PARMS_Update?PARM_NAME='${key}'&PARM_VALUE='${this.newData.rec[key]}'`
+                });
+            }
+        }
         return req;
     }
-    private init() {
-        this.titleHeader = this.constParam.title;
-        this.prepInputs = this.getObjectInputFields(this.constParam.fields);
-        this.queryObj = this.getObjQueryInputsField(this.prepInputs._list);
-    }
-
     private getObjectInputFields(fields) {
         const inputs: any = { _list: [], rec: {} };
         fields.forEach(field => {
@@ -70,11 +101,33 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         return inputs;
     }
     private unsubscribe() {
-        this.subscriptions.forEach((subscr) => {
+        this.subscriptions.forEach(subscr => {
             if (subscr) {
                 subscr.unsubscribe();
             }
         });
         this.subscriptions = [];
+    }
+    private changeByPath(path: string, value: any) {
+        let _value = null;
+        if (typeof value === 'boolean') {
+            _value = +value;
+        } else if (value === 'null') {
+            _value = null;
+        } else if (value instanceof Date) {
+            _value = EosUtils.dateToString(value);
+        } else if (value === '') {
+            // fix empty strings in IE
+            _value = null;
+        } else {
+            _value = value;
+        }
+        this.newData = EosUtils.setValueByPath(this.newData, path, _value);
+        const oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
+
+        if (oldValue !== _value) {
+            // console.warn('changed', path, oldValue, 'to', _value, this.prepareData.rec, this.newData.rec);
+        }
+        return _value !== oldValue;
     }
 }
