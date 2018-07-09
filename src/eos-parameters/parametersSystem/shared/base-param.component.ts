@@ -32,7 +32,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         this.unsubscribe();
     }
     ngOnInit() {
-        this.formChanged.emit(false);
+        // this.formChanged.emit(false);
     }
     init() {
         this.titleHeader = this.constParam.title;
@@ -42,7 +42,9 @@ export class BaseParamComponent implements OnDestroy, OnInit {
             .getData(this.queryObj)
             .then(data => {
                 this.data = data;
+                // console.log(this.data);
                 this.prepareData = this.convData(data);
+                // console.log(this.prepareData);
                 this.inputs = this.dataSrv.getInputs(this.prepInputs, this.prepareData);
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.subscriptions.push(
@@ -72,9 +74,30 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     convData(data: Array<any>) {
         const d = {};
         data.forEach(item => {
-            d[item.PARM_NAME] = item.PARM_VALUE;
+            if (item.PARM_VALUE === 'NO') {
+                d[item.PARM_NAME] = 0;
+            } else if (item.PARM_VALUE === 'YES') {
+                d[item.PARM_NAME] = 1;
+            } else {
+                d[item.PARM_NAME] = item.PARM_VALUE;
+            }
         });
         return { rec: d };
+    }
+    submit() {
+        if (this.newData) {
+            this.paramApiSrv
+                .setData(this.createObjRequest())
+                .then(data => {
+                    this.formChanged.emit(false);
+                    console.dir(data);
+                })
+                .catch(data => console.log(data));
+        }
+    }
+    cancel() {
+        this.ngOnDestroy(); // для очистки предыдущих подписок
+        this.init(); // нужно реализовать без запоса на базу
     }
 
     getObjQueryInputsField(inputs: Array<any>) {

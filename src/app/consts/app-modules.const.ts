@@ -2,7 +2,7 @@ export const APP_MODULES = [{
     title: 'Cправочники',
     url: '/spravochniki'
 }, {
-    title: 'Параметры системы',
+    title: 'Настройки системы',
     url: '/parameters',
 }];
 

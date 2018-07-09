@@ -8,7 +8,7 @@ import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
     templateUrl: 'parametersSystem.component.html'
 })
 export class ParametersSystemComponent implements OnChanges, OnInit {
-    disableSave = false;
+    disableSave: boolean;
     isChanged: boolean;
     paramId: string;
     constructor(
@@ -43,11 +43,12 @@ export class ParametersSystemComponent implements OnChanges, OnInit {
                         // const _data = this.cardEditRef.getNewData();
                         // return this._save(_data).then(node => !!node);
                     } else {
+                        this.isChanged = false;
                         return true;
                     }
                 })
-                .catch(() => {
-                    // console.log('cancel reason', err);
+                .catch((err) => {
+                    console.log('cancel reason', err);
                     return false;
                 });
         } else {

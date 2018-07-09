@@ -46,6 +46,7 @@
          <eos-param-rc
             (formChanged)="recordChanged($event)"
             (formInvalid)="turnOffSave($event)"
+            [btnDisabled]="!isChanged || disableSave"
          ></eos-param-rc>
     </ng-container>
 </ng-container>
