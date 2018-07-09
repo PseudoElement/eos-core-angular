@@ -33,6 +33,12 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     }
     ngOnInit() {
         // this.formChanged.emit(false);
+        this.subscriptions.push(
+            this.paramApiSrv.saveData$.subscribe(() => {
+                // console.log('save in base component');
+                this.submit();
+            })
+        );
     }
     init() {
         this.titleHeader = this.constParam.title;

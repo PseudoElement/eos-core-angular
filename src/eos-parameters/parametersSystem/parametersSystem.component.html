@@ -6,7 +6,7 @@
             [btnDisabled]="!isChanged || disableSave"
         ></eos-param-web>
     </ng-container>
-    <ng-container *ngSwitchCase="'other'">
+    <!-- <ng-container *ngSwitchCase="'other'">
          <eos-param-other
             (formChanged)="recordChanged($event)"
             (formInvalid)="turnOffSave($event)"
@@ -41,7 +41,7 @@
             (formChanged)="recordChanged($event)"
             (formInvalid)="turnOffSave($event)"
          ></eos-param-prj-rc>
-    </ng-container>
+    </ng-container> -->
     <ng-container *ngSwitchCase="'rc'">
          <eos-param-rc
             (formChanged)="recordChanged($event)"

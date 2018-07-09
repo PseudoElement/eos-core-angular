@@ -2,6 +2,7 @@ import { Component, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { ActivatedRoute } from '../../../node_modules/@angular/router';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
+import { EosParametersDescriptionServ } from './shared/service/eos-parameters-descriptor.service';
 
 @Component({
     // selector: 'eos-parameters-system',
@@ -13,7 +14,8 @@ export class ParametersSystemComponent implements OnChanges, OnInit {
     paramId: string;
     constructor(
         private _route: ActivatedRoute,
-        private _confirmSrv: ConfirmWindowService
+        private _confirmSrv: ConfirmWindowService,
+        private _paramDescSrv: EosParametersDescriptionServ
     ) {
         this._route.params.subscribe(params => (this.paramId = params['id']));
     }
@@ -39,6 +41,9 @@ export class ParametersSystemComponent implements OnChanges, OnInit {
                 .confirm(Object.assign({}, CONFIRM_SAVE_ON_LEAVE, { confirmDisabled: this.disableSave }))
                 .then(doSave => {
                     if (doSave) { // тут нужно сохранить
+                        // console.log('saveFromData');
+                        this._paramDescSrv.saveDataFromAsk();
+                        this.isChanged = false;
                         return true; // временная заглушка
                         // const _data = this.cardEditRef.getNewData();
                         // return this._save(_data).then(node => !!node);
