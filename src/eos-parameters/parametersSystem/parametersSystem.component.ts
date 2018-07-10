@@ -1,8 +1,8 @@
 import { Component, OnChanges, SimpleChanges, OnInit } from '@angular/core';
-import { ActivatedRoute } from '../../../node_modules/@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
-import { EosParametersDescriptionServ } from './shared/service/eos-parameters-descriptor.service';
+import { ParamDescriptorSrv } from './shared/service/param-descriptor.service';
 
 @Component({
     // selector: 'eos-parameters-system',
@@ -15,7 +15,7 @@ export class ParametersSystemComponent implements OnChanges, OnInit {
     constructor(
         private _route: ActivatedRoute,
         private _confirmSrv: ConfirmWindowService,
-        private _paramDescSrv: EosParametersDescriptionServ
+        private _paramDescSrv: ParamDescriptorSrv
     ) {
         this._route.params.subscribe(params => (this.paramId = params['id']));
     }

@@ -1,18 +1,20 @@
 import { FormGroup } from '@angular/forms';
-import { E_FIELD_TYPE, IBaseParameters } from '../shared/interfaces/parameters.interfaces';
-import { Output, EventEmitter, OnDestroy, OnInit, Input } from '@angular/core';
+import { E_FIELD_TYPE, IBaseParameters } from './interfaces/parameters.interfaces';
+import { Output, EventEmitter, OnDestroy, OnInit, Input, Injector } from '@angular/core';
 import { Subscription } from 'rxjs/Rx';
-import { EosParametersDescriptionServ } from './service/eos-parameters-descriptor.service';
+import { ParamApiSrv } from './service/parameters-api.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosUtils } from 'eos-common/core/utils';
+import { ParamDescriptorSrv } from './service/param-descriptor.service';
 
 export class BaseParamComponent implements OnDestroy, OnInit {
     @Input() btnDisabled;
     @Output() formChanged = new EventEmitter();
     @Output() formInvalid = new EventEmitter();
+    descriptorSrv: ParamDescriptorSrv;
     constParam: IBaseParameters;
-    paramApiSrv: EosParametersDescriptionServ;
+    paramApiSrv: ParamApiSrv;
     dataSrv: EosDataConvertService;
     inputCtrlSrv: InputControlService;
     titleHeader;
@@ -25,8 +27,15 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     queryObj;
     subscriptions: Subscription[] = [];
     private _currentFormStatus;
-    constructor(paramModel) {
+    constructor(
+        injector: Injector,
+        paramModel
+    ) {
         this.constParam = paramModel;
+        this.paramApiSrv = injector.get(ParamApiSrv);
+        this.dataSrv = injector.get(EosDataConvertService);
+        this.inputCtrlSrv = injector.get(InputControlService);
+        this.descriptorSrv = injector.get(ParamDescriptorSrv);
     }
     ngOnDestroy() {
         this.unsubscribe();
@@ -34,7 +43,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     ngOnInit() {
         // this.formChanged.emit(false);
         this.subscriptions.push(
-            this.paramApiSrv.saveData$.subscribe(() => {
+            this.descriptorSrv.saveData$.subscribe(() => {
                 // console.log('save in base component');
                 this.submit();
             })

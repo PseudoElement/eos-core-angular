@@ -22,8 +22,9 @@ import { NavParamComponent } from './parametersSystem/shared/nav-param/nav-param
 
 
 /*  Service  */
-import { EosParametersDescriptionServ } from './parametersSystem/shared/service/eos-parameters-descriptor.service';
+import { ParamApiSrv } from './parametersSystem/shared/service/parameters-api.service';
 import { EosCommonModule } from 'eos-common/eos-common.module';
+import { ParamDescriptorSrv } from './parametersSystem/shared/service/param-descriptor.service';
 
 
 @NgModule({
@@ -48,7 +49,10 @@ import { EosCommonModule } from 'eos-common/eos-common.module';
         ReactiveFormsModule,
         EosCommonModule
     ],
-    providers: [EosParametersDescriptionServ],
+    providers: [
+        ParamApiSrv,
+        ParamDescriptorSrv
+    ],
     exports: [NavParamComponent]
 })
 export class EosParametersModule {}

@@ -1,18 +1,9 @@
 import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { Subject } from '../../../../../node_modules/rxjs';
 
 @Injectable()
-export class EosParametersDescriptionServ {
-    private _saveFromAskSubject = new Subject<any>();
-    get saveData$ () {
-        return this._saveFromAskSubject.asObservable();
-    }
+export class ParamApiSrv {
     constructor(private apiSrv: PipRX) {}
-
-    saveDataFromAsk() {
-        this._saveFromAskSubject.next();
-    }
     getData(query?: any): Promise<any[]> {
         return this.apiSrv
         .read(query)
