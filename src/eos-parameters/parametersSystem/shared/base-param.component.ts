@@ -18,15 +18,15 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     dataSrv: EosDataConvertService;
     inputCtrlSrv: InputControlService;
     titleHeader;
-    data = {};
-    prepareData;
     newData;
     prepInputs: any;
     inputs: any;
     form: FormGroup;
     queryObj;
     subscriptions: Subscription[] = [];
+    private prepareData;
     private _currentFormStatus;
+    private _fieldsType = {};
     constructor(
         injector: Injector,
         paramModel
@@ -41,10 +41,8 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         this.unsubscribe();
     }
     ngOnInit() {
-        // this.formChanged.emit(false);
         this.subscriptions.push(
             this.descriptorSrv.saveData$.subscribe(() => {
-                // console.log('save in base component');
                 this.submit();
             })
         );
@@ -56,22 +54,21 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         this.paramApiSrv
             .getData(this.queryObj)
             .then(data => {
-                this.data = data;
-                // console.log(this.data);
                 this.prepareData = this.convData(data);
-                // console.log(this.prepareData);
-                this.inputs = this.dataSrv.getInputs(this.prepInputs, this.prepareData);
+                this.inputs = this.getInputs();
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.subscriptions.push(
-                    this.form.valueChanges.debounceTime(700).subscribe(newVal => {
-                        let changed = false;
-                        Object.keys(newVal).forEach(path => {
-                            if (this.changeByPath(path, newVal[path])) {
-                                changed = true;
-                            }
-                        });
-                        // console.log('newData', this.newData, '\nprepData', this.prepareData, '\nformValue', newVal);
-                        this.formChanged.emit(changed);
+                    this.form.valueChanges
+                        .debounceTime(400)
+                        .subscribe(newVal => {
+                            let changed = false;
+                            Object.keys(newVal).forEach(path => {
+                                if (this.changeByPath(path, newVal[path])) {
+                                    changed = true;
+                                }
+                            });
+                            console.log('newData', this.newData.rec, '\nprepData', this.prepareData.rec, '\nformValue', newVal);
+                            this.formChanged.emit(changed);
                     })
                 );
                 this.subscriptions.push(
@@ -82,20 +79,13 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                         this._currentFormStatus = status;
                     })
                 );
-                // console.log(this.subscriptions);
             })
             .catch(data => console.log(data));
     }
     convData(data: Array<any>) {
         const d = {};
         data.forEach(item => {
-            if (item.PARM_VALUE === 'NO') {
-                d[item.PARM_NAME] = 0;
-            } else if (item.PARM_VALUE === 'YES') {
-                d[item.PARM_NAME] = 1;
-            } else {
-                d[item.PARM_NAME] = item.PARM_VALUE;
-            }
+            d[item.PARM_NAME] = item.PARM_VALUE;
         });
         return { rec: d };
     }
@@ -105,14 +95,15 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                 .setData(this.createObjRequest())
                 .then(data => {
                     this.formChanged.emit(false);
-                    console.dir(data);
+                    this.prepareData.rec = Object.assign({}, this.newData.rec);
+                    console.log('newData', this.newData.rec, 'prepData', this.prepareData.rec);
                 })
                 .catch(data => console.log(data));
         }
     }
     cancel() {
-        this.ngOnDestroy(); // для очистки предыдущих подписок
-        this.init(); // нужно реализовать без запоса на базу
+        this.ngOnDestroy();
+        this.init();
     }
 
     getObjQueryInputsField(inputs: Array<any>) {
@@ -134,6 +125,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     private getObjectInputFields(fields) {
         const inputs: any = { _list: [], rec: {} };
         fields.forEach(field => {
+            this._fieldsType[field.key] = field.type;
             inputs._list.push(field.key);
             inputs.rec[field.key] = { title: field.title, type: E_FIELD_TYPE[field.type], foreignKey: field.key };
         });
@@ -150,7 +142,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     private changeByPath(path: string, value: any) {
         let _value = null;
         if (typeof value === 'boolean') {
-            _value = +value;
+            _value = value ? 'YES' : 'NO'; //  _value = +value;
         } else if (value === 'null') {
             _value = null;
         } else if (value instanceof Date) {
@@ -168,5 +160,20 @@ export class BaseParamComponent implements OnDestroy, OnInit {
             // console.warn('changed', path, oldValue, 'to', _value, this.prepareData.rec, this.newData.rec);
         }
         return _value !== oldValue;
+    }
+    private getInputs() {
+        const dataInput = {rec: {}};
+        Object.keys(this.prepareData.rec).forEach(key => {
+            if (this._fieldsType[key] === 'boolean') {
+                if (this.prepareData.rec[key] === 'YES') {
+                    dataInput.rec[key] = true;
+                } else {
+                    dataInput.rec[key] = false;
+                }
+            } else {
+                dataInput.rec[key] = this.prepareData.rec[key];
+            }
+        });
+        return this.dataSrv.getInputs(this.prepInputs, dataInput);
     }
 }
