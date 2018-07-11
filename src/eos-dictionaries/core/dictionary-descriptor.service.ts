@@ -8,6 +8,7 @@ import { TreeDictionaryDescriptor } from 'eos-dictionaries/core/tree-dictionary-
 import { DepartmentDictionaryDescriptor } from 'eos-dictionaries/core/department-dictionary-descriptor';
 import { OrganizationDictionaryDescriptor } from 'eos-dictionaries/core/organization-dictionary-descriptor';
 import { CabinetDictionaryDescriptor } from 'eos-dictionaries/core/cabinet-dictionary-descriptor';
+import { DocgroupDictionaryDescriptor } from 'eos-dictionaries/core/docgroup-dictionary-descriptor';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -54,6 +55,9 @@ export class DictionaryDescriptorService {
                         break;
                     case 'cabinet':
                         res = new CabinetDictionaryDescriptor(descr, this.apiSrv);
+                        break;
+                    case 'docgroup':
+                        res = new DocgroupDictionaryDescriptor(descr, this.apiSrv);
                         break;
                 }
 

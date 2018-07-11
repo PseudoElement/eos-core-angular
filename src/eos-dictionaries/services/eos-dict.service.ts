@@ -395,13 +395,7 @@ export class EosDictService {
                 if (aNode) {
                     this._openNode(aNode);
                 }
-                return this.getFullNode(dictionary.id, nodeId)
-                    .then((node) => {
-                        this._openNode(node);
-                        this.updateViewParameters({ updatingInfo: false });
-                        return node;
-                    })
-                    .catch((err) => this._errHandler(err));
+                return Promise.resolve(aNode);
             } else {
                 return Promise.resolve(this._listNode);
             }

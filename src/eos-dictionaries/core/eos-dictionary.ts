@@ -311,11 +311,7 @@ export class EosDictionary {
             return this.descriptor.getChildren(node.data.rec)
                 .then((nodes) => {
                     const res = this.updateNodes(nodes, true);
-                    return Promise.all(res.map((chld) => this.getNodeRelatedData(chld)))
-                        .then(() => {
-                            node.updating = false;
-                            return res;
-                        });
+                    return Promise.all(res);
                 });
         } else {
             return Promise.resolve([]);
@@ -365,8 +361,7 @@ export class EosDictionary {
             .search(criteries)
             .then((data) => {
                 const nodes = this.updateNodes(data, false);
-                return Promise.all(nodes.map((node) => this.getNodeRelatedData(node)))
-                    .then(() => nodes);
+                return Promise.all(nodes);
             });
     }
 
