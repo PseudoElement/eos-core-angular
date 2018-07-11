@@ -16,6 +16,8 @@ import { EosCommonModule } from '../eos-common/eos-common.module';
 import { EosDictionariesModule } from '../eos-dictionaries/eos-dictionaries.module';
 import { EosRestModule } from '../eos-rest/eos-rest.module';
 
+import { EosParametersModule } from '../eos-parameters/eos-parameters.module';
+
 import { AppComponent } from './app.component';
 import { BreadcrumbsComponent } from './breadcrumb/breadcrumb.component';
 import { DesktopComponent } from './desktop/desktop.component';
@@ -74,6 +76,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
         EosRestModule.forRoot(APP_CONFIG_LOCAL),
         EosCommonModule,
         EosDictionariesModule,
+        EosParametersModule,
     ],
     entryComponents: [
         LoginFormComponent,

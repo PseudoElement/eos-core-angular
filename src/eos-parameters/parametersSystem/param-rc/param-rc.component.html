@@ -1,0 +1,32 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2" *ngIf="inputs">
+            <eos-param-header
+                [title]="titleHeader"
+                (submitForm)="submit()"
+                (cancelForm)="cancel()"
+                [statusBtnSub]="btnDisabled"
+            ></eos-param-header>
+            <div class="form-wrap">
+                    <eos-dynamic-input
+                    [input]="inputs['rec.REP_SELF']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="row">
+        <span>Ввод отчётов только исполнителем поручений</span>
+        <label class="radio">
+            <input type="radio" name="radio1" value="YES" [(ngModel)]="radioCheck">
+            <span></span>
+        </label>
+        <span>Да</span>
+        <label class="radio">
+            <input type="radio" name="radio1" value="NO" [(ngModel)]="radioCheck">
+            <span></span>
+        </label>
+        <span>Нет</span>
+    </div> -->
+</div>

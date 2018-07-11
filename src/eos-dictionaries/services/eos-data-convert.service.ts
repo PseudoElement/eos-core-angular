@@ -22,7 +22,7 @@ export class EosDataConvertService {
      * @param fieldsDescription node fields description
      * @param data node data
      */
-    getInputs(fieldsDescription: any[], data: any, editMode = true) {
+    getInputs(fieldsDescription: any, data: any, editMode = true) {
         const inputs: any = {};
         if (fieldsDescription) {
             Object.keys(fieldsDescription).forEach((_dict) => {

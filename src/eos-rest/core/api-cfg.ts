@@ -5,8 +5,8 @@ import { IAppCfg } from 'eos-common/interfaces';
  * check src/app/app.config.ts
 */
 export class ApiCfg implements IAppCfg {
-    webBaseUrl = 'http://www.eos.ru';
-    apiBaseUrl = 'http://localhost/api';
+    webBaseUrl = 'http://localhost/X181';
+    apiBaseUrl = 'http://localhost/X181';
     authApi = '/Services/ApiSession.asmx/';
     dataApi = '/OData.svc/';
 

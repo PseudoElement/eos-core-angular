@@ -69,8 +69,8 @@ export class PipRX extends PipeUtils {
 
     initConfig(config: any) {
         this._cfg = Object.assign({
-            webBaseUrl: 'http://www.eos.ru',
-            apiBaseUrl: 'http://localhost/api',
+            webBaseUrl: 'http://localhost/X181',
+            apiBaseUrl: 'http://localhost/X181',
             authApi: '/Services/ApiSession.asmx/',
             dataApi: '/OData.svc/',
         }, config);
@@ -179,7 +179,7 @@ export class PipRX extends PipeUtils {
     private _odataGet<T>(urls: string[], req: IRequest): Observable<T[]> {
         const _options = Object.assign({}, this._options, {
             headers: new Headers({
-                'MaxDataServiceVersion': '3.0',
+                // 'MaxDataServiceVersion': '3.0',
                 'Accept': 'application/json;odata=light;q=1,application/json;odata=minimalmetadata;'
             })
         });
@@ -224,7 +224,7 @@ export class PipRX extends PipeUtils {
                 // 'DataServiceVersion': '1.0', //todo: add in Allowed-Headers in OPTIONS response
                 'Accept': 'multipart/mixed',
                 'Content-Type': 'multipart/mixed;boundary=' + BATCH_BOUNDARY,
-                'MaxDataServiceVersion': '3.0'
+                // 'MaxDataServiceVersion': '3.0'
             })
         });
 

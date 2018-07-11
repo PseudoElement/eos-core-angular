@@ -1,0 +1,14 @@
+.param-wrap {
+    text-align: center;
+
+    .param {
+        display: inline-block;
+        border: solid 1px $border-color-main-theme;
+        background: $white;
+        width: 800px;
+    }
+}
+
+.eos-param-other {
+    color: red;
+}

@@ -12,6 +12,7 @@ export class EosHeaderComponent implements OnDestroy {
     modules = APP_MODULES;
     modulesDropdown = APP_MODULES_DROPDOWN;
     breadcrumbView = true;
+    navParamView = true;
     private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
@@ -33,6 +34,6 @@ export class EosHeaderComponent implements OnDestroy {
         let _actRoute = this._route.snapshot;
         while (_actRoute.firstChild) { _actRoute = _actRoute.firstChild; }
         this.breadcrumbView = _actRoute.data && _actRoute.data.showBreadcrumb;
-
+        this.navParamView = _actRoute.data && _actRoute.data.showNav;
     }
 }
