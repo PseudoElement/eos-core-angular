@@ -67,7 +67,6 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                                     changed = true;
                                 }
                             });
-                            console.log('newData', this.newData.rec, '\nprepData', this.prepareData.rec, '\nformValue', newVal);
                             this.formChanged.emit(changed);
                     })
                 );
@@ -96,7 +95,6 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                 .then(data => {
                     this.formChanged.emit(false);
                     this.prepareData.rec = Object.assign({}, this.newData.rec);
-                    console.log('newData', this.newData.rec, 'prepData', this.prepareData.rec);
                 })
                 .catch(data => console.log(data));
         }
