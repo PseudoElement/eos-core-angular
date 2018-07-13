@@ -2,11 +2,15 @@ eos-dynamic-input {
     font-size: 16px;
 }
 
-.form-wrap {
+.input-param-wrapper {
+    border: 1px solid $border-color-main-theme;
     background: $white;
-    padding: 20px;
 
-    hr {
-        margin-top: 0;
+    .form-wrap {
+        padding: 20px;
+
+        hr {
+            margin-top: 0;
+        }
     }
 }
