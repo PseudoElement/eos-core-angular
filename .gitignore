@@ -26,6 +26,5 @@ debug.log
 !system.config.js
 !wallaby.js
 !gulpfile.js
-!invokeMenu.js
 remote-profile/*
 src/app/app.config.local.ts

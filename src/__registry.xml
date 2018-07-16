@@ -1,4 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<registry>
-	<script target ="~/ArmSite/Pages/ArmMain.aspx;~/Pages/Cabinet/Folder.aspx;" src="../../Classif/invokeMenu.js"/>
-</registry>

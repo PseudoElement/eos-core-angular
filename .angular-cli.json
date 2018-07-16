@@ -10,9 +10,7 @@
       "outDir": "dist",
       "assets": [
         "assets",
-        "favicon.ico",
-        "__registry.xml",
-        "invokeMenu.js"
+        "favicon.ico"
       ],
       "index": "index.html",
       "main": "main.ts",
