@@ -125,7 +125,11 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         fields.forEach(field => {
             this._fieldsType[field.key] = field.type;
             inputs._list.push(field.key);
-            inputs.rec[field.key] = { title: field.title, type: E_FIELD_TYPE[field.type], foreignKey: field.key };
+            inputs.rec[field.key] = {
+                title: field.title,
+                type: E_FIELD_TYPE[field.type],
+                foreignKey: field.key
+            };
         });
         return inputs;
     }
@@ -162,7 +166,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     private getInputs() {
         const dataInput = {rec: {}};
         Object.keys(this.prepareData.rec).forEach(key => {
-            if (this._fieldsType[key] === 'boolean') {
+            if (this._fieldsType[key] === 'boolean' || this._fieldsType[key] === 'toggle') {
                 if (this.prepareData.rec[key] === 'YES') {
                     dataInput.rec[key] = true;
                 } else {

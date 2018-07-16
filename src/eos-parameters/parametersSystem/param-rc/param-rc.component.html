@@ -1,32 +1,59 @@
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2" *ngIf="inputs">
+<div class="row">
+    <div class="col-md-8 col-md-offset-2" *ngIf="inputs">
+        <div class="input-param-wrapper input-param-rc-wrapper">
             <eos-param-header
                 [title]="titleHeader"
                 (submitForm)="submit()"
                 (cancelForm)="cancel()"
                 [statusBtnSub]="btnDisabled"
             ></eos-param-header>
+            <eos-dynamic-input
+                [input]="inputs['rec.REP_SELF']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
             <div class="form-wrap">
-                    <eos-dynamic-input
-                    [input]="inputs['rec.REP_SELF']"
+                <eos-dynamic-input
+                    [input]="inputs['rec.RESOLUTION_REPLY_PROTECTED']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    [input]="inputs['rec.REPLY_CTRL_RESOLUTION_PROTECTED']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    [input]="inputs['rec.RESOLUTION_REPLY_DELETE_PROTECTED']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    [input]="inputs['rec.RES_PLAN_MORE_PARENT']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    [input]="inputs['rec.RES_DATE_LESS_PARENT']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    [input]="inputs['rec.CONSTRAIN_DELO_LIST']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    [input]="inputs['rec.RESOLUTION_PRJ_COPY']"
                     [form]="form"
                     [readonly]="false"
                 ></eos-dynamic-input>
             </div>
         </div>
     </div>
-    <!-- <div class="row">
-        <span>Ввод отчётов только исполнителем поручений</span>
-        <label class="radio">
-            <input type="radio" name="radio1" value="YES" [(ngModel)]="radioCheck">
-            <span></span>
-        </label>
-        <span>Да</span>
-        <label class="radio">
-            <input type="radio" name="radio1" value="NO" [(ngModel)]="radioCheck">
-            <span></span>
-        </label>
-        <span>Нет</span>
-    </div> -->
 </div>
+
+
+
+
+
