@@ -20,6 +20,7 @@ import { DynamicInputDateComponent } from './dynamic-form-input/dynamic-input-da
 import { DynamicInputSelectComponent } from './dynamic-form-input/dynamic-input-select.component';
 import { DynamicInputStringComponent } from './dynamic-form-input/dynamic-input-string.component';
 import { DynamicInputTextComponent } from './dynamic-form-input/dynamic-input-text.component';
+import { DynamicInputToggleComponent } from './dynamic-form-input/dynamic-input-toggle.component';
 import { InfoComponent } from './info/info.component';
 import { MessagesComponent } from './messages/messages.component';
 import { PhotoUploaderComponent } from './photo-uploader/photo-uploader.component';
@@ -54,6 +55,7 @@ import { EosDatePipe } from './pipes/eos-date.pipe';
         DynamicInputSelectComponent,
         DynamicInputStringComponent,
         DynamicInputTextComponent,
+        DynamicInputToggleComponent,
         EosDateMaskDirective,
         EosDatePipe,
     ],

@@ -7,7 +7,7 @@ export const RC_PARAM: IBaseParameters = {
     fields: [
         {
             key: 'REP_SELF',
-            type: 'boolean',
+            type: 'toggle',
             title: 'Ввод отчетов только исполнителем поручений'
         },
         {
