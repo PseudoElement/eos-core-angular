@@ -11,6 +11,7 @@ import { NOT_EMPTY_STRING } from '../consts/input-validation';
 import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 import { ButtonsInput } from 'eos-common/core/inputs/buttons-input';
 import { ToggleInput } from 'eos-common/core/inputs/toggle-input';
+import { NumberIncrementInput } from 'eos-common/core/inputs/number-increment-input';
 
 @Injectable()
 export class EosDataConvertService {
@@ -32,6 +33,21 @@ export class EosDataConvertService {
                     case 'rec':
                         Object.keys(descr).forEach((_key) => {
                             switch (descr[_key].type) {
+                                case E_FIELD_TYPE.numberIncrement:
+                                    inputs[_dict + '.' + _key] = new NumberIncrementInput({
+                                        key: _dict + '.' + descr[_key].foreignKey,
+                                        label: descr[_key].title,
+                                        required: descr[_key].required,
+                                        pattern: descr[_key].pattern,
+                                        isUnique: descr[_key].isUnique,
+                                        uniqueInDict: descr[_key].uniqueInDict,
+                                        forNode: descr[_key].forNode,
+                                        value: data[_dict][descr[_key].foreignKey]
+                                            || descr[_key].default,
+                                        length: descr[_key].length,
+                                        disabled: !editMode,
+                                    });
+                                    break;
                                 case E_FIELD_TYPE.number:
                                 case E_FIELD_TYPE.string:
                                     inputs[_dict + '.' + _key] = new StringInput({

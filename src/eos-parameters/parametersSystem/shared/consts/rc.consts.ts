@@ -11,6 +11,12 @@ export const RC_PARAM: IBaseParameters = {
             title: 'Ввод отчетов только исполнителем поручений'
         },
         {
+            key: 'REG_PERIOD',
+            type: 'numberIncrement',
+            title: 'ПРОДОЛЖИТЕЛЬНОСТЬ',
+            pattern: /^\d0?$/
+        },
+        {
             key: 'RESOLUTION_REPLY_PROTECTED',
             type: 'boolean',
             title: 'Запретить редактирование поручения при наличии отчета исполнителя'

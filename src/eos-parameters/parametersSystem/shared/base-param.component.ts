@@ -128,7 +128,9 @@ export class BaseParamComponent implements OnDestroy, OnInit {
             inputs.rec[field.key] = {
                 title: field.title,
                 type: E_FIELD_TYPE[field.type],
-                foreignKey: field.key
+                foreignKey: field.key,
+                pattern: field.pattern,
+                length: field.length
             };
         });
         return inputs;

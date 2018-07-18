@@ -42,5 +42,10 @@
             [input]="input"
             [readonly]="readonly"
             [inputTooltip]="tooltip"></eos-dynamic-input-toggle>
+        <eos-dynamic-input-increment-number *ngSwitchCase="types.numberIncrement"
+            [form]="form"
+            [input]="input"
+            [readonly]="readonly"
+            [inputTooltip]="tooltip"></eos-dynamic-input-increment-number>
     </ng-container>
 </div>

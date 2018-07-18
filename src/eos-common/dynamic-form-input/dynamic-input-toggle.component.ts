@@ -1,4 +1,4 @@
-import { Component } from '../../../node_modules/@angular/core';
+import { Component } from '@angular/core';
 import { DynamicInputBase } from './dynamic-input-base';
 
 @Component({

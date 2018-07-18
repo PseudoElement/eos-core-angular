@@ -13,6 +13,16 @@
                 [readonly]="false"
             ></eos-dynamic-input>
             <div class="form-wrap">
+                <span>Редактирование в режиме «Регистрация РК»</span>
+                <hr>
+                <eos-dynamic-input
+                [input]="inputs['rec.REG_PERIOD']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            </div>
+            <hr>
+            <div class="form-wrap">
                 <eos-dynamic-input
                     [input]="inputs['rec.RESOLUTION_REPLY_PROTECTED']"
                     [form]="form"

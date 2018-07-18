@@ -1,0 +1,49 @@
+.input-increment {
+    position: relative;
+    width: 90px;
+    border: 1px solid $border-color-main-theme;
+    background-color: $secondary-color-main-theme;
+
+    &.input-invalid {
+        border-color: $invalid-color-main-theme;
+    }
+
+    input {
+        background-color: $secondary-color-main-theme;
+        width: 40px;
+        border: 0;
+        padding: 3px 0 3px 8px;
+        font-size: 14px;
+        color: black;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    span {
+        display: block;
+        height: 100%;
+        width: 28px;
+        position: absolute;
+        text-align: center;
+        cursor: pointer;
+
+        &::before {
+            display: inline-block;
+            color: $active-field-color-main-theme;
+            margin-top: 4px;
+            font-size: 20px;
+        }
+
+        &.increase {
+            top: 0;
+            right: 0;
+        }
+
+        &.decrease {
+            top: 0;
+            right: 24px;
+        }
+    }
+}
