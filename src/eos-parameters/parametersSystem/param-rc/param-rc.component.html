@@ -12,17 +12,33 @@
                 [form]="form"
                 [readonly]="false"
             ></eos-dynamic-input>
-            <div class="form-wrap">
-                <span>Редактирование в режиме «Регистрация РК»</span>
+            <div class="input-grou">
+                <span class="l-font">Редактирование в режиме «Регистрация РК»</span>
                 <hr>
-                <eos-dynamic-input
-                [input]="inputs['rec.REG_PERIOD']"
-                [form]="form"
-                [readonly]="false"
-            ></eos-dynamic-input>
+                <div class="inline-block number-increment-wrap">
+                    <eos-dynamic-input
+                        [input]="inputs['rec.REG_PERIOD']"
+                        [form]="form"
+                        [readonly]="false"
+                    ></eos-dynamic-input>
+                </div>
+                <div class="inline-block select-wrap">
+                    <eos-dynamic-input
+                        [input]="inputs['rec.REG_UNIT']"
+                        [form]="form"
+                        [readonly]="false"
+                    ></eos-dynamic-input>
+                </div>
+                <div class="inline-block">
+                    <eos-dynamic-input
+                        [input]="inputs['rec.REG_CHECK_EDIT']"
+                        [form]="form"
+                        [readonly]="false"
+                    ></eos-dynamic-input>
+                </div>
             </div>
             <hr>
-            <div class="form-wrap">
+            <div class="input-grou">
                 <eos-dynamic-input
                     [input]="inputs['rec.RESOLUTION_REPLY_PROTECTED']"
                     [form]="form"

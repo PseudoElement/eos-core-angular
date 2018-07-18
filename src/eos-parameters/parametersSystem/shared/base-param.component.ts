@@ -100,6 +100,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         }
     }
     cancel() {
+        this.formChanged.emit(false);
         this.ngOnDestroy();
         this.init();
     }
@@ -130,7 +131,8 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                 type: E_FIELD_TYPE[field.type],
                 foreignKey: field.key,
                 pattern: field.pattern,
-                length: field.length
+                length: field.length,
+                options: field.options
             };
         });
         return inputs;

@@ -1,6 +1,8 @@
 <div [formGroup]="form">
-    <label>{{input.label}}</label>
-    <div class="input-increment"[ngClass]="{'input-invalid': control.invalid}">
+    <span class="label-text-s">{{input.label}}</span>
+    <div
+        class="input-increment"
+        [ngClass]="{'input-invalid': control.invalid}">
         <input type="text"
             #inputF
             max="10"

@@ -188,18 +188,21 @@ eos-dynamic-input {
 .toggle-wrap {
     background: $light-grey-1;
     border: 1px solid $border-color-main-theme;
-    border-width: 1px 0 1px 0;
+    border-width: 1px 0;
     padding: 1px;
     font-size: 14px;
+    height: 44px;
 
     .label-text {
+        position: relative;
+        bottom: 4px;
         display: inline-block;
-        margin: 0 10px 12px 15px;
+        margin: 0 10px 0 15px;
     }
     .toggle {
         position: relative;
         display: inline-block;
-        top: 12px;
+        top: 9px;
         width: 38px;
         height: 24px;
 

@@ -1,0 +1,17 @@
+.input-param-wrapper {
+    border: 1px solid $border-color-main-theme;
+    background: $white;
+
+    hr {
+        margin: 10px 0;
+    }
+
+    .input-grou {
+        padding: 0 20px;
+
+        hr {
+            margin-top: 3px;
+            margin-bottom: 10px;
+        }
+    }
+}

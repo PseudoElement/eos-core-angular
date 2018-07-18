@@ -14,7 +14,22 @@ export const RC_PARAM: IBaseParameters = {
             key: 'REG_PERIOD',
             type: 'numberIncrement',
             title: 'ПРОДОЛЖИТЕЛЬНОСТЬ',
-            pattern: /^\d0?$/
+            pattern: /^[1-9]0?$/
+        },
+        {
+            key: 'REG_UNIT',
+            type: 'select',
+            title: '',
+            options: [
+                {value: 1, title: 'Мин.'},
+                {value: 2, title: 'Час.'},
+                {value: 3, title: 'Сутки'}
+            ]
+        },
+        {
+            key: 'REG_CHECK_EDIT',
+            type: 'boolean',
+            title: 'Не редактируемые другими пользователями'
         },
         {
             key: 'RESOLUTION_REPLY_PROTECTED',

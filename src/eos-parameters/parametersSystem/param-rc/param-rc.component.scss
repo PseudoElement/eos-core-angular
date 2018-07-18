@@ -2,6 +2,23 @@
     label {
         font-size: 12px;
     }
+
+    .inline-block {
+        display: inline-block;
+    }
+
+    .select-wrap {
+        margin-left: -10px;
+        margin-right: 40px;
+    }
+
+    .select-wrap, .number-increment-wrap {
+        height: 56px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
 }
 
 
