@@ -8,12 +8,25 @@
     }
 
     .select-wrap {
-        margin-left: -10px;
+        margin-left: 10px;
         margin-right: 40px;
     }
 
+    .number-increment-wrap {
+        display: inline-block;
+
+    }
+
+    .label-input-increment {
+        display: block;
+        margin-bottom: -4px;
+    }
+    
     .select-wrap, .number-increment-wrap {
-        height: 56px;
+        
+        .form-group {
+            margin: 0;
+        }
     }
 
     .form-group {

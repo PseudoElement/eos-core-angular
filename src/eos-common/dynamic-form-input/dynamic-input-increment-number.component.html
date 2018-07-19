@@ -1,5 +1,6 @@
-<div [formGroup]="form">
-    <span class="label-text-s">{{input.label}}</span>
+<div
+    [ngClass]="'inline-block'"
+    [formGroup]="form">
     <div
         class="input-increment"
         [ngClass]="{'input-invalid': control.invalid}">
@@ -12,13 +13,13 @@
             [ngClass]="{'readonly': readonly}"
             (focus)="onFocus()"
             (blur)="onBlur()">
-            <span
+        <span
                 class="decrease fa fa-minus"
                 (click)="onDecrease(inputF)"
-            ></span>
-            <span
+        ></span>
+        <span
                 class="increase fa fa-plus"
                 (click)="onIncrease(inputF)"
-            ></span>
-        </div>
+        ></span>
+    </div>
 </div>

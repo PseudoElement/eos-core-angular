@@ -1,3 +1,15 @@
-h1 {
-    color: red;
+.input-param-prj-wrapper {
+    .param-input-group {
+        .input-select-sub {
+            margin: 0 5px;
+
+            .form-group {
+                margin-bottom: 10px;
+            }
+        }
+
+        label {
+            font-size: 12px;
+        }
+    }
 }

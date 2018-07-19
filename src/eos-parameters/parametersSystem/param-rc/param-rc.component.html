@@ -1,83 +1,90 @@
-<div class="row">
-    <div class="col-md-8 col-md-offset-2" *ngIf="inputs">
-        <div class="input-param-wrapper input-param-rc-wrapper">
-            <eos-param-header
-                [title]="titleHeader"
-                (submitForm)="submit()"
-                (cancelForm)="cancel()"
-                [statusBtnSub]="btnDisabled"
-            ></eos-param-header>
-            <eos-dynamic-input
-                [input]="inputs['rec.REP_SELF']"
-                [form]="form"
-                [readonly]="false"
-            ></eos-dynamic-input>
-            <div class="input-grou">
-                <span class="l-font">Редактирование в режиме «Регистрация РК»</span>
-                <hr>
-                <div class="inline-block number-increment-wrap">
-                    <eos-dynamic-input
-                        [input]="inputs['rec.REG_PERIOD']"
-                        [form]="form"
-                        [readonly]="false"
-                    ></eos-dynamic-input>
-                </div>
-                <div class="inline-block select-wrap">
-                    <eos-dynamic-input
-                        [input]="inputs['rec.REG_UNIT']"
-                        [form]="form"
-                        [readonly]="false"
-                    ></eos-dynamic-input>
-                </div>
-                <div class="inline-block">
-                    <eos-dynamic-input
-                        [input]="inputs['rec.REG_CHECK_EDIT']"
-                        [form]="form"
-                        [readonly]="false"
-                    ></eos-dynamic-input>
-                </div>
+<div
+    class="input-param-wrapper input-param-rc-wrapper"
+    *ngIf="inputs">
+    <eos-param-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnDisabled"
+    ></eos-param-header>
+    <div class="param-input-group">
+        <span class="l-font">Правило определения контрольности документа</span>
+        <hr>
+    </div>
+    <eos-dynamic-input
+        [input]="inputs['rec.REP_SELF']"
+        [form]="form"
+        [readonly]="false"
+    ></eos-dynamic-input>
+    <div class="param-input-group">
+        <span class="l-font">Редактирование в режиме «Регистрация РК»</span>
+        <hr>
+        <span class="label-text-s label-input-increment">ПРОДОЛЖИТЕЛЬНОСТЬ</span>
+        <div>
+            <div class="number-increment-wrap">
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputs['rec.REG_PERIOD']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
             </div>
-            <hr>
-            <div class="input-grou">
+            <div class="inline-block select-wrap">
                 <eos-dynamic-input
-                    [input]="inputs['rec.RESOLUTION_REPLY_PROTECTED']"
+                    [input]="inputs['rec.REG_UNIT']"
                     [form]="form"
                     [readonly]="false"
                 ></eos-dynamic-input>
+            </div>
+            <div class="inline-block">
                 <eos-dynamic-input
-                    [input]="inputs['rec.REPLY_CTRL_RESOLUTION_PROTECTED']"
-                    [form]="form"
-                    [readonly]="false"
-                ></eos-dynamic-input>
-                <eos-dynamic-input
-                    [input]="inputs['rec.RESOLUTION_REPLY_DELETE_PROTECTED']"
-                    [form]="form"
-                    [readonly]="false"
-                ></eos-dynamic-input>
-                <eos-dynamic-input
-                    [input]="inputs['rec.RES_PLAN_MORE_PARENT']"
-                    [form]="form"
-                    [readonly]="false"
-                ></eos-dynamic-input>
-                <eos-dynamic-input
-                    [input]="inputs['rec.RES_DATE_LESS_PARENT']"
-                    [form]="form"
-                    [readonly]="false"
-                ></eos-dynamic-input>
-                <eos-dynamic-input
-                    [input]="inputs['rec.CONSTRAIN_DELO_LIST']"
-                    [form]="form"
-                    [readonly]="false"
-                ></eos-dynamic-input>
-                <eos-dynamic-input
-                    [input]="inputs['rec.RESOLUTION_PRJ_COPY']"
+                    [input]="inputs['rec.REG_CHECK_EDIT']"
                     [form]="form"
                     [readonly]="false"
                 ></eos-dynamic-input>
             </div>
         </div>
     </div>
+    <hr>
+    <div class="param-input-group">
+        <eos-dynamic-input
+            [input]="inputs['rec.RESOLUTION_REPLY_PROTECTED']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.REPLY_CTRL_RESOLUTION_PROTECTED']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.RESOLUTION_REPLY_DELETE_PROTECTED']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.RES_PLAN_MORE_PARENT']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.RES_DATE_LESS_PARENT']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.CONSTRAIN_DELO_LIST']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.RESOLUTION_PRJ_COPY']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
 </div>
+
 
 
 

@@ -1,9 +1,77 @@
-<div class="param-wrap">
-    <div class="param">
-        <eos-param-header [title]="titleHeader">
-        </eos-param-header>
-        <div class="eos-param-other">
-            <h1>Param PRJ RC</h1>
+<div class="input-param-wrapper input-param-prj-wrapper" *ngIf="inputs">
+    <eos-param-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnDisabled"
+    ></eos-param-header>
+    <div class="param-input-group">
+        <eos-dynamic-input
+            [input]="inputs['rec.PRJ_VS_DATE_PROTECTED']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+    <eos-dynamic-input
+        [input]="inputs['rec.VS_SELF']"
+        [form]="form"
+        [readonly]="false"
+    ></eos-dynamic-input>
+    <div class="param-input-group">
+        <span>Запретить изменение файлов РКПД при статусе:</span>
+        <eos-dynamic-input
+            [ngClass]="['inline-block', 'input-select-sub']"
+            [input]="inputs['rec.PRJ_STAGE_FILE_PROTECTED']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <span>и выше</span>
+    </div>
+    <hr>
+    <div class="param-input-group">
+        <eos-dynamic-input
+            [input]="inputs['rec.PRJ_VERSION_PROTECTED']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.PRJ_VISA_PROTECTED']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.STRONG_USING_EDS_SIGN']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <div>
+            <span>Запретить редактирование инф. о визировании при статусе:</span>
+            <eos-dynamic-input
+                [ngClass]="['inline-block', 'input-select-sub']"
+                [input]="inputs['rec.PRJ_STAGE_VISA_PROTECTED']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <span>и выше</span>
         </div>
+        <div>
+            <span>Запретить редактирование инф. о подписании при статусе:</span>
+            <eos-dynamic-input
+                [ngClass]="['inline-block', 'input-select-sub']"
+                [input]="inputs['rec.PRJ_STAGE_SIGN_PROTECTED']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <span>и выше</span>
+        </div>
+        <eos-dynamic-input
+            [input]="inputs['rec.PRJ_BLOCK_DELETED_NUMBERS']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="param-input-group">
+        
     </div>
 </div>
