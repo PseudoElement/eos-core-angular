@@ -22,6 +22,7 @@ import { DynamicInputStringComponent } from './dynamic-form-input/dynamic-input-
 import { DynamicInputTextComponent } from './dynamic-form-input/dynamic-input-text.component';
 import { DynamicInputToggleComponent } from './dynamic-form-input/dynamic-input-toggle.component';
 import { DynamicInputNumberIncrementComponent } from './dynamic-form-input/dynamic-input-increment-number.component';
+import { DynamicInputRadioComponent } from './dynamic-form-input/dynamic-input-radio.component';
 import { InfoComponent } from './info/info.component';
 import { MessagesComponent } from './messages/messages.component';
 import { PhotoUploaderComponent } from './photo-uploader/photo-uploader.component';
@@ -58,6 +59,7 @@ import { EosDatePipe } from './pipes/eos-date.pipe';
         DynamicInputTextComponent,
         DynamicInputToggleComponent,
         DynamicInputNumberIncrementComponent,
+        DynamicInputRadioComponent,
         EosDateMaskDirective,
         EosDatePipe,
     ],

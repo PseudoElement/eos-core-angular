@@ -69,5 +69,15 @@ export const PRJ_RC_PARAM: IBaseParameters = {
             type: 'boolean',
             title: 'Не использовать номера удаляемых РКПД'
         },
+        {
+            key: 'PRJ_REGTODAY_LIMIT',
+            type: 'radio',
+            title: '',
+            options: [
+                {value: 'CURRENT', title: 'Текущей картотекой регистратора'},
+                {value: 'ALL', title: 'Множеством картотек регистратора'},
+                {value: 'NO', title: 'Не ограничивать'},
+            ]
+        }
     ]
 };

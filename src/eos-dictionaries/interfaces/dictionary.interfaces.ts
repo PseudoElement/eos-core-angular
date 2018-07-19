@@ -37,7 +37,8 @@ export enum E_FIELD_TYPE {
     select,
     array,
     toggle,
-    numberIncrement
+    numberIncrement,
+    radio
 }
 
 export interface IFieldDescriptor {

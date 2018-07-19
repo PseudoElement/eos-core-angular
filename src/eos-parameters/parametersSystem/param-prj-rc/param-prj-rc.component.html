@@ -72,6 +72,13 @@
     </div>
     <hr>
     <div class="param-input-group">
-        
+        <span class="l-font">Ограничить перечень РКПД для регистрации:</span>
+        <hr>
+        <eos-dynamic-input
+            [ngClass]="'param-input-radio'"
+            [input]="inputs['rec.PRJ_REGTODAY_LIMIT']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
     </div>
 </div>

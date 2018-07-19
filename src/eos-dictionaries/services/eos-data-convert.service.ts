@@ -12,6 +12,7 @@ import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 import { ButtonsInput } from 'eos-common/core/inputs/buttons-input';
 import { ToggleInput } from 'eos-common/core/inputs/toggle-input';
 import { NumberIncrementInput } from 'eos-common/core/inputs/number-increment-input';
+import { RadioInput } from 'eos-common/core/inputs/radio-input';
 
 @Injectable()
 export class EosDataConvertService {
@@ -92,6 +93,16 @@ export class EosDataConvertService {
                                         forNode: descr[_key].forNode,
                                         value: !!data[_dict][descr[_key].foreignKey],
                                         disabled: !editMode,
+                                    });
+                                    break;
+                                case E_FIELD_TYPE.radio:
+                                    inputs[_dict + '.' + _key] = new RadioInput({
+                                        key: _dict + '.' + descr[_key].foreignKey,
+                                        label: descr[_key].title,
+                                        forNode: descr[_key].forNode,
+                                        value: data[_dict][descr[_key].foreignKey],
+                                        disabled: !editMode,
+                                        options: descr[_key].options,
                                     });
                                     break;
                                 case E_FIELD_TYPE.select:
