@@ -132,7 +132,8 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                 foreignKey: field.key,
                 pattern: field.pattern,
                 length: field.length,
-                options: field.options
+                options: field.options,
+                readonly: field.readonly
             };
         });
         return inputs;

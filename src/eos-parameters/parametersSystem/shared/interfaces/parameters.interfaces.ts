@@ -25,6 +25,8 @@ export interface IFieldDescriptor {
     key?: string;
     title: string;
     type: string;
+    readonly?: boolean;
+
     length?: number;
     format?: string;
     foreignKey?: string;

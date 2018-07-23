@@ -102,6 +102,20 @@
     }
 }
 
+.radio-inline,
+.radio {
+    input[type="radio"] {
+        &[disabled] {
+            &:checked+span {
+                background-image: url("../assets/icons/Radio-V-Grey.svg");
+            }
+            &+span {
+                background-image: url("../assets/icons/Radio-Grey.svg");
+            }
+        }
+    }
+}
+
 .group-checkbox {
     input[type="checkbox"] {
         &:checked+span {

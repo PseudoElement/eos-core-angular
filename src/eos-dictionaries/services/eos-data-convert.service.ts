@@ -101,7 +101,8 @@ export class EosDataConvertService {
                                         label: descr[_key].title,
                                         forNode: descr[_key].forNode,
                                         value: data[_dict][descr[_key].foreignKey],
-                                        disabled: !editMode,
+                                        readonly: descr[_key].readonly,
+                                        disabled: descr[_key].readonly || !editMode,
                                         options: descr[_key].options,
                                     });
                                     break;
@@ -114,7 +115,9 @@ export class EosDataConvertService {
                                         forNode: descr[_key].forNode,
                                         value: data[_dict][descr[_key].foreignKey]
                                             || descr[_key].default,
-                                        disabled: !editMode,
+                                        readonly: descr[_key].readonly,
+
+                                        disabled: descr[_key].readonly || !editMode,
                                     });
                                     break;
                                 case E_FIELD_TYPE.buttons:
