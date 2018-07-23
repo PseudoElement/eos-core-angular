@@ -32,6 +32,20 @@
     .form-group {
         margin-bottom: 15px;
     }
+
+    .elem-input-radio {
+        font-size: 14px;
+        display: inline-block;
+        margin-right: 30px;
+    }
+
+    .param-input-group-section {
+        padding-left: 30px;
+
+        .elem-input-radio {
+            margin-right: 90px;
+        }
+    }
 }
 
 

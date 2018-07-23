@@ -6,6 +6,37 @@ export const RC_PARAM: IBaseParameters = {
     title: 'Работа с РК',
     fields: [
         {
+            key: 'RC_CTRL',
+            type: 'radio',
+            readonly: true,
+            title: '',
+            options: [
+                {value: '0', title: 'Правило 1 (от поручения)'},
+                {value: '1', title: 'Правило 2 (вручную)'},
+            ]
+        },
+        {
+            key: 'RC_CTRL_ABS',
+            type: 'radio',
+            title: '',
+            options: [
+                {value: '0', title: 'Абсолютно'},
+                {value: '1', title: 'Картотечно'},
+            ]
+        },
+        {
+            key: 'RC_CTRL_RES_LAYER',
+            type: 'select',
+            title: 'по поручениям',
+            // readonly: true,
+            options: [
+                {value: 1, title: '1 уровня'},
+                {value: 2, title: '1 и 2 уровня'},
+                {value: 3, title: '1-3 уровня'},
+                {value: 0, title: 'всех уровней'}
+            ]
+        },
+        {
             key: 'REP_SELF',
             type: 'toggle',
             title: 'Ввод отчетов только исполнителем поручений'

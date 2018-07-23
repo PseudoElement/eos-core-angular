@@ -10,6 +10,26 @@
     <div class="param-input-group">
         <span class="l-font">Правило определения контрольности документа</span>
         <hr>
+        <eos-dynamic-input
+            [input]="inputs['rec.RC_CTRL']"
+            [form]="form"
+            [readonly]="inputs['rec.RC_CTRL'].readonly"
+        ></eos-dynamic-input>
+        <hr>
+        <div class="param-input-group-section">
+            <eos-dynamic-input
+                class="inline-block"
+                [input]="inputs['rec.RC_CTRL_ABS']"
+                [form]="form"
+                [readonly]="inputs['rec.RC_CTRL_ABS'].readonly"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                class="inline-block"
+                [input]="inputs['rec.RC_CTRL_RES_LAYER']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+        </div>
     </div>
     <eos-dynamic-input
         [input]="inputs['rec.REP_SELF']"
