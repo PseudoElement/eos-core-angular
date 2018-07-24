@@ -7,9 +7,13 @@ import { DynamicInputBase } from './dynamic-input-base';
 })
 export class DynamicInputNumberIncrementComponent extends DynamicInputBase {
     onIncrease(input) {
-        this.control.setValue(String(+this.control.value + 1));
+        if (this.control.enabled) {
+            this.control.patchValue(String(+this.control.value + 1));
+        }
     }
     onDecrease(input) {
-        this.control.setValue(String(+this.control.value - 1));
+        if (this.control.enabled) {
+            this.control.patchValue(String(+this.control.value - 1));
+        }
     }
 }

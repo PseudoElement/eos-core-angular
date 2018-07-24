@@ -3,7 +3,7 @@
     [formGroup]="form">
     <div
         class="input-increment"
-        [ngClass]="{'input-invalid': control.invalid}">
+        [ngClass]="{'input-invalid': control.invalid, 'disabled': readonly}">
         <input type="text"
             #inputF
             max="10"

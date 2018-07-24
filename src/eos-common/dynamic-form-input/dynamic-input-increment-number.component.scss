@@ -13,8 +13,17 @@
         border-color: $invalid-color-main-theme;
     }
 
-    &:focus {
-        border-color: red;
+    &.disabled {
+        border-color: transparent;
+        background-color: transparent;
+        
+        input {
+            background-color: transparent;
+        }
+
+        span {
+            display: none;
+        }
     }
 
     input {
