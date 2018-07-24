@@ -34,10 +34,10 @@ export const RC_PARAM: IBaseParameters = {
             title: 'по поручениям',
             // readonly: true,
             options: [
-                {value: 1, title: '1 уровня'},
-                {value: 2, title: '1 и 2 уровня'},
-                {value: 3, title: '1-3 уровня'},
-                {value: 0, title: 'всех уровней'}
+                {value: '1', title: '1 уровня'},
+                {value: '2', title: '1 и 2 уровня'},
+                {value: '3', title: '1-3 уровня'},
+                {value: '0', title: 'всех уровней'}
             ]
         },
         {
@@ -56,9 +56,9 @@ export const RC_PARAM: IBaseParameters = {
             type: 'select',
             title: '',
             options: [
-                {value: 1, title: 'Мин.'},
-                {value: 2, title: 'Час.'},
-                {value: 3, title: 'Сутки'}
+                {value: '1', title: 'Мин.'},
+                {value: '2', title: 'Час.'},
+                {value: '3', title: 'Сутки'}
             ]
         },
         {
