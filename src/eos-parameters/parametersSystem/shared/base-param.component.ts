@@ -7,6 +7,8 @@ import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-conver
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosUtils } from 'eos-common/core/utils';
 import { ParamDescriptorSrv } from './service/param-descriptor.service';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from './consts/eos-parameters.const';
 
 export class BaseParamComponent implements OnDestroy, OnInit {
     @Input() btnDisabled;
@@ -17,14 +19,17 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     paramApiSrv: ParamApiSrv;
     dataSrv: EosDataConvertService;
     inputCtrlSrv: InputControlService;
+    msgSrv: EosMessageService;
     titleHeader;
+    disabledField = false;
+    isChangeForm = false;
     newData;
     prepInputs: any;
     inputs: any;
     form: FormGroup;
     queryObj;
     subscriptions: Subscription[] = [];
-    private prepareData;
+    prepareData;
     private _currentFormStatus;
     private _fieldsType = {};
     constructor(
@@ -36,6 +41,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         this.dataSrv = injector.get(EosDataConvertService);
         this.inputCtrlSrv = injector.get(InputControlService);
         this.descriptorSrv = injector.get(ParamDescriptorSrv);
+        this.msgSrv = injector.get(EosMessageService);
     }
     ngOnDestroy() {
         this.unsubscribe();
@@ -51,7 +57,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         this.titleHeader = this.constParam.title;
         this.prepInputs = this.getObjectInputFields(this.constParam.fields);
         this.queryObj = this.getObjQueryInputsField(this.prepInputs._list);
-        this.paramApiSrv
+        return this.paramApiSrv
             .getData(this.queryObj)
             .then(data => {
                 this.prepareData = this.convData(data);
@@ -68,6 +74,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                                 }
                             });
                             this.formChanged.emit(changed);
+                            this.isChangeForm = changed;
                     })
                 );
                 this.subscriptions.push(
@@ -90,19 +97,26 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     }
     submit() {
         if (this.newData) {
+            this.formChanged.emit(false);
+            this.isChangeForm = false;
             this.paramApiSrv
                 .setData(this.createObjRequest())
                 .then(data => {
-                    this.formChanged.emit(false);
                     this.prepareData.rec = Object.assign({}, this.newData.rec);
+                    console.log(data);
+                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
                 .catch(data => console.log(data));
         }
     }
     cancel() {
-        this.formChanged.emit(false);
-        this.ngOnDestroy();
-        this.init();
+        if (this.isChangeForm) {
+            this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+            this.isChangeForm = false;
+            this.formChanged.emit(false);
+            this.ngOnDestroy();
+            this.init();
+        }
     }
 
     getObjQueryInputsField(inputs: Array<any>) {
@@ -120,6 +134,19 @@ export class BaseParamComponent implements OnDestroy, OnInit {
             }
         }
         return req;
+    }
+    checkDataToDisabled(keyField, value) {
+        if (this.form.controls['rec.' + keyField].value === value) {
+            this.disabledField = true;
+            this.constParam.disabledFields.forEach(key => {
+                this.form.controls['rec.' + key].disable();
+            });
+        } else {
+            this.disabledField = false;
+            this.constParam.disabledFields.forEach(key => {
+                this.form.controls['rec.' + key].enable();
+            });
+        }
     }
     private getObjectInputFields(fields) {
         const inputs: any = { _list: [], rec: {} };
@@ -164,7 +191,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         const oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
 
         if (oldValue !== _value) {
-            // console.warn('changed', path, oldValue, 'to', _value, this.prepareData.rec, this.newData.rec);
+            // console.log('changed', path, oldValue, 'to', _value, this.prepareData.rec, this.newData.rec);
         }
         return _value !== oldValue;
     }

@@ -16,6 +16,7 @@ export interface IBaseParameters {
     id: string;
     apiInstance: string;
     title: string;
+    disabledFields?: string[];
     visible?: boolean;
     actions?: string[];
     fields: IFieldDescriptor[];

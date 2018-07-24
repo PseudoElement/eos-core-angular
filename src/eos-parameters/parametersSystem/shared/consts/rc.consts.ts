@@ -4,6 +4,10 @@ export const RC_PARAM: IBaseParameters = {
     id: 'rc',
     apiInstance: 'USER_PARMS',
     title: 'Работа с РК',
+    disabledFields: [
+        'RC_CTRL_ABS',
+        'RC_CTRL_RES_LAYER'
+    ],
     fields: [
         {
             key: 'RC_CTRL',

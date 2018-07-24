@@ -21,13 +21,13 @@
                 class="inline-block"
                 [input]="inputs['rec.RC_CTRL_ABS']"
                 [form]="form"
-                [readonly]="inputs['rec.RC_CTRL_ABS'].readonly"
+                [readonly]="disabledField"
             ></eos-dynamic-input>
             <eos-dynamic-input
                 class="inline-block"
                 [input]="inputs['rec.RC_CTRL_RES_LAYER']"
                 [form]="form"
-                [readonly]="false"
+                [readonly]="disabledField"
             ></eos-dynamic-input>
         </div>
     </div>

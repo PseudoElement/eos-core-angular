@@ -9,6 +9,9 @@ import { RC_PARAM } from '../shared/consts/rc.consts';
 export class ParamRcComponent extends BaseParamComponent {
     constructor( injector: Injector ) {
         super(injector, RC_PARAM);
-        this.init();
+        this.init()
+        .then(() => {
+            this.checkDataToDisabled('RC_CTRL', '1');
+        });
     }
 }
