@@ -39,3 +39,9 @@ export const PARM_CANCEL_CHANGE: IMessage = {
     msg: '',
     dismissOnTimeout: 2000
 };
+export const PARM_CHANGE_RC_RES_LAYER: IMessage = {
+    type: 'warning',
+    title: 'Необходимо выполнить процедуру пересчета флагов контрольности всех РК',
+    msg: 'Эта операция может занять много времени и ресурсов',
+    dismissOnTimeout: 5000
+};

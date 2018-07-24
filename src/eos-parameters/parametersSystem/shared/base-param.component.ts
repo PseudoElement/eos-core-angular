@@ -103,7 +103,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                 .setData(this.createObjRequest())
                 .then(data => {
                     this.prepareData.rec = Object.assign({}, this.newData.rec);
-                    console.log(data);
+                    // console.log(data);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
                 .catch(data => console.log(data));
@@ -148,6 +148,28 @@ export class BaseParamComponent implements OnDestroy, OnInit {
             });
         }
     }
+    changeByPath(path: string, value: any) {
+        let _value = null;
+        if (typeof value === 'boolean') {
+            _value = value ? 'YES' : 'NO'; //  _value = +value;
+        } else if (value === 'null') {
+            _value = null;
+        } else if (value instanceof Date) {
+            _value = EosUtils.dateToString(value);
+        } else if (value === '') {
+            // fix empty strings in IE
+            _value = null;
+        } else {
+            _value = value;
+        }
+        this.newData = EosUtils.setValueByPath(this.newData, path, _value);
+        const oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
+
+        if (oldValue !== _value) {
+            // console.log('changed', path, oldValue, 'to', _value, this.prepareData.rec, this.newData.rec);
+        }
+        return _value !== oldValue;
+    }
     private getObjectInputFields(fields) {
         const inputs: any = { _list: [], rec: {} };
         fields.forEach(field => {
@@ -172,28 +194,6 @@ export class BaseParamComponent implements OnDestroy, OnInit {
             }
         });
         this.subscriptions = [];
-    }
-    private changeByPath(path: string, value: any) {
-        let _value = null;
-        if (typeof value === 'boolean') {
-            _value = value ? 'YES' : 'NO'; //  _value = +value;
-        } else if (value === 'null') {
-            _value = null;
-        } else if (value instanceof Date) {
-            _value = EosUtils.dateToString(value);
-        } else if (value === '') {
-            // fix empty strings in IE
-            _value = null;
-        } else {
-            _value = value;
-        }
-        this.newData = EosUtils.setValueByPath(this.newData, path, _value);
-        const oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
-
-        if (oldValue !== _value) {
-            // console.log('changed', path, oldValue, 'to', _value, this.prepareData.rec, this.newData.rec);
-        }
-        return _value !== oldValue;
     }
     private getInputs() {
         const dataInput = {rec: {}};
