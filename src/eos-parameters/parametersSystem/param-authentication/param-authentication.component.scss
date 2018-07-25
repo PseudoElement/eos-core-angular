@@ -1,3 +1,26 @@
-h1 {
-    color: red;
+.input-param-auth-wrapper {
+    .param-input-group {
+        .input-increment-wrapp {
+            margin: 0 10px;
+        }
+
+        .input-increment-wrapp-margin {
+            .form-group {
+                margin-bottom: 5px;
+            }
+        }
+
+        .label-text-margin {
+            margin-left: 60px;
+        }
+
+        .elem-input-radio {
+            display: inline-block;
+            margin-right: 30px;
+            
+            label {
+                font-size: 14px;
+            }
+        }
+    }
 }

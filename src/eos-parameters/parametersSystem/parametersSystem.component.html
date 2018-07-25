@@ -7,7 +7,14 @@
                         (formChanged)="recordChanged($event)"
                         (formInvalid)="turnOffSave($event)"
                         [btnDisabled]="!isChanged || disableSave"
-                    ></eos-param-web>
+                        ></eos-param-web>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'authentication'">
+                        <eos-param-authentication
+                        (formChanged)="recordChanged($event)"
+                        (formInvalid)="turnOffSave($event)"
+                        [btnDisabled]="!isChanged || disableSave"
+                    ></eos-param-authentication>
                 </ng-container>
                 <!-- <ng-container *ngSwitchCase="'other'">
                     <eos-param-other
@@ -26,12 +33,6 @@
                         (formChanged)="recordChanged($event)"
                         (formInvalid)="turnOffSave($event)"
                     ></eos-param-context-rc>
-                </ng-container>
-                <ng-container *ngSwitchCase="'authentication'">
-                    <eos-param-authentication
-                        (formChanged)="recordChanged($event)"
-                        (formInvalid)="turnOffSave($event)"
-                    ></eos-param-authentication>
                 </ng-container>
                 <ng-container *ngSwitchCase="'files'">
                     <eos-param-files
