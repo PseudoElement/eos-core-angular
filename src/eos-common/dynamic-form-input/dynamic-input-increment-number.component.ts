@@ -9,11 +9,13 @@ export class DynamicInputNumberIncrementComponent extends DynamicInputBase {
     onIncrease(input) {
         if (this.control.enabled) {
             this.control.patchValue(String(+this.control.value + 1));
+            this.control.markAsDirty();
         }
     }
     onDecrease(input) {
         if (this.control.enabled) {
             this.control.patchValue(String(+this.control.value - 1));
+            this.control.markAsDirty();
         }
     }
 }

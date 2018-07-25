@@ -3,6 +3,8 @@
     [formGroup]="form">
     <div
         class="input-increment"
+        (mouseenter)="onBlur()"
+        (mouseleave)="onFocus()"
         [ngClass]="{'input-invalid': control.invalid, 'disabled': readonly}">
         <input type="text"
             #inputF
@@ -10,9 +12,7 @@
             [formControlName]="input.key"
             [id]="input.key"
             [readonly]="readonly"
-            [ngClass]="{'readonly': readonly}"
-            (focus)="onFocus()"
-            (blur)="onBlur()">
+            [ngClass]="{'readonly': readonly}">
         <span
                 class="decrease fa fa-minus"
                 (click)="onDecrease(inputF)"
