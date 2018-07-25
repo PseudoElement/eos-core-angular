@@ -32,7 +32,6 @@ export const RC_PARAM: IBaseParameters = {
             key: 'RC_CTRL_RES_LAYER',
             type: 'select',
             title: 'по поручениям',
-            // readonly: true,
             options: [
                 {value: '1', title: '1 уровня'},
                 {value: '2', title: '1 и 2 уровня'},
@@ -49,7 +48,6 @@ export const RC_PARAM: IBaseParameters = {
             key: 'REG_PERIOD',
             type: 'numberIncrement',
             title: 'ПРОДОЛЖИТЕЛЬНОСТЬ',
-            pattern: /^[1-9]0?$/
         },
         {
             key: 'REG_UNIT',
