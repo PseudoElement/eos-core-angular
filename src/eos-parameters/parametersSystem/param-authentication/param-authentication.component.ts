@@ -15,18 +15,6 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
             this.afterInitRC();
         });
     }
-    afterInitRC() {
-        // console.log(this.prepareData);
-        this.checkDataToDisabled('CHANGE_PASS', true);
-        this.subscriptions.push(
-            this.form.controls['rec.CHANGE_PASS'].valueChanges
-            .subscribe(newValue => {
-                this.checkDataToDisabled('CHANGE_PASS', true);
-                // if (this.changeByPath('rec.CHANGE_PASS', newValue)) {
-                // }
-            })
-        );
-    }
     cancel() {
         if (this.isChangeForm) {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
@@ -38,5 +26,29 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
                 this.afterInitRC();
             });
         }
+    }
+    afterInitRC() {
+        // console.log(this.prepareData);
+        this.checkDataToDisabled('CHANGE_PASS', true);
+        this.subscriptions.push(
+            this.form.controls['rec.CHANGE_PASS'].valueChanges
+            .subscribe(newValue => {
+                this.checkDataToDisabled('CHANGE_PASS', true);
+            })
+        );
+        this.subscriptions.push(
+            this.form.controls['rec.PASS_ALF'].valueChanges
+            .subscribe(newValue => {
+                if (this.form.controls['rec.PASS_ALF'].enabled) {
+                    if (+newValue > 1) {
+                        this.form.controls['rec.PASS_CASE'].enable();
+                    } else {
+                        this.form.controls['rec.PASS_CASE'].patchValue(false);
+                        this.form.controls['rec.PASS_CASE'].disable();
+                    }
+                }
+            })
+        );
+        this.form.controls['rec.PASS_ALF'].updateValueAndValidity();
     }
 }
