@@ -37,7 +37,7 @@
                 class="inline-block"
                 [input]="inputs['rec.PASS_CASE']"
                 [form]="form"
-                [readonly]="disabledField"
+                [readonly]="disabledField || readOnlyPassCase"
             ></eos-dynamic-input>
         </div>
         <div>
@@ -75,7 +75,7 @@
             class="inline-block"
             [input]="inputs['rec.PASS_LIST_SUBSTR']"
             [form]="form"
-            [readonly]="disabledField"
+            [readonly]="disabledField || readOnlyPassListSubstr"
         ></eos-dynamic-input>
         <div>
             <span>{{inputs['rec.PASS_OLD'].label}}</span>

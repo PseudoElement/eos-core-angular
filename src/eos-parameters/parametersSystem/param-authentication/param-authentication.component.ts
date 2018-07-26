@@ -8,6 +8,8 @@ import { PARM_CANCEL_CHANGE } from '../shared/consts/eos-parameters.const';
     templateUrl: 'param-authentication.component.html'
 })
 export class ParamAuthenticationComponent extends BaseParamComponent {
+    readOnlyPassCase: boolean;
+    readOnlyPassListSubstr: boolean;
     constructor( injector: Injector ) {
         super(injector, AUTH_PARAM);
         this.init()
@@ -28,22 +30,23 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
         }
     }
     afterInitRC() {
-        // console.log(this.prepareData);
-        this.checkDataToDisabled('CHANGE_PASS', true);
         this.subscriptions.push(
             this.form.controls['rec.CHANGE_PASS'].valueChanges
             .subscribe(newValue => {
                 this.checkDataToDisabled('CHANGE_PASS', true);
             })
         );
+        this.form.controls['rec.CHANGE_PASS'].updateValueAndValidity();
 
         this.subscriptions.push(
             this.form.controls['rec.PASS_ALF'].valueChanges
             .subscribe(newValue => {
                 if (this.form.controls['rec.PASS_ALF'].enabled) {
                     if (+newValue > 1) {
+                        this.readOnlyPassCase = false;
                         this.form.controls['rec.PASS_CASE'].enable();
                     } else {
+                        this.readOnlyPassCase = true;
                         this.form.controls['rec.PASS_CASE'].patchValue(false);
                         this.form.controls['rec.PASS_CASE'].disable();
                     }
@@ -57,8 +60,10 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
             .subscribe(newValue => {
                 if (this.form.controls['rec.PASS_LIST'].enabled) {
                     if (newValue) {
+                        this.readOnlyPassListSubstr = false;
                         this.form.controls['rec.PASS_LIST_SUBSTR'].enable();
                     } else {
+                        this.readOnlyPassListSubstr = true;
                         this.form.controls['rec.PASS_LIST_SUBSTR'].disable();
                     }
                 }
