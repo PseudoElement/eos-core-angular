@@ -10,6 +10,7 @@ import { PARM_CANCEL_CHANGE } from '../shared/consts/eos-parameters.const';
 export class ParamAuthenticationComponent extends BaseParamComponent {
     readOnlyPassCase: boolean;
     readOnlyPassListSubstr: boolean;
+    collectionVisible = true;
     constructor( injector: Injector ) {
         super(injector, AUTH_PARAM);
         this.init()
@@ -71,5 +72,8 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
         );
         this.form.controls['rec.PASS_LIST'].updateValueAndValidity();
 
+    }
+    closeCollection(value) {
+        this.collectionVisible = value;
     }
 }

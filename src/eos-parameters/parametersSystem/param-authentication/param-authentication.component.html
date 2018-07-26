@@ -70,6 +70,12 @@
                 [form]="form"
                 [readonly]="disabledField"
             ></eos-dynamic-input>
+            <div class="parm-auth-btn-wrap">
+                <button
+                    class="btn btn-primary"
+                    (click)="closeCollection(false)"
+                >Словарь</button>
+            </div>
         </div>
         <eos-dynamic-input
             class="inline-block"
@@ -111,4 +117,8 @@
             <span class="m-font">ошибочных вводов пароля</span>
         </div>
     </div>
+    <eos-param-auth-collection
+        [hidden]="collectionVisible"
+        (closeCollection)="closeCollection(true)"
+    ></eos-param-auth-collection>
 </div>

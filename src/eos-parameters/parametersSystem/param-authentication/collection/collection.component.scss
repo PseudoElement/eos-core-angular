@@ -1,0 +1,18 @@
+.collection-wrapp {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1065;
+    background-color: rgba(0, 0, 0, .1);
+
+    .collection-main {
+        background-color: #fff;
+        position: absolute;
+        top: 200px;
+        width: 500px;
+        margin-left: calc(50% - 250px);
+        box-shadow: 0 0 15px rgba(0, 0, 0, .2);
+    }
+}

@@ -14,6 +14,7 @@ import { ParamSearchComponent } from './parametersSystem/param-search/param-sear
 import { ParamHeaderComponent } from './parametersSystem/shared/param-header/header.component';
 import { ParamContextRcComponent } from './parametersSystem/param-context-rc/param-context-rc.component';
 import { ParamAuthenticationComponent } from './parametersSystem/param-authentication/param-authentication.component';
+import { AuthenticationCollectionComponent } from './parametersSystem/param-authentication/collection/collection.component';
 import { ParamFielsComponent } from './parametersSystem/param-files/param-files.component';
 import { ParamPrjRcComponent } from './parametersSystem/param-prj-rc/param-prj-rc.component';
 import { ParamRcComponent } from './parametersSystem/param-rc/param-rc.component';
@@ -37,6 +38,7 @@ import { ParamDescriptorSrv } from './parametersSystem/shared/service/param-desc
         ParamHeaderComponent,
         ParamContextRcComponent,
         ParamAuthenticationComponent,
+        AuthenticationCollectionComponent,
         ParamFielsComponent,
         ParamPrjRcComponent,
         ParamRcComponent
