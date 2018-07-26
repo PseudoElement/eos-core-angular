@@ -36,6 +36,7 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
                 this.checkDataToDisabled('CHANGE_PASS', true);
             })
         );
+
         this.subscriptions.push(
             this.form.controls['rec.PASS_ALF'].valueChanges
             .subscribe(newValue => {
@@ -50,5 +51,20 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
             })
         );
         this.form.controls['rec.PASS_ALF'].updateValueAndValidity();
+
+        this.subscriptions.push(
+            this.form.controls['rec.PASS_LIST'].valueChanges
+            .subscribe(newValue => {
+                if (this.form.controls['rec.PASS_LIST'].enabled) {
+                    if (newValue) {
+                        this.form.controls['rec.PASS_LIST_SUBSTR'].enable();
+                    } else {
+                        this.form.controls['rec.PASS_LIST_SUBSTR'].disable();
+                    }
+                }
+            })
+        );
+        this.form.controls['rec.PASS_LIST'].updateValueAndValidity();
+
     }
 }
