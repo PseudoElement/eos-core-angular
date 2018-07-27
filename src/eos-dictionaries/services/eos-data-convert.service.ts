@@ -62,7 +62,7 @@ export class EosDataConvertService {
                                         value: data[_dict][descr[_key].foreignKey]
                                             || descr[_key].default,
                                         length: descr[_key].length,
-                                        disabled: !editMode,
+                                        disabled: descr[_key].readonly || !editMode,
                                     });
                                     break;
                                 case E_FIELD_TYPE.text:

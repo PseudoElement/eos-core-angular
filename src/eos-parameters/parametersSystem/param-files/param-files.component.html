@@ -1,9 +1,58 @@
-<div class="param-wrap">
-    <div class="param">
-        <eos-param-header [title]="titleHeader">
-        </eos-param-header>
-        <div class="eos-param-other">
-            <h1>Param Files</h1>
+<div
+    class="input-param-wrapper input-param-files-wrapper"
+    *ngIf="inputs">
+    <eos-param-header
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnDisabled"
+        [title]="titleHeader">
+    </eos-param-header>
+    <div class="param-input-group">
+        <span class="l-font">Параметры хранения прикрепленных файлов</span>
+        <hr>
+        <eos-dynamic-input
+            class="margin-bottom"
+            [input]="inputs['rec.EDMSNAME']"
+            [form]="form"
+            [readonly]="inputs['rec.EDMSNAME'].readonly"
+        ></eos-dynamic-input>
+        <span class="s-font">Место хранения:</span>
+        <eos-dynamic-input
+            class="input-radio-files"
+            [input]="inputs['rec.EDMSPARM']"
+            [form]="form"
+            [readonly]="inputs['rec.EDMSPARM'].readonly"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [hidden]="hiddenFieldPath"
+            [input]="inputs['rec.GATEPATH']"
+            [form]="form"
+            [readonly]="inputs['rec.GATEPATH'].readonly"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [hidden]="hiddenFieldPath"
+            [input]="inputs['rec.STORAGEPATH']"
+            [form]="form"
+            [readonly]="inputs['rec.STORAGEPATH'].readonly"
+        ></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="param-input-group">
+        <div>
+            <span>Ограничения на прикрепляемые файлы</span>
+            <form [formGroup]="formAttach" class="inline-block">
+                <label
+                    class="radio inline-block margit-r-radio"
+                    *ngFor="let field of formAttachfields">
+                    <input
+                        name="attachFile"
+                        [value]="field.value"
+                        [formControlName]="'attachFile'"
+                        type="radio">
+                    <span></span>
+                    {{field.text}}
+                </label>
+            </form>
         </div>
     </div>
 </div>

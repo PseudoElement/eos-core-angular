@@ -33,13 +33,14 @@
                         (formChanged)="recordChanged($event)"
                         (formInvalid)="turnOffSave($event)"
                     ></eos-param-context-rc>
-                </ng-container>
+                </ng-container> -->
                 <ng-container *ngSwitchCase="'files'">
                     <eos-param-files
                         (formChanged)="recordChanged($event)"
                         (formInvalid)="turnOffSave($event)"
+                        [btnDisabled]="!isChanged || disableSave"
                     ></eos-param-files>
-                </ng-container> -->
+                </ng-container>
                 <ng-container *ngSwitchCase="'prj-rc'">
                     <eos-param-prj-rc
                         (formChanged)="recordChanged($event)"
