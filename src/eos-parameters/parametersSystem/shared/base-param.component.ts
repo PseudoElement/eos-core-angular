@@ -61,6 +61,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
             .getData(this.queryObj)
             .then(data => {
                 this.prepareData = this.convData(data);
+                // console.log(this.prepareData.rec);
                 this.inputs = this.getInputs();
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.subscriptions.push(
@@ -149,9 +150,12 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         }
     }
     changeByPath(path: string, value: any) {
+        const key = path.split('.')[1];
         let _value = null;
-        if (typeof value === 'boolean') {
+        if (typeof value === 'boolean' && !this.prepInputs.rec[key].formatDbBinary) {
             _value = value ? 'YES' : 'NO'; //  _value = +value;
+        } else if (typeof value === 'boolean' && this.prepInputs.rec[key].formatDbBinary) {
+            _value = value ? '1' : '0';
         } else if (value === 'null') {
             _value = null;
         } else if (value instanceof Date) {
@@ -182,7 +186,8 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                 pattern: field.pattern,
                 length: field.length,
                 options: field.options,
-                readonly: field.readonly
+                readonly: !!field.readonly,
+                formatDbBinary: !!field.formatDbBinary
             };
         });
         return inputs;
@@ -198,8 +203,15 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     private getInputs() {
         const dataInput = {rec: {}};
         Object.keys(this.prepareData.rec).forEach(key => {
-            if (this._fieldsType[key] === 'boolean' || this._fieldsType[key] === 'toggle') {
+            // console.log(!this.prepInputs.rec[key].formatDbBinary);
+            if ((this._fieldsType[key] === 'boolean' || this._fieldsType[key] === 'toggle') && !this.prepInputs.rec[key].formatDbBinary) {
                 if (this.prepareData.rec[key] === 'YES') {
+                    dataInput.rec[key] = true;
+                } else {
+                    dataInput.rec[key] = false;
+                }
+            } else if (this.prepInputs.rec[key].formatDbBinary) {
+                if (this.prepareData.rec[key] === '1') {
                     dataInput.rec[key] = true;
                 } else {
                     dataInput.rec[key] = false;

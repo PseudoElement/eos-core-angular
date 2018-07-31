@@ -19,6 +19,7 @@ export interface IBaseParameters {
     disabledFields?: string[];
     visible?: boolean;
     actions?: string[];
+    fieldsChild?: IFieldDescriptor[];
     fields: IFieldDescriptor[];
 }
 
@@ -26,6 +27,7 @@ export interface IFieldDescriptor {
     key?: string;
     title: string;
     type: string;
+    formatDbBinary?: boolean;
     readonly?: boolean;
 
     length?: number;

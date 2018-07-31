@@ -17,6 +17,8 @@ export class InputBase<T>{
     options?: any[];
     disabled?: boolean;
     length?: number;
+    formatDbBinary?: boolean;
+
 
     constructor(options: {
         value?: T,
@@ -34,6 +36,7 @@ export class InputBase<T>{
         forNode?: boolean,
         options?: any[],
         disabled?: boolean,
+        formatDbBinary?: boolean,
         length?: number;
     } = {}) {
         this.value = options.value;
@@ -47,6 +50,7 @@ export class InputBase<T>{
         }
         this.pattern = options.pattern || null;
         this.readonly = !!options.readonly;
+        this.formatDbBinary = options.formatDbBinary;
         this.isUnique = !!options.isUnique;
         this.uniqueInDict = !!options.uniqueInDict;
         this.hideLabel = !!options.hideLabel;

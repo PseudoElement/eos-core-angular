@@ -90,6 +90,7 @@ export class EosDataConvertService {
                                     inputs[_dict + '.' + _key] = new CheckboxInput({
                                         key: _dict + '.' + descr[_key].foreignKey,
                                         label: descr[_key].title,
+                                        formatDbBinary: descr[_key].formatDbBinary,
                                         forNode: descr[_key].forNode,
                                         value: !!data[_dict][descr[_key].foreignKey],
                                         disabled: !editMode,
