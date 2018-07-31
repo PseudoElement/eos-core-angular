@@ -34,6 +34,12 @@
         .list-group {
             .list-group-item {
                 background: $light-grey-1;
+                &:focus {
+                    outline: none;
+                }
+                &.active-element-param {
+                    background: $highlight-color-main-theme;
+                }
             }
         }
     }
