@@ -62,6 +62,7 @@ export class EosDataConvertService {
                                         value: data[_dict][descr[_key].foreignKey]
                                             || descr[_key].default,
                                         length: descr[_key].length,
+                                        readonly: descr[_key].readonly,
                                         disabled: descr[_key].readonly || !editMode,
                                     });
                                     break;

@@ -16,13 +16,14 @@
                         [btnDisabled]="!isChanged || disableSave"
                     ></eos-param-authentication>
                 </ng-container>
-                <!-- <ng-container *ngSwitchCase="'other'">
+                <ng-container *ngSwitchCase="'other'">
                     <eos-param-other
                         (formChanged)="recordChanged($event)"
                         (formInvalid)="turnOffSave($event)"
+                        [btnDisabled]="!isChanged || disableSave"
                     ></eos-param-other>
                 </ng-container>
-                <ng-container *ngSwitchCase="'search'">
+                <!-- <ng-container *ngSwitchCase="'search'">
                     <eos-param-search
                         (formChanged)="recordChanged($event)"
                         (formInvalid)="turnOffSave($event)"

@@ -63,6 +63,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                 this.prepareData = this.convData(data);
                 // console.log(this.prepareData.rec);
                 this.inputs = this.getInputs();
+                // console.log(this.inputs);
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.subscriptions.push(
                     this.form.valueChanges
