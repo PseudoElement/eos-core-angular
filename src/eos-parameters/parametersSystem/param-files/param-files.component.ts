@@ -56,7 +56,7 @@ export class ParamFielsComponent extends BaseParamComponent {
             this.ngOnDestroy();
             this.init()
             .then(() => {
-                // this.afterInit();
+                this.afterInit();
             });
         }
     }
@@ -74,7 +74,7 @@ export class ParamFielsComponent extends BaseParamComponent {
                     }
                 })
         );
-        this.paramApiSrv.getData(this.queryFileConstraint)
+        this.paramApiSrv.getData(Object.assign({}, this.queryFileConstraint))
         .then(data => {
             // console.log(data);
             this.prepDataAttachField(data);
@@ -105,6 +105,9 @@ export class ParamFielsComponent extends BaseParamComponent {
                     this._currentFormAttachStatus = status;
                 })
             );
+        })
+        .catch(err => {
+            console.log(err);
         });
     }
     getInputAttach() {
