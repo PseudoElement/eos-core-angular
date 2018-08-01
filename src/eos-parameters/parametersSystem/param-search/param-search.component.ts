@@ -1,33 +1,41 @@
-import { Component } from '@angular/core';
-import { ParamApiSrv } from '../shared/service/parameters-api.service';
+import { PARM_CANCEL_CHANGE } from './../shared/consts/eos-parameters.const';
+import { SEARCH_PARAM } from './../shared/consts/search-consts';
+import { BaseParamComponent } from './../shared/base-param.component';
+import { Component, Injector } from '@angular/core';
 
 @Component({
     selector: 'eos-param-search',
     templateUrl: 'param-search.component.html'
 })
-export class ParamSearchComponent {
-    titleHeader = 'Поиск';
-    checked = false;
-    radioCheck = 'two';
-    data: any = 1;
-    query4 = {
-        USER_PARMS: {
-            criteries: {
-                PARM_NAME: 'APPSRV_CRYPTO_ACTIVEX||APPSRV_CRYPTO_INITSTR||APPSRV_PKI_ACTIVEX||APPSRV_PKI_INITSTR',
-                ISN_USER_OWNER: '-99'
-            }
-        }
-    };
-
-    setParm = [{ method: 'POST', requestUri: 'SYS_PARMS_Update?PARM_NAME=\'REG_CHECK_EDIT\'&PARM_VALUE=\'YES\'' }];
-
-    constructor(private ApiServ: ParamApiSrv) {}
-    getDataDb1() {
-        this.ApiServ.getData(this.query4).then(data => console.dir(data));
+export class ParamSearchComponent extends BaseParamComponent {
+    constructor( injector: Injector ) {
+        super(injector, SEARCH_PARAM);
+        this.init()
+        .then(() => {
+            this.afterInitRC();
+        });
     }
-
-    setData() {
-        this.ApiServ.setData(this.setParm)
-        .then(data => console.dir(data));
+    cancel() {
+        if (this.isChangeForm) {
+            this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+            this.isChangeForm = false;
+            this.formChanged.emit(false);
+            this.ngOnDestroy();
+            this.init()
+            .then(() => {
+                this.afterInitRC();
+            });
+        }
+    }
+    afterInitRC() {
+        this.subscriptions.push(
+            this.form.controls['rec.FULLTEXT_EXTENSIONS'].valueChanges
+            .debounceTime(300)
+            .subscribe(value => {
+                if (this.changeByPath('rec.FULLTEXT_EXTENSIONS', value)) {
+                    this.form.controls['rec.FULLTEXT_EXTENSIONS'].patchValue(value.toUpperCase());
+                }
+            })
+        );
     }
 }
