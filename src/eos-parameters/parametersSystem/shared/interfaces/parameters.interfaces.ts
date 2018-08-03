@@ -20,7 +20,7 @@ export interface IBaseParameters {
     visible?: boolean;
     actions?: string[];
     fieldsChild?: IFieldDescriptor[];
-    fields: IFieldDescriptor[];
+    fields?: IFieldDescriptor[];
 }
 
 export interface IFieldDescriptor {

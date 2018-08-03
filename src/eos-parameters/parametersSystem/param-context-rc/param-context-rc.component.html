@@ -1,9 +1,119 @@
-<div class="param-wrap">
-    <div class="param">
-        <eos-param-header [title]="titleHeader">
-        </eos-param-header>
-        <div class="eos-param-other">
-            <h1>Param Contect RC</h1>
+<div *ngIf="inputs" class="input-param-wrapper input-param-context-wrapper">
+    <eos-param-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnDisabled"
+    ></eos-param-header>
+    <div class="param-input-group">
+        <div [formGroup]="formContextChoice">
+            <label class="checkbox">
+                <input type="checkbox"
+                    [formControlName]="inputChoiceFiles.key"
+                    [id]="inputChoiceFiles.key"
+                    [ngClass]="{'readonly': readonly}"
+                    >
+                <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                {{inputChoiceFiles.label}}
+            </label>
+            <!-- <label
+                class="radio inline-block margit-r-radio"
+                *ngFor="let field of inputChoiceContextRC">
+                <input
+                    name="contextRC"
+                    [value]="field.value"
+                    [formControlName]="'contextRC'"
+                    type="radio">
+                <span></span>
+                {{field.text}}
+            </label> -->
+            <div
+            *ngFor="let field of inputChoiceContextRC"
+            class="elem-input-radio inline-block margit-r-radio">
+                <label
+                [ngClass]="{disabled: formReadonli}"
+                class="radio">
+                <input
+                    type="radio"
+                    [readonly]="formReadonli"
+                    [ngClass]="{'readonly': formReadonli}"
+                    [name]="'contextRC'"
+                    [formControlName]="'contextRC'"
+                    [value]="field.value">
+                <span></span>
+                {{field.text}}
+                </label>
+            </div>
         </div>
     </div>
+    <hr>
+    <div class="param-input-group" [hidden]="hiddenFilesContext">
+        <eos-dynamic-input
+            [input]="inputs['rec.DOC_RC']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.DOC_REF_FILE']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.REF_SEND']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.JOURNAL']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.DOC_REF_RUBRIC']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.DOC_REF_LINK']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.ACQUAINTANCE']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.FORWARD']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.AR_RC_VALUE']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.ITEMS']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <div [formGroup]="formContextChoice">
+            <label
+                class="checkbox"
+                [ngClass]="{disabled: readonly}">
+                <input type="checkbox"
+                        [formControlName]="'contextResolution'"
+                        [id]="inputcontextResolution.key"
+                        [readonly]="formReadonli">
+                        <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                        {{inputcontextResolution.label}}
+            </label>
+        </div>
+    </div>
+</div>
+<div>
+    <pre>
+        {{ tempData | json }}
+    </pre>
 </div>

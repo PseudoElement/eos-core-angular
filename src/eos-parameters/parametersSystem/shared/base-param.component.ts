@@ -37,6 +37,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         paramModel
     ) {
         this.constParam = paramModel;
+        this.titleHeader = this.constParam.title;
         this.paramApiSrv = injector.get(ParamApiSrv);
         this.dataSrv = injector.get(EosDataConvertService);
         this.inputCtrlSrv = injector.get(InputControlService);
@@ -54,41 +55,50 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         );
     }
     init() {
-        this.titleHeader = this.constParam.title;
-        this.prepInputs = this.getObjectInputFields(this.constParam.fields);
-        this.queryObj = this.getObjQueryInputsField(this.prepInputs._list);
-        return this.paramApiSrv
-            .getData(this.queryObj)
+        this.prepareDataParam();
+        // console.log(Object.assign({}, this.queryObj));
+        return this.getData(this.queryObj)
             .then(data => {
                 this.prepareData = this.convData(data);
                 // console.log(this.prepareData.rec);
                 this.inputs = this.getInputs();
                 // console.log(this.inputs);
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-                this.subscriptions.push(
-                    this.form.valueChanges
-                        .debounceTime(400)
-                        .subscribe(newVal => {
-                            let changed = false;
-                            Object.keys(newVal).forEach(path => {
-                                if (this.changeByPath(path, newVal[path])) {
-                                    changed = true;
-                                }
-                            });
-                            this.formChanged.emit(changed);
-                            this.isChangeForm = changed;
-                    })
-                );
-                this.subscriptions.push(
-                    this.form.statusChanges.subscribe(status => {
-                        if (this._currentFormStatus !== status) {
-                            this.formInvalid.emit(status === 'INVALID');
-                        }
-                        this._currentFormStatus = status;
-                    })
-                );
+                this.subscribeChangeForm();
             })
-            .catch(data => console.log(data));
+            .catch(err => console.log(err));
+    }
+    subscribeChangeForm() {
+        this.subscriptions.push(
+            this.form.valueChanges
+                .debounceTime(200)
+                .subscribe(newVal => {
+                    let changed = false;
+                    Object.keys(newVal).forEach(path => {
+                        if (this.changeByPath(path, newVal[path])) {
+                            changed = true;
+                        }
+                    });
+                    this.formChanged.emit(changed);
+                    this.isChangeForm = changed;
+            })
+        );
+        this.subscriptions.push(
+            this.form.statusChanges.subscribe(status => {
+                if (this._currentFormStatus !== status) {
+                    this.formInvalid.emit(status === 'INVALID');
+                }
+                this._currentFormStatus = status;
+            })
+        );
+    }
+
+    getData(req) {
+        return this.paramApiSrv.getData(req);
+    }
+    prepareDataParam() {
+        this.prepInputs = this.getObjectInputFields(this.constParam.fields);
+        this.queryObj = this.getObjQueryInputsField(this.prepInputs._list);
     }
     convData(data: Array<any>) {
         const d = {};
@@ -122,7 +132,14 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     }
 
     getObjQueryInputsField(inputs: Array<any>) {
-        return { USER_PARMS: { criteries: { PARM_NAME: inputs.join('||'), ISN_USER_OWNER: '-99' } } };
+        return {
+            [this.constParam.apiInstance]: {
+                    criteries: {
+                        PARM_NAME: inputs.join('||'),
+                        ISN_USER_OWNER: '-99'
+                }
+            }
+        };
     }
 
     createObjRequest(): any[] {
@@ -175,7 +192,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         }
         return _value !== oldValue;
     }
-    private getObjectInputFields(fields) {
+    getObjectInputFields(fields) {
         const inputs: any = { _list: [], rec: {} };
         fields.forEach(field => {
             this._fieldsType[field.key] = field.type;
@@ -193,15 +210,8 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         });
         return inputs;
     }
-    private unsubscribe() {
-        this.subscriptions.forEach(subscr => {
-            if (subscr) {
-                subscr.unsubscribe();
-            }
-        });
-        this.subscriptions = [];
-    }
-    private getInputs() {
+
+    getInputs() {
         const dataInput = {rec: {}};
         Object.keys(this.prepareData.rec).forEach(key => {
             // console.log(!this.prepInputs.rec[key].formatDbBinary);
@@ -222,5 +232,13 @@ export class BaseParamComponent implements OnDestroy, OnInit {
             }
         });
         return this.dataSrv.getInputs(this.prepInputs, dataInput);
+    }
+    private unsubscribe() {
+        this.subscriptions.forEach(subscr => {
+            if (subscr) {
+                subscr.unsubscribe();
+            }
+        });
+        this.subscriptions = [];
     }
 }
