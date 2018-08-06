@@ -12,7 +12,6 @@ import { Component, Injector } from '@angular/core';
 export class ParamContextRcComponent extends BaseParamComponent {
     formContextChoice: FormGroup;
     formReadonli: boolean;
-    tempData; // deleted mi
     hiddenFilesContext = false;
     inputChoiceFiles = {
             key: 'contextFile',
@@ -52,8 +51,6 @@ export class ParamContextRcComponent extends BaseParamComponent {
                 dataDb[0].PARM_VALUE.slice(1, -1).split(',').forEach(key => {
                     data[key] = true;
                 });
-                this.tempData = dataDb[0].PARM_VALUE
-                .slice(1, -1).split(','); // deleted mi
                 return data;
             }
             return null;
@@ -132,7 +129,7 @@ export class ParamContextRcComponent extends BaseParamComponent {
         for (const key in this.newData.rec) {
             if (key) {
                 if (this.newData.rec[key] === true) {
-                    value = value === '' ? ',' : value;
+                    value = value || ',';
                     value += key + ',';
                 }
             }
@@ -147,12 +144,15 @@ export class ParamContextRcComponent extends BaseParamComponent {
         this.subscriptions.push(
             this.formContextChoice.controls.contextFile.valueChanges
                 .subscribe(value => {
-                    // console.log('chenged choice files', value);
+                    console.log('chenged choice files', value);
                     if (value) {
-                        this.form.enable();
+                        setTimeout(() => {
+                            this.form.enable();
+                        }, 0);
                         this.formReadonli = false;
                         this.formContextChoice.controls.contextRC.enable();
                         this.formContextChoice.controls.contextResolution.enable();
+                        console.log(this.form);
                     } else {
                         this.prepInputs._list.forEach(key => {
                             this.form.controls['rec.' + key].patchValue(false);
@@ -164,6 +164,17 @@ export class ParamContextRcComponent extends BaseParamComponent {
                         this.formContextChoice.controls.contextResolution.disable();
                         // console.log(this.form);
                         this.formReadonli = true;
+                    }
+                })
+        );
+        this.subscriptions.push(
+            this.formContextChoice.controls.contextRC.valueChanges
+                .subscribe(value => {
+                    // console.log('chenged choice RC', value);
+                    if (value === 'rc') {
+                        this.hiddenFilesContext = false;
+                    } else {
+                        this.hiddenFilesContext = true;
                     }
                 })
         );

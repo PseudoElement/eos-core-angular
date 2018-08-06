@@ -16,17 +16,6 @@
                 <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
                 {{inputChoiceFiles.label}}
             </label>
-            <!-- <label
-                class="radio inline-block margit-r-radio"
-                *ngFor="let field of inputChoiceContextRC">
-                <input
-                    name="contextRC"
-                    [value]="field.value"
-                    [formControlName]="'contextRC'"
-                    type="radio">
-                <span></span>
-                {{field.text}}
-            </label> -->
             <div
             *ngFor="let field of inputChoiceContextRC"
             class="elem-input-radio inline-block margit-r-radio">
@@ -47,7 +36,7 @@
         </div>
     </div>
     <hr>
-    <div class="param-input-group" [hidden]="hiddenFilesContext">
+    <div class="param-input-group rc-doc-left-column" [hidden]="hiddenFilesContext">
         <eos-dynamic-input
             [input]="inputs['rec.DOC_RC']"
             [form]="form"
@@ -110,10 +99,94 @@
                         {{inputcontextResolution.label}}
             </label>
         </div>
+        <div class="param-input-group rc-doc-right-column" [hidden]="hiddenFilesContext">
+            <eos-dynamic-input
+                [input]="inputs['rec.REF_CORRESP1']"
+                [form]="form"
+                [readonly]="formReadonli"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.REF_CORRESP2']"
+                [form]="form"
+                [readonly]="formReadonli"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.REF_VISA']"
+                [form]="form"
+                [readonly]="formReadonli"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.DOC_SIGN']"
+                [form]="form"
+                [readonly]="formReadonli"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.DOC_WHO']"
+                [form]="form"
+                [readonly]="formReadonli"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.REF_SOISP']"
+                [form]="form"
+                [readonly]="formReadonli"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.DOC_EXE']"
+                [form]="form"
+                [readonly]="formReadonli"
+            ></eos-dynamic-input>
+        </div>
     </div>
-</div>
-<div>
-    <pre>
-        {{ tempData | json }}
-    </pre>
+    <div class="param-input-group" [hidden]="!hiddenFilesContext">
+        <eos-dynamic-input
+            [input]="inputs['rec.PRJ_RC']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.PRJ_REF_FILE']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.PRJ_REF_SEND']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.PRJ_REF_RUBRIC']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.PRJ_REF_LINK']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.PRJ_FORUM']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.PRJ_EXEC']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.PRJ_VISA']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.PRJ_SIGN']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.AR_PRJ_VALUE']"
+            [form]="form"
+            [readonly]="formReadonli"
+        ></eos-dynamic-input>
+    </div>
 </div>

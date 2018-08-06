@@ -1,3 +1,19 @@
 .input-param-context-wrapper {
     
+    .rc-doc-left-column {
+        position: relative;
+
+        .rc-doc-right-column {
+            width: 50%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin-top: 0;
+        }
+    }
+
+    .margit-r-radio {
+        margin: 15px 20px 0 0;
+    }
+
 }
