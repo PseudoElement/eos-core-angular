@@ -34,6 +34,7 @@
         .list-group {
             .list-group-item {
                 background: $light-grey-1;
+                cursor: pointer;
                 &:focus {
                     outline: none;
                 }
