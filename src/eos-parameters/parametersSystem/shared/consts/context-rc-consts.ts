@@ -55,6 +55,15 @@ export const CONTEXT_RC_PARAM: IBaseParameters = {
             title: 'Пункты'
         },
         {
+            key: 'RESOLUTION',
+            type: 'radio',
+            title: 'Резолюции',
+            options: [
+                {value: 'RESOLUTION_ALL', title: 'Все'},
+                {value: 'RESOLUTION_FIRST', title: 'Первого уровня'}
+            ]
+        },
+        {
             key: 'REF_CORRESP1',
             type: 'boolean',
             title: 'REF_CORRESP1'

@@ -87,7 +87,7 @@
             [form]="form"
             [readonly]="formReadonli"
         ></eos-dynamic-input>
-        <div [formGroup]="formContextChoice">
+        <div [formGroup]="formContextChoice" class="inline-block">
             <label
                 class="checkbox"
                 [ngClass]="{disabled: readonly}">
@@ -99,6 +99,12 @@
                         {{inputcontextResolution.label}}
             </label>
         </div>
+        <eos-dynamic-input
+            class="input-radio-resolution"
+            [input]="inputs['rec.RESOLUTION']"
+            [form]="form"
+            [readonly]="hiddenInputRadioResolution"
+        ></eos-dynamic-input>
         <div class="param-input-group rc-doc-right-column" [hidden]="hiddenFilesContext">
             <eos-dynamic-input
                 [input]="inputs['rec.REF_CORRESP1']"

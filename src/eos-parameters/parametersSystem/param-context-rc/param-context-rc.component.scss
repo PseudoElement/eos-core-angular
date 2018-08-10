@@ -16,4 +16,12 @@
         margin: 15px 20px 0 0;
     }
 
+    .input-radio-resolution {
+        display: inline-block;
+
+        .elem-input-radio {
+            display: inline-block;
+            margin-left: 20px;
+        }
+    }
 }

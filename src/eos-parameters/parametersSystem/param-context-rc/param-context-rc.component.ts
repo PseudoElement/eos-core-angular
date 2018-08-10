@@ -3,16 +3,17 @@ import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from './../shared/consts/eos-pa
 import { FormGroup, FormControl } from '@angular/forms';
 import { CONTEXT_RC_PARAM } from './../shared/consts/context-rc-consts';
 import { BaseParamComponent } from './../shared/base-param.component';
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 
 @Component({
     selector: 'eos-param-context-rc',
     templateUrl: 'param-context-rc.component.html'
 })
-export class ParamContextRcComponent extends BaseParamComponent {
+export class ParamContextRcComponent extends BaseParamComponent implements OnInit {
     formContextChoice: FormGroup;
     formReadonli: boolean;
     hiddenFilesContext = false;
+    hiddenInputRadioResolution: boolean;
     inputChoiceFiles = {
             key: 'contextFile',
             label: 'Форматировать и индексировать файлы контекста'
@@ -33,6 +34,9 @@ export class ParamContextRcComponent extends BaseParamComponent {
     ];
     constructor( injector: Injector ) {
         super(injector, CONTEXT_RC_PARAM);
+    }
+
+    ngOnInit() {
         this.queryObj = this.getObjQueryInputsField(['CONTEXT_SECTIONS_ENABLED']);
         this.prepInputs = this.getObjectInputFields(this.constParam.fields);
         this.formContextChoice = new FormGroup({
@@ -56,19 +60,16 @@ export class ParamContextRcComponent extends BaseParamComponent {
             return null;
         })
         .then(data => {
-            // console.log(data);
             this.prepareData = this.prepDataContext(data);
             this.inputs = this.getInputs();
             this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
             this.subscribeChangeForm();
             this.subscribeChoiceForm();
-            // console.log(data);
             if (data) {
                 this.formContextChoice.controls.contextFile.patchValue(true);
             } else {
                 this.formContextChoice.controls.contextFile.patchValue(false);
             }
-            // console.log(this.form);
         })
         .catch(err => {
             console.log(err);
@@ -78,7 +79,19 @@ export class ParamContextRcComponent extends BaseParamComponent {
         const prepareData = {rec: {}};
         if (data) {
             this.prepInputs._list.forEach(key => {
-                prepareData.rec[key] = data.hasOwnProperty(key);
+                if (key === 'RESOLUTION') {
+                    let resol: any = data.hasOwnProperty('RESOLUTION_ALL') ? 'RESOLUTION_ALL' : false;
+                    resol = data.hasOwnProperty('RESOLUTION_FIRST') ? 'RESOLUTION_FIRST' : false;
+                    if (resol) {
+                        prepareData.rec[key] = resol;
+                        this.formContextChoice.controls.contextResolution.patchValue(true);
+                    } else {
+                        prepareData.rec[key] = false;
+                        this.formContextChoice.controls.contextResolution.patchValue(false);
+                    }
+                } else {
+                    prepareData.rec[key] = data.hasOwnProperty(key);
+                }
             });
             return prepareData;
         }
@@ -91,7 +104,6 @@ export class ParamContextRcComponent extends BaseParamComponent {
         return this.dataSrv.getInputs(this.prepInputs, this.prepareData);
     }
     cancel() {
-        console.log('cansel', this.isChangeForm);
         if (this.isChangeForm) {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
             this.isChangeForm = false;
@@ -102,14 +114,12 @@ export class ParamContextRcComponent extends BaseParamComponent {
     }
     submit() {
         if (this.newData) {
-            // console.log(this.createObjRequestCotext());
             this.formChanged.emit(false);
             this.isChangeForm = false;
             this.paramApiSrv
                 .setData(this.createObjRequestCotext())
                 .then(data => {
                     this.prepareData.rec = Object.assign({}, this.newData.rec);
-                    console.log(data);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
                 .catch(data => console.log(data));
@@ -127,24 +137,50 @@ export class ParamContextRcComponent extends BaseParamComponent {
     createObjRequestCotext() {
         let value = '';
         for (const key in this.newData.rec) {
-            if (key) {
-                if (this.newData.rec[key] === true) {
-                    value = value || ',';
-                    value += key + ',';
-                }
+            if (key === 'RESOLUTION' && this.newData.rec[key]) {
+                value = value || ',';
+                value += this.newData.rec[key] + ',';
+            } else if (this.newData.rec[key]) {
+                value = value || ',';
+                value += key + ',';
             }
         }
-        console.log(value);
         return [{
             method: 'POST',
             requestUri: `SYS_PARMS_Update?PARM_NAME='CONTEXT_SECTIONS_ENABLED'&PARM_VALUE='${value}'`
         }];
     }
+    subscribeChangeForm() {
+        this.subscriptions.push(
+            this.form.valueChanges
+                .debounceTime(200)
+                .subscribe(newVal => {
+                    if (!newVal.hasOwnProperty('rec.RESOLUTION')) {
+                        newVal['rec.RESOLUTION'] = this.form.controls['rec.RESOLUTION'].value;
+                    }
+                    let changed = false;
+                    Object.keys(newVal).forEach(path => {
+                        if (this.changeByPath(path, newVal[path])) {
+                            changed = true;
+                        }
+                    });
+                    this.formChanged.emit(changed);
+                    this.isChangeForm = changed;
+            })
+        );
+        this.subscriptions.push(
+            this.form.statusChanges.subscribe(status => {
+                if (this._currentFormStatus !== status) {
+                    this.formInvalid.emit(status === 'INVALID');
+                }
+                this._currentFormStatus = status;
+            })
+        );
+    }
     subscribeChoiceForm() {
         this.subscriptions.push(
             this.formContextChoice.controls.contextFile.valueChanges
                 .subscribe(value => {
-                    console.log('chenged choice files', value);
                     if (value) {
                         setTimeout(() => {
                             this.form.enable();
@@ -152,17 +188,16 @@ export class ParamContextRcComponent extends BaseParamComponent {
                         this.formReadonli = false;
                         this.formContextChoice.controls.contextRC.enable();
                         this.formContextChoice.controls.contextResolution.enable();
-                        console.log(this.form);
                     } else {
                         this.prepInputs._list.forEach(key => {
                             this.form.controls['rec.' + key].patchValue(false);
                         });
+                        this.formContextChoice.controls.contextResolution.patchValue(false);
                         setTimeout(() => {
                             this.form.disable();
                         }, 0);
                         this.formContextChoice.controls.contextRC.disable();
                         this.formContextChoice.controls.contextResolution.disable();
-                        // console.log(this.form);
                         this.formReadonli = true;
                     }
                 })
@@ -170,11 +205,27 @@ export class ParamContextRcComponent extends BaseParamComponent {
         this.subscriptions.push(
             this.formContextChoice.controls.contextRC.valueChanges
                 .subscribe(value => {
-                    // console.log('chenged choice RC', value);
                     if (value === 'rc') {
                         this.hiddenFilesContext = false;
                     } else {
                         this.hiddenFilesContext = true;
+                    }
+                })
+        );
+        this.subscriptions.push(
+            this.formContextChoice.controls.contextResolution.valueChanges
+                .subscribe(value => {
+                    if (value) {
+                        setTimeout(() => {
+                            this.form.controls['rec.RESOLUTION'].enable();
+                        }, 0);
+                        this.hiddenInputRadioResolution = false;
+                    } else {
+                        this.form.controls['rec.RESOLUTION'].patchValue(false);
+                        this.hiddenInputRadioResolution = true;
+                        setTimeout(() => {
+                            this.form.controls['rec.RESOLUTION'].disable({emitEvent: true});
+                        }, 0);
                     }
                 })
         );

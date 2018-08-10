@@ -30,7 +30,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     queryObj;
     subscriptions: Subscription[] = [];
     prepareData;
-    private _currentFormStatus;
+    _currentFormStatus;
     private _fieldsType = {};
     constructor(
         injector: Injector,
@@ -56,13 +56,10 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     }
     init() {
         this.prepareDataParam();
-        // console.log(Object.assign({}, this.queryObj));
         return this.getData(this.queryObj)
             .then(data => {
                 this.prepareData = this.convData(data);
-                // console.log(this.prepareData.rec);
                 this.inputs = this.getInputs();
-                // console.log(this.inputs);
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.subscribeChangeForm();
             })
@@ -115,7 +112,6 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                 .setData(this.createObjRequest())
                 .then(data => {
                     this.prepareData.rec = Object.assign({}, this.newData.rec);
-                    // console.log(data);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
                 .catch(data => console.log(data));
@@ -214,7 +210,6 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     getInputs() {
         const dataInput = {rec: {}};
         Object.keys(this.prepareData.rec).forEach(key => {
-            // console.log(!this.prepInputs.rec[key].formatDbBinary);
             if ((this._fieldsType[key] === 'boolean' || this._fieldsType[key] === 'toggle') && !this.prepInputs.rec[key].formatDbBinary) {
                 if (this.prepareData.rec[key] === 'YES') {
                     dataInput.rec[key] = true;
