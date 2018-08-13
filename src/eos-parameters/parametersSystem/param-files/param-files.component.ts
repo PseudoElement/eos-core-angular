@@ -1,7 +1,7 @@
 import { EosUtils } from 'eos-common/core/utils';
 import { E_FIELD_TYPE } from 'eos-parameters/parametersSystem/shared/interfaces/parameters.interfaces';
 import { FormGroup, FormControl } from '@angular/forms';
-import { PARM_CANCEL_CHANGE } from './../shared/consts/eos-parameters.const';
+import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from './../shared/consts/eos-parameters.const';
 import { FILES_PARAM } from '../shared/consts/files-consts';
 import { BaseParamComponent } from '../shared/base-param.component';
 import { Component, Injector } from '@angular/core';
@@ -14,11 +14,13 @@ export class ParamFielsComponent extends BaseParamComponent {
     hiddenFieldPath = false;
     formAttachChoice: FormGroup;
     _currentFormAttachStatus;
+    dataAttachDb;
     prepDataAttach = {rec: {}};
     inputAttach;
     hiddenFieldAttach = false;
     formAttach: FormGroup;
     prepInputsAttach;
+    isChangeFormAttach = false;
     newDataAttach;
     formAttachfields = [
         {
@@ -49,7 +51,7 @@ export class ParamFielsComponent extends BaseParamComponent {
         });
     }
     cancel() {
-        if (this.isChangeForm) {
+        if (this.isChangeForm || this.isChangeFormAttach) {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
             this.isChangeForm = false;
             this.formChanged.emit(false);
@@ -76,14 +78,13 @@ export class ParamFielsComponent extends BaseParamComponent {
         );
         this.paramApiSrv.getData(Object.assign({}, this.queryFileConstraint))
         .then(data => {
-            // console.log(data);
+            this.dataAttachDb = data;
             this.prepDataAttachField(data);
-            // console.log(this.prepDataAttach.rec);
             this.inputAttach = this.getInputAttach();
             this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
             this.subscriptions.push(
                 this.formAttach.valueChanges
-                .debounceTime(400)
+                .debounceTime(200)
                 .subscribe(newValue => {
                     let changed = false;
                     Object.keys(newValue).forEach(path => {
@@ -92,13 +93,11 @@ export class ParamFielsComponent extends BaseParamComponent {
                         }
                     });
                     this.formChanged.emit(changed);
-                    this.isChangeForm = changed;
-                    // console.log(this.prepDataAttach.rec);
-                    // console.log(this.newDataAttach.rec);
+                    this.isChangeFormAttach = changed;
                 })
             );
             this.subscriptions.push(
-                this.form.statusChanges.subscribe(status => {
+                this.formAttach.statusChanges.subscribe(status => {
                     if (this._currentFormAttachStatus !== status) {
                         this.formInvalid.emit(status === 'INVALID');
                     }
@@ -109,6 +108,41 @@ export class ParamFielsComponent extends BaseParamComponent {
         .catch(err => {
             console.log(err);
         });
+    }
+    submit() {
+        if (this.newData || this.newDataAttach) {
+            let dataRes = [];
+            this.formChanged.emit(false);
+            this.isChangeForm = false;
+            if (this.newData) {
+                dataRes = this.createObjRequest();
+            }
+            if (this.newDataAttach) {
+                this.dataAttachDb.forEach((item) => {
+                    dataRes.push({
+                        method: 'MERGE',
+                        requestUri: `DOCGROUP_CL('0.')/DG_FILE_CONSTRAINT_List('${item.CompositePrimaryKey}')`,
+                        data: {
+                            MAX_SIZE: this.newDataAttach.rec[`${item.CATEGORY}_MAX_SIZE`],
+                            ONE_FILE: this.newDataAttach.rec[`${item.CATEGORY}_ONE_FILE`],
+                            EXTENSIONS: this.newDataAttach.rec[`${item.CATEGORY}_EXTENSIONS`]
+                        }
+                    });
+                });
+            }
+            this.paramApiSrv
+                .setData(dataRes)
+                .then(data => {
+                    if (this.newData) {
+                        this.prepareData.rec = Object.assign({}, this.newData.rec);
+                    }
+                    if (this.newDataAttach) {
+                        this.newDataAttach.rec = Object.assign({}, this.newDataAttach.rec);
+                    }
+                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                })
+                .catch(data => console.log(data));
+        }
     }
     getInputAttach() {
         return this.dataSrv.getInputs(this.prepInputsAttach, this.prepDataAttach);
@@ -138,7 +172,6 @@ export class ParamFielsComponent extends BaseParamComponent {
     }
     changeByPathAttach(path: string, value: any) {
         const key = path.split('_').pop();
-        // console.log(key);
         let _value = null;
         if (key === 'FILE') {
             _value = +value;
