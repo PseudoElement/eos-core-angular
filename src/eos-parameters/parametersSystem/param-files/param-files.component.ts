@@ -54,6 +54,7 @@ export class ParamFielsComponent extends BaseParamComponent {
         if (this.isChangeForm || this.isChangeFormAttach) {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
             this.isChangeForm = false;
+            this.isChangeFormAttach = false;
             this.formChanged.emit(false);
             this.ngOnDestroy();
             this.init()
@@ -114,6 +115,7 @@ export class ParamFielsComponent extends BaseParamComponent {
             let dataRes = [];
             this.formChanged.emit(false);
             this.isChangeForm = false;
+            this.isChangeFormAttach = false;
             if (this.newData) {
                 dataRes = this.createObjRequest();
             }

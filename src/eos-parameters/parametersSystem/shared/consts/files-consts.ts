@@ -22,7 +22,7 @@ export const FILES_PARAM: IBaseParameters = {
             key: 'EDMSPARM',
             type: 'radio',
             title: '',
-            // readonly: true,
+            readonly: true,
             options: [
                 {value: 'DB', title: 'База данных несколькими отрезками'},
                 {value: 'DB2', title: 'База данных одним отрезком'},
