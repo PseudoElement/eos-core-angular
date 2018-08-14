@@ -107,6 +107,9 @@ export class ParamFielsComponent extends BaseParamComponent {
             );
         })
         .catch(err => {
+            if (err.code === 434) {
+                this._router.navigate(['/login']);
+            }
             console.log(err);
         });
     }

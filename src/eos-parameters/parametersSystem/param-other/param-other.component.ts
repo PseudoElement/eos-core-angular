@@ -22,9 +22,6 @@ export class ParamOtherComponent extends BaseParamComponent {
     });
     constructor( injector: Injector ) {
         super(injector, OTHER_PARAM);
-        this.init()
-        .then(() => {
-            // this.afterInitRC();
-        });
+        this.init();
     }
 }
