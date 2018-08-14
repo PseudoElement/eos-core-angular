@@ -72,9 +72,6 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
             }
         })
         .catch(err => {
-            if (err.code === 434) {
-                this._router.navigate(['/login']);
-            }
             console.log(err);
         });
     }

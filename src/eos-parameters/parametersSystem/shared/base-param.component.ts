@@ -9,7 +9,6 @@ import { EosUtils } from 'eos-common/core/utils';
 import { ParamDescriptorSrv } from './service/param-descriptor.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from './consts/eos-parameters.const';
-import { Router } from '@angular/router';
 
 export class BaseParamComponent implements OnDestroy, OnInit {
     @Input() btnDisabled;
@@ -21,7 +20,6 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     dataSrv: EosDataConvertService;
     inputCtrlSrv: InputControlService;
     msgSrv: EosMessageService;
-    _router: Router;
     titleHeader;
     disabledField = false;
     isChangeForm = false;
@@ -45,7 +43,6 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         this.inputCtrlSrv = injector.get(InputControlService);
         this.descriptorSrv = injector.get(ParamDescriptorSrv);
         this.msgSrv = injector.get(EosMessageService);
-        this._router = injector.get(Router);
     }
     ngOnDestroy() {
         this.unsubscribe();
@@ -66,12 +63,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.subscribeChangeForm();
             })
-            .catch(err => {
-                if (err.code === 434) {
-                    this._router.navigate(['/login']);
-                }
-                console.log(err);
-            });
+            .catch(err => console.log(err));
     }
     subscribeChangeForm() {
         this.subscriptions.push(
