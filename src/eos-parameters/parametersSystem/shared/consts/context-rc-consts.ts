@@ -66,87 +66,87 @@ export const CONTEXT_RC_PARAM: IBaseParameters = {
         {
             key: 'REF_CORRESP1',
             type: 'boolean',
-            title: 'REF_CORRESP1'
+            title: 'Корреспонденты'
         },
         {
             key: 'REF_CORRESP2',
             type: 'boolean',
-            title: 'REF_CORRESP2'
+            title: 'Сопроводительные документы'
         },
         {
             key: 'REF_VISA',
             type: 'boolean',
-            title: 'REF_VISA'
+            title: 'Визы'
         },
         {
             key: 'DOC_SIGN',
             type: 'boolean',
-            title: 'DOC_SIGN'
+            title: 'Подпиал'
         },
         {
             key: 'DOC_WHO',
             type: 'boolean',
-            title: 'DOC_WHO'
+            title: 'Кому(адресован)'
         },
         {
             key: 'REF_SOISP',
             type: 'boolean',
-            title: 'REF_SOISP'
+            title: 'Соисполнители'
         },
         {
             key: 'DOC_EXE',
             type: 'boolean',
-            title: 'DOC_EXE'
+            title: 'Исполниели'
         },
         {
             key: 'PRJ_RC', // PRJ_RC
             type: 'boolean',
-            title: 'PRJ_RC'
+            title: 'Основные реквизиты РКПД'
         },
         {
             key: 'PRJ_REF_FILE',
             type: 'boolean',
-            title: 'PRJ_REF_FILE'
+            title: 'Файлы РКПД'
         },
         {
             key: 'PRJ_REF_SEND',
             type: 'boolean',
-            title: 'PRJ_REF_SEND'
+            title: 'Адресаты'
         },
         {
             key: 'PRJ_REF_RUBRIC',
             type: 'boolean',
-            title: 'PRJ_REF_RUBRIC'
+            title: 'Рубрики'
         },
         {
             key: 'PRJ_REF_LINK',
             type: 'boolean',
-            title: 'PRJ_REF_LINK'
+            title: 'Связи'
         },
         {
             key: 'PRJ_FORUM',
             type: 'boolean',
-            title: 'PRJ_FORUM'
+            title: 'Обсуждение'
         },
         {
             key: 'PRJ_EXEC',
             type: 'boolean',
-            title: 'PRJ_EXEC'
+            title: 'Исполнители'
         },
         {
             key: 'PRJ_VISA',
             type: 'boolean',
-            title: 'PRJ_VISA'
+            title: 'Визы'
         },
         {
             key: 'PRJ_SIGN',
             type: 'boolean',
-            title: 'PRJ_SIGN'
+            title: 'Подписи'
         },
         {
             key: 'AR_PRJ_VALUE',
             type: 'boolean',
-            title: 'AR_PRJ_VALUE'
+            title: 'Дополнительные реквизиты РКПД'
         },
     ]
 };
