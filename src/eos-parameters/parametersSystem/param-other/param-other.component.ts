@@ -23,8 +23,10 @@ export class ParamOtherComponent extends BaseParamComponent {
     constructor( injector: Injector ) {
         super(injector, OTHER_PARAM);
         this.init()
-        .then(() => {
-            // this.afterInitRC();
+        .catch(err => {
+            if (err.code !== 434) {
+                console.log(err);
+            }
         });
     }
 }

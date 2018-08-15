@@ -63,7 +63,9 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.subscribeChangeForm();
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                throw err;
+            });
     }
     subscribeChangeForm() {
         this.subscriptions.push(

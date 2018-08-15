@@ -20,6 +20,11 @@ export class ParamRcComponent extends BaseParamComponent {
         this.init()
         .then(() => {
             this.afterInitRC();
+        })
+        .catch(err => {
+            if (err.code !== 434) {
+                console.log(err);
+            }
         });
     }
     cancel() {
@@ -31,6 +36,10 @@ export class ParamRcComponent extends BaseParamComponent {
             this.init()
             .then(() => {
                 this.afterInitRC();
+            }).catch(err => {
+                if (err.code !== 434) {
+                    console.log(err);
+                }
             });
         }
     }

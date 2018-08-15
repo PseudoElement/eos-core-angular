@@ -9,6 +9,11 @@ import { BaseParamComponent } from '../shared/base-param.component';
 export class ParamWebComponent extends BaseParamComponent {
     constructor( injector: Injector ) {
         super( injector, WEB_PARAM);
-        this.init();
+        this.init()
+        .catch(err => {
+            if (err.code !== 434) {
+                console.log(err);
+            }
+        });
     }
 }

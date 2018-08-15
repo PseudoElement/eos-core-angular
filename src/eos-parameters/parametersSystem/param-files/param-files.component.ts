@@ -48,6 +48,10 @@ export class ParamFielsComponent extends BaseParamComponent {
             });
              this.prepInputsAttach = this.prepareInputField(FILES_PARAM.fieldsChild);
             this.afterInit();
+        }).catch(err => {
+            if (err.code !== 434) {
+                console.log(err);
+            }
         });
     }
     cancel() {
@@ -60,6 +64,11 @@ export class ParamFielsComponent extends BaseParamComponent {
             this.init()
             .then(() => {
                 this.afterInit();
+            })
+            .catch(err => {
+                if (err.code !== 434) {
+                    console.log(err);
+                }
             });
         }
     }
@@ -107,7 +116,7 @@ export class ParamFielsComponent extends BaseParamComponent {
             );
         })
         .catch(err => {
-            console.log(err);
+            throw err;
         });
     }
     submit() {

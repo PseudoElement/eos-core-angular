@@ -72,7 +72,9 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
             }
         })
         .catch(err => {
-            console.log(err);
+            if (err.code !== 434) {
+                console.log(err);
+            }
         });
     }
     prepDataContext(data) {

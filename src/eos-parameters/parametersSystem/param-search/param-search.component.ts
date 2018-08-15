@@ -24,6 +24,11 @@ export class ParamSearchComponent extends BaseParamComponent {
             this.init()
             .then(() => {
                 this.afterInitRC();
+            })
+            .catch(err => {
+                if (err.code !== 434) {
+                    console.log(err);
+                }
             });
         }
     }

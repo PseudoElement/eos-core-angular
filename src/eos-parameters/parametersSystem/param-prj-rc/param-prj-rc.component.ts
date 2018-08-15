@@ -10,6 +10,11 @@ export class ParamPrjRcComponent extends BaseParamComponent {
 
     constructor( injector: Injector ) {
         super( injector, PRJ_RC_PARAM);
-        this.init();
+        this.init()
+        .catch(err => {
+            if (err.code !== 434) {
+                console.log(err);
+            }
+        });
     }
 }
