@@ -34,6 +34,7 @@ import { TestPageComponent } from './test-page/test-page.component';
 
 import { TitleComponent } from './title/title.component';
 import { UserComponent } from './user/user.component';
+import { NavParamComponent } from './nav-param/nav-param.component';
 
 import { EosBreadcrumbsService } from './services/eos-breadcrumbs.service';
 import { EosDeskService } from './services/eos-desk.service';
@@ -63,6 +64,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
         TestPageComponent,
         TitleComponent,
         UserComponent,
+        NavParamComponent
     ],
     imports: [
         AppRoutingModule,
