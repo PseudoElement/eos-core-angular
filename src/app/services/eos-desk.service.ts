@@ -85,12 +85,20 @@ export class EosDeskService {
      * @param desk desktop with which add dictionary
      */
     public appendDeskItemToView(desk: IDesk) {
+        let item: IDeskItem;
         const dictionaryURL = this._router.url.split('/')[2];
-        const item: IDeskItem = {
-            title: this._dictSrv.dictionaryTitle,
-            /* fullTitle: this._dictSrv.dictionaryTitle, */
-            url: '/spravochniki/' + dictionaryURL
-        };
+        if (this._router.url.split('/')[1] === 'parameters') {
+            item = {
+                title: 'Настройки системы',
+                url: '/parameters/rc'
+            };
+        } else {
+            item = {
+                title: this._dictSrv.dictionaryTitle,
+                /* fullTitle: this._dictSrv.dictionaryTitle, */
+                url: '/spravochniki/' + dictionaryURL
+            };
+        }
         const view: SRCH_VIEW = this.findView(desk.id);
         if (view !== undefined) {
             if (view.SRCH_VIEW_DESC_List.find(el => el.BLOCK_ID === item.url.split('/')[2])) {
@@ -271,6 +279,12 @@ export class EosDeskService {
     }
 
     private mapToDefaultDescItem(blockId: string): IDeskItem {
+        if (blockId === 'rc') {
+            return {
+                url: '/parameters/rc',
+                title: ''
+            };
+        }
         const defaults = this._desksList[0].references;
         const s = '/spravochniki/' + blockId;
         const result = defaults.find(it => it.url === s);
