@@ -15,6 +15,7 @@ import { SRCH_VIEW } from 'eos-rest/interfaces/structures';
 import { ViewManager } from 'eos-rest/services/viewManager';
 import { _ES } from 'eos-rest/core/consts';
 import { WARN_DESK_MAX_COUNT } from '../consts/messages.consts';
+import { EOS_PARAMETERS_TAB } from 'eos-parameters/parametersSystem/shared/consts/eos-parameters.const';
 
 const DEFAULT_DESKTOP_NAME = 'Мой рабочий стол';
 const DEFAULT_DESKS: EosDesk[] = [{
@@ -88,9 +89,10 @@ export class EosDeskService {
         let item: IDeskItem;
         const dictionaryURL = this._router.url.split('/')[2];
         if (this._router.url.split('/')[1] === 'parameters') {
+            const lable = EOS_PARAMETERS_TAB.find((i) => i.url === dictionaryURL);
             item = {
-                title: 'Настройки системы',
-                url: '/parameters/rc'
+                title: `Настройки системы (${lable.title})`,
+                url: '/parameters/' + lable.url
             };
         } else {
             item = {
@@ -279,9 +281,10 @@ export class EosDeskService {
     }
 
     private mapToDefaultDescItem(blockId: string): IDeskItem {
-        if (blockId === 'rc') {
+        const lable = EOS_PARAMETERS_TAB.find(i => i.url === blockId);
+        if (lable) {
             return {
-                url: '/parameters/rc',
+                url: '/parameters/' + lable.url,
                 title: ''
             };
         }
