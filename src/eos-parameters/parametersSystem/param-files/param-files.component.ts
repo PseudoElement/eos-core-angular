@@ -4,14 +4,15 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from './../shared/consts/eos-parameters.const';
 import { FILES_PARAM } from '../shared/consts/files-consts';
 import { BaseParamComponent } from '../shared/base-param.component';
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, ViewChild } from '@angular/core';
+import { ModalDirective } from 'ngx-bootstrap';
 
 @Component({
     selector: 'eos-param-files',
     templateUrl: 'param-files.component.html'
 })
 export class ParamFielsComponent extends BaseParamComponent {
-    hiddenFieldPath = false;
+    @ViewChild('infoAttachFilesModal') infoAttachFilesModal: ModalDirective;
     formAttachChoice: FormGroup;
     _currentFormAttachStatus;
     dataAttachDb;
@@ -73,9 +74,6 @@ export class ParamFielsComponent extends BaseParamComponent {
         }
     }
     afterInit() {
-        if (this.form.controls['rec.EDMSPARM'].value !== 'STORAGE') {
-            this.hiddenFieldPath = true;
-        }
         this.subscriptions.push(
             this.formAttachChoice.controls.attachFile.valueChanges
                 .subscribe(value => {
@@ -200,5 +198,12 @@ export class ParamFielsComponent extends BaseParamComponent {
             // console.log('changed', path, oldValue, 'to', _value, this.prepDataAttach.rec);
         }
         return _value !== oldValue;
+    }
+    showInfoAttachFiles() {
+        console.log('showAttach');
+        this.infoAttachFilesModal.show();
+    }
+    hideInfoAttachFiles() {
+        this.infoAttachFilesModal.hide();
     }
 }

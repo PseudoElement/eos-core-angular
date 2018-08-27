@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { ModalModule } from 'ngx-bootstrap';
+
 // import { HttpModule } from '@angular/http';
 
 import { AppRoutingModule } from 'app/app-routing.module';
@@ -47,7 +49,8 @@ import { ParamDescriptorSrv } from './parametersSystem/shared/service/param-desc
         AppRoutingModule,
         FormsModule,
         ReactiveFormsModule,
-        EosCommonModule
+        EosCommonModule,
+        ModalModule,
     ],
     providers: [
         ParamApiSrv,
