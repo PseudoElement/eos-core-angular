@@ -33,6 +33,7 @@ export const OTHER_PARAM: IBaseParameters = {
                 {value: '2', title: 'СЭВ'},
                 {value: '3', title: 'МЭДО'},
                 {value: '4', title: 'VipNet'},
+                {value: '1', title: 'E-MAIL'},
             ]
         },
         {
@@ -46,6 +47,7 @@ export const OTHER_PARAM: IBaseParameters = {
                 {value: '2', title: 'СЭВ'},
                 {value: '3', title: 'МЭДО'},
                 {value: '4', title: 'VipNet'},
+                {value: '1', title: 'E-MAIL'},
             ]
         },
     ]

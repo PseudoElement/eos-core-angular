@@ -18,25 +18,25 @@ export const SEARCH_PARAM: IBaseParameters = {
             key: 'INDEX_URL',
             type: 'string',
             readonly: true,
-            title: 'Полный путь к прокси-сервису внешней службы поиска:',
+            title: 'Полный путь к прокси-сервису внешней службы поиска',
         },
         {
             key: 'INDEXTIMEOUT',
             type: 'numberIncrement',
             readonly: true,
-            title: 'Максимальное время ожидания выполнения запроса(сек):',
+            title: 'Максимальное время ожидания выполнения запроса(сек)',
         },
         {
             key: 'ELNPATH',
             type: 'string',
             readonly: true,
-            title: 'Папка для eln-ярлыков:',
+            title: 'Папка для eln-ярлыков',
         },
         {
             key: 'FULLTEXT_EXTENSIONS',
             type: 'string',
             // readonly: true,
-            title: 'Форматы файлов, индексируемых внешней службой:',
+            title: 'Форматы файлов, индексируемых внешней службой',
         },
     ]
 };

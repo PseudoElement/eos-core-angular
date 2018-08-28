@@ -12,7 +12,7 @@ export const FILES_PARAM: IBaseParameters = {
         {
             key: 'EDMSNAME',
             type: 'select',
-            title: 'Система хранения:',
+            title: 'Система хранения',
             readonly: true,
             options: [
                 {value: 'DELO', title: 'Дело'}
@@ -33,13 +33,13 @@ export const FILES_PARAM: IBaseParameters = {
             key: 'GATEPATH',
             type: 'string',
             readonly: true,
-            title: 'Каталог шлюза:'
+            title: 'Каталог шлюза'
         },
         {
             key: 'STORAGEPATH',
             type: 'string',
             readonly: true,
-            title: 'Папка хранения файлов:'
+            title: 'Папка хранения файлов'
         },
         {
             key: 'EDS_DELETE_DENIED', // в базе значение 1/0

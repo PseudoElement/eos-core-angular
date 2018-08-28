@@ -200,7 +200,6 @@ export class ParamFielsComponent extends BaseParamComponent {
         return _value !== oldValue;
     }
     showInfoAttachFiles() {
-        console.log('showAttach');
         this.infoAttachFilesModal.show();
     }
     hideInfoAttachFiles() {

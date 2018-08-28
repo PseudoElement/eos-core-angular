@@ -13,22 +13,22 @@ class="input-param-wrapper input-param-other-wrapper">
         <eos-dynamic-input
             [input]="inputServer"
             [form]="formServer"
-            [readonly]="false"
+            [readonly]="true"
         ></eos-dynamic-input>
         <eos-dynamic-input
             [input]="inputs['rec.SEV_SERVER']"
             [form]="form"
-            [readonly]="false"
+            [readonly]="inputs['rec.SEV_SERVER'].readonly"
         ></eos-dynamic-input>
         <eos-dynamic-input
             [input]="inputs['rec.SEV_ROOT_DIR']"
             [form]="form"
-            [readonly]="false"
+            [readonly]="inputs['rec.SEV_ROOT_DIR'].readonly"
         ></eos-dynamic-input>
         <eos-dynamic-input
             [input]="inputs['rec.NOTIFY_MANAGMENT']"
             [form]="form"
-            [readonly]="false"
+            [readonly]="inputs['rec.NOTIFY_MANAGMENT'].readonly"
         ></eos-dynamic-input>
     </div>
     <hr>
