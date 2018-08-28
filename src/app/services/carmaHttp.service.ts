@@ -188,6 +188,7 @@ export class CarmaHttpService extends CarmaConnectionInterface {
         super();
     }
     init(initStr, stores) {
+        initStr = initStr || 'SERVER="http://localhost:8080"';
         this.stores = stores;
         this.initStr = initStr;
         this.ctorStores = stores;

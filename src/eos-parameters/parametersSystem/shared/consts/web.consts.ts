@@ -24,12 +24,11 @@ export const WEB_PARAM: IBaseParameters = {
             key: 'APPSRV_PKI_INITSTR',
             type: 'string',
             title: 'Строка инициализации',
+        },
+        {
+            key: 'CERT_APPSRV_STORES',
+            type: 'string',
+            title: 'Хранилища сертификатов',
         }
-        // {
-        //     key: 'STORAGE',
-        //     type: 'buttons',
-        //     title: 'Хранилища сертификатов',
-        //     options: [{ value: 1, title: 'Хранилища сертификатов'}]
-        // }
     ]
 };

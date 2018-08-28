@@ -33,6 +33,9 @@
             [form]="form"
             [readonly]="false"
         ></eos-dynamic-input>
-        <button class="btn btn-primary btn-block storageBtn" (click)="btnTest()">Хранилища сертификатов</button>
     </div>
 </div>
+
+<button class="btn btn-primary btn-block storageBtn" (click)="btnTest()">Хранилища сертификатов</button>
+
+<pre>{{carmaStores | json}}</pre>
