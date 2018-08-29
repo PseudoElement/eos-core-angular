@@ -1,4 +1,4 @@
-<div class="input-param-wrapper input-param-web-wrapper" *ngIf="inputs">
+<div class="input-param-wrapper input-param-web-wrapper" *ngIf="form">
     <eos-param-header
         [title]="titleHeader"
         (submitForm)="submit()"
@@ -19,7 +19,7 @@
             [readonly]="false"
         ></eos-dynamic-input>
     </div>
-    <hr>
+    <!-- <hr> -->
     <div class="param-input-group">
         <span class="l-font">Объекты поддержки работы с инфраструктурой открытых ключей</span>
         <hr>
@@ -34,8 +34,11 @@
             [readonly]="false"
         ></eos-dynamic-input>
     </div>
+    <!-- <hr> -->
+    <div class="param-input-group">
+        <eos-cert-stores
+        [formControlStores]="form.controls['rec.CERT_APPSRV_STORES']"
+        >
+        </eos-cert-stores>
+    </div>
 </div>
-
-<button class="btn btn-primary btn-block storageBtn" (click)="btnTest()">Хранилища сертификатов</button>
-
-<pre>{{carmaStores | json}}</pre>

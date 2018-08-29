@@ -1,6 +1,8 @@
 .param-system {
     width: 800px;
+    max-height: calc(100vh - 176px);
     margin-left: calc(50vw - 420px);
+    overflow: auto;
 
     .input-param-wrapper {
         border: 1px solid $border-color-main-theme;
