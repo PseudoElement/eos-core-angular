@@ -8,24 +8,24 @@ import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
 
 export class CertStoresComponent implements OnInit {
     @Input('formControlStores') formControlStores;
-    carmaStores: Istore[] = [];
+    initCarmaStores: Istore[];
+    listCertStores: string[];
 
     constructor(
         private carmaService: CarmaHttpService
     ) {}
     ngOnInit() {
         // console.log('OnInit', this.formControlStores);
-        const listStore = this.formControlStores.value.split('\t');
-        this.createCarmaStores(listStore);
-        this.carmaService.init(null, this.carmaStores);
-        console.log(this.carmaStores);
-        return listStore;
+        this.listCertStores = this.formControlStores.value.split('\t');
+        this.createInitCarmaStores(this.listCertStores);
+        this.carmaService.init(null, this.initCarmaStores);
+        console.log(this.initCarmaStores);
     }
-    createCarmaStores(listStore: string[]) {
-        this.carmaStores = [];
+    createInitCarmaStores(listStore: string[]) {
+        this.initCarmaStores = [];
         listStore.forEach((str: string) => {
             const arr = str.split(':');
-            this.carmaStores.push({
+            this.initCarmaStores.push({
                 Location: arr[0],
                 Address: '',
                 Name: arr[1]
