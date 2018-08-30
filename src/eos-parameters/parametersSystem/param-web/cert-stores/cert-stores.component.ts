@@ -8,6 +8,10 @@ import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
 
 export class CertStoresComponent implements OnInit {
     @Input('formControlStores') formControlStores;
+    node = {
+        marked: false
+    }; // Temp
+    allMarked: boolean = false;
     initCarmaStores: Istore[];
     listCertStores: string[];
 
@@ -19,7 +23,7 @@ export class CertStoresComponent implements OnInit {
         this.listCertStores = this.formControlStores.value.split('\t');
         this.createInitCarmaStores(this.listCertStores);
         this.carmaService.init(null, this.initCarmaStores);
-        console.log(this.initCarmaStores);
+        // console.log(this.initCarmaStores);
     }
     createInitCarmaStores(listStore: string[]) {
         this.initCarmaStores = [];
@@ -32,5 +36,13 @@ export class CertStoresComponent implements OnInit {
             });
         });
     }
-
+    toggleAllMarks() {
+        console.log('toggleAllMarks');
+    }
+    orderByField() {
+        console.log('orderByField');
+    }
+    markNode(e) {
+        console.log(e);
+    }
 }

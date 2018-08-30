@@ -1,1 +1,58 @@
+.cert-wrapper {
+    .cert-header {
 
+    }
+    .cert-action {
+        background: $light-grey-1;
+        border: 1px solid $border-color-main-theme;
+        margin-top: 2px;
+
+        .btn {
+            width: 48px;
+            height: 48px;
+            background: transparent;
+        }
+    }
+    .cert-param {
+        background: $light-grey-1;
+        border: 1px solid $border-color-main-theme;
+        border-top-color: transparent;
+
+        .checkbox-inline {
+            width: 48px;
+            height: 48px;
+            padding-top: 13px;
+        }
+
+        .item {
+            display: inline-block;
+
+            .text {
+                cursor: pointer;
+                color: $button-color-main-theme;
+                position: relative;
+                top: 3px;
+            }
+            .eos-icon {
+                vertical-align: middle;
+            }
+        }
+    }
+
+    .cert-content {
+        border: 1px solid $border-color-main-theme;
+        border-top-color: transparent;
+        margin-bottom: 20px;
+
+        ul {
+            margin: 0;
+            padding: 0;
+
+            li {
+            list-style: none;
+            line-height: 32px;
+            color: #000;
+            }
+        }
+    }
+}

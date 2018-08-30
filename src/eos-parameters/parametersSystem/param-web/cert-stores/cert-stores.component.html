@@ -1,3 +1,92 @@
-<span class="l-font">Хранилища сертификатов</span>
 <!-- <pre>{{initCarmaStores | json}}</pre> -->
-<span class="eos-icon eos-icon-plus-blue small" ng-reflect-ng-class="eos-icon eos-icon-plus-blue sm"></span>
+<div class="cert-wrapper">
+    <div class="cert-header">
+            <span class="l-font">Хранилища сертификатов</span>
+    </div>
+    <div class="cert-action">
+        <button
+            class="btn"
+            tooltip="Добавить"
+            placement="bottom"
+            containerClass="tooltip-info"
+        >
+                <span class="eos-icon eos-icon-plus-blue small"></span>
+        </button>
+        <button
+            class="btn"
+            tooltip="Удалить"
+            placement="bottom"
+            containerClass="tooltip-info"
+        >
+                <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+        </button>
+        <button
+            class="btn"
+            tooltip="Просмотреть"
+            placement="bottom"
+            containerClass="tooltip-info"
+        >
+                <span class="eos-icon eos-icon-show-blue small"></span>
+        </button>
+    </div>
+    <div class="cert-param">
+        <div
+            class="checkbox-inline"
+        >
+            <label [tooltip]="'выбрать все'"
+                placement="bottom"
+                container="body"
+                containerClass="tooltip-info"
+            >
+                <input type="checkbox" [(ngModel)]="allMarked" (change)="toggleAllMarks()">
+                <span></span>
+            </label>
+        </div>
+        <div
+            class="item l-font"
+        >
+            <span class="text"
+                (click)="orderByField()"
+                tooltip="Упорядочить"
+                placement="bottom"
+                container="body"
+                containerClass="tooltip-info"
+            >
+                Хранилища
+            </span>
+            <span class="order-icon">
+                <span
+                class="icon eos-icon small"
+                [ngClass]="{'eos-icon-arrow-blue-top': true, 'eos-icon-arrow-blue-bottom': !true}"
+                >
+                </span>
+            </span>
+        </div>
+    </div>
+    <div class="cert-content">
+        <ul>
+            <li>
+                <div class="list">
+                    <label
+                        class="checkbox-inline"
+                        [tooltip]="node.marked ? markTemp : notMarkTemp"
+                        containerClass="tooltip-info"
+                        container="body"
+                        placement="bottom"
+                    >
+                        <input
+                            type="checkbox"
+                            [(ngModel)]="node.marked"
+                            (ngModelChange)="markNode($event)"
+                        >
+                        <span></span>
+                    </label>
+                    List
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<ng-template #markTemp>Снять<br>пометку</ng-template>
+<ng-template #notMarkTemp>Пометить<br>элемент</ng-template>
