@@ -15,7 +15,6 @@ export class CertStoresService {
     private initCarmaStores: Istore[];
     private listsCetsStores: IListCertStotes[];
     private orderByAscend: boolean = true;
-    private isCarmaServer: boolean = false;
     constructor(
         private carmaService: CarmaHttpService
     ) {
@@ -36,11 +35,6 @@ export class CertStoresService {
         this.listsCetsStores = this.createListCetsStores();
         this.carmaService.init(null, this.initCarmaStores);
         this._orderByField();
-        this.carmaService.init(null, this.initCarmaStores)
-            .subscribe((data: boolean) => {
-                this.isCarmaServer = data;
-                this._isCarmaServer$.next(data);
-            });
     }
     selectedNode(list: IListCertStotes) {
         this.listsCetsStores.forEach(node => {
@@ -78,7 +72,15 @@ export class CertStoresService {
             list.marked = e;
         }
     }
-
+    addStores() {
+        this._isCarmaServer$.next(false);
+        this.carmaService.init(null, this.initCarmaStores)
+            .subscribe((data: boolean) => {
+                console.log(data);
+                // this.isCarmaServer = data;
+                this._isCarmaServer$.next(data);
+            });
+    }
     private createInitCarmaStores(listStore: string[]) {
         const list = [];
         listStore.forEach((str: string) => {

@@ -6,9 +6,10 @@
     <div class="cert-action">
         <button
             class="btn"
-            tooltip="Добавить"
+            tooltip="Добавить хранилище"
             placement="bottom"
             containerClass="tooltip-info"
+            (click)="addStores()"
             [disabled]="!isCarma"
         >
                 <span class="eos-icon eos-icon-plus-blue small"></span>

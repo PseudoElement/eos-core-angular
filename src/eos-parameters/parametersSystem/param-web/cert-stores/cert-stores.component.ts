@@ -15,7 +15,7 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
     CurrentSelect: IListCertStotes;
     listCertStores: IListCertStotes[];
     orderBy: boolean = true;
-    isCarma: boolean = false;
+    isCarma: boolean = true;
 
     constructor(
         public certStoresService: CertStoresService
@@ -58,5 +58,8 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
     }
     showCert(list: IListCertStotes) {
         console.log('ShowCert');
+    }
+    addStores() {
+        this.certStoresService.addStores();
     }
 }
