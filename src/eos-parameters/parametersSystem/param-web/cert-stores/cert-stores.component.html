@@ -25,6 +25,7 @@
             tooltip="Просмотреть"
             placement="bottom"
             containerClass="tooltip-info"
+            [disabled]="!CurrentSelect"
         >
                 <span class="eos-icon eos-icon-show-blue small"></span>
         </button>
@@ -65,23 +66,31 @@
     </div>
     <div class="cert-content">
         <ul>
-            <li>
-                <div class="list">
+            <li
+                *ngFor="let list of listCertStores"
+            >
+                <div
+                    class="list"
+                    [ngClass]="{'highlighted': list.isSelected}"
+                    (click)="selectedNode(list)"
+                    (dblclick)="showCert(list)"
+                >
                     <label
                         class="checkbox-inline"
-                        [tooltip]="node.marked ? markTemp : notMarkTemp"
+                        [tooltip]="list.marked ? markTemp : notMarkTemp"
                         containerClass="tooltip-info"
                         container="body"
+                        (click)="checkboxClick($event)"
                         placement="bottom"
                     >
                         <input
                             type="checkbox"
-                            [(ngModel)]="node.marked"
-                            (ngModelChange)="markNode($event)"
+                            [(ngModel)]="list.marked || list.selectedMark"
+                            (ngModelChange)="markNode($event, list)"
                         >
                         <span></span>
                     </label>
-                    List
+                    {{list.Location}}:{{list.Name}}
                 </div>
             </li>
         </ul>

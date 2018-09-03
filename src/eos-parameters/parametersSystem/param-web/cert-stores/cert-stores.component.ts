@@ -1,48 +1,58 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
+import { Component, OnInit, Input, OnChanges, OnDestroy } from '@angular/core';
+import { CertStoresService, IListCertStotes } from './cert-stores.service';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'eos-cert-stores',
-    templateUrl: 'cert-stores.component.html'
+    templateUrl: 'cert-stores.component.html',
+    providers: [CertStoresService]
 })
 
-export class CertStoresComponent implements OnInit {
+export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
     @Input('formControlStores') formControlStores;
-    node = {
-        marked: false
-    }; // Temp
+    cSub: Subscription;
+    CurrentSelect: IListCertStotes;
     allMarked: boolean = false;
-    initCarmaStores: Istore[];
-    listCertStores: string[];
+
+    listCertStores: IListCertStotes[];
 
     constructor(
-        private carmaService: CarmaHttpService
+        public certStoresService: CertStoresService
     ) {}
     ngOnInit() {
-        // console.log('OnInit', this.formControlStores);
-        this.listCertStores = this.formControlStores.value.split('\t');
-        this.createInitCarmaStores(this.listCertStores);
-        this.carmaService.init(null, this.initCarmaStores);
-        // console.log(this.initCarmaStores);
-    }
-    createInitCarmaStores(listStore: string[]) {
-        this.initCarmaStores = [];
-        listStore.forEach((str: string) => {
-            const arr = str.split(':');
-            this.initCarmaStores.push({
-                Location: arr[0],
-                Address: '',
-                Name: arr[1]
-            });
+        this.certStoresService.initCarma(this.formControlStores.value.split('\t'));
+        this.listCertStores = this.certStoresService.getListCetsStores;
+        this.cSub = this.certStoresService.getCurrentSelectedNode$.subscribe((list: IListCertStotes) => {
+            this.CurrentSelect = list;
+            // console.log(list);
         });
     }
+    ngOnChanges() {
+        console.log('OnChanges');
+    }
+    ngOnDestroy() {
+        this.cSub.unsubscribe();
+    }
+
     toggleAllMarks() {
         console.log('toggleAllMarks');
     }
     orderByField() {
         console.log('orderByField');
+        console.log(this.certStoresService.getListCetsStores);
     }
-    markNode(e) {
-        console.log(e);
+    markNode(e, list: IListCertStotes) {
+        this.certStoresService.markNode(e, list);
+        // console.log('markNode');
+    }
+    selectedNode(list: IListCertStotes) {
+        this.certStoresService.selectedNode(list);
+        console.log('selectNode');
+    }
+    checkboxClick(e: Event) {
+        e.stopPropagation();
+    }
+    showCert(list: IListCertStotes) {
+        console.log('ShowCert');
     }
 }

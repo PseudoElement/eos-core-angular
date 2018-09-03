@@ -49,9 +49,15 @@
             padding: 0;
 
             li {
-            list-style: none;
-            line-height: 32px;
-            color: #000;
+                list-style: none;
+                line-height: 32px;
+                color: #000;
+
+                .list {
+                    input{
+                        display: none;
+                    }
+                }
             }
         }
     }
