@@ -11,9 +11,11 @@ import { Subscription } from 'rxjs/Subscription';
 export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
     @Input('formControlStores') formControlStores;
     cSub: Subscription;
+    sSub: Subscription;
     CurrentSelect: IListCertStotes;
     listCertStores: IListCertStotes[];
     orderBy: boolean = true;
+    isCarma: boolean = false;
 
     constructor(
         public certStoresService: CertStoresService
@@ -23,7 +25,9 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
         this.listCertStores = this.certStoresService.getListCetsStores;
         this.cSub = this.certStoresService.getCurrentSelectedNode$.subscribe((list: IListCertStotes) => {
             this.CurrentSelect = list;
-            // console.log(list);
+        });
+        this.sSub = this.certStoresService.getIsCarmaServer$.subscribe((data: boolean) => {
+            this.isCarma = data;
         });
     }
     ngOnChanges() {
@@ -31,6 +35,7 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
     }
     ngOnDestroy() {
         this.cSub.unsubscribe();
+        this.sSub.unsubscribe();
     }
 
     toggleAllMarks(e) {

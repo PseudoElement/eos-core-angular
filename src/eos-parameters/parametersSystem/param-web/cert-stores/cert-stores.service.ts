@@ -11,13 +11,16 @@ export interface IListCertStotes extends Istore {
 @Injectable()
 export class CertStoresService {
     private _currentSelectedNode$: Subject<IListCertStotes>;
+    private _isCarmaServer$: Subject<boolean>;
     private initCarmaStores: Istore[];
     private listsCetsStores: IListCertStotes[];
     private orderByAscend: boolean = true;
+    private isCarmaServer: boolean = false;
     constructor(
         private carmaService: CarmaHttpService
     ) {
         this._currentSelectedNode$ = new Subject();
+        this._isCarmaServer$ = new Subject();
     }
     get getListCetsStores() {
         return this.listsCetsStores;
@@ -25,11 +28,19 @@ export class CertStoresService {
     get getCurrentSelectedNode$() {
         return this._currentSelectedNode$.asObservable();
     }
+    get getIsCarmaServer$() {
+        return this._isCarmaServer$.asObservable();
+    }
     initCarma(listCertStores: string[]) {
         this.initCarmaStores = this.createInitCarmaStores(listCertStores);
         this.listsCetsStores = this.createListCetsStores();
         this.carmaService.init(null, this.initCarmaStores);
         this._orderByField();
+        this.carmaService.init(null, this.initCarmaStores)
+            .subscribe((data: boolean) => {
+                this.isCarmaServer = data;
+                this._isCarmaServer$.next(data);
+            });
     }
     selectedNode(list: IListCertStotes) {
         this.listsCetsStores.forEach(node => {

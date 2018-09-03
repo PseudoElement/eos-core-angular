@@ -223,8 +223,15 @@ export class CarmaHttpService extends CarmaConnectionInterface {
         }
         this.storesConfig = this.__make_stores(this.stores);
         this.__make_stores(stores);
-        this.TestConnection();
-        this.getServiceInfo();
+        return this.TestConnection()
+        .map((data) => {
+            if (data.errorCode === 0 && data.errorMessage === 'DONE') {
+                this.getServiceInfo();
+                return true;
+            } else {
+                return false;
+            }
+        });
     }
 
 
@@ -273,14 +280,9 @@ export class CarmaHttpService extends CarmaConnectionInterface {
     }
 
     TestConnection() {
-        this.request({
+        return this.request({
             mode: this.mode_testconn
-        }).subscribe(
-            (data) => {}, // console.log(data),
-            (error) => {
-                throw new Error(error);
-            }
-        );
+        });
     }
 
     EnumCertificates(location, address, name): Observable<string[]> {
