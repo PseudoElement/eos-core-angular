@@ -13,6 +13,7 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
     cSub: Subscription;
     CurrentSelect: IListCertStotes;
     listCertStores: IListCertStotes[];
+    orderBy: boolean = true;
 
     constructor(
         public certStoresService: CertStoresService
@@ -36,8 +37,8 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
         this.certStoresService.toggleAllMarks(e);
     }
     orderByField() {
-        console.log('orderByField');
-        console.log(this.certStoresService.getListCetsStores);
+        this.certStoresService.orderByField();
+        this.orderBy = !this.orderBy;
     }
     markNode(e, list: IListCertStotes) {
         this.certStoresService.markNode(e, list);

@@ -10,9 +10,10 @@ export interface IListCertStotes extends Istore {
 
 @Injectable()
 export class CertStoresService {
-    public _currentSelectedNode$: Subject<IListCertStotes>;
+    private _currentSelectedNode$: Subject<IListCertStotes>;
     private initCarmaStores: Istore[];
     private listsCetsStores: IListCertStotes[];
+    private orderByAscend: boolean = true;
     constructor(
         private carmaService: CarmaHttpService
     ) {
@@ -28,6 +29,7 @@ export class CertStoresService {
         this.initCarmaStores = this.createInitCarmaStores(listCertStores);
         this.listsCetsStores = this.createListCetsStores();
         this.carmaService.init(null, this.initCarmaStores);
+        this._orderByField();
     }
     selectedNode(list: IListCertStotes) {
         this.listsCetsStores.forEach(node => {
@@ -45,6 +47,10 @@ export class CertStoresService {
         this.listsCetsStores.forEach(node => {
             node.marked = e.target.checked;
         });
+    }
+    orderByField() {
+        this.orderByAscend = !this.orderByAscend;
+        this._orderByField();
     }
     markNode(e, list: IListCertStotes) {
         if (!e) {
@@ -78,5 +84,20 @@ export class CertStoresService {
             }, elem));
         });
         return a;
+    }
+    private _orderByField() {
+        this.listsCetsStores.sort((a: IListCertStotes, b: IListCertStotes) => {
+            const _a = a.Name.toUpperCase();
+            const _b = b.Name.toUpperCase();
+            if (_a > _b) {
+                return this.orderByAscend ? 1 : -1;
+            }
+            if (_a < _b) {
+                return this.orderByAscend ? -1 : 1;
+            }
+            if (_a === _b) {
+                return 0;
+            }
+        });
     }
 }
