@@ -44,9 +44,16 @@ export class CertStoresService {
         this._currentSelectedNode$.next(list);
     }
     toggleAllMarks(e) {
-        this.listsCetsStores.forEach(node => {
-            node.marked = e.target.checked;
-        });
+        if (e.target.checked) {
+            this.listsCetsStores.forEach(node => {
+                node.marked = e.target.checked;
+            });
+        } else {
+                this.listsCetsStores.forEach(node => {
+                    node.marked = e.target.checked;
+                    node.selectedMark = e.target.checked;
+                });
+        }
     }
     orderByField() {
         this.orderByAscend = !this.orderByAscend;
