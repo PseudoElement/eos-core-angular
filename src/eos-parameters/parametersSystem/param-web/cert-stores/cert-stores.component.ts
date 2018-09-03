@@ -12,8 +12,6 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
     @Input('formControlStores') formControlStores;
     cSub: Subscription;
     CurrentSelect: IListCertStotes;
-    allMarked: boolean = false;
-
     listCertStores: IListCertStotes[];
 
     constructor(
@@ -34,8 +32,8 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
         this.cSub.unsubscribe();
     }
 
-    toggleAllMarks() {
-        console.log('toggleAllMarks');
+    toggleAllMarks(e) {
+        this.certStoresService.toggleAllMarks(e);
     }
     orderByField() {
         console.log('orderByField');
@@ -47,7 +45,7 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
     }
     selectedNode(list: IListCertStotes) {
         this.certStoresService.selectedNode(list);
-        console.log('selectNode');
+        // console.log('selectNode');
     }
     checkboxClick(e: Event) {
         e.stopPropagation();

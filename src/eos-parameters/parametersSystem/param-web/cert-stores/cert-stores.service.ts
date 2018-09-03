@@ -41,6 +41,11 @@ export class CertStoresService {
         });
         this._currentSelectedNode$.next(list);
     }
+    toggleAllMarks(e) {
+        this.listsCetsStores.forEach(node => {
+            node.marked = e.target.checked;
+        });
+    }
     markNode(e, list: IListCertStotes) {
         if (!e) {
             list.marked = e;

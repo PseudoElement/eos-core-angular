@@ -34,12 +34,12 @@
         <div
             class="checkbox-inline"
         >
-            <label [tooltip]="'выбрать все'"
+            <label [tooltip]="checkAllMarkes.checked ? 'Снять пометки' : 'Пометить все'"
                 placement="bottom"
                 container="body"
                 containerClass="tooltip-info"
             >
-                <input type="checkbox" [(ngModel)]="allMarked" (change)="toggleAllMarks()">
+                <input #checkAllMarkes type="checkbox" (change)="toggleAllMarks($event)">
                 <span></span>
             </label>
         </div>
