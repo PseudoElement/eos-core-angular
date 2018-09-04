@@ -39,27 +39,8 @@
         }
     }
 
-}
 
-.modal-dialog {
-    width: 800px;
-    margin-top: 250px;
-
-    .modal-content {
-        border: 0;
-
-        .modal-header {
-            background: $active-field-color-main-theme;
-            color: $white;
-        }
-
-        .modal-body {
-
-            eos-dynamic-input {
-                font-size: 14px;
-
-            }
-
-        }
+    .modal-dialog {
+        margin-top: 250px;
     }
 }

@@ -45,6 +45,12 @@ export const PARM_CHANGE_RC_RES_LAYER: IMessage = {
     msg: 'Эта операция может занять много времени и ресурсов',
     dismissOnTimeout: 5000
 };
+export const PARM_NOT_CARMA_SERVER: IMessage = {
+    type: 'warning',
+    title: 'Отсутствует сервер "Карма"',
+    msg: 'Требуется установить службу - "КАРМА"',
+    dismissOnTimeout: 5000
+};
 
 export const REG_RANGE_0_30 = /^[1-2]?\d$|^30$/;
 export const REG_RANGE_0_60 = /^[1-5]?\d$|^60$/;

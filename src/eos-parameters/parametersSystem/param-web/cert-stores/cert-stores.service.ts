@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
 import { Subject } from 'rxjs/Subject';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { PARM_NOT_CARMA_SERVER } from '../../shared/consts/eos-parameters.const';
 
 export interface IListCertStotes extends Istore {
     marked: boolean;
@@ -11,12 +13,15 @@ export interface IListCertStotes extends Istore {
 @Injectable()
 export class CertStoresService {
     private _currentSelectedNode$: Subject<IListCertStotes>;
+    private currentSelectedNode: IListCertStotes;
     private _isCarmaServer$: Subject<boolean>;
+    private isCarmaServer: boolean;
     private initCarmaStores: Istore[];
     private listsCetsStores: IListCertStotes[];
     private orderByAscend: boolean = true;
     constructor(
-        private carmaService: CarmaHttpService
+        private carmaService: CarmaHttpService,
+        private msgSrv: EosMessageService
     ) {
         this._currentSelectedNode$ = new Subject();
         this._isCarmaServer$ = new Subject();
@@ -46,6 +51,7 @@ export class CertStoresService {
                 node.selectedMark = false;
             }
         });
+        this.currentSelectedNode = list;
         this._currentSelectedNode$.next(list);
     }
     toggleAllMarks(e) {
@@ -73,13 +79,31 @@ export class CertStoresService {
         }
     }
     addStores() {
-        this._isCarmaServer$.next(false);
-        this.carmaService.init(null, this.initCarmaStores)
-            .subscribe((data: boolean) => {
-                console.log(data);
-                // this.isCarmaServer = data;
-                this._isCarmaServer$.next(data);
-            });
+        // this._isCarmaServer$.next(false);
+        this.initCarmaServer()
+            .subscribe(
+                (data: boolean) => {
+                    if (data) {
+                        console.log('открыть окно', data); // To do реализовать открытие окна добавления хранилищ
+                        this.isCarmaServer = data;
+                        this._isCarmaServer$.next(data);
+                    } else {
+                        this.isCarmaServer = false;
+                        this.msgSrv.addNewMessage(PARM_NOT_CARMA_SERVER);
+                        console.log('PARM_NOT_CARMA_SERVER', data);
+                    }
+                },
+                (err) => {
+                    this.msgSrv.addNewMessage(PARM_NOT_CARMA_SERVER);
+                }
+        );
+    }
+    showListCertNode() {
+        return this.carmaService.EnumCertificates(
+            this.currentSelectedNode.Location,
+            this.currentSelectedNode.Address,
+            this.currentSelectedNode.Name
+        );
     }
     private createInitCarmaStores(listStore: string[]) {
         const list = [];
@@ -118,6 +142,13 @@ export class CertStoresService {
             if (_a === _b) {
                 return 0;
             }
+        });
+    }
+    private initCarmaServer() {
+        return this.carmaService.init(null, this.initCarmaStores)
+        .map((data: boolean) => {
+            this.isCarmaServer = data;
+            return data;
         });
     }
 }

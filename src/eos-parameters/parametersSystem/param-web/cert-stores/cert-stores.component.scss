@@ -54,11 +54,18 @@
                 color: #000;
 
                 .list {
+                    cursor: default;
+                    user-select: none;
+
                     input{
                         display: none;
                     }
                 }
             }
         }
+    }
+
+    .modal-dialog {
+        margin-top: 350px;
     }
 }

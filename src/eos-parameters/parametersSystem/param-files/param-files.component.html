@@ -172,51 +172,51 @@
             [readonly]="inputs['rec.FILE_WITH_EDS_PROTECTED'].readonly"
         ></eos-dynamic-input>
     </div>
-</div>
-
-
-<div
-    *ngIf="inputs"
-    bsModal
-    #infoAttachFilesModal="bs-modal"
-    class="modal fade"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="dialog-child-name"
->
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 id="dialog-child-name" class="modal-title pull-left">Параметры хранения прикрепленных файлов</h4>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideInfoAttachFiles()">
-          <span class="eos-icon eos-icon-close-white small"></span>
-        </button>
-      </div>
-      <div class="modal-body">
+    <div
+        *ngIf="inputs"
+        bsModal
+        #infoAttachFilesModal="bs-modal"
+        class="modal fade"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="dialog-child-name"
+    >
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 id="dialog-child-name" class="modal-title pull-left">Параметры хранения прикрепленных файлов</h4>
+            <button type="button" class="close pull-right" aria-label="Close" (click)="hideInfoAttachFiles()">
+              <span class="eos-icon eos-icon-close-white small"></span>
+            </button>
+          </div>
+          <div class="modal-body">
+                <eos-dynamic-input
+                class="margin-bottom"
+                [input]="inputs['rec.EDMSNAME']"
+                [form]="form"
+                [readonly]="inputs['rec.EDMSNAME'].readonly"
+            ></eos-dynamic-input>
+            <span class="s-font">Место хранения:</span>
             <eos-dynamic-input
-            class="margin-bottom"
-            [input]="inputs['rec.EDMSNAME']"
-            [form]="form"
-            [readonly]="inputs['rec.EDMSNAME'].readonly"
-        ></eos-dynamic-input>
-        <span class="s-font">Место хранения:</span>
-        <eos-dynamic-input
-            class="input-radio-files"
-            [input]="inputs['rec.EDMSPARM']"
-            [form]="form"
-            [readonly]="inputs['rec.EDMSPARM'].readonly"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            [input]="inputs['rec.GATEPATH']"
-            [form]="form"
-            [readonly]="inputs['rec.GATEPATH'].readonly"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            [input]="inputs['rec.STORAGEPATH']"
-            [form]="form"
-            [readonly]="inputs['rec.STORAGEPATH'].readonly"
-        ></eos-dynamic-input>
+                class="input-radio-files"
+                [input]="inputs['rec.EDMSPARM']"
+                [form]="form"
+                [readonly]="inputs['rec.EDMSPARM'].readonly"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.GATEPATH']"
+                [form]="form"
+                [readonly]="inputs['rec.GATEPATH'].readonly"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.STORAGEPATH']"
+                [form]="form"
+                [readonly]="inputs['rec.STORAGEPATH'].readonly"
+            ></eos-dynamic-input>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 </div>
+
+

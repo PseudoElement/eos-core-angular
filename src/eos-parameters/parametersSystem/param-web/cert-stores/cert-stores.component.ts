@@ -1,6 +1,7 @@
-import { Component, OnInit, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
 import { CertStoresService, IListCertStotes } from './cert-stores.service';
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'eos-cert-stores',
@@ -10,12 +11,14 @@ import { Subscription } from 'rxjs/Subscription';
 
 export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
     @Input('formControlStores') formControlStores;
+    @ViewChild('InfoCertModal') InfoCertModal;
     cSub: Subscription;
     sSub: Subscription;
     CurrentSelect: IListCertStotes;
     listCertStores: IListCertStotes[];
     orderBy: boolean = true;
     isCarma: boolean = true;
+    listCertNode$: Observable<string[]>;
 
     constructor(
         public certStoresService: CertStoresService
@@ -47,17 +50,16 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
     }
     markNode(e, list: IListCertStotes) {
         this.certStoresService.markNode(e, list);
-        // console.log('markNode');
     }
     selectedNode(list: IListCertStotes) {
         this.certStoresService.selectedNode(list);
-        // console.log('selectNode');
     }
     checkboxClick(e: Event) {
         e.stopPropagation();
     }
-    showCert(list: IListCertStotes) {
-        console.log('ShowCert');
+    showCert() {
+        this.listCertNode$ = this.certStoresService.showListCertNode();
+        this.InfoCertModal.show();
     }
     addStores() {
         this.certStoresService.addStores();

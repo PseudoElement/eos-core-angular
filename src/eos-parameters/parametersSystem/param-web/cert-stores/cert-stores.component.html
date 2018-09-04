@@ -27,6 +27,7 @@
             tooltip="Просмотреть"
             placement="bottom"
             containerClass="tooltip-info"
+            (click)="showCert()"
             [disabled]="!CurrentSelect"
         >
                 <span class="eos-icon eos-icon-show-blue small"></span>
@@ -67,7 +68,9 @@
         </div>
     </div>
     <div class="cert-content">
-        <ul>
+        <ul
+            *ngIf="listCertStores.length; else emptyStores"
+        >
             <li
                 *ngFor="let list of listCertStores"
             >
@@ -75,7 +78,7 @@
                     class="list"
                     [ngClass]="{'highlighted': list.isSelected}"
                     (click)="selectedNode(list)"
-                    (dblclick)="showCert(list)"
+                    (dblclick)="showCert()"
                 >
                     <label
                         class="checkbox-inline"
@@ -97,7 +100,42 @@
             </li>
         </ul>
     </div>
+    <!-- Модальное окно отображения сертификатов хранилища -->
+    <div
+        bsModal #InfoCertModal="bs-modal"
+        class="modal fade" tabindex="-1"
+        role="dialog"
+        aria-labelledby="dialog-sizes-name1"
+    >
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{CurrentSelect?.Location}}:{{CurrentSelect?.Name}}</h4>
+            <button type="button" class="close pull-right" (click)="InfoCertModal.hide()" aria-label="Close">
+                <span class="eos-icon eos-icon-close-white small"></span>
+            </button>
+          </div>
+          <div
+            class="modal-body"
+            *ngIf="listCertNode$ | async as cert"
+          >
+            <div
+                *ngIf="cert.length; else emptyCert"
+            >
+                {{cert}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 
 <ng-template #markTemp>Снять<br>пометку</ng-template>
 <ng-template #notMarkTemp>Пометить<br>элемент</ng-template>
+<ng-template #emptyCert>
+    <h4>Сертифткаты отсутствуют</h4>
+</ng-template>
+<ng-template #emptyStores>
+    <h4>Хранилища отсутствуют</h4>
+</ng-template>
+
