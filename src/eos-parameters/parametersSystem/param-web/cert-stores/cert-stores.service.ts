@@ -15,7 +15,7 @@ export class CertStoresService {
     private _currentSelectedNode$: Subject<IListCertStotes>;
     private currentSelectedNode: IListCertStotes;
     private _isCarmaServer$: Subject<boolean>;
-    private isCarmaServer: boolean;
+    private isCarmaServer: boolean = false;
     private initCarmaStores: Istore[];
     private listsCetsStores: IListCertStotes[];
     private orderByAscend: boolean = true;
@@ -40,6 +40,7 @@ export class CertStoresService {
         this.listsCetsStores = this.createListCetsStores();
         this.carmaService.init(null, this.initCarmaStores);
         this._orderByField();
+        this.initCarmaServer();
     }
     selectedNode(list: IListCertStotes) {
         this.listsCetsStores.forEach(node => {
@@ -79,31 +80,22 @@ export class CertStoresService {
         }
     }
     addStores() {
-        // this._isCarmaServer$.next(false);
-        this.initCarmaServer()
-            .subscribe(
-                (data: boolean) => {
-                    if (data) {
-                        console.log('открыть окно', data); // To do реализовать открытие окна добавления хранилищ
-                        this.isCarmaServer = data;
-                        this._isCarmaServer$.next(data);
-                    } else {
-                        this.isCarmaServer = false;
-                        this.msgSrv.addNewMessage(PARM_NOT_CARMA_SERVER);
-                        console.log('PARM_NOT_CARMA_SERVER', data);
-                    }
-                },
-                (err) => {
-                    this.msgSrv.addNewMessage(PARM_NOT_CARMA_SERVER);
-                }
-        );
+        if (this.isCarmaServer) {
+            console.log('open add stores');
+        } else {
+            this.msgSrv.addNewMessage(PARM_NOT_CARMA_SERVER);
+        }
     }
     showListCertNode() {
-        return this.carmaService.EnumCertificates(
-            this.currentSelectedNode.Location,
-            this.currentSelectedNode.Address,
-            this.currentSelectedNode.Name
-        );
+        if (this.isCarmaServer) {
+            return this.carmaService.EnumCertificates(
+                this.currentSelectedNode.Location,
+                this.currentSelectedNode.Address,
+                this.currentSelectedNode.Name
+            );
+        } else {
+            this.msgSrv.addNewMessage(PARM_NOT_CARMA_SERVER);
+        }
     }
     private createInitCarmaStores(listStore: string[]) {
         const list = [];
@@ -146,9 +138,13 @@ export class CertStoresService {
     }
     private initCarmaServer() {
         return this.carmaService.init(null, this.initCarmaStores)
-        .map((data: boolean) => {
-            this.isCarmaServer = data;
-            return data;
-        });
+        .subscribe(
+            (data: boolean) => {
+                this.isCarmaServer = data;
+            },
+            (err) => {
+                this.isCarmaServer = false;
+            }
+        );
     }
 }

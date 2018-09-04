@@ -117,7 +117,7 @@
           </div>
           <div
             class="modal-body"
-            *ngIf="listCertNode$ | async as cert"
+            *ngIf="listCertNode$ | async as cert; else errorCarma"
           >
             <div
                 *ngIf="cert.length; else emptyCert"
@@ -137,5 +137,10 @@
 </ng-template>
 <ng-template #emptyStores>
     <h4>Хранилища отсутствуют</h4>
+</ng-template>
+<ng-template #errorCarma>
+    <div class="modal-body">
+        <h4>Сервер Карма не доступен</h4>
+    </div>
 </ng-template>
 
