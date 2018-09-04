@@ -19,6 +19,8 @@
             tooltip="Удалить"
             placement="bottom"
             containerClass="tooltip-info"
+            (click)="deleteStores()"
+            [disabled]="!this.certStoresService.isMarkNode"
         >
                 <span class="eos-icon eos-icon-bin-forever-blue small"></span>
         </button>
@@ -136,7 +138,7 @@
     <h4>Сертифткаты отсутствуют</h4>
 </ng-template>
 <ng-template #emptyStores>
-    <h4>Хранилища отсутствуют</h4>
+    <h4 class="emptyStores">Хранилища не указаны</h4>
 </ng-template>
 <ng-template #errorCarma>
     <div class="modal-body">

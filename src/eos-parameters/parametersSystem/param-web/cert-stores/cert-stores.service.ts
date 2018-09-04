@@ -12,13 +12,15 @@ export interface IListCertStotes extends Istore {
 
 @Injectable()
 export class CertStoresService {
-    private _currentSelectedNode$: Subject<IListCertStotes>;
+    isMarkNode: boolean = false;
     private currentSelectedNode: IListCertStotes;
+    private _currentSelectedNode$: Subject<IListCertStotes>;
     private _isCarmaServer$: Subject<boolean>;
     private isCarmaServer: boolean = false;
     private initCarmaStores: Istore[];
     private listsCetsStores: IListCertStotes[];
     private orderByAscend: boolean = true;
+    private listStoresDb: string[];
     constructor(
         private carmaService: CarmaHttpService,
         private msgSrv: EosMessageService
@@ -36,13 +38,14 @@ export class CertStoresService {
         return this._isCarmaServer$.asObservable();
     }
     initCarma(listCertStores: string[]) {
-        this.initCarmaStores = this.createInitCarmaStores(listCertStores);
+        this.listStoresDb = listCertStores;
+        this.createInitCarmaStores();
         this.listsCetsStores = this.createListCetsStores();
-        this.carmaService.init(null, this.initCarmaStores);
         this._orderByField();
         this.initCarmaServer();
     }
     selectedNode(list: IListCertStotes) {
+        this.isMarkNode = true;
         this.listsCetsStores.forEach(node => {
             if (node === list) {
                 node.isSelected = true;
@@ -50,6 +53,7 @@ export class CertStoresService {
             } else {
                 node.isSelected = false;
                 node.selectedMark = false;
+                this.checkMarkNode();
             }
         });
         this.currentSelectedNode = list;
@@ -64,6 +68,8 @@ export class CertStoresService {
                 this.listsCetsStores.forEach(node => {
                     node.marked = e.target.checked;
                     node.selectedMark = e.target.checked;
+                    node.isSelected = false;
+
                 });
         }
     }
@@ -75,13 +81,16 @@ export class CertStoresService {
         if (!e) {
             list.marked = e;
             list.selectedMark = e;
+            this.checkMarkNode();
         } else {
             list.marked = e;
+            this.isMarkNode = true;
         }
     }
     addStores() {
         if (this.isCarmaServer) {
             console.log('open add stores');
+            console.log(this.isMarkNode);
         } else {
             this.msgSrv.addNewMessage(PARM_NOT_CARMA_SERVER);
         }
@@ -97,9 +106,28 @@ export class CertStoresService {
             this.msgSrv.addNewMessage(PARM_NOT_CARMA_SERVER);
         }
     }
-    private createInitCarmaStores(listStore: string[]) {
+    deleteStores(): string {
+        for (let i = 0; i < this.listsCetsStores.length; i++) {
+            const node = this.listsCetsStores[i];
+            if (node.marked || node.selectedMark) {
+                const k = this.listStoresDb.findIndex((str) => {
+                    const arr = str.split(':');
+                    if (arr[0] === node.Location && arr[1] === node.Name) {
+                        return true;
+                    }
+                });
+                this.listStoresDb.splice(k, 1);
+
+                this.listsCetsStores.splice(i, 1);
+                i --;
+            }
+        }
+        this.checkMarkNode();
+        return this.listStoresDb.join('\t');
+    }
+    private createInitCarmaStores() {
         const list = [];
-        listStore.forEach((str: string) => {
+        this.listStoresDb.forEach((str: string) => {
             const arr = str.split(':');
             list.push({
                 Location: arr[0],
@@ -107,7 +135,7 @@ export class CertStoresService {
                 Name: arr[1]
             });
         });
-        return list;
+        this.initCarmaStores = list;
     }
 
     private createListCetsStores(): IListCertStotes[] {
@@ -146,5 +174,14 @@ export class CertStoresService {
                 this.isCarmaServer = false;
             }
         );
+    }
+    private checkMarkNode() {
+        let check = false;
+        this.listsCetsStores.forEach(node => {
+            if (node.marked || node.selectedMark) {
+                check = true;
+            }
+        });
+        this.isMarkNode = check;
     }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnChanges, OnDestroy, ViewChild } from '@angu
 import { CertStoresService, IListCertStotes } from './cert-stores.service';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+import { FormControl } from '@angular/forms';
 
 @Component({
     selector: 'eos-cert-stores',
@@ -10,7 +11,7 @@ import { Observable } from 'rxjs/Observable';
 })
 
 export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
-    @Input('formControlStores') formControlStores;
+    @Input('formControlStores') formControlStores: FormControl;
     @ViewChild('InfoCertModal') InfoCertModal;
     cSub: Subscription;
     sSub: Subscription;
@@ -63,5 +64,8 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
     }
     addStores() {
         this.certStoresService.addStores();
+    }
+    deleteStores() {
+        this.formControlStores.patchValue(this.certStoresService.deleteStores());
     }
 }
