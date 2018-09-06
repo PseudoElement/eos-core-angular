@@ -97,7 +97,7 @@
                         >
                         <span></span>
                     </label>
-                    {{list.Location}}:{{list.Name}}
+                    {{list.Location}}: {{list.Name}}
                 </div>
             </li>
         </ul>
@@ -109,26 +109,42 @@
         role="dialog"
         aria-labelledby="dialog-sizes-name1"
     >
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{CurrentSelect?.Location}}:{{CurrentSelect?.Name}}</h4>
-            <button type="button" class="close pull-right" (click)="InfoCertModal.hide()" aria-label="Close">
-                <span class="eos-icon eos-icon-close-white small"></span>
-            </button>
-          </div>
-          <div
-            class="modal-body"
-            *ngIf="listCertNode$ | async as cert; else errorCarma"
-          >
-            <div
-                *ngIf="cert.length; else emptyCert"
-            >
-                {{cert}}
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{CurrentSelect?.Location}}:{{CurrentSelect?.Name}}</h4>
+                    <button type="button" class="close pull-right" (click)="InfoCertModal.hide()" aria-label="Close">
+                        <span class="eos-icon eos-icon-close-white small"></span>
+                    </button>
+                </div>
+                <div
+                    class="modal-body"
+                    *ngIf="listCertNode$ | async as cert; else errorCarma"
+                >
+                    <div
+                        *ngIf="cert.length; else emptyCert"
+                    >
+                        {{cert}}
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
+    </div>
+    <!-- Модальное окно добавления сертификатов хранилища -->
+    <div
+        bsModal #addCertStoresModal="bs-modal"
+        class="modal fade" tabindex="-1"
+        role="dialog"
+        aria-labelledby="dialog-sizes-name1"
+    >
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                    <eos-add-cert-stores
+                        (closeAddCertModal)="closeAddCertModal()"
+                    >
+                    </eos-add-cert-stores>
+            </div>
+        </div>
     </div>
 </div>
 

@@ -21,6 +21,7 @@ import { ParamFielsComponent } from './parametersSystem/param-files/param-files.
 import { ParamPrjRcComponent } from './parametersSystem/param-prj-rc/param-prj-rc.component';
 import { ParamRcComponent } from './parametersSystem/param-rc/param-rc.component';
 import { CertStoresComponent } from './parametersSystem/param-web/cert-stores/cert-stores.component';
+import { AddCertStoresComponent } from './parametersSystem/param-web/cert-stores/add-cert-stores/add-cert-stores.component';
 
 
 
@@ -44,6 +45,7 @@ import { ParamDescriptorSrv } from './parametersSystem/shared/service/param-desc
         ParamPrjRcComponent,
         ParamRcComponent,
         CertStoresComponent,
+        AddCertStoresComponent,
     ],
     imports: [
         BrowserModule,

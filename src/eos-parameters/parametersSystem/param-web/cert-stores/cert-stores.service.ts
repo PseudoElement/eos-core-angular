@@ -89,8 +89,7 @@ export class CertStoresService {
     }
     addStores() {
         if (this.isCarmaServer) {
-            console.log('open add stores');
-            console.log(this.isMarkNode);
+            // console.log('open add stores');
         } else {
             this.msgSrv.addNewMessage(PARM_NOT_CARMA_SERVER);
         }

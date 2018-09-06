@@ -3,6 +3,7 @@ import { CertStoresService, IListCertStotes } from './cert-stores.service';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { FormControl } from '@angular/forms';
+import { ModalDirective } from 'ngx-bootstrap';
 
 @Component({
     selector: 'eos-cert-stores',
@@ -12,7 +13,8 @@ import { FormControl } from '@angular/forms';
 
 export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
     @Input('formControlStores') formControlStores: FormControl;
-    @ViewChild('InfoCertModal') InfoCertModal;
+    @ViewChild('InfoCertModal') InfoCertModal: ModalDirective;
+    @ViewChild('addCertStoresModal') addCertStoresModal: ModalDirective;
     cSub: Subscription;
     sSub: Subscription;
     CurrentSelect: IListCertStotes;
@@ -35,7 +37,7 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
         });
     }
     ngOnChanges() {
-        console.log('OnChanges');
+        // console.log('OnChanges');
     }
     ngOnDestroy() {
         this.cSub.unsubscribe();
@@ -64,8 +66,12 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
     }
     addStores() {
         this.certStoresService.addStores();
+        this.addCertStoresModal.show();
     }
     deleteStores() {
         this.formControlStores.patchValue(this.certStoresService.deleteStores());
+    }
+    closeAddCertModal() {
+        this.addCertStoresModal.hide();
     }
 }
