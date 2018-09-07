@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
 import { Subject } from 'rxjs/Subject';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { PARM_NOT_CARMA_SERVER } from '../../shared/consts/eos-parameters.const';
+import { PARM_NOT_CARMA_SERVER } from '../shared/consts/eos-parameters.const';
+import { AbstractControl } from '@angular/forms';
 
 export interface IListCertStotes extends Istore {
     marked: boolean;
@@ -16,17 +17,19 @@ export class CertStoresService {
     private currentSelectedNode: IListCertStotes;
     private _currentSelectedNode$: Subject<IListCertStotes>;
     private _isCarmaServer$: Subject<boolean>;
+    private updateFormControl$: Subject<string>;
     private isCarmaServer: boolean = false;
     private initCarmaStores: Istore[];
     private listsCetsStores: IListCertStotes[];
     private orderByAscend: boolean = true;
-    private listStoresDb: string[];
+    private formControlStore: AbstractControl;
     constructor(
         private carmaService: CarmaHttpService,
         private msgSrv: EosMessageService
     ) {
         this._currentSelectedNode$ = new Subject();
         this._isCarmaServer$ = new Subject();
+        this.updateFormControl$ = new Subject();
     }
     get getListCetsStores() {
         return this.listsCetsStores;
@@ -37,9 +40,17 @@ export class CertStoresService {
     get getIsCarmaServer$() {
         return this._isCarmaServer$.asObservable();
     }
+    get updateFormControlStore$() {
+        return this.updateFormControl$.asObservable();
+    }
+    get formControl() {
+        return this.formControlStore;
+    }
+    set formControl(formControl: AbstractControl) {
+        this.formControlStore = formControl;
+    }
     initCarma(listCertStores: string[]) {
-        this.listStoresDb = listCertStores;
-        this.createInitCarmaStores();
+        this.createInitCarmaStores(listCertStores);
         this.listsCetsStores = this.createListCetsStores();
         this._orderByField();
         this.initCarmaServer();
@@ -71,6 +82,7 @@ export class CertStoresService {
 
                 });
         }
+        this.checkMarkNode();
     }
     orderByField() {
         this.orderByAscend = !this.orderByAscend;
@@ -86,12 +98,9 @@ export class CertStoresService {
             this.isMarkNode = true;
         }
     }
-    addStores() {
-        if (this.isCarmaServer) {
-            // console.log('open add stores');
-        } else {
-            this.msgSrv.addNewMessage(PARM_NOT_CARMA_SERVER);
-        }
+    addStores(node) { // {name: "My", selected: true, location: "sslm"}
+        this.listsCetsStores.push(this.createListCertStotes(node.name, node.location));
+        this.updateFormControl$.next(this.createStringForUpdate());
     }
     showListCertNode() {
         if (this.isCarmaServer) {
@@ -108,27 +117,26 @@ export class CertStoresService {
         return this.carmaService.EnumStores(location, address);
     }
     deleteStores(): string {
+        const actuallyStores: string[] = [];
         for (let i = 0; i < this.listsCetsStores.length; i++) {
             const node = this.listsCetsStores[i];
             if (node.marked || node.selectedMark) {
-                const k = this.listStoresDb.findIndex((str) => {
-                    const arr = str.split(':');
-                    if (arr[0] === node.Location && arr[1] === node.Name) {
-                        return true;
-                    }
-                });
-                this.listStoresDb.splice(k, 1);
-
                 this.listsCetsStores.splice(i, 1);
                 i --;
+            } else {
+                actuallyStores.push(`${node.Location}:${node.Name}`);
             }
         }
         this.checkMarkNode();
-        return this.listStoresDb.join('\t');
+        if (actuallyStores.length) {
+            return actuallyStores.join('\t');
+        }
+        return '';
+        // return this.listStoresDb.join('\t');
     }
-    private createInitCarmaStores() {
+    private createInitCarmaStores(listCertStores: string[]) {
         const list = [];
-        this.listStoresDb.forEach((str: string) => {
+        listCertStores.forEach((str: string) => {
             const arr = str.split(':');
             list.push({
                 Location: arr[0],
@@ -184,5 +192,26 @@ export class CertStoresService {
             }
         });
         this.isMarkNode = check;
+    }
+    private createListCertStotes(name: string, location: string): IListCertStotes {
+        return {
+            Location: location,
+            Address: '',
+            Name: name,
+            marked: false,
+            isSelected: false,
+            selectedMark: false
+        };
+    }
+    private createStringForUpdate() {
+        if (this.listsCetsStores.length) {
+            const stores: string[] = [];
+            this.listsCetsStores.forEach(node => {
+                stores.push(`${node.Location}:${node.Name}`);
+            });
+            return stores.join('\t');
+        } else {
+            return '';
+        }
     }
 }

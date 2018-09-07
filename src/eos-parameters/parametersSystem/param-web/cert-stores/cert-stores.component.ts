@@ -1,22 +1,25 @@
-import { Component, OnInit, Input, OnChanges, OnDestroy, ViewChild } from '@angular/core';
-import { CertStoresService, IListCertStotes } from './cert-stores.service';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { CertStoresService, IListCertStotes } from '../cert-stores.service';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
-import { FormControl } from '@angular/forms';
+import { AbstractControl } from '@angular/forms';
 import { ModalDirective } from 'ngx-bootstrap';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { PARM_NOT_CARMA_SERVER } from '../../shared/consts/eos-parameters.const';
 
 @Component({
     selector: 'eos-cert-stores',
-    templateUrl: 'cert-stores.component.html',
-    providers: [CertStoresService]
+    templateUrl: 'cert-stores.component.html'
 })
 
-export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
-    @Input('formControlStores') formControlStores: FormControl;
+export class CertStoresComponent implements OnInit, OnDestroy {
+    // @Input('formControlStores') formControlStores: FormControl;
     @ViewChild('InfoCertModal') InfoCertModal: ModalDirective;
     @ViewChild('addCertStoresModal') addCertStoresModal: ModalDirective;
+    formControlStores: AbstractControl;
     cSub: Subscription;
     sSub: Subscription;
+    uSub: Subscription;
     CurrentSelect: IListCertStotes;
     listCertStores: IListCertStotes[];
     orderBy: boolean = true;
@@ -25,10 +28,16 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
     listCertNode$: Observable<string[]>;
 
     constructor(
-        public certStoresService: CertStoresService
+        public certStoresService: CertStoresService,
+        private msgSrv: EosMessageService
     ) {}
     ngOnInit() {
-        this.certStoresService.initCarma(this.formControlStores.value.split('\t'));
+        this.formControlStores = this.certStoresService.formControl;
+        let certStores = [];
+        if (typeof this.formControlStores.value === 'string') {
+            certStores = this.formControlStores.value.split('\t');
+        }
+        this.certStoresService.initCarma(certStores);
         this.listCertStores = this.certStoresService.getListCetsStores;
         this.cSub = this.certStoresService.getCurrentSelectedNode$.subscribe((list: IListCertStotes) => {
             this.CurrentSelect = list;
@@ -36,13 +45,14 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
         this.sSub = this.certStoresService.getIsCarmaServer$.subscribe((data: boolean) => {
             this.isCarma = data;
         });
-    }
-    ngOnChanges() {
-        // console.log('OnChanges');
+        this.uSub = this.certStoresService.updateFormControlStore$.subscribe((data: string) => {
+            this.formControlStores.patchValue(data);
+        });
     }
     ngOnDestroy() {
         this.cSub.unsubscribe();
         this.sSub.unsubscribe();
+        this.uSub.unsubscribe();
     }
 
     toggleAllMarks(e) {
@@ -70,7 +80,7 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
             this.CertStoresModal = true;
             this.addCertStoresModal.show();
         } else {
-            // сообщение о отсутствии сервера карма
+            this.msgSrv.addNewMessage(PARM_NOT_CARMA_SERVER);
         }
     }
     deleteStores() {

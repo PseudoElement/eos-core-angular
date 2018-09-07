@@ -176,9 +176,11 @@ export class BaseParamComponent implements OnDestroy, OnInit {
             _value = null;
         } else if (value instanceof Date) {
             _value = EosUtils.dateToString(value);
-        } else if (value === '') {
-            // fix empty strings in IE
-            _value = null;
+        } else if (value === null) {
+            _value = '';
+        // } else if (value === '') {
+        //     // fix empty strings in IE
+        //     _value = null;
         } else {
             _value = value;
         }
