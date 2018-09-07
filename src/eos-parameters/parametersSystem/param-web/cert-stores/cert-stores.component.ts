@@ -21,6 +21,7 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
     listCertStores: IListCertStotes[];
     orderBy: boolean = true;
     isCarma: boolean = true;
+    CertStoresModal = false;
     listCertNode$: Observable<string[]>;
 
     constructor(
@@ -65,13 +66,18 @@ export class CertStoresComponent implements OnInit, OnChanges, OnDestroy {
         this.InfoCertModal.show();
     }
     addStores() {
-        this.certStoresService.addStores();
-        this.addCertStoresModal.show();
+        if (this.isCarma) {
+            this.CertStoresModal = true;
+            this.addCertStoresModal.show();
+        } else {
+            // сообщение о отсутствии сервера карма
+        }
     }
     deleteStores() {
         this.formControlStores.patchValue(this.certStoresService.deleteStores());
     }
     closeAddCertModal() {
         this.addCertStoresModal.hide();
+        this.CertStoresModal = false;
     }
 }

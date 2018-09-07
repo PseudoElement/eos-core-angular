@@ -140,6 +140,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                     <eos-add-cert-stores
+                        *ngIf="CertStoresModal"
                         (closeAddCertModal)="closeAddCertModal()"
                     >
                     </eos-add-cert-stores>

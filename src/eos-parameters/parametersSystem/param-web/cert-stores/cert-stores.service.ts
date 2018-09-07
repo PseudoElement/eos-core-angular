@@ -53,7 +53,6 @@ export class CertStoresService {
             } else {
                 node.isSelected = false;
                 node.selectedMark = false;
-                this.checkMarkNode();
             }
         });
         this.currentSelectedNode = list;
@@ -104,6 +103,9 @@ export class CertStoresService {
         } else {
             this.msgSrv.addNewMessage(PARM_NOT_CARMA_SERVER);
         }
+    }
+    showListStores(location, address) {
+        return this.carmaService.EnumStores(location, address);
     }
     deleteStores(): string {
         for (let i = 0; i < this.listsCetsStores.length; i++) {

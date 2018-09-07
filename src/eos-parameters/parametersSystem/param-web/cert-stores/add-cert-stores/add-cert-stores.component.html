@@ -3,7 +3,7 @@
         [title]="titleHeader"
         (submitForm)="submit()"
         (cancelForm)="cancel()"
-        [statusBtnSub]="btnSubmitDisabled"
+        [statusBtnSub]="!currentSelectNode"
     ></eos-param-header>
     <div class="add-cert-stores">
         <div class="input-wrap">
@@ -44,6 +44,8 @@
                     type="text"
                     placeholder="Адрес хранилища"
                     autocomplete="off"
+                    [disabled]="certSystemStore === 'sslm'"
+                    [(ngModel)]="certSystemAddress"
                 >
                 <button
                     class="adres-search btn"
@@ -54,11 +56,22 @@
             </div>
         </div>
         <div class="list-stores">
-            <ul>
-                <li class="highlighted">some text</li>
-                <li>some text</li>
+            <ul
+                *ngIf="listStores$ | async"
+            >
+                <li
+                    *ngFor="let list of listStores"
+                    [ngClass]="{highlighted: list.selected}"
+                    (click)="selectNode(list)"
+                    (dblclick)="submit()"
+                >
+                    {{list.title}}
+                </li>
             </ul>
         </div>
     </div>
 </div>
 
+<ng-template #emptyStores>
+    <h3>Произведите поиск хранилища</h3>
+</ng-template>
