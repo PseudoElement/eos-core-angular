@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { CertStoresService, IListCertStotes } from '../cert-stores.service';
-import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { AbstractControl } from '@angular/forms';
 import { ModalDirective } from 'ngx-bootstrap';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { PARM_NOT_CARMA_SERVER } from '../../shared/consts/eos-parameters.const';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'eos-cert-stores',
@@ -13,19 +13,16 @@ import { PARM_NOT_CARMA_SERVER } from '../../shared/consts/eos-parameters.const'
 })
 
 export class CertStoresComponent implements OnInit, OnDestroy {
-    // @Input('formControlStores') formControlStores: FormControl;
     @ViewChild('InfoCertModal') InfoCertModal: ModalDirective;
     @ViewChild('addCertStoresModal') addCertStoresModal: ModalDirective;
     formControlStores: AbstractControl;
-    cSub: Subscription;
-    sSub: Subscription;
-    uSub: Subscription;
     CurrentSelect: IListCertStotes;
     listCertStores: IListCertStotes[];
     orderBy: boolean = true;
     isCarma: boolean = true;
     CertStoresModal = false;
     listCertNode$: Observable<string[]>;
+    private ngUnsubscribe: Subject<void> = new Subject<void>();
 
     constructor(
         public certStoresService: CertStoresService,
@@ -39,20 +36,25 @@ export class CertStoresComponent implements OnInit, OnDestroy {
         }
         this.certStoresService.initCarma(certStores);
         this.listCertStores = this.certStoresService.getListCetsStores;
-        this.cSub = this.certStoresService.getCurrentSelectedNode$.subscribe((list: IListCertStotes) => {
+        this.certStoresService.getCurrentSelectedNode$
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((list: IListCertStotes) => {
             this.CurrentSelect = list;
         });
-        this.sSub = this.certStoresService.getIsCarmaServer$.subscribe((data: boolean) => {
+        this.certStoresService.getIsCarmaServer$
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((data: boolean) => {
             this.isCarma = data;
         });
-        this.uSub = this.certStoresService.updateFormControlStore$.subscribe((data: string) => {
+        this.certStoresService.updateFormControlStore$
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((data: string) => {
             this.formControlStores.patchValue(data);
         });
     }
     ngOnDestroy() {
-        this.cSub.unsubscribe();
-        this.sSub.unsubscribe();
-        this.uSub.unsubscribe();
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
     }
 
     toggleAllMarks(e) {
