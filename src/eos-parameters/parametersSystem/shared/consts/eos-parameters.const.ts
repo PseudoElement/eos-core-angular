@@ -51,6 +51,12 @@ export const PARM_NOT_CARMA_SERVER: IMessage = {
     msg: 'Требуется установить службу - "КАРМА"',
     dismissOnTimeout: 5000
 };
+export const PARM_ERR_OPEN_CERT_STORES: IMessage = {
+    type: 'warning',
+    title: 'Ошибка открытия списка сертификатов',
+    msg: 'Не удается найти указанный файл',
+    dismissOnTimeout: 5000
+};
 
 export const REG_RANGE_0_30 = /^[1-2]?\d$|^30$/;
 export const REG_RANGE_0_60 = /^[1-5]?\d$|^60$/;

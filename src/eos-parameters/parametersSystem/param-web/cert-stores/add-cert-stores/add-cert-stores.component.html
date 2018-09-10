@@ -44,7 +44,6 @@
                     type="text"
                     placeholder="Адрес хранилища"
                     autocomplete="off"
-                    [disabled]="certSystemStore === 'sslm'"
                     [(ngModel)]="certSystemAddress"
                 >
                 <button
@@ -65,7 +64,7 @@
                     (click)="selectNode(list)"
                     (dblclick)="submit()"
                 >
-                    {{list.name}}
+                    {{list.title}}
                 </li>
             </ul>
         </div>

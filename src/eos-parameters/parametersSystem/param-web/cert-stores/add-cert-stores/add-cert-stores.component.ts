@@ -1,33 +1,27 @@
-import { OnInit, Component, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { CertStoresService } from '../../cert-stores.service';
+import { PARM_ERR_OPEN_CERT_STORES } from '../../../shared/consts/eos-parameters.const';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { IListStores } from '../../../shared/consts/web.consts';
 
-export interface IListStores {
-    name: string;
-    selected: boolean;
-    location: string;
-}
+
 @Component({
     selector: 'eos-add-cert-stores',
     templateUrl: 'add-cert-stores.component.html'
 })
-export class AddCertStoresComponent implements OnInit, OnDestroy {
+export class AddCertStoresComponent {
     @Output('closeAddCertModal') closeAddCertModal = new EventEmitter;
     protected titleHeader = 'Выберите хранилища сертификатов';
     protected certSystemStore: string = 'sslm';
-    protected certSystemAddress: string;
+    protected certSystemAddress: string = 'localhost';
     protected listStores$: Observable<string[]>;
     protected listStores: IListStores[];
     protected currentSelectNode: IListStores;
     constructor(
-        private certStoresService: CertStoresService
+        private certStoresService: CertStoresService,
+        private msgSrv: EosMessageService
     ) {}
-    ngOnInit() {
-        // console.log('init add stores');
-    }
-    ngOnDestroy() {
-        // console.log('destoy');
-    }
     submit() {
         this.certStoresService.addStores(this.currentSelectNode);
         this.closeAddCertModal.emit();
@@ -37,24 +31,53 @@ export class AddCertStoresComponent implements OnInit, OnDestroy {
     }
     searchStore() {
         if (this.certSystemStore === 'sslm') {
-            this.listStores$ = this.certStoresService.showListStores(this.certSystemStore, '')
+            this.listStores$ = this.certStoresService.showListStores(this.certSystemStore, this.certSystemAddress)
+                .catch(e => {
+                    this.msgSrv.addNewMessage(PARM_ERR_OPEN_CERT_STORES);
+                    return Observable.of(null);
+                })
                 .map(data => {
                     const listStores = [];
-                    // console.log(data);
-                    data.forEach(item => {
-                        const arr = item.split('\\');
-                        listStores.push({
-                            name: arr[arr.length - 1],
-                            selected: false,
-                            location: 'sslm'
+                    if (data && data.length) {
+                        data.forEach(item => {
+                            const arr = item.split('\\');
+                            listStores.push({
+                                title: arr[arr.length - 1],
+                                name: arr[arr.length - 1],
+                                selected: false,
+                                location: 'sslm',
+                                address: arr[arr.length - 2]
+                            });
                         });
-                    });
-                    // console.log(listStores);
+                    }
                     this.listStores = listStores;
                     return data;
                 });
+            }
+            if (this.certSystemStore === 'sss') {
+                this.listStores$ = this.certStoresService.showListStores(this.certSystemStore, this.certSystemAddress)
+                    .catch(e => {
+                        this.msgSrv.addNewMessage(PARM_ERR_OPEN_CERT_STORES);
+                        return Observable.of(null);
+                    })
+                    .map(data => {
+                        const listStores = [];
+                        if (data && data.length) {
+                            data.forEach(item => {
+                                const arr = item.split('\\');
+                                listStores.push({
+                                    title: arr[arr.length - 1],
+                                    name: item,
+                                    selected: false,
+                                    location: 'sss',
+                                    address: arr[arr.length - 2]
+                                });
+                            });
+                        }
+                        this.listStores = listStores;
+                        return data;
+                    });
         }
-        // console.log('search', this.certSystemStore);
     }
     selectNode(list: IListStores) {
         this.currentSelectNode = list;

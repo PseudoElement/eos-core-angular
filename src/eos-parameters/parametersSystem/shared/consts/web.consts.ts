@@ -32,3 +32,11 @@ export const WEB_PARAM: IBaseParameters = {
         }
     ]
 };
+
+export interface IListStores {
+    name: string;
+    selected: boolean;
+    location: string;
+    address: string;
+    title: string;
+}

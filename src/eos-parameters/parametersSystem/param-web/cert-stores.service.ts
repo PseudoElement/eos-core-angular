@@ -4,6 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { PARM_NOT_CARMA_SERVER } from '../shared/consts/eos-parameters.const';
 import { AbstractControl } from '@angular/forms';
+import { IListStores } from '../shared/consts/web.consts';
 
 export interface IListCertStotes extends Istore {
     marked: boolean;
@@ -98,16 +99,23 @@ export class CertStoresService {
             this.isMarkNode = true;
         }
     }
-    addStores(node) { // {name: "My", selected: true, location: "sslm"}
-        this.listsCetsStores.push(this.createListCertStotes(node.name, node.location));
+    addStores(node: IListStores) {
+        this.listsCetsStores.push(this.createListCertStotes(node));
         this.updateFormControl$.next(this.createStringForUpdate());
     }
     showListCertNode() {
         if (this.isCarmaServer) {
+            const curName = this.currentSelectedNode.Name;
+            let name;
+            if (curName.indexOf('\\') !== -1) {
+                name = curName.split('\\')[1];
+            } else {
+                name = curName;
+            }
             return this.carmaService.EnumCertificates(
                 this.currentSelectedNode.Location,
                 this.currentSelectedNode.Address,
-                this.currentSelectedNode.Name
+                name
             );
         } else {
             this.msgSrv.addNewMessage(PARM_NOT_CARMA_SERVER);
@@ -135,15 +143,18 @@ export class CertStoresService {
             return actuallyStores.join('\t');
         }
         return '';
-        // return this.listStoresDb.join('\t');
     }
     private createInitCarmaStores(listCertStores: string[]) {
         const list = [];
         listCertStores.forEach((str: string) => {
+            let address = '';
             const arr = str.split(':');
+            if (arr[1].indexOf('\\') !== -1) {
+                address = arr[1].split('\\')[0];
+            }
             list.push({
                 Location: arr[0],
-                Address: '',
+                Address: address,
                 Name: arr[1]
             });
         });
@@ -196,11 +207,11 @@ export class CertStoresService {
         });
         this.isMarkNode = check;
     }
-    private createListCertStotes(name: string, location: string): IListCertStotes {
+    private createListCertStotes(node: IListStores): IListCertStotes {
         return {
-            Location: location,
-            Address: '',
-            Name: name,
+            Location: node.location,
+            Address: node.address,
+            Name: node.name,
             marked: false,
             isSelected: false,
             selectedMark: false
