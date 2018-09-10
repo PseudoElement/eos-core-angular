@@ -121,6 +121,9 @@ export class CertStoresService {
         for (let i = 0; i < this.listsCetsStores.length; i++) {
             const node = this.listsCetsStores[i];
             if (node.marked || node.selectedMark) {
+                if (node === this.currentSelectedNode) {
+                    this.currentSelectedNode = null;
+                }
                 this.listsCetsStores.splice(i, 1);
                 i --;
             } else {
