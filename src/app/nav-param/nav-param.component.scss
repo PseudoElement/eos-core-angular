@@ -24,7 +24,6 @@
         height: 2000px;
         background: $white;
         border-radius: 5px 5px 0 0;
-        // transform: translateX(-30px);
         transition: .5s;
 
         &.list-show {
@@ -49,5 +48,9 @@
         .sandwich {
             transition: .5s;
         }
+    }
+
+    .nav-text {
+        color: $button-color-main-theme;
     }
 }

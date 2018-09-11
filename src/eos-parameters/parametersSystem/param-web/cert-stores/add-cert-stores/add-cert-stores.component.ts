@@ -14,7 +14,7 @@ export class AddCertStoresComponent {
     @Output('closeAddCertModal') closeAddCertModal = new EventEmitter;
     protected titleHeader = 'Выберите хранилища сертификатов';
     protected certSystemStore: string = 'sslm';
-    protected certSystemAddress: string = 'localhost';
+    protected certSystemAddress: string;
     protected listStores$: Observable<string[]>;
     protected listStores: IListStores[];
     protected currentSelectNode: IListStores;
