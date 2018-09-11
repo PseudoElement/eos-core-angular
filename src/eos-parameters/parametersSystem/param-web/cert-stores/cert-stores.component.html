@@ -10,7 +10,6 @@
             placement="bottom"
             containerClass="tooltip-info"
             (click)="addStores()"
-            [disabled]="!isCarma"
         >
                 <span class="eos-icon eos-icon-plus-blue small"></span>
         </button>
@@ -119,7 +118,7 @@
                 </div>
                 <div
                     class="modal-body"
-                    *ngIf="listCertNode$ | async as cert; else errorCarma"
+                    *ngIf="listCertNode$ | async as cert; else loaderCarma"
                 >
                     <div
                         *ngIf="cert.length; else emptyCert"
@@ -157,9 +156,18 @@
 <ng-template #emptyStores>
     <h4 class="emptyStores">Хранилища не указаны</h4>
 </ng-template>
-<ng-template #errorCarma>
+<ng-template #loaderCarma>
+    <div class="modal-body">
+        <div id="loadblock">
+            <div id="loading">
+                <i class="fa fa-spinner fa-pulse fa-fw selected-text lg bl"></i>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- <ng-template #errorCarma>
     <div class="modal-body">
         <h4>Сервер Карма не доступен</h4>
     </div>
-</ng-template>
+</ng-template> -->
 

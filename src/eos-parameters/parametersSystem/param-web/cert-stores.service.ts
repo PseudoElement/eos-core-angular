@@ -192,9 +192,11 @@ export class CertStoresService {
         .subscribe(
             (data: boolean) => {
                 this.isCarmaServer = data;
+                this._isCarmaServer$.next(data);
             },
             (err) => {
                 this.isCarmaServer = false;
+                this._isCarmaServer$.next(false);
             }
         );
     }

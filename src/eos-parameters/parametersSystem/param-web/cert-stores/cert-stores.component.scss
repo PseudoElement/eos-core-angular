@@ -67,6 +67,10 @@
 
     .modal-dialog {
         margin-top: 350px;
+
+        .modal-body {
+            min-height: 100px;
+        }
     }
 }
 

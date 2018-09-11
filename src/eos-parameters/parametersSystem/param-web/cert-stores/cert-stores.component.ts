@@ -74,8 +74,10 @@ export class CertStoresComponent implements OnInit, OnDestroy {
         e.stopPropagation();
     }
     showCert() {
-        this.listCertNode$ = this.certStoresService.showListCertNode();
-        this.InfoCertModal.show();
+            this.listCertNode$ = this.certStoresService.showListCertNode();
+        if (this.listCertNode$) {
+            this.InfoCertModal.show();
+        }
     }
     addStores() {
         if (this.isCarma) {
