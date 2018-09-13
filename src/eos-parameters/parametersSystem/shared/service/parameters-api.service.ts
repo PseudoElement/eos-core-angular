@@ -17,7 +17,14 @@ export class ParamApiSrv {
         })
         .catch(err => {
             if (err.code === 434) {
-                this._router.navigate(['/login']);
+                this._router.navigate(
+                    ['/login'],
+                    {
+                        queryParams: {
+                            returnUrl: this._router.url
+                        }
+                    }
+                );
             }
             throw err;
         });

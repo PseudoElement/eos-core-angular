@@ -123,7 +123,11 @@
                     <div
                         *ngIf="cert.length; else emptyCert"
                     >
-                        {{cert}}
+                        <ul>
+                            <li *ngFor="let c of cert">
+                                {{c}}
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
