@@ -80,7 +80,6 @@ export class CertStoresComponent implements OnInit, OnDestroy {
         }
     }
     showCertInfo(certId: string) {
-        console.log('show cert info');
         this.certStoresService.showCert(certId);
     }
     addStores() {

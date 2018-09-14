@@ -124,11 +124,16 @@
                         *ngIf="cert.length; else emptyCert"
                     >
                         <ul>
-                            <li
-                                *ngFor="let c of cert"
-                                (dblclick)="showCertInfo(c)"
-                            >
-                                {{c}}
+                            <li *ngFor="let c of cert">
+                                <div class="list-item-cert">
+                                    {{c}}
+                                </div>
+                                <div
+                                    class="info-icon-wrap"
+                                    (click)="showCertInfo(c)"
+                                >
+                                    <span class="info-icon eos-icon eos-icon-info-blue x-small"></span>
+                                </div>
                             </li>
                         </ul>
                     </div>

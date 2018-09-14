@@ -78,6 +78,20 @@
 
                 li {
                     user-select: none;
+
+                    .list-item-cert {
+                        max-width: 95%;
+                        display: inline-block;
+                        @include text-overflow;
+                    }
+
+                    .info-icon-wrap {
+                        display: inline-block;
+                        padding: 5px;
+                        cursor: pointer;
+                        position: relative;
+                        bottom: 4px;
+                    }
                 }
             }
         }
