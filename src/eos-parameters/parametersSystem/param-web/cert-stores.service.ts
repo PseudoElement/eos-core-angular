@@ -145,6 +145,9 @@ export class CertStoresService {
         }
         return '';
     }
+    showCert(certId: string) {
+        this.carmaService.ShowCert(certId).subscribe(() => {});
+    }
     private createInitCarmaStores(listCertStores: string[]) {
         const list = [];
         listCertStores.forEach((str: string) => {

@@ -79,6 +79,10 @@ export class CertStoresComponent implements OnInit, OnDestroy {
             this.InfoCertModal.show();
         }
     }
+    showCertInfo(certId: string) {
+        console.log('show cert info');
+        this.certStoresService.showCert(certId);
+    }
     addStores() {
         if (this.isCarma) {
             this.CertStoresModal = true;

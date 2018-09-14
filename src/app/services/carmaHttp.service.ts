@@ -287,6 +287,7 @@ export class CarmaHttpService extends CarmaConnectionInterface {
     }
 
     SetCurrentStores(stores: Istore[]) {
+        this.stores = stores;
         this.storesConfig = this.__make_stores(stores);
     }
 
@@ -330,6 +331,12 @@ export class CarmaHttpService extends CarmaConnectionInterface {
             } else {
                 throw new Error(`Ошибка ${data.errorMessage}`);
             }
+        });
+    }
+    ShowCert(certId: string) {
+        return this.request({
+            mode: this.mode_showcert,
+            senderCertId: certId
         });
     }
 }

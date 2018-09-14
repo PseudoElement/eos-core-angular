@@ -124,7 +124,10 @@
                         *ngIf="cert.length; else emptyCert"
                     >
                         <ul>
-                            <li *ngFor="let c of cert">
+                            <li
+                                *ngFor="let c of cert"
+                                (dblclick)="showCertInfo(c)"
+                            >
                                 {{c}}
                             </li>
                         </ul>
