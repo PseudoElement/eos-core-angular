@@ -187,7 +187,7 @@ export class CarmaHttpService extends CarmaConnectionInterface {
     ) {
         super();
     }
-    init(initStr, stores) {
+    init(initStr, stores: Istore[]) {
         initStr = initStr || 'SERVER="http://localhost:8080"';
         this.stores = stores;
         this.initStr = initStr;
@@ -222,7 +222,6 @@ export class CarmaHttpService extends CarmaConnectionInterface {
             }
         }
         this.storesConfig = this.__make_stores(this.stores);
-        this.__make_stores(stores);
         return this.TestConnection()
         .map((data) => {
             if (data.errorCode === 0 && data.errorMessage === 'DONE') {
@@ -236,21 +235,23 @@ export class CarmaHttpService extends CarmaConnectionInterface {
 
 
 
-    __make_stores(stores) {
+    __make_stores(stores: Istore[]) {
         const res = [];
-        for (let i = 0; i < stores.length; i++) {
-            let location = stores[i].Location;
-            const address = stores[i].Address;
-            let name = stores[i].Name;
+        if (stores.length) {
+            for (let i = 0; i < stores.length; i++) {
+                let location = stores[i].Location;
+                const address = stores[i].Address;
+                let name = stores[i].Name;
 
-            if (location === '') {
-                location = 'sscu';
-            }
-            if (name === '') {
-                name = 'MY';
-            }
+                if (location === '') {
+                    location = 'sscu';
+                }
+                if (name === '') {
+                    name = 'MY';
+                }
 
-            res.push({ location: location, address: address, name: name });
+                res.push({ location: location, address: address, name: name });
+            }
         }
         return res;
     }
@@ -283,6 +284,10 @@ export class CarmaHttpService extends CarmaConnectionInterface {
         return this.request({
             mode: this.mode_testconn
         });
+    }
+
+    SetCurrentStores(stores: Istore[]) {
+        this.storesConfig = this.__make_stores(stores);
     }
 
     EnumCertificates(location, address, name): Observable<string[]> {

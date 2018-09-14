@@ -46,7 +46,7 @@ export class AddCertStoresComponent {
                                 name: arr[arr.length - 1],
                                 selected: false,
                                 location: 'sslm',
-                                address: arr[arr.length - 2]
+                                address: arr[arr.length - 2] || ''
                             });
                         });
                     }

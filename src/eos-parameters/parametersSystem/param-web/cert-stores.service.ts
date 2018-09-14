@@ -102,6 +102,7 @@ export class CertStoresService {
     addStores(node: IListStores) {
         this.listsCetsStores.push(this.createListCertStotes(node));
         this.updateFormControl$.next(this.createStringForUpdate());
+        this.carmaService.SetCurrentStores(this.listsCetsStores);
     }
     showListCertNode() {
         if (this.isCarmaServer) {
