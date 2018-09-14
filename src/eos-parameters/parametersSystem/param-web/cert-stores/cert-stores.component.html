@@ -1,5 +1,5 @@
 <!-- <pre>{{initCarmaStores | json}}</pre> -->
-<div class="cert-wrapper">
+<div class="cert-wrapper" #wrapper>
     <div class="cert-header">
             <span class="l-font">Хранилища сертификатов</span>
     </div>
@@ -108,7 +108,7 @@
         role="dialog"
         aria-labelledby="dialog-sizes-name1"
     >
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog" [ngStyle]="{'margin-left.px': offsetLeftModal}">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{CurrentSelect?.Location}}:{{CurrentSelect?.Name}}</h4>
@@ -148,7 +148,7 @@
         role="dialog"
         aria-labelledby="dialog-sizes-name1"
     >
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog" [ngStyle]="{'margin-left.px': offsetLeftModal}">
             <div class="modal-content">
                     <eos-add-cert-stores
                         *ngIf="CertStoresModal"

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterContentInit, ElementRef } from '@angular/core';
 import { CertStoresService, IListCertStotes } from '../cert-stores.service';
 import { Observable } from 'rxjs/Observable';
 import { AbstractControl } from '@angular/forms';
@@ -12,9 +12,11 @@ import { Subject } from 'rxjs/Subject';
     templateUrl: 'cert-stores.component.html'
 })
 
-export class CertStoresComponent implements OnInit, OnDestroy {
+export class CertStoresComponent implements OnInit, OnDestroy, AfterContentInit {
     @ViewChild('InfoCertModal') InfoCertModal: ModalDirective;
     @ViewChild('addCertStoresModal') addCertStoresModal: ModalDirective;
+    @ViewChild('wrapper') wrapper: ElementRef;
+    offsetLeftModal: number;
     formControlStores: AbstractControl;
     CurrentSelect: IListCertStotes;
     listCertStores: IListCertStotes[];
@@ -55,6 +57,9 @@ export class CertStoresComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
+    }
+    ngAfterContentInit() {
+        this.offsetLeftModal = this.wrapper.nativeElement.offsetLeft - 21;
     }
 
     toggleAllMarks(e) {
