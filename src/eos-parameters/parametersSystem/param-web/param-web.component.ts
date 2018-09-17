@@ -21,6 +21,7 @@ export class ParamWebComponent extends BaseParamComponent {
         this.init()
         .then(() => {
             this.certStoresService.formControl = this.form.controls['rec.CERT_APPSRV_STORES'];
+            this.certStoresService.formControlInit = this.form.controls['rec.APPSRV_CRYPTO_INITSTR'];
         })
         .catch(err => {
             if (err.code !== 434) {
@@ -37,6 +38,7 @@ export class ParamWebComponent extends BaseParamComponent {
             this.init()
             .then(() => {
             this.certStoresService.formControl = this.form.controls['rec.CERT_APPSRV_STORES'];
+            this.certStoresService.formControlInit = this.form.controls['rec.APPSRV_CRYPTO_INITSTR'];
                 this.certStores.ngOnInit();
             });
         }

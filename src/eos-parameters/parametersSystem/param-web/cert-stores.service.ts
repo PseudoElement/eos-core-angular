@@ -24,6 +24,7 @@ export class CertStoresService {
     private listsCetsStores: IListCertStotes[];
     private orderByAscend: boolean = true;
     private formControlStore: AbstractControl;
+    private formControlInitString: AbstractControl;
     constructor(
         private carmaService: CarmaHttpService,
         private msgSrv: EosMessageService
@@ -49,6 +50,9 @@ export class CertStoresService {
     }
     set formControl(formControl: AbstractControl) {
         this.formControlStore = formControl;
+    }
+    set formControlInit(formControl: AbstractControl) {
+        this.formControlInitString = formControl;
     }
     initCarma(listCertStores: string[]) {
         this.createInitCarmaStores(listCertStores);
@@ -192,7 +196,7 @@ export class CertStoresService {
         });
     }
     private initCarmaServer() {
-        return this.carmaService.init(null, this.initCarmaStores)
+        return this.carmaService.init(this.formControlInitString.value, this.initCarmaStores)
         .subscribe(
             (data: boolean) => {
                 this.isCarmaServer = data;
