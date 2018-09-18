@@ -12,12 +12,12 @@ import { IListStores } from '../../../shared/consts/web.consts';
 })
 export class AddCertStoresComponent {
     @Output('closeAddCertModal') closeAddCertModal = new EventEmitter;
-    protected titleHeader = 'Выберите хранилища сертификатов';
-    protected certSystemStore: string = 'sslm';
-    protected certSystemAddress: string;
-    protected listStores$: Observable<string[]>;
-    protected listStores: IListStores[];
-    protected currentSelectNode: IListStores;
+    titleHeader = 'Выберите хранилища сертификатов';
+    certSystemStore: string = 'sslm';
+    certSystemAddress: string;
+    listStores$: Observable<string[]>;
+    listStores: IListStores[];
+    currentSelectNode: IListStores;
     constructor(
         private certStoresService: CertStoresService,
         private msgSrv: EosMessageService
