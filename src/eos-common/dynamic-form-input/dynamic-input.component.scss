@@ -35,6 +35,7 @@ eos-dynamic-input {
         background-color: transparent;
     }
     .form-control {
+        display: inline-block;
         border-color: $border-color-main-theme;
         &.light {
             background-color: $modal-block-background-main-theme;
