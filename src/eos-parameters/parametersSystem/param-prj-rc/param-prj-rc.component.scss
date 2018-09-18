@@ -1,3 +1,23 @@
-h1 {
-    color: red;
+.input-param-prj-wrapper {
+    .param-input-group {
+        .input-select-sub {
+            margin: 0 5px;
+
+            .form-group {
+                margin-bottom: 10px;
+            }
+        }
+
+        .param-input-radio {
+            font-size: 14px;
+        }
+
+        label {
+            font-size: 12px;
+        }
+
+        .elem-input-radio {
+            margin-top: 10px;
+        }
+    }
 }

@@ -35,9 +35,10 @@ eos-dynamic-input {
         background-color: transparent;
     }
     .form-control {
+        display: inline-block;
         border-color: $border-color-main-theme;
         &.light {
-            background-color: $modal-block-background-main-theme
+            background-color: $modal-block-background-main-theme;
         }
         &:-ms-input-placeholder {
             color: $placeholder-color;
@@ -69,7 +70,7 @@ eos-dynamic-input {
     .required {
         position: relative;
         &:after {
-            content: " ";
+            content: ' ';
             position: absolute;
             display: block;
             top: 0;
@@ -88,7 +89,7 @@ eos-dynamic-input {
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-            background-image: url("../assets/icons/Arrow-V-Blue-Bottom.png");
+            background-image: url('../assets/icons/Arrow-V-Blue-Bottom.png');
             background-repeat: no-repeat;
             background-position-x: right;
             background-position-y: center;
@@ -176,11 +177,88 @@ eos-dynamic-input {
 .theme-dark-blue .bs-datepicker-head,
 .theme-dark-blue .bs-datepicker-body table td span.selected,
 .theme-dark-blue .bs-datepicker-body table td.selected span,
-.theme-dark-blue .bs-datepicker-body table td span[class*="select-"]:after,
-.theme-dark-blue .bs-datepicker-body table td[class*="select-"] span:after {
+.theme-dark-blue .bs-datepicker-body table td span[class*='select-']:after,
+.theme-dark-blue .bs-datepicker-body table td[class*='select-'] span:after {
     background-color: $button-color-main-theme !important;
 }
 
 .bs-datepicker-body table td {
     color: black !important;
+}
+
+.toggle-wrap {
+    background: $light-grey-1;
+    border: 1px solid $border-color-main-theme;
+    border-width: 1px 0;
+    padding: 1px;
+    font-size: 14px;
+    height: 44px;
+
+    .label-text {
+        position: relative;
+        bottom: 4px;
+        display: inline-block;
+        margin: 0 10px 0 15px;
+        font-size: 14px;
+        cursor: pointer;
+
+        &.disabled {
+            cursor: default;
+        }
+    }
+    .toggle {
+        position: relative;
+        display: inline-block;
+        top: 9px;
+        width: 38px;
+        height: 24px;
+
+        input {
+            display: none;
+
+            &:checked + .slider {
+                background-color: #2196f3;
+            }
+
+            &:focus + .slider {
+                box-shadow: 0 0 1px #2196f3;
+            }
+
+            &:checked + .slider:before {
+                -webkit-transform: translateX(14px);
+                -ms-transform: translateX(14px);
+                transform: translateX(14px);
+            }
+
+            &[disabled]+.slider {
+                cursor: default;
+            }
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #f00;
+            -webkit-transition: 0.4s;
+            transition: 0.4s;
+            border-radius: 20px;
+
+            &::before {
+                position: absolute;
+                content: '';
+                height: 20px;
+                width: 20px;
+                left: 2px;
+                bottom: 2px;
+                background-color: white;
+                -webkit-transition: 0.4s;
+                transition: 0.4s;
+                border-radius: 50%;
+            }
+        }
+    }
 }

@@ -34,12 +34,14 @@ import { TestPageComponent } from './test-page/test-page.component';
 
 import { TitleComponent } from './title/title.component';
 import { UserComponent } from './user/user.component';
+import { NavParamComponent } from './nav-param/nav-param.component';
 
 import { EosBreadcrumbsService } from './services/eos-breadcrumbs.service';
 import { EosDeskService } from './services/eos-desk.service';
 import { EosNoticeService } from './services/eos-notice.service';
 import { EosStorageService } from './services/eos-storage.service';
 import { EosUserProfileService } from './services/eos-user-profile.service';
+import { CarmaHttpService } from './services/carmaHttp.service';
 
 /* guards */
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
@@ -63,6 +65,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
         TestPageComponent,
         TitleComponent,
         UserComponent,
+        NavParamComponent
     ],
     imports: [
         AppRoutingModule,
@@ -96,6 +99,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
         EosNoticeService,
         EosStorageService,
         EosUserProfileService,
+        CarmaHttpService,
     ],
     bootstrap: [AppComponent],
 })

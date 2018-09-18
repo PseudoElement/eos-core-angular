@@ -1,0 +1,76 @@
+<div class="add-cert-stores-wrapper">
+    <eos-param-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="!currentSelectNode"
+    ></eos-param-header>
+    <div class="add-cert-stores">
+        <div class="input-wrap">
+            <label
+                for="selectStores"
+            >
+                Расположение хранилища
+            </label>
+            <br>
+            <div class="eos-select"
+                [ngClass]="{'required': isRequired}"
+                *ngIf="!readonly"
+            >
+                <select
+                    class="form-control m-font"
+                    id="selectStores"
+                    [(ngModel)]="certSystemStore"
+                >
+                    <option value="sslm">
+                        Учетная запись компьютера
+                    </option>
+                    <option value="sss">
+                        Учетная запись службы
+                    </option>
+                    <option value="remote">
+                        Удаленный сервер
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="input-wrap pull-right">
+            <label for="adress">
+                Адрес хранилища
+            </label>
+            <div>
+                <input class="form-control m-font"
+                    id="adress"
+                    type="text"
+                    placeholder="Адрес хранилища"
+                    autocomplete="off"
+                    [(ngModel)]="certSystemAddress"
+                >
+                <button
+                    class="adres-search btn"
+                    (click)="searchStore()"
+                >
+                    <span class="eos-icon eos-icon-search-blue small"></span>
+                </button>
+            </div>
+        </div>
+        <div class="list-stores">
+            <ul
+                *ngIf="listStores$ | async"
+            >
+                <li
+                    *ngFor="let list of listStores"
+                    [ngClass]="{highlighted: list.selected}"
+                    (click)="selectNode(list)"
+                    (dblclick)="submit()"
+                >
+                    {{list.title}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<ng-template #emptyStores>
+    <h3>Произведите поиск хранилища</h3>
+</ng-template>

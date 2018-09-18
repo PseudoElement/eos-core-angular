@@ -4,10 +4,12 @@
             <span class="icon eos-icon small" [ngClass]="{'eos-icon-menu-white': isWide, 'eos-icon-menu-blue': !isWide}"></span>
         </button>
     </span>
+    <span class="nav-text">
+        Настройки системы
+    </span>
 
     <span class="pull-right">
-        <!-- <eos-pushpin></eos-pushpin> -->
-        <!-- <eos-pushpin [hidden]="varr2" [infoOpened]="varr1"></eos-pushpin> -->
+        <eos-pushpin [infoOpened]="true"></eos-pushpin>
     </span>
 
     <div [ngClass]="{'list-show' : isWide}" class="list">
@@ -15,7 +17,8 @@
             <li
                 class="list-group-item"
                 *ngFor="let param of listParams"
-                 [routerLink]="['/parameters', param.url]"
+                [routerLink]="['/parameters', param.url]"
+                routerLinkActive="active-element-param"
             >{{param.title}}</li>
         </ul>
     </div>

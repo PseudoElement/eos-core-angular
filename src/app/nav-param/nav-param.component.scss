@@ -24,7 +24,6 @@
         height: 2000px;
         background: $white;
         border-radius: 5px 5px 0 0;
-        // transform: translateX(-30px);
         transition: .5s;
 
         &.list-show {
@@ -34,6 +33,13 @@
         .list-group {
             .list-group-item {
                 background: $light-grey-1;
+                cursor: pointer;
+                &:focus {
+                    outline: none;
+                }
+                &.active-element-param {
+                    background: $highlight-color-main-theme;
+                }
             }
         }
     }
@@ -42,5 +48,9 @@
         .sandwich {
             transition: .5s;
         }
+    }
+
+    .nav-text {
+        color: $button-color-main-theme;
     }
 }

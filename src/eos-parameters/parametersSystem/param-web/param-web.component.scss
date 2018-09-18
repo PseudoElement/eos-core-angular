@@ -1,12 +1,11 @@
-eos-dynamic-input {
-    font-size: 16px;
+.input-param-web-wrapper {
+    .param-input-group {
+        label {
+            font-size: 14px;
+        }
+    }
 }
 
-.form-wrap {
-    background: $white;
-    padding: 20px;
-
-    hr {
-        margin-top: 0;
-    }
+.storageBtn {
+    margin-top: 20px;
 }

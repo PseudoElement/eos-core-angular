@@ -1,0 +1,20 @@
+<div [formGroup]="form">
+    <div class="toggle-wrap">
+        <label
+            [for]="input.key"
+            class="label-text"
+            [ngClass]="{disabled: readonly}">
+            {{input.label}}
+        </label>
+        <label class="toggle">
+            <input
+                [formControlName]="input.key"
+                [id]="input.key"
+                type="checkbox"
+                [readonly]="readonly"
+                (blur)="onBlur()"
+                (focus)="onFocus()">
+            <span class="slider round"></span>
+        </label>
+    </div>
+</div>

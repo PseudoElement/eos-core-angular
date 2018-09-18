@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EOS_PARAMETERS_TAB } from '../consts/eos-parameters.const';
+import { EOS_PARAMETERS_TAB } from 'eos-parameters/parametersSystem/shared/consts/eos-parameters.const';
 
 @Component({
     selector: 'eos-nav-param',

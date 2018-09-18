@@ -1,0 +1,25 @@
+<div
+    [ngClass]="'inline-block'"
+    [formGroup]="form">
+    <div
+        class="input-increment"
+        (mouseenter)="onFocus()"
+        (mouseleave)="onBlur()"
+        [ngClass]="{'input-invalid': control.invalid, 'disabled': readonly}">
+        <input type="text"
+            #inputF
+            max="10"
+            [formControlName]="input.key"
+            [id]="input.key"
+            [readonly]="readonly"
+            [ngClass]="{'readonly': readonly}">
+        <span
+                class="decrease fa fa-minus"
+                (click)="onDecrease(inputF)"
+        ></span>
+        <span
+                class="increase fa fa-plus"
+                (click)="onIncrease(inputF)"
+        ></span>
+    </div>
+</div>
