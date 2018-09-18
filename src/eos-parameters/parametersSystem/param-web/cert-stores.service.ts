@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
 import { Subject } from 'rxjs/Subject';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { PARM_NOT_CARMA_SERVER } from '../shared/consts/eos-parameters.const';
+import { PARM_NOT_CARMA_SERVER, PARM_ERR_OPEN_CERT_STORES } from '../shared/consts/eos-parameters.const';
 import { AbstractControl } from '@angular/forms';
 import { IListStores } from '../shared/consts/web.consts';
+import { Observable } from 'rxjs/Observable';
 
 export interface IListCertStotes extends Istore {
     marked: boolean;
@@ -150,7 +151,12 @@ export class CertStoresService {
         return '';
     }
     showCert(certId: string) {
-        this.carmaService.ShowCert(certId).subscribe(() => {});
+        this.carmaService.ShowCert(certId)
+            .catch(e => {
+                this.msgSrv.addNewMessage(PARM_ERR_OPEN_CERT_STORES);
+                return Observable.of(null);
+            })
+            .subscribe(() => {});
     }
     private createInitCarmaStores(listCertStores: string[]) {
         const list = [];
@@ -202,7 +208,7 @@ export class CertStoresService {
                 this.isCarmaServer = data;
                 this._isCarmaServer$.next(data);
             },
-            (err) => {
+            () => {
                 this.isCarmaServer = false;
                 this._isCarmaServer$.next(false);
             }
