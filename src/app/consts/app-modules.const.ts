@@ -1,12 +1,29 @@
-export const APP_MODULES = [{
-    title: 'Cправочники',
-    url: '/spravochniki'
-}, {
-    title: 'Настройки системы',
-    url: '/parameters',
-}];
+export const APP_MODULES = [
+    {
+        title: 'Cправочники',
+        url: '/spravochniki'
+    },
+    {
+        title: 'Пользователи',
+        url: '/user-params',
+    },
+    {
+        title: 'Настройки системы',
+        url: '/parameters',
+    }
+];
 
-export const APP_MODULES_DROPDOWN = [{
-    title: 'Тестовая страница',
-    url: '/test'
-}];
+export const APP_MODULES_DROPDOWN = [
+    {
+        title: 'Тестовая страница',
+        url: '/test'
+    },
+    {
+        title: 'Пользователи test 3611',
+        url: '/user-params/3611',
+    },
+    {
+        title: 'Пользователи test 4316',
+        url: '/user-params/4316/registration/1',
+    }
+];

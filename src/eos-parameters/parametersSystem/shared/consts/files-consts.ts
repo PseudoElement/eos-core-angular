@@ -1,6 +1,6 @@
 import { IBaseParameters } from '../interfaces/parameters.interfaces';
 
-export const MAX_SIZE = 'Мах размер:';
+export const MAX_SIZE = 'Мах размер';
 export const ONE_FILE = 'Один файл';
 export const REG_EXTENSIONS: RegExp = /\..*\S$/;
 export const REG_MAX_SIZE: RegExp = /^\d*$/;
@@ -45,7 +45,7 @@ export const FILES_PARAM: IBaseParameters = {
             key: 'EDS_DELETE_DENIED', // в базе значение 1/0
             type: 'boolean',
             formatDbBinary: true,
-            title: 'Запретить удалять ЭП файлов РК/РКПД'
+            title: 'Запретить удаление ЭП файлов РК/РКПД'
         },
         {
             key: 'FILE_WITH_EDS_PROTECTED',

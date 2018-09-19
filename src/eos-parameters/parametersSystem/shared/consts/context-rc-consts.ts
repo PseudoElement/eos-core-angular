@@ -81,7 +81,7 @@ export const CONTEXT_RC_PARAM: IBaseParameters = {
         {
             key: 'DOC_SIGN',
             type: 'boolean',
-            title: 'Подпиал'
+            title: 'Подписал'
         },
         {
             key: 'DOC_WHO',
@@ -96,7 +96,7 @@ export const CONTEXT_RC_PARAM: IBaseParameters = {
         {
             key: 'DOC_EXE',
             type: 'boolean',
-            title: 'Исполниели'
+            title: 'Исполнители'
         },
         {
             key: 'PRJ_RC', // PRJ_RC

@@ -82,12 +82,12 @@ export const RC_PARAM: IBaseParameters = {
         {
             key: 'RES_PLAN_MORE_PARENT',
             type: 'boolean',
-            title: 'Ввод поручений с «План. датой» больше «План. даты» РК или род. поручения'
+            title: 'Запретить ввод поручений с «План. датой» больше «План. даты» РК или род. поручения'
         },
         {
             key: 'RES_DATE_LESS_PARENT',
             type: 'boolean',
-            title: 'Ввод резолюций с датой меньше даты рег.РК или род. резолюции'
+            title: 'Запретить ввод резолюций с датой меньше даты рег. РК или род. резолюции'
         },
         {
             key: 'CONSTRAIN_DELO_LIST',

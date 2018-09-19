@@ -16,7 +16,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
     hiddenInputRadioResolution: boolean;
     inputChoiceFiles = {
             key: 'contextFile',
-            label: 'Форматировать и индексировать файлы контекста'
+            label: 'Формировать и индексировать файлы контекста'
         };
     inputcontextResolution = {
         key: 'contextResolution',

@@ -13,7 +13,7 @@ export class ParamOtherComponent extends BaseParamComponent {
     inputServer = {
         controlType: E_FIELD_TYPE.string,
         key: 'server',
-        label: 'Сервер приложений и сервер ДелоWEB',
+        label: 'Сервер приложений и сервер «ДелоWEB»',
     };
     apiConf = new ApiCfg;
 

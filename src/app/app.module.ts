@@ -17,6 +17,7 @@ import { EosDictionariesModule } from '../eos-dictionaries/eos-dictionaries.modu
 import { EosRestModule } from '../eos-rest/eos-rest.module';
 
 import { EosParametersModule } from '../eos-parameters/eos-parameters.module';
+import { EosUserParamsModule } from 'eos-user-params/eos-user-params.module';
 
 import { AppComponent } from './app.component';
 import { BreadcrumbsComponent } from './breadcrumb/breadcrumb.component';
@@ -80,6 +81,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
         EosCommonModule,
         EosDictionariesModule,
         EosParametersModule,
+        EosUserParamsModule,
     ],
     entryComponents: [
         LoginFormComponent,

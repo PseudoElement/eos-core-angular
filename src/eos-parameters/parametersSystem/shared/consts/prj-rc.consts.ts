@@ -40,7 +40,7 @@ export const PRJ_RC_PARAM: IBaseParameters = {
         {
             key: 'STRONG_USING_EDS_SIGN',
             type: 'boolean',
-            title: 'Строгое требование установкиЭП при подписании'
+            title: 'Строгое требование установки ЭП при подписании'
         },
         {
             key: 'PRJ_STAGE_VISA_PROTECTED',
