@@ -24,8 +24,8 @@ export const RC_PARAM: IBaseParameters = {
             type: 'radio',
             title: '',
             options: [
-                {value: '0', title: 'Абсолютно'},
-                {value: '1', title: 'Картотечно'},
+                {value: '1', title: 'Абсолютно'},
+                {value: '0', title: 'Картотечно'},
             ]
         },
         {

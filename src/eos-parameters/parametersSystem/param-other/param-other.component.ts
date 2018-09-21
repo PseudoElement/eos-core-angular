@@ -1,9 +1,9 @@
-import { ApiCfg } from './../../../eos-rest/core/api-cfg';
 import { E_FIELD_TYPE } from 'eos-parameters/parametersSystem/shared/interfaces/parameters.interfaces';
 import { OTHER_PARAM } from './../shared/consts/other-consts';
 import { BaseParamComponent } from './../shared/base-param.component';
 import { Component, Injector } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     selector: 'eos-param-other',
@@ -15,13 +15,17 @@ export class ParamOtherComponent extends BaseParamComponent {
         key: 'server',
         label: 'Сервер приложений и сервер «ДелоWEB»',
     };
-    apiConf = new ApiCfg;
+    formServer: FormGroup;
 
-    formServer = new FormGroup({
-        server: new FormControl({ value: this.apiConf.apiBaseUrl, disabled: true })
-    });
-    constructor( injector: Injector ) {
+
+    constructor(
+        injector: Injector,
+        protected context: AppContext
+        ) {
         super(injector, OTHER_PARAM);
+        this.formServer = new FormGroup({
+            server: new FormControl({ value: context.SysParms._more_json.ParamsDic['СЕРВЕР ПРИЛОЖЕНИЙ'], disabled: true })
+        });
         this.init()
         .catch(err => {
             if (err.code !== 434) {
