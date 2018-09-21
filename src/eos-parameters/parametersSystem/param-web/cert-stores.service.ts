@@ -136,6 +136,7 @@ export class CertStoresService {
             if (node.marked || node.selectedMark) {
                 if (node === this.currentSelectedNode) {
                     this.currentSelectedNode = null;
+                    this._currentSelectedNode$.next(null);
                 }
                 this.listsCetsStores.splice(i, 1);
                 i --;
