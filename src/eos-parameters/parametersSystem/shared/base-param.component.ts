@@ -92,7 +92,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         );
     }
 
-    getData(req) {
+    getData(req): Promise<any> {
         return this.paramApiSrv.getData(req);
     }
     prepareDataParam() {
