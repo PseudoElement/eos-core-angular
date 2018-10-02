@@ -333,6 +333,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
      * @description Open modal with CreateNodeComponent, fullfill CreateNodeComponent data
      */
     private _openCreate(recParams: any) {
+        if (this.dictionaryId === 'user_param') {
+            this._router.navigate(['/user-params-set']);
+            return;
+        }
         this.modalWindow = this._modalSrv.show(CreateNodeComponent, { class: 'creating-modal' });
         const dictionary = this._dictSrv.currentDictionary;
         const editDescr = dictionary.getEditDescriptor();
