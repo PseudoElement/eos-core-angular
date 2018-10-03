@@ -58,6 +58,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         this.prepareDataParam();
         return this.getData(this.queryObj)
             .then(data => {
+                console.log(data, this.queryObj);
                 this.prepareData = this.convData(data);
                 this.inputs = this.getInputs();
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
@@ -96,7 +97,9 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         return this.paramApiSrv.getData(req);
     }
     prepareDataParam() {
+        console.log(this.constParam.fields);
         this.prepInputs = this.getObjectInputFields(this.constParam.fields);
+        console.log(this.prepInputs);
         this.queryObj = this.getObjQueryInputsField(this.prepInputs._list);
     }
     convData(data: Array<any>) {
@@ -187,6 +190,11 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         this.newData = EosUtils.setValueByPath(this.newData, path, _value);
         const oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
 
+        console.log(path);
+        console.log(value);
+        console.log(this.newData);
+        console.log(oldValue);
+        console.log(_value);
         if (oldValue !== _value) {
             // console.log('changed', path, oldValue, 'to', _value, this.prepareData.rec, this.newData.rec);
         }
@@ -230,6 +238,8 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                 dataInput.rec[key] = this.prepareData.rec[key];
             }
         });
+        console.log(this.prepInputs);
+        console.log(dataInput);
         return this.dataSrv.getInputs(this.prepInputs, dataInput);
     }
     private unsubscribe() {

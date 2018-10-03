@@ -1,0 +1,163 @@
+<div class="input-user-wrapper input-user-external-application-wrapper"
+*ngIf="inputs">
+        <eos-user-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnDisabled"
+    ></eos-user-header>
+    <div class="titles-external-application">
+        <span class="l-font inscription-application-call-string">Строка вызова приложения:</span>
+        <span class="l-font inscription-call-options">Параметры вызова:</span>
+    </div>
+    <label>Ctrl+Shift+1:</label>
+    <div class="user-input-group">
+        <eos-dynamic-input
+                    class="inline-block application-call-string"
+                    [input]="inputs['rec.START_APP_1']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_1'].readonly"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    class="inline-block call-options"
+                    [input]="inputs['rec.START_APP_1_PARMS']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_1_PARMS'].readonly"
+                ></eos-dynamic-input>
+    </div>
+    <label>Ctrl+Shift+2:</label>
+    <div class="user-input-group">
+        <eos-dynamic-input
+                    class="inline-block application-call-string"
+                    [input]="inputs['rec.START_APP_2']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_2'].readonly"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    class="inline-block call-options"
+                    [input]="inputs['rec.START_APP_2_PARMS']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_2_PARMS'].readonly"
+                ></eos-dynamic-input>
+    </div>
+    <label>Ctrl+Shift+3:</label>
+    <div class="user-input-group">
+        <eos-dynamic-input
+                    class="inline-block application-call-string"
+                    [input]="inputs['rec.START_APP_3']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_3'].readonly"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    class="inline-block call-options"
+                    [input]="inputs['rec.START_APP_3_PARMS']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_3_PARMS'].readonly"
+                ></eos-dynamic-input>
+    </div>
+    <label>Ctrl+Shift+4:</label>
+    <div class="user-input-group">
+        <eos-dynamic-input
+                    class="inline-block application-call-string"
+                    [input]="inputs['rec.START_APP_4']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_4'].readonly"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    class="inline-block call-options"
+                    [input]="inputs['rec.START_APP_4_PARMS']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_4_PARMS'].readonly"
+                ></eos-dynamic-input>
+    </div>
+    <label>Ctrl+Shift+5:</label>
+    <div class="user-input-group">
+        <eos-dynamic-input
+                    class="inline-block application-call-string"
+                    [input]="inputs['rec.START_APP_5']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_5'].readonly"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    class="inline-block call-options"
+                    [input]="inputs['rec.START_APP_5_PARMS']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_5_PARMS'].readonly"
+                ></eos-dynamic-input>
+    </div>
+    <label>Ctrl+Shift+6:</label>
+    <div class="user-input-group">
+        <eos-dynamic-input
+                    class="inline-block application-call-string"
+                    [input]="inputs['rec.START_APP_6']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_6'].readonly"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    class="inline-block call-options"
+                    [input]="inputs['rec.START_APP_6_PARMS']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_6_PARMS'].readonly"
+                ></eos-dynamic-input>
+    </div>
+    <label>Ctrl+Shift+7:</label>
+    <div class="user-input-group">
+        <eos-dynamic-input
+                    class="inline-block application-call-string"
+                    [input]="inputs['rec.START_APP_7']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_7'].readonly"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    class="inline-block call-options"
+                    [input]="inputs['rec.START_APP_7_PARMS']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_7_PARMS'].readonly"
+                ></eos-dynamic-input>
+    </div>
+    <label>Ctrl+Shift+8:</label>
+    <div class="user-input-group">
+        <eos-dynamic-input
+                    class="inline-block application-call-string"
+                    [input]="inputs['rec.START_APP_8']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_8'].readonly"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    class="inline-block call-options"
+                    [input]="inputs['rec.START_APP_8_PARMS']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_8_PARMS'].readonly"
+                ></eos-dynamic-input>
+    </div>
+    <label>Ctrl+Shift+9:</label>
+    <div class="user-input-group">
+        <eos-dynamic-input
+                    class="inline-block application-call-string"
+                    [input]="inputs['rec.START_APP_9']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_9'].readonly"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    class="inline-block call-options"
+                    [input]="inputs['rec.START_APP_9_PARMS']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_9_PARMS'].readonly"
+                ></eos-dynamic-input>
+    </div>
+    <label>Ctrl+Shift+0:</label>
+    <div class="user-input-group">
+        <eos-dynamic-input
+                    class="inline-block application-call-string"
+                    [input]="inputs['rec.START_APP_0']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_0'].readonly"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    class="inline-block call-options"
+                    [input]="inputs['rec.START_APP_0_PARMS']"
+                    [form]="form"
+                    [readonly]="inputs['rec.START_APP_0_PARMS'].readonly"
+                ></eos-dynamic-input>
+    </div>
+</div>

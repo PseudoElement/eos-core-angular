@@ -12,7 +12,6 @@ export class UserParamApiSrv {
         return this.apiSrv
         .read(query)
         .then((data: any[]) => {
-            // this.prepareForEdit(data);
             return data;
         })
         .catch(err => {

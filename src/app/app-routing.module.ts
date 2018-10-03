@@ -19,6 +19,7 @@ import { LoginComponent } from './login/login.component';
 import { ParametersSystemComponent } from '../eos-parameters/parametersSystem/parametersSystem.component';
 import { UserParamsComponent } from 'eos-user-params/eos-user-params.component';
 import { UserParamSetComponent } from 'eos-user-params/user-params-set/user-params-set.component';
+// import { UserParamDirectoriesComponent } from 'eos-user-params/user-params-set/user-param-directories/user-param-directories.component';
 /// import { environment } from 'environments/environment';
 
 const routes: Routes = [
@@ -178,7 +179,9 @@ const routes: Routes = [
                 children: [
                     {
                         path: ':field-id',
+                        pathMatch: 'full',
                         component: UserParamSetComponent,
+                        canDeactivate: [CanDeactivateGuard],
                         children: [
                             {
                                 path: ':sub-field',
@@ -188,8 +191,8 @@ const routes: Routes = [
                     },
                     {
                         path: '',
+                        redirectTo: 'directories',
                         pathMatch: 'full',
-                        redirectTo: 'registration',
                     },
                 ]
             }

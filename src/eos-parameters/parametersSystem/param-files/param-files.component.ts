@@ -86,6 +86,7 @@ export class ParamFielsComponent extends BaseParamComponent {
         );
         this.paramApiSrv.getData(Object.assign({}, this.queryFileConstraint))
         .then(data => {
+            console.log(data);
             this.dataAttachDb = data;
             this.prepDataAttachField(data);
             this.inputAttach = this.getInputAttach();
@@ -128,6 +129,7 @@ export class ParamFielsComponent extends BaseParamComponent {
             }
             if (this.newDataAttach) {
                 this.dataAttachDb.forEach((item) => {
+                    console.log(item);
                     dataRes.push({
                         method: 'MERGE',
                         requestUri: `DOCGROUP_CL('0.')/DG_FILE_CONSTRAINT_List('${item.CompositePrimaryKey}')`,
@@ -138,6 +140,7 @@ export class ParamFielsComponent extends BaseParamComponent {
                         }
                     });
                 });
+                console.log(dataRes);
             }
             this.paramApiSrv
                 .setData(dataRes)
@@ -180,6 +183,7 @@ export class ParamFielsComponent extends BaseParamComponent {
         return inputs;
     }
     changeByPathAttach(path: string, value: any) {
+       // console.log(path);
         const key = path.split('_').pop();
         let _value = null;
         if (key === 'FILE') {

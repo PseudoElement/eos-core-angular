@@ -1,3 +1,51 @@
-h2 {
-    color: yellow;
+.user-system {
+    width: 800px;
+    max-height: calc(100vh - 176px);
+    margin-left: calc(50vw - 420px);
+    overflow: auto;
+
+    .input-user-wrapper {
+        border: 1px solid $border-color-main-theme;
+        background: $white;
+
+        hr {
+            margin: 10px 0;
+        }
+
+        .user-input-group {
+            padding: 0 20px;
+            margin-top: 20px;
+
+            hr {
+                margin-top: 3px;
+                margin-bottom: 10px;
+            }
+
+            label {
+                font-size: 14px;
+            }
+        }
+    }
+
+    .modal-dialog {
+        width: 800px;
+
+        .modal-content {
+            border: 0;
+
+            .modal-header {
+                background: $active-field-color-main-theme;
+                color: $white;
+            }
+
+            .modal-body {
+
+                eos-dynamic-input {
+                    font-size: 14px;
+
+                }
+
+            }
+        }
+    }
 }

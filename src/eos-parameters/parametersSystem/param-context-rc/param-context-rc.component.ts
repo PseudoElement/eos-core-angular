@@ -138,11 +138,14 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
     }
     createObjRequestCotext() {
         let value = '';
+        console.log(this.newData.rec);
         for (const key in this.newData.rec) {
             if (key === 'RESOLUTION' && this.newData.rec[key]) {
+                console.log(key);
                 value = value || ',';
                 value += this.newData.rec[key] + ',';
             } else if (this.newData.rec[key]) {
+                console.log(key);
                 value = value || ',';
                 value += key + ',';
             }

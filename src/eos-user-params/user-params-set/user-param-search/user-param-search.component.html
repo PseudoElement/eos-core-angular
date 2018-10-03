@@ -1,0 +1,29 @@
+<div class="input-user-wrapper input-user-search-wrapper"
+*ngIf="inputs">
+<eos-user-header
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnDisabled"
+        [title]="titleHeader"></eos-user-header>
+        <div class="user-input-group">
+            <span class="l-font">Результат поиска</span>
+            <hr>
+            <div class="number-increment-wrap">
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputs['rec.SRCH_LIMIT_RESULT']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+            </div>
+        </div>
+            <hr>
+            <div class="user-input-group">
+                <span class="l-font">Картотека РК</span>
+                <hr>
+                    <eos-dynamic-input
+                        [input]="inputs['rec.SEARCH_CONTEXT_CARD_EMPTY']"
+                        [form]="form"
+                    ></eos-dynamic-input>
+            </div>
+</div>
