@@ -5,7 +5,7 @@ import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 // import { ParamDescriptorSrv } from './shared/service/param-descriptor.service';
 
 @Component({
-  //  selector: 'eos-user-params-set',
+    selector: 'eos-user-params-set',
     templateUrl: 'user-params-set.component.html'
 })
 export class UserParamSetComponent implements OnChanges, OnInit {
@@ -17,7 +17,9 @@ export class UserParamSetComponent implements OnChanges, OnInit {
         private _confirmSrv: ConfirmWindowService,
       //  private _paramDescSrv: ParamDescriptorSrv
     ) {
-        this._route.params.subscribe(users => (this.userId = users['field-id']));
+        this._route.params.subscribe(users => {
+            this.userId = users['sub-field'];
+        });
     }
     ngOnChanges(changes: SimpleChanges) {
         console.log('Changes user system', changes);

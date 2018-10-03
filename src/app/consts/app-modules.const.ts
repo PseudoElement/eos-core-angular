@@ -20,7 +20,7 @@ export const APP_MODULES_DROPDOWN = [
     },
     {
         title: 'Пользователи test 3611',
-        url: '/user-params/3611',
+        url: '/user-params-set/param-set/search',
     },
     {
         title: 'Пользователи test 4316',

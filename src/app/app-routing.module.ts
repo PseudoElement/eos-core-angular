@@ -17,8 +17,7 @@ import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
 import { LoginComponent } from './login/login.component';
 
 import { ParametersSystemComponent } from '../eos-parameters/parametersSystem/parametersSystem.component';
-import { UserParamSetComponent } from 'eos-user-params/user-params-set/user-params-set.component';
-// import { UserParamDirectoriesComponent } from 'eos-user-params/user-params-set/user-param-directories/user-param-directories.component';
+import { UserParamsComponent } from 'eos-user-params/eos-user-params.component';
 /// import { environment } from 'environments/environment';
 
 const routes: Routes = [
@@ -169,11 +168,15 @@ const routes: Routes = [
         children: [
             {
                 path: ':field-id',
-                component: UserParamSetComponent,
                 children: [
                     {
                         path: ':sub-field',
-                        component: UserParamSetComponent
+                        component: UserParamsComponent
+                    },
+                    {
+                        path: '',
+                        pathMatch: 'full',
+                        component: UserParamsComponent
                     }
                 ]
             },

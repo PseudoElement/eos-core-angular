@@ -4,35 +4,35 @@
             <eos-user-param-directories
             (formChanged)="recordChanged($event)"
             (formInvalid)="turnOffSave($event)"
-            [btnDisabled]="!isChanged || disableSave">   
+            [btnDisabled]="!isChanged || disableSave">
             </eos-user-param-directories>
         </ng-container>
         <ng-container *ngSwitchCase="'search'">
             <eos-user-param-search
             (formChanged)="recordChanged($event)"
             (formInvalid)="turnOffSave($event)"
-            [btnDisabled]="!isChanged || disableSave">   
+            [btnDisabled]="!isChanged || disableSave">
             </eos-user-param-search>
         </ng-container>
         <ng-container *ngSwitchCase="'visualization'">
             <eos-user-param-visualization
             (formChanged)="recordChanged($event)"
             (formInvalid)="turnOffSave($event)"
-            [btnDisabled]="!isChanged || disableSave">   
+            [btnDisabled]="!isChanged || disableSave">
             </eos-user-param-visualization>
         </ng-container>
         <ng-container *ngSwitchCase="'external-application'">
                 <eos-user-param-external-application
                 (formChanged)="recordChanged($event)"
                 (formInvalid)="turnOffSave($event)"
-                [btnDisabled]="!isChanged || disableSave">   
+                [btnDisabled]="!isChanged || disableSave">
                 </eos-user-param-external-application>
             </ng-container>
             <ng-container *ngSwitchCase="'other'">
                 <eos-user-param-other
                 (formChanged)="recordChanged($event)"
                 (formInvalid)="turnOffSave($event)"
-                [btnDisabled]="!isChanged || disableSave">   
+                [btnDisabled]="!isChanged || disableSave">
                 </eos-user-param-other>
             </ng-container>
     </ng-container>
