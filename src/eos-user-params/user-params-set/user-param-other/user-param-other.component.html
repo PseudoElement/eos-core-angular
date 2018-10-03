@@ -1,0 +1,86 @@
+<div class="input-user-wrapper input-user-other-rk-forwarding-wrapper"
+*ngIf="inputs">
+<eos-user-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnDisabled"
+    ></eos-user-header> 
+    <div class="tabs-wrapper usual-border border-bottom">
+        <ul class="tabs">
+            <li class="tab-item"
+                *ngFor="let tab of fieldGroups; let i = index"
+                [ngClass]="{'active': i === currTab}"
+                (click)="setTab(i)">
+                <span class="tab-title">{{tab}}</span>
+            </li>
+        </ul>
+</div>
+
+<div class="user-param-other-content-wrapper">
+    <div [hidden]="currTab !== 0"
+    class="clearfix">
+    <!--------------------------0--------------------------------------------->
+    <div class="input-user-wrapper input-user-other-rk-forwarding-wrapper"
+*ngIf="inputs">
+    <div class="user-input-group">
+        <span class="l-font">Пересылка</span>
+        <hr>
+            <eos-dynamic-input
+                [input]="inputs['rec.SEND_DIALOG']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="user-input-group">
+            <span class="l-font">Удалять РК из текущего кабинета после пересылки</span>
+        <hr>
+        <eos-dynamic-input
+                [input]="inputs['rec.DELFROMCAB']"
+                [form]="form"
+                [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="user-input-group">
+            <span class="l-font">Добавлять адресатов пересылки РК в ЖПД</span>
+        <hr>
+        <eos-dynamic-input
+                [input]="inputs['rec.MARKDOC']"
+                [form]="form"
+                [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="user-input-group">
+            <span class="l-font">Передавать</span>
+        <hr>
+        <eos-dynamic-input
+                [input]="inputs['rec.MARKDOCKND']"
+                [form]="form"
+                [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+</div>
+</div>
+<!--------------------------0--------------------------------------------->
+<!--------------------------1--------------------------------------------->
+    <div [hidden]="currTab !== 1"
+    class="clearfix">
+<span>Внешние адресаты</span>
+<div class="user-input-group">
+    <span class="l-font">При добавлении указывать</span>
+    <hr>
+    <eos-dynamic-input
+    class="inline-block"
+    [input]="inputs['rec.RS_OUTER_DEFAULT_DELIVERY']"
+    [form]="form"
+    [readonly]="false"
+></eos-dynamic-input>
+<span></span>
+</div>
+</div>
+<!--------------------------1--------------------------------------------->
+</div>
+</div>

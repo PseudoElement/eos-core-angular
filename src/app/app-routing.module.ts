@@ -18,6 +18,7 @@ import { LoginComponent } from './login/login.component';
 
 import { ParametersSystemComponent } from '../eos-parameters/parametersSystem/parametersSystem.component';
 import { UserParamSetComponent } from 'eos-user-params/user-params-set/user-params-set.component';
+// import { UserParamDirectoriesComponent } from 'eos-user-params/user-params-set/user-param-directories/user-param-directories.component';
 /// import { environment } from 'environments/environment';
 
 const routes: Routes = [
