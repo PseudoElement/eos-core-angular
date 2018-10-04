@@ -1,5 +1,9 @@
 .input-user-other-rk-forwarding-wrapper {
 
+    .tabs-wrapper {
+        margin: 0;
+    }
+
     .inline-block {
         display: inline-block;
         padding-top: 10px;
@@ -22,6 +26,11 @@
             padding-left: 40px;
             padding-right: 40px;
         }
+    }
+
+    .the-main-recipients-of-the-document-titles {
+        font-weight: bold;
+        clear: both;
     }
 }
 

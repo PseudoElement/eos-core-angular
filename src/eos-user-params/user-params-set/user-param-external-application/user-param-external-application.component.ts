@@ -1,5 +1,5 @@
 import { Component, Injector } from '@angular/core';
-import { UserParamExternalApplicationSrv } from '../../shared/services/user-param-external-application.service';
+import { UserParamExternalApplicationSrv } from '../shared-user-param/services/user-param-external-application.service';
 
 @Component({
     selector: 'eos-user-param-external-application',

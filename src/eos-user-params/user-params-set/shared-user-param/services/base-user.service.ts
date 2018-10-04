@@ -1,12 +1,12 @@
 import { OnDestroy, OnInit, Injectable, Injector, Output, Input, EventEmitter } from '@angular/core';
-import { E_FIELD_TYPE, IBaseUsers } from '../intrfaces/user-params.interfaces';
-import { UserParamApiSrv } from '../services/user-params-api.service';
+import { E_FIELD_TYPE, IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
+import { UserParamApiSrv } from '../../../shared/services/user-params-api.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { Subscription } from 'rxjs/Rx';
-import { UserParamsDescriptorSrv } from './user-params-descriptor.service';
+import { UserParamsDescriptorSrv } from '../../../shared/services/user-params-descriptor.service';
 import { EosUtils } from 'eos-common/core/utils';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
 
@@ -64,7 +64,8 @@ export class BaseUserSrv implements OnDestroy, OnInit {
         return this.getData({
             USER_PARMS: {
                 criteries: {
-                    PARM_NAME: 'WINPOS||SORT||SRCH_CONTACT_FIELDS||SRCH_LIMIT_RESULT||SEARCH_CONTEXT_CARD_EMPTY||SEND_DIALOG||DELFROMCAB||MARKDOC||MARKDOCKND||RS_OUTER_DEFAULT_DELIVERY',
+                    PARM_NAME: 'WINPOS||SORT||SRCH_CONTACT_FIELDS||SRCH_LIMIT_RESULT||SEARCH_CONTEXT_CARD_EMPTY||SEND_DIALOG||DELFROMCAB||MARKDOC||MARKDOCKND||RS_OUTER_DEFAULT_DELIVERY||MARKDOCKND1||GPD_FLAG||VOL_FLAG||CUR_CABINET' +
+                    '||PARAM_WINDOW||SELECT_ITEMS||REESTR_ONE_TO_ONE||ORIG_FLAG||REESTR_NOT_INCLUDED||REESTR_DATE_INTERVAL||REESTR_COPY_COUNT',
                     ISN_USER_OWNER: '3611'
                 }
             }
@@ -184,7 +185,15 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     getInputs() {
         const dataInput = {rec: {}};
         Object.keys(this.prepareData.rec).forEach(key => {
-            dataInput.rec[key] = this.prepareData.rec[key];
+            if ((this._fieldsType[key] === 'boolean' || this._fieldsType[key] === 'toggle') && !this.prepInputs.rec[key].formatDbBinary) {
+                if (this.prepareData.rec[key] === 'YES') {
+                    dataInput.rec[key] = true;
+                } else {
+                    dataInput.rec[key] = false;
+                }
+            } else {
+                dataInput.rec[key] = this.prepareData.rec[key];
+            }
         });
         return this.dataSrv.getInputs(this.prepInputs, dataInput);
     }

@@ -27,6 +27,7 @@
         <span class="l-font">Пересылка</span>
         <hr>
             <eos-dynamic-input
+            class="inline-block"
                 [input]="inputs['rec.SEND_DIALOG']"
                 [form]="form"
                 [readonly]="false"
@@ -37,6 +38,7 @@
             <span class="l-font">Удалять РК из текущего кабинета после пересылки</span>
         <hr>
         <eos-dynamic-input
+        class="inline-block"
                 [input]="inputs['rec.DELFROMCAB']"
                 [form]="form"
                 [readonly]="false"
@@ -68,10 +70,12 @@
 <!--------------------------1--------------------------------------------->
     <div [hidden]="currTab !== 1"
     class="clearfix">
-<span>Внешние адресаты</span>
 <div class="user-input-group">
+        <p class="the-main-recipients-of-the-document-titles">Внешние адресаты</p>
     <span class="l-font">При добавлении указывать</span>
     <hr>
+    <div>
+            <span>Вид отправки:</span>
     <eos-dynamic-input
     class="inline-block"
     [input]="inputs['rec.RS_OUTER_DEFAULT_DELIVERY']"
@@ -81,6 +85,104 @@
 <span></span>
 </div>
 </div>
+<hr>
+<div class="user-input-group">
+        <p class="the-main-recipients-of-the-document-titles">Внутренние адресаты</p>
+        <span class="l-font">При добавлении указывать экземпляр документа:</span>
+        <hr>
+            <eos-dynamic-input
+                [input]="inputs['rec.MARKDOCKND1']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="user-input-group">
+    <eos-dynamic-input
+                [input]="inputs['rec.GPD_FLAG']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.VOL_FLAG']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+        </div>
+</div>
 <!--------------------------1--------------------------------------------->
+<!--------------------------2--------------------------------------------->
+<div [hidden]="currTab !== 2"
+    class="clearfix">
+    <div class="user-input-group">
+            <span class="l-font">Получать реестр:</span>
+            <hr>
+                <eos-dynamic-input
+                    [input]="inputs['rec.CUR_CABINET']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+        </div>
+        <hr>
+        <div class="user-input-group">
+                <eos-dynamic-input
+                [input]="inputs['rec.PARAM_WINDOW']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.SELECT_ITEMS']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.REESTR_ONE_TO_ONE']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            </div>
+            <hr>
+            <div class="user-input-group">
+                    <span class="l-font">Получать по:</span>
+                    <hr>
+                        <eos-dynamic-input
+                            [input]="inputs['rec.ORIG_FLAG']"
+                            [form]="form"
+                            [readonly]="false"
+                        ></eos-dynamic-input>
+                        <eos-dynamic-input
+                [input]="inputs['rec.REESTR_NOT_INCLUDED']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+        </div>
+            <hr>
+            <div class="user-input-group">
+                    <div class="number-increment-wrap">
+                        <span>Дата передачи документов не позднее ( дней ):</span>
+                            <eos-dynamic-input
+                                class="inline-block"
+                                [input]="inputs['rec.REESTR_DATE_INTERVAL']"
+                                [form]="form"
+                                [readonly]="false"
+                            ></eos-dynamic-input>
+                        </div>
+                        <div class="number-increment-wrap">
+                                <span>Количество копий:</span>
+                                <eos-dynamic-input
+                                    class="inline-block"
+                                    [input]="inputs['rec.REESTR_COPY_COUNT']"
+                                    [form]="form"
+                                    [readonly]="false"
+                                ></eos-dynamic-input>
+                            </div>
+            </div>
+            <hr>
+            <div class="user-input-group">
+                
+            </div>
+               
+</div>
+<!--------------------------2--------------------------------------------->
 </div>
 </div>

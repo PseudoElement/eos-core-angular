@@ -1,5 +1,5 @@
 import { Component, Injector } from '@angular/core';
-import { UserParamSearchSrv } from '../../shared/services/user-param-search.service';
+import { UserParamSearchSrv } from '../shared-user-param/services/user-param-search.service';
 
 @Component({
     selector: 'eos-user-param-search',

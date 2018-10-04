@@ -1,5 +1,5 @@
 import { Component, Injector } from '@angular/core';
-import { UserParamOtherSrv } from '../../shared/services/user-param-other.service';
+import { UserParamOtherSrv } from '../shared-user-param/services/user-param-other.service';
 
 @Component({
     selector: 'eos-user-param-other',

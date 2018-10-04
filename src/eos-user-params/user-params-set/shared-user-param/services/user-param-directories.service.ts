@@ -3,7 +3,7 @@ import { EosUtils } from 'eos-common/core/utils';
 import { BaseUserSrv } from './base-user.service';
 import { FormGroup } from '@angular/forms';
 import {  PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../consts/eos-user-params.const';
-import { E_FIELD_TYPE } from '../intrfaces/user-params.interfaces';
+import { E_FIELD_TYPE } from '../../../shared/intrfaces/user-params.interfaces';
 import { DIRECTORIES_USER } from '../consts/directories.consts';
 // import { EosUtils } from 'eos-common/core/utils';
 
