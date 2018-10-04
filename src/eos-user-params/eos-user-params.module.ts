@@ -17,6 +17,8 @@ import { UserParamVisualizationComponent } from './user-params-set/user-param-vi
 import { UserParamEAComponent } from './user-params-set/user-param-external-application/user-param-external-application.component';
 import { UserParamOtherForwardingComponent } from './user-params-set/user-param-other/user-param-other.component';
 import { UserParamsService } from './shared/services/user-params.service';
+import { ParamEmailAddressComponent } from './email-address/email-address.component';
+import { ParamsRightsDeloComponent } from './rights-delo/rights-delo.component';
 
 @NgModule({
     declarations: [
@@ -27,7 +29,9 @@ import { UserParamsService } from './shared/services/user-params.service';
         UserParamSearchComponent,
         UserParamVisualizationComponent,
         UserParamEAComponent,
-        UserParamOtherForwardingComponent
+        UserParamOtherForwardingComponent,
+        ParamEmailAddressComponent,
+        ParamsRightsDeloComponent
     ],
     imports: [
         BrowserModule,
