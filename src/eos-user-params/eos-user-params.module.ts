@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipModule, ModalModule } from 'ngx-bootstrap';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { EosCommonModule } from 'eos-common/eos-common.module';
+
 import { UserParamsComponent } from './eos-user-params.component';
 import { UserParamApiSrv } from './shared/services/user-params-api.service';
 import { UserParamsDescriptorSrv } from './shared/services/user-params-descriptor.service';
@@ -15,6 +16,7 @@ import { UserParamSearchComponent } from './user-params-set/user-param-search/us
 import { UserParamVisualizationComponent } from './user-params-set/user-param-visualization/user-param-visualization.component';
 import { UserParamEAComponent } from './user-params-set/user-param-external-application/user-param-external-application.component';
 import { UserParamOtherForwardingComponent } from './user-params-set/user-param-other/user-param-other.component';
+import { UserParamsService } from './shared/services/user-params.service';
 
 @NgModule({
     declarations: [
@@ -38,7 +40,8 @@ import { UserParamOtherForwardingComponent } from './user-params-set/user-param-
     ],
     providers: [
         UserParamApiSrv,
-        UserParamsDescriptorSrv
+        UserParamsDescriptorSrv,
+        UserParamsService
     ]
 })
 export class EosUserParamsModule {}

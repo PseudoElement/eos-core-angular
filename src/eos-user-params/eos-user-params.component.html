@@ -1,1 +1,11 @@
-<eos-user-params-set></eos-user-params-set>
+<div *ngIf="!isLoading">
+    <ng-container [ngSwitch]="pageId">
+        <ng-container *ngSwitchCase="'param-set'">
+            <eos-user-params-set></eos-user-params-set>
+        </ng-container>
+    </ng-container>
+</div>
+
+<div class="spinner-wrapper" *ngIf="isLoading">
+    <eos-spinner [size]="'lg'"></eos-spinner>
+</div>

@@ -8,12 +8,18 @@ export class UserParamApiSrv {
         private apiSrv: PipRX,
         private _router: Router
     ) {}
-    getData(query?: any): Promise<any> {
+    getData<T>(query?: any): Promise<T[]> {
         return this.apiSrv
-        .read(query)
-        .then((data: any[]) => {
+        .read<T>(query)
+        .then((data: T[]) => {
             // this.prepareForEdit(data);
             return data;
+
+            // return new Promise<T[]>((resolve) => {
+            //     setTimeout(() => {
+            //         resolve(data);
+            //     }, 2000);
+            // });
         })
         .catch(err => {
             if (err.code === 434) {

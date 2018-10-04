@@ -17,8 +17,12 @@ export class UserParamSetComponent implements OnChanges, OnInit {
         private _confirmSrv: ConfirmWindowService,
       //  private _paramDescSrv: ParamDescriptorSrv
     ) {
-        this._route.params.subscribe(users => {
-            this.userId = users['sub-field'];
+        this._route.params.subscribe(param => {
+            if (param['sub-field']) {
+                this.userId = param['sub-field'];
+            } else {
+                this.userId = 'search'; // Значение по умолчанию, поменять на 'registration'
+            }
         });
     }
     ngOnChanges(changes: SimpleChanges) {
