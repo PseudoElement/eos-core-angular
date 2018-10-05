@@ -1,5 +1,5 @@
 import { Component, Injector } from '@angular/core';
-import { UserParamVisualizationSrv } from '../../shared/services/user-param-visualization.service';
+import { UserParamVisualizationSrv } from '../shared-user-param/services/user-param-visualization.service';
 
 @Component({
     selector: 'eos-user-param-visualization',

@@ -1,4 +1,4 @@
-import { IBaseUsers } from '../intrfaces/user-params.interfaces';
+import { IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
 
 export const EXTERNAL_APPLICATION_USER: IBaseUsers = {
     id: 'external-application',

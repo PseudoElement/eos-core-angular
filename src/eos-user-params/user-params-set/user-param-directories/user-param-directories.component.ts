@@ -1,5 +1,5 @@
 import { Component, Injector } from '@angular/core';
-import { UserParamDirectoriesSrv } from '../../shared/services/user-param-directories.service';
+import { UserParamDirectoriesSrv } from '../shared-user-param/services/user-param-directories.service';
 
 @Component({
     selector: 'eos-user-param-directories',
