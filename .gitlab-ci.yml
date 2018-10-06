@@ -1,0 +1,20 @@
+stages:
+  - build
+  - test
+  - deploy
+
+## build stage
+
+build_job:
+  stage: build
+  tags:
+    - ruby
+    - compass
+  script:
+    - 'npm install'
+    - 'npm run build-stage'
+  only:
+    - master
+  artifacts:
+    paths:
+      - dist/
