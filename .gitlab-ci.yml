@@ -1,3 +1,6 @@
+variables:
+  LAST_UPLOADED_FILE: "http://git.eos.ru/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/builds/artifacts/${CI_COMMIT_REF_NAME}/raw/${HELLO_FILE}?job=html-artifacts"
+
 stages:
   - build
   - test
@@ -12,7 +15,7 @@ build_job:
     - compass
   script:
     - 'npm install'
-    - 'npm run build-stage'
+    - 'npm run build-prod'
   only:
     - master
   artifacts:
