@@ -42,17 +42,16 @@ publish_job:
     - 'echo target path: $TFS_TARGET_PATH'
     - 'echo workspace: $TMP_WORKSPACE'
     - 'echo server folder: $SERVER_FOLDER'
-    - 'echo server folder: $LOCAL_FOLDER'
+    - 'echo local folder: ${PWD}/$LOCAL_FOLDER'
     
-    - 'echo tf workspace -new $TMP_WORKSPACE'
-    - 'echo tf workfold -map $SERVER_FOLDER $LOCAL_FOLDER -workspace:$TMP_WORKSPACE'
-    - 'echo tf get $LOCAL_FOLDER -force -recursive'
+    - 'tf workspace -new $TMP_WORKSPACE'
+    - 'tf workfold -map $SERVER_FOLDER $LOCAL_FOLDER -workspace:$TMP_WORKSPACE'
+    - 'tf get $LOCAL_FOLDER -force -recursive'
     
-    - 'echo rm -r -f  $LOCAL_FOLDER/*'
-    - 'echo cp $BIN_FOLDER/* $LOCAL_FOLDER'
-    - 'echo tf delete -detect -recursive $LOCAL_FOLDER'
-    - 'echo tf add -noignore -recursive $LOCAL_FOLDER'
-    - 'echo tf delete -detect -recursive $LOCAL_FOLDER'
+    - 'rm -r -f  $LOCAL_FOLDER/*'
+    - 'cp -r $BIN_FOLDER/* $LOCAL_FOLDER'
+    - 'tf delete -detect -recursive $LOCAL_FOLDER'
+    - 'tf add -noignore -recursive $LOCAL_FOLDER'
     - 'echo tf checkin $LOCAL_FOLDER -comment:"${COMMENT_TEXT}" -override:"Automated Build Process" -recursive'
     
     - 'echo rm -r -f  $LOCAL_FOLDER'
@@ -63,6 +62,9 @@ publish_job:
 
 cleanup_job:
   stage: cleanup
+  tags:
+    - ruby
+    - compass
   script:
     - 'echo rm -r -f  $LOCAL_FOLDER'
     - 'echo tf workspace -delete $TMP_WORKSPACE'
