@@ -1,11 +1,10 @@
 variables:
-  LAST_UPLOADED_FILE: "http://git.eos.ru/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}/builds/artifacts/${CI_COMMIT_REF_NAME}/raw/${HELLO_FILE}?job=html-artifacts"
-  CI_DEBUG_TRACE: "true"
-  TMP_WORKSPACE: WORKSPACE_$CI_PROJECT_NAME
+  #CI_DEBUG_TRACE: "true"
+  TMP_WORKSPACE: ${CI_PROJECT_PATH_SLUG}_${CI_BUILD_REF_SLUG}_${CI_PIPELINE_ID}
   SERVER_FOLDER: $TFS_TARGET_PATH
-  LOCAL_FOLDER: /home/gitlab-runner/builds/ee8663fb/0/dev/nadzor/classif/dist
-  BIN_FOLDER: /home/gitlab-runner/builds/ee8663fb/0/dev/nadzor/classif/dist
-  
+  LOCAL_FOLDER: tmp_for_map
+  BIN_FOLDER: dist
+  COMMENT_TEXT: "${GITLAB_USER_NAME}: ${CI_COMMIT_MESSAGE}"
 
 
 stages:
@@ -36,15 +35,10 @@ build_job:
 
 publish_job:
   stage: deploy
+  tags:
+    - ruby
+    - compass
   script:
-    - 'echo CI_RUNNER_ID: $CI_RUNNER_ID'
-    - 'echo CI_PIPELINE_ID: $CI_PIPELINE_ID'
-    - 'echo CI_PROJECT_ID: $CI_PROJECT_ID'
-    - 'echo CI_PROJECT_DIR: $CI_PROJECT_DIR'
-    - 'echo CI_PROJECT_NAME: $CI_PROJECT_NAME'
-    - 'echo CI_JOB_ID: $CI_JOB_ID'
-    - 'echo CI_JOB_NAME: $CI_JOB_NAME'
-    - 'echo luf: $LAST_UPLOADED_FILE'
     - 'echo target path: $TFS_TARGET_PATH'
     - 'echo workspace: $TMP_WORKSPACE'
     - 'echo server folder: $SERVER_FOLDER'
@@ -59,8 +53,9 @@ publish_job:
     - 'echo tf delete -detect -recursive $LOCAL_FOLDER'
     - 'echo tf add -noignore -recursive $LOCAL_FOLDER'
     - 'echo tf delete -detect -recursive $LOCAL_FOLDER'
-    - 'echo tf checkin $LOCAL_FOLDER -comment:"This is test checkin from Ubuntu" -override:"Automated Build Process" -recursive'
+    - 'echo tf checkin $LOCAL_FOLDER -comment:"${COMMENT_TEXT}" -override:"Automated Build Process" -recursive'
     
+    - 'echo rm -r -f  $LOCAL_FOLDER'
     - 'echo tf workspace -delete $TMP_WORKSPACE'
     
 
