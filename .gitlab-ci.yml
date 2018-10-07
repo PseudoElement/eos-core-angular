@@ -68,5 +68,5 @@ cleanup_job:
     - compass
   script:
     - 'echo rm -r -f  $LOCAL_FOLDER'
-    - 'echo $TF workspace -delete $TMP_WORKSPACE'
+    - '$TF workspace -delete $TMP_WORKSPACE'
   when: always
