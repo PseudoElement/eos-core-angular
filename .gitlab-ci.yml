@@ -44,6 +44,7 @@ publish_job:
     - 'echo server folder: $SERVER_FOLDER'
     - 'echo local folder: ${PWD}/$LOCAL_FOLDER'
     
+    - '$TF eula -accept'
     - '$TF workspace -new $TMP_WORKSPACE'
     - '$TF workfold -map $SERVER_FOLDER $LOCAL_FOLDER -workspace:$TMP_WORKSPACE'
     - '$TF get $LOCAL_FOLDER -force -recursive'
