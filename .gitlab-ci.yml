@@ -44,7 +44,7 @@ publish_job:
     - 'echo server folder: $SERVER_FOLDER'
     - 'echo local folder: ${PWD}/$LOCAL_FOLDER'
     
-    - '$TF eula -accept'
+    #- '$TF eula -accept'
     - '$TF workspace -new $TMP_WORKSPACE'
     - '$TF workfold -map $SERVER_FOLDER $LOCAL_FOLDER -workspace:$TMP_WORKSPACE'
     - '$TF get $LOCAL_FOLDER -force -recursive'
@@ -54,10 +54,6 @@ publish_job:
     - '$TF delete -detect -recursive $LOCAL_FOLDER'
     - '$TF add -noignore -recursive $LOCAL_FOLDER'
     - 'echo $TF checkin $LOCAL_FOLDER -comment:"${COMMENT_TEXT}" -override:"Automated Build Process" -recursive'
-    
-    - 'echo rm -r -f  $LOCAL_FOLDER'
-    - 'echo $TF workspace -delete $TMP_WORKSPACE'
-    
 
 ## cleanup stage
 
