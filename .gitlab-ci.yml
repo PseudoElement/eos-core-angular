@@ -4,7 +4,8 @@ variables:
   SERVER_FOLDER: $TFS_TARGET_PATH
   LOCAL_FOLDER: tmp_for_map
   BIN_FOLDER: dist
-  COMMENT_TEXT: "${GITLAB_USER_NAME}: ${CI_COMMIT_MESSAGE}"
+  COMMIT_URL: "${CI_PROJECT_URL}/commit/${CI_COMMIT_SHA}"
+  COMMENT_TEXT: "${GITLAB_USER_NAME}: ${CI_COMMIT_MESSAGE}\n${COMMIT_URL}"
 
 
 stages:
@@ -56,7 +57,7 @@ publish_job:
     - 'cp -r $BIN_FOLDER/* $LOCAL_FOLDER'
     - '$TF delete -detect -recursive $LOCAL_FOLDER'
     - '$TF add -noignore -recursive $LOCAL_FOLDER |echo skip errors || true'
-    - 'echo $TF checkin $LOCAL_FOLDER -comment:"${COMMENT_TEXT}" -override:"Automated Build Process" -recursive'
+    - '$TF checkin $LOCAL_FOLDER -comment:"${COMMENT_TEXT}" -override:"Automated Build Process" -recursive'
 
 ## cleanup stage
 
