@@ -4,8 +4,7 @@ variables:
   SERVER_FOLDER: $TFS_TARGET_PATH
   LOCAL_FOLDER: tmp_for_map
   BIN_FOLDER: dist
-  COMMIT_URL: "${CI_PROJECT_URL}/commit/${CI_COMMIT_SHA}"
-  COMMENT_TEXT: "${GITLAB_USER_NAME}: ${CI_COMMIT_MESSAGE}\n${COMMIT_URL}"
+  COMMENT_TEXT: "${GITLAB_USER_NAME}: ${CI_COMMIT_MESSAGE}\n${CI_PROJECT_URL}/commit/${CI_COMMIT_SHA}"
 
 
 stages:
@@ -22,9 +21,9 @@ build_job:
   tags:
     - ruby
     - compass
-  cache:
-    paths:
-      - node_modules/
+  #cache:
+  #  paths:
+  #    - node_modules/
   script:
     - 'npm install'
     - 'npm run build-prod'
