@@ -52,7 +52,7 @@ publish_job:
     - 'rm -r -f  $LOCAL_FOLDER/*'
     - 'cp -r $BIN_FOLDER/* $LOCAL_FOLDER'
     - '$TF delete -detect -recursive $LOCAL_FOLDER'
-    - '$TF add -noignore -recursive $LOCAL_FOLDER'
+    - '$TF add -noignore -recursive $LOCAL_FOLDER |echo skip errors |echo skip error "The item already has pending changes"'
     - 'echo $TF checkin $LOCAL_FOLDER -comment:"${COMMENT_TEXT}" -override:"Automated Build Process" -recursive'
 
 ## cleanup stage
