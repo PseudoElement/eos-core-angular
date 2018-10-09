@@ -9,10 +9,14 @@ export class UserParamHeaderComponent {
     @Input() statusBtnSub;
     @Output() submitForm = new EventEmitter();
     @Output() cancelForm = new EventEmitter();
+    @Output() defaultForm = new EventEmitter();
     submit() {
         this.submitForm.emit();
     }
     cancel() {
         this.cancelForm.emit();
+    }
+    default() {
+        this.defaultForm.emit();
     }
 }

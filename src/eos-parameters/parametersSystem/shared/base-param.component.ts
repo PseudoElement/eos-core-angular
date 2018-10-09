@@ -97,6 +97,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     }
     prepareDataParam() {
         this.prepInputs = this.getObjectInputFields(this.constParam.fields);
+        console.log(this.prepInputs._list);
         this.queryObj = this.getObjQueryInputsField(this.prepInputs._list);
     }
     convData(data: Array<any>) {

@@ -9,6 +9,7 @@ export const OTHER_USER: IBaseUsers = {
             key: 'SEND_DIALOG',
             type: 'radio',
             title: '',
+            default: 'NO',
             readonly: false,
             options: [
                 {value: 'NO', title: 'Без диалога'},
@@ -19,6 +20,7 @@ export const OTHER_USER: IBaseUsers = {
             key: 'DELFROMCAB',
             type: 'radio',
             title: '',
+            default: '1',
             readonly: false,
             options: [
                 {value: '1', title: 'Нет'},
@@ -29,6 +31,7 @@ export const OTHER_USER: IBaseUsers = {
             key: 'MARKDOC',
             type: 'radio',
             title: '',
+            default: '1',
             readonly: false,
             options: [
                 {value: '1', title: 'Не добавлять'},
@@ -40,6 +43,7 @@ export const OTHER_USER: IBaseUsers = {
             key: 'MARKDOCKND',
             type: 'radio',
             title: '',
+            default: '0',
             readonly: false,
             options: [
                 {value: '0', title: 'Оригинал(ы)'},
@@ -52,6 +56,7 @@ export const OTHER_USER: IBaseUsers = {
             key: 'RS_OUTER_DEFAULT_DELIVERY',
             type: 'select',
             title: '',
+            default: 'NULL',
             options: [
                 {value: 'NULL', title: ''},
                 {value: '3774', title: 'Почта'},
@@ -72,6 +77,7 @@ export const OTHER_USER: IBaseUsers = {
             key: 'MARKDOCKND1',
             type: 'radio',
             title: '',
+            default: '2',
             readonly: false,
             options: [
                 {value: '0', title: 'Оригинал(ы)'},
@@ -83,17 +89,20 @@ export const OTHER_USER: IBaseUsers = {
         {
             key: 'GPD_FLAG',
             type: 'boolean',
-            title: 'Использовать это правило в Журнале передачи документов'
+            title: 'Использовать это правило в Журнале передачи документов',
+            default: 'NO'
         },
         {
             key: 'VOL_FLAG',
             type: 'boolean',
-            title: 'Заполнять информацию о томах'
+            title: 'Заполнять информацию о томах',
+            default: 'NO'
         },
         {
             key: 'CUR_CABINET',
             type: 'radio',
             title: '',
+            default: '1',
             readonly: false,
             options: [
                 {value: '0', title: 'по записям текущей картотеки'},
@@ -103,22 +112,26 @@ export const OTHER_USER: IBaseUsers = {
         {
             key: 'PARAM_WINDOW',
             type: 'boolean',
-            title: 'Показывать окно изменения параметров реестра'
+            title: 'Показывать окно изменения параметров реестра',
+            default: 'NO'
         },
         {
             key: 'SELECT_ITEMS',
             type: 'boolean',
-            title: 'Давать возможность выбора записей для реестра'
+            title: 'Давать возможность выбора записей для реестра',
+            default: 'NO'
         },
         {
             key: 'REESTR_ONE_TO_ONE',
             type: 'boolean',
-            title: 'Каждый адресат в свой реестр'
+            title: 'Каждый адресат в свой реестр',
+            default: 'YES'
         },
         {
             key: 'ORIG_FLAG',
             type: 'radio',
             title: '',
+            default: '2',
             readonly: false,
             options: [
                 {value: '0', title: 'Оригиналам'},
@@ -129,23 +142,64 @@ export const OTHER_USER: IBaseUsers = {
         {
             key: 'REESTR_NOT_INCLUDED',
             type: 'boolean',
-            title: 'Каждый адресат в свой реестр'
+            title: 'Каждый адресат в свой реестр',
+            default: 'YES',
         },
         {
             key: 'REESTR_DATE_INTERVAL',
             type: 'numberIncrement',
-            title: 'Дата передачи документов не позднее ( дней ):'
+            title: 'Дата передачи документов не позднее ( дней ):',
+            default: '1',
         },
         {
             key: 'REESTR_COPY_COUNT',
             type: 'numberIncrement',
-            title: 'Количество копий:'
+            title: 'Количество копий:',
+            default: '1',
         },
         {
             key: 'REESTR_RESTRACTION_DOCGROUP',
             title: 'Ограничить группами документов',
             type: 'text',
             length: 255,
-        }
-    ]
+        },
+        {
+            key: '12_61',
+            type: 'string',
+            readonly: true,
+            title: ''
+        },
+        {
+            key: '12_1',
+            type: 'string',
+            readonly: true,
+            title: ''
+        },
+        {
+            key: '12_28',
+            type: 'string',
+            readonly: false,
+            title: ''
+        },
+    ],
+    /*fields2: [
+        {
+                key: '12_61',
+                type: 'string',
+                readonly: true,
+                title: ''
+        },
+        {
+            key: '12_62',
+            type: 'string',
+            readonly: true,
+            title: ''
+    },
+    {
+        key: '12_63',
+        type: 'string',
+        readonly: true,
+        title: ''
+},
+    ]*/
 };

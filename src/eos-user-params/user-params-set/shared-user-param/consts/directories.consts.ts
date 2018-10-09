@@ -9,6 +9,7 @@ export const DIRECTORIES_USER: IBaseUsers = {
             key: 'WINPOS',
             type: 'radio',
             title: '',
+            default: '0',
             readonly: false,
             options: [
                 {value: '1', title: 'Вертикальное'},
@@ -19,6 +20,7 @@ export const DIRECTORIES_USER: IBaseUsers = {
             key: 'SORT',
             type: 'radio',
             title: '',
+            default: '0',
             readonly: false,
             options: [
                 {value: '0', title: 'Алфавитная'},
@@ -28,12 +30,13 @@ export const DIRECTORIES_USER: IBaseUsers = {
         {
             key: 'SURNAME',
             type: 'boolean',
-            title: 'ФИО'
+            title: 'ФИО',
+            default: 'SURNAME'
         },
         {
             key: 'DUTY',
             type: 'boolean',
-            title: 'Должность'
+            title: 'Должность',
         },
         {
             key: 'DEPARTMENT',

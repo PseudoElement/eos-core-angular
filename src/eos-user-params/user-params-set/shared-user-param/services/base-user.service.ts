@@ -18,6 +18,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     descriptorSrv: UserParamsDescriptorSrv;
     prepInputs: any;
     queryObj;
+    queryObjForDefault;
     titleHeader;
     constUserParam: IBaseUsers;
     userParamApiSrv: UserParamApiSrv;
@@ -25,6 +26,8 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     prepareData;
     inputs: any;
     newData;
+    defaultData;
+    oldValue: any;
     isChangeForm = false;
     disabledField = false;
     dataSrv: EosDataConvertService;
@@ -61,15 +64,8 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     }
     init() {
         this.prepareDataParam();
-        return this.getData({
-            USER_PARMS: {
-                criteries: {
-                    PARM_NAME: 'WINPOS||SORT||SRCH_CONTACT_FIELDS||SRCH_LIMIT_RESULT||SEARCH_CONTEXT_CARD_EMPTY||SEND_DIALOG||DELFROMCAB||MARKDOC||MARKDOCKND||RS_OUTER_DEFAULT_DELIVERY||MARKDOCKND1||GPD_FLAG||VOL_FLAG||CUR_CABINET' +
-                    '||PARAM_WINDOW||SELECT_ITEMS||REESTR_ONE_TO_ONE||ORIG_FLAG||REESTR_NOT_INCLUDED||REESTR_DATE_INTERVAL||REESTR_COPY_COUNT',
-                    ISN_USER_OWNER: '3611'
-                }
-            }
-        }).then(data => {
+        console.log(this.queryObj);
+        return this.getData(this.queryObj).then(data => {
                 this.prepareData = this.convData(data);
                 this.inputs = this.getInputs();
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
@@ -86,9 +82,14 @@ export class BaseUserSrv implements OnDestroy, OnInit {
                 .subscribe(newVal => {
                     let changed = false;
                     Object.keys(newVal).forEach(path => {
-                         if (this.changeByPath(path, newVal[path])) {
+                        this.oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
+                        if (this.oldValue !== newVal[path] && typeof newVal[path] === 'string') {
+                            this.changeByPath(path, newVal[path]);
                             changed = true;
                         }
+                      /*   if (this.changeByPath(path, newVal[path])) {
+                            changed = true;
+                         }*/
                     });
                     this.formChanged.emit(changed);
                     this.isChangeForm = changed;
@@ -105,6 +106,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     }
     changeByPath(path: string, value: any) {
        // const key = path.split('.')[1];
+        console.log('LKJ');
         let _value = null;
         if (typeof value === 'boolean') {
             _value = value ? '1' : '0';
@@ -121,6 +123,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     prepareDataParam() {
         this.prepInputs = this.getObjectInputFields(this.constUserParam.fields);
         this.queryObj = this.getObjQueryInputsField(this.prepInputs._list);
+        console.log(this.queryObj);
     }
     getObjectInputFields(fields) {
         const inputs: any = { _list: [], rec: {} };
@@ -138,9 +141,38 @@ export class BaseUserSrv implements OnDestroy, OnInit {
                 formatDbBinary: !!field.formatDbBinary
             };
         });
+        console.log(inputs);
+        console.log(inputs._list);
+       /* for (let i = 0; i < inputs._list.length; i++) {
+            for (let j = 0; j < inputs._list[i].length; j++) {
+                if (inputs._list[i].charAt(j) === ' ') {
+                    inputs._list[i].charAt(j) = '_';
+                }
+            }
+        }*/
         return inputs;
     }
     getObjQueryInputsField(inputs: Array<any>) {
+        console.log('Я тут');
+        // inputs.join('||')
+        console.log({
+            [this.constUserParam.apiInstance]: {
+                    criteries: {
+                        PARM_GROUP: '12',
+                        ISN_USER_OWNER: '3611||-99'
+                }
+            }
+        });
+        return {
+            [this.constUserParam.apiInstance]: {
+                    criteries: {
+                        PARM_NAME: inputs.join('||'),
+                        ISN_USER_OWNER: '-99'
+                }
+            }
+        };
+    }
+    getObjQueryInputsFieldForDefault(inputs: Array<any>) {
         return {
             [this.constUserParam.apiInstance]: {
                     criteries: {
@@ -155,9 +187,22 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     }
     convData(data: Array<any>) {
         const d = {};
+        let incrementValueOne = 0;
+        let incrementValueTwo = 33;
+        console.log(data);
         data.forEach(item => {
-            d[item.PARM_NAME] = item.PARM_VALUE;
+            if (item.PARM_GROUP === 12) {
+               /* console.log(item);
+                console.log(item.PARM_VALUE);
+                console.log('' + 12 + '_' + ++incrementValueOne); */
+               d['' + 12 + '_' + ++incrementValueOne] = item.PARM_VALUE;
+               d['' + 12 + '_' + ++incrementValueTwo] = item.PARM_NAME;
+            } else {
+                console.log('Попал');
+               d[item.PARM_NAME] = item.PARM_VALUE;
+            }
         });
+        console.log({ rec: d });
         return { rec: d };
     }
     submit() {
@@ -168,6 +213,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
                 .setData(this.createObjRequest())
                 .then(data => {
                     this.prepareData.rec = Object.assign({}, this.newData.rec);
+                   // console.log(this.prepareData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
                 .catch(data => console.log(data));
@@ -182,7 +228,25 @@ export class BaseUserSrv implements OnDestroy, OnInit {
             this.init();
         }
     }
+    default() {
+        console.log('RED');
+        this.queryObjForDefault = this.getObjQueryInputsFieldForDefault(this.prepInputs._list);
+        return this.getData(this.queryObjForDefault).then(data => {
+                this.prepareData = this.convData(data);
+                this.inputs = this.getInputs();
+                this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+                console.log('Попал');
+                console.log(this.form);
+                this.subscribeChangeForm();
+            })
+            .catch(err => {
+                throw err;
+            });
+
+          //  console.log(this.defaultData);
+    }
     getInputs() {
+        // !
         const dataInput = {rec: {}};
         Object.keys(this.prepareData.rec).forEach(key => {
             if ((this._fieldsType[key] === 'boolean' || this._fieldsType[key] === 'toggle') && !this.prepInputs.rec[key].formatDbBinary) {
@@ -201,9 +265,10 @@ export class BaseUserSrv implements OnDestroy, OnInit {
         const req = [];
         for (const key in this.newData.rec) {
             if (key) {
+                console.log(this.newData, key);
                 req.push({
                     method: 'POST',
-                    requestUri: `SYS_PARMS_Update?PARM_NAME='${key}'&PARM_VALUE='${this.newData.rec[key]}'`
+                    requestUri: `PARM_NAME='${key}'&PARM_VALUE='${this.newData.rec[key]}'`
                 });
             }
         }

@@ -4,6 +4,7 @@
         [title]="titleHeader"
         (submitForm)="submit()"
         (cancelForm)="cancel()"
+        (defaultForm)="default()"
         [statusBtnSub]="btnDisabled"
     ></eos-user-header> 
     <div class="tabs-wrapper usual-border border-bottom">
@@ -179,10 +180,69 @@
             </div>
             <hr>
             <div class="user-input-group">
-                
+                <eos-dynamic-input class="restrict-by-document-groups"
+                [input]="inputs['rec.REESTR_RESTRACTION_DOCGROUP']"
+                [form]="form"
+                [readonly]="false"></eos-dynamic-input>
+                <button
+            class="btn add-storage"
+            tooltip="Выбор из справочника"
+            containerClass="tooltip-info"
+            (click)="selectfromTheDirectory()"
+        >
+                <span class="eos-icon eos-icon-folder-blue small"></span>
+        </button>
             </div>
                
 </div>
 <!--------------------------2--------------------------------------------->
+<!--------------------------3--------------------------------------------->
+<div [hidden]="currTab !== 3" 
+    class="clearfix">
+    <div class="table-wrapper usual-border">
+            <div class="table-header">
+                    <div class="table-header-content">
+                        <div class="template-title">
+                        <div *ngFor="let field of fieldTemplates" class="item l-font">
+                                <span class="text"
+                                    [ngClass]="{'selected-text': '#2196f3'}"
+                                    tooltip="{{field}}"
+                                    placement="bottom"
+                                    container="body"
+                                    containerClass="tooltip-info">{{field}}</span>
+                                   <!-- <span class="order-icon"><span
+                                            class="eos-icon small"
+                                            [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span>-->
+            </div>
+        </div>
+            </div>
+                </div>
+               <!-- <div class="eos-template-list">
+                    <ul>
+                        <li *ngFor="let param of listParams">
+                                <eos-dynamic-input
+                                class="inline-block"
+                                [input]="inputs['rec.12_61']"
+                                [form]="form"
+                                [readonly]="false"
+                            ></eos-dynamic-input>
+                               <eos-dynamic-input
+                                class="inline-block"
+                                [input]="inputs['rec.12_1']"
+                                [form]="form"
+                                [readonly]="false"
+                            ></eos-dynamic-input>
+                            <eos-dynamic-input
+                            class="inline-block"
+                            [input]="inputs['rec.12_28']"
+                            [form]="form"
+                            [readonly]="false"
+                        ></eos-dynamic-input>
+                        </li>
+                    </ul>
+    </div>-->
+    </div>
+</div>
+<!--------------------------3--------------------------------------------->
 </div>
 </div>

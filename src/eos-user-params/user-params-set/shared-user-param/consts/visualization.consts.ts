@@ -9,6 +9,7 @@ export const VISUALIZATION_USER: IBaseUsers = {
             key: 'COLLAGE_SHOW_MODE',
             type: 'select',
             title: '',
+            default: '0',
             options: [
                 {value: '-1', title: 'Ассоциированное приложение'},
                 {value: '0', title: 'Оригинальный файл'},

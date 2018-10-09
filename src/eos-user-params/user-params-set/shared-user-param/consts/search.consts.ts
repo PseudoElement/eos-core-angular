@@ -8,12 +8,14 @@ export const SEARCH_USER: IBaseUsers = {
         {
             key: 'SRCH_LIMIT_RESULT',
             type: 'numberIncrement',
-            title: 'Максимальное кол-во записей:'
+            title: 'Максимальное кол-во записей:',
+            default: '0'
         },
         {
             key: 'SEARCH_CONTEXT_CARD_EMPTY',
             type: 'radio',
             title: '',
+            default: '1',
             readonly: false,
             options: [
                 {value: '0', title: 'Текущая картотека'},

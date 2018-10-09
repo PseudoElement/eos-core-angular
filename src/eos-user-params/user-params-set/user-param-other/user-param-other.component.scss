@@ -32,6 +32,46 @@
         font-weight: bold;
         clear: both;
     }
+
+    .restrict-by-document-groups {
+        width: 65%;
+        display: inline-block;
+    }
+
+    .add-storage {
+        margin-bottom: 50px;
+        }
+
+    .template-title {
+        display: flex;
+        justify-content: space-around;
+        width: 100%;
+        vertical-align: middle;
+        font-size: 0;
+    /* color: */
+    .item {
+        display: inline-block;
+        margin-right: $grid-gutter-width / 2;
+        margin-top: 11px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: middle;
+        &+.item {
+            margin-left: $grid-gutter-width / 2;
+        }
+        .text {
+            cursor: pointer;
+        }
+        .order-icon {
+            padding: 0 3px;
+        }
+        .eos-icon {
+            margin: -5px 0 0;
+            vertical-align: middle;
+        }
+    }
+    }
 }
 
 .rc-doc-left-column {
