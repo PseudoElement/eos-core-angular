@@ -19,6 +19,7 @@ import { UserParamOtherForwardingComponent } from './user-params-set/user-param-
 import { UserParamsService } from './shared/services/user-params.service';
 import { ParamEmailAddressComponent } from './email-address/email-address.component';
 import { ParamsRightsDeloComponent } from './rights-delo/rights-delo.component';
+import { ParamsBaseParamComponent } from './base-param/base-param.component';
 
 @NgModule({
     declarations: [
@@ -31,7 +32,8 @@ import { ParamsRightsDeloComponent } from './rights-delo/rights-delo.component';
         UserParamEAComponent,
         UserParamOtherForwardingComponent,
         ParamEmailAddressComponent,
-        ParamsRightsDeloComponent
+        ParamsRightsDeloComponent,
+        ParamsBaseParamComponent
     ],
     imports: [
         BrowserModule,
