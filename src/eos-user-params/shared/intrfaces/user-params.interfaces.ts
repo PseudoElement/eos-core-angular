@@ -3,6 +3,7 @@ export interface IUserBese {
     apiInstance: string;
     title: string;
     fields: IUserInput[];
+   // fields2: IUserInput[];
 }
 
 export interface IUserInput {
@@ -21,6 +22,7 @@ export interface IBaseUsers {
     actions?: string[];
     fieldsChild?: IFieldDescriptor[];
     fields?: IFieldDescriptor[];
+   // fields2?: IFieldDescriptor[];
 }
 
 export interface IFieldDescriptor {

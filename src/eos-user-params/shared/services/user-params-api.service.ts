@@ -37,9 +37,13 @@ export class UserParamApiSrv {
     }
 
     setData(query: any[]): Promise<any[]> {
+        console.log(query);
         return this.apiSrv.batch(query, '').then((data: any) => {
-            return data;
+            return null;
         });
+       /* return this.apiSrv.batch(query, '').then((data: any) => {
+            return data;
+        });*/
     }
 
     // protected prepareForEdit(records: any[]): any[] {
