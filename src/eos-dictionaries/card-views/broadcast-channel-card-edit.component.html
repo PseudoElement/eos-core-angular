@@ -1,0 +1,104 @@
+<div class="card-content-wrapper">
+    <eos-dynamic-input [input]="inputs['rec.CLASSIF_NAME']"
+                       [form]="form"
+                       [readonly]="!editMode"></eos-dynamic-input>
+    <eos-dynamic-input [input]="inputs['rec.NOTE']"
+                       [form]="form"
+                       [readonly]="!editMode"></eos-dynamic-input>
+    <eos-dynamic-input [input]="inputs['rec.CHANNEL_TYPE']"
+                       [form]="form"
+                       [readonly]="!editMode" ></eos-dynamic-input>
+    <span *ngIf="isEmail">
+        <div class="tabs-wrapper usual-border border-bottom">
+            <ul class="tabs">
+                <li class="tab-item"
+                    role="presentation"
+                    [ngClass]="{'active': 0 === currTab}"
+                    (click)="setTab(0)">
+                    <span class="tab-title">Исходящая почта</span>
+                </li>
+                <li class="tab-item"
+                    role="presentation"
+                    [ngClass]="{'active': 1 === currTab}"
+                    (click)="setTab(1)">
+                    <span class="tab-title">Входящая почта</span>
+                </li>
+            </ul>
+        </div>
+        <div [hidden]="currTab !== 0"
+                class="eos-broadcast-channel-tab">
+            <table class="table usual-border border-bottom table-owners">
+                <tr>
+                    <td>
+                        <eos-dynamic-input [input]="inputs['rec.SMTP_EMAIL']"
+                                           [form]="form"
+                                           [readonly]="!editMode"></eos-dynamic-input>
+                        <eos-dynamic-input [input]="inputs['rec.SMTP_SERVER']"
+                                           [form]="form"
+                                           [readonly]="!editMode"></eos-dynamic-input>
+                        <span [hidden]="authMethod == 0">
+                            <eos-dynamic-input [input]="inputs['rec.SMTP_LOGIN']"
+                                               [form]="form"
+                                               [readonly]="!editMode"></eos-dynamic-input>
+                        </span>
+                        <eos-dynamic-input [input]="inputs['rec.ENCRYPTION_TYPE']"
+                                           [form]="form"
+                                           [readonly]="!editMode"></eos-dynamic-input>
+                    </td>
+                    <td>
+                        <eos-dynamic-input [input]="inputs['rec.AUTH_METHOD']"
+                                           [form]="form"
+                                           [readonly]="!editMode"></eos-dynamic-input>
+                        <eos-dynamic-input [input]="inputs['rec.SMTP_PORT']"
+                                           [form]="form"
+                                           [readonly]="!editMode"></eos-dynamic-input>
+                        <span [hidden]="authMethod == 0">
+                            <eos-dynamic-input [input]="inputs['rec.SMTP_PASSWORD']"
+                                               [form]="form"
+                                               [readonly]="!editMode"></eos-dynamic-input>
+                        </span>
+                        <eos-dynamic-input [input]="inputs['rec.SMTP_DELAY']"
+                                           [form]="form"
+                                           [readonly]="!editMode"></eos-dynamic-input>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div [hidden]="currTab !== 1"
+             class="eos-broadcast-channel-tab">
+            <table class="table usual-border border-bottom table-owners">
+                <tr>
+                    <td>
+                        <eos-dynamic-input [input]="inputs['rec.POP3_SERVER']"
+                                           [form]="form"
+                                           [readonly]="!editMode"></eos-dynamic-input>
+                        <eos-dynamic-input [input]="inputs['rec.POP3_LOGIN']"
+                                           [form]="form"
+                                           [readonly]="!editMode"></eos-dynamic-input>
+                        <eos-dynamic-input [input]="inputs['rec.POP3_ENCRYPTION']"
+                                           [form]="form"
+                                           [readonly]="!editMode"></eos-dynamic-input>
+                    </td>
+                    <td>
+                        <eos-dynamic-input [input]="inputs['rec.POP3_PORT']"
+                                           [form]="form"
+                                           [readonly]="!editMode"></eos-dynamic-input>
+                        <eos-dynamic-input [input]="inputs['rec.POP3_PASSWORD']"
+                                           [form]="form"
+                                           [readonly]="!editMode"></eos-dynamic-input>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+    </span>
+    <span *ngIf="!isEmail">
+        <eos-dynamic-input [input]="inputs['rec.OUT_FOLDER']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.IN_FOLDER']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+
+    </span>
+</div>

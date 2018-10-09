@@ -1,0 +1,375 @@
+<div class="card-content-wrapper">
+    <eos-dynamic-input [input]="inputs['rec.CLASSIF_NAME']"
+                       [form]="form"
+                       [readonly]="!editMode"></eos-dynamic-input>
+    <eos-dynamic-input [input]="inputs['rec.NOTE']"
+                       [form]="form"
+                       [readonly]="!editMode"></eos-dynamic-input>
+    <eos-dynamic-input [input]="inputs['rec.TYPE_DOC']"
+                       [form]="form"
+                       [readonly]="!editMode" ></eos-dynamic-input>
+    <eos-dynamic-input [input]="inputs['rec.RULE_KIND']"
+                       [form]="form"
+                       [readonly]="!editMode" ></eos-dynamic-input>
+    <eos-dynamic-input [input]="inputs['rec.DUE_DOCGROUP']"
+                       [form]="form"
+                       [readonly]="!editMode" ></eos-dynamic-input>
+    <!--Тип документа - Документ, Вид правила – Отправка документа-->
+    <span *ngIf="(typeDoc==1)&&(ruleKind==1)" class="doc-send">
+        <eos-dynamic-input [input]="inputs['rec.SENDER']"
+                           [form]="form"
+                           [readonly]="!editMode" ></eos-dynamic-input>
+        <!--Отправлять реквизиты РК-->
+        <div class="clear-both margin-b">
+            <fieldset>
+                <legend>Отправлять реквизиты РК</legend>
+                <div class="clear-both">
+                    <eos-dynamic-input class="pull-left"
+                                       [input]="inputs['rec.BUNCHS_RK']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="pull-left margin-l"
+                                       [input]="inputs['rec.BUNCHS_RK_KIND']"
+                                       [form]="form"
+                                       [disabled]="!isBunchRK"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="pull-left margin-l"
+                                       [ngStyle]="{'width.px': 300}"
+                                       [input]="inputs['rec.BUNCHS_RK_TYPE']"
+                                       [form]="form"
+                                       [disabled]="!(isBunchRK&&isBunchWithType)"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                </div>
+                <eos-dynamic-input class="clear-both"
+                                   [input]="inputs['rec.STAMP_ACCESS']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.RUBRICS']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <div class="clear-both">
+                    <eos-dynamic-input class="pull-left"
+                                       [input]="inputs['rec.ADR_SUBJ_DOC']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="pull-left margin-l"
+                                       [input]="inputs['rec.RGN_SUBJ_DOC']"
+                                       [form]="form"
+                                       [disabled]="!adrSubjDoc"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                </div>
+                <eos-dynamic-input class="clear-both"
+                                   [input]="inputs['rec.VISAS']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <div class="clear-both">
+                    <eos-dynamic-input class="pull-left"
+                                       [input]="inputs['rec.ADDRESSEES']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="pull-left margin-l"
+                                       [input]="inputs['rec.ADDRESSEES_KIND']"
+                                       [form]="form"
+                                       [disabled]="!addressees"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                </div>
+                <eos-dynamic-input class="clear-both"
+                                   [input]="inputs['rec.DETAILS']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+            </fieldset>
+        </div>
+        <eos-dynamic-input [input]="inputs['rec.AVALIBLE']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+        <!--Отправлять файлы поручений-->
+        <div class="clear-both margin-b">
+            <fieldset>
+                <legend>Отправлять файлы поручений</legend>
+                <eos-dynamic-input [input]="inputs['rec.FILES']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <div class="files">
+                    <eos-dynamic-input [input]="inputs['rec.FILES_EXTENSION']"
+                                       [form]="form"
+                                       [disabled]="!files"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.FILES_STAMP']"
+                                       [form]="form"
+                                       [disabled]="!files"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="pull-left"
+                                       [input]="inputs['rec.FILES_MAX_SIZE']"
+                                       [form]="form"
+                                       [disabled]="!files"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                </div>
+            </fieldset>
+        </div>
+        <!--Отправлять поручения РК-->
+        <div class="margin-b">
+            <fieldset>
+                <legend>Отправлять поручения РК</legend>
+                <div class="clear-both margin-b">
+                    <eos-dynamic-input class="pull-left"
+                                       [input]="inputs['rec.ITEMS']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="pull-left margin-l"
+                                       [input]="inputs['rec.ITEMS_KIND']"
+                                       [form]="form"
+                                       [disabled]="!items"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                </div>
+                <div class="clear-both margin-b">
+                    <eos-dynamic-input class="pull-left" [input]="inputs['rec.Resolution']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="pull-left margin-l"
+                                       [input]="inputs['rec.RESOLUTION_KIND']"
+                                       [form]="form"
+                                       [disabled]="!resolution"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                </div>
+                <div class="clear-both files">
+                    <eos-dynamic-input [input]="inputs['rec.Category']"
+                                       [form]="form"
+                                       [disabled]="!resolution"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.Controller']"
+                                       [form]="form"
+                                       [disabled]="!resolution"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.RESOLUTION_NOTE']"
+                                       [form]="form"
+                                       [disabled]="!resolution"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                </div>
+                <div class="clear-both files margin-b">
+                    <fieldset>
+                        <legend>Отправлять файлы поручений</legend>
+                        <eos-dynamic-input [input]="inputs['rec.RESOLUTION_FILES']"
+                                           [form]="form"
+                                           [readonly]="!editMode"></eos-dynamic-input>
+                        <div class="files">
+                            <eos-dynamic-input [input]="inputs['rec.RESOLUTION_FILES_EXTENSION']"
+                                               [form]="form"
+                                               [disabled]="!resolutionFiles"
+                                               [readonly]="!editMode"></eos-dynamic-input>
+                            <eos-dynamic-input class="pull-left"
+                                               [input]="inputs['rec.RESOLUTION_FILES_MAX_SIZE']"
+                                               [form]="form"
+                                               [disabled]="!resolutionFiles"
+                                               [readonly]="!editMode"></eos-dynamic-input>
+                        </div>
+                    </fieldset>
+                </div>
+           </fieldset>
+        </div>
+
+        <!--Подписка на уведомления и доклады-->
+        <div class="margin-b">
+            <fieldset>
+                <legend>Подписка на уведомления и доклады</legend>
+                <eos-dynamic-input [input]="inputs['rec.Reception']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.Registration']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.Forwarding']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.Consideration']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.Report']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.Redirection']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.Answer']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input class="pull-left"
+                                   [input]="inputs['rec.Period']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+           </fieldset>
+        </div>
+    </span>
+    <!--Тип документа - Документ, Вид правила - Прием документа-->
+    <span *ngIf="(typeDoc==1)&&(ruleKind==2)" class="doc-send">
+        <eos-dynamic-input [input]="inputs['rec.handRegistration']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.groupDocs']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.cardFile']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.cabinetFile']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.korRuleSend']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.orgCreate']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+       <!--Принимать реквизиты РК-->
+        <div class="margin-b">
+            <fieldset>
+                <legend>Принимать реквизиты РК</legend>
+                <div class="clear-both">
+                    <eos-dynamic-input class="pull-left"
+                                       [input]="inputs['rec.BUNCHS_RK']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="pull-left margin-l"
+                                       [input]="inputs['rec.BUNCHS_RK_KIND']"
+                                       [form]="form"
+                                       [disabled]="!isBunchRK"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="pull-left margin-l"
+                                       [ngStyle]="{'width.px': 300}"
+                                       [input]="inputs['rec.BUNCHS_RK_TYPE']"
+                                       [form]="form"
+                                       [disabled]="!(isBunchRK&&isBunchWithType)"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                </div>
+                <eos-dynamic-input class="clear-both"
+                                   [input]="inputs['rec.STAMP_ACCESS']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.RUBRICS']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <div class="clear-both">
+                    <eos-dynamic-input class="pull-left"
+                                       [input]="inputs['rec.ADR_SUBJ_DOC']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="pull-left margin-l"
+                                       [input]="inputs['rec.adrReplace']"
+                                       [form]="form"
+                                       [disabled]="!adrSubjDoc"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="clear-both"
+                                       [ngStyle]="{'margin-left.px': 25}"
+                                       [input]="inputs['rec.RGN_SUBJ_DOC']"
+                                       [form]="form"
+                                       [disabled]="!adrSubjDoc"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                </div>
+                <eos-dynamic-input class="clear-both"
+                                   [input]="inputs['rec.DETAILS']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+
+            </fieldset>
+        </div>
+        <!--Принимать поручения РК-->
+        <div class="margin-b">
+            <fieldset>
+                <legend>Принимать поручения РК</legend>
+                <div class="clear-both">
+                    <eos-dynamic-input class="pull-left"
+                                       [input]="inputs['rec.orders']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="pull-left margin-l"
+                                       [input]="inputs['rec.ordersKind']"
+                                       [form]="form"
+                                       [disabled]="!orders"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                </div>
+                <div class="clear-both"
+                     [ngStyle]="{'margin-left.px': 25}">
+                    <eos-dynamic-input class="pull-left"
+                                       [input]="inputs['rec.categoryOrders']"
+                                       [form]="form"
+                                       [disabled]="!orders"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="pull-left margin-l"
+                                       [input]="inputs['rec.noteOrders']"
+                                       [form]="form"
+                                       [disabled]="!orders"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                </div>
+                <eos-dynamic-input class="clear-both"
+                                   [input]="inputs['rec.takeFilesOrders']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+            </fieldset>
+        </div>
+        <div class="margin-b">
+            <fieldset>
+                <legend>Принимать (редактировать) при повторном получении документов СЭВ</legend>
+                <eos-dynamic-input [input]="inputs['rec.takeFilesRK']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.takeOrdersRK']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+            </fieldset>
+        </div>
+    </span>
+    <!--Тип документа - Документ, Вид правила - Отправка доклада-->
+    <span *ngIf="(typeDoc==1)&&(ruleKind==3)" class="doc-send">
+        <!--Отправлять уведомления и доклады-->
+        <div class="margin-b">
+            <fieldset>
+                <legend>Отправлять уведомления и доклады</legend>
+                <eos-dynamic-input [input]="inputs['rec.Reception']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.Registration']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <div class="clear-both">
+                    <eos-dynamic-input class="pull-left"
+                                       [input]="inputs['rec.forwardingDocs']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="pull-left"
+                                       [input]="inputs['rec.kindForwardingDocs']"
+                                       [form]="form"
+                                       [disabled]="!forwardingDocs"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                </div>
+                <eos-dynamic-input [input]="inputs['rec.Consideration']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <div class="clear-both"
+                     [ngStyle]="{'margin-left.px': 25}">
+
+                    <eos-dynamic-input class="pull-left"
+                                       [input]="inputs['rec.kindConsideration']"
+                                       [form]="form"
+                                       [disabled]="!consideration"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="clear-both"
+                                       [input]="inputs['rec.textConsideration']"
+                                       [form]="form"
+                                       [disabled]="!consideration"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.Consideration']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.Consideration']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.Consideration']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.Consideration']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                </div>
+            </fieldset>
+        </div>
+    </span>
+</div>

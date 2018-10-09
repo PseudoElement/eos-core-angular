@@ -1,0 +1,35 @@
+<div class="card-content-wrapper">
+     <eos-dynamic-input [input]="inputs['rec.CLASSIF_NAME']"
+        [form]="form"
+        [readonly]="!editMode"></eos-dynamic-input>
+    <eos-dynamic-input [input]="inputs['rec.ISN_ADDR_CATEGORY']"
+           [form]="form"
+           [readonly]="!editMode"></eos-dynamic-input>
+    <div class="row-wrapper space-between">
+        <eos-dynamic-input [input]="inputs['rec.ISN_DELIVERY']"
+            [form]="form"
+            [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.GROUP_MAIL']"
+            [form]="form"
+            [readonly]="!editMode"></eos-dynamic-input>
+    </div>
+    <div class="data">
+        <div class="number">
+            <eos-dynamic-input class="flip-vertical" [input]="inputs['rec.FLAG_TYPE']"
+                [form]="form"
+                [readonly]="!editMode"></eos-dynamic-input>
+        </div>
+        <div class="print">
+            <eos-dynamic-input class="max" [input]="inputs['rec.EMERGENCY']"
+                [form]="form"
+                [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input class="max" [input]="inputs['rec.IMPOTANCE']"
+                [form]="form"
+                [readonly]="!editMode"></eos-dynamic-input>
+        </div>
+    </div>
+
+    <eos-dynamic-input [input]="inputs['rec.NOTE']"
+        [form]="form"
+        [readonly]="!editMode"></eos-dynamic-input>
+</div>

@@ -1,0 +1,17 @@
+.card-content-wrapper {
+    .data {
+        display: flex;
+        align-items: flex-start;
+
+        .number {
+            padding-right: 10px;
+        }
+        .print {
+            width: 100%;
+            .max {
+                width: 100%;
+            }
+        }
+    }
+}
+
