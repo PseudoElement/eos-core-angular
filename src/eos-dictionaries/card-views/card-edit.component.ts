@@ -1,10 +1,12 @@
-import { Component, Output, Input, EventEmitter, ViewChild, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import {Component, Output, Input, EventEmitter, ViewChild, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 import { EosUtils } from 'eos-common/core/utils';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from '../services/eos-data-convert.service';
+import { DictionaryDescriptorService } from '../core/dictionary-descriptor.service';
+import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
 
 @Component({
     selector: 'eos-card-edit',
@@ -31,21 +33,28 @@ export class CardEditComponent implements OnChanges, OnDestroy {
 
     constructor(
         private _dataSrv: EosDataConvertService,
-        private _inputCtrlSrv: InputControlService
+        private _inputCtrlSrv: InputControlService,
+        private _dictSrv: DictionaryDescriptorService,
+        private _channelSrv: EosBroadcastChannelService
     ) {
         this.subscriptions = [];
-    }
+     }
     /**
      * return new data, used by parent component
      */
     getNewData(): any {
-        return EosUtils.deepUpdate(Object.assign({}, this.data), this.newData);
+        const newData = EosUtils.deepUpdate(Object.assign({}, this.data), this.newData);
+        if (this.dictionaryId === 'broadcast-channel') {
+            this._channelSrv.data = newData.rec;
+            newData.rec['PARAMS'] = this._channelSrv.toXml();
+        }
+        return newData;
     }
 
     ngOnChanges(changes: SimpleChanges) {
         if ((changes.fieldsDescription || changes.data) && this.fieldsDescription && this.data) {
             this.unsubscribe();
-            const inputs = this._dataSrv.getInputs(this.fieldsDescription, this.data, this.editMode);
+            const inputs = this._dataSrv.getInputs(this.fieldsDescription, this.data, this.editMode, this._dictSrv, this._channelSrv);
             const isNode = this.data.rec && this.data.rec.IS_NODE;
             this.form = this._inputCtrlSrv.toFormGroup(inputs, isNode);
             this.inputs = inputs;
