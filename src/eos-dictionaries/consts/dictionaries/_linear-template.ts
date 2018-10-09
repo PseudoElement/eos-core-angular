@@ -20,7 +20,7 @@ export const LINEAR_TEMPLATE: IDictionaryDescriptor = {
         title: 'ID',
     },
     Object.assign({}, COMMON_FIELD_NAME, {
-        length: 64,
+        length: 100,
     })]),
     treeFields: ['CLASSIF_NAME'],
     editFields: ['CLASSIF_NAME', 'NOTE'],
@@ -30,4 +30,5 @@ export const LINEAR_TEMPLATE: IDictionaryDescriptor = {
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: ['CLASSIF_NAME'],
     allVisibleFields: [],
+    iconName: 'eos-icon-dept-blue'
 };
