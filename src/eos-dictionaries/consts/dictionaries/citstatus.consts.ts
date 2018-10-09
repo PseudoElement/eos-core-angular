@@ -6,9 +6,10 @@ export const CITSTATUS_DICT: ITreeDictionaryDescriptor = {
     id: 'cistatus',
     apiInstance: 'CITSTATUS_CL',
     dictType: E_DICT_TYPE.tree,
-    title: 'Справочник статусов граждан',
+    title: 'Статус заявителя',
     defaultOrder: 'CLASSIF_NAME',
     visible: true,
+    iconName: 'eos-icon-applicant-status-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes'],
@@ -38,12 +39,12 @@ export const CITSTATUS_DICT: ITreeDictionaryDescriptor = {
         title: 'LAYER',
         type: 'number'
     },
-        COMMON_FIELD_CODE,
+    Object.assign({}, COMMON_FIELD_CODE, {length: 20}),
     Object.assign({}, COMMON_FIELD_NAME, {
         title: 'Наименование статуса',
         isUnique: true,
         uniqueInDict: true,
-        length: 64,
+        length: 150,
     }), {
         key: 'IS_NODE',
         title: 'IS_NODE',
