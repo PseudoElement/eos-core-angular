@@ -17,33 +17,6 @@
         border: none;
     }
 
-    .list {
-        position: absolute;
-        left: -300px;
-        min-width: 300px;
-        height: 2000px;
-        background: $white;
-        border-radius: 5px 5px 0 0;
-        transition: .5s;
-
-        &.list-show {
-            left: 0;
-        }
-
-        .list-group {
-            .list-group-item {
-                background: $light-grey-1;
-                cursor: pointer;
-                &:focus {
-                    outline: none;
-                }
-                &.active-element-param {
-                    background: $highlight-color-main-theme;
-                }
-            }
-        }
-    }
-
     .eos-sandwich {
         .sandwich {
             transition: .5s;

@@ -43,6 +43,7 @@ import { EosNoticeService } from './services/eos-notice.service';
 import { EosStorageService } from './services/eos-storage.service';
 import { EosUserProfileService } from './services/eos-user-profile.service';
 import { CarmaHttpService } from './services/carmaHttp.service';
+import { NavParamService } from './services/nav-param.service';
 
 /* guards */
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
@@ -102,6 +103,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
         EosStorageService,
         EosUserProfileService,
         CarmaHttpService,
+        NavParamService,
     ],
     bootstrap: [AppComponent],
 })

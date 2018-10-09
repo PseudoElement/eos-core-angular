@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { TooltipModule, ModalModule } from 'ngx-bootstrap';
+import { TooltipModule, ModalModule, AccordionModule } from 'ngx-bootstrap';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { EosCommonModule } from 'eos-common/eos-common.module';
 
@@ -40,7 +40,8 @@ import { ParamsRightsDeloComponent } from './rights-delo/rights-delo.component';
         FormsModule,
         ReactiveFormsModule,
         EosCommonModule,
-        ModalModule
+        ModalModule,
+        AccordionModule
     ],
     providers: [
         UserParamApiSrv,

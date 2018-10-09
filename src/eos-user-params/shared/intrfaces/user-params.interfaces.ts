@@ -63,3 +63,10 @@ export enum E_FIELD_TYPE {
     numberIncrement,
     radio
 }
+
+export interface IParamAccordionList {
+    title: string;
+    url?: string;
+    subList?: IParamAccordionList[];
+    isOpen?: boolean;
+}

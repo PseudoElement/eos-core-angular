@@ -152,13 +152,18 @@ const routes: Routes = [
                 component: ParametersSystemComponent,
                 canDeactivate: [CanDeactivateGuard],
                 data: {
-                    showNav: true
+                    showNav: true,
+                    title: 'Настройки системы'
                 }
             },
             {
                 path: '',
                 redirectTo: 'rc',
-                pathMatch: 'full'
+                pathMatch: 'full',
+                data: {
+                    showNav: true,
+                    title: 'Настройки системы'
+                }
             }
         ]
     },
@@ -171,12 +176,18 @@ const routes: Routes = [
                 children: [
                     {
                         path: ':sub-field',
-                        component: UserParamsComponent
+                        component: UserParamsComponent,
+                        data: {
+                            showNav: true
+                        }
                     },
                     {
                         path: '',
                         pathMatch: 'full',
-                        component: UserParamsComponent
+                        component: UserParamsComponent,
+                        data: {
+                            showNav: true
+                        }
                     }
                 ]
             },

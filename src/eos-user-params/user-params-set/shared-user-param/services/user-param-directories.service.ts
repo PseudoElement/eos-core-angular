@@ -20,7 +20,8 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
     queryFileConstraint = {
         USER_PARMS: {
             criteries: {
-                PARM_NAME: 'WINPOS||SORT||SRCH_CONTACT_FIELDS||SRCH_LIMIT_RESULT||SEARCH_CONTEXT_CARD_EMPTY||SEND_DIALOG||DELFROMCAB||MARKDOC||MARKDOCKND',
+                PARM_NAME:
+'WINPOS||SORT||SRCH_CONTACT_FIELDS||SRCH_LIMIT_RESULT||SEARCH_CONTEXT_CARD_EMPTY||SEND_DIALOG||DELFROMCAB||MARKDOC||MARKDOCKND',
                 ISN_USER_OWNER: '3611'
             }
         }

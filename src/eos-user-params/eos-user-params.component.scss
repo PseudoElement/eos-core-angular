@@ -1,6 +1,92 @@
+.nav-accordion {
+    min-width: $dictionary-block-width;
+    height: 100vh;
+    background: #fff;
+    position: absolute;
+    top: 97px;
+    left: -$dictionary-block-width;
+    border-right: 1px solid $border-color-main-theme;
+    transition: .3s;
+
+    &.isShow {
+        left: 0;
+    }
+
+    .panel {
+        box-shadow: none;
+        border: none;
+        background: none;
+
+        &.active-link {
+            background: $highlight-color-main-theme;
+
+            .panel .card .param-field {
+                background: none;
+            }
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        &.panel {
+            margin-top: 0;
+        }
+    }
+
+    .param-field-wrap {
+        background: $light-grey-1;
+
+        .param-field {
+            color: $primary-font-color-main-theme;
+            border-bottom: 1px solid $border-color-main-theme;
+            border-radius: 0;
+            user-select: none;
+
+            .panel-body {
+                padding: 0;
+
+                .subItem {
+                    padding: 12px 15px;
+                    height: 42px;
+                    border-bottom: 1px solid $border-color-main-theme;
+                    background: $white;
+
+                    &.active-link {
+                        background: $highlight-color-main-theme;
+                    }
+
+                    &:first-child {
+                        box-shadow: inset 0 7px 5px 0 rgba(0, 0, 0, 0.15);
+                    }
+                    &:last-child {
+                        box-shadow: inset 0 -7px 5px 0 rgba(0, 0, 0, 0.15);
+                    }
+
+                    &:focus {
+                        outline: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 .spinner-wrapper {
     width: 100%;
     text-align: center;
     position: absolute;
     top: 25vh;
+}
+
+@media(min-width: 1600px) {
+    .nav-accordion {
+        min-width: $dictionary-block-width-big-display;
+        left: -$dictionary-block-width-big-display;
+
+        &.isShow {
+            left: 0;
+        }
+    }
 }

@@ -4,22 +4,11 @@
             <span class="icon eos-icon small" [ngClass]="{'eos-icon-menu-white': isWide, 'eos-icon-menu-blue': !isWide}"></span>
         </button>
     </span>
-    <span class="nav-text">
-        Настройки системы
+    <span *ngIf="title" class="nav-text">
+        {{title}}
     </span>
 
     <span class="pull-right">
         <eos-pushpin [infoOpened]="true"></eos-pushpin>
     </span>
-
-    <div [ngClass]="{'list-show' : isWide}" class="list">
-        <ul class="list-group">
-            <li
-                class="list-group-item"
-                *ngFor="let param of listParams"
-                [routerLink]="['/parameters', param.url]"
-                routerLinkActive="active-element-param"
-            >{{param.title}}</li>
-        </ul>
-    </div>
 </div>
