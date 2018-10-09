@@ -23,6 +23,7 @@ export abstract class AbstractDictionaryDescriptor {
     readonly title: string;
     readonly type: E_DICT_TYPE;
     readonly apiInstance: string;
+    readonly hideTopMenu?: boolean;
     /**
      * rest metadata. can be used for loading related dictionaries
      */
@@ -52,6 +53,7 @@ export abstract class AbstractDictionaryDescriptor {
             this.type = descriptor.dictType;
             this.apiInstance = descriptor.apiInstance;
             this._defaultOrder = descriptor.defaultOrder;
+            this.hideTopMenu = descriptor.hideTopMenu;
 
             this.apiSrv = apiSrv;
             commonMergeMeta(this);
