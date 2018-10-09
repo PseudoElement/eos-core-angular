@@ -6,6 +6,7 @@ export const CONTACT_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     id: 'contact',
     apiInstance: 'CONTACT',
     title: 'Контакты',
+    iconName: '',
     visible: !environment.production,
     keyField: 'ISN_CONTACT',
     fields: [{
