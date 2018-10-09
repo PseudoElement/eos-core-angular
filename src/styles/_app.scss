@@ -169,3 +169,16 @@
 a {
     cursor: pointer;
 }
+
+fieldset {
+    display: list-item;
+    padding-left: 0.75em;
+    border-radius: 0.25em;
+    border: 0.15em groove;
+    legend {
+        margin-bottom: 0.5em;
+        width: auto;
+        font-size: medium;
+        border-style: none;
+    }
+}
