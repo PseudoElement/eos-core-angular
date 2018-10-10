@@ -8,9 +8,10 @@ export const SIGN_KIND_DICT: IDictionaryDescriptor = {
     id: 'sign-kind',
     apiInstance: 'SIGN_KIND_CL',
     dictType: E_DICT_TYPE.linear,
-    title: 'Виды подписей (ЭП)',
+    title: 'Виды подписей',
     defaultOrder: 'CLASSIF_NAME',
-    visible: false,
+    visible: true,
+    iconName: 'eos-icon-signature-blue',
     actions: [
         'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'removeHard', 'tableCustomization', 'edit', 'view',
