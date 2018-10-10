@@ -2,7 +2,8 @@
     .sortable-wrapper {
         display: flex;
         flex-wrap: wrap;
-        width: calc(100vw - 350px);
+        //width: calc(100vw - 350px);
+        width: 100vw;
         .icon-btn {
             cursor: pointer;
         }
