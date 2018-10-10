@@ -1,24 +1,30 @@
-.node-list-item {
-    overflow: hidden;
-    min-height: 32px;
-    .node-row {
-        cursor: pointer;
-    }
-    .node-marker {
-        width: $item-width;
-        text-align: center;
-        .checkbox,
-        .checkbox-inline {
-            line-height: 32px;
-            input[type="checkbox"]+span {
-                margin: 0;
-            }
+.eos-node-list-item {
+    display: flex;
+    .node-list-item {
+        overflow: hidden;
+        min-height: 32px;
+        display: inline-flex;
+        width: 100%;
+        .node-left {
+            padding: 12px;
         }
-    }
-    eos-node-field {
-        margin-right: $grid-gutter-width /2;
-        &+eos-node-field {
-            margin-left: $grid-gutter-width /2;
+        .node-row {
+            cursor: pointer;
+            display: inline-block;
+            width: 100%;
+            overflow: hidden;
+        }
+        .node-marker {
+            display: inline-block;
+            width: $item-width;
+            text-align: center;
+            .checkbox,
+            .checkbox-inline {
+                line-height: 32px;
+                input[type="checkbox"] + span {
+                    margin: 0;
+                }
+            }
         }
     }
 }
