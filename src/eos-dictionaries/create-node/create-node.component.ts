@@ -31,10 +31,10 @@ export class CreateNodeComponent {
     fullNamesList: string[] = [];
 
     constructor(
-        private _deskSrv: EosDeskService,
-        private _dictSrv: EosDictService,
-        private _breadcrumbsSrv: EosBreadcrumbsService,
-        private _msgSrv: EosMessageService,
+        protected _deskSrv: EosDeskService,
+        protected _dictSrv: EosDictService,
+        protected _breadcrumbsSrv: EosBreadcrumbsService,
+        protected _msgSrv: EosMessageService,
         departmentsSrv: EosDepartmentsService,
     ) {
         this.dutysList = departmentsSrv.dutys;
@@ -69,9 +69,7 @@ export class CreateNodeComponent {
 
         Object.assign(data.rec, this.nodeData.rec); // update with predefined data
 
-        this._dictSrv.addNode(data)
-            .then((node: EosDictionaryNode) => this._afterAdding(node, hide))
-            .catch((err) => this._errHandler(err));
+        this._sendDataOnCreate(data, hide);
     }
 
     /**
@@ -80,6 +78,13 @@ export class CreateNodeComponent {
      */
     recordChanged(hasChanges: boolean) {
         this.hasChanges = hasChanges;
+    }
+
+    protected _sendDataOnCreate(data: any, hide = true) {
+
+        this._dictSrv.addNode(data)
+            .then((node: EosDictionaryNode) => this._afterAdding(node, hide))
+            .catch((err) => this._errHandler(err));
     }
 
     private _afterAdding(node: EosDictionaryNode, hide: boolean): void {
