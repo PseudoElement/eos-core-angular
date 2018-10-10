@@ -1,15 +1,15 @@
 .node-field {
     flex: 0 0 auto;
-    display: inline-block;
+    width: fit-content;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: bottom;
     line-height: 32px;
     height: 32px;
+    padding-right: 2px;
     .table-field-ico {
         display: inline-block;
-        width: $item-width;
         text-align: center;
         line-height: 32px;
     }
