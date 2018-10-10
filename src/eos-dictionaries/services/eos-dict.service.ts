@@ -302,6 +302,10 @@ export class EosDictService {
         return Promise.resolve(this._descrSrv.visibleDictionaries());
     }
 
+    getNadzorDictionariesList(): Promise<IDictionaryDescriptor[]> {
+        return Promise.resolve(this._descrSrv.visibleNadzorDictionaries());
+    }
+
     defaultOrder() {
         this.currentDictionary.defaultOrder();
         this._reorderList(this.currentDictionary);
@@ -390,7 +394,7 @@ export class EosDictService {
         const dictionary = this.currentDictionary;
         if (dictionary) {
             if (!this._listNode || this._listNode.id !== nodeId) {
-                this.updateViewParameters({ updatingInfo: true });
+                this.updateViewParameters({ updatingInfo: false });
                 const aNode = dictionary.getNode(nodeId);
                 if (aNode) {
                     this._openNode(aNode);
@@ -430,7 +434,6 @@ export class EosDictService {
                                 resNode = dictionary.getNode(node.id);
                             }
                         });
-
                     })
                     .then(() => this._reloadList())
                     .then(() => resNode);
@@ -748,7 +751,8 @@ export class EosDictService {
             searchResults: false,
             updatingInfo: false,
             updatingList: false,
-            hasMarked: false
+            hasMarked: false,
+            hideTopMenu: false
         };
     }
 
