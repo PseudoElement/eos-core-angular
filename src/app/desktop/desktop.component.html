@@ -1,8 +1,6 @@
 <div class="eos-desktop">
-    <div class="desktop-wrapper"
-        [ngClass]="{'reverse': historyToLeft}">
-        <div class="links-container"
-            [ngClass]="{'right': historyToLeft}">
+    <div class="desktop-wrapper">
+        <div class="links-container">
             <bs-sortable [(ngModel)]="referencesList"
                 [itemTemplate]="referenceTemplate"
                 itemClass="sortable-item xl-font"
@@ -12,32 +10,32 @@
                 wrapperClass="sortable-wrapper"></bs-sortable>
         </div>
 
-        <div [ngClass]="{'left': historyToLeft}"
-            class="block recent xl-font">
-            <span class="recent-title-wrapper usual-border">
-                <span class="icon eos-icon eos-icon-arrow-v-blue-left" *ngIf="!historyToLeft" (click)="historyToLeft = true"
-                    tooltip="Переместить влево" placement="bottom" containerClass="tooltip-info"></span>
-            <span class="recent-title">История:</span>
-            <span class="icon eos-icon eos-icon-arrow-v-blue-right"
-                aria-hidden="true"
-                *ngIf="historyToLeft"
-                (click)="historyToLeft = false"
-                tooltip="Переместить вправо"
-                placement="bottom"
-                containerClass="tooltip-info"></span>
-            </span>
-            <ul *ngIf="recentItems"
-                class="recent-list">
-                <li class="recent-item usual-border"
-                    *ngFor="let link of recentItems"
-                    tooltip="{{link.title}}"
-                    placement="bottom"
-                    containerClass="tooltip-info word-break">
-                    <a class="link-text"
-                        (click)="goToCard(link)">{{link.title}}</a>
-                </li>
-            </ul>
-        </div>
+        <!--<div [ngClass]="{'left': historyToLeft}"-->
+            <!--class="block recent xl-font">-->
+            <!--<span class="recent-title-wrapper usual-border">-->
+                <!--<span class="icon eos-icon eos-icon-arrow-v-blue-left" *ngIf="!historyToLeft" (click)="historyToLeft = true"-->
+                    <!--tooltip="Переместить влево" placement="bottom" containerClass="tooltip-info"></span>-->
+            <!--<span class="recent-title">История:</span>-->
+            <!--<span class="icon eos-icon eos-icon-arrow-v-blue-right"-->
+                <!--aria-hidden="true"-->
+                <!--*ngIf="historyToLeft"-->
+                <!--(click)="historyToLeft = false"-->
+                <!--tooltip="Переместить вправо"-->
+                <!--placement="bottom"-->
+                <!--containerClass="tooltip-info"></span>-->
+            <!--</span>-->
+            <!--<ul *ngIf="recentItems"-->
+                <!--class="recent-list">-->
+                <!--<li class="recent-item usual-border"-->
+                    <!--*ngFor="let link of recentItems"-->
+                    <!--tooltip="{{link.title}}"-->
+                    <!--placement="bottom"-->
+                    <!--containerClass="tooltip-info word-break">-->
+                    <!--<a class="link-text"-->
+                        <!--(click)="goToCard(link)">{{link.title}}</a>-->
+                <!--</li>-->
+            <!--</ul>-->
+        <!--</div>-->
     </div>
 </div>
 
@@ -47,7 +45,7 @@
     <div class="item-content xl-font block edited"
         *ngIf="editing(item.value)">
         <span class="icon-wrapper">
-            <span class="icon eos-icon eos-icon-bin-blue"></span>
+            <span class="icon eos-icon {{item.value.iconName}}"></span>
         </span>
         <input id="title"
             name="title"
@@ -90,7 +88,7 @@
         containerClass="tooltip-info word-break"
         container="body">
         <span class="icon-wrapper">
-            <span class="icon eos-icon eos-icon-bin-blue"></span>
+            <span class="icon eos-icon {{item.value.iconName}}"></span>
         </span>
         <span [hidden]="editing(item.value)"
             class="text">
