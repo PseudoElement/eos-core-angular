@@ -6,4 +6,5 @@ export const RESOLUTION_CATEGORY_DICT: IDictionaryDescriptor = Object.assign({},
     apiInstance: 'RESOLUTION_CATEGORY_CL',
     title: 'Категории поручений',
     visible: true,
+    iconName: 'eos-icon-category-blue',
 });
