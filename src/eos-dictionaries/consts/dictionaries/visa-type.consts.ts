@@ -20,6 +20,7 @@ export const VISA_TYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
     title: 'Типы виз',
     actions: LINEAR_TEMPLATE.actions.concat(['tableCustomization']),
     visible: true,
+    iconName: 'eos-icon-visa-blue',
     fields: LINEAR_TEMPLATE.fields.concat([
         Object.assign({}, COMMON_FIELD_NAME, { isUnique: true, uniqueInDict: true }),
         {
