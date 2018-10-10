@@ -1989,7 +1989,400 @@ const commonMeta = {
         relations: [
 
         ]
-    }
+    },
+   // NADZOR
+    NP_ADDRESS_VID_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_UDOST_TYPE_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_SUDIM_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_OSNZADER_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            ISN_CODEX_TYPE: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: [
+            {name: 'NP_CODEX_TYPE_CL_Ref', __type: 'NP_CODEX_TYPE_CL', sf: 'ISN_LCLASSIF', tf: 'ISN_LCLASSIF'}
+        ]
+    },
+    NP_OSN_OSVOB_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            ISN_CODEX_TYPE: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: [
+            {name: 'NP_CODEX_TYPE_CL_Ref', __type: 'NP_CODEX_TYPE_CL', sf: 'ISN_LCLASSIF', tf: 'ISN_LCLASSIF'}
+        ]
+    },
+    NP_CODEX_TYPE_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_MERA_TYPE_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_MERA_OSNOV_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_SUD_TYPE_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_NAKAZ_TYPE_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_OB_WHAT_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_OB_VOSST_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_OPF_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            CODE: _t.s,
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_OB_NOMOVE_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_SPEC_SUBJECT_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_NARUSHEN_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_NEZ_METOD_RASSLED_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_RESULT_RASSLED_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_OSN_PRIN_RESH_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_MERA_REAGIR_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_STATUS_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s,
+            CLEAR_CABINET: _t.i
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_FIG_ROLE_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            NOTE: _t.s,
+            ARH_FLAG: _t.i
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_OB_TYPE_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            USE_C: _t.i,
+            USE_A: _t.i,
+            USE_N: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_SPOSOB_UKR_PR_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            ISP_OTKAZ: _t.i,
+            ISP_ISTOCH: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_OB_MOTIV_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            USE_C: _t.i,
+            USE_A: _t.i,
+            USE_N: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_OB_OTZIV_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            USE_C: _t.i,
+            USE_A: _t.i,
+            USE_N: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_OB_RETURN_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            USE_C: _t.i,
+            USE_A: _t.i,
+            USE_N: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
+    NP_OB_OSNOV_CL: {
+        pk: 'ISN_LCLASSIF',
+        properties: {
+            ISN_LCLASSIF: _t.i,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            CLASSIF_NAME: _t.s,
+            WEIGHT: _t.i,
+            USE_C: _t.i,
+            USE_A: _t.i,
+            USE_N: _t.i,
+            USE_VP: _t.i,
+            USE_NP: _t.i,
+            NOTE: _t.s
+        },
+        readonly: [],
+        relations: []
+    },
 };
 
 export function commonMergeMeta(meta: any) {
