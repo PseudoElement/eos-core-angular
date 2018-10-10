@@ -33,6 +33,7 @@ import { RECENT_URL } from 'app/consts/common.consts';
 import { NodeListComponent } from '../node-list/node-list.component';
 import { CreateNodeComponent } from '../create-node/create-node.component';
 import { IPaginationConfig } from '../node-list-pagination/node-list-pagination.interfaces';
+import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -114,6 +115,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         _dictSrv.dictionary$.takeUntil(this.ngUnsubscribe)
             .subscribe((dictionary: EosDictionary) => {
                 if (dictionary) {
+                    if (this.params !== undefined) {
+                        this.params.hideTopMenu = dictionary.descriptor.hideTopMenu === true;
+                    }
                     this.dictionary = dictionary;
                     this.dictionaryId = dictionary.id;
                     if (dictionary.root) {
@@ -129,8 +133,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             .subscribe((dictionary: EosDictionary) => {
                 if (dictionary) {
                     this.dictMode = this._dictSrv.dictMode;
+                    const setParams = this.params === undefined;
                     this.params = Object.assign({}, this.params, { userSort: dictionary.userOrdered });
                     this.params.markItems = dictionary.canDo(E_RECORD_ACTIONS.markRecords);
+                    if (setParams) {
+                        this.params.hideTopMenu = dictionary.descriptor.hideTopMenu;
+                    }
                     this.hasCustomTable = dictionary.canDo(E_RECORD_ACTIONS.tableCustomization);
                 }
             });
@@ -329,7 +337,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
      * @description Open modal with CreateNodeComponent, fullfill CreateNodeComponent data
      */
     private _openCreate(recParams: any) {
-        this.modalWindow = this._modalSrv.show(CreateNodeComponent, { class: 'creating-modal' });
+        if (this.dictionary.descriptor.id === 'broadcast-channel') {
+            this.modalWindow = this._modalSrv.show(CreateNodeBroadcastChannelComponent, {class: 'creating-modal'});
+        } else {
+            this.modalWindow = this._modalSrv.show(CreateNodeComponent, {class: 'creating-modal'});
+        }
         const dictionary = this._dictSrv.currentDictionary;
         const editDescr = dictionary.getEditDescriptor();
         const data = dictionary.getNewNode({ rec: recParams }, this.treeNode);
@@ -368,7 +380,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     }
 
     private _editNode() {
-        const node = this._dictSrv.currentNode;
+        const node = this._dictSrv.listNode;
         if (node) {
             if (node.data.PROTECTED) {
                 this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
