@@ -67,6 +67,23 @@ export class EosDataConvertService {
                                         disabled: descr[_key].readonly || !editMode,
                                     });
                                     break;
+                                    case E_FIELD_TYPE.number:
+                               /* case E_FIELD_TYPE.string:
+                                    inputs[_dict + '.' + _key] = new StringText({
+                                        key: _dict + '.' + descr[_key].foreignKey,
+                                        label: descr[_key].title,
+                                        required: descr[_key].required,
+                                        pattern: descr[_key].pattern,
+                                        isUnique: descr[_key].isUnique,
+                                        uniqueInDict: descr[_key].uniqueInDict,
+                                        forNode: descr[_key].forNode,
+                                        value: data[_dict][descr[_key].foreignKey]
+                                            || descr[_key].default,
+                                        length: descr[_key].length,
+                                        readonly: descr[_key].readonly,
+                                        disabled: descr[_key].readonly || !editMode,
+                                    });
+                                    break;*/
                                 case E_FIELD_TYPE.text:
                                     inputs[_dict + '.' + _key] = new TextInput({
                                         key: _dict + '.' + descr[_key].foreignKey,

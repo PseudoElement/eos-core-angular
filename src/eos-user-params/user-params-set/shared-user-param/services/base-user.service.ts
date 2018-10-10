@@ -256,6 +256,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
                     dataInput.rec[key] = false;
                 }
             } else {
+                console.log(typeof this.prepareData.rec[key]);
                 dataInput.rec[key] = this.prepareData.rec[key];
             }
         });

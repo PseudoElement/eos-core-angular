@@ -146,6 +146,874 @@ export const OTHER_USER: IBaseUsers = {
             title: 'Ограничить группами документов',
             type: 'text',
             length: 255,
-        }
+        },
+        {
+            key: 'Выгрузка РК',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+      /*  {
+            key: '12_1',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_28',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_56',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_2',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_29',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_57',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_3',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_30',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_58',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_4',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_31',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_59',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_5',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_32',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_60',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_6',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_33',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_61',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_7',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_34',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_62',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_8',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_35',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_63',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_9',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_36',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_64',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_10',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_37',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_65',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_11',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_38',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_66',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_12',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_39',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_67',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_13',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_40',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_68',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_14',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_41',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_69',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_15',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_42',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_70',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_16',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_43',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_71',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_17',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_44',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_72',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_18',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_45',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_73',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_19',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_46',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_74',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_20',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_47',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_75',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_21',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_48',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_76',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_22',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_49',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_77',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_23',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_50',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_78',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_24',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_51',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_79',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_25',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_52',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_80',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_26',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_53',
+            type: 'string',
+            title: ''
+
+        },
+        {
+            key: '12_81',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_27',
+            type: 'string',
+            title: '',
+            readonly: true
+        },
+        {
+            key: '12_54',
+            type: 'string',
+            title: ''
+        }*/
+    ],
+    fieldsTemplates: [
+        {
+            key: '12_55',
+            type: 'string',
+            title: '',
+            readonly: true,
+        },
+      /*  {
+            key: '12_1',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_28',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_56',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_2',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_29',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_57',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_3',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_30',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_58',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_4',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_31',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_59',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_5',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_32',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_60',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_6',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_33',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_61',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_7',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_34',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_62',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_8',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_35',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_63',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_9',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_36',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_64',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_10',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_37',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_65',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_11',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_38',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_66',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_12',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_39',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_67',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_13',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_40',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_68',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_14',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_41',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_69',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_15',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_42',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_70',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_16',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_43',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_71',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_17',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_44',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_72',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_18',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_45',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_73',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_19',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_46',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_74',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_20',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_47',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_75',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_21',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_48',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_76',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_22',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_49',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_77',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_23',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_50',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_78',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_24',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_51',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_79',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_25',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_52',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_80',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_26',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_53',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_81',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_27',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: '12_54',
+            type: 'string',
+            title: ''
+        }*/
     ]
 };

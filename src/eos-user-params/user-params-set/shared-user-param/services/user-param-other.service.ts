@@ -55,7 +55,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
 
         console.log(this.currTab);
 
-        if (this.currTab === 3) {
+     /*   if (this.currTab === 3) {
             console.log('Fire');
         return {
             [this.constUserParam.apiInstance]: {
@@ -65,7 +65,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
                 }
             }
         };
-    } else {
+    } else { */
         return {
         [this.constUserParam.apiInstance]: {
             criteries: {
@@ -74,7 +74,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
         }
     }
 };
-    }
+   // }
     }
 
     getObjectInputFields(fields) {
@@ -99,20 +99,20 @@ export class UserParamOtherSrv extends BaseUserSrv {
     }
     convData(data: Array<any>) {
         const d = {};
-        let incrementValueOne = 0;
-        let incrementValueTwo = 33;
-        console.log(data);
+      //  let incrementValueOne = 0;
+      //  let incrementValueTwo = 27;
+     //   console.log(data);
         data.forEach(item => {
-            if (item.PARM_GROUP === 12) {
+          //  if (item.PARM_GROUP === 12) {
                /* console.log(item);
                 console.log(item.PARM_VALUE);
                 console.log('' + 12 + '_' + ++incrementValueOne); */
-               d['' + 12 + '_' + ++incrementValueOne] = item.PARM_VALUE;
-               d['' + 12 + '_' + ++incrementValueTwo] = item.PARM_NAME;
-            } else {
-                console.log('UPOS');
+            //   d['' + 12 + '_' + ++incrementValueOne] = item.PARM_VALUE;
+            //   d['' + 12 + '_' + ++incrementValueTwo] = item.PARM_NAME;
+          //  } else {
+            //    console.log('UPOS');
                d[item.PARM_NAME] = item.PARM_VALUE;
-            }
+          //  }
         });
         console.log({ rec: d });
         return { rec: d };
