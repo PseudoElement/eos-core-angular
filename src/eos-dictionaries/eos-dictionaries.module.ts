@@ -35,6 +35,7 @@ import { DictionariesComponent } from './dictionaries/dictionaries.component';
 import { DictionarySearchComponent } from './dictionary-search/dictionary-search.component';
 import { DocgroupCardComponent } from './card-views/docgroup-card.component';
 import { VisatypeCardComponent } from './card-views/visatype-card.component';
+import { ReestrtypeCardComponent } from './card-views/reestrtype-card.component';
 import { DocgroupTemplateConfigComponent } from './docgroup-template-config/docgroup-template-config.component';
 import { LongTitleHintComponent } from './long-title-hint/long-title-hint.component';
 import { NodeActionsComponent } from './node-actions/node-actions.component';
@@ -47,6 +48,8 @@ import { NodeInfoComponent } from './node-info/node-info.component';
 import { CabinetCardEditComponent } from './card-views/cabinet-card-edit.component';
 import { SandwichComponent } from './sandwich/sandwich.component';
 import { SecurityCardEditComponent } from './card-views/security-card-edit.component';
+import { BroadcastChannelCardEditComponent } from './card-views/broadcast-channel-card-edit.component';
+import { SevRulesCardEditComponent } from './card-views/sev-rules-card-edit.component';
 import { SecurityNodeInfoComponent } from './node-info/security-node-info.component';
 import { SimpleCardEditComponent } from './card-views/simple-card-edit.component';
 import { TreeComponent } from './tree/tree.component';
@@ -58,6 +61,8 @@ import { EosDataConvertService } from './services/eos-data-convert.service';
 import { EosDepartmentsService } from './services/eos-department-service';
 import { EosDictService } from './services/eos-dict.service';
 import { EosSandwichService } from './services/eos-sandwich.service';
+import {CreateNodeBroadcastChannelComponent} from './create-node-broadcast-channel/create-node-broadcast-channel.component';
+import {EosBroadcastChannelService} from './services/eos-broadcast-channel.service';
 
 @NgModule({
     declarations: [
@@ -72,6 +77,7 @@ import { EosSandwichService } from './services/eos-sandwich.service';
         DictionarySearchComponent,
         DocgroupCardComponent,
         VisatypeCardComponent,
+        ReestrtypeCardComponent,
         DocgroupTemplateConfigComponent,
         NodeActionsComponent,
         NodeInfoComponent,
@@ -90,10 +96,14 @@ import { EosSandwichService } from './services/eos-sandwich.service';
         SecurityCardEditComponent,
         SecurityNodeInfoComponent,
         CreateNodeComponent,
+        CreateNodeBroadcastChannelComponent,
+        BroadcastChannelCardEditComponent,
+        SevRulesCardEditComponent
     ],
     entryComponents: [
         ColumnSettingsComponent,
         CreateNodeComponent,
+        CreateNodeBroadcastChannelComponent,
         DocgroupTemplateConfigComponent,
     ],
     imports: [
@@ -124,6 +134,7 @@ import { EosSandwichService } from './services/eos-sandwich.service';
         DictionaryDescriptorService,
         EosDataConvertService,
         EosDepartmentsService,
+        EosBroadcastChannelService,
         EosDictService,
         EosSandwichService,
     ],
