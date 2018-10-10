@@ -7,6 +7,7 @@ export const DELIVERY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
     apiInstance: 'DELIVERY_CL',
     title: 'Виды доставки',
     visible: true,
+    iconName: 'eos-icon-save-send-blue',
     fields: [...LINEAR_TEMPLATE.fields,
     Object.assign({}, COMMON_FIELD_NAME, {
         isUnique: true,
