@@ -21,7 +21,7 @@ export class DesktopComponent implements OnDestroy {
     recentItems: IDeskItem[];
     deskId: string;
 
-    historyToLeft = false;
+    // historyToLeft = false;
 
     notEmptyString = NOT_EMPTY_STRING;
     private dragResolve = false;
