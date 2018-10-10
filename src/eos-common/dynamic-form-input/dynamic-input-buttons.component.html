@@ -1,14 +1,14 @@
 <div [formGroup]="form">
-    <label [hidden]="input.hideLabel"
-        [attr.for]="input.key">{{input.label}}</label>
-    <p *ngIf="readonly"
-        class="form-control-static m-font"
-        [ngClass]="{'placeholder': !hasValue()}">{{currentValue}}</p>
-    <div class="eos-switch btn-group"
-        *ngIf="!readonly">
+    <label [hidden]="input.hideLabel" [attr.for]="input.key">{{input.label}}</label>
+    <div class="eos-switch btn-group readonly" *ngIf="readonly">
+        <label class="btn btn-primary switch-item text-uppercase btn-readonly"
+               [ngClass]="{'btn-primary-full':control?.value === opt.value, 'disabled': disabled}"
+               *ngFor="let opt of buttons">{{opt.title}}</label>
+    </div>
+    <div class="eos-switch btn-group" *ngIf="!readonly">
         <a *ngFor="let opt of buttons"
-            class="btn btn-primary switch-item text-uppercase"
-            [ngClass]="{'btn-primary-full':control?.value === opt.value}"
-            (click)="switchTo(opt)">{{opt.title}}</a>
+           class="btn btn-primary switch-item text-uppercase"
+           [ngClass]="{'btn-primary-full':control?.value === opt.value, 'disabled': disabled}"
+           (click)="switchTo(opt)">{{opt.title}}</a>
     </div>
 </div>
