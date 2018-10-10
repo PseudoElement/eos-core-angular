@@ -2,11 +2,11 @@
     class="dynamic-input-wrapper">
     <label [hidden]="input.hideLabel"
         [attr.for]="input.key">{{input.label}}</label>
-    <div [ngClass]="{'required': isRequired}">
+    <div [ngClass]="{'required': isRequired, 'disabled': disabled}">
         <input class="form-control m-font"
             [formControlName]="input.key"
             [id]="input.key"
-            type="text"
+            [type]="textType"
             [readonly]="readonly"
             [ngClass]="{'readonly': readonly}"
             [placeholder]="input.label"
