@@ -10,6 +10,7 @@ export class EosDictionaryNode {
     parentId?: string;
     parent?: EosDictionaryNode;
     isExpanded?: boolean;
+    isUnique?: number;
 
     /**
      * isActive: boolean, is node selected in tree
