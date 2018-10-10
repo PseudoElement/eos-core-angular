@@ -1,82 +1,73 @@
 <div class="table-wrapper usual-border">
     <div class="table-header">
         <div class="table-header-content"
-            [ngStyle]="{'width.px': tableWidth, 'left.px': headerOffset}"
-            #listHeader>
+             [ngStyle]="{'width.%': 100, 'left.px': headerOffset}">
             <div *ngIf="params.markItems"
-                class="checkbox-inline">
-                <label [tooltip]="markAllTooltip"
-                    placement="bottom"
-                    container="body"
-                    [ngClass]="{'group-checkbox': anyUnmarked && anyMarked}"
-                    containerClass="tooltip-info">
-                        <input type="checkbox" [(ngModel)]="allMarked" (change)="toggleAllMarks()"><span></span></label>
+                 class="checkbox-inline">
+                <label [ngClass]="{'group-checkbox': anyUnmarked && anyMarked}"
+                       [tooltip]="markAllTooltip" placement="bottom" container="body" containerClass="tooltip-info">
+                    <input type="checkbox" [(ngModel)]="allMarked" (change)="toggleAllMarks()">
+                    <span></span>
+                </label>
+            </div>
+            <div *ngIf="!params.markItems"
+                 class="node-left">
             </div>
             <div class="node-title">
                 <div *ngFor="let field of viewFields"
-                    class="item l-font"
-                    [ngStyle]="{'width.px': length[field.key]}">
+                     class="item l-font"
+                     [ngStyle]="{'width.%': length[field.key]}">
                     <span class="text"
-                        [ngClass]="{'selected-text': orderBy}"
-                        (click)="orderByField(field.key)"
-                        tooltip="{{field.title}}"
-                        placement="bottom"
-                        container="body"
-                        containerClass="tooltip-info">{{field.customTitle || field.title}}</span><span class="order-icon"><span *ngIf="orderBy?.fieldKey === field.key"
-                        class="icon eos-icon small"
-                        [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span>
-                </div>
+                          [ngClass]="{'selected-text': orderBy}"
+                          (click)="orderByField(field.key)">{{field.customTitle || field.title}}</span>
+                    <span class="order-icon">
+                        <span *ngIf="orderBy?.fieldKey === field.key"
+                              class="icon eos-icon small"
+                              [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span></div>
                 <div *ngFor="let field of customFields"
-                    class="item l-font"
-                    [ngStyle]="{'width.px': length[field.key]}">
-
+                     class="item l-font"
+                     [ngStyle]="{'width.%': length[field.key]}">
                     <span class="text"
-                        [ngClass]="{'selected-text': orderBy}"
-                        (click)="orderByField(field.key)"
-                        tooltip="{{field.title}}"
-                        placement="bottom"
-                        container="body"
-                        containerClass="tooltip-info">{{field.customTitle || field.title}}</span><span class="order-icon"><span *ngIf="orderBy?.fieldKey === field.key"
-                                class="eos-icon small"
-                                [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span>
-                </div>
+                          [ngClass]="{'selected-text': orderBy}"
+                          (click)="orderByField(field.key)">{{field.customTitle || field.title}}</span><span class="order-icon">
+                    <span *ngIf="orderBy?.fieldKey === field.key"
+                          class="eos-icon small"
+                          [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span></div>
             </div>
         </div>
     </div>
     <div class="eos-node-list"
-        (scroll)="onListScroll($event)">
+         (scroll)="onListScroll($event)">
         <div class="block list"
-            [ngStyle]="{'width.px': tableWidth}"
-            #listContent>
+             [ngStyle]="{'width.%': 100}">
             <p *ngIf="params.updatingList"
-                class="spinner-container text-center">
+               class="spinner-container text-center">
                 <eos-spinner size="lg"></eos-spinner>
             </p>
             <p *ngIf="!nodes?.length && !params.updatingList"
-                class="text-center text-info node-list-info">Нет записей.</p>
+               class="text-center text-info node-list-info">Нет записей.</p>
             <!--Sortable list-->
             <ng-container *ngIf="params.userOrdered && nodes?.length && !params.searchResults && !params.updatingList ">
                 <bs-sortable [(ngModel)]="nodes"
-                    [itemTemplate]="childTemplate"
-                    itemClass="{'highlighted': node.isSelected}"
-                    itemActiveClass="sortable-item-active"
-                    placeholderItem="Drag here"
-                    (drop)="toggleItem()"
-                    placeholderClass="placeholderStyle"
-                    wrapperClass="sortable-wrapper">
+                             [itemTemplate]="childTemplate"
+                             itemClass="{'highlighted': node.isSelected}"
+                             itemActiveClass="sortable-item-active"
+                             placeholderItem="Drag here"
+                             (drop)="toggleItem()"
+                             placeholderClass="placeholderStyle"
+                             wrapperClass="sortable-wrapper">
                 </bs-sortable>
             </ng-container>
             <!--Simple list-->
             <ng-container *ngIf="!params.userOrdered && nodes?.length && !params.updatingList || params.searchResults && !params.updatingList">
                 <eos-node-list-item *ngFor="let item of nodes"
-                    [node]="item"
-                    [params]="params"
-                    [length]="length"
-                    [customFields]="customFields"
-                    (mark)="checkState()"
-                    (onHoverItem)="showHint($event)"></eos-node-list-item>
+                                    [ngStyle]="{'width.%': 100}"
+                                    [length]="length"
+                                    [node]="item"
+                                    [params]="params"
+                                    [customFields]="customFields"
+                                    (mark)="checkState()"></eos-node-list-item>
             </ng-container>
-            <eos-longtitle-hint></eos-longtitle-hint>
         </div>
     </div>
 </div>
@@ -85,12 +76,11 @@
 </ng-template>
 
 <ng-template #childTemplate
-    let-item="item"
-    let-index="index">
+             let-item="item"
+             let-index="index">
     <eos-node-list-item [node]="item.value"
-        [params]="params"
-        [length]="length"
-        [customFields]="customFields"
-        (mark)="checkState()"
-        (onHoverItem)="showHint($event)"></eos-node-list-item>
+                        [length]="length"
+                        [params]="params"
+                        [customFields]="customFields"
+                        (mark)="checkState()"></eos-node-list-item>
 </ng-template>
