@@ -28,8 +28,8 @@ export class EosDataConvertService {
     getInputs(
             fieldsDescription: any[],
             data: any, editMode = true,
-            dictSrv: DictionaryDescriptorService,
-            channelSrv: EosBroadcastChannelService
+            dictSrv?: DictionaryDescriptorService,
+            channelSrv?: EosBroadcastChannelService
     ) {
         const inputs: any = {};
         if (fieldsDescription) {
