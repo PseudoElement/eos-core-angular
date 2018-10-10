@@ -21,7 +21,9 @@ import { VISA_TYPE_DICT } from './dictionaries/visa-type.consts';
 import { RULES_SEV_DICT } from './dictionaries/sev-rules';
 import { COLLISIONS_SEV_DICT } from './dictionaries/sev-collisions';
 import { PARTICIPANT_SEV_DICT } from './dictionaries/sev-participant';
-import { BROADCAST_CHANEL_DICT } from './dictionaries/broadcast-chanel';
+import { BROADCAST_CHANNEL_DICT } from './dictionaries/broadcast-channel';
+import { NADZOR } from './dictionaries/nadzor.consts';
+import { REESTRTYPE_DICT } from './dictionaries/reestrtype.consts';
 
 export const DICTIONARIES = [
     /* tree dictionaries */
@@ -49,5 +51,9 @@ export const DICTIONARIES = [
     RULES_SEV_DICT,
     COLLISIONS_SEV_DICT,
     PARTICIPANT_SEV_DICT,
-    BROADCAST_CHANEL_DICT
+    BROADCAST_CHANNEL_DICT,
+
+    REESTRTYPE_DICT,
+
+    NADZOR,
 ];
