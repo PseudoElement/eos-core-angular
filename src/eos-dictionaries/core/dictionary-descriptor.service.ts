@@ -9,6 +9,10 @@ import { DepartmentDictionaryDescriptor } from 'eos-dictionaries/core/department
 import { OrganizationDictionaryDescriptor } from 'eos-dictionaries/core/organization-dictionary-descriptor';
 import { CabinetDictionaryDescriptor } from 'eos-dictionaries/core/cabinet-dictionary-descriptor';
 import { DocgroupDictionaryDescriptor } from 'eos-dictionaries/core/docgroup-dictionary-descriptor';
+import {NADZORDICTIONARIES} from '../consts/dictionaries/nadzor.consts';
+import {BroadcastChanelDictionaryDescriptor} from './broadcast-chanel-dictionary-descriptor';
+import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
+import {SevCollisionsDictionaryDescriptor} from './sev-collisions-dictionary-descriptor';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -17,6 +21,7 @@ export class DictionaryDescriptorService {
 
     constructor(
         private apiSrv: PipRX,
+        private _channelSrv: EosBroadcastChannelService
     ) {
         this._mDicts = new Map<string, IDictionaryDescriptor>();
         this._mDictClasses = new Map<string, AbstractDictionaryDescriptor>();
@@ -31,10 +36,25 @@ export class DictionaryDescriptorService {
                 }
             })
             .forEach((dict) => this._mDicts.set(dict.id, dict));
+        NADZORDICTIONARIES
+            .sort((a, b) => {
+                if (a.title > b.title) {
+                    return 1;
+                } else if (a.title < b.title) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            })
+            .forEach((dict) => this._mDicts.set(dict.id, dict));
     }
 
     visibleDictionaries(): IDictionaryDescriptor[] {
         return DICTIONARIES.filter((dict) => dict.visible);
+    }
+
+    visibleNadzorDictionaries(): IDictionaryDescriptor[] {
+        return NADZORDICTIONARIES.filter((dict) => dict.visible);
     }
 
     getDescriptorData(name: string): IDictionaryDescriptor {
@@ -53,11 +73,17 @@ export class DictionaryDescriptorService {
                     case 'organization':
                         res = new OrganizationDictionaryDescriptor(descr, this.apiSrv);
                         break;
+                    case 'broadcast-channel':
+                        res = new BroadcastChanelDictionaryDescriptor(descr, this.apiSrv, this._channelSrv);
+                        break;
                     case 'cabinet':
                         res = new CabinetDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case 'docgroup':
                         res = new DocgroupDictionaryDescriptor(descr, this.apiSrv);
+                        break;
+                    case 'sev-collisions':
+                        res = new SevCollisionsDictionaryDescriptor(descr, this.apiSrv);
                         break;
                 }
 
