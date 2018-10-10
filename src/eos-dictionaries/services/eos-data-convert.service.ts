@@ -10,6 +10,9 @@ import { GENDERS } from '../consts/dictionaries/department.consts';
 import { NOT_EMPTY_STRING } from '../consts/input-validation';
 import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 import { ButtonsInput } from 'eos-common/core/inputs/buttons-input';
+import {EosDictionary} from '../core/eos-dictionary';
+import {DictionaryDescriptorService} from '../core/dictionary-descriptor.service';
+import {EosBroadcastChannelService} from './eos-broadcast-channel.service';
 
 @Injectable()
 export class EosDataConvertService {
@@ -22,7 +25,12 @@ export class EosDataConvertService {
      * @param fieldsDescription node fields description
      * @param data node data
      */
-    getInputs(fieldsDescription: any, data: any, editMode = true) {
+    getInputs(
+            fieldsDescription: any[],
+            data: any, editMode = true,
+            dictSrv: DictionaryDescriptorService,
+            channelSrv: EosBroadcastChannelService
+    ) {
         const inputs: any = {};
         if (fieldsDescription) {
             Object.keys(fieldsDescription).forEach((_dict) => {
@@ -45,6 +53,53 @@ export class EosDataConvertService {
                                             || descr[_key].default,
                                         length: descr[_key].length,
                                         disabled: !editMode,
+                                        password: descr[_key].password
+                                    });
+                                    break;
+                                case E_FIELD_TYPE.xml:
+                                    channelSrv.parseXml(data[_dict][descr[_key].foreignKey])
+                                        .then(_data => {
+                                            if (!_data) {
+                                                return;
+                                            }
+                                            Object.keys(_data).forEach((_dataKey) => {
+                                                if (descr[_dataKey] !== undefined) {
+                                                    data[_dict][_dataKey] = _data[_dataKey];
+                                                    switch (descr[_dataKey].type) {
+                                                        case E_FIELD_TYPE.number:
+                                                        case E_FIELD_TYPE.string:
+                                                            inputs[_dict + '.' + _dataKey] = new StringInput({
+                                                                key: _dict + '.' + descr[_dataKey].foreignKey,
+                                                                label: descr[_dataKey].title,
+                                                                required: descr[_dataKey].required,
+                                                                pattern: descr[_dataKey].pattern,
+                                                                isUnique: descr[_dataKey].isUnique,
+                                                                uniqueInDict: descr[_dataKey].uniqueInDict,
+                                                                forNode: descr[_dataKey].forNode,
+                                                                value: data[_dict][descr[_dataKey].foreignKey]
+                                                                || descr[_dataKey].default,
+                                                                length: descr[_dataKey].length,
+                                                                disabled: !editMode,
+                                                                password: descr[_dataKey].password
+                                                            });
+                                                            break;
+                                                        case E_FIELD_TYPE.select:
+                                                            const options = [];
+                                                            options.push(...descr[_dataKey].options);
+                                                            inputs[_dict + '.' + _dataKey] = new DropdownInput({
+                                                                key: _dict + '.' + descr[_dataKey].foreignKey,
+                                                                label: descr[_dataKey].title,
+                                                                options: options,
+                                                                required: descr[_dataKey].required,
+                                                                forNode: descr[_dataKey].forNode,
+                                                                value: data[_dict][descr[_dataKey].foreignKey]
+                                                                || descr[_dataKey].default,
+                                                                disabled: !editMode,
+                                                            });
+                                                            break;
+                                                    }
+                                                }
+                                            });
                                     });
                                     break;
                                 case E_FIELD_TYPE.text:
@@ -69,10 +124,26 @@ export class EosDataConvertService {
                                     });
                                     break;
                                 case E_FIELD_TYPE.select:
+                                    const options = [];
+
+                                    if (descr[_key].dictionaryId !== undefined) {
+                                        const dict = new EosDictionary(descr[_key].dictionaryId, dictSrv);
+                                        dict.init()
+                                            .then(() => {
+                                                dict.nodes.forEach((node) => {
+                                                    if (node.id) {
+                                                        options.push(...[{value: node.originalId, title: node.title}]);
+                                                    }
+                                                });
+                                            });
+                                    } else {
+                                        options.push(...descr[_key].options);
+                                    }
                                     inputs[_dict + '.' + _key] = new DropdownInput({
                                         key: _dict + '.' + descr[_key].foreignKey,
                                         label: descr[_key].title,
-                                        options: descr[_key].options,
+                                        options: options,
+                                        hideLabel: !(descr[_key].title),
                                         required: descr[_key].required,
                                         forNode: descr[_key].forNode,
                                         value: data[_dict][descr[_key].foreignKey]
@@ -86,6 +157,7 @@ export class EosDataConvertService {
                                         label: descr[_key].title,
                                         options: descr[_key].options,
                                         required: descr[_key].required,
+                                        hideLabel: !(descr[_key].title),
                                         forNode: descr[_key].forNode,
                                         value: data[_dict][descr[_key].foreignKey]
                                             || descr[_key].default,
