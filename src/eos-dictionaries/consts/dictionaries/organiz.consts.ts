@@ -2,6 +2,7 @@ import { ITreeDictionaryDescriptor, E_DICT_TYPE } from 'eos-dictionaries/interfa
 import { NOT_EMPTY_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
 import { COMMON_FIELDS, COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME } from './_common';
+import {environment} from '../../../environments/environment';
 
 
 export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
@@ -9,7 +10,8 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     apiInstance: 'ORGANIZ_CL',
     dictType: E_DICT_TYPE.tree,
     title: 'Организации',
-    visible: false,
+    visible: !environment.production,
+    iconName: 'eos-icon-building-blue',
     defaultOrder: 'CLASSIF_NAME',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
