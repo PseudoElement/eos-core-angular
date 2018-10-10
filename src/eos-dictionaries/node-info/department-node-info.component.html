@@ -89,13 +89,13 @@
             </div>
             <div class="full-info usual-border">
                 <div class="field">
-                    <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec['CARD_NAME']?.title}}</p>
-                    <p class="field-value m-font">{{nodeDataFull.rec['CARD_NAME']}}</p>
+                    <div class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec['CARD_NAME']?.title}}</div>
+                    <div class="field-value m-font">{{nodeDataFull.rec['CARD_NAME']}}</div>
                 </div>
                 <div class="field">
-                    <p class="field-title unimportant-text s-font">Фамилия И.О. начальника подразделения</p>
-                    <p class="field-value m-font"><a *ngIf="boss"
-                            [routerLink]="'/spravochniki/departments/' + boss.id + '/view'">{{boss.data.rec.CLASSIF_NAME}}</a></p>
+                    <div class="field-title unimportant-text s-font">Фамилия И.О. начальника подразделения</div>
+                    <div class="field-value m-font"><a *ngIf="boss"
+                            [routerLink]="'/spravochniki/departments/' + boss.id + '/view'">{{boss.data.rec.CLASSIF_NAME}}</a></div>
                 </div>
                 <div class="field">
                     <p class="field-title unimportant-text s-font text-upper">Организация</p>
