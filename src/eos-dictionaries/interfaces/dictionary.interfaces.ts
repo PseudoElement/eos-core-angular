@@ -35,7 +35,8 @@ export enum E_FIELD_TYPE {
     buttons,
     dictionary,
     select,
-    array
+    array,
+    xml
 }
 
 export interface IFieldDescriptor {
@@ -53,6 +54,8 @@ export interface IFieldDescriptor {
     height?: number;
     forNode?: boolean;
     default?: any;
+    dictionaryId?: string;
+    password?: boolean;
 }
 
 export interface IFieldDescriptorBase {
@@ -71,6 +74,8 @@ export interface IFieldDescriptorBase {
     readonly height?: number;
     readonly forNode?: boolean;
     readonly default?: any;
+    readonly dictionaryId?: string;
+    readonly password?: boolean;
 }
 
 export interface IFieldView extends IFieldDescriptorBase {
@@ -88,6 +93,7 @@ export interface IDictionaryDescriptor {
     keyField: string;
     defaultOrder: string;
     parentField?: string;
+    iconName: string;
 
     // listFields: string[];
     searchFields: string[];
@@ -101,6 +107,8 @@ export interface IDictionaryDescriptor {
     shortQuickViewFields: any;
     editFields: any;
     listFields: any;
+
+    hideTopMenu?: boolean;
 }
 
 export interface ITreeDictionaryDescriptor extends IDictionaryDescriptor {
