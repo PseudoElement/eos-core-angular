@@ -74,7 +74,7 @@
                     </ng-template>
                 </div>
             </div>
-            <div class="first-line">
+            <div class="first-line" [hidden]="params.hideTopMenu">
                 <div class="controller pull-left">
                     <eos-node-actions (action)="doAction($event)"></eos-node-actions>
                 </div>
