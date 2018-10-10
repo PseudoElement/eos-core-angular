@@ -9,6 +9,7 @@ export const PRINT_INFO_DICT: IDictionaryDescriptor = {
     defaultOrder: 'PRINT_DEPARTMENT',
     title: '',
     visible: false,
+    iconName: 'eos-icon-dept-blue',
     actions: ['add', 'edit', 'remove', 'removeHard'],
     keyField: 'ISN_OWNER',
     parentField: 'PARENT_DUE',
