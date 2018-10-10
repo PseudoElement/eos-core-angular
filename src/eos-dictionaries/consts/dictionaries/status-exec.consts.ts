@@ -5,8 +5,9 @@ import { COMMON_FIELD_NAME } from './_common';
 export const STATUS_EXEC_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'status-exec',
     apiInstance: 'STATUS_EXEC_CL',
-    title: 'Состояния исполнения (Контролера)',
+    title: 'Состояния исполнения (поручение)',
     visible: true,
+    iconName: 'eos-icon-viewed-blue',
     fields: [...LINEAR_TEMPLATE.fields,
     Object.assign({}, COMMON_FIELD_NAME, {
         isUnique: true,
