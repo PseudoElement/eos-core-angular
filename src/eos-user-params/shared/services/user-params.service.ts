@@ -8,7 +8,13 @@ export class UserParamsService {
     private _userContext: USER_CL;
     get userContextId () {
         if (this._userContext) {
-            return this._userContext.ISN_LCLASSIF;
+            return this._userContext['ISN_LCLASSIF'];
+        }
+        return null;
+    }
+    get userContextParams () {
+        if (this._userContext) {
+            return this._userContext['USER_PARMS_List'];
         }
         return null;
     }
@@ -22,7 +28,8 @@ export class UserParamsService {
                 criteries: {
                     DUE_DEP: depDue
                 }
-            }
+            },
+            expand: 'USER_PARMS_List'
         })
         .then((user: USER_CL[]) => {
             this._userContext = user[0];
