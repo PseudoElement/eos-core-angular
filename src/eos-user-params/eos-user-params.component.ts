@@ -26,18 +26,13 @@ export class UserParamsComponent implements OnDestroy, OnInit {
         this._route.params
             .takeUntil(this.ngUnsubscribe)
             .subscribe(param => {
-                // console.log(param);
                 this.pageId = param['field-id'];
             });
         this._route.queryParams
             .takeUntil(this.ngUnsubscribe)
             .subscribe(qParam => {
-                console.log('Dog');
-                console.log(qParam);
-                console.log(qParam['id']);
                 if (qParam['id']) {
                     this.isLoading = true;
-                    // qParam['id']
                     this._userParamService.getUserIsn(qParam['id'])
                         .then((data: boolean) => {
                             this.isLoading = false;
