@@ -14,6 +14,10 @@ export const APP_MODULES = [
     {
         title: 'Настройки системы',
         url: '/parameters',
+    },
+    {
+        title: 'основные',
+        url: '/user-params-set/base-param',
     }
 ];
 

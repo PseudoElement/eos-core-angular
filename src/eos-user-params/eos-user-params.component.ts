@@ -1,11 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { UserParamsService } from './shared/services/user-params.service';
 import { NavParamService } from 'app/services/nav-param.service';
 import { USER_PARAMS_LIST_NAV } from './shared/consts/user-param.consts';
 import { IParamAccordionList } from './shared/intrfaces/user-params.interfaces';
-// import { USER_CL } from 'eos-rest';
 
 @Component({
     selector: 'eos-user-params',
@@ -16,10 +15,12 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     accordionList: IParamAccordionList[] = USER_PARAMS_LIST_NAV;
     isShowAccordion: boolean;
     isLoading: boolean = false;
+    isNewUser: boolean = false;
     pageId: 'param-set' | 'email-address' | 'rights-delo' | 'base-param';
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor (
         private _navSrv: NavParamService,
+        private _router: Router,
         private _route: ActivatedRoute,
         private _userParamService: UserParamsService
     ) {
@@ -31,13 +32,19 @@ export class UserParamsComponent implements OnDestroy, OnInit {
         this._route.queryParams
             .takeUntil(this.ngUnsubscribe)
             .subscribe(qParam => {
-                if (qParam['id']) {
-                    this.isLoading = true;
-                    this._userParamService.getUserIsn(qParam['id'])
-                        .then((data: boolean) => {
-                            this.isLoading = false;
-                        });
+                if (qParam['createNewUser']) {
+                    this.isNewUser = qParam['createNewUser'];
+                    return;
                 }
+                this.isLoading = true;
+                console.log(qParam);
+                this._userParamService.getUserIsn(qParam['dueDep'])
+                    .then((data: boolean) => {
+                        this.isLoading = false;
+                    })
+                    .catch(() => {
+                        this._router.navigate(['user_param']);
+                    });
             });
         this._navSrv.StateSandwich$
             .takeUntil(this.ngUnsubscribe)
