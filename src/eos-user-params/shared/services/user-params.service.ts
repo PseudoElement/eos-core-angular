@@ -19,6 +19,16 @@ export class UserParamsService {
         }
         return null;
     }
+    get hashUserContext () {
+        if (this._userContext) {
+            const hash: any = {};
+            this.userContextParams.forEach(item => {
+                hash[item.PARM_NAME] = item.PARM_VALUE;
+            });
+            return hash;
+        }
+        return null;
+    }
 
     get isUserContexst () {
         return !!this._userContext;
