@@ -28,15 +28,15 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
     };
     constructor( injector: Injector ) {
         super(injector, DIRECTORIES_USER);
-        this.init()
-        .then(() => {
+        this.init();
+       // .then(() => {
             this.prepInputsAttach = this.prepareInputField(DIRECTORIES_USER.fieldsChild);
             this.afterInit();
-        }).catch(err => {
+       /* }).catch(err => {
             if (err.code !== 434) {
                 console.log(err);
             }
-        });
+        });*/
     }
     cancel() {
         this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
@@ -44,15 +44,15 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
             this.isChangeFormAttach = false;
             this.formChanged.emit(false);
             this.ngOnDestroy();
-        this.init()
-            .then(() => {
+        this.init();
+           // .then(() => {
                 this.afterInit();
-            })
+          /*  })
             .catch(err => {
                 if (err.code !== 434) {
                     console.log(err);
                 }
-            });
+            });*/
     }
     afterInit() {
         this.userParamApiSrv.getData(Object.assign({}, this.queryFileConstraint))

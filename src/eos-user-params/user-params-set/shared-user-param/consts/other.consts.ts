@@ -147,12 +147,11 @@ export const OTHER_USER: IBaseUsers = {
             type: 'text',
             length: 255,
         },
-        {
-            key: 'Выгрузка РК',
+      /*  {
+            key: 'Опись дел',
             type: 'string',
-            title: '',
-            readonly: true
-        },
+            title: ''
+        },*/
       /*  {
             key: '12_1',
             type: 'string',
@@ -610,10 +609,9 @@ export const OTHER_USER: IBaseUsers = {
     ],
     fieldsTemplates: [
         {
-            key: '12_55',
+            key: 'Опись дел',
             type: 'string',
-            title: '',
-            readonly: true,
+            title: ''
         },
       /*  {
             key: '12_1',

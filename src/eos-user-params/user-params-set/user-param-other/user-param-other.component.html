@@ -218,11 +218,11 @@
             </div>
                 </div>
                 <div class="eos-template-list">
-                    <div>
+                    <div *ngFor="let template of listTemplates">
+                        <span>{{template.key}}</span>
                                 <eos-dynamic-input
-                                *ngFor="let template of listTemplates"
                                 class="inline-block table-templates"
-                                [input]="inputs['rec.' + template.key]"
+                                [input]="inputs['rec.Опись дел']"
                                 [form]="form"
                                 [readonly]="false"
                             ></eos-dynamic-input>

@@ -9,6 +9,8 @@ import { Subscription } from 'rxjs/Rx';
 import { UserParamsDescriptorSrv } from '../../../shared/services/user-params-descriptor.service';
 import { EosUtils } from 'eos-common/core/utils';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
+import { UserParamsService } from '../../../shared/services/user-params.service';
+import { USER_PARMS } from 'eos-rest';
 
 @Injectable()
 export class BaseUserSrv implements OnDestroy, OnInit {
@@ -24,6 +26,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     userParamApiSrv: UserParamApiSrv;
     msgSrv: EosMessageService;
     prepareData;
+    sortedData;
     inputs: any;
     newData;
     defaultData;
@@ -38,12 +41,17 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     userId: string;
     disableSave: boolean;
     isChanged: boolean;
+    userParams: USER_PARMS[];
     _currentFormStatus;
+    isLoading: boolean = false;
     private _fieldsType = {};
+    private _userParamsSetSrv: UserParamsService;
     constructor(
         injector: Injector,
         paramModel,
     ) {
+       // this._userParamsSetSrv.userContextParams();
+       this._userParamsSetSrv = injector.get(UserParamsService);
         this.constUserParam = paramModel;
         this.titleHeader = this.constUserParam.title;
         this.userParamApiSrv = injector.get(UserParamApiSrv);
@@ -64,17 +72,79 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     }
     init() {
         this.prepareDataParam();
+        console.log(this.constUserParam);
         console.log(this.queryObj);
-        return this.getData(this.queryObj).then(data => {
-                this.prepareData = this.convData(data);
-                this.inputs = this.getInputs();
-                this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-                this.subscribeChangeForm();
-            })
+      //  this._userParamsSetSrv.getUserIsn();
+      this._userParamsSetSrv.getUserIsn('0.2SF.2T7.2TB.')
+                        .then((data: boolean) => {
+                            this.isLoading = false;
+                        }).then(() => {
+                             const allData = this._userParamsSetSrv.userContextParams;
+                           //  const delta = performance.now();
+                            // this.sortedData = this.binarySearchKeyForData(this.constUserParam.fields, allData);
+
+                          //   console.log('perfomance NOW', performance.now() - delta);
+                            console.log(allData);
+                            console.log(this.sortedData);
+                           // return this.getData(this.queryObj).then(data => { // include service   userContextParams[]300+
+                                    this.prepareData = this.convData(allData);
+                                    this.inputs = this.getInputs();
+                                    this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+                                    this.subscribeChangeForm();
+                                });
+          /*  })
             .catch(err => {
                 throw err;
-            });
+            });*/
     }
+   // linearSearchKeyForData(arrayWithKeys, arrayAllData) {}
+   /* binarySearchKeyForData(arrayWithKeys, arrayAllData) {
+        const readyArray = [];
+        let valueInTheMiddle, longKeyValue, shortKeyValue, shortOrLongForElementFromAllData;
+        let valueInTheEnd = arrayAllData.length, valueInTheStart = 0, keySymbol = 0;
+        for (let i = 0; i < arrayWithKeys.length; i++) {
+            while (valueInTheStart < valueInTheEnd) {
+            valueInTheMiddle = Math.floor((valueInTheStart + valueInTheEnd) / 2);
+
+            if (arrayWithKeys[i].key !== arrayAllData[valueInTheMiddle].PARM_NAME) {
+                if (arrayWithKeys[i].key.length > arrayAllData[valueInTheMiddle].PARM_NAME.length) {
+                    longKeyValue = arrayWithKeys[i].key;
+                    shortKeyValue = arrayAllData[valueInTheMiddle].PARM_NAME;
+                    shortOrLongForElementFromAllData = 'short';
+                } else {
+                    longKeyValue = arrayAllData[valueInTheMiddle].PARM_NAME;
+                    shortKeyValue = arrayWithKeys[i].key;
+                    shortOrLongForElementFromAllData = 'long';
+                }
+
+                keySymbol = 0;
+                while (keySymbol < shortKeyValue.length) {
+                    if (shortKeyValue.charCodeAt(keySymbol) > longKeyValue.charCodeAt(keySymbol)) {
+                        if (shortOrLongForElementFromAllData === 'long') {
+                            valueInTheStart = valueInTheMiddle + 1;
+                        } else if (shortOrLongForElementFromAllData === 'short') {
+                           // valueInTheEnd = valueInTheMiddle;
+                          //  valueInTheStart = valueInTheMiddle + 1;
+                        }
+                        break;
+                    } else if (shortKeyValue.charCodeAt(keySymbol) < longKeyValue.charCodeAt(keySymbol)) {
+                        if (shortOrLongForElementFromAllData === 'long') {
+                            valueInTheEnd = valueInTheMiddle;
+                        } else if (shortOrLongForElementFromAllData === 'short') {
+                            valueInTheStart = valueInTheMiddle + 1;
+                        }
+                        break;
+                    } else {
+                        keySymbol++;
+                    }
+                }
+            } else {
+                readyArray.push(arrayAllData[valueInTheMiddle].PARM_NAME);
+            }
+         }
+        }
+        return readyArray;
+    }*/
     subscribeChangeForm() {
         this.subscriptions.push(
             this.form.valueChanges
@@ -121,7 +191,9 @@ export class BaseUserSrv implements OnDestroy, OnInit {
         return _value !== oldValue;
  }
     prepareDataParam() {
+        console.log(this.constUserParam.fields);
         this.prepInputs = this.getObjectInputFields(this.constUserParam.fields);
+        console.log(this.prepInputs);
         this.queryObj = this.getObjQueryInputsField(this.prepInputs._list);
         console.log(this.queryObj);
     }

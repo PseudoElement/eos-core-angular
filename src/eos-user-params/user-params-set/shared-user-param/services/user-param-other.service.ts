@@ -47,8 +47,8 @@ export class UserParamOtherSrv extends BaseUserSrv {
         console.log({
             [this.constUserParam.apiInstance]: {
                     criteries: {
-                        PARM_GROUP: '12',
-                        ISN_USER_OWNER: '3611||-99'
+                        PARM_NAME: inputs.join('||'),
+                        ISN_USER_OWNER: '3611'
                 }
             }
         });
@@ -70,7 +70,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
         [this.constUserParam.apiInstance]: {
             criteries: {
                 PARM_NAME: inputs.join('||'),
-                ISN_USER_OWNER: '-99'
+                ISN_USER_OWNER: '3611'
         }
     }
 };

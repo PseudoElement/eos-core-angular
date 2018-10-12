@@ -4,6 +4,9 @@ import { REGISTRATION_USER } from '../consts/registration.consts';
 
 @Injectable()
 export class UserParamRegistrationSrv extends BaseUserSrv {
+    readonly fieldGroupsForRegistration: string[] = ['Доп. операции', 'Корр./адресаты',
+    'Эл. почта', 'Сканирование', 'Автопоиск', 'СЭВ', 'РКПД'];
+    currTab = 0;
     dataAttachDb;
     inputAttach;
     prepInputsAttach;
@@ -21,5 +24,9 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
     }
     getInputAttach() {
         return this.dataSrv.getInputs(this.prepInputsAttach, this.prepDataAttach);
+    }
+    setTab(i: number) {
+        this.currTab = i;
+       // this.afterInitUserSearch();
     }
 }

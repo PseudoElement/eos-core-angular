@@ -2,6 +2,8 @@ import { Component, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
+import { USER_PARMS } from 'eos-rest';
+// import { UserParamsService } from '../shared/services/user-params.service';
 // import { ParamDescriptorSrv } from './shared/service/param-descriptor.service';
 
 @Component({
@@ -12,11 +14,14 @@ export class UserParamSetComponent implements OnChanges, OnInit {
     userId: string;
     disableSave: boolean;
     isChanged: boolean;
+    userParams: USER_PARMS[];
     constructor(
         private _route: ActivatedRoute,
         private _confirmSrv: ConfirmWindowService,
+      //  private _userParamsSetSrv: UserParamsService,
       //  private _paramDescSrv: ParamDescriptorSrv
     ) {
+      //  this._userParamsSetSrv.userContextParams();
         this._route.params.subscribe(param => {
             if (param['sub-field']) {
                 this.userId = param['sub-field'];
@@ -24,11 +29,13 @@ export class UserParamSetComponent implements OnChanges, OnInit {
                 this.userId = 'search'; // Значение по умолчанию, поменять на 'registration'
             }
         });
+      // this.userParams =
     }
     ngOnChanges(changes: SimpleChanges) {
         console.log('Changes user system', changes);
     }
     ngOnInit() {
+       // return this.userParams;
         // console.log(!this.isChanged, this.disableSave);
     }
     canDeactivate(_nextState?: any): boolean | Promise<boolean> {

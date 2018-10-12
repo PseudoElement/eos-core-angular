@@ -1,5 +1,7 @@
 import { Component, Injector } from '@angular/core';
 import { UserParamDirectoriesSrv } from '../shared-user-param/services/user-param-directories.service';
+// import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
+import { USER_PARMS } from 'eos-rest';
 
 @Component({
     selector: 'eos-user-param-directories',
@@ -8,7 +10,11 @@ import { UserParamDirectoriesSrv } from '../shared-user-param/services/user-para
 
 export class UserParamDirectoriesComponent extends UserParamDirectoriesSrv {
     prepInputsAttach;
-    constructor( injector: Injector ) {
+    userParams: USER_PARMS[];
+    constructor(
+      //  private _userParamsSetSrv: UserParamsService,
+        injector: Injector ) {
         super(injector);
+       // this._userParamsSetSrv.userContextParams();
     }
 }

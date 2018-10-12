@@ -1,5 +1,9 @@
 export const APP_MODULES = [
     {
+        title: 'Регистрация',
+        url: '/registration',
+    },
+    {
         title: 'Cправочники',
         url: '/spravochniki'
     },
