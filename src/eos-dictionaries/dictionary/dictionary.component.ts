@@ -334,7 +334,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
      */
     private _openCreate(recParams: any) {
         if (this.dictionaryId === 'user_param') {
-            this._router.navigate(['/user-params-set']);
+            this._router.navigate(['/user-params-set'], {queryParams: {createNewUser: true}});
             return;
         }
         this.modalWindow = this._modalSrv.show(CreateNodeComponent, { class: 'creating-modal' });

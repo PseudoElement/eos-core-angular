@@ -73,7 +73,7 @@ export class NodeListItemComponent implements OnInit, OnChanges {
                 _path.push('view');
             } else if (!this.node.isNode && this.node.dictionaryId === 'user_param') {
                 this._router.navigate(['/user-params-set'], {
-                    queryParams: {id: this.node.id}
+                    queryParams: {dueDep: this.node.id}
                 });
                 return;
             }

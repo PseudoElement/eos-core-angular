@@ -194,7 +194,7 @@ const routes: Routes = [
             {
                 path: '',
                 pathMatch: 'full',
-                redirectTo: 'param-set',
+                redirectTo: 'base-param',
             },
         ]
     },
