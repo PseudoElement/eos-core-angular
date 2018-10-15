@@ -7,12 +7,13 @@ import { CheckboxInput } from 'eos-common/core/inputs/checkbox-input';
 import { DateInput } from 'eos-common/core/inputs/date-input';
 import { E_FIELD_TYPE } from '../interfaces';
 import { GENDERS } from '../consts/dictionaries/department.consts';
-import { NOT_EMPTY_STRING } from '../consts/input-validation';
+import { EMAIL, NOT_EMPTY_STRING } from '../consts/input-validation';
 import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 import { ButtonsInput } from 'eos-common/core/inputs/buttons-input';
 import {EosDictionary} from '../core/eos-dictionary';
 import {DictionaryDescriptorService} from '../core/dictionary-descriptor.service';
 import {EosBroadcastChannelService} from './eos-broadcast-channel.service';
+import { MAIL_FORMATS } from '../consts/dictionaries/contact.consts';
 
 @Injectable()
 export class EosDataConvertService {
@@ -53,7 +54,8 @@ export class EosDataConvertService {
                                             || descr[_key].default,
                                         length: descr[_key].length,
                                         disabled: !editMode,
-                                        password: descr[_key].password
+                                        password: descr[_key].password,
+                                        groupLabel: descr[_key].groupLabel
                                     });
                                     break;
                                 case E_FIELD_TYPE.xml:
@@ -80,7 +82,8 @@ export class EosDataConvertService {
                                                                 || descr[_dataKey].default,
                                                                 length: descr[_dataKey].length,
                                                                 disabled: !editMode,
-                                                                password: descr[_dataKey].password
+                                                                password: descr[_dataKey].password,
+                                                                groupLabel: descr[_dataKey].groupLabel
                                                             });
                                                             break;
                                                         case E_FIELD_TYPE.select:
@@ -181,10 +184,69 @@ export class EosDataConvertService {
                             key: 'sev.GLOBAL_ID',
                             label: 'Индекс СЭВ',
                             dict: 'sev',
-                            value: data['sev']['GLOBAL_ID'],
+                            value: data['sev'] ? data['sev']['GLOBAL_ID'] : null,
                             pattern: NOT_EMPTY_STRING,
                             disabled: !editMode,
                         });
+                        break;
+                    case 'contact':
+                        for (let i = 0; i < data.contact.length; i++) {
+                            inputs['contact[' + i + '].E_MAIL'] = new StringInput({
+                                key: 'contact[' + i + '].E_MAIL',
+                                label: 'Адрес e-mail',
+                                dict: 'contact',
+                                value: data.contact[i] ? data.contact[i].E_MAIL : null,
+                                pattern: EMAIL,
+                                disabled: !editMode
+                            });
+                            inputs['contact[' + i + '].ENCRYPT_FLAG'] = new CheckboxInput({
+                                key: 'contact[' + i + '].ENCRYPT_FLAG',
+                                label: 'Требуется шифрование',
+                                forNode: 'contact[' + i + '].ENCRYPT_FLAG',
+                                value: data.contact[i].ENCRYPT_FLAG !== 0,
+                                disabled: !editMode,
+                            });
+                            inputs['contact[' + i + '].EDS_FLAG'] = new CheckboxInput({
+                                key: 'contact[' + i + '].EDS_FLAG',
+                                label: 'Требуется ЭП',
+                                forNode: 'contact[' + i + '].EDS_FLAG',
+                                value: data.contact[i].EDS_FLAG !== 0,
+                                disabled: !editMode,
+                            });
+                            inputs['contact[' + i + '].ID_CERTIFICATE'] = new StringInput({
+                                key: 'contact[' + i + '].ID_CERTIFICATE',
+                                label: 'Cертификат',
+                                dict: 'contact',
+                                value: data.contact[i] ? data.contact[i].ID_CERTIFICATE : null,
+                                disabled: !editMode
+                            });
+
+                            inputs['contact[' + i + '].MAIL_FORMAT'] = new ButtonsInput({
+                                key: 'contact[' + i + '].MAIL_FORMAT',
+                                label: 'В формате',
+                                dict: 'contact',
+                                value: data.contact[i].MAIL_FORMAT,
+                                // options: fieldsDescription['printInfo']['GENDER'].options,
+                                options: MAIL_FORMATS,
+                                pattern: NOT_EMPTY_STRING,
+                                disabled: !editMode,
+                            });
+                            inputs['contact[' + i + '].NOTE'] = new StringInput({
+                                key: 'contact[' + i + '].NOTE',
+                                label: 'Примечание',
+                                dict: 'contact',
+                                value: data.contact[i] ? data.contact[i].NOTE : null,
+                                disabled: !editMode
+                            });
+                            // inputs['contact[' + i + '].email'] = new StringInput({
+                            //     key: 'contact[' + i + '].email',
+                            //     label: 'Адрес e-mail',
+                            //     dict: 'contact',
+                            //     value: data.contact[i] ? data.contact[i].email : null,
+                            //     pattern: EMAIL,
+                            //     disabled: !editMode
+                            // });
+                        }
                         break;
                     case 'printInfo':
                         if (data.rec['IS_NODE'] === 1) { // person
