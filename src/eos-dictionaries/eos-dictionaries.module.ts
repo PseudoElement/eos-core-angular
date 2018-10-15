@@ -45,6 +45,8 @@ import { NodeListComponent } from './node-list/node-list.component';
 import { NodeListItemComponent } from './node-list-item/node-list-item.component';
 import { NodeListPaginationComponent } from './node-list-pagination/node-list-pagination.component';
 import { NodeInfoComponent } from './node-info/node-info.component';
+import { OrganizationsCardEditGroupComponent } from './card-views/organizations-card-edit-group.component';
+import { OrganizationsCardEditNodeComponent } from './card-views/organizations-card-edit-node.component';
 import { CabinetCardEditComponent } from './card-views/cabinet-card-edit.component';
 import { SandwichComponent } from './sandwich/sandwich.component';
 import { SecurityCardEditComponent } from './card-views/security-card-edit.component';
@@ -54,6 +56,7 @@ import { SecurityNodeInfoComponent } from './node-info/security-node-info.compon
 import { SimpleCardEditComponent } from './card-views/simple-card-edit.component';
 import { TreeComponent } from './tree/tree.component';
 import { DictionariesQuickSearchComponent } from './dictionary-quick-search/dictionary-quick-search.component';
+import { CreateNodeBroadcastChannelComponent } from './create-node-broadcast-channel/create-node-broadcast-channel.component';
 
 /* services */
 import { DictionaryDescriptorService } from './core/dictionary-descriptor.service';
@@ -61,8 +64,7 @@ import { EosDataConvertService } from './services/eos-data-convert.service';
 import { EosDepartmentsService } from './services/eos-department-service';
 import { EosDictService } from './services/eos-dict.service';
 import { EosSandwichService } from './services/eos-sandwich.service';
-import {CreateNodeBroadcastChannelComponent} from './create-node-broadcast-channel/create-node-broadcast-channel.component';
-import {EosBroadcastChannelService} from './services/eos-broadcast-channel.service';
+import { EosBroadcastChannelService } from './services/eos-broadcast-channel.service';
 
 @NgModule({
     declarations: [
@@ -98,7 +100,9 @@ import {EosBroadcastChannelService} from './services/eos-broadcast-channel.servi
         CreateNodeComponent,
         CreateNodeBroadcastChannelComponent,
         BroadcastChannelCardEditComponent,
-        SevRulesCardEditComponent
+        SevRulesCardEditComponent,
+        OrganizationsCardEditGroupComponent,
+        OrganizationsCardEditNodeComponent
     ],
     entryComponents: [
         ColumnSettingsComponent,
