@@ -3,6 +3,20 @@ import { IEnt, ILinearCL, IHierCL, IStamp } from './interfaces';
 // tslint:disable class-name
 
 /**
+ * Словарь недопустимых паролей
+ */
+export interface PASS_STOP_LIST extends IEnt {
+    /**
+     * Недопустимое значение
+     */
+    CLASSIF_NAME: string;
+    /**
+     * ISN Недопустимого значения
+     */
+    ISN_PASS_STOP_LIST: number;
+}
+
+/**
  * Справочник видов доставки
  */
 export interface DELIVERY_CL extends ILinearCL {

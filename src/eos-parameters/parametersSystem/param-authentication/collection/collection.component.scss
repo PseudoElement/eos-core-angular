@@ -1,18 +1,76 @@
-.collection-wrapp {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 1065;
-    background-color: rgba(0, 0, 0, .1);
+.modal-collection {
+    width: 800px;
+    margin: 200px auto;
+
+
+    .collection-action {
+        background: $light-grey-1;
+        border-bottom: 1px solid $border-color-main-theme;
+
+        .btn {
+            width: 48px;
+            height: 48px;
+            background: transparent;
+        }
+    }
+
+    .collection-param {
+        background: $light-grey-1;
+        border-bottom: 1px solid $border-color-main-theme;
+        // border-top-color: transparent;
+
+        .checkbox-inline {
+            width: 48px;
+            height: 48px;
+            padding-top: 13px;
+        }
+
+        .item {
+            display: inline-block;
+
+            .text {
+                cursor: pointer;
+                color: $button-color-main-theme;
+                position: relative;
+                top: 3px;
+            }
+            .eos-icon {
+                vertical-align: middle;
+            }
+        }
+    }
 
     .collection-main {
-        background-color: #fff;
-        position: absolute;
-        top: 200px;
-        width: 500px;
-        margin-left: calc(50% - 250px);
-        box-shadow: 0 0 15px rgba(0, 0, 0, .2);
+        // padding: 0 10px;
+        min-height: 200px;
+
+        // border: 1px solid $border-color-main-theme;
+        // border-top-color: transparent;
+        margin-bottom: 20px;
+
+        ul {
+            margin: 0;
+            padding: 0;
+
+            li {
+                list-style: none;
+                line-height: 32px;
+                color: #000;
+
+                .list {
+                    cursor: default;
+                    user-select: none;
+
+                    input{
+                        display: none;
+                    }
+                }
+            }
+        }
+
     }
+}
+
+.collection-empty-list {
+    margin-left: 15px;
 }
