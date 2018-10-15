@@ -13,4 +13,9 @@ export class DynamicInputStringComponent extends DynamicInputBase {
         }
         return 'text';
     }
+
+    get label(): string {
+
+        return this.input.groupLabel && this.isGroup ? this.input.groupLabel : this.input.label;
+    }
 }
