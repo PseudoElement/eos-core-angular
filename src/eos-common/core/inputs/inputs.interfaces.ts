@@ -17,6 +17,7 @@ export interface IBaseInput {
     options?: any[];
     disabled?: boolean;
     password?: boolean;
+    groupLabel?: string;
 }
 
 export interface ISelectInput extends IBaseInput {
