@@ -180,7 +180,8 @@ export class RecordDescriptor {
                         forNode: _f.forNode,
                         dictionaryId: _f.dictionaryId,
                         default: _f.default,
-                        password: _f.password
+                        password: _f.password,
+                        groupLabel: _f.groupLabel
                     };
                 }
             });
