@@ -154,7 +154,9 @@ export abstract class AbstractDictionaryDescriptor {
         if (order) {
             req.orderby = order;
         }
-
+        if (this.id === 'organization') {
+            req.expand = 'CONTACT_List';
+        }
         return this.apiSrv
             .read(req)
             .then((data: any[]) => {
