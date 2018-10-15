@@ -47,6 +47,13 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         if (this.dictionaryId === 'broadcast-channel') {
             this._channelSrv.data = newData.rec;
             newData.rec['PARAMS'] = this._channelSrv.toXml();
+        } else if (this.dictionaryId === 'organization') {
+            if (newData.rec['ISN_ADDR_CATEGORY'] !== null) {
+                newData.rec['ISN_ADDR_CATEGORY'] = +newData.rec['ISN_ADDR_CATEGORY'];
+            }
+            if (newData.rec['ISN_REGION'] !== null) {
+                newData.rec['ISN_REGION'] = +newData.rec['ISN_REGION'];
+            }
         }
         return newData;
     }
