@@ -18,6 +18,7 @@ export class FieldDescriptor implements IFieldDescriptorBase {
     readonly default?: any;
     readonly dictionaryId?: string;
     readonly password?: boolean;
+    readonly groupLabel?: string;
 
     constructor(data: IFieldDescriptor) {
         if (data.key) {
@@ -58,5 +59,8 @@ export class FieldDescriptor implements IFieldDescriptorBase {
         this.dictionaryId = data.dictionaryId;
 
         this.password = !!data.password;
+        if (data.groupLabel) {
+            this.groupLabel = data.groupLabel;
+        }
     }
 }
