@@ -3,6 +3,8 @@ import { NOT_EMPTY_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
 import { COMMON_FIELDS, COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME } from './_common';
 import {environment} from '../../../environments/environment';
+import {ADDR_CATEGORY_DICT} from './addr-category.consts';
+import { REGION_DICT } from './region.consts';
 
 
 export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
@@ -54,6 +56,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     },
     Object.assign({}, COMMON_FIELD_NAME, {
         title: 'Наименование организации',
+        groupLabel: 'Наименование группы',
         length: 255,
     }), /* {
         key: 'CLASSIF_NAME_SEARCH',
@@ -110,9 +113,8 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     }, {
         key: 'ISN_REGION',
         title: 'Регион',
-        type: 'number',
-        pattern: NOT_EMPTY_STRING,
-        length: 10,
+        type: 'dictionary',
+        dictionaryId: REGION_DICT.id,
     }, {
         key: 'OKONH',
         title: 'ОКОНХ',
@@ -140,9 +142,9 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     }, {
         key: 'ISN_ADDR_CATEGORY',
         title: 'Категория адресата',
-        type: 'number',
-        pattern: NOT_EMPTY_STRING,
-        length: 10,
+        type: 'select',
+        dictionaryId: ADDR_CATEGORY_DICT.id,
+        length: 200,
 
     }, {
         key: 'CODE',
@@ -159,7 +161,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         pattern: NOT_EMPTY_STRING,
     }, {
         key: 'contact',
-        type: 'dictionary',
+        type: 'array',
         title: '',
 
     }, {
@@ -171,18 +173,23 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         key: 'ar-organiz-value',
         type: 'dictionary',
         title: '',
+    }, {
+        key: 'sev',
+        type: 'dictionary',
+        title: '',
 
     }]),
     treeFields: ['CLASSIF_NAME'],
-    editFields: ['CLASSIF_NAME', 'CLASSIF_NAME_SEARCH', 'FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS', 'MAIL_FOR_ALL', 'NOTE', 'OKPO',
-        'INN', 'ISN_REGION', 'OKONH', 'LAW_ADRESS', 'ISN_ORGANIZ_TYPE', 'SERTIFICAT', 'ISN_ADDR_CATEGORY', 'CODE', 'OGRN',
-        'contact', 'bank-recvisit', 'ar-organiz-value'],
+    editFields: ['PARENT_DUE', 'CLASSIF_NAME', 'CLASSIF_NAME_SEARCH', 'FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS',
+        'MAIL_FOR_ALL', 'NOTE', 'OKPO', 'INN', 'ISN_REGION', 'OKONH', 'LAW_ADRESS', 'ISN_ORGANIZ_TYPE', 'SERTIFICAT',
+        'ISN_ADDR_CATEGORY', 'CODE', 'OGRN', 'contact', 'bank-recvisit', 'ar-organiz-value', 'sev'],
     searchFields: ['CLASSIF_NAME'],
     fullSearchFields: [],
-    quickViewFields: ['FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS', 'OKPO', 'INN', 'OKONH', 'LAW_ADRESS', 'ISN_ORGANIZ_TYPE', 'SERTIFICAT',
-        'ISN_ADDR_CATEGORY', 'CODE', 'OGRN'],
+    quickViewFields: ['FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS', 'OKPO', 'INN', 'OKONH', 'LAW_ADRESS',
+        'ISN_ORGANIZ_TYPE', 'SERTIFICAT',  'ISN_ADDR_CATEGORY', 'CODE', 'OGRN', 'sev'],
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: ['CLASSIF_NAME'],
     allVisibleFields: ['CLASSIF_NAME_SEARCH', 'FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS', 'MAIL_FOR_ALL', 'NOTE', 'OKPO',
-        'INN', 'ISN_REGION', 'OKONH', 'LAW_ADRESS', 'ISN_ORGANIZ_TYPE', 'SERTIFICAT', 'ISN_ADDR_CATEGORY', 'CODE', 'OGRN'],
+        'INN', 'ISN_REGION', 'OKONH', 'LAW_ADRESS', 'ISN_ORGANIZ_TYPE', 'SERTIFICAT', 'ISN_ADDR_CATEGORY', 'CODE',
+        'OGRN'],
 };
