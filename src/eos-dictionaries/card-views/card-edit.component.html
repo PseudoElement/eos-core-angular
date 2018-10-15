@@ -24,6 +24,22 @@
                                                           [dutysList]="dutysList"
                                                           [fullNamesList]="fullNamesList"></eos-departments-card-edit-department>
                 </ng-container>
+                <ng-container *ngSwitchCase="'organization'">
+                    <eos-organizations-card-edit-node #cardEditEl
+                                                      *ngIf="data.rec['IS_NODE'] === 1"
+                                                      class="organizations-card-edit-node simple-card-edit"
+                                                      [form]="form"
+                                                      [inputs]="inputs"
+                                                      [data]="data"
+                                                      [editMode]="editMode"></eos-organizations-card-edit-node>
+                    <eos-organizations-card-edit-group #cardEditEl
+                                                      *ngIf="data.rec['IS_NODE'] === 0"
+                                                      class="organizations-card-edit-group simple-card-edit"
+                                                      [form]="form"
+                                                      [inputs]="inputs"
+                                                      [data]="data"
+                                                      [editMode]="editMode"></eos-organizations-card-edit-group>
+                </ng-container>
                 <eos-cabinet-card-edit *ngSwitchCase="'cabinet'"
                                        #cardEditEl
                                        class="cabinet-card-edit"
