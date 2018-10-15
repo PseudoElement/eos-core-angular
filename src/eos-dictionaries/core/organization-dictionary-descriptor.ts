@@ -1,11 +1,11 @@
-import { DictionaryDescriptor } from './dictionary-descriptor';
 import { IRecordOperationResult } from 'eos-dictionaries/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { CONTACT, ORGANIZ_CL, SEV_ASSOCIATION } from 'eos-rest';
 import { SevIndexHelper } from 'eos-rest/services/sevIndex-helper';
 import { PipRX } from 'eos-rest/services/pipRX.service';
+import { TreeDictionaryDescriptor } from './tree-dictionary-descriptor';
 
-export class OrganizationDictionaryDescriptor extends DictionaryDescriptor {
+export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
 
     addContacts(newContacts: any[], orgDUE: string): Promise<IRecordOperationResult[]> {
         return this.apiSrv.read<ORGANIZ_CL>({ ORGANIZ_CL: orgDUE, expand: 'CONTACT_List' })
