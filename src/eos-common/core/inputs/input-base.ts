@@ -18,6 +18,8 @@ export class InputBase<T>{
     disabled?: boolean;
     length?: number;
     password?: boolean;
+    groupLabel?: string;
+    isGroup?: boolean;
 
     constructor(options: {
         value?: T,
@@ -36,7 +38,9 @@ export class InputBase<T>{
         options?: any[],
         disabled?: boolean,
         length?: number,
-        password?: boolean;
+        password?: boolean,
+        groupLabel?: string,
+        isGroup?: boolean
     } = {}) {
         this.value = options.value;
         this.key = options.key || '';
@@ -56,5 +60,7 @@ export class InputBase<T>{
         this.disabled = !!options.disabled;
         this.length = options.length;
         this.password = options.password;
+        this.groupLabel = options.groupLabel;
+        this.isGroup = options.isGroup;
     }
 }
