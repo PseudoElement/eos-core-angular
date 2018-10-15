@@ -56,6 +56,7 @@ export interface IFieldDescriptor {
     default?: any;
     dictionaryId?: string;
     password?: boolean;
+    groupLabel?: string;
 }
 
 export interface IFieldDescriptorBase {
@@ -76,6 +77,7 @@ export interface IFieldDescriptorBase {
     readonly default?: any;
     readonly dictionaryId?: string;
     readonly password?: boolean;
+    readonly groupLabel?: string;
 }
 
 export interface IFieldView extends IFieldDescriptorBase {
