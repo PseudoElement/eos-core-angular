@@ -277,6 +277,15 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             if (this.node.data && this.node.data.sev && this.node.data.sev._orig) {
                 EosUtils.deepUpdate(this.node.data.sev._orig, this.node.data.sev);
             }
+            if (this.node.data && this.node.data.CONTACT_List) {
+                this.node.data.contact = [];
+                for (let i = 0; i < this.node.data.CONTACT_List.length; i++) {
+                    const contact = Object.assign({}, node.data.CONTACT_List[i]);
+                    contact._orig = {};
+                    EosUtils.deepUpdate(contact._orig, node.data.CONTACT_List[i]);
+                    node.data.contact.push(contact);
+                }
+            }
             this.nodeData = this.node.data; // getEditData();
             // console.log('recived description', this.nodeData);
 
