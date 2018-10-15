@@ -1,0 +1,92 @@
+<div class="card-content-wrapper">
+    <div class="tabs-wrapper usual-border border-bottom">
+        <ul class="tabs">
+            <li class="tab-item"
+                role="presentation"
+                [ngClass]="{'active': 0 === currTab}"
+                (click)="setTab(0)">
+                <span class="tab-title">Основные данные</span>
+            </li>
+            <li class="tab-item"
+                role="presentation"
+                [ngClass]="{'active': 1 === currTab}"
+                (click)="setTab(1)">
+                <span class="tab-title">Представители</span>
+            </li>
+            <li class="tab-item"
+                role="presentation"
+                [ngClass]="{'active': 2 === currTab}"
+                (click)="setTab(2)">
+                <span class="tab-title">Реквизиты</span>
+            </li>
+            <li class="tab-item"
+                role="presentation"
+                [ngClass]="{'active': 3 === currTab}"
+                (click)="setTab(3)">
+                <span class="tab-title">Дополнительные сведения</span>
+            </li>
+        </ul>
+    </div>
+    {{data.contact}}
+    <div [hidden]="currTab !== 0"
+         class="eos-organization-node-tab">
+        <table class="table usual-border border-bottom table-owners">
+            <tr>
+                <td>
+                    <eos-dynamic-input [input]="inputs['rec.CLASSIF_NAME']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.FULLNAME']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.NOTE']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['sev.GLOBAL_ID']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.ADDRESS']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['rec.LAW_ADRESS']"
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
+                    <fieldset>
+                    <table width="100%">
+                        <span *ngFor="let contact of data.contact; index as i;">
+                            <tr>
+                                <td>
+                                    <eos-dynamic-input [input]="inputs['contact[' + i + '].E_MAIL']"
+                                                       [form]="form"
+                                                       [readonly]="!editMode"></eos-dynamic-input>
+                                    <eos-dynamic-input [input]="inputs['contact[' + i + '].ENCRYPT_FLAG']"
+                                                       [form]="form"
+                                                       [readonly]="!editMode"></eos-dynamic-input>
+                                    <eos-dynamic-input [input]="inputs['contact[' + i + '].MAIL_FORMAT']"
+                                                       [form]="form"
+                                                       [readonly]="!editMode"></eos-dynamic-input>
+                                </td>
+                                <td>
+                                    <eos-dynamic-input [input]="inputs['contact[' + i + '].EDS_FLAG']"
+                                                       [form]="form"
+                                                       [readonly]="!editMode"></eos-dynamic-input>
+                                    <eos-dynamic-input [input]="inputs['contact[' + i + '].ID_CERTIFICATE']"
+                                                       [form]="form"
+                                                       [readonly]="!editMode"></eos-dynamic-input>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <eos-dynamic-input [input]="inputs['contact[' + i + '].NOTE']"
+                                                       [form]="form"
+                                                       [readonly]="!editMode"></eos-dynamic-input>
+                                </td>
+                            </tr>
+                        </span>
+                    </table>
+                    </fieldset>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

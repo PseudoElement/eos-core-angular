@@ -1,0 +1,80 @@
+.organizations-card-edit-node {
+    display: block;
+    width: 800px;
+}
+.eos-organization-node-tab {
+    margin-bottom: 0;
+    .table-owners {
+    }
+    .panel-group .panel-heading {
+        padding: 11px 20px;
+    }
+    .panel-body {
+        padding: 0;
+    }
+    &>.panel+.panel {
+    }
+    .table,
+    table {
+        margin-bottom: 0px;
+        background-color: #fff;
+        vertical-align: middle;
+        tr {
+            background-color: inherit;
+            border-width: 1px 0;
+            line-height: 32px;
+        }
+        th,
+        td,
+        .th,
+        .td {
+            border-width: 1px;
+            background-color: inherit;
+            line-height: inherit;
+            vertical-align: middle;
+            font-weight: normal;
+            padding: 0px 20px;
+            height: inherit;
+        }
+        tbody {
+            td,
+            .td {
+                border-top-style: none;
+                border-bottom-style: none;
+                font-size: 14px;
+            }
+        }
+        th,
+        .th {
+            white-space: nowrap;
+        }
+        .td-checkbox {
+            padding: 0;
+            width: 48px;
+            text-align: center;
+            &+td,
+            &+th {
+                padding-left: 0;
+            }
+            .checkbox-inline {
+                line-height: inherit;
+                padding: 0;
+            }
+            input[type="checkbox"]+span {
+                margin: 0;
+            }
+        }
+    }
+}
+
+fieldset {
+    display: block;
+    padding-left: 0.75em;
+    border-radius: 0.25em;
+    border: 0.15em groove;
+    legend {
+        width: auto;
+        font-size: medium;
+        border-style: none;
+    }
+}
