@@ -11,7 +11,6 @@ export class DynamicInputComponent {
     @Input() input: InputBase<any>;
     @Input() form: FormGroup;
     @Input() readonly: boolean;
-    @Input() isGroup: boolean;
 
     types = E_FIELD_TYPE;
 
