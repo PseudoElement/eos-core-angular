@@ -16,7 +16,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
     hiddenInputRadioResolution: boolean;
     inputChoiceFiles = {
             key: 'contextFile',
-            label: 'Форматировать и индексировать файлы контекста'
+            label: 'Формировать и индексировать файлы контекста'
         };
     inputcontextResolution = {
         key: 'contextResolution',
@@ -124,7 +124,15 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
                     this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
-                .catch(data => console.log(data));
+                .catch(data => {
+                    this.formChanged.emit(true);
+                    this.isChangeForm = true;
+                    this.msgSrv.addNewMessage({
+                        type: 'danger',
+                        title: 'Ошибка сервера',
+                        msg: data.message ? data.message : data
+                    });
+                });
         }
     }
     changeByPath(path: string, value: any) {
@@ -148,8 +156,11 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
             }
         }
         return [{
-            method: 'POST',
-            requestUri: `SYS_PARMS_Update?PARM_NAME='CONTEXT_SECTIONS_ENABLED'&PARM_VALUE='${value}'`
+            method: 'MERGE',
+            requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 CONTEXT_SECTIONS_ENABLED')`,
+            data: {
+                PARM_VALUE: value
+            }
         }];
     }
     subscribeChangeForm() {

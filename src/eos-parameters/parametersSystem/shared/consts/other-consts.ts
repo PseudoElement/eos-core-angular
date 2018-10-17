@@ -26,29 +26,13 @@ export const OTHER_PARAM: IBaseParameters = {
             key: 'EMAIL_ISN_DELIVERY',
             type: 'select',
             title: '',
-            options: [
-                {value: '3777', title: 'Телефонограмма'},
-                {value: '3779', title: 'Спецсвязь'},
-                {value: '3778', title: 'Факс'},
-                {value: '2', title: 'СЭВ'},
-                {value: '3', title: 'МЭДО'},
-                {value: '4', title: 'VipNet'},
-                {value: '1', title: 'E-MAIL'},
-            ]
+            options: []
         },
         {
             key: 'SEV_ISN_DELIVERY',
             type: 'select',
             title: '',
-            options: [
-                {value: '3777', title: 'Телефонограмма'},
-                {value: '3779', title: 'Спецсвязь'},
-                {value: '3778', title: 'Факс'},
-                {value: '2', title: 'СЭВ'},
-                {value: '3', title: 'МЭДО'},
-                {value: '4', title: 'VipNet'},
-                {value: '1', title: 'E-MAIL'},
-            ]
+            options: []
         },
     ]
 };

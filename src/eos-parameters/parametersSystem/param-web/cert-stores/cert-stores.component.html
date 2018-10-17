@@ -1,4 +1,3 @@
-<!-- <pre>{{initCarmaStores | json}}</pre> -->
 <div class="cert-wrapper" #wrapper>
     <div class="cert-header">
             <span class="l-font">Хранилища сертификатов</span>
@@ -15,10 +14,11 @@
         </button>
         <button
             class="btn"
+            #dTolltip="bs-tooltip"
             tooltip="Удалить"
             placement="bottom"
             containerClass="tooltip-info"
-            (click)="deleteStores()"
+            (click)="dTolltip.hide(); deleteStores()"
             [disabled]="!this.certStoresService.isMarkNode"
         >
                 <span class="eos-icon eos-icon-bin-forever-blue small"></span>

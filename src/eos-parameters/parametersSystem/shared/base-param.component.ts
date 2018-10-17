@@ -92,7 +92,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         );
     }
 
-    getData(req) {
+    getData(req): Promise<any> {
         return this.paramApiSrv.getData(req);
     }
     prepareDataParam() {
@@ -111,12 +111,20 @@ export class BaseParamComponent implements OnDestroy, OnInit {
             this.formChanged.emit(false);
             this.isChangeForm = false;
             this.paramApiSrv
-                .setData(this.createObjRequest())
-                .then(data => {
+            .setData(this.createObjRequest())
+            .then(data => {
                     this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
-                .catch(data => console.log(data));
+                .catch(data => {
+                    this.formChanged.emit(true);
+                    this.isChangeForm = true;
+                    this.msgSrv.addNewMessage({
+                        type: 'danger',
+                        title: 'Ошибка сервера',
+                        msg: data.message ? data.message : data
+                    });
+                });
         }
     }
     cancel() {
@@ -145,8 +153,11 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         for (const key in this.newData.rec) {
             if (key) {
                 req.push({
-                    method: 'POST',
-                    requestUri: `SYS_PARMS_Update?PARM_NAME='${key}'&PARM_VALUE='${this.newData.rec[key]}'`
+                    method: 'MERGE',
+                    requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 ${key}')`,
+                    data: {
+                        PARM_VALUE: this.newData.rec[key]
+                    }
                 });
             }
         }

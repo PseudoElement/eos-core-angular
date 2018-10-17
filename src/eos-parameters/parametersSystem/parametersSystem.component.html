@@ -58,3 +58,14 @@
         </ng-container>
     </ng-container>
 </div>
+
+<div [ngClass]="{'list-show' : isWide}" class="params-nav-list">
+    <ul class="list-group">
+        <li
+            class="list-group-item"
+            *ngFor="let param of listParams"
+            [routerLink]="['/parameters', param.url]"
+            routerLinkActive="active-element-param"
+        >{{param.title}}</li>
+    </ul>
+</div>

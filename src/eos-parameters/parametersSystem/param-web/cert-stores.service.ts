@@ -84,8 +84,7 @@ export class CertStoresService {
                 this.listsCetsStores.forEach(node => {
                     node.marked = e.target.checked;
                     node.selectedMark = e.target.checked;
-                    node.isSelected = false;
-
+                    // node.isSelected = false;
                 });
         }
         this.checkMarkNode();
@@ -137,6 +136,7 @@ export class CertStoresService {
             if (node.marked || node.selectedMark) {
                 if (node === this.currentSelectedNode) {
                     this.currentSelectedNode = null;
+                    this._currentSelectedNode$.next(null);
                 }
                 this.listsCetsStores.splice(i, 1);
                 i --;

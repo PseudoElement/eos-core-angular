@@ -1,0 +1,21 @@
+.header {
+    padding: 15px;
+    position: relative;
+    border-bottom: solid 1px $border-color-main-theme;
+    background: $light-grey-1;
+    .header__text-wrap {
+        text-align: left;
+        .header__text {
+            color: $primary-font-color-main-theme;
+            font-size: 18px;
+        }
+    }
+    .header__button-wrap {
+        position: absolute;
+        top: 13px;
+        right: 12px;
+        .header__button {
+            margin-right: 10px;
+        }
+    }
+}

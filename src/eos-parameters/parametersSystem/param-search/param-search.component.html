@@ -18,7 +18,7 @@ class="input-param-wrapper input-param-search-wrapper">
         <eos-dynamic-input
             [input]="inputs['rec.INDEX_URL']"
             [form]="form"
-            [readonly]="false"
+            [readonly]="inputs['rec.INDEX_URL'].readonly"
         ></eos-dynamic-input>
         <div>
             <span>{{inputs['rec.INDEXTIMEOUT'].label}}</span>
@@ -32,12 +32,12 @@ class="input-param-wrapper input-param-search-wrapper">
         <eos-dynamic-input
             [input]="inputs['rec.ELNPATH']"
             [form]="form"
-            [readonly]="false"
+            [readonly]="inputs['rec.ELNPATH'].readonly"
         ></eos-dynamic-input>
         <eos-dynamic-input
             [input]="inputs['rec.FULLTEXT_EXTENSIONS']"
             [form]="form"
-            [readonly]="false"
+            [readonly]="inputs['rec.FULLTEXT_EXTENSIONS'].readonly"
         ></eos-dynamic-input>
     </div>
 </div>

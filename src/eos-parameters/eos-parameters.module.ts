@@ -29,6 +29,7 @@ import { AddCertStoresComponent } from './parametersSystem/param-web/cert-stores
 import { ParamApiSrv } from './parametersSystem/shared/service/parameters-api.service';
 import { EosCommonModule } from 'eos-common/eos-common.module';
 import { ParamDescriptorSrv } from './parametersSystem/shared/service/param-descriptor.service';
+import { CollectionService } from './parametersSystem/param-authentication/collection/collection.service';
 
 
 @NgModule({
@@ -47,6 +48,9 @@ import { ParamDescriptorSrv } from './parametersSystem/shared/service/param-desc
         CertStoresComponent,
         AddCertStoresComponent,
     ],
+    entryComponents: [
+        AuthenticationCollectionComponent
+    ],
     imports: [
         BrowserModule,
         TooltipModule.forRoot(),
@@ -58,7 +62,8 @@ import { ParamDescriptorSrv } from './parametersSystem/shared/service/param-desc
     ],
     providers: [
         ParamApiSrv,
-        ParamDescriptorSrv
+        ParamDescriptorSrv,
+        CollectionService
     ]
 })
 export class EosParametersModule {}

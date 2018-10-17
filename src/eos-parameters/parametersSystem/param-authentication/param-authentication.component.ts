@@ -2,16 +2,22 @@ import { Component, Injector } from '@angular/core';
 import { BaseParamComponent } from '../shared/base-param.component';
 import { AUTH_PARAM } from '../shared/consts/auth-consts';
 import { PARM_CANCEL_CHANGE } from '../shared/consts/eos-parameters.const';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { AuthenticationCollectionComponent } from './collection/collection.component';
 
 @Component({
     selector: 'eos-param-authentication',
     templateUrl: 'param-authentication.component.html'
 })
 export class ParamAuthenticationComponent extends BaseParamComponent {
+    modalCollection: BsModalRef;
     readOnlyPassCase: boolean;
     readOnlyPassListSubstr: boolean;
     collectionVisible = true;
-    constructor( injector: Injector ) {
+    constructor(
+        private _modalSrv: BsModalService,
+        injector: Injector
+        ) {
         super(injector, AUTH_PARAM);
         this.init()
         .then(() => {
@@ -82,7 +88,14 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
         this.form.controls['rec.PASS_LIST'].updateValueAndValidity();
 
     }
-    closeCollection(value) {
-        this.collectionVisible = value;
+    openCollection() {
+        // this.collectionVisible = value;
+        this.modalCollection = this._modalSrv.show(AuthenticationCollectionComponent, {
+            class: 'modal-collection',
+            ignoreBackdropClick: true
+        });
+        this.modalCollection.content.closeCollection.subscribe(() => {
+            this.modalCollection.hide();
+        });
     }
 }

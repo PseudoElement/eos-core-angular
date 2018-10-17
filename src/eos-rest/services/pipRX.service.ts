@@ -69,8 +69,8 @@ export class PipRX extends PipeUtils {
 
     initConfig(config: any) {
         this._cfg = Object.assign({
-            webBaseUrl: 'http://localhost/X181',
-            apiBaseUrl: 'http://localhost/X181',
+            webBaseUrl: 'http://localhost/X182',
+            apiBaseUrl: 'http://localhost/X182',
             authApi: '/Services/ApiSession.asmx/',
             dataApi: '/OData.svc/',
         }, config);
@@ -258,7 +258,7 @@ export class PipRX extends PipeUtils {
                 'Content-Type: application/http',
                 'Content-Transfer-Encoding: binary',
                 '',
-                it.method + ' ' + it.requestUri + ' HTTP/1.1',
+                it.method + ' ' + encodeURI(it.requestUri) + ' HTTP/1.1',
                 'Accept: application/json;odata=light;q=1,application/json;odata=nometadata;',
                 'MaxDataServiceVersion: 3.0',
                 'Content-Type: application/json',

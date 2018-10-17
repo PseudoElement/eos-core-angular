@@ -17,6 +17,7 @@ import { EosDictionariesModule } from '../eos-dictionaries/eos-dictionaries.modu
 import { EosRestModule } from '../eos-rest/eos-rest.module';
 
 import { EosParametersModule } from '../eos-parameters/eos-parameters.module';
+import { EosUserParamsModule } from 'eos-user-params/eos-user-params.module';
 
 import { AppComponent } from './app.component';
 import { BreadcrumbsComponent } from './breadcrumb/breadcrumb.component';
@@ -42,6 +43,7 @@ import { EosNoticeService } from './services/eos-notice.service';
 import { EosStorageService } from './services/eos-storage.service';
 import { EosUserProfileService } from './services/eos-user-profile.service';
 import { CarmaHttpService } from './services/carmaHttp.service';
+import { NavParamService } from './services/nav-param.service';
 
 /* guards */
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
@@ -80,6 +82,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
         EosCommonModule,
         EosDictionariesModule,
         EosParametersModule,
+        EosUserParamsModule,
     ],
     entryComponents: [
         LoginFormComponent,
@@ -100,6 +103,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
         EosStorageService,
         EosUserProfileService,
         CarmaHttpService,
+        NavParamService,
     ],
     bootstrap: [AppComponent],
 })

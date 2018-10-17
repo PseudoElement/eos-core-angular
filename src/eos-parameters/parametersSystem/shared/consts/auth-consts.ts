@@ -20,12 +20,12 @@ export const AUTH_PARAM: IBaseParameters = {
         {
             key: 'CHANGE_PASS',
             type: 'boolean',
-            title: 'Запретить пользавателям смену пароля'
+            title: 'Запретить пользователям смену пароля'
         },
         {
             key: 'PASS_MINLEN',
             type: 'numberIncrement',
-            title: 'Длинна пароля не менее:',
+            title: 'Длина пароля не менее:',
             pattern: REG_RANGE_0_30
         },
         {
@@ -61,7 +61,7 @@ export const AUTH_PARAM: IBaseParameters = {
             type: 'radio',
             title: '',
             options: [
-                {value: 'YES', title: 'как подстраку'},
+                {value: 'YES', title: 'как подстроку'},
                 {value: 'NO', title: 'точное значение'},
             ]
         },
@@ -80,7 +80,7 @@ export const AUTH_PARAM: IBaseParameters = {
         {
             key: 'MAX_LOGIN_ATTEMPTS',
             type: 'numberIncrement',
-            title: 'Блокировка пользователя после',
+            title: 'Блокировать пользователя после',
             pattern: /^\d{1,4}$/
         },
     ]
