@@ -1,7 +1,7 @@
 <header>
     <eos-param-header
         title='Словарь недопустимых паролей'
-        [statusBtnSub]="false"
+        [statusBtnSub]="!qureyForChenge.length"
         (submitForm)="submit()"
         (cancelForm)="cancel()"
     ></eos-param-header>
@@ -44,7 +44,6 @@
         >
             <label [tooltip]="checkAllMarkes.checked ? 'Снять пометки' : 'Пометить все'"
                 placement="bottom"
-                container="body"
                 containerClass="tooltip-info"
             >
                 <input #checkAllMarkes type="checkbox" (change)="toggleAllMarks($event)">
@@ -58,7 +57,6 @@
                 (click)="orderByField()"
                 tooltip="Упорядочить"
                 placement="bottom"
-                container="body"
                 containerClass="tooltip-info"
             >
                 Словарь
@@ -73,37 +71,38 @@
         </div>
     </div>
 <div class="collection-main">
-    <ul
-        *ngIf="(collectionList && collectionList.length); else emptyStores"
-    >
-        <li
-            *ngFor="let list of collectionList"
+    <div *ngIf="!isLoading; else spinner">
+        <ul
+            *ngIf="(collectionList && collectionList.length); else emptyStores"
         >
-            <div
-                class="list"
-                [ngClass]="{'highlighted': list.isSelected}"
-                (click)="selectedNode(list)"
-                (dblclick)="editWord()"
+            <li
+                *ngFor="let list of collectionList"
             >
-                <label
-                    class="checkbox-inline"
-                    [tooltip]="list.marked ? markTemp : notMarkTemp"
-                    containerClass="tooltip-info"
-                    container="body"
-                    (click)="checkboxStopPropagation($event)"
-                    placement="bottom"
+                <div
+                    class="list"
+                    [ngClass]="{'highlighted': list.isSelected}"
+                    (click)="selectedNode(list)"
+                    (dblclick)="editWord()"
                 >
-                    <input
-                        type="checkbox"
-                        [(ngModel)]="list.marked || list.selectedMark"
-                        (ngModelChange)="markWord($event, list)"
+                    <label
+                        class="checkbox-inline"
+                        [tooltip]="list.marked ? markTemp : notMarkTemp"
+                        containerClass="tooltip-info"
+                        (click)="checkboxStopPropagation($event)"
+                        placement="bottom"
                     >
-                    <span></span>
-                </label>
-                {{list.CLASSIF_NAME}}
-            </div>
-        </li>
-    </ul>
+                        <input
+                            type="checkbox"
+                            [(ngModel)]="list.marked || list.selectedMark"
+                            (ngModelChange)="markWord($event, list)"
+                        >
+                        <span></span>
+                    </label>
+                    {{list.CLASSIF_NAME}}
+                </div>
+            </li>
+        </ul>
+    </div>
 </div>
 
 <ng-template #emptyStores>
@@ -111,3 +110,40 @@
 </ng-template>
 <ng-template #markTemp>Снять<br>пометку</ng-template>
 <ng-template #notMarkTemp>Пометить<br>элемент</ng-template>
+<ng-template #spinner>
+    <div class="spinner-wrapper">
+        <eos-spinner [size]="'lg'"></eos-spinner>
+    </div>
+</ng-template>
+
+<ng-template #modalWord>
+    <header>
+        <div class="header">
+            <div class="header__text-wrap">
+                <span class="header__text">{{isNewWord ? 'Добавить' : 'Редактировать'}} недопустимый пароль</span>
+            </div>
+            <div class="header__button-wrap">
+                <button
+                    class="btn btn-primary header__button"
+                    (click)="cancelModalWord()"
+                    >ОТМЕНИТЬ
+                </button>
+                <button
+                    class="btn btn-primary-full header__button"
+                    (click)="submitModalWord()"
+                    [disabled]="inputWordValue === ''"
+                    >{{isNewWord ? 'ДОБАВИТЬ' : 'РЕДАКТИРОВАТЬ'}}
+                </button>
+            </div>
+        </div>
+    </header>
+    <main class="modalWord-content">
+        <span>Слово: </span>
+        <input class="form-control m-font inline-block"
+            #inputWord
+            type="text"
+            [(ngModel)]="inputWordValue"
+            (keyup)="inputWord.value = inputWord.value.toUpperCase()"
+        >
+    </main>
+</ng-template>

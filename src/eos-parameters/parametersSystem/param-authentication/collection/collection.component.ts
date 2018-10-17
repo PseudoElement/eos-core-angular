@@ -1,40 +1,107 @@
-import { Component, OnDestroy, EventEmitter, Output, OnInit} from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { CollectionService, ICollectionList } from './collection.service';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+
+export const CONFIRM_SAVE_ON_LEAVE = {
+    title: 'Имеются несохранённые изменения',
+    body: 'Внесённые изменения могут быть потеряны.',
+    okTitle: 'Сохранить и закрыть',
+    cancelTitle: 'Закрыть без сохранения'
+};
 
 @Component({
     selector: 'eos-param-auth-collection',
     templateUrl: 'collection.component.html'
 })
 
-export class AuthenticationCollectionComponent implements OnDestroy, OnInit {
+export class AuthenticationCollectionComponent implements OnInit {
     @Output() closeCollection = new EventEmitter();
+    @ViewChild('modalWord') modalWord: TemplateRef<any>;
+    modalWordRef: BsModalRef;
     isMarkNode: boolean = false;
+    isNewWord: boolean;
     collectionList: ICollectionList[];
     currentSelectedWord: ICollectionList;
     orderBy: boolean = true;
+    isLoading: boolean;
+    qureyForChenge: any[] = [];
+    inputWordValue: string = '';
     constructor (
-        private _collectionSrv: CollectionService
+        private _confirmSrv: ConfirmWindowService,
+        private _collectionSrv: CollectionService,
+        private _modalSrv: BsModalService
     ) {}
-    ngOnDestroy(): void {
-        console.log('destroy');
-    }
     ngOnInit () {
+        this.isLoading = true;
         this._collectionSrv.getCollectionList()
             .then((list: ICollectionList[]) => {
+                this.isLoading = false;
                 this.collectionList = list;
                 this._orderByField();
+            })
+            .catch(e => {
+                this._closed();
             });
     }
     submit() {
-        console.log('submit');
+        this._collectionSrv.changeWords(this.qureyForChenge)
+            .then((state: Boolean) => {
+                if (state) {
+                    this._closed();
+                }
+            });
+    }
+    submitModalWord() {
+        this.modalWordRef.hide();
+        this.inputWordValue = this.inputWordValue.toUpperCase();
+        if (this.isNewWord) {
+            this.collectionList.push({
+                marked: false,
+                isSelected: false,
+                selectedMark: false,
+                CLASSIF_NAME: this.inputWordValue,
+                ISN_PASS_STOP_LIST: null
+            });
+            this.qureyForChenge.push(this._createRequestForCreate(this.inputWordValue));
+            this.isNewWord = false;
+        } else {
+            this.currentSelectedWord.CLASSIF_NAME = this.inputWordValue;
+            if (this.currentSelectedWord.ISN_PASS_STOP_LIST) {
+                this.qureyForChenge.push(this._createRequestForUpdate(
+                    this.currentSelectedWord.ISN_PASS_STOP_LIST,
+                    this.inputWordValue
+                ));
+            } else {
+                this.qureyForChenge.push(this._createRequestForCreate(this.inputWordValue));
+            }
+        }
+        this.inputWordValue = '';
     }
     cancel() {
-        this._closed();
+        if (this.qureyForChenge.length) {
+            this._confirmSrv.confirm(CONFIRM_SAVE_ON_LEAVE)
+            .then(state => {
+                if (state) {
+                    this.submit();
+                } else {
+                    this._closed();
+                }
+            });
+        } else {
+            this._closed();
+        }
+    }
+    cancelModalWord() {
+        this.modalWordRef.hide();
+        this.isNewWord = false;
+        this.inputWordValue = '';
     }
 
 
     addWord() {
-        console.log('add word');
+        this.isNewWord = true;
+        this._openModal();
     }
     deleteWords() {
         for (let i = 0; i < this.collectionList.length; i++) {
@@ -43,14 +110,16 @@ export class AuthenticationCollectionComponent implements OnDestroy, OnInit {
                 if (node === this.currentSelectedWord) {
                     this.currentSelectedWord = null;
                 }
-                this.collectionList.splice(i, 1); // удалить с базы!!!
+                this.qureyForChenge.push(this._createRequestForDelete(node));
+                this.collectionList.splice(i, 1);
                 i --;
             }
         }
         this._checkMarkNode();
     }
     editWord() {
-        console.log('edit word');
+        this.inputWordValue = this.currentSelectedWord.CLASSIF_NAME;
+        this._openModal();
     }
     toggleAllMarks(event) {
         if (event.target.checked) {
@@ -122,5 +191,32 @@ export class AuthenticationCollectionComponent implements OnDestroy, OnInit {
                 return 0;
             }
         });
+    }
+    private _createRequestForDelete(word: ICollectionList) {
+        return {
+            method: 'DELETE',
+            requestUri: `SYS_PARMS(-99)/PASS_STOP_LIST_List(${word.ISN_PASS_STOP_LIST})`
+        };
+    }
+    private _createRequestForUpdate(id, word) {
+        return {
+            method: 'MERGE',
+            requestUri: `SYS_PARMS(-99)/PASS_STOP_LIST_List(${id})`,
+            data: {
+                CLASSIF_NAME: word
+            }
+        };
+    }
+    private _createRequestForCreate(word) {
+        return {
+            method: 'POST',
+            requestUri: 'SYS_PARMS(-99)/PASS_STOP_LIST_List',
+            data: {
+                CLASSIF_NAME: word
+            }
+        };
+    }
+    private _openModal() {
+        this.modalWordRef = this._modalSrv.show(this.modalWord, {class: 'modalWord', ignoreBackdropClick: true});
     }
 }

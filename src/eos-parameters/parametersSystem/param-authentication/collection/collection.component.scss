@@ -1,6 +1,6 @@
 .modal-collection {
     width: 800px;
-    margin: 200px auto;
+    margin: 200px auto 0;
 
 
     .collection-action {
@@ -41,12 +41,10 @@
     }
 
     .collection-main {
-        // padding: 0 10px;
         min-height: 200px;
-
-        // border: 1px solid $border-color-main-theme;
-        // border-top-color: transparent;
-        margin-bottom: 20px;
+        max-height: 50vh;
+        background: $white;
+        overflow: auto;
 
         ul {
             margin: 0;
@@ -73,4 +71,14 @@
 
 .collection-empty-list {
     margin-left: 15px;
+}
+
+.modalWord {
+    width: 600px;
+    margin: 280px auto 0;
+
+    .modalWord-content {
+        padding: 15px;
+        background: $white;
+    }
 }
