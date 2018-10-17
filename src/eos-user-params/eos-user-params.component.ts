@@ -37,8 +37,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                     return;
                 }
                 this.isLoading = true;
-                console.log(qParam);
-                this._userParamService.getUserIsn(qParam['dueDep'])
+                this._userParamService.getUserIsn(qParam['dueDep']) // '0.2SF.2T7.2TB.'
                     .then((data: boolean) => {
                         this.isLoading = false;
                     })

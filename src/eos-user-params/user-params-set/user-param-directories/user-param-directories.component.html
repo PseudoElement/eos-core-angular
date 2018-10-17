@@ -1,10 +1,11 @@
 <div class="input-user-wrapper input-user-directories-wrapper"
 *ngIf="inputs">
     <eos-user-header
+        [title]="titleHeader"
         (submitForm)="submit()"
         (cancelForm)="cancel()"
-        [statusBtnSub]="btnDisabled"
-        [title]="titleHeader"></eos-user-header>
+        (defaultForm)="default()"
+        [statusBtnSub]="btnDisabled"></eos-user-header>
     <div class="user-input-group">
         <span class="l-font">Окно справочников</span>
         <hr>

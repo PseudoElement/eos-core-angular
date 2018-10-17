@@ -75,7 +75,6 @@ export class UserParamsService {
         }
     }
     private _errorHandler (err) {
-        console.log(err);
         const errMessage = err.message ? err.message : err;
         this._msgSrv.addNewMessage({
             type: 'danger',

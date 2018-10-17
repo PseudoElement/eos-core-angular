@@ -38,7 +38,6 @@
             [form]="form"
             [readonly]="false"
         ></eos-dynamic-input>
-       <!-- <span>Текущего кабинета</span>-->
         <eos-dynamic-input
             [input]="inputs['rec.AUTOLOAD_TO_DELO_CURR_CAB']"
             [form]="form"
@@ -120,5 +119,12 @@
         ></eos-dynamic-input>
     </div>
     </div>
+    <!------------------------------------------------------------------------->
+    <div [hidden]="currTab !== 4"
+    class="clearfix">
+    <div class="user-input-group">
+
+    </div>
+</div>
 </div>
 </div>
