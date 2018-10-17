@@ -6,7 +6,7 @@
         (cancelForm)="cancel()"
         (defaultForm)="default()"
         [statusBtnSub]="btnDisabled"
-    ></eos-user-header> 
+    ></eos-user-header>
     <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs">
             <li class="tab-item"
@@ -193,11 +193,11 @@
                 <span class="eos-icon eos-icon-folder-blue small"></span>
         </button>
             </div>
-               
+
 </div>
 <!--------------------------2--------------------------------------------->
 <!--------------------------3--------------------------------------------->
-<div [hidden]="currTab !== 3" 
+<div [hidden]="currTab !== 3"
     class="clearfix">
     <div class="table-wrapper usual-border">
             <div class="table-header">
@@ -215,7 +215,7 @@
             </div>
                 </div>
                 <div class="eos-template-list">
-                    <div *ngFor="let template of listTemplates">
+                    <!-- <div *ngFor="let template of listTemplates">
                         <span>{{template.key}}</span>
                                 <eos-dynamic-input
                                 class="inline-block table-templates"
@@ -223,7 +223,7 @@
                                 [form]="form"
                                 [readonly]="false"
                             ></eos-dynamic-input>
-                        </div>
+                    </div> -->
     </div>
     </div>
 </div>
