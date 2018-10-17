@@ -73,8 +73,7 @@
             <div class="parm-auth-btn-wrap">
                 <button
                     class="btn btn-primary"
-                    disabled="true"
-                    (click)="closeCollection(false)"
+                    (click)="openCollection()"
                 >Словарь</button>
             </div>
         </div>
@@ -118,8 +117,4 @@
             <span class="m-font">ошибочных вводов пароля</span>
         </div>
     </div>
-    <eos-param-auth-collection
-        [hidden]="collectionVisible"
-        (closeCollection)="closeCollection(true)"
-    ></eos-param-auth-collection>
 </div>

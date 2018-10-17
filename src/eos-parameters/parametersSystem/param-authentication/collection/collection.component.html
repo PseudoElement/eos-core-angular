@@ -1,12 +1,149 @@
-<div class="collection-wrapp">
-    <div class="collection-main">
-        <header>
-            <eos-param-header
-                title='Словарь недопустимых паролей'
-                [statusBtnSub]="false"
-                (submitForm)="submit()"
-                (cancelForm)="cancel()"
-            ></eos-param-header>
-        </header>
+<header>
+    <eos-param-header
+        title='Словарь недопустимых паролей'
+        [statusBtnSub]="!qureyForChenge.length"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+    ></eos-param-header>
+</header>
+<div class="collection-action">
+    <button
+        class="btn"
+        tooltip="Добавить"
+        placement="bottom"
+        containerClass="tooltip-info"
+        (click)="addWord()"
+    >
+            <span class="eos-icon eos-icon-plus-blue small"></span>
+    </button>
+    <button
+        class="btn"
+        #dTolltip="bs-tooltip"
+        tooltip="Удалить"
+        placement="bottom"
+        containerClass="tooltip-info"
+        (click)="dTolltip.hide(); deleteWords()"
+        [disabled]="!isMarkNode"
+    >
+            <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+    </button>
+    <button
+        class="btn"
+        tooltip="Редактировать"
+        placement="bottom"
+        containerClass="tooltip-info"
+        (click)="editWord()"
+        [disabled]="!currentSelectedWord"
+    >
+            <span class="eos-icon eos-icon-edit-blue small"></span>
+    </button>
+</div>
+<div class="collection-param">
+        <div
+            class="checkbox-inline"
+        >
+            <label [tooltip]="checkAllMarkes.checked ? 'Снять пометки' : 'Пометить все'"
+                placement="bottom"
+                containerClass="tooltip-info"
+            >
+                <input #checkAllMarkes type="checkbox" (change)="toggleAllMarks($event)">
+                <span></span>
+            </label>
+        </div>
+        <div
+            class="item l-font"
+        >
+            <span class="text"
+                (click)="orderByField()"
+                tooltip="Упорядочить"
+                placement="bottom"
+                containerClass="tooltip-info"
+            >
+                Словарь
+            </span>
+            <span class="order-icon">
+                <span
+                class="icon eos-icon small"
+                [ngClass]="{'eos-icon-arrow-blue-top': orderBy, 'eos-icon-arrow-blue-bottom': !orderBy}"
+                >
+                </span>
+            </span>
+        </div>
+    </div>
+<div class="collection-main">
+    <div *ngIf="!isLoading; else spinner">
+        <ul
+            *ngIf="(collectionList && collectionList.length); else emptyStores"
+        >
+            <li
+                *ngFor="let list of collectionList"
+            >
+                <div
+                    class="list"
+                    [ngClass]="{'highlighted': list.isSelected}"
+                    (click)="selectedNode(list)"
+                    (dblclick)="editWord()"
+                >
+                    <label
+                        class="checkbox-inline"
+                        [tooltip]="list.marked ? markTemp : notMarkTemp"
+                        containerClass="tooltip-info"
+                        (click)="checkboxStopPropagation($event)"
+                        placement="bottom"
+                    >
+                        <input
+                            type="checkbox"
+                            [(ngModel)]="list.marked || list.selectedMark"
+                            (ngModelChange)="markWord($event, list)"
+                        >
+                        <span></span>
+                    </label>
+                    {{list.CLASSIF_NAME}}
+                </div>
+            </li>
+        </ul>
     </div>
 </div>
+
+<ng-template #emptyStores>
+    <h4 class="collection-empty-list">Словарь пуст</h4>
+</ng-template>
+<ng-template #markTemp>Снять<br>пометку</ng-template>
+<ng-template #notMarkTemp>Пометить<br>элемент</ng-template>
+<ng-template #spinner>
+    <div class="spinner-wrapper">
+        <eos-spinner [size]="'lg'"></eos-spinner>
+    </div>
+</ng-template>
+
+<ng-template #modalWord>
+    <header>
+        <div class="header">
+            <div class="header__text-wrap">
+                <span class="header__text">{{isNewWord ? 'Добавить' : 'Редактировать'}} недопустимый пароль</span>
+            </div>
+            <div class="header__button-wrap">
+                <button
+                    class="btn btn-primary header__button"
+                    (click)="cancelModalWord()"
+                    >ОТМЕНИТЬ
+                </button>
+                <button
+                    class="btn btn-primary-full header__button"
+                    (click)="submitModalWord()"
+                    [disabled]="inputWordValue === ''"
+                    >{{isNewWord ? 'ДОБАВИТЬ' : 'РЕДАКТИРОВАТЬ'}}
+                </button>
+            </div>
+        </div>
+    </header>
+    <main class="modalWord-content">
+        <span>Слово: </span>
+        <input class="form-control m-font inline-block"
+            #inputWord
+            type="text"
+            [(ngModel)]="inputWordValue"
+            (keyup)="inputWord.value = inputWord.value.toUpperCase()"
+        >
+    </main>
+</ng-template>
