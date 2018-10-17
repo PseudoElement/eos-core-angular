@@ -210,35 +210,20 @@
                                     placement="bottom"
                                     container="body"
                                     containerClass="tooltip-info">{{field}}</span>
-                                   <!-- <span class="order-icon"><span
-                                            class="eos-icon small"
-                                            [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span>-->
             </div>
         </div>
             </div>
                 </div>
                 <div class="eos-template-list">
-                    <div>
+                    <div *ngFor="let template of listTemplates">
+                        <span>{{template.key}}</span>
                                 <eos-dynamic-input
-                                *ngFor="let template of listTemplates"
                                 class="inline-block table-templates"
-                                [input]="inputs['rec.' + template.key]"
+                                [input]="inputs['rec.Опись дел']"
                                 [form]="form"
                                 [readonly]="false"
                             ></eos-dynamic-input>
                         </div>
-                              <!--<eos-dynamic-input
-                                class="inline-block"
-                                [input]="inputs['rec.12_1']"
-                                [form]="form"
-                                [readonly]="false"
-                            ></eos-dynamic-input>
-                            <eos-dynamic-input
-                            class="inline-block"
-                            [input]="inputs['rec.12_28']"
-                            [form]="form"
-                            [readonly]="false"
-                        ></eos-dynamic-input>-->
     </div>
     </div>
 </div>

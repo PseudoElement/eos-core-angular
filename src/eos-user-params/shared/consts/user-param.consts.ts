@@ -26,6 +26,10 @@ export const SUB_PARAMS_LIST_NAV: IParamAccordionList[] = [
         url: 'mail'
     },
     {
+        title: 'Визуализация',
+        url: 'visualization'
+    },
+    {
         title: 'Внешние приложения',
         url: 'out-app'
     },

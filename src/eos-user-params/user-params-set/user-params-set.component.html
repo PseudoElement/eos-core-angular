@@ -1,12 +1,19 @@
 <div class="user-system">
     <ng-container [ngSwitch]="userId">
-        <ng-container *ngSwitchCase="'directories'">
+        <ng-container *ngSwitchCase="'registration'">
+            <eos-user-param-registration
+            (formChanged)="recordChanged($event)"
+            (formInvalid)="turnOffSave($event)"
+            [btnDisabled]="!isChanged || disableSave">
+            </eos-user-param-registration>
+        </ng-container>
+        <!--<ng-container *ngSwitchCase="'dictionary'">
             <eos-user-param-directories
             (formChanged)="recordChanged($event)"
             (formInvalid)="turnOffSave($event)"
             [btnDisabled]="!isChanged || disableSave">
             </eos-user-param-directories>
-        </ng-container>
+        </ng-container>-->
         <ng-container *ngSwitchCase="'search'">
             <eos-user-param-search
             (formChanged)="recordChanged($event)"

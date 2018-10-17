@@ -12,14 +12,7 @@ export class UserParamApiSrv {
         return this.apiSrv
         .read<T>(query)
         .then((data: T[]) => {
-            // this.prepareForEdit(data);
             return data;
-
-            // return new Promise<T[]>((resolve) => {
-            //     setTimeout(() => {
-            //         resolve(data);
-            //     }, 2000);
-            // });
         })
         .catch(err => {
             if (err.code === 434) {
@@ -37,13 +30,9 @@ export class UserParamApiSrv {
     }
 
     setData(query: any[]): Promise<any[]> {
-        console.log(query);
         return this.apiSrv.batch(query, '').then((data: any) => {
-            return null;
-        });
-       /* return this.apiSrv.batch(query, '').then((data: any) => {
             return data;
-        });*/
+        });
     }
 
     // protected prepareForEdit(records: any[]): any[] {

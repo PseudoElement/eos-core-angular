@@ -5,7 +5,6 @@ import { FormGroup } from '@angular/forms';
 import {  PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../consts/eos-user-params.const';
 import { E_FIELD_TYPE } from '../../../shared/intrfaces/user-params.interfaces';
 import { DIRECTORIES_USER } from '../consts/directories.consts';
-// import { EosUtils } from 'eos-common/core/utils';
 
 @Injectable()
 export class UserParamDirectoriesSrv extends BaseUserSrv {
@@ -28,15 +27,9 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
     };
     constructor( injector: Injector ) {
         super(injector, DIRECTORIES_USER);
-        this.init()
-        .then(() => {
+        this.init();
             this.prepInputsAttach = this.prepareInputField(DIRECTORIES_USER.fieldsChild);
             this.afterInit();
-        }).catch(err => {
-            if (err.code !== 434) {
-                console.log(err);
-            }
-        });
     }
     cancel() {
         this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
@@ -44,15 +37,7 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
             this.isChangeFormAttach = false;
             this.formChanged.emit(false);
             this.ngOnDestroy();
-        this.init()
-            .then(() => {
-                this.afterInit();
-            })
-            .catch(err => {
-                if (err.code !== 434) {
-                    console.log(err);
-                }
-            });
+            this.init();
     }
     afterInit() {
         this.userParamApiSrv.getData(Object.assign({}, this.queryFileConstraint))
@@ -119,9 +104,10 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
                     }
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
+                // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
         }
-    }
+   }
     prepDataAttachField(data) {
         data.forEach(field => {
             if (field.PARM_NAME === 'SRCH_CONTACT_FIELDS') {
@@ -151,7 +137,6 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
         return inputs;
     }
     changeByPathAttach(path: string, value: any) {
-       // const key = path.split('_').pop();
         let _value = null;
         _value = value;
         this.newDataAttach = EosUtils.setValueByPath(this.newDataAttach, path, _value);

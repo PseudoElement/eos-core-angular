@@ -34,47 +34,21 @@ export class UserParamOtherSrv extends BaseUserSrv {
     }
     setTab(i: number) {
         this.currTab = i;
-        this.afterInitUserSearch();
+       // this.afterInitUserSearch();
     }
     prepareDataParam() {
         this.prepInputs = this.getObjectInputFields(this.constUserParam.fields);
         this.queryObj = this.getObjQueryInputsField2(this.prepInputs._list);
-        console.log(this.queryObj);
     }
     getObjQueryInputsField2(inputs: Array<any>) {
-        console.log('Попал в UPOS');
-        // inputs.join('||')
-        console.log({
-            [this.constUserParam.apiInstance]: {
-                    criteries: {
-                        PARM_GROUP: '12',
-                        ISN_USER_OWNER: '3611||-99'
-                }
-            }
-        });
-
-        console.log(this.currTab);
-
-     /*   if (this.currTab === 3) {
-            console.log('Fire');
-        return {
-            [this.constUserParam.apiInstance]: {
-                    criteries: {
-                        PARM_GROUP: '12',
-                        ISN_USER_OWNER: '3611||-99'
-                }
-            }
-        };
-    } else { */
         return {
         [this.constUserParam.apiInstance]: {
             criteries: {
                 PARM_NAME: inputs.join('||'),
-                ISN_USER_OWNER: '-99'
-        }
-    }
-};
-   // }
+                ISN_USER_OWNER: '3611'
+            }
+          }
+       };
     }
 
     getObjectInputFields(fields) {
@@ -93,40 +67,15 @@ export class UserParamOtherSrv extends BaseUserSrv {
                 formatDbBinary: !!field.formatDbBinary
             };
         });
-        console.log(inputs);
-        console.log(inputs._list);
         return inputs;
     }
-    convData(data: Array<any>) {
+    convData(data: Object) {
         const d = {};
-      //  let incrementValueOne = 0;
-      //  let incrementValueTwo = 27;
-     //   console.log(data);
-        data.forEach(item => {
-          //  if (item.PARM_GROUP === 12) {
-               /* console.log(item);
-                console.log(item.PARM_VALUE);
-                console.log('' + 12 + '_' + ++incrementValueOne); */
-            //   d['' + 12 + '_' + ++incrementValueOne] = item.PARM_VALUE;
-            //   d['' + 12 + '_' + ++incrementValueTwo] = item.PARM_NAME;
-          //  } else {
-            //    console.log('UPOS');
-               d[item.PARM_NAME] = item.PARM_VALUE;
-          //  }
-        });
-        console.log({ rec: d });
+     for (const key of Object.keys(data)) {
+        d[key] = data[key];
+     }
         return { rec: d };
     }
-  /*  prepDataAttachField(data) {
-        data.forEach(field => {
-            if (field.PARM_NAME === 'Доклады СЭВ') {
-            this.prepDataAttach.rec['REPORTS_OF_THE CMEA'] = field.PARM_VALUE.indexOf('SURNAME') >= 0 ? 'SURNAME' : null;
-            }
-        });
-    }
-    getDataForTable() {
-
-    }*/
     selectfromTheDirectory() {
         // http://localhost/X182
     }
