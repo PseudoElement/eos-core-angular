@@ -1,0 +1,71 @@
+variables:
+  #CI_DEBUG_TRACE: "true"
+  TMP_WORKSPACE: ${CI_PROJECT_PATH_SLUG}_${CI_BUILD_REF_SLUG}_${CI_PIPELINE_ID}
+  SERVER_FOLDER: $TFS_TARGET_PATH
+  LOCAL_FOLDER: tmp_for_map
+  BIN_FOLDER: dist
+  COMMENT_TEXT: "${GITLAB_USER_NAME}: ${CI_COMMIT_MESSAGE}\n${CI_PROJECT_URL}/commit/${CI_COMMIT_SHA}"
+
+
+stages:
+  - build
+  - test
+  - deploy
+  - cleanup
+
+
+## build stage
+
+build_job:
+  stage: build
+  tags:
+    - ruby
+    - compass
+  #cache:
+  #  paths:
+  #    - node_modules/
+  script:
+    - 'npm install'
+    - 'npm run build-prod'
+  only:
+    - master
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/
+
+## deploy stage
+
+publish_job:
+  stage: deploy
+  tags:
+    - ruby
+    - compass
+  script:
+    - 'echo target path: $TFS_TARGET_PATH'
+    - 'echo workspace: $TMP_WORKSPACE'
+    - 'echo server folder: $SERVER_FOLDER'
+    - 'echo local folder: ${PWD}/$LOCAL_FOLDER'
+    
+    #- '$TF eula -accept'
+    - '$TF workspace -new $TMP_WORKSPACE'
+    - '$TF workfold -map $SERVER_FOLDER $LOCAL_FOLDER -workspace:$TMP_WORKSPACE'
+    - '$TF get $LOCAL_FOLDER -force -recursive'
+    
+    - 'rm -r -f  $LOCAL_FOLDER/*'
+    - 'cp -r $BIN_FOLDER/* $LOCAL_FOLDER'
+    - '$TF delete -detect -recursive $LOCAL_FOLDER'
+    - '$TF add -noignore -recursive $LOCAL_FOLDER |echo skip errors || true'
+    - '$TF checkin $LOCAL_FOLDER -comment:"${COMMENT_TEXT}" -override:"Automated Build Process" -recursive'
+
+## cleanup stage
+
+cleanup_job:
+  stage: cleanup
+  tags:
+    - ruby
+    - compass
+  script:
+    - 'echo rm -r -f  $LOCAL_FOLDER'
+    - '$TF workspace -delete $TMP_WORKSPACE'
+  when: always
