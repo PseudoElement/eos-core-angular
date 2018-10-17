@@ -1,0 +1,62 @@
+.add-cert-stores-wrapper {
+    background: $white;
+
+    .add-cert-stores {
+        padding: 20px;
+
+        .input-wrap {
+            display: inline-block;
+            width: 49%;
+            position: relative;
+
+            .eos-select {
+                display: inline-block;
+
+                select {
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    background-image: url('../assets/icons/Arrow-V-Blue-Bottom.png');
+                    background-repeat: no-repeat;
+                    background-position-x: right;
+                    background-position-y: center;
+                    background-size: 24px;
+                    padding-right: 24px;
+                }
+
+                select::-ms-expand {
+                    display: none;
+                }
+            }
+            .adres-search {
+                // display: block;
+                background: $modal-block-background-main-theme;
+                width: 32px;
+                height: 32px;
+                padding: 0;
+                position: absolute;
+                bottom: 1px;
+                right: 1px;
+            }
+        }
+
+        .list-stores {
+            margin-top: 20px;
+            background: $light-grey-1;
+            border: 1px solid $border-color-main-theme;
+            min-height: 200px;
+
+            ul {
+                list-style: none;
+                margin: 0;
+                padding: 7px;
+
+                li {
+                    color: black;
+                    padding-left: 4px;
+                    user-select: none;
+                }
+            }
+        }
+    }
+}

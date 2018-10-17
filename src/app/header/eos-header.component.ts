@@ -12,7 +12,7 @@ export class EosHeaderComponent implements OnDestroy {
     modules = APP_MODULES;
     modulesDropdown = APP_MODULES_DROPDOWN;
     breadcrumbView = true;
-    navParamView = true;
+    navParamView = false;
     private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(

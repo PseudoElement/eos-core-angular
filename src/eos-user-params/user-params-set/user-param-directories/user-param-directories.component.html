@@ -1,0 +1,55 @@
+<div class="input-user-wrapper input-user-directories-wrapper"
+*ngIf="inputs">
+    <eos-user-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        (defaultForm)="default()"
+        [statusBtnSub]="btnDisabled"></eos-user-header>
+    <div class="user-input-group">
+        <span class="l-font">Окно справочников</span>
+        <hr>
+            <eos-dynamic-input
+                [input]="inputs['rec.WINPOS']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+    </div>
+        <hr>
+            <div class="user-input-group">
+            <span class="l-font">Сортировка результатов поиска</span>
+        <hr>
+        <eos-dynamic-input
+                [input]="inputs['rec.SORT']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            </div>
+            <hr>
+            <div class="user-input-group">
+            <span class="l-font">Поиск представителей организаций по полю</span>
+            <hr>
+            <div class="user-input-group-section">
+                <eos-dynamic-input
+                class="inline-block"
+                [input]="inputs['rec.SURNAME']"
+                [form]="formAttach"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <span class="span-or">или</span>
+            <eos-dynamic-input
+                class="inline-block"
+                [input]="inputs['rec.DUTY']"
+                [form]="formAttach"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <span class="span-or"> или </span>
+            <eos-dynamic-input
+                class="inline-block"
+                [input]="inputs['rec.DEPARTMENT']"
+                [form]="formAttach"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            </div>
+    </div>
+</div>

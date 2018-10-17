@@ -1,3 +1,46 @@
-h1 {
-    color: red;
+.input-param-files-wrapper {
+    .param-input-group {
+
+        .input-radio-files {
+            .elem-input-radio {
+                display: inline-block;
+                margin-right: 18px;
+            }
+        }
+
+        .margin-bottom {
+            margin-bottom: -15px;
+        }
+
+        .margit-r-radio {
+            margin: 0 30px 0 15px;
+        }
+    }
+
+    .formAttach {
+        .attach-checkbox {
+            margin: 0 30px;
+        }
+    }
+
+    .info-icon-wrap {
+        display: inline-block;
+        padding: 5px;
+        cursor: pointer;
+
+        span {
+
+            &.info-icon {
+                position: relative;
+                top: 3px;
+                // display: inline-block;
+                // padding: 10px;
+            }
+        }
+    }
+
+
+    .modal-dialog {
+        margin-top: 250px;
+    }
 }

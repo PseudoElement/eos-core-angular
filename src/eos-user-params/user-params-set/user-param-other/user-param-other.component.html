@@ -1,0 +1,232 @@
+<div class="input-user-wrapper input-user-other-rk-forwarding-wrapper"
+*ngIf="inputs">
+<eos-user-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        (defaultForm)="default()"
+        [statusBtnSub]="btnDisabled"
+    ></eos-user-header>
+    <div class="tabs-wrapper usual-border border-bottom">
+        <ul class="tabs">
+            <li class="tab-item"
+                *ngFor="let tab of fieldGroups; let i = index"
+                [ngClass]="{'active': i === currTab}"
+                (click)="setTab(i)">
+                <span class="tab-title">{{tab}}</span>
+            </li>
+        </ul>
+</div>
+
+<div class="user-param-other-content-wrapper">
+    <div [hidden]="currTab !== 0"
+    class="clearfix">
+    <!--------------------------0--------------------------------------------->
+    <div class="input-user-wrapper input-user-other-rk-forwarding-wrapper"
+*ngIf="inputs">
+    <div class="user-input-group">
+        <span class="l-font">Пересылка</span>
+        <hr>
+            <eos-dynamic-input
+            class="inline-block"
+                [input]="inputs['rec.SEND_DIALOG']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="user-input-group">
+            <span class="l-font">Удалять РК из текущего кабинета после пересылки</span>
+        <hr>
+        <eos-dynamic-input
+        class="inline-block"
+                [input]="inputs['rec.DELFROMCAB']"
+                [form]="form"
+                [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="user-input-group">
+            <span class="l-font">Добавлять адресатов пересылки РК в ЖПД</span>
+        <hr>
+        <eos-dynamic-input
+                [input]="inputs['rec.MARKDOC']"
+                [form]="form"
+                [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="user-input-group">
+            <span class="l-font">Передавать</span>
+        <hr>
+        <eos-dynamic-input
+                [input]="inputs['rec.MARKDOCKND']"
+                [form]="form"
+                [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+</div>
+</div>
+<!--------------------------0--------------------------------------------->
+<!--------------------------1--------------------------------------------->
+    <div [hidden]="currTab !== 1"
+    class="clearfix">
+<div class="user-input-group">
+        <p class="the-main-recipients-of-the-document-titles">Внешние адресаты</p>
+    <span class="l-font">При добавлении указывать</span>
+    <hr>
+    <div>
+            <span>Вид отправки:</span>
+    <eos-dynamic-input
+    class="inline-block"
+    [input]="inputs['rec.RS_OUTER_DEFAULT_DELIVERY']"
+    [form]="form"
+    [readonly]="false"
+></eos-dynamic-input>
+<span></span>
+</div>
+</div>
+<hr>
+<div class="user-input-group">
+        <p class="the-main-recipients-of-the-document-titles">Внутренние адресаты</p>
+        <span class="l-font">При добавлении указывать экземпляр документа:</span>
+        <hr>
+            <eos-dynamic-input
+                [input]="inputs['rec.MARKDOCKND1']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="user-input-group">
+    <eos-dynamic-input
+                [input]="inputs['rec.GPD_FLAG']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.VOL_FLAG']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+        </div>
+</div>
+<!--------------------------1--------------------------------------------->
+<!--------------------------2--------------------------------------------->
+<div [hidden]="currTab !== 2"
+    class="clearfix">
+    <div class="user-input-group">
+            <span class="l-font">Получать реестр:</span>
+            <hr>
+                <eos-dynamic-input
+                    [input]="inputs['rec.CUR_CABINET']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+        </div>
+        <hr>
+        <div class="user-input-group">
+                <eos-dynamic-input
+                [input]="inputs['rec.PARAM_WINDOW']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.SELECT_ITEMS']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.REESTR_ONE_TO_ONE']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            </div>
+            <hr>
+            <div class="user-input-group">
+                    <span class="l-font">Получать по:</span>
+                    <hr>
+                        <eos-dynamic-input
+                            [input]="inputs['rec.ORIG_FLAG']"
+                            [form]="form"
+                            [readonly]="false"
+                        ></eos-dynamic-input>
+                        <eos-dynamic-input
+                [input]="inputs['rec.REESTR_NOT_INCLUDED']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+        </div>
+            <hr>
+            <div class="user-input-group">
+                    <div class="number-increment-wrap">
+                        <span>Дата передачи документов не позднее ( дней ):</span>
+                            <eos-dynamic-input
+                                class="inline-block"
+                                [input]="inputs['rec.REESTR_DATE_INTERVAL']"
+                                [form]="form"
+                                [readonly]="false"
+                            ></eos-dynamic-input>
+                        </div>
+                        <div class="number-increment-wrap">
+                                <span>Количество копий:</span>
+                                <eos-dynamic-input
+                                    class="inline-block"
+                                    [input]="inputs['rec.REESTR_COPY_COUNT']"
+                                    [form]="form"
+                                    [readonly]="false"
+                                ></eos-dynamic-input>
+                            </div>
+            </div>
+            <hr>
+            <div class="user-input-group">
+                <eos-dynamic-input class="restrict-by-document-groups"
+                [input]="inputs['rec.REESTR_RESTRACTION_DOCGROUP']"
+                [form]="form"
+                [readonly]="false"></eos-dynamic-input>
+                <button
+            class="btn add-storage"
+            tooltip="Выбор из справочника"
+            containerClass="tooltip-info"
+            (click)="selectfromTheDirectory()"
+        >
+                <span class="eos-icon eos-icon-folder-blue small"></span>
+        </button>
+            </div>
+
+</div>
+<!--------------------------2--------------------------------------------->
+<!--------------------------3--------------------------------------------->
+<div [hidden]="currTab !== 3"
+    class="clearfix">
+    <div class="table-wrapper usual-border">
+            <div class="table-header">
+                    <div class="table-header-content">
+                        <div class="template-title">
+                        <div *ngFor="let field of fieldTemplates" class="item l-font">
+                                <span class="text"
+                                    [ngClass]="{'selected-text': '#2196f3'}"
+                                    tooltip="{{field}}"
+                                    placement="bottom"
+                                    container="body"
+                                    containerClass="tooltip-info">{{field}}</span>
+            </div>
+        </div>
+            </div>
+                </div>
+                <div class="eos-template-list">
+                    <!-- <div *ngFor="let template of listTemplates">
+                        <span>{{template.key}}</span>
+                                <eos-dynamic-input
+                                class="inline-block table-templates"
+                                [input]="inputs['rec.Опись дел']"
+                                [form]="form"
+                                [readonly]="false"
+                            ></eos-dynamic-input>
+                    </div> -->
+    </div>
+    </div>
+</div>
+<!--------------------------3--------------------------------------------->
+</div>
+</div>

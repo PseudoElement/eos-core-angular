@@ -98,9 +98,13 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         _bcSrv: EosBreadcrumbsService,
     ) {
         _route.params.subscribe((params) => {
-            if (params) {
-                this.dictionaryId = params.dictionaryId;
-                this._nodeId = params.nodeId;
+            const parm = Object.assign({}, params);
+            if (_router.url.split('/')[1] === 'user_param') {
+                parm.dictionaryId = 'user_param';
+            }
+            if (parm) {
+                this.dictionaryId = parm.dictionaryId;
+                this._nodeId = parm.nodeId;
                 if (this.dictionaryId) {
                     this._dictSrv.openDictionary(this.dictionaryId)
                         .then(() => this._dictSrv.selectTreeNode(this._nodeId));
@@ -329,6 +333,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
      * @description Open modal with CreateNodeComponent, fullfill CreateNodeComponent data
      */
     private _openCreate(recParams: any) {
+        if (this.dictionaryId === 'user_param') {
+            this._router.navigate(['/user-params-set'], {queryParams: {createNewUser: true}});
+            return;
+        }
         this.modalWindow = this._modalSrv.show(CreateNodeComponent, { class: 'creating-modal' });
         const dictionary = this._dictSrv.currentDictionary;
         const editDescr = dictionary.getEditDescriptor();

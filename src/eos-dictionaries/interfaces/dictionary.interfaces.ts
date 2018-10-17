@@ -35,7 +35,10 @@ export enum E_FIELD_TYPE {
     buttons,
     dictionary,
     select,
-    array
+    array,
+    toggle,
+    numberIncrement,
+    radio
 }
 
 export interface IFieldDescriptor {

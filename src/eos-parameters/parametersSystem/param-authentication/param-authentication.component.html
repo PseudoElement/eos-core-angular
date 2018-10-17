@@ -1,9 +1,120 @@
-<div class="param-wrap">
-    <div class="param">
-        <eos-param-header [title]="titleHeader">
-        </eos-param-header>
-        <div class="eos-param-other">
-            <h1>Param Contect RC</h1>
+<div class="input-param-wrapper input-param-auth-wrapper" *ngIf="inputs">
+    <eos-param-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnDisabled"
+    ></eos-param-header>
+    <div class="param-input-group">
+        <eos-dynamic-input
+            [input]="inputs['rec.CHANGE_PASS']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <span class="m-font">{{inputs['rec.PASS_MINLEN'].label}}</span>
+        <eos-dynamic-input
+            class="inline-block input-increment-wrapp input-increment-wrapp-margin"
+            [input]="inputs['rec.PASS_MINLEN']"
+            [form]="form"
+            [readonly]="disabledField"
+        ></eos-dynamic-input>
+        <span>символов</span>
+    </div>
+    <hr>
+    <div class="param-input-group">
+        <span class="l-font">Значение пароля должно содержать:</span>
+        <hr>
+        <div>
+            <span class="l-font">не менее</span>
+            <eos-dynamic-input
+                class="inline-block input-increment-wrapp"
+                [input]="inputs['rec.PASS_ALF']"
+                [form]="form"
+                [readonly]="disabledField"
+            ></eos-dynamic-input>
+            <span>{{inputs['rec.PASS_ALF'].label}}</span>
+            <eos-dynamic-input
+                class="inline-block"
+                [input]="inputs['rec.PASS_CASE']"
+                [form]="form"
+                [readonly]="disabledField || readOnlyPassCase"
+            ></eos-dynamic-input>
+        </div>
+        <div>
+            <span class="l-font">не менее</span>
+            <eos-dynamic-input
+                class="inline-block input-increment-wrapp"
+                [input]="inputs['rec.PASS_NUM']"
+                [form]="form"
+                [readonly]="disabledField"
+            ></eos-dynamic-input>
+            <span>{{inputs['rec.PASS_NUM'].label}}</span>
+            <span class="l-font label-text-margin">не менее</span>
+            <eos-dynamic-input
+                class="inline-block input-increment-wrapp input-increment-wrapp-margin"
+                [input]="inputs['rec.PASS_SPEC']"
+                [form]="form"
+                [readonly]="disabledField"
+            ></eos-dynamic-input>
+            <span>{{inputs['rec.PASS_SPEC'].label}}</span>
+        </div>
+    </div>
+    <hr>
+    <div class="param-input-group">
+        <span class="l-font">Значение пароля не должно содержать:</span>
+        <hr>
+        <div>
+            <eos-dynamic-input
+                class="inline-block"
+                [input]="inputs['rec.PASS_LIST']"
+                [form]="form"
+                [readonly]="disabledField"
+            ></eos-dynamic-input>
+            <div class="parm-auth-btn-wrap">
+                <button
+                    class="btn btn-primary"
+                    (click)="openCollection()"
+                >Словарь</button>
+            </div>
+        </div>
+        <eos-dynamic-input
+            class="inline-block"
+            [input]="inputs['rec.PASS_LIST_SUBSTR']"
+            [form]="form"
+            [readonly]="disabledField || readOnlyPassListSubstr"
+        ></eos-dynamic-input>
+        <div>
+            <span>{{inputs['rec.PASS_OLD'].label}}</span>
+            <eos-dynamic-input
+            class="inline-block input-increment-wrapp input-increment-wrapp-margin"
+            [input]="inputs['rec.PASS_OLD']"
+            [form]="form"
+            [readonly]="disabledField"
+            ></eos-dynamic-input>
+            <span class="m-font">символов старого значения</span>
+        </div>
+    </div>
+    <hr>
+    <div class="param-input-group">
+        <div>
+            <span>{{inputs['rec.PASS_DATE'].label}}</span>
+            <eos-dynamic-input
+            class="inline-block input-increment-wrapp"
+            [input]="inputs['rec.PASS_DATE']"
+            [form]="form"
+            [readonly]="disabledField"
+            ></eos-dynamic-input>
+            <span class="m-font">дней</span>
+        </div>
+        <div>
+            <span>{{inputs['rec.MAX_LOGIN_ATTEMPTS'].label}}</span>
+            <eos-dynamic-input
+            class="inline-block input-increment-wrapp"
+            [input]="inputs['rec.MAX_LOGIN_ATTEMPTS']"
+            [form]="form"
+            [readonly]="false"
+            ></eos-dynamic-input>
+            <span class="m-font">ошибочных вводов пароля</span>
         </div>
     </div>
 </div>

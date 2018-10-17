@@ -17,6 +17,7 @@ import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
 import { LoginComponent } from './login/login.component';
 
 import { ParametersSystemComponent } from '../eos-parameters/parametersSystem/parametersSystem.component';
+import { UserParamsComponent } from 'eos-user-params/eos-user-params.component';
 /// import { environment } from 'environments/environment';
 
 const routes: Routes = [
@@ -151,12 +152,78 @@ const routes: Routes = [
                 component: ParametersSystemComponent,
                 canDeactivate: [CanDeactivateGuard],
                 data: {
-                    showNav: true
+                    showNav: true,
+                    title: 'Настройки системы'
                 }
             },
             {
                 path: '',
                 redirectTo: 'rc',
+                pathMatch: 'full',
+                data: {
+                    showNav: true,
+                    title: 'Настройки системы'
+                }
+            }
+        ]
+    },
+    {
+        path: 'user-params-set',
+        canActivate: [AuthorizedGuard],
+        children: [
+            {
+                path: ':field-id',
+                children: [
+                    {
+                        path: ':sub-field',
+                        component: UserParamsComponent,
+                        data: {
+                            showNav: true
+                        }
+                    },
+                    {
+                        path: '',
+                        pathMatch: 'full',
+                        component: UserParamsComponent,
+                        data: {
+                            showNav: true
+                        }
+                    }
+                ]
+            },
+            {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'base-param',
+            },
+        ]
+    },
+    {
+        path: 'user_param',
+        data: {
+            title: 'Пользователи',
+            showBreadcrumb: true,
+            showInBreadcrumb: true,
+            showSandwichInBreadcrumb: true,
+            showPushpin: true
+        },
+        canActivate: [AuthorizedGuard],
+        children: [
+            {
+                path: ':nodeId',
+                data: { title: 'Запись', showInBreadcrumb: false },
+                children: [
+                    {
+                        path: '',
+                        component: DictionaryComponent,
+                        pathMatch: 'full',
+                        data: { showBreadcrumb: true, showSandwichInBreadcrumb: true, showPushpin: true }
+                    }
+                ]
+            },
+            {
+                path: '',
+                component: DictionaryComponent,
                 pathMatch: 'full'
             }
         ]

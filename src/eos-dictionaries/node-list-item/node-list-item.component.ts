@@ -68,9 +68,14 @@ export class NodeListItemComponent implements OnInit, OnChanges {
         evt.stopPropagation();
         if (!this._dictSrv.isRoot(this.node.id) && !this.node.isDeleted) {
             const _path = this.node.getPath();
-            if (!this.node.isNode || view) {
+            if ((!this.node.isNode || view ) && this.node.dictionaryId !== 'user_param') {
                 this._storageSrv.setItem(RECENT_URL, this._router.url);
                 _path.push('view');
+            } else if (!this.node.isNode && this.node.dictionaryId === 'user_param') {
+                this._router.navigate(['/user-params-set'], {
+                    queryParams: {dueDep: this.node.id}
+                });
+                return;
             }
             this._router.navigate(_path);
         }

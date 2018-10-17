@@ -1,9 +1,222 @@
-<div class="param-wrap">
-    <div class="param">
-        <eos-param-header [title]="titleHeader">
-        </eos-param-header>
-        <div class="eos-param-other">
-            <h1>Param Files</h1>
+<div
+    class="input-param-wrapper input-param-files-wrapper"
+    *ngIf="inputs">
+    <eos-param-header
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnDisabled"
+        [title]="titleHeader">
+    </eos-param-header>
+    <div class="param-input-group">
+        <span class="l-font">Параметры хранения прикрепленных файлов</span>
+        <div
+            class="info-icon-wrap"
+            (click)="showInfoAttachFiles()"
+        >
+            <span class="info-icon eos-icon eos-icon-info-blue x-small"></span>
         </div>
     </div>
+    <hr>
+    <div class="param-input-group">
+        <span>Ограничения на прикрепляемые файлы</span>
+        <form [formGroup]="formAttachChoice" class="inline-block">
+            <label
+                class="radio inline-block margit-r-radio"
+                *ngFor="let field of formAttachfields">
+                <input
+                    name="attachFile"
+                    [value]="field.value"
+                    [formControlName]="'attachFile'"
+                    type="radio">
+                <span></span>
+                {{field.text}}
+            </label>
+        </form>
+        <hr>
+        <form [formGroup]="formAttach" *ngIf="formAttach">
+            <div class="formAttach" [hidden]="hiddenFieldAttach">
+                <div class="l-font">Файлы РК</div>
+                <span>{{inputAttach['rec.DOC_RC_MAX_SIZE'].label}}</span>
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputAttach['rec.DOC_RC_MAX_SIZE']"
+                    [form]="formAttach"
+                    [readonly]="inputAttach['rec.DOC_RC_MAX_SIZE'].readonly"
+                ></eos-dynamic-input>
+                <span>Мбайт</span>
+                <eos-dynamic-input
+                    class="inline-block attach-checkbox"
+                    [input]="inputAttach['rec.DOC_RC_ONE_FILE']"
+                    [form]="formAttach"
+                    [readonly]="inputAttach['rec.DOC_RC_ONE_FILE'].readonly"
+                ></eos-dynamic-input>
+                <span>С расширением</span>
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputAttach['rec.DOC_RC_EXTENSIONS']"
+                    [form]="formAttach"
+                    [readonly]="inputAttach['rec.DOC_RC_EXTENSIONS'].readonly"
+                ></eos-dynamic-input>
+                <hr>
+            </div>
+            <div class="formAttach" [hidden]="hiddenFieldAttach">
+                <div class="l-font">Файлы поручений</div>
+                <span>{{inputAttach['rec.RESOLUTION_MAX_SIZE'].label}}</span>
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputAttach['rec.RESOLUTION_MAX_SIZE']"
+                    [form]="formAttach"
+                    [readonly]="inputAttach['rec.RESOLUTION_MAX_SIZE'].readonly"
+                ></eos-dynamic-input>
+                <span>Мбайт</span>
+                <eos-dynamic-input
+                    class="inline-block attach-checkbox"
+                    [input]="inputAttach['rec.RESOLUTION_ONE_FILE']"
+                    [form]="formAttach"
+                    [readonly]="inputAttach['rec.RESOLUTION_ONE_FILE'].readonly"
+                ></eos-dynamic-input>
+                <span>С расширением</span>
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputAttach['rec.RESOLUTION_EXTENSIONS']"
+                    [form]="formAttach"
+                    [readonly]="inputAttach['rec.RESOLUTION_EXTENSIONS'].readonly"
+                ></eos-dynamic-input>
+                <hr>
+            </div>
+            <div class="formAttach" [hidden]="hiddenFieldAttach">
+                <div class="l-font">Файлы отчетов исполнителей</div>
+                <span>{{inputAttach['rec.REPLY_MAX_SIZE'].label}}</span>
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputAttach['rec.REPLY_MAX_SIZE']"
+                    [form]="formAttach"
+                    [readonly]="inputAttach['rec.REPLY_MAX_SIZE'].readonly"
+                ></eos-dynamic-input>
+                <span>Мбайт</span>
+                <eos-dynamic-input
+                    class="inline-block attach-checkbox"
+                    [input]="inputAttach['rec.REPLY_ONE_FILE']"
+                    [form]="formAttach"
+                    [readonly]="inputAttach['rec.REPLY_ONE_FILE'].readonly"
+                ></eos-dynamic-input>
+                <span>С расширением</span>
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputAttach['rec.REPLY_EXTENSIONS']"
+                    [form]="formAttach"
+                    [readonly]="inputAttach['rec.REPLY_EXTENSIONS'].readonly"
+                ></eos-dynamic-input>
+            </div>
+            <div class="formAttach" [hidden]="!hiddenFieldAttach">
+                <div class="l-font">Файлы РКПД</div>
+                <span>{{inputAttach['rec.PRJ_RC_MAX_SIZE'].label}}</span>
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputAttach['rec.PRJ_RC_MAX_SIZE']"
+                    [form]="formAttach"
+                    [readonly]="inputAttach['rec.PRJ_RC_MAX_SIZE'].readonly"
+                ></eos-dynamic-input>
+                <span>Мбайт</span>
+                <eos-dynamic-input
+                    class="inline-block attach-checkbox"
+                    [input]="inputAttach['rec.PRJ_RC_ONE_FILE']"
+                    [form]="formAttach"
+                    [readonly]="inputAttach['rec.PRJ_RC_ONE_FILE'].readonly"
+                ></eos-dynamic-input>
+                <span>С расширением</span>
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputAttach['rec.PRJ_RC_EXTENSIONS']"
+                    [form]="formAttach"
+                    [readonly]="inputAttach['rec.PRJ_RC_EXTENSIONS'].readonly"
+                ></eos-dynamic-input>
+                <hr>
+            </div>
+            <div class="formAttach" [hidden]="!hiddenFieldAttach">
+                <div class="l-font">Файлы визы или подписи</div>
+                <span>{{inputAttach['rec.PRJ_VISA_SIGN_MAX_SIZE'].label}}</span>
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputAttach['rec.PRJ_VISA_SIGN_MAX_SIZE']"
+                    [form]="formAttach"
+                    [readonly]="inputAttach['rec.PRJ_VISA_SIGN_MAX_SIZE'].readonly"
+                ></eos-dynamic-input>
+                <span>Мбайт</span>
+                <eos-dynamic-input
+                    class="inline-block attach-checkbox"
+                    [input]="inputAttach['rec.PRJ_VISA_SIGN_ONE_FILE']"
+                    [form]="formAttach"
+                    [readonly]="inputAttach['rec.PRJ_VISA_SIGN_ONE_FILE'].readonly"
+                ></eos-dynamic-input>
+                <span>С расширением</span>
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputAttach['rec.PRJ_VISA_SIGN_EXTENSIONS']"
+                    [form]="formAttach"
+                    [readonly]="inputAttach['rec.PRJ_VISA_SIGN_EXTENSIONS'].readonly"
+                ></eos-dynamic-input>
+            </div>
+        </form>
+    </div>
+    <hr>
+    <div class="param-input-group">
+        <eos-dynamic-input
+            [input]="inputs['rec.EDS_DELETE_DENIED']"
+            [form]="form"
+            [readonly]="inputs['rec.EDS_DELETE_DENIED'].readonly"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.FILE_WITH_EDS_PROTECTED']"
+            [form]="form"
+            [readonly]="inputs['rec.FILE_WITH_EDS_PROTECTED'].readonly"
+        ></eos-dynamic-input>
+    </div>
+    <div
+        *ngIf="inputs"
+        bsModal
+        #infoAttachFilesModal="bs-modal"
+        class="modal fade"
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="dialog-child-name"
+    >
+    <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 id="dialog-child-name" class="modal-title pull-left">Параметры хранения прикрепленных файлов</h4>
+            <button type="button" class="close pull-right" aria-label="Close" (click)="hideInfoAttachFiles()">
+              <span class="eos-icon eos-icon-close-white small"></span>
+            </button>
+          </div>
+          <div class="modal-body">
+                <eos-dynamic-input
+                class="margin-bottom"
+                [input]="inputs['rec.EDMSNAME']"
+                [form]="form"
+                [readonly]="inputs['rec.EDMSNAME'].readonly"
+            ></eos-dynamic-input>
+            <span class="s-font">Место хранения:</span>
+            <eos-dynamic-input
+                class="input-radio-files"
+                [input]="inputs['rec.EDMSPARM']"
+                [form]="form"
+                [readonly]="inputs['rec.EDMSPARM'].readonly"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.GATEPATH']"
+                [form]="form"
+                [readonly]="inputs['rec.GATEPATH'].readonly"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.STORAGEPATH']"
+                [form]="form"
+                [readonly]="inputs['rec.STORAGEPATH'].readonly"
+            ></eos-dynamic-input>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
+
+

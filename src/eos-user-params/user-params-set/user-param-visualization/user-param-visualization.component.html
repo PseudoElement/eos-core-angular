@@ -1,0 +1,23 @@
+<div class="input-user-wrapper input-user-visualization-wrapper"
+*ngIf="inputs">
+        <eos-user-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        (defaultForm)="default()"
+        [statusBtnSub]="btnDisabled"
+    ></eos-user-header>
+    <div class="user-input-group">
+            <span class="l-font">Режим отображения основного файла</span>
+            <hr>
+            <div>
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputs['rec.COLLAGE_SHOW_MODE']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+                <span></span>
+            </div>
+    </div>
+</div>

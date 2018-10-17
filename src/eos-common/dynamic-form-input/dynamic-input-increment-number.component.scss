@@ -1,0 +1,68 @@
+.label-text-s {
+    font-size: 10px;
+}
+
+.input-increment {
+    position: relative;
+    width: 90px;
+    border: 1px solid $border-color-main-theme;
+    background-color: $light-grey-1;
+    padding: 3px 0;
+
+    &.input-invalid {
+        border-color: $invalid-color-main-theme;
+    }
+
+    &.disabled {
+        border-color: transparent;
+        background-color: transparent;
+        
+        input {
+            background-color: transparent;
+            padding: 3px 0 3px 8px;
+        }
+
+        span {
+            display: none;
+        }
+    }
+
+    input {
+        background-color: $light-grey-1;
+        width: 40px;
+        border: 0;
+        padding: 3px 0 3px 8px;
+        font-size: 14px;
+        color: black;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    span {
+        display: block;
+        height: 100%;
+        width: 28px;
+        position: absolute;
+        text-align: center;
+        cursor: pointer;
+
+        &::before {
+            display: inline-block;
+            color: $active-field-color-main-theme;
+            margin-top: 7px;
+            font-size: 20px;
+        }
+
+        &.increase {
+            top: 0;
+            right: 0;
+        }
+
+        &.decrease {
+            top: 0;
+            right: 24px;
+        }
+    }
+}

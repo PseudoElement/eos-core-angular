@@ -22,6 +22,7 @@ import { RULES_SEV_DICT } from './dictionaries/sev-rules';
 import { COLLISIONS_SEV_DICT } from './dictionaries/sev-collisions';
 import { PARTICIPANT_SEV_DICT } from './dictionaries/sev-participant';
 import { BROADCAST_CHANEL_DICT } from './dictionaries/broadcast-chanel';
+import { USER_PARAM } from './dictionaries/user-param.consts';
 
 export const DICTIONARIES = [
     /* tree dictionaries */
@@ -29,6 +30,7 @@ export const DICTIONARIES = [
     DEPARTMENTS_DICT,
     REGION_DICT,
     RUBRICATOR_DICT,
+    USER_PARAM,
     /* linear dictionaries */
     ADDR_CATEGORY_DICT,
     CABINET_DICT,

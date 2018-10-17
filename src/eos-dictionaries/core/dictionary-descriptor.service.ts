@@ -9,6 +9,7 @@ import { DepartmentDictionaryDescriptor } from 'eos-dictionaries/core/department
 import { OrganizationDictionaryDescriptor } from 'eos-dictionaries/core/organization-dictionary-descriptor';
 import { CabinetDictionaryDescriptor } from 'eos-dictionaries/core/cabinet-dictionary-descriptor';
 import { DocgroupDictionaryDescriptor } from 'eos-dictionaries/core/docgroup-dictionary-descriptor';
+import { UserParamDictionaryDescriptor } from './user-param-dictionary-descriptor';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -49,6 +50,9 @@ export class DictionaryDescriptorService {
                 switch (descr.id) {
                     case 'departments':
                         res = new DepartmentDictionaryDescriptor(descr, this.apiSrv);
+                        break;
+                    case 'user_param':
+                        res = new UserParamDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case 'organization':
                         res = new OrganizationDictionaryDescriptor(descr, this.apiSrv);

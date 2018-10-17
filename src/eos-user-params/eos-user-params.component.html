@@ -1,0 +1,59 @@
+<div *ngIf="!isLoading">
+    <ng-container [ngSwitch]="pageId">
+        <ng-container *ngSwitchCase="'param-set'">
+            <eos-user-params-set></eos-user-params-set>
+        </ng-container>
+        <ng-container *ngSwitchCase="'email-address'">
+            <eos-params-email-address></eos-params-email-address>
+        </ng-container>
+        <ng-container *ngSwitchCase="'rights-delo'">
+            <eos-params-rights-delo></eos-params-rights-delo>
+        </ng-container>
+        <ng-container *ngSwitchCase="'base-param'">
+            <eos-params-base-param
+                [newUser]="isNewUser"
+            ></eos-params-base-param>
+        </ng-container>
+    </ng-container>
+</div>
+
+<nav
+    *ngIf="!(pageId === 'base-param' && isNewUser)"
+    class="nav-accordion"
+    [ngClass]="{isShow: !isShowAccordion}"
+>
+    <accordion>
+        <accordion-group
+            *ngFor="let item of accordionList"
+            class="param-field-wrap"
+            panelClass="param-field"
+            [isDisabled]="!item.subList"
+            [(isOpen)]="item.isOpen"
+            [routerLink]="!item.subList ? ['/user-params-set', item.url] : null"
+            [routerLinkActive]="!item.subList ? 'active-link' : 'null'"
+        >
+            <div accordion-heading>
+                {{item.title}}
+                <span
+                    *ngIf="item.subList"
+                    class="icon eos-icon small float-right pull-right"
+                    [ngClass]="{'eos-icon-arrow-v-blue-bottom': !item.isOpen, 'eos-icon-arrow-v-blue-top': item.isOpen}"
+                ></span>
+            </div>
+            <div *ngIf="item.subList">
+                <div
+                    *ngFor="let subItem of item.subList"
+                    class="subItem"
+                    [routerLink]="['/user-params-set/param-set', subItem.url]"
+                    routerLinkActive="active-link"
+                >
+                    {{subItem.title}}
+                </div>
+            </div>
+        </accordion-group>
+    </accordion>
+</nav>
+
+<div class="spinner-wrapper" *ngIf="isLoading">
+    <eos-spinner [size]="'lg'"></eos-spinner>
+</div>

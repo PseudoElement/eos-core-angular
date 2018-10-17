@@ -16,15 +16,20 @@ export interface IBaseParameters {
     id: string;
     apiInstance: string;
     title: string;
+    disabledFields?: string[];
     visible?: boolean;
     actions?: string[];
-    fields: IFieldDescriptor[];
+    fieldsChild?: IFieldDescriptor[];
+    fields?: IFieldDescriptor[];
 }
 
 export interface IFieldDescriptor {
     key?: string;
     title: string;
     type: string;
+    formatDbBinary?: boolean;
+    readonly?: boolean;
+
     length?: number;
     format?: string;
     foreignKey?: string;
@@ -54,5 +59,8 @@ export enum E_FIELD_TYPE {
     buttons,
     dictionary,
     select,
-    array
+    array,
+    toggle,
+    numberIncrement,
+    radio
 }
