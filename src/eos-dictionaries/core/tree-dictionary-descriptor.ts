@@ -1,11 +1,12 @@
 import { ITreeDictionaryDescriptor, IRecordOperationResult } from 'eos-dictionaries/interfaces';
 import { FieldDescriptor } from './field-descriptor';
 import { RecordDescriptor } from './record-descriptor';
-import { IHierCL, CB_PRINT_INFO } from 'eos-rest';
+import { IHierCL, CB_PRINT_INFO, CONTACT } from 'eos-rest';
 import { AbstractDictionaryDescriptor } from 'eos-dictionaries/core/abstract-dictionary-descriptor';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { PrintInfoHelper } from 'eos-rest/services/printInfo-helper';
 import { FieldsDecline } from '../interfaces/fields-decline.inerface';
+import { ContactHelper } from '../../eos-rest/services/contact-helper';
 
 export class TreeRecordDescriptor extends RecordDescriptor {
     dictionary: TreeDictionaryDescriptor;
@@ -70,8 +71,16 @@ export class TreeDictionaryDescriptor extends AbstractDictionaryDescriptor {
                                     data[key] = Object.assign(printInfoRec, data[key]);
                                     if (PrintInfoHelper.PrepareForSave(data[key], data.rec)) {
                                         changeData.push(data[key]);
-                                        break;
                                     }
+                                    break;
+                                case 'contact':
+                                    const contactRec = this.apiSrv.entityHelper.prepareForEdit<CONTACT>(undefined, 'CONTACT');
+                                    data[key] = Object.assign(contactRec, data[key]);
+                                    if (ContactHelper.PrepareForSave(data[key], data.rec)) {
+                                        changeData.push(data[key]);
+                                    }
+                                    break;
+
                             }
                         }
                     });

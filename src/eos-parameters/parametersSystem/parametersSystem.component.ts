@@ -20,7 +20,7 @@ export class ParametersSystemComponent implements OnChanges, OnInit {
         this._route.params.subscribe(params => (this.paramId = params['id']));
     }
     ngOnChanges(changes: SimpleChanges) {
-        console.log('Changes param system', changes);
+        // console.log('Changes param system', changes);
     }
     ngOnInit() {
         // console.log(!this.isChanged, this.disableSave);
@@ -53,7 +53,7 @@ export class ParametersSystemComponent implements OnChanges, OnInit {
                     }
                 })
                 .catch((err) => {
-                    console.log('cancel reason', err);
+                    // console.log('cancel reason', err);
                     return false;
                 });
         } else {

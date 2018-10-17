@@ -27,7 +27,6 @@
             </li>
         </ul>
     </div>
-    {{data.contact}}
     <div [hidden]="currTab !== 0"
          class="eos-organization-node-tab">
         <table class="table usual-border border-bottom table-owners">
@@ -52,7 +51,7 @@
                                        [form]="form"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <fieldset>
-                    <table width="100%">
+                        <table width="100%">
                         <span *ngFor="let contact of data.contact; index as i;">
                             <tr>
                                 <td>
@@ -83,7 +82,7 @@
                                 </td>
                             </tr>
                         </span>
-                    </table>
+                        </table>
                     </fieldset>
                 </td>
             </tr>

@@ -12,6 +12,7 @@ import { SEV_ASSOCIATION } from 'eos-rest/interfaces/structures';
 import { IAppCfg } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { EosUtils } from 'eos-common/core/utils';
+import { ContactHelper } from '../../eos-rest/services/contact-helper';
 
 export abstract class AbstractDictionaryDescriptor {
     /**
@@ -299,7 +300,19 @@ export abstract class AbstractDictionaryDescriptor {
                             changeData.push(data);
                         }
                         break;
+                    case 'contact':
+                        for (const contact of data) {
+                            if (ContactHelper.PrepareForSave(contact, originalData.rec)) {
+                                // for (let contact of data) {
+                                // changeData.push(contact);
+                                // }
+                            }
+                        }
+                        break;
                     case 'rec':
+                        // if (data['CONTACT_List']) {
+                        //     delete data['CONTACT_List'];
+                        // }
                         changeData.push(data);
                         break;
                     default: // do nothing
