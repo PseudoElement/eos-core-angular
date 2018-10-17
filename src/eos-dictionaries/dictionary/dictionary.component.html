@@ -20,8 +20,7 @@
     </div>
     <div class="selected-wrapper"
         #selectedWrapper
-        [ngClass]="{'open-tree': currentState[0] && !hideTree }"
-        (click)="onClick()">
+        [ngClass]="{'open-tree': currentState[0] && !hideTree }">
         <div class="node-actions">
             <div *ngIf="treeNode"
                 class="selected-node xl-font"

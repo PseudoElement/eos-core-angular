@@ -258,12 +258,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         this._dictSrv.setUserOrder(nodes);
     }
 
-    onClick() {
-        if (window.innerWidth < 1600) {
-            this._sandwichSrv.changeDictState(false, true);
-        }
-    }
-
     goUp() {
         if (this.treeNode && this.treeNode.parent) {
             const path = this.treeNode.parent.getPath();
