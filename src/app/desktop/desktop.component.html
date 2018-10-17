@@ -82,11 +82,7 @@
     <div *ngIf="!editing(item.value)"
         (mousedown)="tryMove($event)"
         class="item-content xl-font block"
-        [routerLink]="[item.value.url]"
-        tooltip="{{deskId === 'system' ? item.value.title : item.value.title}}"
-        placement="bottom"
-        containerClass="tooltip-info word-break"
-        container="body">
+        [routerLink]="[item.value.url]">
         <span class="icon-wrapper">
             <span class="icon eos-icon {{item.value.iconName}}"></span>
         </span>
