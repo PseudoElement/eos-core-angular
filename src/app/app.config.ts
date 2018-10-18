@@ -1,6 +1,6 @@
 export const APP_CONFIG = {
-    webBaseUrl: 'http://localhost/X182',
-    apiBaseUrl: 'http://localhost/X182',
+    webBaseUrl: '../',
+    apiBaseUrl: '../',
     authApi: '/Services/ApiSession.asmx/',
     dataApi: '/OData.svc/',
 };
