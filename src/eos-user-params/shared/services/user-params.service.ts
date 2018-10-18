@@ -59,6 +59,9 @@ export class UserParamsService {
             return false;
         });
     }
+    clearIdStorage() {
+        this._storageSrv.removeItem('userContextParam');
+    }
 
     private _createRec (req, due?) {
         if (due) {

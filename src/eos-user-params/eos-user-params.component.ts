@@ -33,6 +33,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
             .takeUntil(this.ngUnsubscribe)
             .subscribe(qParam => {
                 if (qParam['createNewUser']) {
+                    this._userParamService.clearIdStorage();
                     this.isNewUser = qParam['createNewUser'];
                     return;
                 }
