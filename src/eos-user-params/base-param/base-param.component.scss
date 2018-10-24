@@ -1,1 +1,14 @@
+.base-param__wrapper {
+    width: 800px;
+    min-height: 200px; // временно
+    margin: 0 auto;
+    background: $white;
 
+    .base-param__main {
+        padding: 20px;
+
+        .base-param__row {
+            display: flex;
+        }
+    }
+}

@@ -13,6 +13,9 @@ export class UserParamsService {
         }
         return null;
     }
+    get curentUser () {
+        return this._userContext;
+    }
     get userContextParams () {
         if (this._userContext) {
             return this._userContext['USER_PARMS_List'];

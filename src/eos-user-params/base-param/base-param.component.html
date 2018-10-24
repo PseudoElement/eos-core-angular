@@ -1,1 +1,14 @@
-<h1>base param component{{newUser ? 'for new User' : ''}}</h1>
+<div class="base-param__wrapper">
+    <eos-user-header
+        [title]="title"
+        [statusBtnSub]="stateHeaderSubmit"
+        [isDefault]="false"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+    ></eos-user-header>
+    <div class="base-param__main">
+        <div class="base-param__row">
+            <button (click)="testClick()">test</button>
+        </div>
+    </div>
+</div>
