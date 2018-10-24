@@ -1,3 +1,15 @@
+export interface IOpenClessifParams {
+    classif: string;
+    id?: string;
+    skipDeleted?: boolean;
+    selectMulty?: boolean;
+    selectLeafs?: boolean;
+    selectNodes?: boolean;
+    nomenkl_jou?: boolean;
+    return_due?: boolean;
+    selected? ;
+}
+
 export interface IUserBese {
     id: string;
     apiInstance: string;
