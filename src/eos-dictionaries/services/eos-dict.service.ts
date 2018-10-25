@@ -752,7 +752,8 @@ export class EosDictService {
             updatingInfo: false,
             updatingList: false,
             hasMarked: false,
-            hideTopMenu: false
+            hideTopMenu: false,
+            tableCustomization: false,
         };
     }
 
@@ -801,7 +802,8 @@ export class EosDictService {
                         this.updateViewParameters({
                             userOrdered: this._storageSrv.getUserOrderState(this._dictionaries[0].id),
                             markItems: this._dictionaries[0].canMarkItems,
-                            updatingList: false
+                            updatingList: false,
+                            // tableCustomization: true,
                         });
                         this._dictionaries[0].initUserOrder(
                             this.viewParameters.userOrdered,
