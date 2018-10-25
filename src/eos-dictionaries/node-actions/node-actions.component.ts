@@ -137,6 +137,8 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.createRepresentative:
                     _enabled = _enabled && !this._viewParams.searchResults;
                     break;
+                case E_RECORD_ACTIONS.tableCustomization:
+                    break;
             }
         }
         button.show = _show;
