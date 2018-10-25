@@ -65,6 +65,7 @@ import { EosDepartmentsService } from './services/eos-department-service';
 import { EosDictService } from './services/eos-dict.service';
 import { EosSandwichService } from './services/eos-sandwich.service';
 import { EosBroadcastChannelService } from './services/eos-broadcast-channel.service';
+import { EosSevRulesService } from './services/eos-sev-rules.service';
 
 @NgModule({
     declarations: [
@@ -139,6 +140,7 @@ import { EosBroadcastChannelService } from './services/eos-broadcast-channel.ser
         EosDataConvertService,
         EosDepartmentsService,
         EosBroadcastChannelService,
+        EosSevRulesService,
         EosDictService,
         EosSandwichService,
     ],

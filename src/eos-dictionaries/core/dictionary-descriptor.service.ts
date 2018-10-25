@@ -11,8 +11,10 @@ import { CabinetDictionaryDescriptor } from 'eos-dictionaries/core/cabinet-dicti
 import { DocgroupDictionaryDescriptor } from 'eos-dictionaries/core/docgroup-dictionary-descriptor';
 import {NADZORDICTIONARIES} from '../consts/dictionaries/nadzor.consts';
 import {BroadcastChanelDictionaryDescriptor} from './broadcast-chanel-dictionary-descriptor';
+import {SevRulesDictionaryDescriptor} from './sev-rules-dictionary-descriptor';
 import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
 import {SevCollisionsDictionaryDescriptor} from './sev-collisions-dictionary-descriptor';
+import {EosSevRulesService} from '../services/eos-sev-rules.service';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -21,7 +23,8 @@ export class DictionaryDescriptorService {
 
     constructor(
         private apiSrv: PipRX,
-        private _channelSrv: EosBroadcastChannelService
+        private _channelSrv: EosBroadcastChannelService,
+        private _rulesSrv: EosSevRulesService
     ) {
         this._mDicts = new Map<string, IDictionaryDescriptor>();
         this._mDictClasses = new Map<string, AbstractDictionaryDescriptor>();
@@ -75,6 +78,9 @@ export class DictionaryDescriptorService {
                         break;
                     case 'broadcast-channel':
                         res = new BroadcastChanelDictionaryDescriptor(descr, this.apiSrv, this._channelSrv);
+                        break;
+                    case 'sev-rules':
+                        res = new SevRulesDictionaryDescriptor(descr, this.apiSrv, this._rulesSrv);
                         break;
                     case 'cabinet':
                         res = new CabinetDictionaryDescriptor(descr, this.apiSrv);

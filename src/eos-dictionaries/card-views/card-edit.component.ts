@@ -7,6 +7,7 @@ import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from '../services/eos-data-convert.service';
 import { DictionaryDescriptorService } from '../core/dictionary-descriptor.service';
 import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
+import {EosSevRulesService} from '../services/eos-sev-rules.service';
 
 @Component({
     selector: 'eos-card-edit',
@@ -35,7 +36,8 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         private _dataSrv: EosDataConvertService,
         private _inputCtrlSrv: InputControlService,
         private _dictSrv: DictionaryDescriptorService,
-        private _channelSrv: EosBroadcastChannelService
+        private _channelSrv: EosBroadcastChannelService,
+        private _rulesSrv: EosSevRulesService,
     ) {
         this.subscriptions = [];
      }
@@ -54,6 +56,10 @@ export class CardEditComponent implements OnChanges, OnDestroy {
             if (newData.rec['ISN_REGION'] !== null) {
                 newData.rec['ISN_REGION'] = +newData.rec['ISN_REGION'];
             }
+        } else if (this.dictionaryId === 'sev-rules') {
+            this._rulesSrv.data = newData.rec;
+            newData.rec['SCRIPT_CONFIG'] = this._rulesSrv.scriptConfigToXml();
+            newData.rec['FILTER_CONFIG'] = this._rulesSrv.filterConfigToXml();
         }
         return newData;
     }

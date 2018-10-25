@@ -4,16 +4,18 @@ import {COMMON_FIELD_NAME, COMMON_FIELD_NOTE} from './_common';
 import {DOCGROUP_DICT} from './docgroup.consts';
 import {
     ADDRESS_REPLACE,
-    ADDRESSEES_KIND,
-    BUNCHS_RK_KIND, CONSIDERATION_KIND,
-    DOCUMENT_TYPES, EXECUTOR_CONSIDERATION_KIND, FORWARDING_DOCS_KIND,
+    ADDRESSEE_KIND,
+    LINK_KIND, CONSIDERATION_KIND, DATE_EXECUTION_PROJECT_KIND,
+    DOCUMENT_TYPES, EXECUTOR_CONSIDERATION_KIND, EXECUTOR_PROJECT_KIND, FORWARDING_DOCS_KIND, FORWARDING_DOCS_PROJECT_KIND,
     ITEMS_KIND,
     KOR_RULE_SEND, ORDERS_KIND,
-    RESOLUTION_KIND,
-    TYPE_OF_RULE
+    RESOLUTION_KIND, SIGNATURES_KIND,
+    TYPE_OF_RULE, Visa_KIND, Visa_KIND_TAKE
 } from '../sev-const';
 import {SECURITY_DICT} from './security.consts';
 import {ORG_TYPE_DICT} from './org-type.consts';
+import {CONTACT_DICT} from './contact.consts';
+import {ORGANIZ_DICT} from './organiz.consts';
 
 export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'sev-rules',
@@ -30,201 +32,217 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
         Object.assign({}, COMMON_FIELD_NOTE, {
             title: 'Примечание'
         }), {
-            key: 'TYPE_DOC',
+            key: 'SCRIPT_CONFIG',
+            type: 'xml',
+        }, {
+            key: 'FILTER_CONFIG',
+            type: 'xml',
+        }, {
+            key: 'type',
             type: 'select',
             title: 'Тип документа',
             options: DOCUMENT_TYPES,
             default: 1,
-            required: true,
         }, {
-            key: 'RULE_KIND',
+            key: 'kind',
             type: 'select',
             title: 'Вид правила',
             options: TYPE_OF_RULE,
             default: 1,
-            required: true,
+        }, {
+            key: 'RULE_KIND',
+            type: 'number',
+            default: 1,
         }, {
             key: 'DUE_DOCGROUP',
             type: 'select',
             title: 'Группа документов',
             dictionaryId: DOCGROUP_DICT.id,
             options: [],
-            required: true,
         }, {
             key: 'DUE_DEP',
             type: 'select',
             options: [],
             title: 'Отправитель/Получатель',
-            required: true,
         }, {
-            key: 'SENDER',
+            key: 'departmentSend', // TODO справочник организаций
             type: 'select',
-            options: [],
+            dictionaryId: ORGANIZ_DICT.id,
+            options: [{
+                value: 0,
+                title: 'Для всех организаций'
+            }],
             title: 'Отправитель',
-            required: true,
         }, {
-            key: 'BUNCHS_RK',
+            key: 'departmentReceive', // TODO справочник организаций и подразделений
+            type: 'select',
+            options: [],
+            title: 'Получатель',
+        }, {
+            key: 'kindDepartment',
+            type: 'select',
+            options: [], // TODO Отправитель получатель
+        }, {
+            key: 'link',
             type: 'boolean',
-            title: 'Связки РК:',
-            required: true,
+            title: 'Связки РК',
         }, {
-            key: 'BUNCHS_RK_KIND',
+            key: 'linkKind',
             type: 'buttons',
-            options: BUNCHS_RK_KIND,
+            options: LINK_KIND,
             default: 0,
-            required: true,
         }, {
-            key: 'BUNCHS_RK_TYPE',
+            key: 'linkTypeList',  // TODO Типы связок
             type: 'select',
             options: [],
         }, {
-            key: 'STAMP_ACCESS',
+            key: 'access',
             type: 'boolean',
             title: 'Гриф доступа',
             default: true,
         }, {
-            key: 'RUBRICS',
+            key: 'rubric',
             type: 'boolean',
             title: 'Рубрики',
             default: true,
         }, {
-            key: 'ADR_SUBJ_DOC',
+            key: 'address',
             type: 'boolean',
             title: 'Адрес субъекта документа',
             default: true,
         }, {
-            key: 'RGN_SUBJ_DOC',
+            key: 'region',
             type: 'boolean',
             title: 'Регион субъекта документа',
         }, {
-            key: 'VISAS',
+            key: 'visa',
             type: 'boolean',
             title: 'Визы',
             default: true,
         }, {
-            key: 'ADDRESSEES',
+            key: 'addressee',
             type: 'boolean',
             title: 'Адресаты',
             default: true,
         }, {
-            key: 'ADDRESSEES_KIND',
+            key: 'addresseeKind',
             type: 'buttons',
             default: 0,
-            options: ADDRESSEES_KIND,
+            options: ADDRESSEE_KIND,
         }, {
-            key: 'DETAILS',
+            key: 'additionalField',
             title: 'Доп. реквизиты',
             type: 'boolean',
             default: true,
         }, {
-            key: 'AVALIBLE',
+            key: 'userGrantedOnly',
             title: 'Только доступные пользователю файлы и поручения',
             type: 'boolean',
             default: true,
         }, {
-            key: 'FILES',
+            key: 'file',
             title: 'Файлы',
             type: 'boolean',
             default: true,
         }, {
-            key: 'FILES_EXTENSION',
+            key: 'fileExtensions',
             title: 'С расширением',
             type: 'string',
         }, {
-            key: 'FILES_STAMP',
+            key: 'fileAccessList', // TODO должен быть массив
             title: 'Гриф доступа',
             type: 'select',
             dictionaryId: SECURITY_DICT.id,
             options: [],
         }, {
-            key: 'FILES_MAX_SIZE',
+            key: 'fileMaxLength',
             title: 'Max размер',
             type: 'number',
         }, {
-            key: 'RESOLUTION_FILES',
-            title: 'Файлы',
-            type: 'boolean',
-            default: true,
-        }, {
-            key: 'RESOLUTION_FILES_EXTENSION',
-            title: 'С расширением',
-            type: 'string',
-        }, {
-            key: 'RESOLUTION_FILES_MAX_SIZE',
-            title: 'Max размер',
-            type: 'number',
-        }, {
-            key: 'Reception',
-            title: 'Уведомление о приеме',
-            type: 'boolean',
-            default: true,
-        }, {
-            key: 'Registration',
-            title: 'Доклад о регистрации (отказ в регистрации)/доклад о редактировании данных',
-            type: 'boolean',
-            default: true,
-        }, {
-            key: 'Forwarding',
-            title: 'Доклад о направлении документа',
-            type: 'boolean',
-            default: true,
-        }, {
-            key: 'Consideration',
-            title: 'Доклад о работе с документом (ввод резолюций)',
-            type: 'boolean',
-            default: true,
-        }, {
-            key: 'Report',
-            title: 'Доклад об исполнении поручения',
-            type: 'boolean',
-            default: true,
-        }, {
-            key: 'Redirection',
-            title: 'Доклад об отправке документа',
-            type: 'boolean',
-            default: true,
-        }, {
-            key: 'Answer',
-            title: 'Доклад об отправке документа-ответа',
-            type: 'boolean',
-            default: true,
-        }, {
-            key: 'ITEMS',
+            key: 'item',
             title: 'Пункты',
             type: 'boolean',
             default: true,
         }, {
-            key: 'ITEMS_KIND',
+            key: 'itemKind',
             type: 'buttons',
             default: 1,
             options: ITEMS_KIND,
         }, {
-            key: 'Resolution',
+            key: 'resolution',
             title: 'Резолюции',
             type: 'boolean',
             default: true,
         }, {
-            key: 'RESOLUTION_KIND',
+            key: 'resolutionKind',
             type: 'buttons',
             default: 1,
             options: RESOLUTION_KIND,
         }, {
-            key: 'Category',
+            key: 'taskCategory',
             title: 'Категория поручения',
             type: 'boolean',
             default: true,
         }, {
-            key: 'Controller',
+            key: 'taskController',
             title: 'Контролер поручения',
             type: 'boolean',
             default: true,
         }, {
-            key: 'RESOLUTION_NOTE',
+            key: 'taskNote',
             title: 'Примечание',
             type: 'boolean',
             default: true,
         }, {
-            key: 'Period',
+            key: 'taskFile',
+            title: 'Файлы',
+            type: 'boolean',
+            default: true,
+        }, {
+            key: 'taskFileExtensions',
+            title: 'С расширением',
+            type: 'string',
+        }, {
+            key: 'taskFileMaxLength',
+            title: 'Max размер',
+            type: 'number',
+        }, {
+            key: 'reception',
+            title: 'Уведомление о приеме',
+            type: 'boolean',
+            default: true,
+        }, {
+            key: 'registration',
+            title: 'Доклад о регистрации (отказ в регистрации)/доклад о редактировании данных',
+            type: 'boolean',
+            default: true,
+        }, {
+            key: 'forwarding',
+            title: 'Доклад о направлении документа',
+            type: 'boolean',
+            default: true,
+        }, {
+            key: 'consideration',
+            title: 'Доклад о работе с документом (ввод резолюций)',
+            type: 'boolean',
+            default: true,
+        }, {
+            key: 'report',
+            title: 'Доклад об исполнении поручения',
+            type: 'boolean',
+            default: true,
+        }, {
+            key: 'redirection',
+            title: 'Доклад об отправке документов',
+            type: 'boolean',
+            default: true,
+        }, {
+            key: 'answer',
+            title: 'Доклад об отправке документа-ответа',
+            type: 'boolean',
+            default: true,
+        }, {
+            key: 'stopDayCount',
             title: 'Доклады направлять в течении (сутки)',
             type: 'number',
             default: 30,
@@ -234,50 +252,40 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
             type: 'boolean',
             default: false
         }, {
-            key: 'groupDocs',
+            key: 'FilterConfig',
             title: 'Для групп документов',
-            type: 'select',
+            type: 'array',
             options: [],
         }, {
             key: 'cardFile',
             title: 'Картотека автомата',
             type: 'select',
             options: [],
-            required: true,
+
         }, {
             key: 'cabinetFile',
             title: 'Кабинет автомата',
             type: 'select',
             options: [],
-            required: true,
         }, {
             key: 'korRuleSend',
             title: 'Корр. РК сформировать',
             type: 'select',
             options: KOR_RULE_SEND,
-            required: true,
             default: 1,
         }, {
-            key: 'orgCreate',
+            key: 'OrganizationFolder',
             title: 'Организации создавать',
             type: 'select',
             dictionaryId: ORG_TYPE_DICT.id,
             options: [],
-            required: true,
         }, {
             key: 'adrReplace',
             type: 'buttons',
             options: ADDRESS_REPLACE,
             default: 1,
         }, {
-            key: 'orgCreate',
-            title: 'Организации создавать',
-            type: 'select',
-            dictionaryId: ORG_TYPE_DICT.id,
-            options: [],
-            required: true,
-        }, {
-            key: 'takeFilesRK',
+            key: 'takeFileRK',
             title: 'Принимать файлы РК',
             type: 'boolean',
             default: true,
@@ -292,22 +300,17 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
             options: ORDERS_KIND,
             default: 0,
         }, {
-            key: 'categoryOrders',
-            title: 'Категория поручения',
-            type: 'boolean',
-            default: true,
-        }, {
             key: 'noteOrders',
             title: 'Примечание',
             type: 'boolean',
             default: true,
         }, {
-            key: 'takeFilesOrders',
+            key: 'takeFileOrders',
             title: 'Принимать файлы РК',
             type: 'boolean',
             default: true,
         }, {
-            key: 'takeFilesRK',
+            key: 'takeFileRK',
             title: 'Файлы РК',
             type: 'boolean',
         }, {
@@ -350,23 +353,19 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
             title: 'План. дата',
             type: 'boolean',
         }, {
-            key: 'controllerOrder',
-            title: 'Контролер поручения',
-            type: 'boolean',
-        }, {
-            key: 'executionCourse',
+            key: 'Summary',
             title: 'Ход исполнения',
             type: 'boolean',
         }, {
-            key: 'controlDate',
+            key: 'FactDate',
             title: 'Дата снятия с контроля',
             type: 'boolean',
         }, {
-            key: 'executionStatus',
+            key: 'Status',
             title: 'Состояние исполненения',
             type: 'boolean',
         }, {
-            key: 'controlBase',
+            key: 'Resume',
             title: 'Основание для снятия с контроля',
             type: 'boolean',
         }, {
@@ -379,8 +378,8 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
             options: EXECUTOR_CONSIDERATION_KIND,
             default: 0,
         }, {
-            key: 'executorFiles',
-            title: 'Файлы иисполнителя',
+            key: 'executorFile',
+            title: 'Файлы исполнителя',
             type: 'boolean',
             default: true,
         }, {
@@ -393,20 +392,193 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
             title: 'Пересчитывать срок отправки докуладов',
             type: 'boolean',
             default: true,
+        }, {
+            key: 'regNumber',
+            title: 'Рег.№ в \'Адресат\'',
+            type: 'boolean',
+        }, {
+            key: 'reportExecution',
+            title: 'Отчет об исполнении в \'Поручение\'',
+            type: 'boolean',
+            default: true,
+        }, {
+            key: 'LinkPD',
+            type: 'boolean',
+            title: 'Связки РКПД:',
+        }, {
+            key: 'executorsProject',
+            type: 'boolean',
+            title: 'Исполнители',
+        }, {
+            key: 'kindExecutorProject',
+            type: 'buttons',
+            options: EXECUTOR_PROJECT_KIND,
+            default: 1,
+        }, {
+            key: 'dateExecutionProject',
+            type: 'boolean',
+            title: 'Срок исполнения',
+        }, {
+            key: 'kindDateExecutionProject',
+            type: 'buttons',
+            options: DATE_EXECUTION_PROJECT_KIND,
+            default: 1,
+        }, {
+            key: 'FileRKPD',
+            type: 'boolean',
+            title: 'Файлы РКПД',
+        }, {
+            key: 'VisaKind',
+            type: 'buttons',
+            options: Visa_KIND,
+            default: 0,
+        }, {
+            key: 'VisaInfo',
+            type: 'boolean',
+            title: 'Информация о визе',
+        }, {
+            key: 'VisaFile',
+            type: 'boolean',
+            title: 'Файл визы',
+        }, {
+            key: 'signatures',
+            type: 'boolean',
+            title: 'Подписи',
+        }, {
+            key: 'signaturesKind',
+            type: 'buttons',
+            options: SIGNATURES_KIND,
+            default: 0,
+        }, {
+            key: 'signaturesInfo',
+            type: 'boolean',
+            title: 'Информация о подписи',
+        }, {
+            key: 'signaturesFile',
+            type: 'boolean',
+            title: 'Файл подписи',
+        }, {
+            key: 'registrationProject',
+            title: 'Доклад о регистрации (отказ в регистрации)',
+            type: 'boolean',
+        }, {
+            key: 'forwardingVisa',
+            title: 'Доклад о направлении документа на визирование',
+            type: 'boolean',
+        }, {
+            key: 'forwardingSign',
+            title: 'Доклад о направлении документа на подписание',
+            type: 'boolean',
+        }, {
+            key: 'reportVisa',
+            title: 'Доклад о визировании',
+            type: 'boolean',
+        }, {
+            key: 'reportSign',
+            title: 'Доклад о подписании',
+            type: 'boolean',
+        }, {
+            key: 'executor',
+            title: 'Исполнитель',
+            type: 'select',
+            dictionaryId: CONTACT_DICT.id,
+            options: [],
+        }, {
+            key: 'executive',
+            title: 'ДЛ за "Текущую организацию"',
+            type: 'select',
+            dictionaryId: CONTACT_DICT.id,
+            options: [],
+        }, {
+            key: 'VisaKindTake',
+            type: 'buttons',
+            options: Visa_KIND_TAKE,
+            default: 0,
+        }, {
+            key: 'signatureKindTake',
+            type: 'buttons',
+            options: Visa_KIND_TAKE,
+            default: 0,
+        }, {
+            key: 'visaDate',
+            title: 'Срок визы, если требуемый срок истек',
+            type: 'number',
+        }, {
+            key: 'visaDays',
+            title: 'дней',
+            type: 'boolean',
+            default: true,
+        }, {
+            key: 'signatureDate',
+            title: 'Срок подписи, если требуемый срок истек',
+            type: 'number',
+        }, {
+            key: 'signatureDays',
+            title: 'дней',
+            type: 'boolean',
+            default: true,
+        }, {
+            key: 'visaForward',
+            title: 'Направить на визирование',
+            type: 'boolean',
+        }, {
+            key: 'signatureForward',
+            title: 'Направить на подпись',
+            type: 'boolean',
+        }, {
+            key: 'forwardingVisaKind',
+            type: 'buttons',
+            options: FORWARDING_DOCS_PROJECT_KIND,
+            default: 1,
+        }, {
+            key: 'forwardingSignKind',
+            type: 'buttons',
+            options: FORWARDING_DOCS_PROJECT_KIND,
+            default: 1,
+        }, {
+            key: 'reportVisaKind',
+            type: 'buttons',
+            options: FORWARDING_DOCS_PROJECT_KIND,
+            default: 1,
+        }, {
+            key: 'reportSignKind',
+            type: 'buttons',
+            options: FORWARDING_DOCS_PROJECT_KIND,
+            default: 1,
+        }, {
+            key: 'infoVisaign',
+            title: 'Информация о визировании/подписании в РКПД',
+            type: 'boolean',
+            default: true,
+        }, {
+            key: 'fileVisaign',
+            title: 'Файл визы/подписи',
+            type: 'boolean',
+            default: true,
+        }, {
+            key: 'correctingVisaign',
+            title: 'Корректировать визирующих/подписывающих в РКПД',
+            type: 'boolean',
+            default: true,
         }],
-    editFields: ['CLASSIF_NAME', 'NOTE', 'TYPE_DOC', 'RULE_KIND', 'DUE_DOCGROUP', 'DUE_DEP', 'SENDER', 'BUNCHS_RK',
-        'BUNCHS_RK_KIND', 'BUNCHS_RK_TYPE', 'STAMP_ACCESS', 'RUBRICS', 'ADR_SUBJ_DOC', 'RGN_SUBJ_DOC', 'VISAS',
-        'ADDRESSEES', 'ADDRESSEES_KIND', 'DETAILS', 'AVALIBLE', 'FILES', 'FILES_EXTENSION', 'FILES_STAMP',
-        'FILES_MAX_SIZE', 'Reception', 'Registration', 'Forwarding', 'Consideration', 'Report', 'Redirection',
-        'Answer', 'ITEMS', 'ITEMS_KIND', 'Resolution', 'RESOLUTION_KIND', 'Category', 'Controller', 'RESOLUTION_NOTE',
-        'RESOLUTION_FILES', 'RESOLUTION_FILES_EXTENSION', 'RESOLUTION_FILES_MAX_SIZE', 'Period', 'handRegistration',
-        'groupDocs', 'cardFile', 'cabinetFile', 'korRuleSend', 'orgCreate', 'adrReplace', 'orgCreate', 'takeFilesRK',
-        'orders', 'ordersKind', 'categoryOrders', 'noteOrders', 'takeFilesOrders', 'takeFilesRK', 'takeOrdersRK', 'forwardingDocs',
+    editFields: ['CLASSIF_NAME', 'RULE_KIND', 'NOTE', 'type', 'DUE_DOCGROUP', 'DUE_DEP', 'departmentSend', 'kind', 'linkInclude', 'link',
+        'linkKind', 'linkTypeList', 'access', 'rubric', 'address', 'region', 'visa', 'addressee', 'addresseeKind', 'additionalField',
+        'userGrantedOnly', 'file', 'fileExtensions', 'fileAccessList', 'fileMaxLength', 'item', 'itemKind', 'resolution',
+        'resolutionKind', 'taskCategory', 'taskController', 'taskNote', 'taskFile', 'taskFileExtensions', 'taskFileMaxLength', 'reception',
+        'registration', 'forwarding', 'consideration', 'report', 'redirection', 'answer', 'stopDayCount',
+        'handRegistration',
+        'groupDocs', 'cardFile', 'cabinetFile', 'korRuleSend', 'OrganizationFolder', 'adrReplace', 'takeFileRK',
+        'orders', 'ordersKind', 'noteOrders', 'takeFileOrders', 'takeFileRK', 'takeOrdersRK', 'forwardingDocs',
         'kindForwardingDocs', 'kindConsideration', 'textConsideration', 'categoryConsideration', 'noteConsideration',
-        'controlConsideration', 'planConsideration', 'controllerOrder', 'executionCourse', 'controlDate', 'executionStatus', 'controlBase',
-        'executorConsideration', 'kindExecutorConsideration', 'executorFiles', 'editSet'],
+        'controlConsideration', 'planConsideration', 'Summary', 'FactDate', 'Status', 'Resume',
+        'executorConsideration', 'kindExecutorConsideration', 'executors', 'executorFile', 'editSet', 'calcDate', 'regNumber',
+        'LinkPD', 'executorsProject', 'kindExecutorProject', 'dateExecutionProject', 'kindDateExecutionProject', 'FileRKPD',
+        'VisaKind', 'VisaInfo', 'VisaFile', 'signatures', 'signaturesKind', 'signaturesInfo', 'signaturesFile', 'registrationProject',
+        'forwardingVisa', 'forwardingSign', 'reportVisa', 'reportSign', 'executor', 'executive', 'visaDate', 'visaDays',
+        'signatureDate', 'signatureDays', 'visaForward', 'signatureForward', 'VisaKindTake', 'signatureKindTake', 'forwardingVisaKind',
+        'forwardingSignKind', 'reportVisaKind', 'reportSignKind', 'infoVisaign', 'fileVisaign', 'correctingVisaign'],
     listFields: ['CLASSIF_NAME', 'NOTE'],
     allVisibleFields: [],
-    quickViewFields: ['CLASSIF_NAME', 'NOTE', 'TYPE_DOC', 'RULE_KIND', 'DUE_DOCGROUP', 'DUE_DEP'],
+    quickViewFields: ['CLASSIF_NAME', 'NOTE', 'type', 'RULE_KIND', 'DUE_DOCGROUP', 'DUE_DEP'],
     searchFields: [],
 });

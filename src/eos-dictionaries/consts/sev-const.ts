@@ -44,12 +44,12 @@ export const TYPE_OF_RULE: Array<OptionDiscription> = [{
     title: 'Прием доклада'
 }];
 
-export const BUNCHS_RK_KIND: Array<OptionDiscription> = [
+export const LINK_KIND: Array<OptionDiscription> = [
     { value: 0, title: 'Все'},
     { value: 1, title: 'С типом: '}
 ];
 
-export const ADDRESSEES_KIND: Array<OptionDiscription> = [
+export const ADDRESSEE_KIND: Array<OptionDiscription> = [
     { value: 0, title: 'Все'},
     { value: 1, title: 'Адресаты сообщений'}
 ];
@@ -75,15 +75,46 @@ export const FORWARDING_DOCS_KIND: Array<OptionDiscription> = [
     { value: 1, title: 'Первого'}
 ];
 
+export const FORWARDING_DOCS_PROJECT_KIND: Array<OptionDiscription> = [
+    { value: 0, title: 'Всем'},
+    { value: 1, title: 'Только присланным'}
+];
+
 export const CONSIDERATION_KIND: Array<OptionDiscription> = [
     { value: 0, title: 'Все'},
     { value: 1, title: 'Первые'},
     { value: 2, title: 'Последение'}
 ];
 
+export const Visa_KIND: Array<OptionDiscription> = [
+    { value: 0, title: 'Все'},
+    { value: 1, title: 'Первичные'},
+    { value: 2, title: 'Только адресат сообщения'}
+];
+
+export const Visa_KIND_TAKE: Array<OptionDiscription> = [
+    { value: 0, title: 'Все'},
+    { value: 1, title: 'Только свои'}
+];
+
+export const SIGNATURES_KIND: Array<OptionDiscription> = [
+    { value: 0, title: 'Все'},
+    { value: 1, title: 'Только адресат сообщения'}
+];
+
 export const EXECUTOR_CONSIDERATION_KIND: Array<OptionDiscription> = [
     { value: 0, title: 'Все'},
     { value: 1, title: 'Ответственные'}
+];
+
+export const EXECUTOR_PROJECT_KIND: Array<OptionDiscription> = [
+    { value: 0, title: 'Все'},
+    { value: 1, title: 'Только первый'}
+];
+
+export const DATE_EXECUTION_PROJECT_KIND: Array<OptionDiscription> = [
+    { value: 0, title: 'Срок РКПД'},
+    { value: 1, title: 'Срок направления'}
 ];
 
 export const DOCUMENTS_GROUP: Array<OptionDiscription> = [];

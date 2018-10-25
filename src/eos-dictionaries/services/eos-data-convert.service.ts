@@ -127,7 +127,7 @@ export class EosDataConvertService {
                                     });
                                     break;
                                 case E_FIELD_TYPE.select:
-                                    const options = [];
+                                    const options = descr[_key].options;
 
                                     if (descr[_key].dictionaryId !== undefined) {
                                         const dict = new EosDictionary(descr[_key].dictionaryId, dictSrv);
@@ -139,8 +139,6 @@ export class EosDataConvertService {
                                                     }
                                                 });
                                             });
-                                    } else {
-                                        options.push(...descr[_key].options);
                                     }
                                     inputs[_dict + '.' + _key] = new DropdownInput({
                                         key: _dict + '.' + descr[_key].foreignKey,

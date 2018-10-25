@@ -11,34 +11,37 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent {
         super(injector);
     }
     get typeDoc(): number {
-        return this.getValue('rec.TYPE_DOC');
+        return this.getValue('rec.type');
     }
     get ruleKind(): number {
-        return this.getValue('rec.RULE_KIND');
+        return this.getValue('rec.kind');
     }
-    get isBunchRK(): boolean {
-        return this.getValue('rec.BUNCHS_RK');
+    get link(): boolean {
+        return this.getValue('rec.link');
     }
-    get isBunchWithType(): boolean {
-        return this.getValue('rec.BUNCHS_RK_KIND') === 1;
+    get isBunchRKPD(): boolean {
+        return this.getValue('rec.LinkPD');
     }
-    get adrSubjDoc(): boolean {
-        return this.getValue('rec.ADR_SUBJ_DOC');
+    get isLinkKindWithType(): boolean {
+        return this.getValue('rec.linkKind') === 1;
     }
-    get addressees(): boolean {
-        return this.getValue('rec.ADDRESSEES');
+    get address(): boolean {
+        return this.getValue('rec.address');
     }
-    get files(): boolean {
-        return this.getValue('rec.FILES');
+    get addressee(): boolean {
+        return this.getValue('rec.addressee');
     }
-    get resolutionFiles(): boolean {
-        return this.getValue('rec.RESOLUTION_FILES');
+    get file(): boolean {
+        return this.getValue('rec.file');
     }
-    get items(): boolean {
-        return this.getValue('rec.ITEMS');
+    get taskFile(): boolean {
+        return this.getValue('rec.taskFile');
+    }
+    get item(): boolean {
+        return this.getValue('rec.item');
     }
     get resolution(): boolean {
-        return this.getValue('rec.Resolution');
+        return this.getValue('rec.resolution');
     }
     get orders(): boolean {
         return this.getValue('rec.orders');
@@ -48,5 +51,56 @@ export class SevRulesCardEditComponent extends BaseCardEditComponent {
     }
     get consideration(): boolean {
         return this.getValue('rec.Consideration');
+    }
+    get executors(): boolean {
+        return this.getValue('rec.executors');
+    }
+    get executorFiles(): boolean {
+        return this.getValue('rec.executorFiles');
+    }
+    get editSet(): boolean {
+        return this.getValue('rec.editSet');
+    }
+    get reportExecution(): boolean {
+        return this.getValue('rec.reportExecution');
+    }
+    get executorsProject(): boolean {
+        return this.getValue('rec.executorsProject');
+    }
+    get dateExecutionProject(): boolean {
+        return this.getValue('rec.dateExecutionProject');
+    }
+    get Visa(): boolean {
+        return this.getValue('rec.Visa');
+    }
+    get VisaInfo(): boolean {
+        return this.getValue('rec.VisaInfo');
+    }
+    get signatures(): boolean {
+        return this.getValue('rec.signatures');
+    }
+    get signaturesInfo(): boolean {
+        return this.getValue('rec.signaturesInfo');
+    }
+    get visaForward(): boolean {
+        return this.getValue('rec.visaForward');
+    }
+    get signatureForward(): boolean {
+        return this.getValue('rec.signatureForward');
+    }
+    get forwardingVisa(): boolean {
+        return this.getValue('rec.forwardingVisa');
+    }
+    get forwardingSign(): boolean {
+        return this.getValue('rec.forwardingSign');
+    }
+    get reportVisa(): boolean {
+        return this.getValue('rec.reportVisa');
+    }
+    get reportSign(): boolean {
+        return this.getValue('rec.reportSign');
+    }
+    get infoVisaign(): boolean {
+        return this.getValue('rec.infoVisaign');
     }
 }
