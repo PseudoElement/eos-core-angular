@@ -8,4 +8,5 @@ export interface IDictionaryViewParameters {
     updatingInfo: boolean;
     hasMarked: boolean;
     hideTopMenu: boolean;
+    tableCustomization: boolean;
 }
