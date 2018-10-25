@@ -94,7 +94,7 @@ const RECORD_ACTION_SHOW_ALL_RECORDS: IAction = {
     buttonClass: null
 };
 
-const RECORD_ACTION_SHOW_SETTEINGS: IAction = {
+const RECORD_ACTION_SHOW_SETTINGS: IAction = {
     type: E_RECORD_ACTIONS.tableCustomization,
     group: E_ACTION_GROUPS.common,
     title: 'Настройка отображения',
@@ -130,17 +130,17 @@ const RECORD_ACTION_DELETE_HARD: IAction = {
     buttonClass: null
 };
 
-const RECORD_ACTION_CREATE_ORGANISATION_AGENT: IAction = {
-    type: E_RECORD_ACTIONS.createRepresentative,
-    group: E_ACTION_GROUPS.group,
-    title: 'Создать представителя организации',
-    hint: 'Создать представителя организации',
-    iconClass: 'eos-icon eos-icon-avatar-blue small',
-    disabledIconClass: 'eos-icon eos-icon-avatar-grey small',
-    activeIconClass: null,
-    hoverIconClass: 'eos-icon eos-icon-avatar-dark-blue small',
-    buttonClass: null
-};
+// const RECORD_ACTION_CREATE_ORGANISATION_AGENT: IAction = {
+//     type: E_RECORD_ACTIONS.createRepresentative,
+//     group: E_ACTION_GROUPS.group,
+//     title: 'Создать представителя организации',
+//     hint: 'Создать представителя организации',
+//     iconClass: 'eos-icon eos-icon-avatar-blue small',
+//     disabledIconClass: 'eos-icon eos-icon-avatar-grey small',
+//     activeIconClass: null,
+//     hoverIconClass: 'eos-icon eos-icon-avatar-dark-blue small',
+//     buttonClass: null
+// };
 
 export const RECORD_ACTIONS_NAVIGATION_UP = {
     type: E_RECORD_ACTIONS.navigateUp,
@@ -173,8 +173,8 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_TO_UP ,
     RECORD_ACTION_TO_DOWN ,
     RECORD_ACTION_SHOW_ALL_RECORDS,
-    RECORD_ACTION_CREATE_ORGANISATION_AGENT,
-    RECORD_ACTION_SHOW_SETTEINGS
+    // RECORD_ACTION_CREATE_ORGANISATION_AGENT,
+    RECORD_ACTION_SHOW_SETTINGS
 ];
 
 export const MORE_RECORD_ACTIONS: IAction[] = [
@@ -188,8 +188,8 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_TO_UP,
     RECORD_ACTION_TO_DOWN,
     RECORD_ACTION_SHOW_ALL_RECORDS,
-    RECORD_ACTION_CREATE_ORGANISATION_AGENT,
-    RECORD_ACTION_SHOW_SETTEINGS
+    // RECORD_ACTION_CREATE_ORGANISATION_AGENT,
+    RECORD_ACTION_SHOW_SETTINGS
 ];
 
 export const COMMON_ADD_MENU = [{
