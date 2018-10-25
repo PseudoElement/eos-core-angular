@@ -11,10 +11,11 @@ import { CabinetDictionaryDescriptor } from 'eos-dictionaries/core/cabinet-dicti
 import { DocgroupDictionaryDescriptor } from 'eos-dictionaries/core/docgroup-dictionary-descriptor';
 import {NADZORDICTIONARIES} from '../consts/dictionaries/nadzor.consts';
 import {BroadcastChanelDictionaryDescriptor} from './broadcast-chanel-dictionary-descriptor';
-import {SevRulesDictionaryDescriptor} from './sev-rules-dictionary-descriptor';
 import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
 import {SevCollisionsDictionaryDescriptor} from './sev-collisions-dictionary-descriptor';
+import {NadzorDictionaryDescriptor} from './nadzor-dictionary-descriptor';
 import {EosSevRulesService} from '../services/eos-sev-rules.service';
+import {SevRulesDictionaryDescriptor} from './sev-rules-dictionary-descriptor';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -92,6 +93,18 @@ export class DictionaryDescriptorService {
                         res = new SevCollisionsDictionaryDescriptor(descr, this.apiSrv);
                         break;
                 }
+
+                // Added for parent be a Nadzor
+                if (!res) {
+                    for (const d of NADZORDICTIONARIES) {
+                        if (d.id && d.id === descr.id) {
+                            res = new NadzorDictionaryDescriptor(descr, this.apiSrv);
+                            break;
+                        }
+                    }
+                }
+
+
 
                 if (!res) {
                     switch (descr.dictType) {
