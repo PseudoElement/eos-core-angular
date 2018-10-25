@@ -74,7 +74,7 @@ const childrenDictionariesComponent = [{
 
 const routes: Routes = [{
     path: 'spravochniki/nadzor',
-    data: { title: 'Справочники', showInBreadcrumb: true },
+    data: { title: 'Надзор', showInBreadcrumb: true },
     canActivate: [AuthorizedGuard],
     children: childrenDictionariesComponent,
     }, {
