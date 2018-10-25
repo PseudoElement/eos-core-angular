@@ -13,6 +13,8 @@ import { EosUtils } from 'eos-common/core/utils';
 import {EosDictionary} from '../core/eos-dictionary';
 import {DictionaryDescriptorService} from '../core/dictionary-descriptor.service';
 
+const ITEM_WIDTH_FOR_NAN = 100;
+
 @Component({
     selector: 'eos-node-list',
     templateUrl: 'node-list.component.html',
@@ -252,7 +254,7 @@ export class NodeListComponent implements OnInit, OnDestroy {
         });
         if (this.customFields) {
             this.customFields.forEach((_f) => {
-                const itemWidth = _f.length;
+                const itemWidth = _f.length ? _f.length : ITEM_WIDTH_FOR_NAN;
                 length[_f.key] = itemWidth;
                 fullWidth += itemWidth;
             });
