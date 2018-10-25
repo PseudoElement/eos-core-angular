@@ -2384,6 +2384,27 @@ const commonMeta = {
         readonly: [],
         relations: []
     },
+    NP_RESHEN_CL: {
+        pk: 'DUE',
+        properties: {
+            ISN_NODE: _t.i,
+            DUE: _t.s,
+            MAXDUE: _t.s,
+            LAYER: _t.i,
+            IS_NODE: _t.i,
+            ISN_HIGH_NODE: _t.i,
+            CLASSIF_NAME: _t.s,
+            PROTECTED: _t.i,
+            DELETED: _t.i,
+            ID_GAS_PS: _t.s,
+            NOTE: _t.s,
+            WEIGHT: _t.i
+        },
+        readonly: ['PROTECTED', 'ID_GAS_PS'],
+        relations: [
+            { name: 'PARENT_Ref', __type: 'NP_RESHEN_CL', sf: 'ISN_HIGH_NODE', tf: 'ISN_NODE' }
+        ]
+    }
 };
 
 export function commonMergeMeta(meta: any) {

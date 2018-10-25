@@ -3866,6 +3866,12 @@ export interface NP_OB_OSNOV_CL extends ILinearCL {
     USE_NP: boolean;
 }
 
+export interface NP_RESHEN_CL extends IHierCL {
+    LAYER: number;
+    WEIGHT: number;
+    MAXDUE: string;
+}
+
 export interface SYS_PARMS extends IEnt {
     ISN_USER_OWNER: number;
     DBMS: string;
