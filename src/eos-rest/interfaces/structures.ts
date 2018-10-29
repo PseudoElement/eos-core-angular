@@ -3882,3 +3882,16 @@ export interface CUSTOM_STORAGE_ID extends IEnt {
 
     CUSTOM_STORAGE_List: CUSTOM_STORAGE[];
 }
+
+export interface NP_RESHEN_CL extends IHierCL {
+    LAYER: number;
+    WEIGHT: number;
+    MAXDUE: string;
+}
+
+export interface NP_SUD_RESHEN_TYPE_CL extends IHierCL {
+    LAYER: number;
+    WEIGHT: number;
+    MAXDUE: string;
+}
+

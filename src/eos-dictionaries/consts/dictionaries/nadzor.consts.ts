@@ -28,7 +28,9 @@ import {NP_SUD_TYPE_CL} from './nadzor/sud-type.consts';
 import {NP_SUDIM_CL} from './nadzor/sudim.consts';
 import {IDictionaryDescriptor} from '../../interfaces';
 import {LINEAR_TEMPLATE} from './_linear-template';
+import {NP_SUD_RESHEN_TYPE_CL} from './nadzor/reshen-suda.const';
 import {NP_RESHEN_CL} from './nadzor/reshen.consts';
+import {NP_OSN_PRED_DELA_CL} from './nadzor/osn-pred-dela';
 
 export const NADZORDICTIONARIES = [
     NP_ADDRESS_VID_CL,
@@ -59,7 +61,9 @@ export const NADZORDICTIONARIES = [
     NP_SUD_TYPE_CL,
     NP_SUDIM_CL,
     NP_UDOST_TYPE_CL,
-    NP_RESHEN_CL
+    NP_SUD_RESHEN_TYPE_CL,
+    NP_RESHEN_CL,
+    NP_OSN_PRED_DELA_CL,
 ];
 
 export const NADZOR: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {

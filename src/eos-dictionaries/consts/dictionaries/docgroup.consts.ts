@@ -36,135 +36,136 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         type: 'string',
         title: 'ID',
         length: 248,
-    },  Object.assign({}, COMMON_FIELD_CODE, {lenght: 10}),
-        Object.assign({}, COMMON_FIELD_NOTE, {lenght: 100}),
-        Object.assign({}, COMMON_FIELD_NAME, {lenght: 100}),
-        Object.assign({}, COMMON_FIELD_FULLNAME, {lenght: 100}),
-        {
-            key: 'IS_COPYCOUNT',
-            title: 'Нумерация копий',
-            type: 'boolean',
-        }, {
-            key: 'RC_TYPE',
-            title: 'Вид РК',
-            type: 'select',
-            options: RK_TYPE_OPTIONS,
-        }, {
-            key: 'DOCGROUP_INDEX',
-            title: 'Индекс',
-            type: 'string',
-        }, {
-            key: 'DOCNUMBER_FLAG',
-            title: 'Номерообразование',
-            type: 'boolean',
-        }, {
-            key: 'SHABLON',
-            title: 'Шаблон',
-            type: 'string',
-            required: true,
-        }, {
-            key: 'EDS_FLAG',
-            // title: 'Требуется ЭП',
-            title: 'ЭП',
-            type: 'boolean',
-        }, {
-            key: 'ENCRYPT_FLAG',
-            // title: 'Требуется шифрование',
-            title: 'шифрование',
-            type: 'boolean',
-        }, {
-            key: 'TEST_UNIQ_FLAG',
-            title: 'Проверка уникальности',
-            type: 'boolean',
-            forNode: true
-        }, {
-            key: 'PRJ_NUM_FLAG',
-            title: 'Проекты документов',
-            type: 'boolean',
-        }, {
-            key: 'PRJ_SHABLON',
-            title: 'Шаблон номера проекта документа',
-            type: 'string',
-            required: true,
-        }, {
-            key: 'PRJ_WEIGHT',
-            title: 'Вес в списке для проектов',
-            type: 'number',
-        }, {
-            key: 'PRJ_AUTO_REG',
-            title: 'Авторегистрация проекта',
-            type: 'boolean',
-            forNode: true,
-        }, {
-            key: 'PRJ_APPLY_EDS',
-            // title: 'Применять ЭП подписей',
-            title: 'подписей',
-            type: 'boolean',
-            forNode: true,
-        }, {
-            key: 'PRJ_APPLY2_EDS',
-            // title: 'Применять ЭП виз',
-            title: 'виз',
-            type: 'boolean',
-            forNode: true,
-        }, {
-            key: 'PRJ_APPLY_EXEC_EDS',
-            // title: 'Применять ЭП исполнителей',
-            title: 'исполнителей',
-            type: 'boolean',
-            forNode: true,
-        }, {
-            key: 'PRJ_DEL_AFTER_REG',
-            title: 'Удалять РКПД после регистрации',
-            type: 'boolean',
-            forNode: true,
-        }, {
-            key: 'PRJ_TEST_UNIQ_FLAG',
-            title: 'Проверка уникальности номера проекта',
-            type: 'boolean',
-            forNode: true,
-        }, {
-            key: 'E_DOCUMENT',
-            title: 'Оригинал в эл.виде',
-            type: 'boolean',
-        }, {
-            key: 'ACCESS_MODE',
-            title: 'Конфиденциальность',
-            type: 'number',
-        }, {
-            key: 'ACCESS_MODE_FIXED',
-            title: 'Без редактирования',
-            type: 'boolean',
-        }, {
-            key: 'INITIATIVE_RESOLUTION',
-            title: 'Инициативные поручения',
-            type: 'boolean',
-            forNode: true,
-        }, {
-            key: 'UNKNOWN_1',
-            title: 'РК перс. доступа',
-            type: 'boolean',
-        }, {
-            key: 'AR_DOCGROUP_List',
-            title: 'список используемых для этой группы документов дополнительных реквизитов',
-            type: 'AR_DOCGROUP[]',
-        }, {
-            key: 'DG_FILE_CONSTRAINT_List',
-            title: 'список используемых для этой группы документов ограничений на файлы',
-            type: 'DG_FILE_CONSTRAINT[]',
-        }, {
-            key: 'DOC_DEFAULT_VALUE_List',
-            title: 'список используемых для этой группы документов дополнительных реквизитов РК',
-            type: 'DOC_DEFAULT_VALUE[]',
-        }, {
-            key: 'PRJ_DEFAULT_VALUE_List',
-            title: 'список используемых для этой группы документов правил заполнения реквизитов РКПД',
-            type: 'PRJ_DEFAULT_VALUE[]',
-        }, {
-            key: 'SHABLON_DETAIL_List',
-            title: 'список используемых для этой группы документов ограничений шаблонов номерообразования',
-            type: 'SHABLON_DETAIL[]',
-        }]),
+    },
+    Object.assign({}, COMMON_FIELD_CODE, {lenght: 10}),
+    Object.assign({}, COMMON_FIELD_NOTE, {lenght: 100}),
+    Object.assign({}, COMMON_FIELD_NAME, {lenght: 100}),
+    Object.assign({}, COMMON_FIELD_FULLNAME, {lenght: 100}),
+    {
+        key: 'IS_COPYCOUNT',
+        title: 'Нумерация копий',
+        type: 'boolean',
+    }, {
+        key: 'RC_TYPE',
+        title: 'Вид РК',
+        type: 'select',
+        options: RK_TYPE_OPTIONS,
+    }, {
+        key: 'DOCGROUP_INDEX',
+        title: 'Индекс',
+        type: 'string',
+    }, {
+        key: 'DOCNUMBER_FLAG',
+        title: 'Номерообразование',
+        type: 'boolean',
+    }, {
+        key: 'SHABLON',
+        title: 'Шаблон',
+        type: 'string',
+        required: true,
+    }, {
+        key: 'EDS_FLAG',
+        // title: 'Требуется ЭП',
+        title: 'ЭП',
+        type: 'boolean',
+    }, {
+        key: 'ENCRYPT_FLAG',
+        // title: 'Требуется шифрование',
+        title: 'шифрование',
+        type: 'boolean',
+    }, {
+        key: 'TEST_UNIQ_FLAG',
+        title: 'Проверка уникальности',
+        type: 'boolean',
+        forNode: true
+    }, {
+        key: 'PRJ_NUM_FLAG',
+        title: 'Проекты документов',
+        type: 'boolean',
+    }, {
+        key: 'PRJ_SHABLON',
+        title: 'Шаблон номера проекта документа',
+        type: 'string',
+        required: true,
+    }, {
+        key: 'PRJ_WEIGHT',
+        title: 'Вес в списке для проектов',
+        type: 'number',
+    }, {
+        key: 'PRJ_AUTO_REG',
+        title: 'Авторегистрация проекта',
+        type: 'boolean',
+        forNode: true,
+    }, {
+        key: 'PRJ_APPLY_EDS',
+        // title: 'Применять ЭП подписей',
+        title: 'подписей',
+        type: 'boolean',
+        forNode: true,
+    }, {
+        key: 'PRJ_APPLY2_EDS',
+        // title: 'Применять ЭП виз',
+        title: 'виз',
+        type: 'boolean',
+        forNode: true,
+    }, {
+        key: 'PRJ_APPLY_EXEC_EDS',
+        // title: 'Применять ЭП исполнителей',
+        title: 'исполнителей',
+        type: 'boolean',
+        forNode: true,
+    }, {
+        key: 'PRJ_DEL_AFTER_REG',
+        title: 'Удалять РКПД после регистрации',
+        type: 'boolean',
+        forNode: true,
+    }, {
+        key: 'PRJ_TEST_UNIQ_FLAG',
+        title: 'Проверка уникальности номера проекта',
+        type: 'boolean',
+        forNode: true,
+    }, {
+        key: 'E_DOCUMENT',
+        title: 'Оригинал в эл.виде',
+        type: 'boolean',
+    }, {
+        key: 'ACCESS_MODE',
+        title: 'Конфиденциальность',
+        type: 'number',
+    }, {
+        key: 'ACCESS_MODE_FIXED',
+        title: 'Без редактирования',
+        type: 'boolean',
+    }, {
+        key: 'INITIATIVE_RESOLUTION',
+        title: 'Инициативные поручения',
+        type: 'boolean',
+        forNode: true,
+    }, {
+        key: 'UNKNOWN_1',
+        title: 'РК перс. доступа',
+        type: 'boolean',
+    }, {
+        key: 'AR_DOCGROUP_List',
+        title: 'список используемых для этой группы документов дополнительных реквизитов',
+        type: 'AR_DOCGROUP[]',
+    }, {
+        key: 'DG_FILE_CONSTRAINT_List',
+        title: 'список используемых для этой группы документов ограничений на файлы',
+        type: 'DG_FILE_CONSTRAINT[]',
+    }, {
+        key: 'DOC_DEFAULT_VALUE_List',
+        title: 'список используемых для этой группы документов дополнительных реквизитов РК',
+        type: 'DOC_DEFAULT_VALUE[]',
+    }, {
+        key: 'PRJ_DEFAULT_VALUE_List',
+        title: 'список используемых для этой группы документов правил заполнения реквизитов РКПД',
+        type: 'PRJ_DEFAULT_VALUE[]',
+    }, {
+        key: 'SHABLON_DETAIL_List',
+        title: 'список используемых для этой группы документов ограничений шаблонов номерообразования',
+        type: 'SHABLON_DETAIL[]',
+    }]),
     treeFields: ['CLASSIF_NAME'],
     editFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME', 'NOTE', 'IS_COPYCOUNT', 'ACCESS_MODE_FIXED', 'E_DOCUMENT', 'PRJ_TEST_UNIQ_FLAG',
         'PRJ_DEL_AFTER_REG', 'PRJ_APPLY_EXEC_EDS', 'PRJ_APPLY2_EDS', 'PRJ_APPLY_EDS', 'PRJ_AUTO_REG', 'PRJ_SHABLON', 'PRJ_NUM_FLAG',

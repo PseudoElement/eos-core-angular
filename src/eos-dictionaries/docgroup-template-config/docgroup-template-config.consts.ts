@@ -17,6 +17,8 @@ export const DG_TPL_COMB1 = { key: '{@2}', title: 'Сводобный + поря
 export const DG_TPL_COMB2 = { key: '{1#}', title: 'Спец. элемент первичного документа' };
 export const DG_TPL_COMB3 = { key: '{2#}', title: 'Спец. элемент повторного документа' };
 export const DG_TPL_COMB4 = { key: '{3#}', title: 'Специальный элемент ответов' };
+export const DG_TPL_NUM_NP = { key: '{N}', title: 'Номер НП' };
+
 
 export const VALID_TEMPLATE_EXPR = /\{2|A|B|C|2#|3#|@|@2\}/;
 export const VALID_PRJ_TEMPLATE_EXPR = /\{2|@|@2\}/;
@@ -43,6 +45,7 @@ export const DOC_TEMPLATE_ELEMENTS = [
     DG_TPL_COMB2,
     DG_TPL_COMB3,
     DG_TPL_COMB4,
+    DG_TPL_NUM_NP,
 ];
 
 export const PRJ_TEMPLATE_ELEMENTS = [
