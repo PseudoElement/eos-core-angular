@@ -35,6 +35,11 @@
             color: $disabled-color-main-theme;
         }
     }
+
+    .title-item:hover {
+        color: $active-field-color-main-theme;
+    }
+
 }
 
 @media(max-width: 1599px) {

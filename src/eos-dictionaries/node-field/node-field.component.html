@@ -2,7 +2,7 @@
      class="node-field"
      id="{{field.foreignKey}}"
      [ngClass]="{'no-padding': node.isNode && (field.key === 'CLASSIF_NAME' || field.foreignKey === 'CLASSIF_NAME')}"
-     [tooltip]="node.title" placement="bottom" containerClass="tooltip-info" container="body">
+     [tooltip]="this.tooltipValue" placement="bottom" containerClass="tooltip-info" container="body">
     <ng-container [ngSwitch]="field.type">
         <div *ngSwitchCase="types.boolean"
             class="node-field-checkbox">

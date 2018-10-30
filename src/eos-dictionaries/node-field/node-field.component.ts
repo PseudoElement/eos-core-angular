@@ -33,4 +33,11 @@ export class NodeFieldComponent {
     decodeDictionary(): string {
         return this.node.getFieldValue(this.field);
     }
+
+    get tooltipValue(): string {
+        if (this.field.key === 'CODE') {
+            return '';
+        }
+        return this.field.value;
+    }
 }

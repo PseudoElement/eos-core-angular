@@ -32,7 +32,9 @@ import {NP_SUD_RESHEN_TYPE_CL} from './nadzor/reshen-suda.const';
 import {NP_RESHEN_CL} from './nadzor/reshen.consts';
 import {NP_OSN_PRED_DELA_CL} from './nadzor/osn-pred-dela';
 
-export const NADZORDICTIONARIES = [
+
+
+export const NADZORDICTIONARIES_LINEAR = [
     NP_ADDRESS_VID_CL,
     NP_CODEX_TYPE_CL,
     NP_FIG_ROLE_CL,
@@ -61,10 +63,15 @@ export const NADZORDICTIONARIES = [
     NP_SUD_TYPE_CL,
     NP_SUDIM_CL,
     NP_UDOST_TYPE_CL,
+];
+
+export const NADZORDICTIONARIES_TREE = [
     NP_SUD_RESHEN_TYPE_CL,
     NP_RESHEN_CL,
     NP_OSN_PRED_DELA_CL,
 ];
+
+export const NADZORDICTIONARIES = NADZORDICTIONARIES_LINEAR . concat(NADZORDICTIONARIES_TREE);
 
 export const NADZOR: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'nadzor',

@@ -11,11 +11,11 @@ export const NP_RESHEN_CL: ITreeDictionaryDescriptor = {
     visible: true,
     iconName: '',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
-        'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
-        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes'],
+        'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'removeHard', 'tableCustomization',
+        'edit', 'view', 'remove', 'userOrder', 'showAllSubnodes', 'restore'],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
-    searchConfig: [SEARCH_TYPES.quick],
+    searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
     fields: COMMON_FIELDS.concat([{
         key: 'DUE',
         type: 'string',
@@ -38,6 +38,11 @@ export const NP_RESHEN_CL: ITreeDictionaryDescriptor = {
         key: 'LAYER',
         title: 'LAYER',
         type: 'number'
+    }, {
+        key: 'ID_GAS_PS',
+        type: 'string',
+        title: 'ID ГАС ПС',
+        length: 10,
     },
         Object.assign({}, COMMON_FIELD_NAME, {
             title: 'Наименование',
@@ -49,12 +54,12 @@ export const NP_RESHEN_CL: ITreeDictionaryDescriptor = {
             title: 'IS_NODE',
             type: 'number'
         }]),
-    treeFields: ['CLASSIF_NAME', 'NOTE'],
-    editFields: ['CLASSIF_NAME', 'NOTE'],
+    treeFields: ['CLASSIF_NAME', ],
+    editFields: ['CLASSIF_NAME', 'ID_GAS_PS', 'NOTE'],
     searchFields: ['CLASSIF_NAME'],
-    fullSearchFields: ['CLASSIF_NAME', 'NOTE'],
-    quickViewFields: ['CLASSIF_NAME', 'NOTE'],
+    fullSearchFields: ['CLASSIF_NAME', 'NOTE', ],
+    quickViewFields: ['CLASSIF_NAME', 'NOTE',  ],
     shortQuickViewFields: ['CLASSIF_NAME'],
-    listFields: ['CLASSIF_NAME', 'NOTE'],
-    allVisibleFields: [],
+    listFields: ['CLASSIF_NAME', , 'NOTE', ],
+    allVisibleFields: ['ID_GAS_PS'],
 };

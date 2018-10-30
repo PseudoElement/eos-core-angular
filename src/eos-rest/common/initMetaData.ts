@@ -2400,9 +2400,9 @@ const commonMeta = {
             NOTE: _t.s,
             WEIGHT: _t.i
         },
-        readonly: ['PROTECTED', 'ID_GAS_PS'],
+        readonly: ['PROTECTED'],
         relations: [
-            { name: 'PARENT_Ref', __type: 'NP_RESHEN_CL', sf: 'ISN_HIGH_NODE', tf: 'ISN_NODE' }
+            { name: 'PARENT_Ref', __type: 'NP_RESHEN_CL', sf: 'DUE', tf: 'DUE' }
         ]
     },
     NP_SUD_RESHEN_TYPE_CL: {
@@ -2444,9 +2444,10 @@ const commonMeta = {
             NOTE: _t.s
         },
         readonly: [
-            // 'PROTECTED'
+            'PROTECTED'
         ],
         relations: [
+            // { name: 'PARENT_Ref', __type: 'NP_OSN_PRED_DELA_CL', sf: 'ISN_NODE', tf: 'ISN_HIGH_NODE' }
             { name: 'PARENT_Ref', __type: 'NP_OSN_PRED_DELA_CL', sf: 'DUE', tf: 'DUE' }
         ]
 

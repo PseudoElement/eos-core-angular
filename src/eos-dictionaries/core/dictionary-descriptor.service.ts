@@ -9,11 +9,11 @@ import { DepartmentDictionaryDescriptor } from 'eos-dictionaries/core/department
 import { OrganizationDictionaryDescriptor } from 'eos-dictionaries/core/organization-dictionary-descriptor';
 import { CabinetDictionaryDescriptor } from 'eos-dictionaries/core/cabinet-dictionary-descriptor';
 import { DocgroupDictionaryDescriptor } from 'eos-dictionaries/core/docgroup-dictionary-descriptor';
-import {NADZORDICTIONARIES} from '../consts/dictionaries/nadzor.consts';
+import {NADZORDICTIONARIES, NADZORDICTIONARIES_LINEAR, NADZORDICTIONARIES_TREE} from '../consts/dictionaries/nadzor.consts';
 import {BroadcastChanelDictionaryDescriptor} from './broadcast-chanel-dictionary-descriptor';
 import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
 import {SevCollisionsDictionaryDescriptor} from './sev-collisions-dictionary-descriptor';
-import {NadzorDictionaryDescriptor} from './nadzor-dictionary-descriptor';
+import {NadzorLinearDictionaryDescriptor, NadzorTreeDictionaryDescriptor} from './nadzor-dictionary-descriptor';
 import {EosSevRulesService} from '../services/eos-sev-rules.service';
 import {SevRulesDictionaryDescriptor} from './sev-rules-dictionary-descriptor';
 
@@ -96,9 +96,17 @@ export class DictionaryDescriptorService {
 
                 // Added for parent be a Nadzor
                 if (!res) {
-                    for (const d of NADZORDICTIONARIES) {
+                    for (const d of NADZORDICTIONARIES_TREE) {
                         if (d.id && d.id === descr.id) {
-                            res = new NadzorDictionaryDescriptor(descr, this.apiSrv);
+                            res = new NadzorTreeDictionaryDescriptor(descr, this.apiSrv);
+                            break;
+                        }
+                    }
+                }
+                if (!res) {
+                    for (const d of NADZORDICTIONARIES_LINEAR) {
+                        if (d.id && d.id === descr.id) {
+                            res = new NadzorLinearDictionaryDescriptor(descr, this.apiSrv);
                             break;
                         }
                     }
