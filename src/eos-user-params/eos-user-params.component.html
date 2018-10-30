@@ -20,7 +20,7 @@
 <nav
     *ngIf="!(pageId === 'base-param' && isNewUser)"
     class="nav-accordion"
-    [ngClass]="{isShow: !isShowAccordion}"
+    [ngClass]="{isShow: isShowAccordion}"
 >
     <accordion>
         <accordion-group

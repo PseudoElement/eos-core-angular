@@ -21,6 +21,7 @@ import { UserParamsService } from './shared/services/user-params.service';
 import { ParamEmailAddressComponent } from './email-address/email-address.component';
 import { ParamsRightsDeloComponent } from './rights-delo/rights-delo.component';
 import { ParamsBaseParamComponent } from './base-param/base-param.component';
+import { InputParamControlService } from './shared/services/input-param-control.service';
 
 @NgModule({
     declarations: [
@@ -50,7 +51,8 @@ import { ParamsBaseParamComponent } from './base-param/base-param.component';
     providers: [
         UserParamApiSrv,
         UserParamsDescriptorSrv,
-        UserParamsService
+        UserParamsService,
+        InputParamControlService,
     ]
 })
 export class EosUserParamsModule {}

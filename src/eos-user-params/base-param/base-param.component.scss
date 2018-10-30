@@ -1,4 +1,8 @@
 .base-param__wrapper {
+    eos-dynamic-input {
+        font-size: 14px;
+    }
+
     width: 800px;
     min-height: 200px; // временно
     margin: 0 auto;
@@ -9,6 +13,18 @@
 
         .base-param__row {
             display: flex;
+
+            &.flex-end {
+                justify-content: flex-end;
+            }
+
+            .auth-ceck {
+                margin-left: 20px;
+
+                .form-group {
+                    margin-top: 30px;
+                }
+            }
         }
     }
 }

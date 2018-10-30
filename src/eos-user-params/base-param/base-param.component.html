@@ -1,4 +1,4 @@
-<div class="base-param__wrapper">
+<div class="base-param__wrapper" *ngIf="!isLoading">
     <eos-user-header
         [title]="title"
         [statusBtnSub]="stateHeaderSubmit"
@@ -7,8 +7,37 @@
         (cancelForm)="cancel()"
     ></eos-user-header>
     <div class="base-param__main">
-        <div class="base-param__row">
-            <button (click)="testClick()">test</button>
+        <div class="base-param__row flex-end">
+            <eos-dynamic-input
+                [input]="inputs['CLASSIF_NAME']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['USERTYPE']"
+                [form]="form"
+                [readonly]="false"
+                class="auth-ceck"
+            ></eos-dynamic-input>
         </div>
+        <div class="base-param__row">
+            <eos-dynamic-input
+                [input]="inputs['PASSWORD_DATE']"
+                [form]="form"
+                [readonly]="inputs['PASSWORD_DATE'].readonly"
+            ></eos-dynamic-input>
+        </div>
+        <!-- <div class="base-param__row">
+            <eos-dynamic-input
+                [input]="inputs['PASSWORD_DATE']"
+                [form]="form"
+                [readonly]="inputs['PASSWORD_DATE'].readonly"
+            ></eos-dynamic-input>
+        </div> -->
     </div>
+    <button (click)="testClick()">test</button>
+</div>
+
+<div class="spinner-wrapper" *ngIf="isLoading">
+    <eos-spinner [size]="'lg'"></eos-spinner>
 </div>

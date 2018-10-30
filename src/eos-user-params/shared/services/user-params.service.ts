@@ -13,7 +13,7 @@ export class UserParamsService {
         }
         return null;
     }
-    get curentUser () {
+    get curentUser (): USER_CL {
         return this._userContext;
     }
     get userContextParams () {
@@ -24,11 +24,7 @@ export class UserParamsService {
     }
     get hashUserContext () {
         if (this._userContext) {
-            const hash: any = {};
-            this.userContextParams.forEach(item => {
-                hash[item.PARM_NAME] = item.PARM_VALUE;
-            });
-            return hash;
+            return this._userContext['USER_PARMS_HASH'];
         }
         return null;
     }
@@ -54,6 +50,7 @@ export class UserParamsService {
         return this._pipSrv.getData<USER_CL>(query)
         .then((user: USER_CL[]) => {
             this._userContext = user[0];
+            this._createHash();
             this._storageSrv.setItem('userContextParam', this.userContextId, true);
             return true;
         })
@@ -64,6 +61,32 @@ export class UserParamsService {
     }
     clearIdStorage() {
         this._storageSrv.removeItem('userContextParam');
+    }
+
+    getSysParms(): Promise<any> {
+        return this._pipSrv.getData({
+            'USER_PARMS': {
+                criteries: {
+                    ISN_USER_OWNER: '-99',
+                    PARM_NAME: 'CATEGORIES_FOR_USER||CHANGE_PASS'
+                }
+            }
+        })
+        .then((data) => {
+            const h = {};
+            data.forEach(p => {
+                h[p['PARM_NAME']] = p;
+            });
+            return new Promise((r) => {
+                setTimeout(() => {
+                    r(h);
+                }, 0);
+            });
+            // return h;
+        })
+        .catch(err => {
+            this._errorHandler(err);
+        });
     }
 
     private _createRec (req, due?) {
@@ -86,6 +109,12 @@ export class UserParamsService {
             type: 'danger',
             title: '',
             msg: errMessage
+        });
+    }
+    private _createHash() {
+        this._userContext['USER_PARMS_HASH'] = {};
+        this.userContextParams.forEach(item => {
+            this._userContext['USER_PARMS_HASH'][item['PARM_NAME']] = item.PARM_VALUE;
         });
     }
 }

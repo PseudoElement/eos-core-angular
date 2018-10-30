@@ -6,7 +6,7 @@ export class WaitClassifService {
             return 'classif';
         };
     }
-    openClassif(params: IOpenClessifParams): Promise<String> { // 0.2SD.2F2HW.
+    openClassif(params: IOpenClessifParams): Promise<String> { // 0.2SV.2T1.
         const url = this._prepareUrl(params);
         const w = window.open(url, 'name', 'left=10,top=200,width=1000,height=500');
         return new Promise((resolve, reject) => {
