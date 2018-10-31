@@ -7,6 +7,7 @@
         (cancelForm)="cancel()"
     ></eos-user-header>
     <div class="base-param__main">
+        <!-- Логин и Аутентификация с помощью ОС -->
         <div class="base-param__row flex-end">
             <eos-dynamic-input
                 [input]="inputs['CLASSIF_NAME']"
@@ -20,6 +21,7 @@
                 class="auth-ceck"
             ></eos-dynamic-input>
         </div>
+        <!-- Дата смены пароля и поля для пароля -->
         <div class="base-param__row">
             <eos-dynamic-input
                 [input]="inputs['PASSWORD_DATE']"
@@ -27,11 +29,15 @@
                 [readonly]="inputs['PASSWORD_DATE'].readonly"
             ></eos-dynamic-input>
         </div>
+        <!-- технический пользователь -->
         <div class="base-param__row">
             <eos-dynamic-input
                 [input]="controls['teсhUser']"
                 [form]="formControls"
                 [readonly]="controls['teсhUser'].readonly"
+                tooltip="к техническим пользователям невозможно привязать должностное лицо"
+                placement="bottom"
+                containerClass="tooltip-info"
             ></eos-dynamic-input>
         </div>
     </div>

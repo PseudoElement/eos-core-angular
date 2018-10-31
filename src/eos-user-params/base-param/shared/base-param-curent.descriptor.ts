@@ -20,12 +20,14 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
         fields.forEach((f: IInputParamControl) => {
             if (f['key'] === 'teсhUser') {
                 f['disabled'] = true;
+                f['readonly'] = true;
             }
         });
     }
     private _prepareDataForForm (field: IInputParamControl) {
         if (field['key'] === 'PASSWORD_DATE') {
             const pass = this._userParamSrv.hashUserContext['CHANGE_PASS'];
+            field['disabled'] = pass !== 'YES' ? true : false;
             field['readonly'] = pass !== 'YES' ? true : false;
         }
         if (field.controlType === E_FIELD_TYPE.boolean) {
