@@ -4,11 +4,12 @@ import { USER_CL } from 'eos-rest';
 // import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-params/shared/consts/user-param.consts';
-import { BASE_PARAM_INPUTS } from 'eos-user-params/shared/consts/base-param.consts';
+import { BASE_PARAM_INPUTS, BASE_PARAM_CONTROL_INPUT } from 'eos-user-params/shared/consts/base-param.consts';
 import { FormGroup } from '@angular/forms';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { IInputParamControl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+import { BaseParamCurentDescriptor } from './shared/base-param-curent.descriptor';
+import { BaseParamNewDescriptor } from './shared/base-param-new.descriptor';
 
 @Component({
     selector: 'eos-params-base-param',
@@ -20,11 +21,19 @@ export class ParamsBaseParamComponent implements OnInit {
     title: string = 'Новый пользователь';
     curentUser: USER_CL;
     stateHeaderSubmit: boolean = false;
+
     inputFields: IInputParamControl[] = BASE_PARAM_INPUTS;
+    controlField: IInputParamControl[] = BASE_PARAM_CONTROL_INPUT;
     inputs;
+    controls;
     form: FormGroup;
+    formControls: FormGroup;
     isLoading: Boolean = true;
     private _sysParams;
+    private _descSrv;
+    get sysParams() {
+        return this._sysParams;
+    }
     constructor(
         private _inputCtrlSrv: InputParamControlService,
         private _waitClassifSrv: WaitClassifService,
@@ -32,26 +41,26 @@ export class ParamsBaseParamComponent implements OnInit {
         private _userParamSrv: UserParamsService
     ) {}
     ngOnInit () {
-        this._userParamSrv.getSysParms()
-        .then(sysData => {
-            this._sysParams = sysData;
-            if (!this.newUser) {
-                this.curentUser = this._userParamSrv.curentUser;
-                this.title = `${this.curentUser['SURNAME_PATRON']} (${this.curentUser['CLASSIF_NAME']})`;
-                // console.log(this.curentUser);
-                this.inputFields.forEach((f: IInputParamControl) => {
-                    f['value'] = this._prepareDataForForm(f);
-                });
-                // console.log(this.inputFields);
-            }
-            this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
-            // console.log('inputs', this.inputs);
-            this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
-            this.isLoading = false;
-            this.form.valueChanges.subscribe((data) => {
-                const date: Date = data['PASSWORD_DATE'];
-                console.log(this._dateToString(date) === (this.curentUser['PASSWORD_DATE'].toString()));
-            });
+        if (!this.newUser) {
+            this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
+            this.curentUser = this._userParamSrv.curentUser;
+            this.title = `${this.curentUser['SURNAME_PATRON']} (${this.curentUser['CLASSIF_NAME']})`;
+        } else {
+            this._descSrv = new BaseParamNewDescriptor(this._userParamSrv);
+        }
+
+        this._descSrv.fillValueInputField(this.inputFields);
+        this._descSrv.fillValueControlField(this.controlField);
+
+        this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
+        this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
+
+        this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
+        this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
+
+        this.isLoading = false;
+        this.form.valueChanges.subscribe((data) => {
+            console.log(data);
         });
     }
     submit() {
@@ -59,7 +68,6 @@ export class ParamsBaseParamComponent implements OnInit {
     }
     cancel() {
         console.log('cancel');
-        // this._apiSrv.setData(this.data);
     }
     showDepartment() {
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
@@ -73,17 +81,6 @@ export class ParamsBaseParamComponent implements OnInit {
 
     testClick() {
         console.log('test');
-        this._userParamSrv.getSysParms();
-    }
-    private _prepareDataForForm (field: IInputParamControl) {
-        if (field['key'] === 'PASSWORD_DATE') {
-            const pass = this._sysParams['CHANGE_PASS']['PARM_VALUE'];
-            field['readonly'] = pass !== 'YES' ? true : false;
-        }
-        if (field.controlType === E_FIELD_TYPE.boolean) {
-            return !!this.curentUser[field['key']];
-        }
-        return this.curentUser[field['key']];
     }
     // private _prepareDataForDb (field: IBaseInput) {
     //     if (field.controlType === 'checkbox') {
@@ -92,10 +89,4 @@ export class ParamsBaseParamComponent implements OnInit {
     //     return this.curentUser[field['key']];
     // }
 
-    private _dateToString(date: Date) { // 2018-10-29T00:00:00
-        return `${date.getFullYear()}-${this._pad(date.getMonth() + 1)}-${this._pad(date.getDate())}T00:00:00`;
-    }
-    private _pad(n: number): string {
-        return n < 10 ? '0' + n : '' + n;
-    }
 }

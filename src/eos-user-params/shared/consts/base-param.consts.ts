@@ -73,4 +73,30 @@ export const BASE_PARAM_INPUTS: IInputParamControl[] = [
     // },
 ];
 
-export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [];
+export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: 'teсhUser',
+        label: 'Технический пользователь',
+        // readonly: true,
+        value: false,
+    },
+    {
+        controlType: E_FIELD_TYPE.string,
+        key: 'pass',
+        label: 'ПАРОЛЬ',
+        required: true,
+        // pattern: /\S+/,
+        // forNode: false,
+        value: '',
+    },
+    {
+        controlType: E_FIELD_TYPE.string,
+        key: 'passRepeated',
+        label: 'ПОВТОРИТЕ ПАРОЛЬ',
+        required: true,
+        // pattern: /\S+/,
+        // forNode: false,
+        value: '',
+    },
+];

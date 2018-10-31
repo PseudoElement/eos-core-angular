@@ -32,13 +32,16 @@ export class UserParamsComponent implements OnDestroy, OnInit {
         this._route.queryParams
             .takeUntil(this.ngUnsubscribe)
             .subscribe(qParam => {
-                if (qParam['createNewUser']) {
-                    this._userParamService.clearIdStorage();
-                    this.isNewUser = qParam['createNewUser'];
-                    return;
-                }
                 this.isLoading = true;
-                this._userParamService.getUserIsn(qParam['dueDep'])
+                if (qParam['createNewUser']) {
+                    this.isNewUser = qParam['createNewUser'];
+                    this._userParamService.fetchSysParams()
+                    .then(() => {
+                        this.isLoading = false;
+                        return;
+                    });
+                }
+                this._userParamService.getUserIsn(qParam['isn_cl'])
                     .then((data: boolean) => {
                         this.isLoading = false;
                     })
