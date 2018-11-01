@@ -24,27 +24,13 @@ export const BASE_PARAM_INPUTS: IInputParamControl[] = [
         label: 'Аутентификация с помощью ОС',
         value: false,
     },
-    // {
-    //     controlType: 'select',
-    //     key: 'data.select',
-    //     label: 'select value',
-    //     disabled: false,
-    //     required: false,
-    //     options: [
-    //         {
-    //             value: 1,
-    //             title: 'one',
-    //         },
-    //         {
-    //             value: 2,
-    //             title: 'two',
-    //         },
-    //         {
-    //             value: 3,
-    //             title: 'three',
-    //         },
-    //     ],
-    // },
+    {
+        controlType: E_FIELD_TYPE.string,
+        key: 'DUE_DEP_NAME',
+        label: 'ДОЛЖНОСТНОЕ ЛИЦО',
+        required: true,
+        value: '',
+    },
     // {
     //     controlType: 'date',
     //     key: 'data.date',
@@ -98,5 +84,14 @@ export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
         // pattern: /\S+/,
         // forNode: false,
         value: '',
+    },
+    {
+        controlType: E_FIELD_TYPE.select,
+        key: 'SELECT_ROLE',
+        label: 'SELECT_ROLE',
+        disabled: true,
+        readonly: true,
+        required: false,
+        options: [],
     },
 ];

@@ -10,6 +10,7 @@ import { IInputParamControl } from '../intrfaces/user-parm.intterfaces';
 import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { NOT_EMPTY_STRING } from 'eos-common/consts/common.consts';
 import { EosUtils } from 'eos-common/core/utils';
+import { DropdownInput } from 'eos-common/core/inputs/select-input';
 
 export class InputParamControlService {
     generateInputs(inputs: IInputParamControl[]) {
@@ -25,9 +26,9 @@ export class InputParamControlService {
                 case E_FIELD_TYPE.date:
                     set[input.key] = new DateInput(input);
                     break;
-                // case E_FIELD_TYPE.select:
-                //     set[input.key] = new DropdownInput(<ISelectInput>input);
-                //     break;
+                case E_FIELD_TYPE.select:
+                    set[input.key] = new DropdownInput(Object.assign({options: []}, input));
+                    break;
                 // case E_FIELD_TYPE.buttons:
                 //     set[input.key] = new ButtonsInput(<ISelectInput>input);
                 //     break;

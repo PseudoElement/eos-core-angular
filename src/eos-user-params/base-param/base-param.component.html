@@ -22,15 +22,48 @@
             ></eos-dynamic-input>
         </div>
         <!-- Дата смены пароля и поля для пароля -->
-        <div class="base-param__row">
+        <div class="base-param__row flex-space-between">
             <eos-dynamic-input
                 [input]="inputs['PASSWORD_DATE']"
                 [form]="form"
                 [readonly]="inputs['PASSWORD_DATE'].readonly"
             ></eos-dynamic-input>
+
+            <div [formGroup]="formControls"
+                class="dynamic-input-wrapper">
+                <label [hidden]="controls['pass'].hideLabel"
+                    [attr.for]="controls['pass'].key">{{controls['pass'].label}}</label>
+                <div [ngClass]="{'required': controls['pass'].required}">
+                <input class="form-control m-font"
+                    [formControlName]="controls['pass'].key"
+                    [id]="controls['pass'].key"
+                    type="text"
+                    [readonly]="controls['pass'].readonly"
+                    [ngClass]="{'readonly': readonly}"
+                    [placeholder]="controls['pass'].label"
+                    autocomplete="off">
+                </div>
+            </div>
+
+            <div [formGroup]="formControls"
+                class="dynamic-input-wrapper">
+                <label [hidden]="controls['passRepeated'].hideLabel"
+                    [attr.for]="controls['passRepeated'].key">{{controls['passRepeated'].label}}</label>
+                <div [ngClass]="{'required': controls['passRepeated'].required}">
+                <input class="form-control m-font"
+                    [formControlName]="controls['passRepeated'].key"
+                    [id]="controls['passRepeated'].key"
+                    type="text"
+                    [readonly]="controls['passRepeated'].readonly"
+                    [ngClass]="{'readonly': readonly}"
+                    [placeholder]="controls['passRepeated'].label"
+                    autocomplete="off">
+                </div>
+            </div>
+
         </div>
-        <!-- технический пользователь -->
-        <div class="base-param__row">
+        <!-- технический пользователь, должностное лицо и роль -->
+        <div class="base-param__row flex-space-between">
             <eos-dynamic-input
                 [input]="controls['teсhUser']"
                 [form]="formControls"
@@ -39,7 +72,45 @@
                 placement="bottom"
                 containerClass="tooltip-info"
             ></eos-dynamic-input>
+
+            <div [formGroup]="form"
+                class="dynamic-input-wrapper">
+                <label [hidden]="inputs['DUE_DEP_NAME'].hideLabel"
+                    [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
+                <div [ngClass]="{'required': inputs['DUE_DEP_NAME'].required}" style="width: 300px">
+                <input class="form-control m-font inline-block"
+                    style="width: 270px;"
+                    readonly
+                    [formControlName]="inputs['DUE_DEP_NAME'].key"
+                    [id]="inputs['DUE_DEP_NAME'].key"
+                    type="text"
+                    [readonly]="inputs['DUE_DEP_NAME'].readonly"
+                    [ngClass]="{'readonly': readonly}"
+                    [placeholder]="inputs['DUE_DEP_NAME'].label"
+                    autocomplete="off">
+                    <span class="icon eos-icon small"
+                        [ngClass]="{'eos-icon-avatar-blue': true, 'eos-icon-avatar-grey': !true}"
+                        (click)="selectDepartment()"
+                    ></span>
+                </div>
+            </div>
+
+            <eos-dynamic-input
+                [input]="controls['SELECT_ROLE']"
+                [form]="formControls"
+                [readonly]="controls['SELECT_ROLE'].readonly"
+            ></eos-dynamic-input>
         </div>
+        <!-- <div class="base-param__row">
+            <eos-dynamic-input
+                [input]="controls['teсhUser']"
+                [form]="formControls"
+                [readonly]="controls['teсhUser'].readonly"
+                tooltip="к техническим пользователям невозможно привязать должностное лицо"
+                placement="bottom"
+                containerClass="tooltip-info"
+            ></eos-dynamic-input>
+        </div> -->
     </div>
     <button (click)="testClick()">test</button>
 </div>

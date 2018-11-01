@@ -15,6 +15,11 @@ export interface IInputParamControl {
     uniqueInDict?: boolean;
     hideLabel?: boolean;
     forNode?: boolean;
-    options?: any[];
+    options?: ISelectOptionControl[];
     disabled?: boolean;
+}
+
+export interface ISelectOptionControl {
+    value: string | number;
+    title: string;
 }

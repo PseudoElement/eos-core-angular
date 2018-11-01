@@ -41,6 +41,7 @@ export class ParamsBaseParamComponent implements OnInit {
         private _userParamSrv: UserParamsService
     ) {}
     ngOnInit () {
+        // console.log(this._userParamSrv.curentUser);
         if (!this.newUser) {
             this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
             this.curentUser = this._userParamSrv.curentUser;
@@ -77,6 +78,10 @@ export class ParamsBaseParamComponent implements OnInit {
         .catch(() => {
             console.log('catch');
         });
+    }
+
+    selectDepartment() {
+        console.log('department');
     }
 
     testClick() {

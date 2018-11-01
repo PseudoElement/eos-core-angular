@@ -21,9 +21,22 @@ export class BaseParamNewDescriptor extends BaseParamAbstractDescriptor {
     }
     fillValueControlField(fields: IInputParamControl[]) {
         fields.forEach((f: IInputParamControl) => {
-            if (f['key'] === 'teсhUser') {
-                f['disabled'] = false;
-                f['readonly'] = false;
+            switch (f['key']) {
+                case 'teсhUser':
+                    f['disabled'] = false;
+                    f['readonly'] = false;
+                    break;
+                case 'SELECT_ROLE':
+                    if (this._userParamSrv.sysParams['CATEGORIES_FOR_USER']) {
+                        const str: String = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'];
+                        str.substr(1).split(';').forEach(role => {
+                            f['options'].push({
+                                title: role,
+                                value: role
+                            });
+                        });
+                    }
+                    break;
             }
         });
     }

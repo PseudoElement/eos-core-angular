@@ -18,9 +18,26 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
     }
     fillValueControlField(fields: IInputParamControl[]) {
         fields.forEach((f: IInputParamControl) => {
-            if (f['key'] === 'teсhUser') {
-                f['disabled'] = true;
-                f['readonly'] = true;
+            switch (f['key']) {
+                case 'teсhUser':
+                    f['disabled'] = true;
+                    f['readonly'] = true;
+                    if (this._userParamSrv.isTechUser) {
+                        f['value'] = true;
+                    }
+                    break;
+                case 'SELECT_ROLE':
+                    if (this._userParamSrv.sysParams['CATEGORIES_FOR_USER']) {
+                        const str: String = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'];
+                        str.substr(1).split(';').forEach(role => {
+                            f['options'].push({
+                                title: role,
+                                value: role
+                            });
+                        });
+                        f['value'] = this._userParamSrv.hashUserContext['CATEGORY'];
+                    }
+                    break;
             }
         });
     }
@@ -29,6 +46,10 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
             const pass = this._userParamSrv.hashUserContext['CHANGE_PASS'];
             field['disabled'] = pass !== 'YES' ? true : false;
             field['readonly'] = pass !== 'YES' ? true : false;
+        }
+        if (field['key'] === 'DUE_DEP_NAME') {
+            field['disabled'] = true;
+            field['readonly'] = true;
         }
         if (field.controlType === E_FIELD_TYPE.boolean) {
             return !!this._userParamSrv.curentUser[field['key']];

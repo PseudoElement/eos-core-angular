@@ -1,13 +1,20 @@
 import { Injectable } from '@angular/core';
 import { UserParamApiSrv } from './user-params-api.service';
-import { USER_CL } from 'eos-rest';
+import { USER_CL, DEPARTMENT } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 
 @Injectable()
 export class UserParamsService {
     private _isTechUser: boolean;
     private _userContext: USER_CL;
+    private _userContextDeparnment: DEPARTMENT;
     private _sysParams;
+    get userContextDeparnment() {
+        if (this._userContextDeparnment) {
+            return this._userContextDeparnment;
+        }
+        return null;
+    }
 
     get sysParams() {
         if (this._sysParams) {
@@ -61,9 +68,29 @@ export class UserParamsService {
         const _sys = this.fetchSysParams();
         return Promise.all([_user, _sys])
         .then(([user, sys]) => {
+            this._sysParams = sys;
             this._userContext = user[0];
-            this._isTechUser = !!this._userContext['DUE_DEP'];
+            this._userContext['DUE_DEP_NAME'] = '';
+            this._isTechUser = !this._userContext['DUE_DEP'];
+            this._userContext['isTechUser'] = !this._userContext['DUE_DEP'];
             this._createHash();
+            if (!this._isTechUser) {
+                const queryDueDep = {
+                    DEPARTMENT: {
+                        criteries: {
+                            DUE: this._userContext['DUE_DEP']
+                        }
+                    }
+                };
+                return this._pipSrv.getData(queryDueDep);
+            }
+            return Promise.resolve([]);
+        })
+        .then((data: any[]) => {
+            if (data.length) {
+                this._userContextDeparnment = data[0];
+                this._userContext['DUE_DEP_NAME'] = this._userContextDeparnment['CLASSIF_NAME'];
+            }
             return true;
         })
         .catch(err => {
