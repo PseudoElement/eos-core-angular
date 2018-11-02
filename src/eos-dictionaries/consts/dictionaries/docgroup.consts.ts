@@ -5,10 +5,10 @@ import {COMMON_FIELDS, COMMON_FIELD_CODE, COMMON_FIELD_NAME, COMMON_FIELD_FULLNA
 import { ISelectOption } from 'eos-common/interfaces';
 
 export const RK_TYPE_OPTIONS: ISelectOption[] = [
-    { value: 1, title: 'Не определена' },
-    { value: 2, title: 'Входящие' },
+    { value: 0, title: 'Не определена' },
+    { value: 1, title: 'Входящие' },
     { value: 3, title: 'Исходящие' },
-    { value: 4, title: 'Письма граждан' }
+    { value: 2, title: 'Письма граждан' }
 ];
 
 export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
@@ -50,6 +50,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         title: 'Вид РК',
         type: 'select',
         options: RK_TYPE_OPTIONS,
+        default: 3,
     }, {
         key: 'DOCGROUP_INDEX',
         title: 'Индекс',
@@ -65,17 +66,15 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         required: true,
     }, {
         key: 'EDS_FLAG',
-        // title: 'Требуется ЭП',
         title: 'ЭП',
         type: 'boolean',
     }, {
         key: 'ENCRYPT_FLAG',
-        // title: 'Требуется шифрование',
-        title: 'шифрование',
+        title: 'Шифрование',
         type: 'boolean',
     }, {
         key: 'TEST_UNIQ_FLAG',
-        title: 'Проверка уникальности',
+        title: 'Проверка уникальности номера',
         type: 'boolean',
         forNode: true
     }, {
@@ -84,7 +83,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         type: 'boolean',
     }, {
         key: 'PRJ_SHABLON',
-        title: 'Шаблон номера проекта документа',
+        title: 'Шаблон проекта',
         type: 'string',
         required: true,
     }, {
@@ -93,24 +92,21 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         type: 'number',
     }, {
         key: 'PRJ_AUTO_REG',
-        title: 'Авторегистрация проекта',
+        title: 'Автоматическая регистрация',
         type: 'boolean',
         forNode: true,
     }, {
         key: 'PRJ_APPLY_EDS',
-        // title: 'Применять ЭП подписей',
         title: 'подписей',
         type: 'boolean',
         forNode: true,
     }, {
         key: 'PRJ_APPLY2_EDS',
-        // title: 'Применять ЭП виз',
         title: 'виз',
         type: 'boolean',
         forNode: true,
     }, {
         key: 'PRJ_APPLY_EXEC_EDS',
-        // title: 'Применять ЭП исполнителей',
         title: 'исполнителей',
         type: 'boolean',
         forNode: true,
@@ -130,8 +126,8 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         type: 'boolean',
     }, {
         key: 'ACCESS_MODE',
-        title: 'Конфиденциальность',
-        type: 'number',
+        title: 'РК перс. доступа',
+        type: 'boolean',
     }, {
         key: 'ACCESS_MODE_FIXED',
         title: 'Без редактирования',
@@ -141,10 +137,6 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         title: 'Инициативные поручения',
         type: 'boolean',
         forNode: true,
-    }, {
-        key: 'UNKNOWN_1',
-        title: 'РК перс. доступа',
-        type: 'boolean',
     }, {
         key: 'AR_DOCGROUP_List',
         title: 'список используемых для этой группы документов дополнительных реквизитов',
@@ -170,7 +162,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     editFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME', 'NOTE', 'IS_COPYCOUNT', 'ACCESS_MODE_FIXED', 'E_DOCUMENT', 'PRJ_TEST_UNIQ_FLAG',
         'PRJ_DEL_AFTER_REG', 'PRJ_APPLY_EXEC_EDS', 'PRJ_APPLY2_EDS', 'PRJ_APPLY_EDS', 'PRJ_AUTO_REG', 'PRJ_SHABLON', 'PRJ_NUM_FLAG',
         'TEST_UNIQ_FLAG', 'ENCRYPT_FLAG', 'EDS_FLAG', 'SHABLON', 'DOCNUMBER_FLAG', 'DOCGROUP_INDEX', 'RC_TYPE', 'INITIATIVE_RESOLUTION',
-        'UNKNOWN_1'],
+        'ACCESS_MODE'],
     searchFields: ['CODE', 'CLASSIF_NAME'/*, 'NOTE'*/],
     fullSearchFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME', 'DOCGROUP_INDEX', 'NOTE'],
     quickViewFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME', 'NOTE', 'DOCGROUP_INDEX', 'RC_TYPE' ],  // CLASSIF_NAME is in shortQuickViewFields

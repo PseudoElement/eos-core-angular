@@ -16,6 +16,18 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         return this.getValue('rec.PRJ_NUM_FLAG');
     }
 
+    get isNode(): boolean {
+        return this.getValue('rec.IS_NODE');
+    }
+
+    get eDocument(): boolean {
+        return this.getValue('rec.E_DOCUMENT');
+    }
+
+    get rcType(): number {
+        return this.getValue('rec.RC_TYPE');
+    }
+
     private modalSrv: BsModalService;
     private templateModal: BsModalRef;
 
