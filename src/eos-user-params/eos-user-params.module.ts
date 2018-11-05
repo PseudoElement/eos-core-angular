@@ -12,6 +12,7 @@ import { UserParamsDescriptorSrv } from './shared/services/user-params-descripto
 import { UserParamSetComponent } from './user-params-set/user-params-set.component';
 import { UserParamHeaderComponent } from './shared/user-param-header/user-header.component';
 import { UserParamRegistrationComponent } from './user-params-set/user-param-registration/user-param-registration.component';
+import { UserParamCabinetsComponent } from './user-params-set/user-param-cabinets/user-param-cabinets.component';
 import { UserParamDirectoriesComponent } from './user-params-set/user-param-directories/user-param-directories.component';
 import { UserParamSearchComponent } from './user-params-set/user-param-search/user-param-search.component';
 import { UserParamVisualizationComponent } from './user-params-set/user-param-visualization/user-param-visualization.component';
@@ -28,6 +29,7 @@ import { ParamsBaseParamComponent } from './base-param/base-param.component';
         UserParamSetComponent,
         UserParamHeaderComponent,
         UserParamRegistrationComponent,
+        UserParamCabinetsComponent,
         UserParamDirectoriesComponent,
         UserParamSearchComponent,
         UserParamVisualizationComponent,

@@ -5,10 +5,10 @@ export const SUB_PARAMS_LIST_NAV: IParamAccordionList[] = [
         title: 'Регистрация',
         url: 'registration'
     },
-    // {
-    //     title: 'Кабинеты',
-    //     url: 'cabinets'
-    // },
+    {
+         title: 'Кабинеты',
+         url: 'cabinets'
+    },
     // {
     //     title: 'РК',
     //     url: 'rc'

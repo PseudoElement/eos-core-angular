@@ -108,6 +108,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     }
     submit() {
         if (this.newData) {
+            console.log('BP');
             this.formChanged.emit(false);
             this.isChangeForm = false;
             this.paramApiSrv

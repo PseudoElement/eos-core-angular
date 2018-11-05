@@ -44,8 +44,8 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     userParams: USER_PARMS[];
     _currentFormStatus;
     isLoading: boolean = false;
+    _userParamsSetSrv: UserParamsService;
     private _fieldsType = {};
-    private _userParamsSetSrv: UserParamsService;
     constructor(
         injector: Injector,
         paramModel,
@@ -227,9 +227,12 @@ export class BaseUserSrv implements OnDestroy, OnInit {
         }
     }
     default() {
+        console.log('JJJJJJJJJJ');
         const changed = true;
+        console.log(this.prepInputs);
         this.queryObjForDefault = this.getObjQueryInputsFieldForDefault(this.prepInputs._list);
         return this.getData(this.queryObjForDefault).then(data => {
+            console.log(data);
                 this.prepareData = this.convDataForDefault(data);
                 this.inputs = this.getInputs();
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
@@ -259,26 +262,34 @@ export class BaseUserSrv implements OnDestroy, OnInit {
 
     createObjRequest(): any[] {
         const req = [];
+        const userId = this._userParamsSetSrv.userContextId;
+        console.log(this.newData);
         for (const key in this.newData.rec) {
-            if (key) {
+            if (key && key !== 'DEF_SEARCH_CITIZEN' && key.indexOf('FOLDERCOLORSTATUS') !== 0 &&
+            key.indexOf('HILITE_PRJ_RC') !== 0 && key.indexOf('HILITE_RESOLUTION') !== 0 &&
+            key.indexOf('RCSEND') !== 0) {
+                console.log(key);
+                console.log(this.newData.rec[key]);
                 req.push({
                     method: 'MERGE',
-                    requestUri: `USER_CL(4057818)/USER_PARMS_List(\'4057818 ${key}\')`,
+                    requestUri: `USER_CL(${userId})/USER_PARMS_List(\'${userId} ${key}\')`,
                     data: {
                         PARM_VALUE: `${this.newData.rec[key]}`
                     }
                 });
             }
         }
+        console.log(req);
         return req;
     }
     createObjRequestForDefaultValues(): any[] {
         const req = [];
+        const userId = this._userParamsSetSrv.userContextId;
         for (const key in this.prepareData.rec) {
             if (key) {
                 req.push({
                     method: 'MERGE',
-                    requestUri: `USER_CL(4057818)/USER_PARMS_List(\'4057818 ${key}\')`,
+                    requestUri: `USER_CL(${userId})/USER_PARMS_List(\'${userId} ${key}\')`,
                     data: {
                         PARM_VALUE: `${this.prepareData.rec[key]}`
                     }
@@ -288,6 +299,8 @@ export class BaseUserSrv implements OnDestroy, OnInit {
         return req;
     }
     checkDataToDisabled(keyField, value) {
+        console.log(keyField);
+        console.log(value);
         if (this.form.controls['rec.' + keyField].value === value) {
             this.disabledField = true;
             this.constUserParam.disabledFields.forEach(key => {
