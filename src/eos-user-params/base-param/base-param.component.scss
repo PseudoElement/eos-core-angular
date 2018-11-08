@@ -1,19 +1,19 @@
-.base-param__wrapper {
+.base-param-wrapper {
+
+    width: 800px;
+    margin: 0 auto;
+    background: $white;
+
     eos-dynamic-input {
         font-size: 14px;
     }
 
-    width: 800px;
-    min-height: 200px; // временно
-    margin: 0 auto;
-    background: $white;
-
-    .base-param__main {
+    .base-param-main {
         padding: 20px;
         max-height: calc(100vh - 260px);
         overflow-y: scroll;
 
-        .base-param__row {
+        .base-param-row {
             display: flex;
 
             &.flex-end {
@@ -44,7 +44,7 @@
 .shell {
     width: 100vw;
     height: 100vh;
-    background: RGBA(0, 0, 0, .3);
+    background: rgba(0, 0, 0, .3);
     position: fixed;
     top: 0;
     left: 0;

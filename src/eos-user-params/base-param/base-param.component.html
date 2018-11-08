@@ -1,4 +1,4 @@
-<div class="base-param__wrapper" *ngIf="!isLoading">
+<div class="base-param-wrapper" *ngIf="!isLoading">
     <eos-user-header
         [title]="title"
         [statusBtnSub]="stateHeaderSubmit"
@@ -6,9 +6,9 @@
         (submitForm)="submit()"
         (cancelForm)="cancel()"
     ></eos-user-header>
-    <div class="base-param__main">
+    <div class="base-param-main">
         <!-- Логин и Аутентификация с помощью ОС -->
-        <div class="base-param__row flex-end">
+        <div class="base-param-row flex-end">
             <eos-dynamic-input
                 [input]="inputs['CLASSIF_NAME']"
                 [form]="form"
@@ -22,7 +22,7 @@
             ></eos-dynamic-input>
         </div>
         <!-- Дата смены пароля и поля для пароля -->
-        <div class="base-param__row flex-space-between">
+        <div class="base-param-row flex-space-between">
             <eos-dynamic-input
                 [input]="inputs['PASSWORD_DATE']"
                 [form]="form"
@@ -63,7 +63,7 @@
 
         </div>
         <!-- технический пользователь, должностное лицо и роль -->
-        <div class="base-param__row flex-space-between">
+        <div class="base-param-row flex-space-between">
             <eos-dynamic-input
                 [input]="controls['teсhUser']"
                 [form]="formControls"
@@ -102,7 +102,7 @@
             ></eos-dynamic-input>
         </div>
         <!-- Примечания -->
-        <div class="base-param__row">
+        <div class="base-param-row">
             <eos-dynamic-input
                 [input]="inputs['NOTE2']"
                 [form]="form"
@@ -112,7 +112,7 @@
         </div>
         <span class="l-font">Доступ к системам</span> <!-- Доступ к системам -->
         <hr>
-        <div class="base-param__row flex-space-between">
+        <div class="base-param-row flex-space-between">
             <eos-dynamic-input
                 [input]="accessInputs['0']"
                 [form]="formAccess"
@@ -135,7 +135,7 @@
             ></eos-dynamic-input>
         </div>
         <hr>
-        <div class="base-param__row flex-space-between">
+        <div class="base-param-row flex-space-between">
             <eos-dynamic-input
                 [input]="accessInputs['26']"
                 [form]="formAccess"
@@ -152,7 +152,7 @@
                 [readonly]="formAccess.get('16').disabled"
             ></eos-dynamic-input>
         </div>
-        <div class="base-param__row flex-space-between">
+        <div class="base-param-row flex-space-between">
             <eos-dynamic-input
                 [input]="accessInputs['23']"
                 [form]="formAccess"
@@ -169,7 +169,7 @@
                 [readonly]="formAccess.get('5').disabled"
             ></eos-dynamic-input>
         </div>
-        <div class="base-param__row flex-space-between">
+        <div class="base-param-row flex-space-between">
             <eos-dynamic-input
                 [input]="accessInputs['25']"
                 [form]="formAccess"
@@ -186,7 +186,7 @@
                 [readonly]="formAccess.get('21').disabled"
             ></eos-dynamic-input>
         </div>
-        <div class="base-param__row flex-space-between">
+        <div class="base-param-row flex-space-between">
             <eos-dynamic-input
                 [input]="accessInputs['17']"
                 [form]="formAccess"
