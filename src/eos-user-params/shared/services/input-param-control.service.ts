@@ -11,6 +11,7 @@ import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from
 import { NOT_EMPTY_STRING } from 'eos-common/consts/common.consts';
 import { EosUtils } from 'eos-common/core/utils';
 import { DropdownInput } from 'eos-common/core/inputs/select-input';
+import { RadioInput } from 'eos-common/core/inputs/radio-input';
 
 export class InputParamControlService {
     generateInputs(inputs: IInputParamControl[]) {
@@ -28,6 +29,9 @@ export class InputParamControlService {
                     break;
                 case E_FIELD_TYPE.select:
                     set[input.key] = new DropdownInput(Object.assign({options: []}, input));
+                    break;
+                case E_FIELD_TYPE.radio:
+                    set[input.key] = new RadioInput(input);
                     break;
                 // case E_FIELD_TYPE.buttons:
                 //     set[input.key] = new ButtonsInput(<ISelectInput>input);

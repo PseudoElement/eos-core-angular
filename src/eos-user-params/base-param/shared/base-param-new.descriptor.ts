@@ -10,7 +10,6 @@ export class BaseParamNewDescriptor extends BaseParamAbstractDescriptor {
         private _userParamSrv: UserParamsService
     ) {
         super();
-        // console.log(this._userParamSrv);
         this._userParamSrv.fetchExpandUser();
     }
 
@@ -27,15 +26,16 @@ export class BaseParamNewDescriptor extends BaseParamAbstractDescriptor {
                     f['readonly'] = false;
                     break;
                 case 'SELECT_ROLE':
-                    if (this._userParamSrv.sysParams['CATEGORIES_FOR_USER']) {
-                        const str: String = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'];
-                        str.substr(1).split(';').forEach(role => {
-                            f['options'].push({
-                                title: role,
-                                value: role
-                            });
-                        });
-                    }
+                    f['disabled'] = true;
+                    break;
+            }
+        });
+    }
+    fillValueAccessField(fields: IInputParamControl[]) {
+        fields.forEach(f => {
+            switch (f['key']) {
+                case '1-27':
+                    f['disabled'] = true;
                     break;
             }
         });

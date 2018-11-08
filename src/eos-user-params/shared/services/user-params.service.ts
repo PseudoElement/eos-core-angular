@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { UserParamApiSrv } from './user-params-api.service';
 import { USER_CL, DEPARTMENT } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { IParamUserCl } from '../intrfaces/user-parm.intterfaces';
 
 @Injectable()
 export class UserParamsService {
     private _isTechUser: boolean;
-    private _userContext: USER_CL;
+    private _userContext: IParamUserCl;
     private _userContextDeparnment: DEPARTMENT;
     private _sysParams;
     get userContextDeparnment() {
@@ -32,7 +33,7 @@ export class UserParamsService {
         }
         return null;
     }
-    get curentUser (): USER_CL {
+    get curentUser (): IParamUserCl {
         return this._userContext;
     }
     get userContextParams () {
@@ -62,7 +63,7 @@ export class UserParamsService {
                     ISN_LCLASSIF: isn_cl
                 }
             },
-            expand: 'USER_PARMS_List'
+            expand: 'USER_PARMS_List,USERCARD_List'
         };
         const _user = this._pipSrv.getData<USER_CL>(queryUser);
         const _sys = this.fetchSysParams();
@@ -73,16 +74,12 @@ export class UserParamsService {
             this._userContext['DUE_DEP_NAME'] = '';
             this._isTechUser = !this._userContext['DUE_DEP'];
             this._userContext['isTechUser'] = !this._userContext['DUE_DEP'];
+            this._userContext['isAccessDelo'] = !!this._userContext.USERCARD_List.length;
+            this._userContext['ACCESS_SYSTEMS'] = this._userContext['AV_SYSTEMS'].split('');
+
             this._createHash();
             if (!this._isTechUser) {
-                const queryDueDep = {
-                    DEPARTMENT: {
-                        criteries: {
-                            DUE: this._userContext['DUE_DEP']
-                        }
-                    }
-                };
-                return this._pipSrv.getData(queryDueDep);
+                return this.getDepartmentFromUser(this._userContext['DUE_DEP']);
             }
             return Promise.resolve([]);
         })
@@ -116,6 +113,17 @@ export class UserParamsService {
             this._sysParams = h;
             return h;
         });
+    }
+
+    getDepartmentFromUser (dueDep: string): Promise<any> {
+        const queryDueDep = {
+            DEPARTMENT: {
+                criteries: {
+                    DUE: dueDep
+                }
+            }
+        };
+        return this._pipSrv.getData<DEPARTMENT>(queryDueDep);
     }
 
     fetchExpandUser() {}

@@ -30,33 +30,20 @@ export const BASE_PARAM_INPUTS: IInputParamControl[] = [
         label: 'ДОЛЖНОСТНОЕ ЛИЦО',
         required: true,
         value: '',
+        data: '',
     },
-    // {
-    //     controlType: 'date',
-    //     key: 'data.date',
-    //     value: new Date(),
-    //     label: 'date',
-    // },
-    // {
-    //     controlType: 'buttons',
-    //     key: 'data.switch',
-    //     label: 'buttons',
-    //     options: [
-    //         {
-    //             value: 1,
-    //             title: 'one',
-    //         },
-    //         {
-    //             value: 2,
-    //             title: 'two',
-    //         },
-    //         {
-    //             value: 3,
-    //             title: 'three',
-    //         },
-    //     ],
-    //     value: 1,
-    // },
+    {
+        controlType: E_FIELD_TYPE.text,
+        key: 'NOTE2',
+        label: 'ПРИМЕЧАНИЯ',
+        value: '',
+    },
+    { /* ---------     доступ к системам      -----------*/
+        controlType: E_FIELD_TYPE.boolean,
+        key: 'access_delo',
+        label: 'ДЕЛО',
+        value: '',
+    },
 ];
 
 export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
@@ -64,7 +51,6 @@ export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
         controlType: E_FIELD_TYPE.boolean,
         key: 'teсhUser',
         label: 'Технический пользователь',
-        // readonly: true,
         value: false,
     },
     {
@@ -88,10 +74,110 @@ export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.select,
         key: 'SELECT_ROLE',
-        label: 'SELECT_ROLE',
-        disabled: true,
-        readonly: true,
-        required: false,
-        options: [],
+        label: 'РОЛЬ',
+        disabled: false,
+        readonly: false,
+        options: [
+            {
+                title: '',
+                value: ''
+            }
+        ],
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: 'delo_web',
+        label: 'ДЕЛО-WEB',
+        value: false,
+    },
+];
+
+export const BASE_PARAM_ACCESS_INPUT: IInputParamControl[] = [
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '0',
+        label: 'ДЕЛО',
+        value: false
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '0-1',
+        label: 'ДЕЛО + ДЕЛО-WEB',
+        value: false
+    },
+    {
+        controlType: E_FIELD_TYPE.radio,
+        key: '1-27',
+        label: '',
+        options: [
+            {
+                title: 'ЛГО',
+                value: '1'
+            },
+            {
+                title: 'КЛ',
+                value: '27'
+            }
+        ]
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '26',
+        label: 'Информер',
+        value: false
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '23',
+        label: 'Мобильный кабинет',
+        value: false
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '25',
+        label: 'АРМ руководитель',
+        value: false
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '17',
+        label: 'Поиск по штрих-коду',
+        value: false
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '2',
+        label: 'Сканирование',
+        value: false
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '3',
+        label: 'Поточное сканирование',
+        value: false
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '15',
+        label: 'Печать штрих-кода',
+        value: false
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '16',
+        label: 'Оповещения и уведомления',
+        value: false
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '5',
+        label: 'ЭП и шифрование',
+        value: false
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '21',
+        label: 'EOS Desktop Service',
+        value: false
     },
 ];

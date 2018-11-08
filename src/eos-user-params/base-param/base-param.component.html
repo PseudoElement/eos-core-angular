@@ -18,7 +18,7 @@
                 [input]="inputs['USERTYPE']"
                 [form]="form"
                 [readonly]="false"
-                class="auth-ceck"
+                class="mt-ceck"
             ></eos-dynamic-input>
         </div>
         <!-- Дата смены пароля и поля для пароля -->
@@ -68,6 +68,7 @@
                 [input]="controls['teсhUser']"
                 [form]="formControls"
                 [readonly]="controls['teсhUser'].readonly"
+                class="mt-ceck"
                 tooltip="к техническим пользователям невозможно привязать должностное лицо"
                 placement="bottom"
                 containerClass="tooltip-info"
@@ -79,18 +80,17 @@
                     [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
                 <div [ngClass]="{'required': inputs['DUE_DEP_NAME'].required}" style="width: 300px">
                 <input class="form-control m-font inline-block"
-                    style="width: 270px;"
+                    style="width: 270px; cursor: default;"
                     readonly
                     [formControlName]="inputs['DUE_DEP_NAME'].key"
                     [id]="inputs['DUE_DEP_NAME'].key"
                     type="text"
-                    [readonly]="inputs['DUE_DEP_NAME'].readonly"
                     [ngClass]="{'readonly': readonly}"
                     [placeholder]="inputs['DUE_DEP_NAME'].label"
                     autocomplete="off">
                     <span class="icon eos-icon small"
-                        [ngClass]="{'eos-icon-avatar-blue': true, 'eos-icon-avatar-grey': !true}"
-                        (click)="selectDepartment()"
+                        [ngClass]="{'eos-icon-avatar-blue': form.get('DUE_DEP_NAME').enabled, 'eos-icon-avatar-grey': form.get('DUE_DEP_NAME').disabled}"
+                        (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"
                     ></span>
                 </div>
             </div>
@@ -98,23 +98,106 @@
             <eos-dynamic-input
                 [input]="controls['SELECT_ROLE']"
                 [form]="formControls"
-                [readonly]="controls['SELECT_ROLE'].readonly"
+                [readonly]="formControls.get('SELECT_ROLE').disabled"
             ></eos-dynamic-input>
         </div>
-        <!-- <div class="base-param__row">
+        <!-- Примечания -->
+        <div class="base-param__row">
             <eos-dynamic-input
-                [input]="controls['teсhUser']"
-                [form]="formControls"
-                [readonly]="controls['teсhUser'].readonly"
-                tooltip="к техническим пользователям невозможно привязать должностное лицо"
-                placement="bottom"
-                containerClass="tooltip-info"
+                [input]="inputs['NOTE2']"
+                [form]="form"
+                [readonly]="inputs['NOTE2'].readonly"
+                style="width: 100%"
             ></eos-dynamic-input>
-        </div> -->
+        </div>
+        <span class="l-font">Доступ к системам</span> <!-- Доступ к системам -->
+        <hr>
+        <div class="base-param__row flex-space-between">
+            <eos-dynamic-input
+                [input]="accessInputs['0']"
+                [form]="formAccess"
+                [readonly]="formAccess.get('0').disabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="accessInputs['0-1']"
+                [form]="formAccess"
+                [readonly]="formAccess.get('0-1').disabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="controls['delo_web']"
+                [form]="formControls"
+                [readonly]="formControls.get('delo_web').disabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="accessInputs['1-27']"
+                [form]="formAccess"
+                [readonly]="formAccess.get('1-27').disabled"
+            ></eos-dynamic-input>
+        </div>
+        <hr>
+        <div class="base-param__row flex-space-between">
+            <eos-dynamic-input
+                [input]="accessInputs['26']"
+                [form]="formAccess"
+                [readonly]="formAccess.get('26').disabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="accessInputs['2']"
+                [form]="formAccess"
+                [readonly]="formAccess.get('2').disabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="accessInputs['16']"
+                [form]="formAccess"
+                [readonly]="formAccess.get('16').disabled"
+            ></eos-dynamic-input>
+        </div>
+        <div class="base-param__row flex-space-between">
+            <eos-dynamic-input
+                [input]="accessInputs['23']"
+                [form]="formAccess"
+                [readonly]="formAccess.get('23').disabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="accessInputs['3']"
+                [form]="formAccess"
+                [readonly]="formAccess.get('3').disabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="accessInputs['5']"
+                [form]="formAccess"
+                [readonly]="formAccess.get('5').disabled"
+            ></eos-dynamic-input>
+        </div>
+        <div class="base-param__row flex-space-between">
+            <eos-dynamic-input
+                [input]="accessInputs['25']"
+                [form]="formAccess"
+                [readonly]="formAccess.get('25').disabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="accessInputs['15']"
+                [form]="formAccess"
+                [readonly]="formAccess.get('15').disabled"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="accessInputs['21']"
+                [form]="formAccess"
+                [readonly]="formAccess.get('21').disabled"
+            ></eos-dynamic-input>
+        </div>
+        <div class="base-param__row flex-space-between">
+            <eos-dynamic-input
+                [input]="accessInputs['17']"
+                [form]="formAccess"
+                [readonly]="formAccess.get('17').disabled"
+            ></eos-dynamic-input>
+        </div>
     </div>
-    <button (click)="testClick()">test</button>
 </div>
 
 <div class="spinner-wrapper" *ngIf="isLoading">
     <eos-spinner [size]="'lg'"></eos-spinner>
 </div>
+
+<div *ngIf="isShell" class="shell"></div>

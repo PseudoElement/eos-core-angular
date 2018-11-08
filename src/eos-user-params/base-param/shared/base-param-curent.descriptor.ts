@@ -27,17 +27,79 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                     }
                     break;
                 case 'SELECT_ROLE':
-                    if (this._userParamSrv.sysParams['CATEGORIES_FOR_USER']) {
-                        const str: String = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'];
-                        str.substr(1).split(';').forEach(role => {
-                            f['options'].push({
-                                title: role,
-                                value: role
+                    if (this._userParamSrv.curentUser['isAccessDelo']) {
+                        if (this._userParamSrv.sysParams['CATEGORIES_FOR_USER']) {
+                            const str: String = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'];
+                            str.substr(1).split(';').forEach(role => {
+                                f['options'].push({
+                                    title: role,
+                                    value: role
+                                });
                             });
-                        });
-                        f['value'] = this._userParamSrv.hashUserContext['CATEGORY'];
+                            f['value'] = this._userParamSrv.hashUserContext['CATEGORY'];
+                        }
+                    } else {
+                        f['disabled'] = true;
                     }
                     break;
+                case 'delo_web':
+                    const arr = this._userParamSrv.curentUser['ACCESS_SYSTEMS'];
+                    if ((+arr[27] || +arr[1]) && !+arr[0]) {
+                        f['value'] = true;
+                    } else if ((+arr[0] && +arr[1]) || (+arr[0] && !+arr[1])) {
+                        f['disabled'] = true;
+                    }
+                    break;
+            }
+        });
+    }
+
+    fillValueAccessField(fields: IInputParamControl[]) {
+        const arr = this._userParamSrv.curentUser['ACCESS_SYSTEMS'];
+        const delo = !!(+arr[0] && !+arr[1]);
+        const delo_deloWeb = !!(+arr[0] && +arr[1]);
+        const deloWeb = !!((+arr[1] || +arr[27]) && !+arr[0]);
+
+        fields.forEach(f => {
+            switch (f['key']) {
+                case '0-1':
+                    if (delo_deloWeb) {
+                        f['value'] = true;
+                    } else if (deloWeb || delo) {
+                        f['disabled'] = true;
+                    }
+                    break;
+                case '1-27':
+                    if (deloWeb) {
+                        f['value'] = +arr[1] ? '1' : '27';
+                    } else {
+                        f['disabled'] = true;
+                    }
+                    break;
+                case '0':
+                    if (delo) {
+                        f['value'] = true;
+                    } else if (deloWeb || delo_deloWeb) {
+                        f['disabled'] = true;
+                    }
+                    break;
+                case '23':
+                    if (delo) {
+                        f['disabled'] = true;
+                    }
+                    break;
+                case '21':
+                    if (delo) {
+                        f['disabled'] = true;
+                    }
+                    break;
+                case '26':
+                    if (deloWeb) {
+                        f['disabled'] = true;
+                    }
+                    break;
+                default:
+                    f['value'] = !!+arr[f['key']];
             }
         });
     }

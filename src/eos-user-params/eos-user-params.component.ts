@@ -38,16 +38,16 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                     this._userParamService.fetchSysParams()
                     .then(() => {
                         this.isLoading = false;
-                        return;
                     });
+                } else {
+                    this._userParamService.getUserIsn(qParam['isn_cl'])
+                        .then((data: boolean) => {
+                            this.isLoading = false;
+                        })
+                        .catch(() => {
+                            this._router.navigate(['user_param']);
+                        });
                 }
-                this._userParamService.getUserIsn(qParam['isn_cl'])
-                    .then((data: boolean) => {
-                        this.isLoading = false;
-                    })
-                    .catch(() => {
-                        this._router.navigate(['user_param']);
-                    });
             });
         this._navSrv.StateSandwich$
             .takeUntil(this.ngUnsubscribe)
