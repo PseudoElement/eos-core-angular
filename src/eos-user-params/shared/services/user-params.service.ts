@@ -63,7 +63,7 @@ export class UserParamsService {
                     ISN_LCLASSIF: isn_cl
                 }
             },
-            expand: 'USER_PARMS_List,USERCARD_List'
+            expand: 'USER_PARMS_List,USERCARD_List,USER_CERTIFICATE_List'
         };
         const _user = this._pipSrv.getData<USER_CL>(queryUser);
         const _sys = this.fetchSysParams();
