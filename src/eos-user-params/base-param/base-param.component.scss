@@ -39,6 +39,7 @@
         }
 
         .icon-electronic {
+            cursor: pointer;
             margin-bottom: -8px;
             margin-left: 10px;
         }
@@ -49,7 +50,21 @@
 
             .base-input-role {
                 position: absolute;
-                top: 3px;
+                top: 0px;
+            }
+        }
+
+        .base-department-input {
+
+            input {
+                background: $light-grey-1;
+            }
+
+            .icon-add-department {
+                cursor: pointer;
+                display: inline-block;
+                margin-left: -34px;
+                margin-bottom: -7px;
             }
         }
     }
