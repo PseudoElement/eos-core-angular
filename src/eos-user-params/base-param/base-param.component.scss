@@ -6,6 +6,7 @@
 
     eos-dynamic-input {
         font-size: 14px;
+        display: inline-block;
     }
 
     .base-param-main {
@@ -13,29 +14,42 @@
         max-height: calc(100vh - 260px);
         overflow-y: scroll;
 
-        .base-param-row {
-            display: flex;
+        .base-text-input {
+            width: 250px;
+            margin-left: 26px;
+            display: inline-block;
+        }
 
-            &.flex-end {
-                justify-content: flex-end;
-            }
+        .mt-ceck {
+            margin-top: 30px;
+        }
 
-            &.flex-space-between {
-                justify-content: space-between;
-            }
+        .base-login-input {
+            margin-left: 209px;
+        }
 
-            .mt-ceck {
-                margin-left: 20px;
+        .elem-input-radio {
+            font-size: 14px;
+            display: inline-block;
+            margin-right: 20px;
+        }
 
-                .form-group {
-                    margin-top: 30px;
-                }
-            }
+        .base-checkbox-input {
+            width: 220px;
+        }
 
-            .elem-input-radio {
-                font-size: 14px;
-                display: inline-block;
-                margin-right: 20px;
+        .icon-electronic {
+            margin-bottom: -8px;
+            margin-left: 10px;
+        }
+
+        .row-department-role {
+            position: relative;
+            margin-bottom: 20px;
+
+            .base-input-role {
+                position: absolute;
+                top: 3px;
             }
         }
     }
