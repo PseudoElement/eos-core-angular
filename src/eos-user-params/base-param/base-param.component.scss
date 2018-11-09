@@ -50,7 +50,7 @@
 
             .base-input-role {
                 position: absolute;
-                top: 0px;
+                top: 0;
             }
         }
 
@@ -58,6 +58,8 @@
 
             input {
                 background: $light-grey-1;
+                width: 457px;
+                cursor: default;
             }
 
             .icon-add-department {
