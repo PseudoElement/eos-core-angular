@@ -3,138 +3,160 @@ import { EosUtils } from 'eos-common/core/utils';
 import { BaseUserSrv } from './base-user.service';
 import { FormGroup } from '@angular/forms';
 import {  PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../consts/eos-user-params.const';
-import { E_FIELD_TYPE } from '../../../shared/intrfaces/user-params.interfaces';
+// import { E_FIELD_TYPE } from '../../../shared/intrfaces/user-params.interfaces';
 import { DIRECTORIES_USER } from '../consts/directories.consts';
 
 @Injectable()
 export class UserParamDirectoriesSrv extends BaseUserSrv {
     newDataAttach;
     isChangeFormAttach = false;
+    defaultFlag = false;
     dataAttachDb;
     prepDataAttach = {rec: {}};
     inputAttach;
     formAttach: FormGroup;
     prepInputsAttach;
     _currentFormAttachStatus;
-    queryFileConstraint = {
-        USER_PARMS: {
-            criteries: {
-                PARM_NAME:
-'WINPOS||SORT||SRCH_CONTACT_FIELDS||SRCH_LIMIT_RESULT||SEARCH_CONTEXT_CARD_EMPTY||SEND_DIALOG||DELFROMCAB||MARKDOC||MARKDOCKND',
-                ISN_USER_OWNER: '3611'
-            }
-        }
-    };
     constructor( injector: Injector ) {
         super(injector, DIRECTORIES_USER);
         this.init();
-            this.prepInputsAttach = this.prepareInputField(DIRECTORIES_USER.fieldsChild);
+            this.prepInputsAttach = this.getObjectInputFields(DIRECTORIES_USER.fieldsChild);
             this.afterInit();
     }
-    cancel() {
-        this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
-            this.isChangeForm = false;
-            this.isChangeFormAttach = false;
-            this.formChanged.emit(false);
-            this.ngOnDestroy();
-            this.init();
-    }
     afterInit() {
-        this.userParamApiSrv.getData(Object.assign({}, this.queryFileConstraint))
-        .then(data => {
-            this.dataAttachDb = data;
-            this.prepDataAttachField(data);
-            this.inputAttach = this.getInputAttach();
-            this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
-            this.subscriptions.push(
-                this.formAttach.valueChanges
+        const allData = this._userParamsSetSrv.hashUserContext;
+        this.sortedData = this.linearSearchKeyForData(this.constUserParam.fields, allData);
+        this.prepareData = this.convData(this.sortedData);
+        this.prepDataAttachField(this.prepareData.rec);
+        this.inputAttach = this.getInputAttach();
+        this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
+        this.subscriptions.push(
+            this.formAttach.valueChanges
                 .debounceTime(200)
-                .subscribe(newValue => {
+                .subscribe(newVal => {
                     let changed = false;
-                    Object.keys(newValue).forEach(path => {
-                        if (this.changeByPathAttach(path, newValue[path])) {
+                    Object.keys(newVal).forEach(path => {
+                        if (this.changeByPathAttach(path, newVal[path])) {
                             changed = true;
                         }
                     });
                     this.formChanged.emit(changed);
                     this.isChangeFormAttach = changed;
-                })
-            );
-            this.subscriptions.push(
-                this.formAttach.statusChanges.subscribe(status => {
-                    if (this._currentFormAttachStatus !== status) {
-                        this.formInvalid.emit(status === 'INVALID');
-                    }
-                    this._currentFormAttachStatus = status;
-                })
-            );
-        });
-    }
-   submit() {
-          if (this.newData || this.newDataAttach) {
-          let dataRes = [];
-          this.formChanged.emit(false);
-          this.isChangeForm = false;
-          this.isChangeFormAttach = false;
-          if (this.newData) {
-            dataRes = this.createObjRequest();
-        }
-        if (this.newDataAttach) {
-            const req = [];
-            let value = '';
-            for (const key in this.newDataAttach.rec) {
-                if (this.newDataAttach.rec[key]) {
-                    value = value || ',';
-                    value += key + ',';
+            })
+        );
+        this.subscriptions.push(
+            this.formAttach.statusChanges.subscribe(status => {
+                if (this._currentFormStatus !== status) {
+                    this.formInvalid.emit(status === 'INVALID');
                 }
-            }
-            req.push({
-                method: 'POST',
-                requestUri: `SYS_PARMS_Update?PARM_NAME='SRCH_CONTACT_FIELDS'&PARM_VALUE='${value}'`
-            });
+                this._currentFormStatus = status;
+            })
+        );
+    }
+    cancel() {
+        if (this.isChangeForm || this.isChangeFormAttach) {
+            this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+            this.isChangeForm = false;
+            this.isChangeFormAttach = false;
+            this.formChanged.emit(false);
+            this.ngOnDestroy();
+            this.init();
+            this.afterInit();
         }
-        this.userParamApiSrv
-                .setData(dataRes)
+    }
+    submit() {
+        if (this.newData || this.newDataAttach || this.prepareData) {
+            this.formChanged.emit(false);
+            this.isChangeForm = false;
+            this._userParamsSetSrv.getUserIsn();
+            if (this.defaultFlag) {
+                this.defaultFlag = false;
+                this.userParamApiSrv
+                .setData(this.createObjRequestForDefaultValues())
                 .then(data => {
-                    if (this.newData) {
-                        this.prepareData.rec = Object.assign({}, this.newData.rec);
-                    }
-                    if (this.newDataAttach) {
-                        this.newDataAttach.rec = Object.assign({}, this.newDataAttach.rec);
-                    }
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
-        }
-   }
-    prepDataAttachField(data) {
-        data.forEach(field => {
-            if (field.PARM_NAME === 'SRCH_CONTACT_FIELDS') {
-            this.prepDataAttach.rec['SURNAME'] = field.PARM_VALUE.indexOf('SURNAME') >= 0 ? 'SURNAME' : null;
-            this.prepDataAttach.rec['DUTY'] = field.PARM_VALUE.indexOf('DUTY') >= 0 ? 'DUTY' : null;
-            this.prepDataAttach.rec['DEPARTMENT'] = field.PARM_VALUE.indexOf('DEPARTMENT') >= 0 ? 'DEPARTMENT' : null;
+            } else if (this.newData && this.newDataAttach) {
+                this.userParamApiSrv
+                .setData(this.createObjRequestForAll())
+                .then(data => {
+                  //  this.prepareData.rec = Object.assign({}, this.newData.rec);
+                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                })
+                // tslint:disable-next-line:no-console
+                .catch(data => console.log(data));
+            } else if (this.newData) {
+            this.userParamApiSrv
+                .setData(this.createObjRequest())
+                .then(data => {
+                  //  this.prepareData.rec = Object.assign({}, this.newData.rec);
+                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                })
+                // tslint:disable-next-line:no-console
+                .catch(data => console.log(data));
+            } else if (this.newDataAttach) {
+                this.userParamApiSrv
+                .setData(this.createObjRequestForAttach())
+                .then(data => {
+                   // this.prepareData.rec = Object.assign({}, this.newData.rec);
+                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                })
+                // tslint:disable-next-line:no-console
+                .catch(data => console.log(data));
+                }
             }
-        });
+        }
+        createObjRequestForAll() {
+            const req = this.createObjRequest();
+            const reqAttach = this.createObjRequestForAttach();
+            const newReq = req.concat(reqAttach[0]);
+            return newReq;
+        }
+        createObjRequestForAttach(): any[] {
+            let valueDef = '';
+            const arrayOfKeysSrchContactFields = ['SRCH_CONTACT_FIELDS_SURNAME', 'SRCH_CONTACT_FIELDS_DUTY',
+            'SRCH_CONTACT_FIELDS_DEPARTMENT'];
+            const arrayForValueSrchContactFields = ['SURNAME', 'DUTY', 'DEPARTMENT'];
+            const req = [];
+            const userId = this._userParamsSetSrv.userContextId;
+            const arrayKeys = arrayOfKeysSrchContactFields;
+                for (let i = 0; i < arrayKeys.length; i++) {
+                    if (typeof this.newDataAttach.rec[arrayKeys[i]] === 'boolean') {
+                        if (this.newDataAttach.rec[arrayKeys[i]] === true) {
+                            if (valueDef !== '' && valueDef !== null) {
+                                valueDef += ',';
+                            }
+                            valueDef += arrayForValueSrchContactFields[i];
+                        }
+                    } else {
+                        valueDef = '';
+                        valueDef += this.newDataAttach.rec[arrayKeys[i]];
+                    }
+                }
+                req.push({
+                    method: 'MERGE',
+                    requestUri: `USER_CL(${userId})/USER_PARMS_List(\'${userId} ${'SRCH_CONTACT_FIELDS'}\')`,
+                    data: {
+                        PARM_VALUE: `${valueDef}`
+                    }
+                });
+            return req;
+     }
+    prepDataAttachField(data) {
+        for (const key of Object.keys(data)) {
+            if (key === 'SRCH_CONTACT_FIELDS') {
+            this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_SURNAME'] = data[key].indexOf('SURNAME')
+            >= 0 ? 'SRCH_CONTACT_FIELDS_SURNAME' : '';
+            this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_DUTY'] = data[key].indexOf('DUTY') >= 0 ? 'SRCH_CONTACT_FIELDS_DUTY' : '';
+            this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_DEPARTMENT'] = data[key].indexOf('DEPARTMENT')
+            >= 0 ? 'SRCH_CONTACT_FIELDS_DEPARTMENT' : '';
+            }
+        }
     }
     getInputAttach() {
         return this.dataSrv.getInputs(this.prepInputsAttach, this.prepDataAttach);
-    }
-    prepareInputField(fields) {
-        const inputs = {_list: [], rec: {}};
-        fields.forEach(field => {
-            inputs._list.push(field.key);
-            inputs.rec[field.key] = {
-                title: field.title,
-                type: E_FIELD_TYPE[field.type],
-                foreignKey: field.key,
-                pattern: field.pattern,
-                length: field.length,
-                options: field.options,
-                readonly: field.readonly
-            };
-        });
-        return inputs;
     }
     changeByPathAttach(path: string, value: any) {
         let _value = null;
@@ -146,5 +168,24 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
             // console.log('changed', path, oldValue, 'to', _value, this.prepDataAttach.rec);
         }
         return _value !== oldValue;
+    }
+    default() {
+        const changed = true;
+        this.defaultFlag = true;
+        this.queryObjForDefault = this.getObjQueryInputsFieldForDefault(this.prepInputs._list);
+        return this.getData(this.queryObjForDefault).then(data => {
+                this.prepareData = this.convDataForDefault(data);
+                this.prepDataAttachField(this.prepareData.rec);
+                this.inputAttach = this.getInputAttach();
+                this.inputs = this.getInputs();
+                this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+                this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
+                this.formChanged.emit(changed);
+                this.isChangeForm = changed;
+                this.subscribeChangeForm();
+            })
+            .catch(err => {
+                throw err;
+            });
     }
 }

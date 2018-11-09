@@ -185,36 +185,43 @@
                     [input]="inputAttach['rec.RCSEND_HIDE_OPERATION_SEND_EMAIL']"
                     [form]="formAttach"
                     [readonly]="false"
+                    (change)="saveToSubmit('RCSEND_HIDE_OPERATION_SEND_EMAIL')"
                 ></eos-dynamic-input>
                 <eos-dynamic-input
                     [input]="inputAttach['rec.RCSEND_ENCRYPTION']"
                     [form]="formAttach"
                     [readonly]="false"
+                    (change)="saveToSubmit('RCSEND_ENCRYPTION')"
                 ></eos-dynamic-input>
                 <eos-dynamic-input
                     [input]="inputAttach['rec.RCSEND_ELECTRONIC_SIGNATURE']"
                     [form]="formAttach"
                     [readonly]="false"
+                    (change)="saveToSubmit('RCSEND_ELECTRONIC_SIGNATURE')"
                 ></eos-dynamic-input>
                 <eos-dynamic-input
                     [input]="inputAttach['rec.RCSEND_COMPRESS_ATTACHED_FILES']"
                     [form]="formAttach"
                     [readonly]="false"
+                    (change)="saveToSubmit('RCSEND_COMPRESS_ATTACHED_FILES')"
                 ></eos-dynamic-input>
                 <eos-dynamic-input
                     [input]="inputAttach['rec.RCSEND_CONSIDER_THE_TYPE_OF_DISPATCH']"
                     [form]="formAttach"
                     [readonly]="false"
+                    (change)="saveToSubmit('RCSEND_CONSIDER_THE_TYPE_OF_DISPATCH')"
                 ></eos-dynamic-input>
                 <eos-dynamic-input
                     [input]="inputAttach['rec.RCSEND_REPORT_THE_DELIVERY_OF_THIS_MESSAGE']"
                     [form]="formAttach"
                     [readonly]="false"
+                    (change)="saveToSubmit('RCSEND_REPORT_THE_DELIVERY_OF_THIS_MESSAGE')"
                 ></eos-dynamic-input>
                 <eos-dynamic-input
                     [input]="inputAttach['rec.RCSEND_REQUIRES_REGISTRATION_NOTICE_OR_OPT_OUT']"
                     [form]="formAttach"
                     [readonly]="false"
+                    (change)="saveToSubmit('RCSEND_REQUIRES_REGISTRATION_NOTICE_OR_OPT_OUT')"
                 ></eos-dynamic-input>
                 <eos-dynamic-input class="inline-block"
                     [input]="inputs['rec.RECEIP_EMAIL']"
@@ -239,6 +246,7 @@
                                     [input]="inputAttach['rec.RCSEND_RESOLUTIONS']"
                                     [form]="formAttach"
                                     [readonly]="false"
+                                    (change)="checkDataToDisabled('RCSEND_RESOLUTIONS', false)"
                             ></eos-dynamic-input>
                             <eos-dynamic-input
                                     [input]="inputAttach['rec.RCSEND_RESOLUTIONS_RADIO']"
@@ -252,6 +260,7 @@
                                     [input]="inputAttach['rec.RCSEND_ADDRESSEES']"
                                     [form]="formAttach"
                                     [readonly]="false"
+                                    (change)="checkDataToDisabled('RCSEND_ADDRESSEES', false)"
                             ></eos-dynamic-input>
                             <eos-dynamic-input
                                     [input]="inputAttach['rec.RCSEND_ADDRESSEES_RADIO']"
@@ -298,19 +307,21 @@
                            <eos-dynamic-input
                             [input]="inputAttach['rec.RCSEND_REGISTRATION_NUMBER']"
                             [form]="formAttach"
-                            [readonly]="false"
+                            [readonly]="true"
                             (change)="toggleAllMarksThisCheckbox($event, 'RCSEND_REGISTRATION_NUMBER')"
                            ></eos-dynamic-input>
                            <eos-dynamic-input
+                            [ngStyle]="{'padding-left': '5%'}"
                             [input]="inputAttach['rec.RCSEND_REGISTRATION_NUMBER_SUBSET']"
                             [form]="formAttach"
-                            [readonly]="false"
+                            [readonly]="true"
                             (change)="toggleAllMarksThisCheckbox($event, 'RCSEND_REGISTRATION_NUMBER_SUBSET')"
                            ></eos-dynamic-input>
                            <eos-dynamic-input
+                            [ngStyle]="{'padding-left': '5%'}"
                             [input]="inputAttach['rec.RCSEND_DATE_OF_REGISTRATION']"
                             [form]="formAttach"
-                            [readonly]="false"
+                            [readonly]="true"
                             (change)="toggleAllMarksThisCheckbox($event, 'RCSEND_DATE_OF_REGISTRATION')"
                            ></eos-dynamic-input>
                            <eos-dynamic-input
@@ -1396,10 +1407,138 @@
                            ></eos-dynamic-input>
                     </div>
                 </div>
+                <div *ngIf="subItem.isOpen && subItem.title === 'Параметры приема и регистрации сообщений'">
+                    <div class="user-input-group">
+                            <eos-dynamic-input
+                             [input]="inputAttach['rec.MAILRECEIVE_DELETE_POST_AFTER_REGISTRATION']"
+                             [form]="formAttach"
+                             [readonly]="false"
+                             (change)="saveToSubmit('MAILRECEIVE_DELETE_POST_AFTER_REGISTRATION')"
+                            ></eos-dynamic-input>
+                            <eos-dynamic-input
+                             [input]="inputAttach['rec.MAILRECEIVE_DELETE_POST_AFTER_CANCELING_REGISTRATION']"
+                             [form]="formAttach"
+                             [readonly]="false"
+                             (change)="saveToSubmit('MAILRECEIVE_DELETE_POST_AFTER_CANCELING_REGISTRATION')"
+                            ></eos-dynamic-input>
+                            <eos-dynamic-input
+                             [input]="inputAttach['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT']"
+                             [form]="formAttach"
+                             [readonly]="false"
+                             (change)="checkDataToDisabled('MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT', false)"
+                            ></eos-dynamic-input>
+                            <eos-dynamic-input
+                             [ngStyle]="{'padding-left': '5%'}"
+                             [input]="inputAttach['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO']"
+                             [form]="formAttach"
+                             [readonly]="false"
+                             (change)="saveToSubmit('MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO')"
+                            ></eos-dynamic-input>
+                            <eos-dynamic-input
+                             [input]="inputAttach['rec.MAILRECEIVE_ATTACH_DOCUMENT_PASSPORT_TO_RK']"
+                             [form]="formAttach"
+                             [readonly]="false"
+                             (change)="saveToSubmit('MAILRECEIVE_ATTACH_DOCUMENT_PASSPORT_TO_RK')"
+                            ></eos-dynamic-input>
+                            <eos-dynamic-input
+                             [input]="inputAttach['rec.MAILRECEIVE_TAKE_RUBRICS_RK']"
+                             [form]="formAttach"
+                             [readonly]="false"
+                             (change)="checkDataToDisabled('MAILRECEIVE_TAKE_RUBRICS_RK', false)"
+                            ></eos-dynamic-input>
+                            <eos-dynamic-input
+                             [ngStyle]="{'padding-left': '5%'}"
+                             [input]="inputAttach['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO']"
+                             [form]="formAttach"
+                             [readonly]="false"
+                             (change)="saveToSubmit('MAILRECEIVE_TAKE_RUBRICS_RK_RADIO')"
+                            ></eos-dynamic-input>
+                            <eos-dynamic-input
+                             [input]="inputAttach['rec.MAILRECEIVE_ACCOMPANYING_DOCUMENTS']"
+                             [form]="formAttach"
+                             [readonly]="false"
+                             (change)="saveToSubmit('MAILRECEIVE_ACCOMPANYING_DOCUMENTS')"
+                            ></eos-dynamic-input>
+                            <eos-dynamic-input
+                             [input]="inputAttach['rec.MAILRECEIVE_AUTOMATICALLY_ADD_ORGANIZATIONS_AND_REPRESENTATIVES']"
+                             [form]="formAttach"
+                             [readonly]="false"
+                             (change)="saveToSubmit('MAILRECEIVE_AUTOMATICALLY_ADD_ORGANIZATIONS_AND_REPRESENTATIVES')"
+                            ></eos-dynamic-input>
+                            <eos-dynamic-input
+                             [input]="inputAttach['rec.MAILRECEIVE_CHECK_EMAIL_MESSAGES']"
+                             [form]="formAttach"
+                             [readonly]="false"
+                             (change)="saveToSubmit('MAILRECEIVE_CHECK_EMAIL_MESSAGES')"
+                            ></eos-dynamic-input>
+                            <eos-dynamic-input
+                             [input]="inputAttach['rec.MAILRECEIVE_CHECK_EMAIL_FILE_ATTACHMENTS']"
+                             [form]="formAttach"
+                             [readonly]="false"
+                             (change)="saveToSubmit('MAILRECEIVE_CHECK_EMAIL_FILE_ATTACHMENTS')"
+                            ></eos-dynamic-input>
+                            <eos-dynamic-input
+                             [input]="inputAttach['rec.MAILRECEIVE_CHECK_EMAIL_RESOLUTION']"
+                             [form]="formAttach"
+                             [readonly]="false"
+                             (change)="saveToSubmit('MAILRECEIVE_CHECK_EMAIL_RESOLUTION')"
+                            ></eos-dynamic-input>
+                            <eos-dynamic-input
+                             [input]="inputAttach['rec.MAILRECEIVE_NOTIFY_SENDER_IF_EMAIL_IS_NOT_VALID']"
+                             [form]="formAttach"
+                             [readonly]="false"
+                             (change)="saveToSubmit('MAILRECEIVE_NOTIFY_SENDER_IF_EMAIL_IS_NOT_VALID')"
+                            ></eos-dynamic-input>
+                            <eos-dynamic-input
+                             [input]="inputAttach['rec.MAILRECEIVE_NOTIFY_SENDER_IF_EMAIL_IS_VALID']"
+                             [form]="formAttach"
+                             [readonly]="false"
+                             (change)="saveToSubmit('MAILRECEIVE_NOTIFY_SENDER_IF_EMAIL_IS_VALID')"
+                            ></eos-dynamic-input>
+                    </div>
+                </div>
             </accordion-group>
     </accordion-group>
     </accordion>
 </nav>
+</div>
+<!------------------------------------------------------------------------->
+<div [hidden]="currTab !== 3"
+    class="clearfix">
+    <div class="user-input-group">
+        <span>Штрих-код для книжной ориентации:</span>
+            <eos-dynamic-input
+                 [ngStyle]="{'width': '50%'}"
+                 [input]="inputs['rec.SHABLONBARCODE']"
+                 [form]="form"
+                 [readonly]="false"
+            ></eos-dynamic-input>
+<span></span>
+<br>
+        <span>Штрих-код для альбомной ориентации:</span>
+            <eos-dynamic-input
+                 [ngStyle]="{'width': '50%'}"
+                 [input]="inputs['rec.SHABLONBARCODEL']"
+                 [form]="form"
+                 [readonly]="false"
+            ></eos-dynamic-input>
+<span></span>
+<br>
+        <span>Формат сохранения электронного образа документа:</span>
+            <eos-dynamic-input
+                 [ngStyle]="{'width': '50%'}"
+                 [input]="inputs['rec.SAVEFORMAT']"
+                 [form]="form"
+                 [readonly]="false"
+            ></eos-dynamic-input>
+<span></span>
+<br>
+            <eos-dynamic-input
+                [input]="inputs['rec.LOCKFILE_SSCAN']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+    </div>
 </div>
 <!------------------------------------------------------------------------->
     <div [hidden]="currTab !== 4"

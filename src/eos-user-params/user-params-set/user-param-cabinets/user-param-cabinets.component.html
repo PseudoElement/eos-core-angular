@@ -18,23 +18,11 @@
         </ul>
 </div>
 
-    <div [hidden]="currTab !== 0"
+<div [hidden]="currTab !== 0"
     class="clearfix">
   <div class="user-input-group">
         <span class="l-font">Подсвечивать новые записи в папке</span>
         <hr>
-        <!--<ul class="cabinets-highlight-new-enntries-in-the-folder" *ngFor="let item of fieldsKeysForHighlightNewEnntriesInTheFolder; let i = index">
-
-            <li>
-                <eos-dynamic-input
-                [input]="inputAttach['rec.' + item]"
-                [form]="formAttach"
-                [readonly]="false"
-                ></eos-dynamic-input>
-            </li>
-               
-        </ul>-->
-
         <div class="cabinets-highlight-new-enntries-in-the-folder">
                 <eos-dynamic-input
                 [input]="inputAttach['rec.FOLDERCOLORSTATUS_RECEIVED']"
@@ -86,69 +74,6 @@
             [readonly]="false"
             ></eos-dynamic-input>
                 </div>
-
-
-        <!--<div>
-        <eos-dynamic-input
-        class="inline-block"
-        [input]="inputAttach['rec.FOLDERCOLORSTATUS_RECEIVED']"
-        [form]="formAttach"
-        [readonly]="false"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-        class="cabinets-highlight-new-enntries-in-the-folder inline-block"
-        [input]="inputAttach['rec.FOLDERCOLORSTATUS_FOR_EXECUTION']"
-        [form]="formAttach"
-        [readonly]="false"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-        class="cabinets-highlight-new-enntries-in-the-folder inline-block"
-        [input]="inputAttach['rec.FOLDERCOLORSTATUS_UNDER_CONTROL']"
-        [form]="formAttach"
-        [readonly]="false"
-        ></eos-dynamic-input>
-        </div>
-        <br>
-        <div>
-        <eos-dynamic-input
-        class="inline-block"
-        [input]="inputAttach['rec.FOLDERCOLORSTATUS_HAVE_LEADERSHIP']"
-        [form]="formAttach"
-        [readonly]="false"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-        class="cabinets-highlight-new-enntries-in-the-folder inline-block"
-        [input]="inputAttach['rec.FOLDERCOLORSTATUS_FOR_CONSIDERATION']"
-        [form]="formAttach"
-        [readonly]="false"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-        class="cabinets-highlight-new-enntries-in-the-folder inline-block"
-        [input]="inputAttach['rec.FOLDERCOLORSTATUS_INTO_THE_BUSINESS']"
-        [form]="formAttach"
-        [readonly]="false"
-        ></eos-dynamic-input>
-        </div>
-        <br>
-        <div>
-        <eos-dynamic-input
-        class="inline-block"
-        [input]="inputAttach['rec.FOLDERCOLORSTATUS_PROJECT_MANAGEMENT']"
-        [form]="formAttach"
-        [readonly]="false"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-        class="cabinets-highlight-new-enntries-in-the-folder inline-block"
-        [input]="inputAttach['rec.FOLDERCOLORSTATUS_ON_SIGHT']"
-        [form]="formAttach"
-        [readonly]="false"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-        class="cabinets-highlight-new-enntries-in-the-folder inline-block"
-        [input]="inputAttach['rec.FOLDERCOLORSTATUS_ON_THE_SIGNATURE']"
-        [form]="formAttach"
-        [readonly]="false"
-        ></eos-dynamic-input>-->
         </div>
     <hr>
     <div class="user-input-group">

@@ -248,7 +248,8 @@ export class BaseUserSrv implements OnDestroy, OnInit {
         const dataInput = {rec: {}};
         Object.keys(this.prepareData.rec).forEach(key => {
             if ((this._fieldsType[key] === 'boolean' || this._fieldsType[key] === 'toggle') && !this.prepInputs.rec[key].formatDbBinary) {
-                if (this.prepareData.rec[key] === 'YES') {
+                console.log(this.prepareData.rec[key]);
+                if (this.prepareData.rec[key] === 'YES' || this.prepareData.rec[key] === '1') {
                     dataInput.rec[key] = true;
                 } else {
                     dataInput.rec[key] = false;

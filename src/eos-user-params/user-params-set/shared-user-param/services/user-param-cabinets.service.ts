@@ -31,7 +31,6 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     }
     setTab(i: number) {
         this.currTab = i;
-       // this.afterInitUserSearch();
     }
     afterInit() {
         const allData = this._userParamsSetSrv.hashUserContext;
@@ -129,13 +128,6 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             this.inputAttach = this.getInputAttach();
         });
     }
-  /*  private openAccordion() {
-        this.accordionListForEmail.forEach((item: IParamAccordionList) => {
-            if (item.url === this.pageId) {
-                item.isOpen = true;
-            }
-        });
-    }*/
     getInputAttach() {
         return this.dataSrv.getInputs(this.prepInputsAttach, this.prepDataAttach);
     }
@@ -167,7 +159,6 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
 
     submit() {
         if (this.newData || this.newDataAttach || this.prepareData) {
-            console.log(this.newData);
             this.formChanged.emit(false);
             this.isChangeForm = false;
             this._userParamsSetSrv.getUserIsn();
@@ -213,7 +204,6 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
         createObjRequestForAll() {
             const req = this.createObjRequest();
             const reqAttach = this.createObjRequestForAttach();
-           // const newReq = req.concat(reqAttach[0]);
             const newReq = req.concat(reqAttach[0]).concat(reqAttach[1]).concat(reqAttach[2]);
             return newReq;
         }
@@ -225,8 +215,6 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
 'FOLDERCOLORSTATUS_ON_THE_SIGNATURE'];
             const arrayOfKeysHiliteReolution = ['HILITE_RESOLUTION_BOOLEAN', 'HILITE_RESOLUTION_INCREMENT'];
             const arrayOfKeysHilitePrjRc = ['HILITE_PRJ_RC_BOOLEAN', 'HILITE_PRJ_RC_INCREMENT'];
-// const arrayOfKeysInTheCorrectOrderForRcsend = [];
- // ttttt = ['RCSEND_DOCUMENT_AUTHOR_ORGANIZATION', 'RCSEND_DOCUMENT_AUTHOR_CITIZEN'];
             const req = [];
             const keysForCabinets = ['FOLDERCOLORSTATUS', 'HILITE_RESOLUTION', 'HILITE_PRJ_RC'];
             const userId = this._userParamsSetSrv.userContextId;
@@ -236,7 +224,6 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                  ? arrayOfKeysFoldercolorstatus : keysForCabinets[key] === 'HILITE_RESOLUTION' ?
                  arrayOfKeysHiliteReolution : arrayOfKeysHilitePrjRc;
                 for (let i = 0; i < arrayKeys.length; i++) {
-                  //  console.log(this.newDataAttach.rec[arrayKeys[i]]);
                  // if ()
                     if (typeof this.newDataAttach.rec[arrayKeys[i]] === 'boolean') {
                         if (this.newDataAttach.rec[arrayKeys[i]] === true) {
@@ -247,11 +234,6 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                     } else {
                         valueDef = '';
                         valueDef += this.newDataAttach.rec[arrayKeys[i]];
-                      /*  if (keysForCabinets[key] === 'HILITE_RESOLUTION') {
-                            valueDef = '5';
-                        } else {
-                           valueDef += this.newDataAttach.rec[arrayKeys[i]];
-                        }*/
                     }
                 }
                 req.push({

@@ -14,13 +14,13 @@
             [btnDisabled]="!isChanged || disableSave">
             </eos-user-param-cabinets>
         </ng-container>
-        <!--<ng-container *ngSwitchCase="'dictionary'">
+        <ng-container *ngSwitchCase="'dictionary'">
             <eos-user-param-directories
             (formChanged)="recordChanged($event)"
             (formInvalid)="turnOffSave($event)"
             [btnDisabled]="!isChanged || disableSave">
             </eos-user-param-directories>
-        </ng-container>-->
+        </ng-container>
         <ng-container *ngSwitchCase="'search'">
             <eos-user-param-search
             (formChanged)="recordChanged($event)"

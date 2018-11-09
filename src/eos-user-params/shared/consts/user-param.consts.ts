@@ -17,10 +17,10 @@ export const SUB_PARAMS_LIST_NAV: IParamAccordionList[] = [
         title: 'Поиск',
         url: 'search'
     },
-    // {
-    //     title: 'Справочники',
-    //     url: 'dictionary'
-    // },
+    {
+        title: 'Справочники',
+        url: 'dictionary'
+    },
     // {
     //     title: 'Электронная почта',
     //     url: 'mail'
