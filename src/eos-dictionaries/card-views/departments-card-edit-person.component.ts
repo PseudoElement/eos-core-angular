@@ -12,7 +12,7 @@ import { UPLOAD_IMG_FALLED, INFO_PERSONE_DONT_HAVE_CABINET } from '../consts/mes
 })
 export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent implements OnChanges {
     readonly fieldGroups: string[] = ['Основные данные', 'Контактная информация', 'Дополнительные сведения'];
-    currTab = 0;
+
     photo = DEFAULT_PHOTO;
 
     private currentNodeId: string;
@@ -50,14 +50,6 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                 }
             });
         }
-    }
-
-    /**
-     * switch tabs
-     * @param i tab number
-     */
-    setTab(i: number) {
-        this.currTab = i;
     }
 
     newImage(img: IImage) {

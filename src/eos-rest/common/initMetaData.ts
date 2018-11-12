@@ -864,12 +864,12 @@ const commonMeta = {
             ISN_ADDR_CATEGORY: _t.i,
             CODE: _t.s,
             OGRN: _t.s,
-            DUE_REGION: _t.s,
+            // DUE_REGION: _t.s,
             INS_DATE: _t.d,
             UPD_DATE: _t.d,
             INS_WHO: _t.i,
             UPD_WHO: _t.i,
-            CONTACT_List: _t.dt
+            // CONTACT_List: _t.dt
         },
         readonly: [
             'ISN_REGION'

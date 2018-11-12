@@ -41,8 +41,6 @@ const childrenDictionariesComponent = [{
             data: { showBreadcrumb: true, showSandwichInBreadcrumb: true, showPushpin: true },
         }, {
             path: 'edit',
-            pathMatch: 'full',
-            component: CardComponent,
             data: {
                 title: 'Редактирование',
                 showInBreadcrumb: false,
@@ -51,11 +49,19 @@ const childrenDictionariesComponent = [{
                 closeStyle: true,
                 showPushpin: false
             },
-            canDeactivate: [CanDeactivateGuard]
+            children: [
+                {
+                    path: '',
+                    redirectTo: '0',
+                    pathMatch: 'full',
+                },
+                {
+                    path: ':tabNum',
+                    component: CardComponent,
+                    canDeactivate: [CanDeactivateGuard],
+            }],
         }, {
             path: 'view',
-            pathMatch: 'full',
-            component: CardComponent,
             data: {
                 title: 'Просмотр',
                 showInBreadcrumb: false,
@@ -64,6 +70,16 @@ const childrenDictionariesComponent = [{
                 closeStyle: true,
                 showPushpin: false
             },
+            children: [
+                {
+                    path: '',
+                    redirectTo: '0',
+                    pathMatch: 'full',
+                },
+                {
+                    path: ':tabNum',
+                    component: CardComponent,
+            }],
         }],
     }, {
         path: '',
@@ -77,7 +93,7 @@ const routes: Routes = [{
     data: { title: 'Надзор', showInBreadcrumb: true },
     canActivate: [AuthorizedGuard],
     children: childrenDictionariesComponent,
-    }, {
+}, {
     path: 'spravochniki',
     data: { title: 'Справочники', showInBreadcrumb: true },
     canActivate: [AuthorizedGuard],

@@ -1,17 +1,18 @@
-import { Component, ViewChild, OnDestroy, OnInit } from '@angular/core';
-import { SortableComponent, BsModalRef, BsModalService } from 'ngx-bootstrap';
-import { Subject } from 'rxjs/Subject';
+import {Component, ViewChild, OnDestroy, OnInit, Inject, AfterViewChecked, ChangeDetectorRef} from '@angular/core';
+import {SortableComponent, BsModalRef, BsModalService} from 'ngx-bootstrap';
+import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
-import { EosDictionaryNode } from '../core/eos-dictionary-node';
-import { EosDictService } from '../services/eos-dict.service';
-import { IDictionaryViewParameters, IFieldView, IOrderBy, E_FIELD_SET } from 'eos-dictionaries/interfaces';
-import { LongTitleHintComponent } from '../long-title-hint/long-title-hint.component';
-import { HintConfiguration } from '../long-title-hint/hint-configuration.interface';
-import { ColumnSettingsComponent } from '../column-settings/column-settings.component';
-import { EosUtils } from 'eos-common/core/utils';
+import {EosDictionaryNode} from '../core/eos-dictionary-node';
+import {EosDictService} from '../services/eos-dict.service';
+import {IDictionaryViewParameters, IFieldView, IOrderBy, E_FIELD_SET} from 'eos-dictionaries/interfaces';
+import {LongTitleHintComponent} from '../long-title-hint/long-title-hint.component';
+import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
+import {ColumnSettingsComponent} from '../column-settings/column-settings.component';
+import {EosUtils} from 'eos-common/core/utils';
 import {EosDictionary} from '../core/eos-dictionary';
 import {DictionaryDescriptorService} from '../core/dictionary-descriptor.service';
+import {DOCUMENT} from '@angular/common';
 
 const ITEM_WIDTH_FOR_NAN = 100;
 
@@ -19,7 +20,7 @@ const ITEM_WIDTH_FOR_NAN = 100;
     selector: 'eos-node-list',
     templateUrl: 'node-list.component.html',
 })
-export class NodeListComponent implements OnInit, OnDestroy {
+export class NodeListComponent implements AfterViewChecked, OnInit, OnDestroy {
     @ViewChild(SortableComponent) sortableComponent: SortableComponent;
     @ViewChild(LongTitleHintComponent) hint: LongTitleHintComponent;
 
@@ -28,6 +29,7 @@ export class NodeListComponent implements OnInit, OnDestroy {
     anyUnmarked: boolean;
     customFields: IFieldView[] = [];
     length = {};
+    min_length = {};
     modalWindow: BsModalRef;
     nodes: EosDictionaryNode[] = []; // Elements for one page
     orderBy: IOrderBy;
@@ -35,13 +37,16 @@ export class NodeListComponent implements OnInit, OnDestroy {
     tableWidth = 0;
     headerOffset = 0;
     viewFields: IFieldView[] = [];
+    already_calced = false;
 
     private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
+        @Inject(DOCUMENT) document,
         private dictSrv: EosDictService,
         private modalSrv: BsModalService,
         private descrSrv: DictionaryDescriptorService,
+        private cdr: ChangeDetectorRef,
     ) {
         dictSrv.visibleList$.takeUntil(this.ngUnsubscribe)
             .subscribe((nodes: EosDictionaryNode[]) => {
@@ -103,6 +108,46 @@ export class NodeListComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+        const c = this.viewFields.length + this.customFields.length;
+
+        this.viewFields.forEach((_f) => {
+            const element = document.getElementById('vf_' + _f.key);
+            if (element) {
+                // this.length[_f.key] = element.clientWidth;
+                this.min_length[_f.key] = 100 / c;
+            }
+        });
+
+        this.customFields.forEach((_f) => {
+            const element = document.getElementById('vf_' + _f.key);
+            if (element) {
+                // this.length[_f.key] = element.clientWidth;
+                this.min_length[_f.key] = 100 / c;
+            }
+        });
+
+    }
+
+    ngAfterViewChecked() {
+
+        if (!this.already_calced) {
+            // this.already_calced = true;
+
+            this.viewFields.forEach((_f) => {
+                const element = document.getElementById('vf_' + _f.key);
+                if (element) {
+                    this.length[_f.key] = element.clientWidth;
+                }
+            });
+
+            this.customFields.forEach((_f) => {
+                const element = document.getElementById('vf_' + _f.key);
+                if (element) {
+                    this.length[_f.key] = element.clientWidth;
+                }
+            });
+        }
+        this.cdr.detectChanges();
     }
 
     ngOnDestroy() {
@@ -119,7 +164,7 @@ export class NodeListComponent implements OnInit, OnDestroy {
      * @description Open modal with ColumnSettingsComponent, fullfill ColumnSettingsComponent data
      */
     configColumns() {
-        this.modalWindow = this.modalSrv.show(ColumnSettingsComponent, { class: 'column-settings-modal modal-lg' });
+        this.modalWindow = this.modalSrv.show(ColumnSettingsComponent, {class: 'column-settings-modal modal-lg'});
         this.modalWindow.content.fixedFields = EosUtils.deepUpdate([], this.viewFields);
         this.modalWindow.content.customTitles = EosUtils.deepUpdate([], this.dictSrv.customTitles);
         this.modalWindow.content.currentFields = EosUtils.deepUpdate([], this.customFields);
@@ -149,6 +194,7 @@ export class NodeListComponent implements OnInit, OnDestroy {
             this.orderBy.ascend = !this.orderBy.ascend;
         }
         this.dictSrv.orderBy(this.orderBy);
+        this.cdr.detectChanges();
     }
 
     showHint(hintConfig?: HintConfiguration) {
@@ -240,31 +286,72 @@ export class NodeListComponent implements OnInit, OnDestroy {
 
     onListScroll(evt: Event) {
         const offset = evt.srcElement.scrollLeft;
-        this.headerOffset = - offset;
+        this.headerOffset = -offset;
+
+        // Fix for unhidden tooltip in IE
+        const element = document.querySelector('.tooltip');
+        if (element) {
+            element.setAttribute('style', 'display: none');
+        }
+    }
+
+    isOverflowed() {
+        const element = document.querySelector('.node-title');
+        if (!element) {
+            return false;
+        }
+        return element.scrollWidth > element.clientWidth;
+
+    }
+
+    onRightClick() {
+        this.dictSrv.incFirstUnfixedIndex();
+    }
+
+    getSlicedCustomFields() {
+        return this.customFields.slice(this.params.firstUnfixedIndex);
+    }
+
+    onLeftClick() {
+        this.dictSrv.decFirstUnfixedIndex();
+    }
+
+    isShifted() {
+        return (this.params.firstUnfixedIndex !== 0);
     }
 
     private _countColumnWidth() {
         const length = {};
-        let fullWidth = 0;
+        if (this.isOverflowed()) {
+            this.min_length = [];
+            // console.log("over");
+        } else {
+            // console.log("!over");
+            let fullWidth = 0;
 
-        this.viewFields.forEach((_f) => {
-            const itemWidth = _f.length;
-            length[_f.key] = itemWidth;
-            fullWidth += itemWidth;
-        });
-        if (this.customFields) {
-            this.customFields.forEach((_f) => {
-                const itemWidth = _f.length ? _f.length : ITEM_WIDTH_FOR_NAN;
+            this.viewFields.forEach((_f) => {
+                const itemWidth = this.length[_f.key];
                 length[_f.key] = itemWidth;
                 fullWidth += itemWidth;
             });
-            this.customFields.forEach((_f) => {
+
+            if (this.customFields) {
+                this.customFields.forEach((_f) => {
+                    const itemWidth = this.length[_f.key] ? this.length[_f.key] : ITEM_WIDTH_FOR_NAN;
+                    length[_f.key] = itemWidth;
+                    fullWidth += itemWidth;
+                });
+                this.customFields.forEach((_f) => {
+                    length[_f.key] = length[_f.key] / fullWidth * 100;
+                });
+            }
+            this.viewFields.forEach((_f) => {
                 length[_f.key] = length[_f.key] / fullWidth * 100;
             });
+
+            this.min_length = length;
         }
-        this.viewFields.forEach((_f) => {
-            length[_f.key] = length[_f.key] / fullWidth * 100;
-        });
-        this.length = length;
     }
+
+
 }

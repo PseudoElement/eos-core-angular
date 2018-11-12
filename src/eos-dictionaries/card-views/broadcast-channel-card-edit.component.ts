@@ -7,8 +7,6 @@ import { BaseCardEditComponent } from './base-card-edit.component';
 })
 export class BroadcastChannelCardEditComponent extends BaseCardEditComponent {
 
-    currTab = 0;
-
     constructor(injector: Injector) {
         super(injector);
     }
@@ -19,10 +17,6 @@ export class BroadcastChannelCardEditComponent extends BaseCardEditComponent {
 
     get authMethod(): number {
         return +this.getValue('rec.AUTH_METHOD');
-    }
-
-    setTab(idx: number) {
-        this.currTab = idx;
     }
 
 }

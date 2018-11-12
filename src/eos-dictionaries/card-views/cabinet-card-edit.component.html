@@ -3,15 +3,15 @@
         <li class="tab-item"
             *ngFor="let tab of tabs; let i = index"
             role="presentation"
-            [ngClass]="{'active secondary-text': i === activeTab}"
+            [ngClass]="{'active secondary-text': i === currTab}"
             (click)="setTab(i)">
             <span class="tab-title">{{tab}}</span>
         </li>
     </ul>
 </div>
 <div class="card-content-wrapper"
-     [ngClass]="{'main-data': activeTab === 0}">
-    <div [hidden]="activeTab !== 0"
+     [ngClass]="{'main-data': currTab === 0}">
+    <div [hidden]="currTab !== 0"
          class="eos-cabinet-tab">
         <div class="clearfix">
             <eos-dynamic-input *ngIf="inputs['rec.CABINET_NAME']"
@@ -132,7 +132,7 @@
             </div>
         </div>
     </div>
-    <div [hidden]="activeTab !== 1"
+    <div [hidden]="currTab !== 1"
          class="cabinet-access eos-cabinet-tab">
         <div class="table-wrapper row"
              [ngClass]="{scrollable: showScroll}">

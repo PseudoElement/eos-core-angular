@@ -8,6 +8,7 @@ export enum E_DEPT_MODE {
 }
 
 export enum E_DICT_TYPE {
+    organiz,
     linear,
     tree,
     department
@@ -111,6 +112,7 @@ export interface IDictionaryDescriptor {
     listFields: any;
 
     hideTopMenu?: boolean;
+    editOnlyNodes?: boolean;
 }
 
 export interface ITreeDictionaryDescriptor extends IDictionaryDescriptor {
@@ -119,6 +121,7 @@ export interface ITreeDictionaryDescriptor extends IDictionaryDescriptor {
     shortQuickViewFields: string[];
     editFields: string[];
     listFields: string[];
+
 }
 
 /* mode for department-like ditionary */

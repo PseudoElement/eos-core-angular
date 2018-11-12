@@ -19,7 +19,7 @@ export abstract class AbstractDictionaryDescriptor {
      * decription of dictionary fields
      */
     abstract record: RecordDescriptor;
-
+    editOnlyNodes = false;
     readonly id: string;
     readonly title: string;
     readonly type: E_DICT_TYPE;
@@ -55,6 +55,7 @@ export abstract class AbstractDictionaryDescriptor {
             this.apiInstance = descriptor.apiInstance;
             this._defaultOrder = descriptor.defaultOrder;
             this.hideTopMenu = descriptor.hideTopMenu;
+            this.editOnlyNodes = descriptor.editOnlyNodes;
 
             this.apiSrv = apiSrv;
             commonMergeMeta(this);

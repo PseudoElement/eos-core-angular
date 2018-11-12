@@ -211,3 +211,10 @@ export const DEPARTMENT_ADD_MENU = [
         title: 'Создать должностное лицо'
     }
 ];
+
+export const ORGANIZ_ADD_MENU = [
+    {
+        params: { 'IS_NODE': 0 },
+        title: 'Создать группу'
+    }
+];

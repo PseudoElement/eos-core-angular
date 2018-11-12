@@ -1,15 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, OnChanges } from '@angular/core';
-import { Router } from '@angular/router';
+import {Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, OnChanges} from '@angular/core';
+import {Router} from '@angular/router';
 
-import { EosStorageService } from 'app/services/eos-storage.service';
+import {EosStorageService} from 'app/services/eos-storage.service';
 
-import { RECENT_URL } from 'app/consts/common.consts';
+import {RECENT_URL} from 'app/consts/common.consts';
 
-import { EosDictService } from '../services/eos-dict.service';
-import { EosDictionaryNode } from '../core/eos-dictionary-node';
-import { IDictionaryViewParameters, IFieldView } from 'eos-dictionaries/interfaces';
-import { HintConfiguration } from '../long-title-hint/hint-configuration.interface';
-import { EosUtils } from 'eos-common/core/utils';
+import {EosDictService} from '../services/eos-dict.service';
+import {EosDictionaryNode} from '../core/eos-dictionary-node';
+import {IDictionaryViewParameters, IFieldView} from 'eos-dictionaries/interfaces';
+import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
+import {EosUtils} from 'eos-common/core/utils';
 
 @Component({
     selector: 'eos-node-list-item',
@@ -34,11 +34,11 @@ export class NodeListItemComponent implements OnInit, OnChanges {
         private _storageSrv: EosStorageService,
         private _dictSrv: EosDictService,
         private _router: Router,
-    ) { }
+    ) {
+    }
 
     ngOnInit() {
         this.viewFields = this.node.getListView();
-
     }
 
     ngOnChanges() {
@@ -49,6 +49,10 @@ export class NodeListItemComponent implements OnInit, OnChanges {
                 // this.customValues[_field.key] = this.node.getValue(_field);
             });
         }
+    }
+
+    getSlicedCustomFields() {
+        return this.custom.slice(this.params.firstUnfixedIndex);
     }
 
     selectNode(evt: Event): void {
@@ -80,10 +84,16 @@ export class NodeListItemComponent implements OnInit, OnChanges {
         this.onHoverItem.emit(config);
     }
 
+    isShifted() {
+        return this.params.firstUnfixedIndex !== 0;
+    }
+
     private openNode() {
         if (!this.node.isDeleted && this.node.id !== '') {
             this._dictSrv.openNode(this.node.id);
             this.mark.emit(true);
         }
     }
+
+
 }

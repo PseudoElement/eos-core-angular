@@ -133,6 +133,7 @@
 .tooltip-info,
 .tooltip-error {
     .tooltip-inner {
+        max-width: 380px;
         box-shadow: 0 0 0 1px $active-field-color-main-theme, 5px 5px 20px 0 rgba(0, 0, 0, 0.3);
         border-color: $active-field-color-main-theme;
     }

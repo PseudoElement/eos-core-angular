@@ -18,7 +18,7 @@ interface ICabinetOwner {
 })
 export class CabinetCardEditComponent extends BaseCardEditComponent implements OnChanges {
     readonly tabs = ['Основные данные', 'Доступ пользователей к кабинету'];
-    activeTab = 0;
+
     status: any = {
         showOwners: true,
         showAccess: true,
@@ -107,7 +107,7 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     }
 
     setTab(idx: number) {
-        this.activeTab = idx;
+        super.setTab(idx);
         setTimeout(() => {
             this.updateScroller();
         }, 0);

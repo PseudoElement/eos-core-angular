@@ -75,7 +75,7 @@ export const NADZORDICTIONARIES = NADZORDICTIONARIES_LINEAR . concat(NADZORDICTI
 
 export const NADZOR: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'nadzor',
-    title: 'Надзор',
+    title: 'Справочники Надзора',
     visible: true,
     apiInstance: 'nadzor',
     iconName: 'eos-icon-review-blue'

@@ -52,6 +52,28 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     params: IDictionaryViewParameters;
     treeNode: EosDictionaryNode;
     title: string;
+
+    SLICE_LEN = 110;
+
+    get sliced_title(): string {
+        if (this.isTitleSliced) {
+            let sliced = this.title.slice(0, this.SLICE_LEN).trim();
+            const pos = sliced.lastIndexOf(' ');
+            sliced = sliced.slice(0, pos);
+            sliced += '...';
+            return sliced;
+        } else {
+            return this.title;
+        }
+    }
+
+    get isTitleSliced(): boolean {
+        if (this.title.length >= this.SLICE_LEN) {
+            return true;
+        }
+        return false;
+    }
+
     treeNodes: EosDictionaryNode[] = [];
     paginationConfig: IPaginationConfig; // Pagination configuration, use for count node
 

@@ -29,6 +29,7 @@ import { LS_EDIT_CARD } from '../consts/common';
 import { CardEditComponent } from 'eos-dictionaries/card-views/card-edit.component';
 import { EosDepartmentsService } from '../services/eos-department-service';
 import {EosUtils} from '../../eos-common/core/utils';
+import {toNumber} from 'ngx-bootstrap/timepicker/timepicker.utils';
 // import { UUID } from 'angular2-uuid';
 
 export enum EDIT_CARD_MODES {
@@ -114,10 +115,12 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         private _router: Router,
         private departmentsSrv: EosDepartmentsService,
     ) {
+        let tabNum = 0;
         this.selfLink = this._router.url;
         this._route.params.subscribe((params) => {
             this.dictionaryId = params.dictionaryId;
             this.nodeId = params.nodeId;
+            tabNum = (toNumber(params.tabNum));
             this._init();
         });
 
@@ -126,6 +129,8 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             .subscribe((nodes) => {
                 this.nodes = nodes.filter((node) => !node.isDeleted);
             });
+
+        this._dictSrv.currentTab = tabNum;
     }
 
     @HostListener('window:beforeunload', ['$event'])
@@ -247,7 +252,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     private _init() {
         this.nextRoute = this._router.url;
         this._urlSegments = this._router.url.split('/');
-        this._mode = EDIT_CARD_MODES[this._urlSegments[this._urlSegments.length - 1]];
+        this._mode = EDIT_CARD_MODES[this._urlSegments[this._urlSegments.length - 2]];
         this._getNode();
     }
 
@@ -355,10 +360,11 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
     private _makeUrl(nodeId: string, forceMode?: EDIT_CARD_MODES): string {
         const _url = [].concat([], this._urlSegments);
-        _url[_url.length - 2] = nodeId;
+        _url[_url.length - 3] = nodeId;
+        _url[_url.length - 1] = this._dictSrv.currentTab;
 
         if (forceMode !== undefined && EDIT_CARD_MODES[forceMode]) {
-            _url[_url.length - 1] = EDIT_CARD_MODES[forceMode];
+            _url[_url.length - 2] = EDIT_CARD_MODES[forceMode];
         }
         return _url.join('/');
     }

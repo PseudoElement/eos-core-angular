@@ -32,9 +32,23 @@
                         <span class="eos-icon eos-icon-arrow-blue-left"></span>
                     </button>
                 </div>
-                <div class="selected-node-title">
-                    <span class="long-title xl-font">{{title}}</span>
-                </div>
+
+                <ng-container *ngIf="this.isTitleSliced; then slicedTitle else nonSlicedTitle"></ng-container>
+                <ng-template #slicedTitle>
+                    <div class="selected-node-title"
+                    [tooltip]='this.title'
+                    placement="bottom"
+                    container="body"
+                    containerClass="tooltip-info">
+                        <span class="long-title xl-font">{{sliced_title}}</span>
+                    </div>
+                </ng-template>
+                <ng-template #nonSlicedTitle>
+                    <div class="selected-node-title">
+                        <span class="long-title xl-font">{{this.title}}</span>
+                    </div>
+                </ng-template>
+
                 <div class="tabs-wrapper usual-border m-font">
                     <ul class="tabs"
                         *ngIf="dictionary?.id === 'departments'">

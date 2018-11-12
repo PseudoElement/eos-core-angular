@@ -1,10 +1,16 @@
 .eos-node-list-item {
     display: flex;
+    .pull-left {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
     .node-list-item {
         overflow: hidden;
         min-height: 32px;
         display: inline-flex;
         width: 100%;
+        white-space: nowrap;
+        max-height: 32px;
         .node-left {
             padding: 12px;
         }

@@ -16,7 +16,8 @@
             <div class="node-title">
                 <div *ngFor="let field of viewFields"
                      class="item l-font"
-                     [ngStyle]="{'width.%': length[field.key]}">
+                     [attr.id]="'vf_'+field.key"
+                     [ngStyle]="{'min-width.%': min_length[field.key]}">
                     <span class="text"
                           [ngClass]="{'selected-text': orderBy}"
                           (click)="orderByField(field.key)">{{field.customTitle || field.title}}</span>
@@ -24,15 +25,26 @@
                         <span *ngIf="orderBy?.fieldKey === field.key"
                               class="icon eos-icon small"
                               [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span></div>
-                <div *ngFor="let field of customFields"
+
+                <div *ngIf="isShifted()" class="arrow-left selected-text" (click)="onLeftClick()">
+                    <div class="arrow-left-fix">
+                    <i class="fa fa-angle-left "></i>
+                    </div>
+                </div>
+                <div *ngFor="let field of getSlicedCustomFields();let first=first;"
                      class="item l-font"
-                     [ngStyle]="{'width.%': length[field.key]}">
+                     [class.left-shadowed]="first&&(isShifted())"
+                     [attr.id]="'vf_'+field.key"
+                    [ngStyle]="{'min-width.%': min_length[field.key]}">
                     <span class="text"
                           [ngClass]="{'selected-text': orderBy}"
                           (click)="orderByField(field.key)">{{field.customTitle || field.title}}</span><span class="order-icon">
                     <span *ngIf="orderBy?.fieldKey === field.key"
                           class="eos-icon small"
                           [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span></div>
+            </div>
+            <div *ngIf="isOverflowed()" class="arrow-right selected-text" (click)="onRightClick()">
+                <i class="fa fa-angle-right "></i>
             </div>
         </div>
     </div>

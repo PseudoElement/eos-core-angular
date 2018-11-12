@@ -7,7 +7,7 @@ import { EosDictService } from '../services/eos-dict.service';
 import { EosDictionary } from '../core/eos-dictionary';
 import {
     RECORD_ACTIONS, MORE_RECORD_ACTIONS,
-    COMMON_ADD_MENU, DEPARTMENT_ADD_MENU
+    COMMON_ADD_MENU, DEPARTMENT_ADD_MENU, ORGANIZ_ADD_MENU
 } from '../consts/record-actions.consts';
 import {
     IActionButton, IAction, IDictionaryViewParameters, E_DICT_TYPE,
@@ -34,6 +34,7 @@ export class NodeActionsComponent implements OnDestroy {
     private dictionary: EosDictionary;
     private _nodeSelected = false;
     private _viewParams: IDictionaryViewParameters;
+    private _dictSrv: EosDictService;
 
     get haveMoreButtons(): boolean {
         let have = false;
@@ -55,6 +56,7 @@ export class NodeActionsComponent implements OnDestroy {
                 this._viewParams = params;
                 this._update();
             });
+        this._dictSrv = _dictSrv;
     }
 
     ngOnDestroy() {
@@ -90,6 +92,8 @@ export class NodeActionsComponent implements OnDestroy {
             this.isTree = this.dictionary && this.dictionary.descriptor.dictionaryType !== E_DICT_TYPE.linear;
             if (this.dictionary.descriptor.dictionaryType === E_DICT_TYPE.department) {
                 this.addMenu = DEPARTMENT_ADD_MENU;
+            } else if (this.dictionary.descriptor.dictionaryType === E_DICT_TYPE.organiz) {
+                this.addMenu = ORGANIZ_ADD_MENU;
             } else {
                 this.addMenu = COMMON_ADD_MENU;
             }
@@ -121,7 +125,12 @@ export class NodeActionsComponent implements OnDestroy {
                     _enabled = _enabled && this._viewParams.hasMarked;
                     break;
                 case E_RECORD_ACTIONS.edit:
-                    _enabled = _enabled && this._nodeSelected;
+                    _enabled = _enabled && this._nodeSelected; /* && (this._dictSrv.listNode.isNode);*/
+                    if (this.dictionary.descriptor.editOnlyNodes !== undefined) {
+                        if (this._dictSrv && this._dictSrv.listNode) {
+                            _enabled = this.dictionary.descriptor.editOnlyNodes && this._dictSrv.listNode.isNode;
+                        }
+                    }
                     break;
                 case E_RECORD_ACTIONS.showDeleted:
                     _active = this._viewParams.showDeleted;

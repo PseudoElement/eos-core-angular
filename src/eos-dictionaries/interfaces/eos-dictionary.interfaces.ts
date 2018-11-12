@@ -9,4 +9,5 @@ export interface IDictionaryViewParameters {
     hasMarked: boolean;
     hideTopMenu: boolean;
     tableCustomization: boolean;
+    firstUnfixedIndex: number;
 }

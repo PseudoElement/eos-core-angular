@@ -229,7 +229,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     }, {
         key: 'organization',
         type: 'dictionary',
-        title: 'Организация',
+        title: 'Структура Организаций',
     }, {
         key: 'cabinet',
         type: 'dictionary',
