@@ -18,6 +18,7 @@ import { LoginComponent } from './login/login.component';
 
 import { ParametersSystemComponent } from '../eos-parameters/parametersSystem/parametersSystem.component';
 import { UserParamsComponent } from 'eos-user-params/eos-user-params.component';
+import { UserSelectComponent } from 'eos-user-select/eos-user-select.component';
 /// import { environment } from 'environments/environment';
 
 const routes: Routes = [
@@ -199,35 +200,64 @@ const routes: Routes = [
         ]
     },
     {
-        path: 'user_param',
-        data: {
-            title: 'Пользователи',
-            showBreadcrumb: true,
-            showInBreadcrumb: true,
-            showSandwichInBreadcrumb: true,
-            showPushpin: true
-        },
+        path: 'user_param_make',
         canActivate: [AuthorizedGuard],
+        data: { showInBreadcrumb: true },
         children: [
             {
                 path: ':nodeId',
-                data: { title: 'Запись', showInBreadcrumb: false },
-                children: [
-                    {
-                        path: '',
-                        component: DictionaryComponent,
-                        pathMatch: 'full',
-                        data: { showBreadcrumb: true, showSandwichInBreadcrumb: true, showPushpin: true }
-                    }
-                ]
+                component: UserSelectComponent,
+                data: {
+                    title: 'Справочник',
+                    showBreadcrumb: true,
+                    showInBreadcrumb: true,
+                    showSandwichInBreadcrumb: true,
+                    showPushpin: true
+                },
             },
             {
                 path: '',
-                component: DictionaryComponent,
-                pathMatch: 'full'
+                component: UserSelectComponent,
+                data: {
+                    title: 'Справочник',
+                    showBreadcrumb: true,
+                    showInBreadcrumb: true,
+                    showSandwichInBreadcrumb: true,
+                    showPushpin: true
+                },
             }
         ]
     },
+    // {
+    //     path: 'user_param',
+    //     data: {
+    //         title: 'Пользователи',
+    //         showBreadcrumb: true,
+    //         showInBreadcrumb: true,
+    //         showSandwichInBreadcrumb: true,
+    //         showPushpin: true
+    //     },
+    //     canActivate: [AuthorizedGuard],
+    //     children: [
+    //         {
+    //             path: ':nodeId',
+    //             data: { title: 'Запись', showInBreadcrumb: false },
+    //             children: [
+    //                 {
+    //                     path: '',
+    //                     component: DictionaryComponent,
+    //                     pathMatch: 'full',
+    //                     data: { showBreadcrumb: true, showSandwichInBreadcrumb: true, showPushpin: true }
+    //                 }
+    //             ]
+    //         },
+    //         {
+    //             path: '',
+    //             component: DictionaryComponent,
+    //             pathMatch: 'full'
+    //         }
+    //     ]
+    // },
     {
         path: '',
         redirectTo: '/desk/system',
