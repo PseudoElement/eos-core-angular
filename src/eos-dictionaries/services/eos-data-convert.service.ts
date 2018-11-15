@@ -127,7 +127,9 @@ export class EosDataConvertService {
                                     });
                                     break;
                                 case E_FIELD_TYPE.select:
-                                    const options = descr[_key].options;
+                                    // remarked - becouse continuously adding to options
+                                    // const options = descr[_key].options;
+                                    const options = [];
 
                                     if (descr[_key].dictionaryId !== undefined) {
                                         const dict = new EosDictionary(descr[_key].dictionaryId, dictSrv);

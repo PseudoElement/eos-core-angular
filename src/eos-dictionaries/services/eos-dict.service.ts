@@ -53,7 +53,7 @@ export class EosDictService {
     private _srchCriteries: any[];
     private _customFields: any;
     private _customTitles: any;
-    private _dictMode: number;
+    private _dictMode = 0;
     private _dictMode$: BehaviorSubject<number>;
     private _dictionaries: EosDictionary[];
     private _listDictionary$: BehaviorSubject<EosDictionary>;
@@ -384,9 +384,13 @@ export class EosDictService {
                         parent = parent.parent;
                     }
                 }
-                this.updateViewParameters({updatingList: false});
                 this._selectTreeNode(node);
                 return node;
+            }).then( () => {
+                this._reloadList().then(() => {
+                        this.updateViewParameters({updatingList: false});
+                    });
+                return null;
             })
             .catch(err => this._errHandler(err));
     }
@@ -805,7 +809,7 @@ export class EosDictService {
     private _openDictionary(dictionaryId: string): Promise<EosDictionary> {
         let _p: Promise<EosDictionary> = this._mDictionaryPromise.get(dictionaryId);
         if (!_p) {
-            this._dictMode = 0;
+            // this._dictMode = 0;
             try {
                 this._dictionaries[0] = new EosDictionary(dictionaryId, this._descrSrv);
             } catch (e) {
@@ -1008,7 +1012,7 @@ export class EosDictService {
     private _selectTreeNode(node: EosDictionaryNode) {
         if (this.treeNode !== node) {
             this._srchCriteries = null;
-            this._dictMode = 0;
+
             if (this.treeNode) {
                 if (this.treeNode.children) {
                     this.treeNode.children.forEach((child) => child.marked = false);

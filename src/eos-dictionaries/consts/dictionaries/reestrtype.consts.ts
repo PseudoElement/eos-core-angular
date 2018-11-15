@@ -31,6 +31,7 @@ export const REESTRTYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_T
             length: 100,
             dictionaryId: DELIVERY_DICT.id,
             options: [],
+            default: 1,
     }, {
             key: 'GROUP_MAIL',
             type: 'boolean',

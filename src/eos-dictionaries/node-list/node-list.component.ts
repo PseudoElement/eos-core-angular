@@ -1,4 +1,4 @@
-import {Component, ViewChild, OnDestroy, OnInit, Inject, AfterViewChecked, ChangeDetectorRef} from '@angular/core';
+import {Component, ViewChild, OnDestroy, OnInit, Inject, ChangeDetectorRef, AfterContentChecked} from '@angular/core';
 import {SortableComponent, BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
@@ -20,7 +20,7 @@ const ITEM_WIDTH_FOR_NAN = 100;
     selector: 'eos-node-list',
     templateUrl: 'node-list.component.html',
 })
-export class NodeListComponent implements AfterViewChecked, OnInit, OnDestroy {
+export class NodeListComponent implements AfterContentChecked, OnInit, OnDestroy {
     @ViewChild(SortableComponent) sortableComponent: SortableComponent;
     @ViewChild(LongTitleHintComponent) hint: LongTitleHintComponent;
 
@@ -128,26 +128,8 @@ export class NodeListComponent implements AfterViewChecked, OnInit, OnDestroy {
 
     }
 
-    ngAfterViewChecked() {
-
-        if (!this.already_calced) {
-            // this.already_calced = true;
-
-            this.viewFields.forEach((_f) => {
-                const element = document.getElementById('vf_' + _f.key);
-                if (element) {
-                    this.length[_f.key] = element.clientWidth;
-                }
-            });
-
-            this.customFields.forEach((_f) => {
-                const element = document.getElementById('vf_' + _f.key);
-                if (element) {
-                    this.length[_f.key] = element.clientWidth;
-                }
-            });
-        }
-        this.cdr.detectChanges();
+    ngAfterContentChecked() {
+        this._countColumnWidth();
     }
 
     ngOnDestroy() {
@@ -264,6 +246,7 @@ export class NodeListComponent implements AfterViewChecked, OnInit, OnDestroy {
 
     userOrdered(nodes: EosDictionaryNode[]) {
         this.dictSrv.setUserOrder(nodes);
+
     }
 
     openNodeNavigate(backward = false): void {
@@ -321,6 +304,21 @@ export class NodeListComponent implements AfterViewChecked, OnInit, OnDestroy {
     }
 
     private _countColumnWidth() {
+        this.viewFields.forEach((_f) => {
+            const element = document.getElementById('vf_' + _f.key);
+            if (element) {
+                this.length[_f.key] = element.clientWidth;
+            }
+        });
+
+        this.customFields.forEach((_f) => {
+            const element = document.getElementById('vf_' + _f.key);
+            if (element) {
+                this.length[_f.key] = element.clientWidth;
+            }
+        });
+
+
         const length = {};
         if (this.isOverflowed()) {
             this.min_length = [];
@@ -351,6 +349,8 @@ export class NodeListComponent implements AfterViewChecked, OnInit, OnDestroy {
 
             this.min_length = length;
         }
+
+        this.cdr.detectChanges();
     }
 
 

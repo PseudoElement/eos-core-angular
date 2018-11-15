@@ -9,11 +9,12 @@
             <select class="form-control m-font"
                     [ngClass]="{'readonly': readonly, 'placeholder': !hasValue()}"
                     [id]="input.key"
+                    onmousedown="this.focus();"
                     [formControlName]="input.key"
                     (focus)="onFocus()"
                     (blur)="onBlur()">
             <option disabled="disabled" [selected]="!hasValue()" class="hidden">{{input.label}}</option>
             <option *ngFor="let opt of input.options" [value]="opt.value">{{opt.title}}</option>
-        </select>
+            </select>
         </div>
 </div>

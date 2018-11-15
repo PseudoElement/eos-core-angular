@@ -59,7 +59,9 @@ export class EosDateMaskDirective implements ControlValueAccessor {
                 }
                 break;
             case 46: // delete
-                if (cursorPos !== 2 && cursorPos !== 5) {
+                if (cursorPos === 0) {
+                    oldVal = '';
+                } else if (cursorPos !== 2 && cursorPos !== 5) {
                     oldVal = this.removeSymbolAt(oldVal, cursorPos);
                 }
                 break;
