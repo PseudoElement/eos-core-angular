@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { UserParamApiSrv } from './user-params-api.service';
-import { USER_CL } from 'eos-rest';
+import { USER_CL, DEPARTMENT } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EosStorageService } from 'app/services/eos-storage.service';
 
 @Injectable()
 export class UserParamsService {
+    _userDepartment: DEPARTMENT;
     private _userContext: USER_CL;
+   // private _userCard: USERCARD;
     get userContextId () {
         if (this._userContext) {
             return this._userContext['ISN_LCLASSIF'];
@@ -19,12 +21,39 @@ export class UserParamsService {
         }
         return null;
     }
+    get userCard () {
+        console.log(this._userContext);
+        if (this._userContext) {
+            return this._userContext['USERCARD_List'];
+        }
+    }
     get hashUserContext () {
+        console.log(this._userContext);
+        console.log(this.userContextParams);
+       // console.log(this._userCard);
+        console.log(this.userCard);
         if (this._userContext) {
             const hash: any = {};
             this.userContextParams.forEach(item => {
                 hash[item.PARM_NAME] = item.PARM_VALUE;
             });
+          /*  this.userCard.forEach(item => {
+                hash[item.DUE] = item.FUNCLIST;
+            });*/
+            console.log(hash);
+            return hash;
+        }
+        return null;
+    }
+
+    get hashUserContextCard () {
+        if (this._userContext) {
+            const hash: any = {};
+            console.log(this.userCard);
+            this.userCard.forEach(item => {
+                hash[item.DUE] = item.FUNCLIST;
+            });
+            console.log(hash);
             return hash;
         }
         return null;
@@ -43,7 +72,7 @@ export class UserParamsService {
             USER_CL: {
                 criteries: {}
             },
-            expand: 'USER_PARMS_List'
+            expand: 'USER_PARMS_List,USERCARD_List'
         };
         if (!this._createRec(query, dueDep)) {
             return Promise.reject(false);

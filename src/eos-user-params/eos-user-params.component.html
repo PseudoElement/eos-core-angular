@@ -44,7 +44,7 @@
                 <div
                     *ngFor="let subItem of item.subList"
                     class="subItem"
-                    [routerLink]="['/user-params-set/param-set', subItem.url]"
+                    [routerLink]="['/user-params-set/' + item.url, subItem.url]"
                     routerLinkActive="active-link"
                 >
                     {{subItem.title}}

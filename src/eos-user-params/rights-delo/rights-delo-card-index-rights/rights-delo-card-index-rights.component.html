@@ -1,0 +1,37 @@
+<div class="input-user-wrapper input-user-card-index-rights-wrapper" *ngIf="!isLoading">
+        <eos-rights-delo-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnDisabled"
+    ></eos-rights-delo-header>
+    <div class="user-input-group">
+        <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputs['rec.SELECT_FOR_CARD_NAME']"
+                    [form]="form"
+                    [readonly]="false"
+                    (change)="selectOnClick($event)"
+                ></eos-dynamic-input>
+        <span></span>
+        <ul *ngFor="let item of arrayKeysCheckboxforCardIndexRights; let i = index;">
+            <li
+            class="list-group-item">
+                       <!-- <eos-dynamic-input
+                        [input]="inputs['rec.' + item]"
+                        [form]="form"
+                        [readonly]="false"
+                        ></eos-dynamic-input>-->
+                        <eos-dynamic-input
+                            [input]="inputAttach['rec.' + item]"
+                            [form]="formAttach"
+                            [readonly]="false"
+                           ></eos-dynamic-input>
+        </li>
+    </ul>
+    </div>
+</div>
+
+<div class="spinner-wrapper" *ngIf="isLoading">
+        <eos-spinner [size]="'lg'"></eos-spinner>
+</div>
