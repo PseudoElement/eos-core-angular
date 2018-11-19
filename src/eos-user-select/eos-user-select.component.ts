@@ -24,7 +24,6 @@ export class UserSelectComponent implements OnDestroy, AfterViewInit, DoCheck {
     ) {
         _sandwichSrv.currentDictState$.takeUntil(this.ngUnsubscribe)
             .subscribe((state: boolean[]) => {
-                console.log(state);
                 this.currentState = state;
             });
     }

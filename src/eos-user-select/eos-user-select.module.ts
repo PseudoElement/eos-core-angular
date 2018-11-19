@@ -8,6 +8,8 @@ import { EosCommonModule } from 'eos-common/eos-common.module';
 /*     ----Components----     */
 import { UserSelectComponent } from './eos-user-select.component';
 import { TreeUserSelectComponent } from './tree-user-select/tree-user-select.component';
+/*     ----Services----     */
+import { TreeUserSelectService } from './shered/services/tree-user-select.service';
 
 @NgModule({
     declarations: [
@@ -23,6 +25,9 @@ import { TreeUserSelectComponent } from './tree-user-select/tree-user-select.com
         EosCommonModule,
         ModalModule,
         AccordionModule
+    ],
+    providers: [
+        TreeUserSelectService,
     ],
 })
 export class EosUserSelectModule {}
