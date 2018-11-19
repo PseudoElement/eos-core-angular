@@ -93,37 +93,11 @@ export class TreeUserSelectService {
             }
         });
 
-        /* find root */
-        // if (!this.root) {
-        //     let rootNode: TreeUserNode;
-        //     rootNode = nodes.find((node) => node.parentId === null || node.parentId === undefined);
-
-        //     /* fallback if root undefined */
-        //     if (!rootNode) {
-        //         rootNode = new TreeUserNode({DUE: '0.', IS_NODE: 0});
-        //         rootNode.children = [];
-        //         this._nodes.set(rootNode.id, rootNode);
-        //     }
-
-        //     this.root = rootNode;
-        // }
-
-        /* force set title and visible for root */
-        // this.root.title = this.descriptor.title;
-        // this.root.data['DELETED'] = false;
-        // this.root.isExpanded = true;
         nodes.forEach((node) => {
             if (!node.parent && node !== this.root) {
                 this.root.addChild(node);
             }
         });
-
-        // const treeOrderKey = this.root.getTreeView()[0];
-        // this.nodes.forEach((node) => {
-        //     if (treeOrderKey && node.children && node.children.length > 0) {
-        //         node.children = this._orderByField(node.children, { fieldKey: treeOrderKey.foreignKey, ascend: true });
-        //     }
-        // });
         this._nodes.forEach((node) => node.updateExpandable(this._showDeleted));
     }
     private getSubtree(d: DEPARTMENT) {

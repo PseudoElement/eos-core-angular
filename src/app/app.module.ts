@@ -69,7 +69,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
         TestPageComponent,
         TitleComponent,
         UserComponent,
-        NavParamComponent
+        NavParamComponent,
     ],
     imports: [
         AppRoutingModule,

@@ -21,6 +21,12 @@
         height: 100%;
         overflow-x: auto;
     }
+
+    .spiner {
+        display: inline-block;
+        margin: 50px 50%;
+        transform: translateX(-50%);
+    }
 }
 
 @media(min-width: 1600px) {

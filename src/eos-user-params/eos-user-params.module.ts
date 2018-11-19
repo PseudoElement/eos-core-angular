@@ -46,7 +46,7 @@ import { InputParamControlService } from './shared/services/input-param-control.
         ReactiveFormsModule,
         EosCommonModule,
         ModalModule,
-        AccordionModule
+        AccordionModule,
     ],
     providers: [
         UserParamApiSrv,

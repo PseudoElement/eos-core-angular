@@ -119,6 +119,7 @@ import { EosSandwichService } from './services/eos-sandwich.service';
         DictionariesComponent,
         SandwichComponent,
         ColumnSettingsComponent,
+        NodeListPaginationComponent,
     ],
     providers: [
         DictionaryDescriptorService,
