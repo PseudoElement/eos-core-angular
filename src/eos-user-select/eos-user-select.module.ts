@@ -10,8 +10,6 @@ import { UserSelectComponent } from './eos-user-select.component';
 import { TreeUserSelectComponent } from './tree-user-select/tree-user-select.component';
 /*     ----Services----     */
 import { TreeUserSelectService } from './shered/services/tree-user-select.service';
-/*     ----Module----     */
-import { EosDictionariesModule } from 'eos-dictionaries/eos-dictionaries.module';
 
 @NgModule({
     declarations: [
@@ -26,8 +24,7 @@ import { EosDictionariesModule } from 'eos-dictionaries/eos-dictionaries.module'
         ReactiveFormsModule,
         EosCommonModule,
         ModalModule,
-        AccordionModule,
-        EosDictionariesModule,
+        AccordionModule
     ],
     providers: [
         TreeUserSelectService,
