@@ -1,0 +1,38 @@
+<div class="input-user-wrapper input-user-rc-wrapper"
+*ngIf="inputs">
+        <eos-user-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        (defaultForm)="default()"
+        [statusBtnSub]="btnDisabled"
+    ></eos-user-header>
+    <div class="user-input-group">
+            <span class="l-font">Открывать закладку доп. реквезиты при открытии РК для групп документов.</span>
+            <hr>
+            <div class="user-input-group">
+                    <eos-dynamic-input class="multiple-document-groups-select-rc"
+                    [input]="inputs['rec.OPEN_AR']"
+                    [form]="form"
+                    [readonly]="false"></eos-dynamic-input>
+            <!--<eos-dynamic-input
+                    class="multiple-select-rc"
+                    [input]="inputs['rec.OPEN_AR']"
+                    [form]="form"
+                    [readonly]="false"
+                    multiple
+                ></eos-dynamic-input>-->
+            <!--<select class="multiple-select-rc" size="8" multiple></select>-->
+    </div>
+    <hr>
+    <div class="user-input-group">
+            <span class="l-font">Поручения в подвале РК</span>
+            <hr>
+            <!--<span>Показывать иерархию:</span>-->
+            <eos-dynamic-input
+                [input]="inputs['rec.SHOW_RES_HIERARCHY']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+    </div>
+</div>

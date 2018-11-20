@@ -23,7 +23,7 @@ export class UserParamSetComponent implements OnInit {
             if (param['sub-field']) {
                 this.userId = param['sub-field'];
             } else {
-                this.userId = 'search'; // Значение по умолчанию, поменять на 'registration'
+                this.userId = 'registration'; // Значение по умолчанию, поменять на 'registration'
             }
         });
     }

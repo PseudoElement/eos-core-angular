@@ -13,6 +13,9 @@ export class UserParamApiSrv {
         .read<T>(query)
         .then((data: T[]) => {
             return data;
+          /*  return new Promise<T[]>(function() {
+                setTimeout(() => { console.log(data); }, 3000);
+            });*/
         })
         .catch(err => {
             if (err.code === 434) {

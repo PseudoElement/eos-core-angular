@@ -6,13 +6,13 @@ import { DynamicInputBase } from './dynamic-input-base';
     templateUrl: 'dynamic-input-increment-number.component.html'
 })
 export class DynamicInputNumberIncrementComponent extends DynamicInputBase {
-    onIncrease(input) {
+    onIncrease() {
         if (this.control.enabled) {
             this.control.patchValue(String(+this.control.value + 1));
             this.control.markAsDirty();
         }
     }
-    onDecrease(input) {
+    onDecrease() {
         if (this.control.enabled) {
             this.control.patchValue(String(+this.control.value - 1));
             this.control.markAsDirty();

@@ -1,4 +1,4 @@
-.input-user-registration-rk-forwarding-wrapper {
+.input-user-cabinets-rk-forwarding-wrapper {
 
     .tabs-wrapper {
         margin: 0;
@@ -14,10 +14,22 @@
         display: block;
     }*/
 
+    .user-input-increment-cabinets {
+        display: inline-block;
+    }
+
+    .cabinets-highlight-new-enntries-in-the-folder {
+        display: inline-block;
+        padding-left: 40px;
+    }
+
+    .user-input-span-for-increment-cabinets {
+        display: block;
+    }
 
     .elem-input-radio {
         font-size: 14px;
-        display: inline-block;
+       // display: inline-block;
         margin-right: 40px;
     }
 
@@ -27,38 +39,6 @@
             padding-left: 40px;
             padding-right: 40px;
         }
-    }
-
-    .small {
-        height: 18px;
-        width: 18px;
-    }
-
-    /*.registration-boolean-automatically-call-function-forwarded-RC {
-        margin-top: 20px;
-    } */
-
-    .search-citizens-in-the-directory-by-fields-radio {
-      //  position: absolute;
-       display: inline-block;
-       list-style: none;
-       margin: 0;
-      // float: right;
-      //  padding-top: 10px;
-      //  padding-left: 100px;
-    }
-
-    ul {
-       margin: 0;
-      // padding: 0;
-    }
-
-    .forCheckbox {
-        position: absolute;
-    }
-
-    .forRadio {
-        margin-right: auto;
     }
 
     .the-main-recipients-of-the-document-titles {
@@ -71,9 +51,9 @@
         display: inline-block;
     }
 
-   /* .add-storage {
-       // margin-bottom: 50px;
-        } */
+    .add-storage {
+        margin-bottom: 50px;
+        }
 
     .template-title {
         display: flex;

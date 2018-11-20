@@ -12,6 +12,8 @@ import { UserParamsDescriptorSrv } from './shared/services/user-params-descripto
 import { UserParamSetComponent } from './user-params-set/user-params-set.component';
 import { UserParamHeaderComponent } from './shared/user-param-header/user-header.component';
 import { UserParamRegistrationComponent } from './user-params-set/user-param-registration/user-param-registration.component';
+import { UserParamCabinetsComponent } from './user-params-set/user-param-cabinets/user-param-cabinets.component';
+import { UserParamRCComponent } from './user-params-set/user-param-rc/user-param-rc.component';
 import { UserParamDirectoriesComponent } from './user-params-set/user-param-directories/user-param-directories.component';
 import { UserParamSearchComponent } from './user-params-set/user-param-search/user-param-search.component';
 import { UserParamVisualizationComponent } from './user-params-set/user-param-visualization/user-param-visualization.component';
@@ -20,6 +22,9 @@ import { UserParamOtherForwardingComponent } from './user-params-set/user-param-
 import { UserParamsService } from './shared/services/user-params.service';
 import { ParamEmailAddressComponent } from './email-address/email-address.component';
 import { ParamsRightsDeloComponent } from './rights-delo/rights-delo.component';
+import { RightsDeloHeaderComponent } from './rights-delo/shared-rights-delo/rights-delo-header/rights-delo-header.component';
+import { RightsDeloCardFilesComponent } from './rights-delo/rights-delo-card-files/rights-delo-card-files.component';
+import { RightsDeloCardIndexRightsComponent } from './rights-delo/rights-delo-card-index-rights/rights-delo-card-index-rights.component';
 import { ParamsBaseParamComponent } from './base-param/base-param.component';
 import { InputParamControlService } from './shared/services/input-param-control.service';
 
@@ -29,6 +34,8 @@ import { InputParamControlService } from './shared/services/input-param-control.
         UserParamSetComponent,
         UserParamHeaderComponent,
         UserParamRegistrationComponent,
+        UserParamCabinetsComponent,
+        UserParamRCComponent,
         UserParamDirectoriesComponent,
         UserParamSearchComponent,
         UserParamVisualizationComponent,
@@ -36,6 +43,9 @@ import { InputParamControlService } from './shared/services/input-param-control.
         UserParamOtherForwardingComponent,
         ParamEmailAddressComponent,
         ParamsRightsDeloComponent,
+        RightsDeloHeaderComponent,
+        RightsDeloCardFilesComponent,
+        RightsDeloCardIndexRightsComponent,
         ParamsBaseParamComponent
     ],
     imports: [

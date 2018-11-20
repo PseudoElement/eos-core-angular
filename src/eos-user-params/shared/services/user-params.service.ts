@@ -6,10 +6,12 @@ import { IParamUserCl } from '../intrfaces/user-parm.intterfaces';
 
 @Injectable()
 export class UserParamsService {
+    _userDepartment: DEPARTMENT;
     private _isTechUser: boolean;
     private _userContext: IParamUserCl;
     private _userContextDeparnment: DEPARTMENT;
     private _sysParams;
+
     get userContextDeparnment() {
         if (this._userContextDeparnment) {
             return this._userContextDeparnment;
@@ -42,9 +44,40 @@ export class UserParamsService {
         }
         return null;
     }
+    get userCard () {
+        if (this._userContext) {
+            return this._userContext['USERCARD_List'];
+        }
+    }
     get hashUserContext () {
         if (this._userContext) {
-            return this._userContext['USER_PARMS_HASH'];
+            const hash: any = {};
+            this.userContextParams.forEach(item => {
+                hash[item.PARM_NAME] = item.PARM_VALUE;
+            });
+            return hash;
+        }
+        return null;
+    }
+
+    get hashUserContextCard () {
+        if (this._userContext) {
+            const hash: any = {};
+            this.userCard.forEach(item => {
+                hash[item.DUE] = item.FUNCLIST;
+            });
+            return hash;
+        }
+        return null;
+    }
+
+    get hashUserContexHomeCard () {
+        if (this._userContext) {
+            const hash: any = {};
+            this.userCard.forEach(item => {
+                hash[item.DUE] = item.HOME_CARD;
+            });
+            return hash;
         }
         return null;
     }

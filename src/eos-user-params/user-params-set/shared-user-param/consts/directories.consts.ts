@@ -26,34 +26,29 @@ export const DIRECTORIES_USER: IBaseUsers = {
             ]
         },
         {
-            key: 'SURNAME',
+            key: 'SRCH_CONTACT_FIELDS',
             type: 'boolean',
-            title: 'ФИО'
-        },
-        {
-            key: 'DUTY',
-            type: 'boolean',
-            title: 'Должность'
-        },
-        {
-            key: 'DEPARTMENT',
-            type: 'boolean',
-            title: 'Подразделение'
+            title: ''
         }
     ],
     fieldsChild: [
         {
-            key: 'SURNAME',
+            key: 'SRCH_CONTACT_FIELDS',
+            type: 'boolean',
+            title: ''
+        },
+        {
+            key: 'SRCH_CONTACT_FIELDS_SURNAME',
             type: 'boolean',
             title: 'ФИО'
         },
         {
-            key: 'DUTY',
+            key: 'SRCH_CONTACT_FIELDS_DUTY',
             type: 'boolean',
             title: 'Должность'
         },
         {
-            key: 'DEPARTMENT',
+            key: 'SRCH_CONTACT_FIELDS_DEPARTMENT',
             type: 'boolean',
             title: 'Подразделение'
         }
