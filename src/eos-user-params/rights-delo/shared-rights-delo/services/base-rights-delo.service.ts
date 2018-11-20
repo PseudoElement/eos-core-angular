@@ -183,7 +183,7 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
         if (this.newData || this.prepareData) {
             this.formChanged.emit(false);
             this.isChangeForm = false;
-            this._userParamsSetSrv.getUserIsn();
+            // this._userParamsSetSrv.getUserIsn();
             if (this.newData) {
             this.userParamApiSrv
                 .setData(this.createObjRequest())

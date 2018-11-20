@@ -161,7 +161,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
         if (this.newData || this.newDataAttach || this.prepareData) {
             this.formChanged.emit(false);
             this.isChangeForm = false;
-            this._userParamsSetSrv.getUserIsn();
+            // this._userParamsSetSrv.getUserIsn();
             if (this.defaultFlag) {
                 this.defaultFlag = false;
                 this.userParamApiSrv
