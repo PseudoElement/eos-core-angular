@@ -1,0 +1,57 @@
+<div class="pagination-option l-font"
+    [ngClass]="{'full': currentState[0] && currentState[1],
+        'only-selected': !currentState[0] && !currentState[1] || currentState[0] && !currentState[1],
+        'info': !currentState[0] && currentState[1] || currentState[0] && currentState[1],
+        'tree': currentState[0] && !currentState[1]}">
+    <div class="pagination">
+        <button class="pag-btn btn-default prev"
+            [disabled]="config?.current === 1"
+            (click)="showPage(config.current - 1)">
+            <span class="icon-btn eos-icon eos-icon-arrow-v-blue-left small to-left"
+                [ngClass]="{'eos-icon-arrow-v-grey-left':config?.current === 1}"></span>
+        </button>
+        <button *ngFor="let page of pages let i = index"
+            class="pag-btn btn-default selected-text"
+            [ngClass]="{'btn-primary-full': config.current === page}"
+            (click)="showPage(page)">{{page}}</button>
+        <button class="pag-btn btn-default next"
+            [disabled]="config?.current === pageCount"
+            (click)="showPage(config.current + 1)">
+            <span class="icon-btn eos-icon eos-icon-arrow-v-blue-left small to-rigth"
+                [ngClass]="{'eos-icon-arrow-v-grey-left': config?.current === pageCount}"></span>
+        </button>
+    </div>
+
+    <button class="btn show-more selected-text"
+        [disabled]="config?.current*config?.length >= config?.itemsQty"
+        (click)="showMore()">Показать еще</button>
+
+    <div dropdown
+        placement="top right"
+        #dd="bs-dropdown"
+        dropup="true"
+        class="show-by">
+        <button type="button"
+            dropdownToggle
+            class="drop-btn btn btn-transparent selected-text"
+            style="height: 48px; width: 336px;">
+            <span>Показывать по {{config?.length}}</span>
+            <div class="arrow">
+                <span class="icon-btn eos-icon small"
+                    [ngClass]="{'eos-icon-arrow-v-blue-top': !dd.isOpen, 'eos-icon-arrow-v-blue-bottom': dd.isOpen}"></span>
+            </div>
+        </button>
+        <ul *dropdownMenu
+            class="dropdown-menu dropdown-menu-right"
+            role="menu">
+            <li role="menuitem"
+                *ngFor="let item of pageLengths"
+                (click)="setPageLength(item.value)"
+                class="menuitem">
+                <a class="dropdown-item text-center">
+                    <span class="l-font">Показывать по {{item.title}}</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
