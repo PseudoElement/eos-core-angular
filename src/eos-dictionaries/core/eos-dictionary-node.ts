@@ -304,17 +304,10 @@ export class EosDictionaryNode {
 
     getPath(): string[] {
         const dictionary = this._dictionary;
-        let _path = [];
-        if (dictionary.id === 'user_param') {
-            _path = [
-                dictionary.id,
-            ];
-        } else {
-            _path = [
-                'spravochniki',
-                dictionary.id,
-            ];
-        }
+        const _path = [
+            'spravochniki',
+            dictionary.id,
+        ];
 
         if (dictionary.root !== this) {
             _path.push(this.id);

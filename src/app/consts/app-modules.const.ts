@@ -5,7 +5,7 @@ export const APP_MODULES = [
     },
     {
         title: 'Пользователи',
-        url: '/user_param',
+        url: '/user-params',
     },
     {
         title: 'Настройки системы',
