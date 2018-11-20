@@ -46,6 +46,7 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
     _currentFormStatus;
     isLoading: boolean = false;
     _userParamsSetSrv: UserParamsService;
+    mainCheckbox = {};
     private _fieldsType = {};
     constructor(
         injector: Injector,
@@ -64,8 +65,6 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
     init() {
         this.prepareDataParam();
               const allData = this._userParamsSetSrv.hashUserContextCard;
-          //  const allData = this._userParamsSetSrv.hashUserDepartment;
-              console.log(allData);
               this.sortedData = this.linearSearchKeyForData(this.constUserParam.fields, allData);
               this.prepareData = this.convData(this.sortedData);
               this.inputs = this.getInputs();
@@ -94,10 +93,6 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
         const dataInput = {rec: {}};
         Object.keys(this.prepareData.rec).forEach(key => {
             if ((this._fieldsType[key] === 'boolean' || this._fieldsType[key] === 'toggle') && !this.prepInputs.rec[key].formatDbBinary) {
-                console.log(this.prepareData.rec[key]);
-               /* if (this.prepareData.rec[key] === 'YES' || this.prepareData.rec[key] === '1') {
-                    dataInput.rec[key] = true;
-                } */
                 if (this.prepareData.rec[key] !== undefined) {
                     dataInput.rec[key] = true;
                 } else {
@@ -135,15 +130,8 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
         );
     }
     ngOnDestroy() {
-     //   this.unsubscribe();
     }
     ngOnInit() {
-      /*  this.subscriptions.push(
-            this.descriptorSrv.saveData$.subscribe(() => {
-                this.submit();
-                this.default();
-            })
-        );*/
     }
     prepareDataParam() {
         this.prepInputs = this.getObjectInputFields(this.constUserParam.fields);
@@ -151,16 +139,11 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
     }
     changeByPath(path: string, value: any) {
         let _value = null;
-        const arrayKeysForBooleanType = ['FILELOCK', 'FILE_DONTDEL'];
-        const pathWithoutRec = path.substr(4);
-        if (typeof value === 'boolean' && arrayKeysForBooleanType.some(elem => elem === pathWithoutRec)) {
-            _value = value ? '1' : '0';
-        } else if (typeof value === 'boolean') {
+        if (typeof value === 'boolean') {
             _value = value ? 'YES' : 'NO';
         } else {
             _value = value;
         }
-       // console.log(_value);
         this.newData = EosUtils.setValueByPath(this.newData, path, _value);
         const oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
         if (oldValue !== _value) {
@@ -197,10 +180,7 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
         };
     }
     submit() {
-        console.log(this.newData);
-        console.log(this.prepareData);
         if (this.newData || this.prepareData) {
-            console.log(this.newData);
             this.formChanged.emit(false);
             this.isChangeForm = false;
             this._userParamsSetSrv.getUserIsn();
@@ -250,52 +230,51 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
     }
     createObjRequest(): any[] {
         const req = [];
-      //  const arrayDue = [];
+        let stringKey = '';
+        let level = -1;
+        const arrayPositionPoints = [];
         const userId = this._userParamsSetSrv.userContextId;
-        console.log(this.newData);
-        for (const key in this.newData.rec) {
-            if (key) {
-                console.log(key);
-                console.log(this.newData.rec[key]);
-                console.log(this.newData.rec[key]);
-                for (const aaa of Object.keys(this.newData.rec[key])) {
-                    console.log(aaa);
-                    console.log(this.newData.rec[key][aaa]);
-                    console.log(this.newData.rec[key][aaa]['']);
-                    console.log(`USER_CL(${userId})/USERCARD_List(\'${userId} ${key}\')`);
-                    if (this.newData.rec[key][aaa][''] === 'YES') {
+
+        const funcObj = function(objNewData, objPrepareData) {
+            for (const key in objNewData) {
+                if (typeof objNewData[key] === 'object') {
+                    level++;
+                    stringKey += key + '.';
+                    funcObj(objNewData[key], objPrepareData);
+                } else {
+                    for (let i = 0; i < stringKey.length; i++) {
+                        if (stringKey.charAt(i) === '.') {
+                            arrayPositionPoints.push(i);
+                        }
+                    }
+                    const keys = Object.keys( objNewData );
+                    if (objNewData[key] === 'YES' && objPrepareData[stringKey] === undefined) {
                         req.push({
                             method: 'POST',
                             requestUri: `USER_CL(${userId})/USERCARD_List`,
                             data: {
-                                ISN_CLASSIF: `${userId}`,
-                                DUE: `${aaa}`,
+                                ISN_LCLASSIF: `${userId}`,
+                                DUE: `${stringKey}`,
                                 HOME_CARD: '0',
                                 FUNCLIST: '010000000000010010'
-                              //  PARM_VALUE: `${this.newData.rec[key]}`
                             }
                         });
-                      //  this.arrayDue.push
+                    } else if (objNewData[key] === 'NO' && objPrepareData[stringKey] !== undefined) {
+                        req.push({
+                            method: 'DELETE',
+                            requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${stringKey}\')`
+                        });
+                    }
+                    if (key === keys[keys.length - 1]) {
+                        level--;
+                        stringKey = stringKey.substring(0, arrayPositionPoints[level] + 1);
                     }
                 }
-               /* req.push({
-                    method: 'POST',
-                    requestUri: `USERCARD(${userId})/USERCARD_List(\'${userId} ${key}\')`,
-                    data: {
-                        DUE: `${this.newData.rec[key]}`
-                      //  PARM_VALUE: `${this.newData.rec[key]}`
-                    }
-                });*/
-               /* req.push({
-                    method: 'MERGE',
-                    requestUri: `USER_CL(${userId})/USER_PARMS_List(\'${userId} ${key}\')`,
-                    data: {
-                        PARM_VALUE: `${this.newData.rec[key]}`
-                    }
-                });*/
             }
-        }
-        console.log(req);
+        };
+
+        funcObj(this.newData.rec, this.prepareData.rec);
+
         return req;
     }
     createObjRequestForDefaultValues(): any[] {

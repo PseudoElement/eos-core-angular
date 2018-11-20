@@ -22,16 +22,16 @@ export class UserParamsService {
         return null;
     }
     get userCard () {
-        console.log(this._userContext);
+      //  console.log(this._userContext);
         if (this._userContext) {
             return this._userContext['USERCARD_List'];
         }
     }
     get hashUserContext () {
-        console.log(this._userContext);
-        console.log(this.userContextParams);
+     //   console.log(this._userContext);
+     //   console.log(this.userContextParams);
        // console.log(this._userCard);
-        console.log(this.userCard);
+    //    console.log(this.userCard);
         if (this._userContext) {
             const hash: any = {};
             this.userContextParams.forEach(item => {
@@ -40,7 +40,7 @@ export class UserParamsService {
           /*  this.userCard.forEach(item => {
                 hash[item.DUE] = item.FUNCLIST;
             });*/
-            console.log(hash);
+         //   console.log(hash);
             return hash;
         }
         return null;
@@ -49,11 +49,24 @@ export class UserParamsService {
     get hashUserContextCard () {
         if (this._userContext) {
             const hash: any = {};
-            console.log(this.userCard);
+          //  console.log(this.userCard);
             this.userCard.forEach(item => {
                 hash[item.DUE] = item.FUNCLIST;
             });
-            console.log(hash);
+         //   console.log(hash);
+            return hash;
+        }
+        return null;
+    }
+
+    get hashUserContexHomeCard () {
+        if (this._userContext) {
+            const hash: any = {};
+          //  console.log(this.userCard);
+            this.userCard.forEach(item => {
+                hash[item.DUE] = item.HOME_CARD;
+            });
+          //  console.log(hash);
             return hash;
         }
         return null;

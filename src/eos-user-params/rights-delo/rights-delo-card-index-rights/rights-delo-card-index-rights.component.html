@@ -14,9 +14,9 @@
                     (change)="selectOnClick($event)"
                 ></eos-dynamic-input>
         <span></span>
-        <ul *ngFor="let item of arrayKeysCheckboxforCardIndexRights; let i = index;">
-            <li
-            class="list-group-item">
+        <ul class="list-card-index-rights"
+            *ngFor="let item of arrayKeysCheckboxforCardIndexRights; let i = index;">
+            <li>
                        <!-- <eos-dynamic-input
                         [input]="inputs['rec.' + item]"
                         [form]="form"

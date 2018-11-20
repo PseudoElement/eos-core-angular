@@ -31,6 +31,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         super(injector, CARD_FILES_USER);
     }
     ngOnInit() {
+        // const homeCardData = this._userParamsSetSrv.hashUserContexHomeCard;
         this.isLoading = true;
         this.servApi.getData(this.quaryDepartment)
         .then(data => {
@@ -43,16 +44,31 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                  });
             }
             this.init();
+            this.choosingMainCheckbox();
             this.isLoading = false;
         });
     }
     choosingMainCheckbox() {
+        let flag = true;
+        let tmpI = -1;
         for (let i = 0; i < this.fieldKeysforCardFiles.length; i++) {
+            for (const key in this._userParamsSetSrv.hashUserContexHomeCard) {
             if (this.fieldKeysforCardFiles[i][2] === true) {
+                flag = false;
+                this.fieldKeysforCardFiles[i][2] = true;
                 this.fieldKeysforCardFiles[i][3] = true;
+                this.mainCheckbox[this.fieldKeysforCardFiles[i][0]] = 1;
+            } else if (this.fieldKeysforCardFiles[i][0] === key && this._userParamsSetSrv.hashUserContexHomeCard[key] === 1 && flag) {
+                tmpI = i;
             } else {
                 this.fieldKeysforCardFiles[i][3] = false;
             }
+          }
+        }
+
+        if (tmpI !== -1 && flag) {
+            this.fieldKeysforCardFiles[tmpI][2] = true;
+            this.fieldKeysforCardFiles[tmpI][3] = true;
         }
     }
     selectedNode(word) {

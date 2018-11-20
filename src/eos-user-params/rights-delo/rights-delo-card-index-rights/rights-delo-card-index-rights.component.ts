@@ -142,12 +142,10 @@ export class RightsDeloCardIndexRightsComponent extends BaseRightsDeloSrv implem
         const allData = this._userParamsSetSrv.hashUserContextCard;
         this.isLoading = true;
         CARD_INDEXS_RIGHTS.fields = [];
-        console.log(allData);
         this.servApi.getData(this.quaryDepartment)
         .then(data => {
         for (let i = 0; i < data.length; i++) {
          for (const keyFromUsercard of Object.keys(allData)) {
-             console.log(keyFromUsercard);
            if (data[i]['DUE'] === keyFromUsercard) {
                  this.fieldKeysforCardIndexRights.push(data[i]['DUE']);
                  if (CARD_INDEXS_RIGHTS.fields[0] === undefined) {
@@ -216,9 +214,5 @@ export class RightsDeloCardIndexRightsComponent extends BaseRightsDeloSrv implem
         }
         this.inputAttach = this.getInputAttach();
         this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
-      /*  console.log(event);
-        console.log(event.target);
-        console.log(event.target[0]);
-        console.log(event.target[1].value); */
     }
 }
