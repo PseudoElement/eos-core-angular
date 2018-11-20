@@ -129,7 +129,7 @@ export class EosDataConvertService {
                                 case E_FIELD_TYPE.select:
                                     // remarked - becouse continuously adding to options
                                     // const options = descr[_key].options;
-                                    const options = [];
+                                    let options = [];
 
                                     if (descr[_key].dictionaryId !== undefined) {
                                         const dict = new EosDictionary(descr[_key].dictionaryId, dictSrv);
@@ -141,6 +141,8 @@ export class EosDataConvertService {
                                                     }
                                                 });
                                             });
+                                    } else {
+                                        options = descr[_key].options;
                                     }
                                     inputs[_dict + '.' + _key] = new DropdownInput({
                                         key: _dict + '.' + descr[_key].foreignKey,
