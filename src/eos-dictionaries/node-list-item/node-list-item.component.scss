@@ -1,8 +1,12 @@
 .eos-node-list-item {
+    .pull-left1 {
+        display: inline-block;
+    }
+
     display: flex;
     .pull-left {
         overflow: hidden;
-        text-overflow: ellipsis;
+        //text-overflow: ellipsis;
     }
     .node-list-item {
         overflow: hidden;

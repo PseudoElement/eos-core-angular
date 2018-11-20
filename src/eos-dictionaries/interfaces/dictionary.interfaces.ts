@@ -24,7 +24,11 @@ export enum E_FIELD_SET {
     edit,
     allVisible
 }
-
+export enum E_VISIBLE_TIPE {
+    all,
+    onlyNode,
+    onlyChild,
+}
 export enum E_FIELD_TYPE {
     string,
     number,
@@ -54,6 +58,7 @@ export interface IFieldDescriptor {
     options?: ISelectOption[];
     height?: number;
     forNode?: boolean;
+    vistype?: E_VISIBLE_TIPE;
     default?: any;
     dictionaryId?: string;
     password?: boolean;
@@ -75,6 +80,7 @@ export interface IFieldDescriptorBase {
     readonly options?: ISelectOption[];
     readonly height?: number;
     readonly forNode?: boolean;
+    readonly vistype?: E_VISIBLE_TIPE;
     readonly default?: any;
     readonly dictionaryId?: string;
     readonly password?: boolean;

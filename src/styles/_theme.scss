@@ -130,6 +130,21 @@
     z-index: 1070;
 }
 
+.tooltip.tooltip-info.no-arrow {
+    &.tooltip.right .tooltip-arrow {
+        display: none;
+    }
+    &.tooltip.right .tooltip-inner::before {
+        display: none;
+    }
+    &.tooltip.left .tooltip-arrow {
+        display: none;
+    }
+    &.tooltip.left .tooltip-inner::before {
+        display: none;
+    }
+}
+
 .tooltip-info,
 .tooltip-error {
     .tooltip-inner {

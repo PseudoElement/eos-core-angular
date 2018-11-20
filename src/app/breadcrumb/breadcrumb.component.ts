@@ -64,10 +64,15 @@ export class BreadcrumbsComponent implements OnDestroy {
         this._breadcrumbsSrv.sendAction({action: action});
     }
 
+    treeButtonVisible() {
+        return !this._sandwichSrv.treeIsBlocked;
+    }
+
     private update() {
         let _actRoute = this._route.snapshot;
         while (_actRoute.firstChild) { _actRoute = _actRoute.firstChild; }
         this.showPushpin = _actRoute.data.showPushpin;
         this.showInfoAct = _actRoute.data && _actRoute.data.showSandwichInBreadcrumb;
     }
+
 }

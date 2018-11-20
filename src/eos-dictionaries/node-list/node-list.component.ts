@@ -155,6 +155,12 @@ export class NodeListComponent implements AfterContentChecked, OnInit, OnDestroy
 
         const subscription = this.modalWindow.content.onChoose.subscribe(() => {
             this.customFields = this.dictSrv.customFields;
+            const _customTitles = this.dictSrv.customTitles;
+            this.viewFields.forEach((vField) => {
+                const _title = _customTitles.find((_f) => _f.key === vField.key);
+                vField.customTitle = _title ? _title.customTitle : null;
+            });
+
             this._countColumnWidth();
             subscription.unsubscribe();
         });

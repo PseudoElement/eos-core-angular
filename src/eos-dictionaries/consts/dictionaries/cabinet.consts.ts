@@ -25,12 +25,12 @@ export const CABINET_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     Object.assign({}, COMMON_FIELD_NAME, {
         key: 'CABINET_NAME',
         title: 'Краткое наименование кабинета',
-        length: 80,
+        length: 64,
     }),
     Object.assign({}, COMMON_FIELD_FULLNAME, {
         title: 'Полное наименование кабинета',
         height: 150,
-        length: 150,
+        length: 2000,
     }), {
         key: 'DUE',
         type: 'string',

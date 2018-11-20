@@ -10,6 +10,7 @@ import {EosDictionaryNode} from '../core/eos-dictionary-node';
 import {IDictionaryViewParameters, IFieldView} from 'eos-dictionaries/interfaces';
 import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
 import {EosUtils} from 'eos-common/core/utils';
+import {E_VISIBLE_TIPE} from '../interfaces/dictionary.interfaces';
 
 @Component({
     selector: 'eos-node-list-item',
@@ -45,8 +46,18 @@ export class NodeListItemComponent implements OnInit, OnChanges {
         if (this.customFields) {
             this.custom = EosUtils.deepUpdate({}, this.customFields);
             this.custom.forEach((_field) => {
-                _field.value = this.node.getValue(_field);
-                // this.customValues[_field.key] = this.node.getValue(_field);
+                const is_node = this.node.data.rec['IS_NODE'];
+                if ((_field.vistype !== undefined) && (is_node !== undefined)) {
+                    if (_field.vistype === E_VISIBLE_TIPE.onlyNode && is_node) {
+                        _field.value = this.node.getValue(_field);
+                    } else if (_field.vistype === E_VISIBLE_TIPE.onlyChild && !is_node) {
+                        _field.value = this.node.getValue(_field);
+                    } else {
+                        _field.value = '';
+                    }
+                } else {
+                    _field.value = this.node.getValue(_field);
+                }
             });
         }
     }

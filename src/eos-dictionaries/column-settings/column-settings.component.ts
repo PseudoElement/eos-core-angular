@@ -120,6 +120,7 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
      */
     save() {
         const customsTitles = [].concat(
+            this.fixedFields.filter(el => el.customTitle),
             this.dictionaryFields.filter(el => el.customTitle),
             this.currentFields.filter(el => el.customTitle));
         this.dictSrv.customTitles = customsTitles;
