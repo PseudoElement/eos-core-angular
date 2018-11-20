@@ -23,7 +23,7 @@ export class BaseCardEditComponent implements OnDestroy {
     /* private _dates: any = {}; */
     constructor(injector: Injector) {
         this.dictSrv = injector.get(EosDictService);
-        this.currTab = this.dictSrv.currentTab;
+        this.currTab = this.dictSrv.currentTab ? this.dictSrv.currentTab : 0;
     }
 
     /**

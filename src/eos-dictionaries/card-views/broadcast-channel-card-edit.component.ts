@@ -35,6 +35,7 @@ export class BroadcastChannelCardEditComponent extends BaseCardEditComponent imp
     constructor(injector: Injector) {
         super(injector);
         this.validatorStore = [];
+        this.currTab = 0;
     }
 
     ngOnChanges() {
