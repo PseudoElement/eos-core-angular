@@ -69,8 +69,8 @@ export class PipRX extends PipeUtils {
 
     initConfig(config: any) {
         this._cfg = Object.assign({
-            webBaseUrl: '../',
-            apiBaseUrl: '../',
+            webBaseUrl: 'http://localhost/n1807/',
+            apiBaseUrl: 'http://localhost/n1807/',
             authApi: '/Services/ApiSession.asmx/',
             dataApi: '/OData.svc/',
         }, config);
