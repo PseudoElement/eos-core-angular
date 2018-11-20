@@ -169,7 +169,7 @@ const routes: Routes = [
         ]
     },
     {
-        path: 'user-params-set',
+        path: 'user-params',
         canActivate: [AuthorizedGuard],
         children: [
             {
@@ -196,7 +196,7 @@ const routes: Routes = [
                 path: '',
                 pathMatch: 'full',
                 redirectTo: 'base-param',
-            },
+            }
         ]
     },
     {

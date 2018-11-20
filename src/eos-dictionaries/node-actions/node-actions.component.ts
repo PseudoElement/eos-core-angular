@@ -88,10 +88,8 @@ export class NodeActionsComponent implements OnDestroy {
         this.isTree = false;
         if (this.dictionary) {
             this.isTree = this.dictionary && this.dictionary.descriptor.dictionaryType !== E_DICT_TYPE.linear;
-            if (this.dictionary.descriptor.dictionaryType === E_DICT_TYPE.department && this.dictionary.id === 'departments') {
+            if (this.dictionary.descriptor.dictionaryType === E_DICT_TYPE.department) {
                 this.addMenu = DEPARTMENT_ADD_MENU;
-            } else if (this.dictionary.id === 'user_param') {
-                this.isTree = false;
             } else {
                 this.addMenu = COMMON_ADD_MENU;
             }
