@@ -31,7 +31,7 @@ export const RC_PARAM: IBaseParameters = {
         {
             key: 'RC_CTRL_RES_LAYER',
             type: 'select',
-            title: 'по поручениям',
+            title: 'ПО ПОРУЧЕНИЯМ',
             options: [
                 {value: '1', title: '1 уровня'},
                 {value: '2', title: '1 и 2 уровня'},

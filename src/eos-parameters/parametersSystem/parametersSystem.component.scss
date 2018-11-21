@@ -24,6 +24,12 @@
             label {
                 font-size: 14px;
             }
+
+            .font-label-s {
+                label {
+                    font-size: 11px;
+                }
+            }
         }
     }
 
@@ -68,9 +74,11 @@
         .list-group-item {
             background: $light-grey-1;
             cursor: pointer;
+
             &:focus {
                 outline: none;
             }
+
             &.active-element-param {
                 background: $highlight-color-main-theme;
             }
