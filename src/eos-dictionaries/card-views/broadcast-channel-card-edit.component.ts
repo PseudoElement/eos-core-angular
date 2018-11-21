@@ -1,12 +1,12 @@
 ///<reference path="../../../node_modules/@angular/core/src/metadata/lifecycle_hooks.d.ts"/>
-import {AfterViewChecked, Component, Injector, OnChanges} from '@angular/core';
+import {Component, Injector, OnChanges} from '@angular/core';
 import {BaseCardEditComponent} from './base-card-edit.component';
 
 @Component({
     selector: 'eos-broadcast-channel-card-edit',
     templateUrl: 'broadcast-channel-card-edit.component.html',
 })
-export class BroadcastChannelCardEditComponent extends BaseCardEditComponent implements OnChanges, AfterViewChecked {
+export class BroadcastChannelCardEditComponent extends BaseCardEditComponent implements OnChanges {
 
     private REC_CHANNEL_TYPE = 'rec.CHANNEL_TYPE';
     private REC_AUTH_METHOD = 'rec.AUTH_METHOD';
@@ -39,10 +39,9 @@ export class BroadcastChannelCardEditComponent extends BaseCardEditComponent imp
     }
 
     ngOnChanges() {
-        this.onChannelTypeChanged();
-    }
-
-    ngAfterViewChecked() {
+        setTimeout(() => {
+            this.onChannelTypeChanged();
+        });
     }
 
     get isEmail(): boolean {
@@ -56,11 +55,13 @@ export class BroadcastChannelCardEditComponent extends BaseCardEditComponent imp
 
 
     onAuthMethodChanged() {
-        if (this.isEmail && (this.authMethod !== 0)) {
-            this.requirementsSMTP.forEach(k => this.validatorEnable(k));
-        } else {
-            this.requirementsSMTP.forEach(k => this.validatorDisable(k));
-        }
+        setTimeout(() => {
+            if (this.isEmail && (this.authMethod !== 0)) {
+                this.requirementsSMTP.forEach(k => this.validatorEnable(k));
+            } else {
+                this.requirementsSMTP.forEach(k => this.validatorDisable(k));
+            }
+        });
     }
 
     onChannelTypeChanged() {
