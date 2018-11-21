@@ -38,7 +38,26 @@ export class LoginComponent implements OnInit, OnDestroy {
 
     loggedIn(success: boolean) {
         if (success) {
-            this._router.navigate([this._returnUrl]);
+            if (this._returnUrl.indexOf('?') === -1) {
+                this._router.navigate([this._returnUrl]);
+            } else {
+                const arr = this._returnUrl.split('?');
+                const params = this._parseQueryUrl(arr[1]);
+                this._router.navigate([arr[0]],
+                    {
+                        queryParams: params
+                    }
+                );
+            }
         }
+    }
+    private _parseQueryUrl(query: string) {
+        const q = {};
+        const arr = query.split('&');
+        arr.forEach(i => {
+            const a = i.split('=');
+            q[a[0]] = a[1];
+        });
+        return q;
     }
 }

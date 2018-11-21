@@ -20,6 +20,8 @@ export class InputBase<T>{
     password?: boolean;
     groupLabel?: string;
     isGroup?: boolean;
+    formatDbBinary?: boolean;
+
 
     constructor(options: {
         value?: T,
@@ -40,7 +42,8 @@ export class InputBase<T>{
         length?: number,
         password?: boolean,
         groupLabel?: string,
-        isGroup?: boolean
+        isGroup?: boolean,
+        formatDbBinary?: boolean,
     } = {}) {
         this.value = options.value;
         this.key = options.key || '';
@@ -53,6 +56,7 @@ export class InputBase<T>{
         }
         this.pattern = options.pattern || null;
         this.readonly = !!options.readonly;
+        this.formatDbBinary = options.formatDbBinary;
         this.isUnique = !!options.isUnique;
         this.uniqueInDict = !!options.uniqueInDict;
         this.hideLabel = !!options.hideLabel;

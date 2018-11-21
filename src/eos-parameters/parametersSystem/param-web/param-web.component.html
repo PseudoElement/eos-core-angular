@@ -1,38 +1,44 @@
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2" *ngIf="inputs">
-            <eos-param-header
-                [title]="titleHeader"
-                (submitForm)="submit()"
-                (cancelForm)="cancel()"
-                [statusBtnSub]="btnDisabled"
-            ></eos-param-header>
-            <div class="form-wrap">
-                <label>Объекты поддержки ЭП и шифрования</label>
-                <hr>
-                <eos-dynamic-input
-                    [input]="inputs['rec.APPSRV_CRYPTO_ACTIVEX']"
-                    [form]="form"
-                    [readonly]="false"
-                ></eos-dynamic-input>
-                <eos-dynamic-input
-                    [input]="inputs['rec.APPSRV_CRYPTO_INITSTR']"
-                    [form]="form"
-                    [readonly]="false"
-                ></eos-dynamic-input>
-                <label>Объекты поддержки работы с инфраструктурой открытых ключей</label>
-                <hr>
-                <eos-dynamic-input
-                    [input]="inputs['rec.APPSRV_PKI_ACTIVEX']"
-                    [form]="form"
-                    [readonly]="false"
-                ></eos-dynamic-input>
-                <eos-dynamic-input
-                    [input]="inputs['rec.APPSRV_PKI_INITSTR']"
-                    [form]="form"
-                    [readonly]="false"
-                ></eos-dynamic-input>
-            </div>
-        </div>
+<div class="input-param-wrapper input-param-web-wrapper" *ngIf="form">
+    <eos-param-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnDisabled"
+    ></eos-param-header>
+    <div class="param-input-group">
+        <span class="l-font">Объект поддержки ЭП и шифрования</span>
+        <hr>
+        <eos-dynamic-input
+            [input]="inputs['rec.APPSRV_CRYPTO_ACTIVEX']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.APPSRV_CRYPTO_INITSTR']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+    <!-- <hr> -->
+    <div class="param-input-group">
+        <span class="l-font">Объект поддержки работы с инфраструктурой открытых ключей</span>
+        <hr>
+        <eos-dynamic-input
+            [input]="inputs['rec.APPSRV_PKI_ACTIVEX']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.APPSRV_PKI_INITSTR']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+    <!-- <hr> -->
+    <div class="param-input-group">
+        <eos-cert-stores
+            #certStores
+        >
+        </eos-cert-stores>
     </div>
 </div>

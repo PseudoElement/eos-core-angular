@@ -1,0 +1,83 @@
+.base-param-wrapper {
+
+    width: 800px;
+    margin: 0 auto;
+    background: $white;
+
+    eos-dynamic-input {
+        font-size: 14px;
+        display: inline-block;
+    }
+
+    .base-param-main {
+        padding: 20px;
+        max-height: calc(100vh - 260px);
+        overflow-y: scroll;
+
+        .base-text-input {
+            width: 250px;
+            margin-left: 26px;
+            display: inline-block;
+        }
+
+        .mt-ceck {
+            margin-top: 30px;
+        }
+
+        .base-login-input {
+            margin-left: 209px;
+        }
+
+        .elem-input-radio {
+            font-size: 14px;
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        .base-checkbox-input {
+            width: 220px;
+        }
+
+        .icon-electronic {
+            cursor: pointer;
+            margin-bottom: -8px;
+            margin-left: 10px;
+        }
+
+        .row-department-role {
+            position: relative;
+            margin-bottom: 20px;
+
+            .base-input-role {
+                position: absolute;
+                top: 0;
+            }
+        }
+
+        .base-department-input {
+
+            input {
+                background: $light-grey-1;
+                width: 457px;
+                cursor: default;
+            }
+
+            .icon-add-department {
+                cursor: pointer;
+                display: inline-block;
+                margin-left: -34px;
+                margin-bottom: -7px;
+            }
+        }
+    }
+}
+
+.shell {
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, .3);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2000;
+}

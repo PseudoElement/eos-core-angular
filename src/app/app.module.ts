@@ -17,6 +17,8 @@ import { EosDictionariesModule } from '../eos-dictionaries/eos-dictionaries.modu
 import { EosRestModule } from '../eos-rest/eos-rest.module';
 
 import { EosParametersModule } from '../eos-parameters/eos-parameters.module';
+import { EosUserParamsModule } from 'eos-user-params/eos-user-params.module';
+import { EosUserSelectModule } from 'eos-user-select/eos-user-select.module';
 
 import { AppComponent } from './app.component';
 import { BreadcrumbsComponent } from './breadcrumb/breadcrumb.component';
@@ -34,12 +36,16 @@ import { TestPageComponent } from './test-page/test-page.component';
 
 import { TitleComponent } from './title/title.component';
 import { UserComponent } from './user/user.component';
+import { NavParamComponent } from './nav-param/nav-param.component';
 
 import { EosBreadcrumbsService } from './services/eos-breadcrumbs.service';
 import { EosDeskService } from './services/eos-desk.service';
 import { EosNoticeService } from './services/eos-notice.service';
 import { EosStorageService } from './services/eos-storage.service';
 import { EosUserProfileService } from './services/eos-user-profile.service';
+import { CarmaHttpService } from './services/carmaHttp.service';
+import { NavParamService } from './services/nav-param.service';
+import { WaitClassifService } from './services/waitClassif.service';
 
 /* guards */
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
@@ -63,6 +69,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
         TestPageComponent,
         TitleComponent,
         UserComponent,
+        NavParamComponent
     ],
     imports: [
         AppRoutingModule,
@@ -77,6 +84,8 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
         EosCommonModule,
         EosDictionariesModule,
         EosParametersModule,
+        EosUserParamsModule,
+        EosUserSelectModule,
     ],
     entryComponents: [
         LoginFormComponent,
@@ -96,6 +105,9 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
         EosNoticeService,
         EosStorageService,
         EosUserProfileService,
+        CarmaHttpService,
+        NavParamService,
+        WaitClassifService,
     ],
     bootstrap: [AppComponent],
 })

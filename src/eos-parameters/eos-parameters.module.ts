@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { ModalModule } from 'ngx-bootstrap';
+
 // import { HttpModule } from '@angular/http';
 
 import { AppRoutingModule } from 'app/app-routing.module';
@@ -14,10 +16,12 @@ import { ParamSearchComponent } from './parametersSystem/param-search/param-sear
 import { ParamHeaderComponent } from './parametersSystem/shared/param-header/header.component';
 import { ParamContextRcComponent } from './parametersSystem/param-context-rc/param-context-rc.component';
 import { ParamAuthenticationComponent } from './parametersSystem/param-authentication/param-authentication.component';
+import { AuthenticationCollectionComponent } from './parametersSystem/param-authentication/collection/collection.component';
 import { ParamFielsComponent } from './parametersSystem/param-files/param-files.component';
 import { ParamPrjRcComponent } from './parametersSystem/param-prj-rc/param-prj-rc.component';
 import { ParamRcComponent } from './parametersSystem/param-rc/param-rc.component';
-import { NavParamComponent } from './parametersSystem/shared/nav-param/nav-param.component';
+import { CertStoresComponent } from './parametersSystem/param-web/cert-stores/cert-stores.component';
+import { AddCertStoresComponent } from './parametersSystem/param-web/cert-stores/add-cert-stores/add-cert-stores.component';
 
 
 
@@ -25,11 +29,11 @@ import { NavParamComponent } from './parametersSystem/shared/nav-param/nav-param
 import { ParamApiSrv } from './parametersSystem/shared/service/parameters-api.service';
 import { EosCommonModule } from 'eos-common/eos-common.module';
 import { ParamDescriptorSrv } from './parametersSystem/shared/service/param-descriptor.service';
+import { CollectionService } from './parametersSystem/param-authentication/collection/collection.service';
 
 
 @NgModule({
     declarations: [
-        NavParamComponent,
         ParametersSystemComponent,
         ParamWebComponent,
         ParamOtherComponent,
@@ -37,9 +41,15 @@ import { ParamDescriptorSrv } from './parametersSystem/shared/service/param-desc
         ParamHeaderComponent,
         ParamContextRcComponent,
         ParamAuthenticationComponent,
+        AuthenticationCollectionComponent,
         ParamFielsComponent,
         ParamPrjRcComponent,
-        ParamRcComponent
+        ParamRcComponent,
+        CertStoresComponent,
+        AddCertStoresComponent,
+    ],
+    entryComponents: [
+        AuthenticationCollectionComponent
     ],
     imports: [
         BrowserModule,
@@ -47,12 +57,13 @@ import { ParamDescriptorSrv } from './parametersSystem/shared/service/param-desc
         AppRoutingModule,
         FormsModule,
         ReactiveFormsModule,
-        EosCommonModule
+        EosCommonModule,
+        ModalModule,
     ],
     providers: [
         ParamApiSrv,
-        ParamDescriptorSrv
-    ],
-    exports: [NavParamComponent]
+        ParamDescriptorSrv,
+        CollectionService
+    ]
 })
 export class EosParametersModule {}

@@ -1,41 +1,43 @@
-<div class="eos-param-search">
-    <eos-param-header [title]="titleHeader"></eos-param-header>
-    <h1>Param Search</h1>
+<div
+*ngIf="inputs"
+class="input-param-wrapper input-param-search-wrapper">
+    <eos-param-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnDisabled"
+    ></eos-param-header>
+    <div class="param-input-group">
+        <span class="l-font">Параметры полнотекстового поиска</span>
+        <hr>
+        <eos-dynamic-input
+            [input]="inputs['rec.INDEXKIND']"
+            [form]="form"
+            [readonly]="inputs['rec.INDEXKIND'].readonly"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.INDEX_URL']"
+            [form]="form"
+            [readonly]="inputs['rec.INDEX_URL'].readonly"
+        ></eos-dynamic-input>
+        <div>
+            <span>{{inputs['rec.INDEXTIMEOUT'].label}}</span>
+            <eos-dynamic-input
+                class="inline-block"
+                [input]="inputs['rec.INDEXTIMEOUT']"
+                [form]="form"
+                [readonly]="inputs['rec.INDEXTIMEOUT'].readonly"
+            ></eos-dynamic-input>
+        </div>
+        <eos-dynamic-input
+            [input]="inputs['rec.ELNPATH']"
+            [form]="form"
+            [readonly]="inputs['rec.ELNPATH'].readonly"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.FULLTEXT_EXTENSIONS']"
+            [form]="form"
+            [readonly]="inputs['rec.FULLTEXT_EXTENSIONS'].readonly"
+        ></eos-dynamic-input>
+    </div>
 </div>
-
-<button class="btn btn-primary-full" (click)="setData()">Записать</button>
-
-<br>
-<br>
-
-<div class="node-marker">
-    <label class="checkbox">
-        <input type="checkbox" [(ngModel)]="checked">
-        <span></span>
-    </label>
-</div>
-<br>
-<div>{{checked}}</div>
-<button class="btn btn-primary" (click)="getDataDb1()">getData1</button>
-<hr>
-
-
-
-
-
-
-<label class="radio">
-    <input type="radio" name="rad1" value="one" [(ngModel)]="radioCheck">
-    <span></span>
-</label>
-<label class="radio">
-    <input type="radio" name="rad1" value="two" [(ngModel)]="radioCheck">
-    <span></span>
-</label>
-
-<p>{{radioCheck}}</p>
-
-<label class="switch">
-    <input type="checkbox">
-    <span class="slider round"></span>
-</label>

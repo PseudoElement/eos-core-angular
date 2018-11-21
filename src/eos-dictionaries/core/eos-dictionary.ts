@@ -310,6 +310,7 @@ export class EosDictionary {
             return this.descriptor.getChildren(node.data.rec)
                 .then((nodes) => {
                     const res = this.updateNodes(nodes, true);
+                    node.updating = false;
                     return Promise.all(res);
                 });
         } else {

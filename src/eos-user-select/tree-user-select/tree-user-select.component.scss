@@ -1,0 +1,38 @@
+.tree-user-select-wrapper {
+    height: calc(100vh - 145px);
+
+    .select-modes {
+        border-bottom: solid 1px $border-color-main-theme;
+        background: $light-grey-1;
+
+        .tabs {
+            padding-left: 50px;
+            transition: .3s;
+
+            .tab-item {
+                margin-right: 30px;
+                transition: .3s;
+            }
+        }
+    }
+
+    .tree-wrapper-overflow {
+        // width: 100%;
+        height: 100%;
+        overflow-x: auto;
+    }
+}
+
+@media(min-width: 1600px) {
+    .tree-user-select-wrapper {
+        .select-modes {
+            .tabs {
+                padding-left: 90px;
+
+                .tab-item {
+                    margin-right: 30px;
+                }
+            }
+        }
+    }
+}

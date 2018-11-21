@@ -1,0 +1,22 @@
+<div [formGroup]="form">
+    <div
+        *ngFor="let item of input.options"
+        class="elem-input-radio">
+        <label
+            [ngClass]="{disabled: readonly}"
+            class="radio inline-block">
+            <input
+                type="radio"
+                [readonly]="readonly"
+                [ngClass]="{'readonly': readonly}"
+                [name]="input.key"
+                [id]="input.key"
+                (blur)="onBlur()"
+                (focus)="onFocus()"
+                [formControlName]="input.key"
+                [value]="item.value">
+            <span></span>
+            {{item.title}}
+        </label>
+    </div>
+</div>

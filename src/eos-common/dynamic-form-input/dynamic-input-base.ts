@@ -61,7 +61,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
         this.subscriptions = [];
     }
 
-    protected get control(): AbstractControl {
+     get control(): AbstractControl {
         return this.form.controls[this.input.key];
     }
 

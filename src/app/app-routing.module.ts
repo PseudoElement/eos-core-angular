@@ -15,7 +15,10 @@ import { UserRestComponent } from '../eos-rest/clman/user.component';
 import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
 import { LoginComponent } from './login/login.component';
-import {ParametersSystemComponent} from '../eos-parameters/parametersSystem/parametersSystem.component';
+
+import { ParametersSystemComponent } from '../eos-parameters/parametersSystem/parametersSystem.component';
+import { UserParamsComponent } from 'eos-user-params/eos-user-params.component';
+import { UserSelectComponent } from 'eos-user-select/eos-user-select.component';
 /// import { environment } from 'environments/environment';
 
 const childrenDictionariesComponent = [{
@@ -157,6 +160,65 @@ const routes: Routes = [{
             path: '',
             redirectTo: 'rc',
             pathMatch: 'full'
+        }
+    ]
+}, {
+    path: 'user-params-set',
+    canActivate: [AuthorizedGuard],
+    children: [
+        {
+            path: ':field-id',
+            children: [
+                {
+                    path: ':sub-field',
+                    component: UserParamsComponent,
+                    data: {
+                        showNav: true
+                    }
+                },
+                {
+                    path: '',
+                    pathMatch: 'full',
+                    component: UserParamsComponent,
+                    data: {
+                        showNav: true
+                    }
+                }
+            ]
+        },
+        {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'base-param',
+        },
+    ]
+}, {
+    path: 'user_param',
+    canActivate: [AuthorizedGuard],
+    data: {
+        title: 'Пользователи',
+        showInBreadcrumb: true
+    },
+    children: [
+        {
+            path: ':nodeId',
+            component: UserSelectComponent,
+            data: {
+                showBreadcrumb: true,
+                showInBreadcrumb: true,
+                showSandwichInBreadcrumb: true,
+                showPushpin: true
+            },
+        },
+        {
+            path: '',
+            component: UserSelectComponent,
+            data: {
+                showBreadcrumb: true,
+                showInBreadcrumb: true,
+                showSandwichInBreadcrumb: true,
+                showPushpin: true
+            },
         }
     ]
 }, {

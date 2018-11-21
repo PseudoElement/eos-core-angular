@@ -1,0 +1,98 @@
+<div class="eos-dictionary"
+    [ngClass]="{'full': currentState[0] && currentState[1] && !hideTree,
+        'only-selected': !currentState[0] && !currentState[1] || currentState[0] && !currentState[1] && hideTree,
+        'info': !currentState[0] && currentState[1] || currentState[0] && currentState[1] && hideTree,
+        'tree': currentState[0] && !currentState[1] && !hideTree}"
+>
+    <div class="tree-wrapper block"
+        #tree
+        [ngClass]="{'open-tree': currentState[0] && !hideTree, 'has-spinner': !treeNodes.length }">
+        <eos-tree-user-select></eos-tree-user-select>
+        <eos-spinner *ngIf="!treeNodes.length"
+            size="lg"></eos-spinner>
+        <!-- <eos-tree *ngIf="treeNodes.length"
+            [nodes]="treeNodes"
+            [showDeleted]="params.showDeleted"></eos-tree> -->
+        <div class="fon highlighted"
+            [style.width]="fonConf.width"
+            [style.height]="fonConf.height"
+            [style.top]="fonConf.top"></div>
+    </div>
+    <div class="selected-wrapper"
+        #selectedWrapper
+        [ngClass]="{'open-tree': currentState[0] && !hideTree }">
+        <div class="node-actions">
+            <div *ngIf="true"
+                class="selected-node xl-font"
+                [ngClass]="{'has-custom': hasCustomTable}">
+                <div class="go-top-wrapper">
+                    <button *ngIf="hasParent"
+                        class="btn btn-primary-light"
+                        (click)="goUp()">
+                        <span class="eos-icon eos-icon-arrow-blue-left"></span>
+                    </button>
+                </div>
+                <div class="selected-node-title">
+                    <span class="long-title xl-font">title}}</span>
+                </div>
+                <!-- <div class="tabs-wrapper usual-border m-font">
+                    <ul class="tabs"
+                        *ngIf="dictionary?.id === 'departments'">
+                        <li class="tab-item"
+                            role="presentation"
+                            [ngClass]="{'active': dictMode === 1}"
+                            (click)="setDictMode(1)">
+                            <span class="tab-title">Кабинеты</span>
+                        </li>
+                        <li class="tab-item"
+                            role="presentation"
+                            [ngClass]="{'active': dictMode === 0}"
+                            (click)="setDictMode(0)">
+                            <span class="tab-title">Подразделения</span>
+                        </li>
+                    </ul>
+                </div> -->
+                <div class="item-count usual-border m-font">
+                    <ng-container *ngIf="true; then foundRecords; else records"></ng-container>
+                    <ng-template #records>
+                        <span class="item-count-content">
+                            Записей:
+                            <span class="counter">stub</span>
+                        </span>
+                    </ng-template>
+                    <ng-template #foundRecords>
+                        <span class="item-count-found">
+                            Найдено <span class="counter">stub</span> записей
+                        <button class="btn btn-primary-light"
+                            tooltip="Очистить результаты"
+                            placement="bottom"
+                            container="body"
+                            containerClass="tooltip-info"
+                            (click)="true"><span class="eos-icon eos-icon-close-blue small"></span></button>
+                        </span>
+                    </ng-template>
+                </div>
+            </div>
+            <div class="first-line">
+                <div class="controller pull-left">
+                    <!-- <eos-node-actions (action)="doAction($event)"></eos-node-actions> -->
+                </div>
+                <div class="pull-right">
+                    <!-- <eos-dictionary-search (switchFastSrch)="switchFastSearch($event)"></eos-dictionary-search> -->
+                </div>
+            </div>
+            <!-- <eos-dictionary-quick-search *ngIf="fastSearch"></eos-dictionary-quick-search> -->
+        </div>
+        <!-- <eos-node-list #nodeList></eos-node-list> -->
+        <eos-user-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-user-list-pagination>
+    </div>
+    <div class="opened-wrapper block"
+        [ngClass]="{'open-info': currentState[1]}">
+        <div class="info-spinner">
+            <eos-spinner *ngIf="false"
+                size="lg"></eos-spinner>
+        </div>
+        <!-- <eos-node-info-switcher *ngIf="!params.updatingInfo"></eos-node-info-switcher> -->
+    </div>
+</div>
+

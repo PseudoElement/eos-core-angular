@@ -39,10 +39,25 @@
                                 [disabled]="disabled"
                                 [inputTooltip]="tooltip"></eos-dynamic-input-date>
         <eos-dynamic-input-buttons *ngSwitchCase="types.buttons"
-                                   [form]="form"
-                                   [input]="input"
-                                   [readonly]="readonly"
-                                   [disabled]="disabled"
-                                   [inputTooltip]="tooltip"></eos-dynamic-input-buttons>
+            [form]="form"
+            [input]="input"
+            [disabled]="disabled"
+            [readonly]="readonly"
+            [inputTooltip]="tooltip"></eos-dynamic-input-buttons>
+        <eos-dynamic-input-toggle *ngSwitchCase="types.toggle"
+            [form]="form"
+            [input]="input"
+            [readonly]="readonly"
+            [inputTooltip]="tooltip"></eos-dynamic-input-toggle>
+        <eos-dynamic-input-increment-number *ngSwitchCase="types.numberIncrement"
+            [form]="form"
+            [input]="input"
+            [readonly]="readonly"
+            [inputTooltip]="tooltip"></eos-dynamic-input-increment-number>
+        <eos-dynamic-input-radio *ngSwitchCase="types.radio"
+            [form]="form"
+            [input]="input"
+            [readonly]="readonly"
+            [inputTooltip]="tooltip"></eos-dynamic-input-radio>
     </ng-container>
 </div>

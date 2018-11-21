@@ -1,11 +1,13 @@
 @import "./parametersSystem/parametersSystem.component";
 @import "./parametersSystem/shared/param-header/header.component";
-@import "./parametersSystem/shared/nav-param/nav-param.component";
 @import "./parametersSystem/param-web/param-web.component";
+@import "./parametersSystem/param-web/cert-stores/cert-stores.component";
+@import "./parametersSystem/param-web/cert-stores/add-cert-stores/add-cert-stores.component";
 @import "./parametersSystem/param-other/param-other.component";
 @import "./parametersSystem/param-search/param-search.component";
 @import "./parametersSystem/param-context-rc/param-context-rc.component";
 @import "./parametersSystem/param-authentication/param-authentication.component";
+@import "./parametersSystem/param-authentication/collection/collection.component";
 @import "./parametersSystem/param-files/param-files.component";
 @import "./parametersSystem/param-prj-rc/param-prj-rc.component";
 @import "./parametersSystem/param-rc/param-rc.component";

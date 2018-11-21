@@ -1,0 +1,84 @@
+.modal-collection {
+    width: 800px;
+    margin: 200px auto 0;
+
+
+    .collection-action {
+        background: $light-grey-1;
+        border-bottom: 1px solid $border-color-main-theme;
+
+        .btn {
+            width: 48px;
+            height: 48px;
+            background: transparent;
+        }
+    }
+
+    .collection-param {
+        background: $light-grey-1;
+        border-bottom: 1px solid $border-color-main-theme;
+        // border-top-color: transparent;
+
+        .checkbox-inline {
+            width: 48px;
+            height: 48px;
+            padding-top: 13px;
+        }
+
+        .item {
+            display: inline-block;
+
+            .text {
+                cursor: pointer;
+                color: $button-color-main-theme;
+                position: relative;
+                top: 3px;
+            }
+            .eos-icon {
+                vertical-align: middle;
+            }
+        }
+    }
+
+    .collection-main {
+        min-height: 200px;
+        max-height: 50vh;
+        background: $white;
+        overflow: auto;
+
+        ul {
+            margin: 0;
+            padding: 0;
+
+            li {
+                list-style: none;
+                line-height: 32px;
+                color: #000;
+
+                .list {
+                    cursor: default;
+                    user-select: none;
+
+                    input{
+                        display: none;
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+.collection-empty-list {
+    margin-left: 15px;
+}
+
+.modalWord {
+    width: 600px;
+    margin: 280px auto 0;
+
+    .modalWord-content {
+        padding: 15px;
+        background: $white;
+    }
+}

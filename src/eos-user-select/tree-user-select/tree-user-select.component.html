@@ -1,0 +1,65 @@
+<div class="tree-user-select-wrapper">
+    <!-- табы выбора мода -->
+    <div class="select-modes">
+        <ul class="tabs">
+            <li class="tab-item"
+                *ngFor="let tab of modes"
+                role="presentation"
+                [ngClass]="{'active secondary-text': tab.key === currMode}"
+                (click)="setTab(tab.key)">
+                <span class="tab-title">{{tab.title}}</span>
+            </li>
+        </ul>
+    </div>
+    <div *ngIf="!isLoading; else spiner" class="tree-wrapper-overflow">
+        <ng-container *ngTemplateOutlet="treeTmpl; context: {items: nodes, level: 0}"></ng-container>
+    </div>
+</div>
+
+
+
+
+
+<ng-template #treeTmpl
+    let-items="items"
+    let-level="level">
+    <div *ngFor="let node of items"
+        class="eos-tree-node">
+        <ng-container *ngTemplateOutlet="treeNodeTmpl; context:{node: node, level:level}"></ng-container>
+    </div>
+</ng-template>
+
+<ng-template #treeNodeTmpl
+    let-node="node"
+    let-level="level">
+    <!-- <div style="width: 400px; height: 50px;"></div> -->
+    <ng-container *ngIf="node && (!node.isDeleted || showDeleted)">
+        <div class="node"
+            #el
+            (click)="onSelect($event, node)"
+            [ngClass]="{'highlighted' : node.isActive}"
+            [ngStyle]="{'padding-left.px': getPadding(level)}">
+            <!-- span class="fake-padding"></span -->
+            <div class="tree-btn"
+                (click)="onExpand($event, node)">
+                <span *ngIf="node.expandable"
+                    class="eos-icon tringle-size icon"
+                    [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded, 'eos-icon-close-folder-blue': !node.isExpanded}"></span>
+            </div>
+            <div class="title"
+                [ngClass]="{'deleted': node.isDeleted, 'select': node.isActive}"
+                [style.width.px]="getNodeWidth(level)">
+                <span class="title-item">{{node.title}}</span>
+                <eos-spinner *ngIf="node.updating"
+                    size="sm"></eos-spinner>
+            </div>
+        </div>
+        <ng-container *ngIf="node.isExpanded && node.expandable">
+            <ng-container *ngTemplateOutlet="treeTmpl; context: {items: node.children, level: level*1+1}"></ng-container>
+        </ng-container>
+    </ng-container>
+</ng-template>
+
+<ng-template #spiner>
+    <eos-spinner size="lg"></eos-spinner>
+</ng-template>

@@ -1,0 +1,185 @@
+<div class="cert-wrapper" #wrapper>
+    <div class="cert-header">
+            <span class="l-font">Хранилища сертификатов</span>
+    </div>
+    <div class="cert-action">
+        <button
+            class="btn"
+            tooltip="Добавить хранилище"
+            placement="bottom"
+            containerClass="tooltip-info"
+            (click)="addStores()"
+        >
+                <span class="eos-icon eos-icon-plus-blue small"></span>
+        </button>
+        <button
+            class="btn"
+            #dTolltip="bs-tooltip"
+            tooltip="Удалить"
+            placement="bottom"
+            containerClass="tooltip-info"
+            (click)="dTolltip.hide(); deleteStores()"
+            [disabled]="!this.certStoresService.isMarkNode"
+        >
+                <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+        </button>
+        <button
+            class="btn"
+            tooltip="Просмотреть"
+            placement="bottom"
+            containerClass="tooltip-info"
+            (click)="showCert()"
+            [disabled]="!CurrentSelect"
+        >
+                <span class="eos-icon eos-icon-show-blue small"></span>
+        </button>
+    </div>
+    <div class="cert-param">
+        <div
+            class="checkbox-inline"
+        >
+            <label [tooltip]="checkAllMarkes.checked ? 'Снять пометки' : 'Пометить все'"
+                placement="bottom"
+                container="body"
+                containerClass="tooltip-info"
+            >
+                <input #checkAllMarkes type="checkbox" (change)="toggleAllMarks($event)">
+                <span></span>
+            </label>
+        </div>
+        <div
+            class="item l-font"
+        >
+            <span class="text"
+                (click)="orderByField()"
+                tooltip="Упорядочить"
+                placement="bottom"
+                container="body"
+                containerClass="tooltip-info"
+            >
+                Хранилища
+            </span>
+            <span class="order-icon">
+                <span
+                class="icon eos-icon small"
+                [ngClass]="{'eos-icon-arrow-blue-top': orderBy, 'eos-icon-arrow-blue-bottom': !orderBy}"
+                >
+                </span>
+            </span>
+        </div>
+    </div>
+    <div class="cert-content">
+        <ul
+            *ngIf="listCertStores.length; else emptyStores"
+        >
+            <li
+                *ngFor="let list of listCertStores"
+            >
+                <div
+                    class="list"
+                    [ngClass]="{'highlighted': list.isSelected}"
+                    (click)="selectedNode(list)"
+                    (dblclick)="showCert()"
+                >
+                    <label
+                        class="checkbox-inline"
+                        [tooltip]="list.marked ? markTemp : notMarkTemp"
+                        containerClass="tooltip-info"
+                        container="body"
+                        (click)="checkboxClick($event)"
+                        placement="bottom"
+                    >
+                        <input
+                            type="checkbox"
+                            [(ngModel)]="list.marked || list.selectedMark"
+                            (ngModelChange)="markNode($event, list)"
+                        >
+                        <span></span>
+                    </label>
+                    {{list.Location}}: {{list.Name}}
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!-- Модальное окно отображения сертификатов хранилища -->
+    <div
+        bsModal #InfoCertModal="bs-modal"
+        class="modal fade" tabindex="-1"
+        role="dialog"
+        aria-labelledby="dialog-sizes-name1"
+    >
+        <div class="modal-dialog" [ngStyle]="{'margin-left.px': offsetLeftModal}">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{CurrentSelect?.Location}}:{{CurrentSelect?.Name}}</h4>
+                    <button type="button" class="close pull-right" (click)="InfoCertModal.hide()" aria-label="Close">
+                        <span class="eos-icon eos-icon-close-white small"></span>
+                    </button>
+                </div>
+                <div
+                    class="modal-body"
+                    *ngIf="listCertNode$ | async as cert; else loaderCarma"
+                >
+                    <div
+                        *ngIf="cert.length; else emptyCert"
+                    >
+                        <ul>
+                            <li *ngFor="let c of cert">
+                                <div class="list-item-cert">
+                                    {{c}}
+                                </div>
+                                <div
+                                    class="info-icon-wrap"
+                                    (click)="showCertInfo(c)"
+                                >
+                                    <span class="info-icon eos-icon eos-icon-info-blue x-small"></span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Модальное окно добавления сертификатов хранилища -->
+    <div
+        bsModal #addCertStoresModal="bs-modal"
+        class="modal fade" tabindex="-1"
+        role="dialog"
+        aria-labelledby="dialog-sizes-name1"
+    >
+        <div class="modal-dialog" [ngStyle]="{'margin-left.px': offsetLeftModal}">
+            <div class="modal-content">
+                    <eos-add-cert-stores
+                        *ngIf="CertStoresModal"
+                        (closeAddCertModal)="closeAddCertModal()"
+                    >
+                    </eos-add-cert-stores>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #markTemp>Снять<br>пометку</ng-template>
+<ng-template #notMarkTemp>Пометить<br>элемент</ng-template>
+<ng-template #emptyCert>
+    <h4>Сертифткаты отсутствуют</h4>
+</ng-template>
+<ng-template #emptyStores>
+    <h4 class="emptyStores">Хранилища не указаны</h4>
+</ng-template>
+<ng-template #loaderCarma>
+    <div class="modal-body">
+        <div id="loadblock">
+            <div id="loading">
+                <i class="fa fa-spinner fa-pulse fa-fw selected-text lg bl"></i>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- <ng-template #errorCarma>
+    <div class="modal-body">
+        <h4>Сервер Карма не доступен</h4>
+    </div>
+</ng-template> -->
+
