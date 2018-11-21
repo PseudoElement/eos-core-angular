@@ -563,7 +563,7 @@ export class EosDictService {
     search(searchString: string, params: ISearchSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
         this._srchCriteries = dictionary.getSearchCriteries(searchString, params, this.treeNode);
-        return this._search();
+        return this._search(params.deleted);
     }
 
     setFilter(filter: any) {
