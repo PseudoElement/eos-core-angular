@@ -1,4 +1,4 @@
-import {Component, ViewChild, OnDestroy, OnInit, Inject, ChangeDetectorRef, AfterContentChecked} from '@angular/core';
+import {Component, ViewChild, OnDestroy, OnInit, Inject, ChangeDetectorRef, AfterContentInit, AfterContentChecked} from '@angular/core';
 import {SortableComponent, BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
@@ -15,12 +15,13 @@ import {DictionaryDescriptorService} from '../core/dictionary-descriptor.service
 import {DOCUMENT} from '@angular/common';
 
 const ITEM_WIDTH_FOR_NAN = 100;
+const MAX_PERCENT_WIDTH = 98;
 
 @Component({
     selector: 'eos-node-list',
     templateUrl: 'node-list.component.html',
 })
-export class NodeListComponent implements AfterContentChecked, OnInit, OnDestroy {
+export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, AfterContentChecked {
     @ViewChild(SortableComponent) sortableComponent: SortableComponent;
     @ViewChild(LongTitleHintComponent) hint: LongTitleHintComponent;
 
@@ -34,12 +35,11 @@ export class NodeListComponent implements AfterContentChecked, OnInit, OnDestroy
     nodes: EosDictionaryNode[] = []; // Elements for one page
     orderBy: IOrderBy;
     params: IDictionaryViewParameters;
-    tableWidth = 0;
     headerOffset = 0;
     viewFields: IFieldView[] = [];
-    already_calced = false;
 
     private ngUnsubscribe: Subject<any> = new Subject();
+    private nodeListElement: Element;
 
     constructor(
         @Inject(DOCUMENT) document,
@@ -50,7 +50,6 @@ export class NodeListComponent implements AfterContentChecked, OnInit, OnDestroy
     ) {
         dictSrv.visibleList$.takeUntil(this.ngUnsubscribe)
             .subscribe((nodes: EosDictionaryNode[]) => {
-                // console.log('visibleList', nodes);
                 if (dictSrv.currentDictionary) {
                     this.customFields = this.dictSrv.customFields;
                     this.viewFields = this.dictSrv.currentDictionary.getListView();
@@ -89,7 +88,7 @@ export class NodeListComponent implements AfterContentChecked, OnInit, OnDestroy
                 this.nodes = nodes;
                 setTimeout(() => {
                     this._countColumnWidth();
-                }, 0);
+                }, 100);
                 this.updateMarks();
             });
 
@@ -129,6 +128,12 @@ export class NodeListComponent implements AfterContentChecked, OnInit, OnDestroy
     }
 
     ngAfterContentChecked() {
+        // TODO: remove freq. updates
+        this._countColumnWidth();
+    }
+
+    ngAfterContentInit() {
+        this.nodeListElement = document.querySelector('.node-title');
         this._countColumnWidth();
     }
 
@@ -139,7 +144,6 @@ export class NodeListComponent implements AfterContentChecked, OnInit, OnDestroy
 
     checkState() {
         this.updateMarks();
-        // this.checked.emit();
     }
 
     /**
@@ -160,8 +164,7 @@ export class NodeListComponent implements AfterContentChecked, OnInit, OnDestroy
                 const _title = _customTitles.find((_f) => _f.key === vField.key);
                 vField.customTitle = _title ? _title.customTitle : null;
             });
-
-            this._countColumnWidth();
+            this.dictSrv.orderBy(this.orderBy);
             subscription.unsubscribe();
         });
     }
@@ -212,7 +215,6 @@ export class NodeListComponent implements AfterContentChecked, OnInit, OnDestroy
 
     toggleItem() {
         this.userOrdered(this.nodes);
-        // this.reordered.emit(this.nodes);
     }
 
     updateMarks(): void {
@@ -252,7 +254,6 @@ export class NodeListComponent implements AfterContentChecked, OnInit, OnDestroy
 
     userOrdered(nodes: EosDictionaryNode[]) {
         this.dictSrv.setUserOrder(nodes);
-
     }
 
     openNodeNavigate(backward = false): void {
@@ -284,13 +285,15 @@ export class NodeListComponent implements AfterContentChecked, OnInit, OnDestroy
         }
     }
 
-    isOverflowed() {
-        const element = document.querySelector('.node-title');
-        if (!element) {
+    hasOverflowedColumns() {
+        if (!this.nodeListElement) {
             return false;
         }
-        return element.scrollWidth > element.clientWidth;
+        return (this.nodeListElement.scrollWidth > this.nodeListElement.clientWidth);
+    }
 
+    isOverflowed() {
+        return (this.params.firstUnfixedIndex !== 0) || this.hasOverflowedColumns();
     }
 
     onRightClick() {
@@ -310,27 +313,30 @@ export class NodeListComponent implements AfterContentChecked, OnInit, OnDestroy
     }
 
     private _countColumnWidth() {
+        // console.log('recalc');
+        let length = [];
         this.viewFields.forEach((_f) => {
             const element = document.getElementById('vf_' + _f.key);
             if (element) {
-                this.length[_f.key] = element.clientWidth;
+                length[_f.key] = element.clientWidth;
             }
         });
 
         this.customFields.forEach((_f) => {
             const element = document.getElementById('vf_' + _f.key);
             if (element) {
-                this.length[_f.key] = element.clientWidth;
+                length[_f.key] = element.clientWidth;
             }
         });
 
+        this.length = length;
+        length = [];
 
-        const length = {};
         if (this.isOverflowed()) {
             this.min_length = [];
-            // console.log("over");
+            // console.log('over');
         } else {
-            // console.log("!over");
+            // console.log('!over');
             let fullWidth = 0;
 
             this.viewFields.forEach((_f) => {
@@ -346,11 +352,11 @@ export class NodeListComponent implements AfterContentChecked, OnInit, OnDestroy
                     fullWidth += itemWidth;
                 });
                 this.customFields.forEach((_f) => {
-                    length[_f.key] = length[_f.key] / fullWidth * 100;
+                    length[_f.key] = length[_f.key] / fullWidth * MAX_PERCENT_WIDTH;
                 });
             }
             this.viewFields.forEach((_f) => {
-                length[_f.key] = length[_f.key] / fullWidth * 100;
+                length[_f.key] = length[_f.key] / fullWidth * MAX_PERCENT_WIDTH;
             });
 
             this.min_length = length;
