@@ -60,7 +60,8 @@ export enum E_FIELD_TYPE {
     dictionary,
     select,
     array,
+    xml,
     toggle,
     numberIncrement,
-    radio
+    radio,
 }
