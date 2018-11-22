@@ -96,7 +96,7 @@ export const CONTEXT_RC_PARAM: IBaseParameters = {
         {
             key: 'DOC_EXE',
             type: 'boolean',
-            title: 'Исполнители'
+            title: 'Исполнитель'
         },
         {
             key: 'PRJ_RC', // PRJ_RC
@@ -121,7 +121,7 @@ export const CONTEXT_RC_PARAM: IBaseParameters = {
         {
             key: 'PRJ_REF_LINK',
             type: 'boolean',
-            title: 'Связи'
+            title: 'Связки'
         },
         {
             key: 'PRJ_FORUM',

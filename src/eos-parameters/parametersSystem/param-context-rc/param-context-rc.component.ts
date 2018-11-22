@@ -51,7 +51,6 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
         .then(dataDb => {
             const data = {};
             if (dataDb[0].PARM_VALUE !== '' && dataDb[0].PARM_VALUE !== null) {
-                /* Вторая проверка под вопросом, так как OData пустую строку записывает как NULL*/
                 dataDb[0].PARM_VALUE.slice(1, -1).split(',').forEach(key => {
                     data[key] = true;
                 });
@@ -82,8 +81,8 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
         if (data) {
             this.prepInputs._list.forEach(key => {
                 if (key === 'RESOLUTION') {
-                    let resol: any = data.hasOwnProperty('RESOLUTION_ALL') ? 'RESOLUTION_ALL' : false;
-                    resol = data.hasOwnProperty('RESOLUTION_FIRST') ? 'RESOLUTION_FIRST' : false;
+                    const resol: any = data.hasOwnProperty('RESOLUTION_ALL') ? 'RESOLUTION_ALL' : false ||
+                    data.hasOwnProperty('RESOLUTION_FIRST') ? 'RESOLUTION_FIRST' : false;
                     if (resol) {
                         prepareData.rec[key] = resol;
                         this.formContextChoice.controls.contextResolution.patchValue(true);

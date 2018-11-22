@@ -74,9 +74,11 @@
         .list-group-item {
             background: $light-grey-1;
             cursor: pointer;
+
             &:focus {
                 outline: none;
             }
+
             &.active-element-param {
                 background: $highlight-color-main-theme;
             }
