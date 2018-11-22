@@ -2384,11 +2384,11 @@ const commonMeta = {
         readonly: [],
         relations: []
     },
-     NP_RESHEN_CL: {
+    NP_RESHEN_CL: {
         pk: 'DUE',
         properties: {
-            ISN_NODE: _t.i,
             DUE: _t.s,
+            ISN_NODE: _t.i,
             MAXDUE: _t.s,
             LAYER: _t.i,
             IS_NODE: _t.i,
@@ -2408,9 +2408,9 @@ const commonMeta = {
     NP_SUD_RESHEN_TYPE_CL: {
         pk: 'DUE',
         properties: {
+            DUE: _t.s,
             ISN_NODE: _t.i,
             ISN_HIGH_NODE: _t.i,
-            DUE: _t.s,
             MAXDUE: _t.s,
             LAYER: _t.i,
             IS_NODE: _t.i,
@@ -2431,9 +2431,9 @@ const commonMeta = {
     NP_OSN_PRED_DELA_CL: {
         pk: 'DUE',
         properties: {
+            DUE: _t.s,
             ISN_NODE: _t.i,
             ISN_HIGH_NODE: _t.i,
-            DUE: _t.s,
             MAXDUE: _t.s,
             LAYER: _t.i,
             IS_NODE: _t.i,

@@ -103,7 +103,7 @@ export abstract class AbstractDictionaryDescriptor {
                 };
                 if (SevIndexHelper.PrepareForSave(sevData, record)) {
                     const exist = sevs.find((existSev) =>
-                        sevData.OBJECT_ID !== existSev.OBJECT_ID && existSev.GLOBAL_ID === sevData.GLOBAL_ID);
+                        (sevData.OBJECT_ID === existSev.OBJECT_ID) && (sevData.GLOBAL_ID === existSev.GLOBAL_ID));
 
                     if (exist) {
                         result.success = false;
