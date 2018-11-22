@@ -7,6 +7,7 @@
                        [readonly]="!editMode"></eos-dynamic-input>
     <eos-dynamic-input [input]="inputs['rec.CHANNEL_TYPE']"
                        [form]="form"
+                       (change)="onChannelTypeChanged()"
                        [readonly]="!editMode" ></eos-dynamic-input>
     <span *ngIf="isEmail">
         <div class="tabs-wrapper usual-border border-bottom">
@@ -48,6 +49,7 @@
                     <td>
                         <eos-dynamic-input [input]="inputs['rec.AUTH_METHOD']"
                                            [form]="form"
+                                           (change)="onAuthMethodChanged()"
                                            [readonly]="!editMode"></eos-dynamic-input>
                         <eos-dynamic-input [input]="inputs['rec.SMTP_PORT']"
                                            [form]="form"

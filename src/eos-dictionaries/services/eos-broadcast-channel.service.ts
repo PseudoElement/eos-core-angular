@@ -88,7 +88,7 @@ export class EosBroadcastChannelService {
                 ) +
                 '" Pop3Server="' + (this._data['POP3_SERVER'] === null ? '' : this._data['POP3_SERVER']) +
                 '" Pop3Port="' + (this._data['POP3_PORT'] === null ? '' : this._data['POP3_PORT']) +
-                '" Pop3User="' + (this._data['POP3_USER'] === null ? '' : this._data['POP3_USER']) +
+                '" Pop3User="' + (this._data['POP3_LOGIN'] === null ? '' : this._data['POP3_LOGIN']) +
                 '" Pop3Password="' + (this._data['POP3_PASSWORD'] === null ? '' : this._data['POP3_PASSWORD']) +
                 '" Pop3Ssl="' + (this._data['POP3_ENCRYPTION'] ? 'true' : 'false')
                 + '"/>';

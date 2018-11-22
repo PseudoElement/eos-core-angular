@@ -16,7 +16,6 @@ export const SIGN_KIND_DICT: IDictionaryDescriptor = {
     actions: [
         'quickSearch', 'fullSearch', 'order', 'userOrder',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'tableCustomization', 'edit', 'view',
-        'restore'
     ],
     keyField: 'ISN_LCLASSIF',
     searchConfig: [SEARCH_TYPES.quick],

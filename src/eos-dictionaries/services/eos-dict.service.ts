@@ -563,7 +563,7 @@ export class EosDictService {
     search(searchString: string, params: ISearchSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
         this._srchCriteries = dictionary.getSearchCriteries(searchString, params, this.treeNode);
-        return this._search();
+        return this._search(params.deleted);
     }
 
     setFilter(filter: any) {
@@ -934,7 +934,7 @@ export class EosDictService {
 
     private _reorderList(dictionary: EosDictionary) {
         if (dictionary) {
-            if (!this.viewParameters.searchResults && this.viewParameters.userOrdered && this.treeNode) {
+            if (/* !this.viewParameters.searchResults && */ this.viewParameters.userOrdered && this.treeNode) {
                 this._currentList = dictionary.reorderList(this._currentList, this.treeNode.id);
             } else {
                 this._currentList = dictionary.reorderList(this._currentList);
