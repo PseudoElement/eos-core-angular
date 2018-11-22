@@ -3,7 +3,7 @@ import { MODS_USER_SELECT } from 'eos-user-select/shered/consts/user-select.cons
 import { IModesUserSelect, E_MODES_USER_SELECT } from 'eos-user-select/shered/interfaces/user-select.interface';
 import { TreeUserSelectService } from 'eos-user-select/shered/services/tree-user-select.service';
 import { TreeUserNode } from './core/tree-user-node';
-// import { Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 const BIG_PANEL = 340,
     SMALL_PANEL = 260,
@@ -23,7 +23,7 @@ export class TreeUserSelectComponent implements OnInit {
     isLoading: boolean = true;
     private w: number;
     constructor(
-        // private _router: Router,
+        private _router: Router,
         private treeSrv: TreeUserSelectService
     ) {
     }
@@ -62,12 +62,8 @@ export class TreeUserSelectComponent implements OnInit {
     }
 
     onSelect(evt: Event, node: TreeUserNode) {
-        console.log('onSelect', arguments);
         evt.stopPropagation();
-        // if (!node.isDeleted) {
-        //     const _path = node.getPath();
-        //     this._router.navigate(_path);
-        // }
+        this._router.navigate(['user_param', node.id]);
     }
 
     getPadding(level: number): number {

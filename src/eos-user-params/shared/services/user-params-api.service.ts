@@ -1,6 +1,7 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
+import { USER_CL } from 'eos-rest';
 
 @Injectable()
 export class UserParamApiSrv {
@@ -35,6 +36,21 @@ export class UserParamApiSrv {
     setData(query: any[]): Promise<any[]> {
         return this.apiSrv.batch(query, '').then((data: any) => {
             return data;
+        });
+    }
+
+    getUsers(dueDep: string): Promise<USER_CL[]> {
+        const query = {
+            USER_CL: {
+                criteries: {
+                    DUE_DEP: 'isnull'
+                }
+            }
+        };
+
+        return this.getData<USER_CL>(query)
+        .then(data => {
+            return data.filter(user => user.ORACLE_ID && user.ISN_LCLASSIF !== 0); // костыль для отсеивания "Владелец схемы" и удаленных
         });
     }
 

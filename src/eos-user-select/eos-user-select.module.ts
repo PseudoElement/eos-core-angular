@@ -9,6 +9,7 @@ import { UserSelectPaginationComponent } from './pagination-user-select/paginati
 /*     ----Components----     */
 import { UserSelectComponent } from './eos-user-select.component';
 import { TreeUserSelectComponent } from './tree-user-select/tree-user-select.component';
+import { ListUserSelectComponent } from './list-user-select/list-user-select.component';
 /*     ----Services----     */
 import { TreeUserSelectService } from './shered/services/tree-user-select.service';
 
@@ -17,6 +18,7 @@ import { TreeUserSelectService } from './shered/services/tree-user-select.servic
         UserSelectComponent,
         TreeUserSelectComponent,
         UserSelectPaginationComponent,
+        ListUserSelectComponent,
     ],
     imports: [
         BrowserModule,

@@ -1,0 +1,72 @@
+<div class="table-wrapper usual-border">
+    <div class="table-header">
+        <!-- header action -->
+        <button
+            class="btn"
+            tooltip="Создать пользователя"
+            placement="bottom"
+            containerClass="tooltip-info"
+            (click)="createUser()"
+        >
+                <span class="eos-icon eos-icon-plus-blue small"></span>
+        </button>
+        <button
+            class="btn"
+            tooltip="Редактировать пользователя"
+            placement="bottom"
+            containerClass="tooltip-info"
+            (click)="editUser()"
+        >
+                <span class="eos-icon eos-icon-edit-blue small"></span>
+        </button>
+    </div>
+    <div class="table-header">
+        <!-- header -->
+        header
+    </div>
+    <div class="eos-node-list">
+        <div *ngIf="!isLoading; else spiner"
+        class="block list"
+            [ngStyle]="{'width.px': tableWidth}"
+            #listContent>
+
+            <div
+                *ngFor="let user of listUsers"
+                class="list"
+                [ngClass]="{'highlighted': user.isSelected}"
+                (click)="selectedNode(user)"
+                (dblclick)="editUser()">
+                <label
+                    class="checkbox-inline"
+                    [tooltip]="user.marked ? markTemp : notMarkTemp"
+                    containerClass="tooltip-info"
+                    container="body"
+                    (click)="checkboxClick($event)"
+                    placement="bottom"
+                >
+                    <input
+                        type="checkbox"
+                        [(ngModel)]="user.marked || user.selectedMark"
+                        (ngModelChange)="markNode($event, user)"
+                    >
+                    <span></span>
+                </label>
+                <span style="width: 200px; display: inline-block;">{{user.name}}</span>
+                <span>{{user.login}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #markAllTooltip>
+    {{anyMarked ? 'Снять' : 'Пометить'}}<br/>{{anyMarked ? 'пометки': 'все'}}
+</ng-template>
+
+<ng-template #markTemp>Снять<br>пометку</ng-template>
+<ng-template #notMarkTemp>Пометить<br>элемент</ng-template>
+<ng-template #emptyCert>
+    <h4>Пользователи отсутствуют</h4>
+</ng-template>
+<ng-template #spiner>
+        <eos-spinner size="lg"></eos-spinner>
+</ng-template>
+

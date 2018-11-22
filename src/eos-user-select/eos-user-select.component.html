@@ -73,17 +73,10 @@
                     </ng-template>
                 </div>
             </div>
-            <div class="first-line">
-                <div class="controller pull-left">
-                    <!-- <eos-node-actions (action)="doAction($event)"></eos-node-actions> -->
-                </div>
-                <div class="pull-right">
-                    <!-- <eos-dictionary-search (switchFastSrch)="switchFastSearch($event)"></eos-dictionary-search> -->
-                </div>
-            </div>
             <!-- <eos-dictionary-quick-search *ngIf="fastSearch"></eos-dictionary-quick-search> -->
         </div>
         <!-- <eos-node-list #nodeList></eos-node-list> -->
+        <eos-list-user-select></eos-list-user-select>
         <eos-user-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-user-list-pagination>
     </div>
     <div class="opened-wrapper block"
