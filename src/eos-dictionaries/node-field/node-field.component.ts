@@ -15,32 +15,7 @@ export class NodeFieldComponent {
     @Output() fieldHover: EventEmitter<HintConfiguration> = new EventEmitter<HintConfiguration>();
 
     types = E_FIELD_TYPE;
-
-    showHint(el: HTMLElement) {
-        const span = document.createElement('span'),
-            body = document.getElementsByTagName('body');
-        span.style.position = 'absolute';
-        span.style.top = '-5000px';
-        span.style.left = '-5000px';
-        span.style.padding = '20px';
-        span.innerText = el.innerText;
-        body[0].appendChild(span);
-        if (span.clientWidth > el.clientWidth) {
-            this.fieldHover.emit({
-                top: el.offsetTop - el.offsetParent.scrollTop,
-                left: el.offsetLeft,
-                text: el.innerText,
-                show: true,
-                node: this.node
-            });
-        } else {
-            this.fieldHover.emit({
-                show: false,
-                node: this.node
-            });
-        }
-        body[0].removeChild(span);
-    }
+    length = {};
 
     viewNode(evt: Event) {
         this.view.emit(evt);
@@ -57,5 +32,12 @@ export class NodeFieldComponent {
 
     decodeDictionary(): string {
         return this.node.getFieldValue(this.field);
+    }
+
+    get tooltipValue(): string {
+        if (this.field.key === 'CODE') {
+            return '';
+        }
+        return this.field.value;
     }
 }

@@ -8,6 +8,7 @@ export enum E_DEPT_MODE {
 }
 
 export enum E_DICT_TYPE {
+    organiz,
     linear,
     tree,
     department
@@ -23,7 +24,11 @@ export enum E_FIELD_SET {
     edit,
     allVisible
 }
-
+export enum E_VISIBLE_TIPE {
+    all,
+    onlyNode,
+    onlyChild,
+}
 export enum E_FIELD_TYPE {
     string,
     number,
@@ -36,9 +41,10 @@ export enum E_FIELD_TYPE {
     dictionary,
     select,
     array,
+    xml,
     toggle,
     numberIncrement,
-    radio
+    radio,
 }
 
 export interface IFieldDescriptor {
@@ -55,7 +61,11 @@ export interface IFieldDescriptor {
     options?: ISelectOption[];
     height?: number;
     forNode?: boolean;
+    vistype?: E_VISIBLE_TIPE;
     default?: any;
+    dictionaryId?: string;
+    password?: boolean;
+    groupLabel?: string;
 }
 
 export interface IFieldDescriptorBase {
@@ -73,7 +83,11 @@ export interface IFieldDescriptorBase {
     readonly options?: ISelectOption[];
     readonly height?: number;
     readonly forNode?: boolean;
+    readonly vistype?: E_VISIBLE_TIPE;
     readonly default?: any;
+    readonly dictionaryId?: string;
+    readonly password?: boolean;
+    readonly groupLabel?: string;
 }
 
 export interface IFieldView extends IFieldDescriptorBase {
@@ -91,6 +105,7 @@ export interface IDictionaryDescriptor {
     keyField: string;
     defaultOrder: string;
     parentField?: string;
+    iconName: string;
 
     // listFields: string[];
     searchFields: string[];
@@ -104,6 +119,9 @@ export interface IDictionaryDescriptor {
     shortQuickViewFields: any;
     editFields: any;
     listFields: any;
+
+    hideTopMenu?: boolean;
+    editOnlyNodes?: boolean;
 }
 
 export interface ITreeDictionaryDescriptor extends IDictionaryDescriptor {
@@ -112,6 +130,7 @@ export interface ITreeDictionaryDescriptor extends IDictionaryDescriptor {
     shortQuickViewFields: string[];
     editFields: string[];
     listFields: string[];
+
 }
 
 /* mode for department-like ditionary */

@@ -8,7 +8,9 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     @Input() input: InputBase<any>;
     @Input() form: FormGroup;
     @Input() readonly: boolean;
+    @Input() disabled: boolean;
     @Input() inputTooltip: any;
+    @Input() isGroup: boolean;
 
     protected subscriptions: Subscription[] = [];
 

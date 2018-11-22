@@ -53,7 +53,9 @@
     .short-info {
         display: block;
         margin-bottom: 20px;
-        height: 52px;
+        word-wrap: break-word;
+        word-break: break-word;
+        // height: 52px;
     }
     .full-info {
         border-top-width: 1px;
@@ -63,16 +65,18 @@
     .field-title {
         text-transform: uppercase;
         font-weight: normal;
-        margin: 0 0 8px;
-        line-height: 10px;
+        margin: 0;
+        line-height: 14px;
     }
     .field-value {
-        line-height: 32px;
+        margin-top: 7px;
+        line-height: 20px;
         /* display: inline-block; */
         white-space: pre-wrap;
-        word-break: break-all;
         max-width: 100%;
-        padding: 6px 0;
+        padding: 0;
+        word-wrap: break-word;
+        word-break: break-word;
     }
     .field {
         margin: 0;

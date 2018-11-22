@@ -11,6 +11,7 @@ export const REGION_DICT: ITreeDictionaryDescriptor = {
     title: 'Регионы',
     defaultOrder: 'CLASSIF_NAME',
     visible: true,
+    iconName: 'eos-icon-pin-geo-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'removeHard', 'tableCustomization',
         'edit', 'view', 'remove', 'userOrder', 'showAllSubnodes', 'restore'],

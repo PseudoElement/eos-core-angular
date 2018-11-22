@@ -307,7 +307,6 @@ export class EosDictionary {
 
     getChildren(node: EosDictionaryNode): Promise<EosDictionaryNode[]> {
         if (node) {
-            node.updating = true;
             return this.descriptor.getChildren(node.data.rec)
                 .then((nodes) => {
                     const res = this.updateNodes(nodes, true);

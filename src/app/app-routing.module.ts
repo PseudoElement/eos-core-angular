@@ -21,228 +21,219 @@ import { UserParamsComponent } from 'eos-user-params/eos-user-params.component';
 import { UserSelectComponent } from 'eos-user-select/eos-user-select.component';
 /// import { environment } from 'environments/environment';
 
-const routes: Routes = [
-    {
-        path: 'spravochniki',
-        data: { title: 'Справочники', showInBreadcrumb: true },
-        canActivate: [AuthorizedGuard],
-        children: [
-            {
-                path: '',
-                pathMatch: 'full',
-                component: DictionariesComponent,
-                canActivate: [AuthorizedGuard]
+const childrenDictionariesComponent = [{
+    path: '',
+    pathMatch: 'full',
+    component: DictionariesComponent,
+    canActivate: [AuthorizedGuard],
+}, {
+    path: ':dictionaryId',
+    data: {
+        title: 'Справочник', showBreadcrumb: true,
+        showInBreadcrumb: true,
+        showSandwichInBreadcrumb: true,
+        showPushpin: true
+    },
+    children: [{
+        path: ':nodeId',
+        data: { title: 'Запись', showInBreadcrumb: false },
+        children: [{
+            path: '',
+            component: DictionaryComponent,
+            pathMatch: 'full',
+            data: { showBreadcrumb: true, showSandwichInBreadcrumb: true, showPushpin: true },
+        }, {
+            path: 'edit',
+            data: {
+                title: 'Редактирование',
+                showInBreadcrumb: false,
+                showSandwichInBreadcrumb: false,
+                showBreadcrumb: true,
+                closeStyle: true,
+                showPushpin: false
             },
-            {
-                path: ':dictionaryId',
-                data: {
-                    title: 'Справочник',
-                    showBreadcrumb: true,
-                    showInBreadcrumb: true,
-                    showSandwichInBreadcrumb: true,
-                    showPushpin: true
+            children: [
+                {
+                    path: '',
+                    redirectTo: '0',
+                    pathMatch: 'full',
                 },
-                children: [
-                    {
-                        path: ':nodeId',
-                        data: { title: 'Запись', showInBreadcrumb: false },
-                        children: [
-                            {
-                                path: '',
-                                component: DictionaryComponent,
-                                pathMatch: 'full',
-                                data: { showBreadcrumb: true, showSandwichInBreadcrumb: true, showPushpin: true }
-                            },
-                            {
-                                path: 'edit',
-                                pathMatch: 'full',
-                                component: CardComponent,
-                                data: {
-                                    title: 'Редактирование',
-                                    showInBreadcrumb: false,
-                                    showSandwichInBreadcrumb: false,
-                                    showBreadcrumb: true,
-                                    closeStyle: true,
-                                    showPushpin: false
-                                },
-                                canDeactivate: [CanDeactivateGuard]
-                            },
-                            {
-                                path: 'view',
-                                pathMatch: 'full',
-                                component: CardComponent,
-                                data: {
-                                    title: 'Просмотр',
-                                    showInBreadcrumb: false,
-                                    showSandwichInBreadcrumb: false,
-                                    showBreadcrumb: true,
-                                    closeStyle: true,
-                                    showPushpin: false
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        path: '',
-                        component: DictionaryComponent,
-                        pathMatch: 'full'
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        path: 'desk',
-        data: { title: 'Главная', showInBreadcrumb: false },
-        canActivate: [AuthorizedGuard],
-        children: [
-            {
-                path: '',
-                pathMatch: 'full',
-                component: DesktopComponent
+                {
+                    path: ':tabNum',
+                    component: CardComponent,
+                    canDeactivate: [CanDeactivateGuard],
+            }],
+        }, {
+            path: 'view',
+            data: {
+                title: 'Просмотр',
+                showInBreadcrumb: false,
+                showSandwichInBreadcrumb: false,
+                showBreadcrumb: true,
+                closeStyle: true,
+                showPushpin: false
             },
-            {
-                path: ':desktopId',
-                component: DesktopComponent,
-                data: { title: 'Главная', showInBreadcrumb: false, showBreadcrumb: false }
-            }
-        ]
-    },
-    {
-        path: 'login',
-        canActivate: [UnauthorizedGuard],
-        component: LoginComponent,
-        data: { title: 'Вход в систему', showInBreadcrumb: false }
-    },
-    {
-        path: 'test',
-        component: TestPageComponent,
-        data: { title: 'Test page for UI components' }
-    },
-    {
-        path: 'delivery',
-        canActivate: [AuthorizedGuard],
-        component: DeliveryComponent,
-        data: { title: 'delivery page' }
-    },
-    {
-        path: 'rubric',
-        canActivate: [AuthorizedGuard],
-        component: RubricComponent,
-        data: { title: 'rubric page' }
-    },
-    {
-        path: 'department',
-        canActivate: [AuthorizedGuard],
-        component: DepartmentComponent,
-        data: { title: 'department page' }
-    },
-    {
-        path: 'user',
-        canActivate: [AuthorizedGuard],
-        component: UserRestComponent,
-        data: { title: 'user page' }
-    },
-    {
-        path: 'parameters',
-        canActivate: [AuthorizedGuard],
-        children: [
-            {
-                path: ':id',
-                pathMatch: 'full',
-                component: ParametersSystemComponent,
-                canDeactivate: [CanDeactivateGuard],
-                data: {
-                    showNav: true,
-                    title: 'Настройки системы'
-                }
-            },
-            {
-                path: '',
-                redirectTo: 'rc',
-                pathMatch: 'full',
-                data: {
-                    showNav: true,
-                    title: 'Настройки системы'
-                }
-            }
-        ]
-    },
-    {
-        path: 'user-params-set',
-        canActivate: [AuthorizedGuard],
-        children: [
-            {
-                path: ':field-id',
-                children: [
-                    {
-                        path: ':sub-field',
-                        component: UserParamsComponent,
-                        data: {
-                            showNav: true
-                        }
-                    },
-                    {
-                        path: '',
-                        pathMatch: 'full',
-                        component: UserParamsComponent,
-                        data: {
-                            showNav: true
-                        }
-                    }
-                ]
-            },
-            {
-                path: '',
-                pathMatch: 'full',
-                redirectTo: 'base-param',
-            },
-        ]
-    },
-    {
-        path: 'user_param',
-        canActivate: [AuthorizedGuard],
-        data: {
-            title: 'Пользователи',
-            showInBreadcrumb: true
-        },
-        children: [
-            {
-                path: ':nodeId',
-                component: UserSelectComponent,
-                data: {
-                    showBreadcrumb: true,
-                    showInBreadcrumb: true,
-                    showSandwichInBreadcrumb: true,
-                    showPushpin: true
+            children: [
+                {
+                    path: '',
+                    redirectTo: '0',
+                    pathMatch: 'full',
                 },
-            },
-            {
-                path: '',
-                component: UserSelectComponent,
-                data: {
-                    showBreadcrumb: true,
-                    showInBreadcrumb: true,
-                    showSandwichInBreadcrumb: true,
-                    showPushpin: true
-                },
-            }
-        ]
-    },
-    {
+                {
+                    path: ':tabNum',
+                    component: CardComponent,
+            }],
+        }],
+    }, {
         path: '',
-        redirectTo: '/desk/system',
-        pathMatch: 'full'
+        component: DictionaryComponent,
+        pathMatch: 'full',
+    }],
+}];
+
+const routes: Routes = [{
+    path: 'spravochniki/nadzor',
+    data: { title: 'Надзор', showInBreadcrumb: true },
+    canActivate: [AuthorizedGuard],
+    children: childrenDictionariesComponent,
+}, {
+    path: 'spravochniki',
+    data: { title: 'Справочники', showInBreadcrumb: true },
+    canActivate: [AuthorizedGuard],
+    children: childrenDictionariesComponent,
+}, {
+    path: 'desk',
+    data: { title: 'Главная', showInBreadcrumb: false },
+    canActivate: [AuthorizedGuard],
+    children: [{
+        path: '',
+        pathMatch: 'full',
+        component: DesktopComponent,
+    }, {
+        path: ':desktopId',
+        component: DesktopComponent,
+        data: { title: 'Главная', showInBreadcrumb: false, showBreadcrumb: false }
+    }]
+}, {
+    path: 'login',
+    canActivate: [UnauthorizedGuard],
+    component: LoginComponent,
+    data: { title: 'Вход в систему', showInBreadcrumb: false }
+}, {
+    path: 'test',
+    component: TestPageComponent,
+    data: { title: 'Test page for UI components' },
+}, {
+    path: 'delivery',
+    canActivate: [AuthorizedGuard],
+    component: DeliveryComponent,
+    data: { title: 'delivery page' },
+}, {
+    path: 'rubric',
+    canActivate: [AuthorizedGuard],
+    component: RubricComponent,
+    data: { title: 'rubric page' }
+}, {
+    path: 'department',
+    canActivate: [AuthorizedGuard],
+    component: DepartmentComponent,
+    data: { title: 'department page' }
+}, {
+    path: 'user',
+    canActivate: [AuthorizedGuard],
+    component: UserRestComponent,
+    data: { title: 'user page' }
+}, {
+    path: 'parameters',
+    canActivate: [AuthorizedGuard],
+    children: [
+        {
+            path: ':id',
+            pathMatch: 'full',
+            component: ParametersSystemComponent,
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+                showNav: true
+            }
+        },
+        {
+            path: '',
+            redirectTo: 'rc',
+            pathMatch: 'full'
+        }
+    ]
+}, {
+    path: 'user-params-set',
+    canActivate: [AuthorizedGuard],
+    children: [
+        {
+            path: ':field-id',
+            children: [
+                {
+                    path: ':sub-field',
+                    component: UserParamsComponent,
+                    data: {
+                        showNav: true
+                    }
+                },
+                {
+                    path: '',
+                    pathMatch: 'full',
+                    component: UserParamsComponent,
+                    data: {
+                        showNav: true
+                    }
+                }
+            ]
+        },
+        {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'base-param',
+        },
+    ]
+}, {
+    path: 'user_param',
+    canActivate: [AuthorizedGuard],
+    data: {
+        title: 'Пользователи',
+        showInBreadcrumb: true
     },
-    {
-        path: '**',
-        redirectTo: '/desk/system',
-        pathMatch: 'full'
-    }
-];
+    children: [
+        {
+            path: ':nodeId',
+            component: UserSelectComponent,
+            data: {
+                showBreadcrumb: true,
+                showInBreadcrumb: true,
+                showSandwichInBreadcrumb: true,
+                showPushpin: true
+            },
+        },
+        {
+            path: '',
+            component: UserSelectComponent,
+            data: {
+                showBreadcrumb: true,
+                showInBreadcrumb: true,
+                showSandwichInBreadcrumb: true,
+                showPushpin: true
+            },
+        }
+    ]
+}, {
+    path: '',
+    redirectTo: '/desk/system',
+    pathMatch: 'full',
+}, {
+    path: '**',
+    redirectTo: '/desk/system',
+    pathMatch: 'full',
+}];
 
 @NgModule({
     imports: [RouterModule.forRoot(routes, { useHash: true })],
-    exports: [RouterModule]
+    exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+}

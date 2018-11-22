@@ -148,7 +148,7 @@ export class TestPageComponent implements OnInit, OnChanges {
     }
 
     chooseCL(_evt) {
-        const siteUrl = 'http://localhost/X182.WebSite.Publish/';
+        const siteUrl = '../';
         const pageUrl = siteUrl + 'Pages/Classif/ChooseClassif.aspx?';
         const params = 'Classif=DEPARTMENT&value_id=__ClassifIds&skip_deleted=True&select_nodes=True&select_leaf=True&return_due=True';
         window.open(pageUrl + params, 'clhoose', 'width=1050,height=800,resizable=1,status=1,top=20,left=20');

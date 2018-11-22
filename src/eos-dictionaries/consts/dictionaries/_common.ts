@@ -26,7 +26,7 @@ export const COMMON_FIELD_FULLNAME: IFieldDescriptor = {
     key: 'FULLNAME',
     title: 'Полное наименование',
     type: 'text',
-    length: 2000,
+    length: 250,
     pattern: NOT_EMPTY_STRING,
 };
 
@@ -34,7 +34,7 @@ export const COMMON_FIELD_NOTE = {
     key: 'NOTE',
     title: 'Примечание',
     type: 'text',
-    length: 255,
+    length: 250,
 };
 
 export const COMMON_FIELDS: IFieldDescriptor[] = [{

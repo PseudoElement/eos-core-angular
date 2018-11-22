@@ -18,12 +18,18 @@
         display: flex;
         margin: 0;
         .pag-btn {
+            &.btn-primary-full {
+                background-color: $active-field-color-main-theme;
+                color: $secondary-color-main-theme;
+                z-index: 100;
+            }
             background-color: $modal-block-background-main-theme;
             width: $item-width;
             height: $item-height;
             border: 1px solid #e6e6e6;
             border-right: transparent;
             border-radius: 0;
+            vertical-align: middle;
             &:disabled {
                 cursor: not-allowed;
                 border-left-width: 1px;

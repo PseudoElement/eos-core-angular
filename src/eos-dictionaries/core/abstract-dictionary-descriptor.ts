@@ -12,17 +12,19 @@ import { SEV_ASSOCIATION } from 'eos-rest/interfaces/structures';
 import { IAppCfg } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { EosUtils } from 'eos-common/core/utils';
+import { ContactHelper } from '../../eos-rest/services/contact-helper';
 
 export abstract class AbstractDictionaryDescriptor {
     /**
      * decription of dictionary fields
      */
     abstract record: RecordDescriptor;
-
+    editOnlyNodes = false;
     readonly id: string;
     readonly title: string;
     readonly type: E_DICT_TYPE;
     readonly apiInstance: string;
+    readonly hideTopMenu?: boolean;
     /**
      * rest metadata. can be used for loading related dictionaries
      */
@@ -52,6 +54,8 @@ export abstract class AbstractDictionaryDescriptor {
             this.type = descriptor.dictType;
             this.apiInstance = descriptor.apiInstance;
             this._defaultOrder = descriptor.defaultOrder;
+            this.hideTopMenu = descriptor.hideTopMenu;
+            this.editOnlyNodes = descriptor.editOnlyNodes;
 
             this.apiSrv = apiSrv;
             commonMergeMeta(this);
@@ -152,7 +156,9 @@ export abstract class AbstractDictionaryDescriptor {
         if (order) {
             req.orderby = order;
         }
-
+        if (this.id === 'organization') {
+            req.expand = 'CONTACT_List';
+        }
         return this.apiSrv
             .read(req)
             .then((data: any[]) => {
@@ -295,7 +301,19 @@ export abstract class AbstractDictionaryDescriptor {
                             changeData.push(data);
                         }
                         break;
+                    case 'contact':
+                        for (const contact of data) {
+                            if (ContactHelper.PrepareForSave(contact, originalData.rec)) {
+                                // for (let contact of data) {
+                                // changeData.push(contact);
+                                // }
+                            }
+                        }
+                        break;
                     case 'rec':
+                        // if (data['CONTACT_List']) {
+                        //     delete data['CONTACT_List'];
+                        // }
                         changeData.push(data);
                         break;
                     default: // do nothing

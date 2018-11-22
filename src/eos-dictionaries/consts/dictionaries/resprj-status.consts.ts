@@ -7,6 +7,7 @@ export const RESPRJ_STATUS_DICT: IDictionaryDescriptor = Object.assign({}, LINEA
     apiInstance: 'RESPRJ_STATUS_CL',
     title: 'Статусы проекта поручения',
     visible: true,
+    iconName: 'eos-icon-project-status-blue',
     fields: [...LINEAR_TEMPLATE.fields,
     Object.assign({}, COMMON_FIELD_NAME, {
         isUnique: true,

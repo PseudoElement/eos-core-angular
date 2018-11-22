@@ -68,7 +68,7 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
                     }
                 })
                 .catch((err) => {
-                    console.log('cancel reason', err);
+                    // console.log('cancel reason', err);
                     return false;
                 });
         } else {

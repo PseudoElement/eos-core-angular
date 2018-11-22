@@ -9,6 +9,7 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
     dictType: E_DICT_TYPE.tree,
     title: 'Рубрикатор',
     visible: true,
+    iconName: 'eos-icon-template-blue',
     defaultOrder: 'CLASSIF_NAME',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
@@ -26,13 +27,13 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
     Object.assign({}, COMMON_FIELD_CODE, {
         key: 'RUBRIC_CODE',
         required: true,
-        length: 248,
+        length: 20,
         isUnique: true,
         uniqueInDict: true,
     }),
     Object.assign({}, COMMON_FIELD_NAME, {
         title: 'Краткое наименование',
-        length: 2000,
+        length: 250,
         isUnique: true,
         uniqueInDict: true,
     }),

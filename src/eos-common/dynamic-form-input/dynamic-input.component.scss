@@ -84,6 +84,10 @@ eos-dynamic-input {
             background-color: $invalid-color-main-theme;
         }
     }
+    .disabled{
+        pointer-events: none;
+        opacity: 0.65;
+    }
     .eos-select {
         select {
             -webkit-appearance: none;
@@ -146,6 +150,20 @@ eos-dynamic-input {
             line-height: 30px;
             vertical-align: middle;
             padding: 0 5px;
+        }
+        .btn-readonly {
+            pointer-events: none;
+            border-color: $placeholder-color;
+            &.btn-primary {
+                border-color: $placeholder-color;
+                color: $placeholder-color;
+                background: white;
+            }
+            &.btn-primary-full {
+                border-color: $placeholder-color;
+                background-color: $placeholder-color;
+                color: white;
+            }
         }
     }
 }

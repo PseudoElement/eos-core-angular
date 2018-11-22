@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ViewChild } from '@angular/core';
+import {Component, Output, EventEmitter, ViewChild, ElementRef, AfterViewInit} from '@angular/core';
 import { environment } from '../../environments/environment';
 import { EosUserProfileService } from '../services/eos-user-profile.service';
 
@@ -6,9 +6,10 @@ import { EosUserProfileService } from '../services/eos-user-profile.service';
     selector: 'eos-login-form',
     templateUrl: 'login-form.component.html'
 })
-export class LoginFormComponent {
-    @ViewChild('errTooltip') errTooltip;
+export class LoginFormComponent implements AfterViewInit {
+
     inpType = 'password';
+    hidePassword: boolean;
     userName: string;
     userPassword: string;
     lockUser: boolean;
@@ -16,16 +17,27 @@ export class LoginFormComponent {
     haveErr = false;
     @Output() logged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
+    @ViewChild('errTooltip') errTooltip;
+    @ViewChild('loginField') private loginElementRef: ElementRef;
+
     constructor(
         private _profileSrv: EosUserProfileService
     ) {
         if (!environment.production) {
             this.userName = 'tver';
             this.userPassword = 'tver';
+            this.hidePassword = true;
         }
     }
 
-    login(): void {
+    public ngAfterViewInit(): void {
+        this.loginElementRef.nativeElement.focus();
+    }
+
+    login(event): void {
+        if (event && event.key !== 'Enter') {
+            return;
+        }
         if (!this.inProcess) {
             this.inProcess = true;
             this.haveErr = false;
@@ -54,11 +66,18 @@ export class LoginFormComponent {
         this.logged.emit(false);
     }
 
+    togglePass() {
+        this.inpType = this.inpType === 'text' ? 'password' : 'text';
+        this.hidePassword = !this.hidePassword;
+    }
+
     showPass() {
         this.inpType = 'text';
+        this.hidePassword = false;
     }
 
     hidePass() {
         this.inpType = 'password';
+        this.hidePassword = true;
     }
 }

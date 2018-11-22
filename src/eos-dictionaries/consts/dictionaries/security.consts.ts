@@ -9,6 +9,7 @@ export const SECURITY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
     defaultOrder: 'GRIF_NAME',
     title: 'Грифы доступа',
     visible: true,
+    iconName: 'eos-icon-lock-blue',
     actions: LINEAR_TEMPLATE.actions.concat(['tableCustomization']),
     fields: LINEAR_TEMPLATE.fields.concat([{
         key: 'SECURLEVEL',

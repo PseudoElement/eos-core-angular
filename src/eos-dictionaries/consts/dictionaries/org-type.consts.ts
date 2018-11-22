@@ -5,8 +5,9 @@ import { COMMON_FIELD_NAME } from './_common';
 export const ORG_TYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'org-type',
     apiInstance: 'ORG_TYPE_CL',
-    title: 'Формы собственности',
+    title: 'Типы организаций',
     visible: true,
+    iconName: 'eos-icon-organisation-type-blue',
     fields: [...LINEAR_TEMPLATE.fields,
     Object.assign({}, COMMON_FIELD_NAME, {
         isUnique: true,

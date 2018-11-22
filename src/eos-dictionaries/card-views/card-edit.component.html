@@ -1,64 +1,101 @@
 <div class="card-edit block"
-    *ngIf="data && data.rec">
+     *ngIf="data && data.rec">
     <article class="edit-content">
         <form [formGroup]="form"
-            class="form">
+              class="form">
             <ng-container [ngSwitch]="dictionaryId">
                 <ng-container *ngSwitchCase="'departments'">
                     <eos-departments-card-edit-person #cardEditEl
-                        *ngIf="data.rec['IS_NODE'] === 1"
-                        class="departments-person-card-edit simple-card-edit"
-                        [form]="form"
-                        [inputs]="inputs"
-                        [data]="data"
-                        [editMode]="editMode"
-                        [dutysList]="dutysList"
-                        [fullNamesList]="fullNamesList"></eos-departments-card-edit-person>
+                                                      *ngIf="data.rec['IS_NODE'] === 1"
+                                                      class="departments-person-card-edit simple-card-edit"
+                                                      [form]="form"
+                                                      [inputs]="inputs"
+                                                      [data]="data"
+                                                      [editMode]="editMode"
+                                                      [dutysList]="dutysList"
+                                                      [fullNamesList]="fullNamesList"></eos-departments-card-edit-person>
                     <eos-departments-card-edit-department #cardEditEl
-                        *ngIf="data.rec['IS_NODE'] === 0"
-                        class="departments-department-card-edit simple-card-edit"
-                        [form]="form"
-                        [inputs]="inputs"
-                        [data]="data"
-                        [editMode]="editMode"
-                        [dutysList]="dutysList"
-                        [fullNamesList]="fullNamesList"></eos-departments-card-edit-department>
+                                                          *ngIf="data.rec['IS_NODE'] === 0"
+                                                          class="departments-department-card-edit simple-card-edit"
+                                                          [form]="form"
+                                                          [inputs]="inputs"
+                                                          [data]="data"
+                                                          [editMode]="editMode"
+                                                          [dutysList]="dutysList"
+                                                          [fullNamesList]="fullNamesList"></eos-departments-card-edit-department>
+                </ng-container>
+                <ng-container *ngSwitchCase="'organization'">
+                    <eos-organizations-card-edit-node #cardEditEl
+                                                      *ngIf="data.rec['IS_NODE'] === 1"
+                                                      class="organizations-card-edit-node simple-card-edit"
+                                                      [form]="form"
+                                                      [inputs]="inputs"
+                                                      [data]="data"
+                                                      [editMode]="editMode"></eos-organizations-card-edit-node>
+                    <eos-organizations-card-edit-group #cardEditEl
+                                                      *ngIf="data.rec['IS_NODE'] === 0"
+                                                      class="organizations-card-edit-group simple-card-edit"
+                                                      [form]="form"
+                                                      [inputs]="inputs"
+                                                      [data]="data"
+                                                      [editMode]="editMode"></eos-organizations-card-edit-group>
                 </ng-container>
                 <eos-cabinet-card-edit *ngSwitchCase="'cabinet'"
-                    #cardEditEl
-                    class="cabinet-card-edit"
-                    [form]="form"
-                    [inputs]="inputs"
-                    [data]="data"
-                    [editMode]="editMode"></eos-cabinet-card-edit>
+                                       #cardEditEl
+                                       class="cabinet-card-edit"
+                                       [form]="form"
+                                       [inputs]="inputs"
+                                       [data]="data"
+                                       [editMode]="editMode"></eos-cabinet-card-edit>
                 <eos-security-card-edit *ngSwitchCase="'security'"
-                    #cardEditEl
-                    class="security-card-edit simple-card-edit"
-                    [form]="form"
-                    [inputs]="inputs"
-                    [data]="data"
-                    [editMode]="editMode"></eos-security-card-edit>
+                                        #cardEditEl
+                                        class="security-card-edit simple-card-edit"
+                                        [form]="form"
+                                        [inputs]="inputs"
+                                        [data]="data"
+                                        [editMode]="editMode"></eos-security-card-edit>
+                <eos-broadcast-channel-card-edit *ngSwitchCase="'broadcast-channel'"
+                                                 #cardEditEl
+                                                 class="broadcast-channel-card-edit simple-card-edit"
+                                                 [form]="form"
+                                                 [inputs]="inputs"
+                                                 [data]="data"
+                                                 [editMode]="editMode"></eos-broadcast-channel-card-edit>
+                <eos-sev-rules-card-edit *ngSwitchCase="'sev-rules'"
+                                         #cardEditEl
+                                         class="sev-rules-card-edit simple-card-edit"
+                                         [form]="form"
+                                         [inputs]="inputs"
+                                         [data]="data"
+                                         [editMode]="editMode"></eos-sev-rules-card-edit>
                 <eos-docgroup-card *ngSwitchCase="'docgroup'"
-                    #cardEditEl
-                    class="docgroup-card simple-card-edit"
-                    [form]="form"
-                    [inputs]="inputs"
-                    [data]="data"
-                    [editMode]="editMode"></eos-docgroup-card>
+                                   #cardEditEl
+                                   class="docgroup-card simple-card-edit"
+                                   [form]="form"
+                                   [inputs]="inputs"
+                                   [data]="data"
+                                   [editMode]="editMode"></eos-docgroup-card>
                 <eos-visatype-card *ngSwitchCase="'visa-type'"
-                    #cardEditEl
-                    class="visatype-card simple-card-edit"
-                    [form]="form"
-                    [inputs]="inputs"
-                    [data]="data"
-                    [editMode]="editMode"></eos-visatype-card>
+                                   #cardEditEl
+                                   class="visatype-card simple-card-edit"
+                                   [form]="form"
+                                   [inputs]="inputs"
+                                   [data]="data"
+                                   [editMode]="editMode"></eos-visatype-card>
+                <eos-reestrtype-card *ngSwitchCase="'reestrtype'"
+                                     #cardEditEl
+                                     class="reestrtype-card simple-card-edit"
+                                     [form]="form"
+                                     [inputs]="inputs"
+                                     [data]="data"
+                                     [editMode]="editMode"></eos-reestrtype-card>
                 <eos-simple-card-edit *ngSwitchDefault
-                    #cardEditEl
-                    class="simple-card-edit"
-                    [form]="form"
-                    [inputs]="inputs"
-                    [data]="data"
-                    [editMode]="editMode"></eos-simple-card-edit>
+                                      #cardEditEl
+                                      class="simple-card-edit"
+                                      [form]="form"
+                                      [inputs]="inputs"
+                                      [data]="data"
+                                      [editMode]="editMode"></eos-simple-card-edit>
             </ng-container>
             <!-- div class="form-group unimportant-text s-font">
                 <label>* - поля обязательные к заполнению</label>

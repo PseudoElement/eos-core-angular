@@ -70,6 +70,7 @@ export class EosDeskService {
                     return {
                         url: '/spravochniki/' + dictionary.id,
                         title: dictionary.title,
+                        iconName: dictionary.iconName,
                     };
                 });
             });
@@ -98,7 +99,8 @@ export class EosDeskService {
             item = {
                 title: this._dictSrv.dictionaryTitle,
                 /* fullTitle: this._dictSrv.dictionaryTitle, */
-                url: '/spravochniki/' + dictionaryURL
+                url: '/spravochniki/' + dictionaryURL,
+                iconName: '',
             };
         }
         const view: SRCH_VIEW = this.findView(desk.id);

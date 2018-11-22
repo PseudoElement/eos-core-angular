@@ -1,4 +1,4 @@
-import { E_DICT_TYPE, IDepartmentDictionaryDescriptor } from 'eos-dictionaries/interfaces';
+import {E_DICT_TYPE, E_VISIBLE_TIPE, IDepartmentDictionaryDescriptor} from 'eos-dictionaries/interfaces';
 import { NOT_EMPTY_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
 import { ISelectOption } from 'eos-common/interfaces';
@@ -23,6 +23,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     title: 'Подразделения',
     defaultOrder: 'title',
     visible: true,
+    iconName: 'eos-icon-department-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'import', 'export', 'importPhotos',
         'createRepresentative', 'tableCustomization', 'showAllSubnodes', 'edit', 'view', 'slantForForms', 'restore', 'remove', 'removeHard',
         'showDeleted', 'tuneFields'],
@@ -67,26 +68,15 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         title: 'Parent ID',
         length: 248,
     },
-        COMMON_FIELD_CODE,
+    Object.assign({}, COMMON_FIELD_CODE, {length: 20}),
     Object.assign({}, COMMON_FIELD_NAME, {
         key: 'title',
         title: 'Краткое наименование подразделения',
         foreignKey: 'CLASSIF_NAME',
         length: 255,
         required: true,
-        // isUnique: true,
-        // uniqueInDict: true,
         forNode: false,
     }),
-    /*
-    Object.assign({}, COMMON_FIELD_NAME, {
-        key: 'fio',
-        title: 'Фамилия И.О. - должность',
-        foreignKey: 'CLASSIF_NAME',
-        length: 255,
-        forNode: false,
-    },
-    */
     {
         key: 'SURNAME',
         title: 'Фамилия И.О.',
@@ -110,6 +100,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         type: 'text',
         foreignKey: 'FULLNAME',
         forNode: false,
+        vistype: E_VISIBLE_TIPE.onlyChild,
     }),
     Object.assign({}, COMMON_FIELD_FULLNAME, {
         key: 'fullPosition',
@@ -118,6 +109,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         foreignKey: 'FULLNAME',
         length: 1998,
         forNode: true,
+        vistype: E_VISIBLE_TIPE.onlyNode,
     }), {
         key: 'SKYPE',
         title: 'Skype',
@@ -239,7 +231,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     }, {
         key: 'organization',
         type: 'dictionary',
-        title: 'Организация',
+        title: 'Структура Организаций',
     }, {
         key: 'cabinet',
         type: 'dictionary',
@@ -296,7 +288,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         'START_DATE', 'END_DATE', 'fullPosition', 'SKYPE', 'printInfo', 'sev', 'organization', 'cabinet', 'user', 'photo',
         'title', 'DUE_LINK_ORGANIZ', 'indexDep', 'fullTitle', 'ISN_PHOTO'],
     // ['fio', 'position', 'description', 'title', 'phone', 'email', 'rooms', 'associatedUsers']
-    allVisibleFields: ['SURNAME', 'DUTY', 'fullTitle', 'SKYPE', /* 'DEPARTMENT_DUE', */ 'ORDER_NUM', 'indexDep', 'POST_H', 'CARD_FLAG',
+    allVisibleFields: ['SURNAME', 'DUTY', 'fullTitle', 'fullPosition', 'SKYPE', /* 'DEPARTMENT_DUE', */ 'ORDER_NUM', 'indexDep', 'POST_H', 'CARD_FLAG',
         'CARD_NAME', 'NOTE', 'START_DATE', 'END_DATE', 'PHONE_LOCAL', 'PHONE', 'FAX', 'E_MAIL', 'NUM_CAB', 'organization'/*, 'printInfo', 'sev',
 'organization', 'cabinet', 'user'*/],
 };

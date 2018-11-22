@@ -5,20 +5,56 @@
     border-style: solid;
     position: relative;
 }
+.arrow-right {
+    display: inline-block;
+    position: absolute;
+    right: 0px;
+    top: 1px;
+    font-size: 26px;
+    padding-left: 40px;
+    padding-right: 10px;
+    cursor: pointer;
+    background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(255,255,255,1),rgba(255,255,255,1) );
+}
+
+.arrow-left {
+    display: inline-block;
+    position: absolute;
+    top: 1px;
+    font-size: 26px;
+    padding-right: 0px;
+    cursor: pointer;
+}
+
+.arrow-left-fix{
+    left: -15px;
+    position: absolute;
+}
+
+.left-shadowed {
+    -webkit-box-shadow: inset 40px 0px 26px -38px rgba(0,0,0,0.75);
+    -moz-box-shadow: inset 40px 0px 26px -38px rgba(0,0,0,0.75);
+    box-shadow: inset 40px 0px 26px -38px rgba(0,0,0,0.75);
+    line-height: unset;
+}
 
 .eos-table {
     min-width: 100%;
 }
-
+.node-left {
+    padding: 12px;
+}
 .table-header {
     color: $primary-font-color-main-theme;
     background-color: $modal-block-background-main-theme;
     border-bottom: 1px solid $border-color-main-theme;
     width: 100%;
     min-height: $item-height;
+    white-space: nowrap;
     /* height: $item-height; */
-    line-height: $item-height - 1px;
+    line-height: $item-height;
     position: relative;
+    //overflow: hidden;
     .table-header-content {
         left: 0;
         top: 0;
@@ -28,7 +64,7 @@
     }
     .checkbox-inline {
         line-height: $item-height - 1px;
-        width: $item-width;
+        width: $item-width - 2px;
     }
 }
 
@@ -37,17 +73,16 @@
     width: 100%;
     vertical-align: middle;
     font-size: 0;
-    /* color: */
+    overflow: hidden;
     .item {
         display: inline-block;
-        margin-right: $grid-gutter-width / 2;
         white-space: nowrap;
-        overflow: hidden;
         text-overflow: ellipsis;
         vertical-align: middle;
-        &+.item {
-            margin-left: $grid-gutter-width / 2;
-        }
+        padding-left: 20px;
+        padding-right: 20px;
+        height: 48px;
+        line-height: 48px;
         .text {
             cursor: pointer;
         }
@@ -65,7 +100,7 @@
     position: relative;
     overflow-y: auto;
     overflow-x: auto;
-    max-height: calc(100vh - 394px);
+    max-height: calc(100vh - 350px);
     bs-sortable {
         width: 100%;
     }

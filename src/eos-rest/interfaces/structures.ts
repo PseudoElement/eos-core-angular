@@ -3651,6 +3651,241 @@ export interface DEPARTMENT_REPL extends IEnt {
     END_DATE: number;
 }
 
+// NADZOR
+export interface NP_ADDRESS_VID_CL extends ILinearCL {
+
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_UDOST_TYPE_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_SUDIM_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_OSNZADER_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    ISN_CODEX_TYPE: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_CODEX_TYPE_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_MERA_TYPE_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_MERA_OSNOV_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_SUD_TYPE_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_NAKAZ_TYPE_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_OB_WHAT_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_OB_NOMOVE_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_OB_VOSST_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_SPEC_SUBJECT_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_OSN_PRIN_RESH_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_MERA_REAGIR_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_NARUSHEN_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_NEZ_METOD_RASSLED_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_RESULT_RASSLED_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_OPF_CL extends ILinearCL {
+    CODE: string;
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_OSN_OSVOB_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+}
+
+export interface NP_STATUS_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+    CLEAR_CABINET: boolean;
+}
+
+export interface NP_FIG_ROLE_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+    ARH_FLAG: boolean;
+}
+
+export interface NP_SPOSOB_UKR_PR_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+    ISP_OTKAZ: boolean;
+    ISP_ISTOCH: boolean;
+}
+
+export interface NP_FIG_ROLE_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+    CLEAR_CABINET: boolean;
+}
+
+export interface NP_OB_TYPE_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+    USE_C: boolean;
+    USE_A: boolean;
+    USE_N: boolean;
+}
+
+export interface NP_OB_RETURN_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+    USE_C: boolean;
+    USE_A: boolean;
+    USE_N: boolean;
+}
+
+export interface NP_OB_OTZIV_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+    USE_C: boolean;
+    USE_A: boolean;
+    USE_N: boolean;
+}
+
+export interface NP_OB_MOTIV_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+    USE_C: boolean;
+    USE_A: boolean;
+    USE_N: boolean;
+}
+
+export interface NP_OB_OSNOV_CL extends ILinearCL {
+    ISN_LCLASSIF: number;
+    CLASSIF_NAME: string;
+    NOTE: string;
+    WEIGHT: number;
+    USE_C: boolean;
+    USE_A: boolean;
+    USE_N: boolean;
+    USE_VP: boolean;
+    USE_NP: boolean;
+}
+
+export interface NP_RESHEN_CL extends IHierCL {
+    LAYER: number;
+    WEIGHT: number;
+    MAXDUE: string;
+}
+
 export interface SYS_PARMS extends IEnt {
     ISN_USER_OWNER: number;
     DBMS: string;
@@ -3661,3 +3896,16 @@ export interface CUSTOM_STORAGE_ID extends IEnt {
 
     CUSTOM_STORAGE_List: CUSTOM_STORAGE[];
 }
+
+export interface NP_RESHEN_CL extends IHierCL {
+    LAYER: number;
+    WEIGHT: number;
+    MAXDUE: string;
+}
+
+export interface NP_SUD_RESHEN_TYPE_CL extends IHierCL {
+    LAYER: number;
+    WEIGHT: number;
+    MAXDUE: string;
+}
+

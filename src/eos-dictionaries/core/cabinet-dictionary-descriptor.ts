@@ -92,7 +92,7 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
         EosUtils.setValueByPath(rec, 'users', []);
         EosUtils.setValueByPath(rec, 'rec.FOLDER_List',
             CABINET_FOLDERS.map((fConst) =>
-                this.apiSrv.entityHelper.prepareAdded<FOLDER>({ FOLDER_KIND: fConst.key, USER_COUNT: 0 }, 'FOLDER')
+                this.apiSrv.entityHelper.prepareAdded<FOLDER>({ FOLDER_KIND: fConst.key, USER_COUNT: 1 }, 'FOLDER')
             )
         );
         return rec;

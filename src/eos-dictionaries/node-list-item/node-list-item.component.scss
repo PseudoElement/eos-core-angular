@@ -1,24 +1,44 @@
-.node-list-item {
-    overflow: hidden;
-    min-height: 32px;
-    .node-row {
-        cursor: pointer;
+.eos-node-list-item {
+    .pull-left1 {
+        display: inline-block;
     }
-    .node-marker {
-        width: $item-width;
-        text-align: center;
-        .checkbox,
-        .checkbox-inline {
-            line-height: 32px;
-            input[type="checkbox"]+span {
-                margin: 0;
+
+    display: flex;
+    .pull-left {
+        overflow: hidden;
+        //text-overflow: ellipsis;
+    }
+    .node-list-item {
+        overflow: hidden;
+        min-height: 32px;
+        display: inline-flex;
+        width: 100%;
+        white-space: nowrap;
+        max-height: 32px;
+        .node-left {
+            padding: 12px;
+        }
+        .node-row {
+            cursor: pointer;
+            display: inline-block;
+            width: 100%;
+            overflow: hidden;
+        }
+        .node-marker {
+            display: inline-block;
+            width: $item-width;
+            text-align: center;
+            .checkbox,
+            .checkbox-inline {
+                line-height: 32px;
+                input[type="checkbox"] + span {
+                    margin: 0;
+                }
             }
         }
     }
-    eos-node-field {
-        margin-right: $grid-gutter-width /2;
-        &+eos-node-field {
-            margin-left: $grid-gutter-width /2;
-        }
-    }
+}
+.eos-node-list-item:hover {
+    background-color: $highlight-color-main-theme;
+    color: $secondary-font-color-main-theme;
 }

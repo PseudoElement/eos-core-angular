@@ -1,5 +1,6 @@
 import { IFieldDescriptor, IFieldDescriptorBase, E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ISelectOption } from 'eos-common/interfaces';
+import {E_VISIBLE_TIPE} from '../interfaces/dictionary.interfaces';
 
 export class FieldDescriptor implements IFieldDescriptorBase {
     readonly key: string;
@@ -14,8 +15,12 @@ export class FieldDescriptor implements IFieldDescriptorBase {
     readonly uniqueInDict?: boolean;
     readonly options?: ISelectOption[];
     readonly height?: number;
+    readonly vistype?: E_VISIBLE_TIPE;
     readonly forNode?: boolean;
     readonly default?: any;
+    readonly dictionaryId?: string;
+    readonly password?: boolean;
+    readonly groupLabel?: string;
 
     constructor(data: IFieldDescriptor) {
         if (data.key) {
@@ -50,8 +55,14 @@ export class FieldDescriptor implements IFieldDescriptorBase {
         if (data.height) {
             this.height = data.height;
         }
-
+        this.vistype = data.vistype;
         this.forNode = data.forNode;
         this.default = data.default;
+        this.dictionaryId = data.dictionaryId;
+
+        this.password = !!data.password;
+        if (data.groupLabel) {
+            this.groupLabel = data.groupLabel;
+        }
     }
 }

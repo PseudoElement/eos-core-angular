@@ -17,6 +17,9 @@ export class InputBase<T>{
     options?: any[];
     disabled?: boolean;
     length?: number;
+    password?: boolean;
+    groupLabel?: string;
+    isGroup?: boolean;
     formatDbBinary?: boolean;
 
 
@@ -36,8 +39,11 @@ export class InputBase<T>{
         forNode?: boolean,
         options?: any[],
         disabled?: boolean,
+        length?: number,
+        password?: boolean,
+        groupLabel?: string,
+        isGroup?: boolean,
         formatDbBinary?: boolean,
-        length?: number;
     } = {}) {
         this.value = options.value;
         this.key = options.key || '';
@@ -57,5 +63,8 @@ export class InputBase<T>{
         this.forNode = options.forNode;
         this.disabled = !!options.disabled;
         this.length = options.length;
+        this.password = options.password;
+        this.groupLabel = options.groupLabel;
+        this.isGroup = options.isGroup;
     }
 }

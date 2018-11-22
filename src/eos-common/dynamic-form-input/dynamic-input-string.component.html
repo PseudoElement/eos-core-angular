@@ -1,17 +1,17 @@
 <div [formGroup]="form"
-    class="dynamic-input-wrapper">
+     class="dynamic-input-wrapper">
     <label [hidden]="input.hideLabel"
-        [attr.for]="input.key">{{input.label}}</label>
-    <div [ngClass]="{'required': isRequired}">
+           [attr.for]="input.key">{{label}}</label>
+    <div [ngClass]="{'required': isRequired, 'disabled': disabled}">
         <input class="form-control m-font"
-            [formControlName]="input.key"
-            [id]="input.key"
-            type="text"
-            [readonly]="readonly"
-            [ngClass]="{'readonly': readonly}"
-            [placeholder]="input.label"
-            (focus)="onFocus()"
-            (blur)="onBlur()"
-            autocomplete="off">
+               [formControlName]="input.key"
+               [id]="input.key"
+               [type]="textType"
+               [readonly]="readonly"
+               [ngClass]="{'readonly': readonly}"
+               placeholder="..."
+               (focus)="onFocus()"
+               (blur)="onBlur()"
+               autocomplete="off">
     </div>
 </div>

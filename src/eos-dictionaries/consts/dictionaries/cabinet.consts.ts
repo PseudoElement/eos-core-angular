@@ -2,13 +2,15 @@ import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME } from './_common';
 import { SEARCH_TYPES } from '../search-types';
+import {environment} from '../../../environments/environment';
 
 export const CABINET_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'cabinet',
     apiInstance: 'CABINET',
     title: 'Кабинеты',
     keyField: 'ISN_CABINET',
-    visible: false,
+    visible: !environment.production,
+    iconName: 'eos-icon-department-blue',
     searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'edit',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'remove', 'removeHard',
@@ -27,7 +29,7 @@ export const CABINET_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     }),
     Object.assign({}, COMMON_FIELD_FULLNAME, {
         title: 'Полное наименование кабинета',
-        height: 50,
+        height: 150,
         length: 2000,
     }), {
         key: 'DUE',
@@ -38,13 +40,14 @@ export const CABINET_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         key: 'DEPARTMENT_NAME',
         title: 'Подразделение',
         type: 'text',
+        length: 100,
     }, {
         key: 'department',
         type: 'dictionary',
         title: 'Подразделение'
     }, {
         key: 'users',
-        type: 'dictionary',
+        type: 'array',
         title: 'Пользователи кабинета'
     }, {
         key: 'folders',
@@ -53,7 +56,7 @@ export const CABINET_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         foreignKey: 'FOLDER_List'
     }, {
         key: 'owners',
-        type: 'dictionary',
+        type: 'array',
         title: 'Владельцы кабинета'
     }, {
         key: 'cabinetAccess',

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import { EosDictService } from '../services/eos-dict.service';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { ISearchSettings, SEARCH_MODES, E_DICT_TYPE } from 'eos-dictionaries/interfaces';
@@ -8,12 +8,15 @@ import { SEARCH_NOT_DONE } from '../consts/messages.consts';
     selector: 'eos-dictionary-quick-search',
     templateUrl: 'dictionary-quick-search.component.html',
 })
-export class DictionariesQuickSearchComponent {
+export class DictionariesQuickSearchComponent implements AfterViewInit {
     public srchString = '';
     public settings: ISearchSettings = {
         mode: SEARCH_MODES.totalDictionary,
         deleted: false
     };
+
+    @ViewChild('quickSearchField') private searchElementRef: ElementRef;
+
     private searchDone = true;
 
     get isTree(): boolean {
@@ -24,6 +27,10 @@ export class DictionariesQuickSearchComponent {
         private _dictSrv: EosDictService,
         private _msgSrv: EosMessageService,
     ) { }
+
+    public ngAfterViewInit(): void {
+        this.searchElementRef.nativeElement.focus();
+    }
 
     quickSearch(evt: KeyboardEvent) {
         if (evt.keyCode === 13) {

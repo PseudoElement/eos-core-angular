@@ -1,20 +1,20 @@
 <div [formGroup]="form">
     <label [hidden]="input.hideLabel"
-        [attr.for]="input.key">{{input.label}}</label>
+           [attr.for]="input.key">{{input.label}}</label>
     <p *ngIf="readonly"
-        class="form-control-static m-font"
-        [ngClass]="{'placeholder': !hasValue()}">{{currentValue}}</p>
-    <div class="eos-select"
-        [ngClass]="{'required': isRequired}"
-        *ngIf="!readonly">
-        <select class="form-control m-font"
-            [ngClass]="{readonly: readonly, 'placeholder': !hasValue()}"
-            [id]="input.key"
-            [formControlName]="input.key"
-            (focus)="onFocus()"
-            (blur)="onBlur()">
-        <option disabled="disabled" [selected]="!hasValue()" class="hidden">{{input.label}}</option>
-        <option *ngFor="let opt of input.options" [value]="opt.value">{{opt.title}}</option>
-    </select>
-    </div>
+       class="form-control-static m-font"
+       [ngClass]="{'placeholder': !hasValue()}">{{currentValue}}</p>
+        <div class="eos-select" *ngIf="!readonly"
+             [ngClass]="{'required': isRequired, 'disabled': disabled}">
+            <select class="form-control m-font"
+                    [ngClass]="{'readonly': readonly, 'placeholder': !hasValue()}"
+                    [id]="input.key"
+                    onmousedown="this.focus();"
+                    [formControlName]="input.key"
+                    (focus)="onFocus()"
+                    (blur)="onBlur()">
+            <option disabled="disabled" [selected]="!hasValue()" class="hidden">{{input.label}}</option>
+            <option *ngFor="let opt of input.options" [value]="opt.value">{{opt.title}}</option>
+            </select>
+        </div>
 </div>

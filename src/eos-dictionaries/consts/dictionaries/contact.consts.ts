@@ -1,11 +1,19 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { environment } from 'environments/environment';
+import { ISelectOption } from '../../../eos-common/interfaces';
+
+export const MAIL_FORMATS: ISelectOption[] = [
+    { value: 1, title: 'Старый паспорт' },
+    { value: 2, title: 'Паспорт XML' },
+    { value: 3, title: 'DOCX' }
+];
 
 export const CONTACT_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'contact',
     apiInstance: 'CONTACT',
     title: 'Контакты',
+    iconName: '',
     visible: !environment.production,
     keyField: 'ISN_CONTACT',
     fields: [{

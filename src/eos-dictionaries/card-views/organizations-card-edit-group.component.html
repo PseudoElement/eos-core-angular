@@ -1,0 +1,16 @@
+<div class="card-content-wrapper">
+    <div class="clearfix">
+        <eos-dynamic-input [input]="inputs['rec.CLASSIF_NAME']"
+                           [form]="form"
+                           [readonly]="!editMode"
+                           [isGroup]="true"></eos-dynamic-input>
+
+
+        <eos-dynamic-input [input]="inputs['rec.ISN_ADDR_CATEGORY']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.NOTE']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+    </div>
+</div>

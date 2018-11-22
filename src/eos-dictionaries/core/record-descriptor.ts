@@ -178,7 +178,11 @@ export class RecordDescriptor {
                         height: _f.height,
                         foreignKey: _f.foreignKey,
                         forNode: _f.forNode,
-                        default: _f.default
+                        vistype: _f.vistype,
+                        dictionaryId: _f.dictionaryId,
+                        default: _f.default,
+                        password: _f.password,
+                        groupLabel: _f.groupLabel
                     };
                 }
             });

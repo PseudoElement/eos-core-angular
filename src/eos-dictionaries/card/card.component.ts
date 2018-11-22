@@ -28,6 +28,8 @@ import { LS_EDIT_CARD } from '../consts/common';
 
 import { CardEditComponent } from 'eos-dictionaries/card-views/card-edit.component';
 import { EosDepartmentsService } from '../services/eos-department-service';
+import {EosUtils} from '../../eos-common/core/utils';
+import {toNumber} from 'ngx-bootstrap/timepicker/timepicker.utils';
 // import { UUID } from 'angular2-uuid';
 
 export enum EDIT_CARD_MODES {
@@ -113,10 +115,12 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         private _router: Router,
         private departmentsSrv: EosDepartmentsService,
     ) {
+        let tabNum = 0;
         this.selfLink = this._router.url;
         this._route.params.subscribe((params) => {
             this.dictionaryId = params.dictionaryId;
             this.nodeId = params.nodeId;
+            tabNum = (toNumber(params.tabNum));
             this._init();
         });
 
@@ -125,6 +129,8 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             .subscribe((nodes) => {
                 this.nodes = nodes.filter((node) => !node.isDeleted);
             });
+
+        this._dictSrv.currentTab = tabNum;
     }
 
     @HostListener('window:beforeunload', ['$event'])
@@ -246,7 +252,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     private _init() {
         this.nextRoute = this._router.url;
         this._urlSegments = this._router.url.split('/');
-        this._mode = EDIT_CARD_MODES[this._urlSegments[this._urlSegments.length - 1]];
+        this._mode = EDIT_CARD_MODES[this._urlSegments[this._urlSegments.length - 2]];
         this._getNode();
     }
 
@@ -270,6 +276,22 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
         if (this.node) {
             this.fieldsDescription = this.node.getEditFieldsDescription();
+            if (this.node.data && this.node.data.printInfo && this.node.data.printInfo._orig) {
+                EosUtils.deepUpdate(this.node.data.printInfo._orig, this.node.data.printInfo);
+            }
+            if (this.node.data && this.node.data.sev && this.node.data.sev._orig) {
+                EosUtils.deepUpdate(this.node.data.sev._orig, this.node.data.sev);
+            }
+            if (this.node.data && this.node.data.CONTACT_List) {
+                this.node.data.contact = [];
+                for (let i = 0; i < this.node.data.CONTACT_List.length; i++) {
+                    const contact = Object.assign({}, node.data.CONTACT_List[i]);
+                    contact._orig = {};
+                    EosUtils.deepUpdate(contact._orig, node.data.CONTACT_List[i]);
+                    // contact._orig.__metadata = node.data.CONTACT_List[i].__metadata;
+                    node.data.contact.push(contact);
+                }
+            }
             this.nodeData = this.node.data; // getEditData();
             // console.log('recived description', this.nodeData);
 
@@ -338,10 +360,11 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
     private _makeUrl(nodeId: string, forceMode?: EDIT_CARD_MODES): string {
         const _url = [].concat([], this._urlSegments);
-        _url[_url.length - 2] = nodeId;
+        _url[_url.length - 3] = nodeId;
+        _url[_url.length - 1] = this._dictSrv.currentTab;
 
         if (forceMode !== undefined && EDIT_CARD_MODES[forceMode]) {
-            _url[_url.length - 1] = EDIT_CARD_MODES[forceMode];
+            _url[_url.length - 2] = EDIT_CARD_MODES[forceMode];
         }
         return _url.join('/');
     }
@@ -392,6 +415,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             this._deskSrv.addRecentItem({
                 url: this._router.url,
                 title: node.title,
+                iconName: '',
             });
             this._clearEditingCardLink();
         } else {

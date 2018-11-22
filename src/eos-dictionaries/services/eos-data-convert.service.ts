@@ -7,9 +7,13 @@ import { CheckboxInput } from 'eos-common/core/inputs/checkbox-input';
 import { DateInput } from 'eos-common/core/inputs/date-input';
 import { E_FIELD_TYPE } from '../interfaces';
 import { GENDERS } from '../consts/dictionaries/department.consts';
-import { NOT_EMPTY_STRING } from '../consts/input-validation';
+import { EMAIL, NOT_EMPTY_STRING } from '../consts/input-validation';
 import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 import { ButtonsInput } from 'eos-common/core/inputs/buttons-input';
+import {EosDictionary} from '../core/eos-dictionary';
+import {DictionaryDescriptorService} from '../core/dictionary-descriptor.service';
+import {EosBroadcastChannelService} from './eos-broadcast-channel.service';
+import { MAIL_FORMATS } from '../consts/dictionaries/contact.consts';
 import { ToggleInput } from 'eos-common/core/inputs/toggle-input';
 import { NumberIncrementInput } from 'eos-common/core/inputs/number-increment-input';
 import { RadioInput } from 'eos-common/core/inputs/radio-input';
@@ -25,7 +29,12 @@ export class EosDataConvertService {
      * @param fieldsDescription node fields description
      * @param data node data
      */
-    getInputs(fieldsDescription: any, data: any, editMode = true) {
+    getInputs(
+            fieldsDescription: any[],
+            data: any, editMode = true,
+            dictSrv?: DictionaryDescriptorService,
+            channelSrv?: EosBroadcastChannelService
+    ) {
         const inputs: any = {};
         if (fieldsDescription) {
             Object.keys(fieldsDescription).forEach((_dict) => {
@@ -65,6 +74,55 @@ export class EosDataConvertService {
                                         length: descr[_key].length,
                                         readonly: descr[_key].readonly,
                                         disabled: descr[_key].readonly || !editMode,
+                                        password: descr[_key].password,
+                                        groupLabel: descr[_key].groupLabel
+                                    });
+                                    break;
+                                case E_FIELD_TYPE.xml:
+                                    channelSrv.parseXml(data[_dict][descr[_key].foreignKey])
+                                        .then(_data => {
+                                            if (!_data) {
+                                                return;
+                                            }
+                                            Object.keys(_data).forEach((_dataKey) => {
+                                                if (descr[_dataKey] !== undefined) {
+                                                    data[_dict][_dataKey] = _data[_dataKey];
+                                                    switch (descr[_dataKey].type) {
+                                                        case E_FIELD_TYPE.number:
+                                                        case E_FIELD_TYPE.string:
+                                                            inputs[_dict + '.' + _dataKey] = new StringInput({
+                                                                key: _dict + '.' + descr[_dataKey].foreignKey,
+                                                                label: descr[_dataKey].title,
+                                                                required: descr[_dataKey].required,
+                                                                pattern: descr[_dataKey].pattern,
+                                                                isUnique: descr[_dataKey].isUnique,
+                                                                uniqueInDict: descr[_dataKey].uniqueInDict,
+                                                                forNode: descr[_dataKey].forNode,
+                                                                value: data[_dict][descr[_dataKey].foreignKey]
+                                                                || descr[_dataKey].default,
+                                                                length: descr[_dataKey].length,
+                                                                disabled: !editMode,
+                                                                password: descr[_dataKey].password,
+                                                                groupLabel: descr[_dataKey].groupLabel
+                                                            });
+                                                            break;
+                                                        case E_FIELD_TYPE.select:
+                                                            const options = [];
+                                                            options.push(...descr[_dataKey].options);
+                                                            inputs[_dict + '.' + _dataKey] = new DropdownInput({
+                                                                key: _dict + '.' + descr[_dataKey].foreignKey,
+                                                                label: descr[_dataKey].title,
+                                                                options: options,
+                                                                required: descr[_dataKey].required,
+                                                                forNode: descr[_dataKey].forNode,
+                                                                value: data[_dict][descr[_dataKey].foreignKey]
+                                                                || descr[_dataKey].default,
+                                                                disabled: !editMode,
+                                                            });
+                                                            break;
+                                                    }
+                                                }
+                                            });
                                     });
                                     break;
                                     case E_FIELD_TYPE.number:
@@ -127,10 +185,28 @@ export class EosDataConvertService {
                                     });
                                     break;
                                 case E_FIELD_TYPE.select:
+                                    // remarked - becouse continuously adding to options
+                                    // const options = descr[_key].options;
+                                    let options = [];
+
+                                    if (descr[_key].dictionaryId !== undefined) {
+                                        const dict = new EosDictionary(descr[_key].dictionaryId, dictSrv);
+                                        dict.init()
+                                            .then(() => {
+                                                dict.nodes.forEach((node) => {
+                                                    if (node.id) {
+                                                        options.push(...[{value: node.originalId, title: node.title}]);
+                                                    }
+                                                });
+                                            });
+                                    } else {
+                                        options = descr[_key].options;
+                                    }
                                     inputs[_dict + '.' + _key] = new DropdownInput({
                                         key: _dict + '.' + descr[_key].foreignKey,
                                         label: descr[_key].title,
-                                        options: descr[_key].options,
+                                        options: options,
+                                        hideLabel: !(descr[_key].title),
                                         required: descr[_key].required,
                                         forNode: descr[_key].forNode,
                                         value: data[_dict][descr[_key].foreignKey]
@@ -146,6 +222,7 @@ export class EosDataConvertService {
                                         label: descr[_key].title,
                                         options: descr[_key].options,
                                         required: descr[_key].required,
+                                        hideLabel: !(descr[_key].title),
                                         forNode: descr[_key].forNode,
                                         value: data[_dict][descr[_key].foreignKey]
                                             || descr[_key].default,
@@ -169,10 +246,69 @@ export class EosDataConvertService {
                             key: 'sev.GLOBAL_ID',
                             label: 'Индекс СЭВ',
                             dict: 'sev',
-                            value: data['sev']['GLOBAL_ID'],
+                            value: data['sev'] ? data['sev']['GLOBAL_ID'] : null,
                             pattern: NOT_EMPTY_STRING,
                             disabled: !editMode,
                         });
+                        break;
+                    case 'contact':
+                        for (let i = 0; i < data.contact.length; i++) {
+                            inputs['contact[' + i + '].E_MAIL'] = new StringInput({
+                                key: 'contact[' + i + '].E_MAIL',
+                                label: 'Адрес e-mail',
+                                dict: 'contact',
+                                value: data.contact[i] ? data.contact[i].E_MAIL : null,
+                                pattern: EMAIL,
+                                disabled: !editMode
+                            });
+                            inputs['contact[' + i + '].ENCRYPT_FLAG'] = new CheckboxInput({
+                                key: 'contact[' + i + '].ENCRYPT_FLAG',
+                                label: 'Требуется шифрование',
+                                forNode: 'contact[' + i + '].ENCRYPT_FLAG',
+                                value: data.contact[i].ENCRYPT_FLAG !== 0,
+                                disabled: !editMode,
+                            });
+                            inputs['contact[' + i + '].EDS_FLAG'] = new CheckboxInput({
+                                key: 'contact[' + i + '].EDS_FLAG',
+                                label: 'Требуется ЭП',
+                                forNode: 'contact[' + i + '].EDS_FLAG',
+                                value: data.contact[i].EDS_FLAG !== 0,
+                                disabled: !editMode,
+                            });
+                            inputs['contact[' + i + '].ID_CERTIFICATE'] = new StringInput({
+                                key: 'contact[' + i + '].ID_CERTIFICATE',
+                                label: 'Cертификат',
+                                dict: 'contact',
+                                value: data.contact[i] ? data.contact[i].ID_CERTIFICATE : null,
+                                disabled: !editMode
+                            });
+
+                            inputs['contact[' + i + '].MAIL_FORMAT'] = new ButtonsInput({
+                                key: 'contact[' + i + '].MAIL_FORMAT',
+                                label: 'В формате',
+                                dict: 'contact',
+                                value: data.contact[i].MAIL_FORMAT,
+                                // options: fieldsDescription['printInfo']['GENDER'].options,
+                                options: MAIL_FORMATS,
+                                pattern: NOT_EMPTY_STRING,
+                                disabled: !editMode,
+                            });
+                            inputs['contact[' + i + '].NOTE'] = new StringInput({
+                                key: 'contact[' + i + '].NOTE',
+                                label: 'Примечание',
+                                dict: 'contact',
+                                value: data.contact[i] ? data.contact[i].NOTE : null,
+                                disabled: !editMode
+                            });
+                            // inputs['contact[' + i + '].email'] = new StringInput({
+                            //     key: 'contact[' + i + '].email',
+                            //     label: 'Адрес e-mail',
+                            //     dict: 'contact',
+                            //     value: data.contact[i] ? data.contact[i].email : null,
+                            //     pattern: EMAIL,
+                            //     disabled: !editMode
+                            // });
+                        }
                         break;
                     case 'printInfo':
                         if (data.rec['IS_NODE'] === 1) { // person

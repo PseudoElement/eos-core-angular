@@ -1,0 +1,18 @@
+.card-content-wrapper {
+    .data {
+        display: flex;
+        align-items: flex-start;
+
+        .number {
+            padding-right: 10px;
+            min-width: 240px;
+        }
+        .print {
+            width: 100%;
+            .max {
+                width: 100%;
+            }
+        }
+    }
+}
+

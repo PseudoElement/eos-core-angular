@@ -6,13 +6,14 @@ export class PrintInfoHelper {
         'PRINT_SURNAME', 'PRINT_SURNAME_DP', 'PRINT_DUTY', 'PRINT_DEPARTMENT', 'DEPARTMENT_RP',
         'SURNAME', 'NAME', 'PATRON', 'SURNAME_RP', 'NAME_RP', 'PATRON_RP', 'SURNAME_DP', 'NAME_DP',
         'PATRON_DP', 'SURNAME_VP', 'NAME_VP', 'PATRON_VP', 'SURNAME_TP', 'NAME_TP', 'PATRON_TP', 'SURNAME_PP',
-        'NAME_PP', 'PATRON_PP', 'DUTY_RP', 'DUTY_DP', 'DUTY_VP',
+        'NAME_PP', 'PATRON_PP', 'DUTY_RP', 'DUTY_DP', 'DUTY_VP', 'GENDER', 'IS_OWNER', 'NOT_USE_IN_DUTY'
     ];
 
     static PrepareForSave(rec: CB_PRINT_INFO, owner: IEnt): boolean {
 
         const fDelete = PrintInfoHelper.chkFields
-            .findIndex((key) => rec[key] && rec[key] !== null && rec[key].trim() !== '') < 0;
+            .findIndex((key) => rec[key] && rec[key] !== null &&
+                (Number.isInteger(rec[key]) || rec[key].trim() !== '')) < 0;
 
         // console.log('cbi owner', rec, owner['ISN_NODE']);
         if (fDelete) {
