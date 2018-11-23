@@ -26,6 +26,7 @@ import { NADZOR } from './dictionaries/nadzor.consts';
 import { REESTRTYPE_DICT } from './dictionaries/reestrtype.consts';
 import {NOMENKL_CL} from './dictionaries/nomenkl.const';
 import {EDS_CATEGORY_CL} from './dictionaries/category-eds.consts';
+import {LINK_CL} from './dictionaries/link.consts';
 
 export const DICTIONARIES = [
     /* tree dictionaries */
@@ -52,6 +53,7 @@ export const DICTIONARIES = [
     // CITIZENS_DICT,
     NOMENKL_CL,
     EDS_CATEGORY_CL,
+    LINK_CL,
     // SEV
     RULES_SEV_DICT,
     COLLISIONS_SEV_DICT,

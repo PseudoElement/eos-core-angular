@@ -33,12 +33,12 @@
                                                       [data]="data"
                                                       [editMode]="editMode"></eos-organizations-card-edit-node>
                     <eos-organizations-card-edit-group #cardEditEl
-                                                      *ngIf="data.rec['IS_NODE'] === 0"
-                                                      class="organizations-card-edit-group simple-card-edit"
-                                                      [form]="form"
-                                                      [inputs]="inputs"
-                                                      [data]="data"
-                                                      [editMode]="editMode"></eos-organizations-card-edit-group>
+                                                       *ngIf="data.rec['IS_NODE'] === 0"
+                                                       class="organizations-card-edit-group simple-card-edit"
+                                                       [form]="form"
+                                                       [inputs]="inputs"
+                                                       [data]="data"
+                                                       [editMode]="editMode"></eos-organizations-card-edit-group>
                 </ng-container>
                 <eos-cabinet-card-edit *ngSwitchCase="'cabinet'"
                                        #cardEditEl
@@ -75,13 +75,20 @@
                                    [inputs]="inputs"
                                    [data]="data"
                                    [editMode]="editMode"></eos-docgroup-card>
+                <eos-nomenkl-card *ngSwitchCase="'nomenkl'"
+                                  #cardEditEl
+                                  class="nomenkl-card simple-card-edit"
+                                  [form]="form"
+                                  [inputs]="inputs"
+                                  [data]="data"
+                                  [editMode]="editMode"></eos-nomenkl-card>
                 <eos-citizen-card *ngSwitchCase="'citizens'"
-                                   #cardEditEl
-                                   class="citizen-card simple-card-edit"
-                                   [form]="form"
-                                   [inputs]="inputs"
-                                   [data]="data"
-                                   [editMode]="editMode"></eos-citizen-card>
+                                  #cardEditEl
+                                  class="citizen-card simple-card-edit"
+                                  [form]="form"
+                                  [inputs]="inputs"
+                                  [data]="data"
+                                  [editMode]="editMode"></eos-citizen-card>
                 <eos-visatype-card *ngSwitchCase="'visa-type'"
                                    #cardEditEl
                                    class="visatype-card simple-card-edit"

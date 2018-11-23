@@ -18,17 +18,22 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
     }, {
         key: 'CLOSED',
         title: 'Закрыто',
-        type: 'number',
+        type: 'boolean',
         default: 0,
         required: true,
     }, {
         key: 'SECURITY',
-        title: 'SECURITY',
+        title: 'Гриф',
         type: 'string',
         length: 64,
     }, {
+        key: 'SHELF_LIFE',
+        title: 'Время хранения',
+        type: 'string',
+        length: 255,
+    }, {
         key: 'YEAR_NUMBER',
-        title: 'Год',
+        title: 'Ввод в действие',
         type: 'number',
         required: true,
     }, {
@@ -36,23 +41,18 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
         title: 'Время',
         type: 'number',
     }, {
-        key: 'SHELF_TIME',
-        title: 'Время хранения',
-        type: 'string',
-        length: 255,
-    }, {
         key: 'NOM_NUMBER',
-        title: 'Номер',
+        title: 'Индекс',
         type: 'string',
         length: 24,
         required: true,
     }, {
         key: 'END_YEAR',
-        title: 'Год окончания',
+        title: 'Завершение',
         type: 'number',
     }, {
         key: 'ARTICLE',
-        title: 'Артикль',
+        title: 'Статья',
         type: 'string',
         length: 255,
     }, {
@@ -61,7 +61,7 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
         type: 'number',
     }, {
         key: 'CLOSE_DATE',
-        title: 'Кем закрыто',
+        title: 'Дата закрытия',
         type: 'date',
     }, {
         key: 'DOC_UID',
@@ -70,11 +70,11 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
         length: 512,
     }, {
         key: 'ARCH_DATE',
-        title: 'Дата архивации',
+        title: 'Передано в архив',
         type: 'date',
     }, {
         key: 'ARCH_FLAG',
-        title: 'Флаг архивации',
+        title: 'Подлежит сдаче в архив',
         type: 'number',
     }, {
         key: 'E_DOCUMENT',
@@ -82,19 +82,20 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
         type: 'number',
     },
         Object.assign({}, COMMON_FIELD_NAME, {
+            title: 'Заголовок',
             length: 2000,
         }),
     ]),
 
     treeFields: ['CLASSIF_NAME'],
-    editFields: ['CLASSIF_NAME', 'NOTE', 'CLOSED', 'SECURITY', 'YEAR_NUMBER', 'STORE_TIME', 'SHELF_TIME', 'NOM_NUMBER',
+    editFields: ['CLASSIF_NAME', 'NOTE', 'CLOSED', 'SECURITY', 'YEAR_NUMBER', 'STORE_TIME', 'SHELF_LIFE', 'NOM_NUMBER',
         'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', ],
     searchFields: ['CLASSIF_NAME', 'NOTE'],
     fullSearchFields: ['CLASSIF_NAME', 'NOTE'],
     quickViewFields: ['NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME', ],
-    listFields: ['YEAR_NUMBER', 'NOM_NUMBER', 'CLASSIF_NAME'],
-    allVisibleFields: ['NOTE', 'CLOSED', 'SECURITY', 'STORE_TIME', 'SHELF_TIME',
+    listFields: ['NOM_NUMBER', 'SECURITY', 'CLASSIF_NAME'],
+    allVisibleFields: ['NOTE', 'CLOSED', 'SECURITY', 'STORE_TIME', 'SHELF_LIFE',
         'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', ],
 
 });

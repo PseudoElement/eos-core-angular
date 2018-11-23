@@ -1,0 +1,54 @@
+<div class="card-content-wrapper">
+    <div class="clearfix">
+        <eos-dynamic-input *ngIf="inputs['rec.CLASSIF_NAME']"
+                           [input]="inputs['rec.CLASSIF_NAME']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+        <div class="row-wrapper space-between">
+            <eos-dynamic-input *ngIf="inputs['rec.NOM_NUMBER']"
+                               [input]="inputs['rec.NOM_NUMBER']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input *ngIf="inputs['rec.SHELF_LIFE']"
+                               [input]="inputs['rec.SHELF_LIFE']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input *ngIf="inputs['rec.SECURITY']"
+                               [input]="inputs['rec.SECURITY']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+        </div>
+        <eos-dynamic-input class="checkbox-inline"
+                           [input]="inputs['rec.CLOSED']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+
+        <eos-dynamic-input *ngIf="inputs['rec.ARTICLE']"
+                           [input]="inputs['rec.ARTICLE']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+        <div class="row-wrapper space-between">
+            <eos-dynamic-input *ngIf="inputs['rec.YEAR_NUMBER']"
+                               [input]="inputs['rec.YEAR_NUMBER']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input *ngIf="inputs['rec.END_YEAR']"
+                               [input]="inputs['rec.END_YEAR']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input *ngIf="inputs['rec.ARCH_DATE']"
+                               [input]="inputs['rec.ARCH_DATE']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input class="checkbox-inline"
+                               [input]="inputs['rec.ARCH_FLAG']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+        </div>
+        <eos-dynamic-input *ngIf="inputs['rec.NOTE']"
+                           [input]="inputs['rec.NOTE']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+
+    </div>
+</div>
