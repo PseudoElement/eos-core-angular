@@ -1,0 +1,31 @@
+.list-user-select-wrapper {
+    .table-header {
+        .btn {
+            background: transparent;
+        }
+    }
+
+    // .table-header {
+    //     .user-title-name {
+
+    //     }
+    // }
+
+    .eos-node-list {
+        background: $white;
+
+        .user-select-node {
+            line-height: 30px;
+        }
+
+        .user-select-empty-list {
+            margin-left: 20px;
+        }
+    }
+
+    .user-list-first-colomn {
+        width: 200px;
+        display: inline-block;
+        margin-left: 20px;
+    }
+}

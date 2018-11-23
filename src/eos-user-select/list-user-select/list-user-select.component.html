@@ -1,70 +1,75 @@
-<div class="table-wrapper usual-border">
-    <div class="table-header">
-        <!-- header action -->
-        <button
-            class="btn"
-            tooltip="Создать пользователя"
-            placement="bottom"
-            containerClass="tooltip-info"
-            (click)="createUser()"
-        >
-                <span class="eos-icon eos-icon-plus-blue small"></span>
-        </button>
-        <button
-            class="btn"
-            tooltip="Редактировать пользователя"
-            placement="bottom"
-            containerClass="tooltip-info"
-            (click)="editUser()"
-        >
-                <span class="eos-icon eos-icon-edit-blue small"></span>
-        </button>
-    </div>
-    <div class="table-header">
-        <!-- header -->
-        header
-    </div>
-    <div class="eos-node-list">
-        <div *ngIf="!isLoading; else spiner"
-        class="block list"
-            [ngStyle]="{'width.px': tableWidth}"
-            #listContent>
+<div class="list-user-select-wrapper">
+    <div class="table-wrapper usual-border">
+        <div class="table-header">
+            <!-- header action -->
+            <button
+                class="btn"
+                tooltip="Создать пользователя"
+                placement="bottom"
+                container="body"
+                containerClass="tooltip-info"
+                (click)="createUser()"
+            >
+                    <span class="eos-icon eos-icon-plus-blue small"></span>
+            </button>
+            <button
+                class="btn"
+                tooltip="Редактировать пользователя"
+                placement="bottom"
+                container="body"
+                containerClass="tooltip-info"
+                (click)="editUser()"
+            >
+                    <span class="eos-icon eos-icon-edit-blue small"></span>
+            </button>
+        </div>
+        <div class="table-header">
+            <!-- header -->
+            <span class="user-title-name user-list-first-colomn">Фамилия</span>
+            <span>Логин</span>
+        </div>
+        <div *ngIf="!isLoading; else spiner" class="eos-node-list">
+            <div *ngIf="listUsers?.length; else emptyCert"
+                class="block"
+                [ngStyle]="{'width.px': tableWidth}"
+                #listContent>
 
-            <div
-                *ngFor="let user of listUsers"
-                class="list"
-                [ngClass]="{'highlighted': user.isSelected}"
-                (click)="selectedNode(user)"
-                (dblclick)="editUser()">
-                <label
-                    class="checkbox-inline"
-                    [tooltip]="user.marked ? markTemp : notMarkTemp"
-                    containerClass="tooltip-info"
-                    container="body"
-                    (click)="checkboxClick($event)"
-                    placement="bottom"
-                >
-                    <input
-                        type="checkbox"
-                        [(ngModel)]="user.marked || user.selectedMark"
-                        (ngModelChange)="markNode($event, user)"
+                <div
+                    *ngFor="let user of listUsers"
+                    class="user-select-node"
+                    [ngClass]="{'highlighted': user.isSelected}"
+                    (click)="selectedNode(user)"
+                    (dblclick)="editUser()">
+                    <!-- <label
+                        class="checkbox-inline"
+                        [tooltip]="user.marked ? markTemp : notMarkTemp"
+                        containerClass="tooltip-info"
+                        container="body"
+                        (click)="checkboxClick($event)"
+                        placement="bottom"
                     >
-                    <span></span>
-                </label>
-                <span style="width: 200px; display: inline-block;">{{user.name}}</span>
-                <span>{{user.login}}</span>
+                        <input
+                            type="checkbox"
+                            [(ngModel)]="user.marked || user.selectedMark"
+                            (ngModelChange)="markNode($event, user)"
+                        >
+                        <span></span>
+                    </label> -->
+                    <span class="user-list-first-colomn">{{user.name}}</span>
+                    <span>{{user.login}}</span>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<ng-template #markAllTooltip>
+<!-- <ng-template #markAllTooltip>
     {{anyMarked ? 'Снять' : 'Пометить'}}<br/>{{anyMarked ? 'пометки': 'все'}}
-</ng-template>
+</ng-template> -->
 
 <ng-template #markTemp>Снять<br>пометку</ng-template>
 <ng-template #notMarkTemp>Пометить<br>элемент</ng-template>
 <ng-template #emptyCert>
-    <h4>Пользователи отсутствуют</h4>
+    <h4 class="user-select-empty-list">Пользователи отсутствуют</h4>
 </ng-template>
 <ng-template #spiner>
         <eos-spinner size="lg"></eos-spinner>

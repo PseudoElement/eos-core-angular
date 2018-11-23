@@ -21,7 +21,8 @@
     <div class="selected-wrapper"
         #selectedWrapper
         [ngClass]="{'open-tree': currentState[0] && !hideTree }">
-        <div class="node-actions">
+
+        <!-- <div class="node-actions">
             <div *ngIf="true"
                 class="selected-node xl-font"
                 [ngClass]="{'has-custom': hasCustomTable}">
@@ -35,7 +36,7 @@
                 <div class="selected-node-title">
                     <span class="long-title xl-font">title}}</span>
                 </div>
-                <!-- <div class="tabs-wrapper usual-border m-font">
+                <div class="tabs-wrapper usual-border m-font">
                     <ul class="tabs"
                         *ngIf="dictionary?.id === 'departments'">
                         <li class="tab-item"
@@ -51,7 +52,7 @@
                             <span class="tab-title">Подразделения</span>
                         </li>
                     </ul>
-                </div> -->
+                </div>
                 <div class="item-count usual-border m-font">
                     <ng-container *ngIf="true; then foundRecords; else records"></ng-container>
                     <ng-template #records>
@@ -73,11 +74,12 @@
                     </ng-template>
                 </div>
             </div>
-            <!-- <eos-dictionary-quick-search *ngIf="fastSearch"></eos-dictionary-quick-search> -->
-        </div>
+            <eos-dictionary-quick-search *ngIf="fastSearch"></eos-dictionary-quick-search>
+        </div> -->
+
         <!-- <eos-node-list #nodeList></eos-node-list> -->
         <eos-list-user-select></eos-list-user-select>
-        <eos-user-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-user-list-pagination>
+        <!-- <eos-user-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-user-list-pagination> -->
     </div>
     <div class="opened-wrapper block"
         [ngClass]="{'open-info': currentState[1]}">

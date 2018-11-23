@@ -38,7 +38,11 @@ export class ListUserSelectComponent implements OnDestroy {
     }
 
     selectedNode(user: UserSelectNode) {
+        if (this.selectedUser) {
+            this.selectedUser.isSelected = false;
+        }
         this.selectedUser = user;
+        this.selectedUser.isSelected = true;
     }
 
     editUser() {
