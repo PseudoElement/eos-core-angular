@@ -25,6 +25,7 @@ import { BROADCAST_CHANNEL_DICT } from './dictionaries/broadcast-channel';
 import { NADZOR } from './dictionaries/nadzor.consts';
 import { REESTRTYPE_DICT } from './dictionaries/reestrtype.consts';
 import {CITIZENS_DICT} from './dictionaries/citizens.const';
+import {NOMENKL_CL} from './dictionaries/nomenkl.const';
 
 export const DICTIONARIES = [
     /* tree dictionaries */
@@ -49,6 +50,7 @@ export const DICTIONARIES = [
     STATUS_REPLY_DICT,
     VISA_TYPE_DICT,
     CITIZENS_DICT,
+    NOMENKL_CL,
     // SEV
     RULES_SEV_DICT,
     COLLISIONS_SEV_DICT,
