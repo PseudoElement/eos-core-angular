@@ -2,6 +2,7 @@ import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { USER_CL } from 'eos-rest';
+import { ALL_ROWS } from 'eos-rest/core/consts';
 
 @Injectable()
 export class UserParamApiSrv {
@@ -39,14 +40,14 @@ export class UserParamApiSrv {
         });
     }
 
-    getUsers(dueDep: string): Promise<USER_CL[]> {
-        const query = {
-            USER_CL: {
-                criteries: {
-                    DUE_DEP: 'isnull'
-                }
-            }
-        };
+    getUsers(dueDep?: string): Promise<USER_CL[]> {
+        let q;
+        if (!dueDep) {
+            q = ALL_ROWS;
+        } else {
+            q = PipRX.criteries({DUE_DEP: `${dueDep}%`});
+        }
+        const query = {USER_CL: q};
 
         return this.getData<USER_CL>(query)
         .then(data => {
