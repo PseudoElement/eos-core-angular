@@ -16,7 +16,7 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
     disableSave: boolean;
     isChanged: boolean;
     paramId: string;
-    isWide: boolean = false;
+    isWide: boolean = true;
     private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(

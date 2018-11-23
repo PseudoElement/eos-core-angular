@@ -9,7 +9,7 @@ import { NavParamService } from '../services/nav-param.service';
 })
 export class NavParamComponent implements OnDestroy {
     title: string;
-    isWide: boolean = false;
+    isWide: boolean = true;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor (
         private _navSrv: NavParamService,

@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 @Injectable()
 
 export class NavParamService {
-    private _changeStateSandwich$ = new BehaviorSubject(false);
+    private _changeStateSandwich$ = new BehaviorSubject(true);
 
     get StateSandwich$() {
         return this._changeStateSandwich$.asObservable();
