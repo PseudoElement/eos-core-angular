@@ -110,14 +110,17 @@ export interface IDictionaryDescriptor {
     // listFields: string[];
     searchFields: string[];
     searchConfig: SEARCH_TYPES[];
+    /** customize view fields */
     allVisibleFields: string[];
     treeFields: string[];
 
-    /* abstract field sets, depend on dictionary type */
+    /** abstract field sets, depend on dictionary type */
     fullSearchFields: any;
     quickViewFields: any;
     shortQuickViewFields: any;
+    /** fields for based edit */
     editFields: any;
+    /** pinned fields */
     listFields: any;
 
     hideTopMenu?: boolean;
