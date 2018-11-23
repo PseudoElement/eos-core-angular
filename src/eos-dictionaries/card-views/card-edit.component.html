@@ -75,6 +75,13 @@
                                    [inputs]="inputs"
                                    [data]="data"
                                    [editMode]="editMode"></eos-docgroup-card>
+                <eos-citizen-card *ngSwitchCase="'citizens'"
+                                   #cardEditEl
+                                   class="citizen-card simple-card-edit"
+                                   [form]="form"
+                                   [inputs]="inputs"
+                                   [data]="data"
+                                   [editMode]="editMode"></eos-citizen-card>
                 <eos-visatype-card *ngSwitchCase="'visa-type'"
                                    #cardEditEl
                                    class="visatype-card simple-card-edit"

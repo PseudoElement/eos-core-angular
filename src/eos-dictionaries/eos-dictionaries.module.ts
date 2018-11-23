@@ -66,6 +66,7 @@ import { EosDictService } from './services/eos-dict.service';
 import { EosSandwichService } from './services/eos-sandwich.service';
 import { EosBroadcastChannelService } from './services/eos-broadcast-channel.service';
 import { EosSevRulesService } from './services/eos-sev-rules.service';
+import {CitizenCardComponent} from './card-views/citizen-card.component';
 
 @NgModule({
     declarations: [
@@ -79,6 +80,7 @@ import { EosSevRulesService } from './services/eos-sev-rules.service';
         DictionariesQuickSearchComponent,
         DictionarySearchComponent,
         DocgroupCardComponent,
+        CitizenCardComponent,
         VisatypeCardComponent,
         ReestrtypeCardComponent,
         DocgroupTemplateConfigComponent,
