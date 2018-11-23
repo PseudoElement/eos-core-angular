@@ -60,6 +60,6 @@ export const NP_RESHEN_CL: ITreeDictionaryDescriptor = {
     fullSearchFields: ['CLASSIF_NAME', 'NOTE', ],
     quickViewFields: ['CLASSIF_NAME', 'NOTE',  ],
     shortQuickViewFields: ['CLASSIF_NAME'],
-    listFields: ['CLASSIF_NAME', , 'NOTE', ],
+    listFields: ['CLASSIF_NAME', 'NOTE', ],
     allVisibleFields: ['ID_GAS_PS'],
 };
