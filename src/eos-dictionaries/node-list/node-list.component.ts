@@ -10,8 +10,6 @@ import {LongTitleHintComponent} from '../long-title-hint/long-title-hint.compone
 import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
 import {ColumnSettingsComponent} from '../column-settings/column-settings.component';
 import {EosUtils} from 'eos-common/core/utils';
-import {EosDictionary} from '../core/eos-dictionary';
-import {DictionaryDescriptorService} from '../core/dictionary-descriptor.service';
 import {DOCUMENT} from '@angular/common';
 
 const ITEM_WIDTH_FOR_NAN = 100;
@@ -45,37 +43,14 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         @Inject(DOCUMENT) document,
         private dictSrv: EosDictService,
         private modalSrv: BsModalService,
-        private descrSrv: DictionaryDescriptorService,
         private cdr: ChangeDetectorRef,
     ) {
+        this.viewFields = this.dictSrv.currentDictionary.getListView();
+
         dictSrv.visibleList$.takeUntil(this.ngUnsubscribe)
             .subscribe((nodes: EosDictionaryNode[]) => {
                 if (dictSrv.currentDictionary) {
                     this.customFields = this.dictSrv.customFields;
-                    this.viewFields = this.dictSrv.currentDictionary.getListView();
-
-                    this.viewFields.forEach((field) => {
-                        if (field.dictionaryId !== undefined) {
-                            const dict = new EosDictionary(field.dictionaryId, this.descrSrv);
-                            dict.init()
-                                .then(() => {
-                                    dict.nodes.forEach((node) => {
-                                        field.options.push(...[{value: node.originalId, title: node.title}]);
-                                    });
-                                });
-                        } else if (field.key === 'IS_UNIQUE' && dictSrv.currentDictionary.id === 'reestrtype') {
-                            nodes.forEach((node) => {
-                                node.data.rec.IS_UNIQUE = 1;
-                                nodes.forEach((neighbor) => {
-                                    if (node.data.rec.ISN_ADDR_CATEGORY === neighbor.data.rec.ISN_ADDR_CATEGORY
-                                        && node.data.rec.ISN_DELIVERY === neighbor.data.rec.ISN_DELIVERY
-                                        && node.data.rec.ISN_LCLASSIF !== neighbor.data.rec.ISN_LCLASSIF) {
-                                        node.data.rec.IS_UNIQUE = 0;
-                                    }
-                                });
-                            });
-                        }
-                    });
 
                     const _customTitles = this.dictSrv.customTitles;
                     _customTitles.forEach((_title) => {

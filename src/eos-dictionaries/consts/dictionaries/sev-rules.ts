@@ -57,7 +57,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
             key: 'DUE_DOCGROUP',
             type: 'select',
             title: 'Группа документов',
-            dictionaryId: DOCGROUP_DICT.id,
+            dictionaryId: DOCGROUP_DICT.apiInstance,
             options: [],
         }, {
             key: 'DUE_DEP',
@@ -67,7 +67,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
         }, {
             key: 'departmentSend', // TODO справочник организаций
             type: 'select',
-            dictionaryId: ORGANIZ_DICT.id,
+            dictionaryId: ORGANIZ_DICT.apiInstance,
             options: [{
                 value: 0,
                 title: 'Для всех организаций'
@@ -152,7 +152,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
             key: 'fileAccessList', // TODO должен быть массив
             title: 'Гриф доступа',
             type: 'select',
-            dictionaryId: SECURITY_DICT.id,
+            dictionaryId: SECURITY_DICT.apiInstance,
             options: [],
         }, {
             key: 'fileMaxLength',
@@ -277,7 +277,7 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
             key: 'OrganizationFolder',
             title: 'Организации создавать',
             type: 'select',
-            dictionaryId: ORG_TYPE_DICT.id,
+            dictionaryId: ORG_TYPE_DICT.apiInstance,
             options: [],
         }, {
             key: 'adrReplace',
@@ -481,13 +481,13 @@ export const RULES_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
             key: 'executor',
             title: 'Исполнитель',
             type: 'select',
-            dictionaryId: CONTACT_DICT.id,
+            dictionaryId: CONTACT_DICT.apiInstance,
             options: [],
         }, {
             key: 'executive',
             title: 'ДЛ за "Текущую организацию"',
             type: 'select',
-            dictionaryId: CONTACT_DICT.id,
+            dictionaryId: CONTACT_DICT.apiInstance,
             options: [],
         }, {
             key: 'VisaKindTake',

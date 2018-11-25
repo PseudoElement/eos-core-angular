@@ -21,7 +21,7 @@ export const REESTRTYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_T
             title: 'Категория',
             length: 150,
             required: true,
-            dictionaryId: ADDR_CATEGORY_DICT.id,
+            dictionaryId: ADDR_CATEGORY_DICT.apiInstance,
             options: [],
             default: 0,
     }, {
@@ -29,7 +29,7 @@ export const REESTRTYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_T
             type: 'select',
             title: 'Вид отправки',
             length: 100,
-            dictionaryId: DELIVERY_DICT.id,
+            dictionaryId: DELIVERY_DICT.apiInstance,
             options: [],
             default: 1,
     }, {

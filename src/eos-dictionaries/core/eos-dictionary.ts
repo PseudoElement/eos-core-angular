@@ -412,7 +412,19 @@ export class EosDictionary {
     }
 
     getListView() {
-        return this.descriptor.record.getListView({});
+        const fields = this.descriptor.record.getListView({});
+        this.descriptor.getFullRelated()
+            .then((related) => {
+                fields.forEach((field) => {
+                    if ((field.dictionaryId !== undefined)) {
+                        field.options.splice(0, field.options.length);
+                        related[field.dictionaryId].forEach((rel) =>
+                            field.options.push({value: rel.ISN_LCLASSIF, title: rel.CLASSIF_NAME})
+                        );
+                    }
+                });
+            });
+        return fields;
     }
 
     getEditDescriptor(): {} {

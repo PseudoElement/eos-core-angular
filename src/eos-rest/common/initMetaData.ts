@@ -606,8 +606,8 @@ const commonMeta = {
             { name: 'AR_DOCGROUP_List', __type: 'AR_DOCGROUP', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP' },
             { name: 'DG_FILE_CONSTRAINT_List', __type: 'DG_FILE_CONSTRAINT', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP' },
             // { name: 'DOC_DEFAULT_VALUE_List', __type: 'DOC_DEFAULT_VALUE', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP' },
-            { name: 'PRJ_DEFAULT_VALUE_List', __type: 'PRJ_DEFAULT_VALUE', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP' },
-            { name: 'SHABLON_DETAIL_List', __type: 'SHABLON_DETAIL', sf: 'DUE', tf: 'DUE' }
+            // { name: 'PRJ_DEFAULT_VALUE_List', __type: 'PRJ_DEFAULT_VALUE', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP' },
+            // { name: 'SHABLON_DETAIL_List', __type: 'SHABLON_DETAIL', sf: 'DUE', tf: 'DUE' }
         ]
     },
     EDS_CATEGORY_CL: {

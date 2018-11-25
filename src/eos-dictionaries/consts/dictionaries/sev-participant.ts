@@ -21,7 +21,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LIN
     }, {
         key: 'ISN_CHANNEL',
         type: 'select',
-        dictionaryId: BROADCAST_CHANNEL_DICT.id,
+        dictionaryId: BROADCAST_CHANNEL_DICT.apiInstance,
         title: 'Канал передачи сообщений',
         required: true,
         options: [],

@@ -350,6 +350,18 @@ export abstract class AbstractDictionaryDescriptor {
             });
     }
 
+    getFullRelated(): Promise<any> {
+        const reqs = [];
+        this.metadata.relations.forEach((relation) => {
+            reqs.push(this.apiSrv
+                .read({[relation.__type]: []}));
+        });
+        return Promise.all(reqs)
+            .then((responses) => {
+                return this.associateRelationType(responses);
+            });
+    }
+
     protected _postChanges(data: any, updates: any): Promise<any[]> {
         // console.log('_postChanges', data, updates);
         Object.assign(data, updates);
@@ -405,7 +417,16 @@ export abstract class AbstractDictionaryDescriptor {
 
     protected aRelationsToObject(responses: any[]): any {
         const related = {};
-        this.metadata.relations.forEach((relation, idx) => related[relation.name] = responses[idx]);
+        this.metadata.relations.forEach((relation, idx) => {
+            related[relation.name] = responses[idx];
+        });
+        return related;
+    }
+    protected associateRelationType(responses: any[]): any {
+        const related = {};
+        this.metadata.relations.forEach((relation, idx) => {
+            related[relation.__type] = responses[idx];
+        });
         return related;
     }
 }

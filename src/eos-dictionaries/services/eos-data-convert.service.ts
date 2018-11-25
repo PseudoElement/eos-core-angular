@@ -10,7 +10,6 @@ import { GENDERS } from '../consts/dictionaries/department.consts';
 import { EMAIL, NOT_EMPTY_STRING } from '../consts/input-validation';
 import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 import { ButtonsInput } from 'eos-common/core/inputs/buttons-input';
-import {EosDictionary} from '../core/eos-dictionary';
 import {DictionaryDescriptorService} from '../core/dictionary-descriptor.service';
 import {EosBroadcastChannelService} from './eos-broadcast-channel.service';
 import { MAIL_FORMATS } from '../consts/dictionaries/contact.consts';
@@ -107,12 +106,10 @@ export class EosDataConvertService {
                                                             });
                                                             break;
                                                         case E_FIELD_TYPE.select:
-                                                            const options = [];
-                                                            options.push(...descr[_dataKey].options);
                                                             inputs[_dict + '.' + _dataKey] = new DropdownInput({
                                                                 key: _dict + '.' + descr[_dataKey].foreignKey,
                                                                 label: descr[_dataKey].title,
-                                                                options: options,
+                                                                options: descr[_dataKey].options,
                                                                 required: descr[_dataKey].required,
                                                                 forNode: descr[_dataKey].forNode,
                                                                 value: data[_dict][descr[_dataKey].foreignKey]
@@ -185,27 +182,10 @@ export class EosDataConvertService {
                                     });
                                     break;
                                 case E_FIELD_TYPE.select:
-                                    // remarked - becouse continuously adding to options
-                                    // const options = descr[_key].options;
-                                    let options = [];
-
-                                    if (descr[_key].dictionaryId !== undefined) {
-                                        const dict = new EosDictionary(descr[_key].dictionaryId, dictSrv);
-                                        dict.init()
-                                            .then(() => {
-                                                dict.nodes.forEach((node) => {
-                                                    if (node.id) {
-                                                        options.push(...[{value: node.originalId, title: node.title}]);
-                                                    }
-                                                });
-                                            });
-                                    } else {
-                                        options = descr[_key].options;
-                                    }
                                     inputs[_dict + '.' + _key] = new DropdownInput({
                                         key: _dict + '.' + descr[_key].foreignKey,
                                         label: descr[_key].title,
-                                        options: options,
+                                        options: descr[_key].options,
                                         hideLabel: !(descr[_key].title),
                                         required: descr[_key].required,
                                         forNode: descr[_key].forNode,

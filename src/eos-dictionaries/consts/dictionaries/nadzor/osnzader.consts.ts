@@ -11,7 +11,7 @@ export const NP_OSNZADER_CL: IDictionaryDescriptor = Object.assign({}, NADZOR_TE
         key: 'ISN_CODEX_TYPE',
         type: 'select',
         title: 'Тип кодекса',
-        dictionaryId: NP_CODEX_TYPE_CL.id,
+        dictionaryId: NP_CODEX_TYPE_CL.apiInstance,
         options: [],
     }],
     editFields: [...NADZOR_TEMPLATE.editFields, 'ISN_CODEX_TYPE']
