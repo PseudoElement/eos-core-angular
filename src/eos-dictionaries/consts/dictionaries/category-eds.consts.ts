@@ -13,4 +13,9 @@ export const EDS_CATEGORY_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_T
             isUnique: true,
             uniqueInDict: true,
         })],
+    quickViewFields: ['CLASSIF_NAME', 'NOTE'],  // CLASSIF_NAME is in shortQuickViewFields
+    listFields: ['CLASSIF_NAME', 'NOTE'],
+    allVisibleFields: [],
+    editFields: ['CLASSIF_NAME', 'NOTE' ]
+
 });
