@@ -1,4 +1,4 @@
-import { IOpenClessifParams } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
+import { IOpenClassifParams } from 'eos-common/interfaces';
 
 export class WaitClassifService {
     constructor() {
@@ -6,7 +6,7 @@ export class WaitClassifService {
             return 'classif';
         };
     }
-    openClassif(params: IOpenClessifParams): Promise<String> { // 0.2SV.2T1.
+    openClassif(params: IOpenClassifParams): Promise<String> { // 0.2SV.2T1.
         const url = this._prepareUrl(params);
         const w = window.open(url, 'name', 'left=10,top=200,width=1000,height=500');
         return new Promise((resolve, reject) => {
@@ -28,7 +28,7 @@ export class WaitClassifService {
             }, 500);
         });
     }
-    private _prepareUrl(params: IOpenClessifParams): string {
+    private _prepareUrl(params: IOpenClassifParams): string {
         let url = '../Eos.Delo.JsControls/Classif/ChooseClassif.aspx?';
         url += `Classif=${params.classif}`;
         url += params.return_due ? '&return_due=true' : '';

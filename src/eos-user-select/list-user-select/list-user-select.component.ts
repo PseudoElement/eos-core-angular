@@ -4,18 +4,22 @@ import { Subject } from 'rxjs/Subject';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { USER_CL } from 'eos-rest';
 import { UserSelectNode } from './user-node-select';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { CreateUserComponent } from './createUser/createUser.component';
 
 @Component({
     selector: 'eos-list-user-select',
     templateUrl: 'list-user-select.component.html'
 })
 export class ListUserSelectComponent implements OnDestroy {
+    createUserModal: BsModalRef;
     listUsers: UserSelectNode[];
     selectedUser: UserSelectNode;
     isLoading: boolean;
     isMarkNode: Boolean;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor (
+        private _modalSrv: BsModalService,
         private _apiSrv: UserParamApiSrv,
         private _route: ActivatedRoute,
         private _router: Router,
@@ -24,7 +28,6 @@ export class ListUserSelectComponent implements OnDestroy {
             .takeUntil(this.ngUnsubscribe)
             .subscribe(param => {
                 this.isLoading = true;
-                console.log(param['nodeId']);
                 this._apiSrv.getUsers(param['nodeId'])
                 .then((data: USER_CL[]) => {
                     this.listUsers = this._getListUsers(data);
@@ -46,7 +49,6 @@ export class ListUserSelectComponent implements OnDestroy {
     }
 
     editUser() {
-        console.log('editUser()');
         if (this.selectedUser) {
             this._router.navigate(['user-params-set'], {
                 queryParams: {isn_cl: this.selectedUser.id}
@@ -66,8 +68,12 @@ export class ListUserSelectComponent implements OnDestroy {
     }
 
     createUser() {
-        this._router.navigate(['user-params-set'], {
-            queryParams: {createNewUser: true}
+        this.createUserModal = this._modalSrv.show(CreateUserComponent, {
+            class: 'param-create-user',
+            ignoreBackdropClick: true
+        });
+        this.createUserModal.content.closedModal.subscribe(() => {
+            this.createUserModal.hide();
         });
     }
     private _getListUsers (data: USER_CL[]): UserSelectNode[] {

@@ -64,6 +64,9 @@ import { CollectionService } from './parametersSystem/param-authentication/colle
         ParamApiSrv,
         ParamDescriptorSrv,
         CollectionService
-    ]
+    ],
+    exports: [
+        ParamHeaderComponent,
+    ],
 })
 export class EosParametersModule {}

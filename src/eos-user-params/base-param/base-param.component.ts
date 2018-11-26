@@ -2,7 +2,6 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { USER_CL, DEPARTMENT } from 'eos-rest';
 import { WaitClassifService } from 'app/services/waitClassif.service';
-import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-params/shared/consts/user-param.consts';
 import { BASE_PARAM_INPUTS, BASE_PARAM_CONTROL_INPUT, BASE_PARAM_ACCESS_INPUT } from 'eos-user-params/shared/consts/base-param.consts';
 import { FormGroup } from '@angular/forms';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
@@ -10,6 +9,7 @@ import { IInputParamControl } from 'eos-user-params/shared/intrfaces/user-parm.i
 import { BaseParamCurentDescriptor } from './shared/base-param-curent.descriptor';
 import { BaseParamNewDescriptor } from './shared/base-param-new.descriptor';
 import { Subject } from 'rxjs/Subject';
+import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 
 @Component({
     selector: 'eos-params-base-param',
