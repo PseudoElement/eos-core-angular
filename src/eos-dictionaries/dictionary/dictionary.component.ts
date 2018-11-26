@@ -122,11 +122,26 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     ) {
         _route.params.subscribe((params) => {
             if (params) {
-                this.dictionaryId = params.dictionaryId;
-                this._nodeId = params.nodeId;
-                if (this.dictionaryId) {
-                    this._dictSrv.openDictionary(this.dictionaryId)
-                        .then(() => this._dictSrv.selectTreeNode(this._nodeId));
+                if (params.dictionaryId === 'nomenkl') {
+                    // Быстрый костыль для нуменклатуры дел. пока вяжемся к подразделениям во вкладке.
+                    this.dictionaryId = 'departments';
+                    this._nodeId = params.nodeId;
+                    if (this.dictionaryId) {
+                        this._dictSrv.openDictionary(this.dictionaryId)
+                            .then(() => this._dictSrv.selectTreeNode(this._nodeId));
+                    }
+                    try {
+                        this.setDictMode(2);
+                    } catch (e) {
+
+                    }
+                } else {
+                    this.dictionaryId = params.dictionaryId;
+                    this._nodeId = params.nodeId;
+                    if (this.dictionaryId) {
+                        this._dictSrv.openDictionary(this.dictionaryId)
+                            .then(() => this._dictSrv.selectTreeNode(this._nodeId));
+                    }
                 }
             }
         });
@@ -319,6 +334,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
     setDictMode(mode: number) {
         this._dictSrv.setDictMode(mode);
+        this.nodeList.updateViewFields();
     }
 
     /**

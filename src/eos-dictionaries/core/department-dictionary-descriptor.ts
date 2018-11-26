@@ -121,6 +121,8 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
         switch (mode) {
             case 1:
                 return 'cabinet';
+            case 2:
+                return 'nomenkl';
             default:
                 return this.id;
         }

@@ -780,7 +780,7 @@ const commonMeta = {
 
         ],
         relations: [
-            { name: 'DEPARTMENT_Ref', __type: 'DEPARTMENT', sf: 'DUE', tf: 'DUE' }
+            { name: 'DEPARTMENT_Ref', __type: 'DEPARTMENT', sf: 'DUE', tf: 'DUE' },
         ]
     },
     NTFY_SYSTEM_PARAMS: {

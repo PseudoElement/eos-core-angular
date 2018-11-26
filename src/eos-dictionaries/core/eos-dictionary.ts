@@ -368,7 +368,7 @@ export class EosDictionary {
     searchByParentData(dictionary: EosDictionary, node: EosDictionaryNode): Promise<EosDictionaryNode[]> {
         if (dictionary.id === 'departments') {
             const critery = {
-                'DUE': node.id
+                'DUE': node.id ? node.id : ''
             };
             return this.search([critery]);
         }

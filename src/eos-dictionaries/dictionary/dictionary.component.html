@@ -54,15 +54,21 @@
                         *ngIf="dictionary?.id === 'departments'">
                         <li class="tab-item"
                             role="presentation"
+                            [ngClass]="{'active': dictMode === 0}"
+                            (click)="setDictMode(0)">
+                            <span class="tab-title">Подразделения</span>
+                        </li>
+                        <li class="tab-item"
+                            role="presentation"
                             [ngClass]="{'active': dictMode === 1}"
                             (click)="setDictMode(1)">
                             <span class="tab-title">Кабинеты</span>
                         </li>
                         <li class="tab-item"
                             role="presentation"
-                            [ngClass]="{'active': dictMode === 0}"
-                            (click)="setDictMode(0)">
-                            <span class="tab-title">Подразделения</span>
+                            [ngClass]="{'active': dictMode === 2}"
+                            (click)="setDictMode(2)">
+                            <span class="tab-title">Номенклатура</span>
                         </li>
                     </ul>
                 </div>
