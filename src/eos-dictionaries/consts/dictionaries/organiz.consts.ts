@@ -190,7 +190,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     quickViewFields: ['FULLNAME', ],
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: ['CLASSIF_NAME'],
-    allVisibleFields: ['CLASSIF_NAME', 'NOTE', ],
+    allVisibleFields: ['NOTE', ],
     // allVisibleFields: ['CLASSIF_NAME_SEARCH', 'FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS', 'MAIL_FOR_ALL', 'NOTE', 'OKPO',
     //     'INN', 'ISN_REGION', 'OKONH', 'LAW_ADRESS', 'ISN_ORGANIZ_TYPE', 'SERTIFICAT', 'ISN_ADDR_CATEGORY', 'CODE',
     //     'OGRN'],
