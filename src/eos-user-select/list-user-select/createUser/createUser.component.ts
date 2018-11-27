@@ -5,7 +5,8 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { PipRX, DEPARTMENT } from 'eos-rest';
 import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
-// import { ALL_ROWS } from 'eos-rest/core/consts';
+import { ALL_ROWS } from 'eos-rest/core/consts';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'eos-param-create-user',
@@ -15,19 +16,20 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     @Output() closedModal = new EventEmitter();
     isLoading: boolean = true;
     data = {
+        SELECT_ROLE: '',
         classifName: '',
         dueDL: '',
-        role: '',
-        isn_user_copy_from: ''
+        isn_user_copy_from: '3611'
     };
     fields = CREATE_USER_INPUTS;
     inputs;
     form: FormGroup;
     titleHeader = 'Новый пользователь';
-    btnDisabled: boolean;
+    btnDisabled: boolean = true;
     isShell: Boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor (
+        private _router: Router,
         private _inputCtrlSrv: InputParamControlService,
         private _waitClassifSrv: WaitClassifService,
         private _apiSrv: PipRX,
@@ -55,15 +57,22 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
-    close() {
-        this.closedModal.emit();
-    }
 
     submit() {
-        this._createUrlForSop();
+        this.btnDisabled = true;
+        const url = this._createUrlForSop();
+
+        this._apiSrv.read({
+            [url]: ALL_ROWS,
+        })
+        .then(data => {
+            this.closedModal.emit();
+            this._router.navigate(['user-params-set'], {
+                queryParams: {isn_cl: data[0]}
+            });
+        });
     }
     cancel() {
-        // console.log('cancel()');
         this.closedModal.emit();
     }
 
@@ -82,7 +91,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         .then((data: DEPARTMENT[]) => {
             this.isShell = false;
             const dep: DEPARTMENT = data[0];
-            this.data['dueDep'] = dep['DUE'];
+            this.data['dueDL'] = dep['DUE'];
             this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
         })
         .catch(() => {
@@ -102,27 +111,12 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
     private _createUrlForSop() {
         const d = this.data;
-        let url = 'SYS_PARMS(-99)?';
-        // url += `classifName=${d['classifName'] ? d['classifName'] : ''}`;
-        if (d['classifName']) {
-            url += `classifName=${encodeURI(d['classifName'])}`;
-        }
-        if (d['dueDL']) {
-            url += `&dueDL=${d['dueDL']}`;
-        }
-        if (d['role']) {
-            url += `&role=${encodeURI(d['role'])}`;
-        }
-        if (d['isn_user_copy_from']) {
-            url += `&isn_user_copy_from=${d['isn_user_copy_from']}`;
-        }
-        console.log(url);
-        // this._apiSrv.read({
-        //     'SYS_PARMS(-99)?$expand=PASS_STOP_LIST_List,USER_PARMS_List': ALL_ROWS,
-        // })
-        // .then(data => {
-        //     console.log(data);
-        // });
+        let url = 'CreateUserCl?';
+            url += `classifName='${d['classifName'] ? encodeURI(d['classifName']) : ''}'`;
+            url += `&dueDL='${d['dueDL'] ? d['dueDL'] : ''}'`;
+            url += `&role='${d['SELECT_ROLE'] ? encodeURI(d['SELECT_ROLE']) : ''}'`;
+            url += `&isn_user_copy_from=${d['isn_user_copy_from'] ? d['isn_user_copy_from'] : ''}`;
+        return url;
     }
 
     private _subscribe() {
@@ -145,7 +139,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                     this.data[c] = d[c];
                 }
             }
-            console.log(this.data);
+            this.btnDisabled = this.form.invalid;
         });
     }
 }
