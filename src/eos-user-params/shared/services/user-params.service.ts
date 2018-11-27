@@ -89,7 +89,7 @@ export class UserParamsService {
         private _pipSrv: UserParamApiSrv,
         private _msgSrv: EosMessageService
     ) {}
-    getUserIsn(isn_cl: string): Promise<boolean> {
+    getUserIsn(isn_cl: string = this.userContextId.toString()): Promise<boolean> {
         const queryUser = {
             USER_CL: {
                 criteries: {
