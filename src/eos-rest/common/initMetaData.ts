@@ -474,7 +474,9 @@ const commonMeta = {
             INS_DATE: _t.d,
             UPD_DATE: _t.d,
             INS_WHO: _t.i,
-            UPD_WHO: _t.i
+            UPD_WHO: _t.i,
+            ID_GAS_PS: _t.s,
+            AUTO_NUMBER: _t.i,
         },
         readonly: [
 
@@ -780,7 +782,7 @@ const commonMeta = {
 
         ],
         relations: [
-            { name: 'DEPARTMENT_Ref', __type: 'DEPARTMENT', sf: 'DUE', tf: 'DUE' }
+            { name: 'DEPARTMENT_Ref', __type: 'DEPARTMENT', sf: 'DUE', tf: 'DUE' },
         ]
     },
     NTFY_SYSTEM_PARAMS: {
@@ -2451,6 +2453,17 @@ const commonMeta = {
             { name: 'PARENT_Ref', __type: 'NP_OSN_PRED_DELA_CL', sf: 'DUE', tf: 'DUE' }
         ]
 
+    },
+    NP_NUMCREATION: {
+        pk: ['BASE_ID', 'YEAR_NUMBER', 'CURRENT_NUMBER'],
+        properties: {
+            BASE_ID: _t.s,
+            YEAR_NUMBER: _t.i,
+            CURRENT_NUMBER: _t.i,
+            FLAG_MAX: _t.i,
+            USER_ID: _t.s,
+            LOCK_TIME: _t.d,
+        }
     },
 };
 

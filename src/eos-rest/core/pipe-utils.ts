@@ -72,7 +72,9 @@ export class PipeUtils {
         const md = data['odata.metadata'];
         const tn = md.split('#')[1].split('/')[0];
         const items = data.value || [data];
-        this.parseEntity(items, tn);
+        if (tn !== 'Collection(Edm.Int32)') { // костыль для ответа от сопа по созданию пользователя
+            this.parseEntity(items, tn);
+        }
         return items;
     }
 

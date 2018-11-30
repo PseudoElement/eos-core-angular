@@ -26,7 +26,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     iconName: 'eos-icon-department-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'import', 'export', 'importPhotos',
         'createRepresentative', 'tableCustomization', 'showAllSubnodes', 'edit', 'view', 'slantForForms', 'restore', 'remove', 'removeHard',
-        'showDeleted', 'tuneFields'],
+        'showDeleted', 'tuneFields', 'CounterNPMain', 'CounterNP'],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
     modeField: 'IS_NODE',
@@ -269,6 +269,15 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         pattern: NOT_EMPTY_STRING,
         foreignKey: 'FULLNAME',
     }, {
+        key: 'ID_GAS_PS',
+        title: 'Код ГАС ПС',
+        type: 'string',
+        length: 10,
+    }, {
+        key: 'AUTO_NUMBER',
+        title: 'Номерообразование',
+        type: 'boolean',
+    }, {
         key: 'photo',
         type: 'dictionary',
         title: 'Фото'
@@ -289,7 +298,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         'title', 'DUE_LINK_ORGANIZ', 'indexDep', 'fullTitle', 'ISN_PHOTO'],
     // ['fio', 'position', 'description', 'title', 'phone', 'email', 'rooms', 'associatedUsers']
     allVisibleFields: ['SURNAME', 'DUTY', 'fullTitle', 'fullPosition', 'SKYPE', /* 'DEPARTMENT_DUE', */ 'ORDER_NUM', 'indexDep', 'POST_H', 'CARD_FLAG',
-        'CARD_NAME', 'NOTE', 'START_DATE', 'END_DATE', 'PHONE_LOCAL', 'PHONE', 'FAX', 'E_MAIL', 'NUM_CAB', 'organization'/*, 'printInfo', 'sev',
+        'CARD_NAME', 'NOTE', 'START_DATE', 'END_DATE', 'PHONE_LOCAL', 'PHONE', 'FAX', 'E_MAIL', 'NUM_CAB', 'organization', 'ID_GAS_PS', 'AUTO_NUMBER' /*, 'printInfo', 'sev',
 'organization', 'cabinet', 'user'*/],
 };
 /* tslint:enable:max-line-length */

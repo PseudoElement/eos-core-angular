@@ -89,14 +89,34 @@ export class UserParamsService {
         private _pipSrv: UserParamApiSrv,
         private _msgSrv: EosMessageService
     ) {}
-    getUserIsn(isn_cl: string): Promise<boolean> {
+    test() {
+        // console.log('trest');
+        const q = [{
+            method: 'MERGE',
+            requestUri: `USER_CL(${this.userContextId})`,
+            data: {
+                NOTE2: 'note',
+                // AV_SYSTEMS: b.join(''),
+                IS_PASSWORD: 2,
+                CLASSIF_NAME: 'R1'
+            }
+        }];
+        this._pipSrv.setData(q)
+        .then(data => {
+            console.log(data);
+        })
+        .catch(e => {
+            console.log(e);
+        });
+    }
+    getUserIsn(isn_cl: string = this.userContextId.toString()): Promise<boolean> {
         const queryUser = {
             USER_CL: {
                 criteries: {
                     ISN_LCLASSIF: isn_cl
                 }
             },
-            expand: 'USER_PARMS_List,USERCARD_List,USER_CERTIFICATE_List'
+            expand: 'USER_PARMS_List,USERCARD_List/USER_CABINET_List'
         };
         const _user = this._pipSrv.getData<USER_CL>(queryUser);
         const _sys = this.fetchSysParams();

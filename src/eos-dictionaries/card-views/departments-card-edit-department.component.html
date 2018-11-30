@@ -37,6 +37,13 @@
     </div>
     <div class="clearfix">
         <div class="col-1 pull-left">
+            <eos-dynamic-input [input]="inputs['rec.ID_GAS_PS']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+        </div>
+    </div>
+    <div class="clearfix">
+        <div class="col-1 pull-left">
             <eos-dynamic-input [input]="inputs['rec.START_DATE']"
                 [form]="form"
                 [readonly]="!editMode"></eos-dynamic-input>

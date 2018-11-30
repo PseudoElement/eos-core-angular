@@ -17,6 +17,7 @@ import {NadzorLinearDictionaryDescriptor, NadzorTreeDictionaryDescriptor} from '
 import {EosSevRulesService} from '../services/eos-sev-rules.service';
 import {SevRulesDictionaryDescriptor} from './sev-rules-dictionary-descriptor';
 import {LinkDictionaryDescriptor} from './link-dictionary-descriptor';
+import {NomenklDictionaryDescriptor} from './nomenkl-dictionary-descriptor';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -95,6 +96,9 @@ export class DictionaryDescriptorService {
                         break;
                     case 'link':
                         res = new LinkDictionaryDescriptor(descr, this.apiSrv);
+                        break;
+                    case 'nomenkl':
+                        res = new NomenklDictionaryDescriptor(descr, this.apiSrv, this);
                         break;
                 }
 

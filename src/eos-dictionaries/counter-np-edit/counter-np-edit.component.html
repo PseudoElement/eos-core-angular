@@ -1,0 +1,53 @@
+<div class="modal-header">
+    <h4 class="xl-font primary-text pull-left">Счетчик номерообразования НП</h4>
+</div>
+<div class="spinner-container text-center" *ngIf="isUpdating" >
+    <eos-spinner size="lg"></eos-spinner>
+</div>
+<div class="modal-body" *ngIf="!isUpdating">
+    <div class="l-font pull-left">
+        <span>{{getNodeTitle()}}</span>
+    </div>
+    <div class="modal-body-container">
+        <div class="divTable" *ngIf="nodes">
+                <div class="divTableHeading">
+                    <div class="divTableHeaderRow">
+                    <div class="divTableHead">&nbsp;Год</div>
+                    <div class="divTableHead">&nbsp;Значение</div>
+                    </div>
+                </div>
+            <div class="divTableBody">
+                <div class="divTableRow" *ngFor="let node of nodes"
+                    (click)="rowClick(node)">
+                    <div class="divTableCell">{{node.YEAR_NUMBER}}</div>
+                    <div class="divTableCell">{{node.CURRENT_NUMBER}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="edit-block">
+                <input class="form-control m-font edit-control"
+                       [(ngModel)]="editValueYear"
+                       id="val_year"
+                       type="text"
+                       placeholder="Год"
+                       autocomplete="off">
+                <input class="form-control m-font edit-control"
+                       [(ngModel)]="editValueNum"
+                       id="val_number"
+                       type="text"
+                       placeholder="Значение"
+                       autocomplete="off">
+        </div>
+
+        <div class="modal-footer">
+            <span class="pull-right">
+                <button type="button" class="btn btn-primary-full upper fixed-width"
+                        (click)="save()">Изменить значение</button>
+                <button type="button" class="btn btn-primary have-margin fixed-width"
+                        (click)="hideModal()">Выход</button>
+            </span>
+        </div>
+    </div>
+</div>
+

@@ -483,6 +483,10 @@ export class EosDictService {
         }
     }
 
+    errHandler(err: RestError | any) {
+        return this._errHandler(err);
+    }
+
     toggleAllSubnodes(): Promise<EosDictionaryNode[]> {
         this.updateViewParameters({
             updatingList: true,
@@ -743,7 +747,7 @@ export class EosDictService {
     }
 
     private getDictionaryById(id: string): Promise<EosDictionary> {
-        const existDict = this._dictionaries.find((dictionary) => dictionary.id === id);
+        const existDict = this._dictionaries.find((dictionary) => dictionary && dictionary.id === id);
         if (existDict) {
             return Promise.resolve(existDict);
         } else {

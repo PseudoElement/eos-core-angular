@@ -1,18 +1,12 @@
-import { Component, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import {Component, EventEmitter, OnDestroy, Output} from '@angular/core';
+import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 import 'rxjs/add/operator/combineLatest';
 
-import { EosDictService } from '../services/eos-dict.service';
-import { EosDictionary } from '../core/eos-dictionary';
-import {
-    RECORD_ACTIONS, MORE_RECORD_ACTIONS,
-    COMMON_ADD_MENU, DEPARTMENT_ADD_MENU, ORGANIZ_ADD_MENU
-} from '../consts/record-actions.consts';
-import {
-    IActionButton, IAction, IDictionaryViewParameters, E_DICT_TYPE,
-    E_RECORD_ACTIONS, IActionEvent
-} from 'eos-dictionaries/interfaces';
+import {EosDictService} from '../services/eos-dict.service';
+import {EosDictionary} from '../core/eos-dictionary';
+import {COMMON_ADD_MENU, DEPARTMENT_ADD_MENU, MORE_RECORD_ACTIONS, ORGANIZ_ADD_MENU, RECORD_ACTIONS} from '../consts/record-actions.consts';
+import {E_DICT_TYPE, E_RECORD_ACTIONS, IAction, IActionButton, IActionEvent, IDictionaryViewParameters} from 'eos-dictionaries/interfaces';
 
 @Component({
     selector: 'eos-node-actions',
@@ -147,6 +141,15 @@ export class NodeActionsComponent implements OnDestroy {
                     _enabled = _enabled && !this._viewParams.searchResults;
                     break;
                 case E_RECORD_ACTIONS.tableCustomization:
+                    break;
+                case E_RECORD_ACTIONS.CounterNPMain:
+                    break;
+                case E_RECORD_ACTIONS.CounterNP:
+                    if (this._dictSrv && this._dictSrv.listNode) {
+                        _enabled = this._dictSrv.listNode.isNode;
+                    } else {
+                        _enabled = false;
+                    }
                     break;
             }
         }

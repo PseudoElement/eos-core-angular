@@ -69,12 +69,14 @@ import { EosBroadcastChannelService } from './services/eos-broadcast-channel.ser
 import { EosSevRulesService } from './services/eos-sev-rules.service';
 import {CitizenCardComponent} from './card-views/citizen-card.component';
 import {NomenklCardComponent} from './card-views/nomenkl-card.component';
+import {CounterNpEditComponent} from './counter-np-edit/counter-np-edit.component';
 
 @NgModule({
     declarations: [
         CardComponent,
         CardEditComponent,
         ColumnSettingsComponent,
+        CounterNpEditComponent,
         DepartmentsCardEditDepartmentComponent,
         DepartmentsCardEditPersonComponent,
         DictionaryComponent,
@@ -114,6 +116,7 @@ import {NomenklCardComponent} from './card-views/nomenkl-card.component';
     ],
     entryComponents: [
         ColumnSettingsComponent,
+        CounterNpEditComponent,
         CreateNodeComponent,
         CreateNodeBroadcastChannelComponent,
         DocgroupTemplateConfigComponent,
@@ -142,6 +145,7 @@ import {NomenklCardComponent} from './card-views/nomenkl-card.component';
         DictionariesComponent,
         SandwichComponent,
         ColumnSettingsComponent,
+        CounterNpEditComponent,
     ],
     providers: [
         DictionaryDescriptorService,

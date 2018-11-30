@@ -1,4 +1,4 @@
-import { IParamAccordionList, IOpenClessifParams } from '../intrfaces/user-params.interfaces';
+import { IParamAccordionList } from '../intrfaces/user-params.interfaces';
 
 export const SUB_PARAMS_LIST_NAV: IParamAccordionList[] = [
     {
@@ -79,12 +79,4 @@ export const USER_PARAMS_LIST_NAV: IParamAccordionList[] = [
     },
 ];
 
-export const OPEN_CLASSIF_DEPARTMENT: IOpenClessifParams = {
-    classif: 'DEPARTMENT',
-    return_due: true,
-    id: '0.',
-    skipDeleted: true,
-    selectMulty: false,
-    selectLeafs: true,
-    selectNodes: false,
-};
+

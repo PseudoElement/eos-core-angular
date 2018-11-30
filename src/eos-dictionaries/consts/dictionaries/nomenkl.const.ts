@@ -1,19 +1,26 @@
-import {IDictionaryDescriptor} from 'eos-dictionaries/interfaces';
+import {E_DICT_TYPE, ITreeDictionaryDescriptor} from 'eos-dictionaries/interfaces';
 import {LINEAR_TEMPLATE} from './_linear-template';
 import {COMMON_FIELD_NAME} from './_common';
 
 
-export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
+export const NOMENKL_CL: ITreeDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'nomenkl',
     apiInstance: 'NOMENKL_CL',
     title: 'Номенклатура дел',
     visible: true,
-    iconName: '',
+    dictType: E_DICT_TYPE.custom,
+    parentField: 'DUE',
+    iconName: 'eos-icon-deal-blue',
     keyField: 'ISN_LCLASSIF',
     fields: LINEAR_TEMPLATE.fields.concat([{
         key: 'DUE',
         type: 'string',
         title: 'ID',
+        length: 248,
+    }, {
+        key: 'PARENT_DUE',
+        type: 'string',
+        title: 'PARENT ID',
         length: 248,
     }, {
         key: 'CLOSED',
@@ -26,6 +33,8 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
         title: 'Гриф',
         type: 'string',
         length: 64,
+        // dictionaryId: SECURITY_DICT.apiInstance,
+        // options: [],
     }, {
         key: 'SHELF_LIFE',
         title: 'Время хранения',
@@ -75,7 +84,7 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
     }, {
         key: 'ARCH_FLAG',
         title: 'Подлежит сдаче в архив',
-        type: 'number',
+        type: 'boolean',
     }, {
         key: 'E_DOCUMENT',
         title: 'E_DOCUMENT',

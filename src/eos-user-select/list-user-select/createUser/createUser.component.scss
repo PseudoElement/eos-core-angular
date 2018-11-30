@@ -1,0 +1,44 @@
+.param-create-user {
+    margin-top: 100px;
+    width: 800px;
+
+    main {
+        background: $white;
+        padding: 20px;
+
+        eos-dynamic-input {
+            font-size: 14px;
+            display: inline-block;
+        }
+
+        .create-user-login-input {
+            width: 280px;
+        }
+
+        .base-department-input {
+
+            input {
+                background: $light-grey-1;
+                width: 457px;
+                cursor: default;
+            }
+
+            .icon-add-department {
+                cursor: pointer;
+                display: inline-block;
+                margin-left: -34px;
+                margin-bottom: -7px;
+            }
+        }
+    }
+
+    .shell {
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, .3);
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 2000;
+    }
+}
