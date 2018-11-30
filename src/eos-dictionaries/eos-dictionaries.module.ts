@@ -57,7 +57,8 @@ import { SimpleCardEditComponent } from './card-views/simple-card-edit.component
 import { TreeComponent } from './tree/tree.component';
 import { DictionariesQuickSearchComponent } from './dictionary-quick-search/dictionary-quick-search.component';
 import { CreateNodeBroadcastChannelComponent } from './create-node-broadcast-channel/create-node-broadcast-channel.component';
-
+import { LinkCardComponent } from './card-views/link-card.component';
+import { AdditionalFieldsComponent } from './additional-fields/additional-fields.component';
 /* services */
 import { DictionaryDescriptorService } from './core/dictionary-descriptor.service';
 import { EosDataConvertService } from './services/eos-data-convert.service';
@@ -107,13 +108,16 @@ import {NomenklCardComponent} from './card-views/nomenkl-card.component';
         BroadcastChannelCardEditComponent,
         SevRulesCardEditComponent,
         OrganizationsCardEditGroupComponent,
-        OrganizationsCardEditNodeComponent
+        OrganizationsCardEditNodeComponent,
+        AdditionalFieldsComponent,
+        LinkCardComponent,
     ],
     entryComponents: [
         ColumnSettingsComponent,
         CreateNodeComponent,
         CreateNodeBroadcastChannelComponent,
         DocgroupTemplateConfigComponent,
+        AdditionalFieldsComponent,
     ],
     imports: [
         BrowserModule,
