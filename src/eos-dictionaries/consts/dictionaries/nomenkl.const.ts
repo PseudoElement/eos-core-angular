@@ -8,14 +8,19 @@ export const NOMENKL_CL: ITreeDictionaryDescriptor = Object.assign({}, LINEAR_TE
     apiInstance: 'NOMENKL_CL',
     title: 'Номенклатура дел',
     visible: true,
-    dictType: E_DICT_TYPE.linear,
-    parentField: 'PARENT_DUE',
-    iconName: '',
+    dictType: E_DICT_TYPE.custom,
+    parentField: 'DUE',
+    iconName: 'eos-icon-deal-blue',
     keyField: 'ISN_LCLASSIF',
     fields: LINEAR_TEMPLATE.fields.concat([{
         key: 'DUE',
         type: 'string',
         title: 'ID',
+        length: 248,
+    }, {
+        key: 'PARENT_DUE',
+        type: 'string',
+        title: 'PARENT ID',
         length: 248,
     }, {
         key: 'CLOSED',

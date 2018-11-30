@@ -130,6 +130,30 @@ const RECORD_ACTION_DELETE_HARD: IAction = {
     buttonClass: null
 };
 
+const RECORD_ACTION_COUNTERNPMAIN: IAction = {
+    type: E_RECORD_ACTIONS.CounterNPMain,
+    group: E_ACTION_GROUPS.item,
+    title: 'Главный счетчик номерообразования НП',
+    hint: 'Главный счетчик номерообразования НП',
+    iconClass: 'eos-icon eos-icon-info-blue small',
+    disabledIconClass: 'eos-icon eos-icon-info-grey small',
+    activeIconClass: null,
+    hoverIconClass: 'eos-icon eos-icon-info-blue small',
+    buttonClass: null
+};
+
+const RECORD_ACTION_COUNTERNP: IAction = {
+    type: E_RECORD_ACTIONS.CounterNP,
+    group: E_ACTION_GROUPS.item,
+    title: 'счетчик номерообразования НП',
+    hint: 'счетчик номерообразования НП',
+    iconClass: 'eos-icon eos-icon-info-blue small',
+    disabledIconClass: 'eos-icon eos-icon-info-grey small',
+    activeIconClass: null,
+    hoverIconClass: 'eos-icon eos-icon-info-blue small',
+    buttonClass: null
+};
+
 // const RECORD_ACTION_CREATE_ORGANISATION_AGENT: IAction = {
 //     type: E_RECORD_ACTIONS.createRepresentative,
 //     group: E_ACTION_GROUPS.group,
@@ -174,7 +198,9 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_TO_DOWN ,
     RECORD_ACTION_SHOW_ALL_RECORDS,
     // RECORD_ACTION_CREATE_ORGANISATION_AGENT,
-    RECORD_ACTION_SHOW_SETTINGS
+    RECORD_ACTION_SHOW_SETTINGS,
+    RECORD_ACTION_COUNTERNPMAIN,
+    RECORD_ACTION_COUNTERNP,
 ];
 
 export const MORE_RECORD_ACTIONS: IAction[] = [
@@ -189,7 +215,7 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_TO_DOWN,
     RECORD_ACTION_SHOW_ALL_RECORDS,
     // RECORD_ACTION_CREATE_ORGANISATION_AGENT,
-    RECORD_ACTION_SHOW_SETTINGS
+    RECORD_ACTION_SHOW_SETTINGS,
 ];
 
 export const COMMON_ADD_MENU = [{

@@ -45,11 +45,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         private modalSrv: BsModalService,
         private cdr: ChangeDetectorRef,
     ) {
-        this.viewFields = this.dictSrv.currentDictionary.getListView();
 
         dictSrv.visibleList$.takeUntil(this.ngUnsubscribe)
             .subscribe((nodes: EosDictionaryNode[]) => {
                 if (dictSrv.currentDictionary) {
+                    this.updateViewFields();
                     this.customFields = this.dictSrv.customFields;
 
                     const _customTitles = this.dictSrv.customTitles;

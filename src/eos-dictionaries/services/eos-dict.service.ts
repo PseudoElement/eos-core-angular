@@ -483,6 +483,10 @@ export class EosDictService {
         }
     }
 
+    errHandler(err: RestError | any) {
+        return this._errHandler(err);
+    }
+
     toggleAllSubnodes(): Promise<EosDictionaryNode[]> {
         this.updateViewParameters({
             updatingList: true,

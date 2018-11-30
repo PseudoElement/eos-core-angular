@@ -1,39 +1,40 @@
-import { Component, OnDestroy, ViewChild, DoCheck, AfterViewInit, HostListener } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
+import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
 
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 
-import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { CONFIRM_NODE_DELETE, CONFIRM_NODES_DELETE, CONFIRM_SUBNODES_RESTORE } from 'app/consts/confirms.const';
-import { IConfirmWindow } from 'eos-common/core/confirm-window.interface';
+import {ConfirmWindowService} from 'eos-common/confirm-window/confirm-window.service';
+import {CONFIRM_NODE_DELETE, CONFIRM_NODES_DELETE, CONFIRM_SUBNODES_RESTORE} from 'app/consts/confirms.const';
+import {IConfirmWindow} from 'eos-common/core/confirm-window.interface';
 
-import { EosDictService } from '../services/eos-dict.service';
-import { EosDictionary } from '../core/eos-dictionary';
-import { IDictionaryViewParameters, E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent } from 'eos-dictionaries/interfaces';
-import { EosDictionaryNode } from '../core/eos-dictionary-node';
-import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { EosStorageService } from 'app/services/eos-storage.service';
-import { EosSandwichService } from '../services/eos-sandwich.service';
-import { EosBreadcrumbsService } from '../../app/services/eos-breadcrumbs.service';
+import {EosDictService} from '../services/eos-dict.service';
+import {EosDictionary} from '../core/eos-dictionary';
+import {E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters} from 'eos-dictionaries/interfaces';
+import {EosDictionaryNode} from '../core/eos-dictionary-node';
+import {EosMessageService} from 'eos-common/services/eos-message.service';
+import {EosStorageService} from 'app/services/eos-storage.service';
+import {EosSandwichService} from '../services/eos-sandwich.service';
+import {EosBreadcrumbsService} from '../../app/services/eos-breadcrumbs.service';
 
 import {
-    WARN_EDIT_ERROR,
-    DANGER_EDIT_ROOT_ERROR,
     DANGER_EDIT_DELETED_ERROR,
-    WARN_LOGIC_DELETE,
+    DANGER_EDIT_ROOT_ERROR,
     DANGER_HAVE_NO_ELEMENTS,
     DANGER_LOGICALY_RESTORE_ELEMENT,
-    WARN_ELEMENT_PROTECTED
+    WARN_EDIT_ERROR,
+    WARN_ELEMENT_PROTECTED,
+    WARN_LOGIC_DELETE,
+    DANGER_EDIT_ONLY_DEPARTMENTS_ALLOWED
 } from '../consts/messages.consts';
 
-import { RECENT_URL } from 'app/consts/common.consts';
-import { NodeListComponent } from '../node-list/node-list.component';
-import { CreateNodeComponent } from '../create-node/create-node.component';
-import { IPaginationConfig } from '../node-list-pagination/node-list-pagination.interfaces';
+import {RECENT_URL} from 'app/consts/common.consts';
+import {NodeListComponent} from '../node-list/node-list.component';
+import {CreateNodeComponent} from '../create-node/create-node.component';
+import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.interfaces';
 import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
+import {CounterNpEditComponent, NUMCREATION_MAIN_NODE_ID} from '../counter-np-edit/counter-np-edit.component';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -282,10 +283,18 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.tableCustomization:
                 this.nodeList.configColumns();
                 break;
+            case E_RECORD_ACTIONS.CounterNPMain:
+                this._editCounterNP(true);
+                break;
+            case E_RECORD_ACTIONS.CounterNP:
+                this._editCounterNP(false);
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
     }
+
+
 
     resetSearch() {
         this._dictSrv.resetSearch();
@@ -409,6 +418,41 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             this._msgSrv.addNewMessage(WARN_LOGIC_DELETE);
         }
         this._dictSrv.markDeleted(true, true);
+    }
+
+    private _editCounterNP (isMainNP: boolean) {
+        if (this.dictionaryId !== 'departments') {
+            this._msgSrv.addNewMessage(DANGER_EDIT_ONLY_DEPARTMENTS_ALLOWED);
+            return;
+        }
+        this.modalWindow = null;
+        if (isMainNP) {
+            this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg' });
+            this.modalWindow.content.init(NUMCREATION_MAIN_NODE_ID);
+
+        } else {
+            const node = this._dictSrv.listNode;
+            if (node) {
+                if (node.data.PROTECTED) {
+                    this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
+                } else if (node.isDeleted) {
+                    this._msgSrv.addNewMessage(DANGER_EDIT_DELETED_ERROR);
+                } else {
+                    this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg'});
+                    this.modalWindow.content.init(node.id);
+                }
+            } else {
+                this._msgSrv.addNewMessage(WARN_EDIT_ERROR);
+            }
+        }
+
+        if (this.modalWindow) {
+            const subscription = this.modalWindow.content.onChoose.subscribe(() => {
+                subscription.unsubscribe();
+            });
+        }
+
+
     }
 
     private _editNode() {

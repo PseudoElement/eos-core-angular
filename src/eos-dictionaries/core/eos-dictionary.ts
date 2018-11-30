@@ -481,7 +481,7 @@ export class EosDictionary {
         if (!this.root) {
             let rootNode: EosDictionaryNode;
             if (this.descriptor.dictionaryType !== E_DICT_TYPE.linear) {
-                rootNode = nodes.find((node) => node.parentId === null || node.parentId === undefined);
+                rootNode = nodes.find((node) => node.parentId === null || node.parentId === undefined || node.id === node.parentId);
             }
 
             /* fallback if root undefined */

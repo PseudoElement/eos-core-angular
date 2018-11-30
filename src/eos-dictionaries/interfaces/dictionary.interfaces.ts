@@ -11,7 +11,8 @@ export enum E_DICT_TYPE {
     organiz,
     linear,
     tree,
-    department
+    department,
+    custom
 }
 
 export enum E_FIELD_SET {
