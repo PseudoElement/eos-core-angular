@@ -20,13 +20,22 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
         fields.forEach((f: IInputParamControl) => {
             switch (f['key']) {
                 case 'teсhUser':
-                    f['disabled'] = true;
-                    f['readonly'] = true;
                     if (this._userParamSrv.isTechUser) {
                         f['value'] = true;
                     }
                     break;
+                case 'DUE_DEP_NAME':
+                    if (!this._userParamSrv.isTechUser) {
+                        f['value'] = this._userParamSrv.curentUser.DUE_DEP_NAME;
+                    }
+                    break;
                 case 'SELECT_ROLE':
+                    f['options'] = [
+                        {
+                            title: '',
+                            value: ''
+                        }
+                    ];
                     if (this._userParamSrv.curentUser['isAccessDelo']) {
                         if (this._userParamSrv.sysParams['CATEGORIES_FOR_USER']) {
                             const str: String = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'];
@@ -40,14 +49,7 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                         }
                     } else {
                         f['disabled'] = true;
-                    }
-                    break;
-                case 'delo_web':
-                    const arr = this._userParamSrv.curentUser['ACCESS_SYSTEMS'];
-                    if ((+arr[27] || +arr[1]) && !+arr[0]) {
-                        f['value'] = true;
-                    } else if ((+arr[0] && +arr[1]) || (+arr[0] && !+arr[1])) {
-                        f['disabled'] = true;
+                        f['readonly'] = true;
                     }
                     break;
             }
@@ -62,6 +64,13 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
 
         fields.forEach(f => {
             switch (f['key']) {
+                case 'delo_web':
+                    if (deloWeb) {
+                        f['value'] = true;
+                    } else {
+                        f['disabled'] = true;
+                    }
+                    break;
                 case '0-1':
                     if (delo_deloWeb) {
                         f['value'] = true;
@@ -83,35 +92,19 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                         f['disabled'] = true;
                     }
                     break;
-                case '23':
-                    if (delo) {
-                        f['disabled'] = true;
-                    }
-                    break;
-                case '21':
-                    if (delo) {
-                        f['disabled'] = true;
-                    }
-                    break;
-                case '26':
-                    if (deloWeb) {
-                        f['disabled'] = true;
-                    }
-                    break;
                 default:
                     f['value'] = !!+arr[f['key']];
             }
         });
+    }
+    dateToString(date: Date) {
+        return this._dateToString(date);
     }
     private _prepareDataForForm (field: IInputParamControl) {
         if (field['key'] === 'PASSWORD_DATE') {
             const pass = this._userParamSrv.hashUserContext['CHANGE_PASS'];
             field['disabled'] = pass !== 'YES' ? true : false;
             field['readonly'] = pass !== 'YES' ? true : false;
-        }
-        if (field['key'] === 'DUE_DEP_NAME') {
-            field['disabled'] = true;
-            field['readonly'] = true;
         }
         if (field.controlType === E_FIELD_TYPE.boolean) {
             return !!this._userParamSrv.curentUser[field['key']];

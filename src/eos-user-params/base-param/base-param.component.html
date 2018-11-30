@@ -36,10 +36,11 @@
                 class="dynamic-input-wrapper base-text-input">
                 <label [hidden]="controls['pass'].hideLabel"
                     [attr.for]="controls['pass'].key">{{controls['pass'].label}}</label>
-                <div [ngClass]="{'required': controls['pass'].required}">
+                <div>
                 <input class="form-control m-font"
                     [formControlName]="controls['pass'].key"
                     [id]="controls['pass'].key"
+                    (blur)="checkPass()"
                     type="text"
                     [readonly]="controls['pass'].readonly"
                     [ngClass]="{'readonly': readonly}"
@@ -52,14 +53,18 @@
                 class="dynamic-input-wrapper base-text-input">
                 <label [hidden]="controls['passRepeated'].hideLabel"
                     [attr.for]="controls['passRepeated'].key">{{controls['passRepeated'].label}}</label>
-                <div [ngClass]="{'required': controls['passRepeated'].required}">
+                <div>
                 <input class="form-control m-font"
                     [formControlName]="controls['passRepeated'].key"
                     [id]="controls['passRepeated'].key"
+                    (blur)="checkPass()"
                     type="text"
                     [readonly]="controls['passRepeated'].readonly"
                     [ngClass]="{'readonly': readonly}"
                     [placeholder]="controls['passRepeated'].label"
+                    [tooltip]="errorPass ? 'Пароли не совпадают' : 'Повторите пароль'"
+                    placement="bottom"
+                    [containerClass]="errorPass ? 'tooltip-error' : 'tooltip-info'"
                     autocomplete="off">
                 </div>
             </div>
@@ -77,22 +82,22 @@
         <!-- должностное лицо и роль -->
         <div class="row-department-role">
 
-            <div [formGroup]="form"
+            <div [formGroup]="formControls"
                 class="dynamic-input-wrapper inline-block base-department-input">
-                <label [hidden]="inputs['DUE_DEP_NAME'].hideLabel"
-                    [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
-                <div [ngClass]="{'required': inputs['DUE_DEP_NAME'].required}" style="width: 461px">
+                <label
+                    [attr.for]="controls['DUE_DEP_NAME'].key">{{controls['DUE_DEP_NAME'].label}}</label>
+                <div [ngClass]="{'required': controls['DUE_DEP_NAME'].required}" style="width: 461px">
                 <input class="form-control m-font inline-block"
                     readonly
-                    [formControlName]="inputs['DUE_DEP_NAME'].key"
-                    [id]="inputs['DUE_DEP_NAME'].key"
+                    [formControlName]="controls['DUE_DEP_NAME'].key"
+                    [id]="controls['DUE_DEP_NAME'].key"
                     type="text"
                     [ngClass]="{'readonly': readonly}"
-                    [placeholder]="inputs['DUE_DEP_NAME'].label"
+                    [placeholder]="controls['DUE_DEP_NAME'].label"
                     autocomplete="off">
                     <span class="icon eos-icon small icon-add-department"
-                        [ngClass]="{'eos-icon-avatar-blue': form.get('DUE_DEP_NAME').enabled, 'eos-icon-avatar-grey': form.get('DUE_DEP_NAME').disabled}"
-                        (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"
+                        [ngClass]="{'eos-icon-avatar-blue': formControls.get('DUE_DEP_NAME').enabled, 'eos-icon-avatar-grey': formControls.get('DUE_DEP_NAME').disabled}"
+                        (click)="selectDepartment(formControls.get('DUE_DEP_NAME').enabled)"
                     ></span>
                 </div>
             </div>
@@ -130,9 +135,9 @@
                 class="base-checkbox-input"
             ></eos-dynamic-input>
             <eos-dynamic-input
-                [input]="controls['delo_web']"
-                [form]="formControls"
-                [readonly]="formControls.get('delo_web').disabled"
+                [input]="accessInputs['delo_web']"
+                [form]="formAccess"
+                [readonly]="formAccess.get('delo_web').disabled"
             ></eos-dynamic-input>
             <eos-dynamic-input
                 [input]="accessInputs['1-27']"

@@ -160,9 +160,9 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
         return Promise.all([pUser, pOrganization, pCabinet, pPrintInfo, pCabinets, pPhotoImg])
             .then(([user, org, cabinet, printInfo, cabinets, photoImgs]) => {
                 const img = (photoImgs[0]) ? <IImage>{
-                    data: photoImgs[0].CONTENTS,
-                    extension: photoImgs[0].EXTENSION,
-                    url: `url(data:image/${photoImgs[0].EXTENSION};base64,${photoImgs[0].CONTENTS})`
+                    data: photoImgs[0]['CONTENTS'],
+                    extension: photoImgs[0]['EXTENSION'],
+                    url: `url(data:image/${photoImgs[0]['EXTENSION']};base64,${photoImgs[0]['CONTENTS']})`
                 } : null;
 
                 return {

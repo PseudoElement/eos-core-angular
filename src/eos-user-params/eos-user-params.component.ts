@@ -32,22 +32,18 @@ export class UserParamsComponent implements OnDestroy, OnInit {
         this._route.queryParams
             .takeUntil(this.ngUnsubscribe)
             .subscribe(qParam => {
-                this.isLoading = true;
-                if (qParam['createNewUser']) {
-                    this.isNewUser = qParam['createNewUser'];
-                    this._userParamService.fetchSysParams()
-                    .then(() => {
-                        this.isLoading = false;
-                    });
-                } else {
-                    this._userParamService.getUserIsn(qParam['isn_cl'])
-                        .then((data: boolean) => {
-                            this.isLoading = false;
-                        })
-                        .catch(() => {
-                            this._router.navigate(['user_param']);
-                        });
+                if (!qParam['isn_cl'] && !this._userParamService.isUserContexst) {
+                    this._router.navigate(['user_param']);
+                    return;
                 }
+                this.isLoading = true;
+                this._userParamService.getUserIsn(qParam['isn_cl'])
+                    .then((data: boolean) => {
+                        this.isLoading = false;
+                    })
+                    .catch(() => {
+                        this._router.navigate(['user_param']);
+                    });
             });
         this._navSrv.StateSandwich$
             .takeUntil(this.ngUnsubscribe)
