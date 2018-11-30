@@ -16,6 +16,7 @@ import {SevCollisionsDictionaryDescriptor} from './sev-collisions-dictionary-des
 import {NadzorLinearDictionaryDescriptor, NadzorTreeDictionaryDescriptor} from './nadzor-dictionary-descriptor';
 import {EosSevRulesService} from '../services/eos-sev-rules.service';
 import {SevRulesDictionaryDescriptor} from './sev-rules-dictionary-descriptor';
+import {LinkDictionaryDescriptor} from './link-dictionary-descriptor';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -91,6 +92,9 @@ export class DictionaryDescriptorService {
                         break;
                     case 'sev-collisions':
                         res = new SevCollisionsDictionaryDescriptor(descr, this.apiSrv);
+                        break;
+                    case 'link':
+                        res = new LinkDictionaryDescriptor(descr, this.apiSrv);
                         break;
                 }
 

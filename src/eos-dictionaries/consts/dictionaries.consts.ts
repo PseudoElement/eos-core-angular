@@ -16,6 +16,7 @@ import { RESPRJ_STATUS_DICT } from './dictionaries/resprj-status.consts';
 import { SECURITY_DICT } from './dictionaries/security.consts';
 import { SIGN_KIND_DICT } from './dictionaries/sign-kind.consts';
 import { STATUS_EXEC_DICT } from './dictionaries/status-exec.consts';
+import { LINK_DICT } from './dictionaries/link.consts';
 import { STATUS_REPLY_DICT } from './dictionaries/status-reply.consts';
 import { VISA_TYPE_DICT } from './dictionaries/visa-type.consts';
 import { RULES_SEV_DICT } from './dictionaries/sev-rules';
@@ -26,7 +27,6 @@ import { NADZOR } from './dictionaries/nadzor.consts';
 import { REESTRTYPE_DICT } from './dictionaries/reestrtype.consts';
 import {NOMENKL_CL} from './dictionaries/nomenkl.const';
 import {EDS_CATEGORY_CL} from './dictionaries/category-eds.consts';
-import {LINK_CL} from './dictionaries/link.consts';
 
 export const DICTIONARIES = [
     /* tree dictionaries */
@@ -53,8 +53,8 @@ export const DICTIONARIES = [
     // CITIZENS_DICT,
     NOMENKL_CL,
     EDS_CATEGORY_CL,
-    LINK_CL,
-    // SEV
+    LINK_DICT,
+     // SEV
     RULES_SEV_DICT,
     COLLISIONS_SEV_DICT,
     PARTICIPANT_SEV_DICT,

@@ -6,6 +6,12 @@ export const WARN_EDIT_ERROR: IMessage = {
     msg: 'не выбран элемент для редактирования'
 };
 
+export const WARN_SELECT_NODE: IMessage = {
+    type: 'warning',
+    title: 'Предупреждение: ',
+    msg: 'не выбрано ни одного элемента'
+};
+
 export const DANGER_EDIT_ROOT_ERROR: IMessage = {
     type: 'danger',
     title: 'Ошибка редактирования элемента: ',

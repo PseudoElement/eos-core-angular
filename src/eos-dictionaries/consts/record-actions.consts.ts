@@ -162,6 +162,18 @@ export const RECORD_ACTIONS_NAVIGATION_DOWN = {
     buttonClass: null
 };
 
+const RECORD_ACTIONS_ADDITIONAL_FIELDS: IAction = {
+    type: E_RECORD_ACTIONS.additionalFields,
+    group: E_ACTION_GROUPS.item,
+    title: 'Дополнительные реквизиты РК',
+    hint: 'Доп.реквизиты РК',
+    iconClass: 'eos-icon eos-icon-clip-blue small',
+    disabledIconClass: 'eos-icon eos-icon-clip-grey small',
+    activeIconClass: '',
+    hoverIconClass: 'eos-icon eos-icon-repair-clip-blue small',
+    buttonClass: null
+};
+
 export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_CREATE,
     RECORD_ACTIONS_EDIT,
@@ -174,7 +186,8 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_TO_DOWN ,
     RECORD_ACTION_SHOW_ALL_RECORDS,
     // RECORD_ACTION_CREATE_ORGANISATION_AGENT,
-    RECORD_ACTION_SHOW_SETTINGS
+    RECORD_ACTION_SHOW_SETTINGS,
+    RECORD_ACTIONS_ADDITIONAL_FIELDS
 ];
 
 export const MORE_RECORD_ACTIONS: IAction[] = [
@@ -189,7 +202,8 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_TO_DOWN,
     RECORD_ACTION_SHOW_ALL_RECORDS,
     // RECORD_ACTION_CREATE_ORGANISATION_AGENT,
-    RECORD_ACTION_SHOW_SETTINGS
+    RECORD_ACTION_SHOW_SETTINGS,
+    RECORD_ACTIONS_ADDITIONAL_FIELDS
 ];
 
 export const COMMON_ADD_MENU = [{

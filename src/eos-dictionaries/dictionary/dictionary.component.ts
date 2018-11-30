@@ -26,7 +26,7 @@ import {
     WARN_LOGIC_DELETE,
     DANGER_HAVE_NO_ELEMENTS,
     DANGER_LOGICALY_RESTORE_ELEMENT,
-    WARN_ELEMENT_PROTECTED
+    WARN_ELEMENT_PROTECTED, WARN_SELECT_NODE
 } from '../consts/messages.consts';
 
 import { RECENT_URL } from 'app/consts/common.consts';
@@ -267,6 +267,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.tableCustomization:
                 this.nodeList.configColumns();
                 break;
+            case E_RECORD_ACTIONS.additionalFields:
+                this._openAdditionalFields();
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -438,4 +441,13 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         }
         p.then((confirmed: boolean) => this._dictSrv.markDeleted(confirmed, false));
     }
+
+    private _openAdditionalFields() {
+        const node = this._dictSrv.listNode;
+        if (node) {
+             this.nodeList.openAdditionalFields(node);
+        } else {
+            this._msgSrv.addNewMessage(WARN_SELECT_NODE);
+        }
+     }
 }

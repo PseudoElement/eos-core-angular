@@ -21,8 +21,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     iconName: 'eos-icon-folder-group-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
-        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes'
-    ],
+        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes' , 'additionalFields'],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
     searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
@@ -137,35 +136,15 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         title: 'Инициативные поручения',
         type: 'boolean',
         forNode: true,
-    }, {
-        key: 'AR_DOCGROUP_List',
-        title: 'список используемых для этой группы документов дополнительных реквизитов',
-        type: 'AR_DOCGROUP[]',
-    }, {
-        key: 'DG_FILE_CONSTRAINT_List',
-        title: 'список используемых для этой группы документов ограничений на файлы',
-        type: 'DG_FILE_CONSTRAINT[]',
-    }, {
-        key: 'DOC_DEFAULT_VALUE_List',
-        title: 'список используемых для этой группы документов дополнительных реквизитов РК',
-        type: 'DOC_DEFAULT_VALUE[]',
-    }, {
-        key: 'PRJ_DEFAULT_VALUE_List',
-        title: 'список используемых для этой группы документов правил заполнения реквизитов РКПД',
-        type: 'PRJ_DEFAULT_VALUE[]',
-    }, {
-        key: 'SHABLON_DETAIL_List',
-        title: 'список используемых для этой группы документов ограничений шаблонов номерообразования',
-        type: 'SHABLON_DETAIL[]',
     }]),
     treeFields: ['CLASSIF_NAME'],
     editFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME', 'NOTE', 'IS_COPYCOUNT', 'ACCESS_MODE_FIXED', 'E_DOCUMENT', 'PRJ_TEST_UNIQ_FLAG',
         'PRJ_DEL_AFTER_REG', 'PRJ_APPLY_EXEC_EDS', 'PRJ_APPLY2_EDS', 'PRJ_APPLY_EDS', 'PRJ_AUTO_REG', 'PRJ_SHABLON', 'PRJ_NUM_FLAG',
         'TEST_UNIQ_FLAG', 'ENCRYPT_FLAG', 'EDS_FLAG', 'SHABLON', 'DOCNUMBER_FLAG', 'DOCGROUP_INDEX', 'RC_TYPE', 'INITIATIVE_RESOLUTION',
         'ACCESS_MODE'],
-    searchFields: ['CODE', 'CLASSIF_NAME'/*, 'NOTE'*/],
+    searchFields: ['CODE', 'CLASSIF_NAME'],
     fullSearchFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME', 'DOCGROUP_INDEX', 'NOTE'],
-    quickViewFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME', 'NOTE', 'DOCGROUP_INDEX', 'RC_TYPE' ],  // CLASSIF_NAME is in shortQuickViewFields
+    quickViewFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME', 'NOTE', 'DOCGROUP_INDEX', 'RC_TYPE' ],
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: ['CODE', 'CLASSIF_NAME'],
     allVisibleFields: ['NOTE', 'FULLNAME'],

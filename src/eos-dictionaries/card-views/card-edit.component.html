@@ -103,6 +103,13 @@
                                      [inputs]="inputs"
                                      [data]="data"
                                      [editMode]="editMode"></eos-reestrtype-card>
+                <eos-link-card *ngSwitchCase="'link'"
+                               #cardEditEl
+                               class="simple-card-edit"
+                               [form]="form"
+                               [inputs]="inputs"
+                               [data]="data"
+                               [editMode]="editMode"></eos-link-card>
                 <eos-simple-card-edit *ngSwitchDefault
                                       #cardEditEl
                                       class="simple-card-edit"

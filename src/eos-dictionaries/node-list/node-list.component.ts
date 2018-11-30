@@ -9,6 +9,7 @@ import {IDictionaryViewParameters, IFieldView, IOrderBy, E_FIELD_SET} from 'eos-
 import {LongTitleHintComponent} from '../long-title-hint/long-title-hint.component';
 import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
 import {ColumnSettingsComponent} from '../column-settings/column-settings.component';
+import {AdditionalFieldsComponent} from '../additional-fields/additional-fields.component';
 import {EosUtils} from 'eos-common/core/utils';
 import {DOCUMENT} from '@angular/common';
 
@@ -143,6 +144,14 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             subscription.unsubscribe();
         });
     }
+
+    openAdditionalFields(node: EosDictionaryNode) {
+        this.modalWindow = this.modalSrv.show(AdditionalFieldsComponent, {class: 'additional-fields-modal modal-lg'});
+        this.modalWindow.content.nodeDescription = node.title;
+        this.modalWindow.content.data = node.data;
+        this.modalWindow.content.nodes = this.nodes;
+        this.modalWindow.content.init('3');
+     }
 
     getMarkedTitles(): string[] {
         return this.nodes

@@ -1,0 +1,85 @@
+<div class="card-content-wrapper">
+    <div>
+        <fieldset>
+            <legend>Прямая связка</legend>
+            <eos-dynamic-input [input]="inputs['rec.LINK_INDEX']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.CLASSIF_NAME']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.TRANSPARENT']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.NOTE']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+        </fieldset>
+    </div>
+    <div *ngIf="isNotLinksEqualsOrNew">
+        <fieldset>
+            <legend>Обратная связка</legend>
+            <eos-dynamic-input [input]="inputs['rec.PAIR_INDEX']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.PAIR_NAME']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.PAIR_TRANSPARENT']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.PAIR_NOTE']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+        </fieldset>
+    </div>
+    <div [ngStyle]="{'margin-top.px': 20}">
+        <label class="pull-left"
+               [ngStyle]="{'margin-top.px': 14}">Категория</label>
+        <eos-dynamic-input class="pull-left"
+                           [ngStyle]="{'margin-left.px': 20}"
+                           [input]="inputs['rec.LINK_TYPE']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+        <div *ngIf="editMode && ((!isLinkTypeNull) && (linkType != 0))" class="pull-right">
+            <label [ngStyle]="{'margin-top.px': 14}">Направления связок: </label>
+            <a class="btn btn-primary"
+               (click)="changeDir()">Изменить</a>
+        </div>
+    </div>
+    <div *ngIf="((!isLinkTypeNull) && (linkType != 0))"
+         class="clear-both">
+        <div class="display-flex">
+            <div class="margin-t">Инициативный документ</div>
+            <div class="full-width">
+                <div class="display-flex">
+                    <ng-container *ngIf="!direction; then arrowLeft else nonArrow"></ng-container>
+                    <input class="form-control m-font margin-b"
+                           [disabled]="true"
+                           placeholder="{{classifName}}">
+                    <ng-container *ngIf="!direction; then nonArrow else arrowRight"></ng-container>
+                </div>
+                <div class="display-flex">
+                    <ng-container *ngIf="!direction; then nonArrow else arrowLeft"></ng-container>
+                    <input class="form-control m-font margin-b"
+                           [disabled]="true"
+                           placeholder="{{pairName}}">
+                    <ng-container *ngIf="!direction; then arrowRight else nonArrow"></ng-container>
+                </div>
+            </div>
+            <div class="margin-t">Проект документа</div>
+        </div>
+    </div>
+ </div>
+
+<ng-template #arrowLeft>
+    <span class="eos-icon eos-icon-arrow-blue-left small margin-t5"></span>
+</ng-template>
+
+<ng-template #arrowRight>
+    <span class="eos-icon eos-icon-arrow-blue-right small margin-t5"></span>
+</ng-template>
+
+<ng-template #nonArrow>
+    <span class="eos-icon small margin-t5"></span>
+</ng-template>
