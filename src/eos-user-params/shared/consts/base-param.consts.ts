@@ -7,8 +7,6 @@ export const BASE_PARAM_INPUTS: IInputParamControl[] = [
         key: 'CLASSIF_NAME',
         label: 'ЛОГИН',
         required: true,
-        // pattern: /\S+/,
-        // forNode: false,
         value: '',
     },
     {
@@ -25,23 +23,9 @@ export const BASE_PARAM_INPUTS: IInputParamControl[] = [
         value: false,
     },
     {
-        controlType: E_FIELD_TYPE.string,
-        key: 'DUE_DEP_NAME',
-        label: 'ДОЛЖНОСТНОЕ ЛИЦО',
-        required: true,
-        value: '',
-        data: '',
-    },
-    {
         controlType: E_FIELD_TYPE.text,
         key: 'NOTE2',
         label: 'ПРИМЕЧАНИЯ',
-        value: '',
-    },
-    { /* ---------     доступ к системам      -----------*/
-        controlType: E_FIELD_TYPE.boolean,
-        key: 'access_delo',
-        label: 'ДЕЛО',
         value: '',
     },
 ];
@@ -51,24 +35,22 @@ export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
         controlType: E_FIELD_TYPE.boolean,
         key: 'teсhUser',
         label: 'Технический пользователь',
+        disabled: true,
+        readonly: true,
         value: false,
     },
     {
         controlType: E_FIELD_TYPE.string,
         key: 'pass',
         label: 'ПАРОЛЬ',
-        required: true,
-        // pattern: /\S+/,
-        // forNode: false,
+        pattern: /^\S+$/,
         value: '',
     },
     {
         controlType: E_FIELD_TYPE.string,
         key: 'passRepeated',
         label: 'ПОВТОРИТЕ ПАРОЛЬ',
-        required: true,
-        // pattern: /\S+/,
-        // forNode: false,
+        pattern: /^\S+$/,
         value: '',
     },
     {
@@ -85,14 +67,23 @@ export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
         ],
     },
     {
+        controlType: E_FIELD_TYPE.string,
+        key: 'DUE_DEP_NAME',
+        label: 'ДОЛЖНОСТНОЕ ЛИЦО',
+        disabled: true,
+        readonly: true,
+        value: '',
+        data: '',
+    },
+];
+
+export const BASE_PARAM_ACCESS_INPUT: IInputParamControl[] = [
+    {
         controlType: E_FIELD_TYPE.boolean,
         key: 'delo_web',
         label: 'ДЕЛО-WEB',
         value: false,
     },
-];
-
-export const BASE_PARAM_ACCESS_INPUT: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '0',

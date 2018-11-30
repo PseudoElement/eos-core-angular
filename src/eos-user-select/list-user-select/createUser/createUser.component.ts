@@ -7,6 +7,9 @@ import { FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { Router } from '@angular/router';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { IMessage } from 'eos-common/interfaces';
+import { RestError } from 'eos-rest/core/rest-error';
 
 @Component({
     selector: 'eos-param-create-user',
@@ -29,6 +32,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     isShell: Boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor (
+        private _msgSrv: EosMessageService,
         private _router: Router,
         private _inputCtrlSrv: InputParamControlService,
         private _waitClassifSrv: WaitClassifService,
@@ -70,6 +74,26 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this._router.navigate(['user-params-set'], {
                 queryParams: {isn_cl: data[0]}
             });
+        })
+        .catch(e => {
+            const m: IMessage = {
+                type: 'warning',
+                title: 'Ошибка сервера',
+                msg: '',
+            };
+            if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
+                this._router.navigate(['login'], {
+                    queryParams: {
+                        returnUrl: this._router.url
+                    }
+                });
+            }
+            if (e instanceof RestError && e.code === 500) {
+                m.msg = 'Пользователь с таким логином уже существует';
+            } else {
+                m.msg = e.message ? e.message : e;
+            }
+            this._msgSrv.addNewMessage(m);
         });
     }
     cancel() {

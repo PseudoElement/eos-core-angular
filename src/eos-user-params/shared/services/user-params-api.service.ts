@@ -51,8 +51,7 @@ export class UserParamApiSrv {
 
         return this.getData<USER_CL>(query)
         .then(data => {
-            /* костыль для отсеивания "Владелец схемы" и удаленных */
-            return data.filter(user => /* user.ORACLE_ID &&  */user.ISN_LCLASSIF !== 0 && user.DELETED === 0);
+            return data.filter(user => /* user.ORACLE_ID &&  */user.ISN_LCLASSIF !== 0 && user.CLASSIF_NAME !== ' ');
         });
     }
 
