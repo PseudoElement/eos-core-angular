@@ -33,6 +33,7 @@ export class AdditionalFieldsComponent extends BaseCardEditComponent implements 
     nodes: any[];
     inputs: any;
     newData: any = {};
+    w = 240;
 
     inputType = new DropdownInput({
         key: 'type',
@@ -50,7 +51,7 @@ export class AdditionalFieldsComponent extends BaseCardEditComponent implements 
     private isn_ar_descrs;
     private ar_values;
     private _nodes;
-    private w = 240;
+
 
     constructor(
         private _msgSrv: EosMessageService,
