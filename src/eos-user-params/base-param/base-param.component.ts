@@ -122,7 +122,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     }
                 });
                 if (data && data['pass']) {
-                    if (!this.curentUser['ORACLE_ID']) {
+                    if (this.curentUser['IS_PASSWORD'] === 0) {
                         const url = `CreateLogin?pass='${data['pass']}'&isn_user=${id}`;
                         qPass = this._apiSrv.getData({[url]: ALL_ROWS});
                     } else {
