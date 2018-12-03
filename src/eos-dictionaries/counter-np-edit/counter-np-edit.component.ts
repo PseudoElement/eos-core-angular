@@ -19,11 +19,11 @@ export class CounterNpEditComponent implements OnDestroy, OnInit {
     // @Input() dictionaryFields: IFieldView[] = [];
     @Output() onChoose: EventEmitter<any> = new EventEmitter<any>();
 
+    isUpdating = true;
     protected apiSrv: PipRX;
     private nodes: any[];
     // private isMain: boolean;
     private dep_node: any;
-    private isUpdating = true;
     private editValueNum: number;
     private editValueYear: number;
     // public haveCustomTitle = false;
