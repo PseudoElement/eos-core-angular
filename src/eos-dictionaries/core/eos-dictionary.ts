@@ -469,7 +469,7 @@ export class EosDictionary {
     private _updateTree(nodes: EosDictionaryNode[]) {
         /* build tree */
         nodes.forEach((_node) => {
-            if (_node.parentId) {
+            if (_node.parentId && _node.parentId !== _node.id) {
                 const parent = this._nodes.get(_node.parentId);
                 if (parent) {
                     parent.addChild(_node);

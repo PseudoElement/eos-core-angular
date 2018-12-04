@@ -1,208 +1,95 @@
 import {
     IDictionaryDescriptor, ITreeDictionaryDescriptor,
 } from 'eos-dictionaries/interfaces';
-import {FieldsDecline} from 'eos-dictionaries/interfaces/fields-decline.inerface';
 
 import {PipRX} from 'eos-rest/services/pipRX.service';
-import {TreeDictionaryDescriptor} from 'eos-dictionaries/core/tree-dictionary-descriptor';
-import {TreeRecordDescriptor} from './tree-dictionary-descriptor';
 import {FieldDescriptor} from './field-descriptor';
 import {ModeFieldSet} from './record-mode';
 import {ALL_ROWS} from '../../eos-rest/core/consts';
-import {IFieldView} from '../interfaces';
-import {CABINET, DEPARTMENT, IHierCL, USER_CABINET, USER_CL} from '../../eos-rest';
-import {DepartmentDictionaryDescriptor} from './department-dictionary-descriptor';
-import {DictionaryDescriptorService} from './dictionary-descriptor.service';
+import {DEPARTMENT} from '../../eos-rest';
+import {CustomTreeNode} from '../tree2/custom-tree.component';
+import {DictionaryDescriptor} from './dictionary-descriptor';
+import {RecordDescriptor} from './record-descriptor';
 
-export class NomenklRecordDescriptor extends TreeRecordDescriptor {
+export class NomenklRecordDescriptor extends RecordDescriptor {
     dictionary: NomenklDictionaryDescriptor;
 
     parentField: FieldDescriptor;
-    // modeField: FieldDescriptor;
-    // modeList: IRecordModeDescription[];
     fullSearchFields: ModeFieldSet | any;
-    private _keyField;
 
-    constructor(dictionary: NomenklDictionaryDescriptor, descriptor: ITreeDictionaryDescriptor) {
+    constructor(dictionary: NomenklDictionaryDescriptor, descriptor: IDictionaryDescriptor,
+    ) {
         super(dictionary, descriptor);
-
         this.dictionary = dictionary;
-        this._setCustomField('parentField', descriptor);
-        // this.keyField;
-        // this.modeField = this.fieldsMap.get(descriptor.modeField);
-
-        // if (!this.modeField) {
-        //     throw new Error('No field decribed for "' + descriptor.modeField + '"');
-        // }
-        //
-        // this.modeList = descriptor.modeList;
-        // this._initModeSets([
-        //     'fullSearchFields',
-        // ], descriptor);
     }
 
-    get keyField() {
-        return this._keyField;
+    filterBy(filters: any, data: any): boolean {
+        if (filters && filters.hasOwnProperty('YEAR')) {
+            const y: number = filters['YEAR'];
+            const y1: number = data.rec['YEAR_NUMBER'];
+            const y2: number = data.rec['END_YEAR'];
+            if (y) {
+                if (y1 && (y1 > y)) {
+                    return false;
+                }
+                if (y2 && (y2 < y)) {
+                    return false;
+                }
+            }
+        }
+        return super.filterBy(filters, data);
     }
-
-    set keyField(value) {
-        // value.key = 'DUE';
-        value.foreignKey = 'DUE';
-        this._keyField = value;
-    }
-
-
-//     parentField: FieldDescriptor;
-//     modeField: FieldDescriptor;
-//     modeList: IRecordModeDescription[];
-//     fullSearchFields: ModeFieldSet | any;
-//
-//     constructor(dictionary: DepartmentDictionaryDescriptor, descriptor: IDepartmentDictionaryDescriptor) {
-//         super(dictionary, descriptor);
-//         this.dictionary = dictionary;
-//         this._setCustomField('parentField', descriptor);
-//         this.modeField = this.fieldsMap.get(descriptor.modeField);
-//
-//         if (!this.modeField) {
-//             throw new Error('No field decribed for "' + descriptor.modeField + '"');
-//         }
-//
-//         this.modeList = descriptor.modeList;
-//         this._initModeSets([
-//             'fullSearchFields',
-//         ], descriptor);
-//     }
-//
-//     filterBy(filters: any, data: any): boolean {
-//         let visible = super.filterBy(filters, data);
-//         if (visible && filters) {
-//             if (filters.hasOwnProperty('date') && filters.date) {
-//                 const startDate = data.rec['START_DATE'] ? new Date(data.rec['START_DATE']).setHours(0, 0, 0, 0) : null;
-//                 const endDate = data.rec['END_DATE'] ? new Date(data.rec['END_DATE']).setHours(0, 0, 0, 0) : null;
-//                 visible = (!startDate || filters.date - startDate >= 0) && (!endDate || endDate - filters.date >= 0);
-//             }
-//         }
-//         return visible;
-//     }
-//
-    getListView(data: any): IFieldView[] {
-        const res = super.getListView(data);
-        return res;
-    }
-
-//     getFieldValue(field: IFieldView, data: any): any {
-//         let value = super.getFieldValue(field, data);
-//         if (!value) {
-//             switch (field.key) {
-//                 default:
-//                     value = data[field.key] ? data[field.key]['CLASSIF_NAME'] : null;
-//             }
-//         }
-//         return value;
-//     }
-//
-//     protected _getFullSearchFields(): FieldDescriptor[] {
-//         let __res = [];
-//         Object.keys(this.fullSearchFields).forEach((mode) => {
-//             __res = __res.concat(this.fullSearchFields[mode]);
-//         });
-//         return __res;
-//     }
-//
-//     private _initModeSets(setNames: string[], descriptor: IDepartmentDictionaryDescriptor) {
-//         setNames.forEach((setName) => {
-//             if (!this[setName]) {
-//                 this[setName] = new ModeFieldSet(this, descriptor[setName]);
-//             }
-//         });
-//     }
 }
 
-export class NomenklDictionaryDescriptor extends TreeDictionaryDescriptor {
-    // record: NomenklRecordDescriptor;
-    depDict: DepartmentDictionaryDescriptor;
+export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
+    record: NomenklRecordDescriptor;
+    foo: number = 0;
+    private _treeData: CustomTreeNode[];
+    private _filterDUE: string;
 
     constructor(
         descriptor: IDictionaryDescriptor,
         apiSrv: PipRX,
-        private dictDescriptorSrv: DictionaryDescriptorService,
     ) {
-        // noinspection JSAnnotator
         super(descriptor, apiSrv);
-
-        let descr1: IDictionaryDescriptor;
-        descr1 = this.dictDescriptorSrv.getDescriptorData('departments');
-
-        this.depDict = new DepartmentDictionaryDescriptor(descr1, apiSrv);
-        // if (descriptor) {
-        //     this.id = descriptor.id;
-        //     this.title = descriptor.title;
-        //     this.type = descriptor.dictType;
-        //     this.apiInstance = descriptor.apiInstance;
-        //     this._defaultOrder = descriptor.defaultOrder;
-        //     this.hideTopMenu = descriptor.hideTopMenu;
-        //     this.editOnlyNodes = descriptor.editOnlyNodes;
-        //
-        //     this.apiSrv = apiSrv;
-        //     commonMergeMeta(this);
-        //     this._initRecord(descriptor);
-        // } else {
-        //     return undefined;
-        // }
+        this.foo = 0;
     }
 
-
-    getBoss(departmentDue: string): Promise<any> {
-        return this.apiSrv.read({
-            'DEPARTMENT_CL': PipRX.criteries({
-                'PARENT_DUE': departmentDue,
-                'IS_NODE': '1',
-                'POST_H': '1',
-            })
-        })
-            .then(([rec]) => rec);
+    hasCustomTree() {
+        return true;
     }
 
-    // getRoot(): Promise<any[]> {
-    //     return this.getData({ criteries: { LAYER: '0:2'/*, IS_NODE: '0'*/ } }, 'DUE');
-    // }
+    getCustomTreeData(): Promise<CustomTreeNode[]> {
+        return this.apiSrv.read<DEPARTMENT>({'DEPARTMENT': PipRX.criteries({'IS_NODE': '0'})})
+            .then((data) => {
+                this._makeTreeData(data);
+                return this._treeData;
+            });
+    }
+
     getRoot(): Promise<any[]> {
-
-        return this.depDict.getData().then((d) => {
-            return d;
-        });
-
-        // return this.getData();
-    }
-
-    // getData(query?: any, order?: string, limit?: number): Promise<any[]> {
-    //     return Promise.resolve([]);
-    // }
-    getChildren(record: IHierCL): Promise<any[]> {
         return this.getData();
     }
 
-    getFullRelated(): Promise<any> {
-        return super.getFullRelated().then((d) => {
-            return d;
-        });
-    }
-
-    getIdByDictionaryMode(mode: number): string {
-        switch (mode) {
-            case 1:
-                return 'nomenkl';
-            default:
-                return this.depDict.id;
+    setRootNode(_nodeId: string) {
+        this._filterDUE = _nodeId;
+        if (this._treeData) {
+            this.parseTree(this._treeData, (item: CustomTreeNode) => {
+                item.isActive = (item.id === this._filterDUE);
+            });
         }
+
     }
 
     getData(query?: any, order?: string, limit?: number): Promise<any[]> {
-        if (!query) {
-            query = ALL_ROWS;
-        }
 
-        // console.warn('getData', query, order, limit);
+        if (!query) {
+            if (this._filterDUE) {
+                query = {criteries: {DUE: this._filterDUE}};
+            } else {
+                query = ALL_ROWS;
+            }
+        }
 
         const req = {[this.apiInstance]: query};
 
@@ -222,159 +109,88 @@ export class NomenklDictionaryDescriptor extends TreeDictionaryDescriptor {
             });
     }
 
-    // getParentDictionaryId(): string {
-    //     return 'departments';
-    // }
-
-    getOwners(depDue: string): Promise<DEPARTMENT[]> {
-        return this.apiSrv.read<DEPARTMENT>({'DEPARTMENT': PipRX.criteries({'IS_NODE': '1', DEPARTMENT_DUE: depDue})})
-            .then((owners) => {
-                this.prepareForEdit(owners);
-                return owners;
-            });
-    }
-
-    getRelated(rec: CABINET): Promise<any> {
-        const reqs = [
-            this.apiSrv.read({'FOLDER': PipRX.criteries({'ISN_CABINET': rec.ISN_CABINET + ''})}),
-            this.apiSrv.read({'DEPARTMENT': [rec.DUE]})
-                .then(([department]: DEPARTMENT[]) => {
-                    return this.getOwners(department.DEPARTMENT_DUE)
-                        .then((owners) => [department, owners]);
-                }),
-            this.apiSrv.read({'USER_CABINET': PipRX.criteries({'ISN_CABINET': rec.ISN_CABINET + ''})})
-                .then((userCabinet: USER_CABINET[]) => {
-                    this.prepareForEdit(userCabinet);
-                    const userIds = userCabinet.map((u2c) => u2c.ISN_LCLASSIF);
-                    if (userIds.length) {
-                        return this.apiSrv.read<USER_CL>({'USER_CL': userIds})
-                            .then((users) => [userCabinet, users]);
-                    } else {
-                        return [userCabinet, []];
-                    }
-                }),
-        ];
-        return Promise.all(reqs)
-            .then(([folders, [department, owners], [userCabinet, users]]) => {
-                this.prepareForEdit(folders);
-                const related = {
-                    department: department,
-                    folders: folders,
-                    cabinetAccess: userCabinet,
-                    users: users,
-                    owners: owners
-                };
-                return related;
-            });
-    }
-
-    // getBoss(departmentDue: string): Promise<any> {
-    //     return this.apiSrv.read({
-    //         'DEPARTMENT_CL': PipRX.criteries({
-    //             'PARENT_DUE': departmentDue,
-    //             'IS_NODE': '1',
-    //             'POST_H': '1',
-    //         })
-    //     })
-    //         .then(([rec]) => rec);
-    // }
-
-
-    // getFullSearchCriteries(data: any): any {
-    //     const _criteries = {};
-    //     const mode = data['srchMode'];
-    //     const _searchFields = this.record.fullSearchFields[mode];
-    //     switch (mode) {
-    //         case 'department':
-    //             _criteries['IS_NODE'] = '0';
-    //             break;
-    //         case 'person':
-    //             _criteries['IS_NODE'] = '1';
-    //             break;
-    //         case 'cabinet':
-    //             _criteries['department.cabinet.CABINET_NAME'] = '"' + data.cabinet['CABINET_NAME'].trim() + '"';
-    //             break;
-    //     }
-    //     if (mode !== 'cabinet') {
-    //         _searchFields.forEach((fld) => {
-    //             if (data[mode][fld.foreignKey]) {
-    //                 _criteries[fld.foreignKey] = '"' + data[mode][fld.foreignKey].trim() + '"';
-    //             }
-    //         });
-    //     }
-    //     return _criteries;
-    // }
-
-    // getIdByDictionaryMode(mode: number): string {
-    //     switch (mode) {
-    //         case 1:
-    //             return 'cabinet';
-    //         case 2:
-    //             return 'nomenkl';
-    //         default:
-    //             return this.id;
-    //     }
-    // }
-
-    // getRelated(rec: any, orgDUE: string): Promise<any> {
-    //     const pUser = this.apiSrv
-    //         .read({ 'USER_CL': PipRX.criteries({ 'DUE_DEP': rec['DUE'] }) })
-    //         .then((items) => this.apiSrv.entityHelper.prepareForEdit(items[0]));
-    //
-    //     const pOrganization = (orgDUE) ? this.getCachedRecord({ ORGANIZ_CL: [orgDUE] }) : Promise.resolve(null);
-    //
-    //     const pCabinet = (rec['ISN_CABINET']) ? this.getCachedRecord({ 'CABINET': rec['ISN_CABINET'] }) : Promise.resolve(null);
-    //     const pCabinets = this.getCachedRecord({ 'CABINET': { 'criteries': { DUE: rec.DUE } } });
-    //
-    //     let owner = rec['ISN_NODE'].toString();
-    //     if (!rec['IS_NODE'] && rec['ISN_HIGH_NODE'] !== undefined && rec['ISN_HIGH_NODE'] !== null) {
-    //         owner += '|' + rec['ISN_HIGH_NODE'].toString();
-    //     }
-    //
-    //     const pPrintInfo = this.apiSrv
-    //         .read<CB_PRINT_INFO>({
-    //             CB_PRINT_INFO: PipRX.criteries({
-    //                 ISN_OWNER: owner,
-    //                 OWNER_KIND: '104'
-    //             })
-    //         })
-    //         .then((items) => {
-    //             const info = items.find((item) => item.ISN_OWNER === rec['ISN_NODE']);
-    //             return this.apiSrv.entityHelper.prepareForEdit<CB_PRINT_INFO>(info || items[0], 'CB_PRINT_INFO');
-    //         });
-    //
-    //     const pPhotoImg = (rec['ISN_PHOTO']) ? this.apiSrv.read({ DELO_BLOB: rec['ISN_PHOTO'] }) : Promise.resolve([]);
-    //
-    //     return Promise.all([pUser, pOrganization, pCabinet, pPrintInfo, pCabinets, pPhotoImg])
-    //         .then(([user, org, cabinet, printInfo, cabinets, photoImgs]) => {
-    //             const img = (photoImgs[0]) ? <IImage>{
-    //                 data: photoImgs[0].CONTENTS,
-    //                 extension: photoImgs[0].EXTENSION,
-    //                 url: `url(data:image/${photoImgs[0].EXTENSION};base64,${photoImgs[0].CONTENTS})`
-    //             } : null;
-    //
-    //             return {
-    //                 user: user,
-    //                 organization: org,
-    //                 cabinet: cabinet,
-    //                 cabinets: cabinets,
-    //                 printInfo: printInfo,
-    //                 photo: img
-    //             };
-    //         });
-    // }
-
-    // getContacts(orgISN: string): Promise<any> {
-    //     // return this.apiSrv.read({ 'CONTACT': PipRX.criteries({ 'ISN_ORGANIZ': orgISN }) });
-    // }
-    // getListView
-
-    public onPreparePrintInfo(dec: FieldsDecline): Promise<any[]> {
-        return this.apiSrv.read({PreparePrintInfo: PipRX.args(dec)});
-    }
-
     protected _initRecord(data: IDictionaryDescriptor) {
-
         this.record = new NomenklRecordDescriptor(this, <ITreeDictionaryDescriptor>data);
     }
+
+    private parseTree(treeData: CustomTreeNode[], callback) {
+        let i: number;
+
+        for (i = 0; i < treeData.length; i++) {
+            callback(treeData[i]);
+            if (treeData[i].children && treeData[i].children.length) {
+                this.parseTree(treeData[i].children, callback);
+            }
+        }
+    }
+
+
+    private _makeTreeData(ddata: DEPARTMENT[]) {
+        let r: CustomTreeNode;
+        let d: CustomTreeNode;
+        let i: number;
+        const res: CustomTreeNode[] = [];
+        let dd: DEPARTMENT;
+
+        this._treeData = [];
+        for (i = 0; i < ddata.length; i++) {
+            dd = ddata[i];
+            r = {
+                title: (dd.DUE === '0.') ? 'Подразделения' : dd.CLASSIF_NAME,
+                parent: dd.PARENT_DUE,
+                id: dd.DUE,
+                isNode: true,
+                isDeleted: dd.DELETED === 0 ? false : true,
+                isActive: dd.DUE === this._filterDUE,
+                expandable: false,
+                isExpanded: true,
+                updating: false,
+                children: [],
+                path: this._getPath(dd.DUE),
+            };
+            res.push(r);
+        }
+
+        i = 0;
+        while (i < res.length) {
+            d = res[i];
+            r = this.findTreeParent(res, d.parent);
+            if (r) {
+                r.expandable = true;
+                r.isExpanded = false;
+                r.children.push(d);
+                res.splice(i, 1);
+                i--;
+            }
+            i++;
+        }
+        res.find((f) => f.id === '0.').isExpanded = true;
+        this._treeData = res;
+    }
+
+    private findTreeParent(treeData: CustomTreeNode[], id: any) {
+        let i: number;
+        let res: CustomTreeNode;
+        for (i = 0; i < treeData.length; i++) {
+            if (treeData[i].id === id) {
+                return treeData[i];
+            } else if (treeData[i].children && treeData[i].children.length) {
+                res = this.findTreeParent(treeData[i].children, id);
+                if (res) {
+                    return res;
+                }
+            }
+        }
+        return null;
+    }
+
+    private _getPath(DUE: string) {
+        const _path = [
+            'spravochniki',
+            this.id,
+            DUE,
+        ];
+        return _path;
+    }
+
 }

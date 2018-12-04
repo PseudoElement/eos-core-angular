@@ -30,14 +30,23 @@ export class DictionarySearchComponent implements OnDestroy {
     @ViewChild('full') fSearchPop;
     @ViewChild('quick') qSearchPop;
 
-    filterInputs = [{
-        controlType: 'date',
-        key: 'filter.stateDate',
-        value: new Date(),
-        label: 'Состояние на',
-        hideLabel: true,
-        readonly: false
-    }];
+    filterInputs = [
+        {
+            controlType: 'date',
+            key: 'filter.stateDate',
+            value: new Date(),
+            label: 'Состояние на',
+            hideLabel: true,
+            readonly: false
+        }, {
+            controlType: 'numberIncrement',
+            key: 'filter.stateYear',
+            value: new Date().getFullYear(),
+            label: 'Состояние на',
+            hideLabel: true,
+            readonly: false
+        }
+    ];
 
     fieldsDescription = {
         rec: {}
@@ -61,6 +70,7 @@ export class DictionarySearchComponent implements OnDestroy {
     hasDate: boolean;
     hasQuick: boolean;
     hasFull: boolean;
+    hasYear: boolean;
     type: E_DICT_TYPE;
 
     searchForm: FormGroup;
@@ -105,8 +115,12 @@ export class DictionarySearchComponent implements OnDestroy {
         this.inputs = this.inputCtrlSrv.generateInputs(this.filterInputs);
         this.searchForm = this.inputCtrlSrv.toFormGroup(this.inputs, false);
         const dateFilter = this.searchForm.controls['filter.stateDate'];
+        const yearFilter = this.searchForm.controls['filter.stateYear'];
 
         this.searchForm.valueChanges.subscribe((data) => {
+            if (yearFilter.valid) {
+                this.numberFilter(data['filter.stateYear']);
+            }
             if (dateFilter.valid) {
                 this.dateFilter(data['filter.stateDate']);
             } else if (dateFilter.errors.minDate || dateFilter.errors.maxDate) {
@@ -147,6 +161,10 @@ export class DictionarySearchComponent implements OnDestroy {
 
     clearForm() {
         this.clearModel(this.getModelName());
+    }
+
+    numberFilter(n: number) {
+        this._dictSrv.setFilter({ YEAR: n});
     }
 
     dateFilter(date: Date) {
@@ -207,6 +225,16 @@ export class DictionarySearchComponent implements OnDestroy {
             this.hasQuick = !!~_config.findIndex((_t) => _t === SEARCH_TYPES.quick);
             this.hasFull = !!~_config.findIndex((_t) => _t === SEARCH_TYPES.full);
             /* tslint:enable:no-bitwise */
+
+            if (this.dictId === 'nomenkl') {
+                const yearFilter = this.searchForm.controls['filter.stateYear'];
+                this.hasYear = true;
+                if (this._dictSrv.getFilterValue('YEAR')) {
+                    yearFilter.setValue(this._dictSrv.getFilterValue('YEAR'));
+                } else {
+                    this.numberFilter(yearFilter.value);
+                }
+            }
 
             if (this.dictId === 'departments') {
                 if (this._dictSrv.getFilterValue('date')) {

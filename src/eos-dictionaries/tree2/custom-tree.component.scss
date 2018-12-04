@@ -1,0 +1,59 @@
+.eos-custom-tree-node {
+    display: inline-block;
+    .node {
+        font-size: 0;
+        cursor: pointer;
+        padding: $item-width / 6 0;
+        line-height: 20px;
+        display: block;
+        white-space: nowrap;
+        .fake-padding,
+        .tree-btn,
+        .title {
+            display: inline-block;
+        }
+        .tree-btn {
+            width: 20px;
+            vertical-align: top;
+        }
+        .title {
+            min-width: 100px;
+            font-size: 14px;
+            white-space: normal;
+            word-wrap: break-word;
+            color: $primary-font-color-main-theme;
+        }
+
+        .tringle-size {
+            width: 20px;
+            height: 20px;
+        }
+        .select {
+            color: $secondary-font-color-main-theme;
+        }
+        .deleted {
+            color: $disabled-color-main-theme;
+        }
+    }
+
+    .title-item:hover {
+        color: $active-field-color-main-theme;
+    }
+
+}
+
+@media(max-width: 1599px) {
+    .eos-custom-tree-node {
+        .node {
+            min-width: $dictionary-block-width;
+        }
+    }
+}
+
+@media(min-width: 1600px) {
+    .eos-custom-tree-node {
+        .node {
+            min-width: $dictionary-block-width-big-display;
+        }
+    }
+}

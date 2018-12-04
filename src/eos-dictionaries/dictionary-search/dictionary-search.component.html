@@ -7,6 +7,14 @@
             [form]="searchForm"></eos-dynamic-input>
         </span>
     </div>
+    <div [ngClass]="{'hidden': !hasYear}"
+         class="date-filter-wrapper">
+        <span class="text">Состояние на: </span>
+        <span><eos-dynamic-input [input]="inputs[1]"
+                                 [readonly]=inputs[1].readonly
+                                 [form]="searchForm"></eos-dynamic-input>
+        </span>
+    </div>
     <div [popover]="searchModal"
         containerClass="full-search-popover"
         class="search-btn-wraper"

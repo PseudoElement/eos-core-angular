@@ -36,6 +36,7 @@ import {CreateNodeComponent} from '../create-node/create-node.component';
 import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.interfaces';
 import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
 import {CounterNpEditComponent, NUMCREATION_MAIN_NODE_ID} from '../counter-np-edit/counter-np-edit.component';
+import {CustomTreeNode} from '../tree2/custom-tree.component';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -43,6 +44,7 @@ import {CounterNpEditComponent, NUMCREATION_MAIN_NODE_ID} from '../counter-np-ed
 export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     @ViewChild('nodeList') nodeList: NodeListComponent;
     @ViewChild('tree') treeEl;
+    @ViewChild('custom-tree') customTreeEl;
     @ViewChild('selectedWrapper') selectedEl;
 
     dictionary: EosDictionary;
@@ -56,6 +58,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     title: string;
 
     SLICE_LEN = 110;
+    customTreeData: CustomTreeNode[];
 
     get sliced_title(): string {
         if (this.isTitleSliced) {
@@ -96,6 +99,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     fastSearch = false;
 
     hasCustomTable: boolean;
+    hasCustomTree: boolean;
 
     fonConf = {
         width: 0 + 'px',
@@ -124,26 +128,20 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     ) {
         _route.params.subscribe((params) => {
             if (params) {
-                if (params.dictionaryId === 'nomenkl') {
-                    // Быстрый костыль для нуменклатуры дел. пока вяжемся к подразделениям во вкладке.
-                    this.dictionaryId = 'departments';
-                    this._nodeId = params.nodeId;
-                    if (this.dictionaryId) {
-                        this._dictSrv.openDictionary(this.dictionaryId)
-                            .then(() => this._dictSrv.selectTreeNode(this._nodeId));
-                    }
-                    try {
-                        this.setDictMode(2);
-                    } catch (e) {
 
-                    }
-                } else {
-                    this.dictionaryId = params.dictionaryId;
-                    this._nodeId = params.nodeId;
-                    if (this.dictionaryId) {
-                        this._dictSrv.openDictionary(this.dictionaryId)
-                            .then(() => this._dictSrv.selectTreeNode(this._nodeId));
-                    }
+                this.dictionaryId = params.dictionaryId;
+                this._nodeId = params.nodeId;
+                if (this.dictionaryId) {
+                    this._dictSrv.openDictionary(this.dictionaryId)
+                        .then(() => {
+                            if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
+                                this._dictSrv.currentDictionary.descriptor.setRootNode(this._nodeId);
+                                this._dictSrv.selectTreeNode(null);
+
+                            } else {
+                                this._dictSrv.selectTreeNode(this._nodeId);
+                            }
+                        });
                 }
             }
         });
@@ -159,9 +157,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                     }
                     this.dictionary = dictionary;
                     this.dictionaryId = dictionary.id;
+                    this.hasCustomTree = dictionary.descriptor.hasCustomTree();
                     if (dictionary.root) {
                         this.dictionaryName = dictionary.root.title;
                         this.treeNodes = [dictionary.root];
+                    }
+                    if (this.hasCustomTree) {
+                        dictionary.descriptor.getCustomTreeData().then((d) => {
+                            this.customTreeData = d;
+                        });
                     }
                 } else {
                     this.treeNodes = [];
@@ -173,7 +177,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 if (dictionary) {
                     this.dictMode = this._dictSrv.dictMode;
                     const setParams = this.params === undefined;
-                    this.params = Object.assign({}, this.params, { userSort: dictionary.userOrdered });
+                    this.params = Object.assign({}, this.params, {userSort: dictionary.userOrdered});
                     this.params.markItems = dictionary.canDo(E_RECORD_ACTIONS.markRecords);
                     if (setParams) {
                         this.params.hideTopMenu = dictionary.descriptor.hideTopMenu;
@@ -299,7 +303,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     }
 
 
-
     resetSearch() {
         this._dictSrv.resetSearch();
     }
@@ -389,7 +392,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         }
         const dictionary = this._dictSrv.currentDictionary;
         const editDescr = dictionary.getEditDescriptor();
-        const data = dictionary.getNewNode({ rec: recParams }, this.treeNode);
+        const data = dictionary.getNewNode({rec: recParams}, this.treeNode);
 
         this.modalWindow.content.fieldsDescription = editDescr;
         this.modalWindow.content.dictionaryId = dictionary.id;
@@ -409,8 +412,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     private _deleteItems(): void {
         let delCount = 0, allCount = 0;
         this._dictSrv.getMarkedNodes().forEach((node) => {
-            if (node.marked) { allCount++; }
-            if (node.marked && node.isDeleted) { delCount++; }
+            if (node.marked) {
+                allCount++;
+            }
+            if (node.marked && node.isDeleted) {
+                delCount++;
+            }
             if (node.marked && node.isProtected) {
                 node.marked = false;
                 const warn = Object.assign({}, WARN_ELEMENT_PROTECTED);
@@ -424,14 +431,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         this._dictSrv.markDeleted(true, true);
     }
 
-    private _editCounterNP (isMainNP: boolean) {
+    private _editCounterNP(isMainNP: boolean) {
         if (this.dictionaryId !== 'departments') {
             this._msgSrv.addNewMessage(DANGER_EDIT_ONLY_DEPARTMENTS_ALLOWED);
             return;
         }
         this.modalWindow = null;
         if (isMainNP) {
-            this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg' });
+            this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg'});
             this.modalWindow.content.init(NUMCREATION_MAIN_NODE_ID);
 
         } else {
@@ -506,9 +513,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     private _openAdditionalFields() {
         const node = this._dictSrv.listNode;
         if (node) {
-             this.nodeList.openAdditionalFields(node);
+            this.nodeList.openAdditionalFields(node);
         } else {
             this._msgSrv.addNewMessage(WARN_SELECT_NODE);
         }
-     }
+    }
 }

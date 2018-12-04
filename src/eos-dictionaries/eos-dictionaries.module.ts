@@ -70,6 +70,7 @@ import { EosSevRulesService } from './services/eos-sev-rules.service';
 import {CitizenCardComponent} from './card-views/citizen-card.component';
 import {NomenklCardComponent} from './card-views/nomenkl-card.component';
 import {CounterNpEditComponent} from './counter-np-edit/counter-np-edit.component';
+import {CustomTreeComponent} from './tree2/custom-tree.component';
 
 @NgModule({
     declarations: [
@@ -99,6 +100,7 @@ import {CounterNpEditComponent} from './counter-np-edit/counter-np-edit.componen
         SandwichComponent,
         SimpleCardEditComponent,
         TreeComponent,
+        CustomTreeComponent,
         NodeInfoSwitcherComponent,
         DepartmentNodeInfoComponent,
         CabinetNodeInfoComponent,

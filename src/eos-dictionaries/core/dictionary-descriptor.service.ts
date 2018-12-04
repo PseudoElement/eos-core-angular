@@ -98,7 +98,7 @@ export class DictionaryDescriptorService {
                         res = new LinkDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case 'nomenkl':
-                        res = new NomenklDictionaryDescriptor(descr, this.apiSrv, this);
+                        res = new NomenklDictionaryDescriptor(descr, this.apiSrv);
                         break;
                 }
 

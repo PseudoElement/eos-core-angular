@@ -6,20 +6,21 @@ import {Observable} from 'rxjs/Observable';
 import {EosDictionary} from '../core/eos-dictionary';
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
 import {
-    IDictionaryViewParameters, ISearchSettings, IOrderBy,
-    IDictionaryDescriptor, IFieldView, SEARCH_MODES, IRecordOperationResult
+    E_DICT_TYPE,
+    IDictionaryDescriptor,
+    IDictionaryViewParameters,
+    IFieldView,
+    IOrderBy,
+    IRecordOperationResult,
+    ISearchSettings,
+    SEARCH_MODES
 } from 'eos-dictionaries/interfaces';
-import {E_DICT_TYPE} from '../interfaces/dictionary.interfaces';
 import {EosUtils} from 'eos-common/core/utils';
 import {FieldsDecline} from 'eos-dictionaries/interfaces/fields-decline.inerface';
 import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.interfaces';
 import {IImage} from 'eos-dictionaries/interfaces/image.interface';
 import {LS_PAGE_LENGTH, PAGES} from '../node-list-pagination/node-list-pagination.consts';
-
-import {
-    WARN_SEARCH_NOTFOUND, WARN_NOT_ELEMENTS_FOR_REPRESENTATIVE,
-    WARN_NO_ORGANIZATION,
-} from '../consts/messages.consts';
+import {WARN_NO_ORGANIZATION, WARN_NOT_ELEMENTS_FOR_REPRESENTATIVE, WARN_SEARCH_NOTFOUND} from '../consts/messages.consts';
 import {EosMessageService} from 'eos-common/services/eos-message.service';
 import {EosStorageService} from 'app/services/eos-storage.service';
 import {EosDepartmentsService} from './eos-department-service';
@@ -386,10 +387,10 @@ export class EosDictService {
                 }
                 this._selectTreeNode(node);
                 return node;
-            }).then( () => {
+            }).then(() => {
                 this._reloadList().then(() => {
-                        this.updateViewParameters({updatingList: false});
-                    });
+                    this.updateViewParameters({updatingList: false});
+                });
                 return null;
             })
             .catch(err => this._errHandler(err));
@@ -1035,7 +1036,6 @@ export class EosDictService {
                 searchResults: false
             });
         }
-
         if (this._currentList === undefined) {
             if (node) {
                 this._setCurrentList(this.currentDictionary, node.children);

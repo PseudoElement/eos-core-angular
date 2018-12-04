@@ -13,6 +13,7 @@ import { IAppCfg } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { EosUtils } from 'eos-common/core/utils';
 import { ContactHelper } from '../../eos-rest/services/contact-helper';
+import {CustomTreeNode} from '../tree2/custom-tree.component';
 
 export abstract class AbstractDictionaryDescriptor {
     /**
@@ -360,6 +361,18 @@ export abstract class AbstractDictionaryDescriptor {
             .then((responses) => {
                 return this.associateRelationType(responses);
             });
+    }
+
+    hasCustomTree() {
+        return false;
+    }
+
+    getCustomTreeData(): Promise<CustomTreeNode[]> {
+        return Promise.all(null);
+    }
+
+    // method for custom tree
+    setRootNode(_nodeId: string) {
     }
 
     protected _postChanges(data: any, updates: any): Promise<any[]> {

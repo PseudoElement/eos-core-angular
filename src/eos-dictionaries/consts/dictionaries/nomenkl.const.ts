@@ -1,21 +1,27 @@
-import {E_DICT_TYPE, ITreeDictionaryDescriptor} from 'eos-dictionaries/interfaces';
+import {E_DICT_TYPE, IDictionaryDescriptor} from 'eos-dictionaries/interfaces';
 import {LINEAR_TEMPLATE} from './_linear-template';
 import {COMMON_FIELD_NAME} from './_common';
 
 
-export const NOMENKL_CL: ITreeDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
+export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'nomenkl',
     apiInstance: 'NOMENKL_CL',
     title: 'Номенклатура дел',
     visible: true,
     dictType: E_DICT_TYPE.custom,
-    parentField: 'DUE',
+    // parentField: 'DUE',
     iconName: 'eos-icon-deal-blue',
     keyField: 'ISN_LCLASSIF',
+    // parentField: 'PARENT_DUE',
     fields: LINEAR_TEMPLATE.fields.concat([{
         key: 'DUE',
         type: 'string',
         title: 'ID',
+        length: 248,
+    }, {
+        key: 'PARENT_DUE',
+        type: 'string',
+        title: 'Parent ID',
         length: 248,
     }, {
         key: 'PARENT_DUE',
@@ -96,7 +102,8 @@ export const NOMENKL_CL: ITreeDictionaryDescriptor = Object.assign({}, LINEAR_TE
         }),
     ]),
 
-    treeFields: ['CLASSIF_NAME'],
+    treeFields: ['title'],
+    // treeFields: ['CLASSIF_NAME'],
     editFields: ['CLASSIF_NAME', 'NOTE', 'CLOSED', 'SECURITY', 'YEAR_NUMBER', 'STORE_TIME', 'SHELF_LIFE', 'NOM_NUMBER',
         'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', ],
     searchFields: ['CLASSIF_NAME', 'NOTE'],
@@ -104,7 +111,7 @@ export const NOMENKL_CL: ITreeDictionaryDescriptor = Object.assign({}, LINEAR_TE
     quickViewFields: ['NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME', ],
     listFields: ['NOM_NUMBER', 'SECURITY', 'CLASSIF_NAME'],
-    allVisibleFields: ['NOTE', 'CLOSED', 'SECURITY', 'STORE_TIME', 'SHELF_LIFE',
+    allVisibleFields: ['NOTE', 'CLOSED', 'SECURITY', 'STORE_TIME', 'SHELF_LIFE', 'YEAR_NUMBER',
         'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', ],
 
 });

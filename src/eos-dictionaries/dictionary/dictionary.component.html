@@ -10,9 +10,12 @@
         [hidden]="this.dictionary?.descriptor.type === dictTypes.linear">
         <eos-spinner *ngIf="!treeNodes.length"
             size="lg"></eos-spinner>
-        <eos-tree *ngIf="treeNodes.length"
+        <eos-tree *ngIf="treeNodes.length && !hasCustomTree"
             [nodes]="treeNodes"
             [showDeleted]="params.showDeleted"></eos-tree>
+        <eos-custom-tree *ngIf="hasCustomTree"
+                         [data]="customTreeData"
+                         [showDeleted]="params.showDeleted"></eos-custom-tree>
         <div class="fon highlighted"
             [style.width]="fonConf.width"
             [style.height]="fonConf.height"
@@ -63,12 +66,6 @@
                             [ngClass]="{'active': dictMode === 1}"
                             (click)="setDictMode(1)">
                             <span class="tab-title">Кабинеты</span>
-                        </li>
-                        <li class="tab-item"
-                            role="presentation"
-                            [ngClass]="{'active': dictMode === 2}"
-                            (click)="setDictMode(2)">
-                            <span class="tab-title">Номенклатура</span>
                         </li>
                     </ul>
                 </div>
