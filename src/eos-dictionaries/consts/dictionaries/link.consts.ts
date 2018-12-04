@@ -37,7 +37,7 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
     }, {
         key: 'PARE_LINK_Ref',
         type: 'dictionary',
-    },{
+    }, {
         key: 'ISN_PARE_LINK',
         type: 'number',
     }, {

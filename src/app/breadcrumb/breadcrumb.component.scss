@@ -3,6 +3,9 @@
     border-bottom: 1px solid transparent;
     border-radius: 0;
     position: relative;
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
 
     .breadcrumb {
         background-color: inherit;
@@ -27,7 +30,7 @@
         }
 
         .breadcrumb-item {
-            max-width: 200px;
+            //max-width: 400px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
