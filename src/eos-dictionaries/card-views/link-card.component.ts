@@ -12,7 +12,9 @@ export class LinkCardComponent extends BaseCardEditComponent {
     }
 
     changeDir() {
-        this.setValue('rec.LINK_DIR', Math.abs(this.direction - 1));
+        const link_dir = this.direction;
+        this.setValue('rec.LINK_DIR', Math.abs( link_dir - 1));
+        this.setValue('PARE_LINK_Ref.LINK_DIR', link_dir);
     }
     get linkType(): number {
         return this.getValue('rec.LINK_TYPE');
@@ -24,7 +26,7 @@ export class LinkCardComponent extends BaseCardEditComponent {
         return this.getValue('rec.CLASSIF_NAME');
     }
     get pairName(): string {
-        return this.getValue('rec.PAIR_NAME');
+        return this.getValue('PARE_LINK_Ref.CLASSIF_NAME');
     }
     get direction(): number {
         return this.getValue('rec.LINK_DIR');

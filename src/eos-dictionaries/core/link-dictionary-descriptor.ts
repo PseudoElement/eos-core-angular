@@ -1,8 +1,8 @@
 import {DictionaryDescriptor} from './dictionary-descriptor';
 import {ALL_ROWS} from '../../eos-rest/core/consts';
-import {IDictionaryDescriptor} from '../interfaces';
+import {IDictionaryDescriptor, IRecordOperationResult} from '../interfaces';
 import {PipRX} from '../../eos-rest/services/pipRX.service';
-
+import {EosUtils} from '../../eos-common/core/utils';
 
 export class LinkDictionaryDescriptor extends DictionaryDescriptor {
 
@@ -40,10 +40,6 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
                         data.forEach((pair) => {
                             if (rec['ISN_PARE_LINK'] === pair['ISN_LCLASSIF']) {
                                 rec['PAIR_LINK'] = pair['CLASSIF_NAME'];
-                                rec['PAIR_NAME'] = pair['CLASSIF_NAME'];
-                                rec['PAIR_INDEX'] = pair['LINK_INDEX'];
-                                rec['PAIR_TRANSPARENT'] = pair['TRANSPARENT'];
-                                rec['PAIR_NOTE'] = pair['NOTE'];
                             }
                         });
                         newData.push(rec);
@@ -52,4 +48,59 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
                 return newData;
             });
     }
+
+    addRecord(data: any, _useless: any, isProtected = false, isDeleted = false): Promise<any> {
+        const results: IRecordOperationResult[] = [];
+        let _newRec = this.preCreate(isProtected, isDeleted);
+        _newRec = this.apiSrv.entityHelper.prepareAdded<any>(_newRec, this.apiInstance);
+        Object.assign(_newRec, data.rec);
+
+        let _newPare = this.preCreate(isProtected, isDeleted);
+        _newPare = this.apiSrv.entityHelper.prepareAdded<any>(_newPare, this.apiInstance);
+        Object.assign(_newPare, data['PARE_LINK_Ref']);
+
+        _newRec['ISN_LCLASSIF'] = this.apiSrv.sequenceMap.GetTempISN();
+        _newPare['ISN_LCLASSIF'] = this.apiSrv.sequenceMap.GetTempISN();
+
+        _newRec['ISN_PARE_LINK'] = _newPare['ISN_LCLASSIF'];
+        _newPare['ISN_PARE_LINK'] = _newRec['ISN_LCLASSIF'];
+        _newPare['LINK_TYPE'] = _newRec['LINK_TYPE'];
+
+        const changes = this.apiSrv.changeList([_newRec, _newPare]);
+
+        if (changes) {
+            return this.apiSrv.batch(changes, '')
+                .then(() => {
+                    results.push({success: true, record: _newRec});
+                    return results;
+                });
+        } else {
+            return Promise.resolve(results);
+        }
+    }
+
+    updateRecord(originalData: any, updates: any): Promise<IRecordOperationResult[]> {
+        const changeData = [];
+        const results: IRecordOperationResult[] = [];
+        Object.keys(updates).forEach((key) => {
+            if (updates[key]) {
+                const data = EosUtils.deepUpdate(originalData[key], updates[key]);
+                changeData.push(data);
+            }
+        });
+
+        const record = EosUtils.deepUpdate(originalData.rec, updates.rec);
+        const changes = this.apiSrv.changeList(changeData);
+        if (changes.length) {
+            return this.apiSrv.batch(changes, '')
+                .then(() => {
+                    results.push({success: true, record: record});
+                    return results;
+                });
+        } else {
+            return Promise.resolve(results);
+        }
+    }
 }
+
+

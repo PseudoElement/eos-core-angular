@@ -37,9 +37,11 @@ export class EosDataConvertService {
         const inputs: any = {};
         if (fieldsDescription) {
             Object.keys(fieldsDescription).forEach((_dict) => {
-                const descr = fieldsDescription[_dict];
+                let descr = fieldsDescription[_dict];
                 switch (_dict) {
+                    case 'PARE_LINK_Ref':
                     case 'rec':
+                        descr = fieldsDescription['rec'];
                         Object.keys(descr).forEach((_key) => {
                             switch (descr[_key].type) {
                                 case E_FIELD_TYPE.numberIncrement:
@@ -59,6 +61,22 @@ export class EosDataConvertService {
                                     });
                                     break;
                                 case E_FIELD_TYPE.number:
+                                    inputs[_dict + '.' + _key] = new StringInput({
+                                        key: _dict + '.' + descr[_key].foreignKey,
+                                        label: descr[_key].title,
+                                        required: descr[_key].required,
+                                        pattern: descr[_key].pattern,
+                                        isUnique: descr[_key].isUnique,
+                                        uniqueInDict: descr[_key].uniqueInDict,
+                                        forNode: descr[_key].forNode,
+                                        value: data[_dict][descr[_key].foreignKey],
+                                        length: descr[_key].length,
+                                        readonly: descr[_key].readonly,
+                                        disabled: descr[_key].readonly || !editMode,
+                                        password: descr[_key].password,
+                                        groupLabel: descr[_key].groupLabel
+                                    });
+                                    break;
                                 case E_FIELD_TYPE.string:
                                     inputs[_dict + '.' + _key] = new StringInput({
                                         key: _dict + '.' + descr[_key].foreignKey,

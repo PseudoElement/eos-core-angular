@@ -10,7 +10,7 @@ import { SevIndexHelper } from 'eos-rest/services/sevIndex-helper';
 import { PrintInfoHelper } from 'eos-rest/services/printInfo-helper';
 import { SEV_ASSOCIATION } from 'eos-rest/interfaces/structures';
 import { IAppCfg } from 'eos-common/interfaces';
-import { RestError } from 'eos-rest/core/rest-error';
+// import { RestError } from 'eos-rest/core/rest-error';
 import { EosUtils } from 'eos-common/core/utils';
 import { ContactHelper } from '../../eos-rest/services/contact-helper';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
@@ -107,11 +107,12 @@ export abstract class AbstractDictionaryDescriptor {
                         (sevData.OBJECT_ID === existSev.OBJECT_ID) && (sevData.GLOBAL_ID === existSev.GLOBAL_ID));
 
                     if (exist) {
-                        result.success = false;
-                        result.error = new RestError({
-                            isLogicException: true,
-                            message: 'Индекс СЭВ создан ранее!'
-                        });
+                        result = null;
+                        // result.success = false;
+                        // result.error = new RestError({
+                        //     isLogicException: true,
+                        //     message: 'Индекс СЭВ создан ранее!'
+                        // });
                     }
                 } else {
                     result = null;
