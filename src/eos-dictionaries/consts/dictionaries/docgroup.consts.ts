@@ -38,7 +38,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     },
     Object.assign({}, COMMON_FIELD_CODE, {lenght: 10}),
     Object.assign({}, COMMON_FIELD_NOTE, {lenght: 100}),
-    Object.assign({}, COMMON_FIELD_NAME, {lenght: 100}),
+    Object.assign({}, COMMON_FIELD_NAME, {lenght: 100, uniqueInDict: true, isUnique: true}),
     Object.assign({}, COMMON_FIELD_FULLNAME, {lenght: 100}),
     {
         key: 'IS_COPYCOUNT',
