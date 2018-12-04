@@ -40,7 +40,7 @@ export const SUB_PARAMS_LIST_NAV: IParamAccordionList[] = [
 ];
 export const SUB_PARAMS_LIST_NAV_FOR_RIGHTS_DELO: IParamAccordionList[] = [
     {
-        title: 'Картотеки',
+        title: 'Картотеки и кабинеты',
         url: 'card-files'
     },
     {

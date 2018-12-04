@@ -3,7 +3,6 @@ import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api
 import { BaseRightsDeloSrv } from '../shared-rights-delo/services/base-rights-delo.service';
 import { CARD_INDEXS_RIGHTS } from '../shared-rights-delo/consts/card-index-rights.consts';
 import { EosUtils } from 'eos-common/core/utils';
-// import { RightsDeloCardFilesSrv } from '../shared-rights-delo/services/card-files.service';
 
 @Component({
     selector: 'eos-rights-delo-card-index-rights',
@@ -186,7 +185,6 @@ export class RightsDeloCardIndexRightsComponent extends BaseRightsDeloSrv implem
                     dataInput.rec[key] = false;
                 }
             } else {
-
                 dataInput.rec[key] = this.prepDataAttach.rec[key];
             }
         });

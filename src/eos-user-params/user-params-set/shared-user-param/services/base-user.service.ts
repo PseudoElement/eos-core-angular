@@ -193,7 +193,9 @@ export class BaseUserSrv implements OnDestroy, OnInit {
         return { rec: d };
     }
     submit() {
+        console.log(this._userParamsSetSrv);
         if (this.newData || this.prepareData) {
+            const userId = '' + this._userParamsSetSrv.userContextId;
             this.formChanged.emit(false);
             this.isChangeForm = false;
             // this._userParamsSetSrv.getUserIsn();
@@ -203,6 +205,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
                 .then(data => {
                    // this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                    this._userParamsSetSrv.getUserIsn(userId);
                 })
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
@@ -211,6 +214,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
                 .setData(this.createObjRequestForDefaultValues())
                 .then(data => {
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                    this._userParamsSetSrv.getUserIsn(userId);
                 })
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));

@@ -1,4 +1,4 @@
-.input-user-card-files-wrapper {
+.input-user-card-files-directory-modal-wrapper {
     .list-group-item {
         background: $light-grey-1;
         cursor: pointer;
@@ -15,31 +15,6 @@
     }
     .forMainLabel label {
         font-weight: bold;
-    }
-    .left-block-list-card-files {
-        display: inline-block;
-        width: 45%;
-        max-height: 70vh;
-        border: 1px solid $border-color-main-theme;
-        overflow-x: auto;
-        overflow-y: auto;
-        margin-bottom: 20px;
-    }
-
-    .right-block-list-absolute-rights {
-        display: inline-block;
-        width: 45%;
-        vertical-align: top;
-        max-height: 70vh;
-        border: 1px solid $border-color-main-theme;
-        overflow-x: auto;
-        overflow-y: auto;
-        margin-left: 20px;
-        margin-bottom: 20px;
-    }
-
-    .tabs-wrapper {
-        margin-right: 0;
     }
 
     .list-card-files {

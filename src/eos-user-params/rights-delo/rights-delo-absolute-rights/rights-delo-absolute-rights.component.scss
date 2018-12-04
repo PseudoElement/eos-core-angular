@@ -1,4 +1,4 @@
-.input-user-card-files-wrapper {
+.input-user-absolute-rights-wrapper {
     .list-group-item {
         background: $light-grey-1;
         cursor: pointer;
@@ -16,30 +16,22 @@
     .forMainLabel label {
         font-weight: bold;
     }
-    .left-block-list-card-files {
+
+    .left-block-list-absolute-rights {
         display: inline-block;
-        width: 45%;
+        width: 55%;
         max-height: 70vh;
         border: 1px solid $border-color-main-theme;
-        overflow-x: auto;
         overflow-y: auto;
         margin-bottom: 20px;
     }
-
+    
     .right-block-list-absolute-rights {
-        display: inline-block;
-        width: 45%;
+        display: inline-flex;
+        width: 35%;
         vertical-align: top;
-        max-height: 70vh;
-        border: 1px solid $border-color-main-theme;
-        overflow-x: auto;
-        overflow-y: auto;
-        margin-left: 20px;
-        margin-bottom: 20px;
-    }
-
-    .tabs-wrapper {
-        margin-right: 0;
+        // max-height: 70vh;
+      //  margin-bottom: 20px;
     }
 
     .list-card-files {

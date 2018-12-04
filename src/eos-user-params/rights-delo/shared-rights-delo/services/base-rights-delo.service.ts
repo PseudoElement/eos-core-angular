@@ -27,6 +27,8 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
     msgSrv: EosMessageService;
     prepareData;
     sortedData;
+    arrayForNewDynamicValue = [];
+    arrayForRemovingCheckboks = [];
     inputs: any;
     newData;
     defaultData;
@@ -47,10 +49,12 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
     isLoading: boolean = false;
     _userParamsSetSrv: UserParamsService;
     mainCheckbox = {};
+    oldMainCheckbox = {};
+    tmp;
     private _fieldsType = {};
     constructor(
         injector: Injector,
-        paramModel,
+        paramModel
     ) {
         this._userParamsSetSrv = injector.get(UserParamsService);
         this.constUserParam = paramModel;
@@ -149,6 +153,7 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
         if (oldValue !== _value) {
             // console.log('changed', path, oldValue, 'to', _value, this.prepareData.rec, this.newData.rec);
         }
+        this.tmp = this.mainCheckbox;
         return _value !== oldValue;
  }
     getObjectInputFields(fields) {
@@ -181,27 +186,18 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
     }
     submit() {
         if (this.newData || this.prepareData) {
+            const userId = '' + this._userParamsSetSrv.userContextId;
             this.formChanged.emit(false);
             this.isChangeForm = false;
-            // this._userParamsSetSrv.getUserIsn();
-            if (this.newData) {
             this.userParamApiSrv
                 .setData(this.createObjRequest())
                 .then(data => {
                    // this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                    this._userParamsSetSrv.getUserIsn(userId);
                 })
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
-            } else if (this.prepareData) {
-                this.userParamApiSrv
-                .setData(this.createObjRequestForDefaultValues())
-                .then(data => {
-                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                })
-                // tslint:disable-next-line:no-console
-                .catch(data => console.log(data));
-            }
         }
     }
     cancel() {
@@ -230,17 +226,19 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
     }
     createObjRequest(): any[] {
         const req = [];
+        const currentArrayKeysForRemove = [];
         let stringKey = '';
         let level = -1;
         const arrayPositionPoints = [];
         const userId = this._userParamsSetSrv.userContextId;
+        const arrayJust = [];
 
-        const funcObj = function(objNewData, objPrepareData) {
+        const funcObj = function(objNewData, objPrepareData, markMainCheckbox, markOldMainCheckbox) {
             for (const key in objNewData) {
                 if (typeof objNewData[key] === 'object') {
                     level++;
                     stringKey += key + '.';
-                    funcObj(objNewData[key], objPrepareData);
+                    funcObj(objNewData[key], objPrepareData, markMainCheckbox, markOldMainCheckbox);
                 } else {
                     for (let i = 0; i < stringKey.length; i++) {
                         if (stringKey.charAt(i) === '.') {
@@ -249,6 +247,7 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
                     }
                     const keys = Object.keys( objNewData );
                     if (objNewData[key] === 'YES' && objPrepareData[stringKey] === undefined) {
+                     arrayJust.push([stringKey, '010000000000010010']);
                         req.push({
                             method: 'POST',
                             requestUri: `USER_CL(${userId})/USERCARD_List`,
@@ -259,10 +258,33 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
                                 FUNCLIST: '010000000000010010'
                             }
                         });
+                        objPrepareData[stringKey] = '010000000000010010'; // Then
                     } else if (objNewData[key] === 'NO' && objPrepareData[stringKey] !== undefined) {
                         req.push({
                             method: 'DELETE',
                             requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${stringKey}\')`
+                        });
+                        currentArrayKeysForRemove.push(stringKey);
+                        objPrepareData[stringKey] = undefined;
+                    }
+                    const arrayMarkMainCheckbox = Object.keys(markMainCheckbox);
+                    const arrayMarkOldMainCheckbox = Object.keys(markOldMainCheckbox);
+                    if (arrayMarkMainCheckbox[0] === stringKey) {
+                        req.push({
+                            method: 'MERGE',
+                            requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${stringKey}\')`,
+                            data: {
+                                HOME_CARD: `${markMainCheckbox[arrayMarkMainCheckbox[0]]}`
+                            }
+                        });
+                    }
+                    if (arrayMarkOldMainCheckbox[0] === stringKey) {
+                        req.push({
+                            method: 'MERGE',
+                            requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${stringKey}\')`,
+                            data: {
+                                HOME_CARD: `${markOldMainCheckbox[arrayMarkOldMainCheckbox[0]]}`
+                            }
                         });
                     }
                     if (key === keys[keys.length - 1]) {
@@ -273,8 +295,18 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
             }
         };
 
-        funcObj(this.newData.rec, this.prepareData.rec);
-
+        funcObj(this.newData.rec, this.prepareData.rec, this.mainCheckbox, this.oldMainCheckbox);
+        for (const key2 of Object.keys(this.prepareData.rec)) {
+          for (let i = 0; i < currentArrayKeysForRemove.length; i++) {
+              if (key2 === currentArrayKeysForRemove[i]) {
+                this.prepareData.rec[key2] = undefined;
+              }
+          }
+      }
+      this.inputs = this.getInputs();
+        this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+        this.subscribeChangeForm();
+        this.arrayForNewDynamicValue = arrayJust;
         return req;
     }
     createObjRequestForDefaultValues(): any[] {
