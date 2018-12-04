@@ -629,7 +629,11 @@ export class EosDictionary {
                 default:
                     return this.descriptor.getRelated(node.data.rec)
                         .then((related) => {
-                            node.data = Object.assign(node.data, related);
+                            if (node.dictionaryId === 'link') {
+                                node.data = Object.assign(node.data, {PARE_LINK_Ref: related['PARE_LINK_Ref'][0]});
+                            } else {
+                                node.data = Object.assign(node.data, related);
+                            }
                             node.relatedLoaded = true;
                             return node;
                         });

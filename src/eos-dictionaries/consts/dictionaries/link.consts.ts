@@ -26,11 +26,6 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
     Object.assign({}, COMMON_FIELD_NAME, {
         isUnique: true,
         uniqueInDict: true,
-    }),
-    Object.assign({}, COMMON_FIELD_NAME, {
-        key: 'PAIR_NAME',
-        isUnique: true,
-        uniqueInDict: true,
     }), {
         key: 'LINK',
         title: 'Связка',
@@ -40,6 +35,9 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
         title: 'Обратная связка',
         type: 'string',
     }, {
+        key: 'PARE_LINK_Ref',
+        type: 'dictionary',
+    },{
         key: 'ISN_PARE_LINK',
         type: 'number',
     }, {
@@ -50,19 +48,6 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
         key: 'TRANSPARENT',
         title: 'Прозрачная связка',
         type: 'boolean',
-    }, {
-        key: 'PAIR_INDEX',
-        title: 'Индекс',
-        type: 'string',
-    }, {
-        key: 'PAIR_TRANSPARENT',
-        title: 'Прозрачная связка',
-        type: 'boolean',
-    }, {
-        key: 'PAIR_NOTE',
-        title: 'Примечание',
-        type: 'text',
-        length: 250,
     }, {
         key: 'LINK_TYPE',
         title: '',
@@ -80,7 +65,7 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
 
     defaultOrder: 'WEIGHT',
     keyField: 'ISN_LCLASSIF',
-    editFields: ['LINK_INDEX', 'CLASSIF_NAME', 'TRANSPARENT', 'PAIR_INDEX', 'PAIR_NAME', 'PAIR_TRANSPARENT',
-        'LINK_TYPE', 'LINK_DIR', 'ISN_LCLASSIF', 'ISN_PARE_LINK', 'NOTE', 'PAIR_NOTE'],
+    editFields: ['LINK_INDEX', 'CLASSIF_NAME', 'TRANSPARENT', 'LINK_TYPE', 'LINK_DIR', 'ISN_LCLASSIF', 'NOTE',
+        'PARE_LINK_Ref', 'ISN_PARE_LINK'],
     listFields: ['LINK', 'PAIR_LINK', 'TYPE'],
 });
