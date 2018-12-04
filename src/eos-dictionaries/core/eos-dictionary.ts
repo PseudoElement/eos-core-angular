@@ -168,6 +168,7 @@ export class EosDictionary {
         if (data) {
             return this.descriptor.updateRecord(node.data, data)
                 .then((_resp) => {
+                    node.relatedLoaded = false;
                     node.updateData(data.rec);
                     return _resp;
                 });
@@ -183,6 +184,7 @@ export class EosDictionary {
                 const nodeId = nodeData[this.descriptor.record.keyField.foreignKey] + '';
                 let _node = this._nodes.get(nodeId);
                 if (_node) {
+                    _node.relatedLoaded = false;
                     _node.updateData(nodeData);
                 } else {
                     _node = new EosDictionaryNode(this, nodeData);
