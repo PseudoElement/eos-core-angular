@@ -46,7 +46,7 @@
                     <div class="pull-right">
                         <button class="btn btn-primary-light"
                             aria-hidden="true"
-                            [disabled]="!node || node.updating"
+                            [disabled]="!isEditEnabled()"
                             (click)="edit()"
                             tooltip="Редактировать"
                             placement="bottom"
