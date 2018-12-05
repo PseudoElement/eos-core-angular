@@ -2071,7 +2071,8 @@ const commonMeta = {
             ISN_LCLASSIF: _t.i,
             PROTECTED: _t.i,
             DELETED: _t.i,
-            CLASSIF_NAME: _t.s,
+            CLASSIF_NAME_SHORT: _t.s,
+            CLASSIF_NAME_FULL: _t.s,
             WEIGHT: _t.i,
             NOTE: _t.s
         },
