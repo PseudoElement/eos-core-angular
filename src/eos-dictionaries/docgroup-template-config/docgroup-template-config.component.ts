@@ -8,7 +8,8 @@ import {
     DOC_TEMPLATE_ELEMENTS,
     SINGLE_TEMPLATE_ITEM_EXPR,
     VALID_TEMPLATE_EXPR,
-    VALID_PRJ_TEMPLATE_EXPR
+    VALID_PRJ_TEMPLATE_EXPR,
+    ORDER_NUM_TEMPLATE_ITEM_EXPR,
 } from './docgroup-template-config.consts';
 
 @Component({
@@ -85,6 +86,11 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         if (res && this.forProject && item.key === '{7}') {
             res = this.templateItems.findIndex((elem) => elem.key === '{2}') > -1;
         }
+
+        if (res && this.templateItems.findIndex((elem) => ORDER_NUM_TEMPLATE_ITEM_EXPR.test(elem.key)) !== -1) {
+            res = !ORDER_NUM_TEMPLATE_ITEM_EXPR.test(item.key);
+        }
+
         return res;
     }
 

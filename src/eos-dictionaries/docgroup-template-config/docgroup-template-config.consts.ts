@@ -18,12 +18,14 @@ export const DG_TPL_COMB2 = { key: '{1#}', title: 'Спец. элемент пе
 export const DG_TPL_COMB3 = { key: '{2#}', title: 'Спец. элемент повторного документа' };
 export const DG_TPL_COMB4 = { key: '{3#}', title: 'Специальный элемент ответов' };
 export const DG_TPL_NUM_NP = { key: '{N}', title: 'Номер НП' };
+export const DG_TPL_NUM_ORG = { key: '{E}', title: 'Порядковый номер организации - регистратора' };
+export const DG_TPL_INDEX = { key: '{F}', title: 'Индекс организации - регистратора' };
 
 
-export const VALID_TEMPLATE_EXPR = /\{2|A|B|C|2#|3#|@|@2\}/;
-export const VALID_PRJ_TEMPLATE_EXPR = /\{2|@|@2\}/;
-export const SINGLE_TEMPLATE_ITEM_EXPR = /\{@|@2|2#|3#\}/;
-
+export const VALID_TEMPLATE_EXPR = /\{2|A|B|C|D|E|2#|3#|@}|@2\}/;
+export const VALID_PRJ_TEMPLATE_EXPR = /\{2|@}|@2\}/;
+export const SINGLE_TEMPLATE_ITEM_EXPR = /\{@}|2#|3#\}/;
+export const ORDER_NUM_TEMPLATE_ITEM_EXPR = /\{2|@2|E\}/;
 
 export const DOC_TEMPLATE_ELEMENTS = [
     DG_TPL_GRP_IDX,
@@ -46,6 +48,8 @@ export const DOC_TEMPLATE_ELEMENTS = [
     DG_TPL_COMB3,
     DG_TPL_COMB4,
     DG_TPL_NUM_NP,
+    DG_TPL_NUM_ORG,
+    DG_TPL_INDEX
 ];
 
 export const PRJ_TEMPLATE_ELEMENTS = [
