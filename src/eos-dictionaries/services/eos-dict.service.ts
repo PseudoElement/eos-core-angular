@@ -602,10 +602,12 @@ export class EosDictService {
             .catch((err) => this._errHandler(err));
     }
 
-    orderBy(orderBy: IOrderBy) {
+    orderBy(orderBy: IOrderBy, clearUserOrder = true) {
         if (this.currentDictionary) {
             this.currentDictionary.orderBy = orderBy;
-            this.updateViewParameters({userOrdered: false});
+            if (clearUserOrder) {
+                this.updateViewParameters({userOrdered: false});
+            }
             this._reorderList(this.currentDictionary);
         }
     }

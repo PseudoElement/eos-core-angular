@@ -144,7 +144,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 const _title = _customTitles.find((_f) => _f.key === vField.key);
                 vField.customTitle = _title ? _title.customTitle : null;
             });
-            this.dictSrv.orderBy(this.orderBy);
+            this.dictSrv.orderBy(this.orderBy, false);
             subscription.unsubscribe();
         });
     }
