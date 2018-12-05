@@ -116,10 +116,11 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         private departmentsSrv: EosDepartmentsService,
     ) {
         let tabNum = 0;
-        this.selfLink = this._router.url;
+
         this._route.params.subscribe((params) => {
             this.dictionaryId = params.dictionaryId;
             this.nodeId = params.nodeId;
+            this.selfLink = this._router.url;
             tabNum = (toNumber(params.tabNum));
             this._init();
         });
