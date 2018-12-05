@@ -205,12 +205,10 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
         const trimNewTitle = this.newTitle.trim();
         if (trimNewTitle !== this.editedItem.title) {
             this.editedItem.customTitle = trimNewTitle;
-            this.haveCustomTitle = true;
         } else {
             this.editedItem.customTitle = undefined;
-            this.haveCustomTitle = false;
         }
-        this.haveCustomTitle = this._checkCustomTitle();
+        this.haveCustomTitle = Boolean(this.customTitles.length);
         this.cancelTitleEdit();
     }
 
@@ -248,25 +246,6 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
             _f.customTitle = null;
         });
         this.haveCustomTitle = false;
-    }
-
-    private _checkCustomTitle(): boolean {
-        let result = false;
-        if (this.dictionaryFields) {
-            this.dictionaryFields.forEach((_field: IFieldView) => {
-                if (_field.customTitle) {
-                    result = true;
-                }
-            });
-        }
-        if (this.currentFields) {
-            this.currentFields.forEach((_field: IFieldView) => {
-                if (_field.customTitle) {
-                    result = true;
-                }
-            });
-        }
-        return result;
     }
 
 }
