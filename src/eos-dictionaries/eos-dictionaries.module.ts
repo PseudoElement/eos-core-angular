@@ -58,6 +58,7 @@ import { TreeComponent } from './tree/tree.component';
 import { DictionariesQuickSearchComponent } from './dictionary-quick-search/dictionary-quick-search.component';
 import { CreateNodeBroadcastChannelComponent } from './create-node-broadcast-channel/create-node-broadcast-channel.component';
 import { LinkCardComponent } from './card-views/link-card.component';
+import { NadzorCardEditComponent } from './card-views/nadzor-card-edit.component';
 import { AdditionalFieldsComponent } from './additional-fields/additional-fields.component';
 /* services */
 import { DictionaryDescriptorService } from './core/dictionary-descriptor.service';
@@ -115,6 +116,7 @@ import {CustomTreeComponent} from './tree2/custom-tree.component';
         OrganizationsCardEditNodeComponent,
         AdditionalFieldsComponent,
         LinkCardComponent,
+        NadzorCardEditComponent,
     ],
     entryComponents: [
         ColumnSettingsComponent,

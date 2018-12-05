@@ -110,6 +110,34 @@
                                [inputs]="inputs"
                                [data]="data"
                                [editMode]="editMode"></eos-link-card>
+                <eos-nadzor-card-edit *ngSwitchCase="'ob-motiv'"
+                                      #cardEditEl
+                                      class="simple-card-edit"
+                                      [form]="form"
+                                      [inputs]="inputs"
+                                      [data]="data"
+                                      [editMode]="editMode"></eos-nadzor-card-edit>
+                <eos-nadzor-card-edit *ngSwitchCase="'ob-osnov'"
+                                      #cardEditEl
+                                      class="simple-card-edit"
+                                      [form]="form"
+                                      [inputs]="inputs"
+                                      [data]="data"
+                                      [editMode]="editMode"></eos-nadzor-card-edit>
+                <eos-nadzor-card-edit *ngSwitchCase="'ob-type'"
+                                      #cardEditEl
+                                      class="simple-card-edit"
+                                      [form]="form"
+                                      [inputs]="inputs"
+                                      [data]="data"
+                                      [editMode]="editMode"></eos-nadzor-card-edit>
+                <eos-nadzor-card-edit *ngSwitchCase="'ob-otziv'"
+                                      #cardEditEl
+                                      class="simple-card-edit"
+                                      [form]="form"
+                                      [inputs]="inputs"
+                                      [data]="data"
+                                      [editMode]="editMode"></eos-nadzor-card-edit>
                 <eos-simple-card-edit *ngSwitchDefault
                                       #cardEditEl
                                       class="simple-card-edit"

@@ -24,7 +24,7 @@ export const NP_OB_OTZIV_CL: IDictionaryDescriptor = Object.assign({}, NADZOR_TE
     }, {
         key: 'NOTE',
         title: 'Примечание',
-        type: 'string',
+        type: 'text',
         length: 500,
     }],
     editFields: [...NADZOR_TEMPLATE.editFields, 'USE_C', 'USE_A', 'USE_N'],

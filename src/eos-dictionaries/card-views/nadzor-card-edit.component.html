@@ -1,0 +1,45 @@
+<div class="card-content-wrapper">
+    <eos-dynamic-input [input]="inputs['rec.CLASSIF_NAME']"
+                       [form]="form"
+                       [readonly]="!editMode">
+    </eos-dynamic-input>
+    <div>
+        <label>Использовать в:</label><span></span>
+        <div>
+            <eos-dynamic-input class="pull-left"
+                               [input]="inputs['rec.USE_A']"
+                               [form]="form"
+                               [readonly]="!editMode">
+            </eos-dynamic-input>
+            <eos-dynamic-input class="pull-left margin-l"
+                               [input]="inputs['rec.USE_C']"
+                               [form]="form"
+                               [readonly]="!editMode">
+            </eos-dynamic-input>
+            <eos-dynamic-input class="pull-left margin-l"
+                               [input]="inputs['rec.USE_N']"
+                               [form]="form"
+                               [readonly]="!editMode">
+            </eos-dynamic-input>
+        </div>
+    </div>
+    <div class="clear-both">
+        <div>
+            <eos-dynamic-input class="pull-left"
+                               [input]="inputs['rec.USE_VP']"
+                               [form]="form"
+                               [readonly]="!editMode">
+            </eos-dynamic-input>
+            <eos-dynamic-input class="pull-left margin-l"
+                               [input]="inputs['rec.USE_NP']"
+                               [form]="form"
+                               [readonly]="!editMode">
+            </eos-dynamic-input>
+        </div>
+    </div>
+    <eos-dynamic-input class="clear-both"
+                       [input]="inputs['rec.NOTE']"
+                       [form]="form"
+                       [readonly]="!editMode">
+    </eos-dynamic-input>
+</div>
