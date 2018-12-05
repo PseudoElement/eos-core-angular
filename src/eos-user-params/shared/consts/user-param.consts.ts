@@ -62,7 +62,7 @@ export const USER_PARAMS_LIST_NAV: IParamAccordionList[] = [
         url: 'base-param'
     },
     {
-        title: 'Права в системе ДЕЛО',
+        title: 'Права в системе АИК «Надзор»',
         url: 'rights-delo',
         subList: SUB_PARAMS_LIST_NAV_FOR_RIGHTS_DELO,
         isOpen: false
