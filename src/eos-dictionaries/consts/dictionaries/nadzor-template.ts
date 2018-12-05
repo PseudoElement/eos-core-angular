@@ -44,6 +44,6 @@ export const NADZOR_TEMPLATE: IDictionaryDescriptor = {
     fullSearchFields: ['CLASSIF_NAME', 'NOTE'],
     quickViewFields: ['NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME', ],
-    listFields: ['CLASSIF_NAME', 'NOTE'],
-    allVisibleFields: [],
+    listFields: ['CLASSIF_NAME'],
+    allVisibleFields: ['NOTE'],
 };

@@ -7,5 +7,5 @@ export const RESOLUTION_CATEGORY_DICT: IDictionaryDescriptor = Object.assign({},
     title: 'Категории поручений',
     visible: true,
     iconName: 'eos-icon-category-blue',
-    listFields: ['CLASSIF_NAME', 'NOTE'],
+    listFields: ['CLASSIF_NAME'],
 });

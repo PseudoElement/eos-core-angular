@@ -61,8 +61,8 @@ export const NP_SUD_RESHEN_TYPE_CL: ITreeDictionaryDescriptor = /*Object.assign(
     fullSearchFields: ['CLASSIF_NAME', 'NOTE'],
     quickViewFields: ['CLASSIF_NAME', 'NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME'],
-    listFields: ['CLASSIF_NAME', 'NOTE'],
-    allVisibleFields: [],
+    listFields: ['CLASSIF_NAME'],
+    allVisibleFields: ['NOTE'],
 
 
 

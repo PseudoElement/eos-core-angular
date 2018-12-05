@@ -60,8 +60,8 @@ export const NP_OSN_PRED_DELA_CL: ITreeDictionaryDescriptor = /*Object.assign({}
     fullSearchFields: ['CLASSIF_NAME', 'NOTE'],
     quickViewFields: ['CLASSIF_NAME', 'NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME'],
-    listFields: ['CLASSIF_NAME', 'NOTE'],
-    allVisibleFields: [],
+    listFields: ['CLASSIF_NAME'],
+    allVisibleFields: ['NOTE'],
 
 
 };
