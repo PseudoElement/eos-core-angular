@@ -248,6 +248,18 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     canDeactivate(_nextState?: any): boolean | Promise<boolean> {
         return this._askForSaving();
     }
+    isEditEnabled(): boolean {
+        let _enabled: boolean;
+        _enabled = (this.node && !this.node.updating);
+        if (this._dictSrv.currentDictionary.descriptor.editOnlyNodes !== undefined) {
+            if (this._dictSrv && this._dictSrv.listNode) {
+                if (!(this._dictSrv.currentDictionary.descriptor.editOnlyNodes && this.node.isNode)) {
+                    return false;
+                }
+            }
+        }
+        return _enabled;
+    }
 
     private _init() {
         this.nextRoute = this._router.url;
@@ -459,4 +471,5 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         });
         return null;
     }
+
 }
