@@ -15,14 +15,14 @@
              (click)="selectNode($event)"
              (dblclick)="viewNode($event)">
             <eos-node-field *ngFor="let field of viewFields"
-                            class="pull-left"
+                            class="old-pull-left1"
                             [ngStyle]="{'width.px': length[field.key]}"
                             [field]="field"
                             [node]="node"
                             [width]="length[field.key]"
                             (view)="viewNode($event, true)"></eos-node-field><!--
             --><eos-node-field *ngFor="let field of getSlicedCustomFields();let first=first;"
-                            class="pull-left1"
+                            class="old-pull-left1"
                             [class.left-shadowed]="first&&(isShifted())"
                             [ngStyle]="{'width.px': length[field.key]}"
                             [width]="length[field.key]"
