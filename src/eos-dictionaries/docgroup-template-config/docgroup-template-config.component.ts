@@ -19,6 +19,8 @@ import {
 export class DocgroupTemplateConfigComponent implements OnDestroy {
     @Input() dgTemplate: string;
     @Input() forProject: boolean;
+    @Input() rcType: number;
+
     @Output() onSave: EventEmitter<string> = new EventEmitter<string>();
 
     availableItems: any[] = [];
@@ -89,6 +91,10 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
 
         if (res && this.templateItems.findIndex((elem) => ORDER_NUM_TEMPLATE_ITEM_EXPR.test(elem.key)) !== -1) {
             res = !ORDER_NUM_TEMPLATE_ITEM_EXPR.test(item.key);
+        }
+
+        if (res && item.key === '{N}') {
+            res = this.rcType === 3;
         }
 
         return res;
