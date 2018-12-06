@@ -88,8 +88,10 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
         type: 'boolean',
     }, {
         key: 'E_DOCUMENT',
-        title: 'E_DOCUMENT',
-        type: 'number',
+        title: 'Для эл. документов',
+        type: 'boolean',
+        required: true,
+        default: 0,
     },
         Object.assign({}, COMMON_FIELD_NAME, {
             title: 'Заголовок',
