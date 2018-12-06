@@ -235,7 +235,7 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
 
         const funcObj = function(objNewData, objPrepareData, markMainCheckbox, markOldMainCheckbox) {
             for (const key in objNewData) {
-                if (typeof objNewData[key] === 'object') {
+                if (typeof objNewData[key] === 'object' && (Object.keys(markMainCheckbox).length === 0)) {
                     level++;
                     stringKey += key + '.';
                     funcObj(objNewData[key], objPrepareData, markMainCheckbox, markOldMainCheckbox);
@@ -269,19 +269,17 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
                     }
                     const arrayMarkMainCheckbox = Object.keys(markMainCheckbox);
                     const arrayMarkOldMainCheckbox = Object.keys(markOldMainCheckbox);
-                    if (arrayMarkMainCheckbox[0] === stringKey) {
+                    if (Object.keys(markMainCheckbox).length > 0) {
                         req.push({
                             method: 'MERGE',
-                            requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${stringKey}\')`,
+                            requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${arrayMarkMainCheckbox[0]}\')`,
                             data: {
                                 HOME_CARD: `${markMainCheckbox[arrayMarkMainCheckbox[0]]}`
                             }
                         });
-                    }
-                    if (arrayMarkOldMainCheckbox[0] === stringKey) {
                         req.push({
                             method: 'MERGE',
-                            requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${stringKey}\')`,
+                            requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${arrayMarkOldMainCheckbox[0]}\')`,
                             data: {
                                 HOME_CARD: `${markOldMainCheckbox[arrayMarkOldMainCheckbox[0]]}`
                             }

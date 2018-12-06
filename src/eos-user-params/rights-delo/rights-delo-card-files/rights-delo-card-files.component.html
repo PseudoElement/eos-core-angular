@@ -24,7 +24,7 @@
                   (click)="addCardFile()">
                 <span class="eos-icon eos-icon-plus-blue small"></span>
                 </button>
-                <button
+               <!-- <button
                   class="btn btn-primary-light"
                   tooltip="Удалить картотеку"
                   placement="bottom"
@@ -32,7 +32,7 @@
                   containerClass="tooltip-info"
                   (click)="removeCardFile()">
                 <span class="eos-icon eos-icon-minus-blue small"></span>
-                </button>
+                </button>-->
                 <button
                   class="btn btn-primary-light"
                   tooltip="Главная"
@@ -56,7 +56,7 @@
                             [readonly]="false"
                             ></eos-dynamic-input>
             </li>
-        </ul>      
+        </ul>
 </div>
 <div class="right-block-list-absolute-rights">
         <div class="tabs-wrapper usual-border border-bottom">
@@ -64,11 +64,12 @@
                         <span class="long-title xl-font">Кабинеты</span>
                 </div>
         </div>
+        <div *ngIf="flagCurrentDataCabinetDepartment">
         <div class="user-input-group">
                 <eos-dynamic-input
                     [input]="inputs['rec.SELECT_FOR_CABINETS_NAME']"
                     [form]="form"
-                    [readonly]="false"
+                    (change)="selectOnClick($event)"
                 ></eos-dynamic-input>
         <span></span>
         </div>
@@ -80,7 +81,11 @@
                         (click)="selectedNode(key[1])"
                     ></eos-dynamic-input>
         </li>
-                </ul> 
+        </ul>
+        </div>
+        <div *ngIf="!flagCurrentDataCabinetDepartment">
+                <span class="the-inscription-of-absence-cabinets">Кабинетов нет!</span>
+        </div>
 </div>
 </div>
 </div>

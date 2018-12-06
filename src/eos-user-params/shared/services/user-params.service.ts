@@ -6,7 +6,6 @@ import { IParamUserCl } from '../intrfaces/user-parm.intterfaces';
 
 @Injectable()
 export class UserParamsService {
-    // _userDepartment: DEPARTMENT;
     private _isTechUser: boolean;
     private _userContext: IParamUserCl;
     private _userContextDeparnment: DEPARTMENT;
@@ -58,12 +57,6 @@ export class UserParamsService {
         }
         return null;
     }
-  /*  get userAbsolutRights () {
-        if (this._userContext) {
-            return this._userContext['DELO_RIGHTS'];
-        }
-        return null;
-    }*/
     get hashUserContext () {
         if (this._userContext) {
             const hash: any = {};
@@ -143,7 +136,6 @@ export class UserParamsService {
         private _msgSrv: EosMessageService
     ) {}
     test() {
-        // console.log('trest');
         const q = [{
             method: 'MERGE',
             requestUri: `USER_CL(${this.userContextId})`,

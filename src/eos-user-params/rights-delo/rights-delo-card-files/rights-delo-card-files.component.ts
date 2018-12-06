@@ -53,6 +53,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     allDataForCurrentUsercard;
     currentIsnCabinet;
     currentWord;
+    flagCurrentDataCabinetDepartment = true;
     private quaryDepartment = {
         DEPARTMENT: {
             criteries: {
@@ -113,14 +114,15 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                             this.arrayForCurrentCabinets.push([data4[j]['CABINET_NAME'], data4[j]['ISN_CABINET'], data4[j]['DUE']]);
                 }
                 });
-            this.init();
+                this.init();
+                this.choosingMainCheckbox();
         }).then(() => {
             for (let i = 0; i < CARD_FILES_USER.fields.length; i++) {
                 if (CARD_FILES_USER.fields[i]['readonly'] === true) {
                   this.form.controls['rec.' + CARD_FILES_USER.fields[i]['key']].disable();
                 }
             }
-              this.choosingMainCheckbox();
+           //   this.choosingMainCheckbox();
               this.isLoading = false;
         });
         });
@@ -193,12 +195,11 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         return _value !== oldValue;
     }
     submit() {
-     //   if (this.newDataAttach || this.prepareData) {
+        if (this.newDataAttach || this.prepareData || this.newData) {
             const userId = '' + this._userParamsSetSrv.userContextId;
             this.formChanged.emit(false);
             this.isChangeForm = false;
             // this._userParamsSetSrv.getUserIsn();
-            console.log(this.newDataAttach);
             this.userParamApiSrv
                 .setData(this.createObjRequestForAll())
                 .then(data => {
@@ -208,7 +209,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 })
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
-       // }
+        }
     }
       createObjRequestForAttach(): any[] {
         let valueDefForFoldersAvailable = '';
@@ -269,13 +270,13 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
        return req;
     }
     createObjRequestForAll() {
-        const req = this.createObjRequest();
         let newReq;
         if (this.newDataAttach) {
         const reqAttach = this.createObjRequestForAttach();
+        const req = this.createObjRequest();
         newReq = req.concat(reqAttach[0]);
         } else {
-        newReq = req;
+         return this.createObjRequest();
         }
         return newReq;
     }
@@ -293,9 +294,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             } else if (this.fieldKeysforCardFiles[i][0] === key && this._userParamsSetSrv.hashUserContexHomeCard[key] === 1 && flag) {
                 tmpI = i;
             } else {
-                this.oldMainCheckbox = {};
                 this.fieldKeysforCardFiles[i][3] = false;
-                this.oldMainCheckbox[this.fieldKeysforCardFiles[i][0]] = 0;
             }
           }
         }
@@ -340,6 +339,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         this.currentSelectedWord = word;
     }
     currentSelectCard() {
+        let dataCabinetDepartmentForDefault;
         const quareCabinetDepartment = {
             CABINET: {
                 criteries: {
@@ -347,16 +347,41 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 }
             }
         };
+        const selectForCabinetsName = CARD_FILES_USER.fields.find(elem => elem.key === 'SELECT_FOR_CABINETS_NAME');
+        selectForCabinetsName['options'] = [];
+
         this.servApi.getData(quareCabinetDepartment).then(dataCabinetDepartment => {
-            for (let j = 0; j < dataCabinetDepartment.length; j++) {
-                const selectForCabinetsName = CARD_FILES_USER.fields.find(elem => elem.key === 'SELECT_FOR_CABINETS_NAME');
-              selectForCabinetsName['options'] = [];
-              selectForCabinetsName['options'].push({value: dataCabinetDepartment[j]['DUE'], title: dataCabinetDepartment[j]['CABINET_NAME']});
-        }
+            dataCabinetDepartmentForDefault = dataCabinetDepartment;
+            if (dataCabinetDepartment.length > 0) {
+                for (let j = 0; j < dataCabinetDepartment.length; j++) {
+                  selectForCabinetsName['options'].push({value: dataCabinetDepartment[j]['DUE'], title: dataCabinetDepartment[j]['CABINET_NAME']});
+                }
+                this.flagCurrentDataCabinetDepartment = true;
+            } else {
+                this.flagCurrentDataCabinetDepartment = false;
+            }
+        }).then(() => {
+           this.init();
+        }).then(() => {
+            if (this.flagCurrentDataCabinetDepartment) {
+                this.form['value']['rec.SELECT_FOR_CABINETS_NAME'] = dataCabinetDepartmentForDefault[0]['DUE'];
+                this.prepareData.rec['SELECT_FOR_CABINETS_NAME'] = dataCabinetDepartmentForDefault[0]['DUE'];
+                this.inputs = this.getInputs();
+                this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+                this.subscribeChangeForm();
+            }
         });
     }
+    selectOnClick(event) {
+        for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
+            if (event.target.value === this.allDataForCurrentUsercard['USER_CABINET_List'][i]['DEPARTMENT_DUE']) {
+                this.settingValuesForFieldsCabinets(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
+            } else {
+                this.settingValuesForFieldsCabinets('Empty');
+            }
+        }
+    }
     addCardFile() {
-        // this.collectionVisible = value;
         this.modalCollection = this._modalSrv.show(CardFilesDirectoryModalComponent, {
             class: 'modal-collection',
             ignoreBackdropClick: true
@@ -367,9 +392,10 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     }
     removeCardFile() {
       /*  for (let i = 0; i < this.fieldKeysforCardFiles.length; i++) {
-            if (this.fieldKeysforCardFiles[i][1] === this.currentWord) {
-                this.arrayForRemovingCheckboks.push(this.fieldKeysforCardFiles[i][0]);
-               // this.newData.rec[this.fieldKeysforCardFiles[i][0]] = false;
+            if (this.fieldKeysforCardFiles[i][0] === this.allDataForCurrentUsercard['DUE']) {
+                this.prepareData.rec[this.fieldKeysforCardFiles[i][0]] = undefined;
+                this.fieldKeysforCardFiles[i][4] = false;
+                this.newData.rec[this.fieldKeysforCardFiles[i][0]] = 'NO';
                 this.inputs = this.getInputs();
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.subscribeChangeForm();
