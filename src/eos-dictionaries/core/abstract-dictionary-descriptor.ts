@@ -1,19 +1,27 @@
-import { E_DICT_TYPE, IDictionaryDescriptor, E_FIELD_SET, IRecordOperationResult, E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
-import { RecordDescriptor } from 'eos-dictionaries/core/record-descriptor';
+import {
+    E_DICT_TYPE,
+    IDictionaryDescriptor,
+    E_FIELD_SET,
+    IRecordOperationResult,
+    E_FIELD_TYPE,
+    ISearchSettings
+} from 'eos-dictionaries/interfaces';
+import {RecordDescriptor} from 'eos-dictionaries/core/record-descriptor';
 
-import { commonMergeMeta } from 'eos-rest/common/initMetaData';
-import { FieldsDecline } from 'eos-dictionaries/interfaces/fields-decline.inerface';
-import { PipRX } from 'eos-rest/services/pipRX.service';
-import { ALL_ROWS, _ES } from 'eos-rest/core/consts';
-import { ITypeDef, IEnt, DELO_BLOB } from 'eos-rest';
-import { SevIndexHelper } from 'eos-rest/services/sevIndex-helper';
-import { PrintInfoHelper } from 'eos-rest/services/printInfo-helper';
-import { SEV_ASSOCIATION } from 'eos-rest/interfaces/structures';
-import { IAppCfg } from 'eos-common/interfaces';
+import {commonMergeMeta} from 'eos-rest/common/initMetaData';
+import {FieldsDecline} from 'eos-dictionaries/interfaces/fields-decline.inerface';
+import {PipRX} from 'eos-rest/services/pipRX.service';
+import {ALL_ROWS, _ES} from 'eos-rest/core/consts';
+import {ITypeDef, IEnt, DELO_BLOB} from 'eos-rest';
+import {SevIndexHelper} from 'eos-rest/services/sevIndex-helper';
+import {PrintInfoHelper} from 'eos-rest/services/printInfo-helper';
+import {SEV_ASSOCIATION} from 'eos-rest/interfaces/structures';
+import {IAppCfg} from 'eos-common/interfaces';
 // import { RestError } from 'eos-rest/core/rest-error';
-import { EosUtils } from 'eos-common/core/utils';
-import { ContactHelper } from '../../eos-rest/services/contact-helper';
+import {EosUtils} from 'eos-common/core/utils';
+import {ContactHelper} from '../../eos-rest/services/contact-helper';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
+import {EosDictionaryNode} from 'eos-dictionaries/core/eos-dictionary-node';
 
 export abstract class AbstractDictionaryDescriptor {
     /**
@@ -67,9 +75,13 @@ export abstract class AbstractDictionaryDescriptor {
     }
 
     abstract addRecord(...params): Promise<IRecordOperationResult[]>;
+
     abstract getChildren(...params): Promise<any[]>;
+
     abstract getRoot(): Promise<any[]>;
+
     abstract getSubtree(...params): Promise<any[]>;
+
     abstract onPreparePrintInfo(dec: FieldsDecline): Promise<any[]>;
 
     addBlob(ext: string, blobData: string): Promise<string | number> {
@@ -91,7 +103,7 @@ export abstract class AbstractDictionaryDescriptor {
     }
 
     checkSevIsNew(sevData: SEV_ASSOCIATION, record: any): Promise<IRecordOperationResult> {
-        return this.apiSrv.read<SEV_ASSOCIATION>({ SEV_ASSOCIATION: PipRX.criteries({ OBJECT_NAME: this.apiInstance }) })
+        return this.apiSrv.read<SEV_ASSOCIATION>({SEV_ASSOCIATION: PipRX.criteries({OBJECT_NAME: this.apiInstance})})
             .then((sevs) => {
                 let result: IRecordOperationResult;
                 if (!sevData.__metadata) { // if new SEV
@@ -149,7 +161,7 @@ export abstract class AbstractDictionaryDescriptor {
 
         // console.warn('getData', query, order, limit);
 
-        const req = { [this.apiInstance]: query };
+        const req = {[this.apiInstance]: query};
 
         if (limit) {
             req.top = limit;
@@ -212,7 +224,7 @@ export abstract class AbstractDictionaryDescriptor {
             if (rec[relation.sf]) {
                 reqs.push(this.apiSrv
                     .read({
-                        [relation.__type]: PipRX.criteries({ [relation.tf]: rec[relation.sf] + '' })
+                        [relation.__type]: PipRX.criteries({[relation.tf]: rec[relation.sf] + ''})
                     })
                     .then((records) => this.prepareForEdit(records))
                 );
@@ -265,7 +277,7 @@ export abstract class AbstractDictionaryDescriptor {
         records.forEach((record) => record.DELETED = deletedState);
         const changes = this.apiSrv.changeList(records);
         if (deletedState === 0 && cascade) {
-            PipRX.invokeSop(changes, 'ClassifCascade_TRule', { DELETED: +cascade });
+            PipRX.invokeSop(changes, 'ClassifCascade_TRule', {DELETED: +cascade});
         }
         return this.apiSrv.batch(changes, '');
     }
@@ -343,7 +355,7 @@ export abstract class AbstractDictionaryDescriptor {
                 if (changes.length) {
                     return this.apiSrv.batch(changes, '')
                         .then(() => {
-                            results.push({ success: true, record: record });
+                            results.push({success: true, record: record});
                             return results;
                         });
                 } else {
@@ -375,6 +387,10 @@ export abstract class AbstractDictionaryDescriptor {
     // method for custom tree
     setRootNode(_nodeId: string) {
     }
+
+    extendCritery(critery: any, params: ISearchSettings, selectedNode: EosDictionaryNode) {
+    }
+
 
     protected _postChanges(data: any, updates: any): Promise<any[]> {
         // console.log('_postChanges', data, updates);
@@ -436,6 +452,7 @@ export abstract class AbstractDictionaryDescriptor {
         });
         return related;
     }
+
     protected associateRelationType(responses: any[]): any {
         const related = {};
         this.metadata.relations.forEach((relation, idx) => {
@@ -443,4 +460,5 @@ export abstract class AbstractDictionaryDescriptor {
         });
         return related;
     }
+
 }
