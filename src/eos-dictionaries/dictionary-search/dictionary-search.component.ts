@@ -45,6 +45,13 @@ export class DictionarySearchComponent implements OnDestroy {
             label: 'Состояние на',
             hideLabel: true,
             readonly: false
+        }, {
+            controlType: 'boolean',
+            key: 'filter.CB1',
+            value: 0,
+            label: 'переходящие',
+            hideLabel: true,
+            readonly: false
         }
     ];
 
@@ -116,10 +123,14 @@ export class DictionarySearchComponent implements OnDestroy {
         this.searchForm = this.inputCtrlSrv.toFormGroup(this.inputs, false);
         const dateFilter = this.searchForm.controls['filter.stateDate'];
         const yearFilter = this.searchForm.controls['filter.stateYear'];
+        const cb1Filter = this.searchForm.controls['filter.CB1'];
 
         this.searchForm.valueChanges.subscribe((data) => {
             if (yearFilter.valid) {
                 this.numberFilter(data['filter.stateYear']);
+            }
+            if (cb1Filter) {
+                this.cbFilter(data['filter.CB1']);
             }
             if (dateFilter.valid) {
                 this.dateFilter(data['filter.stateDate']);
@@ -165,6 +176,10 @@ export class DictionarySearchComponent implements OnDestroy {
 
     numberFilter(n: number) {
         this._dictSrv.setFilter({ YEAR: n});
+    }
+
+    cbFilter(n: boolean) {
+        this._dictSrv.setFilter({ CB1: n});
     }
 
     dateFilter(date: Date) {

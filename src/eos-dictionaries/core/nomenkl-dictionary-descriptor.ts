@@ -30,7 +30,11 @@ export class NomenklRecordDescriptor extends RecordDescriptor {
             const y: number = filters['YEAR'];
             const y1: number = data.rec['YEAR_NUMBER'];
             const y2: number = data.rec['END_YEAR'];
+            const p: boolean = filters['CB1'];
             if (y) {
+                if (!p && !y2) {
+                    return false;
+                }
                 if (y1 && (y1 > y)) {
                     return false;
                 }

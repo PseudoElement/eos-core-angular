@@ -7,12 +7,11 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
     id: 'nomenkl',
     apiInstance: 'NOMENKL_CL',
     title: 'Номенклатура дел',
+    defaultOrder: 'NOM_NUMBER',
     visible: true,
     dictType: E_DICT_TYPE.custom,
-    // parentField: 'DUE',
     iconName: 'eos-icon-deal-blue',
     keyField: 'ISN_LCLASSIF',
-    // parentField: 'PARENT_DUE',
     fields: LINEAR_TEMPLATE.fields.concat([{
         key: 'DUE',
         type: 'string',
@@ -100,7 +99,6 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
     ]),
 
     treeFields: ['title'],
-    // treeFields: ['CLASSIF_NAME'],
     editFields: ['CLASSIF_NAME', 'NOTE', 'CLOSED', 'SECURITY', 'YEAR_NUMBER', 'STORE_TIME', 'SHELF_LIFE', 'NOM_NUMBER',
         'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', ],
     searchFields: ['CLASSIF_NAME', 'NOTE'],
