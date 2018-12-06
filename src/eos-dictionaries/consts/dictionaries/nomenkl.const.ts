@@ -24,11 +24,6 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
         title: 'Parent ID',
         length: 248,
     }, {
-        key: 'PARENT_DUE',
-        type: 'string',
-        title: 'PARENT ID',
-        length: 248,
-    }, {
         key: 'CLOSED',
         title: 'Закрыто',
         type: 'boolean',
@@ -37,10 +32,10 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
     }, {
         key: 'SECURITY',
         title: 'Гриф',
-        type: 'string',
+        type: 'select',
         length: 64,
-        // dictionaryId: SECURITY_DICT.apiInstance,
-        // options: [],
+        default: '',
+        options: [],
     }, {
         key: 'SHELF_LIFE',
         title: 'Время хранения',
