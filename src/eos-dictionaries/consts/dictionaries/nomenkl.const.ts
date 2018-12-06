@@ -105,7 +105,7 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
     fullSearchFields: ['CLASSIF_NAME', 'NOTE', 'NOM_NUMBER'],
     quickViewFields: ['CLASSIF_NAME', 'NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME'],
-    listFields: ['NOM_NUMBER', 'SECURITY', 'CLASSIF_NAME'],
+    listFields: ['NOM_NUMBER', 'CLASSIF_NAME'],
     allVisibleFields: ['NOTE', 'CLOSED', 'SECURITY', 'STORE_TIME', 'SHELF_LIFE', 'YEAR_NUMBER',
         'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', ],
 

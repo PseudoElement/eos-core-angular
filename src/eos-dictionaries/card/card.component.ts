@@ -254,7 +254,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         _enabled = (this.node && !this.node.updating);
         if (this._dictSrv.currentDictionary.descriptor.editOnlyNodes !== undefined) {
             if (this._dictSrv && this._dictSrv.listNode) {
-                if (!(this._dictSrv.currentDictionary.descriptor.editOnlyNodes && this.node.isNode)) {
+                if (!(this._dictSrv.currentDictionary.descriptor.editOnlyNodes && this.node && this.node.isNode)) {
                     return false;
                 }
             }
