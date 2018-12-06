@@ -11,6 +11,8 @@ import {CustomTreeNode} from '../tree2/custom-tree.component';
 import {DictionaryDescriptor} from './dictionary-descriptor';
 import {RecordDescriptor} from './record-descriptor';
 
+const NP_NOM_ROOT_DUE = '0.';
+
 export class NomenklRecordDescriptor extends RecordDescriptor {
     dictionary: NomenklDictionaryDescriptor;
 
@@ -43,7 +45,6 @@ export class NomenklRecordDescriptor extends RecordDescriptor {
 
 export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
     record: NomenklRecordDescriptor;
-    foo: number = 0;
     private _treeData: CustomTreeNode[];
     private _filterDUE: string;
 
@@ -52,7 +53,7 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
         apiSrv: PipRX,
     ) {
         super(descriptor, apiSrv);
-        this.foo = 0;
+        this._filterDUE = NP_NOM_ROOT_DUE;
     }
 
     hasCustomTree() {
@@ -84,7 +85,7 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
     getData(query?: any, order?: string, limit?: number): Promise<any[]> {
 
         if (!query) {
-            if (this._filterDUE) {
+            if (this._filterDUE && (this._filterDUE !== NP_NOM_ROOT_DUE)) {
                 query = {criteries: {DUE: this._filterDUE}};
             } else {
                 query = ALL_ROWS;
@@ -107,6 +108,12 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
                 this.prepareForEdit(data);
                 return data;
             });
+    }
+
+    getNewRecord(preSetData: {}): {} {
+        const res = super.getNewRecord(preSetData);
+        res['rec']['DUE'] = this._filterDUE;
+        return res;
     }
 
     protected _initRecord(data: IDictionaryDescriptor) {
@@ -136,7 +143,7 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
         for (i = 0; i < ddata.length; i++) {
             dd = ddata[i];
             r = {
-                title: (dd.DUE === '0.') ? 'Подразделения' : dd.CLASSIF_NAME,
+                title: (dd.DUE === NP_NOM_ROOT_DUE) ? 'Подразделения' : dd.CLASSIF_NAME,
                 parent: dd.PARENT_DUE,
                 id: dd.DUE,
                 isNode: true,
@@ -164,7 +171,7 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
             }
             i++;
         }
-        res.find((f) => f.id === '0.').isExpanded = true;
+        res.find((f) => f.id === NP_NOM_ROOT_DUE).isExpanded = true;
         this._treeData = res;
     }
 

@@ -83,12 +83,13 @@ export class NodeActionsComponent implements OnDestroy {
     private _update() {
         this.isTree = false;
         if (this.dictionary) {
-            this.isTree = this.dictionary && this.dictionary.descriptor.dictionaryType !== E_DICT_TYPE.linear;
+            this.isTree = this.dictionary && (this.dictionary.descriptor.dictionaryType !== E_DICT_TYPE.linear) &&
+                (this.dictionary.descriptor.dictionaryType !== E_DICT_TYPE.custom);
             if (this.dictionary.descriptor.dictionaryType === E_DICT_TYPE.department) {
                 this.addMenu = DEPARTMENT_ADD_MENU;
             } else if (this.dictionary.descriptor.dictionaryType === E_DICT_TYPE.organiz) {
                 this.addMenu = ORGANIZ_ADD_MENU;
-            } else {
+            } else if (this.dictionary.descriptor.dictionaryType !== E_DICT_TYPE.custom) {
                 this.addMenu = COMMON_ADD_MENU;
             }
         }
