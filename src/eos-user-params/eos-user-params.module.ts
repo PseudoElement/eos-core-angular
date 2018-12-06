@@ -24,6 +24,9 @@ import { ParamEmailAddressComponent } from './email-address/email-address.compon
 import { ParamsRightsDeloComponent } from './rights-delo/rights-delo.component';
 import { RightsDeloHeaderComponent } from './rights-delo/shared-rights-delo/rights-delo-header/rights-delo-header.component';
 import { RightsDeloCardFilesComponent } from './rights-delo/rights-delo-card-files/rights-delo-card-files.component';
+import { RightsDeloAbsoluteRightsComponent } from './rights-delo/rights-delo-absolute-rights/rights-delo-absolute-rights.component';
+import { AbsoluteRightsDirectoryComponent } from './rights-delo/rights-delo-absolute-rights/absolute-rights-directory-modal/absolute-rights-directory-modal.component';
+import { CardFilesDirectoryModalComponent } from './rights-delo/rights-delo-card-files/card-files-directory-modal/card-files-directory-modal.component';
 import { RightsDeloCardIndexRightsComponent } from './rights-delo/rights-delo-card-index-rights/rights-delo-card-index-rights.component';
 import { ParamsBaseParamComponent } from './base-param/base-param.component';
 import { InputParamControlService } from './shared/services/input-param-control.service';
@@ -45,8 +48,15 @@ import { InputParamControlService } from './shared/services/input-param-control.
         ParamsRightsDeloComponent,
         RightsDeloHeaderComponent,
         RightsDeloCardFilesComponent,
+        RightsDeloAbsoluteRightsComponent,
+        AbsoluteRightsDirectoryComponent,
+        CardFilesDirectoryModalComponent,
         RightsDeloCardIndexRightsComponent,
         ParamsBaseParamComponent
+    ],
+    entryComponents: [
+        AbsoluteRightsDirectoryComponent,
+        CardFilesDirectoryModalComponent
     ],
     imports: [
         BrowserModule,

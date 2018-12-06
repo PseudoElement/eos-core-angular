@@ -1,0 +1,171 @@
+:host{
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    display: flex;
+
+}
+.fullWidth{
+    width: 100%;
+    height: 100%;
+}
+.rt-user{
+    width: 100%;
+    height: 100%;
+    padding: 0px 20px;
+    .rt-avatar{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 20px 0px 20px 0px;
+        border-bottom: 1px solid #e6e6e6;
+        box-sizing: border-box;
+        .avatar-wr{
+            width: 80px;
+            height: 80px;
+            min-width: 80px;
+
+            .avatar-img{
+                width: 100%;
+                height: 100%;
+                display: inline-block;
+            }
+        }
+        .avatar-title{
+            max-height: 80px;
+            font-size: 16px;
+            line-height: 20px;
+            color: #000000;
+            padding-left: 20px;
+            overflow: hidden;
+        }
+    }
+    .info-wr{
+        padding: 20px 0px 0px 0px;
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+        .info-role,.info-note{
+            display: flex;
+            flex-direction: column;
+            .rt-grey{
+                display: inline-block;
+                margin-bottom: 8px;
+                font-size: 13px;
+                height: 10px;
+                line-height: 10px;
+                text-transform: uppercase;
+            }
+            .rt-black{
+                display: inline-block;
+                line-height: 32px;
+                color: #000000;
+                text-transform: capitalize;
+                overflow: hidden;
+                max-height: 32px;
+            }
+
+        }
+        .info-note{
+            margin-top: 20px;
+            margin-bottom: 8px;
+        }
+
+    }
+    .rt-cabinet{
+        padding: 14px 0px 10px 0px;
+        border-top:  1px solid #e6e6e6;
+        border-bottom:  1px solid #e6e6e6;
+        box-sizing: border-box;
+        .rt-grey{
+            display: inline-block;
+            margin-bottom: 8px;
+            font-size: 13px;
+            height: 10px;
+            line-height: 10px;
+            text-transform: uppercase;
+        }
+        .is-user{
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
+            .is-user-title{
+                display: inline-block;
+                margin-bottom: 8px;
+                font-size: 13px;
+                height: 10px;
+                line-height: 10px;
+                text-transform: uppercase;
+            }
+            .is-user-login{
+                display: inline-block;
+                line-height: 32px;
+                color: #2196f3;
+                overflow: hidden;
+                max-height: 32px;
+            }
+        }
+
+
+    }
+    .rt-sustem{
+        position: relative;
+        .sustem-tab-rw{
+            display: inline-flex;
+            padding-top: 14px;
+            cursor: pointer;
+            .small{
+                position: absolute;
+                left: 92%;
+            }
+        }
+
+        .sustem-wr{
+        display: flex;
+        justify-content: end;
+        flex-direction: column;
+        height: 0px;
+        overflow: hidden;
+        transition: 0.4s;
+    }
+    .opened{
+        height: 500px;
+        max-height: 100%;
+    }
+
+
+    }
+}
+
+.teh-user{
+    padding: 20px 0 20px 0;
+    border-bottom:  1px solid #e6e6e6;
+    font-size: 16px;
+    .teh-user-title{
+        color: #000000;
+    }
+    .teh-user-content{
+        color: #000000;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center
+    }
+    .teh-user-name{
+        color: #000000;
+        overflow: hidden;
+        padding-left: 20px;
+    }
+}
+
+.spinner-user-sel{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center
+}
+.eos-icon.eos-icon-checkbox-black{
+    min-width: 24px;
+}

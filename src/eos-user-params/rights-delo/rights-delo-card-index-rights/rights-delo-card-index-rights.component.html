@@ -17,17 +17,12 @@
         <ul class="list-card-index-rights"
             *ngFor="let item of arrayKeysCheckboxforCardIndexRights; let i = index;">
             <li>
-                       <!-- <eos-dynamic-input
-                        [input]="inputs['rec.' + item]"
-                        [form]="form"
-                        [readonly]="false"
-                        ></eos-dynamic-input>-->
-                        <eos-dynamic-input
-                            [input]="inputAttach['rec.' + item]"
-                            [form]="formAttach"
-                            [readonly]="false"
-                           ></eos-dynamic-input>
-        </li>
+                <eos-dynamic-input
+                    [input]="inputAttach['rec.' + item]"
+                    [form]="formAttach"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+            </li>
     </ul>
     </div>
 </div>

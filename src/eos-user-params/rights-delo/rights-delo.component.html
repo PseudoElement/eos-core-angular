@@ -7,6 +7,13 @@
                 [btnDisabled]="!isChanged || disableSave">
                 </eos-rights-delo-card-files>
             </ng-container>
+            <ng-container *ngSwitchCase="'absolute-rights'">
+                <eos-rights-delo-absolute-rights
+                (formChanged)="recordChanged($event)"
+                (formInvalid)="turnOffSave($event)"
+                [btnDisabled]="!isChanged || disableSave">
+                </eos-rights-delo-absolute-rights>
+            </ng-container>
             <ng-container *ngSwitchCase="'card-index-rights'">
                     <eos-rights-delo-card-index-rights
                     (formChanged)="recordChanged($event)"

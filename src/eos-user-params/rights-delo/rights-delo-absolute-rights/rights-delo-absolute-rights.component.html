@@ -1,0 +1,35 @@
+<div class="input-user-wrapper input-user-absolute-rights-wrapper" *ngIf="!isLoading">
+    <eos-rights-delo-header
+    [title]="titleHeader"
+    (submitForm)="submit()"
+    (cancelForm)="cancel()"
+    [statusBtnSub]="btnDisabled"
+></eos-rights-delo-header>
+
+<div class="user-input-group">
+<div class="left-block-list-absolute-rights">
+        <ul class="list-card-files"
+        *ngFor="let key of arrayCheckboxforAbsoluteRights; let i = index;">
+            <li (click)="selectedNode(key[1])">
+                    <eos-dynamic-input
+                        [ngClass]="{'highlighted': key[2]}"
+                        [input]="inputAttach['rec.' + key[0]]"
+                        [form]="formAttach"
+                        [readonly]="false"
+                    ></eos-dynamic-input>
+        </li>
+    </ul>      
+</div>
+<div class="right-block-list-absolute-rights">
+    <button
+        class="btn btn-primary"
+        (click)="openDirectoryModal()"
+        >Справочники
+    </button>
+</div>
+</div>
+</div>
+
+<div class="spinner-wrapper" *ngIf="isLoading">
+    <eos-spinner [size]="'lg'"></eos-spinner>
+</div>

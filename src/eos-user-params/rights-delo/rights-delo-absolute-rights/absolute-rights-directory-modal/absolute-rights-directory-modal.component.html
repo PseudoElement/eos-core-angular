@@ -1,0 +1,28 @@
+<header>
+    <eos-rights-delo-header
+        title='Доступные пользователю справочники'
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+    ></eos-rights-delo-header>
+</header>
+<div class="user-input-group">
+    <div class="left-block-list-absolute-rights-directory">
+            <ul class="list-card-files"
+            *ngFor="let key of arrayCheckboxforAbsoluteRightsDirectory; let i = index;">
+                <li>
+                        <eos-dynamic-input
+                            [input]="inputAttach['rec.' + key[0]]"
+                            [form]="formAttach"
+                            [readonly]="false"
+                        ></eos-dynamic-input>
+            </li>
+        </ul>      
+    </div>
+    <!--<div class="right-block-list-absolute-rights">
+        <button
+            class="btn btn-primary"
+            (click)="openDirectoryModal()"
+            >Справочники
+        </button>
+    </div>-->
+    </div>

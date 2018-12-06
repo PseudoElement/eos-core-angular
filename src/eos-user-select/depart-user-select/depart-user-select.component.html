@@ -1,0 +1,17 @@
+<div class="rt-info" *ngIf="showComponent">
+    <div class="info-wr">
+        <div class="info-job">
+            <span class="rt-grey">Должность</span>
+            <span class="rt-black">{{department.DUTY || 'не указан'}}</span>
+        </div>
+        <div class="info-pfone">
+            <span class="rt-grey">Телефон</span>
+            <span class="rt-black">{{department.PHONE || 'не указан'}}</span>
+        </div>
+        <div class="info-mail">
+            <span class="rt-grey">E-Mail</span>
+            <span class="rt-black rt-blue">{{department.E_MAIL || 'не указан'}}</span>
+        </div>
+    </div>
+    <ng-content ></ng-content>
+</div>

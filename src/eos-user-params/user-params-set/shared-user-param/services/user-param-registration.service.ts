@@ -1117,15 +1117,19 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
     }
     submit() {
         if (this.newData || this.newDataAttach || this.prepareData) {
+            const userId = '' + this._userParamsSetSrv.userContextId;
+            console.log(this._userParamsSetSrv.userContextId);
+           // console.log(userId);
             this.formChanged.emit(false);
             this.isChangeForm = false;
-            // this._userParamsSetSrv.getUserIsn();
+          //   this._userParamsSetSrv.getUserIsn(userId);
             if (this.newData && this.newDataAttach) {
                 this.userParamApiSrv
                 .setData(this.createObjRequestForAll())
                 .then(data => {
                   //  this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                    this._userParamsSetSrv.getUserIsn(userId);
                 })
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
@@ -1135,6 +1139,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 .then(data => {
                   //  this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                    this._userParamsSetSrv.getUserIsn(userId);
                 })
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
@@ -1144,6 +1149,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 .then(data => {
                    // this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                    this._userParamsSetSrv.getUserIsn(userId);
                 })
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
@@ -1152,10 +1158,14 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                     .setData(this.createObjRequestForDefaultValues())
                     .then(data => {
                         this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                        this._userParamsSetSrv.getUserIsn(userId);
                     })
                     // tslint:disable-next-line:no-console
                     .catch(data => console.log(data));
                 }
+               // const userId = '' + this._userParamsSetSrv.userContextId;
+               // console.log(userId);
+              //  this._userParamsSetSrv.getUserIsn(userId);
             }
         }
         createObjRequestForAttach(): any[] {

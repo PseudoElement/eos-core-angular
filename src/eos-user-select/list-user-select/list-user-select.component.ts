@@ -6,6 +6,7 @@ import { USER_CL } from 'eos-rest';
 import { UserSelectNode } from './user-node-select';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { CreateUserComponent } from './createUser/createUser.component';
+import {RtUserSelectService} from '../shered/services/rt-user-select.service';
 
 @Component({
     selector: 'eos-list-user-select',
@@ -23,6 +24,7 @@ export class ListUserSelectComponent implements OnDestroy {
         private _apiSrv: UserParamApiSrv,
         private _route: ActivatedRoute,
         private _router: Router,
+        private rtUserService: RtUserSelectService
     ) {
         this._route.params
             .takeUntil(this.ngUnsubscribe)
@@ -46,6 +48,7 @@ export class ListUserSelectComponent implements OnDestroy {
         }
         this.selectedUser = user;
         this.selectedUser.isSelected = true;
+        this.rtUserService.changeSelectedUser(user);
     }
 
     editUser() {

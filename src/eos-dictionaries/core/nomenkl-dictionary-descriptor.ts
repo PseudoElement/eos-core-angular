@@ -1,5 +1,5 @@
 import {
-    IDictionaryDescriptor, ITreeDictionaryDescriptor,
+    IDictionaryDescriptor, ISearchSettings, ITreeDictionaryDescriptor,
 } from 'eos-dictionaries/interfaces';
 
 import {PipRX} from 'eos-rest/services/pipRX.service';
@@ -10,6 +10,7 @@ import {DEPARTMENT} from '../../eos-rest';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
 import {DictionaryDescriptor} from './dictionary-descriptor';
 import {RecordDescriptor} from './record-descriptor';
+import {EosDictionaryNode} from './eos-dictionary-node';
 
 const NP_NOM_ROOT_DUE = '0.';
 
@@ -27,14 +28,21 @@ export class NomenklRecordDescriptor extends RecordDescriptor {
 
     filterBy(filters: any, data: any): boolean {
         if (filters && filters.hasOwnProperty('YEAR')) {
-            const y: number = filters['YEAR'];
+            const y: number = parseInt(filters['YEAR'], 10);
             const y1: number = data.rec['YEAR_NUMBER'];
             const y2: number = data.rec['END_YEAR'];
+            const p: boolean = filters['CB1'];
             if (y) {
+                if (!p && !y2) {
+                    return false;
+                }
                 if (y1 && (y1 > y)) {
                     return false;
                 }
                 if (y2 && (y2 < y)) {
+                    return false;
+                }
+                if (!p && (y2) && (y !== y2)) {
                     return false;
                 }
             }
@@ -114,6 +122,12 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
         const res = super.getNewRecord(preSetData);
         res['rec']['DUE'] = this._filterDUE;
         return res;
+    }
+
+    extendCritery(critery: any, params: ISearchSettings, selectedNode: EosDictionaryNode) {
+        if (params.mode === 2) {
+            critery['DUE'] = this._filterDUE;
+        }
     }
 
     protected _initRecord(data: IDictionaryDescriptor) {

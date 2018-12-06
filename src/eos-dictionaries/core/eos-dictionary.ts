@@ -2,18 +2,19 @@ import {
     E_DICT_TYPE,
     E_FIELD_SET,
     E_FIELD_TYPE,
-    ISearchSettings,
-    SEARCH_MODES,
+    E_RECORD_ACTIONS,
     IOrderBy,
     IRecordOperationResult,
-    E_RECORD_ACTIONS,
+    ISearchSettings,
+    SEARCH_MODES,
 } from 'eos-dictionaries/interfaces';
-import { AbstractDictionaryDescriptor } from './abstract-dictionary-descriptor';
-import { EosDictionaryNode } from './eos-dictionary-node';
+import {AbstractDictionaryDescriptor} from './abstract-dictionary-descriptor';
+import {EosDictionaryNode} from './eos-dictionary-node';
 
-import { DictionaryDescriptorService } from 'eos-dictionaries/core/dictionary-descriptor.service';
-import { OrganizationDictionaryDescriptor } from 'eos-dictionaries/core/organization-dictionary-descriptor';
-import { EosUtils } from 'eos-common/core/utils';
+import {DictionaryDescriptorService} from 'eos-dictionaries/core/dictionary-descriptor.service';
+import {OrganizationDictionaryDescriptor} from 'eos-dictionaries/core/organization-dictionary-descriptor';
+import {EosUtils} from 'eos-common/core/utils';
+
 // import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 
 export class EosDictionary {
@@ -543,15 +544,24 @@ export class EosDictionary {
     }
 
     private _extendCritery(critery: any, params: ISearchSettings, selectedNode?: EosDictionaryNode) {
-        if (this.descriptor.type !== E_DICT_TYPE.linear) {
-            if (params.mode === SEARCH_MODES.totalDictionary) {
-                // critery[selectedNode._descriptor.keyField.foreignKey] = selectedNode.originalId.toString().split('.')[0] + '.%';
-            } else if (params.mode === SEARCH_MODES.onlyCurrentBranch) {
-                critery['ISN_HIGH_NODE'] = selectedNode.data.rec['ISN_NODE'] + '';
-            } else if (params.mode === SEARCH_MODES.currentAndSubbranch) {
-                const layer = selectedNode.originalId.toString().split('.').length - 1;
-                critery[selectedNode._descriptor.keyField.foreignKey] = selectedNode.originalId + '%';
-                critery['LAYER'] = layer + ':Null';
+        switch (this.descriptor.type) {
+            case E_DICT_TYPE.department:
+            case E_DICT_TYPE.organiz:
+            case E_DICT_TYPE.tree: {
+                if (params.mode === SEARCH_MODES.totalDictionary) {
+                    // critery[selectedNode._descriptor.keyField.foreignKey] = selectedNode.originalId.toString().split('.')[0] + '.%';
+                } else if (params.mode === SEARCH_MODES.onlyCurrentBranch) {
+                    critery['ISN_HIGH_NODE'] = selectedNode.data.rec['ISN_NODE'] + '';
+                } else if (params.mode === SEARCH_MODES.currentAndSubbranch) {
+                    const layer = selectedNode.originalId.toString().split('.').length - 1;
+                    critery[selectedNode._descriptor.keyField.foreignKey] = selectedNode.originalId + '%';
+                    critery['LAYER'] = layer + ':Null';
+                }
+                break;
+            }
+            case E_DICT_TYPE.custom: {
+                this.descriptor.extendCritery(critery, params, selectedNode);
+                break;
             }
         }
     }

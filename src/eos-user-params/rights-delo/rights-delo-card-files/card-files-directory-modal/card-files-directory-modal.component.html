@@ -1,0 +1,26 @@
+<div class="input-user-wrapper input-user-card-files-directory-modal-wrapper" *ngIf="!isLoading">
+<header>
+    <eos-rights-delo-header
+        [title]="titleHeader"
+        (submitForm)="submitDirectoryModal()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnDisabled"
+    ></eos-rights-delo-header>
+</header>
+<div class="user-input-group">
+    <ul class="list-card-files"
+        *ngFor="let key of fieldKeysforCardFiles2; let i = index;">
+        <li>
+                    <eos-dynamic-input
+                    [input]="inputs['rec.' + key[0]]"
+                    [form]="form"
+                    [readonly]="false"
+                    ></eos-dynamic-input>
+        </li>
+    </ul>
+</div>
+</div>
+
+<div class="spinner-wrapper" *ngIf="isLoading">
+    <eos-spinner [size]="'lg'"></eos-spinner>
+</div>

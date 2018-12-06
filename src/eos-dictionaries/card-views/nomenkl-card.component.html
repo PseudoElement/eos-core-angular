@@ -1,5 +1,9 @@
 <div class="card-content-wrapper">
     <div class="clearfix">
+        <eos-dynamic-input *ngIf="inputs['rec.E_DOCUMENT']"
+                           [input]="inputs['rec.E_DOCUMENT']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input *ngIf="inputs['rec.CLASSIF_NAME']"
                            [input]="inputs['rec.CLASSIF_NAME']"
                            [form]="form"

@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { UserParamApiSrv } from './user-params-api.service';
-import { USER_CL, DEPARTMENT } from 'eos-rest';
+import { USER_CL, DEPARTMENT, USERCARD } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IParamUserCl } from '../intrfaces/user-parm.intterfaces';
 
 @Injectable()
 export class UserParamsService {
-    _userDepartment: DEPARTMENT;
     private _isTechUser: boolean;
     private _userContext: IParamUserCl;
     private _userContextDeparnment: DEPARTMENT;
+    private _userContextCard: USERCARD;
     private _sysParams;
 
     get userContextDeparnment() {
@@ -31,6 +31,7 @@ export class UserParamsService {
     }
     get userContextId () {
         if (this._userContext) {
+           // console.log(this._userContext);
             return this._userContext['ISN_LCLASSIF'];
         }
         return null;
@@ -48,6 +49,13 @@ export class UserParamsService {
         if (this._userContext) {
             return this._userContext['USERCARD_List'];
         }
+    }
+
+    get userCabinet () {
+        if (this._userContextCard) {
+            return this._userContextCard['USER_CABINET_List'];
+        }
+        return null;
     }
     get hashUserContext () {
         if (this._userContext) {
@@ -82,6 +90,44 @@ export class UserParamsService {
         return null;
     }
 
+    get hashUserContexHomeCard2 () {
+      //  console.log(this._userContext);
+        if (this._userContext) {
+            const hash: any = {};
+            this.userCard.forEach(item => {
+                hash[item.DUE] = item.ISN_LCLASSIF;
+            });
+            return hash;
+        }
+        return null;
+    }
+
+    get hashUserContexCabinet () {
+        //  console.log(this._userContext);
+          if (this._userContextCard) {
+              const hash: any = {};
+              this.userCabinet.forEach(item => {
+                  hash[item.ISN_LCLASSIF] = item.FOLDERS_AVAILABLE;
+                  hash[item.ISN_LCLASSIF] = item.HIDE_INACCESSIBLE;
+                  hash[item.ISN_LCLASSIF] = item.HIDE_INACCESSIBLE_PRJ;
+              });
+              return hash;
+          }
+          return null;
+      }
+
+  /*  get hashUserAbsoluteRights () {
+        if (this._userContext) {
+            const hash: any = {};
+            for (let i = 0; i < this._userContext['ISN_CLASSIF'].length; i++) {
+                hash[this._userContext['ISN_CLASSIF'][i]] = this._userContext['DELO_RIGHTS'][i];
+            }
+            console.log(hash);
+            return hash;
+        }
+        return null;
+    }*/
+
     get isUserContexst () {
         return !!this._userContext;
     }
@@ -90,7 +136,6 @@ export class UserParamsService {
         private _msgSrv: EosMessageService
     ) {}
     test() {
-        // console.log('trest');
         const q = [{
             method: 'MERGE',
             requestUri: `USER_CL(${this.userContextId})`,
@@ -113,12 +158,12 @@ export class UserParamsService {
         const queryUser = {
             USER_CL: {
                 criteries: {
-                    ISN_LCLASSIF: isn_cl
+                    ISN_LCLASSIF: isn_cl ? isn_cl : (this.userContextId + '')
                 }
             },
             expand: 'USER_PARMS_List,USERCARD_List/USER_CABINET_List'
         };
-        const _user = this._pipSrv.getData<USER_CL>(queryUser);
+        const _user = this._pipSrv.getData<USER_CL>(Object.assign({}, queryUser));
         const _sys = this.fetchSysParams();
         return Promise.all([_user, _sys])
         .then(([user, sys]) => {

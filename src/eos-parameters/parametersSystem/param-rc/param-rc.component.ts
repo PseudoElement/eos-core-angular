@@ -60,6 +60,7 @@ export class ParamRcComponent extends BaseParamComponent {
                 this.changePattern(newValue);
             })
         );
+        console.log(this.form);
     }
     changePattern(value) {
         if (value === '1') {
