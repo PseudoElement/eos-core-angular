@@ -43,8 +43,19 @@
     </div>
     <div class="dg-template-wrapper">
         <span>Шаблон</span>
-        <p class="dg-template m-font">{{dgTemplate}}</p>
+        <input class="dg-template m-font"
+               [id]="'dgTemplate'"
+               [type]="'text'"
+               [disabled]="true"
+               placeholder="{{dgTemplate}}">
         <button class="btn btn-primary"
             (click)="clearTemplate()">Очистить</button>
+        <input *ngIf="separator"
+               class="m-font"
+               [ngStyle]="{'margin-left.px': 10}"
+               [id]="'separator'"
+               [type]="'text'"
+               (keyup.enter)="update($event)"
+               value="{{separator}}">
     </div>
 </div>

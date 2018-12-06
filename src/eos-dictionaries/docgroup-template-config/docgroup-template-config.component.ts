@@ -26,6 +26,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     availableItems: any[] = [];
     templateItems: any[] = [];
     selected: any[] = [null, null];
+    separator: string;
 
     private subscriptions: Subscription[] = [];
 
@@ -101,7 +102,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     }
 
     isSeparator(item: any) {
-        return item.key === '/' || item.key === '-';
+        return item.key.indexOf('{') + item.key.indexOf('}') === -2;
     }
 
     isTemplateValid(): boolean {
@@ -167,7 +168,16 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     select(item: any, idx: number) {
         if (idx > 0 || this.isEnabled(item)) {
             this.selected[idx] = item;
+            if (idx === 1) {
+                this.separator = this.isSeparator(item) ? item.key : '';
+            }
         }
+    }
+
+    update(event: any) {
+        event.target.value = event.target.value.replace(/([*{}])/g, '');
+        this.selected[1].key = event.target.value;
+        this.generateTemplate();
     }
 
     private generateTemplate(): string {
@@ -176,15 +186,18 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     }
 
     private parseTemplate() {
-        const expr = /\{.{1,2}\}|-|\//g;
-        let res;
-        this.templateItems = [];
-        while (res = expr.exec(this.dgTemplate)) {
-            const tplElem = DOC_TEMPLATE_ELEMENTS.find((elem) => elem.key === res[0]);
-            if (tplElem) {
-                this.templateItems.push(Object.assign({}, tplElem));
+        this.dgTemplate.split(/(\{.{1,2}\})/).forEach((key) => {
+            if (key) {
+                const tplElem = DOC_TEMPLATE_ELEMENTS.find((elem) => elem.key === key);
+                if (tplElem) {
+                    this.templateItems.push(Object.assign({}, tplElem));
+                } else {
+                    this.templateItems.push(Object.assign({},{
+                        key: key,
+                        title: 'Разделитель'}));
+                }
             }
-        }
+        });
     }
 
     private updateAvailableItems() {
