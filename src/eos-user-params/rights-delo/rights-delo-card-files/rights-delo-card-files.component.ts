@@ -126,6 +126,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
               this.isLoading = false;
         });
         });
+        console.log(this.prepareData);
     }
     settingValuesForFieldsCabinets(value) {
                             this.prepDataAttachField(value);
@@ -391,15 +392,15 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         });
     }
     removeCardFile() {
-      /*  for (let i = 0; i < this.fieldKeysforCardFiles.length; i++) {
+        for (let i = 0; i < this.fieldKeysforCardFiles.length; i++) {
             if (this.fieldKeysforCardFiles[i][0] === this.allDataForCurrentUsercard['DUE']) {
-                this.prepareData.rec[this.fieldKeysforCardFiles[i][0]] = undefined;
+              //  this.prepareData.rec[this.fieldKeysforCardFiles[i][0]] = undefined;
                 this.fieldKeysforCardFiles[i][4] = false;
                 this.newData.rec[this.fieldKeysforCardFiles[i][0]] = 'NO';
                 this.inputs = this.getInputs();
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.subscribeChangeForm();
             }
-        }*/
+        }
     }
 }

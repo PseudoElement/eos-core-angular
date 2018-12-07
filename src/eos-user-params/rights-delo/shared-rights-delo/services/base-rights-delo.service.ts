@@ -226,20 +226,27 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
     }
     createObjRequest(): any[] {
         const req = [];
-        const currentArrayKeysForRemove = [];
         let stringKey = '';
         let level = -1;
-        const arrayPositionPoints = [];
+        let arrayPositionPoints = [];
+        let valueFromObjPrepareData;
+       // let countKeysForCurrentLevel;
+       // const arrayCountKeysForCurrentLevel = [];
         const userId = this._userParamsSetSrv.userContextId;
         const arrayJust = [];
 
         const funcObj = function(objNewData, objPrepareData, markMainCheckbox, markOldMainCheckbox) {
             for (const key in objNewData) {
                 if (typeof objNewData[key] === 'object' && (Object.keys(markMainCheckbox).length === 0)) {
+                   // countKeysForCurrentLevel = Object.keys(objNewData[key]).length;
                     level++;
+                 //   arrayCountKeysForCurrentLevel.push(countKeysForCurrentLevel);
                     stringKey += key + '.';
                     funcObj(objNewData[key], objPrepareData, markMainCheckbox, markOldMainCheckbox);
                 } else {
+                    if (level === -1 || level === 0) {
+                        valueFromObjPrepareData = objPrepareData[key];
+                    }
                     for (let i = 0; i < stringKey.length; i++) {
                         if (stringKey.charAt(i) === '.') {
                             arrayPositionPoints.push(i);
@@ -259,12 +266,14 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
                             }
                         });
                         objPrepareData[stringKey] = '010000000000010010'; // Then
-                    } else if (objNewData[key] === 'NO' && objPrepareData[stringKey] !== undefined) {
+                    } else if (objNewData[key] === 'NO' && ((objPrepareData[stringKey] !== undefined) || (valueFromObjPrepareData !== undefined))) {
+                        if (valueFromObjPrepareData !== undefined) {
+                            stringKey = key;
+                        }
                         req.push({
                             method: 'DELETE',
                             requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${stringKey}\')`
                         });
-                        currentArrayKeysForRemove.push(stringKey);
                         objPrepareData[stringKey] = undefined;
                     }
                     const arrayMarkMainCheckbox = Object.keys(markMainCheckbox);
@@ -286,21 +295,38 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
                         });
                     }
                     if (key === keys[keys.length - 1]) {
-                        level--;
+                     //   let arraySplitForStringKey, theLengthOfThePenultimateElement;
+                        level = 0;
+                       /* for (let i = 0; i < arrayCountKeysForCurrentLevel.length; i++) {
+                            if (arrayCountKeysForCurrentLevel[arrayCountKeysForCurrentLevel.length - 2] > 2) {
+                                arraySplitForStringKey = stringKey.split('.');
+                                theLengthOfThePenultimateElement = arraySplitForStringKey[arraySplitForStringKey.length - 2].length + 1;
+                                stringKey = stringKey.substring(0, stringKey.length - theLengthOfThePenultimateElement);
+                                arrayCountKeysForCurrentLevel.pop();
+                                arrayCountKeysForCurrentLevel.pop();
+                                arrayCountKeysForCurrentLevel.push();
+                            } else {
+                                level--;
+                            }
+                        }*/
                         stringKey = stringKey.substring(0, arrayPositionPoints[level] + 1);
+                        arrayPositionPoints = [];
                     }
                 }
             }
         };
 
+        console.log(this.newData);
+        console.log(this.prepareData);
+
         funcObj(this.newData.rec, this.prepareData.rec, this.mainCheckbox, this.oldMainCheckbox);
-        for (const key2 of Object.keys(this.prepareData.rec)) {
+      /*  for (const key2 of Object.keys(this.prepareData.rec)) {
           for (let i = 0; i < currentArrayKeysForRemove.length; i++) {
               if (key2 === currentArrayKeysForRemove[i]) {
                 this.prepareData.rec[key2] = undefined;
               }
           }
-      }
+        }*/
       this.inputs = this.getInputs();
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
         this.subscribeChangeForm();
