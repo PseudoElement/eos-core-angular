@@ -186,18 +186,21 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     }
 
     private parseTemplate() {
-        this.dgTemplate.split(/(\{.{1,2}\})/).forEach((key) => {
-            if (key) {
-                const tplElem = DOC_TEMPLATE_ELEMENTS.find((elem) => elem.key === key);
-                if (tplElem) {
-                    this.templateItems.push(Object.assign({}, tplElem));
-                } else {
-                    this.templateItems.push(Object.assign({}, {
-                        key: key,
-                        title: 'Разделитель'}));
+        if (this.dgTemplate) {
+            this.dgTemplate.split(/(\{.{1,2}\})/).forEach((key) => {
+                if (key) {
+                    const tplElem = DOC_TEMPLATE_ELEMENTS.find((elem) => elem.key === key);
+                    if (tplElem) {
+                        this.templateItems.push(Object.assign({}, tplElem));
+                    } else {
+                        this.templateItems.push(Object.assign({}, {
+                            key: key,
+                            title: 'Разделитель'
+                        }));
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     private updateAvailableItems() {
