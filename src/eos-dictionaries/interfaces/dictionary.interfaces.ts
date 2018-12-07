@@ -67,6 +67,8 @@ export interface IFieldDescriptor {
     dictionaryId?: string;
     password?: boolean;
     groupLabel?: string;
+    minValue?: number;
+    maxValue?: number;
 }
 
 export interface IFieldDescriptorBase {

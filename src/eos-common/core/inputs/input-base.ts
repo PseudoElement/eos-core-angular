@@ -21,6 +21,8 @@ export class InputBase<T>{
     groupLabel?: string;
     isGroup?: boolean;
     formatDbBinary?: boolean;
+    minValue?: number;
+    maxValue?: number;
 
 
     constructor(options: {
@@ -44,6 +46,8 @@ export class InputBase<T>{
         groupLabel?: string,
         isGroup?: boolean,
         formatDbBinary?: boolean,
+        minValue?: number;
+        maxValue?: number;
     } = {}) {
         this.value = options.value;
         this.key = options.key || '';
@@ -66,5 +70,7 @@ export class InputBase<T>{
         this.password = options.password;
         this.groupLabel = options.groupLabel;
         this.isGroup = options.isGroup;
+        this.minValue = options.minValue;
+        this.maxValue = options.maxValue;
     }
 }

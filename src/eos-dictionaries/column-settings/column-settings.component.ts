@@ -189,7 +189,7 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
         }
     }
 
-    /**
+    /*
      * make item edited
      * @param item edited item
      */
@@ -208,7 +208,10 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
         } else {
             this.editedItem.customTitle = undefined;
         }
-        this.haveCustomTitle = Boolean(this.customTitles.length);
+
+        this.haveCustomTitle = this.fixedFields.some(el => Boolean(el.customTitle)) ||
+            this.dictionaryFields.some(el => Boolean(el.customTitle)) ||
+            this.currentFields.some(el => Boolean(el.customTitle));
         this.cancelTitleEdit();
     }
 

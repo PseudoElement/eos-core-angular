@@ -145,3 +145,9 @@ export const DANGER_EDIT_ONLY_DEPARTMENTS_ALLOWED: IMessage = {
     title: 'Ошибка редактирования',
     msg: 'Редактирование "Счетчика номерообразования НП" доступно только справочнику "подразделения"'
 };
+
+export const DANGER_EDIT_YEAR_INVALID: IMessage = {
+    type: 'danger',
+    title: 'Ошибка редактирования',
+    msg: 'Неверно задан год'
+};

@@ -182,7 +182,9 @@ export class RecordDescriptor {
                         dictionaryId: _f.dictionaryId,
                         default: _f.default,
                         password: _f.password,
-                        groupLabel: _f.groupLabel
+                        groupLabel: _f.groupLabel,
+                        maxValue: _f.maxValue,
+                        minValue: _f.minValue,
                     };
                 }
             });

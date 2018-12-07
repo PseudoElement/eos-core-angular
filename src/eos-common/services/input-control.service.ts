@@ -1,22 +1,23 @@
-import { Injectable } from '@angular/core';
-import { FormControl, FormGroup, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
+import {Injectable} from '@angular/core';
+import {AbstractControl, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 
-import { InputBase } from '../core/inputs/input-base';
-import { EosDictService } from '../../eos-dictionaries/services/eos-dict.service';
-import { IBaseInput, ISelectInput } from '../interfaces';
-import { StringInput } from '../core/inputs/string-input';
-import { TextInput } from '../core/inputs/text-input';
-import { CheckboxInput } from '../core/inputs/checkbox-input';
-import { DateInput } from '../core/inputs/date-input';
-import { DropdownInput } from '../core/inputs/select-input';
-import { ButtonsInput } from '../core/inputs/buttons-input';
-import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
-import { EosUtils } from '../core/utils';
-import { NOT_EMPTY_STRING } from '../consts/common.consts';
+import {InputBase} from '../core/inputs/input-base';
+import {EosDictService} from '../../eos-dictionaries/services/eos-dict.service';
+import {IBaseInput, ISelectInput} from '../interfaces';
+import {StringInput} from '../core/inputs/string-input';
+import {TextInput} from '../core/inputs/text-input';
+import {CheckboxInput} from '../core/inputs/checkbox-input';
+import {DateInput} from '../core/inputs/date-input';
+import {DropdownInput} from '../core/inputs/select-input';
+import {ButtonsInput} from '../core/inputs/buttons-input';
+import {E_FIELD_TYPE} from 'eos-dictionaries/interfaces';
+import {EosUtils} from '../core/utils';
+import {NOT_EMPTY_STRING} from '../consts/common.consts';
 
 @Injectable()
 export class InputControlService {
-    constructor(private _dictSrv: EosDictService) { }
+    constructor(private _dictSrv: EosDictService) {
+    }
 
     generateInputs(inputs: IBaseInput[]): InputBase<any>[] {
         const set: InputBase<any>[] = [];
@@ -103,7 +104,7 @@ export class InputControlService {
                 }
             }
 
-            return (valid ? null : { dateCompare: errMessage });
+            return (valid ? null : {dateCompare: errMessage});
         };
     }
 
@@ -113,13 +114,13 @@ export class InputControlService {
             let error = null;
             if (value && value instanceof Date) {
                 if (isNaN(value.getTime())) {
-                    error = { 'wrongDate': true };
+                    error = {'wrongDate': true};
                 } else {
                     const ts = value.setHours(0, 0, 0, 0);
                     if (ts - new Date('01/01/1900').setHours(0, 0, 0, 0) < 0) {
-                        error = { 'minDate': true };
+                        error = {'minDate': true};
                     } else if (new Date('12/31/2100').setHours(0, 0, 0, 0) - ts < 0) {
-                        error = { 'maxDate': true };
+                        error = {'maxDate': true};
                     }
                 }
             }
@@ -137,7 +138,7 @@ export class InputControlService {
         const validators = [];
 
         if (input.disabled) {
-            group[input.key] = new FormControl({ value: value, disabled: true }, validators);
+            group[input.key] = new FormControl({value: value, disabled: true}, validators);
         } else {
             if (input.controlType === E_FIELD_TYPE.date) {
                 validators.push(this.dateValueValidator());
@@ -146,6 +147,10 @@ export class InputControlService {
                 }
                 if (input.key === 'rec.START_DATE') {
                     validators.push(this.dateCompareValidator('rec.END_DATE', 'lt'));
+                }
+            } else if (input.controlType === E_FIELD_TYPE.numberIncrement) {
+                if (input.minValue || input.maxValue) {
+                    validators.push(this.numberValidator(input.minValue, input.maxValue));
                 }
             }
 
@@ -163,7 +168,21 @@ export class InputControlService {
             if (input.length) {
                 validators.push(Validators.maxLength(input.length));
             }
+
             group[input.key] = new FormControl(value, validators);
         }
+    }
+
+    private numberValidator(minValue: number, maxValue: number) {
+        return (control: AbstractControl): { [errKey: string]: any } => {
+            let valid = true;
+            let errMessage: string = null;
+            const value = control.value;
+            if (value && ((maxValue && (value > maxValue)) || (minValue && (value < minValue)))) {
+                valid = false;
+                errMessage = 'Значение задано неверно';
+            }
+            return (valid ? null : {pattern: errMessage});
+        };
     }
 }

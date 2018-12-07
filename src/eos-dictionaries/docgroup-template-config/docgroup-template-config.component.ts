@@ -192,7 +192,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
                 if (tplElem) {
                     this.templateItems.push(Object.assign({}, tplElem));
                 } else {
-                    this.templateItems.push(Object.assign({},{
+                    this.templateItems.push(Object.assign({}, {
                         key: key,
                         title: 'Разделитель'}));
                 }

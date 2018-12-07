@@ -21,6 +21,8 @@ export class FieldDescriptor implements IFieldDescriptorBase {
     readonly dictionaryId?: string;
     readonly password?: boolean;
     readonly groupLabel?: string;
+    readonly minValue?: number;
+    readonly maxValue?: number;
 
     constructor(data: IFieldDescriptor) {
         if (data.key) {
@@ -47,6 +49,8 @@ export class FieldDescriptor implements IFieldDescriptorBase {
         this.isUnique = !!data.isUnique;
 
         this.uniqueInDict = !!data.uniqueInDict;
+        this.minValue = data.minValue;
+        this.maxValue = data.maxValue;
 
         if (data.options) {
             this.options = data.options;

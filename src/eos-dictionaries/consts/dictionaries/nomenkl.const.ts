@@ -1,6 +1,7 @@
 import {E_DICT_TYPE, IDictionaryDescriptor} from 'eos-dictionaries/interfaces';
 import {LINEAR_TEMPLATE} from './_linear-template';
 import {COMMON_FIELD_NAME} from './_common';
+import {YEAR_PATTERN} from 'eos-common/consts/common.consts';
 
 
 export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
@@ -37,14 +38,18 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
         options: [],
     }, {
         key: 'SHELF_LIFE',
-        title: 'Время хранения',
+        title: 'Срок хранения',
         type: 'string',
         length: 255,
     }, {
         key: 'YEAR_NUMBER',
         title: 'Ввод в действие',
-        type: 'number',
+        type: 'numberIncrement',
+        pattern: YEAR_PATTERN,
         required: true,
+        minValue: 1901,
+        maxValue: 2100,
+
     }, {
         key: 'STORE_TIME',
         title: 'Время',
@@ -58,7 +63,10 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
     }, {
         key: 'END_YEAR',
         title: 'Завершение',
-        type: 'number',
+        type: 'numberIncrement',
+        pattern: YEAR_PATTERN,
+        minValue: 1901,
+        maxValue: 2100,
     }, {
         key: 'ARTICLE',
         title: 'Статья',
@@ -91,6 +99,13 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
         type: 'boolean',
         required: true,
         default: 0,
+    }, {
+        key: 'buttPer',
+        type: 'buttons',
+        title: '',
+        length: 100,
+        options: [{value: 0, title: 'Текущее'}, {value: 1, title: 'Переходящее'}],
+        default: 1,
     },
         Object.assign({}, COMMON_FIELD_NAME, {
             title: 'Заголовок',
@@ -100,7 +115,7 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
 
     treeFields: ['title'],
     editFields: ['CLASSIF_NAME', 'NOTE', 'CLOSED', 'SECURITY', 'YEAR_NUMBER', 'STORE_TIME', 'SHELF_LIFE', 'NOM_NUMBER',
-        'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', ],
+        'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', 'buttPer'],
     searchFields: ['CLASSIF_NAME', 'NOM_NUMBER', ],
     fullSearchFields: ['CLASSIF_NAME', 'NOTE', 'NOM_NUMBER'],
     quickViewFields: ['CLASSIF_NAME', 'NOTE'],

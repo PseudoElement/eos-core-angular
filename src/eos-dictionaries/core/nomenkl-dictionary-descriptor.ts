@@ -29,6 +29,7 @@ export class NomenklRecordDescriptor extends RecordDescriptor {
     filterBy(filters: any, data: any): boolean {
         if (filters && filters.hasOwnProperty('YEAR')) {
             const y: number = parseInt(filters['YEAR'], 10);
+            this.dictionary.defaultYear = y;
             const y1: number = data.rec['YEAR_NUMBER'];
             const y2: number = data.rec['END_YEAR'];
             const p: boolean = filters['CB1'];
@@ -53,8 +54,11 @@ export class NomenklRecordDescriptor extends RecordDescriptor {
 
 export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
     record: NomenklRecordDescriptor;
+    defaultYear: number;
     private _treeData: CustomTreeNode[];
     private _filterDUE: string;
+    private _defaultNumber: string;
+
 
     constructor(
         descriptor: IDictionaryDescriptor,
@@ -114,6 +118,15 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
             .read(req)
             .then((data: any[]) => {
                 this.prepareForEdit(data);
+                if (data && data.length) {
+                    const i = data[0]['NOM_NUMBER'];
+                    if (i) {
+                        this._defaultNumber = i.substring(0, 2);
+                        if (this._defaultNumber === '$$') {
+                            this._defaultNumber = '';
+                        }
+                    }
+                }
                 return data;
             });
     }
@@ -121,6 +134,8 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
     getNewRecord(preSetData: {}): {} {
         const res = super.getNewRecord(preSetData);
         res['rec']['DUE'] = this._filterDUE;
+        res['rec']['YEAR_NUMBER'] = this.defaultYear;
+        res['rec']['NOM_NUMBER'] = this._defaultNumber;
         return res;
     }
 

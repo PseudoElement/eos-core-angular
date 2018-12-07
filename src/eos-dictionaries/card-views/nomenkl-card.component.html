@@ -22,10 +22,17 @@
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
         </div>
-        <eos-dynamic-input class="checkbox-inline"
-                           [input]="inputs['rec.CLOSED']"
-                           [form]="form"
-                           [readonly]="!editMode"></eos-dynamic-input>
+        <div class="row-wrapper space-between">
+            <eos-dynamic-input class="checkbox-inline"
+                               [input]="inputs['rec.CLOSED']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input class="per-current"
+                               [input]="inputs['rec.buttPer']"
+                               [form]="form"
+                               (click)="onChangeButtPer($event)"
+                               [readonly]="!editMode"></eos-dynamic-input>
+        </div>
 
         <eos-dynamic-input *ngIf="inputs['rec.ARTICLE']"
                            [input]="inputs['rec.ARTICLE']"

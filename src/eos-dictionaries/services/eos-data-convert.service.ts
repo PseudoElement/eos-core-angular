@@ -58,6 +58,8 @@ export class EosDataConvertService {
                                         length: descr[_key].length,
                                         readonly: descr[_key].readonly,
                                         disabled: descr[_key].readonly || !editMode,
+                                        maxValue: descr[_key].maxValue,
+                                        minValue: descr[_key].minValue,
                                     });
                                     break;
                                 case E_FIELD_TYPE.number:
@@ -74,7 +76,9 @@ export class EosDataConvertService {
                                         readonly: descr[_key].readonly,
                                         disabled: descr[_key].readonly || !editMode,
                                         password: descr[_key].password,
-                                        groupLabel: descr[_key].groupLabel
+                                        groupLabel: descr[_key].groupLabel,
+                                        maxValue: descr[_key].maxValue,
+                                        minValue: descr[_key].minValue,
                                     });
                                     break;
                                 case E_FIELD_TYPE.string:
