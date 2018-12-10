@@ -32,6 +32,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     titleHeader = 'Новый пользователь';
     btnDisabled: boolean = true;
     isShell: Boolean = false;
+    initDue: string;
+    initLogin: string;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor (
         private _apiSrv: UserParamApiSrv,
@@ -47,9 +49,11 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
         this.inputs['SELECT_ROLE'].options = [];
         this.inputs['USER_COPY'].options = [{title: '', value: ''}];
-        this.listUsers.forEach(user => {
-            this.inputs['USER_COPY'].options.push({title: user.SURNAME_PATRON, value: user.ISN_LCLASSIF});
-        });
+        if (this.listUsers) {
+            this.listUsers.forEach(user => {
+                this.inputs['USER_COPY'].options.push({title: user.SURNAME_PATRON, value: user.ISN_LCLASSIF});
+            });
+        }
         this.isLoading = true;
         this._pipeSrv.read({USER_PARMS: {criteries: {
             ISN_USER_OWNER: '-99',
@@ -61,6 +65,15 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 this.inputs['SELECT_ROLE'].options.push({title: i, value: i});
             });
             this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
+                if (this.initDue) {
+                    this.data['dueDL'] = this.initDue;
+                    this._getDepartmentFromUser(this.initDue).then((dt) => {
+                        this.form.controls['DUE_DEP_NAME'].patchValue(dt[0]['SURNAME']);
+                    });
+                }
+                if (this.initLogin) {
+                    this.form.controls['classifName'].patchValue(this.initLogin);
+                }
             this.isLoading = false;
             this._subscribe();
         });
@@ -130,7 +143,6 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this.isShell = false;
         });
     }
-
 
     private _getDepartmentFromUser (dueDep) {
         const queryDueDep = {
