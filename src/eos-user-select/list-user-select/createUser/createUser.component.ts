@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
-import { CREATE_USER_INPUTS, OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
+import { CREATE_USER_INPUTS, OPEN_CLASSIF_DEPARTMENT, OPEN_CLASSIF_USER_CL } from 'eos-user-select/shered/consts/create-user.consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { PipRX, DEPARTMENT, USER_CL } from 'eos-rest';
 import { FormGroup } from '@angular/forms';
@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
-import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 
 @Component({
     selector: 'eos-param-create-user',
@@ -18,14 +17,8 @@ import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api
 })
 export class CreateUserComponent implements OnInit, OnDestroy {
     @Output() closedModal = new EventEmitter();
-    listUsers: USER_CL[];
     isLoading: boolean = true;
-    data = {
-        SELECT_ROLE: '',
-        classifName: '',
-        dueDL: '',
-        isn_user_copy_from: ''
-    };
+    data = {};
     fields = CREATE_USER_INPUTS;
     inputs;
     form: FormGroup;
@@ -36,7 +29,6 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     initLogin: string;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor (
-        private _apiSrv: UserParamApiSrv,
         private _msgSrv: EosMessageService,
         private _router: Router,
         private _inputCtrlSrv: InputParamControlService,
@@ -45,15 +37,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        this.listUsers = this._apiSrv.listUser;
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
         this.inputs['SELECT_ROLE'].options = [];
-        this.inputs['USER_COPY'].options = [{title: '', value: ''}];
-        if (this.listUsers) {
-            this.listUsers.forEach(user => {
-                this.inputs['USER_COPY'].options.push({title: user.SURNAME_PATRON, value: user.ISN_LCLASSIF});
-            });
-        }
         this.isLoading = true;
         this._pipeSrv.read({USER_PARMS: {criteries: {
             ISN_USER_OWNER: '-99',
@@ -126,6 +111,21 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this._showDepartment();
         }
     }
+    selectUser() {
+        this.isShell = true;
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL, true)
+        .then(data => {
+            this.data['ISN_USER_COPY'] = data;
+            return this._getUserCl(data);
+        })
+        .then(data => {
+            this.isShell = false;
+            this.form.get('USER_COPY').patchValue(data[0]['SURNAME_PATRON']);
+        })
+        .catch(() => {
+            this.isShell = false;
+        });
+    }
 
     private _showDepartment() {
         this.isShell = true;
@@ -154,13 +154,23 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         };
         return this._pipeSrv.read<DEPARTMENT>(queryDueDep);
     }
+    private _getUserCl (isn) {
+        const queryUser = {
+            USER_CL: {
+                criteries: {
+                    ISN_LCLASSIF: isn
+                }
+            }
+        };
+        return this._pipeSrv.read<USER_CL>(queryUser);
+    }
     private _createUrlForSop() {
         const d = this.data;
         let url = 'CreateUserCl?';
             url += `classifName='${d['classifName'] ? encodeURI(d['classifName']) : ''}'`;
             url += `&dueDL='${d['dueDL'] ? d['dueDL'] : ''}'`;
             url += `&role='${d['SELECT_ROLE'] ? encodeURI(d['SELECT_ROLE']) : ''}'`;
-            url += `&isn_user_copy_from=${d['USER_COPY'] ? d['USER_COPY'] : '0'}`; // если не выбран пользователь для копирования передаем '0'
+            url += `&isn_user_copy_from=${d['ISN_USER_COPY'] ? d['ISN_USER_COPY'] : '0'}`; // если не выбран пользователь для копирования передаем '0'
         return url;
     }
 

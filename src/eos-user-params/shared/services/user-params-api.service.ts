@@ -6,7 +6,6 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
 
 @Injectable()
 export class UserParamApiSrv {
-    listUser: USER_CL[];
     constructor(
         private apiSrv: PipRX,
         private _router: Router
@@ -52,11 +51,7 @@ export class UserParamApiSrv {
 
         return this.getData<USER_CL>(query)
         .then(data => {
-            data = data.filter(user => user.ISN_LCLASSIF !== 0 && user.CLASSIF_NAME !== ' ');
-            if (!dueDep) {
-                this.listUser = data;
-            }
-            return data;
+            return data.filter(user => user.ISN_LCLASSIF !== 0 && user.CLASSIF_NAME !== ' ');
         });
     }
 

@@ -30,10 +30,10 @@ export const CREATE_USER_INPUTS = [
         options: [],
     },
     {
-        controlType: E_FIELD_TYPE.select,
+        controlType: E_FIELD_TYPE.string,
         key: 'USER_COPY',
         label: 'Скопировать настройки от:',
-        options: [],
+        value: '',
     },
 ];
 
@@ -45,4 +45,8 @@ export const OPEN_CLASSIF_DEPARTMENT: IOpenClassifParams = {
     selectMulty: false,
     selectLeafs: true,
     selectNodes: false,
+};
+export const OPEN_CLASSIF_USER_CL: IOpenClassifParams = {
+    classif: 'USER_CL',
+    selectMulty: false,
 };

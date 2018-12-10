@@ -44,12 +44,23 @@
             [readonly]="form.get('SELECT_ROLE').disabled"
         ></eos-dynamic-input>
     </div>
-    <eos-dynamic-input
-        class="base-text-input base-input-role"
-        [input]="inputs['USER_COPY']"
-        [form]="form"
-        [readonly]="form.get('USER_COPY').disabled"
-    ></eos-dynamic-input>
+    <div [formGroup]="form"
+        class="dynamic-input-wrapper inline-block base-department-input">
+        <label
+            [attr.for]="inputs['USER_COPY'].key">{{inputs['USER_COPY'].label}}</label>
+        <div style="width: 461px">
+        <input class="form-control m-font inline-block"
+            readonly
+            [formControlName]="inputs['USER_COPY'].key"
+            [id]="inputs['USER_COPY'].key"
+            type="text"
+            [placeholder]="inputs['USER_COPY'].label"
+            autocomplete="off">
+            <span class="icon eos-icon eos-icon-avatar-blue small icon-add-department"
+                (click)="selectUser()"
+            ></span>
+        </div>
+    </div>
 </main>
 
 <div *ngIf="isShell" class="shell"></div>
