@@ -19,6 +19,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
 
     boss: EosDictionaryNode;
     department: string;
+    isUserUpdating: boolean;
 
     constructor(
         private _modalSrv: BsModalService,
@@ -31,8 +32,10 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         super.ngOnChanges();
 
         if (this.node) {
+            this.isUserUpdating = true;
             this._uapisrv.getUsers(this.node.data.rec['DUE']).then((u) => {
                 this.nodeDataFull.user = u[0];
+                this.isUserUpdating = false;
             });
 
             if (!this.node.data.rec['IS_NODE'] && this.node.children) {
