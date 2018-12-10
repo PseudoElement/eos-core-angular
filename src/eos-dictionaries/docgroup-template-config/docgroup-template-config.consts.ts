@@ -10,6 +10,7 @@ export const DG_TPL_LINK_IDX = { key: '{9}', title: 'Индекс связки' 
 export const DG_TPL_LINKED_DOC_REG_NUMBER = { key: '{A}', title: 'Рег. № связанного документа' };
 export const DG_TPL_LINKED_DOC_NUMBER = { key: '{B}', title: 'Порядковый номер связанного документа' };
 export const DG_TPL_RK_NUMBER = { key: '{C}', title: 'Порядковый номер в пределах связанной РК' };
+export const DG_TPL_NUM_NP = { key: '{N}', title: 'Номер НП' };
 export const DG_TPL_SEPARATOR1 = { key: '-', title: 'Разделитель' };
 export const DG_TPL_SEPARATOR2 = { key: '/', title: 'Разделитель' };
 export const DG_TPL_MANUAL_NUMBER = { key: '{@}', title: 'Свободный номер' };
@@ -17,7 +18,6 @@ export const DG_TPL_COMB1 = { key: '{@2}', title: 'Сводобный + поря
 export const DG_TPL_COMB2 = { key: '{1#}', title: 'Спец. элемент первичного документа' };
 export const DG_TPL_COMB3 = { key: '{2#}', title: 'Спец. элемент повторного документа' };
 export const DG_TPL_COMB4 = { key: '{3#}', title: 'Специальный элемент ответов' };
-export const DG_TPL_NUM_NP = { key: '{N}', title: 'Номер НП' };
 export const DG_TPL_NUM_ORG = { key: '{E}', title: 'Порядковый номер организации - регистратора' };
 export const DG_TPL_INDEX = { key: '{F}', title: 'Индекс организации - регистратора' };
 
@@ -40,6 +40,7 @@ export const DOC_TEMPLATE_ELEMENTS = [
     DG_TPL_LINKED_DOC_REG_NUMBER,
     DG_TPL_LINKED_DOC_NUMBER,
     DG_TPL_RK_NUMBER,
+    DG_TPL_NUM_NP,
     DG_TPL_SEPARATOR1,
     DG_TPL_SEPARATOR2,
     DG_TPL_MANUAL_NUMBER,
@@ -47,7 +48,6 @@ export const DOC_TEMPLATE_ELEMENTS = [
     DG_TPL_COMB2,
     DG_TPL_COMB3,
     DG_TPL_COMB4,
-    DG_TPL_NUM_NP,
     DG_TPL_NUM_ORG,
     DG_TPL_INDEX
 ];
