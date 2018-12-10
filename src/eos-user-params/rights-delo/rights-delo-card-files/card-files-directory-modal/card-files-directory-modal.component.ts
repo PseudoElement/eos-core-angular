@@ -16,13 +16,9 @@ export class CardFilesDirectoryModalComponent extends BaseRightsDeloSrv implemen
     @Output() formChanged = new EventEmitter();
     @Output() formInvalid = new EventEmitter();
     isLoading = false;
-    fieldKeysforCardFiles = [];
     fieldKeysforCardFiles2 = [];
     _userParamsSetSrv: UserParamsService;
     dataSrv: EosDataConvertService;
-    sortedData;
-    prepareData;
-    newData;
     form: FormGroup;
     inputs: any;
     prepInputs: any;

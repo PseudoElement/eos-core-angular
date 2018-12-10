@@ -44,6 +44,12 @@
             [readonly]="form.get('SELECT_ROLE').disabled"
         ></eos-dynamic-input>
     </div>
+    <eos-dynamic-input
+        class="base-text-input base-input-role"
+        [input]="inputs['USER_COPY']"
+        [form]="form"
+        [readonly]="form.get('USER_COPY').disabled"
+    ></eos-dynamic-input>
 </main>
 
 <div *ngIf="isShell" class="shell"></div>

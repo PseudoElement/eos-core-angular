@@ -29,6 +29,12 @@ export const CREATE_USER_INPUTS = [
         label: 'РОЛЬ',
         options: [],
     },
+    {
+        controlType: E_FIELD_TYPE.select,
+        key: 'USER_COPY',
+        label: 'Скопировать настройки от:',
+        options: [],
+    },
 ];
 
 export const OPEN_CLASSIF_DEPARTMENT: IOpenClassifParams = {
