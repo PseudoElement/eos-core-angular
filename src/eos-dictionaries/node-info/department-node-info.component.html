@@ -69,10 +69,19 @@
                     <p class="field-value m-font"><a *ngIf="nodeDataFull.cabinet?.ISN_CABINET"
                             [routerLink]="'/spravochniki/cabinet/'+nodeDataFull.cabinet?.ISN_CABINET + '/view'">{{nodeDataFull.cabinet?.CABINET_NAME}}</a></p>
                 </div>
-                <div class="field">
+                <div class="field" *ngIf="getUserLogin()">
                     <p class="field-title unimportant-text s-font">ЯВЛЯЕТСЯ ПОЛЬЗОВАТЕЛЕМ</p>
-                    <p class="field-value m-font">{{nodeDataFull.user?.CLASSIF_NAME}}</p>
+                    <p class="field-value m-font" *ngIf="getUserLogin()">{{getUserLogin()}}</p>
                     <!-- p class="field-value m-font"><a [routerLink]="'/spravochniki/user/'+nodeDataFull.user?.ISN_LCLASSIF + '/view'">{{nodeDataFull.user?.CLASSIF_NAME}}</a></p -->
+                </div>
+                <div class="field" *ngIf="!getUserLogin()">
+                    <button
+                            class="link-name primary-text l-font active"
+                            tooltip="Сделать пользователем"
+                            placement="top"
+                            container="body"
+                            containerClass="tooltip-info"
+                            (click)="createUser()">Сделать пользователем</button>
                 </div>
             </div>
         </div>

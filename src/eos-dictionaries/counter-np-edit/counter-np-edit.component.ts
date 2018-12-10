@@ -105,7 +105,7 @@ export class CounterNpEditComponent implements OnDestroy, OnInit {
             this.dep_node = data[0];
         });
 
-        this.apiSrv.read({'DEPARTMENT': this.baseId}).then((data) => {
+        this.apiSrv.read({'NP_NUMCREATION': this.baseId}).then((data) => {
             data = [
                 {
                     'BASE_ID': this.baseId,
