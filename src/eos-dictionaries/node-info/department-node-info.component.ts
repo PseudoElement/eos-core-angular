@@ -5,6 +5,7 @@ import {ROLES_IN_WORKFLOW} from '../consts/dictionaries/department.consts';
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
 import {CreateUserComponent} from '../../eos-user-select/list-user-select/createUser/createUser.component';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
+import {UserParamApiSrv} from '../../eos-user-params/shared/services/user-params-api.service';
 
 @Component({
     selector: 'eos-department-node-info',
@@ -21,6 +22,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
 
     constructor(
         private _modalSrv: BsModalService,
+        private _uapisrv: UserParamApiSrv,
     ) {
         super();
     }
@@ -29,6 +31,10 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         super.ngOnChanges();
 
         if (this.node) {
+            this._uapisrv.getUsers(this.node.data.rec['DUE']).then((u) => {
+                this.nodeDataFull.user = u[0];
+            });
+
             if (!this.node.data.rec['IS_NODE'] && this.node.children) {
                 this.boss = this.node.children.find((_chld) => _chld.data.rec['POST_H']);
             } else {
