@@ -7,12 +7,14 @@ import { UserSelectNode } from './user-node-select';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { CreateUserComponent } from './createUser/createUser.component';
 import {RtUserSelectService} from '../shered/services/rt-user-select.service';
+import { EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.service';
 
 @Component({
     selector: 'eos-list-user-select',
     templateUrl: 'list-user-select.component.html'
 })
 export class ListUserSelectComponent implements OnDestroy {
+    currentState: boolean[];
     createUserModal: BsModalRef;
     listUsers: UserSelectNode[];
     selectedUser: UserSelectNode;
@@ -24,7 +26,8 @@ export class ListUserSelectComponent implements OnDestroy {
         private _apiSrv: UserParamApiSrv,
         private _route: ActivatedRoute,
         private _router: Router,
-        private rtUserService: RtUserSelectService
+        private rtUserService: RtUserSelectService,
+        private _sandwichSrv: EosSandwichService,
     ) {
         this._route.params
             .takeUntil(this.ngUnsubscribe)
@@ -35,6 +38,10 @@ export class ListUserSelectComponent implements OnDestroy {
                     this.listUsers = this._getListUsers(data);
                     this.isLoading = false;
                 });
+            });
+        this._sandwichSrv.currentDictState$.takeUntil(this.ngUnsubscribe)
+            .subscribe((state: boolean[]) => {
+                this.currentState = state;
             });
     }
     ngOnDestroy() {

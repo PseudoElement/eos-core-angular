@@ -5,7 +5,7 @@
             <button
                 class="btn"
                 tooltip="Создать пользователя"
-                placement="bottom"
+                [placement]="currentState[0] ? 'bottom' : 'right'"
                 container="body"
                 containerClass="tooltip-info"
                 (click)="createUser()"
@@ -15,7 +15,7 @@
             <button
                 class="btn"
                 tooltip="Редактировать пользователя"
-                placement="bottom"
+                [placement]="currentState[0] ? 'bottom' : 'right'"
                 container="body"
                 containerClass="tooltip-info"
                 (click)="editUser()"
