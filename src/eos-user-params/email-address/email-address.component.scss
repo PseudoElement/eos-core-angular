@@ -1,0 +1,106 @@
+:host{
+    display: block;
+    width: 800px;
+    margin: auto;
+}
+
+.email-window{
+
+}
+
+.email-control{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    button{
+        position: relative;
+        width: 30px;
+        height: 30px;
+        margin: 0px 10px;
+        padding: 0;
+    }
+    .eos-icon{
+        position: relative;
+        left: 0px;
+        width: 24px;
+        height: 23px;
+    }
+}
+.email-wr{
+    width: 100%;
+   .email-header{
+       width: 100%;
+       display: flex;
+       align-items: center;
+       height: 30px;
+       margin-top: 30px;
+       .first,.last,.seconds{
+           display: inline-block;
+           border: 1px solid #2196f3;
+       }
+       .first{
+            width: 45%;
+            height: 100%;
+            text-align: left;
+            padding: 5px
+       }
+       .seconds{
+        width: 30%;
+        height: 100%;
+        text-align: left;
+        padding: 5px;
+
+       }
+       .last{
+        width: 30%;
+        height: 100%;
+        text-align: left;
+        padding: 5px
+       }
+
+   }
+
+}
+
+.email-content{
+    width: 100%;
+
+    .emali-list{
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
+    .emali-list-first, .emali-list-secont, .emali-list-last{
+        display: inline-block;
+        border: 1px solid #000;
+        height: 100%;
+        text-align: left;
+        border-top: none;
+        height: 30px;
+        input{
+            width: 100%;
+            height: 100%;
+            padding-left: 5px;
+            border: none;
+        }
+   }
+    .emali-list-first{
+        width: 45%;
+    }
+    .emali-list-secont{
+        width: 30%;
+        max-height: 30px;
+        overflow: hidden;
+        border-left: none;
+        border-right: none;
+    }
+    .emali-list-last{
+        width: 30%;
+    }
+    label{
+        line-height: normal
+    }
+}
+.current{
+    background: #e3f2fd;
+}
