@@ -6,6 +6,7 @@ import {AbstractControl, ValidatorFn} from '@angular/forms';
 @Component({
     selector: 'eos-nomenkl-card',
     templateUrl: 'nomenkl-card.component.html',
+    styleUrls: ['./nomenkl-card.component.scss']
 })
 export class NomenklCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
     private previousValues: SimpleChanges;
