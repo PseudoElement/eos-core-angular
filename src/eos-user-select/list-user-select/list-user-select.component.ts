@@ -36,6 +36,9 @@ export class ListUserSelectComponent implements OnDestroy {
                 this._apiSrv.getUsers(param['nodeId'])
                 .then((data: USER_CL[]) => {
                     this.listUsers = this._getListUsers(data);
+                    if (this.listUsers && this.listUsers.length) {
+                        this.selectedNode(this.listUsers[0]);
+                    }
                     this.isLoading = false;
                 });
             });
