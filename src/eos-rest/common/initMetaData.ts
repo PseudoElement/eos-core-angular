@@ -476,7 +476,7 @@ const commonMeta = {
             INS_WHO: _t.i,
             UPD_WHO: _t.i,
             ID_GAS_PS: _t.s,
-            AUTO_NUMBER: _t.i,
+            NUMCREATION_FLAG: _t.i,
         },
         readonly: [
 
