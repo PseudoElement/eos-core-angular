@@ -28,6 +28,7 @@ import { RightsDeloAbsoluteRightsComponent } from './rights-delo/rights-delo-abs
 import { AbsoluteRightsDirectoryComponent } from './rights-delo/rights-delo-absolute-rights/absolute-rights-directory-modal/absolute-rights-directory-modal.component';
 import { CardFilesDirectoryModalComponent } from './rights-delo/rights-delo-card-files/card-files-directory-modal/card-files-directory-modal.component';
 import { RightsDeloCardIndexRightsComponent } from './rights-delo/rights-delo-card-index-rights/rights-delo-card-index-rights.component';
+import { RightPanelForDocumentGroupsComponent } from './rights-delo/right-panel-for-document-groups/right-panel-for-document-groups.component';
 import { ParamsBaseParamComponent } from './base-param/base-param.component';
 import { InputParamControlService } from './shared/services/input-param-control.service';
 
@@ -52,6 +53,7 @@ import { InputParamControlService } from './shared/services/input-param-control.
         AbsoluteRightsDirectoryComponent,
         CardFilesDirectoryModalComponent,
         RightsDeloCardIndexRightsComponent,
+        RightPanelForDocumentGroupsComponent,
         ParamsBaseParamComponent
     ],
     entryComponents: [

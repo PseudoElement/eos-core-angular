@@ -1,24 +1,4 @@
-.input-user-card-index-rights-wrapper {
-    .left-block-list-side {
-        display: inline-block;
-        width: 45%;
-        max-height: 70vh;
-        border: 1px solid $border-color-main-theme;
-        overflow-x: auto;
-        overflow-y: auto;
-        margin-bottom: 20px;
-    }
-    .right-block-list-side {
-        display: inline-block;
-        width: 45%;
-        vertical-align: top;
-        max-height: 70vh;
-        border: 1px solid $border-color-main-theme;
-        overflow-x: auto;
-        overflow-y: auto;
-        margin-left: 20px;
-        margin-bottom: 20px;
-    }
+.input-user-right-panel-for-document-groups-wrapper {
     .list-group-item {
         background: $light-grey-1;
         cursor: pointer;
@@ -37,8 +17,6 @@
 
     .list-card-index-rights {
         list-style: none;
-        line-height: 32px;
-        margin: 0;
     }
 
     .hover-boolean-card-files:indeterminate {
