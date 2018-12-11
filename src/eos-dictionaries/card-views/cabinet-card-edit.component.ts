@@ -98,8 +98,10 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     }
 
     add(owner: ICabinetOwner) {
-        this.setValue(this.getOwnerPath(owner.index), this.data.rec.ISN_CABINET);
-        owner.data.ISN_CABINET = this.data.rec.ISN_CABINET;
+        if (!owner.data['DELETED']) {
+            this.setValue(this.getOwnerPath(owner.index), this.data.rec.ISN_CABINET);
+            owner.data.ISN_CABINET = this.data.rec.ISN_CABINET;
+        }
     }
 
     endScroll() {

@@ -45,8 +45,8 @@
                     <li *ngFor="let owner of possibleOwners"
                         role="menuitem"
                         class="selected-text menuitem"
-                        [ngClass]="{deleted: owner.data['DELETED']}"
-                        (click)="add(owner)">{{owner.data['CLASSIF_NAME']}}</li>
+                        [ngClass]="{deleted: owner.data['DELETED'], disabled: owner.data['DELETED']}"
+                        (click)="add(owner);">{{owner.data['CLASSIF_NAME']}}</li>
                     <li *ngIf="!possibleOwners.length"
                         class="disabled menuitem"><span class="disabled">Нет доступных ДЛ</span></li>
                 </ul>

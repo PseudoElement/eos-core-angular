@@ -76,7 +76,7 @@
                 <div *ngIf="!isUserUpdating">
                 <div class="field" *ngIf="getUserLogin()">
                     <p class="field-title unimportant-text s-font">ЯВЛЯЕТСЯ ПОЛЬЗОВАТЕЛЕМ</p>
-                    <p class="field-value m-font" *ngIf="getUserLogin()">{{getUserLogin()}}</p>
+                    <p class="field-value m-font">{{getUserLogin()}}</p>
                     <!-- p class="field-value m-font"><a [routerLink]="'/spravochniki/user/'+nodeDataFull.user?.ISN_LCLASSIF + '/view'">{{nodeDataFull.user?.CLASSIF_NAME}}</a></p -->
                 </div>
                 <div class="field" *ngIf="!getUserLogin()">
