@@ -3,11 +3,9 @@ import { UserParamApiSrv } from './user-params-api.service';
 import { USER_CL, DEPARTMENT, USERCARD } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IParamUserCl } from '../intrfaces/user-parm.intterfaces';
-import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class UserParamsService {
-    public SubEmail: Subject<any> = new Subject();
     private _isTechUser: boolean;
     private _userContext: IParamUserCl;
     private _userContextDeparnment: DEPARTMENT;
@@ -163,7 +161,7 @@ export class UserParamsService {
                     ISN_LCLASSIF: isn_cl ? isn_cl : (this.userContextId + '')
                 }
             },
-            expand: 'USER_PARMS_List,USERCARD_List/USER_CABINET_List,NTFY_USER_EMAIL_List'
+            expand: 'USER_PARMS_List,USERCARD_List/USER_CABINET_List'
         };
         const _user = this._pipSrv.getData<USER_CL>(Object.assign({}, queryUser));
         const _sys = this.fetchSysParams();
@@ -176,7 +174,7 @@ export class UserParamsService {
             this._userContext['isTechUser'] = !this._userContext['DUE_DEP'];
             this._userContext['isAccessDelo'] = !!this._userContext.USERCARD_List.length;
             this._userContext['ACCESS_SYSTEMS'] = this._userContext['AV_SYSTEMS'].split('');
-            this.SubEmail.next(this._userContext);
+
             this._createHash();
             if (!this._isTechUser) {
                 return this.getDepartmentFromUser(this._userContext['DUE_DEP']);

@@ -73,10 +73,10 @@ export const USER_PARAMS_LIST_NAV: IParamAccordionList[] = [
         subList: SUB_PARAMS_LIST_NAV,
         isOpen: false
     },
-    // {
-    //     title: 'Ведение адресов электронной почты',
-    //     url: 'email-address'
-    // },
+    {
+        title: 'Ведение адресов электронной почты',
+        url: 'email-address'
+    },
 ];
 
 

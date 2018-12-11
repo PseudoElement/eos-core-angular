@@ -31,8 +31,6 @@ import { RightsDeloCardIndexRightsComponent } from './rights-delo/rights-delo-ca
 import { RightPanelForDocumentGroupsComponent } from './rights-delo/right-panel-for-document-groups/right-panel-for-document-groups.component';
 import { ParamsBaseParamComponent } from './base-param/base-param.component';
 import { InputParamControlService } from './shared/services/input-param-control.service';
-import {EmailAddressService} from './shared/services/email-address.service';
-import {EmailFormComponent} from './email-address/email-form/email-form.component';
 
 @NgModule({
     declarations: [
@@ -55,8 +53,8 @@ import {EmailFormComponent} from './email-address/email-form/email-form.componen
         AbsoluteRightsDirectoryComponent,
         CardFilesDirectoryModalComponent,
         RightsDeloCardIndexRightsComponent,
-        ParamsBaseParamComponent,
-        EmailFormComponent
+        RightPanelForDocumentGroupsComponent,
+        ParamsBaseParamComponent
     ],
     entryComponents: [
         AbsoluteRightsDirectoryComponent,
@@ -77,7 +75,6 @@ import {EmailFormComponent} from './email-address/email-form/email-form.componen
         UserParamsDescriptorSrv,
         UserParamsService,
         InputParamControlService,
-        EmailAddressService
     ]
 })
 export class EosUserParamsModule {}
