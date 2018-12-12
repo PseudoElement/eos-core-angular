@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
+// import {Router} from '@angular/router';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 
@@ -172,7 +172,7 @@ export class EosDictService {
     }
 
     constructor(
-        private _router: Router,
+        // private _router: Router,
         private _msgSrv: EosMessageService,
         private _storageSrv: EosStorageService,
         private _descrSrv: DictionaryDescriptorService,
@@ -1089,11 +1089,15 @@ export class EosDictService {
             updatingList: false,
         });
         if (err instanceof RestError && (err.code === 434 || err.code === 0)) {
-            this._router.navigate(['login'], {
-                queryParams: {
-                    returnUrl: this._router.url
-                }
-            });
+            // this._router.navigate(['login'], {
+            //     queryParams: {
+            //         returnUrl: this._router.url
+            //     }
+            // });
+            let url = document.location.href.split('#')[0];
+            url = url.slice(0, url.lastIndexOf('Classif')) + 'login.aspx';
+            document.location.assign(url);
+
             return undefined;
         } else {
             const errMessage = err.message ? err.message : err;
