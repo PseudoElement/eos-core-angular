@@ -102,7 +102,7 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
     }
     private _prepareDataForForm (field: IInputParamControl) {
         if (field['key'] === 'PASSWORD_DATE') {
-            const pass = this._userParamSrv.hashUserContext['CHANGE_PASS'];
+            const pass = this._userParamSrv.sysParams['CHANGE_PASS'];
             field['disabled'] = pass !== 'YES' ? true : false;
             field['readonly'] = pass !== 'YES' ? true : false;
         }

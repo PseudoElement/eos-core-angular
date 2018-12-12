@@ -59,11 +59,13 @@ export class UserParamsService {
     }
     get hashUserContext () {
         if (this._userContext) {
-            const hash: any = {};
-            this.userContextParams.forEach(item => {
-                hash[item.PARM_NAME] = item.PARM_VALUE;
-            });
-            return hash;
+            // const hash: any = {};
+            // this.userContextParams.forEach(item => {
+            //     hash[item.PARM_NAME] = item.PARM_VALUE;
+            // });
+            // return hash;
+
+            return this._userContext['USER_PARMS_HASH'];
         }
         return null;
     }
@@ -135,25 +137,6 @@ export class UserParamsService {
         private _pipSrv: UserParamApiSrv,
         private _msgSrv: EosMessageService
     ) {}
-    test() {
-        const q = [{
-            method: 'MERGE',
-            requestUri: `USER_CL(${this.userContextId})`,
-            data: {
-                NOTE2: 'note',
-                // AV_SYSTEMS: b.join(''),
-                IS_PASSWORD: 2,
-                CLASSIF_NAME: 'R1'
-            }
-        }];
-        this._pipSrv.setData(q)
-        .then(data => {
-            console.log(data);
-        })
-        .catch(e => {
-            console.log(e);
-        });
-    }
     getUserIsn(isn_cl: string = this.userContextId.toString()): Promise<boolean> {
         const queryUser = {
             USER_CL: {
@@ -163,7 +146,7 @@ export class UserParamsService {
             },
             expand: 'USER_PARMS_List,USERCARD_List/USER_CABINET_List'
         };
-        const _user = this._pipSrv.getData<USER_CL>(Object.assign({}, queryUser));
+        const _user = this._pipSrv.getData<USER_CL>(queryUser);
         const _sys = this.fetchSysParams();
         return Promise.all([_user, _sys])
         .then(([user, sys]) => {
