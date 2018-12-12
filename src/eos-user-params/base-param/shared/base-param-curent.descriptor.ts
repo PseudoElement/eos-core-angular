@@ -18,10 +18,13 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
     }
     fillValueControlField(fields: IInputParamControl[]) {
         fields.forEach((f: IInputParamControl) => {
+            f['value'] = '';
             switch (f['key']) {
                 case 'teсhUser':
                     if (this._userParamSrv.isTechUser) {
                         f['value'] = true;
+                    } else {
+                        f['value'] = false;
                     }
                     break;
                 case 'DUE_DEP_NAME':
