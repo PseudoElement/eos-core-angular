@@ -401,11 +401,12 @@ export class EosDictService {
         if (dictionary) {
             if (!this._listNode || this._listNode.id !== nodeId) {
                 this.updateViewParameters({updatingInfo: false});
-                const aNode = dictionary.getNode(nodeId);
-                if (aNode) {
-                    this._openNode(aNode);
-                }
-                return Promise.resolve(aNode);
+                return dictionary.getFullNodeInfo(nodeId).then((node) => {
+                    if (node) {
+                        this._openNode(node);
+                    }
+                    return Promise.resolve(node);
+                });
             } else {
                 return Promise.resolve(this._listNode);
             }
