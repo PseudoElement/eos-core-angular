@@ -275,7 +275,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             length: 10,
         }, {
             key: 'NUMCREATION_FLAG',
-            title: 'Номерообразование',
+            title: 'Номерообразование НП',
             type: 'boolean',
         }, {
             key: 'photo',
