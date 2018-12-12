@@ -2348,6 +2348,8 @@ const commonMeta = {
             USE_C: _t.i,
             USE_A: _t.i,
             USE_N: _t.i,
+            USE_VP: _t.i,
+            USE_NP: _t.i,
             NOTE: _t.s
         },
         readonly: [],

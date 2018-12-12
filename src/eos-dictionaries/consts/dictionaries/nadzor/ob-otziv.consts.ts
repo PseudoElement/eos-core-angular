@@ -10,22 +10,27 @@ export const NP_OB_OTZIV_CL: IDictionaryDescriptor = Object.assign({}, NADZOR_TE
         key: 'USE_C',
         title: 'Кассации',
         type: 'boolean',
-        length: 20,
     }, {
         key: 'USE_A',
         title: 'Апелляции',
         type: 'boolean',
-        length: 20,
     }, {
         key: 'USE_N',
         title: 'Надзорной инстанции',
         type: 'boolean',
-        length: 20,
+    }, {
+        key: 'USE_VP',
+        title: 'Обжалование вступивших в силу постановлений',
+        type: 'boolean',
+    }, {
+        key: 'USE_NP',
+        title: 'Обжалование не вступивших в силу постановлений',
+        type: 'boolean',
     }, {
         key: 'NOTE',
         title: 'Примечание',
         type: 'text',
         length: 500,
     }],
-    editFields: [...NADZOR_TEMPLATE.editFields, 'USE_C', 'USE_A', 'USE_N'],
+    editFields: [...NADZOR_TEMPLATE.editFields, 'USE_C', 'USE_A', 'USE_N', 'USE_VP', 'USE_NP'],
 });
