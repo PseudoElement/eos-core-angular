@@ -18,11 +18,13 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     flagSustem: boolean;
     opened: boolean;
     chooseTemplate: string;
+    isPhoto: boolean|number;
     destroySubsriber: Subject<any> = new Subject();
     constructor(
         private _sandwichSrv: EosSandwichService,
         private _selectedUser: RtUserSelectService
     ) {
+        this.isPhoto = false;
         this.chooseTemplate = 'preview';
         this.flagSustem = false;
         this.opened = false;
@@ -31,6 +33,10 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             .takeUntil(this.destroySubsriber)
             .subscribe(result => {
             this.flagRtBlock = result[1];
+            if (this.flagRtBlock && this.CurrentUser) {
+                this.chooseTemplate = 'spinner';
+                    this.geyInfo();
+                }
             });
 
         this._selectedUser.changerUser
@@ -38,19 +44,22 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             .subscribe(currentUser => {
                 if (currentUser) {
                     this.CurrentUser = currentUser;
-                    const isn = currentUser.data['ISN_LCLASSIF'];
                     if (this.flagRtBlock) {
                         this.chooseTemplate = 'spinner';
-                        if ( currentUser.data['DUE_DEP'] !== null) {
-                        const due = currentUser.data['DUE_DEP'];
-                            this.getInfo(isn, due);
-                        }else {
-                            this.getInfo(isn);
-                            this.showDep = false;
-                        }
-                }
+                        this.geyInfo();
+                    }
                 }
             });
+    }
+    geyInfo() {
+        const isn = this.CurrentUser['data']['ISN_LCLASSIF'];
+        if ( this.CurrentUser['data']['DUE_DEP'] !== null) {
+            const due =  this.CurrentUser['data']['DUE_DEP'];
+                this.getInfo(isn, due);
+            }else {
+                this.getInfo(isn);
+                this.showDep = false;
+            }
     }
 
     parseSustemParam(parseParam) {
@@ -59,11 +68,14 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
 
     getInfo(isn, due?): void {
         this.getObjectForSystems();
+        if (!due) {
+            this.isPhoto = false;
+        }
         this._selectedUser.getUserIsn(isn, due)
         .then((result: [USER_CL, DEPARTMENT]) => {
-            console.log(result);
            if (result[1].toString() === '[object Object]') {
             this.DueInfo = result[1];
+            this.isPhoto =  this.DueInfo.ISN_PHOTO;
             this.showDep = true;
            }else {
             this.DueInfo = null;
