@@ -1,14 +1,17 @@
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 
 export const CARD_INDEXS_RIGHTS = [
-      /*  {
-            controlType: E_FIELD_TYPE.select,
-            key: 'SELECT_FOR_CARD_NAME',
-            type: 'select',
-            title: '',
-            index: '',
-            options: []
-        },*/
+        {
+            controlType: E_FIELD_TYPE.boolean,
+            key: 'CARD_INDEX_RIGHTS_RESTRICT_REGISTRATION_FILING',
+            type: 'boolean',
+            title: 'Ораничить картотекой регистрации',
+            index: -2,
+            isSelected: false,
+            data: {
+                rightContent: 1
+            }
+        },
         {
             controlType: E_FIELD_TYPE.boolean,
             key: 'CARD_INDEX_RIGHTS_REGISTRATION_OF_DOCUMENTS',
@@ -112,7 +115,7 @@ export const CARD_INDEXS_RIGHTS = [
             controlType: E_FIELD_TYPE.boolean,
             key: 'CARD_INDEX_RIGHTS_DOCUMENT_REWIND',
             type: 'boolean',
-            title: 'Перемотка документов',
+            title: 'Переотметка документов',
             index: 9,
             isSelected: false,
             data: {
@@ -239,5 +242,5 @@ export const CARD_INDEXS_RIGHTS = [
             data: {
                 rightContent: 2
             }
-        },
+        }
 ];

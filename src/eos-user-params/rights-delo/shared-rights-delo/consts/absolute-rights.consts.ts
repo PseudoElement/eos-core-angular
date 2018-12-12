@@ -232,4 +232,26 @@ export const ABSOLUTE_RIGHTS = [
             rightContent: 0
         }
     },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: 'ABSOLUTE_RIGHTS_ADD_NP',
+        type: 'boolean',
+        title: 'Добавление НП',
+        index: 13,
+        isSelected: false,
+        data: {
+            rightContent: 0
+        }
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: 'ABSOLUTE_RIGHTS_EDITING_NP',
+        type: 'boolean',
+        title: 'Редактирование НП',
+        index: 14,
+        isSelected: false,
+        data: {
+            rightContent: 0
+        }
+    },
 ];
