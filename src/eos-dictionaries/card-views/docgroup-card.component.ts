@@ -51,7 +51,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         const content = {
             forProject: forProject,
             dgTemplate: this.getValue(path),
-            rcType: this.getValue('rec.RC_TYPE')
+            rcType: this.rcType
         };
 
         this.templateModal.content.init(content);
