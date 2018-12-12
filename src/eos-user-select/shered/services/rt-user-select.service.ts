@@ -4,6 +4,7 @@ import { PipRX } from 'eos-rest/services/pipRX.service';
 import { Subject } from 'rxjs/Subject';
 import { UserParamApiSrv } from '../../../eos-user-params/shared/services/user-params-api.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class RtUserSelectService {
@@ -66,7 +67,7 @@ export class RtUserSelectService {
             checked: false
         }
     };
-    private _ChangeSelectUser: any;
+    private _ChangeSelectUser: UserSelectNode;
     private UserCabinetInfo: Array<any>;
     constructor(private apiSrv: PipRX,
         private _pipSrv: UserParamApiSrv,
@@ -75,7 +76,9 @@ export class RtUserSelectService {
         this.UserCabinetInfo = [];
     }
 
-
+    get changerUser(): Observable<any> {
+        return this.subject.asObservable();
+    }
     changeSelectedUser(user: UserSelectNode) {
         this._ChangeSelectUser = user;
         this.subject.next(this._ChangeSelectUser);
@@ -95,7 +98,6 @@ export class RtUserSelectService {
     }
 
     getUserIsn(isn_cl, due?: number): Promise<any> {
-
         const queryUser = {
             USER_CL: {
                 criteries: {
@@ -115,7 +117,7 @@ export class RtUserSelectService {
         return Promise.all([user, due ? DepartmentReq : Promise.resolve(5)]);
     }
 
-    getUserCabinets(isn_cl) {
+    getUserCabinets(isn_cl): Promise<any> {
         const queryCabinet = {
             USER_CABINET: {
                 criteries: {
@@ -123,12 +125,13 @@ export class RtUserSelectService {
                 }
             }
         };
-        return this.apiSrv.read(queryCabinet).then(res => {
-            return res;
+        return this.apiSrv.read(queryCabinet)
+        .then(result => {
+            return result;
         });
     }
 
-    getCabinetName(cabinet) {
+    getCabinetName(cabinet): Promise<any> {
         const queryCabinet = {
             CABINET: {
                 criteries: {
@@ -136,13 +139,14 @@ export class RtUserSelectService {
                 }
             }
         };
-        return this.apiSrv.read(queryCabinet).then(res => {
-            return res;
+        return this.apiSrv.read(queryCabinet)
+        .then(result => {
+            return result;
         });
     }
 
 
-    getInfoCabinet(isn_cl) {
+    getInfoCabinet(isn_cl): Promise<any> {
         let cab_list = '';
         this.UserCabinetInfo = [];
         return this.getUserCabinets(isn_cl).then(resultCabinet => {
@@ -172,7 +176,7 @@ export class RtUserSelectService {
             return false;
         });
     }
-    private _errorHandler(err) {
+    private _errorHandler(err): void {
         const errMessage = err.message ? err.message : err;
         this._msgSrv.addNewMessage({
             type: 'danger',
