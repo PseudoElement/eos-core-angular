@@ -42,7 +42,7 @@ export const REESTRTYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_T
             type: 'buttons',
             title: 'Номерообразование',
             length: 100,
-            options: [{value: 0, title: 'от счетчика'}, {value: 1, title: 'редактируемый'}],
+            options: [{value: 1, title: 'от счетчика'}, {value: 0, title: 'редактируемый'}],
             default: 0,
     }, {
             key: 'EMERGENCY',
