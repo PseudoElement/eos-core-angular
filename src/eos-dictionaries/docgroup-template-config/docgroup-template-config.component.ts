@@ -73,6 +73,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         if (content) {
             this.dgTemplate = content.dgTemplate;
             this.forProject = content.forProject;
+            this.rcType = content.rcType;
         }
 
         this.parseTemplate();
@@ -95,7 +96,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         }
 
         if (res && item.key === '{N}') {
-            res = this.rcType === 3;
+            res = (this.rcType === 3);
         }
 
         return res;

@@ -79,7 +79,6 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
         // toggle CARD_NAME
         this.toggleInput(formChanges['rec.CARD_FLAG'], 'rec.CARD_NAME', formChanges, updates);
 
-
         if (Object.keys(updates).length) {
             this.form.patchValue(updates);
         }

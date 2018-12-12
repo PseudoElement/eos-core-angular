@@ -26,6 +26,9 @@
             <eos-dynamic-input [input]="inputs['sev.GLOBAL_ID']"
                 [form]="form"
                 [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.ID_GAS_PS']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
         </div>
         <div class="col-2 pull-right">
             <div class="department-fullname">
@@ -37,9 +40,6 @@
     </div>
     <div class="clearfix">
         <div class="col-1 pull-left">
-            <eos-dynamic-input [input]="inputs['rec.ID_GAS_PS']"
-                               [form]="form"
-                               [readonly]="!editMode"></eos-dynamic-input>
         </div>
     </div>
     <div class="clearfix">
@@ -73,6 +73,9 @@
                 <eos-dynamic-input [input]="inputs['rec.CARD_FLAG']"
                     [form]="form"
                     [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.NUMCREATION_FLAG']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
             </div>
         </div>
         <div class="col-2 pull-right">
@@ -87,4 +90,5 @@
                 [readonly]="!editMode"></eos-dynamic-input>
         </div>
     </div>
+
 </div>

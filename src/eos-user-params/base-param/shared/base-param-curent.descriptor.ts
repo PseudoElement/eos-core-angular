@@ -18,10 +18,13 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
     }
     fillValueControlField(fields: IInputParamControl[]) {
         fields.forEach((f: IInputParamControl) => {
+            f['value'] = '';
             switch (f['key']) {
                 case 'teсhUser':
                     if (this._userParamSrv.isTechUser) {
                         f['value'] = true;
+                    } else {
+                        f['value'] = false;
                     }
                     break;
                 case 'DUE_DEP_NAME':
@@ -50,6 +53,16 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                     } else {
                         f['disabled'] = true;
                         f['readonly'] = true;
+                    }
+                    break;
+                case 'pass': // дизейблим поля пока нету СОПА на изменение пароля
+                case 'passRepeated':
+                    if (this._userParamSrv.curentUser['IS_PASSWORD'] !== 0) { // если логина нет
+                        f['disabled'] = true;
+                        f['readonly'] = true;
+                    } else {
+                        f['disabled'] = false;
+                        f['readonly'] = false;
                     }
                     break;
             }
@@ -102,7 +115,7 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
     }
     private _prepareDataForForm (field: IInputParamControl) {
         if (field['key'] === 'PASSWORD_DATE') {
-            const pass = this._userParamSrv.hashUserContext['CHANGE_PASS'];
+            const pass = this._userParamSrv.sysParams['CHANGE_PASS'];
             field['disabled'] = pass !== 'YES' ? true : false;
             field['readonly'] = pass !== 'YES' ? true : false;
         }

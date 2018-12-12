@@ -69,11 +69,12 @@
                     <p class="field-value m-font"><a *ngIf="nodeDataFull.cabinet?.ISN_CABINET"
                             [routerLink]="'/spravochniki/cabinet/'+nodeDataFull.cabinet?.ISN_CABINET + '/view'">{{nodeDataFull.cabinet?.CABINET_NAME}}</a></p>
                 </div>
-                <p *ngIf="isUserUpdating"
-                   class="spinner-container text-center">
-                    <eos-spinner size="lg"></eos-spinner>
-                </p>
-                <div *ngIf="!isUserUpdating">
+                <hr>
+                <!--<p *ngIf="isUserUpdating"-->
+                   <!--class="spinner-container text-center">-->
+                    <!--<eos-spinner size="lg"></eos-spinner>-->
+                <!--</p>-->
+                <!--<div *ngIf="!isUserUpdating">-->
                 <div class="field" *ngIf="getUserLogin()">
                     <p class="field-title unimportant-text s-font">ЯВЛЯЕТСЯ ПОЛЬЗОВАТЕЛЕМ</p>
                     <p class="field-value m-font">{{getUserLogin()}}</p>
@@ -88,7 +89,7 @@
                             containerClass="tooltip-info"
                             (click)="createUser()">Сделать пользователем</button>
                 </div>
-                </div>
+                <!--</div>-->
             </div>
         </div>
         <div *ngIf="nodeDataFull && nodeDataFull.rec && !nodeDataFull.rec['IS_NODE']"

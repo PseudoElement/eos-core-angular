@@ -154,7 +154,11 @@
     .teh-user-name{
         color: #000000;
         overflow: hidden;
-        padding-left: 20px;
+        padding-left: 38px;
+        display: inline-block;
+        width: 100%;
+        text-align: left;
+        font-size: 16px;
     }
 }
 
@@ -168,4 +172,7 @@
 }
 .eos-icon.eos-icon-checkbox-black{
     min-width: 24px;
+}
+.teh-p{
+    font-size: 15px;
 }
