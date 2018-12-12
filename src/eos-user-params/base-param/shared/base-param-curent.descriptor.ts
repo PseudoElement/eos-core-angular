@@ -52,6 +52,16 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                         f['readonly'] = true;
                     }
                     break;
+                case 'pass': // дизейблим поля пока нету СОПА на изменение пароля
+                case 'passRepeated':
+                    if (this._userParamSrv.curentUser['IS_PASSWORD'] !== 0) { // если логина нет
+                        f['disabled'] = true;
+                        f['readonly'] = true;
+                    } else {
+                        f['disabled'] = false;
+                        f['readonly'] = false;
+                    }
+                    break;
             }
         });
     }

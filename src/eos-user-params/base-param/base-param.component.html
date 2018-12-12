@@ -36,7 +36,7 @@
                 class="dynamic-input-wrapper base-text-input">
                 <label [hidden]="controls['pass'].hideLabel"
                     [attr.for]="controls['pass'].key">{{controls['pass'].label}}</label>
-                <div>
+                <div [ngClass]="{'disabled': controls['pass'].disabled}">
                 <input class="form-control m-font"
                     [formControlName]="controls['pass'].key"
                     [id]="controls['pass'].key"
@@ -53,7 +53,7 @@
                 class="dynamic-input-wrapper base-text-input">
                 <label [hidden]="controls['passRepeated'].hideLabel"
                     [attr.for]="controls['passRepeated'].key">{{controls['passRepeated'].label}}</label>
-                <div>
+                <div [ngClass]="{'disabled': controls['pass'].disabled}">
                 <input class="form-control m-font"
                     [formControlName]="controls['passRepeated'].key"
                     [id]="controls['passRepeated'].key"
