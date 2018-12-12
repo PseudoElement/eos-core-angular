@@ -304,6 +304,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
 
     resetSearch() {
+        this.params.searchResults = false;
         this._dictSrv.resetSearch();
     }
 
