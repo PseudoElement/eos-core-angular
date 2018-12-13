@@ -83,8 +83,14 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         this.dictSrv.inclineFields(field)
             .then(([res]: any) => {
                 if (res) {
-                    Object.keys(res).forEach((key) => this.setValue('printInfo.' + key, res[key]));
+                    Object.keys(res).forEach((key) => {
+                        if (key !== 'PRINT_DEPARTMENT') {
+                            this.setValue('printInfo.' + key, res[key]);
+                        }
+                    });
                 }
             });
+
+        this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.currentNode.parent.data.rec['CLASSIF_NAME']);
     }
 }
