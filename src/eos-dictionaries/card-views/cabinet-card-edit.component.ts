@@ -219,7 +219,8 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
         // this.folderList = data.rec.FOLDER_List;
 
         this.cabinetFolders = data.rec.FOLDER_List
-            .map((folder) => CABINET_FOLDERS.find((fConst) => fConst.key === folder.FOLDER_KIND));
+            .map((folder) => CABINET_FOLDERS.find((fConst) =>
+                    fConst.key === folder.FOLDER_KIND)).filter( (el) => el);
 
         this.accessHeaders = [{
             title: 'Ограничение доступа РК',
