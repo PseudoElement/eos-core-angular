@@ -146,10 +146,10 @@ export const DANGER_EDIT_ONLY_DEPARTMENTS_ALLOWED: IMessage = {
     msg: 'Редактирование "Счетчика номерообразования НП" доступно только справочнику "подразделения"'
 };
 
-export const DANGER_EDIT_CABINET_ON_ROOT: IMessage = {
+export const DANGER_EDIT_ON_ROOT: IMessage = {
     type: 'danger',
     title: 'Ошибка редактирования',
-    msg: 'Для добавления кабинета необходимо выбрать подразделение'
+    msg: 'Необходимо выбрать подразделение'
 };
 
 export const DANGER_EDIT_YEAR_INVALID: IMessage = {

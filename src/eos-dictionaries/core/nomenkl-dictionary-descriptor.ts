@@ -11,6 +11,9 @@ import {CustomTreeNode} from '../tree2/custom-tree.component';
 import {DictionaryDescriptor} from './dictionary-descriptor';
 import {RecordDescriptor} from './record-descriptor';
 import {EosDictionaryNode} from './eos-dictionary-node';
+import {DictionaryComponent} from '../dictionary/dictionary.component';
+import {DANGER_EDIT_ON_ROOT} from '../consts/messages.consts';
+import {IMessage} from '../../eos-common/core/message.interface';
 
 const NP_NOM_ROOT_DUE = '0.';
 
@@ -82,6 +85,14 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
 
     getRoot(): Promise<any[]> {
         return this.getData();
+    }
+
+    preCreateCheck(dict: DictionaryComponent): IMessage {
+        if (this._filterDUE) {
+            return null;
+        } else {
+            return DANGER_EDIT_ON_ROOT;
+        }
     }
 
     setRootNode(_nodeId: string) {

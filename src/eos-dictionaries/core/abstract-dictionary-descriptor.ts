@@ -16,12 +16,13 @@ import {ITypeDef, IEnt, DELO_BLOB} from 'eos-rest';
 import {SevIndexHelper} from 'eos-rest/services/sevIndex-helper';
 import {PrintInfoHelper} from 'eos-rest/services/printInfo-helper';
 import {SEV_ASSOCIATION} from 'eos-rest/interfaces/structures';
-import {IAppCfg} from 'eos-common/interfaces';
+import {IAppCfg, IMessage} from 'eos-common/interfaces';
 // import { RestError } from 'eos-rest/core/rest-error';
 import {EosUtils} from 'eos-common/core/utils';
 import {ContactHelper} from '../../eos-rest/services/contact-helper';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
 import {EosDictionaryNode} from 'eos-dictionaries/core/eos-dictionary-node';
+import {DictionaryComponent} from 'eos-dictionaries/dictionary/dictionary.component';
 
 export abstract class AbstractDictionaryDescriptor {
     /**
@@ -391,6 +392,9 @@ export abstract class AbstractDictionaryDescriptor {
     extendCritery(critery: any, params: ISearchSettings, selectedNode: EosDictionaryNode) {
     }
 
+    preCreateCheck(dict: DictionaryComponent): IMessage {
+        return null;
+    }
 
     protected _postChanges(data: any, updates: any): Promise<any[]> {
         // console.log('_postChanges', data, updates);

@@ -6,6 +6,9 @@ import { IRecordOperationResult, IDictionaryDescriptor } from '../interfaces';
 import { RecordDescriptor } from './record-descriptor';
 import { EosUtils } from 'eos-common/core/utils';
 import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
+import {DictionaryComponent} from '../dictionary/dictionary.component';
+import {DANGER_EDIT_ON_ROOT} from '../consts/messages.consts';
+import {IMessage} from '../../eos-common/core/message.interface';
 
 export class CabinetRecordDescriptor extends RecordDescriptor {
     constructor(dictionary: CabinetDictionaryDescriptor, data: IDictionaryDescriptor) {
@@ -32,6 +35,13 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
                     return null;
                 }
             });
+    }
+
+    preCreateCheck(dict: DictionaryComponent): IMessage {
+        if (dict.treeNode.id === '0.') {
+            return DANGER_EDIT_ON_ROOT;
+        }
+        return null;
     }
 
     getData(query?: any, order?: string, limit?: number): Promise<any[]> {

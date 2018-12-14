@@ -27,7 +27,7 @@ import {
     WARN_ELEMENT_PROTECTED,
     WARN_LOGIC_DELETE,
     DANGER_EDIT_ONLY_DEPARTMENTS_ALLOWED,
-    WARN_SELECT_NODE, DANGER_EDIT_CABINET_ON_ROOT,
+    WARN_SELECT_NODE,
 } from '../consts/messages.consts';
 
 import {RECENT_URL} from 'app/consts/common.consts';
@@ -386,18 +386,23 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
      * @description Open modal with CreateNodeComponent, fullfill CreateNodeComponent data
      */
     private _openCreate(recParams: any) {
-        if ((this._dictSrv.currentDictionary.descriptor.id === 'cabinet') && (this.treeNode.id === '0.')) {
-            this._msgSrv.addNewMessage(DANGER_EDIT_CABINET_ON_ROOT);
+        let data: {};
+        let editDescr: {};
+        let dictionary: EosDictionary;
+        const createWarning = this.dictionary.descriptor.preCreateCheck(this);
+        if (createWarning) {
+            this._msgSrv.addNewMessage(createWarning);
             return;
         }
+
         if (this.dictionary.descriptor.id === 'broadcast-channel') {
             this.modalWindow = this._modalSrv.show(CreateNodeBroadcastChannelComponent, {class: 'creating-modal'});
         } else {
             this.modalWindow = this._modalSrv.show(CreateNodeComponent, {class: 'creating-modal'});
         }
-        const dictionary = this._dictSrv.currentDictionary;
-        const editDescr = dictionary.getEditDescriptor();
-        const data = dictionary.getNewNode({rec: recParams}, this.treeNode);
+        dictionary = this._dictSrv.currentDictionary;
+        editDescr = dictionary.getEditDescriptor();
+        data = dictionary.getNewNode({rec: recParams}, this.treeNode);
 
         this.modalWindow.content.fieldsDescription = editDescr;
         this.modalWindow.content.dictionaryId = dictionary.id;

@@ -457,7 +457,8 @@ export class EosDictService {
                 .then((results) => {
                     return this._reloadList(true)
                         .then(() => {
-                            if (dictionary.descriptor.type !== E_DICT_TYPE.linear) {
+                            if (dictionary.descriptor.type !== E_DICT_TYPE.linear &&
+                                dictionary.descriptor.type !== E_DICT_TYPE.custom) {
                                 this._treeNode$.next(this.treeNode);
                                 const keyFld = dictionary.descriptor.record.keyField.foreignKey;
 
