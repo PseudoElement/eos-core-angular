@@ -7,14 +7,13 @@
     ></eos-rights-delo-header>
     <div class="user-input-group">
 <div class="left-block-list-side">
-        <span></span>
-        <ul class="list-card-index-rights"
-            *ngFor="let item of fields; let i = index;"
-            (click)="selectedNode(item.title)">
-            <li [ngClass]="{'highlighted': item.isSelected}"
-            *ngIf="item.index > -1">
+    <span></span>
+    <ul class="list-card-index-rights"
+            *ngFor="let node of listNode"
+            (click)="selectNode(node)">
+            <li [ngClass]="{'highlighted': node.data.isSelected}">
                 <span
-                >{{item.title}}</span>
+                >{{node.label}}</span>
             </li>
     </ul>
 </div>
