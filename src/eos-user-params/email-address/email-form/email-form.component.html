@@ -1,0 +1,12 @@
+
+<div class="" *ngIf="inputsInfo">
+    <div class="code-list" *ngFor="let list of inputsInfo">
+        <label class="checkbox  minus-checkbox">
+                <!-- group.controls.checkbox ? 1 : 0 -->
+            <input  [checked]="list.check"   type="checkbox" readonly="readonly" class="readonly" (change)="saveParams($event, list.name)">
+            <span class="eos-icon eos-icon-checkbox-black"></span>
+            <span>  {{list.name}}</span>
+            </label>
+    </div>
+</div>
+
