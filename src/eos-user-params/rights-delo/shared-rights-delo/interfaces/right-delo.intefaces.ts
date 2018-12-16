@@ -5,5 +5,7 @@ export enum E_RIGHT_DELO_ACCESS_CONTENT {
     department,
     departmentCardAuthor,
     editOrganiz,
-    classif
+    classif,
+    all,
+    departmentCardAuthorSentProject,
 }

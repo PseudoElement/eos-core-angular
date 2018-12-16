@@ -1,257 +1,265 @@
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+import { E_RIGHT_DELO_ACCESS_CONTENT } from '../interfaces/right-delo.intefaces';
+import { IInputParamControl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 
-export const ABSOLUTE_RIGHTS = [
+export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_SYSTEM_TECHNOLOGIST',
-        type: 'boolean',
-        title: 'Системный технолог',
-        index: 0,
-        isSelected: false,
+        key: '0',
+        label: 'Системный технолог',
         data: {
-            rightContent: 1
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.classif
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_SEARCH_ALL_CARD_INDEXES',
-        type: 'boolean',
-        title: 'Поиск по всем картотекам',
-        index: 1,
-        isSelected: false,
+        key: '1',
+        label: 'Поиск по всем картотекам',
         data: {
-            rightContent: 0
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_SENDING_DOCUMENTS_IN_REGISTRIES',
-        type: 'boolean',
-        title: 'Отправка документов по реестрам',
-        index: 2,
-        isSelected: false,
+        key: '2',
+        label: 'Отправка документов по реестрам',
         data: {
-            rightContent: 0
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+        }
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean, // этот параметр есть в деле, но нет в старом ПБ надзора
+        key: '3',
+        label: 'Просмотр всех поручений',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_VIEW_ALL_ORDERS',
-        type: 'boolean',
-        title: 'Просмотр всех поручений',
-        index: 3,
-        isSelected: false,
+        key: '4',
+        label: 'Ввод резолюций',
         data: {
-            rightContent: 0
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_ENTERING_RESOLUTIONS',
-        type: 'boolean',
-        title: 'Ввод резолюций',
-        index: 4,
-        isSelected: false,
+        key: '5',
+        label: 'Исполнение поручений',
         data: {
-            rightContent: 2
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_ENTER_DRAFT_RESOLUTIONS',
-        type: 'boolean',
-        title: 'Ввод проектов резолюций',
-        index: 22,
-        isSelected: false,
+        key: '6',
+        label: 'Контроль исполнения поручений',
         data: {
-            rightContent: 2
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_EXECUTION_OF_ORDERS',
-        type: 'boolean',
-        title: 'Исполнение поручений',
-        index: 5,
-        isSelected: false,
+        key: '7',
+        label: 'Добавление организаций и граждан', // в старом ПБ надзора (Добавление организаций)
         data: {
-            rightContent: 3
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_CREATION_OF_THE_RCPD',
-        type: 'boolean',
-        title: 'Создание РКПД',
-        index: 28,
-        isSelected: false,
+        key: '8',
+        label: 'Редактирование организаций и граждан', // в старом ПБ надзора (Добавление граждан) и нет выбора (1 - Всех, 2 - Не заполненных)
         data: {
-            rightContent: 4
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.all
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_CONTROL_OF_EXECUTION_OF_ORDERS',
-        type: 'boolean',
-        title: 'Контроль исполнения поручений',
-        index: 6,
-        isSelected: false,
+        key: '9',
+        label: 'Редактирование регистрационного номера РК',
         data: {
-            rightContent: 3
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_ADDING_ORGANIZATIONS_AND_CITIZENS',
-        type: 'boolean',
-        title: 'Добавление организаций и граждан',
-        index: 7,
-        isSelected: false,
+        key: '10',
+        label: 'Визировать проекты',
         data: {
-            rightContent: 0
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_EDITING_ORGANIZATIONS_AND_CITIZENS',
-        type: 'boolean',
-        title: 'Редактирование организаций и граждан',
-        index: 8,
-        isSelected: false,
+        key: '11',
+        label: 'Подписывать проекты',
         data: {
-            rightContent: 5
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+        }
+    },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean,
+    //     key: '12',
+    //     label: 'Создвать НП',
+    //     data: {
+    //         isSelected: false,
+    //         rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+    //     }
+    // },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '13',
+        label: 'Создвать НП',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_EDITING_THE_REGISTRATION_NUMBER_OF_THE_RC',
-        type: 'boolean',
-        title: 'Редактирование регистрационного номера РК',
-        index: 9,
-        isSelected: false,
+        key: '14',
+        label: 'Работать с НП',
         data: {
-            rightContent: 0
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_VISITING_PROJECTS',
-        type: 'boolean',
-        title: 'Визировать проекты',
-        index: 10,
-        isSelected: false,
+        key: '15',
+        label: 'Создавать системные запросы',
         data: {
-            rightContent: 3
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_SIGN_PROJECTS',
-        type: 'boolean',
-        title: 'Подписывать проекты',
-        index: 11,
-        isSelected: false,
+        key: '16',
+        label: 'Добавление обстоятельств дел',
         data: {
-            rightContent: 3
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_CREATE_SYSTEM_QUERIES',
-        type: 'boolean',
-        title: 'Создавать системные запросы',
-        index: 15,
-        isSelected: false,
+        key: '17',
+        label: 'Редактирование обстоятельств дел',
         data: {
-            rightContent: 0
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_GROUP_REMOVAL_OF_RC',
-        type: 'boolean',
-        title: 'Групповое удаление РК',
-        index: 18,
-        isSelected: false,
+        key: '18',
+        label: 'Групповое удаление РК', // в старом ПБ надзора (Удаление реестров)
         data: {
-            rightContent: 0
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_ALERT_SUBSCRIPTION_MANAGEMENT',
-        type: 'boolean',
-        title: 'Управление подпиской на оповещения',
-        index: 19,
-        isSelected: false,
+        key: '19',
+        label: 'Управление подпиской на оповещения', // в старом ПБ надзора нет
         data: {
-            rightContent: 0
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_READING_FILES_IN_ALL_CARDS',
-        type: 'boolean',
-        title: 'Чтение файлов во всех картотеках',
-        index: 23,
-        isSelected: false,
+        key: '20',
+        label: 'Редактирование организаций',
         data: {
-            rightContent: 0
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.all
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_READING_RC_PERSONAL_ACCESS',
-        type: 'boolean',
-        title: 'Чтение РК персон. доступа',
-        index: 24,
-        isSelected: false,
+        key: '21',
+        label: 'Редактирование граждан',
         data: {
-            rightContent: 3
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.all
         }
     },
     {
         controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_READING_PERSONAL_ACCESS_FILES',
-        type: 'boolean',
-        title: 'Чтение файлов персон. доступа',
-        index: 25,
-        isSelected: false,
+        key: '22',
+        label: 'Ввод проектов резолюций', // в старом ПБ надзора (Выгрузка информации на ССТУ) и нет значения 2
         data: {
-            rightContent: 3
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject
         }
     },
     {
-        controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_UPLOADING_INFORMATION_TO_THE_SSTU',
-        type: 'boolean',
-        title: 'Выгрузка информации на ССТУ',
-        index: 29,
-        isSelected: false,
+        controlType: E_FIELD_TYPE.boolean, // в старом ПБ надзора нет
+        key: '23',
+        label: 'Чтение файлов во всех картотеках',
         data: {
-            rightContent: 0
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
     {
-        controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_ADD_NP',
-        type: 'boolean',
-        title: 'Добавление НП',
-        index: 13,
-        isSelected: false,
+        controlType: E_FIELD_TYPE.boolean, // в старом ПБ надзора нет
+        key: '24',
+        label: 'Чтение РК персон. доступа',
         data: {
-            rightContent: 0
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         }
     },
     {
-        controlType: E_FIELD_TYPE.boolean,
-        key: 'ABSOLUTE_RIGHTS_EDITING_NP',
-        type: 'boolean',
-        title: 'Редактирование НП',
-        index: 14,
-        isSelected: false,
+        controlType: E_FIELD_TYPE.boolean, // в старом ПБ надзора нет
+        key: '25',
+        label: 'Чтение файлов персон. доступа',
         data: {
-            rightContent: 0
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+        }
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean, // в старом ПБ надзора нет
+        key: '29',
+        label: 'Выгрузка информации на ССТУ',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
 ];
+
+export const CONTROL_ALL_NOTALL: IInputParamControl = {
+    controlType: E_FIELD_TYPE.radio,
+    key: 'all',
+    label: '',
+    options: [
+        {
+            title: 'Всех реквизитов',
+            value: '1'
+        },
+        {
+            title: 'Не заполненных',
+            value: '2'
+        }
+    ]
+};
