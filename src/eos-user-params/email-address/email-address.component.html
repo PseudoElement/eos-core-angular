@@ -1,1 +1,74 @@
-<h1>param email address component</h1>
+<div class="email-window">
+    <eos-user-header  [statusBtnSub]='statusBtnSub' [isDefault]='isDefault' (submitForm)='saveAllForm($event)' (cancelForm)='backForm($event)'></eos-user-header>
+    <div class="email-control">
+            <button type="button" class=" email-create btn btn-primary" (click)="openModal(template)">
+                    <span class="eos-icon eos-icon-plus-blue small"></span>
+            </button>
+            <button [disabled]="getaccess" type="button" class=" email-edit btn btn-primary" (click)="openModal(template, true)">
+                    <span class="eos-icon eos-icon-edit-blue small"></span>
+            </button>
+        <button [disabled]="getaccess" class="email-delite  btn btn-primary" (click)='deliteEmailFild()'>
+            <span class="eos-icon eos-icon-bin-blue sma"></span>
+        </button>
+        <button  [disabled]="currentIndex == 0 || getaccess" class="stepTop  btn btn-primary" (click)='upWeight()' >
+            <span class=" eos-icon eos-icon-arrow-v-blue-top small"></span>
+        </button>
+
+        <button [disabled]="currentIndex == umailsInfo.length - 1 || getaccess" class="stepBottom  btn btn-primary" (click)='downWeight()' >
+            <span class="eos-icon eos-icon-arrow-v-blue-bottom small"></span>
+        </button>
+    </div>
+    <div class="email-wr">
+        <div class="email-header">
+            <span class="first">Е-mail пользователя: {{username}}</span>
+            <span class="seconds">Вкл. в рассылку</span>
+            <span class="last">Искл. из рассылки</span>
+        </div>
+        <!-- [ngClass]="{current: currentFueld.EMAIL === email_item.EMAIL}" -->
+        <div class="email-content" *ngIf="umailsInfo.length > 0 && myForm">
+                <form [formGroup]="myForm">
+                    <div formArrayName="groupForm">
+                            <div  class="emali-list" *ngFor="let group of myForm.controls['groupForm'].controls; let i = index"  (click)=chooseCurrentField(i) [ngClass]="{current: currentIndex === i}">
+                                <div class="emali-list"  formGroupName="{{i}}">
+                                            <span [ngClass]="{current: currentIndex === i}" class="emali-list-first">
+                                                <input formControlName="email"  type="text" readonly="readonly" class="readonly" >
+                                            </span>
+                                            <span [ngClass]="{current: currentIndex === i}" class="emali-list-secont">
+                                                <label class="checkbox disabled minus-checkbox ">
+                                                    <input  formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" >
+                                                    <span class="eos-icon eos-icon-checkbox-black"></span>
+                                                    </label>
+                                            </span>
+                                            <span [ngClass]="{current: currentIndex === i}" class="emali-list-last">
+                                                    <input formControlName="params"   type="text" readonly="readonly" class="readonly" >
+                                            </span>
+                                </div>
+                            </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #template>
+    <div class="modalHeader">
+            <eos-user-header [isDefault]='isDefault' (submitForm)='createNewField(newEmail)' (cancelForm)="modalRef.hide()"></eos-user-header>
+    </div>
+    <div class="modal-body">
+     <main class="modalWord-content">
+            <span >{{editFalg ? 'Ограничение рассылки оповещений и уведомлений' : 'Введите новую почту'}}</span>
+            <input class="form-control m-font inline-block" [readonly]="editFalg" type="text" [(ngModel)] = "newEmail">
+
+            <div class="modal-r" *ngIf='editFalg'>
+                <div class="modal-title-cust">Снимите отметку с событий, сообщения о которых не нужно рассылать</div>
+                <eos-email-form (sendParams)="getChildParams($event)" [checkedParams]='currentParams' [code]='CODE'></eos-email-form>
+            </div>
+     </main>
+            <div *ngFor="let alert of alerts">
+                  <div class="alert alert-danger">
+                      <span>{{alert['1'].msg}} <button type="button" class="btn btn-primary" (click)="onClosed(alert['1'].type)">x</button></span>
+                  </div>
+            </div>
+            </div>
+</ng-template>
