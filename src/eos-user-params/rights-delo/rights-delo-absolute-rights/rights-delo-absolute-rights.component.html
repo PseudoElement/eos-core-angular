@@ -1,62 +1,78 @@
-<div class="input-user-wrapper input-user-absolute-rights-wrapper" *ngIf="!isLoading">
+<div class="input-user-wrapper input-user-absolute-rights-wrapper">
     <eos-rights-delo-header
-    title="Абсолютные права"
-    (submitForm)="submit()"
-    (cancelForm)="cancel()"
-    [statusBtnSub]="btnDisabled"
-></eos-rights-delo-header>
+        title="Абсолютные права"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnDisabled"
+    ></eos-rights-delo-header>
 
-<div class="user-input-group">
-    <div class="left-block-list-absolute-rights">
-        <div class="list-card-files"
-            *ngFor="let item of fields"
-            [ngClass]="{'highlighted': item.data.isSelected}">
-            <div [formGroup]="form">
-                <label class="checkbox" (click)="clickLable($event, item, form.get(item.key))">
-                    <input type="checkbox"
-                        hide
-                        [formControlName]="item.key"
-                        [id]="item.key"
-                    >
-                    <span class="eos-icon eos-icon-checkbox-square-blue x-small">
-                    </span>
-                    {{item.label}}
-                </label>
+    <div class="user-input-group">
+        <div class="left-block-list-absolute-rights">
+            <div class="list-card-files"
+                *ngFor="let item of fields"
+                [ngClass]="{'highlighted': item.data.isSelected}">
+                <div [formGroup]="form">
+                    <label class="checkbox" (click)="clickLable($event, item, form.get(item.key))">
+                        <input type="checkbox"
+                            hide
+                            [formControlName]="item.key"
+                            [id]="item.key"
+                        >
+                        <span class="eos-icon eos-icon-checkbox-square-blue x-small">
+                        </span>
+                        {{item.label}}
+                    </label>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="right-block-list-absolute-rights">
-        <ng-container [ngSwitch]="selectedNode.data.rightContent">
-            <ng-container *ngSwitchCase="2">
-                <ng-container *ngTemplateOutlet="none"></ng-container>
-            </ng-container>
-            <ng-container *ngSwitchCase="3">
-                <ng-container *ngTemplateOutlet="department"></ng-container>
-            </ng-container>
-            <ng-container *ngSwitchCase="4">
-                <ng-container *ngTemplateOutlet="department"></ng-container>
-            </ng-container>
-            <ng-container *ngSwitchCase="6">
-                <button
-                    class="btn btn-primary"
-                    (click)="openClessifModal()"
-                    >Справочники
-                </button>
-            </ng-container>
-            <ng-container *ngSwitchCase="7">
-                    <ng-container *ngTemplateOutlet="all"></ng-container>
-            </ng-container>
-            <ng-container *ngSwitchCase="8">
+        <div class="right-block-list-absolute-rights" *ngIf="rightContent">
+            <ng-container [ngSwitch]="selectedNode.data.rightContent">
+                <!-- docGroup -->
+                <ng-container *ngSwitchCase="0">
+                    <ng-container *ngTemplateOutlet="rightDocGroup"></ng-container>
+                </ng-container>
+
+                <!-- none -->
+                <ng-container *ngSwitchCase="2">
+                    <ng-container *ngTemplateOutlet="none"></ng-container>
+                </ng-container>
+
+                <!-- department -->
+                <ng-container *ngSwitchCase="3">
                     <ng-container *ngTemplateOutlet="department"></ng-container>
+                </ng-container>
+
+                <!-- departmentCardAuthor -->
+                <ng-container *ngSwitchCase="4">
+                    <ng-container *ngTemplateOutlet="department"></ng-container>
+                </ng-container>
+
+                <!-- classif -->
+                <ng-container *ngSwitchCase="6">
+                    <button
+                        class="btn btn-primary"
+                        (click)="openClessifModal()"
+                        >Справочники
+                    </button>
+                </ng-container>
+
+                <!-- all -->
+                <ng-container *ngSwitchCase="7">
+                        <ng-container *ngTemplateOutlet="all"></ng-container>
+                </ng-container>
+
+                <!-- departmentCardAuthorSentProject -->
+                <ng-container *ngSwitchCase="8">
+                        <ng-container *ngTemplateOutlet="department"></ng-container>
+                </ng-container>
             </ng-container>
-        </ng-container>
+        </div>
     </div>
-</div>
 </div>
 
-<div class="spinner-wrapper" *ngIf="isLoading">
+<!-- <div class="spinner-wrapper" #spiner>
     <eos-spinner [size]="'lg'"></eos-spinner>
-</div>
+</div> -->
     <!-- --------------------------Отображение правой стороны------------------------------- -->
 
     <!-- пустой -->
@@ -66,7 +82,12 @@
 
     <!-- Подраздиления (Ограничить картотекой Автора) -->
 <ng-template #department>
-    department!!!<br>{{selectedNode | json}}
+    <!-- department!!!<br>{{selectedNode | json}} -->
+    <eos-right-absolute-department
+        [selectedNode]="selectedNode"
+        [curentUser]="curentUser"
+        (Changed)="createBatch($event)"
+    ></eos-right-absolute-department>
 </ng-template>
 
     <!-- всех/незаполненых -->
@@ -78,4 +99,9 @@
         [form]="formGroupAll"
         [readonly]="formGroupAll.get('all').disabled"
     ></eos-dynamic-input>
+</ng-template>
+
+    <!-- Группы документов -->
+<ng-template #rightDocGroup>
+    Группы документов!!!
 </ng-template>

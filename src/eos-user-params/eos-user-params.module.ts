@@ -31,6 +31,7 @@ import { RightsDeloCardIndexRightsComponent } from './rights-delo/rights-delo-ca
 import { RightPanelForDocumentGroupsComponent } from './rights-delo/right-panel-for-document-groups/right-panel-for-document-groups.component';
 import { ParamsBaseParamComponent } from './base-param/base-param.component';
 import { InputParamControlService } from './shared/services/input-param-control.service';
+import { RightDepertmentComponent } from './rights-delo/rights-delo-absolute-rights/right-department/right-department.component';
 
 @NgModule({
     declarations: [
@@ -54,7 +55,8 @@ import { InputParamControlService } from './shared/services/input-param-control.
         CardFilesDirectoryModalComponent,
         RightsDeloCardIndexRightsComponent,
         RightPanelForDocumentGroupsComponent,
-        ParamsBaseParamComponent
+        ParamsBaseParamComponent,
+        RightDepertmentComponent,
     ],
     entryComponents: [
         AbsoluteRightsDirectoryComponent,

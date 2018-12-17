@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-// import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
+import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { ABSOLUTE_RIGHTS, CONTROL_ALL_NOTALL } from '../shared-rights-delo/consts/absolute-rights.consts';
 // import { EosUtils } from 'eos-common/core/utils';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
@@ -19,8 +19,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     curentUser: IParamUserCl;
-    isLoading = false;
-    btnDisabled: boolean = false;
+    btnDisabled: boolean = true;
     directoryModal: BsModalRef;
     arrDeloRight: string[];
     arrNEWDeloRight: string[];
@@ -32,12 +31,14 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     formGroupAll: FormGroup;
     subs = {};
     subForm: Subscription;
+    queryForSave = [];
+    rightContent: boolean;
 
 
     constructor (
         private _userParamsSetSrv: UserParamsService,
         private _modalSrv: BsModalService,
-        // private servApi: UserParamApiSrv,
+        private apiSrv: UserParamApiSrv,
         private _inputCtrlSrv: InputParamControlService,
         ) {
             this.curentUser = this._userParamsSetSrv.curentUser;
@@ -48,7 +49,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
             this.subForm = this.form.valueChanges
              .subscribe(data => {
-                 console.log(data);
                  // tslint:disable-next-line:forin
                  for (const key in  data) {
                      if (+this.arrNEWDeloRight[key] > 1 && data[key]) {
@@ -67,17 +67,31 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.subForm.unsubscribe();
     }
     submit() {
-        console.log('submit()');
+        this.queryForSave.push({
+            method: 'MERGE',
+            requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})`,
+            data: {
+                DELO_RIGHTS: this.arrNEWDeloRight.join('')
+            }
+        });
+        this.apiSrv.setData(this.queryForSave)
+        .then(data => {
+            this.queryForSave = [];
+            this.btnDisabled = true;
+        })
+        .catch(e => {
+            console.log(e);
+        });
     }
     cancel() {
         // console.log('cancel()');
-        console.log('new', this.arrNEWDeloRight.join(''));
-        console.log('old', this.arrDeloRight.join(''));
-        this.arrNEWDeloRight.forEach((v, i) => {
-            if (v !== this.arrDeloRight[i]) {
-                console.log('было ', this.arrDeloRight[i], 'стало ', v, 'inddex ', i);
-            }
-        });
+        // console.log('new', this.arrNEWDeloRight.join(''));
+        // console.log('old', this.arrDeloRight.join(''));
+        // this.arrNEWDeloRight.forEach((v, i) => {
+        //     if (v !== this.arrDeloRight[i]) {
+        //         console.log('было ', this.arrDeloRight[i], 'стало ', v, 'inddex ', i);
+        //     }
+        // });
     }
     clickLable(event, item: IInputParamControl, control: FormControl) {
         event.preventDefault();
@@ -86,7 +100,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this.selectNode(item);
         }
         if (event.target.tagName === 'SPAN') {
-            console.log(control.value, !control.value);
             const value = !control.value;
             item.value = value;
             control.patchValue(value);
@@ -115,12 +128,31 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this.directoryModal.hide();
         });
     }
+    createBatch(data) {
+        // console.log(data);
+        const newDep = data['newDep'];
+        const d = Object.assign({}, data['node']);
+        delete d.department;
+        delete d.isSelected;
+        const str = newDep ? '' : `('${this._userParamsSetSrv.userContextId} ${d['DUE']} ${d['FUNC_NUM']}')`;
+        const batch = {
+            method: newDep ? 'POST' : 'DELETE',
+            requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USERDEP_List${str}`,
+        };
+        if (newDep) {
+            batch['data'] = d;
+        }
+        // console.log(batch);
+        this.queryForSave.push(batch);
+        this._checkChenge();
+    }
     private _writeValue(fields: IInputParamControl[]) {
         fields.forEach((node: IInputParamControl) => {
             node['value'] = !!+this.arrDeloRight[+node['key']];
         });
     }
     private _viewContent() {
+        this.rightContent = false;
         switch (this.selectedNode.data['rightContent']) {
             case E_RIGHT_DELO_ACCESS_CONTENT.all:
                 if (this.formGroupAll) {
@@ -138,12 +170,23 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         this.arrNEWDeloRight[+this.selectedNode.key] = data['all'];
                         this._checkChenge();
                     });
+                this.rightContent = true;
+                break;
+            case E_RIGHT_DELO_ACCESS_CONTENT.department:
+            case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor:
+            case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject:
+                    setTimeout(() => {
+                        this.rightContent = true;
+                    }, 0);
                 break;
         }
     }
     private _checkChenge() {
-        if (this.arrNEWDeloRight.join('') !== this.arrDeloRight.join('')) {
-            console.log('chenged');
+        if (this.arrNEWDeloRight.join('') !== this.arrDeloRight.join('') || this.queryForSave.length) {
+            // console.log('chenged');
+            this.btnDisabled = false;
+        } else {
+            this.btnDisabled = true;
         }
     }
 }

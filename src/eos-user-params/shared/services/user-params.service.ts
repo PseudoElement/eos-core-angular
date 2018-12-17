@@ -144,7 +144,7 @@ export class UserParamsService {
                     ISN_LCLASSIF: isn_cl ? isn_cl : (this.userContextId + '')
                 }
             },
-            expand: 'USER_PARMS_List,USERCARD_List/USER_CABINET_List'
+            expand: 'USER_PARMS_List,USERCARD_List/USER_CABINET_List,USER_RIGHT_DOCGROUP_List,USERDEP_List'
         };
         const _user = this._pipSrv.getData<USER_CL>(queryUser);
         const _sys = this.fetchSysParams();
@@ -205,6 +205,17 @@ export class UserParamsService {
             }
         };
         return this._pipSrv.getData<DEPARTMENT>(queryDueDep);
+    }
+
+    getUserByIsn (isn) {
+        const queryUser = {
+            USER_CL: {
+                criteries: {
+                    ISN_LCLASSIF: isn
+                }
+            }
+        };
+        return this._pipSrv.getData<USER_CL>(queryUser);
     }
 
     fetchExpandUser() {}

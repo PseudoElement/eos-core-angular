@@ -1,6 +1,7 @@
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { E_RIGHT_DELO_ACCESS_CONTENT } from '../interfaces/right-delo.intefaces';
 import { IInputParamControl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { IOpenClassifParams } from 'eos-common/interfaces';
 
 export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
@@ -126,7 +127,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         label: 'Создвать НП',
         data: {
             isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         }
     },
     {
@@ -135,7 +136,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         label: 'Работать с НП',
         data: {
             isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         }
     },
     {
@@ -239,6 +240,15 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     },
     {
         controlType: E_FIELD_TYPE.boolean, // в старом ПБ надзора нет
+        key: '28',
+        label: 'Создание РКПД',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroup // USER_RIGHT_DOCGROUP
+        }
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean, // в старом ПБ надзора нет
         key: '29',
         label: 'Выгрузка информации на ССТУ',
         data: {
@@ -262,4 +272,14 @@ export const CONTROL_ALL_NOTALL: IInputParamControl = {
             value: '2'
         }
     ]
+};
+
+export const OPEN_CLASSIF_DEPARTMENT_FOR_RIGHT: IOpenClassifParams = {
+    classif: 'DEPARTMENT',
+    return_due: true,
+    // id: '0.',
+    skipDeleted: true,
+    selectMulty: false,
+    selectLeafs: true,
+    selectNodes: false,
 };
