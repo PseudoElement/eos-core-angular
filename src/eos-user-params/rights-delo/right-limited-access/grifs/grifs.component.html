@@ -1,0 +1,19 @@
+<div *ngIf="myForm">
+        <form [formGroup]="myForm">
+                <div formArrayName="grifs">
+    <div  class="emali-list" *ngFor="let group of myForm.controls['grifs'].controls; let i = index">
+                                <div class="emali-list"  formGroupName="{{i}}">
+                                <span  class="emali-list-secont">
+                                        <label class="checkbox disabled minus-checkbox ">
+                                            <input  formControlName="checkbox"    type="checkbox" readonly="readonly" class="readonly" >
+                                            <span class="eos-icon eos-icon-checkbox-black"></span>
+                                        </label>
+                                </span>
+                                <span  class="emali-list-first">
+                                        <input formControlName="name"  type="text" readonly="readonly" class="readonly" >
+                                </span>
+                        </div>
+                    </div>
+                    </div>
+        </form>
+</div>

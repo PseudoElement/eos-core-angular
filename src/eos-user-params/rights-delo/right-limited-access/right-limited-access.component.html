@@ -1,6 +1,17 @@
 
 <div class="email-window">
     <eos-user-header [title]="'Ограничение доступа'"  [statusBtnSub]='statusBtnSub' [isDefault]='isDefault' (submitForm)='saveAllForm()' (cancelForm)='backForm($event)'></eos-user-header>
+    <div class="doc-navigate">
+        <ul class="tabs">
+            <li class="tab-item" (click)='changeActivelink()' [ngClass]="{active: activeLink}">
+                <span>Группы документов</span>
+            </li>
+            <li class="tab-item" (click)='changeActivelink()' [ngClass]="{active: !activeLink}">
+                <span>Грифы</span>
+            </li>
+        </ul>
+    </div>
+    <div *ngIf="activeLink; else unset">
     <div class="email-control">
             <button type="button" class=" email-create btn btn-primary" (click)="OpenClassiv()">
                     <span class="eos-icon eos-icon-plus-blue small"></span>
@@ -33,4 +44,9 @@
             </form>
         </div>
     </div>
+</div>
+
+<ng-template #unset>
+       <eos-grifs (changeGrifs)="SubscribtGrifs($event)"></eos-grifs>
+</ng-template>
 </div>

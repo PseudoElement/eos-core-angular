@@ -41,4 +41,33 @@
     .current{
         background-color: #faf
     }
+    .doc-navigate{
+        display: flex;
+        justify-content: space-around;
+        padding: 0 20px;
+        margin: 0 -20px;
+        background-color: #fafafa;
+        border-color: #e6e6e6;
+        border-width: 1px;
+        margin-bottom: 20px;
+        .tabs{
+            display: inline-block;
+            color: #646464;
+            padding: 0;
+            .tab-item{
+                display: inline-block;
+                border-bottom: 6px solid transparent;
+                padding: 12px 0 5px;
+                position: relative;
+                cursor: pointer;
+                height: 48px;
+                margin-right: 40px;
+            }
+            .active{
+                border-color: #2196f3;
+                color: #2196f3!important;
+            }
+        }
+
+    }
 }

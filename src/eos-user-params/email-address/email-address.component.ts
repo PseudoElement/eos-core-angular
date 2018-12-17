@@ -47,6 +47,7 @@ export class ParamEmailAddressComponent implements OnInit {
         this.editFalg = false;
         this.username = this._userServices.curentUser['SURNAME_PATRON'];
         // для работы с формой создание, удаление, редакт.
+        console.log(this._userServices.curentUser );
         this.umailsInfo = this._userServices.curentUser['NTFY_USER_EMAIL_List'].slice();
 
         // для хранения первоночального состояния формы.

@@ -2,10 +2,13 @@ import {Injectable} from '@angular/core';
 import { UserParamsService } from '../services/user-params.service';
 import { UserParamApiSrv } from './user-params-api.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { ALL_ROWS } from 'eos-rest/core/consts';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class LimitedAccesseService {
     CurrentUser: any;
+    public subscribe: Subject<any> = new Subject();
     constructor(
         private _userServices: UserParamsService,
         private _pipSrv: UserParamApiSrv,
@@ -13,7 +16,6 @@ export class LimitedAccesseService {
         // private _piprx: PipRX
     ) {
         this.CurrentUser = this._userServices.curentUser;
-        console.log(this.CurrentUser);
     }
 
 
@@ -157,6 +159,32 @@ preAddNewDocument(form) {
             });
         });
         return this.delite(dataDelite);
+    }
+
+
+    // грифы
+
+    getDataGrifs() {
+        const user = this._userServices.curentUser.ISN_LCLASSIF;
+        const query = {
+            USER_CL: {
+                criteries: {
+                    ISN_LCLASSIF: String(user)
+                }
+            },
+            expand: 'USERSECUR_List'
+        };
+     return   this._pipSrv.getData(query);
+    }
+    getGrifsName() {
+
+        const query = {
+            SECURITY_CL: ALL_ROWS
+        };
+     return   this._pipSrv.getData(query);
+    }
+    getInfoGrifs() {
+        return Promise.all([this.getDataGrifs(), this.getGrifsName()]);
     }
     private _errorHandler(err): void {
         const errMessage = err.message ? err.message : err;

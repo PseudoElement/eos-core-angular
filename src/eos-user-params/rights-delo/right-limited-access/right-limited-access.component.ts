@@ -20,6 +20,8 @@ export class RightLimitedAccessComponent implements OnInit {
     public delitedSetStore = new Set();
     public saveParams: any;
     public currentParams: string;
+    public activeLink: boolean;
+    public flagGrifs: boolean;
     public myForm: FormGroup;
     private ArrayForm: FormArray;
     constructor(
@@ -27,7 +29,8 @@ export class RightLimitedAccessComponent implements OnInit {
        private _msgSrv: EosMessageService,
       private _waitClassifSrv: WaitClassifService,
     )   {
-
+        this.activeLink = true;
+        this.flagGrifs = true;
     }
     clearForm(): void {
         this.umailsInfo.splice(0, this.umailsInfo.length);
@@ -45,7 +48,10 @@ export class RightLimitedAccessComponent implements OnInit {
         this.myForm.setControl('groupForm', this.createGroup(false, false, true));
     }
     saveAllForm(): void {
-        Promise.all([ this._limitservise.preAddNewDocument(this.ArrayForm), this._limitservise.preDelite(this.delitedSetStore), this._limitservise.preEdit(this.ArrayForm)])
+        Promise.all([
+            this._limitservise.preAddNewDocument(this.ArrayForm),
+            this._limitservise.preDelite(this.delitedSetStore),
+            this._limitservise.preEdit(this.ArrayForm)])
         .then(result => {
             this._limitservise.getAccessCode()
             .then((params) => {
@@ -60,6 +66,7 @@ export class RightLimitedAccessComponent implements OnInit {
                     this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
                     this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                 }
+                this._limitservise.subscribe.next(false);
             });
         }).catch(res => {
             const m: IMessage = {
@@ -73,6 +80,7 @@ export class RightLimitedAccessComponent implements OnInit {
     backForm(event): void {
         this.delitedSetStore.clear();
         this.clearForm();
+        this._limitservise.subscribe.next(true);
     }
 
     chooseCurrentField(index: number): void {
@@ -216,6 +224,16 @@ export class RightLimitedAccessComponent implements OnInit {
         array.sort(function(a, b){
             return a.DUE - b.DUE;
         });
-      }
+    }
+
+    changeActivelink() {
+        this.activeLink = !this.activeLink;
+
+    }
+    SubscribtGrifs(event) {
+console.log(event);
+
+// flagGrifs
+    }
 
 }
