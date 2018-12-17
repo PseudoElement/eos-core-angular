@@ -183,11 +183,11 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
             this.servApi
                 .setData(this.createObjRequestForAttach())
                 .then(data => {
-                    this.servApi.setData(this.createObjRequestForAttachAfterBackend())
+                   /* this.servApi.setData(this.createObjRequestForAttachAfterBackend())
                     .then(data2 => {
                         this._userParamsSetSrv.getUserIsn('' + this.userCard.get(Array.from(this.userCard)[0][0])['ISN_LCLASSIF']);
                     })
-                    .catch(data2 => console.log(data2));
+                    .catch(data2 => console.log(data2));*/
                    // this.prepareData.rec = Object.assign({}, this.newData.rec);
                    // this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                     this._userParamsSetSrv.getUserIsn('' + this.userCard.get(Array.from(this.userCard)[0][0])['ISN_LCLASSIF']);
