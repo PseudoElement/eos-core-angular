@@ -35,7 +35,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '3',
+            key: '18',
             // key: 'CARD_INDEX_RIGHTS_EDITING_ADDITIONAL_DETAILS',
             label: 'Редактирование доп.реквизитов',
             data: {
@@ -45,7 +45,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '4',
+            key: '19',
             // key: 'CARD_INDEX_RIGHTS_EDITING_RUBRICS',
             label: 'Редактирование рубрик',
             data: {
@@ -55,7 +55,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '5',
+            key: '20',
             // key: 'CARD_INDEX_RIGHTS_EDITING_BUNDLE',
             label: 'Редактирование связок',
             data: {
@@ -65,7 +65,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '6',
+            key: '3',
             // key: 'CARD_INDEX_RIGHTS_RC_REMOVAL',
             label: 'Удаление РК',
             data: {
@@ -75,7 +75,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '7',
+            key: '4',
             // key: 'CARD_INDEX_RIGHTS_RC_SHIPMENT',
             label: 'Пересылка РК',
             data: {
@@ -85,7 +85,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '8',
+            key: '5',
             // key: 'CARD_INDEX_RIGHTS_RECEIVE_REPORTS',
             label: 'Получение отчетов',
             data: {
@@ -95,7 +95,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '9',
+            key: '6',
             // key: 'CARD_INDEX_RIGHTS_DOCUMENT_REWIND',
             label: 'Переотметка документов',
             data: {
@@ -105,7 +105,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '10',
+            key: '7',
             // key: 'CARD_INDEX_RIGHTS_WRITING_OFF_OF_DOCUMENTS_IN_DELO',
             label: 'Списание документов в дело',
             data: {
@@ -115,7 +115,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '11',
+            key: '8',
             // key: 'CARD_INDEX_RIGHTS_MARK_FAMILIARIZATION',
             label: 'Отметка ознакомления',
             data: {
@@ -125,7 +125,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '12',
+            key: '9',
             // key: 'CARD_INDEX_RIGHTS_SENDING_BY_EMAIL',
             label: 'Отправка по e-mail',
             data: {
@@ -135,7 +135,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '13',
+            key: '10',
             // key: 'CARD_INDEX_RIGHTS_MARK_SENDING_DOCUMENTS',
             label: 'Отметка отправки документов',
             data: {
@@ -145,7 +145,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '14',
+            key: '11',
             // key: 'CARD_INDEX_RIGHTS_INVENTORY_OF_CASES',
             label: 'Опись дел',
             data: {
@@ -155,7 +155,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '15',
+            key: '12',
             // key: 'CARD_INDEX_RIGHTS_ADD_FILES',
             label: 'Добавлять файлы',
             data: {
@@ -165,7 +165,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '16',
+            key: '13',
             // key: 'CARD_INDEX_RIGHTS_READ_FILES',
             label: 'Читать файлы',
             data: {
@@ -175,7 +175,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '17',
+            key: '14',
             // key: 'CARD_INDEX_RIGHTS_EDIT_FILES',
             label: 'Редактировать файлы',
             data: {
@@ -185,7 +185,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '18',
+            key: '15',
             // key: 'CARD_INDEX_RIGHTS_DELETE_FILES',
             label: 'Удалять файлы',
             data: {
@@ -195,7 +195,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '19',
+            key: '16',
             // key: 'CARD_INDEX_RIGHTS_VIEW_ORDERS',
             label: 'Просмотр поручений',
             data: {
@@ -205,7 +205,7 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
         },
         {
             controlType: E_FIELD_TYPE.boolean,
-            key: '20',
+            key: '17',
             // key: 'CARD_INDEX_RIGHTS_SENDING_MESSAGES_SEV',
             label: 'Отправка сообщений СЭВ',
             data: {
@@ -213,4 +213,16 @@ export const CARD_INDEXS_RIGHTS: IInputParamControl[] = [
                 rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroup
             }
         }
+];
+
+export const DOCUMENT_GROUPS: IInputParamControl[] = [
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '1',
+        // key: 'CARD_INDEX_RIGHTS_REGISTRATION_OF_DOCUMENTS',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroup
+        }
+    },
 ];
