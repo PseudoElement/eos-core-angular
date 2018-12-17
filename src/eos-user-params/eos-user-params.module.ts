@@ -33,6 +33,7 @@ import { ParamsBaseParamComponent } from './base-param/base-param.component';
 import { InputParamControlService } from './shared/services/input-param-control.service';
 import {EmailAddressService} from './shared/services/email-address.service';
 import {EmailFormComponent} from './email-address/email-form/email-form.component';
+import { RightDepertmentComponent } from './rights-delo/rights-delo-absolute-rights/right-department/right-department.component';
 
 @NgModule({
     declarations: [
@@ -58,6 +59,8 @@ import {EmailFormComponent} from './email-address/email-form/email-form.componen
         ParamsBaseParamComponent,
         EmailFormComponent,
         RightPanelForDocumentGroupsComponent,
+        ParamsBaseParamComponent,
+        RightDepertmentComponent,
     ],
     entryComponents: [
         AbsoluteRightsDirectoryComponent,

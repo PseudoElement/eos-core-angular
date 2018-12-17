@@ -1,0 +1,28 @@
+<div class="right-dep-list" *ngIf="!isLoading">
+    <button
+        class="btn"
+        tooltip="Добавить должностное лицо"
+        placement="bottom"
+        containerClass="tooltip-info"
+        (click)="addDep()"
+    >
+        <span class="eos-icon eos-icon-plus-blue small"></span>
+    </button>
+    <button
+        class="btn"
+        tooltip="Удалить должностное лицо"
+        placement="bottom"
+        containerClass="tooltip-info"
+        [disabled]="!selectedDep"
+        (click)="DeleteDep()"
+    >
+        <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+    </button>
+
+    <div *ngFor="let dep of userDepFuncNumber"
+        (click)="selectNode(dep)"
+        [ngClass]="{'highlighted': dep.isSelected}">
+    {{dep['department'].CLASSIF_NAME}}</div>
+</div>
+
+<div *ngIf="isShell" class="shell"></div>
