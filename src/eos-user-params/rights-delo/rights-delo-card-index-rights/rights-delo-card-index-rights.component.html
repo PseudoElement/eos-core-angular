@@ -7,61 +7,18 @@
     ></eos-rights-delo-header>
     <div class="user-input-group">
 <div class="left-block-list-side">
-    <span></span>
-    <ul class="list-card-index-rights"
-            *ngFor="let node of listNode"
-            (click)="selectNode(node)">
-            <li [ngClass]="{'highlighted': node.data.isSelected}">
-                <span
-                >{{node.label}}</span>
-            </li>
-    </ul>
-</div>
-
-<!--<div class="right-side">
+<select class="form-control m-font" (change)="selectInputOnChange($event)">
+    <option *ngFor="let opt of fieldsForSelect" [value]="opt.DUE">{{opt.CARD_NAME}}</option>
+</select>
+<div *ngFor="let item of listNode">
 <eos-dynamic-input
-*ngIf="currentStateRightSide === 1"
-[input]="inputAttach['rec.CARD_INDEX_RIGHTS_RESTRICT_REGISTRATION_FILING']"
-[form]="formAttach"
-[readonly]="false"
+    [input]="inputs[item.key]"
+    [form]="form"
+    [readonly]="false"
 ></eos-dynamic-input>
-<div class="right-block-list-side">
-        <div *ngIf="currentStateRightSide === 2 || currentStateRightSide === 1">
-        <div class="usual-border border-bottom">
-                <div class="visible-lg-inline-block actions">
-                        <button
-                          class="btn btn-primary-light"
-                          tooltip="Добавить"
-                          placement="bottom"
-                          container="body"
-                          containerClass="tooltip-info">
-                        <span class="eos-icon eos-icon-plus-blue small"></span>
-                        </button>
-                        <button
-                          class="btn btn-primary-light"
-                          tooltip="Удалить"
-                          placement="bottom"
-                          container="body"
-                          containerClass="tooltip-info">
-                        <span class="eos-icon eos-icon-minus-blue small"></span>
-                        </button>
-                </div>
-                </div>
-                <div class="user-input-group">
-                <ul class="list-card-files"
-                    *ngFor="let item of fields; let i = index;">
-                <li *ngIf="item.data.rightContent === -1">
-                            <eos-dynamic-input
-                            [input]="inputAttach['rec.' + item.key]"
-                            [form]="formAttach"
-                            [readonly]="false"
-                            ></eos-dynamic-input>
-                            </li>
-               </ul>
-       </div>
-    </div>
 </div>
-</div>-->
+</div>
+<!--<div class="right-block-list-side"></div>-->
 </div>
 </div>
 
