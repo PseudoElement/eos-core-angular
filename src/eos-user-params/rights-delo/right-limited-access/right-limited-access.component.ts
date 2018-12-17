@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-// import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import {LimitedAccesseService} from '../../shared/services/limited-access.service';
 import { FormGroup, FormControl, FormArray} from '@angular/forms';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -16,21 +15,11 @@ import { IMessage } from 'eos-common/interfaces';
 export class RightLimitedAccessComponent implements OnInit {
     public isDefault = false;
     public statusBtnSub: boolean = true;
-    public username: string;
     public umailsInfo: Array<any>;
     public currentIndex: number;
-    public prevIndex: number;
-    public dismissible: boolean = true;
-    public defaultAlerts: Map <string, any> = new Map();
     public delitedSetStore = new Set();
-    public seveForm: Set<any>;
-    public editFalg: boolean;
-    public editedEmail: string;
     public saveParams: any;
-    public newEmail: string;
-    public CODE: Map<string, string>;
     public currentParams: string;
-    public childParams: Set<string> = new Set();
     public myForm: FormGroup;
     private ArrayForm: FormArray;
     constructor(
@@ -118,15 +107,6 @@ export class RightLimitedAccessComponent implements OnInit {
         if (this.umailsInfo.length > 0) {
             this.currentIndex = 0;
         }
-    }
-
-
-    getChildParams(event: Set<string>) {
-        this.childParams = event;
-    }
-
-    parseChildParams() {
-      return  Array.from(this.childParams).join(';');
     }
 
     OpenClassiv(): void {
