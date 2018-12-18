@@ -34,6 +34,7 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
         title: 'Гриф',
         type: 'select',
         length: 64,
+        // default: 'общий',
         default: '',
         options: [],
     }, {
