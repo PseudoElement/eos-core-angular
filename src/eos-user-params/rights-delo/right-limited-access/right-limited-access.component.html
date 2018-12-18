@@ -1,6 +1,6 @@
 
 <div class="email-window">
-    <eos-user-header [title]="'Ограничение доступа'"  [statusBtnSub]='statusBtnSub' [isDefault]='isDefault' (submitForm)='saveAllForm()' (cancelForm)='backForm($event)'></eos-user-header>
+    <eos-user-header [title]="'Ограничение доступа'"  [statusBtnSub]="getBtn" [isDefault]='isDefault' (submitForm)='saveAllForm()' (cancelForm)='backForm($event)'></eos-user-header>
     <div class="doc-navigate">
         <ul class="tabs">
             <li class="tab-item" (click)='changeActivelink()' [ngClass]="{active: activeLink}">
@@ -11,15 +11,15 @@
             </li>
         </ul>
     </div>
-    <div *ngIf="activeLink; else unset">
-    <div class="email-control">
-            <button type="button" class=" email-create btn btn-primary" (click)="OpenClassiv()">
-                    <span class="eos-icon eos-icon-plus-blue small"></span>
+    <div *ngIf="activeLink">
+        <div class="email-control">
+                <button type="button" class=" email-create btn btn-primary" (click)="OpenClassiv()">
+                        <span class="eos-icon eos-icon-plus-blue small"></span>
+                </button>
+            <button class="email-delite  btn btn-primary" (click)='deliteEmailFild()'>
+                <span class="eos-icon eos-icon-bin-blue sma"></span>
             </button>
-        <button class="email-delite  btn btn-primary" (click)='deliteEmailFild()'>
-            <span class="eos-icon eos-icon-bin-blue sma"></span>
-        </button>
-    </div>
+        </div>
 
     <div class="email-wr">
         <div class="email-header">
@@ -30,7 +30,7 @@
                             <div  class="emali-list" *ngFor="let group of myForm.controls['groupForm'].controls; let i = index"  (click)=chooseCurrentField(i) [ngClass]="{current: currentIndex === i}">
                                 <div class="emali-list"  formGroupName="{{i}}">
                                 <span [ngClass]="{current: currentIndex === i}" class="emali-list-secont">
-                                        <label class="checkbox disabled minus-checkbox ">
+                                        <label class="checkbox disabled minus-checkbox">
                                             <input  formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" >
                                             <span class="eos-icon eos-icon-checkbox-black"></span>
                                         </label>
@@ -45,8 +45,8 @@
         </div>
     </div>
 </div>
-
-<ng-template #unset>
-       <eos-grifs (changeGrifs)="SubscribtGrifs($event)"></eos-grifs>
-</ng-template>
+<div *ngIf="!activeLink">
+        <eos-grifs (changeGrifs)="SubscribtGrifs($event)"></eos-grifs>
+    </div>
 </div>
+<div *ngIf="bacgHeader" class="bacgrFixed"></div>

@@ -1,16 +1,18 @@
 :host{
     display: block;
     width: 100%;
+    height: calc(100vh - 176px);
     .email-control{
-        padding: 9px;
+        padding: 0px;
         background-color: #fafafa;
         margin-top: 1px;
         margin-bottom: 1px;
+        display: flex;
         button{
             border: none;
             outline: none;
-            width: 24px;
-            height: 24px;
+            width: 31px;
+            height: 35px;
             background-color: #fafafa;
             .eos-icon{
                 width: 24px;
@@ -39,17 +41,16 @@
 
     }
     .current{
-        background-color: #faf
+        background-color: #e3f2fd
     }
     .doc-navigate{
         display: flex;
-        justify-content: space-around;
+        justify-content: flex-start;
         padding: 0 20px;
-        margin: 0 -20px;
         background-color: #fafafa;
         border-color: #e6e6e6;
         border-width: 1px;
-        margin-bottom: 20px;
+        margin-bottom: 1px;
         .tabs{
             display: inline-block;
             color: #646464;
@@ -70,4 +71,15 @@
         }
 
     }
+}
+.bacgrFixed{
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    height: 100vh;
+    z-index: 99;
+    background-color: #646464;
+    opacity: 0.6;
 }

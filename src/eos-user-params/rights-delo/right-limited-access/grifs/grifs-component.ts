@@ -1,9 +1,8 @@
 import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
-// import { FormGroup, FormControl, FormArray} from '@angular/forms';
-// import { EosMessageService } from 'eos-common/services/eos-message.service';
-// import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import {LimitedAccesseService} from '../../../shared/services/limited-access.service';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs/Subject';
+import { UserParamsService } from '../../../shared/services/user-params.service';
 @Component({
     selector: 'eos-grifs',
     styleUrls: ['grifs.component.scss'],
@@ -14,19 +13,19 @@ export class GrifsComponent implements OnInit, OnDestroy {
     public myForm: FormGroup;
     saveOrigin: any;
     flagChande: boolean;
+    Unsub = new Subject();
     @Output() changeGrifs = new EventEmitter();
     constructor(
         private _limitservise: LimitedAccesseService,
+        private _userServices: UserParamsService,
     ) {
         this.flagChande = true;
-        this._limitservise.subscribe.subscribe(data => {
-            if (!this.flagChande) {
+        this._limitservise.subscribe.takeUntil(this.Unsub).subscribe(data => {
                if (data) {
                    this.reset();
                }else {
                 this.updateInfo();
                }
-            }
         });
     }
     reset() {
@@ -34,6 +33,7 @@ export class GrifsComponent implements OnInit, OnDestroy {
         this.saveOrigin.splice(0,  this.saveOrigin.length);
         this.myForm.removeControl('grifs');
         this.grifsForm = new FormArray([]);
+        localStorage.removeItem(String(this._userServices.userContextId));
         this.myForm.setControl('grifs', this.createGroup(prom));
         this.saveOrigin = prom;
     }
@@ -45,6 +45,7 @@ export class GrifsComponent implements OnInit, OnDestroy {
             this.myForm.removeControl('grifs');
             this.grifsForm = new FormArray([]);
             const newt = this.relaseDate(res);
+           // localStorage.removeItem(String(this._userServices.userContextId));
             this.myForm.setControl('grifs', this.createGroup(newt));
             this.saveOrigin = newt.slice();
         });
@@ -69,13 +70,14 @@ export class GrifsComponent implements OnInit, OnDestroy {
         const arrList = res[0][0].USERSECUR_List;
         if (res[1].length > 0) {
             res[1].forEach(el => {
-                arrList.forEach(arrl => {
-                    if (el.SECURLEVEL === arrl.SECURLEVEL) {
-                        arrObj['checkbox'] = true;
-                    }else {
-                        arrObj['checkbox'] = false;
-                    }
-                });
+               const tre = arrList.some( ele => {
+                   return el.SECURLEVEL === ele.SECURLEVEL;
+               });
+               if (tre) {
+                arrObj['checkbox'] = true;
+               }else {
+                     arrObj['checkbox']  = false;
+               }
                 arrObj['SECURLEVEL'] = el.SECURLEVEL;
                 arrObj['GRIF_NAME'] = el.GRIF_NAME;
                 arraData.push(arrObj);
@@ -86,10 +88,20 @@ export class GrifsComponent implements OnInit, OnDestroy {
     }
     creatFrorm() {
         this.myForm = new FormGroup({'grifs':  this.grifsForm});
-    }
 
+    }
     createGroup(data) {
-        data.forEach(el => {
+        let dataUpdate = null;
+        if (localStorage.getItem(String(this._userServices.userContextId))) {
+             dataUpdate = JSON.parse(localStorage.getItem(String(this._limitservise.CurrentUser['ISN_LCLASSIF'])));
+        }
+        let endDate = null;
+        if (dataUpdate) {
+            endDate = dataUpdate;
+        }else {
+            endDate = data;
+        }
+        endDate.forEach(el => {
             this.grifsForm.push(new FormGroup(this.createFormControls(el, false)));
         });
         return  this.grifsForm;
@@ -97,8 +109,8 @@ export class GrifsComponent implements OnInit, OnDestroy {
 
     createFormControls(element, bool1): {[key: string]: FormControl} {
         const controls = {};
-        controls['level'] = new FormControl(element.SECURLEVEL);
-        controls['name'] = new FormControl(element.GRIF_NAME);
+        controls['SECURLEVEL'] = new FormControl(element.SECURLEVEL);
+        controls['GRIF_NAME'] = new FormControl(element.GRIF_NAME);
         controls['checkbox'] = new FormControl(element.checkbox);
         controls['action'] = new FormControl('unset');
         return controls;
@@ -106,9 +118,11 @@ export class GrifsComponent implements OnInit, OnDestroy {
 
       checkChanges(data?: {[key: string]: Array<any>}) {
         let count_error = 0;
+        const storage = [];
           this.saveOrigin.forEach((element, index) => {
            const checkedField = data.grifs[index];
             const checkedData = element;
+            storage.push(checkedField);
             if (checkedField) {
                 if (Number(checkedField['checkbox']) !== Number(checkedData['checkbox']) && Number(checkedField['checkbox']) > Number(checkedData['checkbox']) ) {
                     this.grifsForm.get(String(index))
@@ -128,9 +142,12 @@ export class GrifsComponent implements OnInit, OnDestroy {
                     this.flagChande = true;
                 }
             }
+            localStorage.setItem(String(this._userServices.userContextId), JSON.stringify(storage));
     });
     this.changeGrifs.emit( {flag: this.flagChande, form:  this.grifsForm });
   }
   ngOnDestroy() {
+    this.Unsub.next();
+    this.Unsub.complete();
   }
 }

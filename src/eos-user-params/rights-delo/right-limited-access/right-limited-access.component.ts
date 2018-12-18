@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {LimitedAccesseService} from '../../shared/services/limited-access.service';
 import { FormGroup, FormControl, FormArray} from '@angular/forms';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -12,7 +12,7 @@ import { IMessage } from 'eos-common/interfaces';
     templateUrl: 'right-limited-access.component.html'
 })
 
-export class RightLimitedAccessComponent implements OnInit {
+export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     public isDefault = false;
     public statusBtnSub: boolean = true;
     public umailsInfo: Array<any>;
@@ -22,6 +22,8 @@ export class RightLimitedAccessComponent implements OnInit {
     public currentParams: string;
     public activeLink: boolean;
     public flagGrifs: boolean;
+    public bacgHeader: boolean;
+    public grifsForm: FormGroup;
     public myForm: FormGroup;
     private ArrayForm: FormArray;
     constructor(
@@ -31,6 +33,7 @@ export class RightLimitedAccessComponent implements OnInit {
     )   {
         this.activeLink = true;
         this.flagGrifs = true;
+        this.bacgHeader = false;
     }
     clearForm(): void {
         this.umailsInfo.splice(0, this.umailsInfo.length);
@@ -48,10 +51,12 @@ export class RightLimitedAccessComponent implements OnInit {
         this.myForm.setControl('groupForm', this.createGroup(false, false, true));
     }
     saveAllForm(): void {
-        Promise.all([
-            this._limitservise.preAddNewDocument(this.ArrayForm),
-            this._limitservise.preDelite(this.delitedSetStore),
-            this._limitservise.preEdit(this.ArrayForm)])
+        const promise_all = [];
+        promise_all.push(this._limitservise.preAddNewDocument(this.ArrayForm), this._limitservise.preDelite(this.delitedSetStore),  this._limitservise.preEdit(this.ArrayForm)  );
+        if (this.grifsForm) {
+            promise_all.push(this._limitservise.postGrifs(this.grifsForm), this._limitservise.deliteGrifs(this.grifsForm));
+        }
+        Promise.all([...promise_all])
         .then(result => {
             this._limitservise.getAccessCode()
             .then((params) => {
@@ -64,9 +69,11 @@ export class RightLimitedAccessComponent implements OnInit {
                     this.umailsInfo =  this.saveParams.slice();
                     this.statusBtnSub = true;
                     this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+                    this._limitservise.subscribe.next(false);
                     this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+                    promise_all.splice(0, promise_all.length);
+
                 }
-                this._limitservise.subscribe.next(false);
             });
         }).catch(res => {
             const m: IMessage = {
@@ -87,7 +94,7 @@ export class RightLimitedAccessComponent implements OnInit {
         this.currentIndex = index;
     }
     deliteEmailFild(): void {
-        if (this.currentIndex !== null || undefined) {
+        if (this.currentIndex !== (null || undefined) && this.currentIndex !== 0) {
             this.preDelite();
             this.searchNeddedField();
         }
@@ -118,6 +125,7 @@ export class RightLimitedAccessComponent implements OnInit {
     }
 
     OpenClassiv(): void {
+        this.bacgHeader = true;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DOCGR, true)
         .then(result_classif => {
             const newClassif = result_classif !== '' || null || undefined ? result_classif : '0.';
@@ -134,10 +142,11 @@ export class RightLimitedAccessComponent implements OnInit {
                     this.addFormControls(newField, false, true);
                     this.currentIndex = this.umailsInfo.length - 1;
                     this.statusBtnSub = false;
+                    this.bacgHeader = false;
                 });
             });
         }).catch( error => {
-            console.log('Окно закрыто');
+            this.bacgHeader = false;
         });
     }
 
@@ -174,16 +183,16 @@ export class RightLimitedAccessComponent implements OnInit {
           let arrayField;
           const group = new FormArray([]);
           flagBackForm ? arrayField =  this.saveParams : arrayField =  this.umailsInfo;
-          arrayField.forEach(element => {
-            group.push(new FormGroup(this.createFormControls(element, changedField, newField)));
+          arrayField.forEach((element, index) => {
+            group.push(new FormGroup(this.createFormControls(element, changedField, newField, index)));
           });
           return group;
       }
-      createFormControls(element, bool1, bool2): {[key: string]: FormControl} {
+      createFormControls(element, bool1, bool2, index?): {[key: string]: FormControl} {
         const controls = {};
         controls['name'] = new FormControl(element.NAME);
         controls['due'] = new FormControl(element.DUE);
-        controls['checkbox'] = new FormControl(Number(element.ALLOWED));
+        controls['checkbox'] = new FormControl(Boolean(element.ALLOWED));
         controls['change'] = new FormControl(bool1);
         controls['newField'] = new FormControl(bool2);
         return controls;
@@ -211,7 +220,9 @@ export class RightLimitedAccessComponent implements OnInit {
               if (this.delitedSetStore.size) {
                 count_error++;
               }
+
               count_error > 0 ? this.statusBtnSub = false : this.statusBtnSub = true;
+
               count_error = 0;
       }
 
@@ -228,12 +239,19 @@ export class RightLimitedAccessComponent implements OnInit {
 
     changeActivelink() {
         this.activeLink = !this.activeLink;
-
     }
     SubscribtGrifs(event) {
-console.log(event);
-
-// flagGrifs
+        this.flagGrifs = event.flag;
+        this.grifsForm = event.form;
+    }
+    ngOnDestroy() {
+        this._limitservise.GrifForm = undefined;
+    }
+    get getBtn() {
+        if ( this.statusBtnSub === false || this.flagGrifs === false) {
+            return false;
+        }
+        return true;
     }
 
 }

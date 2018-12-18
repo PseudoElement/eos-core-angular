@@ -1,0 +1,25 @@
+:host{
+    display: blok;
+    width: 100%;
+    .emali-list{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        .emali-list-secont{
+            height: 32px;
+        }
+        .emali-list-first{
+            display: inline-block;
+            width: 100%;
+            input{
+                width: 100%;
+                border: none;
+                background-color: transparent;
+            }
+        }
+    }
+    .user-system{
+        overflow: hidden;
+    }
+}

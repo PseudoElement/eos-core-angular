@@ -4,11 +4,13 @@ import { UserParamApiSrv } from './user-params-api.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { Subject } from 'rxjs/Subject';
+import { FormGroup } from '@angular/forms';
 
 @Injectable()
 export class LimitedAccesseService {
     CurrentUser: any;
     public subscribe: Subject<any> = new Subject();
+    GrifForm: FormGroup;
     constructor(
         private _userServices: UserParamsService,
         private _pipSrv: UserParamApiSrv,
@@ -177,7 +179,6 @@ preAddNewDocument(form) {
      return   this._pipSrv.getData(query);
     }
     getGrifsName() {
-
         const query = {
             SECURITY_CL: ALL_ROWS
         };
@@ -185,6 +186,38 @@ preAddNewDocument(form) {
     }
     getInfoGrifs() {
         return Promise.all([this.getDataGrifs(), this.getGrifsName()]);
+    }
+
+    postGrifs(form) {
+        const data = [];
+        const chengedFields = form.value.filter(element => {
+            return element.action === 'create';
+        });
+        chengedFields.forEach(element => {
+            data.push({
+                method: 'POST',
+                requestUri: `USERSECUR`,
+                data: {
+                    ISN_LCLASSIF: this._userServices.curentUser['ISN_LCLASSIF'],
+                    SECURLEVEL: element.level
+                }
+            });
+        });
+        return   this._pipSrv.setData(data);
+    }
+
+    deliteGrifs(form) {
+        const data = [];
+        const chengedFields = form.value.filter(element => {
+            return element.action === 'delite';
+        });
+        chengedFields.forEach(element => {
+            data.push({
+                method: 'DELETE',
+                requestUri: `USER_CL(${this._userServices.userContextId})/USERSECUR_List(\'${this._userServices.userContextId} ${element.level}\')`,
+            });
+        });
+        return   this._pipSrv.setData(data);
     }
     private _errorHandler(err): void {
         const errMessage = err.message ? err.message : err;
