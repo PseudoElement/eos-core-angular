@@ -20,6 +20,11 @@
             }
         }
     }
+    .email-wr{
+        max-height: 370px;
+        overflow: auto;
+        padding-bottom: 20px;
+    }
     .emali-list{
         display: flex;
         justify-content: flex-start;

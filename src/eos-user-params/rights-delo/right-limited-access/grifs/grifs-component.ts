@@ -20,7 +20,9 @@ export class GrifsComponent implements OnInit, OnDestroy {
         private _userServices: UserParamsService,
     ) {
         this.flagChande = true;
-        this._limitservise.subscribe.takeUntil(this.Unsub).subscribe(data => {
+        this._limitservise.subscribe
+        .takeUntil(this.Unsub)
+        .subscribe(data => {
                if (data) {
                    this.reset();
                }else {
@@ -33,19 +35,21 @@ export class GrifsComponent implements OnInit, OnDestroy {
         this.saveOrigin.splice(0,  this.saveOrigin.length);
         this.myForm.removeControl('grifs');
         this.grifsForm = new FormArray([]);
-        localStorage.removeItem(String(this._userServices.userContextId));
-        this.myForm.setControl('grifs', this.createGroup(prom));
+        sessionStorage.removeItem(String(this._userServices.userContextId));
         this.saveOrigin = prom;
+        this.myForm.setControl('grifs', this.createGroup(prom));
+        // this.saveOrigin = prom;
     }
 
     updateInfo() {
         this._limitservise.getInfoGrifs()
         .then(res => {
+            sessionStorage.removeItem(String(this._userServices.userContextId));
             this.saveOrigin.splice(0,  this.saveOrigin.length);
             this.myForm.removeControl('grifs');
             this.grifsForm = new FormArray([]);
             const newt = this.relaseDate(res);
-           // localStorage.removeItem(String(this._userServices.userContextId));
+            this.saveOrigin = newt.slice();
             this.myForm.setControl('grifs', this.createGroup(newt));
             this.saveOrigin = newt.slice();
         });
@@ -88,12 +92,11 @@ export class GrifsComponent implements OnInit, OnDestroy {
     }
     creatFrorm() {
         this.myForm = new FormGroup({'grifs':  this.grifsForm});
-
     }
     createGroup(data) {
         let dataUpdate = null;
-        if (localStorage.getItem(String(this._userServices.userContextId))) {
-             dataUpdate = JSON.parse(localStorage.getItem(String(this._limitservise.CurrentUser['ISN_LCLASSIF'])));
+        if (sessionStorage.getItem(String(this._userServices.userContextId))) {
+             dataUpdate = JSON.parse(sessionStorage.getItem(String(this._limitservise.CurrentUser['ISN_LCLASSIF'])));
         }
         let endDate = null;
         if (dataUpdate) {
@@ -142,7 +145,7 @@ export class GrifsComponent implements OnInit, OnDestroy {
                     this.flagChande = true;
                 }
             }
-            localStorage.setItem(String(this._userServices.userContextId), JSON.stringify(storage));
+           sessionStorage.setItem(String(this._userServices.userContextId), JSON.stringify(storage));
     });
     this.changeGrifs.emit( {flag: this.flagChande, form:  this.grifsForm });
   }

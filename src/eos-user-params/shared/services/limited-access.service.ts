@@ -196,10 +196,10 @@ preAddNewDocument(form) {
         chengedFields.forEach(element => {
             data.push({
                 method: 'POST',
-                requestUri: `USERSECUR`,
+                requestUri: `USER_CL(${ this._userServices.userContextId})/USERSECUR_List`,
                 data: {
                     ISN_LCLASSIF: String(this._userServices.userContextId),
-                    SECURLEVEL: element.level
+                    SECURLEVEL: String(element.SECURLEVEL)
                 }
             });
         });
@@ -214,7 +214,7 @@ preAddNewDocument(form) {
         chengedFields.forEach(element => {
             data.push({
                 method: 'DELETE',
-                requestUri: `USER_CL(${this._userServices.userContextId})/USERSECUR_List(\'${this._userServices.userContextId} ${element.level}\')`,
+                requestUri: `USER_CL(${ this._userServices.userContextId})/USERSECUR_List(\'${element.SECURLEVEL} ${this._userServices.userContextId}\')`,
             });
         });
         return   this._pipSrv.setData(data);

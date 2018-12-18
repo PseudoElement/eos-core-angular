@@ -5,6 +5,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import {OPEN_CLASSIF_DOCGR } from '../../../eos-user-select/shered/consts/create-user.consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';
+import { UserParamsService } from '../../shared/services/user-params.service';
 import { IMessage } from 'eos-common/interfaces';
 @Component({
     selector: 'eos-right-limited-access',
@@ -30,12 +31,14 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
        private _limitservise: LimitedAccesseService,
        private _msgSrv: EosMessageService,
       private _waitClassifSrv: WaitClassifService,
+      private _userServices: UserParamsService,
     )   {
         this.activeLink = true;
         this.flagGrifs = true;
         this.bacgHeader = false;
     }
     clearForm(): void {
+        sessionStorage.removeItem(String(this._userServices.userContextId));
         this.umailsInfo.splice(0, this.umailsInfo.length);
         this.resetForm();
         this.umailsInfo = this.saveParams.slice();
@@ -45,6 +48,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
            // this.currentIndex = this.saveParams.length - 1;
         }
         this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+        this.flagGrifs = true;
     }
     resetForm() {
         this.myForm.removeControl('groupForm');
@@ -52,6 +56,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     }
     saveAllForm(): void {
         const promise_all = [];
+        sessionStorage.removeItem(String(this._userServices.userContextId));
         promise_all.push(this._limitservise.preAddNewDocument(this.ArrayForm), this._limitservise.preDelite(this.delitedSetStore),  this._limitservise.preEdit(this.ArrayForm)  );
         if (this.grifsForm) {
             promise_all.push(this._limitservise.postGrifs(this.grifsForm), this._limitservise.deliteGrifs(this.grifsForm));
@@ -68,6 +73,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                     this.resetForm();
                     this.umailsInfo =  this.saveParams.slice();
                     this.statusBtnSub = true;
+                    this.flagGrifs = true;
                     this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
                     this._limitservise.subscribe.next(false);
                     this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);

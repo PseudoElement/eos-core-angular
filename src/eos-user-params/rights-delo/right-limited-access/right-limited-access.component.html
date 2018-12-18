@@ -31,8 +31,9 @@
                                 <div class="emali-list"  formGroupName="{{i}}">
                                 <span [ngClass]="{current: currentIndex === i}" class="emali-list-secont">
                                         <label class="checkbox disabled minus-checkbox">
-                                            <input  formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" >
-                                            <span class="eos-icon eos-icon-checkbox-black"></span>
+                                            <input *ngIf="i !== 0 "  formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" >
+                                            <input *ngIf="i == 0 " disabled  formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" >
+                                            <span class="eos-icon-checkbox-square-v-grey "></span>
                                         </label>
                                 </span>
                                 <span [ngClass]="{current: currentIndex === i}" class="emali-list-first">
