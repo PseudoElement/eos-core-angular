@@ -50,6 +50,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         dictSrv.visibleList$.takeUntil(this.ngUnsubscribe)
             .subscribe((nodes: EosDictionaryNode[]) => {
                 if (dictSrv.currentDictionary) {
+
                     this.customFields = this.dictSrv.customFields;
                     this.updateViewFields(this.customFields);
 
