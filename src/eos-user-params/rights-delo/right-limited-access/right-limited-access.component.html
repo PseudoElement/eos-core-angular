@@ -1,0 +1,36 @@
+
+<div class="email-window">
+    <eos-user-header [title]="'Ограничение доступа'"  [statusBtnSub]='statusBtnSub' [isDefault]='isDefault' (submitForm)='saveAllForm()' (cancelForm)='backForm($event)'></eos-user-header>
+    <div class="email-control">
+            <button type="button" class=" email-create btn btn-primary" (click)="OpenClassiv()">
+                    <span class="eos-icon eos-icon-plus-blue small"></span>
+            </button>
+        <button class="email-delite  btn btn-primary" (click)='deliteEmailFild()'>
+            <span class="eos-icon eos-icon-bin-blue sma"></span>
+        </button>
+    </div>
+
+    <div class="email-wr">
+        <div class="email-header">
+        </div>
+        <div class="email-content" *ngIf="umailsInfo && myForm">
+                <form [formGroup]="myForm">
+                    <div formArrayName="groupForm">
+                            <div  class="emali-list" *ngFor="let group of myForm.controls['groupForm'].controls; let i = index"  (click)=chooseCurrentField(i) [ngClass]="{current: currentIndex === i}">
+                                <div class="emali-list"  formGroupName="{{i}}">
+                                <span [ngClass]="{current: currentIndex === i}" class="emali-list-secont">
+                                        <label class="checkbox disabled minus-checkbox ">
+                                            <input  formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" >
+                                            <span class="eos-icon eos-icon-checkbox-black"></span>
+                                        </label>
+                                </span>
+                                <span [ngClass]="{current: currentIndex === i}" class="emali-list-first">
+                                        <input formControlName="name"  type="text" readonly="readonly" class="readonly" >
+                                </span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
