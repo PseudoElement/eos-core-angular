@@ -33,6 +33,8 @@ import { ParamsBaseParamComponent } from './base-param/base-param.component';
 import { InputParamControlService } from './shared/services/input-param-control.service';
 import {EmailAddressService} from './shared/services/email-address.service';
 import {EmailFormComponent} from './email-address/email-form/email-form.component';
+import {RightLimitedAccessComponent} from './rights-delo/right-limited-access/right-limited-access.component';
+import {LimitedAccesseService} from './shared/services/limited-access.service';
 import { RightDepertmentComponent } from './rights-delo/rights-delo-absolute-rights/right-department/right-department.component';
 
 @NgModule({
@@ -59,6 +61,7 @@ import { RightDepertmentComponent } from './rights-delo/rights-delo-absolute-rig
         ParamsBaseParamComponent,
         EmailFormComponent,
         RightPanelForDocumentGroupsComponent,
+        RightLimitedAccessComponent,
         ParamsBaseParamComponent,
         RightDepertmentComponent,
     ],
@@ -81,7 +84,8 @@ import { RightDepertmentComponent } from './rights-delo/rights-delo-absolute-rig
         UserParamsDescriptorSrv,
         UserParamsService,
         InputParamControlService,
-        EmailAddressService
+        EmailAddressService,
+        LimitedAccesseService
     ]
 })
 export class EosUserParamsModule {}
