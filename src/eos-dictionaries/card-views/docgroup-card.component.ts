@@ -19,7 +19,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
     }
 
     get havesRC(): boolean {
-        return this.data['DOC_RC_List'].length !== 0;
+        return (this.data['DOC_RC_List'] && this.data['DOC_RC_List'].length !== 0);
     }
 
     get isNode(): boolean {
@@ -86,7 +86,9 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
                 this._restorePrevious('rec.SHABLON');
                 this._restorePrevious('rec.PRJ_NUM_FLAG');
             } else {
-                this.setValue('rec.SHABLON', this.getValue('rec.SHABLON').replace('{N}', ''));
+                if (tpl) {
+                    this.setValue('rec.SHABLON', tpl.replace('{N}', ''));
+                }
                 this.setValue('rec.PRJ_NUM_FLAG', null);
             }
         }
