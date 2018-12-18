@@ -116,7 +116,7 @@ export class GrifsComponent implements OnInit, OnDestroy {
         return controls;
       }
 
-      checkChanges(data?: {[key: string]: Array<any>}) {
+    checkChanges(data?: {[key: string]: Array<any>}) {
         let count_error = 0;
         const storage = [];
           this.saveOrigin.forEach((element, index) => {

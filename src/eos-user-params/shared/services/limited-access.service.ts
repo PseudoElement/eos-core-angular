@@ -22,7 +22,7 @@ export class LimitedAccesseService {
 
 
     getAccessCode() {
-        const user = this._userServices.curentUser.ISN_LCLASSIF;
+        const user = this._userServices.userContextId;
         const query = {
             USER_CL: {
                 criteries: {
@@ -102,9 +102,9 @@ preAddNewDocument(form) {
     arrForms.forEach(element => {
         data.push({
             method: 'POST',
-            requestUri: `USER_CL(${ this._userServices.curentUser['ISN_LCLASSIF']})/USER_DOCGROUP_ACCESS_List`,
+            requestUri: `USER_CL(${ this._userServices.userContextId})/USER_DOCGROUP_ACCESS_List`,
             data: {
-                ISN_LCLASSIF: this._userServices.curentUser['ISN_LCLASSIF'],
+                ISN_LCLASSIF: this._userServices.userContextId,
                 DUE: element.due,
                 ALLOWED: element.checkbox ? '1' : '0',
             }
@@ -132,7 +132,7 @@ preAddNewDocument(form) {
         chengedFields.forEach(element => {
             data.push({
                 method: 'MERGE',
-                requestUri: `USER_CL(${this._userServices.curentUser['ISN_LCLASSIF']})/USER_DOCGROUP_ACCESS_List(\'${this._userServices.curentUser['ISN_LCLASSIF']} ${element.due}\')`,
+                requestUri: `USER_CL(${this._userServices.userContextId})/USER_DOCGROUP_ACCESS_List(\'${this._userServices.userContextId} ${element.due}\')`,
                 data: {
                     ALLOWED: element.checkbox ? '1' : '0',
                 }
@@ -157,7 +157,7 @@ preAddNewDocument(form) {
         Array.from(value).forEach(element => {
             dataDelite.push({
                 method: 'DELETE',
-                requestUri: `USER_CL(${this._userServices.curentUser['ISN_LCLASSIF']})/USER_DOCGROUP_ACCESS_List(\'${this._userServices.curentUser['ISN_LCLASSIF']} ${element.due}\')`,
+                requestUri: `USER_CL(${this._userServices.userContextId})/USER_DOCGROUP_ACCESS_List(\'${this._userServices.userContextId} ${element.due}\')`,
             });
         });
         return this.delite(dataDelite);
@@ -167,7 +167,7 @@ preAddNewDocument(form) {
     // грифы
 
     getDataGrifs() {
-        const user = this._userServices.curentUser.ISN_LCLASSIF;
+        const user = this._userServices.userContextId;
         const query = {
             USER_CL: {
                 criteries: {
@@ -198,7 +198,7 @@ preAddNewDocument(form) {
                 method: 'POST',
                 requestUri: `USERSECUR`,
                 data: {
-                    ISN_LCLASSIF: this._userServices.curentUser['ISN_LCLASSIF'],
+                    ISN_LCLASSIF: String(this._userServices.userContextId),
                     SECURLEVEL: element.level
                 }
             });

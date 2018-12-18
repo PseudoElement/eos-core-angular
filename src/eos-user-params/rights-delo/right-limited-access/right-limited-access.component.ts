@@ -104,7 +104,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         const delitedField  = this.ArrayForm.get(String(this.currentIndex));
         if (delitedField) {
               if (delitedField.value.newField !== true) {
-            // в map добавлены только поля для удаления без флага true в форме, в свойсттве newField
+            //  в map добавлены только поля для удаления без флага true в форме, в свойсттве newField
             this.delitedSetStore.add(delitedField.value);
         }
     }
