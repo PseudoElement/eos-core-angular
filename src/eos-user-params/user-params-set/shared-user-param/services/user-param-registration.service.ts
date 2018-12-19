@@ -1317,8 +1317,6 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
         }
         }
         cancel() {
-            // this.init();
-            // this.prepInputsAttach = this.getObjectInputFields(REGISTRATION_USER.fieldsChild);
             this.formChanged.emit(false);
             this.isChangeForm = false;
             this.afterInit();
