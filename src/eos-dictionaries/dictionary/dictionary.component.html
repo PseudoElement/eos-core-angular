@@ -6,14 +6,15 @@
     (transitionend)="transitionEnd()">
     <div class="tree-wrapper block"
         #tree
-        [ngClass]="{'open-tree': currentState[0] && !hideTree, 'has-spinner': !treeNodes.length }"
+        [ngClass]="{'open-tree': currentState[0] && !hideTree,
+                    'has-spinner': ((hasCustomTree && !customTreeData) || !treeNodes.length) }"
         [hidden]="this.dictionary?.descriptor.type === dictTypes.linear">
-        <eos-spinner *ngIf="!treeNodes.length"
-            size="lg"></eos-spinner>
+        <eos-spinner *ngIf="((hasCustomTree && !customTreeData) || !treeNodes.length)" size="lg">
+        </eos-spinner>
         <eos-tree *ngIf="treeNodes.length && !hasCustomTree"
             [nodes]="treeNodes"
             [showDeleted]="params.showDeleted"></eos-tree>
-        <eos-custom-tree *ngIf="hasCustomTree"
+        <eos-custom-tree *ngIf="hasCustomTree && customTreeData"
                          [data]="customTreeData"
                          [showDeleted]="params.showDeleted"></eos-custom-tree>
         <div class="fon highlighted"

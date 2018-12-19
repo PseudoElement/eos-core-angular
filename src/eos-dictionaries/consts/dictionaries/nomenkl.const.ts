@@ -34,6 +34,7 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
         title: 'Гриф',
         type: 'select',
         length: 64,
+        // default: 'общий',
         default: '',
         options: [],
     }, {
@@ -75,7 +76,9 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
     }, {
         key: 'CLOSE_WHO',
         title: 'Кем закрыто',
-        type: 'number',
+        type: 'select',
+        options: [],
+        dictionaryId: 'USER_CL',
     }, {
         key: 'CLOSE_DATE',
         title: 'Дата закрытия',
@@ -115,12 +118,12 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
 
     treeFields: ['title'],
     editFields: ['CLASSIF_NAME', 'NOTE', 'CLOSED', 'SECURITY', 'YEAR_NUMBER', 'STORE_TIME', 'SHELF_LIFE', 'NOM_NUMBER',
-        'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', 'buttPer'],
+        'END_YEAR', 'ARTICLE', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', 'buttPer'],
     searchFields: ['CLASSIF_NAME', 'NOM_NUMBER', ],
     fullSearchFields: ['CLASSIF_NAME', 'NOTE', 'NOM_NUMBER'],
     quickViewFields: ['CLASSIF_NAME', 'NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME'],
-    listFields: ['NOM_NUMBER', 'CLASSIF_NAME'],
+    listFields: ['NOM_NUMBER', 'CLASSIF_NAME', ],
     allVisibleFields: ['NOTE', 'CLOSED', 'SECURITY', 'STORE_TIME', 'SHELF_LIFE', 'YEAR_NUMBER',
         'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', ],
 
