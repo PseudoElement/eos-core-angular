@@ -2,10 +2,15 @@ import {Injectable} from '@angular/core';
 import { UserParamsService } from '../services/user-params.service';
 import { UserParamApiSrv } from './user-params-api.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { ALL_ROWS } from 'eos-rest/core/consts';
+import { Subject } from 'rxjs/Subject';
+import { FormGroup } from '@angular/forms';
 
 @Injectable()
 export class LimitedAccesseService {
     CurrentUser: any;
+    public subscribe: Subject<any> = new Subject();
+    GrifForm: FormGroup;
     constructor(
         private _userServices: UserParamsService,
         private _pipSrv: UserParamApiSrv,
@@ -13,12 +18,11 @@ export class LimitedAccesseService {
         // private _piprx: PipRX
     ) {
         this.CurrentUser = this._userServices.curentUser;
-        console.log(this.CurrentUser);
     }
 
 
     getAccessCode() {
-        const user = this._userServices.curentUser.ISN_LCLASSIF;
+        const user = this._userServices.userContextId;
         const query = {
             USER_CL: {
                 criteries: {
@@ -98,9 +102,9 @@ preAddNewDocument(form) {
     arrForms.forEach(element => {
         data.push({
             method: 'POST',
-            requestUri: `USER_CL(${ this._userServices.curentUser['ISN_LCLASSIF']})/USER_DOCGROUP_ACCESS_List`,
+            requestUri: `USER_CL(${ this._userServices.userContextId})/USER_DOCGROUP_ACCESS_List`,
             data: {
-                ISN_LCLASSIF: this._userServices.curentUser['ISN_LCLASSIF'],
+                ISN_LCLASSIF: this._userServices.userContextId,
                 DUE: element.due,
                 ALLOWED: element.checkbox ? '1' : '0',
             }
@@ -128,7 +132,7 @@ preAddNewDocument(form) {
         chengedFields.forEach(element => {
             data.push({
                 method: 'MERGE',
-                requestUri: `USER_CL(${this._userServices.curentUser['ISN_LCLASSIF']})/USER_DOCGROUP_ACCESS_List(\'${this._userServices.curentUser['ISN_LCLASSIF']} ${element.due}\')`,
+                requestUri: `USER_CL(${this._userServices.userContextId})/USER_DOCGROUP_ACCESS_List(\'${this._userServices.userContextId} ${element.due}\')`,
                 data: {
                     ALLOWED: element.checkbox ? '1' : '0',
                 }
@@ -153,10 +157,67 @@ preAddNewDocument(form) {
         Array.from(value).forEach(element => {
             dataDelite.push({
                 method: 'DELETE',
-                requestUri: `USER_CL(${this._userServices.curentUser['ISN_LCLASSIF']})/USER_DOCGROUP_ACCESS_List(\'${this._userServices.curentUser['ISN_LCLASSIF']} ${element.due}\')`,
+                requestUri: `USER_CL(${this._userServices.userContextId})/USER_DOCGROUP_ACCESS_List(\'${this._userServices.userContextId} ${element.due}\')`,
             });
         });
         return this.delite(dataDelite);
+    }
+
+
+    // грифы
+
+    getDataGrifs() {
+        const user = this._userServices.userContextId;
+        const query = {
+            USER_CL: {
+                criteries: {
+                    ISN_LCLASSIF: String(user)
+                }
+            },
+            expand: 'USERSECUR_List'
+        };
+     return   this._pipSrv.getData(query);
+    }
+    getGrifsName() {
+        const query = {
+            SECURITY_CL: ALL_ROWS
+        };
+     return   this._pipSrv.getData(query);
+    }
+    getInfoGrifs() {
+        return Promise.all([this.getDataGrifs(), this.getGrifsName()]);
+    }
+
+    postGrifs(form) {
+        const data = [];
+        const chengedFields = form.value.filter(element => {
+            return element.action === 'create';
+        });
+        chengedFields.forEach(element => {
+            data.push({
+                method: 'POST',
+                requestUri: `USER_CL(${ this._userServices.userContextId})/USERSECUR_List`,
+                data: {
+                    ISN_LCLASSIF: String(this._userServices.userContextId),
+                    SECURLEVEL: String(element.SECURLEVEL)
+                }
+            });
+        });
+        return   this._pipSrv.setData(data);
+    }
+
+    deliteGrifs(form) {
+        const data = [];
+        const chengedFields = form.value.filter(element => {
+            return element.action === 'delite';
+        });
+        chengedFields.forEach(element => {
+            data.push({
+                method: 'DELETE',
+                requestUri: `USER_CL(${ this._userServices.userContextId})/USERSECUR_List(\'${element.SECURLEVEL} ${this._userServices.userContextId}\')`,
+            });
+        });
+        return   this._pipSrv.setData(data);
     }
     private _errorHandler(err): void {
         const errMessage = err.message ? err.message : err;
