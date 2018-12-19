@@ -9,12 +9,19 @@ export const PARM_SUCCESS_SAVE: IMessage = {
     type: 'success',
     title: 'Изменения сохранены',
     msg: '',
-    dismissOnTimeout: 2000
+    dismissOnTimeout: 5000
 };
 
 export const PARM_CANCEL_CHANGE: IMessage = {
     type: 'warning',
     title: 'Изменения не сохранены',
     msg: '',
-    dismissOnTimeout: 2000
+    dismissOnTimeout: 5000
+};
+
+export const PARM_ERROR_ON_BACKEND: IMessage = {
+    type: 'danger',
+    title: 'Ошибка сервера',
+    msg: '',
+    dismissOnTimeout: 5000
 };

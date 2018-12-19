@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injector } from '@angular/core';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { CARD_INDEXS_RIGHTS, DOCUMENT_GROUPS } from '../shared-rights-delo/consts/card-index-rights.consts';
 // import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
@@ -11,7 +11,8 @@ import { USERCARD, DEPARTMENT } from 'eos-rest';
 import { FormGroup } from '@angular/forms';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-// import { PARM_SUCCESS_SAVE } from '../shared-rights-delo/consts/eos-user-params.const';
+import { E_RIGHT_DELO_ACCESS_CONTENT } from '../shared-rights-delo/interfaces/right-delo.intefaces';
+import { PARM_SUCCESS_SAVE, PARM_ERROR_ON_BACKEND } from '../shared-rights-delo/consts/eos-user-params.const';
 
 @Component({
     selector: 'eos-rights-delo-card-index-rights',
@@ -31,6 +32,8 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     fieldsForSelect;
     inputs;
     booleanFromSubscribe;
+    booleanDataForm;
+    arrayOfNewChanges = [];
     strForSubscribe = '';
     form: FormGroup;
     isLoading = false;
@@ -51,6 +54,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     private quaryUserCardDocgroup = {
         USER_CARD_DOCGROUP: {
             criteries: {
+                ISN_LCLASSIF: '3611'
             }
         }
     };
@@ -61,6 +65,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         }
     };
     constructor(
+        injector: Injector,
         private _userParamsSetSrv: UserParamsService,
         // private _inputCtrlSrv: InputParamControlService,
         private servApi: UserParamApiSrv,
@@ -75,6 +80,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
             due.push(card['DUE']);
         });
         this.quaryDepartment.DEPARTMENT.criteries['DUE'] = due.join('||');
+        this.msgSrv = injector.get(EosMessageService);
     }
     // afterInit() {
     //     const allData = this._userParamsSetSrv.hashUserContextCard;
@@ -119,11 +125,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
             this.servApi.getData(this.quaryUserCardDocgroup)
                 .then(data2 => {
                     this.dataUserCardDocgroup = data2;
-                });
-        }).then(() => {
-            this.servApi.getData(this.quaryDocgroupCl)
-                .then(data3 => {
-                    this.dataDocgroupCl = data3;
+                   // this.isLoading = false;
                 }).then(() => {
                     const firstEvent = {
                         target: {
@@ -133,22 +135,24 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     this.selectInputOnChange(firstEvent);
                     this.isLoading = false;
                 });
+        }).then(() => {
+            this.servApi.getData(this.quaryDocgroupCl)
+                .then(data3 => {
+                    this.dataDocgroupCl = data3;
+                });
         });
     }
     oldElement(data, oldIndex) {
         const tmp = this.userCard.get(data[oldIndex][0]);
         this.strForSubscribe = '';
-        for (const key11 of Object.keys(this.dataForm)) {
-            for (const key22 of Object.keys(this.booleanFromSubscribe)) {
-            if (key11 !== key22) {
-                this.arrayOfIndexesOfModifiedPositions.push();
-            }
-            }
+        if (this.booleanFromSubscribe === undefined) {
+            this.booleanFromSubscribe = this.booleanDataForm;
         }
+
         for (const key of Object.keys(this.booleanFromSubscribe)) {
             if (this.booleanFromSubscribe[key] === true) {
                 this.strForSubscribe += '1';
-            } else {
+            } else if (this.booleanFromSubscribe[key] === false) {
                 this.strForSubscribe += '0';
             }
         }
@@ -161,13 +165,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         }
         for (let i = 0; i < this.listNode.length; i++) {
              this.listNode[i]['value'] = +arrayFuclist[this.listNode[i]['key']];
-          //   copyFunclist += copyFunclist.charAt(i) =
-           // this.listNode[i]['value'] = false; !!
          }
-
-        /* for (let j = 0; j < this.listDocumentGroups.length; j++) {
-             this.listDocumentGroups[j]['value'] =
-         }*/
     }
     prepDataAttachField() {
          for (let i = 0; i < this.listNode.length; i++) {
@@ -183,17 +181,15 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
             this.servApi
                 .setData(this.createObjRequestForAttach())
                 .then(data => {
-                   /* this.servApi.setData(this.createObjRequestForAttachAfterBackend())
+                    this.servApi.setData(this.createObjRequestForAttachAfterBackend())
                     .then(data2 => {
-                        this._userParamsSetSrv.getUserIsn('' + this.userCard.get(Array.from(this.userCard)[0][0])['ISN_LCLASSIF']);
+                       this._userParamsSetSrv.getUserIsn('' + this.userCard.get(Array.from(this.userCard)[0][0])['ISN_LCLASSIF']);
+                       this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                     })
-                    .catch(data2 => console.log(data2));*/
-                   // this.prepareData.rec = Object.assign({}, this.newData.rec);
-                   // this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                    this._userParamsSetSrv.getUserIsn('' + this.userCard.get(Array.from(this.userCard)[0][0])['ISN_LCLASSIF']);
+                    .catch(data2 => console.log(data2));
                 })
                 // tslint:disable-next-line:no-console
-                .catch(data => console.log(data));
+                .catch(() => this.msgSrv.addNewMessage(PARM_ERROR_ON_BACKEND));
             }
     }
     createObjRequestForAttach() {
@@ -218,18 +214,35 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     }
     createObjRequestForAttachAfterBackend() {
         const req = [];
+        this.arrayOfNewChanges = [];
         this.oldElement(Array.from(this.userCard), this.oldIndex);
-
         for (let i = 0; i < this.userCard.size; i++) {
             const tmp = this.userCard.get(Array.from(this.userCard)[i][0]);
             if (tmp.hasOwnProperty('NEW_FUNCLIST')) {
-            req.push({
-                method: 'MERGE',
-                requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')/USER_CARD_DOCGROUP_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']} '0.'\')`,
-                data: {
-                    ALLOWED: 1
+                for (const key of Object.keys(this.booleanDataForm)) {
+                    if (this.booleanDataForm[key] !== this.booleanFromSubscribe[key]) {
+                        this.listNode[key]['valueCheck'] =  this.booleanFromSubscribe[key];
+                        this.arrayOfNewChanges.push(this.listNode[key]);
+                    }
                 }
-            });
+                for (let z = 0; z < this.arrayOfNewChanges.length; z++) {
+                     if (this.arrayOfNewChanges[z].data.rightContent !== E_RIGHT_DELO_ACCESS_CONTENT.none) {
+                         if (this.arrayOfNewChanges[z]['valueCheck'] === true) {
+                        req.push({
+                            method: 'MERGE',
+requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')/USER_CARD_DOCGROUP_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']} ${'0.'} ${+this.arrayOfNewChanges[z]['key'] + 1}\')`,
+                            data: {
+                                ALLOWED: 1
+                            }
+                        });
+                    } else {
+                        req.push({
+                            method: 'DELETE',
+requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')/USER_CARD_DOCGROUP_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']} ${'0.'} ${+this.arrayOfNewChanges[z]['key'] + 1}\')`
+                        });
+                    }
+                    }
+                }
             delete tmp['NEW_FUNCLIST'];
         }
       }
@@ -258,7 +271,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         this.inputs = this.getInputAttach();
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
         this.dataForm = this.form.value;
-        this.booleanFromSubscribe = this.dataForm;
+        this.booleanDataForm = this.dataForm;
         this.form.valueChanges
              .subscribe(data => {
                  this.booleanFromSubscribe = data;
