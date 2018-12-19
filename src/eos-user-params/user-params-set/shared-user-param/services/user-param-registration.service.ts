@@ -355,13 +355,19 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
         return this.dataSrv.getInputs(this.prepInputsAttach, dataInput);
     }
     saveToSubmit(keyName) {
-        if (keyName.indexOf('RCSEND') === 0) {
-            this.arrayOfIndexesRcsend.push(this.objectDataRcsend[keyName]);
-        } else if (keyName.indexOf('MAILRECEIVE') === 0) {
-            this.arrayOfIndexesMailReceive.push(this.objectDataMailreceive[keyName]);
-        }
+            if (keyName.indexOf('RCSEND') === 0) {
+                if (Number(this.arrayOfIndexesRcsend.indexOf(this.objectDataRcsend[keyName])) === -1) {
+                    this.arrayOfIndexesRcsend.push(this.objectDataRcsend[keyName]);
+                }
+                this.arrayOfIndexesRcsend.push(this.objectDataRcsend[keyName]);
+            } else if (keyName.indexOf('MAILRECEIVE') === 0 && keyName !== 'MAILRECEIVE_TAKE_RUBRICS_RK_RADIO' && keyName !== 'MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO') {
+                if (Number(this.arrayOfIndexesMailReceive.indexOf(this.objectDataMailreceive[keyName])) === -1) {
+                    this.arrayOfIndexesMailReceive.push(this.objectDataMailreceive[keyName]);
+                }
+            }
     }
     toggleAllMarksThisCheckbox(event, keyName) {
+        console.log(event, keyName);
         const arrayKeysSubsetsForAuthorOrganization = ['RCSEND_DOCUMENT_AUTHOR_ORGANIZATION_FULL_TITLE',
         'RCSEND_DOCUMENT_AUTHOR_ORGANIZATION_ABBREVIATION', 'RCSEND_DOCUMENT_AUTHOR_ORGANIZATION_OGRN_CODE',
         'RCSEND_DOCUMENT_AUTHOR_ORGANIZATION_INN', 'RCSEND_DOCUMENT_AUTHOR_ORGANIZATION_EMAIL'];
@@ -1104,12 +1110,13 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
         this.inputAttach = this.getInputAttach();
         this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
     }
+
+
     changeByPathAttach(path: string, value: any) {
         let _value = null;
         _value = value;
         this.newDataAttach = EosUtils.setValueByPath(this.newDataAttach, path, _value);
         const oldValue = EosUtils.getValueByPath(this.prepDataAttach, path, false);
-
         if (oldValue !== _value) {
             // console.log('changed', path, oldValue, 'to', _value, this.prepDataAttach.rec);
         }
@@ -1118,7 +1125,6 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
     submit() {
         if (this.newData || this.newDataAttach || this.prepareData) {
             const userId = '' + this._userParamsSetSrv.userContextId;
-            console.log(this._userParamsSetSrv.userContextId);
            // console.log(userId);
             this.formChanged.emit(false);
             this.isChangeForm = false;
@@ -1203,10 +1209,11 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 newValueStringForMailReceive = this.oldStringMailreceive;
                 for (let i = 0; i < this.arrayOfIndexesMailReceive.length; i++) {
                     replacementItem = this.oldStringMailreceive.charAt(this.arrayOfIndexesMailReceive[i]) === '1' ? '0' : '1';
-                    newValueStringForMailReceive =
-                     this.replaceAt(newValueStringForMailReceive, this.arrayOfIndexesMailReceive[i], replacementItem);
+                    newValueStringForMailReceive = this.replaceAt(newValueStringForMailReceive, this.arrayOfIndexesMailReceive[i], replacementItem);
                 }
-                valueDefSearchCitizen = newValueStringForMailReceive;
+                // добавил для сохранения radio button
+                valueDefSearchCitizen = this.updateStringFroRadioButton(newValueStringForMailReceive);
+                valueDefSearchCitizen = this.updateStringFroRadioAlert(valueDefSearchCitizen);
             }
             req.push({
                 method: 'MERGE',
@@ -1221,6 +1228,33 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
         replaceAt(str, index, replacement) {
             return str.substring(0, index) + replacement + str.substring(index + replacement.length);
         }
+
+        updateStringFroRadioButton(newStringForMail: string) {
+            const value = this.formAttach.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].value;
+            switch (value) {
+                case '1':
+                return newStringForMail.substr(0, 6) + '100' + newStringForMail.substr(9);
+                case '0':
+                return newStringForMail.substr(0, 6) + '010' + newStringForMail.substr(9);
+                case '-1':
+                return newStringForMail.substr(0, 6) + '001' + newStringForMail.substr(9);
+                default:
+                return newStringForMail;
+            }
+        }
+
+        updateStringFroRadioAlert(newStringForMail) {
+            const value = this.formAttach.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].value;
+            switch (value) {
+                case '1':
+                return newStringForMail.substr(0, 2) + '01' + newStringForMail.substr(4);
+                case '0':
+                return newStringForMail.substr(0, 2) + '10' + newStringForMail.substr(4);
+                default:
+                return newStringForMail;
+            }
+        }
+
         createObjRequestForAll() {
             const req = this.createObjRequest();
             const reqAttach = this.createObjRequestForAttach();
@@ -1253,15 +1287,27 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
         }
         checkDataToDisabled(keyField, value) {
             if (keyField.indexOf('RCSEND') === 0) {
-                this.arrayOfIndexesRcsend.push(this.objectDataRcsend[keyField]);
-            } else if (keyField.indexOf('MAILRECEIVE') === 0) {
-                this.arrayOfIndexesMailReceive.push(this.objectDataMailreceive[keyField]);
+                if (Number(this.arrayOfIndexesRcsend.indexOf(this.objectDataRcsend[keyField])) === -1) {
+                    this.arrayOfIndexesRcsend.push(this.objectDataRcsend[keyField]);
+                }
+            } else if (keyField.indexOf('MAILRECEIVE') === 0 && keyField !== 'MAILRECEIVE_TAKE_RUBRICS_RK_RADIO') {
+                if (Number(this.arrayOfIndexesMailReceive.indexOf(this.objectDataMailreceive[keyField])) === -1) {
+                    this.arrayOfIndexesMailReceive.push(this.objectDataMailreceive[keyField]);
+                }
             }
             const keyFieldDisabled = keyField === 'RCSEND_RESOLUTIONS' ?
             'RCSEND_RESOLUTIONS_RADIO' : keyField === 'RCSEND_ADDRESSEES' ?
             'RCSEND_ADDRESSEES_RADIO' : keyField === 'MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT' ?
             'MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO' :
             keyField === 'MAILRECEIVE_TAKE_RUBRICS_RK' ? 'MAILRECEIVE_TAKE_RUBRICS_RK_RADIO' : null;
+            // по умолчанию если чекбокс не отмечен выбираем первый.
+            if (this.formAttach.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].value === null) {
+                this.formAttach.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].patchValue('1');
+            }
+            if (this.formAttach.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].value === null) {
+                this.formAttach.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].patchValue('0');
+            }
+                // - //
             if (this.formAttach.controls['rec.' + keyField].value === value) {
                 this.disabledField = true;
                 this.formAttach.controls['rec.' + keyFieldDisabled].disable();
@@ -1269,6 +1315,13 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 this.disabledField = false;
                 this.formAttach.controls['rec.' + keyFieldDisabled].enable();
         }
+        }
+        cancel() {
+            // this.init();
+            // this.prepInputsAttach = this.getObjectInputFields(REGISTRATION_USER.fieldsChild);
+            this.formChanged.emit(false);
+            this.isChangeForm = false;
+            this.afterInit();
         }
         private openAccordion() {
             this.accordionListForEmail.forEach((item: IParamAccordionList) => {
