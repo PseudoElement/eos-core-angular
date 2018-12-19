@@ -10,8 +10,9 @@
 <select class="form-control m-font" (change)="selectInputOnChange($event)">
     <option *ngFor="let opt of fieldsForSelect" [value]="opt.DUE">{{opt.CARD_NAME}}</option>
 </select>
-<div *ngFor="let item of listNode">
+<div *ngFor="let item of listNode" (click)="selectNode(item)">
 <eos-dynamic-input
+    [ngClass]="{'highlighted': item.data.isSelected}"
     [input]="inputs[item.key]"
     [form]="form"
     [readonly]="false"
