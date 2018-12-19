@@ -1,0 +1,16 @@
+:host{
+    display: block;
+    width: 100%;
+    max-height: 300px;
+    overflow: auto;
+
+}
+
+.code-list{
+
+    label {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+}

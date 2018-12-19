@@ -2514,6 +2514,16 @@ export interface NTFY_USER_EMAIL extends IEnt {
     EXCLUDE_OPERATION: string;
 }
 
+export interface NTYF_OPERATION extends IEnt {
+    CODE: string;
+    NAME: string;
+    KIND: number;
+    MSG_EXTEND_TEXT: string;
+    MSG_EXTEND_TEXT2: string;
+    MSG_HEADER: string;
+    MSG_TEXT: string;
+    NOTE: string;
+}
 /**
  * Список идентификаторов реквизитов РКПД и их описание
  */

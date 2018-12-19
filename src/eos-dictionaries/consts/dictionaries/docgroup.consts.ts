@@ -74,8 +74,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     }, {
         key: 'TEST_UNIQ_FLAG',
         title: 'Проверка уникальности номера',
-        type: 'boolean',
-        forNode: true
+        type: 'boolean'
     }, {
         key: 'PRJ_NUM_FLAG',
         title: 'Проекты документов',

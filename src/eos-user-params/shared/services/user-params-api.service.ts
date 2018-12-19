@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { USER_CL } from 'eos-rest';
+import { USER_CL, DEPARTMENT } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 
 @Injectable()
@@ -53,6 +53,17 @@ export class UserParamApiSrv {
         .then(data => {
             return data.filter(user => user.ISN_LCLASSIF !== 0 && user.CLASSIF_NAME !== ' ');
         });
+    }
+
+    grtDepartment(due?: string): Promise<DEPARTMENT[]> {
+        let q;
+        if (!due) {
+            q = ALL_ROWS;
+        } else {
+            q = PipRX.criteries({DUE: due});
+        }
+        const query = {DEPARTMENT: q};
+        return this.getData<DEPARTMENT>(query);
     }
 
     // protected prepareForEdit(records: any[]): any[] {

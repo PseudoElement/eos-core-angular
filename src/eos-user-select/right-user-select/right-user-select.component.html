@@ -3,8 +3,8 @@
             <div class="rt-user">
                 <div class="rt-avatar" *ngIf="DueInfo else unset">
                     <div class="avatar-wr">
-                        <img *ngIf="isPhoto" class="avatar-img" src="../../image.ashx/{{isPhoto}}/110" alt="">
-                        <img *ngIf="!isPhoto" class="avatar-img" src="../../assets/images/no-user.png" alt="">
+                        <img *ngIf="isPhoto" class="avatar-img" src="../image.ashx/{{isPhoto}}/110" alt="Фотография должностного лица">
+                        <img *ngIf="!isPhoto" class="avatar-img" src="assets/images/no-user.png" alt="">
                     </div>
                     <div class="avatar-title">
                         {{DueInfo.SURNAME}}

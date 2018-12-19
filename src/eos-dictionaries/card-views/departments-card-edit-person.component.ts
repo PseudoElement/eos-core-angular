@@ -37,18 +37,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         }
         if (this.form) {
             this.unsubscribe();
-            this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => {
-                if (this.data.rec.POST_H * 1 !== 1 && !this.data.cabinet) {
-                    if (formChanges['rec.POST_H'] * 1 === 1) {
-                        if (!this.bossWarning) {
-                            this.bossWarning = true;
-                            this._msgSrv.addNewMessage(INFO_PERSONE_DONT_HAVE_CABINET);
-                        }
-                    } else {
-                        this.bossWarning = false;
-                    }
-                }
-            });
+            this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this.updateForm(formChanges));
         }
     }
 
@@ -83,8 +72,27 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         this.dictSrv.inclineFields(field)
             .then(([res]: any) => {
                 if (res) {
-                    Object.keys(res).forEach((key) => this.setValue('printInfo.' + key, res[key]));
+                    Object.keys(res).forEach((key) => {
+                        if (key !== 'PRINT_DEPARTMENT') {
+                            this.setValue('printInfo.' + key, res[key]);
+                        }
+                    });
                 }
             });
+
+        this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.currentNode.parent.data.rec['CLASSIF_NAME']);
+    }
+
+    private updateForm(formChanges: any) {
+        if (((this.data.rec.POST_H * 1 !== 1) || (!this.data.rec.POST_H)) && (!this.data.cabinet || !this.data.cabinet.length)) {
+            if (formChanges['rec.POST_H'] * 1 === 1) {
+                if (!this.bossWarning) {
+                    this.bossWarning = true;
+                    this._msgSrv.addNewMessage(INFO_PERSONE_DONT_HAVE_CABINET);
+                }
+            } else {
+                this.bossWarning = false;
+            }
+        }
     }
 }

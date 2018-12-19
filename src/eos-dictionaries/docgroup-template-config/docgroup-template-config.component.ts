@@ -95,7 +95,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
             res = !ORDER_NUM_TEMPLATE_ITEM_EXPR.test(item.key);
         }
 
-        if (res && item.key === '{N}') {
+        if (item.key === '{N}' && res) {
             res = (this.rcType === 3);
         }
 

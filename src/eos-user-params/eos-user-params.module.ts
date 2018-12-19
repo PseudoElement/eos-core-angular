@@ -31,6 +31,12 @@ import { RightsDeloCardIndexRightsComponent } from './rights-delo/rights-delo-ca
 import { RightPanelForDocumentGroupsComponent } from './rights-delo/right-panel-for-document-groups/right-panel-for-document-groups.component';
 import { ParamsBaseParamComponent } from './base-param/base-param.component';
 import { InputParamControlService } from './shared/services/input-param-control.service';
+import {EmailAddressService} from './shared/services/email-address.service';
+import {EmailFormComponent} from './email-address/email-form/email-form.component';
+import {RightLimitedAccessComponent} from './rights-delo/right-limited-access/right-limited-access.component';
+import {LimitedAccesseService} from './shared/services/limited-access.service';
+import { RightDepertmentComponent } from './rights-delo/rights-delo-absolute-rights/right-department/right-department.component';
+import {GrifsComponent} from './rights-delo/right-limited-access/grifs/grifs-component';
 
 @NgModule({
     declarations: [
@@ -53,8 +59,13 @@ import { InputParamControlService } from './shared/services/input-param-control.
         AbsoluteRightsDirectoryComponent,
         CardFilesDirectoryModalComponent,
         RightsDeloCardIndexRightsComponent,
+        ParamsBaseParamComponent,
+        EmailFormComponent,
         RightPanelForDocumentGroupsComponent,
-        ParamsBaseParamComponent
+        RightLimitedAccessComponent,
+        ParamsBaseParamComponent,
+        RightDepertmentComponent,
+        GrifsComponent,
     ],
     entryComponents: [
         AbsoluteRightsDirectoryComponent,
@@ -75,6 +86,8 @@ import { InputParamControlService } from './shared/services/input-param-control.
         UserParamsDescriptorSrv,
         UserParamsService,
         InputParamControlService,
+        EmailAddressService,
+        LimitedAccesseService
     ]
 })
 export class EosUserParamsModule {}

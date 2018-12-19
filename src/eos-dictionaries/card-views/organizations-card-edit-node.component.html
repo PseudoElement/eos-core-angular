@@ -1,5 +1,5 @@
 <div class="card-content-wrapper">
-    <div class="tabs-wrapper usual-border border-bottom">
+    <!-- <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs">
             <li class="tab-item"
                 role="presentation"
@@ -26,7 +26,7 @@
                 <span class="tab-title">Дополнительные сведения</span>
             </li>
         </ul>
-    </div>
+    </div> -->
     <div [hidden]="currTab !== 0"
          class="eos-organization-node-tab">
         <table class="table usual-border border-bottom table-owners">
@@ -41,7 +41,7 @@
                     <eos-dynamic-input [input]="inputs['rec.NOTE']"
                                        [form]="form"
                                        [readonly]="!editMode"></eos-dynamic-input>
-                    <eos-dynamic-input [input]="inputs['sev.GLOBAL_ID']"
+                    <!-- <eos-dynamic-input [input]="inputs['sev.GLOBAL_ID']"
                                        [form]="form"
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input [input]="inputs['rec.ADDRESS']"
@@ -49,8 +49,8 @@
                                        [readonly]="!editMode"></eos-dynamic-input>
                     <eos-dynamic-input [input]="inputs['rec.LAW_ADRESS']"
                                        [form]="form"
-                                       [readonly]="!editMode"></eos-dynamic-input>
-                    <fieldset>
+                                       [readonly]="!editMode"></eos-dynamic-input> -->
+                    <!-- <fieldset>
                         <table width="100%">
                         <span *ngFor="let contact of data.contact; index as i;">
                             <tr>
@@ -83,7 +83,7 @@
                             </tr>
                         </span>
                         </table>
-                    </fieldset>
+                    </fieldset> -->
                 </td>
             </tr>
         </table>

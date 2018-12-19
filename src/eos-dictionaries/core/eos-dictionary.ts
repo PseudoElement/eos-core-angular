@@ -7,6 +7,7 @@ import {
     IRecordOperationResult,
     ISearchSettings,
     SEARCH_MODES,
+    IFieldView,
 } from 'eos-dictionaries/interfaces';
 import {AbstractDictionaryDescriptor} from './abstract-dictionary-descriptor';
 import {EosDictionaryNode} from './eos-dictionary-node';
@@ -414,11 +415,12 @@ export class EosDictionary {
         return null;
     }
 
-    getListView() {
+    getListView(customFields: IFieldView[]) {
         const fields = this.descriptor.record.getListView({});
+        const updatefields = fields.concat(customFields);
         this.descriptor.getFullRelated()
             .then((related) => {
-                fields.forEach((field) => {
+                updatefields.forEach((field) => {
                     if ((field.dictionaryId !== undefined)) {
                         field.options.splice(0, field.options.length);
                         related[field.dictionaryId].forEach((rel) =>

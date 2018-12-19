@@ -50,3 +50,9 @@ export const OPEN_CLASSIF_USER_CL: IOpenClassifParams = {
     classif: 'USER_CL',
     selectMulty: false,
 };
+
+export const OPEN_CLASSIF_DOCGR: IOpenClassifParams = {
+    classif: 'DOCGROUP_CL',
+    selectMulty: true,
+    return_due: true,
+};
