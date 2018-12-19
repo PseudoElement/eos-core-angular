@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {LimitedAccesseService} from '../../shared/services/limited-access.service';
 import { FormGroup, FormControl, FormArray} from '@angular/forms';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import {OPEN_CLASSIF_DOCGR } from '../../../eos-user-select/shered/consts/create-user.consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';
+import { UserParamsService } from '../../shared/services/user-params.service';
 import { IMessage } from 'eos-common/interfaces';
 @Component({
     selector: 'eos-right-limited-access',
@@ -12,7 +13,7 @@ import { IMessage } from 'eos-common/interfaces';
     templateUrl: 'right-limited-access.component.html'
 })
 
-export class RightLimitedAccessComponent implements OnInit {
+export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     public isDefault = false;
     public statusBtnSub: boolean = true;
     public umailsInfo: Array<any>;
@@ -20,16 +21,24 @@ export class RightLimitedAccessComponent implements OnInit {
     public delitedSetStore = new Set();
     public saveParams: any;
     public currentParams: string;
+    public activeLink: boolean;
+    public flagGrifs: boolean;
+    public bacgHeader: boolean;
+    public grifsForm: FormGroup;
     public myForm: FormGroup;
     private ArrayForm: FormArray;
     constructor(
        private _limitservise: LimitedAccesseService,
        private _msgSrv: EosMessageService,
       private _waitClassifSrv: WaitClassifService,
+      private _userServices: UserParamsService,
     )   {
-
+        this.activeLink = true;
+        this.flagGrifs = true;
+        this.bacgHeader = false;
     }
     clearForm(): void {
+        sessionStorage.removeItem(String(this._userServices.userContextId));
         this.umailsInfo.splice(0, this.umailsInfo.length);
         this.resetForm();
         this.umailsInfo = this.saveParams.slice();
@@ -39,13 +48,20 @@ export class RightLimitedAccessComponent implements OnInit {
            // this.currentIndex = this.saveParams.length - 1;
         }
         this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+        this.flagGrifs = true;
     }
     resetForm() {
         this.myForm.removeControl('groupForm');
         this.myForm.setControl('groupForm', this.createGroup(false, false, true));
     }
     saveAllForm(): void {
-        Promise.all([ this._limitservise.preAddNewDocument(this.ArrayForm), this._limitservise.preDelite(this.delitedSetStore), this._limitservise.preEdit(this.ArrayForm)])
+        const promise_all = [];
+        sessionStorage.removeItem(String(this._userServices.userContextId));
+        promise_all.push(this._limitservise.preAddNewDocument(this.ArrayForm), this._limitservise.preDelite(this.delitedSetStore),  this._limitservise.preEdit(this.ArrayForm)  );
+        if (this.grifsForm) {
+            promise_all.push(this._limitservise.postGrifs(this.grifsForm), this._limitservise.deliteGrifs(this.grifsForm));
+        }
+        Promise.all([...promise_all])
         .then(result => {
             this._limitservise.getAccessCode()
             .then((params) => {
@@ -57,8 +73,12 @@ export class RightLimitedAccessComponent implements OnInit {
                     this.resetForm();
                     this.umailsInfo =  this.saveParams.slice();
                     this.statusBtnSub = true;
+                    this.flagGrifs = true;
                     this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+                    this._limitservise.subscribe.next(false);
                     this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+                    promise_all.splice(0, promise_all.length);
+
                 }
             });
         }).catch(res => {
@@ -73,13 +93,14 @@ export class RightLimitedAccessComponent implements OnInit {
     backForm(event): void {
         this.delitedSetStore.clear();
         this.clearForm();
+        this._limitservise.subscribe.next(true);
     }
 
     chooseCurrentField(index: number): void {
         this.currentIndex = index;
     }
     deliteEmailFild(): void {
-        if (this.currentIndex !== null || undefined) {
+        if (this.currentIndex !== (null || undefined) && this.currentIndex !== 0) {
             this.preDelite();
             this.searchNeddedField();
         }
@@ -89,7 +110,7 @@ export class RightLimitedAccessComponent implements OnInit {
         const delitedField  = this.ArrayForm.get(String(this.currentIndex));
         if (delitedField) {
               if (delitedField.value.newField !== true) {
-            // в map добавлены только поля для удаления без флага true в форме, в свойсттве newField
+            //  в map добавлены только поля для удаления без флага true в форме, в свойсттве newField
             this.delitedSetStore.add(delitedField.value);
         }
     }
@@ -110,6 +131,7 @@ export class RightLimitedAccessComponent implements OnInit {
     }
 
     OpenClassiv(): void {
+        this.bacgHeader = true;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DOCGR, true)
         .then(result_classif => {
             const newClassif = result_classif !== '' || null || undefined ? result_classif : '0.';
@@ -126,10 +148,11 @@ export class RightLimitedAccessComponent implements OnInit {
                     this.addFormControls(newField, false, true);
                     this.currentIndex = this.umailsInfo.length - 1;
                     this.statusBtnSub = false;
+                    this.bacgHeader = false;
                 });
             });
         }).catch( error => {
-            console.log('Окно закрыто');
+            this.bacgHeader = false;
         });
     }
 
@@ -154,9 +177,9 @@ export class RightLimitedAccessComponent implements OnInit {
             this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
             this.myForm.valueChanges.subscribe(data => {
                 this.checkChanges(data);
-                });
+            });
         });
-      }
+    }
 
       createForm(changedField: boolean, newField: boolean, flagBackForm?: boolean) {
         this.myForm = new FormGroup({'groupForm': this.createGroup(changedField, newField, flagBackForm)});
@@ -166,16 +189,16 @@ export class RightLimitedAccessComponent implements OnInit {
           let arrayField;
           const group = new FormArray([]);
           flagBackForm ? arrayField =  this.saveParams : arrayField =  this.umailsInfo;
-          arrayField.forEach(element => {
-            group.push(new FormGroup(this.createFormControls(element, changedField, newField)));
+          arrayField.forEach((element, index) => {
+            group.push(new FormGroup(this.createFormControls(element, changedField, newField, index)));
           });
           return group;
       }
-      createFormControls(element, bool1, bool2): {[key: string]: FormControl} {
+      createFormControls(element, bool1, bool2, index?): {[key: string]: FormControl} {
         const controls = {};
         controls['name'] = new FormControl(element.NAME);
         controls['due'] = new FormControl(element.DUE);
-        controls['checkbox'] = new FormControl(Number(element.ALLOWED));
+        controls['checkbox'] = new FormControl(Boolean(element.ALLOWED));
         controls['change'] = new FormControl(bool1);
         controls['newField'] = new FormControl(bool2);
         return controls;
@@ -203,7 +226,9 @@ export class RightLimitedAccessComponent implements OnInit {
               if (this.delitedSetStore.size) {
                 count_error++;
               }
+
               count_error > 0 ? this.statusBtnSub = false : this.statusBtnSub = true;
+
               count_error = 0;
       }
 
@@ -216,6 +241,23 @@ export class RightLimitedAccessComponent implements OnInit {
         array.sort(function(a, b){
             return a.DUE - b.DUE;
         });
-      }
+    }
+
+    changeActivelink() {
+        this.activeLink = !this.activeLink;
+    }
+    SubscribtGrifs(event) {
+        this.flagGrifs = event.flag;
+        this.grifsForm = event.form;
+    }
+    ngOnDestroy() {
+        this._limitservise.GrifForm = undefined;
+    }
+    get getBtn() {
+        if ( this.statusBtnSub === false || this.flagGrifs === false) {
+            return false;
+        }
+        return true;
+    }
 
 }

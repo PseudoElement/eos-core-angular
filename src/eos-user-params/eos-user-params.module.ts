@@ -36,6 +36,7 @@ import {EmailFormComponent} from './email-address/email-form/email-form.componen
 import {RightLimitedAccessComponent} from './rights-delo/right-limited-access/right-limited-access.component';
 import {LimitedAccesseService} from './shared/services/limited-access.service';
 import { RightDepertmentComponent } from './rights-delo/rights-delo-absolute-rights/right-department/right-department.component';
+import {GrifsComponent} from './rights-delo/right-limited-access/grifs/grifs-component';
 
 @NgModule({
     declarations: [
@@ -64,6 +65,7 @@ import { RightDepertmentComponent } from './rights-delo/rights-delo-absolute-rig
         RightLimitedAccessComponent,
         ParamsBaseParamComponent,
         RightDepertmentComponent,
+        GrifsComponent,
     ],
     entryComponents: [
         AbsoluteRightsDirectoryComponent,
