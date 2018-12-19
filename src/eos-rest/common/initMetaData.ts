@@ -607,6 +607,7 @@ const commonMeta = {
         relations: [
             { name: 'AR_DOCGROUP_List', __type: 'AR_DOCGROUP', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP' },
             { name: 'DG_FILE_CONSTRAINT_List', __type: 'DG_FILE_CONSTRAINT', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP' },
+            { name: 'DOC_RC_List', __type: 'DOC_RC', sf: 'DUE', tf: 'DUE_DOCGROUP' },
             // { name: 'DOC_DEFAULT_VALUE_List', __type: 'DOC_DEFAULT_VALUE', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP' },
             // { name: 'PRJ_DEFAULT_VALUE_List', __type: 'PRJ_DEFAULT_VALUE', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP' },
             // { name: 'SHABLON_DETAIL_List', __type: 'SHABLON_DETAIL', sf: 'DUE', tf: 'DUE' }
@@ -783,6 +784,7 @@ const commonMeta = {
         ],
         relations: [
             { name: 'DEPARTMENT_Ref', __type: 'DEPARTMENT', sf: 'DUE', tf: 'DUE' },
+            { name: 'USER_Ref', __type: 'USER_CL', sf: 'CLOSE_WHO', tf: 'ISN_LCLASSIF' },
         ]
     },
     NTFY_SYSTEM_PARAMS: {

@@ -50,8 +50,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         dictSrv.visibleList$.takeUntil(this.ngUnsubscribe)
             .subscribe((nodes: EosDictionaryNode[]) => {
                 if (dictSrv.currentDictionary) {
-                    this.updateViewFields();
+
                     this.customFields = this.dictSrv.customFields;
+                    this.updateViewFields(this.customFields);
 
                     const _customTitles = this.dictSrv.customTitles;
                     _customTitles.forEach((_title) => {
@@ -82,8 +83,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             });
     }
 
-    updateViewFields() {
-        this.viewFields = this.dictSrv.currentDictionary.getListView();
+    updateViewFields(customFields: IFieldView[]) {
+        // also customFields for update
+        this.viewFields = this.dictSrv.currentDictionary.getListView(customFields);
     }
 
     ngOnInit() {

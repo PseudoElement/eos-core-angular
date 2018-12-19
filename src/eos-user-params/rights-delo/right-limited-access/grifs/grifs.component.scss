@@ -1,0 +1,37 @@
+:host{
+    display: blok;
+    width: 100%;
+    .grifs-content{
+        padding: 0 20px;
+        background-color: #fafafa;
+    }
+    .grifs-list{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        background-color: #fafafa;
+        .grifs-list-second{
+            height: 32px;
+        }
+        .grifs-list-first{
+            display: inline-block;
+            width: 100%;
+            input{
+                width: 100%;
+                border: none;
+                outline: none;
+                background-color: transparent;
+            }
+        }
+    }
+    .user-system{
+        overflow: hidden;
+
+    }
+    .grifs-wrapper{
+        max-height: 370px;
+        overflow: auto;
+        padding-bottom: 20px;
+    }
+}

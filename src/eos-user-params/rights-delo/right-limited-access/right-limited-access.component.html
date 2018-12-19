@@ -1,0 +1,55 @@
+
+<div class="access-window">
+    <eos-user-header [title]="'Ограничение доступа'"  [statusBtnSub]="getBtn" [isDefault]='isDefault' (submitForm)='saveAllForm()' (cancelForm)='backForm($event)'></eos-user-header>
+    <div class="doc-navigate">
+        <ul class="tabs">
+            <li class="tab-item" (click)='changeActivelink()' [ngClass]="{active: activeLink}">
+                <span>Группы документов</span>
+            </li>
+            <li class="tab-item" (click)='changeActivelink()' [ngClass]="{active: !activeLink}">
+                <span>Грифы</span>
+            </li>
+        </ul>
+    </div>
+    <div *ngIf="activeLink">
+        <div class="access-control">
+                <button type="button" class="btn btn-primary" (click)="OpenClassiv()">
+                        <span class="eos-icon eos-icon-plus-blue small"></span>
+                </button>
+            <button class="btn btn-primary" (click)='deliteEmailFild()'>
+                <span class="eos-icon eos-icon-bin-blue sma"></span>
+            </button>
+        </div>
+
+    <div class="access-wrapper">
+        <div class="email-header">
+        </div>
+        <div class="email-content" *ngIf="umailsInfo && myForm">
+                <form [formGroup]="myForm">
+                    <div formArrayName="groupForm">
+                            <div  class="acess-content" *ngFor="let group of myForm.controls['groupForm'].controls; let i = index"  (click)=chooseCurrentField(i) [ngClass]="{current: currentIndex === i}">
+                                <div class="access-list"  formGroupName="{{i}}">
+                                <span [ngClass]="{current: currentIndex === i}" class="access-list-second">
+                                        <label class="checkbox disabled minus-checkbox">
+                                            <input *ngIf="i !== 0 "  formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" >
+                                            <input *ngIf="i == 0 " [attr.disabled]="true"  formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" >
+                                            <span class="eos-icon-checkbox-square-v-grey "></span>
+                                        </label>
+                                </span>
+                                <span [ngClass]="{current: currentIndex === i}" class="access-list-last">
+                                        <input formControlName="name"  type="text" readonly="readonly" class="readonly" >
+                                </span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div *ngIf="!activeLink">
+        <eos-grifs (changeGrifs)="SubscribtGrifs($event)"></eos-grifs>
+    </div>
+</div>
+<div *ngIf="bacgHeader" class="bacgrFixed">
+
+</div>

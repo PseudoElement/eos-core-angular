@@ -88,7 +88,7 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
     }
 
     preCreateCheck(dict: DictionaryComponent): IMessage {
-        if (this._filterDUE) {
+        if (this._filterDUE && this._filterDUE !== NP_NOM_ROOT_DUE) {
             return null;
         } else {
             return DANGER_EDIT_ON_ROOT;
@@ -106,12 +106,12 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
     }
 
     getData(query?: any, order?: string, limit?: number): Promise<any[]> {
-
         if (!query) {
             if (this._filterDUE && (this._filterDUE !== NP_NOM_ROOT_DUE)) {
                 query = {criteries: {DUE: this._filterDUE}};
             } else {
                 query = ALL_ROWS;
+                return Promise.resolve([]);
             }
         }
 

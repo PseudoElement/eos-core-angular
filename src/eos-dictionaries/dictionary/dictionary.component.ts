@@ -351,7 +351,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
     setDictMode(mode: number) {
         this._dictSrv.setDictMode(mode);
-        this.nodeList.updateViewFields();
+        this.nodeList.updateViewFields([]);
     }
 
     /**

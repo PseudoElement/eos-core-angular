@@ -6,21 +6,20 @@
         [statusBtnSub]="btnDisabled"
     ></eos-rights-delo-header>
     <div class="user-input-group">
-    <div class="left-block-list-side">
-        <span></span>
-        <ul class="list-card-index-rights"
-            *ngFor="let item of fields; let i = index;"
-            (click)="selectedNode(item.title)">
-            <li [ngClass]="{'highlighted': item.isSelected}">
-                <span
-                >{{item.title}}</span>
-            </li>
-    </ul>
+<div class="left-block-list-side">
+<select class="form-control m-font" (change)="selectInputOnChange($event)">
+    <option *ngFor="let opt of fieldsForSelect" [value]="opt.DUE">{{opt.CARD_NAME}}</option>
+</select>
+<div *ngFor="let item of listNode" (click)="selectNode(item)">
+<eos-dynamic-input
+    [ngClass]="{'highlighted': item.data.isSelected}"
+    [input]="inputs[item.key]"
+    [form]="form"
+    [readonly]="false"
+></eos-dynamic-input>
 </div>
-<div class="right-block-list-side">
-    <eos-right-panel-for-document-groups>
-    </eos-right-panel-for-document-groups>
 </div>
+<!--<div class="right-block-list-side"></div>-->
 </div>
 </div>
 
