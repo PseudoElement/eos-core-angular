@@ -80,6 +80,18 @@ export const WARN_LOGIC_DELETE: IMessage = {
     msg: 'отмеченные элементы уже были логически удалены!'
 };
 
+export const WARN_LOGIC_CLOSE: IMessage = {
+    type: 'warning',
+    title: 'Предупреждение:',
+    msg: 'отмеченные элементы уже были закрыты!'
+};
+
+export const WARN_LOGIC_OPEN: IMessage = {
+    type: 'warning',
+    title: 'Предупреждение:',
+    msg: 'отмеченные элементы уже были открыты!'
+};
+
 export const WARN_NOT_ELEMENTS_FOR_REPRESENTATIVE: IMessage = {
     type: 'warning',
     title: 'Предупреждение:',
@@ -126,6 +138,12 @@ export const WARN_ELEMENT_PROTECTED: IMessage = {
     type: 'warning',
     title: 'Предупреждение:',
     msg: 'элемент "{{elem}}" является защищенным! Удаление невозможно.'
+};
+
+export const WARN_ELEMENT_DELETED: IMessage = {
+    type: 'warning',
+    title: 'Предупреждение:',
+    msg: 'элемент "{{elem}}" удален! Действие невозможно.'
 };
 
 export const INFO_PERSONE_DONT_HAVE_CABINET: IMessage = {

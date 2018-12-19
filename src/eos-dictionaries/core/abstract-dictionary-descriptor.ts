@@ -274,11 +274,11 @@ export abstract class AbstractDictionaryDescriptor {
         }
     }
 
-    markDeleted(records: any[], deletedState = 1, cascade = false): Promise<any[]> {
-        records.forEach((record) => record.DELETED = deletedState);
+    markBooleanData(records: any[], fieldName: string, boolValue, cascade = false): Promise<any[]> {
+        records.forEach((record) => record[fieldName] = +boolValue);
         const changes = this.apiSrv.changeList(records);
-        if (deletedState === 0 && cascade) {
-            PipRX.invokeSop(changes, 'ClassifCascade_TRule', {DELETED: +cascade});
+        if (+boolValue === 0 && cascade) {
+            PipRX.invokeSop(changes, 'ClassifCascade_TRule', {[fieldName]: +cascade});
         }
         return this.apiSrv.batch(changes, '');
     }
@@ -382,7 +382,7 @@ export abstract class AbstractDictionaryDescriptor {
     }
 
     getCustomTreeData(): Promise<CustomTreeNode[]> {
-        return Promise.all(null);
+        return Promise.resolve(null);
     }
 
     // method for custom tree

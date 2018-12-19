@@ -508,14 +508,15 @@ export class EosDictService {
 
     /**
      * @description Marks or unmarks record as deleted
+     * @param fieldName db column for mark, ec 'DELETED'
      * @param recursive true if need to delete with children, default false
-     * @param deleted true - mark as deleted, false - unmark as deleted
+     * @param value true - mark as 1, false - unmark as 0
      * @returns Promise<boolean>
      */
-    markDeleted(recursive = false, deleted = true): Promise<boolean> {
+    setFlagForMarked(fieldName: string, recursive = false, value = true): Promise<boolean> {
         if (this.currentDictionary) {
             this.updateViewParameters({updatingList: true});
-            return this.currentDictionary.markDeleted(recursive, deleted)
+            return this.currentDictionary.setFlagForMarked(fieldName, recursive, value)
                 .then(() => this._reloadList())
                 .then(() => {
                     this.updateViewParameters({updatingList: false});
