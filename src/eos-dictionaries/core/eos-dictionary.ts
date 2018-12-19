@@ -278,22 +278,23 @@ export class EosDictionary {
     }
 
     /**
-     * @description Set DELETED flag for marked records
+     * @description Set flag for marked records
+     * @param fieldName db column, ec 'DELETED'
      * @param recursive do cascade operation, default false
-     * @param deleted mark as deleted (true), unmarkmark as deleted (false)
+     * @param value mark as 1 (true), unmarkmark as 0 (false)
      */
-    markDeleted(recursive = false, deleted = true): Promise<any> {
+    setFlagForMarked(fieldName: string, recursive = false, value = true): Promise<any> {
         const nodeSet = this._getMarkedRecords(recursive);
         // 1 - mark deleted
         // 0 - unmark deleted
-        return this.descriptor.markDeleted(nodeSet, +deleted, recursive)
+        return this.descriptor.markBooleanData(nodeSet, fieldName, +value, recursive)
             .then(() => {
                 // update nodes to reduce server req
-                const marked = this.getMarkedNodes(deleted || recursive);
+                const marked = this.getMarkedNodes(value || recursive);
                 if (marked) {
                     marked.forEach((node) => {
-                        node.data.rec.DELETED = (+deleted);
-                        node.data.rec._orig.DELETED = (+deleted); // force DELETED flag, because reload may doesn't referesh it
+                        node.data.rec.DELETED = (+value);
+                        node.data.rec._orig.DELETED = (+value); // force DELETED flag, because reload may doesn't referesh it
                     });
                 }
                 return this._resetMarked();

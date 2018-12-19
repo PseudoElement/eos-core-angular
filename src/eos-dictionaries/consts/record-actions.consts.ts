@@ -154,6 +154,30 @@ const RECORD_ACTION_COUNTERNP: IAction = {
     buttonClass: null
 };
 
+const RECORD_ACTION_NOMENKL_CLS: IAction = {
+    type: E_RECORD_ACTIONS.CloseSelected,
+    group: E_ACTION_GROUPS.item,
+    title: 'Закрыть выделенные дела',
+    hint: 'Закрыть выделенные дела',
+    iconClass: 'eos-icon eos-icon-info-blue small',
+    disabledIconClass: 'eos-icon eos-icon-info-grey small',
+    activeIconClass: null,
+    hoverIconClass: 'eos-icon eos-icon-info-blue small',
+    buttonClass: null
+};
+
+const RECORD_ACTION_NOMENKL_OPS: IAction = {
+    type: E_RECORD_ACTIONS.OpenSelected,
+    group: E_ACTION_GROUPS.item,
+    title: 'Открыть выделенные дела',
+    hint: 'Открыть выделенные дела',
+    iconClass: 'eos-icon eos-icon-info-blue small',
+    disabledIconClass: 'eos-icon eos-icon-info-grey small',
+    activeIconClass: null,
+    hoverIconClass: 'eos-icon eos-icon-info-blue small',
+    buttonClass: null
+};
+
 // const RECORD_ACTION_CREATE_ORGANISATION_AGENT: IAction = {
 //     type: E_RECORD_ACTIONS.createRepresentative,
 //     group: E_ACTION_GROUPS.group,
@@ -214,6 +238,8 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTIONS_ADDITIONAL_FIELDS,
     RECORD_ACTION_COUNTERNPMAIN,
     RECORD_ACTION_COUNTERNP,
+    RECORD_ACTION_NOMENKL_CLS,
+    RECORD_ACTION_NOMENKL_OPS,
 ];
 
 export const MORE_RECORD_ACTIONS: IAction[] = [

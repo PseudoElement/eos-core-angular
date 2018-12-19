@@ -4,10 +4,18 @@ import {COMMON_FIELD_NAME} from './_common';
 import {YEAR_PATTERN} from 'eos-common/consts/common.consts';
 
 
+export const DID_NOMENKL_CL = 'nomenkl';
 export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
-    id: 'nomenkl',
+    id: DID_NOMENKL_CL,
     apiInstance: 'NOMENKL_CL',
     title: 'Номенклатура дел',
+    actions: [
+        'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
+        'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization', 'removeHard',
+        'edit', 'view', 'remove', 'removeHard', 'userOrder',
+        'OpenSelected',
+        'CloseSelected',
+    ],
     defaultOrder: 'NOM_NUMBER',
     visible: true,
     dictType: E_DICT_TYPE.custom,

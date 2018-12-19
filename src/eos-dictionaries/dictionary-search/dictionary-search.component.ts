@@ -1,3 +1,4 @@
+import { DID_NOMENKL_CL } from './../consts/dictionaries/nomenkl.const';
 import { Component, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -241,7 +242,7 @@ export class DictionarySearchComponent implements OnDestroy {
             this.hasFull = !!~_config.findIndex((_t) => _t === SEARCH_TYPES.full);
             /* tslint:enable:no-bitwise */
 
-            if (this.dictId === 'nomenkl') {
+            if (this.dictId === DID_NOMENKL_CL) {
                 const yearFilter = this.searchForm.controls['filter.stateYear'];
                 this.hasYear = true;
                 if (this._dictSrv.getFilterValue('YEAR')) {
