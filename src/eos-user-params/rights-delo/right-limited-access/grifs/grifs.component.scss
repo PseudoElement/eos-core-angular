@@ -1,20 +1,26 @@
 :host{
     display: blok;
     width: 100%;
-    .emali-list{
+    .grifs-content{
+        padding: 0 20px;
+        background-color: #fafafa;
+    }
+    .grifs-list{
         display: flex;
         justify-content: flex-start;
         align-items: center;
         width: 100%;
-        .emali-list-secont{
+        background-color: #fafafa;
+        .grifs-list-second{
             height: 32px;
         }
-        .emali-list-first{
+        .grifs-list-first{
             display: inline-block;
             width: 100%;
             input{
                 width: 100%;
                 border: none;
+                outline: none;
                 background-color: transparent;
             }
         }

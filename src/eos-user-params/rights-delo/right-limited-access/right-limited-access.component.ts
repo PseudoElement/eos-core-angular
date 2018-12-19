@@ -177,9 +177,9 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
             this.myForm.valueChanges.subscribe(data => {
                 this.checkChanges(data);
-                });
+            });
         });
-      }
+    }
 
       createForm(changedField: boolean, newField: boolean, flagBackForm?: boolean) {
         this.myForm = new FormGroup({'groupForm': this.createGroup(changedField, newField, flagBackForm)});

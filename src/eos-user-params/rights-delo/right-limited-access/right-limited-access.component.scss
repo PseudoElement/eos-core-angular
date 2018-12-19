@@ -2,8 +2,8 @@
     display: block;
     width: 100%;
     height: calc(100vh - 176px);
-    .email-control{
-        padding: 0px;
+    .access-control{
+        padding: 0px 12px;
         background-color: #fafafa;
         margin-top: 1px;
         margin-bottom: 1px;
@@ -20,16 +20,23 @@
             }
         }
     }
-    .email-wr{
+    .access-wrapper{
         max-height: 370px;
         overflow: auto;
         padding-bottom: 20px;
+        .acess-content{
+            padding:  0 18px;
+            background-color: #fafafa;
+        }
+        .current{
+            background-color: #e3f2fd
+        }
     }
-    .emali-list{
+    .access-list{
         display: flex;
         justify-content: flex-start;
-        align-items: center;
         width: 100%;
+        background-color: #fafafa;
 
        > span:last-child{
             display: inline-block;
@@ -42,12 +49,11 @@
             height: 100%;
             border: none;
             cursor: pointer;
+            outline: none;
         }
 
     }
-    .current{
-        background-color: #e3f2fd
-    }
+
     .doc-navigate{
         display: flex;
         justify-content: flex-start;
