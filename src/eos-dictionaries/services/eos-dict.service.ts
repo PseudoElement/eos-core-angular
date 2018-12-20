@@ -360,6 +360,7 @@ export class EosDictService {
      * @param nodeId node ID to be selected
      * @returns selected node in current dictionary
      */
+
     selectTreeNode(nodeId: string): Promise<EosDictionaryNode> {
         let p = Promise.resolve(this.treeNode);
         if (nodeId) {
@@ -387,11 +388,42 @@ export class EosDictService {
                 }
                 this._selectTreeNode(node);
                 return node;
-            }).then(() => {
+            }).then((n) => {
                 this._reloadList().then(() => {
                     this.updateViewParameters({updatingList: false});
                 });
-                return null;
+                return n;
+            })
+            .catch(err => this._errHandler(err));
+    }
+
+    // temporary fix
+    selectCustomTreeNode(): Promise<EosDictionaryNode> {
+        let p = Promise.resolve(this.treeNode);
+        const dictionary = this._dictionaries[0];
+        if (dictionary && dictionary.root) {
+            this.updateViewParameters({updatingList: true});
+            p = this.loadChildren(dictionary, dictionary.root);
+        } else {
+            p = Promise.resolve(null);
+        }
+        return p
+            .then((node) => {
+                if (node) {
+                    let parent = node.parent;
+                    while (parent) {
+                        parent.isExpanded = true;
+                        parent = parent.parent;
+                    }
+                }
+                this._srchCriteries = null;
+                this._selectTreeNode(node);
+                return node;
+            }).then((n) => {
+                this._reloadList().then(() => {
+                    this.updateViewParameters({updatingList: false});
+                });
+                return n;
             })
             .catch(err => this._errHandler(err));
     }

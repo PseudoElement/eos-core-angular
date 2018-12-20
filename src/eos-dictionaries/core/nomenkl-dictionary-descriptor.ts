@@ -105,6 +105,13 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
 
     }
 
+    getChildren(): Promise<any[]> {
+        const _children = {
+            DUE: this._filterDUE + ''
+        };
+        return this.getData({ criteries: _children }, 'DUE');
+    }
+
     getData(query?: any, order?: string, limit?: number): Promise<any[]> {
         if (!query) {
             if (this._filterDUE && (this._filterDUE !== NP_NOM_ROOT_DUE)) {
