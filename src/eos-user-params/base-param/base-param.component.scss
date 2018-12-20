@@ -59,6 +59,7 @@
             input {
                 background: $light-grey-1;
                 width: 457px;
+                padding-right: 34px;
                 cursor: default;
             }
 
@@ -80,4 +81,8 @@
     top: 0;
     left: 0;
     z-index: 2000;
+}
+.wrapper-password{
+    display: flex;
+    justify-content: space-between;
 }

@@ -33,7 +33,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                             fields.options.push({
                                 value: element.ISN_LIST,
                                 title: element.NAME
-                            });
+                        });
                     });
                 }
             });
