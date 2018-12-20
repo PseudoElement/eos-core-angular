@@ -11,7 +11,7 @@ import { SEARCH_NOT_DONE } from '../consts/messages.consts';
 export class DictionariesQuickSearchComponent implements AfterViewInit {
     public srchString = '';
     public settings: ISearchSettings = {
-        mode: SEARCH_MODES.totalDictionary,
+        mode: SEARCH_MODES.currentAndSubbranch,
         deleted: false
     };
 
