@@ -296,7 +296,9 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 data[key].charAt(10) === '1' ? '1' : data[key].charAt(10) === '2' ? '2' : '3';
             } else if (key === 'RCSEND') {
                 this.prepDataAttach.rec['RCSEND_FOR_MULTIPOINT_DOCUMENTS_SEND_RADIO'] = data[key].charAt(7) === '0' &&
-                data[key].charAt(8) === '1' ? '1' : data[key].charAt(7) === '1' && data[key].charAt(8) === '0' ? '0' : null;
+                // последняя проверка на случай если в базе для строки в позиции 7,8 хранятся одинаковые значения ...
+                data[key].charAt(8) === '1' ? '1' : data[key].charAt(7) === '1' && data[key].charAt(8) === '0' ? '0' : data[key].charAt(7) === '1' &&
+                data[key].charAt(8) === '1' ?  '1' : '0';
                 this.prepDataAttach.rec['RCSEND_RESOLUTIONS'] = data[key].charAt(9) === '1' ?
                 this.flagDisabledRcsendResolutions = true : false;
                 this.prepDataAttach.rec['RCSEND_RESOLUTIONS_RADIO'] = data[key].charAt(10) === '0' &&
@@ -346,7 +348,6 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                     dataInput.rec[key] = false;
                 }
             } else {
-
                 dataInput.rec[key] = this.prepDataAttach.rec[key];
             }
               //  dataInput.rec[key] = this.prepDataAttach.rec[key];
@@ -367,7 +368,6 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
             }
     }
     toggleAllMarksThisCheckbox(event, keyName) {
-        console.log(event, keyName);
         const arrayKeysSubsetsForAuthorOrganization = ['RCSEND_DOCUMENT_AUTHOR_ORGANIZATION_FULL_TITLE',
         'RCSEND_DOCUMENT_AUTHOR_ORGANIZATION_ABBREVIATION', 'RCSEND_DOCUMENT_AUTHOR_ORGANIZATION_OGRN_CODE',
         'RCSEND_DOCUMENT_AUTHOR_ORGANIZATION_INN', 'RCSEND_DOCUMENT_AUTHOR_ORGANIZATION_EMAIL'];
@@ -447,6 +447,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
         const arrayKeysSubsetsForResolutionExecutorOrganizationExecutive = ['RCSEND_EXECUTOR_EXECUTIVE_ADDRESSED',
         'RCSEND_EXECUTOR_EXECUTIVE_ADDRESSED_FULL_NAME', 'RCSEND_EXECUTOR_ORGANIZATION_EXECUTIVE_ADDRESSED_SUBDIVISION',
         'RCSEND_EXECUTOR_ORGANIZATION_EXECUTIVE_POSITION'];
+        const arrayKeyForRadioButton = ['RCSEND_FOR_MULTIPOINT_DOCUMENTS_SEND_RADIO', 'RCSEND_RESOLUTIONS_RADIO', 'RCSEND_ADDRESSEES_RADIO'];
         if (event.target.checked) {
             this.prepDataAttach.rec[keyName] = '1';
             this.arrayOfIndexesRcsend.push(this.objectDataRcsend[keyName]);
@@ -1107,8 +1108,12 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 });
             }
     }
-        this.inputAttach = this.getInputAttach();
-        this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
+    arrayKeyForRadioButton.forEach( key => {
+        this.prepDataAttach.rec[key] = this.formAttach.controls['rec.' + key].value;
+      });
+
+       this.inputAttach = this.getInputAttach();
+       this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
     }
 
 
@@ -1204,7 +1209,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                     replacementItem = this.oldStringRcsend.charAt(this.arrayOfIndexesRcsend[i]) === '1' ? '0' : '1';
                     newValueStringForRcsend = this.replaceAt(newValueStringForRcsend, this.arrayOfIndexesRcsend[i], replacementItem);
                 }
-                valueDefSearchCitizen = newValueStringForRcsend;
+                valueDefSearchCitizen = this.updateForSaveRadio('RCSEND', newValueStringForRcsend);
             } else if (keyForSearchCitizensInTheDirectoryByFields[key] === 'MAILRECEIVE') {
                 newValueStringForMailReceive = this.oldStringMailreceive;
                 for (let i = 0; i < this.arrayOfIndexesMailReceive.length; i++) {
@@ -1212,8 +1217,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                     newValueStringForMailReceive = this.replaceAt(newValueStringForMailReceive, this.arrayOfIndexesMailReceive[i], replacementItem);
                 }
                 // добавил для сохранения radio button
-                valueDefSearchCitizen = this.updateStringFroRadioButton(newValueStringForMailReceive);
-                valueDefSearchCitizen = this.updateStringFroRadioAlert(valueDefSearchCitizen);
+                valueDefSearchCitizen = this.updateForSaveRadio('MAILRECEIVE', newValueStringForMailReceive);
             }
             req.push({
                 method: 'MERGE',
@@ -1229,6 +1233,17 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
             return str.substring(0, index) + replacement + str.substring(index + replacement.length);
         }
 
+        updateForSaveRadio(key: string, newStringAll: string): string {
+            switch (key) {
+                case 'MAILRECEIVE':
+                const newStringMAIL = this.updateStringFroRadioButton(newStringAll);
+                return this.updateStringFroRadioAlert(newStringMAIL);
+                case 'RCSEND':
+                const newStringRESENT = this.udateStringForResentRadio('rec.RCSEND_FOR_MULTIPOINT_DOCUMENTS_SEND_RADIO', newStringAll, 7, 9, '01', '10' );
+                const newStringRESENTUP =  this.udateStringForResentRadio( 'rec.RCSEND_RESOLUTIONS_RADIO', newStringRESENT, 10, 12, '01', '10');
+                return  this.udateStringForResentRadio('rec.RCSEND_ADDRESSEES_RADIO', newStringRESENTUP, 169, 171, '01', '10');
+            }
+        }
         updateStringFroRadioButton(newStringForMail: string) {
             const value = this.formAttach.controls['rec.MAILRECEIVE_TAKE_RUBRICS_RK_RADIO'].value;
             switch (value) {
@@ -1243,7 +1258,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
             }
         }
 
-        updateStringFroRadioAlert(newStringForMail) {
+        updateStringFroRadioAlert(newStringForMail: string) {
             const value = this.formAttach.controls['rec.MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO'].value;
             switch (value) {
                 case '1':
@@ -1252,6 +1267,18 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 return newStringForMail.substr(0, 2) + '10' + newStringForMail.substr(4);
                 default:
                 return newStringForMail;
+            }
+        }
+
+        udateStringForResentRadio(nameInput: string, newStringForResend: string, start: number, end: number, from: string, to: string) {
+            const value = this.formAttach.controls[nameInput].value;
+            switch (value) {
+                case '1':
+                return newStringForResend.substr(0, start) + from + newStringForResend.substr(end);
+                case '0':
+                return newStringForResend.substr(0, start) + to + newStringForResend.substr(end);
+                default:
+                return newStringForResend;
             }
         }
 
@@ -1315,12 +1342,13 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 this.disabledField = false;
                 this.formAttach.controls['rec.' + keyFieldDisabled].enable();
         }
-        }
+    }
         cancel() {
             this.formChanged.emit(false);
             this.isChangeForm = false;
+            this.init();
             this.afterInit();
-        }
+    }
         private openAccordion() {
             this.accordionListForEmail.forEach((item: IParamAccordionList) => {
                 if (item.url === this.pageId) {
