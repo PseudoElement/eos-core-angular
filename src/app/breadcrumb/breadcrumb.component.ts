@@ -80,6 +80,9 @@ export class BreadcrumbsComponent implements OnDestroy {
     }
 
     private _calcisEditable(node: EosDictionaryNode): boolean {
+        if (!this._dictSrv || !this._dictSrv.currentDictionary || !this._dictSrv.currentDictionary.descriptor) {
+            return false;
+        }
         if (this._dictSrv.currentDictionary.descriptor.editOnlyNodes !== undefined) {
             if (this._dictSrv && node) {
                 if (!(this._dictSrv.currentDictionary.descriptor.editOnlyNodes && node && node.isNode)) {
