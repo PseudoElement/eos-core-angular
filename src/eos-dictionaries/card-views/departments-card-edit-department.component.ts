@@ -1,17 +1,21 @@
 
-import { Component, Injector, NgZone, OnChanges } from '@angular/core';
+import { Component, Injector, NgZone, OnChanges, SimpleChanges, OnInit } from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { WARN_NO_BINDED_ORGANIZATION } from '../consts/messages.consts';
+import {AbstractControl, ValidatorFn} from '@angular/forms';
 
 @Component({
     selector: 'eos-departments-card-edit-department',
     templateUrl: 'departments-card-edit-department.component.html',
 })
-export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponent implements OnChanges {
+export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponent implements OnChanges, OnInit {
     private _orgName = '';
+    private previousValues: SimpleChanges;
+
     constructor(injector: Injector, private _zone: NgZone, private msgSrv: EosMessageService) {
         super(injector);
+        this.previousValues = {};
     }
 
     get hasCard(): boolean {
@@ -30,6 +34,26 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
         } else {
             return '';
         }
+    }
+
+    ngOnInit () {
+        const v = [this.numcreationFlagValidator()];
+        if (this.form.controls['rec.DEPARTMENT_INDEX'].validator) {
+            v.push(this.form.controls['rec.DEPARTMENT_INDEX'].validator);
+        }
+        this.form.controls['rec.DEPARTMENT_INDEX'].setValidators(v);
+    }
+
+    numcreationFlagValidator(): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: any } => {
+            let error = null;
+            if (this.form.controls['rec.NUMCREATION_FLAG'].value) {
+                if (!this.form.controls['rec.DEPARTMENT_INDEX'].value) {
+                    error = 'Отсутствует индекс';
+                }
+            }
+            return error ? {pattern: error} : null;
+        };
     }
 
     chooseOrganiz() {
@@ -82,5 +106,11 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
         if (Object.keys(updates).length) {
             this.form.patchValue(updates);
         }
+        if (this.previousValues['rec.NUMCREATION_FLAG'] !== formChanges['rec.NUMCREATION_FLAG']) {
+            this.previousValues['rec.NUMCREATION_FLAG'] = formChanges['rec.NUMCREATION_FLAG'];
+            this.form.controls['rec.DEPARTMENT_INDEX'].updateValueAndValidity();
+        }
+
+
     }
 }
