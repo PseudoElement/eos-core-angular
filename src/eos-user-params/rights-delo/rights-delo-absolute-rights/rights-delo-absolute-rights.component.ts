@@ -78,6 +78,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.subForm.unsubscribe();
     }
     submit() {
+        this.btnDisabled = true;
         if (this.arrNEWDeloRight.join('') !== this.arrDeloRight.join('')) {
             this.queryForSave.push({
                 method: 'MERGE',
