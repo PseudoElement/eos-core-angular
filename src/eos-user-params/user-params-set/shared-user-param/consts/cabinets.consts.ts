@@ -1,5 +1,5 @@
 import { IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
-
+const REG_MAX_SIZE: RegExp = /^\d{0,3}$|^1000$/; // 0-1000
 export const CABINETS_USER: IBaseUsers = {
     id: 'cabinets',
     title: 'Кабинеты',
@@ -115,7 +115,8 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'FOLDER_ITEM_LIMIT_RESULT',
             type: 'numberIncrement',
-            title: 'Максимальное количество записи'
+            title: 'Максимальное количество записи',
+            pattern: REG_MAX_SIZE,
         },
     ],
     fieldsChild: [
