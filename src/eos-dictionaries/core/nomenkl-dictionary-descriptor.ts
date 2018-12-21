@@ -60,7 +60,6 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
     filtYear: number;
     private _treeData: CustomTreeNode[];
     private _filterDUE: string;
-    // private _defaultIndex: string;
     private _activeTreeNode: CustomTreeNode;
 
 
@@ -203,6 +202,9 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
                 data: {DEPARTMENT_INDEX : dd.DEPARTMENT_INDEX },
                 path: this._getPath(dd.DUE),
             };
+            if (r.isActive) {
+                this._activeTreeNode = r;
+            }
             res.push(r);
         }
 

@@ -72,7 +72,7 @@
             <div class="card-flag">
                 <eos-dynamic-input [input]="inputs['rec.CARD_FLAG']"
                     [form]="form"
-                    [readonly]="!editMode"></eos-dynamic-input>
+                    [readonly]="!(this.isNewRecord && this.editMode)"></eos-dynamic-input>
                 <eos-dynamic-input [input]="inputs['rec.NUMCREATION_FLAG']"
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
@@ -82,7 +82,7 @@
             <ng-container *ngIf="hasCard">
                 <eos-dynamic-input [input]="inputs['rec.CARD_NAME']"
                     [form]="form"
-                    [readonly]="!editMode"></eos-dynamic-input>
+                    [readonly]="!(this.isNewRecord && this.editMode)"></eos-dynamic-input>
             </ng-container>
             <eos-dynamic-input class="department-note"
                 [input]="inputs['rec.NOTE']"
