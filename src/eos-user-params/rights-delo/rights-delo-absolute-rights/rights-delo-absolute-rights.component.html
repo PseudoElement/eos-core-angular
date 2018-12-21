@@ -9,10 +9,10 @@
     <div class="user-input-group">
         <div class="left-block-list-absolute-rights">
             <div class="list-card-files"
-                *ngFor="let item of fields"
-                [ngClass]="{'highlighted': item.data.isSelected}">
+                *ngFor="let item of listRight"
+                [ngClass]="{'highlighted': item.isSelected}">
                 <div [formGroup]="form">
-                    <label class="checkbox" (click)="clickLable($event, item, form.get(item.key))">
+                    <label class="checkbox" (click)="clickLable($event, item)">
                         <input type="checkbox"
                             hide
                             [formControlName]="item.key"
@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="right-block-list-absolute-rights" *ngIf="rightContent">
-            <ng-container [ngSwitch]="selectedNode.data.rightContent">
+            <ng-container [ngSwitch]="selectedNode.contentProp">
                 <!-- docGroup -->
                 <ng-container *ngSwitchCase="0">
                     <ng-container *ngTemplateOutlet="rightDocGroup"></ng-container>
@@ -63,7 +63,7 @@
 
                 <!-- departmentCardAuthorSentProject -->
                 <ng-container *ngSwitchCase="8">
-                        <ng-container *ngTemplateOutlet="department"></ng-container>
+                    <ng-container *ngTemplateOutlet="department"></ng-container>
                 </ng-container>
             </ng-container>
         </div>
@@ -86,7 +86,7 @@
     <eos-right-absolute-department
         [selectedNode]="selectedNode"
         [curentUser]="curentUser"
-        (Changed)="createBatch($event)"
+        (Changed)="checkChange()"
     ></eos-right-absolute-department>
 </ng-template>
 
