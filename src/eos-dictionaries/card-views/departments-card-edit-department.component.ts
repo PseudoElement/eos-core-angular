@@ -37,22 +37,22 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
     }
 
     ngOnInit () {
-        const v = [this.numcreationFlagValidator()];
+        const v = [this.validatorNumcreationFlag()];
         if (this.form.controls['rec.DEPARTMENT_INDEX'].validator) {
             v.push(this.form.controls['rec.DEPARTMENT_INDEX'].validator);
         }
         this.form.controls['rec.DEPARTMENT_INDEX'].setValidators(v);
     }
 
-    numcreationFlagValidator(): ValidatorFn {
+    validatorNumcreationFlag(): ValidatorFn {
         return (control: AbstractControl): { [key: string]: any } => {
             let error = null;
             if (this.form.controls['rec.NUMCREATION_FLAG'].value) {
                 if (!this.form.controls['rec.DEPARTMENT_INDEX'].value) {
-                    error = 'Отсутствует индекс';
+                    error = 'Отсутствует индекс при активном "Номерообразовании НП"';
                 }
             }
-            return error ? {pattern: error} : null;
+            return error ? {valueError: error} : null;
         };
     }
 
@@ -110,7 +110,5 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
             this.previousValues['rec.NUMCREATION_FLAG'] = formChanges['rec.NUMCREATION_FLAG'];
             this.form.controls['rec.DEPARTMENT_INDEX'].updateValueAndValidity();
         }
-
-
     }
 }

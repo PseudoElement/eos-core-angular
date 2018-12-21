@@ -50,7 +50,7 @@ export class NomenklCardComponent extends BaseCardEditComponent implements OnCha
                     error = 'Год задан неверно';
                 }
             }
-            return error ? {pattern: error} : null;
+            return error ? {valueError: error} : null;
         };
     }
 
