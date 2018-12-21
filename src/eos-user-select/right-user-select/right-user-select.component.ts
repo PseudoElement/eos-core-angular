@@ -122,28 +122,17 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
                 this.fillDeloField(false, false, false, true);
             }
         }
-        if ( split[25] === '1') {
-            this._selectedUser.ArraySystemHelper.APM.checked = true;
-        }else if ( split[21] === '1') {
-            this._selectedUser.ArraySystemHelper.EOS.checked = true;
-        }else if ( split[2] === '1' ) {
-            this._selectedUser.ArraySystemHelper.SCAN.checked = true;
-        }else if ( split[3] === '1' ) {
-            this._selectedUser.ArraySystemHelper.Pscan.checked = true;
-        }else if (  split[5] === '1') {
-            this._selectedUser.ArraySystemHelper.Shif.checked = true;
-        }else if ( split[15] === '1' ) {
-            this._selectedUser.ArraySystemHelper.Scan_code.checked = true;
-        }else if ( split[16] === '1') {
-            this._selectedUser.ArraySystemHelper.Notifer.checked = true;
-        }else if ( split[17] === '1') {
-            this._selectedUser.ArraySystemHelper.Search_code.checked = true;
-        }else if ( split[23] === '1') {
-            this._selectedUser.ArraySystemHelper.MobNet.checked = true;
-        }else if ( split[26] === '1') {
-            this._selectedUser.ArraySystemHelper.Informer.checked = true;
-        }
-        this.flagSustem = true;
+            split[25] === '1' ?  this._selectedUser.ArraySystemHelper.APM.checked = true :  this._selectedUser.ArraySystemHelper.APM.checked = false;
+            split[21] === '1' ?  this._selectedUser.ArraySystemHelper.EOS.checked = true : this._selectedUser.ArraySystemHelper.EOS.checked = false;
+            split[2] === '1' ?  this._selectedUser.ArraySystemHelper.SCAN.checked = true : this._selectedUser.ArraySystemHelper.SCAN.checked = false;
+            split[3] === '1' ?    this._selectedUser.ArraySystemHelper.Pscan.checked = true :   this._selectedUser.ArraySystemHelper.Pscan.checked = false;
+            split[5] === '1' ?  this._selectedUser.ArraySystemHelper.Shif.checked = true : this._selectedUser.ArraySystemHelper.Shif.checked = false;
+            split[15] === '1' ?   this._selectedUser.ArraySystemHelper.Scan_code.checked = true :  this._selectedUser.ArraySystemHelper.Scan_code.checked = false;
+            split[16] === '1' ? this._selectedUser.ArraySystemHelper.Notifer.checked = true : this._selectedUser.ArraySystemHelper.Notifer.checked = false;
+            split[17] === '1' ?  this._selectedUser.ArraySystemHelper.Search_code.checked = true : this._selectedUser.ArraySystemHelper.Search_code.checked = false;
+            split[23] === '1' ?  this._selectedUser.ArraySystemHelper.MobNet.checked = true : this._selectedUser.ArraySystemHelper.MobNet.checked = false;
+            split[26] === '1' ?  this._selectedUser.ArraySystemHelper.Informer.checked = true : this._selectedUser.ArraySystemHelper.Informer.checked = false;
+            this.flagSustem = true;
     }
     fillDeloField(delo: boolean, delo_deloweb: boolean, delowebLGO: boolean, delowebKL: boolean ): void {
         this._selectedUser.ArraySystemHelper.delo.checked = delo;
