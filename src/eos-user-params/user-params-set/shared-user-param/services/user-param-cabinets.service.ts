@@ -60,7 +60,6 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     }
     afterInit() {
         const allData = this._userParamsSetSrv.hashUserContext;
-        console.log(allData);
         this.sortedData = this.linearSearchKeyForData(this.constUserParam.fields, allData);
         this.prepareData = this.convData(this.sortedData);
         this.prepDataAttachField(this.prepareData.rec);

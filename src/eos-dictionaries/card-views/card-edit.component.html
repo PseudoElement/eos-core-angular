@@ -12,6 +12,7 @@
                                                       [inputs]="inputs"
                                                       [data]="data"
                                                       [editMode]="editMode"
+                                                      [isNewRecord]="isNewRecord"
                                                       [dutysList]="dutysList"
                                                       [fullNamesList]="fullNamesList"></eos-departments-card-edit-person>
                     <eos-departments-card-edit-department #cardEditEl
@@ -21,6 +22,7 @@
                                                           [inputs]="inputs"
                                                           [data]="data"
                                                           [editMode]="editMode"
+                                                          [isNewRecord]="isNewRecord"
                                                           [dutysList]="dutysList"
                                                           [fullNamesList]="fullNamesList"></eos-departments-card-edit-department>
                 </ng-container>
@@ -31,6 +33,7 @@
                                                       [form]="form"
                                                       [inputs]="inputs"
                                                       [data]="data"
+                                                      [isNewRecord]="isNewRecord"
                                                       [editMode]="editMode"></eos-organizations-card-edit-node>
                     <eos-organizations-card-edit-group #cardEditEl
                                                        *ngIf="data.rec['IS_NODE'] === 0"
@@ -38,6 +41,7 @@
                                                        [form]="form"
                                                        [inputs]="inputs"
                                                        [data]="data"
+                                                       [isNewRecord]="isNewRecord"
                                                        [editMode]="editMode"></eos-organizations-card-edit-group>
                 </ng-container>
                 <eos-cabinet-card-edit *ngSwitchCase="'cabinet'"
@@ -46,6 +50,7 @@
                                        [form]="form"
                                        [inputs]="inputs"
                                        [data]="data"
+                                       [isNewRecord]="isNewRecord"
                                        [editMode]="editMode"></eos-cabinet-card-edit>
                 <eos-security-card-edit *ngSwitchCase="'security'"
                                         #cardEditEl
@@ -53,6 +58,7 @@
                                         [form]="form"
                                         [inputs]="inputs"
                                         [data]="data"
+                                        [isNewRecord]="isNewRecord"
                                         [editMode]="editMode"></eos-security-card-edit>
                 <eos-broadcast-channel-card-edit *ngSwitchCase="'broadcast-channel'"
                                                  #cardEditEl
@@ -60,6 +66,7 @@
                                                  [form]="form"
                                                  [inputs]="inputs"
                                                  [data]="data"
+                                                 [isNewRecord]="isNewRecord"
                                                  [editMode]="editMode"></eos-broadcast-channel-card-edit>
                 <eos-sev-rules-card-edit *ngSwitchCase="'sev-rules'"
                                          #cardEditEl
@@ -67,6 +74,7 @@
                                          [form]="form"
                                          [inputs]="inputs"
                                          [data]="data"
+                                         [isNewRecord]="isNewRecord"
                                          [editMode]="editMode"></eos-sev-rules-card-edit>
                 <eos-docgroup-card *ngSwitchCase="'docgroup'"
                                    #cardEditEl
@@ -74,6 +82,7 @@
                                    [form]="form"
                                    [inputs]="inputs"
                                    [data]="data"
+                                   [isNewRecord]="isNewRecord"
                                    [editMode]="editMode"></eos-docgroup-card>
                 <eos-nomenkl-card *ngSwitchCase="'nomenkl'"
                                   #cardEditEl
@@ -81,6 +90,7 @@
                                   [form]="form"
                                   [inputs]="inputs"
                                   [data]="data"
+                                  [isNewRecord]="isNewRecord"
                                   [editMode]="editMode"></eos-nomenkl-card>
                 <eos-citizen-card *ngSwitchCase="'citizens'"
                                   #cardEditEl
@@ -88,6 +98,7 @@
                                   [form]="form"
                                   [inputs]="inputs"
                                   [data]="data"
+                                  [isNewRecord]="isNewRecord"
                                   [editMode]="editMode"></eos-citizen-card>
                 <eos-visatype-card *ngSwitchCase="'visa-type'"
                                    #cardEditEl
@@ -95,6 +106,7 @@
                                    [form]="form"
                                    [inputs]="inputs"
                                    [data]="data"
+                                   [isNewRecord]="isNewRecord"
                                    [editMode]="editMode"></eos-visatype-card>
                 <eos-reestrtype-card *ngSwitchCase="'reestrtype'"
                                      #cardEditEl
@@ -102,6 +114,7 @@
                                      [form]="form"
                                      [inputs]="inputs"
                                      [data]="data"
+                                     [isNewRecord]="isNewRecord"
                                      [editMode]="editMode"></eos-reestrtype-card>
                 <eos-link-card *ngSwitchCase="'link'"
                                #cardEditEl
@@ -109,6 +122,7 @@
                                [form]="form"
                                [inputs]="inputs"
                                [data]="data"
+                               [isNewRecord]="isNewRecord"
                                [editMode]="editMode"></eos-link-card>
                 <eos-nadzor-card-edit *ngSwitchCase="'ob-motiv'"
                                       #cardEditEl
@@ -116,6 +130,7 @@
                                       [form]="form"
                                       [inputs]="inputs"
                                       [data]="data"
+                                      [isNewRecord]="isNewRecord"
                                       [editMode]="editMode"></eos-nadzor-card-edit>
                 <eos-nadzor-card-edit *ngSwitchCase="'ob-osnov'"
                                       #cardEditEl
@@ -123,6 +138,7 @@
                                       [form]="form"
                                       [inputs]="inputs"
                                       [data]="data"
+                                      [isNewRecord]="isNewRecord"
                                       [editMode]="editMode"></eos-nadzor-card-edit>
                 <eos-nadzor-card-edit *ngSwitchCase="'ob-type'"
                                       #cardEditEl
@@ -130,6 +146,7 @@
                                       [form]="form"
                                       [inputs]="inputs"
                                       [data]="data"
+                                      [isNewRecord]="isNewRecord"
                                       [editMode]="editMode"></eos-nadzor-card-edit>
                 <eos-nadzor-card-edit *ngSwitchCase="'ob-otziv'"
                                       #cardEditEl
@@ -137,6 +154,7 @@
                                       [form]="form"
                                       [inputs]="inputs"
                                       [data]="data"
+                                      [isNewRecord]="isNewRecord"
                                       [editMode]="editMode"></eos-nadzor-card-edit>
                 <eos-simple-card-edit *ngSwitchDefault
                                       #cardEditEl
@@ -144,6 +162,7 @@
                                       [form]="form"
                                       [inputs]="inputs"
                                       [data]="data"
+                                      [isNewRecord]="isNewRecord"
                                       [editMode]="editMode"></eos-simple-card-edit>
             </ng-container>
             <!-- div class="form-group unimportant-text s-font">

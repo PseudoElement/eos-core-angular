@@ -314,8 +314,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
 
     resetSearch() {
-        this.params.searchResults = false;
         this._dictSrv.resetSearch();
+        this._dictSrv.updateViewParameters({searchResults: false });
     }
 
     userOrdered(nodes: EosDictionaryNode[]) {
@@ -416,6 +416,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
         this.modalWindow.content.fieldsDescription = editDescr;
         this.modalWindow.content.dictionaryId = dictionary.id;
+        this.modalWindow.content.isNewRecord = true;
         this.modalWindow.content.nodeData = data;
 
         this.modalWindow.content.onHide.subscribe(() => {

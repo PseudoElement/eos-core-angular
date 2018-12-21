@@ -281,8 +281,8 @@ export class RecordDescriptor {
     private _bindData(fields: FieldDescriptor[], data: any): IFieldView[] {
         return fields.map((fld) => {
             let _res: IFieldView;
-            if (fld.type === E_FIELD_TYPE.dictionary) {
-                _res = Object.assign({}, fld, { value: data ? data[fld.foreignKey] : null });
+            if (fld.type === E_FIELD_TYPE.dictionary || fld.type === E_FIELD_TYPE.array) {
+                _res = Object.assign({}, fld, {value: data ? data[fld.foreignKey] : null});
             } else {
                 _res = (Object.assign({}, fld, { value: data && data.rec ? data.rec[fld.foreignKey] : (fld.default || null) }));
             }

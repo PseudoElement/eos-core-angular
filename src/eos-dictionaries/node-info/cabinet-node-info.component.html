@@ -1,35 +1,35 @@
 <div class="eos-node-info">
     <div class="opened-node-wrapper">
         <div class="content-block">
-            <div *ngIf="update"
-                class="no-data full-info usual-border">
+            <div *ngIf="update" class="no-data full-info usual-border">
                 <eos-spinner [size]="'lg'"></eos-spinner>
             </div>
-            <div *ngIf="nodeDataShort"
-                class="short-info l-font"><span>{{nodeDataShort.rec['FULLNAME'] || nodeDataShort.rec['CABINET_NAME']}}</span>
+            <div *ngIf="nodeDataShort" class="short-info l-font">
+                <span>{{cabinetName}}</span>
             </div>
-            <div *ngIf="nodeDataFull && nodeDataFull.department"
-                class="full-info usual-border">
+            <div *ngIf="nodeDataFull && nodeDataFull.department" class="full-info usual-border">
                 <div class="field">
                     <p class="field-title unimportant-text s-font">Подразделение</p>
                     <a class="field-value selected-text"
-                        [routerLink]="'/spravochniki/departments/'+nodeDataFull.department['DUE']+'/view'">{{nodeDataFull.department['FULLNAME'] || nodeDataFull.department['CLASSIF_NAME']}}</a>
+                       [routerLink]="routerLinkDepartment(nodeDataFull.department['DUE'])">{{departmentName}}</a>
                 </div>
                 <div class="field">
                     <p class="field-title unimportant-text s-font">Владельцы кабинета</p>
                     <ul class="m-font">
-                        <ng-container *ngFor="let owner of nodeDataFull.owners">
-                            <li *ngIf="nodeDataFull?.rec['ISN_CABINET']===owner['ISN_CABINET']"
-                                class="field-value"><a [routerLink]="'/spravochniki/departments/'+owner['DUE']+'/view'">{{owner.CLASSIF_NAME}}</a></li>
+                        <ng-container *ngFor="let owner of nodeDataFull.rec.owners">
+                            <li *ngIf="isOwner(owner)">
+                                <a class="field-value"
+                                   [routerLink]="routerLinkDepartment(owner['DUE'])">{{owner.CLASSIF_NAME}}</a></li>
                         </ng-container>
                     </ul>
                 </div>
                 <div class="field">
                     <p class="field-title unimportant-text s-font">Пользователи кабинета</p>
                     <ul class="m-font">
-                        <li class="field-value"
-                            *ngFor="let user of nodeDataFull.users">{{user['SURNAME_PATRON']}}</li>
-                            <!--a [routerLink]="'/spravochniki/users/'+user['ISN_LCLASSIF']+'/view'"  /a-->
+                        <ng-container *ngFor="let user of nodeDataFull.rec.users">
+                            <li><a class="field-value"
+                                   [routerLink]="routerLinkUser(user['ISN_LCLASSIF'])">{{user.SURNAME_PATRON}}</a></li>
+                        </ng-container>
                     </ul>
                 </div>
             </div>
