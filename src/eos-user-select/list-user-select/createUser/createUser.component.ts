@@ -182,6 +182,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             if (data) {
                 f.get('DUE_DEP_NAME').patchValue('');
                 f.get('DUE_DEP_NAME').disable();
+                delete this.data['dueDL'];
             } else {
                 f.get('DUE_DEP_NAME').enable();
             }
