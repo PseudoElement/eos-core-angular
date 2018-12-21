@@ -25,12 +25,38 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     prepDataAttach = {rec: {}};
     constructor( injector: Injector ) {
         super(injector, CABINETS_USER);
+        this.getNameSortCabinets().then( sortName => {
+            CABINETS_USER.fields.map(fields => {
+                if (fields.key === 'CABSORT_ISN_DOCGROUP_LIST') {
+                    fields.options.splice(0, fields.options.length);
+                        sortName.forEach(element => {
+                            fields.options.push({
+                                value: element.ISN_LIST,
+                                title: element.NAME
+                        });
+                    });
+                }
+            });
+        });
         this.init();
         this.prepInputsAttach = this.getObjectInputFields(CABINETS_USER.fieldsChild);
         this.afterInit();
     }
     setTab(i: number) {
         this.currTab = i;
+    }
+
+    getNameSortCabinets(): Promise<any> {
+        const user =  this._userParamsSetSrv.userContextId;
+        const query = {
+            USER_LISTS: {
+                criteries: {
+                    ISN_LCLASSIF: String(user),
+                    CLASSIF_ID: '105'
+                }
+            },
+        };
+      return  this.userParamApiSrv.getData(query);
     }
     afterInit() {
         const allData = this._userParamsSetSrv.hashUserContext;
