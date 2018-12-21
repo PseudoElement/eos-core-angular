@@ -45,27 +45,31 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private apiSrv: UserParamApiSrv,
         private _inputCtrlSrv: InputParamControlService,
         ) {
-            this.curentUser = this._userParamsSetSrv.curentUser;
-            this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split('');
-            this.arrNEWDeloRight = this.curentUser['DELO_RIGHTS'].split('');
-            this.fields = this._writeValue(ABSOLUTE_RIGHTS);
-            this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
-            this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
-            this.listRight = this._createList(ABSOLUTE_RIGHTS);
-            this.subForm = this.form.valueChanges
-             .subscribe(data => {
-                 for (const key in  data) {
-                     if (+this.arrNEWDeloRight[key] > 1 && data[key]) {
-                         continue;
-                     }
-                    this.arrNEWDeloRight[key] = (+data[key]).toString();
-                 }
-                 this.checkChange();
-                 setTimeout(() => {
-                     this._viewContent();
-                 }, 0);
-             });
+            this.init();
         }
+
+    init() {
+        this.curentUser = this._userParamsSetSrv.curentUser;
+        this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split('');
+        this.arrNEWDeloRight = this.curentUser['DELO_RIGHTS'].split('');
+        this.fields = this._writeValue(ABSOLUTE_RIGHTS);
+        this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
+        this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
+        this.listRight = this._createList(ABSOLUTE_RIGHTS);
+        this.subForm = this.form.valueChanges
+            .subscribe(data => {
+                for (const key in  data) {
+                    if (+this.arrNEWDeloRight[key] > 1 && data[key]) {
+                        continue;
+                    }
+                this.arrNEWDeloRight[key] = (+data[key]).toString();
+                }
+                this.checkChange();
+                setTimeout(() => {
+                    this._viewContent();
+                }, 0);
+            });
+    }
     ngOnInit() {
         this.selectNode(this.listRight[0]);
         this.inputAll = {all: new RadioInput(CONTROL_ALL_NOTALL)};
@@ -103,15 +107,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
     }
     cancel() {
-        // console.log(this.listRight);
-        // console.log('cancel()');
-        // console.log('new', this.arrNEWDeloRight.join(''));
-        // console.log('old', this.arrDeloRight.join(''));
-        // this.arrNEWDeloRight.forEach((v, i) => {
-        //     if (v !== this.arrDeloRight[i]) {
-        //         console.log('было ', this.arrDeloRight[i], 'стало ', v, 'inddex ', i);
-        //     }
-        // });
+        this.btnDisabled = true;
+        this.ngOnDestroy();
+        this._userParamsSetSrv.getUserIsn()
+        .then(() => {
+            this.init();
+            this.ngOnInit();
+        });
     }
     clickLable(event, item: NodeAbsoluteRight) {
         event.preventDefault();
