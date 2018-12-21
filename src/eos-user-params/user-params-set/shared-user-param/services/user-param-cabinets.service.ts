@@ -37,10 +37,10 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                     });
                 }
             });
-            this.init();
-            this.prepInputsAttach = this.getObjectInputFields(CABINETS_USER.fieldsChild);
-            this.afterInit();
         });
+        this.init();
+        this.prepInputsAttach = this.getObjectInputFields(CABINETS_USER.fieldsChild);
+        this.afterInit();
     }
     setTab(i: number) {
         this.currTab = i;
@@ -62,7 +62,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
         const allData = this._userParamsSetSrv.hashUserContext;
         this.sortedData = this.linearSearchKeyForData(this.constUserParam.fields, allData);
         this.prepareData = this.convData(this.sortedData);
-        this.prepDataAttachField(this.prepareData);
+        this.prepDataAttachField(this.prepareData.rec);
         this.inputAttach = this.getInputAttach();
         this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
         if (this.flagDisabledHiliteResolutionIncrement) {
