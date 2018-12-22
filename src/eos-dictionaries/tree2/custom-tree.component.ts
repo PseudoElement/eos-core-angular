@@ -18,6 +18,7 @@ export class CustomTreeNode {
     isExpanded: boolean;
     updating: boolean;
     path: string[];
+    data?: {};
     children: CustomTreeNode[];
 }
 

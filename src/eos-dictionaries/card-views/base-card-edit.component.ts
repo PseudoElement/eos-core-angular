@@ -10,6 +10,7 @@ export class BaseCardEditComponent implements OnDestroy {
     @Input() inputs: any;
     @Input() data: any;
     @Input() editMode: boolean;
+    @Input() isNewRecord: boolean;
     @Input() dutysList: string[];
     @Input() fullNamesList: string[];
     readonly notEmptyString = NOT_EMPTY_STRING;

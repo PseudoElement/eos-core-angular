@@ -28,6 +28,9 @@ import {
     WARN_LOGIC_DELETE,
     DANGER_EDIT_ONLY_DEPARTMENTS_ALLOWED,
     WARN_SELECT_NODE,
+    WARN_ELEMENT_DELETED,
+    WARN_LOGIC_CLOSE,
+    WARN_LOGIC_OPEN,
 } from '../consts/messages.consts';
 
 import {RECENT_URL} from 'app/consts/common.consts';
@@ -135,8 +138,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                     this._dictSrv.openDictionary(this.dictionaryId)
                         .then(() => {
                             if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
+                                this.dictionary.root.children = null;
                                 this._dictSrv.currentDictionary.descriptor.setRootNode(this._nodeId);
-                                this._dictSrv.selectTreeNode(null);
+                                this._dictSrv.selectCustomTreeNode();
 
                             } else {
                                 this._dictSrv.selectTreeNode(this._nodeId);
@@ -297,6 +301,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.CounterNP:
                 this._editCounterNP(false);
                 break;
+            case E_RECORD_ACTIONS.CloseSelected:
+                this._closeItems();
+                break;
+            case E_RECORD_ACTIONS.OpenSelected:
+                this._openItems();
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -304,8 +314,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
 
     resetSearch() {
-        this.params.searchResults = false;
         this._dictSrv.resetSearch();
+        this._dictSrv.updateViewParameters({searchResults: false });
     }
 
     userOrdered(nodes: EosDictionaryNode[]) {
@@ -406,6 +416,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
         this.modalWindow.content.fieldsDescription = editDescr;
         this.modalWindow.content.dictionaryId = dictionary.id;
+        this.modalWindow.content.isNewRecord = true;
         this.modalWindow.content.nodeData = data;
 
         this.modalWindow.content.onHide.subscribe(() => {
@@ -438,7 +449,59 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         if (delCount === allCount) {
             this._msgSrv.addNewMessage(WARN_LOGIC_DELETE);
         }
-        this._dictSrv.markDeleted(true, true);
+        this._dictSrv.setFlagForMarked('DELETED', true, true);
+    }
+
+    /**
+     * Mark selected 'CLOSE' to 1 (Nomenklature Action)
+     */
+    private _closeItems(): void {
+        const fieldName = 'CLOSED';
+        let rdyCount = 0, allCount = 0;
+        this._dictSrv.getMarkedNodes().forEach((node) => {
+            if (node.marked) {
+                allCount++;
+            }
+            if (node.marked && node.data.rec[fieldName]) {
+                rdyCount++;
+            }
+            if (node.marked && node.isDeleted) {
+                node.marked = false;
+                const warn = Object.assign({}, WARN_ELEMENT_DELETED);
+                warn.msg = warn.msg.replace('{{elem}}', node.title);
+                this._msgSrv.addNewMessage(warn);
+            }
+        });
+        if (rdyCount === allCount) {
+            this._msgSrv.addNewMessage(WARN_LOGIC_CLOSE);
+        }
+        this._dictSrv.setFlagForMarked(fieldName, false, true);
+    }
+
+    /**
+     * Mark selected 'CLOSE' to 0 (Nomenklature Action)
+     */
+    private _openItems(): void {
+        const fieldName = 'CLOSED';
+        let rdyCount = 0, allCount = 0;
+        this._dictSrv.getMarkedNodes().forEach((node) => {
+            if (node.marked) {
+                allCount++;
+            }
+            if (node.marked && !node.data.rec[fieldName]) {
+                rdyCount++;
+            }
+            if (node.marked && node.isDeleted) {
+                node.marked = false;
+                const warn = Object.assign({}, WARN_ELEMENT_DELETED);
+                warn.msg = warn.msg.replace('{{elem}}', node.title);
+                this._msgSrv.addNewMessage(warn);
+            }
+        });
+        if (rdyCount === allCount) {
+            this._msgSrv.addNewMessage(WARN_LOGIC_OPEN);
+        }
+        this._dictSrv.setFlagForMarked(fieldName, false, false);
     }
 
     private _editCounterNP(isMainNP: boolean) {
@@ -517,7 +580,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             p = this._confirmSrv
                 .confirm(_confrm);
         }
-        p.then((confirmed: boolean) => this._dictSrv.markDeleted(confirmed, false));
+        p.then((confirmed: boolean) => this._dictSrv.setFlagForMarked('DELETED', confirmed, false));
     }
 
     private _openAdditionalFields() {

@@ -32,7 +32,7 @@ export class NomenklRecordDescriptor extends RecordDescriptor {
     filterBy(filters: any, data: any): boolean {
         if (filters && filters.hasOwnProperty('YEAR')) {
             const y: number = parseInt(filters['YEAR'], 10);
-            this.dictionary.defaultYear = y;
+            this.dictionary.filtYear = y;
             const y1: number = data.rec['YEAR_NUMBER'];
             const y2: number = data.rec['END_YEAR'];
             const p: boolean = filters['CB1'];
@@ -57,10 +57,10 @@ export class NomenklRecordDescriptor extends RecordDescriptor {
 
 export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
     record: NomenklRecordDescriptor;
-    defaultYear: number;
+    filtYear: number;
     private _treeData: CustomTreeNode[];
     private _filterDUE: string;
-    private _defaultNumber: string;
+    private _activeTreeNode: CustomTreeNode;
 
 
     constructor(
@@ -99,10 +99,21 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
         this._filterDUE = _nodeId;
         if (this._treeData) {
             this.parseTree(this._treeData, (item: CustomTreeNode) => {
-                item.isActive = (item.id === this._filterDUE);
+                if (item.id === this._filterDUE) {
+                    item.isActive = true;
+                    this._activeTreeNode = item;
+                } else {
+                    item.isActive = false;
+                }
             });
         }
+    }
 
+    getChildren(): Promise<any[]> {
+        const _children = {
+            DUE: this._filterDUE + ''
+        };
+        return this.getData({ criteries: _children }, 'DUE');
     }
 
     getData(query?: any, order?: string, limit?: number): Promise<any[]> {
@@ -129,15 +140,6 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
             .read(req)
             .then((data: any[]) => {
                 this.prepareForEdit(data);
-                if (data && data.length) {
-                    const i = data[0]['NOM_NUMBER'];
-                    if (i) {
-                        this._defaultNumber = i.substring(0, 2);
-                        if (this._defaultNumber === '$$') {
-                            this._defaultNumber = '';
-                        }
-                    }
-                }
                 return data;
             });
     }
@@ -145,8 +147,12 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
     getNewRecord(preSetData: {}): {} {
         const res = super.getNewRecord(preSetData);
         res['rec']['DUE'] = this._filterDUE;
-        res['rec']['YEAR_NUMBER'] = this.defaultYear;
-        res['rec']['NOM_NUMBER'] = this._defaultNumber;
+        if (!this.filtYear) {
+            this.filtYear = new Date().getFullYear();
+        }
+        res['rec']['YEAR_NUMBER'] = this.filtYear;
+        res['rec']['NOM_NUMBER'] = this._activeTreeNode.data['DEPARTMENT_INDEX'];
+
         return res;
     }
 
@@ -193,8 +199,12 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
                 isExpanded: true,
                 updating: false,
                 children: [],
+                data: {DEPARTMENT_INDEX : dd.DEPARTMENT_INDEX },
                 path: this._getPath(dd.DUE),
             };
+            if (r.isActive) {
+                this._activeTreeNode = r;
+            }
             res.push(r);
         }
 

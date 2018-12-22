@@ -22,6 +22,8 @@ export enum E_RECORD_ACTIONS {
     additionalFields,
     CounterNPMain,
     CounterNP,
+    CloseSelected,
+    OpenSelected,
     // createRepresentative,
     // slantForForms,
     /* to be extended */

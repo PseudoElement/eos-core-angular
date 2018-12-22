@@ -82,6 +82,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
                             return INPUT_ERROR_MESSAGES[key][+(!!this.input.uniqueInDict)];
                         case 'maxlength':
                             return 'Максимальная длина ' + this.input.length + ' символ(а|ов).';
+                        case 'valueError':
                         case 'dateCompare':
                             return control.errors[key];
                         default:

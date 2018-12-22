@@ -8,7 +8,7 @@
     ></eos-user-header>
     <div class="base-param-main">
         <!-- Логин и Аутентификация с помощью ОС -->
-        <div class="">
+        <div class="wrapper-password">
             <eos-dynamic-input
                 class="base-text-input base-login-input"
                 [input]="inputs['CLASSIF_NAME']"
@@ -24,51 +24,52 @@
         </div>
         <!-- Дата смены пароля и поля для пароля -->
         <div>
-            <eos-dynamic-input
-                style="width: 180px"
-                class="inline-block"
-                [input]="inputs['PASSWORD_DATE']"
-                [form]="form"
-                [readonly]="inputs['PASSWORD_DATE'].readonly"
-            ></eos-dynamic-input>
+            <div class="wrapper-password">
+                <eos-dynamic-input
+                    style="width: 180px"
+                    class="inline-block"
+                    [input]="inputs['PASSWORD_DATE']"
+                    [form]="form"
+                    [readonly]="inputs['PASSWORD_DATE'].readonly"
+                ></eos-dynamic-input>
 
-            <div [formGroup]="formControls"
-                class="dynamic-input-wrapper base-text-input">
-                <label [hidden]="controls['pass'].hideLabel"
-                    [attr.for]="controls['pass'].key">{{controls['pass'].label}}</label>
-                <div [ngClass]="{'disabled': controls['pass'].disabled}">
-                <input class="form-control m-font"
-                    [formControlName]="controls['pass'].key"
-                    [id]="controls['pass'].key"
-                    (blur)="checkPass()"
-                    type="text"
-                    [readonly]="controls['pass'].readonly"
-                    [ngClass]="{'readonly': readonly}"
-                    [placeholder]="controls['pass'].label"
-                    autocomplete="off">
+                <div [formGroup]="formControls"
+                    class="dynamic-input-wrapper base-text-input">
+                    <label [hidden]="controls['pass'].hideLabel"
+                        [attr.for]="controls['pass'].key">{{controls['pass'].label}}</label>
+                    <div [ngClass]="{'disabled': controls['pass'].disabled}">
+                    <input class="form-control m-font"
+                        [formControlName]="controls['pass'].key"
+                        [id]="controls['pass'].key"
+                        (blur)="checkPass()"
+                        type="text"
+                        [readonly]="controls['pass'].readonly"
+                        [ngClass]="{'readonly': readonly}"
+                        [placeholder]="controls['pass'].label"
+                        autocomplete="off">
+                    </div>
+                </div>
+
+                <div [formGroup]="formControls"
+                    class="dynamic-input-wrapper base-text-input">
+                    <label [hidden]="controls['passRepeated'].hideLabel"
+                        [attr.for]="controls['passRepeated'].key">{{controls['passRepeated'].label}}</label>
+                    <div [ngClass]="{'disabled': controls['pass'].disabled}">
+                    <input class="form-control m-font"
+                        [formControlName]="controls['passRepeated'].key"
+                        [id]="controls['passRepeated'].key"
+                        (blur)="checkPass()"
+                        type="text"
+                        [readonly]="controls['passRepeated'].readonly"
+                        [ngClass]="{'readonly': readonly}"
+                        [placeholder]="controls['passRepeated'].label"
+                        [tooltip]="errorPass ? 'Пароли не совпадают' : 'Повторите пароль'"
+                        placement="bottom"
+                        [containerClass]="errorPass ? 'tooltip-error' : 'tooltip-info'"
+                        autocomplete="off">
+                    </div>
                 </div>
             </div>
-
-            <div [formGroup]="formControls"
-                class="dynamic-input-wrapper base-text-input">
-                <label [hidden]="controls['passRepeated'].hideLabel"
-                    [attr.for]="controls['passRepeated'].key">{{controls['passRepeated'].label}}</label>
-                <div [ngClass]="{'disabled': controls['pass'].disabled}">
-                <input class="form-control m-font"
-                    [formControlName]="controls['passRepeated'].key"
-                    [id]="controls['passRepeated'].key"
-                    (blur)="checkPass()"
-                    type="text"
-                    [readonly]="controls['passRepeated'].readonly"
-                    [ngClass]="{'readonly': readonly}"
-                    [placeholder]="controls['passRepeated'].label"
-                    [tooltip]="errorPass ? 'Пароли не совпадают' : 'Повторите пароль'"
-                    placement="bottom"
-                    [containerClass]="errorPass ? 'tooltip-error' : 'tooltip-info'"
-                    autocomplete="off">
-                </div>
-            </div>
-
         </div>
         <!-- технический пользователь -->
         <eos-dynamic-input

@@ -193,7 +193,6 @@ export class BaseUserSrv implements OnDestroy, OnInit {
         return { rec: d };
     }
     submit() {
-        console.log(this._userParamsSetSrv);
         if (this.newData || this.prepareData) {
             const userId = '' + this._userParamsSetSrv.userContextId;
             this.formChanged.emit(false);
@@ -223,11 +222,11 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     }
     cancel() {
         if (this.isChangeForm) {
-            this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
-            this.isChangeForm = false;
-            this.formChanged.emit(false);
-            this.ngOnDestroy();
-            this.init();
+           this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+           this.isChangeForm = false;
+           this.formChanged.emit(false);
+           this.ngOnDestroy();
+           this.init();
         }
     }
     default() {

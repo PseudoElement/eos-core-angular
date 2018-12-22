@@ -9,6 +9,7 @@ import { RECORD_ACTIONS_EDIT,
     RECORD_ACTIONS_NAVIGATION_UP,
     RECORD_ACTIONS_NAVIGATION_DOWN } from '../../eos-dictionaries/consts/record-actions.consts';
 import 'rxjs/add/operator/takeUntil';
+import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 
 @Component({
     selector: 'eos-breadcrumb',
@@ -28,7 +29,10 @@ export class BreadcrumbsComponent implements OnDestroy {
     showPushpin = false;
     showInfoAct = false;
 
+
     private ngUnsubscribe: Subject<any> = new Subject();
+    private _isEditEnabled: boolean;
+
 
     constructor(
         private _breadcrumbsSrv: EosBreadcrumbsService,
@@ -39,12 +43,12 @@ export class BreadcrumbsComponent implements OnDestroy {
     ) {
         _breadcrumbsSrv.breadcrumbs$.takeUntil(this.ngUnsubscribe).
             subscribe((bc: IBreadcrumb[]) => this.breadcrumbs = bc);
-        this.update();
+        this._update();
 
         this._router.events
             .filter((evt) => evt instanceof NavigationEnd)
             .takeUntil(this.ngUnsubscribe)
-            .subscribe(() => this.update());
+            .subscribe(() => this._update());
 
         this._sandwichSrv.currentDictState$
             .takeUntil(this.ngUnsubscribe)
@@ -52,7 +56,10 @@ export class BreadcrumbsComponent implements OnDestroy {
 
         this._dictSrv.openedNode$
             .takeUntil(this.ngUnsubscribe)
-            .subscribe((n) => this.hasInfoData = !!n);
+            .subscribe((n) => {
+                this.hasInfoData = !!n;
+                this._isEditEnabled = this._calcisEditable(n);
+            });
     }
 
     ngOnDestroy() {
@@ -68,7 +75,25 @@ export class BreadcrumbsComponent implements OnDestroy {
         return !this._sandwichSrv.treeIsBlocked;
     }
 
-    private update() {
+    isEditEnabled() {
+        return this._isEditEnabled;
+    }
+
+    private _calcisEditable(node: EosDictionaryNode): boolean {
+        if (!this._dictSrv || !this._dictSrv.currentDictionary || !this._dictSrv.currentDictionary.descriptor) {
+            return false;
+        }
+        if (this._dictSrv.currentDictionary.descriptor.editOnlyNodes !== undefined) {
+            if (this._dictSrv && node) {
+                if (!(this._dictSrv.currentDictionary.descriptor.editOnlyNodes && node && node.isNode)) {
+                    return false;
+                }
+            }
+        }
+        return (node && !node.updating);
+    }
+
+    private _update() {
         let _actRoute = this._route.snapshot;
         while (_actRoute.firstChild) { _actRoute = _actRoute.firstChild; }
         this.showPushpin = _actRoute.data.showPushpin;

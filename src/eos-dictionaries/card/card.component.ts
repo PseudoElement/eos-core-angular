@@ -249,9 +249,9 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     canDeactivate(_nextState?: any): boolean | Promise<boolean> {
         return this._askForSaving();
     }
+
     isEditEnabled(): boolean {
-        let _enabled: boolean;
-        _enabled = (this.node && !this.node.updating);
+
         if (this._dictSrv.currentDictionary.descriptor.editOnlyNodes !== undefined) {
             if (this._dictSrv && this.node) {
                 if (!(this._dictSrv.currentDictionary.descriptor.editOnlyNodes && this.node && this.node.isNode)) {
@@ -259,7 +259,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                 }
             }
         }
-        return _enabled;
+        return (this.node && !this.node.updating);
     }
 
     private _init() {

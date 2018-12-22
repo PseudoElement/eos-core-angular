@@ -11,7 +11,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     readonly fieldsKeysForHighlightNewEnntriesInTheFolder: string[] = ['FOLDERCOLORSTATUS_RECEIVED',
 'FOLDERCOLORSTATUS_FOR_EXECUTION', 'FOLDERCOLORSTATUS_UNDER_CONTROL', 'FOLDERCOLORSTATUS_HAVE_LEADERSHIP',
 'FOLDERCOLORSTATUS_FOR_CONSIDERATION', 'FOLDERCOLORSTATUS_INTO_THE_BUSINESS', 'FOLDERCOLORSTATUS_PROJECT_MANAGEMENT',
-'FOLDERCOLORSTATUS_ON_SIGHT', 'FOLDERCOLORSTATUS_ON_THE_SIGNATURE'];
+'FOLDERCOLORSTATUS_ON_SIGHT', 'FOLDERCOLORSTATUS_ON_THE_SIGNATURE', 'FOLDER_ITEM_LIMIT_RESULT'];
     currTab = 0;
     dataAttachDb;
     inputAttach;
@@ -25,12 +25,38 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     prepDataAttach = {rec: {}};
     constructor( injector: Injector ) {
         super(injector, CABINETS_USER);
+        this.getNameSortCabinets().then( sortName => {
+            CABINETS_USER.fields.map(fields => {
+                if (fields.key === 'CABSORT_ISN_DOCGROUP_LIST') {
+                    fields.options.splice(0, fields.options.length);
+                        sortName.forEach(element => {
+                            fields.options.push({
+                                value: element.ISN_LIST,
+                                title: element.NAME
+                        });
+                    });
+                }
+            });
+        });
         this.init();
         this.prepInputsAttach = this.getObjectInputFields(CABINETS_USER.fieldsChild);
         this.afterInit();
     }
     setTab(i: number) {
         this.currTab = i;
+    }
+
+    getNameSortCabinets(): Promise<any> {
+        const user =  this._userParamsSetSrv.userContextId;
+        const query = {
+            USER_LISTS: {
+                criteries: {
+                    ISN_LCLASSIF: String(user),
+                    CLASSIF_ID: '105'
+                }
+            },
+        };
+      return  this.userParamApiSrv.getData(query);
     }
     afterInit() {
         const allData = this._userParamsSetSrv.hashUserContext;
@@ -49,6 +75,9 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             this.formAttach.controls['rec.HILITE_PRJ_RC_INCREMENT'].enable();
         } else {
             this.formAttach.controls['rec.HILITE_PRJ_RC_INCREMENT'].disable();
+        }
+        if (this.form.controls['rec.FOLDER_ITEM_LIMIT_RESULT'].value === 'null') {
+            this.form.controls['rec.FOLDER_ITEM_LIMIT_RESULT'].patchValue('0');
         }
         this.subscriptions.push(
             this.formAttach.valueChanges
@@ -266,4 +295,10 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                     throw err;
                 });
         }
+        changeMaxNotes(event) {
+            const ChackNan = isNaN(event.target.value);
+            if (ChackNan) {
+             this.form.controls['rec.FOLDER_ITEM_LIMIT_RESULT'].patchValue('0');
+            }
+      }
 }

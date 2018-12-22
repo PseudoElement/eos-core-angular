@@ -17,6 +17,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
     @Input() dictionaryId: string;
     @Input() data: any;
     @Input() editMode: boolean;
+    @Input() isNewRecord: boolean;
     @Input() fieldsDescription: any;
     @Input() dutysList: string[];
     @Input() fullNamesList: string[];

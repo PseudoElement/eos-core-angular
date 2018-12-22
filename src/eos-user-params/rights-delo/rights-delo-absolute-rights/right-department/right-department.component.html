@@ -19,7 +19,7 @@
         <span class="eos-icon eos-icon-bin-forever-blue small"></span>
     </button>
 
-    <div *ngFor="let dep of userDepFuncNumber"
+    <div *ngFor="let dep of listUserDep"
         (click)="selectNode(dep)"
         [ngClass]="{'highlighted': dep.isSelected}">
     {{dep['department'].CLASSIF_NAME}}</div>
