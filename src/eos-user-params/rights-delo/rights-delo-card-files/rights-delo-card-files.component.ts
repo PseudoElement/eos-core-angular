@@ -54,6 +54,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     currentIsnCabinet;
     currentWord;
     flagCurrentDataCabinetDepartment = true;
+    flagCardFileAvailability;
     private quaryDepartment = {
         DEPARTMENT: {
             criteries: {
@@ -95,6 +96,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         .then(data => {
              this.servApi.getData(this.quareUsercard)
              .then(data2 => {
+               if (data2.length > 0) {
                 for (let i = 0; i < data.length; i++) {
                 this.fieldKeysforCardFiles.push([data[i]['DUE'], data[i]['CARD_NAME'], false, false, false]);
                 CARD_FILES_USER.fields.push({
@@ -109,6 +111,10 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                        }
                     }
                 }
+                this.flagCardFileAvailability = true;
+            } else {
+                this.flagCardFileAvailability = false;
+            }
                 this.servApi.getData(this.quaryCabinet).then(data4 => {
                     for (let j = 0; j < data4.length; j++) {
                             this.arrayForCurrentCabinets.push([data4[j]['CABINET_NAME'], data4[j]['ISN_CABINET'], data4[j]['DUE']]);
@@ -126,7 +132,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
               this.isLoading = false;
         });
         });
-        console.log(this.prepareData);
     }
     settingValuesForFieldsCabinets(value) {
                             this.prepDataAttachField(value);
