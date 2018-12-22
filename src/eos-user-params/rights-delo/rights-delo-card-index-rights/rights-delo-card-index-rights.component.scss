@@ -10,15 +10,15 @@
     }
     .right-block-list-side {
         display: inline-block;
-     //   width: 45%;
-        width: 110%;
+        width: 50%;
+      //  width: 110%;
         list-style: none;
         vertical-align: top;
-      //  max-height: 70vh;
+        max-height: 70vh;
         border: 1px solid $border-color-main-theme;
         overflow-x: auto;
         overflow-y: auto;
-      //  margin-left: 20px;
+        margin-left: 20px;
         margin-bottom: 20px;
     }
     .right-side {
@@ -29,6 +29,9 @@
         max-height: 70vh;
         margin-left: 20px;
         margin-bottom: 20px;
+    }
+    .tree-elements {
+        margin-left: 6%;
     }
     .list-card-files {
         list-style: none;

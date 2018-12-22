@@ -7,19 +7,88 @@
     ></eos-rights-delo-header>
     <div class="user-input-group">
 <div class="left-block-list-side">
-<select class="form-control m-font" (change)="selectInputOnChange($event)">
+<!--<select class="form-control m-font" (change)="selectInputOnChange($event)">
     <option *ngFor="let opt of fieldsForSelect" [value]="opt.DUE">{{opt.CARD_NAME}}</option>
-</select>
-<div *ngFor="let item of listNode" (click)="selectNode(item)">
-<eos-dynamic-input
+</select>-->
+<div *ngFor="let item of listNode" (click)="selectNode(item)" [ngClass]="{'highlighted': item.data.isSelected}">
+    <label>
+        <span>{{item.label}}</span>
+    </label>
+<!--<eos-dynamic-input
     [ngClass]="{'highlighted': item.data.isSelected}"
     [input]="inputs[item.key]"
     [form]="form"
     [readonly]="false"
-></eos-dynamic-input>
+></eos-dynamic-input>-->
 </div>
 </div>
-<!--<div class="right-block-list-side"></div>-->
+<div *ngIf="flagToDisplayTheRightSide" class="right-block-list-side">
+    <div class="usual-border border-bottom">
+        <div class="visible-lg-inline-block actions">
+                <button
+                    class="btn btn-primary-light"
+                    tooltip="Добавить"
+                    placement="bottom"
+                    container="body"
+                    containerClass="tooltip-info"
+                    (click)="OpenClassiv()">
+                    <span class="eos-icon eos-icon-plus-blue small"></span>
+                </button>
+                <button
+                    class="btn btn-primary-light"
+                    tooltip="Удалить"
+                    placement="bottom"
+                    container="body"
+                    containerClass="tooltip-info">
+                    <span class="eos-icon eos-icon-minus-blue small"></span>
+                </button>
+        </div>
+    </div>
+    <div *ngFor="let item of treeHierarchyOnTheRightSide">
+        <div (click)="selectNodeOnTheRightSide(item.card)" [ngClass]="{'highlighted': item.card.data.isSelected}">
+        <eos-dynamic-input
+            [input]="inputs[item.card.key]"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        </div>
+        <div *ngIf="item.restrictRegistrationFiling"
+             class="tree-elements"
+             (click)="selectNodeOnTheRightSide(item.restrictRegistrationFiling)"
+             [ngClass]="{'highlighted': item.restrictRegistrationFiling.data.isSelected}">
+            <eos-dynamic-input
+            [input]="inputs[item.restrictRegistrationFiling.key]"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        </div>
+    </div>
+   <!-- <div *ngIf="!flagToDisolayRestrictRegistrationFiling">
+    <div *ngFor="let item of listDocumentGroups">
+        <eos-dynamic-input
+            [input]="inputs[item.key]"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+</div>
+<div *ngIf="flagToDisolayRestrictRegistrationFiling">
+    <div *ngFor="let item of listDocumentGroups">
+        <eos-dynamic-input
+            [input]="inputs[item.key]"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+    <div *ngFor="let item2 of listRestrictRegistrationFiling">
+        <eos-dynamic-input
+            [input]="inputs[item2.key]"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+</div>-->
+</div>
 </div>
 </div>
 
