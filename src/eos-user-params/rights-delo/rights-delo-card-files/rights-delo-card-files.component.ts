@@ -6,7 +6,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { CardFilesDirectoryModalComponent } from './card-files-directory-modal/card-files-directory-modal.component';
 import { EosUtils } from 'eos-common/core/utils';
-import { PARM_SUCCESS_SAVE } from '../shared-rights-delo/consts/eos-user-params.const';
+import { PARM_SUCCESS_SAVE, PARM_CANCEL_WITHOUT_DELETION } from '../shared-rights-delo/consts/eos-user-params.const';
 
 @Component({
     selector: 'eos-rights-delo-card-files',
@@ -55,6 +55,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     currentWord;
     flagCurrentDataCabinetDepartment = true;
     flagCardFileAvailability;
+    globalIndexMainCard;
     private quaryDepartment = {
         DEPARTMENT: {
             criteries: {
@@ -309,6 +310,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             this.oldMainCheckbox = {};
             this.fieldKeysforCardFiles[tmpI][2] = true;
             this.fieldKeysforCardFiles[tmpI][3] = true;
+            this.globalIndexMainCard = tmpI;
             this.oldMainCheckbox[this.fieldKeysforCardFiles[tmpI][0]] = 0;
             this.selectedNode(this.fieldKeysforCardFiles[tmpI][1], null);
         }
@@ -399,12 +401,16 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     removeCardFile() {
         for (let i = 0; i < this.fieldKeysforCardFiles.length; i++) {
             if (this.fieldKeysforCardFiles[i][0] === this.allDataForCurrentUsercard['DUE']) {
-              //  this.prepareData.rec[this.fieldKeysforCardFiles[i][0]] = undefined;
+                if (this.fieldKeysforCardFiles[i][3] === true) {
+                    this.msgSrv.addNewMessage(PARM_CANCEL_WITHOUT_DELETION);
+                } else {
                 this.fieldKeysforCardFiles[i][4] = false;
                 this.newData.rec[this.fieldKeysforCardFiles[i][0]] = 'NO';
+                this.selectedNode(this.fieldKeysforCardFiles[this.globalIndexMainCard][1], null);
                 this.inputs = this.getInputs();
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.subscribeChangeForm();
+                }
             }
         }
     }
