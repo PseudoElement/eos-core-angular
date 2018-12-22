@@ -22,7 +22,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     destroySubsriber: Subject<any> = new Subject();
     constructor(
         private _sandwichSrv: EosSandwichService,
-        private _selectedUser: RtUserSelectService
+        private _selectedUser: RtUserSelectService,
     ) {
         this.isPhoto = false;
         this.chooseTemplate = 'preview';
@@ -63,16 +63,16 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     }
 
     parseSustemParam(parseParam) {
-        return parseParam.data.AV_SYSTEMS.split('');
+        return parseParam.split('');
     }
 
     getInfo(isn, due?): void {
-        this.getObjectForSystems();
         if (!due) {
             this.isPhoto = false;
         }
         this._selectedUser.getUserIsn(isn, due)
         .then((result: [USER_CL, DEPARTMENT]) => {
+            this.getObjectForSystems(result);
            if (result[1].toString() === '[object Object]') {
             this.DueInfo = result[1];
             this.isPhoto =  this.DueInfo.ISN_PHOTO;
@@ -106,22 +106,27 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         }
     }
 
-    getObjectForSystems(): void {
-        const split =  this.parseSustemParam(this.CurrentUser);
+    getObjectForSystems(infoUser): void {
+        const split =  this.parseSustemParam(infoUser[0]['AV_SYSTEMS']);
         const delo = !!(+split[0] && !+split[1]);
         const delo_deloWeb = !!(+split[0] && +split[1]);
         const deloWeb = !!((+split[1] || +split[27]) && !+split[0]);
-        if (delo) {
-            this.fillDeloField(true, false, false, false);
-        }else if (delo_deloWeb) {
-            this.fillDeloField(false, true, false, false);
-        }else if (!delo_deloWeb && deloWeb) {
-            if (+split[1] && !+split[27] && !+split[0]) {
-                this.fillDeloField(false, false, true, false);
-            }else if (!+split[1] && +split[27] && !+split[0]) {
-                this.fillDeloField(false, false, false, true);
+        if (!delo && !delo_deloWeb && !deloWeb) {
+            this.fillDeloField(false, false, false, false);
+        } else {
+            if (delo) {
+                this.fillDeloField(true, false, false, false);
+            }else if (delo_deloWeb) {
+                this.fillDeloField(false, true, false, false);
+            }else if (!delo_deloWeb && deloWeb) {
+                if (+split[1] && !+split[27] && !+split[0]) {
+                    this.fillDeloField(false, false, true, false);
+                }else if (!+split[1] && +split[27] && !+split[0]) {
+                    this.fillDeloField(false, false, false, true);
+                }
             }
         }
+
             split[25] === '1' ?  this._selectedUser.ArraySystemHelper.APM.checked = true :  this._selectedUser.ArraySystemHelper.APM.checked = false;
             split[21] === '1' ?  this._selectedUser.ArraySystemHelper.EOS.checked = true : this._selectedUser.ArraySystemHelper.EOS.checked = false;
             split[2] === '1' ?  this._selectedUser.ArraySystemHelper.SCAN.checked = true : this._selectedUser.ArraySystemHelper.SCAN.checked = false;
