@@ -768,7 +768,7 @@ export class EosDictService {
     }
 
     inclineFields(fields: FieldsDecline): Promise<any[]> {
-        return this.currentDictionary.descriptor.onPreparePrintInfo(fields)
+        return this._dictionaries[0].descriptor.onPreparePrintInfo(fields)
             .catch((err) => this._errHandler(err));
     }
 

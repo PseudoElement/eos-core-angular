@@ -25,7 +25,7 @@ export class CounterNpEditComponent implements OnDestroy, OnInit {
     editValueYear: number;
     nodes: any[];
 
-    notEmptyString = NUMERIC_PATTERN;
+    valuePattern = NUMERIC_PATTERN;
     yearPattern = YEAR_PATTERN;
 
     protected apiSrv: PipRX;
