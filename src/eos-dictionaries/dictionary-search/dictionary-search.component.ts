@@ -80,6 +80,7 @@ export class DictionarySearchComponent implements OnDestroy {
     hasFull: boolean;
     hasYear: boolean;
     type: E_DICT_TYPE;
+    shortFilter = false;
 
     searchForm: FormGroup;
     inputs: InputBase<any>[];
@@ -94,25 +95,6 @@ export class DictionarySearchComponent implements OnDestroy {
     private searchData = {
         srchMode: ''
     };
-
-    get dictId(): string {
-        return this.dictionary.id;
-    }
-
-    get noSearchData(): boolean {
-        return Object.keys(this.searchModel).findIndex((prop) =>
-            this.searchModel[prop] && this.searchModel[prop].trim()) === -1;
-        /*
-        const model = this.getSearchModel();
-        let noData = true;
-        Object.keys(model).forEach((_dict) => {
-            Object.keys(model[_dict]).forEach((_field) => {
-                noData = !(model[_dict][_field] && model[_dict][_field].trim());
-            });
-        });
-        return noData;
-        */
-    }
 
     constructor(
         private _dictSrv: EosDictService,
@@ -144,6 +126,32 @@ export class DictionarySearchComponent implements OnDestroy {
 
         this.subscriptions.push(_dictSrv.dictMode$.subscribe(() => this.initSearchForm()));
         this.subscriptions.push(_dictSrv.dictionary$.subscribe((_d) => this.initSearchForm()));
+    }
+    get dictId(): string {
+        return this.dictionary.id;
+    }
+
+    // @HostListener('window:resize')
+    // onResize() {
+    //     if (this.hasYear) {
+    //         console.log("window.inner", window.innerWidth);
+    //         this.shortFilter = (window.innerWidth < 1000);
+    //     }
+    // }
+
+    get noSearchData(): boolean {
+        return Object.keys(this.searchModel).findIndex((prop) =>
+            this.searchModel[prop] && this.searchModel[prop].trim()) === -1;
+        /*
+        const model = this.getSearchModel();
+        let noData = true;
+        Object.keys(model).forEach((_dict) => {
+            Object.keys(model[_dict]).forEach((_field) => {
+                noData = !(model[_dict][_field] && model[_dict][_field].trim());
+            });
+        });
+        return noData;
+        */
     }
 
     setTab(key: string) {
@@ -244,12 +252,20 @@ export class DictionarySearchComponent implements OnDestroy {
 
             if (this.dictId === DID_NOMENKL_CL) {
                 const yearFilter = this.searchForm.controls['filter.stateYear'];
+                const cb1 = this.searchForm.controls['filter.CB1'];
+                const yv = this._dictSrv.getFilterValue('YEAR');
+                const cv = this._dictSrv.getFilterValue('CB1');
                 this.hasYear = true;
-                if (this._dictSrv.getFilterValue('YEAR')) {
-                    yearFilter.setValue(this._dictSrv.getFilterValue('YEAR'));
+                if (yv) {
+                    yearFilter.setValue(yv);
                 } else {
                     this.numberFilter(yearFilter.value);
                 }
+
+                if (cv) {
+                    cb1.setValue(cv);
+                }
+
             }
 
             if (this.dictId === 'departments') {
