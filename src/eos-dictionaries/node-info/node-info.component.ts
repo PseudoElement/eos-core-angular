@@ -12,7 +12,10 @@ export class NodeInfoComponent extends BaseNodeInfoComponent {
 
         const field = this.fieldsDescriptionFull.rec[key];
         if (field.type === this.fieldTypes.select && field.options.length) {
-            res = field.options.find((op) => op.value === res).title;
+            const f = field.options.find((op) => op.value === res);
+            if (f) {
+                res = f.title;
+            }
         }
 
         return res;
