@@ -204,7 +204,7 @@ export class CounterNpEditComponent implements OnDestroy, OnInit {
                     YEAR_NUMBER: Number(this.editValueYear),
                     CURRENT_NUMBER: Number(this.editValueNum),
                 },
-                requestUri: 'NP_NUMCREATIOIN',
+                requestUri: 'NP_NUMCREATION',
             },
         ];
 
