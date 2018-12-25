@@ -11,7 +11,7 @@ import { EosUtils } from 'eos-common/core/utils';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
 import { UserParamsService } from '../../../shared/services/user-params.service';
 import { USER_PARMS } from 'eos-rest';
-
+import { WaitClassifService } from 'app/services/waitClassif.service';
 @Injectable()
 export class BaseUserSrv implements OnDestroy, OnInit {
     @Input() btnDisabled;
@@ -45,11 +45,13 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     _currentFormStatus;
     isLoading: boolean = false;
     _userParamsSetSrv: UserParamsService;
+    _waitClassifSrv: WaitClassifService;
     private _fieldsType = {};
     constructor(
         injector: Injector,
         paramModel,
     ) {
+        this._waitClassifSrv = injector.get(WaitClassifService);
         this._userParamsSetSrv = injector.get(UserParamsService);
         this.constUserParam = paramModel;
         this.titleHeader = this.constUserParam.title;

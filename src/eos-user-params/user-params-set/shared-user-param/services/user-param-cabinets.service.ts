@@ -4,7 +4,7 @@ import { CABINETS_USER } from '../consts/cabinets.consts';
 import { FormGroup } from '@angular/forms';
 import { EosUtils } from 'eos-common/core/utils';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
-
+import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 @Injectable()
 export class UserParamCabinetsSrv extends BaseUserSrv {
     readonly fieldGroupsForCabinets: string[] = ['Папки', 'Поручения', 'Информер'];
@@ -21,9 +21,12 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     isChangeFormAttach = false;
     flagDisabledHiliteResolutionIncrement = false;
     flagDisabledHilitePrjRcIncrement = false;
+    controller = false;
     formAttach: FormGroup;
     prepDataAttach = {rec: {}};
-    constructor( injector: Injector ) {
+    constructor(
+        injector: Injector,
+         ) {
         super(injector, CABINETS_USER);
         this.getNameSortCabinets().then( sortName => {
             CABINETS_USER.fields.map(fields => {
@@ -36,14 +39,30 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                         });
                     });
                 }
+
+            });
+            this.init();
+            this.prepInputsAttach = this.getObjectInputFields(CABINETS_USER.fieldsChild);
+            this.afterInit();
+            this.getControlAuthor().then(data => {
+                if (data) {
+                    this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(data[0]['CLASSIF_NAME']), {emitEvent: false});
+                }
             });
         });
-        this.init();
-        this.prepInputsAttach = this.getObjectInputFields(CABINETS_USER.fieldsChild);
-        this.afterInit();
     }
     setTab(i: number) {
         this.currTab = i;
+    }
+    getControlAuthor(): Promise<any> {
+        const ControlAuthor = this._userParamsSetSrv.hashUserContext['RESOLUTION_CONTROLLER'];
+        if (ControlAuthor === null) {
+            this.controller = false;
+            return Promise.resolve();
+        } else {
+            this.controller = true;
+            return  this._userParamsSetSrv.getDepartmentFromUser(ControlAuthor);
+        }
     }
 
     getNameSortCabinets(): Promise<any> {
@@ -57,6 +76,23 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             },
         };
       return  this.userParamApiSrv.getData(query);
+    }
+    openClassifDepartment() {
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
+        .then((data: string) => {
+            return this._userParamsSetSrv.getDepartmentFromUser(data);
+        }).then(data => {
+            if  (data) {
+                this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(data[0]['CLASSIF_NAME']));
+            }
+        })
+        .catch(error => {
+
+        });
+    }
+
+    showInfoUser() {
+        console.log('show info');
     }
     afterInit() {
         const allData = this._userParamsSetSrv.hashUserContext;
@@ -77,7 +113,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             this.formAttach.controls['rec.HILITE_PRJ_RC_INCREMENT'].disable();
         }
         if (this.form.controls['rec.FOLDER_ITEM_LIMIT_RESULT'].value === 'null') {
-            this.form.controls['rec.FOLDER_ITEM_LIMIT_RESULT'].patchValue('0');
+            this.form.controls['rec.FOLDER_ITEM_LIMIT_RESULT'].patchValue('0', {emitEvent: false});
         }
         this.subscriptions.push(
             this.formAttach.valueChanges
@@ -101,6 +137,8 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 this._currentFormStatus = status;
             })
         );
+        console.log(allData);
+        console.log(this.form);
     }
     prepDataAttachField(data) {
         for (const key of Object.keys(data)) {
@@ -240,8 +278,8 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             let valueDef = '';
             const arrayOfKeysFoldercolorstatus = ['FOLDERCOLORSTATUS_RECEIVED', 'FOLDERCOLORSTATUS_FOR_EXECUTION',
         'FOLDERCOLORSTATUS_UNDER_CONTROL', 'FOLDERCOLORSTATUS_HAVE_LEADERSHIP', 'FOLDERCOLORSTATUS_FOR_CONSIDERATION',
-    'FOLDERCOLORSTATUS_INTO_THE_BUSINESS', 'FOLDERCOLORSTATUS_PROJECT_MANAGEMENT', 'FOLDERCOLORSTATUS_ON_SIGHT',
-'FOLDERCOLORSTATUS_ON_THE_SIGNATURE'];
+        'FOLDERCOLORSTATUS_INTO_THE_BUSINESS', 'FOLDERCOLORSTATUS_PROJECT_MANAGEMENT', 'FOLDERCOLORSTATUS_ON_SIGHT',
+        'FOLDERCOLORSTATUS_ON_THE_SIGNATURE'];
             const arrayOfKeysHiliteReolution = ['HILITE_RESOLUTION_BOOLEAN', 'HILITE_RESOLUTION_INCREMENT'];
             const arrayOfKeysHilitePrjRc = ['HILITE_PRJ_RC_BOOLEAN', 'HILITE_PRJ_RC_INCREMENT'];
             const req = [];
@@ -294,5 +332,8 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 .catch(err => {
                     throw err;
                 });
+        }
+        get getClass() {
+            return this.controller ? 'eos-icon eos-icon-info-blue small' : 'eos-icon eos-icon-folder-blue small';
         }
 }
