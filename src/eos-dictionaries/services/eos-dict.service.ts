@@ -977,9 +977,9 @@ export class EosDictService {
     private _reorderList(dictionary: EosDictionary) {
         if (dictionary) {
             if (/* !this.viewParameters.searchResults && */ this.viewParameters.userOrdered && this.treeNode) {
-                this._currentList = dictionary.reorderList(this._currentList, this.treeNode.id);
+                this._currentList = dictionary.reorderList(this._currentList, this.viewParameters.showAllSubnodes, this.treeNode.id);
             } else {
-                this._currentList = dictionary.reorderList(this._currentList);
+                this._currentList = dictionary.reorderList(this._currentList, this.viewParameters.showAllSubnodes);
             }
         }
         this._currentList$.next(this._currentList);
