@@ -23,9 +23,11 @@ export class NodeFieldComponent {
 
     currentValue(): string {
         let value = this.field.value;
-        const optValue = this.field.options.find((option) => option.value === this.field.value);
-        if (optValue) {
-            value = optValue.title;
+        if (value !== undefined && value !== null) {
+            const optValue = this.field.options.find((option) => option.value === this.field.value);
+            if (optValue) {
+                value = optValue.title;
+            }
         }
         return value;
     }

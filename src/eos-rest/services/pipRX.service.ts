@@ -150,7 +150,7 @@ export class PipRX extends PipeUtils {
             url += '&_more_json=' + JSON.stringify(r._moreJSON);
         }
 
-        if (ids !== undefined) {
+        if (ids !== undefined && ids.length) {
             const idss = PipeUtils.chunkIds(PipeUtils.distinctIDS(ids instanceof Array ? ids : [ids]));
             for (let i = 0; i < idss.length; i++) {
                 // encode id because of hash issue

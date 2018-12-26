@@ -566,7 +566,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         const childrenTitles: string[] = [];
         let p: Promise<any> = Promise.resolve(false);
 
-        this._dictSrv.getMarkedNodes().forEach((node) => {
+        this._dictSrv.getMarkedNodes(true).forEach((node) => {
             if (node.parent && node.parent.isDeleted) {
                 this._msgSrv.addNewMessage(DANGER_LOGICALY_RESTORE_ELEMENT);
                 node.marked = false;

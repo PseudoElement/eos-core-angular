@@ -121,7 +121,8 @@ export class EosDictService {
         if (_storageData && dictionary) {
             this._customFields = _storageData;
             if (this._customFields[dictionary.id]) {
-                return this._customFields[dictionary.id];
+                const fies: IFieldView[] = this._customFields[dictionary.id];
+                return fies;
             } else {
                 return [];
             }
@@ -271,8 +272,8 @@ export class EosDictService {
         return this.filters.hasOwnProperty(filterName) ? this.filters[filterName] : null;
     }
 
-    getMarkedNodes(): EosDictionaryNode[] {
-        return this.currentDictionary.getMarkedNodes();
+    getMarkedNodes(recursive = false): EosDictionaryNode[] {
+        return this.currentDictionary.getMarkedNodes(recursive);
     }
 
     isDataChanged(data: any, original: any): boolean {
@@ -389,9 +390,13 @@ export class EosDictService {
                 this._selectTreeNode(node);
                 return node;
             }).then((n) => {
-                this._reloadList().then(() => {
+                if (this.dictMode !== 0) {
+                    this._reloadList().then(() => {
+                        this.updateViewParameters({updatingList: false});
+                    });
+                } else {
                     this.updateViewParameters({updatingList: false});
-                });
+                }
                 return n;
             })
             .catch(err => this._errHandler(err));

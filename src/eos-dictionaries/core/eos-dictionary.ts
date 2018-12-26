@@ -419,7 +419,8 @@ export class EosDictionary {
     getListView(customFields: IFieldView[]) {
         const fields = this.descriptor.record.getListView({});
         const updatefields = fields.concat(customFields);
-        this.descriptor.getFullRelated()
+        this.descriptor.getRelatedFields(updatefields.filter(i => i.dictionaryId)
+                                .map(i => i.dictionaryId ? i.dictionaryId : null))
             .then((related) => {
                 updatefields.forEach((field) => {
                     if ((field.dictionaryId !== undefined)) {

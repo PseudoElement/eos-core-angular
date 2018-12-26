@@ -114,6 +114,10 @@ export class RecordDescriptor {
         return this._bindData(this.getFieldSet(E_FIELD_SET.list), data);
     }
 
+    getCustomListView(data: any): IFieldView[] {
+        return this._bindData(this.getFieldSet(E_FIELD_SET.allVisible), data);
+    }
+
     getInfoView(data: any): IFieldView[] {
         return this._bindData(this.getFieldSet(E_FIELD_SET.info), data);
     }
