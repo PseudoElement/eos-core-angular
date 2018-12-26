@@ -71,7 +71,8 @@ export class EosDataConvertService {
                                         isUnique: descr[_key].isUnique,
                                         uniqueInDict: descr[_key].uniqueInDict,
                                         forNode: descr[_key].forNode,
-                                        value: data[_dict][descr[_key].foreignKey],
+                                        value: data[_dict][descr[_key].foreignKey]
+                                            || descr[_key].default,
                                         length: descr[_key].length,
                                         readonly: descr[_key].readonly,
                                         disabled: descr[_key].readonly || !editMode,
