@@ -24,7 +24,6 @@ export class NodeAbsoluteRight {
     }
 
     set value (v: number) {
-        console.log(v);
         if (v === this._valueDb) {
             this.touched = false;
         } else {

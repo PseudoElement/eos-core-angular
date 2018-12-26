@@ -179,11 +179,11 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         all: new FormControl(this.selectedNode.value ? this.arrNEWDeloRight[+this.selectedNode.key] : '0')
                 });
                 setTimeout(() => {
-                    this.selectedNode.value ? this.formGroupAll.enable() : this.formGroupAll.disable();
+                    this.selectedNode.value ? this.formGroupAll.enable({emitEvent: false}) : this.formGroupAll.disable({emitEvent: false});
                 }, 0);
                 this.subs['all'] = this.formGroupAll.valueChanges
                     .subscribe(data => {
-                        this.arrNEWDeloRight[+this.selectedNode.key] = data['all'];
+                        this.selectedNode.value = +data['all'];
                         this.checkChange();
                     });
                 this.rightContent = true;
