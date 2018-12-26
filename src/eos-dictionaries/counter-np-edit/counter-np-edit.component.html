@@ -43,6 +43,8 @@
                        id="val_number"
                        name="val_number"
                        type="number"
+                       pattern="^[0-9]+"
+                       min="0" oninput="validity.valid||(value='');"
                        placeholder="Значение"
                        autocomplete="off"
                        required>
