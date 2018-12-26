@@ -104,9 +104,9 @@
                 color: #2196f3;
                 overflow: hidden;
                 max-height: 32px;
+                cursor: default;
             }
         }
-
 
     }
     .rt-sustem{
@@ -120,7 +120,6 @@
                 left: 92%;
             }
         }
-
         .sustem-wr{
         display: flex;
         justify-content: end;
@@ -130,12 +129,10 @@
         transition: 0.4s;
     }
     .opened{
-        height: 500px;
+        height: 525px;
         max-height: 100%;
     }
-
-
-    }
+}
 }
 
 .teh-user{

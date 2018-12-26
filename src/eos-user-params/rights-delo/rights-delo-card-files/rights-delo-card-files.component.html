@@ -73,6 +73,7 @@
                 ></eos-dynamic-input>
         <span></span>
         </div>
+        <div *ngIf="flagCardFileAvailability">
         <ul class="list-card-files">
             <li *ngFor="let key of arrayKeysCheckboxforCabinets; let i = index;">
                     <eos-dynamic-input
@@ -82,6 +83,7 @@
                     ></eos-dynamic-input>
         </li>
         </ul>
+        </div>
         </div>
         <div *ngIf="!flagCurrentDataCabinetDepartment">
                 <span class="the-inscription-of-absence-cabinets">Кабинетов нет!</span>
