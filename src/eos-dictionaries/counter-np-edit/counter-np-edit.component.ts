@@ -130,7 +130,9 @@ export class CounterNpEditComponent implements OnDestroy, OnInit {
             //         'CURRENT_NUMBER': 12,
             //     },
             // ];
-            this.nodes = data;
+            this.nodes = data.filter(d => {
+                return d['BASE_ID'] === baseid;
+            });
             this.isUpdating = false;
             return data;
         }).catch(err => this.errHandler(err));
