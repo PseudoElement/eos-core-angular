@@ -25,7 +25,7 @@ export class CounterNpEditComponent implements OnDestroy, OnInit {
     yearPattern = YEAR_PATTERN;
 
     protected apiSrv: PipRX;
-    private dep_node: any;
+    private _dep_node = {};
 
     constructor(
         public bsModalRef: BsModalRef,
@@ -41,9 +41,9 @@ export class CounterNpEditComponent implements OnDestroy, OnInit {
 
     init(baseid: string) {
         this.baseId = baseid;
-        // this.isMain = isMain;
+        this._dep_node['CLASSIF_NAME'] = '...';
         this.apiSrv.read({'DEPARTMENT': this.baseId}).then((data) => {
-            this.dep_node = data[0];
+            this._dep_node = data[0];
         });
 
         const query = {criteries: {BASE_ID: this.baseId}};
@@ -105,7 +105,7 @@ export class CounterNpEditComponent implements OnDestroy, OnInit {
         if (this.baseId === NUMCREATION_MAIN_NODE_ID) {
             return 'Главный счетчик';
         } else {
-            return this.dep_node['CLASSIF_NAME'];
+            return this._dep_node['CLASSIF_NAME'];
         }
     }
 
