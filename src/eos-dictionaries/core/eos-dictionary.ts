@@ -464,9 +464,9 @@ export class EosDictionary {
         this._userOrder[nodeId] = order;
     }
 
-    reorderList(nodes: EosDictionaryNode[], parentId?: string): EosDictionaryNode[] {
+    reorderList(nodes: EosDictionaryNode[], subnodesCtrl: boolean, parentId?: string): EosDictionaryNode[] {
         if (this._userOrdered) {
-            return this._doUserOrder(nodes, parentId);
+            return this._doUserOrder(nodes, parentId, subnodesCtrl);
         } else {
             return this._orderByField(nodes);
         }
@@ -569,27 +569,63 @@ export class EosDictionary {
         }
     }
 
-    private _doUserOrder(nodes: EosDictionaryNode[], parentId: string): EosDictionaryNode[] {
+    private _doUserOrder(nodes: EosDictionaryNode[], parentId: string, subnodesCtrl: boolean): EosDictionaryNode[] {
         const userOrderedIDs = this._userOrder ? this._userOrder[parentId] : null;
         if (userOrderedIDs) {
-            const orderedNodes = [];
-            userOrderedIDs.forEach((nodeId) => {
+            let orderedNodes = [];
+            for (let i = 0; i < userOrderedIDs.length; i++  ) {
+                const nodeId = userOrderedIDs[i];
                 const node = nodes.find((item) => item.id === nodeId);
                 if (node) {
                     orderedNodes.push(node);
                 }
-            });
-            nodes.forEach((node) => {
+            }
+
+            for (let i = 0; i < nodes.length; i++) {
+                const node = nodes[i];
                 if (orderedNodes.findIndex((item) => item.id === node.id) === -1) {
                     orderedNodes.push(node);
                 }
+            }
 
-            });
+            if (subnodesCtrl) {
+                orderedNodes = this._resortSubTrees(orderedNodes);
+            }
             return orderedNodes;
         }
         return nodes;
     }
 
+    private _resortSubTrees(nodes: EosDictionaryNode[]) {
+        const orderedNodes = [];
+        nodes = nodes.reverse();
+        while (nodes.length) {
+            const node: EosDictionaryNode = nodes.shift();
+            let found = false;
+            for (let i = 0; i < orderedNodes.length; i++) {
+                if (node.originalParentId === orderedNodes[i].originalId) {
+                    orderedNodes.splice(i, 0, node);
+                    found = true;
+                    break;
+                }
+            }
+            if (found) {
+                continue;
+            }
+            for (let i = 0; i < nodes.length; i++) {
+                if (node.originalParentId === nodes[i].originalId) {
+                    nodes.push(node);
+                    found = true;
+                    break;
+                }
+            }
+            if (found) {
+                continue;
+            }
+            orderedNodes.push(node);
+        }
+        return orderedNodes.reverse();
+    }
     private _orderByField(nodes: EosDictionaryNode[], orderBy?: IOrderBy): EosDictionaryNode[] {
         const _orderBy = orderBy || this._orderBy; // DON'T USE THIS IN COMPARE FUNC!!! IT'S OTHER THIS!!!
 

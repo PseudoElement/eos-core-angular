@@ -59,7 +59,7 @@ export class RtUserSelectService {
             checked: false
         },
         MobNet: {
-            label: 'Мобильный интернет',
+            label: 'Мобильный кабинет',
             checked: false
         },
         Informer: {

@@ -102,9 +102,25 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
                 break;
             case 'person':
                 _criteries['IS_NODE'] = '1';
+
+                if (data.person['printInfo.NAME']) {
+                    _criteries['CB_PRINT_INFO.NAME'] = '"' + data.person['printInfo.NAME'].trim() + '"';
+                }
+                if (data.person['printInfo.SURNAME']) {
+                    _criteries['CB_PRINT_INFO.SURNAME'] = '"' + data.person['printInfo.SURNAME'].trim() + '"';
+                }
+                if (data.person['printInfo.PATRON']) {
+                    _criteries['CB_PRINT_INFO.PATRON'] = '"' + data.person['printInfo.PATRON'].trim() + '"';
+                }
+
                 break;
             case 'cabinet':
-                _criteries['department.cabinet.CABINET_NAME'] = '"' + data.cabinet['CABINET_NAME'].trim() + '"';
+                if (data.cabinet['CABINET_NAME']) {
+                    _criteries['department.cabinet.CABINET_NAME'] = '"' + data.cabinet['CABINET_NAME'].trim() + '"';
+                }
+                if (data.cabinet['fullCabinet']) {
+                    _criteries['department.cabinet.FULLNAME'] = '"' + data.cКabinet['fullCabinet'].trim() + '"';
+                }
                 break;
         }
         if (mode !== 'cabinet') {

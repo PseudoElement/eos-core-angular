@@ -39,14 +39,20 @@
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
         <div class="row-wrapper space-between">
+            <div>
+            <label>ВВОД В ДЕЙСТВИЕ</label>
             <eos-dynamic-input *ngIf="inputs['rec.YEAR_NUMBER']"
                                [input]="inputs['rec.YEAR_NUMBER']"
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
+            </div>
+            <div>
+            <label>ЗАВЕРШЕНИЕ</label>
             <eos-dynamic-input *ngIf="inputs['rec.END_YEAR']"
                                [input]="inputs['rec.END_YEAR']"
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
+            </div>
             <eos-dynamic-input *ngIf="inputs['rec.ARCH_DATE']"
                                [input]="inputs['rec.ARCH_DATE']"
                                [form]="form"

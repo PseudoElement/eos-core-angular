@@ -9,13 +9,13 @@
     </div>
     <div [ngClass]="{'hidden': !hasYear}"
          class="year-filter-wrapper">
-        <span class="text">Состояние на:</span>
+        <span class="text" *ngIf="!shortFilter">Состояние на:</span>
         <span><eos-dynamic-input
                                  [input]="inputs[1]"
                                  [readonly]=inputs[1].readonly
                                  [form]="searchForm"></eos-dynamic-input>
         </span>
-        <span class="text">с переходящими</span>
+        <span class="text" *ngIf="!shortFilter">с переходящими</span>
         <span><eos-dynamic-input
             [input]="inputs[2]"
             [readonly]=inputs[2].readonly
@@ -110,7 +110,6 @@
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['CODE']"
-                                _.__.____
                                 placeholder="{{fieldsDescription.rec['CODE']?.title}}"
                                 maxlength="{{fieldsDescription.rec['CODE']?.length}}">
                             <a class="clear-btn"
@@ -153,6 +152,20 @@
                 </div>
                 <div class="second-col">
                     <div class="form-group unimportant-text">
+                        <label class="s-font" for="FIO">{{fieldsDescription.rec['SURNAME']?.title}}</label>
+                        <div class="search-fld">
+                            <input id="FIO"
+                                   name="FIO"
+                                   type="text"
+                                   class="form-control light"
+                                   [(ngModel)]="searchModel['SURNAME']"
+                                   placeholder="{{fieldsDescription.rec['SURNAME']?.title}}">
+                            <a class="clear-btn"
+                               [ngClass]="{'hide': !searchModel['SURNAME']}"
+                               (click)="searchModel['SURNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        </div>
+                    </div>
+                    <div class="form-group unimportant-text">
                         <label class="s-font"
                             for="SURNAME">Фамилия</label>
                         <div class="search-fld">
@@ -162,8 +175,7 @@
                                 class="form-control light"
                                 [(ngModel)]="searchModel['printInfo.SURNAME']"
                                 placeholder="Фамилия"
-                                maxlength="64"
-                                readonly>
+                                maxlength="64">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['printInfo.SURNAME']}"
                                 (click)="searchModel['printInfo.SURNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
@@ -180,8 +192,7 @@
                                     class="form-control light"
                                     [(ngModel)]="searchModel['printInfo.NAME']"
                                     placeholder="Имя"
-                                    maxlength="64"
-                                    readonly>
+                                    maxlength="64">
                                 <a class="clear-btn"
                                     [ngClass]="{'hide': !searchModel['printInfo.NAME']}"
                                     (click)="searchModel['printInfo.NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
@@ -197,8 +208,7 @@
                                     class="form-control light"
                                     [(ngModel)]="searchModel['printInfo.PATRON']"
                                     placeholder="Отчество"
-                                    maxlength="64"
-                                    readonly>
+                                    maxlength="64">
                                 <a class="clear-btn"
                                     [ngClass]="{'hide': !searchModel['printInfo.PATRON']}"
                                     (click)="searchModel['printInfo.PATRON'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
@@ -249,8 +259,7 @@
                                 class="form-control light"
                                 [(ngModel)]="searchModel['NOTE']"
                                 placeholder="{{fieldsDescription.rec['NOTE']?.title}}"
-                                maxlength="{{fieldsDescription.rec['NOTE']?.length}}"
-                                readonly>
+                                maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['NOTE']}"
                                 (click)="searchModel['NOTE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
@@ -279,6 +288,21 @@
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['CABINET_NAME']}"
                             (click)="searchModel['CABINET_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                    </div>
+                </div>
+                <div class="form-group unimportant-text">
+                    <label class="s-font"
+                           for="fullCabinet">{{fieldsDescription.rec['fullCabinet']?.title}}</label>
+                    <div class="search-fld">
+                        <input id="fullCabinet"
+                               name="fullCabinet"
+                               type="text"
+                               class="form-control light"
+                               [(ngModel)]="searchModel['fullCabinet']"
+                               placeholder="{{fieldsDescription.rec['fullCabinet']?.title}}">
+                        <a class="clear-btn"
+                           [ngClass]="{'hide': !searchModel['fullCabinet']}"
+                           (click)="searchModel['fullCabinet'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
                     </div>
                 </div>
             </form>
@@ -367,8 +391,7 @@
                                 class="form-control light"
                                 [(ngModel)]="searchModel['NOTE']"
                                 placeholder="{{fieldsDescription.rec['NOTE']?.title}}"
-                                maxlength="{{fieldsDescription.rec['NOTE']?.length}}"
-                                readonly>
+                                maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['NOTE']}"
                                 (click)="searchModel['NOTE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
@@ -448,8 +471,7 @@
                             class="form-control light"
                             [(ngModel)]="searchModel['NOTE']"
                             placeholder="{{fieldsDescription.rec['NOTE']?.title}}"
-                            maxlength="{{fieldsDescription.rec['NOTE']?.length}}"
-                            readonly>
+                            maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['NOTE']}"
                             (click)="searchModel['NOTE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
