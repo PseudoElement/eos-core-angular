@@ -19,6 +19,17 @@
         <span class="eos-icon eos-icon-bin-forever-blue small"></span>
     </button>
 
+    <div *ngIf="selectedNode && selectedNode.contentProp === 8">
+        <label class="checkbox">
+            <input type="checkbox"
+            [checked]="selectedNode.value === 2 ? true : false"
+            hide
+            (change)="markedSendPrj($event)">
+            <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+            Разрешить операцию рассылки проекта резолюции
+        </label>
+    </div>
+
     <div *ngFor="let dep of listUserDep"
         (click)="selectNode(dep)"
         [ngClass]="{'highlighted': dep.isSelected}">
