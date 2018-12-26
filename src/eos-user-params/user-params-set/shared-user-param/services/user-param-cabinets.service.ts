@@ -295,10 +295,4 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                     throw err;
                 });
         }
-        changeMaxNotes(event) {
-            const ChackNan = isNaN(event.target.value);
-            if (ChackNan) {
-             this.form.controls['rec.FOLDER_ITEM_LIMIT_RESULT'].patchValue('0');
-            }
-      }
 }

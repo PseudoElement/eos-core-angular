@@ -70,17 +70,19 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
     }
 
     fillValueAccessField(fields: IInputParamControl[]) {
+        const accessArray = [];
         const arr = this._userParamSrv.curentUser['ACCESS_SYSTEMS'];
         const delo = !!(+arr[0] && !+arr[1]);
         const delo_deloWeb = !!(+arr[0] && +arr[1]);
         const deloWeb = !!((+arr[1] || +arr[27]) && !+arr[0]);
-
-        fields.forEach(f => {
+        fields.forEach(field => {
+            const f = Object.assign({}, field);
+            accessArray.push(f);
             switch (f['key']) {
                 case 'delo_web':
                     if (deloWeb) {
                         f['value'] = true;
-                    } else {
+                    } else if (delo || delo_deloWeb) {
                         f['disabled'] = true;
                     }
                     break;
@@ -109,7 +111,8 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                     f['value'] = !!+arr[f['key']];
             }
         });
-    }
+        return accessArray;
+     }
     dateToString(date: Date) {
         return this._dateToString(date);
     }
