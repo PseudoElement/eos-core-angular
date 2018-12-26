@@ -50,20 +50,17 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
 
     init() {
         this.curentUser = this._userParamsSetSrv.curentUser;
-        this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split('');
+        this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split(''); // проверка на наличие массива, если нету , то создать новый
         this.arrNEWDeloRight = this.curentUser['DELO_RIGHTS'].split('');
         this.fields = this._writeValue(ABSOLUTE_RIGHTS);
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
         this.listRight = this._createList(ABSOLUTE_RIGHTS);
         this.subForm = this.form.valueChanges
-            .subscribe(data => {
-                for (const key in  data) {
-                    if (+this.arrNEWDeloRight[key] > 1 && data[key]) {
-                        continue;
-                    }
-                this.arrNEWDeloRight[key] = (+data[key]).toString();
-                }
+            .subscribe(() => {
+                this.listRight.forEach(node => {
+                    this.arrNEWDeloRight[+node.key] = node.value.toString();
+                });
                 this.checkChange();
                 setTimeout(() => {
                     this._viewContent();
@@ -98,13 +95,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
 
         this.apiSrv.setData(this.queryForSave)
-        .then(data => {
+        .then(() => {
             this.queryForSave = [];
             this.btnDisabled = true;
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-        })
-        .catch(e => {
-            console.log(e);
         });
     }
     cancel() {
@@ -123,12 +117,12 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this.selectNode(item);
         }
         if (event.target.tagName === 'SPAN') { // click to checkbox
-            const value = !item.value;
+            const value = !(+item.value);
             if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department || E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor || E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject)) {
                 this._deleteAllDep(item);
             }
 
-            item.value = value;
+            item.value = +value;
 
             if (item !== this.selectedNode && item.isCreate) {
                 this.selectNode(item);
@@ -185,11 +179,11 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         all: new FormControl(this.selectedNode.value ? this.arrNEWDeloRight[+this.selectedNode.key] : '0')
                 });
                 setTimeout(() => {
-                    this.selectedNode.value ? this.formGroupAll.enable() : this.formGroupAll.disable();
+                    this.selectedNode.value ? this.formGroupAll.enable({emitEvent: false}) : this.formGroupAll.disable({emitEvent: false});
                 }, 0);
                 this.subs['all'] = this.formGroupAll.valueChanges
                     .subscribe(data => {
-                        this.arrNEWDeloRight[+this.selectedNode.key] = data['all'];
+                        this.selectedNode.value = +data['all'];
                         this.checkChange();
                     });
                 this.rightContent = true;
@@ -207,7 +201,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     private _createList(constanta: IInputParamControl[]): NodeAbsoluteRight[] {
         const fields = [];
         constanta.forEach((node: IInputParamControl) => {
-            fields.push(new NodeAbsoluteRight(node, !!+this.arrDeloRight[+node['key']], this.form.get(node['key'])));
+            fields.push(new NodeAbsoluteRight(node, +this.arrDeloRight[+node['key']], this.form.get(node['key'])));
         });
         return fields;
     }
