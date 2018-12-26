@@ -175,3 +175,8 @@ export const DANGER_EDIT_YEAR_INVALID: IMessage = {
     title: 'Ошибка редактирования',
     msg: 'Неверно задан год'
 };
+export const DANGER_NUMCREATION_NP_CHANGE: IMessage = {
+    type: 'danger',
+    title: 'Предупреждение: ',
+    msg: 'Указанное значение или значения больше ранее уже использовались в нумерации НП. Изменение значения счетчика невозможно.'
+};

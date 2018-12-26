@@ -4,6 +4,10 @@ import {BsModalRef} from 'ngx-bootstrap';
 import {PipRX} from '../../eos-rest';
 import {EosDictService} from '../services/eos-dict.service';
 import { YEAR_PATTERN, NUMERIC_PATTERN } from 'eos-common/consts/common.consts';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { DANGER_NUMCREATION_NP_CHANGE } from 'eos-dictionaries/consts/messages.consts';
+import { CONFIRM_NUMCREATION_NP_CHANGE } from 'app/consts/confirms.const';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 
 export const NUMCREATION_MAIN_NODE_ID = '0.';
@@ -31,6 +35,8 @@ export class CounterNpEditComponent implements OnDestroy, OnInit {
         public bsModalRef: BsModalRef,
         apiSrv: PipRX,
         private _dictSrv: EosDictService,
+        private _msgSrv: EosMessageService,
+        private _confirmSrv: ConfirmWindowService,
     ) {
         this.apiSrv = apiSrv;
         this.isUpdating = true;
@@ -66,21 +72,59 @@ export class CounterNpEditComponent implements OnDestroy, OnInit {
     }
 
     save() {
-        const chr = [
-            {
-                method: 'POST',
-                data: {
-                    BASE_ID: this.baseId,
-                    YEAR_NUMBER: Number(this.editValueYear),
-                    CURRENT_NUMBER: Number(this.editValueNum),
-                },
-                requestUri: 'NP_NUMCREATION',
-            },
-        ];
+        const query = {criteries: {YEAR_NUMBER: String(this.editValueYear)}};
+        const req = {['NP_NUMCREATION']: query};
+        this.editValueNum = Number(this.editValueNum);
+        const isValid = true;
+        this.apiSrv.read(req).then((data) => {
+            // TODO: check exists years somewhere (ticket 96979)
+            // for (let i = 0; i <= data.length; i++) {
+            //     const r = data[i];
+            //     let val: number;
+            //     if (!r) {
+            //         continue;
+            //     }
+            //     val = Number(r['CURRENT_NUMBER']);
+            //     if (val >= this.editValueNum) {
+            //         isValid = false;
+            //         break;
+            //     }
+            // }
+            return data;
+        }).then((data) => {
+            if (isValid) {
+                const old_value = this._getNodeValue(this.editValueYear);
+                const _confrm = Object.assign({}, CONFIRM_NUMCREATION_NP_CHANGE);
+                _confrm.body = _confrm.body.replace('{{old_value}}', String(old_value))
+                                .replace('{{new_value}}', String(this.editValueNum));
 
-        this.updateRecord(chr).then(() => {
-            this.init(this.baseId);
+                this._confirmSrv
+                    .confirm(_confrm)
+                    .then((confirmed: boolean) => {
+                        if (confirmed) {
+                            const chr = [
+                                {
+                                    method: 'POST',
+                                    data: {
+                                        BASE_ID: this.baseId,
+                                        YEAR_NUMBER: Number(this.editValueYear),
+                                        CURRENT_NUMBER: Number(this.editValueNum),
+                                    },
+                                    requestUri: 'NP_NUMCREATION',
+                                },
+                            ];
+                            this.updateRecord(chr).then(() => {
+                                this.init(this.baseId);
+                            }).catch(err => this.errHandler(err));
+                        }
+                    })
+                    .catch(err => this.errHandler(err));
+            } else {
+                this._msgSrv.addNewMessage(DANGER_NUMCREATION_NP_CHANGE);
+            }
         }).catch(err => this.errHandler(err));
+
+
     }
 
     updateRecord(chr: any/*originalData: any, updates: any*/): Promise<any> {
@@ -118,4 +162,15 @@ export class CounterNpEditComponent implements OnDestroy, OnInit {
         this._dictSrv.errHandler(err);
         this.hideModal();
     }
+
+    private _getNodeValue(editValueYear: number): number {
+        let res = 0;
+        const node = this.nodes.find(n => n.YEAR_NUMBER === this.editValueYear);
+        if (node) {
+            res = node.CURRENT_NUMBER;
+        }
+        return res;
+    }
+
+
 }
