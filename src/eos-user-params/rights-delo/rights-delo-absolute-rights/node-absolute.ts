@@ -23,22 +23,26 @@ export class NodeAbsoluteRight {
         return this._value;
     }
 
-    set value (v) {
-        this.touched = true;
+    set value (v: number) {
+        if (v === this._valueDb) {
+            this.touched = false;
+        } else {
+            this.touched = true;
+        }
         if (!this._value && v) {
             this.isCreate = true;
         }
-        if (this.control.value !== v) {
-            this.control.patchValue(v);
-        }
         this._value = v;
+        this.control.patchValue(!!v);
     }
     private _constData: IInputParamControl;
-    private _value: boolean;
+    private _value: number;
+    private _valueDb: number;
     private _change = [];
-    constructor (node: IInputParamControl, v: boolean, con: AbstractControl) { // подписаться на изменения контрола
+    constructor (node: IInputParamControl, v: number, con: AbstractControl) {
         this._constData = node;
         this._value = v;
+        this._valueDb = v;
         this.control = con;
     }
     pushChange(node) {
@@ -58,5 +62,6 @@ export class NodeAbsoluteRight {
     deleteChange() {
         this.touched = false;
         this._change = [];
+        this._valueDb = this._value;
     }
 }
