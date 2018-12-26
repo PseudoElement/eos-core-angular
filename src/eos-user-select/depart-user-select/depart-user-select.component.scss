@@ -20,6 +20,7 @@
                 margin-bottom: 8px;
             }
             .rt-black{
+                cursor: default;
                 color: #000000;
                 overflow: hidden;
                 line-height: 32px;
@@ -39,8 +40,6 @@
             padding: 20px 0px 0px 0px;
         }
     }
-
-
 }
 .border{
     width: calc(100% - 40px);

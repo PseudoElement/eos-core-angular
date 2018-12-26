@@ -66,10 +66,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
         this.curentUser = this._userParamSrv.curentUser;
         this.title = `${this.curentUser['SURNAME_PATRON']} (${this.curentUser['CLASSIF_NAME']})`;
-
         this._descSrv.fillValueInputField(this.inputFields);
         this._descSrv.fillValueControlField(this.controlField);
-        this._descSrv.fillValueAccessField(this.accessField);
+        this.accessField = this._descSrv.fillValueAccessField(BASE_PARAM_ACCESS_INPUT);
 
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
@@ -79,7 +78,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
         this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
-
         this._dataDb['form'] = this.form.value;
         this._dataDb['formControls'] = this.formControls.value;
         this._dataDb['formAccess'] = this.formAccess.value;

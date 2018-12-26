@@ -22,7 +22,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     destroySubsriber: Subject<any> = new Subject();
     constructor(
         private _sandwichSrv: EosSandwichService,
-        private _selectedUser: RtUserSelectService
+        private _selectedUser: RtUserSelectService,
     ) {
         this.isPhoto = false;
         this.chooseTemplate = 'preview';
@@ -63,16 +63,16 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     }
 
     parseSustemParam(parseParam) {
-        return parseParam.data.AV_SYSTEMS.split('');
+        return parseParam.split('');
     }
 
     getInfo(isn, due?): void {
-        this.getObjectForSystems();
         if (!due) {
             this.isPhoto = false;
         }
         this._selectedUser.getUserIsn(isn, due)
         .then((result: [USER_CL, DEPARTMENT]) => {
+            this.getObjectForSystems(result);
            if (result[1].toString() === '[object Object]') {
             this.DueInfo = result[1];
             this.isPhoto =  this.DueInfo.ISN_PHOTO;
@@ -106,44 +106,38 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         }
     }
 
-    getObjectForSystems(): void {
-        const split =  this.parseSustemParam(this.CurrentUser);
+    getObjectForSystems(infoUser): void {
+        const split =  this.parseSustemParam(infoUser[0]['AV_SYSTEMS']);
         const delo = !!(+split[0] && !+split[1]);
         const delo_deloWeb = !!(+split[0] && +split[1]);
         const deloWeb = !!((+split[1] || +split[27]) && !+split[0]);
-        if (delo) {
-            this.fillDeloField(true, false, false, false);
-        }else if (delo_deloWeb) {
-            this.fillDeloField(false, true, false, false);
-        }else if (!delo_deloWeb && deloWeb) {
-            if (+split[1] && !+split[27] && !+split[0]) {
-                this.fillDeloField(false, false, true, false);
-            }else if (!+split[1] && +split[27] && !+split[0]) {
-                this.fillDeloField(false, false, false, true);
+        if (!delo && !delo_deloWeb && !deloWeb) {
+            this.fillDeloField(false, false, false, false);
+        } else {
+            if (delo) {
+                this.fillDeloField(true, false, false, false);
+            }else if (delo_deloWeb) {
+                this.fillDeloField(false, true, false, false);
+            }else if (!delo_deloWeb && deloWeb) {
+                if (+split[1] && !+split[27] && !+split[0]) {
+                    this.fillDeloField(false, false, true, false);
+                }else if (!+split[1] && +split[27] && !+split[0]) {
+                    this.fillDeloField(false, false, false, true);
+                }
             }
         }
-        if ( split[25] === '1') {
-            this._selectedUser.ArraySystemHelper.APM.checked = true;
-        }else if ( split[21] === '1') {
-            this._selectedUser.ArraySystemHelper.EOS.checked = true;
-        }else if ( split[2] === '1' ) {
-            this._selectedUser.ArraySystemHelper.SCAN.checked = true;
-        }else if ( split[3] === '1' ) {
-            this._selectedUser.ArraySystemHelper.Pscan.checked = true;
-        }else if (  split[5] === '1') {
-            this._selectedUser.ArraySystemHelper.Shif.checked = true;
-        }else if ( split[15] === '1' ) {
-            this._selectedUser.ArraySystemHelper.Scan_code.checked = true;
-        }else if ( split[16] === '1') {
-            this._selectedUser.ArraySystemHelper.Notifer.checked = true;
-        }else if ( split[17] === '1') {
-            this._selectedUser.ArraySystemHelper.Search_code.checked = true;
-        }else if ( split[23] === '1') {
-            this._selectedUser.ArraySystemHelper.MobNet.checked = true;
-        }else if ( split[26] === '1') {
-            this._selectedUser.ArraySystemHelper.Informer.checked = true;
-        }
-        this.flagSustem = true;
+
+            split[25] === '1' ?  this._selectedUser.ArraySystemHelper.APM.checked = true :  this._selectedUser.ArraySystemHelper.APM.checked = false;
+            split[21] === '1' ?  this._selectedUser.ArraySystemHelper.EOS.checked = true : this._selectedUser.ArraySystemHelper.EOS.checked = false;
+            split[2] === '1' ?  this._selectedUser.ArraySystemHelper.SCAN.checked = true : this._selectedUser.ArraySystemHelper.SCAN.checked = false;
+            split[3] === '1' ?    this._selectedUser.ArraySystemHelper.Pscan.checked = true :   this._selectedUser.ArraySystemHelper.Pscan.checked = false;
+            split[5] === '1' ?  this._selectedUser.ArraySystemHelper.Shif.checked = true : this._selectedUser.ArraySystemHelper.Shif.checked = false;
+            split[15] === '1' ?   this._selectedUser.ArraySystemHelper.Scan_code.checked = true :  this._selectedUser.ArraySystemHelper.Scan_code.checked = false;
+            split[16] === '1' ? this._selectedUser.ArraySystemHelper.Notifer.checked = true : this._selectedUser.ArraySystemHelper.Notifer.checked = false;
+            split[17] === '1' ?  this._selectedUser.ArraySystemHelper.Search_code.checked = true : this._selectedUser.ArraySystemHelper.Search_code.checked = false;
+            split[23] === '1' ?  this._selectedUser.ArraySystemHelper.MobNet.checked = true : this._selectedUser.ArraySystemHelper.MobNet.checked = false;
+            split[26] === '1' ?  this._selectedUser.ArraySystemHelper.Informer.checked = true : this._selectedUser.ArraySystemHelper.Informer.checked = false;
+            this.flagSustem = true;
     }
     fillDeloField(delo: boolean, delo_deloweb: boolean, delowebLGO: boolean, delowebKL: boolean ): void {
         this._selectedUser.ArraySystemHelper.delo.checked = delo;
