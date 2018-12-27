@@ -41,4 +41,18 @@
         left: 0;
         z-index: 2000;
     }
+    .create-user-wr{
+        position: relative;
+        span{
+            position: absolute;
+            right: 10px;
+            top: 5px;
+        }
+    }
+    .flex-wr{
+        display: flex;
+        >:last-child{
+            padding-left: 10px;
+        }
+    }
 }
