@@ -1,4 +1,5 @@
 import { OnDestroy, OnInit, Injectable, Injector, Output, Input, EventEmitter } from '@angular/core';
+import { Router} from '@angular/router';
 import { E_FIELD_TYPE, IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
 import { UserParamApiSrv } from '../../../shared/services/user-params-api.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
@@ -11,7 +12,7 @@ import { EosUtils } from 'eos-common/core/utils';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
 import { UserParamsService } from '../../../shared/services/user-params.service';
 import { USER_PARMS } from 'eos-rest';
-
+import { WaitClassifService } from 'app/services/waitClassif.service';
 @Injectable()
 export class BaseUserSrv implements OnDestroy, OnInit {
     @Input() btnDisabled;
@@ -45,11 +46,15 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     _currentFormStatus;
     isLoading: boolean = false;
     _userParamsSetSrv: UserParamsService;
+    _waitClassifSrv: WaitClassifService;
+    _router: Router;
     private _fieldsType = {};
     constructor(
         injector: Injector,
         paramModel,
     ) {
+        this._router = injector.get(Router);
+        this._waitClassifSrv = injector.get(WaitClassifService);
         this._userParamsSetSrv = injector.get(UserParamsService);
         this.constUserParam = paramModel;
         this.titleHeader = this.constUserParam.title;
@@ -102,8 +107,8 @@ export class BaseUserSrv implements OnDestroy, OnInit {
                             changed = true;
                          }
                     });
-                    this.formChanged.emit(changed);
-                    this.isChangeForm = changed;
+                this.formChanged.emit(changed);
+                this.isChangeForm = changed;
             })
         );
         this.subscriptions.push(
@@ -188,7 +193,11 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     convDataForDefault(data: Array<any>) {
         const d = {};
         data.forEach(item => {
-            d[item.PARM_NAME] = item.PARM_VALUE;
+            if (item.PARM_NAME === 'RESOLUTION_CONTROLLER') {
+                d[item.PARM_NAME] = '';
+            } else {
+                 d[item.PARM_NAME] = item.PARM_VALUE;
+            }
         });
         return { rec: d };
     }
@@ -264,7 +273,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
         const req = [];
         const userId = this._userParamsSetSrv.userContextId;
         for (const key in this.newData.rec) {
-            if (key && key !== 'DEF_SEARCH_CITIZEN' && key.indexOf('FOLDERCOLORSTATUS') !== 0 &&
+            if (key && key !== 'DEF_SEARCH_CITIZEN' && key !== 'CONTROLL_AUTHOR' && key.indexOf('FOLDERCOLORSTATUS') !== 0 &&
             key.indexOf('HILITE_PRJ_RC') !== 0 && key.indexOf('HILITE_RESOLUTION') !== 0 &&
             key.indexOf('RCSEND') !== 0) {
                 req.push({

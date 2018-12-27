@@ -110,7 +110,7 @@
                     [input]="inputs['rec.CABSORT_ISN_DOCGROUP_LIST']"
                     [form]="form"
                     [readonly]="false"
-                ></eos-dynamic-input>
+        ></eos-dynamic-input>
         <eos-dynamic-input
             [input]="inputs['rec.SCRATCH_RC']"
             [form]="form"
@@ -139,5 +139,146 @@
                     ></eos-dynamic-input>
                 </div>
             </div>
+    </div>
+<div class="instructions" [hidden]="currTab !== 1">
+    <span>Дата резолюции:</span>
+         <div class="date-resolution">
+            <eos-dynamic-input
+                [input]="inputs['rec.RESOLUTION_DATE']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+         </div>
+         <div class="author-resolution">
+            <span class="author-res-title">Автор резолюции:</span>
+            <eos-dynamic-input
+                [input]="inputs['rec.RESOLUTION_AUTHOR']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.RESOLUTION_SELECT_AUTHOR']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+         </div>
+
+            <eos-dynamic-input
+                [input]="inputs['rec.PARENT_RESOLUTION_TEXT']"
+                [form]="form"
+                [readonly]="false"
+        ></eos-dynamic-input>
+        <hr>
+        <span class="control-author">Контроль поручения:</span>
+        <div class="classifDep">
+            <div class="wr-input">
+                <eos-dynamic-input
+                    [input]="inputs['rec.CONTROLL_AUTHOR']"
+                    [form]="form"
+                    [readonly]="true"
+                ></eos-dynamic-input>
+            </div>
+             <span class ="eos-icon eos-icon-folder-blue small" (click)="openClassifDepartment()"></span>
+             <span [ngClass] ="getClass" (click)="controller ? showInfoUser() : 'false'"></span>
         </div>
+        <div class="control-state" >
+            <eos-dynamic-input
+                [input]="inputs['rec.RESOLUTION_CONTROL_STATE']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+        </div>
+            <eos-dynamic-input
+                [input]="inputs['rec.CORRECT_CTRL_DATE']"
+                [form]="form"
+                [readonly]="false"
+        ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputs['rec.PLAN_DATE_PARENT']"
+                [form]="form"
+                [readonly]="false"
+        ></eos-dynamic-input>
+        <hr>
+        <div class = "check-resol">
+        <span class="check-resol-title">Исполнители:</span>
+        <eos-dynamic-input
+            [input]="inputs['rec.CHECK_RESOL_REPORT']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.SHOW_REPLY_NOTE']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.SHOW_REPLY_READED']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+        <span>Добавлять в журнал передачи документа:</span>
+        <div class="add-to-juornal-radio">
+            <span class="add-j-title">для:</span>
+            <eos-dynamic-input
+                [input]="inputs['rec.ADD_JOURNAL_4DOC']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+        </div>
+        <hr>
+        <div class="add-to-juornal" >
+        <eos-dynamic-input
+            [input]="inputs['rec.ADD_JOURNAL_RESOL_AUTHOR']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.ADD_JOURNAL_CONTROLLER']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.ADD_JOURNAL_RESOL_REPLY']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        </div>
+        <hr>
+        <eos-dynamic-input
+            [input]="inputs['rec.ADD_ADRESS_REPORGANIZ']"
+            [form]="form"
+            [readonly]="false"
+         ></eos-dynamic-input>
+         <hr>
+    <div class="send-res">
+        <span>Рассылка поручения:</span>
+        <eos-dynamic-input
+            [input]="inputs['rec.SEND_ORDER_TO']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.RESOLUTION_CICLE']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        <hr>
+        <span>Проект резолюции:</span>
+        <div class="resolution">
+            <span>"Приоритет" по умолчанию</span>
+           <div>
+                <eos-dynamic-input
+                    [input]="inputs['rec.RESPRJ_PRIORITY_DEFAULT']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+           </div>
+        </div>
+        <hr>
+    </div>
 </div>
+<div class="informer" [hidden]="currTab !== 2">
+</div>
+</div>
+<div *ngIf="bacgHeader" class="bacgrFixed"></div>
