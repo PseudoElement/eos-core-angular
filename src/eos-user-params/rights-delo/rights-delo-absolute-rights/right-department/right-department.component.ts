@@ -95,7 +95,7 @@ export class RightDepertmentComponent implements OnInit {
         .catch(() => {
             this.isShell = false;
             if (this.selectedNode.isCreate) {
-                this.selectedNode.value = false;
+                this.selectedNode.value = 0;
                 this._msgSrv.addNewMessage({
                     type: 'warning',
                     title: '',
@@ -109,12 +109,15 @@ export class RightDepertmentComponent implements OnInit {
         const i = this.listUserDep.findIndex(n => n === this.selectedDep);
         this.listUserDep.splice(i, 1);
         if (!this.listUserDep.length) {
-            this.selectedNode.value = false;
+            this.selectedNode.value = 0;
         }
         this.selectedDep.createEntity = false;
         this.selectedNode.pushChange(this.selectedDep);
         this.selectedDep = null;
         this.Changed.emit();
+    }
+    markedSendPrj(event) {
+        this.selectedNode.value = event.target.checked ? 2 : 1;
     }
     private _getMaxWeight(): number {
         let w = 0;

@@ -121,7 +121,8 @@ export class EosDictService {
         if (_storageData && dictionary) {
             this._customFields = _storageData;
             if (this._customFields[dictionary.id]) {
-                return this._customFields[dictionary.id];
+                const fies: IFieldView[] = this._customFields[dictionary.id];
+                return fies;
             } else {
                 return [];
             }
@@ -271,8 +272,8 @@ export class EosDictService {
         return this.filters.hasOwnProperty(filterName) ? this.filters[filterName] : null;
     }
 
-    getMarkedNodes(): EosDictionaryNode[] {
-        return this.currentDictionary.getMarkedNodes();
+    getMarkedNodes(recursive = false): EosDictionaryNode[] {
+        return this.currentDictionary.getMarkedNodes(recursive);
     }
 
     isDataChanged(data: any, original: any): boolean {
@@ -389,9 +390,13 @@ export class EosDictService {
                 this._selectTreeNode(node);
                 return node;
             }).then((n) => {
-                this._reloadList().then(() => {
+                if (this.dictMode !== 0) {
+                    this._reloadList().then(() => {
+                        this.updateViewParameters({updatingList: false});
+                    });
+                } else {
                     this.updateViewParameters({updatingList: false});
-                });
+                }
                 return n;
             })
             .catch(err => this._errHandler(err));
@@ -768,7 +773,7 @@ export class EosDictService {
     }
 
     inclineFields(fields: FieldsDecline): Promise<any[]> {
-        return this.currentDictionary.descriptor.onPreparePrintInfo(fields)
+        return this._dictionaries[0].descriptor.onPreparePrintInfo(fields)
             .catch((err) => this._errHandler(err));
     }
 
@@ -977,9 +982,9 @@ export class EosDictService {
     private _reorderList(dictionary: EosDictionary) {
         if (dictionary) {
             if (/* !this.viewParameters.searchResults && */ this.viewParameters.userOrdered && this.treeNode) {
-                this._currentList = dictionary.reorderList(this._currentList, this.treeNode.id);
+                this._currentList = dictionary.reorderList(this._currentList, this.viewParameters.showAllSubnodes, this.treeNode.id);
             } else {
-                this._currentList = dictionary.reorderList(this._currentList);
+                this._currentList = dictionary.reorderList(this._currentList, this.viewParameters.showAllSubnodes);
             }
         }
         this._currentList$.next(this._currentList);

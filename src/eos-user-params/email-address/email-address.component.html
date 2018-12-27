@@ -1,20 +1,45 @@
 <div class="email-window">
     <eos-user-header  [statusBtnSub]='statusBtnSub' [isDefault]='isDefault' (submitForm)='saveAllForm($event)' (cancelForm)='backForm($event)'></eos-user-header>
     <div class="email-control">
-            <button type="button" class=" email-create btn btn-primary" (click)="openModal(template)">
-                    <span class="eos-icon eos-icon-plus-blue small"></span>
-            </button>
-            <button [disabled]="getaccess" type="button" class=" email-edit btn btn-primary" (click)="openModal(template, true)">
-                    <span class="eos-icon eos-icon-edit-blue small"></span>
-            </button>
-        <button [disabled]="getaccess" class="email-delite  btn btn-primary" (click)='deliteEmailFild()'>
+        <button
+            type="button"
+            class=" email-create btn btn-primary"
+            (click)="openModal(template)"
+            tooltip="Добавить E-MAIL"
+            containerClass="tooltip-info">
+            <span class="eos-icon eos-icon-plus-blue small"></span>
+        </button>
+        <button
+            [disabled]="getaccess"
+            type="button"
+            class=" email-edit btn btn-primary"
+            (click)="openModal(template, true)"
+            tooltip="Ограничение рассылки"
+            containerClass="tooltip-info">
+            <span class="eos-icon eos-icon-edit-blue small"></span>
+        </button>
+        <button
+            [disabled]="getaccess"
+            class="email-delite  btn btn-primary"
+            (click)='deliteEmailFild()'
+            tooltip="Удалить E-MAIL"
+            containerClass="tooltip-info">
             <span class="eos-icon eos-icon-bin-blue sma"></span>
         </button>
-        <button  [disabled]="currentIndex == 0 || getaccess" class="stepTop  btn btn-primary" (click)='upWeight()' >
+        <button
+            [disabled]="currentIndex == 0 || getaccess"
+            class="stepTop  btn btn-primary"
+            (click)='upWeight()'
+            tooltip="Переместить вверх"
+            containerClass="tooltip-info">
             <span class=" eos-icon eos-icon-arrow-v-blue-top small"></span>
         </button>
-
-        <button [disabled]="currentIndex == umailsInfo.length - 1 || getaccess" class="stepBottom  btn btn-primary" (click)='downWeight()' >
+        <button
+            [disabled]="currentIndex == umailsInfo.length - 1 || getaccess"
+            class="stepBottom  btn btn-primary"
+            (click)='downWeight()'
+            tooltip="Переместить вниз"
+            containerClass="tooltip-info">
             <span class="eos-icon eos-icon-arrow-v-blue-bottom small"></span>
         </button>
     </div>

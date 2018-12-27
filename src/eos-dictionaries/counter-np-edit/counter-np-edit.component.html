@@ -24,30 +24,42 @@
                 </div>
             </div>
         </div>
-
+        <form #editForm="ngForm">
         <div class="edit-block">
                 <input class="form-control m-font edit-control"
                        [(ngModel)]="editValueYear"
+                       [pattern]="yearPattern"
+                       name="val_year"
                        id="val_year"
-                       type="text"
+                       type="number"
+                       min="1950"
+                       max="2100"
                        placeholder="Год"
-                       autocomplete="off">
+                       autocomplete="off"
+                       required>
                 <input class="form-control m-font edit-control"
                        [(ngModel)]="editValueNum"
+                       [pattern]="valuePattern"
                        id="val_number"
-                       type="text"
+                       name="val_number"
+                       type="number"
+                       pattern="^[0-9]+"
+                       min="0" oninput="validity.valid||(value='');"
                        placeholder="Значение"
-                       autocomplete="off">
+                       autocomplete="off"
+                       required>
         </div>
 
         <div class="modal-footer">
             <span class="pull-right">
                 <button type="button" class="btn btn-primary-full upper fixed-width"
+                        [disabled]="!editForm.valid"
                         (click)="save()">Изменить значение</button>
                 <button type="button" class="btn btn-primary have-margin fixed-width"
                         (click)="hideModal()">Выход</button>
             </span>
         </div>
+        </form>
     </div>
 </div>
 

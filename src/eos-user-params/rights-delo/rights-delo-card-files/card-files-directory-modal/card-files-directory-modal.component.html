@@ -1,4 +1,4 @@
-<div class="input-user-wrapper input-user-card-files-directory-modal-wrapper" *ngIf="!isLoading">
+<div class="input-user-wrapper input-user-card-files-directory-modal-wrapper">
 <header>
     <eos-rights-delo-header
         [title]="titleHeader"
@@ -7,7 +7,9 @@
         [statusBtnSub]="btnDisabled"
     ></eos-rights-delo-header>
 </header>
+
 <div class="user-input-group">
+ <div *ngIf="!isLoading">
     <ul class="list-card-files"
         *ngFor="let key of fieldKeysforCardFiles2; let i = index;">
         <li>
@@ -19,8 +21,10 @@
         </li>
     </ul>
 </div>
-</div>
-
+<div class="empty-wall">
 <div class="spinner-wrapper" *ngIf="isLoading">
-    <eos-spinner [size]="'lg'"></eos-spinner>
+        <eos-spinner [size]="'lg'"></eos-spinner>
+    </div>
+</div>
+</div>
 </div>

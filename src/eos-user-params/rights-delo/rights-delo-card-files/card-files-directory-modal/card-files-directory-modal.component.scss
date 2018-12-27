@@ -1,71 +1,16 @@
 .input-user-card-files-directory-modal-wrapper {
-    .list-group-item {
-        background: $light-grey-1;
-        cursor: pointer;
-        &:focus {
-            background: #176ab7;
-            outline: none;
-        }
-        &.active-element-param {
-            background: #176ab7;
-        }
-    }
     label {
         font-size: 12px;
-    }
-    .forMainLabel label {
-        font-weight: bold;
     }
 
     .list-card-files {
         list-style: none;
     }
 
-    .hover-boolean-card-files:indeterminate {
-        background: #542ac7;
+    .empty-wall {
+        height: 70vh;
     }
 
-    .inline-block {
-        display: inline-block;
-    }
-
-    .select-wrap {
-        margin-left: 10px;
-        margin-right: 40px;
-    }
-
-    .number-increment-wrap {
-        display: inline-block;
-
-    }
-
-    .label-input-increment {
-        display: block;
-        margin-bottom: -4px;
-    }
-    
-    .select-wrap, .number-increment-wrap {
-        
-        .form-group {
-            margin: 0;
-        }
-    }
-
-    .form-group {
-        margin-bottom: 15px;
-    }
-
-    .elem-input-radio {
-        font-size: 14px;
-        display: inline-block;
-        margin-right: 30px;
-    }
-
-    .param-input-group-section {
-        padding-left: 30px;
-
-        .elem-input-radio {
-            margin-right: 90px;
-        }
-    }
+    max-height: 70vh;
+    overflow-y: auto;
 }
