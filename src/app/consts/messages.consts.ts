@@ -42,6 +42,12 @@ export const WARN_EDIT_ERROR: IMessage = {
     msg: 'не выбран элемент для редактирования',
 };
 
+export const WARN_CABINET_DELETE: IMessage = {
+    type: 'warning',
+    title: 'Удаление отменено',
+    msg: 'Папки кабинета {name} не пусты',
+};
+
 export const DANGER_EDIT_ROOT_ERROR: IMessage = {
     type: 'danger',
     title: 'Ошибка редактирования элемента: ',
