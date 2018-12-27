@@ -44,8 +44,14 @@
                 </button>
         </div>
     </div>
-    <div *ngFor="let item of treeHierarchyOnTheRightSide">
-        <div (click)="selectNodeOnTheRightSide(item.card)" [ngClass]="{'highlighted': item.card.data.isSelected}">
+    <div *ngFor="let item of treeHierarchyOnTheRightSide" class="inline-block">
+        <div *ngIf="item.restrictRegistrationFiling || item.documents"
+             class="tree-btn inline-block"
+             (click)="openFolder($event, item)">
+                    <span class="eos-icon tringle-size icon"
+                          [ngClass]="{'eos-icon-open-folder-blue': item.openFolder, 'eos-icon-close-folder-blue': !item.openFolder}" ></span>
+                </div>
+        <div (click)="selectNodeOnTheRightSide(item.card)" class="card-item" [ngClass]="{'highlighted': item.card.data.isSelected}">
         <eos-dynamic-input
             [input]="inputs[item.card.key]"
             [form]="form"
@@ -55,6 +61,7 @@
         <div *ngIf="item.restrictRegistrationFiling"
              class="tree-elements"
              (click)="selectNodeOnTheRightSide(item.restrictRegistrationFiling)"
+             [hidden]="!item.openFolder"
              [ngClass]="{'highlighted': item.restrictRegistrationFiling.data.isSelected}">
             <eos-dynamic-input
             [input]="inputs[item.restrictRegistrationFiling.key]"
@@ -62,6 +69,19 @@
             [readonly]="false"
         ></eos-dynamic-input>
         </div>
+        <div *ngIf="item.documents"
+             [hidden]="!item.openFolder">
+        <div *ngFor="let item2 of item.documents"
+             class="tree-elements"
+             (click)="selectNodeOnTheRightSide(item2)"
+             [ngClass]="{'highlighted': allDocuments[item2.INDEX_FOR_SELECT].data.isSelected}">
+            <eos-dynamic-input
+            [input]="inputs[item2.DUE_DOCUMENT]"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+        </div>
+    </div>
     </div>
    <!-- <div *ngIf="!flagToDisolayRestrictRegistrationFiling">
     <div *ngFor="let item of listDocumentGroups">

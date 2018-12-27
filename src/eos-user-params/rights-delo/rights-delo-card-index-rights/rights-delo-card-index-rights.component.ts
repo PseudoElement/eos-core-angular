@@ -128,6 +128,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     ngOnInit() {
         this.isLoading = true;
         this.listDocumentGroups = [];
+        this.allDocuments = [];
 
         // ------------------------------------------------
         for (let e = 0; e < this.listNode.length; e++) {
@@ -197,13 +198,15 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                         for (let t = 0; t < this.allData[z]['USER_CARD_DOCGROUP_List'].length; t++) {
                             this.allDocuments.push({
                                 controlType: E_FIELD_TYPE.boolean,
-                                key: this.allData[z]['USER_CARD_DOCGROUP_List'][t]['DUE_CARD'] + this.allData[z]['USER_CARD_DOCGROUP_List'][t]['DUE'],
+                                key: this.allData[z]['USER_CARD_DOCGROUP_List'][t]['DUE_CARD'] + this.allData[z]['USER_CARD_DOCGROUP_List'][t]['DUE'] + z + t,
                                 label: this.allData[z]['USER_CARD_DOCGROUP_List'][t]['NAME'],
                                 data: {
                                     isSelected: false,
                                    // rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroupCard
                                 }
                              });
+                             this.allData[z]['USER_CARD_DOCGROUP_List'][t]['DUE_DOCUMENT'] = this.allData[z]['USER_CARD_DOCGROUP_List'][t]['DUE_CARD'] + this.allData[z]['USER_CARD_DOCGROUP_List'][t]['DUE'] + z + t;
+                             this.allData[z]['USER_CARD_DOCGROUP_List'][t]['INDEX_FOR_SELECT'] = this.allDocuments.length - 1;
                         }
                     }
 
@@ -243,26 +246,55 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     updateForm(dataCurrentListNode) {
         const indexForCards = dataCurrentListNode['key'];
         const currentElementsForCards = [];
+        let flag = true;
         this.listConcatRigthSide = [];
         this.treeHierarchyOnTheRightSide = [];
     //    console.log(this.dataUserCardDocgroup);
    //     console.log(this.dataDocgroupCl);
        // const arrayFuclist = Array.from(this.userCard) // this.listNode[indexForCards][1]['FUNCLIST'].split('');
 
+       console.log(this.listDocumentGroups);
+
        for (let t = 0; t < this.listDocumentGroups.length; t++) {
+        flag = true;
            for (let z = 0; z < this.allData.length; z++) {
+               flag = true;
+               console.log(flag);
                if (this.listDocumentGroups[t]['key'] === this.allData[z]['DUE']) {
-           this.treeHierarchyOnTheRightSide.push({
-               card: this.listDocumentGroups[t],
-               restrictRegistrationFiling: dataCurrentListNode['data']['rightContent'] === E_RIGHT_DELO_ACCESS_CONTENT.docGroupCard ?
-                this.listRestrictRegistrationFiling[t] : null,
-                documents: [this.allData[z]]
-           });
+                this.treeHierarchyOnTheRightSide.push({
+                    card: this.listDocumentGroups[t],
+                    openFolder: false,
+                    restrictRegistrationFiling: dataCurrentListNode['data']['rightContent'] === E_RIGHT_DELO_ACCESS_CONTENT.docGroupCard ?
+                     this.listRestrictRegistrationFiling[t] : null,
+                     documents: this.allData[z]['USER_CARD_DOCGROUP_List'].length ? (+dataCurrentListNode.key + 1) === this.allData[z]['USER_CARD_DOCGROUP_List'][0]['FUNC_NUM'] ? [this.allData[z]['USER_CARD_DOCGROUP_List'][0]] : null : null
+                });
+               for (let q = 1; q < this.allData[z]['USER_CARD_DOCGROUP_List'].length; q++) {
+                   console.log(flag);
+                /* if (flag) {
+                     console.log(this.treeHierarchyOnTheRightSide);
+                    this.treeHierarchyOnTheRightSide.push({
+                        card: this.listDocumentGroups[t],
+                        restrictRegistrationFiling: dataCurrentListNode['data']['rightContent'] === E_RIGHT_DELO_ACCESS_CONTENT.docGroupCard ?
+                         this.listRestrictRegistrationFiling[t] : null,
+                         documents: (+dataCurrentListNode.key + 1) === this.allData[z]['USER_CARD_DOCGROUP_List'][q]['FUNC_NUM'] ? [this.allData[z]['USER_CARD_DOCGROUP_List'][q]] : null
+                    });
+                    flag = false;
+                 } else */
+                 if (q > 0 && this.treeHierarchyOnTheRightSide[this.treeHierarchyOnTheRightSide.length - 1].documents !== null &&
+                    (+dataCurrentListNode.key + 1) === this.allData[z]['USER_CARD_DOCGROUP_List'][q]['FUNC_NUM']) {
+                   //    console.log(this.treeHierarchyOnTheRightSide[this.treeHierarchyOnTheRightSide.length - 1].documents);
+                    this.treeHierarchyOnTheRightSide[this.treeHierarchyOnTheRightSide.length - 1].documents.push(this.allData[z]['USER_CARD_DOCGROUP_List'][q]);
+                   }
+         //  console.log(this.allData[z]['USER_CARD_DOCGROUP_List'][0]['FUNC_NUM']);
+         //  console.log([this.allData[z]['USER_CARD_DOCGROUP_List']]);
+        }
         }
         }
        }
 
+       console.log(dataCurrentListNode);
        console.log(this.treeHierarchyOnTheRightSide);
+     //  console.log(((+dataCurrentListNode.key + 1) + ''));
 
      /*  for (let t = 0; t < this.listDocumentGroups.length * 2; t++) {
            if (t % 2 === 0) {
@@ -278,29 +310,49 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
       // this.listConcatRigthSide =  this.listDocumentGroups.concat(this.listRestrictRegistrationFiling);
 
         for (let i = 0; i < Array.from(this.userCard).length; i++) {
-            currentElementsForCards.push(Array.from(this.userCard)[i][1]['FUNCLIST'].charAt(indexForCards));
+            currentElementsForCards.push([Array.from(this.userCard)[i][1]['FUNCLIST'].charAt(indexForCards), Array.from(this.userCard)[i][1]['DUE']]);
         }
 
+        console.log(Array.from(this.userCard));
+        console.log(indexForCards);
+        console.log(this.listDocumentGroups);
+        console.log(currentElementsForCards);
+
         for (let j = 0; j < this.listDocumentGroups.length; j++) {
-            console.log(currentElementsForCards[j]);
+            for (let w = 0; w < currentElementsForCards.length; w++) {
+          //  console.log(currentElementsForCards[j]);
         //    console.log(this.listDocumentGroups[j]);
-            this.listDocumentGroups[j]['value'] = +currentElementsForCards[j];
+        if (currentElementsForCards[w][1] === this.listDocumentGroups[j].key) {
+            this.listDocumentGroups[j]['value'] = +currentElementsForCards[w][0];
             if (dataCurrentListNode.data.rightContent === E_RIGHT_DELO_ACCESS_CONTENT.docGroupCard) {
-            if (+currentElementsForCards[j] === 2) {
-                this.listRestrictRegistrationFiling[j]['value'] = +currentElementsForCards[j];
+            if (+currentElementsForCards[w][0] === 2) {
+                this.listRestrictRegistrationFiling[j]['value'] = +currentElementsForCards[w][0];
             } else {
                 this.listRestrictRegistrationFiling[j]['value'] = false;
             }
         }
-           /* this.listDocumentGroups.splice(j, 0, {
-                controlType: E_FIELD_TYPE.boolean,
-                key: this.fieldsForRightSideCards[j + 1]['DUE'] + 'RESTRICT_REGISTRATION_FILING',
-                label: 'Ограничить картотекой регистрации',
-                data: {
-                    isSelected: false,
-                   // rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroupCard
+    }
+    }
+        }
+
+        console.log(this.allDocuments);
+
+        for (let x = 0; x < this.allDocuments.length; x++) {
+            for (let g = 0; g < this.treeHierarchyOnTheRightSide.length; g++) {
+                if (this.treeHierarchyOnTheRightSide[g].documents !== null) {
+                 //   console.log(this.treeHierarchyOnTheRightSide[g].documents);
+                    for (let r = 0; r < this.treeHierarchyOnTheRightSide[g].documents.length; r++) {
+                      //  console.log(this.treeHierarchyOnTheRightSide[g].documents[r]['INDEX_FOR_SELECT']);
+                        if (x === this.treeHierarchyOnTheRightSide[g].documents[r]['INDEX_FOR_SELECT']) {
+                            console.log(x);
+                            console.log(this.allDocuments[x]);
+                            console.log(this.treeHierarchyOnTheRightSide[g].documents[r]);
+                            console.log(this.treeHierarchyOnTheRightSide[g].documents[r]['ALLOWED']);
+                           this.allDocuments[x]['value'] = +this.treeHierarchyOnTheRightSide[g].documents[r]['ALLOWED'];
+                        }
+                    }
                 }
-            });*/
+            }
         }
        /* if (this.oldIndex !== undefined) {
            this.oldElement(data, this.oldIndex);
@@ -316,7 +368,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
          }
      }
     getInputAttach() {
-         const forArgumentGenerateInputs = this.listDocumentGroups.concat(this.listRestrictRegistrationFiling);
+         const forArgumentGenerateInputs = this.listDocumentGroups.concat(this.listRestrictRegistrationFiling).concat(this.allDocuments);
          return this.inputCtrlSrv.generateInputs(forArgumentGenerateInputs);
     }
     OpenClassiv(): void {
@@ -327,6 +379,19 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
             this._limitservise.getCodeNameDOCGROUP(String(newClassif))
             .then(result => {
                 console.log(result);
+                console.log(this.selectedNodeOnTheRigthSide);
+                console.log(this.selectedNode);
+                console.log(this.treeHierarchyOnTheRightSide);
+
+              /*  for (let i = 0; i < this.treeHierarchyOnTheRightSide.length; i++) {
+                    if (this.treeHierarchyOnTheRightSide[i]['card']['key'] === this.selectedNodeOnTheRigthSide.key) {
+                        if (this.treeHierarchyOnTheRightSide[this.treeHierarchyOnTheRightSide.length - 1].documents !== null || undefined) {
+                         //   this.treeHierarchyOnTheRightSide[this.treeHierarchyOnTheRightSide.length - 1].documents.push(this.allData[z]['USER_CARD_DOCGROUP_List'][q]);
+                        }
+                    }
+                }*/
+
+              //  this.treeHierarchyOnTheRightSide[this.treeHierarchyOnTheRightSide.length - 1].documents.push(this.allData[z]['USER_CARD_DOCGROUP_List'][q]);
               /* const arrData = this.checkfield(result);
                arrData.forEach(el => {
                      const newField = {
@@ -453,11 +518,38 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
     }
 
     selectNodeOnTheRightSide(node) {
+        if (node['INDEX_FOR_SELECT'] !== undefined || null) {
+            if (this.selectedNodeOnTheRigthSide) {
+                this.selectedNodeOnTheRigthSide['data']['isSelected'] = false;
+            }
+            this.selectedNodeOnTheRigthSide = this.allDocuments[node['INDEX_FOR_SELECT']];
+            this.selectedNodeOnTheRigthSide['data']['isSelected'] = true;
+        } else {
         if (this.selectedNodeOnTheRigthSide) {
             this.selectedNodeOnTheRigthSide['data']['isSelected'] = false;
         }
         this.selectedNodeOnTheRigthSide = node;
         this.selectedNodeOnTheRigthSide['data']['isSelected'] = true;
+    }
+    }
+
+    openFolder(evt: Event, item) {
+        evt.stopPropagation();
+        if (item.openFolder) {
+            item.openFolder = false;
+        } else {
+            item.openFolder = true;
+        }
+      /*  if (node.isExpanded) {
+            node.isExpanded = false;
+        } else {
+            node.updating = true;
+            this._dictSrv.expandNode(node.id)
+                .then((_node) => {
+                    _node.isExpanded = true;
+                    node.updating = false;
+                });
+        }*/
     }
   //  selectInputOnChange(elem) {
       //  const dataUserCard = Array.from(this.userCard);

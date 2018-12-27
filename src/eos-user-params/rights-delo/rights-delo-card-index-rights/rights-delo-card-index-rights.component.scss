@@ -58,6 +58,12 @@
         margin: 0;
     }
 
+    .card-item {
+        display: inline-block;
+        vertical-align: top;
+        width: 90%;
+    }
+
     .hover-boolean-card-files:indeterminate {
         background: #542ac7;
     }
