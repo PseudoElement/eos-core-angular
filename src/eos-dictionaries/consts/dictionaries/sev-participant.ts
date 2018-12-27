@@ -17,7 +17,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LIN
         title: 'Организация',
         type: 'string',
         required: true,
-        pattern: NOT_EMPTY_STRING
+        pattern: NOT_EMPTY_STRING,
     }, {
         key: 'ISN_CHANNEL',
         type: 'select',
@@ -35,7 +35,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LIN
         type: '',
         title: 'Используемые правила',
     }]),
-    editFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'ADDRESS', 'SEV_PARTICIPANT_RULE_List'],
+    editFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'ADDRESS', 'SEV_PARTICIPANT_RULE_List', 'CLASSIF_NAME'],
     listFields: ['DUE_ORGANIZ'],
     allVisibleFields: ['ISN_CHANNEL', 'NOTE', 'ADDRESS', 'SEV_PARTICIPANT_RULE_List'],
     quickViewFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'ADDRESS', 'SEV_PARTICIPANT_RULE_List'],

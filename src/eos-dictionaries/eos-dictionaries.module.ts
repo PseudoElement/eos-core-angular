@@ -1,3 +1,4 @@
+import { SevParticipantCardEditComponent } from './card-views/sev-participant-card-edit.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -112,6 +113,7 @@ import {CustomTreeComponent} from './tree2/custom-tree.component';
         CreateNodeBroadcastChannelComponent,
         BroadcastChannelCardEditComponent,
         SevRulesCardEditComponent,
+        SevParticipantCardEditComponent,
         OrganizationsCardEditGroupComponent,
         OrganizationsCardEditNodeComponent,
         AdditionalFieldsComponent,
