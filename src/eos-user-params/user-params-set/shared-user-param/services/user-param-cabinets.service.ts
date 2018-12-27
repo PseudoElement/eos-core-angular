@@ -21,7 +21,9 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     isChangeFormAttach = false;
     flagDisabledHiliteResolutionIncrement = false;
     flagDisabledHilitePrjRcIncrement = false;
+    dueForLink = '';
     controller = false;
+    bacgHeader = false;
     formAttach: FormGroup;
     prepDataAttach = {rec: {}};
     constructor(
@@ -56,6 +58,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     }
     getControlAuthor(): Promise<any> {
         const ControlAuthor = this._userParamsSetSrv.hashUserContext['RESOLUTION_CONTROLLER'];
+        this.dueForLink = ControlAuthor;
         if (ControlAuthor === null) {
             this.controller = false;
             return Promise.resolve();
@@ -78,21 +81,26 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
       return  this.userParamApiSrv.getData(query);
     }
     openClassifDepartment() {
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
+        this.bacgHeader = true;
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
         .then((data: string) => {
+            this.dueForLink = data;
             return this._userParamsSetSrv.getDepartmentFromUser(data);
         }).then(data => {
+            this.bacgHeader = false;
             if  (data) {
+                this.form.controls['rec.RESOLUTION_CONTROLLER'].patchValue(String(this.dueForLink));
                 this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(data[0]['CLASSIF_NAME']));
             }
         })
         .catch(error => {
-
+            this.bacgHeader = false;
         });
     }
 
     showInfoUser() {
         console.log('show info');
+        this._router.navigate(['/spravochniki/departments', this.dueForLink, 'view', '0']);
     }
     afterInit() {
         const allData = this._userParamsSetSrv.hashUserContext;
@@ -137,8 +145,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 this._currentFormStatus = status;
             })
         );
-        console.log(allData);
-        console.log(this.form);
+
     }
     prepDataAttachField(data) {
         for (const key of Object.keys(data)) {
@@ -318,7 +325,8 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             const changed = true;
             this.defaultFlag = true;
             this.queryObjForDefault = this.getObjQueryInputsFieldForDefault(this.prepInputs._list);
-            return this.getData(this.queryObjForDefault).then(data => {
+            return this.getData(this.queryObjForDefault)
+            .then(data => {
                     this.prepareData = this.convDataForDefault(data);
                     this.prepDataAttachField(this.prepareData.rec);
                     this.inputAttach = this.getInputAttach();
@@ -334,6 +342,6 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 });
         }
         get getClass() {
-            return this.controller ? 'eos-icon eos-icon-info-blue small' : 'eos-icon eos-icon-folder-blue small';
+            return this.controller ? 'eos-icon eos-icon-info-blue small' : 'eos-icon eos-icon-info-grey small';
         }
 }

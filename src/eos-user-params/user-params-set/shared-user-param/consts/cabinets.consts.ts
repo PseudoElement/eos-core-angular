@@ -174,6 +174,11 @@ export const CABINETS_USER: IBaseUsers = {
             title: 'отметку о прочтении'
         },
         {
+            key: 'RESOLUTION_CONTROLLER',
+            type: 'text',
+            title: ''
+        },
+        {
             key: 'RESOLUTION_CONTROL_STATE',
             type: 'radio',
             title: 'Контроль поручения',
@@ -243,7 +248,6 @@ export const CABINETS_USER: IBaseUsers = {
                 {value: '4', title: 'Без приоритета'},
             ]
         },
-
     ],
     fieldsChild: [
         {

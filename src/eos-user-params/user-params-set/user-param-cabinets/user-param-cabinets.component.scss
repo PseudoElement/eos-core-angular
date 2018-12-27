@@ -93,7 +93,7 @@
 .instructions{
     padding: 0px 20px;
     label{
-        font-size: 16px;
+        font-size: 14px;
     }
     .add-j-title{
         padding-bottom: 13px;
@@ -110,7 +110,10 @@
     }
     .add-to-juornal{
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
+        .form-group{
+            margin-right: 20px;
+        }
     }
     .classifDep{
         display: flex;
@@ -141,8 +144,66 @@
             height: 34px;
         }
     }
+    .date-resolution{
+        .elem-input-radio{
+            display: inline;
+        }
+    }
+    .author-resolution{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        .author-res-title{
+            margin-bottom: 20px;
+            margin-right: 20px;
+        }
+        label{
+            margin-right: 20px;
+        }
+
+    }
+    .control-author{
+        display: inline-block;
+        padding-bottom: 20px;
+    }
+    .control-state{
+        .elem-input-radio{
+            display: inline-block;
+            margin-right: 20px;
+        }
+    }
+    .check-resol{
+        display: flex;
+        justify-content: flex-start;
+        .check-resol-title{
+            padding-top: 7px;
+            padding-right: 20px;
+        }
+        .form-group{
+            margin-right: 20px;
+        }
+    }
+    .send-res{
+        .elem-input-radio{
+            display: inline-block;
+            margin-right: 20px;
+        }
+    }
 }
 .rc-doc-left-column {
     position: relative;
     display: block;
+}
+
+.bacgrFixed{
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    height: 100vh;
+    width: 100%;
+    z-index: 99;
+    background-color: #646464;
+    opacity: 0.6;
 }

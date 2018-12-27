@@ -140,15 +140,18 @@
                 </div>
             </div>
     </div>
-        <div class="instructions" [hidden]="currTab !== 1">
+<div class="instructions" [hidden]="currTab !== 1">
+    <span>Дата резолюции:</span>
+         <div class="date-resolution">
             <eos-dynamic-input
                 [input]="inputs['rec.RESOLUTION_DATE']"
                 [form]="form"
                 [readonly]="false"
             ></eos-dynamic-input>
-            <span>Автор резолюции</span>
-            <hr>
-                <eos-dynamic-input
+         </div>
+         <div class="author-resolution">
+            <span class="author-res-title">Автор резолюции:</span>
+            <eos-dynamic-input
                 [input]="inputs['rec.RESOLUTION_AUTHOR']"
                 [form]="form"
                 [readonly]="false"
@@ -158,13 +161,15 @@
                 [form]="form"
                 [readonly]="false"
             ></eos-dynamic-input>
+         </div>
+
             <eos-dynamic-input
                 [input]="inputs['rec.PARENT_RESOLUTION_TEXT']"
                 [form]="form"
                 [readonly]="false"
         ></eos-dynamic-input>
-        <span>Контроль поручения</span>
         <hr>
+        <span class="control-author">Контроль поручения:</span>
         <div class="classifDep">
             <div class="wr-input">
                 <eos-dynamic-input
@@ -173,14 +178,16 @@
                     [readonly]="true"
                 ></eos-dynamic-input>
             </div>
-             <span [ngClass]="getClass" (click)="controller ? showInfoUser() : openClassifDepartment()"></span>
-
+             <span class ="eos-icon eos-icon-folder-blue small" (click)="openClassifDepartment()"></span>
+             <span [ngClass] ="getClass" (click)="controller ? showInfoUser() : 'false'"></span>
         </div>
+        <div class="control-state" >
             <eos-dynamic-input
                 [input]="inputs['rec.RESOLUTION_CONTROL_STATE']"
                 [form]="form"
                 [readonly]="false"
             ></eos-dynamic-input>
+        </div>
             <eos-dynamic-input
                 [input]="inputs['rec.CORRECT_CTRL_DATE']"
                 [form]="form"
@@ -192,7 +199,8 @@
                 [readonly]="false"
         ></eos-dynamic-input>
         <hr>
-        <span>Исполнители</span>
+        <div class = "check-resol">
+        <span class="check-resol-title">Исполнители:</span>
         <eos-dynamic-input
             [input]="inputs['rec.CHECK_RESOL_REPORT']"
             [form]="form"
@@ -208,6 +216,7 @@
             [form]="form"
             [readonly]="false"
         ></eos-dynamic-input>
+    </div>
         <span>Добавлять в журнал передачи документа:</span>
         <div class="add-to-juornal-radio">
             <span class="add-j-title">для:</span>
@@ -243,7 +252,7 @@
          ></eos-dynamic-input>
          <hr>
     <div class="send-res">
-        <span>Рассылка поручения</span>
+        <span>Рассылка поручения:</span>
         <eos-dynamic-input
             [input]="inputs['rec.SEND_ORDER_TO']"
             [form]="form"
@@ -255,7 +264,7 @@
             [readonly]="false"
         ></eos-dynamic-input>
         <hr>
-        <span>Проект резолюции</span>
+        <span>Проект резолюции:</span>
         <div class="resolution">
             <span>"Приоритет" по умолчанию</span>
            <div>
@@ -267,7 +276,9 @@
            </div>
         </div>
         <hr>
-
     </div>
-        </div>
 </div>
+<div class="informer" [hidden]="currTab !== 2">
+</div>
+</div>
+<div *ngIf="bacgHeader" class="bacgrFixed"></div>
