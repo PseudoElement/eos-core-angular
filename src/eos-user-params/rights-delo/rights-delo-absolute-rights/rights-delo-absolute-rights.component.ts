@@ -188,6 +188,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     });
                 this.rightContent = true;
                 break;
+            case E_RIGHT_DELO_ACCESS_CONTENT.docGroup:
             case E_RIGHT_DELO_ACCESS_CONTENT.department:
             case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject:
                 if (this.selectedNode.value) {

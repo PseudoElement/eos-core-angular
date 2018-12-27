@@ -103,5 +103,9 @@
 
     <!-- Группы документов -->
 <ng-template #rightDocGroup>
-    Группы документов!!!
+    <eos-right-absolute-doc-group
+        [selectedNode]="selectedNode"
+        [curentUser]="curentUser"
+        (Changed)="checkChange()"
+    ></eos-right-absolute-doc-group>
 </ng-template>
