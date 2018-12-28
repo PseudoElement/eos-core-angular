@@ -1,19 +1,37 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { NodeDocsTree } from './node-docs-tree';
 
 @Component({
     selector: 'eos-list-doc-tree',
-    templateUrl: 'list-docs-tree.component.html'
+    templateUrl: 'list-docs-tree.component.html',
 })
-export class ListDocsTreeComponent implements OnInit {
+export class ListDocsTreeComponent implements OnInit, OnChanges {
     @Input() listNode: NodeDocsTree[];
     @Output() select = new EventEmitter();
+    @Output() checkedNode = new EventEmitter();
     list: NodeDocsTree[] = [];
+    curentNode: NodeDocsTree;
 
     ngOnInit() {
+        // this._createStructure(this.listNode);
+    }
+    ngOnChanges(changes: SimpleChanges) {
         this._createStructure(this.listNode);
     }
+
+    clickLable(event, item: NodeDocsTree) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (event.target.tagName === 'LABEL') { // click to label
+            this._selectNode(item);
+        }
+        if (event.target.tagName === 'SPAN') { // click to checkbox
+            item.allowed = !item.allowed;
+            this.checkedNode.emit(item);
+        }
+    }
     private _createStructure(list: NodeDocsTree[]) {
+        this.list = [];
         list.forEach((node: NodeDocsTree) => {
             if (node.link.length === 1) {
                 this.list.push(node);
@@ -22,7 +40,6 @@ export class ListDocsTreeComponent implements OnInit {
             }
         });
         this._writeLayer(this.list, 0);
-        console.log(this.list);
     }
     private _findParent(node: NodeDocsTree) {
         let parent: NodeDocsTree = null;
@@ -47,5 +64,13 @@ export class ListDocsTreeComponent implements OnInit {
                 this._writeLayer(node.children, layer + 1);
             }
         });
+    }
+    private _selectNode(item: NodeDocsTree) {
+        if (this.curentNode) {
+            this.curentNode.isSelected = false;
+        }
+        this.curentNode = item;
+        this.curentNode.isSelected = true;
+        this.select.emit(item);
     }
 }

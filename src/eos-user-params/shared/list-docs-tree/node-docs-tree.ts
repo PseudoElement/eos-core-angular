@@ -9,6 +9,7 @@ export class NodeDocsTree implements IListDocsTree {
     parent: NodeDocsTree;
     layer: number;
     link: string[];
+    isSelected: boolean = false;
     constructor(due: string, label: string, allowed: boolean, data?: any) {
         this.DUE = due;
         this.label = label;
@@ -19,5 +20,10 @@ export class NodeDocsTree implements IListDocsTree {
     }
     addChildren(node: NodeDocsTree) {
         this.children.push(node);
+    }
+    deleteChild(node: NodeDocsTree) {
+        if (this.children.length) {
+            this.children = this.children.filter((chld) => chld !== node);
+        }
     }
 }

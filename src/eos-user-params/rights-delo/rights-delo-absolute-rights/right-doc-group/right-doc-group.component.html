@@ -1,6 +1,7 @@
 <div *ngIf="!isLoading">
     <button
         class="btn"
+        triggers="hover"
         tooltip="Добавить"
         placement="bottom"
         containerClass="tooltip-info"
@@ -13,7 +14,7 @@
         tooltip="Удалить"
         placement="bottom"
         containerClass="tooltip-info"
-        [disabled]="!selectedDep"
+        [disabled]="!curentNode"
         (click)="DeleteDoc()"
     >
         <span class="eos-icon eos-icon-bin-forever-blue small"></span>
@@ -23,5 +24,8 @@
     <eos-list-doc-tree
         [listNode]="list"
         (select)="select($event)"
+        (checkedNode)="checkedNode($event)"
     ></eos-list-doc-tree>
 </div>
+
+<div *ngIf="isShell" class="shell"></div>

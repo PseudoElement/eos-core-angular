@@ -11,8 +11,19 @@
 <ng-template #treeNodeTmpl
     let-node="node">
     <div
+        [ngClass]="{'highlighted': node.isSelected}"
         [ngStyle]="{'padding-left.px': node.layer * 30}">
-        {{node.label}}
+
+        <label class="checkbox" (click)="clickLable($event, node)">
+            <input type="checkbox"
+                hide
+                [checked]="node.allowed"
+            >
+            <span class="eos-icon eos-icon-checkbox-square-blue x-small">
+            </span>
+            {{node.label}}
+        </label>
+
     </div>
     <ng-container *ngIf="node.children.length">
         <ng-container *ngTemplateOutlet="treeTmpl; context: {items: node.children}"></ng-container>
