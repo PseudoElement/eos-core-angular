@@ -524,8 +524,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             if (node) {
                 if (node.data.PROTECTED) {
                     this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
-                } else if (node.isDeleted) {
-                    this._msgSrv.addNewMessage(DANGER_EDIT_DELETED_ERROR);
+                // } else if (node.isDeleted) {
+                //     this._msgSrv.addNewMessage(DANGER_EDIT_DELETED_ERROR);
                 } else {
                     this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg'});
                     this.modalWindow.content.init(node.id);
@@ -565,20 +565,25 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
     private _restoreItems(): void {
         const childrenTitles: string[] = [];
+        let hasFolding = false;
         let p: Promise<any> = Promise.resolve(false);
 
-        this._dictSrv.getMarkedNodes(true).forEach((node) => {
+        this._dictSrv.getMarkedNodes(false).forEach((node) => {
             if (node.parent && node.parent.isDeleted) {
                 this._msgSrv.addNewMessage(DANGER_LOGICALY_RESTORE_ELEMENT);
                 node.marked = false;
             } else {
-                if (node.children && node.children.length) {
+                if (node.isNode) {
+                    hasFolding = true;
                     childrenTitles.push(node.title);
                 }
+                // if (node.children && node.children.length) {
+                //     childrenTitles.push(node.title);
+                // }
             }
         });
 
-        if (childrenTitles.length) {
+        if (childrenTitles.length || hasFolding) {
             const _confrm = Object.assign({}, CONFIRM_SUBNODES_RESTORE);
             _confrm.body = _confrm.body.replace('{{name}}', childrenTitles.join(', '));
 
