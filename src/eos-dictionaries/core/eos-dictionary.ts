@@ -93,7 +93,8 @@ export class EosDictionary {
     }
 
     bindOrganization(orgDue: string): Promise<any> {
-        if (orgDue && this.descriptor.type === E_DICT_TYPE.department) {
+        if (orgDue && (this.descriptor.type === E_DICT_TYPE.department ||
+            this.descriptor.id === 'sev-participant')) {
             const dOrganization = <OrganizationDictionaryDescriptor>this.dictDescrSrv.getDescriptorClass('organization');
             return dOrganization.getData([orgDue])
                 .then(([organization]) => organization);

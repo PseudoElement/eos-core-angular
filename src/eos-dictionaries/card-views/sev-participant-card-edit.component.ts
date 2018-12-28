@@ -69,7 +69,7 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
         const config = this.dictSrv.getApiConfig();
         if (config) {
             const pageUrl = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?';
-            const params = 'Classif=ORGANIZ_CL&value_id=__ClassifIds&skip_deleted=True&select_nodes=False&select_leaf=True&return_due=True';
+            const params = 'Classif=CONTACT&value_id=__ClassifIds&skip_deleted=True&select_nodes=False&select_leaf=True&return_due=True';
             this._zone.runOutsideAngular(() => {
                 window.open(pageUrl + params, 'clhoose', 'width=1050,height=800,resizable=1,status=1,top=20,left=20');
                 window['endPopup'] = (due) => {
@@ -85,7 +85,8 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
             .then((org) => {
                 if (org) {
                     this._orgName = org['CLASSIF_NAME'];
-                    this.setValue('rec.DUE_LINK_ORGANIZ', org.DUE);
+                    this.setValue('rec.DUE_ORGANIZ', org.DUE);
+                    this.setValue('rec.CLASSIF_NAME', org['CLASSIF_NAME']);
                 }
             });
     }

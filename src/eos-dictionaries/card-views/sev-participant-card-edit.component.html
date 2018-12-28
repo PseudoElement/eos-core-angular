@@ -7,19 +7,20 @@
                     (click)="chooseOrganiz()">[выбрать]</a> <a
                     *ngIf="editMode"
                     (click)="unbindOrganization()">[удалить]</a></label>
-                <eos-dynamic-input *ngIf="inputs['rec.DUE_ORGANIZ']"
+        <eos-dynamic-input *ngIf="inputs['rec.CLASSIF_NAME']"
+                    [input]="inputs['rec.CLASSIF_NAME']"
+                    [form]="form"
+                    hideLabel="true"
+                    readonly="true"></eos-dynamic-input>
+        <eos-dynamic-input *ngIf="inputs['rec.DUE_ORGANIZ']"
                     [input]="inputs['rec.DUE_ORGANIZ']"
                     [form]="form"
+                    hidden="true"
                     hideLabel="true"
                     [readonly]="!editMode"></eos-dynamic-input>
                 </div>
         </div>
 
-        <eos-dynamic-input *ngIf="inputs['rec.CLASSIF_NAME']"
-                            [input]="inputs['rec.CLASSIF_NAME']"
-                            [form]="form"
-                            hidden="true"
-                            [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input *ngIf="inputs['rec.NOTE']"
                             [input]="inputs['rec.NOTE']"
                             [form]="form"

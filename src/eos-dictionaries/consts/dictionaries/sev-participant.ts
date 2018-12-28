@@ -2,6 +2,7 @@ import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { NOT_EMPTY_STRING } from '../input-validation';
 import { BROADCAST_CHANNEL_DICT } from './broadcast-channel';
+import { COMMON_FIELD_NAME } from './_common';
 
 export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'sev-participant',
@@ -18,7 +19,9 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LIN
         type: 'string',
         required: true,
         pattern: NOT_EMPTY_STRING,
-    }, {
+    }, Object.assign({}, COMMON_FIELD_NAME, {
+        title: 'Организация'
+    }), {
         key: 'ISN_CHANNEL',
         type: 'select',
         dictionaryId: BROADCAST_CHANNEL_DICT.apiInstance,
@@ -36,7 +39,7 @@ export const PARTICIPANT_SEV_DICT: IDictionaryDescriptor = Object.assign({}, LIN
         title: 'Используемые правила',
     }]),
     editFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'ADDRESS', 'SEV_PARTICIPANT_RULE_List', 'CLASSIF_NAME'],
-    listFields: ['DUE_ORGANIZ'],
+    listFields: ['CLASSIF_NAME'],
     allVisibleFields: ['ISN_CHANNEL', 'NOTE', 'ADDRESS', 'SEV_PARTICIPANT_RULE_List'],
     quickViewFields: ['DUE_ORGANIZ', 'NOTE', 'ISN_CHANNEL', 'ADDRESS', 'SEV_PARTICIPANT_RULE_List'],
     searchFields: [],
