@@ -132,7 +132,7 @@ export class TreeDictionaryDescriptor extends AbstractDictionaryDescriptor {
     }
 
     getRoot(): Promise<any[]> {
-        return this.getData({ criteries: { LAYER: '0:2'/*, IS_NODE: '0'*/ } }, 'DUE');
+        return this.getData({ criteries: { LAYER: '0:2'/*, IS_NODE: '0'*/ } }, 'WEIGHT');
     }
 
     getSubtree(record: IHierCL): Promise<IHierCL[]> {
