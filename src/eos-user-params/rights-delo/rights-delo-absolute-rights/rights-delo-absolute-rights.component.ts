@@ -132,6 +132,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department || E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor || E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject)) {
                 this._deleteAllDep(item);
             }
+            if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup)) {
+                this._deleteAllDocGroup(item);
+            }
 
             item.value = +value;
 
@@ -228,6 +231,16 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
 
         list.forEach(li => {
+            item.pushChange({
+                method: 'DELETE',
+                due: li.DUE,
+                data: li
+            });
+        });
+        this.checkChange();
+    }
+    private _deleteAllDocGroup(item: NodeAbsoluteRight) {
+        this.curentUser.USER_RIGHT_DOCGROUP_List.forEach(li => {
             item.pushChange({
                 method: 'DELETE',
                 due: li.DUE,

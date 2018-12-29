@@ -67,7 +67,7 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
             data.forEach((doc: DOCGROUP_CL) => {
                 const node = this._createNode({
                     ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
-                    FUNC_NUM: 29,
+                    FUNC_NUM: +this.selectedNode.key + 1,
                     DUE: doc.DUE,
                     ALLOWED: 0
                 },
@@ -113,6 +113,9 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
     private _init() {
         this.isLoading = true;
         const str = this.curentUser.USER_RIGHT_DOCGROUP_List.map(i => i.DUE);
+        if (this.selectedNode.isCreate) {
+            str.push('0.');
+        }
         this.apiSrv.getDocGroup(str.join('||'))
         .then((data: DOCGROUP_CL[]) => {
             this.curentUser.USER_RIGHT_DOCGROUP_List.forEach((item: USER_RIGHT_DOCGROUP) => {
@@ -122,6 +125,24 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
                     }
                 });
             });
+            if (this.selectedNode.isCreate) {
+                data.forEach(d => {
+                    if (d.DUE === '0.') {
+                        const rightDocGroup = {
+                            ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
+                            FUNC_NUM: +this.selectedNode.key + 1,
+                            DUE: d.DUE,
+                            ALLOWED: 0
+                        };
+                        this.list.push(this._createNode(rightDocGroup, d));
+                        this.selectedNode.pushChange({
+                            method: 'POST',
+                            due: rightDocGroup.DUE,
+                            data: rightDocGroup
+                        });
+                    }
+                });
+            }
 
             this.isLoading = false;
         });
