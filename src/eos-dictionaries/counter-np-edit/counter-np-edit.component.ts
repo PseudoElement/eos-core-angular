@@ -47,6 +47,7 @@ export class CounterNpEditComponent implements OnDestroy, OnInit {
 
     init(baseid: string) {
         this.baseId = baseid;
+        this.editValueYear = (new Date).getFullYear();
         this._dep_node['CLASSIF_NAME'] = '...';
         this.apiSrv.read({'DEPARTMENT': this.baseId}).then((data) => {
             this._dep_node = data[0];
