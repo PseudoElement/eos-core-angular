@@ -16,6 +16,33 @@ import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { USERDEP } from 'eos-rest';
 import { RestError } from 'eos-rest/core/rest-error';
 
+const QUERY = [
+    {
+        FUNC_NUM: 8,
+        CLASSIF_ID: 107
+    },
+    {
+        FUNC_NUM: 9,
+        CLASSIF_ID: 105
+    },
+    {
+        FUNC_NUM: 10,
+        CLASSIF_ID: 104
+    },
+    {
+        FUNC_NUM: 14,
+        CLASSIF_ID: 119
+    },
+    {
+        FUNC_NUM: 18,
+        CLASSIF_ID: 120
+    },
+    {
+        FUNC_NUM: 29,
+        CLASSIF_ID: 0
+    },
+];
+
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
     templateUrl: 'rights-delo-absolute-rights.component.html'
@@ -89,6 +116,35 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         this.listRight.forEach((node: NodeAbsoluteRight) => {
             if (node.touched) {
+
+                /* костыль для технолога */
+                if (node.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.classif) {
+                    let m = '';
+                    if (node.value) {
+                        m = 'POST';
+                    } else {
+                        m = 'DELETE';
+                    }
+                    QUERY.forEach(item => {
+                        const param = node.value ? '' : `('${this._userParamsSetSrv.userContextId} ${item.FUNC_NUM} 0.')`;
+                        const q = {
+                            method: m,
+                            requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USER_TECH_List${param}`
+                        };
+                        if (node.value) {
+                            q['data'] = {
+                                ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
+                                FUNC_NUM: item.FUNC_NUM,
+                                DUE: '0.',
+                                CLASSIF_ID: item.CLASSIF_ID,
+                                ALLOWED: 1
+                            };
+                        }
+                        this.queryForSave.push(q);
+                    });
+                }
+                /* костыль для технолога */
+
                 node.change.forEach(ch => {
                     this.queryForSave.push(this._createBatch(ch, node));
                 });
@@ -202,6 +258,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     });
                 this.rightContent = true;
                 break;
+            case E_RIGHT_DELO_ACCESS_CONTENT.classif:
             case E_RIGHT_DELO_ACCESS_CONTENT.docGroup:
             case E_RIGHT_DELO_ACCESS_CONTENT.department:
             case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject:
