@@ -30,9 +30,11 @@ export class ListDocsTreeComponent implements OnInit, OnChanges {
             this.checkedNode.emit(item);
         }
     }
-    private _createStructure(list: NodeDocsTree[]) {
+    private _createStructure(liNodes: NodeDocsTree[]) {
         this.list = [];
-        list.forEach((node: NodeDocsTree) => {
+        liNodes.forEach((node: NodeDocsTree) => {
+            node.children = [];
+            node.parent = null;
             if (node.link.length === 1) {
                 this.list.push(node);
             } else {

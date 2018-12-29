@@ -7,12 +7,14 @@ import { InputParamControlService } from 'eos-user-params/shared/services/input-
 import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { FormGroup, FormControl } from '@angular/forms';
-import { E_RIGHT_DELO_ACCESS_CONTENT } from '../shared-rights-delo/interfaces/right-delo.intefaces';
+import { E_RIGHT_DELO_ACCESS_CONTENT, IChengeItemAbsolute } from '../shared-rights-delo/interfaces/right-delo.intefaces';
 import { RadioInput } from 'eos-common/core/inputs/radio-input';
 import { Subscription } from 'rxjs/Subscription';
 import { NodeAbsoluteRight } from './node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
+import { USERDEP } from 'eos-rest';
+import { RestError } from 'eos-rest/core/rest-error';
 
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
@@ -88,17 +90,26 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.listRight.forEach((node: NodeAbsoluteRight) => {
             if (node.touched) {
                 node.change.forEach(ch => {
-                    this.queryForSave.push(this._createBatch(ch));
+                    this.queryForSave.push(this._createBatch(ch, node));
                 });
                 node.deleteChange();
             }
         });
-
         this.apiSrv.setData(this.queryForSave)
         .then(() => {
             this.queryForSave = [];
             this.btnDisabled = true;
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+        })
+        .catch((e) => {
+            if (e instanceof RestError) {
+                this._msgSrv.addNewMessage({
+                    type: 'danger',
+                    title: e.code.toString(),
+                    msg: e.message
+                });
+            }
+            this.cancel();
         });
     }
     cancel() {
@@ -207,7 +218,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         return fields;
     }
     private _deleteAllDep(item: NodeAbsoluteRight) {
-        const list = [];
+        const list: USERDEP[] = [];
         this.curentUser.USERDEP_List = this.curentUser.USERDEP_List.filter(li => {
             if (li['FUNC_NUM'] === +item.key + 1) {
                 list.push(li);
@@ -218,24 +229,35 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
 
         list.forEach(li => {
             item.pushChange({
-                userDep: li,
-                createEntity: false
+                method: 'DELETE',
+                due: li.DUE,
+                data: li
             });
         });
         this.checkChange();
     }
 
-    private _createBatch(data) {
-        const create = data['createEntity'];
-        const userDep = Object.assign({}, data['userDep']);
-
-        const str = create ? '' : `('${this._userParamsSetSrv.userContextId} ${userDep['DUE']} ${userDep['FUNC_NUM']}')`;
+    private _createBatch(chenge: IChengeItemAbsolute, node: NodeAbsoluteRight) {
+        const uId = this._userParamsSetSrv.userContextId;
+        let url = '';
+        switch (node.contentProp) {
+            case E_RIGHT_DELO_ACCESS_CONTENT.department:
+            case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor:
+            case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject:
+            url = `USERDEP_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.due} ${chenge.data['FUNC_NUM']}')`}`;
+                break;
+            case E_RIGHT_DELO_ACCESS_CONTENT.docGroup:
+            url = `USER_RIGHT_DOCGROUP_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.data['FUNC_NUM']} ${chenge.due}')`}`;
+                break;
+        }
         const batch = {
-            method: create ? 'POST' : 'DELETE',
-            requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USERDEP_List${str}`,
+            method: chenge.method,
+            requestUri: `USER_CL(${uId})/${url}`,
         };
-        if (create) {
-            batch['data'] = userDep;
+        if (chenge.method === 'POST' || chenge.method === 'MERGE') {
+            delete chenge.data['CompositePrimaryKey'];
+            delete chenge.data['__metadata'];
+            batch['data'] = chenge.data;
         }
         return batch;
     }

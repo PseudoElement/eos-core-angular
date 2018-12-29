@@ -39,7 +39,12 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
         }
     }
     checkedNode(node: NodeDocsTree) {
-        console.log(node);
+        this.selectedNode.pushChange({
+            method: 'MERGE',
+            due: node.DUE,
+            data: node.data['rightDocGroup']
+        });
+        this.Changed.emit();
     }
 
     addDoc() {
@@ -60,18 +65,28 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
             }
             const nodes: NodeDocsTree[] = [];
             data.forEach((doc: DOCGROUP_CL) => {
-                nodes.push(this._createNode({
-                    ISN_LCLASSIF: +doc.CLASSIF_NAME,
+                const node = this._createNode({
+                    ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
                     FUNC_NUM: 29,
                     DUE: doc.DUE,
                     ALLOWED: 0
                 },
-                doc));
+                doc);
+
+                /* добавляем изменения */
+                this.selectedNode.pushChange({
+                    method: 'POST',
+                    due: node.DUE,
+                    data: node.data['rightDocGroup']
+                });
+
+
+                nodes.push(node);
             });
 
             this.isShell = false;
-            this._clearStructure();
             this.list = this.list.concat(nodes);
+            this.Changed.emit();
         })
         .catch(() => {
             this.isShell = false;
@@ -86,8 +101,13 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
         //     });
         // }
         this.list = this.list.filter(node => node !== this.curentNode);
-        this._clearStructure();
+        this.selectedNode.pushChange({
+            method: 'DELETE',
+            due: this.curentNode.DUE,
+            data: this.curentNode.data['rightDocGroup']
+        });
         this.curentNode = null;
+        this.Changed.emit();
     }
 
     private _init() {
@@ -133,11 +153,5 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
             return false;
         }
         return true;
-    }
-    private _clearStructure() {
-        this.list.forEach(node => {
-            node.children = [];
-            node.parent = null;
-        });
     }
 }

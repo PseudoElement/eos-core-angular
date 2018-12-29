@@ -3,17 +3,24 @@ import { IListDocsTree } from '../intrfaces/user-parm.intterfaces';
 export class NodeDocsTree implements IListDocsTree {
     DUE: string;
     label: string;
-    allowed: boolean;
     data: any;
     children: NodeDocsTree[] = [];
     parent: NodeDocsTree;
     layer: number;
     link: string[];
     isSelected: boolean = false;
+    private _allowed: boolean;
+    get allowed() {
+        return this._allowed;
+    }
+    set allowed(value: boolean) {
+        this._allowed = value;
+        this.data['rightDocGroup']['ALLOWED'] = +value;
+    }
     constructor(due: string, label: string, allowed: boolean, data?: any) {
         this.DUE = due;
         this.label = label;
-        this.allowed = allowed;
+        this._allowed = allowed;
         this.data = data;
         this.link = due.split('.');
         this.link.pop();
