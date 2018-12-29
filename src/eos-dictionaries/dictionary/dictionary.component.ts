@@ -38,7 +38,7 @@ import {NodeListComponent} from '../node-list/node-list.component';
 import {CreateNodeComponent} from '../create-node/create-node.component';
 import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.interfaces';
 import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
-import {CounterNpEditComponent, NUMCREATION_MAIN_NODE_ID} from '../counter-np-edit/counter-np-edit.component';
+import {CounterNpEditComponent} from '../counter-np-edit/counter-np-edit.component';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
 
 @Component({
@@ -517,18 +517,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         this.modalWindow = null;
         if (isMainNP) {
             this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg'});
-            this.modalWindow.content.init(NUMCREATION_MAIN_NODE_ID);
-
+            this.modalWindow.content.initbyNodeData(null);
         } else {
             const node = this._dictSrv.listNode;
             if (node) {
                 if (node.data.PROTECTED) {
                     this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
-                // } else if (node.isDeleted) {
-                //     this._msgSrv.addNewMessage(DANGER_EDIT_DELETED_ERROR);
                 } else {
                     this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg'});
-                    this.modalWindow.content.init(node.id);
+                    this.modalWindow.content.initbyNodeData(node.data.rec);
                 }
             } else {
                 this._msgSrv.addNewMessage(WARN_EDIT_ERROR);
