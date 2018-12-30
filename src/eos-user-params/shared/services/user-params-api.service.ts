@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { USER_CL, DEPARTMENT } from 'eos-rest';
+import { USER_CL, DEPARTMENT, DOCGROUP_CL } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
@@ -87,6 +87,16 @@ export class UserParamApiSrv {
         }
         const query = {DEPARTMENT: q};
         return this.getData<DEPARTMENT>(query);
+    }
+    getDocGroup(due?: string): Promise<DOCGROUP_CL[]> {
+        let q;
+        if (!due) {
+            q = ALL_ROWS;
+        } else {
+            q = PipRX.criteries({DUE: due});
+        }
+        const query = {DOCGROUP_CL: q};
+        return this.getData<DOCGROUP_CL>(query);
     }
 
     changePagination(config: IPaginationConfig) {

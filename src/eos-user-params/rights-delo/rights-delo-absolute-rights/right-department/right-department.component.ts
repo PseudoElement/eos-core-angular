@@ -87,7 +87,11 @@ export class RightDepertmentComponent implements OnInit {
             );
             this.curentUser.USERDEP_List.push(newNode.userDep);
             this.listUserDep.push(newNode);
-            this.selectedNode.pushChange(newNode);
+            this.selectedNode.pushChange({
+                method: 'POST',
+                due: newNode.userDep.DUE,
+                data: newNode.userDep
+            });
             this.selectedNode.isCreate = false;
             this.isShell = false;
             this.Changed.emit();
@@ -112,7 +116,11 @@ export class RightDepertmentComponent implements OnInit {
             this.selectedNode.value = 0;
         }
         this.selectedDep.createEntity = false;
-        this.selectedNode.pushChange(this.selectedDep);
+        this.selectedNode.pushChange({
+            method: 'DELETE',
+            due: this.selectedDep.userDep.DUE,
+            data: this.selectedDep.userDep
+        });
         this.selectedDep = null;
         this.Changed.emit();
     }
