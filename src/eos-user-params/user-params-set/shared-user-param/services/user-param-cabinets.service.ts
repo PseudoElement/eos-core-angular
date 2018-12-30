@@ -7,7 +7,7 @@ import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../consts/eos-user-params
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 @Injectable()
 export class UserParamCabinetsSrv extends BaseUserSrv {
-    readonly fieldGroupsForCabinets: string[] = ['Папки', 'Поручения', 'Информер'];
+    readonly fieldGroupsForCabinets: string[] = ['Папки', 'Поручения'];
     readonly fieldsKeysForHighlightNewEnntriesInTheFolder: string[] = ['FOLDERCOLORSTATUS_RECEIVED',
 'FOLDERCOLORSTATUS_FOR_EXECUTION', 'FOLDERCOLORSTATUS_UNDER_CONTROL', 'FOLDERCOLORSTATUS_HAVE_LEADERSHIP',
 'FOLDERCOLORSTATUS_FOR_CONSIDERATION', 'FOLDERCOLORSTATUS_INTO_THE_BUSINESS', 'FOLDERCOLORSTATUS_PROJECT_MANAGEMENT',
