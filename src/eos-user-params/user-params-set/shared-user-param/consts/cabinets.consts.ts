@@ -215,7 +215,7 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'ADD_ADRESS_REPORGANIZ',
             type: 'boolean',
-            title: 'Добавлять внешних исполнителей поручений в адресаты',
+            title: 'Не добавлять внешних исполнителей поручения в Адресаты',
         },
         {
             key: 'RESOLUTION_CICLE',
