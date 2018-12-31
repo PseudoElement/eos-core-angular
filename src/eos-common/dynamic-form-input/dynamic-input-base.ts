@@ -11,6 +11,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     @Input() disabled: boolean;
     @Input() inputTooltip: any;
     @Input() isGroup: boolean;
+    @Input() hideLabel: boolean;
 
     protected subscriptions: Subscription[] = [];
 

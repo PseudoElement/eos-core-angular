@@ -92,6 +92,14 @@
                                   [data]="data"
                                   [isNewRecord]="isNewRecord"
                                   [editMode]="editMode"></eos-nomenkl-card>
+                <eos-sev-participant-card-edit *ngSwitchCase="'sev-participant'"
+                                  #cardEditEl
+                                  class="nomenkl-card simple-card-edit"
+                                  [form]="form"
+                                  [inputs]="inputs"
+                                  [data]="data"
+                                  [isNewRecord]="isNewRecord"
+                                  [editMode]="editMode"></eos-sev-participant-card-edit>
                 <eos-citizen-card *ngSwitchCase="'citizens'"
                                   #cardEditEl
                                   class="citizen-card simple-card-edit"

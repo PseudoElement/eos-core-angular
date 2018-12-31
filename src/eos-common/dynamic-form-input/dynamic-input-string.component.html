@@ -1,6 +1,6 @@
 <div [formGroup]="form"
      class="dynamic-input-wrapper">
-    <label [hidden]="input.hideLabel"
+    <label [hidden]="(input.hideLabel || hideLabel)"
            [attr.for]="input.key">{{label}}</label>
     <div [ngClass]="{'required': isRequired, 'disabled': disabled}">
         <input class="form-control m-font"

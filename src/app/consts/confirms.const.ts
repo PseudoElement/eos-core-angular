@@ -34,3 +34,10 @@ export const CONFIRM_SUBNODES_RESTORE: IConfirmWindow = {
     okTitle: 'Восстановить дочерние',
     cancelTitle: 'Не восстанавливать дочерние'
 };
+
+export const CONFIRM_NUMCREATION_NP_CHANGE: IConfirmWindow = {
+    title: 'Подтверждение изменения',
+    body: 'Вы хотите изменить значение счетчика с "{{old_value}}" на "{{new_value}}"? ',
+    okTitle: 'Да',
+    cancelTitle: 'Нет'
+};

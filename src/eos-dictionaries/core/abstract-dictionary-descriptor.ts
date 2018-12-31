@@ -365,15 +365,41 @@ export abstract class AbstractDictionaryDescriptor {
             });
     }
 
-    getFullRelated(): Promise<any> {
+    // getFullRelated(): Promise<any> {
+    //     const reqs = [];
+    //     this.metadata.relations.forEach((relation) => {
+    //         reqs.push(this.apiSrv
+    //             .read({[relation.__type]: []}));
+    //     });
+    //     return Promise.all(reqs)
+    //         .then((responses) => {
+    //             return this.associateRelationType(responses);
+    //         });
+    // }
+
+    getRelatedFields(tables: string[]): Promise<any> {
         const reqs = [];
-        this.metadata.relations.forEach((relation) => {
-            reqs.push(this.apiSrv
-                .read({[relation.__type]: []}));
+        tables.forEach( t => {
+            if (t) {
+                const md = this.metadata.relations.find( rel => t === rel.__type);
+                if (md) {
+                    reqs.push(this.apiSrv
+                        .read({[t]: []}));
+                }
+            }
         });
+
+
+        // this.metadata.relations.forEach((relation) => {
+        //     if (s.find(i => i === relation.__type)) {
+        //         reqs.push(
+        //             this.apiSrv.read({[relation.__type]: []}));
+        //     }
+        // });
         return Promise.all(reqs)
             .then((responses) => {
-                return this.associateRelationType(responses);
+
+                return this.associateRelationType(tables, responses);
             });
     }
 
@@ -457,10 +483,10 @@ export abstract class AbstractDictionaryDescriptor {
         return related;
     }
 
-    protected associateRelationType(responses: any[]): any {
+    protected associateRelationType(tables: string[], responses: any[]): any {
         const related = {};
-        this.metadata.relations.forEach((relation, idx) => {
-            related[relation.__type] = responses[idx];
+        tables.forEach((tab, idx) => {
+            related[tab] = responses[idx];
         });
         return related;
     }

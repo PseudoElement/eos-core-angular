@@ -692,6 +692,10 @@ export interface USER_CL extends ILinearCL {
      * список используемых для этого пользователя грифов доступа
      */
     USERSECUR_List: USERSECUR[];
+    /**
+     * список используемых для этого пользователя группы документов абсолютных прав
+     */
+    USER_RIGHT_DOCGROUP_List: USER_RIGHT_DOCGROUP[];
 }
 
 /**

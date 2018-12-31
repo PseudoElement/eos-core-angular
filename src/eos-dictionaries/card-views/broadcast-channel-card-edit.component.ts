@@ -65,7 +65,7 @@ export class BroadcastChannelCardEditComponent extends BaseCardEditComponent imp
     }
 
     onChannelTypeChanged() {
-        if (this.form) {
+        if (this.form && this.editMode) {
             if (this.isEmail) {
                 this.requirementsEmail.forEach(k => this.validatorEnable(k));
                 this.requirementsFS.forEach(k => this.validatorDisable(k));

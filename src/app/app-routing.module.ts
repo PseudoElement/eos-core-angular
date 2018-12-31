@@ -86,7 +86,8 @@ const childrenDictionariesComponent = [{
         }],
     }, {
         path: '',
-        component: DictionaryComponent,
+        redirectTo: '0.',
+        // component: DictionaryComponent,
         pathMatch: 'full',
     }],
 }];

@@ -71,6 +71,14 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
 
         this.dictSrv.inclineFields(field)
             .then(([res]: any) => {
+                const name = res['NAME'];
+                if (name && name.length === 1) {
+                    res['NAME_DP'] = name;
+                    res['NAME_PP'] = name;
+                    res['NAME_RP'] = name;
+                    res['NAME_TP'] = name;
+                    res['NAME_VP'] = name;
+                }
                 if (res) {
                     Object.keys(res).forEach((key) => {
                         if (key !== 'PRINT_DEPARTMENT') {

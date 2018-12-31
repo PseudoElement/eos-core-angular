@@ -186,14 +186,26 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
         return this.getOwners(record.DUE)
             .then((owners) => this.updateOwnersCabinet(owners, record.ISN_CABINET, null))
             .then(() => {
-                record._State = _ES.Deleted;
-                const changes = this.apiSrv.changeList([record]);
-                return this.apiSrv.batch(changes, '')
-                    .then(() => {
-                        return <IRecordOperationResult>{
-                            record: record,
-                            success: true
-                        };
+                return this._canDelete(record)
+                    .then((canDelete) => {
+                        if (canDelete) {
+                            record._State = _ES.Deleted;
+                            const changes = this.apiSrv.changeList([record]);
+                            return this.apiSrv.batch(changes, '')
+                                .then(() => {
+                                    return <IRecordOperationResult>{
+                                        record: record,
+                                        success: true
+                                    };
+                                });
+                        } else {
+                            return <IRecordOperationResult>{
+                                record: Object.assign(record, {CLASSIF_NAME: record['CABINET_NAME']}),
+                                success: false,
+                                error: {code: 0,
+                                    message: 'Папки кабинета не пусты'}
+                            };
+                        }
                     });
             }).catch((err) => {
                 return <IRecordOperationResult>{
@@ -206,6 +218,33 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
 
     protected _initRecord(data: IDictionaryDescriptor) {
         this.record = new CabinetRecordDescriptor(this, data);
+    }
+
+    private _canDelete(record): Promise<boolean> {
+        const foldISN = [];
+        record.FOLDER_List.forEach((folder) => {
+            foldISN.push(folder.ISN_FOLDER);
+        });
+
+        if (foldISN.length) {
+            return this.apiSrv.read({ 'DOC_FOLDER_ITEM': PipRX.criteries({ 'ISN_FOLDER': foldISN.join('|') })})
+                .then((docs) => {
+                    if (docs.length) {
+                        return false;
+                    } else {
+                        return this.apiSrv.read({ 'PRJ_FOLDER_ITEM': PipRX.criteries({ 'ISN_FOLDER': foldISN.join('|') })})
+                            .then((prjs) => {
+                                if (prjs.length) {
+                                    return false;
+                                } else {
+                                    return true;
+                                }
+                            });
+                    }
+                });
+        } else {
+            return Promise.resolve(true);
+        }
     }
 
     private updateOwnersCabinet(owners: DEPARTMENT[], oldCabinetIsn: number, newCabinetIsn: number): Promise<any> {

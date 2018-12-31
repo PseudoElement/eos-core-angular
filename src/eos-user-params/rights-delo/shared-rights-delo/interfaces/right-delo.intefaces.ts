@@ -9,3 +9,8 @@ export enum E_RIGHT_DELO_ACCESS_CONTENT {
     all,
     departmentCardAuthorSentProject,
 }
+export interface IChengeItemAbsolute {
+    method: 'POST'|'DELETE'|'MERGE';
+    due: string;
+    data: any;
+}

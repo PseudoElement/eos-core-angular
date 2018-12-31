@@ -37,6 +37,7 @@ export class CardFilesDirectoryModalComponent extends BaseRightsDeloSrv implemen
         this.dataSrv = injector.get(EosDataConvertService);
     }
     ngOnInit () {
+     this.isLoading = true;
      this.servApi.getData(this.quaryDepartment)
         .then(data => {
             for (let i = 0; i < data.length; i++) {

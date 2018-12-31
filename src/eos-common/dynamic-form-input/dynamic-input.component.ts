@@ -13,6 +13,7 @@ export class DynamicInputComponent {
     @Input() readonly: boolean;
     @Input() disabled: boolean;
     @Input() isGroup: boolean;
+    @Input() hideLabel: boolean;
 
     types = E_FIELD_TYPE;
 

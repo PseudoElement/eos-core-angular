@@ -18,12 +18,12 @@
             [readonly]="false"
         ></eos-dynamic-input>
     </div>
-    <div>
+    <div class="flex-wr">
         <div [formGroup]="form"
             class="dynamic-input-wrapper inline-block base-department-input">
             <label
                 [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
-            <div style="width: 461px">
+            <div class="create-user-wr" style="width: 461px">
             <input class="form-control m-font inline-block"
                 readonly
                 [formControlName]="inputs['DUE_DEP_NAME'].key"
@@ -48,7 +48,7 @@
         class="dynamic-input-wrapper inline-block base-department-input">
         <label
             [attr.for]="inputs['USER_COPY'].key">{{inputs['USER_COPY'].label}}</label>
-        <div style="width: 461px">
+        <div class="create-user-wr" style="width: 461px">
         <input class="form-control m-font inline-block"
             readonly
             [formControlName]="inputs['USER_COPY'].key"

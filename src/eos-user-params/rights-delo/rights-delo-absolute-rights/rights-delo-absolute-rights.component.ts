@@ -7,12 +7,14 @@ import { InputParamControlService } from 'eos-user-params/shared/services/input-
 import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { FormGroup, FormControl } from '@angular/forms';
-import { E_RIGHT_DELO_ACCESS_CONTENT } from '../shared-rights-delo/interfaces/right-delo.intefaces';
+import { E_RIGHT_DELO_ACCESS_CONTENT, IChengeItemAbsolute } from '../shared-rights-delo/interfaces/right-delo.intefaces';
 import { RadioInput } from 'eos-common/core/inputs/radio-input';
 import { Subscription } from 'rxjs/Subscription';
 import { NodeAbsoluteRight } from './node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
+import { USERDEP } from 'eos-rest';
+import { RestError } from 'eos-rest/core/rest-error';
 
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
@@ -50,20 +52,17 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
 
     init() {
         this.curentUser = this._userParamsSetSrv.curentUser;
-        this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split('');
+        this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split(''); // проверка на наличие массива, если нету , то создать новый
         this.arrNEWDeloRight = this.curentUser['DELO_RIGHTS'].split('');
         this.fields = this._writeValue(ABSOLUTE_RIGHTS);
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
         this.listRight = this._createList(ABSOLUTE_RIGHTS);
         this.subForm = this.form.valueChanges
-            .subscribe(data => {
-                for (const key in  data) {
-                    if (+this.arrNEWDeloRight[key] > 1 && data[key]) {
-                        continue;
-                    }
-                this.arrNEWDeloRight[key] = (+data[key]).toString();
-                }
+            .subscribe(() => {
+                this.listRight.forEach(node => {
+                    this.arrNEWDeloRight[+node.key] = node.value.toString();
+                });
                 this.checkChange();
                 setTimeout(() => {
                     this._viewContent();
@@ -91,20 +90,26 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.listRight.forEach((node: NodeAbsoluteRight) => {
             if (node.touched) {
                 node.change.forEach(ch => {
-                    this.queryForSave.push(this._createBatch(ch));
+                    this.queryForSave.push(this._createBatch(ch, node));
                 });
                 node.deleteChange();
             }
         });
-
         this.apiSrv.setData(this.queryForSave)
-        .then(data => {
+        .then(() => {
             this.queryForSave = [];
             this.btnDisabled = true;
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
         })
-        .catch(e => {
-            console.log(e);
+        .catch((e) => {
+            if (e instanceof RestError) {
+                this._msgSrv.addNewMessage({
+                    type: 'danger',
+                    title: e.code.toString(),
+                    msg: e.message
+                });
+            }
+            this.cancel();
         });
     }
     cancel() {
@@ -123,12 +128,15 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this.selectNode(item);
         }
         if (event.target.tagName === 'SPAN') { // click to checkbox
-            const value = !item.value;
+            const value = !(+item.value);
             if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department || E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor || E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject)) {
                 this._deleteAllDep(item);
             }
+            if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup)) {
+                this._deleteAllDocGroup(item);
+            }
 
-            item.value = value;
+            item.value = +value;
 
             if (item !== this.selectedNode && item.isCreate) {
                 this.selectNode(item);
@@ -185,15 +193,16 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         all: new FormControl(this.selectedNode.value ? this.arrNEWDeloRight[+this.selectedNode.key] : '0')
                 });
                 setTimeout(() => {
-                    this.selectedNode.value ? this.formGroupAll.enable() : this.formGroupAll.disable();
+                    this.selectedNode.value ? this.formGroupAll.enable({emitEvent: false}) : this.formGroupAll.disable({emitEvent: false});
                 }, 0);
                 this.subs['all'] = this.formGroupAll.valueChanges
                     .subscribe(data => {
-                        this.arrNEWDeloRight[+this.selectedNode.key] = data['all'];
+                        this.selectedNode.value = +data['all'];
                         this.checkChange();
                     });
                 this.rightContent = true;
                 break;
+            case E_RIGHT_DELO_ACCESS_CONTENT.docGroup:
             case E_RIGHT_DELO_ACCESS_CONTENT.department:
             case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject:
                 if (this.selectedNode.value) {
@@ -207,12 +216,12 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     private _createList(constanta: IInputParamControl[]): NodeAbsoluteRight[] {
         const fields = [];
         constanta.forEach((node: IInputParamControl) => {
-            fields.push(new NodeAbsoluteRight(node, !!+this.arrDeloRight[+node['key']], this.form.get(node['key'])));
+            fields.push(new NodeAbsoluteRight(node, +this.arrDeloRight[+node['key']], this.form.get(node['key'])));
         });
         return fields;
     }
     private _deleteAllDep(item: NodeAbsoluteRight) {
-        const list = [];
+        const list: USERDEP[] = [];
         this.curentUser.USERDEP_List = this.curentUser.USERDEP_List.filter(li => {
             if (li['FUNC_NUM'] === +item.key + 1) {
                 list.push(li);
@@ -223,24 +232,45 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
 
         list.forEach(li => {
             item.pushChange({
-                userDep: li,
-                createEntity: false
+                method: 'DELETE',
+                due: li.DUE,
+                data: li
+            });
+        });
+        this.checkChange();
+    }
+    private _deleteAllDocGroup(item: NodeAbsoluteRight) {
+        this.curentUser.USER_RIGHT_DOCGROUP_List.forEach(li => {
+            item.pushChange({
+                method: 'DELETE',
+                due: li.DUE,
+                data: li
             });
         });
         this.checkChange();
     }
 
-    private _createBatch(data) {
-        const create = data['createEntity'];
-        const userDep = Object.assign({}, data['userDep']);
-
-        const str = create ? '' : `('${this._userParamsSetSrv.userContextId} ${userDep['DUE']} ${userDep['FUNC_NUM']}')`;
+    private _createBatch(chenge: IChengeItemAbsolute, node: NodeAbsoluteRight) {
+        const uId = this._userParamsSetSrv.userContextId;
+        let url = '';
+        switch (node.contentProp) {
+            case E_RIGHT_DELO_ACCESS_CONTENT.department:
+            case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor:
+            case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject:
+            url = `USERDEP_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.due} ${chenge.data['FUNC_NUM']}')`}`;
+                break;
+            case E_RIGHT_DELO_ACCESS_CONTENT.docGroup:
+            url = `USER_RIGHT_DOCGROUP_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.data['FUNC_NUM']} ${chenge.due}')`}`;
+                break;
+        }
         const batch = {
-            method: create ? 'POST' : 'DELETE',
-            requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USERDEP_List${str}`,
+            method: chenge.method,
+            requestUri: `USER_CL(${uId})/${url}`,
         };
-        if (create) {
-            batch['data'] = userDep;
+        if (chenge.method === 'POST' || chenge.method === 'MERGE') {
+            delete chenge.data['CompositePrimaryKey'];
+            delete chenge.data['__metadata'];
+            batch['data'] = chenge.data;
         }
         return batch;
     }

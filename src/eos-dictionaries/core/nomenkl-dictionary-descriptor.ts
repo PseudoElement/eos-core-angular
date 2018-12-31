@@ -76,7 +76,8 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
     }
 
     getCustomTreeData(): Promise<CustomTreeNode[]> {
-        return this.apiSrv.read<DEPARTMENT>({'DEPARTMENT': PipRX.criteries({'IS_NODE': '0'})})
+
+        return this.apiSrv.read<DEPARTMENT>({'DEPARTMENT': PipRX.criteries({'IS_NODE': '0'}),  orderby: 'WEIGHT' })
             .then((data) => {
                 this._makeTreeData(data);
                 return this._treeData;

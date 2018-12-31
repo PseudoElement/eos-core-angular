@@ -157,9 +157,14 @@ export class EmailAddressService {
     }
 
     getAllEmails(email: string): Promise<boolean> {
+
         const query = {
-            NTFY_USER_EMAIL: ALL_ROWS
-        };
+            NTFY_USER_EMAIL: {
+                criteries: {
+                    ISN_USER: String(this._userServices.userContextId)
+            }
+        }
+    };
        return this._pipSrv.getData(query).then(result => {
             if (result.length > 0) {
                return result.some(el => {

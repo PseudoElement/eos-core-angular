@@ -222,23 +222,56 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
 
     moveUp(): void {
-        const _idx = this.nodes.findIndex((node) => node.isSelected);
-
-        if (_idx > 0) {
-            const item = this.nodes[_idx - 1];
-            this.nodes[_idx - 1] = this.nodes[_idx];
-            this.nodes[_idx] = item;
-            this.userOrdered(this.nodes);
+        if (!this.dictSrv.viewParameters.showAllSubnodes) {
+            const _idx = this.nodes.findIndex((node) => node.isSelected);
+            if (_idx > 0) {
+                const item = this.nodes[_idx - 1];
+                this.nodes[_idx - 1] = this.nodes[_idx];
+                this.nodes[_idx] = item;
+                this.userOrdered(this.nodes);
+            }
+        } else {
+            const _idx = this.nodes.findIndex((node) => node.isSelected);
+            let targ_idx = _idx - 1;
+            for (let i = targ_idx; i >= 0; i--) {
+                if (this.nodes[_idx].originalParentId === this.nodes[i].originalParentId) {
+                    targ_idx = i;
+                    if (targ_idx >= 0) {
+                        const item = this.nodes[targ_idx];
+                        this.nodes[targ_idx] = this.nodes[_idx];
+                        this.nodes[_idx] = item;
+                        this.userOrdered(this.nodes);
+                    }
+                    break;
+                }
+            }
         }
     }
 
     moveDown(): void {
-        const _idx = this.nodes.findIndex((node) => node.isSelected);
-        if (_idx < this.nodes.length - 1) {
-            const item = this.nodes[_idx + 1];
-            this.nodes[_idx + 1] = this.nodes[_idx];
-            this.nodes[_idx] = item;
-            this.userOrdered(this.nodes);
+        if (!this.dictSrv.viewParameters.showAllSubnodes) {
+            const _idx = this.nodes.findIndex((node) => node.isSelected);
+            if (_idx < this.nodes.length - 1) {
+                const item = this.nodes[_idx + 1];
+                this.nodes[_idx + 1] = this.nodes[_idx];
+                this.nodes[_idx] = item;
+                this.userOrdered(this.nodes);
+            }
+        } else {
+            const _idx = this.nodes.findIndex((node) => node.isSelected);
+            let targ_idx = _idx + 1;
+            for (let i = targ_idx; i < this.nodes.length; i++) {
+                if (this.nodes[_idx].originalId !== this.nodes[i].originalParentId) {
+                    targ_idx = i;
+                    if (targ_idx < this.nodes.length) {
+                        const item = this.nodes[targ_idx];
+                        this.nodes[targ_idx] = this.nodes[_idx];
+                        this.nodes[_idx] = item;
+                        this.userOrdered(this.nodes);
+                    }
+                    break;
+                }
+            }
         }
     }
 

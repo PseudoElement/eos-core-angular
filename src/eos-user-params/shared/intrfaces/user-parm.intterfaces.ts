@@ -51,3 +51,8 @@ export interface IParamUserCl extends USER_CL {
     isAccessDelo?: boolean;
     ACCESS_SYSTEMS?: string[];
 }
+export interface IListDocsTree {
+    DUE: string;
+    label: string;
+    allowed: boolean;
+}

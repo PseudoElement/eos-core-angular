@@ -13,11 +13,21 @@
     </div>
     <div *ngIf="activeLink">
         <div class="access-control">
-                <button type="button" class="btn btn-primary" (click)="OpenClassiv()">
-                        <span class="eos-icon eos-icon-plus-blue small"></span>
-                </button>
-            <button class="btn btn-primary" (click)='deliteEmailFild()'>
-                <span class="eos-icon eos-icon-bin-blue sma"></span>
+            <button
+                type="button"
+                class="btn btn-primary"
+                (click)="OpenClassiv()"
+                tooltip="Добавить"
+                containerClass="tooltip-info">
+                <span class="eos-icon eos-icon-plus-blue small"></span>
+            </button>
+            <button
+                type="button"
+                class="btn btn-primary"
+                (click)='deliteEmailFild()'
+                tooltip="Удалить"
+                containerClass="tooltip-info">
+                <span class="eos-icon eos-icon-bin-blue small"></span>
             </button>
         </div>
 

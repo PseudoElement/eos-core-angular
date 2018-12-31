@@ -87,7 +87,11 @@ export class RightDepertmentComponent implements OnInit {
             );
             this.curentUser.USERDEP_List.push(newNode.userDep);
             this.listUserDep.push(newNode);
-            this.selectedNode.pushChange(newNode);
+            this.selectedNode.pushChange({
+                method: 'POST',
+                due: newNode.userDep.DUE,
+                data: newNode.userDep
+            });
             this.selectedNode.isCreate = false;
             this.isShell = false;
             this.Changed.emit();
@@ -95,7 +99,7 @@ export class RightDepertmentComponent implements OnInit {
         .catch(() => {
             this.isShell = false;
             if (this.selectedNode.isCreate) {
-                this.selectedNode.value = false;
+                this.selectedNode.value = 0;
                 this._msgSrv.addNewMessage({
                     type: 'warning',
                     title: '',
@@ -109,12 +113,19 @@ export class RightDepertmentComponent implements OnInit {
         const i = this.listUserDep.findIndex(n => n === this.selectedDep);
         this.listUserDep.splice(i, 1);
         if (!this.listUserDep.length) {
-            this.selectedNode.value = false;
+            this.selectedNode.value = 0;
         }
         this.selectedDep.createEntity = false;
-        this.selectedNode.pushChange(this.selectedDep);
+        this.selectedNode.pushChange({
+            method: 'DELETE',
+            due: this.selectedDep.userDep.DUE,
+            data: this.selectedDep.userDep
+        });
         this.selectedDep = null;
         this.Changed.emit();
+    }
+    markedSendPrj(event) {
+        this.selectedNode.value = event.target.checked ? 2 : 1;
     }
     private _getMaxWeight(): number {
         let w = 0;
