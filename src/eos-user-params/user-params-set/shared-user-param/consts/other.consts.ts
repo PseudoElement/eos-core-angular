@@ -150,7 +150,173 @@ export const OTHER_USER: IBaseUsers = {
     ],
     fieldsTemplates: [
         {
+            key: 'Визуализация документа',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Выгрузка РК',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Вставка файла',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Выгрузка РКПД',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Доклады РКПД СЭВ',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Доклады СЭВ',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Журнал ознакомления',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Запуск печатных форм',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Импорт файла',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'КОНТЕКСТНЫЙ ПОИСК',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'ЛИСТ СОГЛАСОВАНИЯ',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Недоступные РК',
+            type: 'string',
+            title: ''
+        },
+
+        {
             key: 'Опись дел',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Отправка РКПД СЭВ',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Отправка СЭВ',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Печать резолюций',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Опись дел',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'ПЕЧАТЬ СПИСКА',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'ПЕЧАТЬ СПИСКА ПОРУЧЕНИЙ',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Печать списка РКПД',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'ПРОЕКТ ДОКУМЕНТА',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Просмотр коллажа',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'ПУНКТ РК',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Регистрационная карточка',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Реестр всех документов',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Реестр отмеченных документов',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Резолюция РК',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Реквизиты сообщения МЭДО',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Сводный журнал',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'СЕРВЕР ПРИЛОЖЕНИЙ',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Синхронизация СЭВ',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Сканирование',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Штамп входящего документа',
+            type: 'string',
+            title: ''
+        },
+        {
+            key: 'Штамп исходящего документа',
             type: 'string',
             title: ''
         },
