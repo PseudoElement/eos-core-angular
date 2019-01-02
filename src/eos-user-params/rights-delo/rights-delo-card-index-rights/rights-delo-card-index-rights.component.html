@@ -1,5 +1,5 @@
 <div class="input-user-wrapper input-user-card-index-rights-wrapper" *ngIf="!isLoading">
-        <eos-rights-delo-header
+    <eos-rights-delo-header
         title="Права в картотеках"
         (submitForm)="submit()"
         (cancelForm)="cancel()"
@@ -13,8 +13,8 @@
     </label>
 </div>
 </div>
-<div *ngIf="flagToDisplayTheRightSide" class="right-block-list-side">
-    <div class="usual-border border-bottom">
+<div class="right-block-list-side">
+    <div *ngIf="flagToDisplayTheRightSide" class="usual-border border-bottom">
         <div class="visible-lg-inline-block actions">
                 <button
                     class="btn btn-primary-light"
@@ -39,7 +39,7 @@
         </div>
     </div>
     <div *ngFor="let item of treeHierarchyOnTheRightSide" class="inline-block">
-        <div *ngIf="item.restrictRegistrationFiling || item.documents"
+        <div *ngIf="(item.restrictRegistrationFiling || item.documents) && flagToDisplayTheRightSide"
              class="tree-btn inline-block"
              (click)="openFolder($event, item)">
                     <span class="eos-icon tringle-size icon"
@@ -60,7 +60,7 @@
         </div>
         </div>
 
-        <div *ngIf="item.restrictRegistrationFiling"
+        <div *ngIf="item.restrictRegistrationFiling && flagToDisplayTheRightSide"
              class="tree-elements"
              [hidden]="!item.openFolder"
              [ngClass]="{'highlighted': item.restrictRegistrationFiling.data.isSelected}">
@@ -78,7 +78,7 @@
                  </label>
              </div>
              </div>
-        <div *ngIf="item.documents"
+        <div *ngIf="item.documents && flagToDisplayTheRightSide"
              class="tree-elements"
              [hidden]="!item.openFolder">
              <div *ngFor="let item2 of item.documents"

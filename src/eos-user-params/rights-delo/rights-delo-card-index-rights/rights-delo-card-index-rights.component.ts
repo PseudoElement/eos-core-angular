@@ -27,9 +27,8 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     curentUser: IParamUserCl;
     selectedNode: IInputParamControlForIndexRight;
     selectedNodeOnTheRigthSide: IInputParamControlForIndexRight;
-    btnDisabled: boolean = false;
+    btnDisabled: boolean = true;
     isChangeForm = false;
-    flagForUpdateDataWhenSwitchingSettings = true;
     flagAddDocuments = false;
     flagRemoveDocuments = false;
     flagForTheNextRequest = false;
@@ -38,12 +37,13 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     listDocumentGroups: IInputParamControl[] = DOCUMENT_GROUPS;
     listRestrictRegistrationFiling: IInputParamControl[] = RESTRICT_REGISTRATION_FILING;
     allDocuments: IInputParamControl[] = ALL_DOCUMENTS;
+    oldLastAllDocuments;
     listConcatRigthSide = [];
     treeHierarchyOnTheRightSide = [];
     allData = [];
     userCard: Map<string, USERCARD>;
     msgSrv: EosMessageService;
-    subscriptions: Subscription[] = [];
+    subscriptions: Subscription;
     newDataAttach;
     fieldsForRightSideCards;
     inputs;
@@ -57,11 +57,10 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     strForSubscribe = '';
     form: FormGroup;
     isLoading = false;
-    newDataFlag = false;
     bacgHeader: boolean;
     flagToDisplayTheRightSide;
-    flagToDisolayRestrictRegistrationFiling;
     oldIndex = [];
+    reqq = [];
     lastIndex;
     arrayOfIndexesOfModifiedPositions = [];
     indexForCards;
@@ -299,19 +298,13 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
             this.updateForm(this.selectedNode);
             this.inputs = this.getInputAttach();
             this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-            this.dataForm = this.form.value;
-            this.booleanDataForm = this.dataForm;
-            this.form.valueChanges
-             .subscribe(data => {
-                 this.booleanFromSubscribe = data;
-                 this.newDataFlag = true;
-             });
             });
         }).catch( error => {
             this.bacgHeader = false;
         });
     }
     updateAllDocuments() {
+        this.allDocuments = [];
         for (let z = 0; z < this.allData.length; z++) {
               for (let t = 0; t < this.allData[z]['USER_CARD_DOCGROUP_List'].length; t++) {
                   this.allDocuments.push({
@@ -332,7 +325,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         if (index > str.length - 1) {
              return str;
             }
-        return str.substr(0, index) + chr + str.substr(index + 1);
+        return str.substr(0, index) + chr + str.substr(+index + 1);
     }
     checkData(event, item, type) {
         event.preventDefault();
@@ -368,13 +361,6 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     this.updateForm(this.selectedNode);
                     this.inputs = this.getInputAttach();
                     this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-                    this.dataForm = this.form.value;
-                    this.booleanDataForm = this.dataForm;
-                    this.form.valueChanges
-                    .subscribe(data => {
-                    this.booleanFromSubscribe = data;
-                    this.newDataFlag = true;
-             });
                     });
                 }
             }
@@ -387,6 +373,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     Array.from(this.userCard)[i][1]['FLAG_NEW_FUNCLIST_REMOVE'] = true;
                 }
             }
+            // !!
             for (let a = 0; a < this.listDocumentGroups.length; a++) {
                 if (this.listDocumentGroups[a].key === item.card.key) {
                   this.listDocumentGroups[a]['value'] = 0;
@@ -398,13 +385,6 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     this.updateForm(this.selectedNode);
                     this.inputs = this.getInputAttach();
                     this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-                    this.dataForm = this.form.value;
-                    this.booleanDataForm = this.dataForm;
-                    this.form.valueChanges
-                    .subscribe(data => {
-                    this.booleanFromSubscribe = data;
-                    this.newDataFlag = true;
-                    });
                 }
             }
         }
@@ -422,13 +402,6 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     this.updateForm(this.selectedNode);
                     this.inputs = this.getInputAttach();
                     this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-                    this.dataForm = this.form.value;
-                    this.booleanDataForm = this.dataForm;
-                    this.form.valueChanges
-                    .subscribe(data => {
-                    this.booleanFromSubscribe = data;
-                    this.newDataFlag = true;
-             });
         } else if (this.form.controls[item.restrictRegistrationFiling.key].value === true) {
             for (let i = 0; i < Array.from(this.userCard).length; i++) {
                 if (item.card.key === Array.from(this.userCard)[i][0]) {
@@ -442,13 +415,6 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     this.updateForm(this.selectedNode);
                     this.inputs = this.getInputAttach();
                     this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-                    this.dataForm = this.form.value;
-                    this.booleanDataForm = this.dataForm;
-                    this.form.valueChanges
-                    .subscribe(data => {
-                    this.booleanFromSubscribe = data;
-                    this.newDataFlag = true;
-             });
         }
     } else if (type === 'documents') {
         if (this.form.controls[item.DUE_DOCUMENT].value === false) {
@@ -466,13 +432,6 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     this.updateForm(this.selectedNode);
                     this.inputs = this.getInputAttach();
                     this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-                    this.dataForm = this.form.value;
-                    this.booleanDataForm = this.dataForm;
-                    this.form.valueChanges
-                    .subscribe(data => {
-                    this.booleanFromSubscribe = data;
-                    this.newDataFlag = true;
-             });
         } else if (this.form.controls[item.DUE_DOCUMENT].value === true) {
             for (let i = 0; i < Array.from(this.userCard).length; i++) {
                 if (item.DUE_CARD === Array.from(this.userCard)[i][0]) {
@@ -485,19 +444,12 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                 }
             }
             this.updateAllDocuments();
-                    this.updateForm(this.selectedNode);
-                    this.inputs = this.getInputAttach();
-                    this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-                    this.dataForm = this.form.value;
-                    this.booleanDataForm = this.dataForm;
-                    this.form.valueChanges
-                    .subscribe(data => {
-                    this.booleanFromSubscribe = data;
-                    this.newDataFlag = true;
-             });
+            this.updateForm(this.selectedNode);
+            this.inputs = this.getInputAttach();
+            this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
         }
     }
-    this.newDataFlag = true;
+    this.btnDisabled = false;
     } else if (event.target.tagName === 'LABEL') {
         if (type === 'card') {
             this.selectNodeOnTheRightSide(item.card);
@@ -506,6 +458,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         } else if (type === 'documents') {
             this.selectNodeOnTheRightSide(item);
         }
+    } else {
     }
     }
     changeByPath(path: string, value: any) {
@@ -520,17 +473,23 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         return _value !== oldValue;
  }
     submit() {
-        if (this.newDataFlag) {
-            this.newDataFlag = false;
+        if (!this.btnDisabled) {
             this.servApi
                 .setData(this.createObjRequestForAttach())
                 .then(data => {
+                    if (this.flagToDisplayTheRightSide) {
                     this.servApi.setData(this.createObjRequestForAttachAfterBackend())
                     .then(data2 => {
                        this._userParamsSetSrv.getUserIsn('' + this.userCard.get(Array.from(this.userCard)[0][0])['ISN_LCLASSIF']);
                        this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                       this.btnDisabled = true;
                     })
                     .catch(data2 => console.log(data2));
+                } else {
+                    this._userParamsSetSrv.getUserIsn('' + this.userCard.get(Array.from(this.userCard)[0][0])['ISN_LCLASSIF']);
+                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                    this.btnDisabled = true;
+                }
                 })
                 // tslint:disable-next-line:no-console
                 .catch(() => this.msgSrv.addNewMessage(PARM_ERROR_ON_BACKEND));
@@ -636,7 +595,9 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
     }
 
     cancel() {
-        this.form.patchValue(this.dataForm);
+      //  this.form.patchValue(this.dataForm);
+      this.btnDisabled = true;
+      this.subscriptions.unsubscribe();
     }
     selectNode(node) {
         if (this.selectedNode) {
@@ -644,30 +605,16 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
         }
         this.selectedNode = node;
         this.selectedNode['data']['isSelected'] = true;
-        if (node.data.rightContent !== E_RIGHT_DELO_ACCESS_CONTENT.none) {
-            if (node.data.rightContent === E_RIGHT_DELO_ACCESS_CONTENT.docGroupCard) {
-                this.flagToDisolayRestrictRegistrationFiling = true;
-            } else {
-                this.flagToDisolayRestrictRegistrationFiling = false;
-            }
-            this.flagToDisplayTheRightSide = true;
-          //  this.flagForUpdateDataWhenSwitchingSettings = true;
-            this.updateForm(node);
-            const firstElement = this.treeHierarchyOnTheRightSide[0]['card'];
-            this.selectNodeOnTheRightSide(firstElement);
-        } else {
+        if (node.data.rightContent === E_RIGHT_DELO_ACCESS_CONTENT.none) {
             this.flagToDisplayTheRightSide = false;
-            this.flagToDisolayRestrictRegistrationFiling = false;
+        } else {
+            this.flagToDisplayTheRightSide = true;
         }
+        this.updateForm(node);
+        const firstElement = this.treeHierarchyOnTheRightSide[0]['card'];
+        this.selectNodeOnTheRightSide(firstElement);
         this.inputs = this.getInputAttach();
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-        this.dataForm = this.form.value;
-        this.booleanDataForm = this.dataForm;
-        this.form.valueChanges
-             .subscribe(data => {
-                 this.booleanFromSubscribe = data;
-                 this.newDataFlag = true;
-             });
     }
 
     selectNodeOnTheRightSide(node) {
@@ -725,14 +672,7 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
 
         this.updateAllDocuments();
         this.updateForm(this.selectedNode);
-            this.inputs = this.getInputAttach();
-            this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-            this.dataForm = this.form.value;
-            this.booleanDataForm = this.dataForm;
-            this.form.valueChanges
-             .subscribe(data => {
-                 this.booleanFromSubscribe = data;
-                 this.newDataFlag = true;
-             });
+        this.inputs = this.getInputAttach();
+        this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
     }
 }
