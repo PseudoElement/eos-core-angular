@@ -15,6 +15,7 @@ import { OPEN_CLASSIF_DOCGR } from '../../../eos-user-select/shered/consts/creat
 import {LimitedAccesseService} from '../../shared/services/limited-access.service';
 import { EosUtils } from 'eos-common/core/utils';
 import { Subscription } from 'rxjs/Rx';
+import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 
 @Component({
     selector: 'eos-rights-delo-card-index-rights',
@@ -23,6 +24,7 @@ import { Subscription } from 'rxjs/Rx';
 
 export class RightsDeloCardIndexRightsComponent implements OnInit {
     @Output() formChanged = new EventEmitter();
+    list: NodeDocsTree[] = [];
     dataForm;
     curentUser: IParamUserCl;
     selectedNode: IInputParamControlForIndexRight;
@@ -41,6 +43,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     listConcatRigthSide = [];
     treeHierarchyOnTheRightSide = [];
     allData = [];
+    startAllData = [];
     userCard: Map<string, USERCARD>;
     msgSrv: EosMessageService;
     subscriptions: Subscription;
@@ -169,10 +172,15 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     }
                 }).then(() => {
                     const firstElement = this.listNode[0];
+                  //  this.startAllData = this.allData;
                     this.selectNode(firstElement);
                     this.isLoading = false;
                 });
         });
+      /*  this.inputs = this.getInputAttach();
+        this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+        this.subscriptions = this.form.valueChanges
+                       .subscribe();*/
     }
     oldElement(data, oldIndex) {
         for (let i = 0; i < this.oldIndex.length; i++) {
@@ -270,7 +278,8 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
 
                 for (let i = 0; i < result.length; i++) {
                     for (let j = 0; j < this.allData.length; j++) {
-                        if (this.allData[j]['DUE'] === this.selectedNodeOnTheRigthSide.key) {
+                        if ((this.allData[j]['DUE'] === this.selectedNodeOnTheRigthSide.key) &&
+                        this.allData[j]['USER_CARD_DOCGROUP_List'].every(elem => elem['DUE'] !== result[i]['DUE'])) {
                             this.allData[j]['USER_CARD_DOCGROUP_List'].push({
                                 ALLOWED: 0,
                                 DUE: result[i]['DUE'],
@@ -287,6 +296,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                                 FUNC_NUM: (+this.selectedNode.key + 1),
                                 ISN_LCLASSIF: this.allData[0]['ISN_LCLASSIF']
                             });
+                        this.btnDisabled = false;
                         }
                     }
                 }
@@ -432,6 +442,17 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     this.updateForm(this.selectedNode);
                     this.inputs = this.getInputAttach();
                     this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+                    this.subscriptions = this.form.valueChanges
+            .subscribe(newVal => {
+                let changed = false;
+                Object.keys(newVal).forEach(path => {
+                    if (this.changeByPath(path, newVal[path])) {
+                        changed = true;
+                    }
+                });
+                this.formChanged.emit(changed);
+                this.isChangeForm = changed;
+            });
         } else if (this.form.controls[item.DUE_DOCUMENT].value === true) {
             for (let i = 0; i < Array.from(this.userCard).length; i++) {
                 if (item.DUE_CARD === Array.from(this.userCard)[i][0]) {
@@ -458,7 +479,6 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         } else if (type === 'documents') {
             this.selectNodeOnTheRightSide(item);
         }
-    } else {
     }
     }
     changeByPath(path: string, value: any) {
@@ -595,9 +615,6 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
     }
 
     cancel() {
-      //  this.form.patchValue(this.dataForm);
-      this.btnDisabled = true;
-      this.subscriptions.unsubscribe();
     }
     selectNode(node) {
         if (this.selectedNode) {
@@ -666,6 +683,7 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
                         FUNC_NUM: this.allData[i]['USER_CARD_DOCGROUP_List'][j]['FUNC_NUM'],
                     });
                     this.allData[i]['USER_CARD_DOCGROUP_List'].splice(j, 1);
+                    this.btnDisabled = false;
                 }
             }
         }
