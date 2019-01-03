@@ -9,10 +9,16 @@
             </div>
             <div *ngIf="nodeDataFull && nodeDataFull.department" class="full-info usual-border">
                 <div class="field">
-                    <p class="field-title unimportant-text s-font">Подразделение</p>
-                    <a class="field-value selected-text"
-                       [routerLink]="routerLinkDepartment(nodeDataFull.department['DUE'])">{{departmentName}}</a>
+                    <p class="field-title unimportant-text s-font">Наименование</p>
+                    <div class="field-value">{{cabinetNameFull}}</div>
                 </div>
+                <span *ngIf="nodeDataFull.department">
+                    <div class="field">
+                        <p class="field-title unimportant-text s-font">Подразделение</p>
+                        <a class="field-value selected-text"
+                           [routerLink]="routerLinkDepartment(nodeDataFull.department['DUE'])">{{departmentName}}</a>
+                    </div>
+                </span>
                 <div class="field">
                     <p class="field-title unimportant-text s-font">Владельцы кабинета</p>
                     <ul class="m-font">

@@ -12,9 +12,12 @@ export class CabinetNodeInfoComponent extends BaseNodeInfoComponent {
     get cabinetName(): string {
         return this.nodeDataShort.rec['FULLNAME'] || this.nodeDataShort.rec['CABINET_NAME'];
     }
+    get cabinetNameFull(): string {
+        return this.nodeDataFull.rec['FULLNAME'] || this.nodeDataFull.rec['CABINET_NAME'];
+    }
 
     get departmentName(): string {
-        return this.nodeDataFull.department['FULLNAME'] || this.nodeDataFull.department['CLASSIF_NAME'];
+        return this.nodeDataFull.department['CLASSIF_NAME'];
     }
 
     routerLinkDepartment(due): string {
