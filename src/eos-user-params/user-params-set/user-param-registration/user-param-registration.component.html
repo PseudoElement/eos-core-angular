@@ -137,16 +137,17 @@
         <div class="user-input-group">
             <span>Помещать новые организации в группу: </span>
             <eos-dynamic-input class="inline-block"
-            [input]="inputs['rec.ORGGROUP']"
+            [input]="inputs['rec.ORGGROUP_NAME']"
             [form]="form"
             [readonly]="false"></eos-dynamic-input>
             <button
-        class="btn add-storage"
-        tooltip="Выбор из справочника"
-        containerClass="tooltip-info"
-    >
-            <span class="eos-icon eos-icon-folder-blue small"></span>
-    </button>
+                class="btn add-storage"
+                tooltip="Выбор из справочника"
+                containerClass="tooltip-info">
+                <span class="eos-icon eos-icon-folder-blue small"
+                (click)='openClassif()'
+                ></span>
+            </button>
         </div>
 </div>
 <!------------------------------------------------------------------------->

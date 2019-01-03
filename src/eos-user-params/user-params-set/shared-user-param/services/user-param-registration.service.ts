@@ -208,6 +208,13 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
         this.init();
         this.prepInputsAttach = this.getObjectInputFields(REGISTRATION_USER.fieldsChild);
         this.afterInit();
+        this.getListOrgGroup().then(list => {
+          if (list) {
+            this.form.controls['rec.ORGGROUP_NAME'].patchValue( list[0]['CLASSIF_NAME'], {
+                emitEvent: false,
+            });
+          }
+        });
     }
     setTab(i: number) {
         this.currTab = i;
@@ -1135,6 +1142,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
             this.isChangeForm = false;
           //   this._userParamsSetSrv.getUserIsn(userId);
             if (this.newData && this.newDataAttach) {
+                console.log('1');
                 this.userParamApiSrv
                 .setData(this.createObjRequestForAll())
                 .then(data => {
@@ -1145,6 +1153,8 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             } else if (this.newData) {
+                this.checkFieldOrgName();
+                console.log('2');
             this.userParamApiSrv
                 .setData(this.createObjRequest())
                 .then(data => {
@@ -1155,6 +1165,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             } else if (this.newDataAttach) {
+                console.log('3');
                 this.userParamApiSrv
                 .setData(this.createObjRequestForAttach())
                 .then(data => {
@@ -1165,6 +1176,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
                 } else if (this.prepareData) {
+                    console.log('4');
                     this.userParamApiSrv
                     .setData(this.createObjRequestForDefaultValues())
                     .then(data => {
@@ -1348,6 +1360,34 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
             this.isChangeForm = false;
             this.init();
             this.afterInit();
+    }
+    protected getListOrgGroup(node?: string, classfi?: boolean): Promise<any> {
+        if (classfi) {
+            this.form.controls['rec.ORGGROUP'].patchValue(node);
+            node = this.form.controls['rec.ORGGROUP'].value;
+        } else {
+             !node ?   node = this.form.controls['rec.ORGGROUP'].value : node = node;
+        }
+        if (node) {
+            const query = {
+                ORGANIZ_CL: {
+                    criteries: {
+                        ISN_NODE: node
+                    }
+                }
+            };
+           return this.userParamApiSrv.getData(query);
+        }
+        return Promise.resolve(false);
+    }
+    protected checkFieldOrgName() {
+        const name = this.form.controls['rec.ORGGROUP_NAME'].value;
+        if (name === '') {
+            this.newData.rec['ORGGROUP'] = '';
+            this.form.controls['rec.ORGGROUP'].patchValue( '', {
+                emitEvent: false,
+            });
+        }
     }
         private openAccordion() {
             this.accordionListForEmail.forEach((item: IParamAccordionList) => {
