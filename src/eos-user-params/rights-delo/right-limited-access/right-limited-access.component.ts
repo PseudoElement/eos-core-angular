@@ -23,9 +23,13 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     public currentParams: string;
     public activeLink: boolean;
     public flagGrifs: boolean;
+    public flagLinks: boolean;
     public bacgHeader: boolean;
     public grifsForm: FormGroup;
+    public LinksForm: FormGroup;
     public myForm: FormGroup;
+    public tabsForAccessLimited = ['Группы документов', 'Грифы', 'Связки'];
+    public currTab = 0;
     private ArrayForm: FormArray;
     constructor(
        private _limitservise: LimitedAccesseService,
@@ -35,6 +39,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     )   {
         this.activeLink = true;
         this.flagGrifs = true;
+        this.flagLinks = true;
         this.bacgHeader = false;
     }
     clearForm(): void {
@@ -57,9 +62,15 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     saveAllForm(): void {
         const promise_all = [];
         sessionStorage.removeItem(String(this._userServices.userContextId));
+        sessionStorage.removeItem(String('links'));
         promise_all.push(this._limitservise.preAddNewDocument(this.ArrayForm), this._limitservise.preDelite(this.delitedSetStore),  this._limitservise.preEdit(this.ArrayForm)  );
         if (this.grifsForm) {
             promise_all.push(this._limitservise.postGrifs(this.grifsForm), this._limitservise.deliteGrifs(this.grifsForm));
+        }
+        if (this.LinksForm) {
+            const valueEdit = this.LinksForm.get('links').value;
+        // this._limitservise.createLinksNpUserLInk(valueEdit),
+        //   promise_all.push(this._limitservise.deliteLinksFromNpUserLink(valueEdit), this._limitservise.createLinksNpUserLInk(valueEdit));
         }
         Promise.all([...promise_all])
         .then(result => {
@@ -226,9 +237,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
               if (this.delitedSetStore.size) {
                 count_error++;
               }
-
               count_error > 0 ? this.statusBtnSub = false : this.statusBtnSub = true;
-
               count_error = 0;
       }
 
@@ -243,18 +252,26 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         });
     }
 
-    changeActivelink() {
-        this.activeLink = !this.activeLink;
+    changeActivelink(tab: number) {
+        // this.activeLink = !this.activeLink;
+        this.currTab = tab;
     }
     SubscribtGrifs(event) {
         this.flagGrifs = event.flag;
         this.grifsForm = event.form;
     }
+    SubscribLInks(event) {
+        this.flagLinks = event.flag;
+        this.LinksForm = event.form;
+    }
     ngOnDestroy() {
         this._limitservise.GrifForm = undefined;
+     //   this._limitservise.LinksFrom = undefined;
+        sessionStorage.removeItem(`${this._userServices.userContextId}`);
+        sessionStorage.removeItem('links');
     }
     get getBtn() {
-        if ( this.statusBtnSub === false || this.flagGrifs === false) {
+        if ( !this.statusBtnSub || !this.flagGrifs || !this.flagLinks) {
             return false;
         }
         return true;

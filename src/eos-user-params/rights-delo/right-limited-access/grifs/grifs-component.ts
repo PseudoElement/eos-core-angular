@@ -96,7 +96,7 @@ export class GrifsComponent implements OnInit, OnDestroy {
     createGroup(data) {
         let dataUpdate = null;
         if (sessionStorage.getItem(String(this._userServices.userContextId))) {
-             dataUpdate = JSON.parse(sessionStorage.getItem(String(this._limitservise.CurrentUser['ISN_LCLASSIF'])));
+             dataUpdate = JSON.parse(sessionStorage.getItem(String(this._userServices.userContextId)));
         }
         let endDate = null;
         if (dataUpdate) {

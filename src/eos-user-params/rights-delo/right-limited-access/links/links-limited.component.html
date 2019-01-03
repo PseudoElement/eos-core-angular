@@ -1,0 +1,19 @@
+<div class="link-limited" *ngIf="myForm">
+    <form [formGroup]="myForm">
+        <div formArrayName="links">
+            <div  class="links-access" *ngFor="let link of myForm.controls['links'].controls; let i = index">
+                    <div class="links-list"   formGroupName="{{i}}">
+                            <span  class="links-list-second">
+                                    <label class="checkbox disabled minus-checkbox ">
+                                        <input  formControlName="checkbox"     type="checkbox" readonly="readonly" class="readonly" >
+                                        <span class="eos-icon eos-icon-checkbox-black"></span>
+                                    </label>
+                            </span>
+                            <span  class="links-list-first links-title-u">
+                                <input formControlName="CLASSIF_NAME"  type="text" readonly="readonly" class="readonly" >
+                            </span>
+                    </div>
+            </div>
+        </div>
+    </form>
+</div>
