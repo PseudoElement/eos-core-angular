@@ -10,9 +10,11 @@ export class UserParamRegistrationComponent extends UserParamRegistrationSrv {
     userId: string;
     disableSave: boolean;
     isChanged: boolean;
+    flagBacground: boolean;
     prepInputsAttach;
     constructor( injector: Injector ) {
         super(injector);
+        this.flagBacground = false;
     }
 
     openClassif() {
@@ -22,6 +24,7 @@ export class UserParamRegistrationComponent extends UserParamRegistrationSrv {
             selectLeafs: false,
             selectNodes: true,
         };
+        this.flagBacground = true;
         this._waitClassifSrv.openClassif(query, true)
         .then(data => {
             this.getListOrgGroup((data as string), true).then(list => {
@@ -30,9 +33,10 @@ export class UserParamRegistrationComponent extends UserParamRegistrationSrv {
                     emitEvent: false,
                 });
                }
+               this.flagBacground = false;
             });
         }).catch(error => {
-
+            this.flagBacground = false;
         });
     }
 }

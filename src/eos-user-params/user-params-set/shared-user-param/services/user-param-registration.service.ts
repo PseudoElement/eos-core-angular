@@ -1142,7 +1142,6 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
             this.isChangeForm = false;
           //   this._userParamsSetSrv.getUserIsn(userId);
             if (this.newData && this.newDataAttach) {
-                console.log('1');
                 this.userParamApiSrv
                 .setData(this.createObjRequestForAll())
                 .then(data => {
@@ -1154,7 +1153,6 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 .catch(data => console.log(data));
             } else if (this.newData) {
                 this.checkFieldOrgName();
-                console.log('2');
             this.userParamApiSrv
                 .setData(this.createObjRequest())
                 .then(data => {
@@ -1165,7 +1163,6 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             } else if (this.newDataAttach) {
-                console.log('3');
                 this.userParamApiSrv
                 .setData(this.createObjRequestForAttach())
                 .then(data => {
@@ -1176,7 +1173,6 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
                 } else if (this.prepareData) {
-                    console.log('4');
                     this.userParamApiSrv
                     .setData(this.createObjRequestForDefaultValues())
                     .then(data => {
