@@ -34,7 +34,7 @@
                     <ul class="m-font">
                         <ng-container *ngFor="let user of nodeDataFull.rec.users">
                             <li><a class="field-value"
-                                   [routerLink]="routerLinkUser(user['ISN_LCLASSIF'])">{{user.SURNAME_PATRON}}</a></li>
+                                   [routerLink]="routerLinkUser" [queryParams]="{isn_cl: user['ISN_LCLASSIF']}">{{user.SURNAME_PATRON}}</a></li>
                         </ng-container>
                     </ul>
                 </div>

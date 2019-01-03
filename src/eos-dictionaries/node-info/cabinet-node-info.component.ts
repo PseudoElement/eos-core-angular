@@ -20,12 +20,13 @@ export class CabinetNodeInfoComponent extends BaseNodeInfoComponent {
         return this.nodeDataFull.department['CLASSIF_NAME'];
     }
 
-    routerLinkDepartment(due): string {
-        return this._routerLink('departments', due);
+    get routerLinkUser(): string {
+        // return this._routerLink('users', isn_user);
+        return '/user-params-set/base-param';
     }
 
-    routerLinkUser(isn_user): string {
-        return this._routerLink('users', isn_user);
+    routerLinkDepartment(due): string {
+        return this._routerLink('departments', due);
     }
 
     isOwner(owner): boolean {
