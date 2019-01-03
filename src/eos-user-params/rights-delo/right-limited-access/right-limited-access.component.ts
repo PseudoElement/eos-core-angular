@@ -70,12 +70,13 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         if (this.LinksForm) {
             const valueEdit = this.LinksForm.get('links').value;
         // this._limitservise.createLinksNpUserLInk(valueEdit),
-        //   promise_all.push(this._limitservise.deliteLinksFromNpUserLink(valueEdit), this._limitservise.createLinksNpUserLInk(valueEdit));
+       promise_all.push(this._limitservise.deliteLinksFromNpUserLink(valueEdit), this._limitservise.createLinksNpUserLInk(valueEdit));
         }
         Promise.all([...promise_all])
         .then(result => {
             this._limitservise.getAccessCode()
             .then((params) => {
+
                 if (params) {
                     this.umailsInfo.splice(0, this.umailsInfo.length);
                     this.saveParams = params.slice();
