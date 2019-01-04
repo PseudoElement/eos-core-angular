@@ -2,6 +2,7 @@ import { Injectable, Injector } from '@angular/core';
 import { BaseUserSrv } from './base-user.service';
 import { OTHER_USER } from '../consts/other.consts';
 import { E_FIELD_TYPE } from '../../../shared/intrfaces/user-params.interfaces';
+import { ALL_ROWS } from 'eos-rest/core/consts';
 
 @Injectable()
 export class UserParamOtherSrv extends BaseUserSrv {
@@ -17,12 +18,30 @@ export class UserParamOtherSrv extends BaseUserSrv {
     private fieldsType = {};
     constructor( injector: Injector ) {
         super(injector, OTHER_USER);
-        this.getDefaultsValues().then(defaultInit => {
-            this.constUserParam.fields = this.constUserParam.fields.concat(this.constUserParam.fieldsTemplates);
-            this.init();
-            this.initShablony = defaultInit;
-            this.saveDefaultValue = (defaultInit as Array<any>).slice();
+        this.getList().then(list => {
+            OTHER_USER.fields.map(field => {
+                if (field.key === 'RS_OUTER_DEFAULT_DELIVERY') {
+                    list.forEach(item => {
+                        field.options.push(
+                            {value: item.ISN_LCLASSIF, title: item.CLASSIF_NAME},
+                        );
+                    });
+                }
+            });
+            this.getDefaultsValues().then(defaultInit => {
+                this.constUserParam.fields = this.constUserParam.fields.concat(this.constUserParam.fieldsTemplates);
+                this.init();
+                this.initShablony = defaultInit;
+                this.saveDefaultValue = (defaultInit as Array<any>).slice();
+            });
         });
+    }
+
+    getList(): Promise<any> {
+         const query = {
+            DELIVERY_CL: ALL_ROWS
+         };
+       return  this.userParamApiSrv.getData(query);
     }
 
     getObjQueryInputsFieldForDefaultAll() {
