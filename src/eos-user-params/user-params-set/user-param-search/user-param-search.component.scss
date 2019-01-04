@@ -13,17 +13,22 @@
     }
 
     .number-increment-wrap {
-        display: inline-block;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        > span{
 
+            margin-right: 10px;
+        }
     }
 
     .label-input-increment {
         display: block;
         margin-bottom: -4px;
     }
-    
+
     .select-wrap, .number-increment-wrap {
-        
+
         .form-group {
             margin: 0;
         }

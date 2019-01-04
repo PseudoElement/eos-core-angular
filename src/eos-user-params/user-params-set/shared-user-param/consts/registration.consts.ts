@@ -134,6 +134,11 @@ export const REGISTRATION_USER: IBaseUsers = {
             type: 'string'
         },
         {
+            key: 'ORGGROUP_NAME',
+            title: '',
+            type: 'string'
+        },
+        {
             key: 'LINKED_SEARCHPARAM',
             type: 'select',
             title: '',
