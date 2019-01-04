@@ -16,13 +16,19 @@
     .forMainLabel label {
         font-weight: bold;
     }
+    .toolbar-line {
+        height: 4vh;
+    }
+    .content-list {
+        max-height: 66vh;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
     .left-block-list-card-files {
         display: inline-block;
         width: 45%;
         max-height: 70vh;
         border: 1px solid $border-color-main-theme;
-        overflow-x: auto;
-        overflow-y: auto;
         margin-bottom: 20px;
     }
 
@@ -75,7 +81,8 @@
     }
 
     .tabs-wrapper {
-        margin-right: 0;
+        margin: 0;
+        border-left: 1px;
     }
 
     .list-card-files {

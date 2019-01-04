@@ -1,11 +1,12 @@
-<div class="input-user-wrapper input-user-card-index-rights-wrapper" *ngIf="!isLoading">
+<div class="input-user-wrapper input-user-card-index-rights-wrapper">
     <eos-rights-delo-header
         title="Права в картотеках"
         (submitForm)="submit()"
         (cancelForm)="cancel()"
         [statusBtnSub]="btnDisabled"
+        [hidden]="!flagCardFileAvailability"
     ></eos-rights-delo-header>
-    <div class="user-input-group">
+<div class="user-input-group" *ngIf="flagCardFileAvailability">
 <div class="left-block-list-side">
 <div *ngFor="let item of listNode" (click)="selectNode(item)" [ngClass]="{'highlighted': item.data.isSelected}">
     <label>
@@ -14,8 +15,7 @@
 </div>
 </div>
 <div class="right-block-list-side">
-    <div *ngIf="flagToDisplayTheRightSide" class="usual-border border-bottom">
-        <div class="visible-lg-inline-block actions">
+    <div *ngIf="flagToDisplayTheRightSide" class="usual-border border-bottom toolbar-line">
                 <button
                     class="btn btn-primary-light"
                     tooltip="Добавить"
@@ -36,8 +36,8 @@
                     (click)="removeDocuments()">
                     <span class="eos-icon eos-icon-minus-blue small"></span>
                 </button>-->
-        </div>
     </div>
+    <div class="content-list" *ngIf="!isLoading">
     <div *ngFor="let item of treeHierarchyOnTheRightSide" class="inline-block">
         <div *ngIf="(item.restrictRegistrationFiling || item.documents) && flagToDisplayTheRightSide"
              class="tree-btn inline-block"
@@ -99,6 +99,11 @@
              </div>
              </div>
 </div>
+</div>
+</div>
+</div>
+<div *ngIf="!flagCardFileAvailability">
+<h1 class="warning-record">Нет картотек!</h1>
 </div>
 </div>
 
