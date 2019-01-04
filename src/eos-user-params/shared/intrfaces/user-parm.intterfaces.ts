@@ -1,4 +1,4 @@
-import { E_FIELD_TYPE } from 'eos-parameters/parametersSystem/shared/interfaces/parameters.interfaces';
+ import { E_FIELD_TYPE } from 'eos-parameters/parametersSystem/shared/interfaces/parameters.interfaces';
 import { USER_CL } from 'eos-rest';
 
 export interface IInputParamControl {
@@ -21,6 +21,25 @@ export interface IInputParamControl {
     data?: any;
 }
 
+export interface IInputParamControlForIndexRight {
+      key?: string;
+      value?: any;
+      dict?: string;
+      label?: string;
+      required?: boolean;
+      order?: number;
+      length?: number;
+      pattern?: RegExp;
+      readonly?: boolean;
+      isUnique?: boolean;
+      uniqueInDict?: boolean;
+      hideLabel?: boolean;
+      forNode?: boolean;
+      options?: ISelectOptionControl[];
+      disabled?: boolean;
+      data?: any;
+  }
+
 export interface ISelectOptionControl {
     value: string | number;
     title: string;
@@ -36,4 +55,11 @@ export interface IListDocsTree {
     DUE: string;
     label: string;
     allowed: boolean;
+}
+
+export interface NpUserLinks {
+    CLASSIF_NAME?: string;
+    ISN_LINK?: number;
+    CHECKED?: boolean;
+    ACTION?: string;
 }

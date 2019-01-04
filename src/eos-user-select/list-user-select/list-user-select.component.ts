@@ -42,8 +42,14 @@ export class ListUserSelectComponent implements OnDestroy {
                     this.isLoading = false;
                 });
             });
-        this._sandwichSrv.currentDictState$.takeUntil(this.ngUnsubscribe)
-            .subscribe((state: boolean[]) => {
+        this._apiSrv.NodeList$
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe(data => {
+            this.listUsers  = this._getListUsers(data);
+        });
+        this._sandwichSrv.currentDictState$
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe((state: boolean[]) => {
                 this.currentState = state;
             });
     }

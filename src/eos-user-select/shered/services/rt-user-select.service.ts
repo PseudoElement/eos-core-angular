@@ -27,11 +27,11 @@ export class RtUserSelectService {
             checked: false
         },
         APM: {
-            label: 'АРМ-руководителя',
+            label: 'АРМ руководителя',
             checked: false
         },
         EOS: {
-            label: 'EOS-Desktop-service',
+            label: 'EOS Desktop Service',
             checked: false
         },
         SCAN: {
@@ -47,7 +47,7 @@ export class RtUserSelectService {
             checked: false
         },
         Scan_code: {
-            label: 'Печать штрих кода',
+            label: 'Печать штрих-кода',
             checked: false
         },
         Notifer: {

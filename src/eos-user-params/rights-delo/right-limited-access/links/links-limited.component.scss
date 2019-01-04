@@ -1,0 +1,18 @@
+.link-limited{
+    padding-left: 20px;
+    max-height: 500px;
+    overflow: auto;
+    background-color: #fafafa;
+    .links-list{
+        display: inline-flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .links-list-first{
+        input{
+            border: none;
+            outline: none;
+            background: transparent;
+        }
+    }
+}

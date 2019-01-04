@@ -49,11 +49,12 @@
 
                 <!-- classif -->
                 <ng-container *ngSwitchCase="6">
-                    <button
+                    <!-- <button
                         class="btn btn-primary"
                         (click)="openClessifModal()"
                         >Справочники
-                    </button>
+                    </button> -->
+                    <ng-container *ngTemplateOutlet="classif"></ng-container>
                 </ng-container>
 
                 <!-- all -->
@@ -109,4 +110,8 @@
         [curentUser]="curentUser"
         (Changed)="checkChange()"
     ></eos-right-absolute-doc-group>
+</ng-template>
+
+<ng-template #classif>
+    <div>Все справочники</div>
 </ng-template>

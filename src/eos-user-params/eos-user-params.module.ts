@@ -34,6 +34,7 @@ import { InputParamControlService } from './shared/services/input-param-control.
 import {EmailAddressService} from './shared/services/email-address.service';
 import {EmailFormComponent} from './email-address/email-form/email-form.component';
 import {RightLimitedAccessComponent} from './rights-delo/right-limited-access/right-limited-access.component';
+import {LinksLimitedComponent} from './rights-delo/right-limited-access/links/links-limited.component';
 import {LimitedAccesseService} from './shared/services/limited-access.service';
 import { RightDepertmentComponent } from './rights-delo/rights-delo-absolute-rights/right-department/right-department.component';
 import {GrifsComponent} from './rights-delo/right-limited-access/grifs/grifs-component';
@@ -70,6 +71,7 @@ import { ListDocsTreeComponent } from './shared/list-docs-tree/list-docs-tree.co
         GrifsComponent,
         RightAbsoluteDocGroupComponent,
         ListDocsTreeComponent,
+        LinksLimitedComponent,
     ],
     entryComponents: [
         AbsoluteRightsDirectoryComponent,

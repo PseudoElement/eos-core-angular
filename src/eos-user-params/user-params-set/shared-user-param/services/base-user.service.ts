@@ -275,7 +275,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
         for (const key in this.newData.rec) {
             if (key && key !== 'DEF_SEARCH_CITIZEN' && key !== 'CONTROLL_AUTHOR' && key.indexOf('FOLDERCOLORSTATUS') !== 0 &&
             key.indexOf('HILITE_PRJ_RC') !== 0 && key.indexOf('HILITE_RESOLUTION') !== 0 &&
-            key.indexOf('RCSEND') !== 0) {
+            key.indexOf('RCSEND') !== 0 && key !== 'ORGGROUP_NAME') {
                 req.push({
                     method: 'MERGE',
                     requestUri: `USER_CL(${userId})/USER_PARMS_List(\'${userId} ${key}\')`,
