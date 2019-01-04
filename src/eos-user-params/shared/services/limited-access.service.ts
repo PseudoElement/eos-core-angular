@@ -5,12 +5,14 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { Subject } from 'rxjs/Subject';
 import { FormGroup } from '@angular/forms';
-
+import {NpUserLinks} from '../intrfaces/user-parm.intterfaces';
 @Injectable()
 export class LimitedAccesseService {
     CurrentUser: any;
     public subscribe: Subject<any> = new Subject();
     GrifForm: FormGroup;
+    LinksFrom: FormGroup;
+    user_id: number;
     constructor(
         private _userServices: UserParamsService,
         private _pipSrv: UserParamApiSrv,
@@ -18,6 +20,7 @@ export class LimitedAccesseService {
         // private _piprx: PipRX
     ) {
         this.CurrentUser = this._userServices.curentUser;
+        this.user_id =  this._userServices.userContextId;
     }
 
 
@@ -219,6 +222,78 @@ preAddNewDocument(form) {
         });
         return   this._pipSrv.setData(data);
     }
+
+    getLinksFromTableLINK_CL(): Promise<any> {
+        const query = {
+            LINK_CL: ALL_ROWS
+        };
+       return this._pipSrv.getData(query);
+    }
+
+    getIsActiveFromTableNpUserLINK(user: number): Promise<any> {
+        const query = {
+            NP_USERLINK: {
+                criteries: {
+                    ISN_LCLASSIF: String(user)
+                }
+            }
+        };
+      return this._pipSrv.getData(query);
+    }
+
+    getResultArrayForLinks(user) {
+        return Promise.all([this.getLinksFromTableLINK_CL(), this.getIsActiveFromTableNpUserLINK(user)]).then(arrayResult => {
+            const paramsForInitForm = [];
+            const LinksName = arrayResult[0];
+            const LinksCheked = arrayResult[1];
+            let objParamsFrom = {};
+            LinksName.forEach(element => {
+                objParamsFrom['CLASSIF_NAME'] = element['CLASSIF_NAME'];
+                objParamsFrom['ISN_LINK'] = element['ISN_LCLASSIF'];
+                const flag =   LinksCheked.some(checked => {
+                    return   checked['ISN_LINK'] === element['ISN_LCLASSIF'] ? true : false;
+                });
+                flag ?   objParamsFrom['checkbox'] = true :   objParamsFrom['checkbox'] = false;
+                paramsForInitForm.push(objParamsFrom);
+                objParamsFrom = {};
+            });
+           return paramsForInitForm;
+        });
+    }
+
+    createLinksNpUserLInk(value: NpUserLinks[]) {
+        const createValue = [];
+        const createParams = value.filter((element: NpUserLinks) => {
+            return element.ACTION === 'CREATE';
+        });
+        createParams.forEach((createVlue: NpUserLinks) => {
+            createValue.push({
+                method: 'POST',
+                requestUri: 'NP_USERLINK',
+                data: {
+                    ISN_LCLASSIF: this._userServices.userContextId,
+                    ISN_LINK: createVlue.ISN_LINK
+                }
+            });
+        });
+        return   this._pipSrv.setData(createValue);
+    }
+
+    deliteLinksFromNpUserLink(value: NpUserLinks[]) {
+        const dataDeleted = [];
+        const deleteParams = value.filter((element:  NpUserLinks) => {
+            return element.ACTION === 'DELETE';
+        });
+
+        deleteParams.forEach((deleted: NpUserLinks) => {
+            dataDeleted.push({
+                method: 'DELETE',
+                requestUri: `NP_USERLINK(\'${this._userServices.userContextId} ${deleted.ISN_LINK}\')`,
+            });
+        });
+        return   this._pipSrv.setData(dataDeleted);
+    }
+
     private _errorHandler(err): void {
         const errMessage = err.message ? err.message : err;
         this._msgSrv.addNewMessage({
