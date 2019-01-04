@@ -12,17 +12,21 @@ export class CabinetNodeInfoComponent extends BaseNodeInfoComponent {
     get cabinetName(): string {
         return this.nodeDataShort.rec['FULLNAME'] || this.nodeDataShort.rec['CABINET_NAME'];
     }
+    get cabinetNameFull(): string {
+        return this.nodeDataFull.rec['FULLNAME'] || this.nodeDataFull.rec['CABINET_NAME'];
+    }
 
     get departmentName(): string {
-        return this.nodeDataFull.department['FULLNAME'] || this.nodeDataFull.department['CLASSIF_NAME'];
+        return this.nodeDataFull.department['CLASSIF_NAME'];
+    }
+
+    get routerLinkUser(): string {
+        // return this._routerLink('users', isn_user);
+        return '/user-params-set/base-param';
     }
 
     routerLinkDepartment(due): string {
         return this._routerLink('departments', due);
-    }
-
-    routerLinkUser(isn_user): string {
-        return this._routerLink('users', isn_user);
     }
 
     isOwner(owner): boolean {

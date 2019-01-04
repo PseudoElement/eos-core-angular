@@ -1,19 +1,19 @@
 <div class="grifs-wrapper" *ngIf="myForm">
-        <form [formGroup]="myForm">
-                <div formArrayName="grifs">
-    <div  class="emali-list grifs-content" *ngFor="let group of myForm.controls['grifs'].controls; let i = index">
-                                <div class="grifs-list"  formGroupName="{{i}}">
-                                <span  class="grifs-list-second">
-                                        <label class="checkbox disabled minus-checkbox ">
-                                            <input  formControlName="checkbox"     type="checkbox" readonly="readonly" class="readonly" >
-                                            <span class="eos-icon eos-icon-checkbox-black"></span>
-                                        </label>
-                                </span>
-                                <span  class="grifs-list-first">
-                                        <input formControlName="GRIF_NAME"  type="text" readonly="readonly" class="readonly" >
-                                </span>
-                        </div>
-                    </div>
+    <form [formGroup]="myForm">
+        <div formArrayName="grifs">
+            <div  class="emali-list grifs-content" *ngFor="let group of myForm.controls['grifs'].controls; let i = index">
+                <div class="grifs-list"  formGroupName="{{i}}">
+                    <span  class="grifs-list-second">
+                            <label class="checkbox disabled minus-checkbox ">
+                                <input  formControlName="checkbox"     type="checkbox" readonly="readonly" class="readonly" >
+                                <span class="eos-icon eos-icon-checkbox-black"></span>
+                            </label>
+                    </span>
+                    <span  class="grifs-list-first">
+                            <input formControlName="GRIF_NAME"  type="text" readonly="readonly" class="readonly" >
+                    </span>
                 </div>
-        </form>
+            </div>
+        </div>
+    </form>
 </div>

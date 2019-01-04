@@ -141,12 +141,12 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'PARENT_RESOLUTION_TEXT',
             type: 'boolean',
-            title: 'Копировать текст подчитенной резолюции из родительского поручения'
+            title: 'Копировать текст подчиненной резолюции из родительского поручения'
         },
         {
             key: 'CORRECT_CTRL_DATE',
             type: 'boolean',
-            title: 'Корректировать  значение контрольности поручения при изменении план. И Факт. Дат'
+            title: 'Корректировать  значение контрольности поручения при изменении План. И Факт. дат'
         },
         {
             key: 'PLAN_DATE_PARENT',
@@ -215,7 +215,7 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'ADD_ADRESS_REPORGANIZ',
             type: 'boolean',
-            title: 'Добавлять внешних исполнителей поручений в адресаты',
+            title: 'Не добавлять внешних исполнителей поручения в Адресаты',
         },
         {
             key: 'RESOLUTION_CICLE',
@@ -234,7 +234,7 @@ export const CABINETS_USER: IBaseUsers = {
             options: [
                 {value: '2', title: 'Всем фигурантам'},
                 {value: '1', title: 'Контролерам и исполнителям'},
-                {value: '0', title: 'не рассылать'},
+                {value: '0', title: 'Не рассылать'},
             ]
         },
         {

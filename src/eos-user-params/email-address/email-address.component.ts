@@ -321,14 +321,13 @@ export class ParamEmailAddressComponent implements OnInit {
       }
      arrChangesValues(current, prev): Array<Array<any>> {
           const T = [[], []];
-
           let CurrentParams = {};
           let PrevParams = {};
           const params = this.constParams();
           const length = this.constParams().length;
           for (let i = 0; i < length; i += 1) {
-            CurrentParams[params[i]] = current[params[i]];
-            PrevParams[params[i]] = prev[params[i]];
+                CurrentParams[params[i]] = current[params[i]];
+                PrevParams[params[i]] = prev[params[i]];
             T[0].push(CurrentParams);
             T[1].push(PrevParams);
             PrevParams = {};
@@ -338,8 +337,8 @@ export class ParamEmailAddressComponent implements OnInit {
       }
       changeCurrentWeight(controlsInfo) {
           const countArray = controlsInfo[0].length - 1;
-            for (let i = 0; i < countArray; i += 1) {
-                if ( i !== countArray - 1) {
+            for (let i = 0; i <= countArray; i += 1) {
+                if ( i !== countArray) {
                     this.myForm.get('groupForm')
                     .get(String(this.currentIndex))
                     .patchValue(controlsInfo[1][i], {emitEvent: false});
@@ -348,11 +347,11 @@ export class ParamEmailAddressComponent implements OnInit {
                     .patchValue(controlsInfo[0][i], {emitEvent: false});
                 } else {
                     this.myForm.get('groupForm')
-                    .get(String(this.currentIndex))
-                    .patchValue(controlsInfo[1][i], {emitEvent: false});
-                    this.myForm.get('groupForm')
                     .get(String(this.prevIndex))
-                    .patchValue(controlsInfo[0][i]);
+                    .patchValue(controlsInfo[0][i], {emitEvent: false});
+                    this.myForm.get('groupForm')
+                    .get(String(this.currentIndex))
+                    .patchValue(controlsInfo[1][i]);
                 }
             }
       }

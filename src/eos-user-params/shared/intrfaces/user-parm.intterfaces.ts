@@ -56,3 +56,10 @@ export interface IListDocsTree {
     label: string;
     allowed: boolean;
 }
+
+export interface NpUserLinks {
+    CLASSIF_NAME?: string;
+    ISN_LINK?: number;
+    CHECKED?: boolean;
+    ACTION?: string;
+}
