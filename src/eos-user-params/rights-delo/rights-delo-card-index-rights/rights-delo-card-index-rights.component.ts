@@ -35,6 +35,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     flagRemoveDocuments = false;
     flagForTheNextRequest = false;
     flagForOpenFolder = false;
+    flagCardFileAvailability;
     listNode: IInputParamControlForIndexRight[] = CARD_INDEXS_RIGHTS;
     listDocumentGroups: IInputParamControl[] = DOCUMENT_GROUPS;
     listRestrictRegistrationFiling: IInputParamControl[] = RESTRICT_REGISTRATION_FILING;
@@ -114,6 +115,8 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
 
         this.servApi.getData(this.quaryDepartment)
         .then(data => {
+            if (data.length > 0) {
+            this.flagCardFileAvailability = true;
             data.forEach((d: DEPARTMENT) => {
                 const card = this.userCard.get(d['DUE']);
                 card['department'] = d;
@@ -139,6 +142,9 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                  });
               }
               this.prepDataAttachField();
+            } else {
+                this.flagCardFileAvailability = false;
+            }
         })
         .then(() => {
             this.servApi.getData(this.quaryDocgroupCl)
