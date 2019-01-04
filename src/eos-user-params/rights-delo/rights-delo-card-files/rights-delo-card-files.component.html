@@ -13,6 +13,7 @@
                         <span class="long-title xl-font">Картотеки</span>
                 </div>
         </div>
+        <div class="toolbar-line">
         <div class="usual-border border-bottom">
         <div class="visible-lg-inline-block actions">
                 <button
@@ -44,6 +45,8 @@
                 </button>
         </div>
         </div>
+        </div>
+        <div class="content-list">
         <ul class="list-card-files"
             *ngFor="let key of fieldKeysforCardFiles; let i = index;">
                 <li *ngIf="key[4]"
@@ -57,6 +60,7 @@
                             ></eos-dynamic-input>
             </li>
         </ul>
+</div>
 </div>
 <div class="right-block-list-absolute-rights">
         <div class="tabs-wrapper usual-border border-bottom">
