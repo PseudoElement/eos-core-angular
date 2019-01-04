@@ -119,7 +119,6 @@ export class EmailAddressService {
         return null;
     }
     deliteEmail(data): Promise<any> {
-        console.log(data);
         if (data.length) {
             const queryUserCl = data;
             return this._pipSrv.setData(queryUserCl).then(res => {

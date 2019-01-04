@@ -113,7 +113,7 @@ export const BASE_PARAM_ACCESS_INPUT: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '25',
-        label: 'АРМ руководитель',
+        label: 'АРМ руководителя',
     },
     {
         controlType: E_FIELD_TYPE.boolean,
