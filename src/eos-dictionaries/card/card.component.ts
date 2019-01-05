@@ -217,7 +217,10 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         this.disableSave = true;
         const _data = this.cardEditRef.getNewData();
         this._save(_data)
-            .then((node: EosDictionaryNode) => this._afterSaving(node));
+            .then((node: EosDictionaryNode) => this._afterSaving(node))
+            .catch(err => {
+                console.log(err);
+            });
     }
 
     disManager(mod: boolean, tooltip: any): boolean {
@@ -407,7 +410,16 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     private _save(data: any): Promise<any> {
         return this._dictSrv.updateNode(this.node, data)
             .then((node) => this._afterUpdating(node))
-            .catch((err) => this._errHandler(err));
+            .catch((err) => {
+                if (err === 'cancel' && this.cardEditRef.dictionaryId === 'reestrtype') {
+                    const oldDelivery = this.cardEditRef.data.rec._orig['ISN_DELIVERY'];
+                    this.cardEditRef.inputs['rec.ISN_DELIVERY'].value = oldDelivery;
+                    this.cardEditRef.newData.rec['ISN_DELIVERY'] = oldDelivery;
+                    this.cardEditRef.form.controls['rec.ISN_DELIVERY'].setValue(oldDelivery, this.cardEditRef.inputs['rec.ISN_DELIVERY'].options);
+                    return null;
+                }
+                this._errHandler(err);
+            });
     }
 
     private _afterSaving(node: EosDictionaryNode) {

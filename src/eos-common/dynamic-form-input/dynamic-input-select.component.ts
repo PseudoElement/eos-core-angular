@@ -10,7 +10,10 @@ export class DynamicInputSelectComponent extends DynamicInputBase {
         let value = this.input.label;
         const ctrl = this.control;
         if (ctrl) {
-            const optValue = this.input.options.find((option) => option.value === ctrl.value);
+            let optValue = this.input.options.find((option) => option.value === ctrl.value);
+            if (!optValue && typeof ctrl.value === 'string') {
+                optValue = this.input.options.find((option) => option.value.toString() === ctrl.value);
+            }
             if (optValue) {
                 value = optValue.title;
             }
