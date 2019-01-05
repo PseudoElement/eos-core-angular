@@ -594,8 +594,11 @@ export class EosDictionary {
                 orderedNodes = this._resortSubTrees(orderedNodes);
             }
             return orderedNodes;
+        } else {
+            this.defaultOrder();
+            return this._orderByField(nodes);
         }
-        return nodes;
+        // return nodes;
     }
 
     private _resortSubTrees(nodes: EosDictionaryNode[]) {
