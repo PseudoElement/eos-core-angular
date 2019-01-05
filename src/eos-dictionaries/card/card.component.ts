@@ -217,10 +217,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         this.disableSave = true;
         const _data = this.cardEditRef.getNewData();
         this._save(_data)
-            .then((node: EosDictionaryNode) => this._afterSaving(node))
-            .catch(err => {
-                console.log(err);
-            });
+            .then((node: EosDictionaryNode) => this._afterSaving(node));
     }
 
     disManager(mod: boolean, tooltip: any): boolean {
