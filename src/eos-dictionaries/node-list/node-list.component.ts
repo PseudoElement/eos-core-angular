@@ -298,7 +298,12 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     onListScroll(evt: Event) {
-        const offset = evt.srcElement.scrollLeft;
+        let offset = -this.headerOffset;
+        if (evt.srcElement) {
+            offset = evt.srcElement.scrollLeft;
+        } else if (evt.target) {
+            offset = (evt.target as Element).scrollLeft;
+        }
         this.headerOffset = -offset;
 
         // Fix for unhidden tooltip in IE
