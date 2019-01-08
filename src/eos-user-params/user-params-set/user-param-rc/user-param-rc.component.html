@@ -10,11 +10,20 @@
     <div class="user-input-group">
             <span class="l-font">Открывать закладку доп. реквезиты при открытии РК для групп документов.</span>
             <hr>
-            <div class="user-input-group">
-                    <eos-dynamic-input class="multiple-document-groups-select-rc"
+            <div class="btn-controll">
+                <button class="btn" containerclass="tooltip-info" placement="bottom" tooltip="Добавить" triggers="hover" (click)="addRcDoc()">
+                    <span class="eos-icon eos-icon-plus-blue small"></span>
+                </button>
+                <button class="btn" containerclass="tooltip-info" placement="bottom" tooltip="Удалить" (click)="deleteRcDoc()">
+                    <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+                </button>
+            </div>
+            <div class="user-input-group user-input-group-flex">
+                <span class="rc-doc" *ngFor='let title of dopRec'>{{title.CLASSIF_NAME}}</span>
+                    <!-- <eos-dynamic-input class="multiple-document-groups-select-rc"
                     [input]="inputs['rec.OPEN_AR']"
                     [form]="form"
-                    [readonly]="false"></eos-dynamic-input>
+                    [readonly]="false"></eos-dynamic-input> -->
             <!--<eos-dynamic-input
                     class="multiple-select-rc"
                     [input]="inputs['rec.OPEN_AR']"

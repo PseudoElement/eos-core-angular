@@ -25,9 +25,9 @@
         display: block;
         margin-bottom: -4px;
     }
-    
+
     .select-wrap, .number-increment-wrap {
-        
+
         .form-group {
             margin: 0;
         }
@@ -48,6 +48,36 @@
 
         .elem-input-radio {
             margin-right: 90px;
+        }
+    }
+    .btn-controll{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding-left: 10px;
+        margin-bottom: 10px;
+        .btn{
+            margin-right: 10px;
+        }
+    }
+    .user-input-group-flex{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        min-height: 100px;
+        padding-left: 10px;
+        padding-right: 10px;
+        background: #fff;
+        box-shadow: 0 0 40px rgba(0, 0, 0, .1) inset;
+        margin-bottom: 10px;
+        padding-top: 10px;
+        .rc-doc{
+            display: inline-block;
+            height: 30px;
+            width: 100%;
+            overflow: hidden;
+
         }
     }
 }
