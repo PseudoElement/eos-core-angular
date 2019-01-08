@@ -27,7 +27,6 @@
     }
 
     .select-wrap, .number-increment-wrap {
-
         .form-group {
             margin: 0;
         }
@@ -54,7 +53,7 @@
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        padding-left: 10px;
+        padding-left: 20px;
         margin-bottom: 10px;
         .btn{
             margin-right: 10px;
@@ -66,18 +65,38 @@
         justify-content: flex-start;
         align-items: flex-start;
         min-height: 100px;
-        padding-left: 10px;
-        padding-right: 10px;
         background: #fff;
-        box-shadow: 0 0 40px rgba(0, 0, 0, .1) inset;
+        box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5) inset;
         margin-bottom: 10px;
         padding-top: 10px;
         .rc-doc{
             display: inline-block;
-            height: 30px;
             width: 100%;
+            padding: 10px 20px;
             overflow: hidden;
+            cursor: pointer;
 
         }
+        .current{
+            background: #e3f2fd;
+        }
     }
+    .user-input-group{
+        padding: 0px!important;
+    }
+    .rc-box{
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+}
+.bcgFixed{
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: gray;
+    opacity: 0.6;
 }
