@@ -24,9 +24,48 @@ export const RC_USER: IBaseUsers = {
             title: 'Показывать иерархию:',
             readonly: false,
             options: [
-                {value: '0', title: 'да'},
-                {value: '1', title: 'нет'}
+                {value: 'YES', title: 'да'},
+                {value: 'NO', title: 'нет'}
             ]
         },
+
+        {
+            key: 'SHOW_ALL_RES',
+            type: 'radio',
+            title: 'Показывать поручения',
+            readonly: false,
+            options: [
+                {value: 'YES', title: 'все'},
+                {value: 'NO', title: 'покартотечно'}
+            ]
+        },
+        {
+            key: 'SHOW_ALL_RESLIST',
+            type: 'radio',
+            title: 'Показывать поручения',
+            readonly: false,
+            options: [
+                {value: 'YES', title: 'все'},
+                {value: 'NO', title: 'покартотечно'}
+            ]
+        },
+        {
+            key: 'RES_LIST_ALL',
+            type: 'boolean',
+            title: 'Развернутую инф. единым списком',
+            readonly: false,
+        },
+        {
+            key: 'SHOW_RAC_DATE',
+            type: 'boolean',
+            title: 'Показывать дату поступления в картотеку',
+            readonly: false,
+        },
+        {
+            key: 'DONT_SHOW_DOC_HIDDEN_FILES',
+            type: 'boolean',
+            title: 'Не показывать скрытые файлы',
+            readonly: false,
+        }
     ]
 };
