@@ -43,7 +43,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '4',
-        label: 'Добавление поручений',
+        label: 'Ввод резолюций',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
@@ -52,7 +52,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '5',
-        label: 'Исполнение поручений или РКПД',
+        label: 'Исполнение поручений',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
@@ -79,7 +79,25 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '8',
+        label: 'Редактирование организаций',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.all
+        }
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '20',
         label: 'Добавление граждан',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+        }
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '21',
+        label: 'Редактирование граждан',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.all
@@ -97,7 +115,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '10',
-        label: 'Визировать проекты',
+        label: 'Визирование проектов',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
@@ -106,7 +124,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '11',
-        label: 'Подписывать проекты',
+        label: 'Подписание проектов',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
@@ -115,7 +133,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '12',
-        label: 'Создвать НП',
+        label: 'Создание НП',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
@@ -124,19 +142,10 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '13',
-        label: 'Редактировать с НП',
+        label: 'Работа с НП',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
-        }
-    },
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: '15',
-        label: 'Создавать системные запросы',
-        data: {
-            isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
     {
@@ -152,6 +161,24 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         controlType: E_FIELD_TYPE.boolean,
         key: '17',
         label: 'Редактирование обстоятельств дел',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+        }
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '14',
+        label: 'Установка на контроль',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+        }
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '15',
+        label: 'Создание системных запросов',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
@@ -176,24 +203,6 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         }
     },
     {
-        controlType: E_FIELD_TYPE.boolean,
-        key: '20',
-        label: 'Редактирование организаций',
-        data: {
-            isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.all
-        }
-    },
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: '21',
-        label: 'Редактирование граждан',
-        data: {
-            isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.all
-        }
-    },
-    {
         controlType: E_FIELD_TYPE.boolean, // отобразить чекбокс Разрешить операцию рассылки проекта резолюции
         key: '22',
         label: 'Добавление проектов резолюций',
@@ -214,7 +223,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '24',
-        label: 'Чтение конфиденциальных РК',
+        label: 'Чтение РК персонального доступа',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
@@ -223,7 +232,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '25',
-        label: 'Чтение конфиденциальных файлов',
+        label: 'Чтение файлов персонального доступа',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
@@ -250,7 +259,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '28',
-        label: 'Право добавления проектов документов',
+        label: 'Создание РКПД',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroup
@@ -259,7 +268,16 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '29',
-        label: 'Право "Выгрузка информации на ССТУ"',
+        label: 'Выгрузка информации на ССТУ',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+        }
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '30',
+        label: 'Удаление реестров',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
