@@ -79,7 +79,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
 
     init() {
         this.curentUser = this._userParamsSetSrv.curentUser;
-        this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split(''); // проверка на наличие массива, если нету , то создать новый
+        this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || new Array(37).fill(0).join('');
+        this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split('');
         this.arrNEWDeloRight = this.curentUser['DELO_RIGHTS'].split('');
         this.fields = this._writeValue(ABSOLUTE_RIGHTS);
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
