@@ -119,7 +119,7 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
                     _criteries['department.cabinet.CABINET_NAME'] = '"' + data.cabinet['CABINET_NAME'].trim() + '"';
                 }
                 if (data.cabinet['fullCabinet']) {
-                    _criteries['department.cabinet.FULLNAME'] = '"' + data.cКabinet['fullCabinet'].trim() + '"';
+                    _criteries['department.cabinet.FULLNAME'] = '"' + data.cabinet['fullCabinet'].trim() + '"';
                 }
                 break;
         }

@@ -11,27 +11,45 @@
     .right-block-list-side {
         display: inline-block;
         width: 50%;
-      //  width: 110%;
         list-style: none;
         vertical-align: top;
-        max-height: 70vh;
         border: 1px solid $border-color-main-theme;
-        overflow-x: auto;
-        overflow-y: auto;
         margin-left: 20px;
         margin-bottom: 20px;
     }
     .right-side {
         display: inline-block;
-       // width: 45%;
         list-style: none;
         vertical-align: top;
         max-height: 70vh;
         margin-left: 20px;
         margin-bottom: 20px;
     }
+    .toolbar-line {
+        height: 4vh;
+    }
+    .content-list {
+        width: 100%;
+        max-height: 66vh;
+        overflow-x: auto;
+        overflow-y: auto;
+    }
+    .warning-record {
+        text-align: center;
+        color: #f44336;
+    }
     .tree-elements {
         margin-left: 6%;
+    }
+    .card-item {
+      display: inline-block;
+      width: 89%;
+      vertical-align: top;
+    }
+
+    .item-card {
+        position: relative;
+        width: 100%;
     }
     .list-card-files {
         list-style: none;
@@ -56,12 +74,6 @@
         list-style: none;
         line-height: 32px;
         margin: 0;
-    }
-
-    .card-item {
-        display: inline-block;
-        vertical-align: top;
-        width: 90%;
     }
 
     .hiden-btn {

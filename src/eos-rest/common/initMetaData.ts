@@ -2470,6 +2470,14 @@ const commonMeta = {
             LOCK_TIME: _t.d,
         }
     },
+    REESTR_NEW: {
+        pk: 'ISN_REESTR',
+        properties: {
+            ISN_DELIVERY: _t.i
+        },
+        readonly: [],
+        relations: []
+    }
 };
 
 export function commonMergeMeta(meta: any) {

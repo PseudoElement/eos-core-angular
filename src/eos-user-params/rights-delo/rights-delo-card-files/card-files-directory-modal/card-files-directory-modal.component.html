@@ -21,7 +21,7 @@
         </li>
     </ul>
 </div>
-<div class="empty-wall">
+<div [ngClass]="{'empty-wall': isLoading}">
 <div class="spinner-wrapper" *ngIf="isLoading">
         <eos-spinner [size]="'lg'"></eos-spinner>
     </div>

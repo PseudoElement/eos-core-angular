@@ -16,7 +16,7 @@ import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { USERDEP } from 'eos-rest';
 import { RestError } from 'eos-rest/core/rest-error';
 
-const QUERY = [
+export const QUERY = [
     {
         FUNC_NUM: 8,
         CLASSIF_ID: 107
@@ -118,31 +118,31 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (node.touched) {
 
                 /* костыль для технолога */
-                if (node.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.classif) {
-                    let m = '';
-                    if (node.value) {
-                        m = 'POST';
-                    } else {
-                        m = 'DELETE';
-                    }
-                    QUERY.forEach(item => {
-                        const param = node.value ? '' : `('${this._userParamsSetSrv.userContextId} ${item.FUNC_NUM} 0.')`;
-                        const q = {
-                            method: m,
-                            requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USER_TECH_List${param}`
-                        };
-                        if (node.value) {
-                            q['data'] = {
-                                ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
-                                FUNC_NUM: item.FUNC_NUM,
-                                DUE: '0.',
-                                CLASSIF_ID: item.CLASSIF_ID,
-                                ALLOWED: 1
-                            };
-                        }
-                        this.queryForSave.push(q);
-                    });
-                }
+                // if (node.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.classif) {
+                //     let m = '';
+                //     if (node.value) {
+                //         m = 'POST';
+                //     } else {
+                //         m = 'DELETE';
+                //     }
+                //     QUERY.forEach(item => {
+                //         const param = node.value ? '' : `('${this._userParamsSetSrv.userContextId} ${item.FUNC_NUM} 0.')`;
+                //         const q = {
+                //             method: m,
+                //             requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USER_TECH_List${param}`
+                //         };
+                //         if (node.value) {
+                //             q['data'] = {
+                //                 ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
+                //                 FUNC_NUM: item.FUNC_NUM,
+                //                 DUE: '0.',
+                //                 CLASSIF_ID: item.CLASSIF_ID,
+                //                 ALLOWED: 1
+                //             };
+                //         }
+                //         this.queryForSave.push(q);
+                //     });
+                // }
                 /* костыль для технолога */
 
                 node.change.forEach(ch => {

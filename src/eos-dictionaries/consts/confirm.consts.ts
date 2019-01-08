@@ -13,3 +13,10 @@ export const CONFIRM_CHANGE_BOSS: IConfirmWindow = {
     okTitle: 'Заменить',
     cancelTitle: 'Отмена'
 };
+
+export const CONFIRM_CHANGE_REESTR: IConfirmWindow = {
+    title: 'Подтвердите действие:',
+    body: 'У данного типа реестров есть не отправленные реестры. Сменить вид отправки для всех этих реестров?',
+    okTitle: 'Да',
+    cancelTitle: 'Нет'
+};
