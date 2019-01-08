@@ -19,6 +19,7 @@ import {EosSevRulesService} from '../services/eos-sev-rules.service';
 import {SevRulesDictionaryDescriptor} from './sev-rules-dictionary-descriptor';
 import {LinkDictionaryDescriptor} from './link-dictionary-descriptor';
 import {NomenklDictionaryDescriptor} from './nomenkl-dictionary-descriptor';
+import { ReestrtypeDictionaryDescriptor } from './reestrtype-dictionary-descriptor';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -100,6 +101,9 @@ export class DictionaryDescriptorService {
                         break;
                     case DID_NOMENKL_CL:
                         res = new NomenklDictionaryDescriptor(descr, this.apiSrv);
+                        break;
+                    case 'reestrtype':
+                        res = new ReestrtypeDictionaryDescriptor(descr, this.apiSrv);
                         break;
                 }
 

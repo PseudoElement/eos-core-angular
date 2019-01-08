@@ -331,6 +331,11 @@ export abstract class AbstractDictionaryDescriptor {
                         // }
                         changeData.push(data);
                         break;
+                    case 'REESTR_NEW':
+                        for (let i = 0; i < updates[key].length; i++) {
+                            changeData.push(updates[key][i]);
+                        }
+                        break;
                     default: // do nothing
 
                 }

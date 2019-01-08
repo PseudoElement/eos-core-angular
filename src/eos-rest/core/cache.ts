@@ -56,6 +56,9 @@ export class Cache extends PipeUtils {
                     urIds.push(ids[i]);
 
             }
+        } else if (place[ids]) {
+            result.push(place[ids]);
+            return result;
         } else
             return undefined;
         return result;
