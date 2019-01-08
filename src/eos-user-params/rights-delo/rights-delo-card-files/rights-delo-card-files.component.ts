@@ -397,7 +397,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     }
     addCardFile() {
         this.modalCollection = this._modalSrv.show(CardFilesDirectoryModalComponent, {
-            class: 'modal-collection',
+            class: 'directory-modal',
             ignoreBackdropClick: true
         });
         this.modalCollection.content.closeCollection.subscribe(() => {
