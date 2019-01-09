@@ -95,6 +95,9 @@ export class ListUserSelectComponent implements OnDestroy {
             this.createUserModal.hide();
         });
     }
+    removeLogicaly() {
+
+    }
     private _getListUsers (data: USER_CL[]): UserSelectNode[] {
         const list: UserSelectNode[] = [];
         data.forEach(user => list.push(new UserSelectNode(user)));

@@ -20,12 +20,24 @@
                 containerClass="tooltip-info"
                 (click)="editUser()"
             >
-                    <span class="eos-icon eos-icon-edit-blue small"></span>
+                <span class="eos-icon eos-icon-edit-blue small"></span>
+            </button>
+            <button
+                class="btn"
+                tooltip="Удалить логически"
+                [placement]="currentState[0] ? 'bottom' : 'right'"
+                container="body"
+                containerClass="tooltip-info"
+                (click)="removeLogicaly()"
+            >
+                <span class="eos-icon eos-icon-bin-blue small"></span>
             </button>
         </div>
         <div class="table-header">
             <!-- header -->
-            <span class="user-title-name user-list-first-colomn">Фамилия</span>
+            <span class="user-title-name user-list-first-colomn">Подразделение</span>
+            <span>Должностное лицо</span>
+            <span>Тип</span>
             <span>Логин</span>
         </div>
         <div *ngIf="!isLoading; else spiner" class="eos-node-list">
@@ -55,7 +67,9 @@
                         >
                         <span></span>
                     </label> -->
-                    <span class="user-list-first-colomn">{{user.name}}</span>
+                    <span class="user-list-first-colomn">{{user.department}}</span>
+                    <span>{{user.login}}</span>
+                    <span>{{user.login}}</span>
                     <span>{{user.login}}</span>
                 </div>
             </div>
