@@ -1,8 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { ABSOLUTE_RIGHTS, CONTROL_ALL_NOTALL } from '../shared-rights-delo/consts/absolute-rights.consts';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap';
-import { AbsoluteRightsDirectoryComponent } from './absolute-rights-directory-modal/absolute-rights-directory-modal.component';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
@@ -51,7 +49,6 @@ export const QUERY = [
 export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     curentUser: IParamUserCl;
     btnDisabled: boolean = true;
-    directoryModal: BsModalRef;
     arrDeloRight: string[];
     arrNEWDeloRight: string[];
     selectedNode: NodeAbsoluteRight; // текущий выбранный элемент
@@ -70,7 +67,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     constructor (
         private _msgSrv: EosMessageService,
         private _userParamsSetSrv: UserParamsService,
-        private _modalSrv: BsModalService,
         private apiSrv: UserParamApiSrv,
         private _inputCtrlSrv: InputParamControlService,
         ) {
@@ -209,15 +205,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this.selectedNode.isSelected = true;
             this._viewContent();
         }
-    }
-    openClessifModal() {
-        this.directoryModal = this._modalSrv.show(AbsoluteRightsDirectoryComponent, {
-            class: 'directory-modal',
-            ignoreBackdropClick: true
-        });
-        this.directoryModal.content.closeCollection.subscribe(() => {
-            this.directoryModal.hide();
-        });
     }
     checkChange() {
         let c = false;

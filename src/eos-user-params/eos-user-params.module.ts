@@ -25,7 +25,6 @@ import { ParamsRightsDeloComponent } from './rights-delo/rights-delo.component';
 import { RightsDeloHeaderComponent } from './rights-delo/shared-rights-delo/rights-delo-header/rights-delo-header.component';
 import { RightsDeloCardFilesComponent } from './rights-delo/rights-delo-card-files/rights-delo-card-files.component';
 import { RightsDeloAbsoluteRightsComponent } from './rights-delo/rights-delo-absolute-rights/rights-delo-absolute-rights.component';
-import { AbsoluteRightsDirectoryComponent } from './rights-delo/rights-delo-absolute-rights/absolute-rights-directory-modal/absolute-rights-directory-modal.component';
 import { CardFilesDirectoryModalComponent } from './rights-delo/rights-delo-card-files/card-files-directory-modal/card-files-directory-modal.component';
 import { RightsDeloCardIndexRightsComponent } from './rights-delo/rights-delo-card-index-rights/rights-delo-card-index-rights.component';
 import { RightPanelForDocumentGroupsComponent } from './rights-delo/right-panel-for-document-groups/right-panel-for-document-groups.component';
@@ -40,6 +39,7 @@ import { RightDepertmentComponent } from './rights-delo/rights-delo-absolute-rig
 import {GrifsComponent} from './rights-delo/right-limited-access/grifs/grifs-component';
 import { RightAbsoluteDocGroupComponent } from './rights-delo/rights-delo-absolute-rights/right-doc-group/right-doc-group.component';
 import { ListDocsTreeComponent } from './shared/list-docs-tree/list-docs-tree.component';
+import { AbsoluteRightsClassifComponent } from './rights-delo/rights-delo-absolute-rights/absolute-rights-classif/absolute-rights-classif.component';
 
 @NgModule({
     declarations: [
@@ -59,7 +59,6 @@ import { ListDocsTreeComponent } from './shared/list-docs-tree/list-docs-tree.co
         RightsDeloHeaderComponent,
         RightsDeloCardFilesComponent,
         RightsDeloAbsoluteRightsComponent,
-        AbsoluteRightsDirectoryComponent,
         CardFilesDirectoryModalComponent,
         RightsDeloCardIndexRightsComponent,
         ParamsBaseParamComponent,
@@ -72,10 +71,10 @@ import { ListDocsTreeComponent } from './shared/list-docs-tree/list-docs-tree.co
         RightAbsoluteDocGroupComponent,
         ListDocsTreeComponent,
         LinksLimitedComponent,
+        AbsoluteRightsClassifComponent,
     ],
     entryComponents: [
-        AbsoluteRightsDirectoryComponent,
-        CardFilesDirectoryModalComponent
+        CardFilesDirectoryModalComponent,
     ],
     imports: [
         BrowserModule,
