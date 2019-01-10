@@ -35,7 +35,7 @@ export class UserParamRCSrv extends BaseUserSrv {
     }
 
     getInfoFroCode(code: string): void {
-        if (code) {
+        if (code && code !== null && code !== 'null') {
              const parsedCode = code.split(',').join('||');
         const query = {
             DOCGROUP_CL: {
@@ -46,9 +46,9 @@ export class UserParamRCSrv extends BaseUserSrv {
         };
         this.userParamApiSrv.getData(query).then(result => {
             this.dopRec = result;
-            this.checRcShowRes();
         });
         }
+        this.checRcShowRes();
     }
     addRcDoc(): void {
         this.flagBacground = true;

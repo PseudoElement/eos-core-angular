@@ -76,7 +76,7 @@ export const OTHER_USER: IBaseUsers = {
             options: [
                 {value: '0', title: 'Оригинал(ы)'},
                 {value: '1', title: 'Копию(и)'},
-                {value: '2', title: 'Первыму оригинал(ы), остальным копии'},
+                {value: '2', title: 'Первому оригинал(ы), остальным копии'},
                 {value: '3', title: 'Вручную'}
             ]
         },
