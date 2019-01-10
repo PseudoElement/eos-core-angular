@@ -46,6 +46,9 @@ export class WaitClassifService {
         if (params.skipDeleted !== undefined && params.skipDeleted !== null) {
             url += `&skip_deleted=${params.skipDeleted}`;
         }
+        if (params.nomenkl_jou !== undefined && params.nomenkl_jou !== null) {
+            url += `&nomenkl_jou=${params.nomenkl_jou}`;
+        }
 
         return url;
     }
