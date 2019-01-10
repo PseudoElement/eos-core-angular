@@ -304,9 +304,5 @@ export const CONTROL_ALL_NOTALL: IInputParamControl = {
 export const OPEN_CLASSIF_DEPARTMENT_FOR_RIGHT: IOpenClassifParams = {
     classif: 'DEPARTMENT',
     return_due: true,
-    // id: '0.',
-    skipDeleted: true,
-    selectMulty: false,
-    selectLeafs: true,
     selectNodes: false,
 };

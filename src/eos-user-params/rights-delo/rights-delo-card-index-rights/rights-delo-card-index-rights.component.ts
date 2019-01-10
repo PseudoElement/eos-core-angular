@@ -35,7 +35,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     flagRemoveDocuments = false;
     flagForTheNextRequest = false;
     flagForOpenFolder = false;
-    flagCardFileAvailability;
+    flagCardFileAvailability = false;
     listNode: IInputParamControlForIndexRight[] = CARD_INDEXS_RIGHTS;
     listDocumentGroups: IInputParamControl[] = DOCUMENT_GROUPS;
     listRestrictRegistrationFiling: IInputParamControl[] = RESTRICT_REGISTRATION_FILING;
@@ -113,9 +113,9 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         }
         // ------------------------------------------------
 
+        if (this.curentUser.USERCARD_List.length > 0) {
         this.servApi.getData(this.quaryDepartment)
         .then(data => {
-            if (data.length > 0) {
             this.flagCardFileAvailability = true;
             data.forEach((d: DEPARTMENT) => {
                 const card = this.userCard.get(d['DUE']);
@@ -142,9 +142,6 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                  });
               }
               this.prepDataAttachField();
-            } else {
-                this.flagCardFileAvailability = false;
-            }
         })
         .then(() => {
             this.servApi.getData(this.quaryDocgroupCl)
@@ -182,11 +179,12 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     this.selectNode(firstElement);
                     this.isLoading = false;
                 });
-        });
+        }).catch(data => console.log(data));
       /*  this.inputs = this.getInputAttach();
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
         this.subscriptions = this.form.valueChanges
                        .subscribe();*/
+    }
     }
     oldElement(data, oldIndex) {
         for (let i = 0; i < this.oldIndex.length; i++) {

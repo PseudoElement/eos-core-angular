@@ -61,37 +61,46 @@ export class RightDepertmentComponent implements OnInit {
         this.isShell = true;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT_FOR_RIGHT)
         .then((data: string) => {
+            if (data === '') {
+                throw new Error();
+            }
+            return this._userParmSrv.getDepartmentFromUser(data.split('|').join('||'));
+        })
+        .then((data: DEPARTMENT[]) => {
             if (this._checkRepeat(data)) {
                 this._msgSrv.addNewMessage({
                     type: 'warning',
                     title: '',
-                    msg: 'Такой элемент уже существует'
+                    msg: 'Нет елементов для добавления'
                 });
+                this.isShell = false;
                 return;
             }
-            return this._userParmSrv.getDepartmentFromUser(data);
-        })
-        .then((data: DEPARTMENT[]) => {
-            const dep = data[0];
-            const newNode = new NodeListDepAbsolute(
-                {
-                    ISN_LCLASSIF: this._userParmSrv.userContextId,
-                    DUE: dep.DUE,
-                    FUNC_NUM: this.funcNum,
-                    WEIGHT: this._getMaxWeight(),
-                    DEEP: 1,
-                    ALLOWED: null,
-                },
-                dep,
-                true
-            );
-            this.curentUser.USERDEP_List.push(newNode.userDep);
-            this.listUserDep.push(newNode);
-            this.selectedNode.pushChange({
-                method: 'POST',
-                due: newNode.userDep.DUE,
-                data: newNode.userDep
+
+            const newNodes: NodeListDepAbsolute[] = [];
+            data.forEach((dep: DEPARTMENT) => {
+                const newNode = new NodeListDepAbsolute(
+                    {
+                        ISN_LCLASSIF: this._userParmSrv.userContextId,
+                        DUE: dep.DUE,
+                        FUNC_NUM: this.funcNum,
+                        WEIGHT: this._getMaxWeight(),
+                        DEEP: 1,
+                        ALLOWED: null,
+                    },
+                    dep,
+                    true
+                );
+                this.curentUser.USERDEP_List.push(newNode.userDep);
+                this.selectedNode.pushChange({
+                    method: 'POST',
+                    due: newNode.userDep.DUE,
+                    data: newNode.userDep
+                });
+                newNodes.push(newNode);
             });
+
+            this.listUserDep = this.listUserDep.concat(newNodes);
             this.selectedNode.isCreate = false;
             this.isShell = false;
             this.Changed.emit();
@@ -136,7 +145,21 @@ export class RightDepertmentComponent implements OnInit {
         });
         return w;
     }
-    private _checkRepeat(due) {
-        return this.listUserDep.findIndex(node => node['userDep']['DUE'] === due) >= 0;
+    private _checkRepeat(arrDep: DEPARTMENT[]) {
+        this.listUserDep.forEach((node: NodeListDepAbsolute) => {
+            const index = arrDep.findIndex(doc => doc.DUE === node.department.DUE);
+            if (index !== -1) {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: '',
+                    msg: `Элемент \'${arrDep[index].CLASSIF_NAME}\' не будет добавлен\nтак как он уже существует`
+                });
+                arrDep.splice(index, 1);
+            }
+        });
+        if (arrDep.length) {
+            return false;
+        }
+        return true;
     }
 }
