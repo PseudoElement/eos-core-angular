@@ -6,7 +6,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { CardFilesDirectoryModalComponent } from './card-files-directory-modal/card-files-directory-modal.component';
 import { EosUtils } from 'eos-common/core/utils';
-import { PARM_SUCCESS_SAVE, PARM_CANCEL_WITHOUT_DELETION } from '../shared-rights-delo/consts/eos-user-params.const';
+import { PARM_SUCCESS_SAVE, PARM_NO_MAIN_CARD } from '../shared-rights-delo/consts/eos-user-params.const';
 
 @Component({
     selector: 'eos-rights-delo-card-files',
@@ -55,6 +55,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     currentWord;
     flagCurrentDataCabinetDepartment = true;
     flagCardFileAvailability;
+    flagNoMainCard = false;
     globalIndexMainCard;
     private quaryDepartment = {
         DEPARTMENT: {
@@ -203,6 +204,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     }
     submit() {
         if (this.newDataAttach || this.prepareData || this.newData) {
+            if (!this.flagNoMainCard) {
             const userId = '' + this._userParamsSetSrv.userContextId;
             this.formChanged.emit(false);
             this.isChangeForm = false;
@@ -216,6 +218,9 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 })
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
+            } else {
+                this.msgSrv.addNewMessage(PARM_NO_MAIN_CARD);
+            }
         }
     }
       createObjRequestForAttach(): any[] {
@@ -290,6 +295,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     choosingMainCheckbox() {
         let flag = true;
         let tmpI = -1;
+        this.flagNoMainCard = false;
         for (let i = 0; i < this.fieldKeysforCardFiles.length; i++) {
             for (const key in this._userParamsSetSrv.hashUserContexHomeCard) {
             if (this.fieldKeysforCardFiles[i][2] === true) {
@@ -391,7 +397,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     }
     addCardFile() {
         this.modalCollection = this._modalSrv.show(CardFilesDirectoryModalComponent, {
-            class: 'modal-collection',
+            class: 'directory-modal',
             ignoreBackdropClick: true
         });
         this.modalCollection.content.closeCollection.subscribe(() => {
@@ -402,15 +408,14 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         for (let i = 0; i < this.fieldKeysforCardFiles.length; i++) {
             if (this.fieldKeysforCardFiles[i][0] === this.allDataForCurrentUsercard['DUE']) {
                 if (this.fieldKeysforCardFiles[i][3] === true) {
-                    this.msgSrv.addNewMessage(PARM_CANCEL_WITHOUT_DELETION);
-                } else {
+                    this.flagNoMainCard = true;
+                }
                 this.fieldKeysforCardFiles[i][4] = false;
                 this.newData.rec[this.fieldKeysforCardFiles[i][0]] = 'NO';
                 this.selectedNode(this.fieldKeysforCardFiles[this.globalIndexMainCard][1], null);
                 this.inputs = this.getInputs();
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.subscribeChangeForm();
-                }
             }
         }
     }

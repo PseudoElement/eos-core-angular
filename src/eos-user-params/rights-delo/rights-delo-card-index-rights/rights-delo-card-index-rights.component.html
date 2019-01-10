@@ -1,12 +1,12 @@
 <div class="input-user-wrapper input-user-card-index-rights-wrapper">
+    <div  *ngIf="flagCardFileAvailability">
     <eos-rights-delo-header
         title="Права в картотеках"
         (submitForm)="submit()"
         (cancelForm)="cancel()"
         [statusBtnSub]="btnDisabled"
-        [hidden]="!flagCardFileAvailability"
     ></eos-rights-delo-header>
-<div class="user-input-group" *ngIf="flagCardFileAvailability">
+<div class="user-input-group">
 <div class="left-block-list-side">
 <div *ngFor="let item of listNode" (click)="selectNode(item)" [ngClass]="{'highlighted': item.data.isSelected}">
     <label>
@@ -38,15 +38,15 @@
                 </button>-->
     </div>
     <div class="content-list" *ngIf="!isLoading">
-    <div *ngFor="let item of treeHierarchyOnTheRightSide" class="inline-block">
+    <div *ngFor="let item of treeHierarchyOnTheRightSide" class="inline-block item-card">
         <div *ngIf="(item.restrictRegistrationFiling || item.documents) && flagToDisplayTheRightSide"
              class="tree-btn inline-block"
              (click)="openFolder($event, item)">
                     <span class="eos-icon tringle-size icon"
                           [ngClass]="{'eos-icon-open-folder-blue': item.openFolder, 'eos-icon-close-folder-blue': !item.openFolder}" ></span>
                 </div>
-        <div class="card-item" [ngClass]="{'highlighted': item.card.data.isSelected}">
-        <div [formGroup]="form">
+        <div class="card-item">
+        <div [formGroup]="form" [ngClass]="{'highlighted': item.card.data.isSelected}">
             <label class="checkbox" (click)="checkData($event, item, 'card')">
                 <input type="checkbox"
                     hide
@@ -58,7 +58,7 @@
                 {{item.card.label}}
             </label>
         </div>
-        </div>
+    </div>
 
         <div *ngIf="item.restrictRegistrationFiling && flagToDisplayTheRightSide"
              class="tree-elements"
@@ -102,11 +102,12 @@
 </div>
 </div>
 </div>
+</div>
 <div *ngIf="!flagCardFileAvailability">
-<h1 class="warning-record">Нет картотек!</h1>
+<h1 class="warning-record">Отсутствуют картотеки!</h1>
 </div>
 </div>
 
-<div class="spinner-wrapper" *ngIf="isLoading">
+<div class="spinner-wrapper" *ngIf="isLoading && flagCardFileAvailability">
         <eos-spinner [size]="'lg'"></eos-spinner>
 </div>

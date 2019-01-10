@@ -20,7 +20,7 @@
         height: 4vh;
     }
     .content-list {
-        max-height: 66vh;
+        max-height: 63vh;
         overflow-x: auto;
         overflow-y: auto;
     }
@@ -44,43 +44,13 @@
         margin-bottom: 20px;
     }
 
-  /*  .right-block-list-absolute-rights-first-block {
-        display: inline-block;
-        width: 90%;
-        vertical-align: top;
-       // max-height: 30vh;
-        padding-left: 15px;
-        padding-right: 15px;
-        border-left: 1px solid $border-color-main-theme;
-        border-right: 1px solid $border-color-main-theme;
-    }
-
-    .right-block-list-absolute-rights-second-block {
-        display: inline-block;
-        width: 90%;
-        vertical-align: top;
-       // max-height: 20vh;
-       padding-left: 15px;
-       padding-right: 15px;
-       border-left: 1px solid $border-color-main-theme;
-       border-right: 1px solid $border-color-main-theme;
-    }
-
-    .right-block-list-absolute-rights-last-element {
-        padding-left: 15px;
-        padding-right: 15px;
-        border-left: 1px solid $border-color-main-theme;
-        border-right: 1px solid $border-color-main-theme;
-        border-bottom: 1px solid $border-color-main-theme;
-        margin-bottom: 20px;
-    } */
-
     .the-inscription-of-absence-cabinets {
         font-size: 18px;
         color: #f44336;
     }
 
     .tabs-wrapper {
+        height: 3vh;
         margin: 0;
         border-left: 1px;
     }

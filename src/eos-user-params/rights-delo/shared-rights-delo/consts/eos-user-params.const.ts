@@ -19,9 +19,9 @@ export const PARM_CANCEL_CHANGE: IMessage = {
     dismissOnTimeout: 5000
 };
 
-export const PARM_CANCEL_WITHOUT_DELETION: IMessage = {
+export const PARM_NO_MAIN_CARD: IMessage = {
     type: 'warning',
-    title: 'Нельзя удалить главную картотеку',
+    title: 'Не определена главная картотека',
     msg: '',
     dismissOnTimeout: 5000
 };

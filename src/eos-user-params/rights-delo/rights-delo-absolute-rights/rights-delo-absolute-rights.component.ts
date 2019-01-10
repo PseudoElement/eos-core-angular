@@ -79,7 +79,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
 
     init() {
         this.curentUser = this._userParamsSetSrv.curentUser;
-        this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split(''); // проверка на наличие массива, если нету , то создать новый
+        this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || new Array(37).fill(0).join('');
+        this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split('');
         this.arrNEWDeloRight = this.curentUser['DELO_RIGHTS'].split('');
         this.fields = this._writeValue(ABSOLUTE_RIGHTS);
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
@@ -118,31 +119,45 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (node.touched) {
 
                 /* костыль для технолога */
-                // if (node.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.classif) {
-                //     let m = '';
-                //     if (node.value) {
-                //         m = 'POST';
-                //     } else {
-                //         m = 'DELETE';
-                //     }
-                //     QUERY.forEach(item => {
-                //         const param = node.value ? '' : `('${this._userParamsSetSrv.userContextId} ${item.FUNC_NUM} 0.')`;
-                //         const q = {
-                //             method: m,
-                //             requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USER_TECH_List${param}`
-                //         };
-                //         if (node.value) {
-                //             q['data'] = {
-                //                 ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
-                //                 FUNC_NUM: item.FUNC_NUM,
-                //                 DUE: '0.',
-                //                 CLASSIF_ID: item.CLASSIF_ID,
-                //                 ALLOWED: 1
-                //             };
-                //         }
-                //         this.queryForSave.push(q);
-                //     });
-                // }
+                if (node.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.classif) {
+                    let m = '';
+                    if (node.value) {
+                        m = 'POST';
+                        this.queryForSave.push({
+                            method: 'MERGE',
+                            requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})`,
+                            data: {
+                                TECH_RIGHTS: new Array(30).fill('1').join('')
+                            }
+                        });
+                    } else {
+                        m = 'DELETE';
+                        this.queryForSave.push({
+                            method: 'MERGE',
+                            requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})`,
+                            data: {
+                                TECH_RIGHTS: ''
+                            }
+                        });
+                    }
+                    QUERY.forEach(item => {
+                        const param = node.value ? '' : `('${this._userParamsSetSrv.userContextId} ${item.FUNC_NUM} 0.')`;
+                        const q = {
+                            method: m,
+                            requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USER_TECH_List${param}`
+                        };
+                        if (node.value) {
+                            q['data'] = {
+                                ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
+                                FUNC_NUM: item.FUNC_NUM,
+                                DUE: '0.',
+                                CLASSIF_ID: item.CLASSIF_ID,
+                                ALLOWED: 1
+                            };
+                        }
+                        this.queryForSave.push(q);
+                    });
+                }
                 /* костыль для технолога */
 
                 node.change.forEach(ch => {

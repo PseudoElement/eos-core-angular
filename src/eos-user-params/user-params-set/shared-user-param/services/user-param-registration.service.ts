@@ -280,6 +280,11 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
             })
         );
     }
+    checkLokfile_SSCAN() {
+        if (this.newData.rec['LOCKFILE_SSCAN'] === 'YES' || 'NO') {
+            this.newData.rec['LOCKFILE_SSCAN'] === 'YES' ?  this.newData.rec['LOCKFILE_SSCAN']  = '1' :  this.newData.rec['LOCKFILE_SSCAN'] = '0';
+        }
+    }
     prepDataAttachField(data) {
         for (const key of Object.keys(data)) {
             if (key === 'DEF_SEARCH_CITIZEN') {
@@ -1152,6 +1157,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             } else if (this.newData) {
+                this.checkLokfile_SSCAN();
                 this.checkFieldOrgName();
             this.userParamApiSrv
                 .setData(this.createObjRequest())
@@ -1364,7 +1370,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
         } else {
              !node ?   node = this.form.controls['rec.ORGGROUP'].value : node = node;
         }
-        if (node) {
+        if (node !== null) {
             const query = {
                 ORGANIZ_CL: {
                     criteries: {
