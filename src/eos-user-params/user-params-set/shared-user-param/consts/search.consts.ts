@@ -8,7 +8,9 @@ export const SEARCH_USER: IBaseUsers = {
         {
             key: 'SRCH_LIMIT_RESULT',
             type: 'numberIncrement',
-            title: 'Максимальное кол-во записей:'
+            title: 'Максимальное кол-во записей:',
+            maxValue: 99999,
+            minValue: 1,
         },
         {
             key: 'SEARCH_CONTEXT_CARD_EMPTY',
