@@ -1,6 +1,6 @@
 import { IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
 const REG_MAX_SIZE: RegExp = /^\d{0,3}$|^1000$/; // 0-1000
-const REG_MAX_SIZE1: RegExp = /^(-\d{1,2}|\d{0,3})$/; // 0-1000
+const REG_MAX_SIZE1: RegExp = /^(-\d{1,2}$|^\d{0,3})$/; // 0-1000
 export const CABINETS_USER: IBaseUsers = {
     id: 'cabinets',
     title: 'Кабинеты',
@@ -306,7 +306,6 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'HILITE_RESOLUTION_INCREMENT',
             type: 'numberIncrement',
-            readonly: true,
             title: '',
             pattern: REG_MAX_SIZE1
         },
@@ -318,9 +317,8 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'HILITE_PRJ_RC_INCREMENT',
             type: 'numberIncrement',
-            readonly: true,
             title: '',
-            pattern: REG_MAX_SIZE1
+            pattern: REG_MAX_SIZE1,
         },
     ]
 };

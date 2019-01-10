@@ -1,7 +1,7 @@
 import { Injectable, Injector } from '@angular/core';
 import { BaseUserSrv } from './base-user.service';
 import { CABINETS_USER } from '../consts/cabinets.consts';
-import { FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { EosUtils } from 'eos-common/core/utils';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
@@ -148,8 +148,6 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
         this.prepDataAttachField(this.prepareData.rec);
         this.inputAttach = this.getInputAttach();
         this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
-        this.formAttach.controls['rec.HILITE_RESOLUTION_INCREMENT'].setValidators(Validators.pattern(/^(-\d{1,2}|\d{0,3})$/));
-        this.formAttach.controls['rec.HILITE_PRJ_RC_INCREMENT'].setValidators(Validators.pattern(/^(-\d{1,2}|\d{0,3})$/));
         if (this.flagDisabledHiliteResolutionIncrement) {
             this.formAttach.controls['rec.HILITE_RESOLUTION_INCREMENT'].enable();
         } else {

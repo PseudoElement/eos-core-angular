@@ -9,7 +9,7 @@ import { Validators } from '@angular/forms';
 export class DynamicInputNumberIncrementComponent extends DynamicInputBase  implements OnChanges {
     onIncrease() {
         if (this.control.enabled) {
-            if (!isNaN(this.control.value)) {
+            if (!isNaN(parseInt(this.control.value, 10))) {
                 this.control.patchValue(String(+this.control.value + 1));
             } else {
                 this.control.patchValue('0');
@@ -28,7 +28,7 @@ export class DynamicInputNumberIncrementComponent extends DynamicInputBase  impl
         }
     }
     ngOnChanges() {
-           if ( !this.input.pattern && this.input.key !== 'rec.HILITE_PRJ_RC_INCREMENT' && this.input.key !== 'rec.HILITE_RESOLUTION_INCREMENT') {
+           if ( !this.input.pattern) {
                  this.control.setValidators(Validators.pattern(/^\d{0,5}$/));
            }
     }
