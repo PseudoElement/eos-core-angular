@@ -28,7 +28,7 @@ export class DynamicInputNumberIncrementComponent extends DynamicInputBase  impl
         }
     }
     ngOnChanges() {
-           if ( !this.input.pattern) {
+           if ( !this.input.pattern && this.input.key !== 'rec.HILITE_PRJ_RC_INCREMENT' && this.input.key !== 'rec.HILITE_RESOLUTION_INCREMENT') {
                  this.control.setValidators(Validators.pattern(/^\d{0,5}$/));
            }
     }
