@@ -9,7 +9,7 @@ import { Validators } from '@angular/forms';
 export class DynamicInputNumberIncrementComponent extends DynamicInputBase  implements OnChanges {
     onIncrease() {
         if (this.control.enabled) {
-            if (!isNaN(this.control.value)) {
+            if (!isNaN(parseInt(this.control.value, 10))) {
                 this.control.patchValue(String(this.checkMaxValue()));
             } else {
                 this.control.patchValue(this.input.minValue ? String(this.input.minValue) : '0');
@@ -19,7 +19,7 @@ export class DynamicInputNumberIncrementComponent extends DynamicInputBase  impl
     }
     onDecrease() {
         if (this.control.enabled) {
-            if (!isNaN(this.control.value)) {
+            if (!isNaN(parseInt(this.control.value, 10))) {
                 this.control.patchValue(String(this.checkMinValue()));
             } else {
                 this.control.patchValue(this.input.minValue ? String(this.input.minValue) : '0');
