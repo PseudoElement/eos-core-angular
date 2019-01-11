@@ -31,6 +31,7 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
     arrayForRemovingCheckboks = [];
     inputs: any;
     newData;
+    newData2 = {};
     defaultData;
     oldValue: any;
     isChangeForm = false;
@@ -120,6 +121,7 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
                             changed = true;
                          }
                     });
+                    this.newData = newVal;
                     this.formChanged.emit(changed);
                     this.isChangeForm = changed;
             })
@@ -156,6 +158,14 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
         this.tmp = this.mainCheckbox;
         return _value !== oldValue;
  }
+    treatmentNewData(newData) {
+        let str = '';
+        for (const key of Object.keys(newData)) {
+            str = key;
+            str = str.substring(4, str.length);
+            this.newData2[str] = newData[key];
+        }
+    }
     getObjectInputFields(fields) {
         const inputs: any = { _list: [], rec: {} };
         fields.forEach(field => {
@@ -226,24 +236,87 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
     }
     createObjRequest(): any[] {
         const req = [];
-        let stringKey = '';
+        let valueFromObjPrepareData;
+        const userId = this._userParamsSetSrv.userContextId;
+        this.treatmentNewData(this.newData);
+
+        for (const key of Object.keys(this.newData2)) {
+        valueFromObjPrepareData = this.prepareData.rec[key];
+        if (this.newData2[key] === true && this.prepareData.rec[key] === undefined) {
+          //  arrayJust.push([stringKey, '010000000000010010']);
+               req.push({
+                   method: 'POST',
+                   requestUri: `USER_CL(${userId})/USERCARD_List`,
+                   data: {
+                       ISN_LCLASSIF: `${userId}`,
+                       DUE: `${key}`,
+                       HOME_CARD: '0',
+                       FUNCLIST: '010000000000010010'
+                   }
+               });
+               this.prepareData.rec[key] = '010000000000010010'; // Then
+           } else if (this.newData2[key] === false && ((this.prepareData.rec[key] !== undefined) || (valueFromObjPrepareData !== undefined))) {
+               req.push({
+                   method: 'DELETE',
+                   requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${key}\')`
+               });
+               this.prepareData.rec[key] = undefined;
+           }
+           if (Object.keys(this.mainCheckbox).length > 0) {
+            req.push({
+                method: 'MERGE',
+                requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${Object.keys(this.mainCheckbox)[0]}\')`,
+                data: {
+                    HOME_CARD: `${this.mainCheckbox[Object.keys(this.mainCheckbox)[0]]}`
+                }
+            });
+            req.push({
+                method: 'MERGE',
+                requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${Object.keys(this.oldMainCheckbox)[0]}\')`,
+                data: {
+                    HOME_CARD: `${this.oldMainCheckbox[Object.keys(this.oldMainCheckbox)[0]]}`
+                }
+            });
+           }
+        //   const arrayMarkMainCheckbox = Object.keys(this.mainCheckbox);
+       //    const arrayMarkOldMainCheckbox = Object.keys(this.oldMainCheckbox);
+        /*   if (Object.keys(this.mainCheckbox).length > 0) {
+               req.push({
+                   method: 'MERGE',
+                   requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${arrayMarkMainCheckbox[0]}\')`,
+                   data: {
+                       HOME_CARD: `${this.mainCheckbox[arrayMarkMainCheckbox[0]]}`
+                   }
+               });
+               req.push({
+                   method: 'MERGE',
+                   requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${arrayMarkOldMainCheckbox[0]}\')`,
+                   data: {
+                       HOME_CARD: `${this.oldMainCheckbox[arrayMarkOldMainCheckbox[0]]}`
+                   }
+               });
+           }*/
+        }
+
+
+
+      /*  let stringKey = '';
         let level = -1;
         let arrayPositionPoints = [];
         let valueFromObjPrepareData;
-       // let countKeysForCurrentLevel;
-       // const arrayCountKeysForCurrentLevel = [];
         const userId = this._userParamsSetSrv.userContextId;
-        const arrayJust = [];
+        const arrayJust = [];*/
 
-        const funcObj = function(objNewData, objPrepareData, markMainCheckbox, markOldMainCheckbox) {
+      /*  const funcObj = function(objNewData, objPrepareData, markMainCheckbox, markOldMainCheckbox) {
             for (const key in objNewData) {
                 if (typeof objNewData[key] === 'object' && (Object.keys(markMainCheckbox).length === 0)) {
-                   // countKeysForCurrentLevel = Object.keys(objNewData[key]).length;
-                    level++;
+                   level++;
                  //   arrayCountKeysForCurrentLevel.push(countKeysForCurrentLevel);
                     stringKey += key + '.';
                     funcObj(objNewData[key], objPrepareData, markMainCheckbox, markOldMainCheckbox);
                 } else {
+                    arrayPositionPoints = [];
+                   // --currentCountItemForLevel;
                     if (level === -1 || level === 0) {
                         valueFromObjPrepareData = objPrepareData[key];
                     }
@@ -296,30 +369,17 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
                     }
                     if (key === keys[keys.length - 1]) {
                      //   let arraySplitForStringKey, theLengthOfThePenultimateElement;
-                        level = 0;
-                       /* for (let i = 0; i < arrayCountKeysForCurrentLevel.length; i++) {
-                            if (arrayCountKeysForCurrentLevel[arrayCountKeysForCurrentLevel.length - 2] > 2) {
-                                arraySplitForStringKey = stringKey.split('.');
-                                theLengthOfThePenultimateElement = arraySplitForStringKey[arraySplitForStringKey.length - 2].length + 1;
-                                stringKey = stringKey.substring(0, stringKey.length - theLengthOfThePenultimateElement);
-                                arrayCountKeysForCurrentLevel.pop();
-                                arrayCountKeysForCurrentLevel.pop();
-                                arrayCountKeysForCurrentLevel.push();
-                            } else {
-                                level--;
-                            }
-                        }*/
+                        level--;
+                        arrayPositionPoints.pop();
                         stringKey = stringKey.substring(0, arrayPositionPoints[level] + 1);
+                     //   stringKey = stringKey.substring(0, arrayPositionPoints[level] + 1);
                         arrayPositionPoints = [];
                     }
                 }
             }
-        };
+        };*/
 
-        console.log(this.newData);
-        console.log(this.prepareData);
-
-        funcObj(this.newData.rec, this.prepareData.rec, this.mainCheckbox, this.oldMainCheckbox);
+    //    funcObj(this.newData.rec, this.prepareData.rec, this.mainCheckbox, this.oldMainCheckbox);
       /*  for (const key2 of Object.keys(this.prepareData.rec)) {
           for (let i = 0; i < currentArrayKeysForRemove.length; i++) {
               if (key2 === currentArrayKeysForRemove[i]) {
@@ -330,7 +390,7 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
       this.inputs = this.getInputs();
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
         this.subscribeChangeForm();
-        this.arrayForNewDynamicValue = arrayJust;
+     //   this.arrayForNewDynamicValue = arrayJust;
         return req;
     }
     createObjRequestForDefaultValues(): any[] {
