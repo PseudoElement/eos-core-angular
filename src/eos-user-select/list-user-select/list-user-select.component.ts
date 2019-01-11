@@ -21,11 +21,12 @@ export class ListUserSelectComponent implements OnDestroy {
     selectedUser: UserSelectNode;
     isLoading: boolean;
     isMarkNode: Boolean;
+    titleCurrentDue: string = '';
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor (
         private _modalSrv: BsModalService,
         private _apiSrv: UserParamApiSrv,
-        private _paginationSrv: UserPaginationService,
+        private _pagSrv: UserPaginationService,
         private _route: ActivatedRoute,
         private _router: Router,
         private rtUserService: RtUserSelectService,
@@ -46,7 +47,7 @@ export class ListUserSelectComponent implements OnDestroy {
                     });
                 });
             });
-        this._paginationSrv.NodeList$
+        this._pagSrv.NodeList$
         .takeUntil(this.ngUnsubscribe)
         .subscribe(data => {
            this._apiSrv.updatePageList(data).then(upDate => {
@@ -104,8 +105,8 @@ export class ListUserSelectComponent implements OnDestroy {
     showDeep() {
         this._apiSrv.flagAllUser = !this._apiSrv.flagAllUser;
         this._apiSrv.devideUsers();
-        this._paginationSrv._initPaginationConfig(true);
-        this._paginationSrv.changePagination(this._paginationSrv.paginationConfig);
+        this._pagSrv._initPaginationConfig(true);
+        this._pagSrv.changePagination(this._pagSrv.paginationConfig);
     }
 
     private _getListUsers (data): UserSelectNode[] {

@@ -1,7 +1,18 @@
 <div class="list-user-select-wrapper">
     <div class="table-wrapper usual-border">
-            <div class="table-header">
+        <div class="table-header">
+            <div class="table-header-wrapper">
+                <div class="selected-node-title">
+                        <span class="long-title xl-font">{{_apiSrv.configList.titleDue}}</span>
                 </div>
+                <div class="item-count usual-border m-font">
+                    <span class="item-count-content">
+                        Записей:
+                        <span class="counter">{{_pagSrv.countMaxSize}}</span>
+                    </span>
+                </div>
+            </div>
+        </div>
         <div class="table-header">
             <!-- header action -->
             <button
@@ -44,10 +55,9 @@
                 <span class="user-list-third-colomn">Тип</span>
                 <span class="user-list-fourth-colomn">Логин</span>
             </div>
-
         </div>
         <div *ngIf="!isLoading; else spiner" class="eos-node-list">
-            <div *ngIf="listUsers?.length; else emptyCert"
+            <div *ngIf="listUsers.length; else emptyCert"
                 class="block"
                 [ngStyle]="{'width.px': tableWidth}"
                 #listContent>

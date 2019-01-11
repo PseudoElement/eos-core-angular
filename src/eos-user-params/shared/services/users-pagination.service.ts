@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { USER_CL} from 'eos-rest';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {IPaginationConfig} from '../../../eos-dictionaries/node-list-pagination/node-list-pagination.interfaces';
 import { EosStorageService } from '../../../../src/app/services/eos-storage.service';
@@ -10,8 +10,9 @@ import { PAGES_SELECT, LS_PAGE_LENGTH } from 'eos-user-select/shered/consts/pagi
 export class UserPaginationService {
     UsersList:  USER_CL[] = [];
     paginationConfig: IPaginationConfig;
-    private _paginationConfig$: BehaviorSubject<IPaginationConfig>;
-    private _NodeList$: BehaviorSubject<USER_CL[]>;
+    countMaxSize: number = 0;
+    private _paginationConfig$: Subject<IPaginationConfig>;
+    private _NodeList$: Subject<USER_CL[]>;
 
     get paginationConfig$(): Observable<IPaginationConfig> {
         return this._paginationConfig$.asObservable();
@@ -24,9 +25,10 @@ export class UserPaginationService {
     constructor(
         private _storageSrv: EosStorageService,
     ) {
-        this._NodeList$ = new BehaviorSubject([]);
-        this._paginationConfig$ = new BehaviorSubject(null);
+        this._NodeList$ = new Subject();
+        this._paginationConfig$ = new Subject();
         this._initPaginationConfig(true);
+        this.countMaxSize = this.paginationConfig.itemsQty;
     }
 
     changePagination(config: IPaginationConfig) {
@@ -47,6 +49,7 @@ export class UserPaginationService {
             this.paginationConfig.start = 1;
             this._paginationConfig$.next(this.paginationConfig);
         }
+        this.countMaxSize = this.paginationConfig.itemsQty;
     }
 
 
@@ -68,6 +71,7 @@ export class UserPaginationService {
 
      private _updateVisibleNodes() {
         this._fixCurrentPage();
+        this.countMaxSize = this.paginationConfig.itemsQty;
         const pageList = this.UsersList.slice((this.paginationConfig.start - 1) * this.paginationConfig.length, this.paginationConfig.current * this.paginationConfig.length);
         this._NodeList$.next(pageList);
         // this.updatePageList(pageList).then(pageLists => {

@@ -9,7 +9,7 @@ import {Observable} from 'rxjs/Observable';
 @Injectable()
 export class UserParamApiSrv {
     flagAllUser: boolean;
-    configList: {[key: string]: number|string} = {};
+    configList = {};
     confiList$: Subject<any>;
     private Allcustomer: USER_CL[] = [];
     get _confiList$(): Observable<{[key: string]: number|string}> {
@@ -71,6 +71,7 @@ export class UserParamApiSrv {
         this.Allcustomer =  data.filter(user => user.ISN_LCLASSIF !== 0 && user.CLASSIF_NAME !== ' ');
         this.users_pagination.UsersList = this.Allcustomer.slice();
         this.devideUsers();
+        this.initConfigTitle(dueDep);
         this.users_pagination._initPaginationConfig();
            return this.users_pagination.UsersList.slice((this.users_pagination.paginationConfig.start - 1)
             * this.users_pagination.paginationConfig.length,
@@ -144,6 +145,11 @@ export class UserParamApiSrv {
                 return pageList;
             });
 
+    }
+    initConfigTitle(dueDep: string) {
+        if (!this.configList['titleDue'] || !dueDep) {
+            this.configList['titleDue'] = 'Все подразделения';
+        }
     }
     // protected prepareForEdit(records: any[]): any[] {
     //     return records.map((record) => this.apiSrv.entityHelper.prepareForEdit(record));

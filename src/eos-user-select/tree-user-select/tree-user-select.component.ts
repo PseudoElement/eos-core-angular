@@ -39,6 +39,10 @@ export class TreeUserSelectComponent implements OnInit {
     }
     setTab(key) {
         this.currMode = key;
+        this._apiSrv.confiList$.next({
+            shooseTab: this.currMode,
+            titleDue: this.currMode === 0 ? 'Все подразделения' : this.currMode === 1 ? 'Все картотеки' : 'Все организации'
+        });
         this.ngOnInit();
     }
 
@@ -66,7 +70,7 @@ export class TreeUserSelectComponent implements OnInit {
         evt.stopPropagation();
         this._apiSrv.confiList$.next({
             shooseTab: this.currMode,
-            titleDue: node.data['CLASSIF_NAME']
+            titleDue: node.title
         });
         this._router.navigate(['user_param', node.id]);
     }
