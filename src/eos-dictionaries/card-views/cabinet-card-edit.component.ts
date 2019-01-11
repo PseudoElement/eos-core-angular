@@ -223,10 +223,10 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                     fConst.key === folder.FOLDER_KIND)).filter( (el) => el);
 
         this.accessHeaders = [{
-            title: 'Ограничение доступа РК',
+            title: 'Ограничение доступа к РК',
             key: 'rk'
         }, {
-            title: 'Ограничение доступа РКПД',
+            title: 'Ограничение доступа к РКПД',
             key: 'rkpd'
         }];
 
