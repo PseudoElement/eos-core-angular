@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, DoCheck, Output, EventEmitter } from '@angular/core';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { BaseRightsDeloSrv } from '../shared-rights-delo/services/base-rights-delo.service';
 import { CARD_FILES_USER } from '../shared-rights-delo/consts/card-files.consts';
@@ -13,7 +13,8 @@ import { PARM_SUCCESS_SAVE, PARM_NO_MAIN_CARD } from '../shared-rights-delo/cons
     templateUrl: 'rights-delo-card-files.component.html'
 })
 
-export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements OnInit {
+export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements OnInit, DoCheck {
+    @Output() Changed = new EventEmitter();
     modalCollection: BsModalRef;
     _userParamsSetSrv: UserParamsService;
     newDataAttach;
@@ -43,11 +44,13 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         apiInstance: 'DEPARTMENT',
         fields: []
     };
+    postOrMergeQuery;
     currentSelectedWord;
     prepInputsAttach;
     prepDataAttach = {rec: {}};
     inputAttach;
     formAttach;
+    currentDueCard;
     objectForIsnCabinet = {};
     allDataForCurrentCabinet;
     allDataForCurrentUsercard;
@@ -56,6 +59,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     flagCurrentDataCabinetDepartment = true;
     flagCardFileAvailability;
     flagNoMainCard = false;
+    flagTmp = false;
     globalIndexMainCard;
     private quaryDepartment = {
         DEPARTMENT: {
@@ -79,6 +83,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     };
     constructor(private _modalSrv: BsModalService, injector: Injector, private servApi: UserParamApiSrv ) {
         super(injector, CARD_FILES_USER);
+      //  console.log(CARD_FILES_USER);
         for (let i = 0; i < this.arrayKeysCheckboxforCabinets.length; i++) {
             this.fieldKeysforCardFilesCabinets.push(
                 {
@@ -89,10 +94,12 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             );
         }
         this.prepInputsAttach = this.getObjectInputFields(this.fieldKeysforCardFilesCabinets);
+       // this.init2();
     }
     ngOnInit() {
         const allDataCard = this._userParamsSetSrv.userCard;
         this.allData = allDataCard;
+        console.log(this.allData);
         this.isLoading = true;
         this.servApi.getData(this.quaryDepartment)
         .then(data => {
@@ -121,7 +128,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                     for (let j = 0; j < data4.length; j++) {
                             this.arrayForCurrentCabinets.push([data4[j]['CABINET_NAME'], data4[j]['ISN_CABINET'], data4[j]['DUE']]);
                 }
-                });
+                }).catch(error => console.log(error));
                 this.init();
                 this.choosingMainCheckbox();
         }).then(() => {
@@ -130,10 +137,31 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                   this.form.controls['rec.' + CARD_FILES_USER.fields[i]['key']].disable();
                 }
             }
-           //   this.choosingMainCheckbox();
               this.isLoading = false;
-        });
-        });
+        }).catch(error => console.log(error));
+        }).catch(error => console.log(error));
+    }
+    ngDoCheck() {
+     /*   if (this.flagTmp) {
+         //   console.log(this.newData.rec);
+        //    console.log(this.prepareData.rec);
+         //   this.fieldKeysforCardFiles = [];
+          //  CARD_FILES_USER.fields = [];
+           // console.log(this.fieldKeysforCardFiles);
+         //   console.log(CARD_FILES_USER.fields);
+            this.prepareData.rec['0.'] = '010000000000010010';
+            this.fieldKeysforCardFiles[0][4] = true;
+          //  console.log(this.prepareData.rec);
+            this.prepareDataParam();
+            this.inputs = this.getInputs();
+           // console.log(this.inputs);
+            this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+          //  console.log(this.form);
+            this.subscribeChangeForm();
+            this.Changed.emit();
+           // this.choosingMainCheckbox();
+          //  this.flagTmp = false;
+        }*/
     }
     settingValuesForFieldsCabinets(value) {
                             this.prepDataAttachField(value);
@@ -203,7 +231,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         return _value !== oldValue;
     }
     submit() {
-        if (this.newDataAttach || this.prepareData || this.newData) {
+        if (this.newDataAttach || this.prepareData || this.newData2) {
             if (!this.flagNoMainCard) {
             const userId = '' + this._userParamsSetSrv.userContextId;
             this.formChanged.emit(false);
@@ -213,6 +241,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 .setData(this.createObjRequestForAll())
                 .then(data => {
                    // this.prepareData.rec = Object.assign({}, this.newData.rec);
+                    this.allData = this._userParamsSetSrv.userCard;
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                     this._userParamsSetSrv.getUserIsn(userId);
                 })
@@ -246,15 +275,21 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                     }
                 } else if (arrayKeys[i][0] === 'USER_ACCOUNTS_SUPERVISORY_PROCEEDINGS') {
                     if (this.newDataAttach.rec[arrayKeys[i][0]] === true) {
+                        console.log('AAA');
                         valueDefForFoldersAvailable += 'A';
                     }
                 } else {
                     if (this.newDataAttach.rec[arrayKeys[i][0]] === true) {
-                           valueDefForFoldersAvailable += arrayForValueSrchContactFields[i];
+                        if (i === 9) {
+                            valueDefForFoldersAvailable += arrayForValueSrchContactFields[6];
+                        } else {
+                            valueDefForFoldersAvailable += arrayForValueSrchContactFields[i];
+                        }
                     }
                 }
             }
-        if (this.allDataForCurrentCabinet.length === 0) {
+     //   if (this.allDataForCurrentCabinet.length === 0) {
+         if (this.postOrMergeQuery === 'POST') {
             req.push({
                 method: 'POST',
                 requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${this.allDataForCurrentUsercard['DUE']}\')/USER_CABINET_List`,
@@ -294,20 +329,34 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     }
     choosingMainCheckbox() {
         let flag = true;
+        let flagIfNotMainCard = true;
         let tmpI = -1;
+        const arr = [];
         this.flagNoMainCard = false;
         for (let i = 0; i < this.fieldKeysforCardFiles.length; i++) {
             for (const key in this._userParamsSetSrv.hashUserContexHomeCard) {
             if (this.fieldKeysforCardFiles[i][2] === true) {
                 this.mainCheckbox = {};
                 flag = false;
+                flagIfNotMainCard = false;
                 this.fieldKeysforCardFiles[i][2] = true;
                 this.fieldKeysforCardFiles[i][3] = true;
                 this.mainCheckbox[this.fieldKeysforCardFiles[i][0]] = 1;
             } else if (this.fieldKeysforCardFiles[i][0] === key && this._userParamsSetSrv.hashUserContexHomeCard[key] === 1 && flag) {
                 tmpI = i;
+                flagIfNotMainCard = false;
             } else {
                 this.fieldKeysforCardFiles[i][3] = false;
+                if ((this.fieldKeysforCardFiles.length - 1) === i && flagIfNotMainCard && tmpI === -1) {
+                    this.fieldKeysforCardFiles[arr[0]][2] = true;
+                    this.fieldKeysforCardFiles[arr[0]][3] = true;
+                    this.mainCheckbox[this.fieldKeysforCardFiles[arr[0]][0]] = 1;
+                    this.selectedNode(this.fieldKeysforCardFiles[arr[0]][1], null);
+                } else if (this.fieldKeysforCardFiles[i][0] === key) {
+                    arr.push(i);
+                } else {
+                this.fieldKeysforCardFiles[i][3] = false;
+                }
             }
           }
         }
@@ -334,14 +383,15 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                             this.allDataForCurrentCabinet = this.allData[j]['USER_CABINET_List'][0];
                             this.allDataForCurrentUsercard = this.allData[j];
                         } else {
+                            let str = '';
                             this.settingValuesForFieldsCabinets('Empty');
                             this.allDataForCurrentCabinet = this.allData[j]['USER_CABINET_List'];
                             this.allDataForCurrentUsercard = this.allData[j];
-                            for (let z = 0; z < this.arrayForCurrentCabinets.length; z++) {
-                                if (word === this.arrayForCurrentCabinets[z][0]) {
-                                    this.currentIsnCabinet = this.arrayForCurrentCabinets[z][1];
-                                }
-                            }
+                            if (event !== null) {
+                            str += event.target.control.id;
+                            str = str.substr(4, str.length);
+                            this.currentDueCard = str;
+                        }
                         }
                     }
                 }
@@ -363,12 +413,14 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         };
         const selectForCabinetsName = CARD_FILES_USER.fields.find(elem => elem.key === 'SELECT_FOR_CABINETS_NAME');
         selectForCabinetsName['options'] = [];
+        selectForCabinetsName['isn'] = [];
 
         this.servApi.getData(quareCabinetDepartment).then(dataCabinetDepartment => {
             dataCabinetDepartmentForDefault = dataCabinetDepartment;
             if (dataCabinetDepartment.length > 0) {
                 for (let j = 0; j < dataCabinetDepartment.length; j++) {
                   selectForCabinetsName['options'].push({value: dataCabinetDepartment[j]['DUE'], title: dataCabinetDepartment[j]['CABINET_NAME']});
+                  selectForCabinetsName['isn'].push({isnCabinet: dataCabinetDepartment[j]['ISN_CABINET']});
                 }
                 this.flagCurrentDataCabinetDepartment = true;
             } else {
@@ -387,13 +439,31 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         });
     }
     selectOnClick(event) {
+      if (this.allDataForCurrentUsercard['USER_CABINET_List'].length > 0) {
         for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
-            if (event.target.value === this.allDataForCurrentUsercard['USER_CABINET_List'][i]['DEPARTMENT_DUE']) {
+            for (let z = 0; z < this.arrayForCurrentCabinets.length; z++) {
+            if (event.target.value === this.allDataForCurrentUsercard['USER_CABINET_List'][i]['DEPARTMENT_DUE'] &&
+            event.target.selectedOptions['0']['innerHTML'] === this.arrayForCurrentCabinets[z][0] &&
+            this.arrayForCurrentCabinets[z][1] === this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET']) {
+             this.currentIsnCabinet = this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'];
                 this.settingValuesForFieldsCabinets(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
+                break;
             } else {
+                this.postOrMergeQuery = 'POST';
                 this.settingValuesForFieldsCabinets('Empty');
             }
         }
+        }
+        this.postOrMergeQuery = 'MERGE';
+    } else {
+            for (let z = 0; z < this.arrayForCurrentCabinets.length; z++) {
+               if (event.target.value === this.arrayForCurrentCabinets[z][2] &&
+                event.target.selectedOptions['0']['innerHTML'] === this.arrayForCurrentCabinets[z][0]) {
+                this.currentIsnCabinet = this.arrayForCurrentCabinets[z][1];
+            }
+        }
+        this.postOrMergeQuery = 'POST';
+    }
     }
     addCardFile() {
         this.modalCollection = this._modalSrv.show(CardFilesDirectoryModalComponent, {
@@ -401,6 +471,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             ignoreBackdropClick: true
         });
         this.modalCollection.content.closeCollection.subscribe(() => {
+            this.flagTmp = true;
             this.modalCollection.hide();
         });
     }
@@ -411,11 +482,14 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                     this.flagNoMainCard = true;
                 }
                 this.fieldKeysforCardFiles[i][4] = false;
-                this.newData.rec[this.fieldKeysforCardFiles[i][0]] = 'NO';
+              //  this.newData.rec[this.fieldKeysforCardFiles[i][0]] = 'NO';
+               this.newData2[this.fieldKeysforCardFiles[i][0]] = false;
                 this.selectedNode(this.fieldKeysforCardFiles[this.globalIndexMainCard][1], null);
                 this.inputs = this.getInputs();
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.subscribeChangeForm();
+                this.btnDisabled = false;
+                break;
             }
         }
     }
