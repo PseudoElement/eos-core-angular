@@ -58,6 +58,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     arrayDataDocumentsForPost = [];
     arrayDataDocumentsForDelete = [];
     btnAddHiden = true;
+    btnMinusHiden = true;
     strForSubscribe = '';
     form: FormGroup;
     isLoading = false;
@@ -646,6 +647,11 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
             }
             this.selectedNodeOnTheRigthSide = this.allDocuments[node['INDEX_FOR_SELECT']];
             this.selectedNodeOnTheRigthSide['data']['isSelected'] = true;
+            if (this.selectedNodeOnTheRigthSide.label === 'Все группы документов') {
+                this.btnMinusHiden = true;
+            } else {
+                this.btnMinusHiden = false;
+            }
         } else {
         if (this.selectedNodeOnTheRigthSide) {
             this.selectedNodeOnTheRigthSide['data']['isSelected'] = false;
@@ -653,8 +659,10 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
         this.selectedNodeOnTheRigthSide = node;
         if (this.selectedNodeOnTheRigthSide.label === 'Ограничить картотекой регистрации') {
             this.btnAddHiden = true;
+            this.btnMinusHiden = true;
         } else {
             this.btnAddHiden = false;
+            this.btnMinusHiden = true;
         }
         this.selectedNodeOnTheRigthSide['data']['isSelected'] = true;
     }
