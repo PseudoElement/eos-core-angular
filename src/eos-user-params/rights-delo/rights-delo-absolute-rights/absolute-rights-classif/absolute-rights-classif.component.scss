@@ -1,1 +1,20 @@
+.user-tech-classif {
+    overflow: auto;
+    max-height: calc(100vh - 280px);
 
+    .right-classif-node {
+        padding-left: 2px;
+        position: relative;
+
+        .list-triangle {
+            position: absolute;
+            left: 0;
+            top: 5px;
+        }
+
+        label {
+            margin-left: 25px;
+            display: inline-block;
+        }
+    }
+}

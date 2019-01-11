@@ -79,6 +79,10 @@ export class NodeAbsoluteRight {
                 return;
             }
         }
+        if (/* this._change.length &&  */(this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.classif)) {
+            console.log('pushChange()', node);
+            return;
+        }
         this.touched = true;
         this._change.push(node);
     }

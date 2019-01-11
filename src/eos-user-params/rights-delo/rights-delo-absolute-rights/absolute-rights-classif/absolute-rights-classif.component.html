@@ -1,1 +1,43 @@
-<div class="temp-test-class">Площадка для справочников</div>
+<div class="user-tech-classif">
+    <div *ngFor="let node of listClassif"
+        class="right-classif-node">
+
+        <span *ngIf="node.expandable"
+            class="eos-icon icon list-triangle small"
+            (click)="expendList(node)"
+            [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded, 'eos-icon-close-folder-blue': !node.isExpanded}"
+        ></span>
+
+        <label class="checkbox">
+            <input type="checkbox"
+                hide
+                [(ngModel)]="node.value"
+            >
+            <span class="eos-icon eos-icon-checkbox-square-blue x-small">
+            </span>
+            {{node.label}}
+        </label>
+
+        <div *ngIf="node.expandable && node.isExpanded">content</div>
+    </div>
+</div>
+
+
+<!-- <div
+        [ngClass]="{'highlighted': node.isSelected}"
+        [ngStyle]="{'padding-left.px': node.layer * 30}">
+
+        <label class="checkbox" (click)="clickLable($event, node)">
+            <input type="checkbox"
+                hide
+                [checked]="node.allowed"
+            >
+            <span class="eos-icon eos-icon-checkbox-square-blue x-small">
+            </span>
+            {{node.label}}
+        </label>
+
+    </div> -->
+
+    <!-- [(ngModel)]="list.marked || list.selectedMark"
+    (ngModelChange)="markWord($event, list)" -->
