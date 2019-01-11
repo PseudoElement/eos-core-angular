@@ -1,37 +1,30 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
+import {UserPaginationService} from '../services/users-pagination.service';
 import { USER_CL, DEPARTMENT, DOCGROUP_CL } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
-import {IPaginationConfig} from '../../../eos-dictionaries/node-list-pagination/node-list-pagination.interfaces';
-import { EosStorageService } from '../../../../src/app/services/eos-storage.service';
-import { PAGES_SELECT, LS_PAGE_LENGTH } from 'eos-user-select/shered/consts/pagination-user-select.consts';
 @Injectable()
 export class UserParamApiSrv {
-    flagDepartment: boolean;
-    private paginationConfig: IPaginationConfig;
+    flagAllUser: boolean;
+    configList: {[key: string]: number|string} = {};
+    confiList$: Subject<any>;
     private Allcustomer: USER_CL[] = [];
-    private official: USER_CL[] = [];
-    private _paginationConfig$: BehaviorSubject<IPaginationConfig>;
-    private _NodeList$: BehaviorSubject<USER_CL[]>;
-    get paginationConfig$(): Observable<IPaginationConfig> {
-        return this._paginationConfig$.asObservable();
-    }
-
-    get NodeList$(): Observable<USER_CL[]> {
-        return this._NodeList$.asObservable();
+    get _confiList$(): Observable<{[key: string]: number|string}> {
+        return this.confiList$.asObservable();
     }
     constructor(
         private apiSrv: PipRX,
         private _router: Router,
-        private _storageSrv: EosStorageService
+        private users_pagination: UserPaginationService,
     ) {
-        this.flagDepartment = false;
-        this._NodeList$ = new BehaviorSubject([]);
-        this._paginationConfig$ = new BehaviorSubject(null);
-        this._initPaginationConfig();
+        this.flagAllUser = true;
+        this.confiList$ = new Subject();
+        this._confiList$.subscribe(data => {
+           this.configList = data;
+        });
     }
 
     getData<T>(query?: any): Promise<T[]> {
@@ -75,35 +68,27 @@ export class UserParamApiSrv {
 
         return this.getData<USER_CL>(query)
         .then(data => {
-          const users =  data.filter(user => user.ISN_LCLASSIF !== 0 && user.CLASSIF_NAME !== ' ');
-          this._initPaginationConfig(true);
-          this.devideUsers(users);
-          if (this.flagDepartment) {
-           return this.official.slice((this.paginationConfig.start - 1) * this.paginationConfig.length, this.paginationConfig.current * this.paginationConfig.length);
-          }else {
-            return this.Allcustomer.slice((this.paginationConfig.start - 1) * this.paginationConfig.length, this.paginationConfig.current * this.paginationConfig.length);
-          }
+        this.Allcustomer =  data.filter(user => user.ISN_LCLASSIF !== 0 && user.CLASSIF_NAME !== ' ');
+        this.users_pagination.UsersList = this.Allcustomer.slice();
+        this.devideUsers();
+        this.users_pagination._initPaginationConfig();
+           return this.users_pagination.UsersList.slice((this.users_pagination.paginationConfig.start - 1)
+            * this.users_pagination.paginationConfig.length,
+             this.users_pagination.paginationConfig.current
+            * this.users_pagination.paginationConfig.length);
         });
     }
 
-    devideUsers(users: USER_CL[]): void {
-        users.forEach(user => {
-            if (user.DUE_DEP) {
-                this.official.push(user);
-            }
-
-        });
-        this.Allcustomer = users.sort(( a, b)  => {
-            if (a.DUE_DEP < b.DUE_DEP) {
-                return 1;
-            } else if (a.DUE_DEP > b.DUE_DEP) {
-                return -1;
-            } else {
-                return 0;
-            }
-        });
-        console.log(this.Allcustomer);
-
+    devideUsers() {
+        if (this.flagAllUser) {
+            this.users_pagination.UsersList = this.Allcustomer.filter(user => {
+                if (user.DUE_DEP) {
+                    return user;
+                }
+            });
+        } else {
+            this.users_pagination.UsersList = this.Allcustomer.slice();
+        }
     }
 
     // getMainUsersList(): Array<USER_CL> {
@@ -135,45 +120,30 @@ export class UserParamApiSrv {
         return this.getData<DOCGROUP_CL>(query);
     }
 
-    changePagination(config: IPaginationConfig) {
-       Object.assign(this.paginationConfig, config);
-        this._updateVisibleNodes();
-        this._paginationConfig$.next(this.paginationConfig);
-    }
-
-    _initPaginationConfig(update?: boolean) {
-        this.paginationConfig = Object.assign(this.paginationConfig || {start: 1, current: 1}, {
-            length: this._storageSrv.getItem(LS_PAGE_LENGTH) || PAGES_SELECT[0].value,
-            itemsQty: this._getCountPage()
+    public updatePageList(pageList): Promise<any> {
+        let stringQuery: string = '';
+        pageList.forEach(user => {
+            if (user.DUE_DEP) {
+                stringQuery += user.DUE_DEP + '|';
+            }
         });
-        if (update) {
-            this._fixCurrentPage();
-        } else {
-            this.paginationConfig.current = 1;
-            this.paginationConfig.start = 1;
-            this._paginationConfig$.next(this.paginationConfig);
-        }
-    }
+        return  this.grtDepartment(stringQuery)
+        .then(departments => {
+                pageList.map(user => {
+                    const findDue = departments.filter(dueDeep => {
+                        return user.DUE_DEP === dueDeep.DUE;
+                    });
+                    if (findDue.length > 0) {
+                        user['DEPARTMENT_SURNAME'] = findDue[0].SURNAME;
+                        user['DEPARTMENT_DYTU'] = findDue[0].DUTY;
+                    } else {
+                        user['DEPARTMENT_SURNAME'] = '';
+                        user['DEPARTMENT_DYTU'] = '';
+                    }
+                });
+                return pageList;
+            });
 
-    private _fixCurrentPage() {
-        this.paginationConfig.itemsQty = this._getCountPage();
-        const maxPage = Math.max(1, Math.ceil(this.paginationConfig.itemsQty / this.paginationConfig.length));
-        this.paginationConfig.start = Math.min(this.paginationConfig.start, maxPage);
-        this.paginationConfig.current = Math.min(this.paginationConfig.current, maxPage);
-        this._paginationConfig$.next(this.paginationConfig);
-    }
-
-  private  _getCountPage() {
-       if (this.Allcustomer) {
-           return this.Allcustomer.length;
-       } else {
-           return 0;
-       }
-    }
-    private _updateVisibleNodes() {
-        this._fixCurrentPage();
-        const pageList = this.Allcustomer.slice((this.paginationConfig.start - 1) * this.paginationConfig.length, this.paginationConfig.current * this.paginationConfig.length);
-        this._NodeList$.next(pageList);
     }
     // protected prepareForEdit(records: any[]): any[] {
     //     return records.map((record) => this.apiSrv.entityHelper.prepareForEdit(record));

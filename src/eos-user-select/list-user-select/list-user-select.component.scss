@@ -5,12 +5,20 @@
         }
     }
 
-    // .table-header {
-    //     .user-title-name {
+    .table-header {
 
-    //     }
-    // }
+            span{
 
+
+        }
+
+    }
+    .table-title{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+    }
     .eos-node-list {
         background: $white;
 
@@ -24,6 +32,16 @@
     }
 
     .user-list-first-colomn {
+        width: 400px;
+        display: inline-block;
+        margin-left: 20px;
+    }
+    .user-list-third-colomn{
+        width: 150px;
+        display: inline-block;
+        margin-left: 20px;
+    }
+    .user-list-fourth-colomn{
         width: 200px;
         display: inline-block;
         margin-left: 20px;

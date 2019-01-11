@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
+import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
 import { USER_CL } from 'eos-rest';
 import { UserSelectNode } from './user-node-select';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
@@ -24,6 +25,7 @@ export class ListUserSelectComponent implements OnDestroy {
     constructor (
         private _modalSrv: BsModalService,
         private _apiSrv: UserParamApiSrv,
+        private _paginationSrv: UserPaginationService,
         private _route: ActivatedRoute,
         private _router: Router,
         private rtUserService: RtUserSelectService,
@@ -35,17 +37,21 @@ export class ListUserSelectComponent implements OnDestroy {
                 this.isLoading = true;
                 this._apiSrv.getUsers(param['nodeId'])
                 .then((data: USER_CL[]) => {
-                    this.listUsers = this._getListUsers(data);
-                    if (this.listUsers && this.listUsers.length) {
-                        this.selectedNode(this.listUsers[0]);
-                    }
-                    this.isLoading = false;
+                    this._apiSrv.updatePageList(data).then(upDate => {
+                        this.listUsers = this._getListUsers(upDate);
+                        if (this.listUsers && this.listUsers.length) {
+                            this.selectedNode(this.listUsers[0]);
+                        }
+                        this.isLoading = false;
+                    });
                 });
             });
-        this._apiSrv.NodeList$
+        this._paginationSrv.NodeList$
         .takeUntil(this.ngUnsubscribe)
         .subscribe(data => {
-            this.listUsers  = this._getListUsers(data);
+           this._apiSrv.updatePageList(data).then(upDate => {
+            this.listUsers  = this._getListUsers(upDate);
+           });
         });
         this._sandwichSrv.currentDictState$
         .takeUntil(this.ngUnsubscribe)
@@ -95,10 +101,14 @@ export class ListUserSelectComponent implements OnDestroy {
             this.createUserModal.hide();
         });
     }
-    removeLogicaly() {
-
+    showDeep() {
+        this._apiSrv.flagAllUser = !this._apiSrv.flagAllUser;
+        this._apiSrv.devideUsers();
+        this._paginationSrv._initPaginationConfig(true);
+        this._paginationSrv.changePagination(this._paginationSrv.paginationConfig);
     }
-    private _getListUsers (data: USER_CL[]): UserSelectNode[] {
+
+    private _getListUsers (data): UserSelectNode[] {
         const list: UserSelectNode[] = [];
         data.forEach(user => list.push(new UserSelectNode(user)));
         return list;

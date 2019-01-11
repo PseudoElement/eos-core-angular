@@ -4,7 +4,7 @@ import { IModesUserSelect, E_MODES_USER_SELECT } from 'eos-user-select/shered/in
 import { TreeUserSelectService } from 'eos-user-select/shered/services/tree-user-select.service';
 import { TreeUserNode } from './core/tree-user-node';
 import { Router } from '@angular/router';
-
+import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 const BIG_PANEL = 340,
     SMALL_PANEL = 260,
     PADDING_W = 32,
@@ -24,7 +24,8 @@ export class TreeUserSelectComponent implements OnInit {
     private w: number;
     constructor(
         private _router: Router,
-        private treeSrv: TreeUserSelectService
+        private treeSrv: TreeUserSelectService,
+        private _apiSrv: UserParamApiSrv,
     ) {
     }
     ngOnInit() {
@@ -63,6 +64,10 @@ export class TreeUserSelectComponent implements OnInit {
 
     onSelect(evt: Event, node: TreeUserNode) {
         evt.stopPropagation();
+        this._apiSrv.confiList$.next({
+            shooseTab: this.currMode,
+            titleDue: node.data['CLASSIF_NAME']
+        });
         this._router.navigate(['user_param', node.id]);
     }
 

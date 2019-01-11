@@ -1,5 +1,6 @@
 import { USER_CL } from 'eos-rest';
 
+
 export class UserSelectNode {
     marked: boolean;
     isSelected: boolean;
@@ -9,6 +10,8 @@ export class UserSelectNode {
     department: string;
     official: string;
     deleted: number;
+    dueName: string;
+    dueDytu: string;
     readonly id;
     constructor(
         public data: USER_CL
@@ -19,5 +22,7 @@ export class UserSelectNode {
         this.department = data.NOTE || 'не указанно';
         this.official = '';
         this.deleted = data.DELETED;
+        this.dueName = data['DEPARTMENT_SURNAME'];
+        this.dueDytu = data['DEPARTMENT_DYTU'];
     }
 }

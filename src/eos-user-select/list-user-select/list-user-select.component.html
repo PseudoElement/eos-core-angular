@@ -1,5 +1,7 @@
 <div class="list-user-select-wrapper">
     <div class="table-wrapper usual-border">
+            <div class="table-header">
+                </div>
         <div class="table-header">
             <!-- header action -->
             <button
@@ -32,13 +34,17 @@
             >
                 <span class="eos-icon eos-icon-bin-blue small"></span>
             </button>
+            <button (click)="showDeep()">показать тех.польз</button>
         </div>
         <div class="table-header">
             <!-- header -->
-            <span class="user-title-name user-list-first-colomn">Подразделение</span>
-            <span>Должностное лицо</span>
-            <span>Тип</span>
-            <span>Логин</span>
+            <div class="table-title">
+                <span class="user-title-name user-list-first-colomn">Подразделение</span>
+                <span class="user-list-first-colomn">Должностное лицо</span>
+                <span class="user-list-third-colomn">Тип</span>
+                <span class="user-list-fourth-colomn">Логин</span>
+            </div>
+
         </div>
         <div *ngIf="!isLoading; else spiner" class="eos-node-list">
             <div *ngIf="listUsers?.length; else emptyCert"
@@ -48,7 +54,7 @@
 
                 <div
                     *ngFor="let user of listUsers"
-                    class="user-select-node"
+                    class="table-title user-select-node"
                     [ngClass]="{'highlighted': user.isSelected}"
                     (click)="selectedNode(user)"
                     (dblclick)="editUser()">
@@ -68,9 +74,9 @@
                         <span></span>
                     </label> -->
                     <span class="user-list-first-colomn">{{user.department}}</span>
-                    <span>{{user.login}}</span>
-                    <span>{{user.login}}</span>
-                    <span>{{user.login}}</span>
+                    <span class="user-list-first-colomn">{{user.dueName}} - {{user.dueDytu}}</span>
+                    <span class="user-list-third-colomn">icon</span>
+                    <span class="user-list-fourth-colomn">{{user.login}}</span>
                 </div>
             </div>
         </div>

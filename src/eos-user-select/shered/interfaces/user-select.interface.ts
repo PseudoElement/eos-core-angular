@@ -5,5 +5,6 @@ export interface IModesUserSelect {
 
 export enum E_MODES_USER_SELECT {
     department,
-    card
+    card,
+    organiz
 }
