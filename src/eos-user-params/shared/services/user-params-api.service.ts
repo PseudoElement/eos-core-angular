@@ -6,13 +6,17 @@ import { USER_CL, DEPARTMENT, DOCGROUP_CL } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
+import { IConfig } from 'eos-user-select/shered/interfaces/user-select.interface';
 @Injectable()
 export class UserParamApiSrv {
     flagAllUser: boolean;
-    configList = {};
-    confiList$: Subject<any>;
+    configList: IConfig = {
+        shooseTab: 0,
+        titleDue: '',
+    };
+    confiList$: Subject<IConfig>;
     private Allcustomer: USER_CL[] = [];
-    get _confiList$(): Observable<{[key: string]: number|string}> {
+    get _confiList$(): Observable<IConfig> {
         return this.confiList$.asObservable();
     }
     constructor(
@@ -20,9 +24,10 @@ export class UserParamApiSrv {
         private _router: Router,
         private users_pagination: UserPaginationService,
     ) {
+        this.initConfigTitle();
         this.flagAllUser = true;
         this.confiList$ = new Subject();
-        this._confiList$.subscribe(data => {
+        this._confiList$.subscribe((data: IConfig) => {
            this.configList = data;
         });
     }
@@ -110,6 +115,16 @@ export class UserParamApiSrv {
         const query = {DEPARTMENT: q};
         return this.getData<DEPARTMENT>(query);
     }
+    grtDepartmentParent(due?: string): Promise<DEPARTMENT[]> {
+        let q;
+        if (!due) {
+            q = ALL_ROWS;
+        } else {
+            q = PipRX.criteries({ISN_NODE: due});
+        }
+        const query = {DEPARTMENT: q};
+        return this.getData<DEPARTMENT>(query);
+    }
     getDocGroup(due?: string): Promise<DOCGROUP_CL[]> {
         let q;
         if (!due) {
@@ -121,8 +136,23 @@ export class UserParamApiSrv {
         return this.getData<DOCGROUP_CL>(query);
     }
 
-    public updatePageList(pageList): Promise<any> {
+    public updatePageList(pageList, curTab): Promise<any> {
+      switch (curTab) {
+        case 0:
+        return this.updateDepartMent(pageList, 0);
+        case 1:
+        return this.updateDepartMent(pageList, 1);
+        case 2:
+        // заглушка для организций
+        return this.updateDepartMent(pageList, 1);
+      }
+
+    }
+
+    updateDepartMent(pageList, tabs) {
+        const setQueryResult = new Set();
         let stringQuery: string = '';
+        let T = '';
         pageList.forEach(user => {
             if (user.DUE_DEP) {
                 stringQuery += user.DUE_DEP + '|';
@@ -130,25 +160,39 @@ export class UserParamApiSrv {
         });
         return  this.grtDepartment(stringQuery)
         .then(departments => {
-                pageList.map(user => {
-                    const findDue = departments.filter(dueDeep => {
-                        return user.DUE_DEP === dueDeep.DUE;
+            departments.forEach(el => {
+                if (el.ISN_HIGH_NODE) {
+                    setQueryResult.add(el.ISN_HIGH_NODE);
+                }
+            });
+           T = Array.from(setQueryResult).join('|');
+                return  this.grtDepartmentParent(T)
+                .then(deepInfo => {
+                     pageList.map(user => {
+                    const findDue = deepInfo.filter(dueDeep => {
+                        const h = user.DUE_DEP.split('.');
+                        return h.slice(0, h.length - 2).join('.') + '.' === dueDeep.DUE;
                     });
                     if (findDue.length > 0) {
                         user['DEPARTMENT_SURNAME'] = findDue[0].SURNAME;
                         user['DEPARTMENT_DYTU'] = findDue[0].DUTY;
+                        user['DEPARTMENT'] = tabs === 0 ? findDue[0].CLASSIF_NAME : findDue[0].CARD_NAME;
                     } else {
                         user['DEPARTMENT_SURNAME'] = '';
                         user['DEPARTMENT_DYTU'] = '';
+                        user['DEPARTMENT'] = '';
                     }
                 });
                 return pageList;
+                });
             });
-
     }
-    initConfigTitle(dueDep: string) {
-        if (!this.configList['titleDue'] || !dueDep) {
-            this.configList['titleDue'] = 'Все подразделения';
+    initConfigTitle(dueDep?: string) {
+        if (!this.configList.titleDue || !dueDep) {
+            this.configList.titleDue = 'Все подразделения';
+        }
+        if (!this.configList.shooseTab) {
+            this.configList.shooseTab = 0;
         }
     }
     // protected prepareForEdit(records: any[]): any[] {

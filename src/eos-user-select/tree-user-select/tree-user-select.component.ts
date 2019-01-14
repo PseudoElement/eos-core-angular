@@ -1,6 +1,6 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { MODS_USER_SELECT } from 'eos-user-select/shered/consts/user-select.consts';
-import { IModesUserSelect, E_MODES_USER_SELECT } from 'eos-user-select/shered/interfaces/user-select.interface';
+import { IModesUserSelect, E_MODES_USER_SELECT} from 'eos-user-select/shered/interfaces/user-select.interface';
 import { TreeUserSelectService } from 'eos-user-select/shered/services/tree-user-select.service';
 import { TreeUserNode } from './core/tree-user-node';
 import { Router } from '@angular/router';

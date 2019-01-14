@@ -38,7 +38,7 @@ export class ListUserSelectComponent implements OnDestroy {
                 this.isLoading = true;
                 this._apiSrv.getUsers(param['nodeId'])
                 .then((data: USER_CL[]) => {
-                    this._apiSrv.updatePageList(data).then(upDate => {
+                    this._apiSrv.updatePageList(data,  this._apiSrv.configList.shooseTab).then(upDate => {
                         this.listUsers = this._getListUsers(upDate);
                         if (this.listUsers && this.listUsers.length) {
                             this.selectedNode(this.listUsers[0]);
@@ -50,8 +50,8 @@ export class ListUserSelectComponent implements OnDestroy {
         this._pagSrv.NodeList$
         .takeUntil(this.ngUnsubscribe)
         .subscribe(data => {
-           this._apiSrv.updatePageList(data).then(upDate => {
-            this.listUsers  = this._getListUsers(upDate);
+           this._apiSrv.updatePageList(data, this._apiSrv.configList.shooseTab ).then(upDate => {
+           this.listUsers  = this._getListUsers(upDate);
            });
         });
         this._sandwichSrv.currentDictState$

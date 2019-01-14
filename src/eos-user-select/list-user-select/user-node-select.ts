@@ -19,7 +19,7 @@ export class UserSelectNode {
         this.name = data.SURNAME_PATRON;
         this.login = data.CLASSIF_NAME;
         this.id = data.ISN_LCLASSIF;
-        this.department = data.NOTE || 'не указанно';
+        this.department = data['DEPARTMENT'] || '...';
         this.official = '';
         this.deleted = data.DELETED;
         this.dueName = data['DEPARTMENT_SURNAME'];
