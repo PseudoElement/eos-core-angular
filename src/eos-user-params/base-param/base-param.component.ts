@@ -16,6 +16,7 @@ import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { Router } from '@angular/router';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
+import { DUE_DEP_OCCUPATION } from 'app/consts/messages.consts';
 
 @Component({
     selector: 'eos-params-base-param',
@@ -190,9 +191,18 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     showDepartment() {
         this.isShell = true;
+        let dueDep = '';
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
         .then((data: string) => {
-            return this._userParamSrv.getDepartmentFromUser(data);
+            dueDep = data;
+            return this._userParamSrv.ceckOccupationDueDep(dueDep, this._userParamSrv.userContextId);
+        })
+        .then((access: boolean) => {
+            if (!access) {
+                this._msgSrv.addNewMessage(DUE_DEP_OCCUPATION);
+                throw new Error();
+            }
+            return this._userParamSrv.getDepartmentFromUser(dueDep);
         })
         .then((data: DEPARTMENT[]) => {
             this.isShell = false;
