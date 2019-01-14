@@ -3,7 +3,8 @@ import { BaseUserSrv } from './base-user.service';
 import { RC_USER } from '../consts/rc.consts';
 import {IOpenClassifParams} from '../../../../eos-common/interfaces/interfaces';
 import { EosUtils } from 'eos-common/core/utils';
-import {PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
+import {PARM_CANCEL_CHANGE,  PARM_SUCCESS_SAVE } from '../consts/eos-user-params.const';
+
 @Injectable()
 export class UserParamRCSrv extends BaseUserSrv {
     dataAttachDb;
@@ -13,6 +14,7 @@ export class UserParamRCSrv extends BaseUserSrv {
     dopRec: Array<any>;
     cutentTab: number;
     flagBacground: boolean;
+    defaultFlag = false;
     constructor( injector: Injector ) {
         super(injector, RC_USER);
         this.flagBacground = false;
@@ -113,9 +115,9 @@ export class UserParamRCSrv extends BaseUserSrv {
 
     disabDefault(flag: boolean): void {
         if (flag) {
-            this.form.controls['rec.SHOW_ALL_RES'].disable();
+            this.form.controls['rec.SHOW_ALL_RES'].disable({onlySelf: true, emitEvent: false});
         } else {
-            this.form.controls['rec.SHOW_ALL_RES'].enable();
+            this.form.controls['rec.SHOW_ALL_RES'].enable({emitEvent: false});
         }
     }
 
@@ -125,8 +127,46 @@ export class UserParamRCSrv extends BaseUserSrv {
         });
     }
 
+    submit() {
+        if (this.newData || this.prepareData) {
+            const userId = '' + this._userParamsSetSrv.userContextId;
+            this.formChanged.emit(false);
+            this.isChangeForm = false;
+            // this._userParamsSetSrv.getUserIsn();
+            if (this.defaultFlag) {
+                this.userParamApiSrv
+                .setData(this.createObjRequestForDefaultValues())
+                .then(data => {
+                    this.defaultFlag = false;
+                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                })
+                // tslint:disable-next-line:no-console
+                .catch(data => console.log(data));
+            } else  if (this.newData) {
+            this.userParamApiSrv
+                .setData(this.createObjRequest())
+                .then(data => {
+                   // this.prepareData.rec = Object.assign({}, this.newData.rec);
+                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                    this._userParamsSetSrv.getUserIsn(userId);
+                })
+                // tslint:disable-next-line:no-console
+                .catch(data => console.log(data));
+            } else if (this.prepareData) {
+                this.userParamApiSrv
+                .setData(this.createObjRequestForDefaultValues())
+                .then(data => {
+                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                    this._userParamsSetSrv.getUserIsn(userId);
+                })
+                // tslint:disable-next-line:no-console
+                .catch(data => console.log(data));
+            }
+        }
+    }
     default() {
         const changed = true;
+        this.defaultFlag = true;
         this.queryObjForDefault = this.getObjQueryInputsFieldForDefault(this.prepInputs._list);
         return this.getData(this.queryObjForDefault).then(data => {
                 this.prepareData = this.convDataForDefault(data);
