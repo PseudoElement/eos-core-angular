@@ -72,33 +72,35 @@
             </div>
         </div>
         <!-- технический пользователь -->
-        <eos-dynamic-input
-        [input]="controls['teсhUser']"
-        [form]="formControls"
-        [readonly]="controls['teсhUser'].readonly"
-        tooltip="к техническим пользователям невозможно привязать должностное лицо"
-        placement="bottom"
-        containerClass="tooltip-info"
-        ></eos-dynamic-input>
+        <div *ngIf="curentUser.isTechUser">
+            <eos-dynamic-input
+            [input]="controls['teсhUser']"
+            [form]="formControls"
+            [readonly]="controls['teсhUser'].readonly"
+            tooltip="к техническим пользователям невозможно привязать должностное лицо"
+            placement="bottom"
+            containerClass="tooltip-info"
+            ></eos-dynamic-input>
+        </div>
         <!-- должностное лицо и роль -->
         <div class="row-department-role">
 
-            <div [formGroup]="formControls"
+            <div [formGroup]="form"
                 class="dynamic-input-wrapper inline-block base-department-input">
                 <label
-                    [attr.for]="controls['DUE_DEP_NAME'].key">{{controls['DUE_DEP_NAME'].label}}</label>
-                <div [ngClass]="{'required': controls['DUE_DEP_NAME'].required}" style="width: 461px">
+                    [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
+                <div [ngClass]="{'required': inputs['DUE_DEP_NAME'].required}" style="width: 461px">
                 <input class="form-control m-font inline-block"
                     readonly
-                    [formControlName]="controls['DUE_DEP_NAME'].key"
-                    [id]="controls['DUE_DEP_NAME'].key"
+                    [formControlName]="inputs['DUE_DEP_NAME'].key"
+                    [id]="inputs['DUE_DEP_NAME'].key"
                     type="text"
                     [ngClass]="{'readonly': readonly}"
-                    [placeholder]="controls['DUE_DEP_NAME'].label"
+                    [placeholder]="inputs['DUE_DEP_NAME'].label"
                     autocomplete="off">
                     <span class="icon eos-icon small icon-add-department"
-                        [ngClass]="{'eos-icon-avatar-blue': formControls.get('DUE_DEP_NAME').enabled, 'eos-icon-avatar-grey': formControls.get('DUE_DEP_NAME').disabled}"
-                        (click)="selectDepartment(formControls.get('DUE_DEP_NAME').enabled)"
+                        [ngClass]="{'eos-icon-avatar-blue': form.get('DUE_DEP_NAME').enabled, 'eos-icon-avatar-grey': form.get('DUE_DEP_NAME').disabled}"
+                        (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"
                     ></span>
                 </div>
             </div>
