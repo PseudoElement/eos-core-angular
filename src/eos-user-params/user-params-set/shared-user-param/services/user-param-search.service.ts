@@ -22,4 +22,26 @@ export class UserParamSearchSrv extends BaseUserSrv {
     getInputAttach() {
         return this.dataSrv.getInputs(this.prepInputsAttach, this.prepDataAttach);
     }
+
+    default() {
+        const changed = true;
+        this.queryObjForDefault = this.getObjQueryInputsFieldForDefault(this.prepInputs._list);
+        return this.getData(this.queryObjForDefault).then(data => {
+                this.prepareData = this.convDataForDefault(data);
+                this.checkLimitSRCH(data);
+                this.inputs = this.getInputs();
+                this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+                this.formChanged.emit(changed);
+                this.isChangeForm = changed;
+                this.subscribeChangeForm();
+            })
+            .catch(err => {
+                throw err;
+            });
+    }
+    checkLimitSRCH(data) {
+        if (String(data[1]['PARM_VALUE']) === 'null' ) {
+            this.prepareData.rec['SRCH_LIMIT_RESULT'] = '';
+        }
+    }
 }
