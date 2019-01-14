@@ -89,6 +89,9 @@ export const CABINET_FOLDERS = [{
     key: 5,
     title: 'На рассмотрении'
 }, {
+    key: 6,
+    title: 'В Дело'
+}, {
     key: 7,
     title: 'Управление проектами'
 }, {
@@ -98,6 +101,7 @@ export const CABINET_FOLDERS = [{
     key: 9,
     title: 'На подписи'
 }, {
-    key: 6,
+    key: 10,
     title: 'Надзорные производства'
 }];
+

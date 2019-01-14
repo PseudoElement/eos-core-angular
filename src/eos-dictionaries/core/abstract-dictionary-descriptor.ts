@@ -278,7 +278,7 @@ export abstract class AbstractDictionaryDescriptor {
         records.forEach((record) => record[fieldName] = +boolValue);
         const changes = this.apiSrv.changeList(records);
         if (+boolValue === 0 && cascade) {
-            PipRX.invokeSop(changes, 'ClassifCascade_TRule', {[fieldName]: +cascade});
+            PipRX.invokeSop(changes, 'ClassifCascade_TRule', {'due' : records[0]['DUE'], 'type': records[0].__metadata.__type,  [fieldName]: +cascade});
         }
         return this.apiSrv.batch(changes, '');
     }
