@@ -15,6 +15,7 @@ export class UserParamRCSrv extends BaseUserSrv {
     cutentTab: number;
     flagBacground: boolean;
     defaultFlag = false;
+    disabledFlagDelite = false;
     constructor( injector: Injector ) {
         super(injector, RC_USER);
         this.flagBacground = false;
@@ -38,7 +39,7 @@ export class UserParamRCSrv extends BaseUserSrv {
 
     getInfoFroCode(code: string): void {
         if (code && code !== null && code !== 'null') {
-             const parsedCode = code.split(',').join('||');
+             const parsedCode = code.split(',').filter(el =>  (el !== 'null' &&  el !== null)).join('||');
         const query = {
             DOCGROUP_CL: {
                 criteries: {
@@ -48,7 +49,10 @@ export class UserParamRCSrv extends BaseUserSrv {
         };
         this.userParamApiSrv.getData(query).then(result => {
             this.dopRec = result;
+           this.dopRec.length > 0 ?  this.disabledFlagDelite = false : this.disabledFlagDelite = true;
         });
+        }else {
+             this.disabledFlagDelite = true;
         }
         this.checRcShowRes();
     }
@@ -71,13 +75,16 @@ export class UserParamRCSrv extends BaseUserSrv {
 
     deleteRcDoc(): void {
         let updateVield: Array<number>, arrayT: Array<number>;
+        let valToSave;
         this.dopRec.splice(this.cutentTab, 1);
         arrayT = [];
         this.dopRec.forEach(value => {
             arrayT.push(value.ISN_NODE);
         });
         updateVield = arrayT;
-        this.form.controls['rec.OPEN_AR'].patchValue(updateVield.join(','));
+        this.dopRec.length > 0 ?  this.disabledFlagDelite = false : this.disabledFlagDelite = true;
+        updateVield.join(',') === '' ? valToSave = '' : valToSave =  updateVield.join(',');
+        this.form.controls['rec.OPEN_AR'].patchValue(valToSave);
     }
 
     addRcDocToInput(data): void {

@@ -14,7 +14,13 @@
                 <button class="btn" containerclass="tooltip-info" placement="bottom" tooltip="Добавить" triggers="hover" (click)="addRcDoc()">
                     <span class="eos-icon eos-icon-plus-blue small"></span>
                 </button>
-                <button class="btn" containerclass="tooltip-info" placement="bottom" tooltip="Удалить" (click)="deleteRcDoc()">
+                <button
+                [disabled]="disabledFlagDelite"
+                class="btn"
+                containerclass="tooltip-info"
+                placement="bottom"
+                tooltip="Удалить"
+                (click)="deleteRcDoc()">
                     <span class="eos-icon eos-icon-bin-forever-blue small"></span>
                 </button>
             </div>
