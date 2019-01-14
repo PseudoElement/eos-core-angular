@@ -83,7 +83,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     };
     constructor(private _modalSrv: BsModalService, injector: Injector, private servApi: UserParamApiSrv ) {
         super(injector, CARD_FILES_USER);
-      //  console.log(CARD_FILES_USER);
         for (let i = 0; i < this.arrayKeysCheckboxforCabinets.length; i++) {
             this.fieldKeysforCardFilesCabinets.push(
                 {
@@ -94,12 +93,10 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             );
         }
         this.prepInputsAttach = this.getObjectInputFields(this.fieldKeysforCardFilesCabinets);
-       // this.init2();
     }
     ngOnInit() {
         const allDataCard = this._userParamsSetSrv.userCard;
         this.allData = allDataCard;
-        console.log(this.allData);
         this.isLoading = true;
         this.servApi.getData(this.quaryDepartment)
         .then(data => {
@@ -142,26 +139,27 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         }).catch(error => console.log(error));
     }
     ngDoCheck() {
-     /*   if (this.flagTmp) {
+        if (this.flagTmp) {
          //   console.log(this.newData.rec);
         //    console.log(this.prepareData.rec);
          //   this.fieldKeysforCardFiles = [];
           //  CARD_FILES_USER.fields = [];
            // console.log(this.fieldKeysforCardFiles);
          //   console.log(CARD_FILES_USER.fields);
-            this.prepareData.rec['0.'] = '010000000000010010';
+        /*    this.prepareData.rec['0.'] = '010000000000010010';
             this.fieldKeysforCardFiles[0][4] = true;
-          //  console.log(this.prepareData.rec);
             this.prepareDataParam();
             this.inputs = this.getInputs();
-           // console.log(this.inputs);
             this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-          //  console.log(this.form);
+            for (let i = 0; i < CARD_FILES_USER.fields.length; i++) {
+                if (CARD_FILES_USER.fields[i]['readonly'] === true) {
+                  this.form.controls['rec.' + CARD_FILES_USER.fields[i]['key']].disable();
+                }
+            }
             this.subscribeChangeForm();
             this.Changed.emit();
-           // this.choosingMainCheckbox();
-          //  this.flagTmp = false;
-        }*/
+            this.flagTmp = false;*/
+        }
     }
     settingValuesForFieldsCabinets(value) {
                             this.prepDataAttachField(value);
@@ -275,7 +273,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                     }
                 } else if (arrayKeys[i][0] === 'USER_ACCOUNTS_SUPERVISORY_PROCEEDINGS') {
                     if (this.newDataAttach.rec[arrayKeys[i][0]] === true) {
-                        console.log('AAA');
                         valueDefForFoldersAvailable += 'A';
                     }
                 } else {
@@ -288,7 +285,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                     }
                 }
             }
-     //   if (this.allDataForCurrentCabinet.length === 0) {
          if (this.postOrMergeQuery === 'POST') {
             req.push({
                 method: 'POST',
@@ -369,6 +365,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             this.oldMainCheckbox[this.fieldKeysforCardFiles[tmpI][0]] = 0;
             this.selectedNode(this.fieldKeysforCardFiles[tmpI][1], null);
         }
+        this.btnDisabled = false;
     }
     selectedNode(word, event) {
         this.isMarkNode = true;
@@ -447,14 +444,20 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             this.arrayForCurrentCabinets[z][1] === this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET']) {
              this.currentIsnCabinet = this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'];
                 this.settingValuesForFieldsCabinets(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
+                this.postOrMergeQuery = 'MERGE';
                 break;
             } else {
+                if (event.target.value === this.arrayForCurrentCabinets[z][2] &&
+                    event.target.selectedOptions['0']['innerHTML'] === this.arrayForCurrentCabinets[z][0] &&
+                    this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'] !== this.arrayForCurrentCabinets[z][1]) {
+                    this.currentIsnCabinet = this.arrayForCurrentCabinets[z][1];
+                    break;
+                }
                 this.postOrMergeQuery = 'POST';
                 this.settingValuesForFieldsCabinets('Empty');
             }
         }
         }
-        this.postOrMergeQuery = 'MERGE';
     } else {
             for (let z = 0; z < this.arrayForCurrentCabinets.length; z++) {
                if (event.target.value === this.arrayForCurrentCabinets[z][2] &&
