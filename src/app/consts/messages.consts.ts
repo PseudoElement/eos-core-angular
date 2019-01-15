@@ -86,3 +86,8 @@ export const NAVIGATE_TO_ELEMENT_WARN: IMessage = {
     msg: 'Запись не найдена.',
     type: 'warning'
 };
+export const EMPTY_ADD_ELEMENT_WARN: IMessage = {
+    type: 'warning',
+    title: '',
+    msg: 'Нет елементов для добавления'
+};

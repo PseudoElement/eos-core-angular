@@ -39,6 +39,7 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
         }
     }
     checkedNode(node: NodeDocsTree) {
+        node.data['rightDocGroup']['ALLOWED'] = node.allowed;
         this.selectedNode.pushChange({
             method: 'MERGE',
             due: node.DUE,

@@ -1,4 +1,5 @@
 .user-tech-classif {
+    border: 1px solid $border-color-main-theme;
     overflow: auto;
     max-height: calc(100vh - 280px);
 
@@ -12,9 +13,31 @@
             top: 5px;
         }
 
-        label {
-            margin-left: 25px;
+        .classif-list-tech-user {
+            margin-left: 20px;
             display: inline-block;
         }
+
+        .content-classif-node {
+
+            .buttons-classif-node {
+                padding-left: 10px;
+                background: $light-grey-1;
+                border: 1px solid $border-color-main-theme;
+                margin: 0 5px;
+
+                .btn {
+                    background: $light-grey-1;
+                }
+            }
+
+            .list-docs-tree {
+                border: 1px solid $border-color-main-theme;
+                border-top: none;
+                margin: 0 5px;
+                padding-left: 51px;
+            }
+        }
+
     }
 }

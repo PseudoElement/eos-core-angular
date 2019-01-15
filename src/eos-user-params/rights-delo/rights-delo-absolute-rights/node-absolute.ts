@@ -53,9 +53,7 @@ export class NodeAbsoluteRight {
             const index = this._change.findIndex((item: IChengeItemAbsolute) => item.due === node.due);
             if (index >= 0) {
                 this._change.splice(index, 1);
-                if (!this._change.length) {
-                    this.touched = false;
-                }
+                this._checkTouched();
                 return;
             }
         }
@@ -68,13 +66,20 @@ export class NodeAbsoluteRight {
                 }
                 if ((this._change[index].method === 'POST') && (node.method === 'DELETE')) {
                     this._change.splice(index, 1);
+                    this._checkTouched();
+                    return;
                 }
                 if (this._change[index].method === 'DELETE') {
                     node.method = 'MERGE';
                     this._change.splice(index, 1, node);
                 }
-                if (this._change[index].method === 'MERGE') {
+                if (this._change[index].method === 'MERGE' && (node.method === 'DELETE')) {
                     this._change.splice(index, 1, node);
+                }
+                if (this._change[index].method === 'MERGE' && (node.method === 'MERGE')) {
+                    this._change.splice(index, 1);
+                    this._checkTouched();
+                    return;
                 }
                 return;
             }
@@ -90,5 +95,10 @@ export class NodeAbsoluteRight {
         this.touched = false;
         this._change = [];
         this._valueDb = this._value;
+    }
+    private _checkTouched() {
+        if (!this._change.length) {
+            this.touched = false;
+        }
     }
 }
