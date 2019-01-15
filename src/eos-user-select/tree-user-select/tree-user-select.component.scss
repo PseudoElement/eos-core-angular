@@ -21,6 +21,10 @@
         height: 100%;
         overflow-x: auto;
     }
+    .activeTree {
+        background: #e3f2fd;
+        color: #000000;
+    }
 }
 
 @media(min-width: 1600px) {

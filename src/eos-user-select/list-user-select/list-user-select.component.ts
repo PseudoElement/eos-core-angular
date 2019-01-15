@@ -9,6 +9,9 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { CreateUserComponent } from './createUser/createUser.component';
 import {RtUserSelectService} from '../shered/services/rt-user-select.service';
 import { EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.service';
+import {IUserSort, SortsList} from '../shered/interfaces/user-select.interface';
+import {HelpersSortFunctions} from '../shered/helpers/sort.helper';
+
 
 @Component({
     selector: 'eos-list-user-select',
@@ -22,6 +25,9 @@ export class ListUserSelectComponent implements OnDestroy {
     isLoading: boolean;
     isMarkNode: Boolean;
     titleCurrentDue: string = '';
+    srtConfig: IUserSort = {};
+    currentSort: string = SortsList[0];
+    helpersClass: any;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor (
         private _modalSrv: BsModalService,
@@ -32,6 +38,8 @@ export class ListUserSelectComponent implements OnDestroy {
         private rtUserService: RtUserSelectService,
         private _sandwichSrv: EosSandwichService,
     ) {
+        this.helpersClass = new HelpersSortFunctions();
+        this.initSort();
         this._route.params
             .takeUntil(this.ngUnsubscribe)
             .subscribe(param => {
@@ -51,7 +59,7 @@ export class ListUserSelectComponent implements OnDestroy {
         .takeUntil(this.ngUnsubscribe)
         .subscribe(data => {
            this._apiSrv.updatePageList(data, this._apiSrv.configList.shooseTab ).then(upDate => {
-           this.listUsers  = this._getListUsers(upDate);
+           this.listUsers  = this.goSortList(this._getListUsers(upDate));
            });
         });
         this._sandwichSrv.currentDictState$
@@ -107,6 +115,57 @@ export class ListUserSelectComponent implements OnDestroy {
         this._apiSrv.devideUsers();
         this._pagSrv._initPaginationConfig(true);
         this._pagSrv.changePagination(this._pagSrv.paginationConfig);
+    }
+
+    sortPageList(nameSort: string) {
+     this.currentSort = nameSort;
+     this.goSortList();
+    }
+    goSortList(pageList?) {
+        if (!this.srtConfig[this.currentSort].checked) {
+            for (const key in  this.srtConfig) {
+                if (this.srtConfig.hasOwnProperty(key)) {
+                 if (key === this.currentSort) {
+                    this.srtConfig[key].checked = true;
+                 }  else {
+                    this.srtConfig[key].checked = false;
+                 }
+                }
+             }
+        }else {
+            this.srtConfig[this.currentSort].upDoun = !this.srtConfig[this.currentSort].upDoun;
+          //  console.log(this.srtConfig);
+        }
+        if (pageList) {
+            return this.listUsers =  this.helpersClass['sort' + this.currentSort](pageList, this.srtConfig[this.currentSort].upDoun);
+        }
+        return this.listUsers =  this.helpersClass['sort' + this.currentSort](this.listUsers, this.srtConfig[this.currentSort].upDoun);
+    }
+    getClassOrder(flag) {
+       // console.log(flag);
+        if (flag) {
+            return 'icon eos-icon small eos-icon-arrow-blue-top';
+        }
+        return 'icon eos-icon small eos-icon-arrow-blue-bottom';
+    }
+
+    initSort() {
+        this.srtConfig.Department = {
+            upDoun: true,
+            checked: true,
+        };
+        this.srtConfig.Login = {
+            upDoun: false,
+            checked: false,
+        };
+        this.srtConfig.Official =  {
+            upDoun: false,
+            checked: false,
+        };
+        this.srtConfig.Tip = {
+            upDoun: false,
+            checked: false,
+        };
     }
 
     private _getListUsers (data): UserSelectNode[] {

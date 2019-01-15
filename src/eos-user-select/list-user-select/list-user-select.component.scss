@@ -18,12 +18,17 @@
         align-items: center;
         justify-content: flex-start;
         width: 100%;
+        .likeLink{
+            cursor: pointer;
+            color: #2196f3;
+        }
     }
     .eos-node-list {
         background: $white;
 
         .user-select-node {
             line-height: 30px;
+            cursor: pointer;
         }
 
         .user-select-empty-list {
@@ -75,6 +80,13 @@
         width: 400px;
         display: inline-block;
         margin-left: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: bottom;
+        line-height: 32px;
+        height: 32px;
+        padding-right: 2px;
     }
     .user-list-third-colomn{
         width: 150px;

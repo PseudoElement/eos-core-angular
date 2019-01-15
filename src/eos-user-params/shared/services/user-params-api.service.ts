@@ -94,6 +94,15 @@ export class UserParamApiSrv {
             });
         } else {
             this.users_pagination.UsersList = this.Allcustomer.slice();
+            this.users_pagination.UsersList.sort(function(a, b){
+                if (a.DUE_DEP === null && b.DUE_DEP !== null) {
+                    return -1;
+                }  else if (a.DUE_DEP !== null && b.DUE_DEP === null) {
+                    return 1;
+                }   else {
+                    return 0;
+                }
+            });
         }
     }
 
@@ -152,12 +161,15 @@ export class UserParamApiSrv {
     updateDepartMent(pageList, tabs) {
         const setQueryResult = new Set();
         let stringQuery: string = '';
-        let T = '';
+        let valueForPadQuery = [];
+        let padQuery;
+        let parseStringUserDue = [];
         pageList.forEach(user => {
             if (user.DUE_DEP) {
                 stringQuery += user.DUE_DEP + '|';
             }
         });
+        stringQuery === '' ? stringQuery = '0000' : stringQuery = stringQuery;
         return  this.grtDepartment(stringQuery)
         .then(departments => {
             departments.forEach(el => {
@@ -165,21 +177,34 @@ export class UserParamApiSrv {
                     setQueryResult.add(el.ISN_HIGH_NODE);
                 }
             });
-           T = Array.from(setQueryResult).join('|');
-                return  this.grtDepartmentParent(T)
+            pageList.map(user => {
+                const findDepartInfo = departments.filter(dapartInfo => {
+                    return user.DUE_DEP === dapartInfo.DUE;
+                });
+                if (findDepartInfo.length > 0) {
+                    user['DEPARTMENT_SURNAME'] = findDepartInfo[0].SURNAME;
+                    user['DEPARTMENT_DYTU'] = findDepartInfo[0].DUTY;
+                }else {
+                    user['DEPARTMENT_SURNAME'] = 'Технический';
+                    user['DEPARTMENT_DYTU'] = 'пользовалтель';
+                }
+            });
+            valueForPadQuery = Array.from(setQueryResult);
+            valueForPadQuery.length > 0 ? padQuery =  valueForPadQuery.join('|') : padQuery = '0000';
+                return  this.grtDepartmentParent(padQuery)
                 .then(deepInfo => {
-                     pageList.map(user => {
+                    pageList.map(user => {
                     const findDue = deepInfo.filter(dueDeep => {
-                        const h = user.DUE_DEP.split('.');
-                        return h.slice(0, h.length - 2).join('.') + '.' === dueDeep.DUE;
+                        if (user.DUE_DEP === null) {
+                            return false;
+                        }   else {
+                            parseStringUserDue = user.DUE_DEP.split('.');
+                            return parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.' === dueDeep.DUE;
+                        }
                     });
                     if (findDue.length > 0) {
-                        user['DEPARTMENT_SURNAME'] = findDue[0].SURNAME;
-                        user['DEPARTMENT_DYTU'] = findDue[0].DUTY;
                         user['DEPARTMENT'] = tabs === 0 ? findDue[0].CLASSIF_NAME : findDue[0].CARD_NAME;
                     } else {
-                        user['DEPARTMENT_SURNAME'] = '';
-                        user['DEPARTMENT_DYTU'] = '';
                         user['DEPARTMENT'] = '';
                     }
                 });

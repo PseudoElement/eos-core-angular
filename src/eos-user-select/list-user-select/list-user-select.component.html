@@ -50,10 +50,26 @@
         <div class="table-header">
             <!-- header -->
             <div class="table-title">
-                <span class="user-title-name user-list-first-colomn">Подразделение</span>
-                <span class="user-list-first-colomn">Должностное лицо</span>
-                <span class="user-list-third-colomn">Тип</span>
-                <span class="user-list-fourth-colomn">Логин</span>
+                <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('Department')">Подразделение
+                    <span class="order-icon">
+                        <span *ngIf ="srtConfig.Department.checked" [ngClass]="getClassOrder(srtConfig.Department.upDoun)"></span>
+                    </span>
+                </span>
+                <span class="user-list-first-colomn likeLink"(click)="sortPageList('Official')">Должностное лицо
+                    <span class="order-icon">
+                        <span *ngIf ="srtConfig.Official.checked" [ngClass]="getClassOrder(srtConfig.Official.upDoun)"></span>
+                    </span>
+                </span>
+                <span class="user-list-third-colomn likeLink"(click)="sortPageList('Tip')">Тип
+                    <span class="order-icon">
+                        <span *ngIf ="srtConfig.Tip.checked" [ngClass]="getClassOrder(srtConfig.Tip.upDoun)"></span>
+                    </span>
+                </span>
+                <span class="user-list-fourth-colomn likeLink"(click)="sortPageList('Login')">Логин
+                    <span class="order-icon">
+                        <span *ngIf ="srtConfig.Login.checked" [ngClass]="getClassOrder(srtConfig.Login.upDoun)"></span>
+                    </span>
+                </span>
             </div>
         </div>
         <div *ngIf="!isLoading; else spiner" class="eos-node-list">
@@ -83,7 +99,11 @@
                         >
                         <span></span>
                     </label> -->
-                    <span class="user-list-first-colomn">{{user.department}}</span>
+                    <span
+                    containerClass="tooltip-info"
+                    class="user-list-first-colomn"
+                    tooltip="{{user.department}}"
+                    >{{user.department}}</span>
                     <span class="user-list-first-colomn">{{user.dueName}} - {{user.dueDytu}}</span>
                     <span class="user-list-third-colomn">icon</span>
                     <span class="user-list-fourth-colomn">{{user.login}}</span>
