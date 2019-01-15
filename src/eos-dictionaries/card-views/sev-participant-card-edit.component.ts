@@ -1,11 +1,12 @@
 import { RulesSelectComponent } from './../sev-rules-select/sev-rules-select.component';
 import { Component, Injector, OnInit, OnChanges, SimpleChanges, NgZone } from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
-import { PipRX } from '../../eos-rest';
-import { WARN_NO_BINDED_ORGANIZATION } from 'eos-dictionaries/consts/messages.consts';
+import { PipRX, SEV_ASSOCIATION } from '../../eos-rest';
+import { WARN_NO_BINDED_ORGANIZATION, DANGER_ORGANIZ_NO_SEV } from 'eos-dictionaries/consts/messages.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { ALL_ROWS, _ES } from 'eos-rest/core/consts';
+import { SevIndexHelper } from 'eos-rest/services/sevIndex-helper';
 
 @Component({
     selector: 'eos-sev-participant-card-edit',
@@ -26,7 +27,7 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
         injector: Injector,
         private _apiSrv: PipRX,
         private _zone: NgZone,
-        private msgSrv: EosMessageService,
+        private _msgSrv: EosMessageService,
         private _modalSrv: BsModalService,
     ) {
         super(injector);
@@ -81,14 +82,23 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
 
     bindOrganization(orgDue: string) {
         const dues = orgDue ? orgDue.split('|') : [''];
-        this.dictSrv.bindOrganization(dues[0])
-            .then((org) => {
-                if (org) {
-                    this._orgName = org['CLASSIF_NAME'];
-                    this.setValue('rec.DUE_ORGANIZ', org.DUE);
-                    this.setValue('rec.CLASSIF_NAME', org['CLASSIF_NAME']);
-                }
-            });
+        const due = dues[0];
+        this._apiSrv.read<SEV_ASSOCIATION>({ SEV_ASSOCIATION: [SevIndexHelper.CompositePrimaryKey(due, 'ORGANIZ_CL')] })
+            .then (rSevIndex => {
+            console.log(rSevIndex);
+            if (rSevIndex && rSevIndex.length) {
+                this.dictSrv.bindOrganization(dues[0])
+                    .then((org) => {
+                        if (org) {
+                            this._orgName = org['CLASSIF_NAME'];
+                            this.setValue('rec.DUE_ORGANIZ', org.DUE);
+                            this.setValue('rec.CLASSIF_NAME', org['CLASSIF_NAME']);
+                        }
+                    });
+            } else {
+                this._msgSrv.addNewMessage(DANGER_ORGANIZ_NO_SEV);
+            }
+        });
     }
 
     unbindOrganization() {
@@ -97,7 +107,7 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
             this.data.organization = null;
             this.setValue('rec.DUE_LINK_ORGANIZ', null);
         } else {
-            this.msgSrv.addNewMessage(WARN_NO_BINDED_ORGANIZATION);
+            this._msgSrv.addNewMessage(WARN_NO_BINDED_ORGANIZATION);
         }
     }
 
