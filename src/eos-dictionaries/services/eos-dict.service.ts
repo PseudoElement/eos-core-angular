@@ -954,7 +954,7 @@ export class EosDictService {
                     });
             }
             if (dictionary.id === 'reestrtype') {
-                if (data.rec['ISN_DELIVERY'] === data.rec._orig['ISN_DELIVERY'].toString()) {
+                if (!data.rec._orig || (data.rec['ISN_DELIVERY'] === data.rec._orig['ISN_DELIVERY'].toString())) {
                     return Promise.resolve(null);
                 }
                 const reestrDesriptor = dictionary.descriptor as ReestrtypeDictionaryDescriptor;
