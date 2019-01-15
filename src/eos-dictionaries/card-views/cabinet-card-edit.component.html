@@ -120,10 +120,10 @@
                 <div class="pull-left"
                      *ngFor="let colIdx of [0,1,2]">
                     <div class="folder-access-item"
-                         *ngFor="let rIdx of [0,1,2]">
+                         *ngFor="let rIdx of [0,1,2,3]">
                         <div class="minus-checkbox">
-                            <eos-dynamic-input *ngIf="inputs['rec.FOLDER_List['+ (colIdx*3 + rIdx) +'].USER_COUNT']"
-                                               [input]="inputs['rec.FOLDER_List['+ (colIdx*3 + rIdx) +'].USER_COUNT']"
+                            <eos-dynamic-input *ngIf="inputs['rec.FOLDER_List['+ (colIdx*4 + rIdx) +'].USER_COUNT']"
+                                               [input]="inputs['rec.FOLDER_List['+ (colIdx*4 + rIdx) +'].USER_COUNT']"
                                                [form]="form"
                                                [readonly]="!editMode"></eos-dynamic-input>
                         </div>

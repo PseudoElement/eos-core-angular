@@ -1,5 +1,5 @@
 <div class="card-content-wrapper">
-    <div class="clearfix">
+    <div class="clearfix"></div>
         <div class="form-group">
             <div class="organization-wrapper">
                 <label [ngClass]="{'unimportant-text': !editMode }">Организация <a
@@ -33,5 +33,11 @@
                             [input]="inputs['rec.ADDRESS']"
                             [form]="form"
                             [readonly]="!editMode"></eos-dynamic-input>
-    </div>
+        <label [ngClass]="{'unimportant-text': !editMode }">Используемые правила <a
+                                *ngIf="editMode"
+                                (click)="chooseRules()">[выбрать]</a> </label>
+        <div class="rules-string" [ngClass]="{'unimportant-text': !editMode }">
+        {{getStringUsedRules()}}
+        </div>
+    <div class="clearfix"></div>
 </div>

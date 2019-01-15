@@ -644,7 +644,7 @@ export class EosDictService {
 
     getFullNode(dictionaryId: string, nodeId: string): Promise<EosDictionaryNode> {
         return this.getDictionaryById(dictionaryId)
-            .then((dictionary) => dictionary.getFullNodeInfo(nodeId))
+            .then((dictionary) => dictionary.getNodeByNodeId(nodeId))
             .then((node) => this.currentNode = node)
             .catch((err) => this._errHandler(err));
     }
@@ -904,6 +904,9 @@ export class EosDictService {
 
     private preSave(dictionary: EosDictionary, data: any): Promise<any> {
         if (data && data.rec) {
+            if (dictionary.id === 'sev-participant') {
+
+            }
             if (dictionary.id === 'departments' && data.rec.IS_NODE) {
                 this.departmentsSrv.addDuty(data.rec.DUTY);
                 this.departmentsSrv.addFullname(data.rec.FULLNAME);

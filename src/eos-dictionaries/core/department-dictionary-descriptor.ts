@@ -178,7 +178,6 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
                     extension: photoImgs[0]['EXTENSION'],
                     url: `url(data:image/${photoImgs[0]['EXTENSION']};base64,${photoImgs[0]['CONTENTS']})`
                 } : null;
-
                 return {
                     user: user,
                     organization: org,
