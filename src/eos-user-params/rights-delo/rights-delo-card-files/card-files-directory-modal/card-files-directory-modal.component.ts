@@ -5,6 +5,7 @@ import { UserParamsService } from '../../../shared/services/user-params.service'
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup } from '@angular/forms';
 import { BaseRightsDeloSrv } from '../../shared-rights-delo/services/base-rights-delo.service';
+import { RightsDeloCardFilesComponent } from '../rights-delo-card-files.component';
 
 @Component({
     selector: 'eos-card-files-directory-modal',
@@ -15,6 +16,7 @@ export class CardFilesDirectoryModalComponent extends BaseRightsDeloSrv implemen
     @Output() closeCollection = new EventEmitter();
     @Output() formChanged = new EventEmitter();
     @Output() formInvalid = new EventEmitter();
+    updateRDCF: RightsDeloCardFilesComponent;
     isLoading = false;
     fieldKeysforCardFiles2 = [];
     _userParamsSetSrv: UserParamsService;

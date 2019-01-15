@@ -26,16 +26,17 @@
                     (click)="OpenClassiv()">
                     <span class="eos-icon eos-icon-plus-blue small"></span>
                 </button>
-                <!--<button
+                <button
                     class="btn btn-primary-light"
                     tooltip="Удалить"
                     placement="bottom"
                     container="body"
                     containerClass="tooltip-info"
                     aria-readonly="false"
+                    [ngClass]="{'hiden-btn': btnMinusHiden}"
                     (click)="removeDocuments()">
                     <span class="eos-icon eos-icon-minus-blue small"></span>
-                </button>-->
+                </button>
     </div>
     <div class="content-list" *ngIf="!isLoading">
     <div *ngFor="let item of treeHierarchyOnTheRightSide" class="inline-block item-card">

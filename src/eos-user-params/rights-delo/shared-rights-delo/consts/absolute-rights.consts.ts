@@ -52,7 +52,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean, // отобразить чекбокс Разрешить операцию рассылки проекта резолюции
         key: '22',
-        label: 'Добавление проектов резолюций',
+        label: 'Ввод проектов резолюций',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject
@@ -61,7 +61,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean, // 7
         key: '27',
-        label: 'Добавление проектов резолюций не ограничено картотекой автора',
+        label: 'Ввод проектов резолюций не ограничен картотекой автора',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none

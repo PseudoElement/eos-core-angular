@@ -73,6 +73,7 @@ import {CitizenCardComponent} from './card-views/citizen-card.component';
 import {NomenklCardComponent} from './card-views/nomenkl-card.component';
 import {CounterNpEditComponent} from './counter-np-edit/counter-np-edit.component';
 import {CustomTreeComponent} from './tree2/custom-tree.component';
+import { RulesSelectComponent } from './sev-rules-select/sev-rules-select.component';
 
 @NgModule({
     declarations: [
@@ -80,6 +81,7 @@ import {CustomTreeComponent} from './tree2/custom-tree.component';
         CardEditComponent,
         ColumnSettingsComponent,
         CounterNpEditComponent,
+        RulesSelectComponent,
         DepartmentsCardEditDepartmentComponent,
         DepartmentsCardEditPersonComponent,
         DictionaryComponent,
@@ -123,6 +125,7 @@ import {CustomTreeComponent} from './tree2/custom-tree.component';
     entryComponents: [
         ColumnSettingsComponent,
         CounterNpEditComponent,
+        RulesSelectComponent,
         CreateNodeComponent,
         CreateNodeBroadcastChannelComponent,
         DocgroupTemplateConfigComponent,
@@ -152,6 +155,7 @@ import {CustomTreeComponent} from './tree2/custom-tree.component';
         SandwichComponent,
         ColumnSettingsComponent,
         CounterNpEditComponent,
+        RulesSelectComponent,
     ],
     providers: [
         DictionaryDescriptorService,
