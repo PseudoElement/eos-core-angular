@@ -1370,7 +1370,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
         } else {
              !node ?   node = this.form.controls['rec.ORGGROUP'].value : node = node;
         }
-        if (node !== null) {
+        if (String(node) !== 'null') {
             const query = {
                 ORGANIZ_CL: {
                     criteries: {
