@@ -277,9 +277,11 @@ export abstract class AbstractDictionaryDescriptor {
     markBooleanData(records: any[], fieldName: string, boolValue, cascade = false): Promise<any[]> {
         records.forEach((record) => record[fieldName] = +boolValue);
         const changes = this.apiSrv.changeList(records);
-        if (+boolValue === 0 && cascade) {
-            PipRX.invokeSop(changes, 'ClassifCascade_TRule', {'due' : records[0]['DUE'], 'type': records[0].__metadata.__type,  [fieldName]: +cascade});
-        }
+        // Temporary disabled while API support done
+        // if (+boolValue === 0 && cascade) {
+        //     // PipRX.invokeSop(changes, 'ClassifCascade_TRule', {'due' : records[0]['DUE'], 'type': records[0].__metadata.__type,  [fieldName]: +cascade});
+        //     PipRX.invokeSop(changes, 'DepartmentCascade_TRule', {'due' : records[0]['DUE'], 'Dates': '15.01.2019',  [fieldName]: +cascade});
+        // }
         return this.apiSrv.batch(changes, '');
     }
 
