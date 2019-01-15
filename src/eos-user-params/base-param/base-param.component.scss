@@ -52,6 +52,13 @@
                 position: absolute;
                 top: 0;
             }
+            .department-role-flex{
+                display: flex;
+                align-items: center;
+                .span-avatar-icon{
+                    margin-bottom: 0;
+                }
+            }
         }
 
         .base-department-input {

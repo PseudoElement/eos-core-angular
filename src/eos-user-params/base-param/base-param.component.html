@@ -89,7 +89,7 @@
                 class="dynamic-input-wrapper inline-block base-department-input">
                 <label
                     [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
-                <div [ngClass]="{'required': inputs['DUE_DEP_NAME'].required}" style="width: 461px">
+                <div [ngClass]="{'required': inputs['DUE_DEP_NAME'].required, 'department-role-flex': true}" style="width: 461px">
                 <input class="form-control m-font inline-block"
                     readonly
                     [formControlName]="inputs['DUE_DEP_NAME'].key"
@@ -98,7 +98,7 @@
                     [ngClass]="{'readonly': readonly}"
                     [placeholder]="inputs['DUE_DEP_NAME'].label"
                     autocomplete="off">
-                    <span class="icon eos-icon small icon-add-department"
+                    <span class="icon eos-icon small icon-add-department span-avatar-icon"
                         [ngClass]="{'eos-icon-avatar-blue': form.get('DUE_DEP_NAME').enabled, 'eos-icon-avatar-grey': form.get('DUE_DEP_NAME').disabled}"
                         (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"
                     ></span>
