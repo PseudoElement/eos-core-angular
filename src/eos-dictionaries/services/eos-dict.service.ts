@@ -644,7 +644,7 @@ export class EosDictService {
 
     getFullNode(dictionaryId: string, nodeId: string): Promise<EosDictionaryNode> {
         return this.getDictionaryById(dictionaryId)
-            .then((dictionary) => dictionary.getNodeByNodeId(nodeId))
+            .then((dictionary) => dictionary.getFullNodeInfo(nodeId))
             .then((node) => this.currentNode = node)
             .catch((err) => this._errHandler(err));
     }
