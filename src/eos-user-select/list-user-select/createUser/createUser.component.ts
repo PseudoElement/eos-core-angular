@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
+import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
+import { DUE_DEP_OCCUPATION } from 'app/consts/messages.consts';
 
 @Component({
     selector: 'eos-param-create-user',
@@ -29,6 +31,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     initLogin: string;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor (
+        private _userParamSrv: UserParamsService,
         private _msgSrv: EosMessageService,
         private _router: Router,
         private _inputCtrlSrv: InputParamControlService,
@@ -52,7 +55,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
                 if (this.initDue) {
                     this.data['dueDL'] = this.initDue;
-                    this._getDepartmentFromUser(this.initDue).then((dt) => {
+                    this._userParamSrv.getDepartmentFromUser(this.initDue).then((dt) => {
                         this.form.controls['DUE_DEP_NAME'].patchValue(dt[0]['SURNAME']);
                     });
                 }
@@ -129,9 +132,18 @@ export class CreateUserComponent implements OnInit, OnDestroy {
 
     private _showDepartment() {
         this.isShell = true;
+        let dueDep = '';
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
         .then((data: string) => {
-            return this._getDepartmentFromUser(data);
+            dueDep = data;
+            return this._userParamSrv.ceckOccupationDueDep(dueDep);
+        })
+        .then((access: boolean) => {
+            if (!access) {
+                this._msgSrv.addNewMessage(DUE_DEP_OCCUPATION);
+                throw new Error();
+            }
+            return this._userParamSrv.getDepartmentFromUser(dueDep);
         })
         .then((data: DEPARTMENT[]) => {
             this.isShell = false;
@@ -142,17 +154,6 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         .catch(() => {
             this.isShell = false;
         });
-    }
-
-    private _getDepartmentFromUser (dueDep) {
-        const queryDueDep = {
-            DEPARTMENT: {
-                criteries: {
-                    DUE: dueDep
-                }
-            }
-        };
-        return this._pipeSrv.read<DEPARTMENT>(queryDueDep);
     }
     private _getUserCl (isn) {
         const queryUser = {

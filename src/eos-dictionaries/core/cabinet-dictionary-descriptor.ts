@@ -68,7 +68,17 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
             .then((data: any[]) => {
                 this.prepareForEdit(data);
                 data.forEach((rec) => {
-                    this.prepareForEdit(rec.FOLDER_List);
+                    // this.prepareForEdit(rec.FOLDER_List);
+
+                    CABINET_FOLDERS.forEach(cf => {
+                        const record = rec.FOLDER_List.find(rfl => rfl.FOLDER_KIND === cf.key);
+                        if (record) {
+                            this.apiSrv.entityHelper.prepareForEdit(record);
+                        } else {
+                            rec.FOLDER_List.push(this.apiSrv.entityHelper.prepareAdded<FOLDER>({ FOLDER_KIND: cf.key, USER_COUNT: 0 }, 'FOLDER'));
+                        }
+                    });
+
                 });
                 const dues = [];
                 data.forEach((rec) => {

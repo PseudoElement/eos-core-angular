@@ -86,3 +86,8 @@ export const NAVIGATE_TO_ELEMENT_WARN: IMessage = {
     msg: 'Запись не найдена.',
     type: 'warning'
 };
+export const DUE_DEP_OCCUPATION: IMessage = {
+    title: 'Предупреждение:',
+    msg: 'Должностное лицо уже привязано к пользователю.',
+    type: 'warning'
+};

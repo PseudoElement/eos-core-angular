@@ -904,6 +904,9 @@ export class EosDictService {
 
     private preSave(dictionary: EosDictionary, data: any): Promise<any> {
         if (data && data.rec) {
+            if (dictionary.id === 'sev-participant') {
+
+            }
             if (dictionary.id === 'departments' && data.rec.IS_NODE) {
                 this.departmentsSrv.addDuty(data.rec.DUTY);
                 this.departmentsSrv.addFullname(data.rec.FULLNAME);
@@ -951,7 +954,7 @@ export class EosDictService {
                     });
             }
             if (dictionary.id === 'reestrtype') {
-                if (data.rec['ISN_DELIVERY'] === data.rec._orig['ISN_DELIVERY'].toString()) {
+                if (!data.rec._orig || (data.rec['ISN_DELIVERY'] === data.rec._orig['ISN_DELIVERY'].toString())) {
                     return Promise.resolve(null);
                 }
                 const reestrDesriptor = dictionary.descriptor as ReestrtypeDictionaryDescriptor;

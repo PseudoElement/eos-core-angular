@@ -6,6 +6,7 @@ import { FILES_PARAM } from '../shared/consts/files-consts';
 import { BaseParamComponent } from '../shared/base-param.component';
 import { Component, Injector, ViewChild } from '@angular/core';
 import { ModalDirective } from 'ngx-bootstrap';
+import { ALL_ROWS } from 'eos-rest/core/consts';
 
 @Component({
     selector: 'eos-param-files',
@@ -34,11 +35,7 @@ export class ParamFielsComponent extends BaseParamComponent {
         }
     ];
     queryFileConstraint = {
-        DG_FILE_CONSTRAINT: {
-            criteries: {
-                ISN_DOCGROUP: '0'
-            }
-        }
+        'DOCGROUP_CL(\'0.\')/DG_FILE_CONSTRAINT_List': ALL_ROWS
     };
     constructor( injector: Injector ) {
         super(injector, FILES_PARAM);

@@ -47,7 +47,7 @@
         <div class="content-list">
         <ul class="list-card-files"
             *ngFor="let key of fieldKeysforCardFiles; let i = index;">
-                <li *ngIf="key[4]"
+                <li *ngIf="key[4] && key[0]"
                 (click)="selectedNode(key[1], $event)"
                 [ngClass]="{'forMainLabel': key[3]}">
                             <eos-dynamic-input
@@ -78,11 +78,12 @@
         <div *ngIf="flagCardFileAvailability">
         <ul class="list-card-files">
             <li *ngFor="let key of arrayKeysCheckboxforCabinets; let i = index;">
+                    <div *ngIf="inputAttach">
                     <eos-dynamic-input
                         [input]="inputAttach['rec.' + key[0]]"
                         [form]="formAttach"
-                        (click)="selectedNode(key[1])"
                     ></eos-dynamic-input>
+                    </div>
         </li>
         </ul>
         </div>
