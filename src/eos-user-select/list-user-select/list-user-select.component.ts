@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
@@ -11,13 +11,14 @@ import {RtUserSelectService} from '../shered/services/rt-user-select.service';
 import { EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.service';
 import {IUserSort, SortsList} from '../shered/interfaces/user-select.interface';
 import {HelpersSortFunctions} from '../shered/helpers/sort.helper';
-
+import {Allbuttons} from '../shered/consts/btn-action.consts';
+import {BtnAction} from '../shered/interfaces/btn-action.interfase';
 
 @Component({
     selector: 'eos-list-user-select',
     templateUrl: 'list-user-select.component.html'
 })
-export class ListUserSelectComponent implements OnDestroy {
+export class ListUserSelectComponent implements OnDestroy, OnInit {
     currentState: boolean[];
     createUserModal: BsModalRef;
     listUsers: UserSelectNode[];
@@ -28,6 +29,7 @@ export class ListUserSelectComponent implements OnDestroy {
     srtConfig: IUserSort = {};
     currentSort: string = SortsList[0];
     helpersClass: any;
+    buttons: BtnAction;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor (
         private _modalSrv: BsModalService,
@@ -67,6 +69,9 @@ export class ListUserSelectComponent implements OnDestroy {
         .subscribe((state: boolean[]) => {
                 this.currentState = state;
             });
+    }
+    ngOnInit() {
+        this.buttons = Allbuttons;
     }
     ngOnDestroy() {
         this.ngUnsubscribe.next();
@@ -119,50 +124,48 @@ export class ListUserSelectComponent implements OnDestroy {
 
     sortPageList(nameSort: string) {
      this.currentSort = nameSort;
+     this.srtConfig[this.currentSort].upDoun = !this.srtConfig[this.currentSort].upDoun;
      this.goSortList();
     }
     goSortList(pageList?) {
         if (!this.srtConfig[this.currentSort].checked) {
             for (const key in  this.srtConfig) {
                 if (this.srtConfig.hasOwnProperty(key)) {
-                 if (key === this.currentSort) {
-                    this.srtConfig[key].checked = true;
-                 }  else {
-                    this.srtConfig[key].checked = false;
-                 }
+                    if (key === this.currentSort) {
+                        this.srtConfig[key].checked = true;
+                    }  else {
+                        this.srtConfig[key].checked = false;
+                    }
                 }
-             }
-        }else {
-            this.srtConfig[this.currentSort].upDoun = !this.srtConfig[this.currentSort].upDoun;
-          //  console.log(this.srtConfig);
+            }
         }
         if (pageList) {
-            return this.listUsers =  this.helpersClass['sort' + this.currentSort](pageList, this.srtConfig[this.currentSort].upDoun);
+            return this.listUsers =  this.helpersClass.sort(pageList, this.srtConfig[this.currentSort].upDoun, this.currentSort);
         }
-        return this.listUsers =  this.helpersClass['sort' + this.currentSort](this.listUsers, this.srtConfig[this.currentSort].upDoun);
+            return this.listUsers =  this.helpersClass.sort(this.listUsers, this.srtConfig[this.currentSort].upDoun, this.currentSort);
     }
     getClassOrder(flag) {
        // console.log(flag);
         if (flag) {
             return 'icon eos-icon small eos-icon-arrow-blue-top';
         }
-        return 'icon eos-icon small eos-icon-arrow-blue-bottom';
+            return 'icon eos-icon small eos-icon-arrow-blue-bottom';
     }
 
     initSort() {
-        this.srtConfig.Department = {
+        this.srtConfig.department = {
             upDoun: true,
             checked: true,
         };
-        this.srtConfig.Login = {
+        this.srtConfig.login = {
             upDoun: false,
             checked: false,
         };
-        this.srtConfig.Official =  {
+        this.srtConfig.official =  {
             upDoun: false,
             checked: false,
         };
-        this.srtConfig.Tip = {
+        this.srtConfig.tip = {
             upDoun: false,
             checked: false,
         };

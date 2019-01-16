@@ -20,9 +20,9 @@ export class UserSelectNode {
         this.login = data.CLASSIF_NAME;
         this.id = data.ISN_LCLASSIF;
         this.department = data['DEPARTMENT'] || '...';
-        this.official = '';
         this.deleted = data.DELETED;
         this.dueName = data['DEPARTMENT_SURNAME'];
         this.dueDytu = data['DEPARTMENT_DYTU'];
+        this.official = this.dueDytu + '-' + this.dueName;
     }
 }

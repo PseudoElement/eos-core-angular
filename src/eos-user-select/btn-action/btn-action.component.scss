@@ -1,0 +1,12 @@
+.btn-action-wrapper{
+    height: 48px;
+    .btn-action-flex{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .btn{
+        height: 48px;
+        width: 48px;
+    }
+}

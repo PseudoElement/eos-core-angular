@@ -15,7 +15,8 @@
         </div>
         <div class="table-header">
             <!-- header action -->
-            <button
+            <eos-btn-action [buttons]='buttons' (doAction)='doAction($event)'></eos-btn-action>
+            <!-- <button
                 class="btn"
                 tooltip="Создать пользователя"
                 [placement]="currentState[0] ? 'bottom' : 'right'"
@@ -45,30 +46,30 @@
             >
                 <span class="eos-icon eos-icon-bin-blue small"></span>
             </button>
-            <button (click)="showDeep()">показать тех.польз</button>
+            <button (click)="showDeep()">показать тех.польз</button> -->
         </div>
         <div class="table-header">
             <!-- header -->
             <div class="table-title">
-                <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('Department')">Подразделение
-                    <span class="order-icon">
-                        <span *ngIf ="srtConfig.Department.checked" [ngClass]="getClassOrder(srtConfig.Department.upDoun)"></span>
-                    </span>
+                <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')">Подразделение
+
+                        <span *ngIf ="srtConfig.department.checked" [ngClass]="getClassOrder(srtConfig.department.upDoun)"></span>
+
                 </span>
-                <span class="user-list-first-colomn likeLink"(click)="sortPageList('Official')">Должностное лицо
-                    <span class="order-icon">
-                        <span *ngIf ="srtConfig.Official.checked" [ngClass]="getClassOrder(srtConfig.Official.upDoun)"></span>
-                    </span>
+                <span class="user-list-first-colomn likeLink"(click)="sortPageList('official')">Должностное лицо
+
+                        <span *ngIf ="srtConfig.official.checked" [ngClass]="getClassOrder(srtConfig.official.upDoun)"></span>
+
                 </span>
-                <span class="user-list-third-colomn likeLink"(click)="sortPageList('Tip')">Тип
-                    <span class="order-icon">
-                        <span *ngIf ="srtConfig.Tip.checked" [ngClass]="getClassOrder(srtConfig.Tip.upDoun)"></span>
-                    </span>
+                <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
+
+                        <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>
+
                 </span>
-                <span class="user-list-fourth-colomn likeLink"(click)="sortPageList('Login')">Логин
-                    <span class="order-icon">
-                        <span *ngIf ="srtConfig.Login.checked" [ngClass]="getClassOrder(srtConfig.Login.upDoun)"></span>
-                    </span>
+                <span class="user-list-fourth-colomn likeLink"(click)="sortPageList('login')">Логин
+
+                        <span *ngIf ="srtConfig.login.checked" [ngClass]="getClassOrder(srtConfig.login.upDoun)"></span>
+
                 </span>
             </div>
         </div>

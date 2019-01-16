@@ -12,14 +12,14 @@ export interface IConfig {
     titleDue: string;
 }
 export interface IUserSort {
-    Department?: IUserCheckSort;
-    Official?: IUserCheckSort;
-    Tip?: IUserCheckSort;
-    Login?: IUserCheckSort;
+    department?: IUserCheckSort;
+    official?: IUserCheckSort;
+    tip?: IUserCheckSort;
+    login?: IUserCheckSort;
 }
 
 export interface IUserCheckSort {
     upDoun: boolean;
     checked: boolean;
 }
-export enum SortsList {department, official, tip, login}
+export enum SortsList {Department, Official, Tip, Login}
