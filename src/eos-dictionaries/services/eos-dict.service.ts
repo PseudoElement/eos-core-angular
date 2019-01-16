@@ -198,6 +198,10 @@ export class EosDictService {
         this._initPaginationConfig();
     }
 
+    clearCurrentNode() {
+        this.currentNode = null;
+    }
+
     bindOrganization(orgDue: string) {
         if (orgDue && this.currentDictionary) {
             return this.currentDictionary.bindOrganization(orgDue);
