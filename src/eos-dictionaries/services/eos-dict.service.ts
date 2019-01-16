@@ -914,10 +914,12 @@ export class EosDictService {
             if (dictionary.id === 'departments' && data.rec.IS_NODE) {
                 this.departmentsSrv.addDuty(data.rec.DUTY);
                 this.departmentsSrv.addFullname(data.rec.FULLNAME);
-
-
                 if (1 * data.rec.POST_H === 1) {
-                    return dictionary.getBoss(data, this.treeNode)
+                    let parent: EosDictionaryNode = null ;
+                    if (this.treeNode && ((!data.rec.PARENT_DUE) || (this.treeNode.id === data.rec.PARENT_DUE))) {
+                        parent = this.treeNode;
+                    }
+                    return dictionary.getBoss(data, parent)
                         .then((boss) => {
                             if (boss && boss.id !== data.rec.DUE) {
                                 const changeBoss = Object.assign({}, CONFIRM_CHANGE_BOSS);
