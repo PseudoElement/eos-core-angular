@@ -57,7 +57,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
         this._waitClassifSrv = injector.get(WaitClassifService);
         this._userParamsSetSrv = injector.get(UserParamsService);
         this.constUserParam = paramModel;
-        this.titleHeader = this.constUserParam.title;
+        this.titleHeader =  `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - ${this.constUserParam.title}`;
         this.userParamApiSrv = injector.get(UserParamApiSrv);
         this.dataSrv = injector.get(EosDataConvertService);
         this.inputCtrlSrv = injector.get(InputControlService);
