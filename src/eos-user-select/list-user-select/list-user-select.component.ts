@@ -12,7 +12,7 @@ import { EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.servi
 import {IUserSort, SortsList} from '../shered/interfaces/user-select.interface';
 import {HelpersSortFunctions} from '../shered/helpers/sort.helper';
 import {Allbuttons} from '../shered/consts/btn-action.consts';
-import {BtnAction} from '../shered/interfaces/btn-action.interfase';
+import {BtnAction, BtnActionFields} from '../shered/interfaces/btn-action.interfase';
 
 @Component({
     selector: 'eos-list-user-select',
@@ -52,7 +52,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                         this.listUsers = this._getListUsers(upDate);
                         if (this.listUsers && this.listUsers.length) {
                             this.selectedNode(this.listUsers[0]);
+                        }   else {
+                            this.selectedUser = undefined;
                         }
+                        this.disabledBtnAction();
                         this.isLoading = false;
                     });
                 });
@@ -61,7 +64,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         .takeUntil(this.ngUnsubscribe)
         .subscribe(data => {
            this._apiSrv.updatePageList(data, this._apiSrv.configList.shooseTab ).then(upDate => {
-           this.listUsers  = this.goSortList(this._getListUsers(upDate));
+           this.listUsers  = this._getListUsers(upDate);
+           if (this.listUsers && this.listUsers.length) {
+            this.selectedNode(this.listUsers[0]);
+            } else {
+                this.selectedUser = undefined;
+            }
+            this.disabledBtnAction();
            });
         });
         this._sandwichSrv.currentDictState$
@@ -76,6 +85,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
+        this.buttons.buttons.map((button: BtnActionFields) => {
+            button.isActive = false;
+            return button;
+        });
     }
 
     selectedNode(user: UserSelectNode) {
@@ -87,7 +100,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.rtUserService.changeSelectedUser(user);
     }
 
-    editUser() {
+    RedactUser() {
         if (this.selectedUser) {
             this._router.navigate(['user-params-set'], {
                 queryParams: {isn_cl: this.selectedUser.id}
@@ -106,7 +119,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         console.log('markNode($event, user)');
     }
 
-    createUser() {
+    CreateUser() {
         this.createUserModal = this._modalSrv.show(CreateUserComponent, {
             class: 'param-create-user',
             ignoreBackdropClick: true
@@ -116,7 +129,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         });
     }
     showDeep() {
-        this._apiSrv.flagAllUser = !this._apiSrv.flagAllUser;
+        this._apiSrv.flagTehnicalUsers = !this._apiSrv.flagTehnicalUsers;
         this._apiSrv.devideUsers();
         this._pagSrv._initPaginationConfig(true);
         this._pagSrv.changePagination(this._pagSrv.paginationConfig);
@@ -125,7 +138,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     sortPageList(nameSort: string) {
      this.currentSort = nameSort;
      this.srtConfig[this.currentSort].upDoun = !this.srtConfig[this.currentSort].upDoun;
-     this.goSortList();
     }
     goSortList(pageList?) {
         if (!this.srtConfig[this.currentSort].checked) {
@@ -140,9 +152,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
         }
         if (pageList) {
-            return this.listUsers =  this.helpersClass.sort(pageList, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+            return this._pagSrv.UsersList =  this.helpersClass.sort(this._pagSrv.UsersList, this.srtConfig[this.currentSort].upDoun, this.currentSort);
         }
-            return this.listUsers =  this.helpersClass.sort(this.listUsers, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+            return this._pagSrv.UsersList =  this.helpersClass.sort(this._pagSrv.UsersList, this.srtConfig[this.currentSort].upDoun, this.currentSort);
     }
     getClassOrder(flag) {
        // console.log(flag);
@@ -170,7 +182,73 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             checked: false,
         };
     }
+    showAction(nameMethods: any) {
+        this.callPassedFunction(nameMethods);
+    }
+    callPassedFunction(nameFunc: string): void {
+       try {
+           this[nameFunc]();
+       } catch  (error) {
+            console.log('переданный параметр ' + nameFunc + ' не является названием метода');
+       }
+    }
 
+    ActionMode() {
+        this._apiSrv.flagDelitedPermanantly = !this._apiSrv.flagDelitedPermanantly;
+        this._apiSrv.devideUsers();
+        this._pagSrv._initPaginationConfig(true);
+        this._pagSrv.changePagination(this._pagSrv.paginationConfig);
+    }
+
+    ActionTehnicalUser() {
+        this._apiSrv.flagTehnicalUsers = !this._apiSrv.flagTehnicalUsers;
+        this._apiSrv.devideUsers();
+        this._pagSrv._initPaginationConfig(true);
+        this._pagSrv.changePagination(this._pagSrv.paginationConfig);
+    }
+
+    OpenAddressManagementWindow() {
+        if (this.selectedUser) {
+            this._router.navigate(['user-params-set/', 'email-address'], {
+                queryParams: {isn_cl: this.selectedUser.id}
+            });
+        }
+    }
+
+    OpenStreamScanSystem() {
+        if (this.selectedUser) {
+            this._router.navigate(['user-params-set/', 'email-address'], {
+                queryParams: {isn_cl: this.selectedUser.id}
+            });
+        }
+    }
+
+    disabledBtnAction() {
+        if (this.selectedUser) {
+            this.buttons.buttons.map((button: BtnActionFields, index) => {
+                if (this.selectedUser.deleted > 0) {
+                    if (button.name === ('RedactUser' || 'DeliteLogicalUser' || 'LocSelectedUser' ||  'LocSelectedUser' || 'OpenAddressManagementWindow' || 'OpenStreamScanSystem' || 'OpenRightsSystemCaseDelo')) {
+                    // || button.name === 'DeliteLogicalUser'
+                    // || button.name === 'LocSelectedUser'
+                    // || button.name === 'OpenAddressManagementWindow'
+                    // || button.name === 'OpenStreamScanSystem'
+                    // || button.name === 'OpenStreamScanSystem'
+                    button.disabled = true;
+                    }
+                }else {
+                    button.disabled = false;
+                }
+                return button;
+            });
+        }   else {
+            this.buttons.buttons.map((button: BtnActionFields, index) => {
+                if (index > 0) {
+                    button.disabled = true;
+                }
+                return button;
+            });
+        }
+    }
     private _getListUsers (data): UserSelectNode[] {
         const list: UserSelectNode[] = [];
         data.forEach(user => list.push(new UserSelectNode(user)));

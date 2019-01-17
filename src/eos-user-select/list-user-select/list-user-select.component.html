@@ -15,7 +15,7 @@
         </div>
         <div class="table-header">
             <!-- header action -->
-            <eos-btn-action [buttons]='buttons' (doAction)='doAction($event)'></eos-btn-action>
+            <eos-btn-action [buttons]='buttons' (showAction)='showAction($event)'></eos-btn-action>
             <!-- <button
                 class="btn"
                 tooltip="Создать пользователя"
@@ -84,7 +84,7 @@
                     class="table-title user-select-node"
                     [ngClass]="{'highlighted': user.isSelected}"
                     (click)="selectedNode(user)"
-                    (dblclick)="editUser()">
+                    (dblclick)="RedactUser()">
                     <!-- <label
                         class="checkbox-inline"
                         [tooltip]="user.marked ? markTemp : notMarkTemp"

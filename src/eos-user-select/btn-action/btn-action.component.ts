@@ -1,5 +1,5 @@
-import { Component, Input, OnInit} from '@angular/core';
-import {BtnAction} from '../shered/interfaces/btn-action.interfase';
+import { Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
+import {BtnAction, BtnActionFields} from '../shered/interfaces/btn-action.interfase';
 @Component({
     selector: 'eos-btn-action',
     templateUrl: 'btn-action.component.html',
@@ -9,13 +9,31 @@ import {BtnAction} from '../shered/interfaces/btn-action.interfase';
 export class BtnActionComponent implements OnInit {
 
     @Input() buttons: BtnAction;
+    @Output() showAction = new EventEmitter();
 
     constructor() {
     }
     ngOnInit() {
-        console.log(this.buttons);
     }
     doAction(event) {
-        console.log(event);
+        this.changeButtons(event);
+        this.showAction.emit(event);
+    }
+
+    changeButtons(name) {
+        // в this.buttons.buttons и  this.buttons.moreButtons  ссылки на одни и те же массивы
+      this.buttons.buttons.map((button: BtnActionFields) => {
+          if (button.name === name) {
+              button.isActive = !button.isActive;
+          }
+          return button;
+        });
+
+        this.buttons.moreButtons.map((button: BtnActionFields) => {
+            if (button.name === name) {
+                button.isActive = !button.isActive;
+            }
+            return button;
+          });
     }
 }

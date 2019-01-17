@@ -9,7 +9,8 @@ import {Observable} from 'rxjs/Observable';
 import { IConfig } from 'eos-user-select/shered/interfaces/user-select.interface';
 @Injectable()
 export class UserParamApiSrv {
-    flagAllUser: boolean;
+    flagTehnicalUsers: boolean;
+    flagDelitedPermanantly: boolean;
     configList: IConfig = {
         shooseTab: 0,
         titleDue: '',
@@ -25,10 +26,11 @@ export class UserParamApiSrv {
         private users_pagination: UserPaginationService,
     ) {
         this.initConfigTitle();
-        this.flagAllUser = true;
+        this.flagTehnicalUsers = false;
+        this.flagDelitedPermanantly = false;
         this.confiList$ = new Subject();
         this._confiList$.subscribe((data: IConfig) => {
-           this.configList = data;
+        this.configList = data;
         });
     }
 
@@ -70,10 +72,9 @@ export class UserParamApiSrv {
             q = PipRX.criteries({DUE_DEP: `${dueDep}%`});
         }
         const query = {USER_CL: q};
-
         return this.getData<USER_CL>(query)
         .then(data => {
-        this.Allcustomer =  data.filter(user => user.ISN_LCLASSIF !== 0 && user.CLASSIF_NAME !== ' ');
+        this.Allcustomer =  data.filter(user => user.ISN_LCLASSIF !== 0);
         this.users_pagination.UsersList = this.Allcustomer.slice();
         this.devideUsers();
         this.initConfigTitle(dueDep);
@@ -86,13 +87,31 @@ export class UserParamApiSrv {
     }
 
     devideUsers() {
-        if (this.flagAllUser) {
+        this.users_pagination.UsersList = this.Allcustomer.slice();
+        if (this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
             this.users_pagination.UsersList = this.Allcustomer.filter(user => {
-                if (user.DUE_DEP) {
+                if ((user.DUE_DEP && +user.DELETED !== 1) || (user.DUE_DEP === null && +user.DELETED !== 1)) {
+                    return user;
+                }
+            }).sort(function(a, b){
+                if (a.DUE_DEP === null && b.DUE_DEP !== null) {
+                    return -1;
+                }  else if (a.DUE_DEP !== null && b.DUE_DEP === null) {
+                    return 1;
+                }   else {
+                    return 0;
+                }
+            });
+        }
+        if (!this.flagTehnicalUsers && this.flagDelitedPermanantly) {
+            this.users_pagination.UsersList = this.Allcustomer.filter(user => {
+                if (user.DUE_DEP || +user.DELETED === 1) {
                     return user;
                 }
             });
-        } else {
+        }
+
+        if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
             this.users_pagination.UsersList = this.Allcustomer.slice();
             this.users_pagination.UsersList.sort(function(a, b){
                 if (a.DUE_DEP === null && b.DUE_DEP !== null) {
@@ -101,6 +120,15 @@ export class UserParamApiSrv {
                     return 1;
                 }   else {
                     return 0;
+                }
+            });
+        }
+
+        if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
+            this.users_pagination.UsersList = this.Allcustomer.slice();
+            this.users_pagination.UsersList =  this.Allcustomer.filter(user => {
+                if (user.DUE_DEP) {
+                    return user;
                 }
             });
         }

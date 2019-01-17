@@ -22,4 +22,4 @@ export interface IUserCheckSort {
     upDoun: boolean;
     checked: boolean;
 }
-export enum SortsList {Department, Official, Tip, Login}
+export enum SortsList {department, official, tip, login}
