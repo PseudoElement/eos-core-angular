@@ -65,6 +65,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     queryForSave = [];
     rightContent: boolean;
     listRight: NodeAbsoluteRight[] = [];
+    titleHeader: string;
 
 
     constructor (
@@ -79,6 +80,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
 
     init() {
         this.curentUser = this._userParamsSetSrv.curentUser;
+        this.titleHeader =  `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Абсолютные права`;
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || new Array(37).fill(0).join('');
         this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split('');
         this.arrNEWDeloRight = this.curentUser['DELO_RIGHTS'].split('');

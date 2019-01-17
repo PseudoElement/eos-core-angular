@@ -1,6 +1,12 @@
 
 <div class="access-window">
-    <eos-user-header [title]="'Ограничение доступа'"  [statusBtnSub]="getBtn" [isDefault]='isDefault' (submitForm)='saveAllForm()' (cancelForm)='backForm($event)'></eos-user-header>
+    <eos-user-header
+        [title]="titleHeader"
+        [statusBtnSub]="getBtn"
+        [isDefault]='isDefault'
+        (submitForm)='saveAllForm()'
+        (cancelForm)='backForm($event)'
+       ></eos-user-header>
     <div class="doc-navigate">
         <ul class="tabs">
                 <li class="tab-item"
