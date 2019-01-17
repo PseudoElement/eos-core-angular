@@ -219,6 +219,26 @@ export class UserParamsService {
         };
         return this._pipSrv.getData<USER_CL>(queryUser);
     }
+    ceckOccupationDueDep(dueDep: string, isn?: number): Promise<boolean> {/* проверяем прикреплино ли должностное лицо к пользователю */
+        const query = {
+            USER_CL: {
+                criteries: {
+                    DUE_DEP: dueDep
+                }
+            }
+        };
+        return this._pipSrv.getData<USER_CL>(query)
+        .then((u: USER_CL[]) => {
+            const user = u[0];
+            if (!user) {
+                return true;
+            }
+            if (isn) {
+                return user['ISN_LCLASSIF'] === isn;
+            }
+            return false;
+        });
+    }
 
     fetchExpandUser() {}
     private _errorHandler (err) {

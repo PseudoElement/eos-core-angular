@@ -573,16 +573,20 @@ export class EosDataConvertService {
                         }
                         break;
                     case 'folders':
-                        data['rec']['FOLDER_List'].forEach((folder) => {
-                            const path = 'rec.FOLDER_List[' + (folder.FOLDER_KIND - 1) + '].USER_COUNT';
-                            const label = CABINET_FOLDERS.find((cf) => cf.key === folder.FOLDER_KIND);
+                        CABINET_FOLDERS.forEach (cf => {
+                            const folder = data['rec']['FOLDER_List'].find( f => f.FOLDER_KIND === cf.key);
+                            const path = 'rec.FOLDER_List[' + (cf.key - 1) + '].USER_COUNT';
+                            const label = cf;
+                            const value = folder ? !!folder.USER_COUNT : false;
+                            // const label = CABINET_FOLDERS.find((cf) => cf.key === folder.FOLDER_KIND);
 
                             inputs[path] = new CheckboxInput({
                                 key: path,
                                 label: label ? label.title : '',
-                                value: !!folder.USER_COUNT,
+                                value: value,
                                 disabled: !editMode,
                             });
+
                         });
                         break;
                 }

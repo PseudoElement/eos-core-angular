@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <h4 class="xl-font primary-text pull-left">Правила СЭВ</h4>
+</div>
+<div class="spinner-container text-center" *ngIf="isUpdating" >
+    <eos-spinner size="lg"></eos-spinner>
+</div>
+<div class="modal-body" *ngIf="!isUpdating">
+    <div class="modal-body-container">
+    <div class="divTable-wrapper">
+        <div class="divTable" *ngIf="listNodes">
+            <div class="divTableBody">
+                <div class="divTableRow" *ngFor="let node of listNodes"
+                    [ngClass]="{'highlighted' : node.isActive}"
+                    (click)="rowRuleClick(node)">
+                    <div class="divTableCell">{{node.CLASSIF_NAME}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="buttons-row">
+        <div>
+            <button class="btn-add"
+                (click)="btnAddClick()"> </button>
+            <button class="btn-del"
+                (click)="btnDelClick()"> </button>
+            <button class="btn-sortup"
+                (click)="btnSortUpClick()"> </button>
+            <button class="btn-sortdn"
+                (click)="btnSortDnClick()"> </button>
+        </div>
+    </div>
+        <div class="divTable-wrapper">
+        <div class="divTable" *ngIf="usedNodes">
+        <div class="divTableBody">
+            <div class="divTableRow" *ngFor="let node of usedNodes"
+                [ngClass]="{'highlighted' : node.isAddedActive}"
+                (click)="rowAddedClick(node)">
+                <div class="divTableCell">{{node.CLASSIF_NAME}}</div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+        <form #editForm="ngForm">
+        <div class="modal-footer">
+            <span class="pull-right">
+                <button type="button" class="btn btn-primary-full upper fixed-width"
+                        [disabled]="!editForm.valid"
+                        (click)="save()">Выбрать</button>
+                <button type="button" class="btn btn-primary have-margin fixed-width"
+                        (click)="hideModal()">Отменить</button>
+            </span>
+        </div>
+        </form>
+    </div>
+</div>
+

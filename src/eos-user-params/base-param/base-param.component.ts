@@ -16,6 +16,7 @@ import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { Router } from '@angular/router';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
+import { DUE_DEP_OCCUPATION } from 'app/consts/messages.consts';
 
 @Component({
     selector: 'eos-params-base-param',
@@ -27,9 +28,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     curentUser: IParamUserCl;
     stateHeaderSubmit: boolean = true;
 
-    inputFields: IInputParamControl[] = BASE_PARAM_INPUTS;
-    controlField: IInputParamControl[] = BASE_PARAM_CONTROL_INPUT;
-    accessField: IInputParamControl[] = BASE_PARAM_ACCESS_INPUT;
+    inputFields: IInputParamControl[];
+    controlField: IInputParamControl[];
+    accessField: IInputParamControl[];
     /* инпуты */
     inputs;
     controls;
@@ -66,8 +67,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
         this.curentUser = this._userParamSrv.curentUser;
         this.title = `${this.curentUser['SURNAME_PATRON']} (${this.curentUser['CLASSIF_NAME']})`;
-        this._descSrv.fillValueInputField(this.inputFields);
-        this._descSrv.fillValueControlField(this.controlField);
+        this.inputFields = this._descSrv.fillValueInputField(BASE_PARAM_INPUTS);
+        this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT);
         this.accessField = this._descSrv.fillValueAccessField(BASE_PARAM_ACCESS_INPUT);
 
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
@@ -99,7 +100,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             if (this._newData['form'] || this._newData['accessSystems']) {
                 let d = {};
                 if (this._newData['form']) {
+                    this._newData['form']['USERTYPE'] = +this._newData['form']['USERTYPE'];
                     d = Object.assign({}, this._newData['form']);
+                    delete d['DUE_DEP_NAME'];
+                    d['DUE_DEP'] = this.inputs['DUE_DEP_NAME'].data;
                 }
                 if (this._newData['accessSystems']) {
                     d = Object.assign(d, { AV_SYSTEMS: this._newData['accessSystems']});
@@ -187,9 +191,18 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     showDepartment() {
         this.isShell = true;
+        let dueDep = '';
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
         .then((data: string) => {
-            return this._userParamSrv.getDepartmentFromUser(data);
+            dueDep = data;
+            return this._userParamSrv.ceckOccupationDueDep(dueDep, this._userParamSrv.userContextId);
+        })
+        .then((access: boolean) => {
+            if (!access) {
+                this._msgSrv.addNewMessage(DUE_DEP_OCCUPATION);
+                throw new Error();
+            }
+            return this._userParamSrv.getDepartmentFromUser(dueDep);
         })
         .then((data: DEPARTMENT[]) => {
             this.isShell = false;
@@ -215,7 +228,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 if (data['PASSWORD_DATE']) {
                     data['PASSWORD_DATE'] = this._descSrv.dateToString(data['PASSWORD_DATE']);
                 }
-                data['USERTYPE'] = +data['USERTYPE'];
                 this._newData['form'] = data;
                 this._checkForChenge();
             });
@@ -320,7 +332,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             const data = this._newData['form'];
             // tslint:disable-next-line:forin
             for (const k in data) {
-                change = change || (data[k] !== this.curentUser[k]);
+                change = change || (data[k] !== this._dataDb['form'][k]);
             }
             this._newData['form'] = change ? this._newData['form'] : null;
         }

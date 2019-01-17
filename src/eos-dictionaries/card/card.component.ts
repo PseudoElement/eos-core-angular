@@ -365,6 +365,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
     private _openNode(node: EosDictionaryNode, forceMode?: EDIT_CARD_MODES) {
         if (node) {
+            node.relatedLoaded = false;
             this.goTo(this._makeUrl(node.id, forceMode));
         } else {
             this._msgSrv.addNewMessage(DANGER_NAVIGATE_TO_DELETED_ERROR);

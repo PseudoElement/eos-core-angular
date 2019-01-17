@@ -57,7 +57,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
         this._waitClassifSrv = injector.get(WaitClassifService);
         this._userParamsSetSrv = injector.get(UserParamsService);
         this.constUserParam = paramModel;
-        this.titleHeader = this.constUserParam.title;
+        this.titleHeader =  `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - ${this.constUserParam.title}`;
         this.userParamApiSrv = injector.get(UserParamApiSrv);
         this.dataSrv = injector.get(EosDataConvertService);
         this.inputCtrlSrv = injector.get(InputControlService);
@@ -87,7 +87,6 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     linearSearchKeyForData(arrayWithKeys, allData) {
         const readyObjectData = {};
         let readyElement;
-
         for (let i = 0; i < arrayWithKeys.length; i++) {
             readyElement = allData[arrayWithKeys[i].key];
             readyObjectData[arrayWithKeys[i].key] = readyElement;
@@ -155,7 +154,9 @@ export class BaseUserSrv implements OnDestroy, OnInit {
                 length: field.length,
                 options: field.options,
                 readonly: !!field.readonly,
-                formatDbBinary: !!field.formatDbBinary
+                formatDbBinary: !!field.formatDbBinary,
+                maxValue: field.maxValue || undefined,
+                minValue: field.minValue || undefined,
             };
         });
         return inputs;

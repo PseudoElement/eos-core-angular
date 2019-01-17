@@ -48,6 +48,8 @@ export interface IFieldDescriptor {
     height?: number;
     forNode?: boolean;
     default?: any;
+    maxValue?: number;
+    minValue?: number;
 }
 
 export interface ISelectOption {

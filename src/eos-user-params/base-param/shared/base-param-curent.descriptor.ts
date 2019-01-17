@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IInputParamControl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
-import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+// import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { BaseParamAbstractDescriptor } from './base-param-abstract.descriptor';
 
 @Injectable()
@@ -12,24 +12,45 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
         super();
     }
     fillValueInputField (fields: IInputParamControl[]) {
-        fields.forEach((f: IInputParamControl) => {
-            f['value'] = this._prepareDataForForm(f);
+        const arrInput = [];
+        fields.forEach((field: IInputParamControl) => {
+            const f = Object.assign({}, field);
+            arrInput.push(f);
+            switch (f['key']) {
+                case 'PASSWORD_DATE':
+                    f['value'] = this._userParamSrv.curentUser[f['key']];
+                    const pass = this._userParamSrv.sysParams['CHANGE_PASS'];
+                    f['disabled'] = pass !== 'YES' ? true : false;
+                    f['readonly'] = pass !== 'YES' ? true : false;
+                    break;
+                case 'DUE_DEP_NAME':
+                    if (!this._userParamSrv.isTechUser) {
+                        f['value'] = this._userParamSrv.curentUser.DUE_DEP_NAME;
+                    } else {
+                        f['disabled'] = true;
+                        f['readonly'] = true;
+                    }
+                    break;
+                case 'USERTYPE':
+                    f['value'] = !!this._userParamSrv.curentUser[f['key']];
+                    break;
+                default:
+                    f['value'] = this._userParamSrv.curentUser[f['key']];
+            }
         });
+        return arrInput;
     }
     fillValueControlField(fields: IInputParamControl[]) {
-        fields.forEach((f: IInputParamControl) => {
-            f['value'] = '';
+        const arrControls = [];
+        fields.forEach((field: IInputParamControl) => {
+            const f = Object.assign({}, field);
+            arrControls.push(f);
             switch (f['key']) {
                 case 'teсhUser':
                     if (this._userParamSrv.isTechUser) {
                         f['value'] = true;
                     } else {
                         f['value'] = false;
-                    }
-                    break;
-                case 'DUE_DEP_NAME':
-                    if (!this._userParamSrv.isTechUser) {
-                        f['value'] = this._userParamSrv.curentUser.DUE_DEP_NAME;
                     }
                     break;
                 case 'SELECT_ROLE':
@@ -67,6 +88,7 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                     break;
             }
         });
+        return arrControls;
     }
 
     fillValueAccessField(fields: IInputParamControl[]) {
@@ -115,16 +137,5 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
      }
     dateToString(date: Date) {
         return this._dateToString(date);
-    }
-    private _prepareDataForForm (field: IInputParamControl) {
-        if (field['key'] === 'PASSWORD_DATE') {
-            const pass = this._userParamSrv.sysParams['CHANGE_PASS'];
-            field['disabled'] = pass !== 'YES' ? true : false;
-            field['readonly'] = pass !== 'YES' ? true : false;
-        }
-        if (field.controlType === E_FIELD_TYPE.boolean) {
-            return !!this._userParamSrv.curentUser[field['key']];
-        }
-        return this._userParamSrv.curentUser[field['key']];
     }
 }

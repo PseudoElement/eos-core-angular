@@ -1,5 +1,10 @@
 <div class="email-window">
-    <eos-user-header  [statusBtnSub]='statusBtnSub' [isDefault]='isDefault' (submitForm)='saveAllForm($event)' (cancelForm)='backForm($event)'></eos-user-header>
+    <eos-user-header
+    [title] = "titleHeader"
+    [statusBtnSub]='statusBtnSub'
+    [isDefault]='isDefault'
+    (submitForm)='saveAllForm($event)'
+    (cancelForm)='backForm($event)'></eos-user-header>
     <div class="email-control">
         <button
             type="button"

@@ -278,7 +278,15 @@ export abstract class AbstractDictionaryDescriptor {
         records.forEach((record) => record[fieldName] = +boolValue);
         const changes = this.apiSrv.changeList(records);
         if (+boolValue === 0 && cascade) {
-            PipRX.invokeSop(changes, 'ClassifCascade_TRule', {[fieldName]: +cascade});
+            const types = Array.from(new Set(records.map (r => r.__metadata.__type)).values());
+            for (let i = 0; i < types.length; i++) {
+                const element = types[i];
+                if (element === 'DEPARTMENT') {
+                    PipRX.invokeSop(changes, 'DepartmentCascade_TRule', {'due' : records[0]['DUE'], 'Dates': 0,  [fieldName]: +cascade});
+                } else {
+                    PipRX.invokeSop(changes, 'ClassifCascade_TRule', {'due' : records[0]['DUE'], 'type': records[0].__metadata.__type,  [fieldName]: +cascade});
+                }
+            }
         }
         return this.apiSrv.batch(changes, '');
     }
