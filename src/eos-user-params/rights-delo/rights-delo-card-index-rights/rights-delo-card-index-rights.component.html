@@ -1,7 +1,7 @@
 <div class="input-user-wrapper input-user-card-index-rights-wrapper">
     <div  *ngIf="flagCardFileAvailability">
     <eos-rights-delo-header
-        title="Права в картотеках"
+        [title]="titleHeader"
         (submitForm)="submit()"
         (cancelForm)="cancel()"
         [statusBtnSub]="btnDisabled"

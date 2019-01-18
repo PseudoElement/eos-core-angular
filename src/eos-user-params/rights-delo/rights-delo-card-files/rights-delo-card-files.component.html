@@ -71,7 +71,7 @@
                 <eos-dynamic-input
                     [input]="inputs['rec.SELECT_FOR_CABINETS_NAME']"
                     [form]="form"
-                    (change)="selectOnClick($event)"
+                    (change)="selectOnClick($event, null)"
                 ></eos-dynamic-input>
         <span></span>
         </div>
@@ -82,6 +82,7 @@
                     <eos-dynamic-input
                         [input]="inputAttach['rec.' + key[0]]"
                         [form]="formAttach"
+                        (click)="checkData()"
                     ></eos-dynamic-input>
                     </div>
         </li>

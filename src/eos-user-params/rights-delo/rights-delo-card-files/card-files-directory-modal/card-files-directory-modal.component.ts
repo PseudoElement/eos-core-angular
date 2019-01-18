@@ -19,15 +19,24 @@ export class CardFilesDirectoryModalComponent extends BaseRightsDeloSrv implemen
     updateRDCF: RightsDeloCardFilesComponent;
     isLoading = false;
     fieldKeysforCardFiles2 = [];
+    arrayUsercard = [];
     _userParamsSetSrv: UserParamsService;
     dataSrv: EosDataConvertService;
     form: FormGroup;
     inputs: any;
     prepInputs: any;
+    flagHaveCard = false;
     private quaryDepartment = {
         DEPARTMENT: {
             criteries: {
                 CARD_FLAG: '1'
+            }
+        }
+    };
+    private quareUsercard = {
+        USERCARD: {
+            criteries: {
+                ISN_LCLASSIF: '' + this._userParamsSetSrv.userContextId
             }
         }
     };
@@ -54,13 +63,30 @@ export class CardFilesDirectoryModalComponent extends BaseRightsDeloSrv implemen
             this.init();
             this.isLoading = false;
         });
+        this.servApi.getData(this.quareUsercard)
+        .then(data2 => {
+            this.arrayUsercard.push(data2);
+        });
         }
         cancel() {
             this._closed();
         }
         submitDirectoryModal() {
+            if (this.arrayUsercard[0].length === 0) {
+                this.flagForFirstMainCard = true;
+            }
             this.submit();
-            this._closed();
+            this.checkFlag();
+        }
+        checkFlag() {
+            if (this.flagForUpdateCardData) {
+                this.flagForUpdateCardData = false;
+                this._closed();
+            } else {
+                setTimeout(() => {
+                    this.checkFlag();
+                }, 100);
+            }
         }
         _closed() {
             this.closeCollection.emit();

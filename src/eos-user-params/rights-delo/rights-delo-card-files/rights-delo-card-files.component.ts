@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, DoCheck, Output, EventEmitter } from '@angular/core';
+import { Component, Injector, OnInit, Output, EventEmitter } from '@angular/core';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { BaseRightsDeloSrv } from '../shared-rights-delo/services/base-rights-delo.service';
 import { CARD_FILES_USER } from '../shared-rights-delo/consts/card-files.consts';
@@ -13,16 +13,19 @@ import { PARM_SUCCESS_SAVE, PARM_NO_MAIN_CARD } from '../shared-rights-delo/cons
     templateUrl: 'rights-delo-card-files.component.html'
 })
 
-export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements OnInit, DoCheck {
+export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements OnInit {
     @Output() Changed = new EventEmitter();
     modalCollection: BsModalRef;
     _userParamsSetSrv: UserParamsService;
     newDataAttach;
     arrayValuesFoldersAvailable = [];
     isLoading = false;
+    listCabinets = [];
     fieldKeysforCardFiles = [];
     fieldKeysforCardFilesCabinets = [];
     arrayForCurrentCabinets = [];
+    arrayNewData = [];
+    arrayUpdateData = [];
     allData;
     arrayKeysCheckboxforCabinets = [
         ['USER_ACCOUNTS_RECEIVED', 'Поступившие'],
@@ -57,10 +60,14 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     currentIsnCabinet;
     currentWord;
     flagCurrentDataCabinetDepartment = true;
+    flagNoCardIndexSelected = false;
     flagCardFileAvailability;
     flagNoMainCard = false;
     flagTmp = false;
     globalIndexMainCard;
+    globalMainCard;
+    flagForFirstShowSelect = false;
+    flagNewDataWhenChanging = false;
     private quaryDepartment = {
         DEPARTMENT: {
             criteries: {
@@ -138,16 +145,28 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         }).catch(error => console.log(error));
         }).catch(error => console.log(error));
     }
-    ngDoCheck() {
-        if (this.flagTmp) {
-         //   console.log(this.newData.rec);
-        //    console.log(this.prepareData.rec);
-         //   this.fieldKeysforCardFiles = [];
-          //  CARD_FILES_USER.fields = [];
-           // console.log(this.fieldKeysforCardFiles);
-         //   console.log(CARD_FILES_USER.fields);
-        /*    this.prepareData.rec['0.'] = '010000000000010010';
-            this.fieldKeysforCardFiles[0][4] = true;
+    updatePageCard() {
+        this.fieldKeysforCardFilesCabinets = [];
+            this.updateInit();
+            for (let i = 0; i < this.arrayKeysCheckboxforCabinets.length; i++) {
+                this.fieldKeysforCardFilesCabinets.push(
+                    {
+                        key: this.arrayKeysCheckboxforCabinets[i][0],
+                        type: 'boolean',
+                        title: this.arrayKeysCheckboxforCabinets[i][1]
+                    }
+                );
+            }
+            this.prepInputsAttach = this.getObjectInputFields(this.fieldKeysforCardFilesCabinets);
+            for (const key of Object.keys(this.prepareData.rec)) {
+                if (this.prepareData.rec[key] !== undefined) {
+                    for (let j = 0; j < this.fieldKeysforCardFiles.length; j++) {
+                        if (this.fieldKeysforCardFiles[j][0] === key) {
+                            this.fieldKeysforCardFiles[j][4] = true;
+                        }
+                    }
+                }
+            }
             this.prepareDataParam();
             this.inputs = this.getInputs();
             this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
@@ -156,13 +175,11 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                   this.form.controls['rec.' + CARD_FILES_USER.fields[i]['key']].disable();
                 }
             }
-            this.subscribeChangeForm();
-            this.Changed.emit();
-            this.flagTmp = false;*/
-        }
-    }
+        this.allData = this._userParamsSetSrv.userCard;
+         }
     settingValuesForFieldsCabinets(value) {
                             this.prepDataAttachField(value);
+                            this.fieldKeysforCardFilesCabinets = [];
                             this.inputAttach = this.getInputAttach();
                             this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
                             this.subscriptions.push(
@@ -250,13 +267,17 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             }
         }
     }
-      createObjRequestForAttach(): any[] {
+    checkData() {
+        this.flagNewDataWhenChanging  = true;
+    }
+    newDataWhenChanging() {
+        if (this.flagNewDataWhenChanging) {
         let valueDefForFoldersAvailable = '';
         let valueDefForHideInaccessible = '';
         let valueDefForHideInaccessiblePrj = '';
-        const arrayForValueSrchContactFields = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
-        const req = [];
+        let flagToCheckForThePresenceOfTheDesiredCabinet = false;
         const userId = this._userParamsSetSrv.userContextId;
+        const arrayForValueSrchContactFields = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
         const arrayKeys = this.arrayKeysCheckboxforCabinets;
             for (let i = 0; i < arrayKeys.length; i++) {
                 if (arrayKeys[i][0] === 'HIDE_INACCESSIBLE') {
@@ -269,7 +290,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                     if (this.newDataAttach.rec[arrayKeys[i][0]] === true) {
                         valueDefForHideInaccessiblePrj += 1;
                     } else {
-                        valueDefForHideInaccessible += 0;
+                        valueDefForHideInaccessiblePrj += 0;
                     }
                 } else if (arrayKeys[i][0] === 'USER_ACCOUNTS_SUPERVISORY_PROCEEDINGS') {
                     if (this.newDataAttach.rec[arrayKeys[i][0]] === true) {
@@ -285,31 +306,114 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                     }
                 }
             }
-         if (this.postOrMergeQuery === 'POST') {
-            req.push({
-                method: 'POST',
-                requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${this.allDataForCurrentUsercard['DUE']}\')/USER_CABINET_List`,
-                data: {
+        if (this.allDataForCurrentUsercard['USER_CABINET_List'].length > 0) {
+            for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
+                if (this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'] === this.currentIsnCabinet) {
+                    this.allDataForCurrentUsercard['USER_CABINET_List'][i]['FOLDERS_AVAILABLE'] = valueDefForFoldersAvailable;
+                    this.allDataForCurrentUsercard['USER_CABINET_List'][i]['HIDE_INACCESSIBLE'] = +valueDefForHideInaccessible;
+                    this.allDataForCurrentUsercard['USER_CABINET_List'][i]['HIDE_INACCESSIBLE_PRJ'] = +valueDefForHideInaccessiblePrj;
+                    this.arrayUpdateData.push({
                         ISN_CABINET: +this.currentIsnCabinet,
                         ISN_LCLASSIF: +userId,
                         FOLDERS_AVAILABLE: valueDefForFoldersAvailable,
                         ORDER_WORK: null,
                         HOME_CABINET: 1,
                         HIDE_INACCESSIBLE: +valueDefForHideInaccessible,
-                        HIDE_INACCESSIBLE_PRJ: +valueDefForHideInaccessiblePrj
+                        HIDE_INACCESSIBLE_PRJ: +valueDefForHideInaccessiblePrj,
+                        DUE_CARD: this.allDataForCurrentUsercard['DUE']
+                });
+                flagToCheckForThePresenceOfTheDesiredCabinet = true;
+                } else if (i === (this.allDataForCurrentUsercard['USER_CABINET_List'].length - 1) && !flagToCheckForThePresenceOfTheDesiredCabinet) {
+                    this.allDataForCurrentUsercard['USER_CABINET_List'].push({
+                        CompositePrimaryKey: '' + this.currentIsnCabinet + ' ' + +userId,
+                        DEPARTMENT_DUE: this.allDataForCurrentUsercard['DUE'],
+                        FOLDERS_AVAILABLE: valueDefForFoldersAvailable,
+                        HIDE_CONF_RESOL: 0,
+                        HIDE_INACCESSIBLE: +valueDefForHideInaccessible,
+                        HIDE_INACCESSIBLE_PRJ: +valueDefForHideInaccessiblePrj,
+                        HOME_CABINET: 0,
+                        ISN_CABINET: this.currentIsnCabinet,
+                        ISN_LCLASSIF: +userId,
+                        IS_ASSISTANT: 0,
+                        ORDER_WORK: null
+                    });
+                    this.arrayNewData.push({
+                        ISN_CABINET: +this.currentIsnCabinet,
+                        ISN_LCLASSIF: +userId,
+                        FOLDERS_AVAILABLE: valueDefForFoldersAvailable,
+                        ORDER_WORK: null,
+                        HOME_CABINET: 1,
+                        HIDE_INACCESSIBLE: +valueDefForHideInaccessible,
+                        HIDE_INACCESSIBLE_PRJ: +valueDefForHideInaccessiblePrj,
+                        DUE_CARD: this.allDataForCurrentUsercard['DUE']
+                });
+                break;
                 }
-            });
+            }
         } else {
-            req.push({
-                method: 'MERGE',
-                requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${this.allDataForCurrentCabinet['DEPARTMENT_DUE']}\')/USER_CABINET_List(\'${this.allDataForCurrentCabinet['ISN_CABINET']} ${userId}\')`,
-                data: {
-                          FOLDERS_AVAILABLE: valueDefForFoldersAvailable,
-                          HIDE_INACCESSIBLE: +valueDefForHideInaccessible,
-                          HIDE_INACCESSIBLE_PRJ: +valueDefForHideInaccessiblePrj,
-                }
+            this.allDataForCurrentUsercard['USER_CABINET_List'].push({
+                CompositePrimaryKey: '' + this.currentIsnCabinet + ' ' + +userId,
+                DEPARTMENT_DUE: this.allDataForCurrentUsercard['DUE'],
+                FOLDERS_AVAILABLE: valueDefForFoldersAvailable,
+                HIDE_CONF_RESOL: 0,
+                HIDE_INACCESSIBLE: +valueDefForHideInaccessible,
+                HIDE_INACCESSIBLE_PRJ: +valueDefForHideInaccessiblePrj,
+                HOME_CABINET: 0,
+                ISN_CABINET: this.currentIsnCabinet,
+                ISN_LCLASSIF: +userId,
+                IS_ASSISTANT: 0,
+                ORDER_WORK: null
             });
+            this.arrayNewData.push({
+                ISN_CABINET: +this.currentIsnCabinet,
+                ISN_LCLASSIF: +userId,
+                FOLDERS_AVAILABLE: valueDefForFoldersAvailable.length > 0 ? valueDefForFoldersAvailable : '1234',
+                ORDER_WORK: null,
+                HOME_CABINET: 1,
+                HIDE_INACCESSIBLE: +valueDefForHideInaccessible,
+                HIDE_INACCESSIBLE_PRJ: +valueDefForHideInaccessiblePrj,
+                DUE_CARD: this.allDataForCurrentUsercard['DUE']
+        });
         }
+        this.flagNewDataWhenChanging = false;
+        }
+    }
+      createObjRequestForAttach(): any[] {
+      this.newDataWhenChanging();
+        const req = [];
+        const userId = this._userParamsSetSrv.userContextId;
+            if (this.arrayNewData.length > 0) {
+                for (let i = 0; i < this.arrayNewData.length; i++) {
+                    req.push({
+                        method: 'POST',
+                        requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${this.arrayNewData[i]['DUE_CARD']}\')/USER_CABINET_List`,
+                        data: {
+                                ISN_CABINET: this.arrayNewData[i]['ISN_CABINET'],
+                                ISN_LCLASSIF: this.arrayNewData[i]['ISN_LCLASSIF'],
+                                FOLDERS_AVAILABLE: this.arrayNewData[i]['FOLDERS_AVAILABLE'],
+                                ORDER_WORK: this.arrayNewData[i]['ORDER_WORK'],
+                                HOME_CABINET: this.arrayNewData[i]['HOME_CABINET'],
+                                HIDE_INACCESSIBLE: this.arrayNewData[i]['HIDE_INACCESSIBLE'],
+                                HIDE_INACCESSIBLE_PRJ: this.arrayNewData[i]['HIDE_INACCESSIBLE_PRJ']
+                        }
+                    });
+                }
+            }
+            if (this.arrayUpdateData.length > 0) {
+                for (let i = 0; i < this.arrayUpdateData.length; i++) {
+                req.push({
+                    method: 'MERGE',
+                    requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${this.arrayUpdateData[i]['DUE_CARD']}\')/USER_CABINET_List(\'${this.arrayUpdateData[i]['ISN_CABINET']} ${userId}\')`,
+                    data: {
+                              FOLDERS_AVAILABLE: this.arrayUpdateData[i]['FOLDERS_AVAILABLE'],
+                              HIDE_INACCESSIBLE: this.arrayUpdateData[i]['HIDE_INACCESSIBLE'],
+                              HIDE_INACCESSIBLE_PRJ: this.arrayUpdateData[i]['HIDE_INACCESSIBLE_PRJ'],
+                    }
+                });
+            }
+            }
+        this.arrayNewData = [];
+        this.arrayUpdateData = [];
        return req;
     }
     createObjRequestForAll() {
@@ -317,7 +421,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         if (this.newDataAttach) {
         const reqAttach = this.createObjRequestForAttach();
         const req = this.createObjRequest();
-        newReq = req.concat(reqAttach[0]);
+        newReq = req.concat(reqAttach);
         } else {
          return this.createObjRequest();
         }
@@ -368,15 +472,18 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         this.btnDisabled = false;
     }
     selectedNode(word, event) {
+        if (word !== 'No main card') {
         this.isMarkNode = true;
+        this.flagNoCardIndexSelected = false;
         for (let i = 0; i < this.fieldKeysforCardFiles.length; i++) {
             if (this.fieldKeysforCardFiles[i][1] === word) {
                 this.currentWord = word;
                 this.fieldKeysforCardFiles[i][2] = true;
                 for (let j = 0; j < this.allData.length; j++) {
                     if (this.fieldKeysforCardFiles[i][0] === this.allData[j]['DUE']) {
+                        this.globalMainCard = this.fieldKeysforCardFiles[i][0];
                         if (this.allData[j]['USER_CABINET_List'].length > 0) {
-                            this.settingValuesForFieldsCabinets(this.allData[j]['USER_CABINET_List'][0]);
+                            this.flagForFirstShowSelect = true;
                             this.allDataForCurrentCabinet = this.allData[j]['USER_CABINET_List'][0];
                             this.allDataForCurrentUsercard = this.allData[j];
                         } else {
@@ -399,6 +506,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         this.currentSelectCard();
         this.currentSelectedWord = word;
     }
+    }
     currentSelectCard() {
         let dataCabinetDepartmentForDefault;
         const quareCabinetDepartment = {
@@ -410,19 +518,30 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         };
         const selectForCabinetsName = CARD_FILES_USER.fields.find(elem => elem.key === 'SELECT_FOR_CABINETS_NAME');
         selectForCabinetsName['options'] = [];
-        selectForCabinetsName['isn'] = [];
 
         this.servApi.getData(quareCabinetDepartment).then(dataCabinetDepartment => {
             dataCabinetDepartmentForDefault = dataCabinetDepartment;
+        if (!this.flagNoCardIndexSelected) {
             if (dataCabinetDepartment.length > 0) {
                 for (let j = 0; j < dataCabinetDepartment.length; j++) {
                   selectForCabinetsName['options'].push({value: dataCabinetDepartment[j]['DUE'], title: dataCabinetDepartment[j]['CABINET_NAME']});
-                  selectForCabinetsName['isn'].push({isnCabinet: dataCabinetDepartment[j]['ISN_CABINET']});
+                  if (this.flagForFirstShowSelect) {
+                    for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
+                        if (this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'] === dataCabinetDepartment[0]['ISN_CABINET']) {
+                            this.settingValuesForFieldsCabinets(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
+                            this.flagForFirstShowSelect = false;
+                        }
+                   }
+                }
+                    this.selectOnClick(null, selectForCabinetsName.options[0]);
                 }
                 this.flagCurrentDataCabinetDepartment = true;
             } else {
                 this.flagCurrentDataCabinetDepartment = false;
             }
+        } else {
+            this.flagCurrentDataCabinetDepartment = false;
+        }
         }).then(() => {
            this.init();
         }).then(() => {
@@ -435,8 +554,21 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             }
         });
     }
-    selectOnClick(event) {
+    selectOnClick(event, dataAtTheStart) {
+      this.newDataWhenChanging();
+      if (dataAtTheStart !== null) {
+        setTimeout(() => {
+        for (let z = 0; z < this.arrayForCurrentCabinets.length; z++) {
+          if (dataAtTheStart.title === this.arrayForCurrentCabinets[z][0] &&
+            dataAtTheStart.value === this.arrayForCurrentCabinets[z][2]) {
+                this.currentIsnCabinet = this.arrayForCurrentCabinets[z][1];
+                break;
+            }
+        }
+    }, 1000);
+      } else {
       if (this.allDataForCurrentUsercard['USER_CABINET_List'].length > 0) {
+       loop1:
         for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
             for (let z = 0; z < this.arrayForCurrentCabinets.length; z++) {
             if (event.target.value === this.allDataForCurrentUsercard['USER_CABINET_List'][i]['DEPARTMENT_DUE'] &&
@@ -445,7 +577,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
              this.currentIsnCabinet = this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'];
                 this.settingValuesForFieldsCabinets(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
                 this.postOrMergeQuery = 'MERGE';
-                break;
+                break loop1;
             } else {
                 if (event.target.value === this.arrayForCurrentCabinets[z][2] &&
                     event.target.selectedOptions['0']['innerHTML'] === this.arrayForCurrentCabinets[z][0] &&
@@ -456,7 +588,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 this.postOrMergeQuery = 'POST';
                 this.settingValuesForFieldsCabinets('Empty');
             }
-        }
+          }
         }
     } else {
             for (let z = 0; z < this.arrayForCurrentCabinets.length; z++) {
@@ -467,6 +599,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         }
         this.postOrMergeQuery = 'POST';
     }
+}
     }
     addCardFile() {
         this.modalCollection = this._modalSrv.show(CardFilesDirectoryModalComponent, {
@@ -474,7 +607,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             ignoreBackdropClick: true
         });
         this.modalCollection.content.closeCollection.subscribe(() => {
-            this.flagTmp = true;
+            this.updatePageCard();
             this.modalCollection.hide();
         });
     }
@@ -483,11 +616,19 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             if (this.fieldKeysforCardFiles[i][0] === this.allDataForCurrentUsercard['DUE']) {
                 if (this.fieldKeysforCardFiles[i][3] === true) {
                     this.flagNoMainCard = true;
+                    this.flagCurrentDataCabinetDepartment = false;
+                    this.flagNoCardIndexSelected = true;
                 }
                 this.fieldKeysforCardFiles[i][4] = false;
               //  this.newData.rec[this.fieldKeysforCardFiles[i][0]] = 'NO';
                this.newData2[this.fieldKeysforCardFiles[i][0]] = false;
+               if (this.fieldKeysforCardFiles[i][3] === true || this.flagNoMainCard) {
+                this.flagCurrentDataCabinetDepartment = false;
+                this.flagNoCardIndexSelected = true;
+                this.selectedNode('No main card', null);
+               } else {
                 this.selectedNode(this.fieldKeysforCardFiles[this.globalIndexMainCard][1], null);
+               }
                 this.inputs = this.getInputs();
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.subscribeChangeForm();

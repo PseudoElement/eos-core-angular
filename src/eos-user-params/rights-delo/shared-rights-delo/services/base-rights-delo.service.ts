@@ -52,6 +52,9 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
     mainCheckbox = {};
     oldMainCheckbox = {};
     tmp;
+    newPrepData;
+    flagForUpdateCardData = false;
+    flagForFirstMainCard = false;
     private _fieldsType = {};
     constructor(
         injector: Injector,
@@ -59,7 +62,7 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
     ) {
         this._userParamsSetSrv = injector.get(UserParamsService);
         this.constUserParam = paramModel;
-        this.titleHeader = this.constUserParam.title;
+        this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - ${this.constUserParam.title}`;
         this.userParamApiSrv = injector.get(UserParamApiSrv);
         this.dataSrv = injector.get(EosDataConvertService);
         this.inputCtrlSrv = injector.get(InputControlService);
@@ -75,6 +78,17 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
               this.inputs = this.getInputs();
               this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
               this.subscribeChangeForm();
+      }
+      updateInit() {
+        this.prepareDataParam();
+        const allData = this._userParamsSetSrv.hashUserContextCard;
+        this.sortedData = this.linearSearchKeyForData(this.constUserParam.fields, allData);
+        this.prepareData = this.convData(this.sortedData);
+        this.inputs = this.getInputs();
+        this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+        this.subscribeChangeForm();
+        this.treatmentNewData(this.newData);
+        this.newPrepData = this.prepareData;
       }
       linearSearchKeyForData(arrayWithKeys, allData) {
         const readyObjectData = {};
@@ -203,6 +217,7 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
                 .setData(this.createObjRequest())
                 .then(data => {
                    // this.prepareData.rec = Object.assign({}, this.newData.rec);
+                   this.flagForUpdateCardData = true;
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                     this._userParamsSetSrv.getUserIsn(userId);
                 })
@@ -240,21 +255,23 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
         const userId = this._userParamsSetSrv.userContextId;
         this.treatmentNewData(this.newData);
 
+        this.newPrepData = this.prepareData;
+
         for (const key of Object.keys(this.newData2)) {
         valueFromObjPrepareData = this.prepareData.rec[key];
         if (this.newData2[key] === true && this.prepareData.rec[key] === undefined) {
-          //  arrayJust.push([stringKey, '010000000000010010']);
                req.push({
                    method: 'POST',
                    requestUri: `USER_CL(${userId})/USERCARD_List`,
                    data: {
                        ISN_LCLASSIF: `${userId}`,
                        DUE: `${key}`,
-                       HOME_CARD: '0',
+                       HOME_CARD: `${this.flagForFirstMainCard === true ? '1' : '0'}`,
                        FUNCLIST: '010000000000010010'
                    }
                });
                this.prepareData.rec[key] = '010000000000010010'; // Then
+               this.flagForFirstMainCard = false;
            } else if (this.newData2[key] === false && ((this.prepareData.rec[key] !== undefined) || (valueFromObjPrepareData !== undefined))) {
                req.push({
                    method: 'DELETE',
@@ -278,119 +295,10 @@ export class BaseRightsDeloSrv implements OnDestroy, OnInit {
                 }
             });
            }
-        //   const arrayMarkMainCheckbox = Object.keys(this.mainCheckbox);
-       //    const arrayMarkOldMainCheckbox = Object.keys(this.oldMainCheckbox);
-        /*   if (Object.keys(this.mainCheckbox).length > 0) {
-               req.push({
-                   method: 'MERGE',
-                   requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${arrayMarkMainCheckbox[0]}\')`,
-                   data: {
-                       HOME_CARD: `${this.mainCheckbox[arrayMarkMainCheckbox[0]]}`
-                   }
-               });
-               req.push({
-                   method: 'MERGE',
-                   requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${arrayMarkOldMainCheckbox[0]}\')`,
-                   data: {
-                       HOME_CARD: `${this.oldMainCheckbox[arrayMarkOldMainCheckbox[0]]}`
-                   }
-               });
-           }*/
         }
-
-
-
-      /*  let stringKey = '';
-        let level = -1;
-        let arrayPositionPoints = [];
-        let valueFromObjPrepareData;
-        const userId = this._userParamsSetSrv.userContextId;
-        const arrayJust = [];*/
-
-      /*  const funcObj = function(objNewData, objPrepareData, markMainCheckbox, markOldMainCheckbox) {
-            for (const key in objNewData) {
-                if (typeof objNewData[key] === 'object' && (Object.keys(markMainCheckbox).length === 0)) {
-                   level++;
-                 //   arrayCountKeysForCurrentLevel.push(countKeysForCurrentLevel);
-                    stringKey += key + '.';
-                    funcObj(objNewData[key], objPrepareData, markMainCheckbox, markOldMainCheckbox);
-                } else {
-                    arrayPositionPoints = [];
-                   // --currentCountItemForLevel;
-                    if (level === -1 || level === 0) {
-                        valueFromObjPrepareData = objPrepareData[key];
-                    }
-                    for (let i = 0; i < stringKey.length; i++) {
-                        if (stringKey.charAt(i) === '.') {
-                            arrayPositionPoints.push(i);
-                        }
-                    }
-                    const keys = Object.keys( objNewData );
-                    if (objNewData[key] === 'YES' && objPrepareData[stringKey] === undefined) {
-                     arrayJust.push([stringKey, '010000000000010010']);
-                        req.push({
-                            method: 'POST',
-                            requestUri: `USER_CL(${userId})/USERCARD_List`,
-                            data: {
-                                ISN_LCLASSIF: `${userId}`,
-                                DUE: `${stringKey}`,
-                                HOME_CARD: '0',
-                                FUNCLIST: '010000000000010010'
-                            }
-                        });
-                        objPrepareData[stringKey] = '010000000000010010'; // Then
-                    } else if (objNewData[key] === 'NO' && ((objPrepareData[stringKey] !== undefined) || (valueFromObjPrepareData !== undefined))) {
-                        if (valueFromObjPrepareData !== undefined) {
-                            stringKey = key;
-                        }
-                        req.push({
-                            method: 'DELETE',
-                            requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${stringKey}\')`
-                        });
-                        objPrepareData[stringKey] = undefined;
-                    }
-                    const arrayMarkMainCheckbox = Object.keys(markMainCheckbox);
-                    const arrayMarkOldMainCheckbox = Object.keys(markOldMainCheckbox);
-                    if (Object.keys(markMainCheckbox).length > 0) {
-                        req.push({
-                            method: 'MERGE',
-                            requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${arrayMarkMainCheckbox[0]}\')`,
-                            data: {
-                                HOME_CARD: `${markMainCheckbox[arrayMarkMainCheckbox[0]]}`
-                            }
-                        });
-                        req.push({
-                            method: 'MERGE',
-                            requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${arrayMarkOldMainCheckbox[0]}\')`,
-                            data: {
-                                HOME_CARD: `${markOldMainCheckbox[arrayMarkOldMainCheckbox[0]]}`
-                            }
-                        });
-                    }
-                    if (key === keys[keys.length - 1]) {
-                     //   let arraySplitForStringKey, theLengthOfThePenultimateElement;
-                        level--;
-                        arrayPositionPoints.pop();
-                        stringKey = stringKey.substring(0, arrayPositionPoints[level] + 1);
-                     //   stringKey = stringKey.substring(0, arrayPositionPoints[level] + 1);
-                        arrayPositionPoints = [];
-                    }
-                }
-            }
-        };*/
-
-    //    funcObj(this.newData.rec, this.prepareData.rec, this.mainCheckbox, this.oldMainCheckbox);
-      /*  for (const key2 of Object.keys(this.prepareData.rec)) {
-          for (let i = 0; i < currentArrayKeysForRemove.length; i++) {
-              if (key2 === currentArrayKeysForRemove[i]) {
-                this.prepareData.rec[key2] = undefined;
-              }
-          }
-        }*/
       this.inputs = this.getInputs();
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
         this.subscribeChangeForm();
-     //   this.arrayForNewDynamicValue = arrayJust;
         return req;
     }
     createObjRequestForDefaultValues(): any[] {
