@@ -31,6 +31,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     helpersClass: any;
     buttons: BtnAction;
     flagChecked: boolean;
+    countMaxSize: number;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor (
         private _modalSrv: BsModalService,
@@ -46,6 +47,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._route.params
             .takeUntil(this.ngUnsubscribe)
             .subscribe(param => {
+                this.titleCurrentDue = this._apiSrv.configList.titleDue;
                 this.flagChecked = false;
                 this.isLoading = true;
                 this._apiSrv.getUsers(param['nodeId'])
@@ -58,6 +60,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                         }
                         this.disabledBtnAction();
                         this.isLoading = false;
+                        this.countMaxSize = this._pagSrv.countMaxSize;
                 });
             });
         this._pagSrv.NodeList$.takeUntil(this.ngUnsubscribe).subscribe((data) => {
