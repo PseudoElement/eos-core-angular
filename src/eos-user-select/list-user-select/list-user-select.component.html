@@ -51,25 +51,21 @@
         <div class="table-header">
             <!-- header -->
             <div class="table-title">
+                <label class="checkbox minus-checkbox">
+                    <input  [checked]="flagChecked"  type="checkbox" (change)="setCheckedAllFlag()">
+                    <span class="eos-icon eos-icon-checkbox-black"></span>
+                </label>
                 <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')">Подразделение
-
-                        <span *ngIf ="srtConfig.department.checked" [ngClass]="getClassOrder(srtConfig.department.upDoun)"></span>
-
+                    <span *ngIf ="srtConfig.department.checked" [ngClass]="getClassOrder(srtConfig.department.upDoun)"></span>
                 </span>
                 <span class="user-list-first-colomn likeLink"(click)="sortPageList('official')">Должностное лицо
-
-                        <span *ngIf ="srtConfig.official.checked" [ngClass]="getClassOrder(srtConfig.official.upDoun)"></span>
-
+                    <span *ngIf ="srtConfig.official.checked" [ngClass]="getClassOrder(srtConfig.official.upDoun)"></span>
                 </span>
                 <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
-
-                        <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>
-
+                    <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>
                 </span>
                 <span class="user-list-fourth-colomn likeLink"(click)="sortPageList('login')">Логин
-
-                        <span *ngIf ="srtConfig.login.checked" [ngClass]="getClassOrder(srtConfig.login.upDoun)"></span>
-
+                    <span *ngIf ="srtConfig.login.checked" [ngClass]="getClassOrder(srtConfig.login.upDoun)"></span>
                 </span>
             </div>
         </div>
@@ -78,13 +74,11 @@
                 class="block"
                 [ngStyle]="{'width.px': tableWidth}"
                 #listContent>
-
                 <div
                     *ngFor="let user of listUsers"
-                    class="table-title user-select-node"
                     [ngClass]="{'highlighted': user.isSelected}"
                     (click)="selectedNode(user)"
-                    (dblclick)="RedactUser()">
+                    (dblclick)="RedactUser(user)">
                     <!-- <label
                         class="checkbox-inline"
                         [tooltip]="user.marked ? markTemp : notMarkTemp"
@@ -100,14 +94,28 @@
                         >
                         <span></span>
                     </label> -->
-                    <span
-                    containerClass="tooltip-info"
-                    class="user-list-first-colomn"
-                    tooltip="{{user.department}}"
-                    >{{user.department}}</span>
-                    <span class="user-list-first-colomn">{{user.dueName}} - {{user.dueDytu}}</span>
-                    <span class="user-list-third-colomn">icon</span>
-                    <span class="user-list-fourth-colomn">{{user.login}}</span>
+                    <div class="table-title user-select-node"  [ngClass]="user.deleted ? 'disabled' : ''">
+                        <label class="checkbox minus-checkbox">
+                        <input  [checked]="user.isChecked" [disabled]="user.deleted ? true : false"  type="checkbox" (change)="setFlagChecked($event, user)">
+                        <span class="eos-icon eos-icon-checkbox-black"></span>
+                        </label>
+                        <span
+                        containerClass="tooltip-info"
+                        class="user-list-first-colomn"
+                        tooltip="{{user.department}}"
+                        >{{user.department}}</span>
+                        <span
+                        class="user-list-first-colomn"
+                        containerClass="tooltip-info"
+                        tooltip="{{user.dueName}}"
+                        >{{user.dueName}}</span>
+                        <span class="user-list-third-colomn">
+                            <span *ngIf="user.deleted" class="eos-icon eos-icon-bin-forever-grey small"></span>
+                            <span *ngIf="user.blockedUser" class="eos-icon eos-icon-on-grey  small"></span>
+                            <span *ngIf="user.blockedSystem" class="eos-icon eos-icon-off  small"></span>
+                        </span>
+                        <span class="user-list-fourth-colomn">{{user.login}}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -125,4 +133,5 @@
 <ng-template #spiner>
         <eos-spinner size="lg"></eos-spinner>
 </ng-template>
+
 

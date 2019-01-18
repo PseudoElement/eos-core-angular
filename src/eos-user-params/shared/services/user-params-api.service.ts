@@ -2,21 +2,24 @@ import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import {UserPaginationService} from '../services/users-pagination.service';
-import { USER_CL, DEPARTMENT, DOCGROUP_CL } from 'eos-rest';
+import { DEPARTMENT, DOCGROUP_CL } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import { IConfig } from 'eos-user-select/shered/interfaces/user-select.interface';
+import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-select';
 @Injectable()
 export class UserParamApiSrv {
     flagTehnicalUsers: boolean;
     flagDelitedPermanantly: boolean;
+    sysParam: any;
+    dueDep: any;
     configList: IConfig = {
         shooseTab: 0,
         titleDue: '',
     };
     confiList$: Subject<IConfig>;
-    private Allcustomer: USER_CL[] = [];
+    private Allcustomer: UserSelectNode[] = [];
     get _confiList$(): Observable<IConfig> {
         return this.confiList$.asObservable();
     }
@@ -32,6 +35,7 @@ export class UserParamApiSrv {
         this._confiList$.subscribe((data: IConfig) => {
         this.configList = data;
         });
+        this.getSysParamForBlockedUser();
     }
 
     getData<T>(query?: any): Promise<T[]> {
@@ -64,7 +68,8 @@ export class UserParamApiSrv {
         });
     }
 
-    getUsers(dueDep?: string): Promise<USER_CL[]> {
+    getUsers(dueDep?: string): Promise<any> {
+        this.dueDep = dueDep || '0.';
         let q;
         if (!dueDep) {
             q = ALL_ROWS;
@@ -72,31 +77,47 @@ export class UserParamApiSrv {
             q = PipRX.criteries({DUE_DEP: `${dueDep}%`});
         }
         const query = {USER_CL: q};
-        return this.getData<USER_CL>(query)
+        return this.getData(query)
         .then(data => {
-        this.Allcustomer =  data.filter(user => user.ISN_LCLASSIF !== 0);
-        this.users_pagination.UsersList = this.Allcustomer.slice();
-        this.devideUsers();
-        this.initConfigTitle(dueDep);
-        this.users_pagination._initPaginationConfig();
-           return this.users_pagination.UsersList.slice((this.users_pagination.paginationConfig.start - 1)
-            * this.users_pagination.paginationConfig.length,
-             this.users_pagination.paginationConfig.current
-            * this.users_pagination.paginationConfig.length);
+            const prepData = data.filter(user => user['ISN_LCLASSIF'] !== 0);
+            return this.updatePageList(prepData, this.configList.shooseTab).then(res => {
+                this.Allcustomer = this._getListUsers(res).slice();
+                this.users_pagination.UsersList = this.Allcustomer.slice();
+                this.devideUsers();
+                this.initConfigTitle(dueDep);
+                this.users_pagination._initPaginationConfig();
+                   return this.users_pagination.UsersList.slice((this.users_pagination.paginationConfig.start - 1)
+                    * this.users_pagination.paginationConfig.length,
+                     this.users_pagination.paginationConfig.current
+                    * this.users_pagination.paginationConfig.length);
+                });
+            });
+    }
+    getSysParamForBlockedUser() {
+        const QUERY = {
+            USER_PARMS: {
+               criteries: {
+                PARM_NAME: 'MAX_LOGIN_ATTEMPTS',
+                ISN_USER_OWNER: '-99'
+               }
+            }
+        };
+        this.getData(QUERY).then(value => {
+            this.sysParam = value[0]['PARM_VALUE'];
         });
     }
 
     devideUsers() {
         this.users_pagination.UsersList = this.Allcustomer.slice();
         if (this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
-            this.users_pagination.UsersList = this.Allcustomer.filter(user => {
-                if ((user.DUE_DEP && +user.DELETED !== 1) || (user.DUE_DEP === null && +user.DELETED !== 1)) {
+            this.users_pagination.UsersList = this.Allcustomer.filter((user: UserSelectNode) => {
+                if ((user.data.DUE_DEP && !user.deleted) || (user.data.DUE_DEP === null && !user.deleted)) {
                     return user;
                 }
             }).sort(function(a, b){
-                if (a.DUE_DEP === null && b.DUE_DEP !== null) {
+                if (a.data.DUE_DEP === null && b.data.DUE_DEP !== null) {
                     return -1;
-                }  else if (a.DUE_DEP !== null && b.DUE_DEP === null) {
+                }  else if (a.data.DUE_DEP !== null && b.data.DUE_DEP === null) {
                     return 1;
                 }   else {
                     return 0;
@@ -105,7 +126,7 @@ export class UserParamApiSrv {
         }
         if (!this.flagTehnicalUsers && this.flagDelitedPermanantly) {
             this.users_pagination.UsersList = this.Allcustomer.filter(user => {
-                if (user.DUE_DEP || +user.DELETED === 1) {
+                if (user.data.DUE_DEP || user.deleted) {
                     return user;
                 }
             });
@@ -114,9 +135,9 @@ export class UserParamApiSrv {
         if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
             this.users_pagination.UsersList = this.Allcustomer.slice();
             this.users_pagination.UsersList.sort(function(a, b){
-                if (a.DUE_DEP === null && b.DUE_DEP !== null) {
+                if (a.data.DUE_DEP === null && b.data.DUE_DEP !== null) {
                     return -1;
-                }  else if (a.DUE_DEP !== null && b.DUE_DEP === null) {
+                }  else if (a.data.DUE_DEP !== null && b.data.DUE_DEP === null) {
                     return 1;
                 }   else {
                     return 0;
@@ -127,7 +148,7 @@ export class UserParamApiSrv {
         if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
             this.users_pagination.UsersList = this.Allcustomer.slice();
             this.users_pagination.UsersList =  this.Allcustomer.filter(user => {
-                if (user.DUE_DEP) {
+                if (user.data.DUE_DEP !== null && !user.deleted) {
                     return user;
                 }
             });
@@ -173,6 +194,43 @@ export class UserParamApiSrv {
         return this.getData<DOCGROUP_CL>(query);
     }
 
+    blokedUser(users: UserSelectNode[]): Promise<any> {
+        const ARRAY_QUERY_SET_DELETE = [];
+        let data = {};
+        users.forEach((user: UserSelectNode) => {
+            if (user.isChecked) {
+                  if (user.blockedUser) {
+                    data = {
+                        DELETED : 0,
+                    };
+                } if (!user.blockedUser && !user.blockedSystem) {
+                    data = {
+                        DELETED : 1,
+                    };
+                } if (user.blockedSystem) {
+                    data = {
+                        DELETED: 0,
+                        LOGIN_ATTEMPTS: 0
+                    };
+                }
+            }
+            ARRAY_QUERY_SET_DELETE.push({
+                method: 'MERGE',
+                requestUri: `USER_CL(${user.id})`,
+                data: data
+            });
+            data = {};
+        });
+        if (ARRAY_QUERY_SET_DELETE.length > 0) {
+         return  this.setData(ARRAY_QUERY_SET_DELETE).then(response => {
+             return response;
+            }).catch(error => {
+                console.log('error');
+            });
+        }   else {
+            return Promise.resolve(false);
+        }
+}
     public updatePageList(pageList, curTab): Promise<any> {
       switch (curTab) {
         case 0:
@@ -212,9 +270,11 @@ export class UserParamApiSrv {
                 if (findDepartInfo.length > 0) {
                     user['DEPARTMENT_SURNAME'] = findDepartInfo[0].SURNAME;
                     user['DEPARTMENT_DYTU'] = findDepartInfo[0].DUTY;
+                    user['DEPARTMENT_DELETE'] = findDepartInfo[0].DELETED;
                 }else {
                     user['DEPARTMENT_SURNAME'] = 'Технический';
                     user['DEPARTMENT_DYTU'] = 'пользовалтель';
+                    user['DEPARTMENT_DELETE'] = 0;
                 }
             });
             valueForPadQuery = Array.from(setQueryResult);
@@ -248,6 +308,13 @@ export class UserParamApiSrv {
             this.configList.shooseTab = 0;
         }
     }
+
+    private _getListUsers (data): UserSelectNode[] {
+        const list: UserSelectNode[] = [];
+        data.forEach(user => list.push(new UserSelectNode(user, this.sysParam)));
+        return list;
+    }
+
     // protected prepareForEdit(records: any[]): any[] {
     //     return records.map((record) => this.apiSrv.entityHelper.prepareForEdit(record));
     // }

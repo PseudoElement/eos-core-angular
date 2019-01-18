@@ -15,6 +15,7 @@
         align-items: center;
         justify-content: flex-start;
         width: 100%;
+        padding-left: 10px;
         .likeLink{
             display: flex;
             align-items: center;
@@ -79,6 +80,7 @@
             color: $white;
         }
     }
+
     .user-list-first-colomn {
         width: 400px;
         display: inline-block;
@@ -100,5 +102,9 @@
         width: 200px;
         display: inline-block;
         margin-left: 20px;
+    }
+    .disabled{
+        cursor: not-allowed!important;
+        color: lightgray
     }
 }

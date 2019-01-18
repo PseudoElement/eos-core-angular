@@ -72,10 +72,10 @@ export const ActionTehnicalUser: BtnActionFields = {
 };
 export const LocSelectedUser: BtnActionFields = {
     name: 'LocSelectedUser',
-    title: 'Заблокировать пользовате(ля-лей)',
+    title: 'Заблокировать пользователей',
     disabledClass: 'eos-icon eos-icon-lock-blue small',
     enableClass: 'eos-icon eos-icon-lock-blue small',
-    tooltip: 'Заблокировать выбранного (выбранных) пользователя',
+    tooltip: 'Заблокировать выбранного (выбранных)  пользователя',
     disabled: false,
     activeClass: 'eos-icon eos-icon-lock-blue small',
     activeBtnClass: '',

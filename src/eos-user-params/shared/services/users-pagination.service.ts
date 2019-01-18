@@ -8,7 +8,7 @@ import { PAGES_SELECT, LS_PAGE_LENGTH } from 'eos-user-select/shered/consts/pagi
 
 @Injectable()
 export class UserPaginationService {
-    UsersList:  USER_CL[] = [];
+    UsersList:  any[] = [];
     paginationConfig: IPaginationConfig;
     countMaxSize: number = 0;
     private _paginationConfig$: Subject<IPaginationConfig>;
@@ -18,7 +18,7 @@ export class UserPaginationService {
         return this._paginationConfig$.asObservable();
     }
 
-    get NodeList$(): Observable<USER_CL[]> {
+    get NodeList$(): Observable<any[]> {
         return this._NodeList$.asObservable();
     }
 
