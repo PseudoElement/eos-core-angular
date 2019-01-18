@@ -1,16 +1,3 @@
-/**
-* Склонение русских имён и фамилий
-*
-* var rn = new RussianName('Паниковский Михаил Самуэльевич');
-* rn.fullName(rn.gcaseRod); // Паниковского Михаила Самуэльевича
-*
-* Список констант по падежам см. ниже в коде.
-*
-* Пожалуйста, присылайте свои уточнения мне на почту. Спасибо.
-*
-* @version  0.1.5
-* @author   Johnny Woo <agalkin@agalkin.ru>
-*/
 
 export class RussianNameProcessor {
     static sexM = 'm';
@@ -326,9 +313,3 @@ export class RussianName {
     }
 }
 
-// RussianName.prototype = {
-
-
-    // var rn = new RussianName('Паниковский Михаил Самуэльевич');
-    // ; // Паниковского Михаила Самуэльевича
-    // console.log(rn.fullName(rn.gcaseTvor));
