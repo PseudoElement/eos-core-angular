@@ -79,6 +79,7 @@ export const BROADCAST_CHANNEL_DICT: IDictionaryDescriptor = Object.assign({}, L
             key: 'SMTP_DELAY',
             type: 'number',
             title: 'Задержка, мин',
+            default: 1,
         }, {
             key: 'POP3_SERVER',
             type: 'string',
