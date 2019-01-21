@@ -155,7 +155,7 @@ export const INFO_PERSONE_DONT_HAVE_CABINET: IMessage = {
 export const WARN_NO_BINDED_ORGANIZATION: IMessage = {
     type: 'warning',
     title: 'Предупреждение:',
-    msg: 'У подразделение нет собственной организации. Удаление невозможно'
+    msg: 'У подразделения нет собственной организации. Удаление невозможно'
 };
 
 export const DANGER_EDIT_ONLY_DEPARTMENTS_ALLOWED: IMessage = {
