@@ -130,6 +130,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             if  (data) {
                 this.form.controls['rec.RESOLUTION_CONTROLLER'].patchValue(String(this.dueForLink));
                 this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(data[0]['CLASSIF_NAME']));
+                this.controller = true;
             }
         })
         .catch(error => {
@@ -137,6 +138,11 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
         });
     }
 
+    clearControlAuthor() {
+        this.form.controls['rec.RESOLUTION_CONTROLLER'].patchValue('');
+        this.form.controls['rec.CONTROLL_AUTHOR'].patchValue('');
+        this.controller = false;
+    }
     showInfoUser() {
         this._router.navigate(['/spravochniki/departments', this.dueForLink, 'view', '0']);
     }
@@ -262,6 +268,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     }
 
     cancel() {
+        let val = null;
         if (this.isChangeForm || this.isChangeFormAttach) {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
             this.isChangeForm = false;
@@ -270,6 +277,12 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             this.ngOnDestroy();
             this.init();
             this.afterInit();
+            val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
+            if (val !== '' &&  val !== null) {
+                this.controller = true;
+            }   else {
+                this.controller = false;
+            }
         }
     }
 
