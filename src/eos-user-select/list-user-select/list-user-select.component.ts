@@ -192,7 +192,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.callPassedFunction(nameMethods);
     }
     callPassedFunction(nameFunc: string): void {
-        this.RedactUser();
        try {
            this[nameFunc]();
        } catch  (error) {
@@ -243,7 +242,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }   else {
             this.countcheckedField = 0;
         }
-        this.disabledBtnDeleted();
+      //  this.disabledBtnDeleted();
     }
 
     changeFlagCheked() {
@@ -260,7 +259,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         if (this.countcheckedField === 0) {
                 this.flagChecked = false;
         }
-        this.disabledBtnDeleted();
+      //  this.disabledBtnDeleted();
     }
     setFlagChecked(event, user: UserSelectNode) {
         user.isChecked = !user.isChecked;
@@ -269,7 +268,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }   else {
             this.countcheckedField -= 1;
         }
-        this.disabledBtnDeleted();
+      //  this.disabledBtnDeleted();
     }
     LocSelectedUser() {
         this.isLoading = true;
@@ -339,6 +338,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 }
                 return button;
             });
+            this.buttons.moreButtons[3].disabled = false;
         }   else {
             this.buttons.buttons.map((button: BtnActionFields, index) => {
                 if (index > 0) {
@@ -346,18 +346,20 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 }
                 return button;
             });
+            this.buttons.moreButtons[3].disabled = true;
         }
+
     }
 
-    private disabledBtnDeleted() {
-        if (this.countcheckedField === 0) {
-            this.buttons.buttons[2].disabled = true;
-            this.buttons.moreButtons[2].disabled = true;
-        } else {
-            this.buttons.buttons[2].disabled = false;
-            this.buttons.moreButtons[2].disabled = false;
-        }
-    }
+    // private disabledBtnDeleted() {
+    //     if (this.countcheckedField === 0) {
+    //         this.buttons.buttons[2].disabled = true;
+    //         this.buttons.moreButtons[2].disabled = true;
+    //     } else {
+    //         this.buttons.buttons[2].disabled = false;
+    //         this.buttons.moreButtons[2].disabled = false;
+    //     }
+    // }
     // private btnDisabledDelite() {
     //     this.buttons.bo
     // }
