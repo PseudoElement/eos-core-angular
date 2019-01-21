@@ -533,8 +533,9 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                         }
                    }
                 }
-                    this.selectOnClick(null, selectForCabinetsName.options[0]);
+                   // this.selectOnClick(null, selectForCabinetsName.options[0]);
                 }
+                this.selectOnClick(null, selectForCabinetsName.options[0]);
                 this.flagCurrentDataCabinetDepartment = true;
             } else {
                 this.flagCurrentDataCabinetDepartment = false;
@@ -562,6 +563,15 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
           if (dataAtTheStart.title === this.arrayForCurrentCabinets[z][0] &&
             dataAtTheStart.value === this.arrayForCurrentCabinets[z][2]) {
                 this.currentIsnCabinet = this.arrayForCurrentCabinets[z][1];
+              /*  for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
+                    if (this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'] === this.currentIsnCabinet) {
+                        console.log('Попапллллл');
+                        console.log(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
+                        this.settingValuesForFieldsCabinets(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
+                    }
+                }*/
+              //  this.settingValuesForFieldsCabinets('Empty');
+              //  this.settingValuesForFieldsCabinets(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
                 break;
             }
         }
