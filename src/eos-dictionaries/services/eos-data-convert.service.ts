@@ -567,7 +567,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['DEPARTMENT_RP'],
                                 pattern: NOT_EMPTY_STRING,
-                                length: 248,
+                                length: 2000,
                                 disabled: !editMode,
                             });
                         }
