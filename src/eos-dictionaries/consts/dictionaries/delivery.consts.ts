@@ -12,5 +12,6 @@ export const DELIVERY_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
     Object.assign({}, COMMON_FIELD_NAME, {
         isUnique: true,
         uniqueInDict: true,
+        length: 64,
     })],
 });

@@ -30,6 +30,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     public myForm: FormGroup;
     public tabsForAccessLimited = ['Группы документов', 'Грифы', 'Связки'];
     public currTab = 0;
+    titleHeader: string;
     private ArrayForm: FormArray;
     constructor(
        private _limitservise: LimitedAccesseService,
@@ -41,6 +42,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.flagGrifs = true;
         this.flagLinks = true;
         this.bacgHeader = false;
+        this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ограничение доступа`;
     }
     clearForm(): void {
         sessionStorage.removeItem(String(this._userServices.userContextId));

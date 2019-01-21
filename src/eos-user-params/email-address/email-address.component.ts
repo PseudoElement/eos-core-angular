@@ -35,6 +35,7 @@ export class ParamEmailAddressComponent implements OnInit {
     public currentParams: string;
     public childParams: Set<string> = new Set();
     public myForm: FormGroup;
+    titleHeader: string;
     private ArrayForm: FormArray;
     constructor(
        private _emailService: EmailAddressService,
@@ -42,6 +43,7 @@ export class ParamEmailAddressComponent implements OnInit {
        private _userServices: UserParamsService,
        private _msgSrv: EosMessageService,
     )   {
+        this.titleHeader =  `${this._userServices.curentUser.SURNAME_PATRON} - Ведение адресов электронной почты`;
         this.currentParams = '';
         this.CODE = null;
         this.editFalg = false;

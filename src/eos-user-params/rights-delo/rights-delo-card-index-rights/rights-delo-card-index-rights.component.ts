@@ -72,6 +72,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     prepDataAttach = {};
     dataUserCardDocgroup;
     dataDocgroupCl;
+    titleHeader: string;
     private quaryDepartment = {
         DEPARTMENT: {
             criteries: {
@@ -96,6 +97,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         const due: string[] = [];
         this.userCard = new Map<string, USERCARD>();
         this.curentUser = this._userParamsSetSrv.curentUser;
+        this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Права в картотеках`;
         this.curentUser['USERCARD_List'].forEach((card: USERCARD) => {
             this.userCard.set(card['DUE'], card);
             due.push(card['DUE']);
