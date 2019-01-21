@@ -13,8 +13,8 @@ import {IUserSort, SortsList} from '../shered/interfaces/user-select.interface';
 import {HelpersSortFunctions} from '../shered/helpers/sort.helper';
 import {Allbuttons} from '../shered/consts/btn-action.consts';
 import {BtnAction, BtnActionFields} from '../shered/interfaces/btn-action.interfase';
-import { PipRX} from 'eos-rest';
-import { ALL_ROWS } from 'eos-rest/core/consts';
+// import { PipRX} from 'eos-rest';
+// import { ALL_ROWS } from 'eos-rest/core/consts';
 @Component({
     selector: 'eos-list-user-select',
     templateUrl: 'list-user-select.component.html'
@@ -44,7 +44,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private _router: Router,
         private rtUserService: RtUserSelectService,
         private _sandwichSrv: EosSandwichService,
-        private _pipeSrv: PipRX,
+      //  private _pipeSrv: PipRX,
     ) {
         this.helpersClass = new HelpersSortFunctions();
         this.initSort();
@@ -106,10 +106,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.rtUserService.changeSelectedUser(user);
     }
 
-    RedactUser(user) {
-        if (user.deleted) {
-            return;
-        }
+    RedactUser() {
         if (this.selectedUser) {
             this._router.navigate(['user-params-set'], {
                 queryParams: {isn_cl: this.selectedUser.id}
@@ -195,6 +192,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.callPassedFunction(nameMethods);
     }
     callPassedFunction(nameFunc: string): void {
+        this.RedactUser();
        try {
            this[nameFunc]();
        } catch  (error) {
@@ -297,48 +295,43 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         });
     }
 
-    DeliteLogicalUser() {
-       // const arrayRequests = [];
-        // this.listUsers.forEach((user: UserSelectNode) => {
-        //     if (user.isChecked) {
+    // DeliteLogicalUser() {
+    //    const arrayRequests = [];
+    //     this.listUsers.forEach((user: UserSelectNode) => {
+    //         if (user.isChecked) {
 
-        //         console.log(url);
-        //     //     arrayRequests.push(
-        //     //         this._pipeSrv.read({
-        //     //             [url]: ALL_ROWS,
-        //     //         }).then(res => {
-        //     //             console.log(res);
-        //     //         })
-        //     //     );
-        //     //     url = '';
-        //     // }
-        //     }
-        // });
-        // const url = this._createUrlForSop(73748);
-        // this._pipeSrv.read({
-        //     [url]: ALL_ROWS,
-        // }).then(result => {
-        //     console.log(result);
-        // }).catch(error => {
-        //     console.log(error);
-        // });
+    //             console.log(url);
+    //         //     arrayRequests.push(
+    //         //         this._pipeSrv.read({
+    //         //             [url]: ALL_ROWS,
+    //         //         }).then(res => {
+    //         //             console.log(res);
+    //         //         })
+    //         //     );
+    //         //     url = '';
+    //         // }
+    //         }
+    //     });
+    //     const url = this._createUrlForSop(73748);
+    //     this._pipeSrv.read({
+    //         [url]: ALL_ROWS,
+    //     }).then(result => {
+    //         console.log(result);
+    //     }).catch(error => {
+    //         console.log(error);
+    //     });
     //    if (arrayRequests.length > 0) {
     //         Promise.all([...arrayRequests]).then(result => {
     //             console.log(result);
     //         });
     //     }
-    }
+    // }
 
    private disabledBtnAction() {
         if (this.selectedUser) {
             this.buttons.buttons.map((button: BtnActionFields, index) => {
                 if (this.selectedUser.deleted) {
-                    if (button.name === ('RedactUser' || 'DeliteLogicalUser' || 'LocSelectedUser' ||  'LocSelectedUser' || 'OpenAddressManagementWindow' || 'OpenStreamScanSystem' || 'OpenRightsSystemCaseDelo')) {
-                    // || button.name === 'DeliteLogicalUser'
-                    // || button.name === 'LocSelectedUser'
-                    // || button.name === 'OpenAddressManagementWindow'
-                    // || button.name === 'OpenStreamScanSystem'
-                    // || button.name === 'OpenStreamScanSystem'
+                    if (button.name === ('RedactUser' || 'DeliteLogicalUser' || 'LocSelectedUser' ||  'LocSelectedUser' || 'OpenAddressManagementWindow' || 'OpenStreamScanSystem' || 'OpenRightsSystemCaseDelo' || 'ActionTehnicalUser')) {
                     button.disabled = true;
                     }
                 }else {
@@ -369,10 +362,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     //     this.buttons.bo
     // }
 
-    private _createUrlForSop(isn_user) {
-        const url = `EraseUser?isn_user=${isn_user}`;
-        return url;
-    }
+    // private _createUrlForSop(isn_user) {
+    //     const url = `EraseUser?isn_user=${isn_user}`;
+    //     return url;
+    // }
 
     private _checkMarkNode() {
         let check = false;

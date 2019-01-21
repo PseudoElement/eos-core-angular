@@ -117,8 +117,8 @@
                         >{{user.dueName}}</span>
                         <span class="user-list-third-colomn">
                             <span *ngIf="user.deleted" class="eos-icon eos-icon-bin-forever-grey small"></span>
-                            <span *ngIf="user.blockedUser && !user.deleted" class="eos-icon eos-icon-on-grey  small"></span>
-                            <span *ngIf="user.blockedSystem" class="eos-icon eos-icon-off  small"></span>
+                            <span *ngIf="user.blockedUser && !user.deleted" class="eos-icon eos-icon-Blockeduser-Yellow  small"></span>
+                            <span *ngIf="user.blockedSystem" class="eos-icon eos-icon-Blockeduser-Red  small"></span>
                         </span>
                         <span class="user-list-fourth-colomn">{{user.login}}</span>
                     </div>
