@@ -36,6 +36,9 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     flagForTheNextRequest = false;
     flagForOpenFolder = false;
     flagCardFileAvailability = false;
+    flagForHidenCheckboxRestrictRegistrationFiling = false;
+  //  flagForButtonAddIfCheck = false;
+    lastKeyForSelect;
     listNode: IInputParamControlForIndexRight[] = CARD_INDEXS_RIGHTS;
     listDocumentGroups: IInputParamControl[] = DOCUMENT_GROUPS;
     listRestrictRegistrationFiling: IInputParamControl[] = RESTRICT_REGISTRATION_FILING;
@@ -389,6 +392,11 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     });
                 }
             }
+            if (this.lastKeyForSelect === item.card.key) {
+                this.btnAddHiden = false;
+            }
+            this.flagForHidenCheckboxRestrictRegistrationFiling = true;
+          //  this.flagForButtonAddIfCheck = true;
         } else if (this.form.controls[item.card.key].value === true) {
             for (let i = 0; i < Array.from(this.userCard).length; i++) {
                 if (item.card.key === Array.from(this.userCard)[i][0]) {
@@ -411,6 +419,11 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 }
             }
+            if (this.lastKeyForSelect === item.card.key) {
+                this.btnAddHiden = true;
+            }
+            this.flagForHidenCheckboxRestrictRegistrationFiling = false;
+           // this.flagForButtonAddIfCheck = false;
         }
     } else if (type === 'restrict') {
         if (this.form.controls[item.restrictRegistrationFiling.key].value === false) {
@@ -662,10 +675,14 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
         if (this.selectedNodeOnTheRigthSide.label === 'Ограничить картотекой регистрации') {
             this.btnAddHiden = true;
             this.btnMinusHiden = true;
+        } else if (this.selectedNodeOnTheRigthSide.value === 0) {
+            this.btnAddHiden = true;
+            this.btnMinusHiden = true;
         } else {
             this.btnAddHiden = false;
             this.btnMinusHiden = true;
         }
+        this.lastKeyForSelect = this.selectedNodeOnTheRigthSide.key;
         this.selectedNodeOnTheRigthSide['data']['isSelected'] = true;
     }
     }
