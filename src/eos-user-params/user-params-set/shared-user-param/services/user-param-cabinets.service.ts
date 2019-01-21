@@ -41,7 +41,6 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                         });
                     });
                 }
-
             });
             this.init();
             this.prepInputsAttach = this.getObjectInputFields(CABINETS_USER.fieldsChild);
@@ -160,7 +159,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             this.formAttach.controls['rec.HILITE_PRJ_RC_INCREMENT'].disable();
         }
         if (this.form.controls['rec.FOLDER_ITEM_LIMIT_RESULT'].value === 'null') {
-            this.form.controls['rec.FOLDER_ITEM_LIMIT_RESULT'].patchValue('0', {emitEvent: false});
+            this.form.controls['rec.FOLDER_ITEM_LIMIT_RESULT'].patchValue('', {emitEvent: false});
         }
         this.subscriptions.push(
             this.formAttach.valueChanges

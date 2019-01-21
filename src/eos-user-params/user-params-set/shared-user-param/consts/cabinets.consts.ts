@@ -1,6 +1,7 @@
 import { IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
-const REG_MAX_SIZE: RegExp = /^\d{0,3}$|^1000$/; // 0-1000
+// const REG_MAX_SIZE: RegExp = /^\d{0,3}$|^1000$/; // 0-1000
 const REG_MAX_SIZE1: RegExp = /^(-\d{1,2}$|^\d{0,3})$/; // 0-1000
+ const REG_MIN_VAL: RegExp = /^[1-9][0-9]*[0-9]*$/;
 export const CABINETS_USER: IBaseUsers = {
     id: 'cabinets',
     title: 'Кабинеты',
@@ -119,7 +120,7 @@ export const CABINETS_USER: IBaseUsers = {
             key: 'FOLDER_ITEM_LIMIT_RESULT',
             type: 'numberIncrement',
             title: 'Максимальное количество записи',
-            pattern: REG_MAX_SIZE,
+            pattern: REG_MIN_VAL,
         },
         {
             key: 'RESOLUTION_DATE',
