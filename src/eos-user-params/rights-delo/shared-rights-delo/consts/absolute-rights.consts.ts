@@ -208,7 +208,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         label: 'Чтение файлов персонального доступа',
         data: {
             isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
         }
     },
     {
