@@ -107,4 +107,23 @@
         cursor: not-allowed!important;
         color: lightgray
     }
+    .spiner-wrapper{
+        width: 100%;
+        height:calc(100vh - 370px);
+        display: flex;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+    }
+    .group-checkbox {
+        padding-left: 0;
+        input[type="checkbox"] {
+            &:checked+span {
+                background-image: url("../assets/icons/Checkbox-Square-V-Blue.svg");
+            }
+            +span {
+                background-image: url("../assets/icons/Checkbox-Square-Minus-Blue.svg");
+            }
+        }
+    }
 }

@@ -136,7 +136,7 @@ export const Allbuttons: BtnAction = {
         ActionMode,
         LocSelectedUser,
         OpenAddressManagementWindow,
-        OpenStreamScanSystem,
+       // OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
     ],
     moreButtons: [
@@ -147,7 +147,7 @@ export const Allbuttons: BtnAction = {
         ActionTehnicalUser,
         LocSelectedUser,
         OpenAddressManagementWindow,
-        OpenStreamScanSystem,
+      //  OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
     ],
     moreButtonCheck: {

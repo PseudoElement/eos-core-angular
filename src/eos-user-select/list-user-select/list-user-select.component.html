@@ -50,19 +50,25 @@
         </div>
         <div class="table-header">
             <!-- header -->
+            <!-- [ngClass]="flagChecked ? eos-icon-checkbox-square-blue : eos-icon-checkbox-square-minus-blue" -->
             <div class="table-title">
-                <label class="checkbox minus-checkbox">
+             <div class="checkbox">
+                <label  [ngClass]="{'group-checkbox': true}">
                     <input  [checked]="flagChecked"  type="checkbox" (change)="setCheckedAllFlag()">
-                    <span class="eos-icon eos-icon-checkbox-black"></span>
+                    <span></span>
                 </label>
+             </div>
                 <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')">Подразделение
                     <span *ngIf ="srtConfig.department.checked" [ngClass]="getClassOrder(srtConfig.department.upDoun)"></span>
                 </span>
                 <span class="user-list-first-colomn likeLink"(click)="sortPageList('official')">Должностное лицо
                     <span *ngIf ="srtConfig.official.checked" [ngClass]="getClassOrder(srtConfig.official.upDoun)"></span>
                 </span>
-                <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
+                <!-- <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
                     <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>
+                </span> -->
+                <span class="user-list-third-colomn likeLink">Тип
+                    <span *ngIf ="srtConfig.tip.checked"></span>
                 </span>
                 <span class="user-list-fourth-colomn likeLink"(click)="sortPageList('login')">Логин
                     <span *ngIf ="srtConfig.login.checked" [ngClass]="getClassOrder(srtConfig.login.upDoun)"></span>
@@ -100,18 +106,18 @@
                         <span class="eos-icon eos-icon-checkbox-black"></span>
                         </label>
                         <span
-                        containerClass="tooltip-info"
                         class="user-list-first-colomn"
                         tooltip="{{user.department}}"
+                        placement="bottom" containerClass="tooltip-info" container="body"
                         >{{user.department}}</span>
                         <span
                         class="user-list-first-colomn"
-                        containerClass="tooltip-info"
                         tooltip="{{user.dueName}}"
+                        placement="bottom" containerClass="tooltip-info" container="body"
                         >{{user.dueName}}</span>
                         <span class="user-list-third-colomn">
                             <span *ngIf="user.deleted" class="eos-icon eos-icon-bin-forever-grey small"></span>
-                            <span *ngIf="user.blockedUser" class="eos-icon eos-icon-on-grey  small"></span>
+                            <span *ngIf="user.blockedUser && !user.deleted" class="eos-icon eos-icon-on-grey  small"></span>
                             <span *ngIf="user.blockedSystem" class="eos-icon eos-icon-off  small"></span>
                         </span>
                         <span class="user-list-fourth-colomn">{{user.login}}</span>
@@ -131,7 +137,9 @@
     <h4 class="user-select-empty-list">Пользователи отсутствуют</h4>
 </ng-template>
 <ng-template #spiner>
-        <eos-spinner size="lg"></eos-spinner>
+    <div class="spiner-wrapper">
+            <eos-spinner size="lg"></eos-spinner>
+    </div>
 </ng-template>
 
 

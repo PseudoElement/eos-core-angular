@@ -13,7 +13,8 @@ import {IUserSort, SortsList} from '../shered/interfaces/user-select.interface';
 import {HelpersSortFunctions} from '../shered/helpers/sort.helper';
 import {Allbuttons} from '../shered/consts/btn-action.consts';
 import {BtnAction, BtnActionFields} from '../shered/interfaces/btn-action.interfase';
-
+import { PipRX} from 'eos-rest';
+import { ALL_ROWS } from 'eos-rest/core/consts';
 @Component({
     selector: 'eos-list-user-select',
     templateUrl: 'list-user-select.component.html'
@@ -32,6 +33,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     buttons: BtnAction;
     flagChecked: boolean;
     countMaxSize: number;
+    // количество выбранных пользователей
+    countcheckedField: number;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor (
         private _modalSrv: BsModalService,
@@ -41,12 +44,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private _router: Router,
         private rtUserService: RtUserSelectService,
         private _sandwichSrv: EosSandwichService,
+        private _pipeSrv: PipRX,
     ) {
         this.helpersClass = new HelpersSortFunctions();
         this.initSort();
         this._route.params
             .takeUntil(this.ngUnsubscribe)
             .subscribe(param => {
+                this.countcheckedField = 0;
                 this.titleCurrentDue = this._apiSrv.configList.titleDue;
                 this.flagChecked = false;
                 this.isLoading = true;
@@ -59,6 +64,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                             this.selectedUser = undefined;
                         }
                         this.disabledBtnAction();
+                        this.changeFlagCheked();
                         this.isLoading = false;
                         this.countMaxSize = this._pagSrv.countMaxSize;
                 });
@@ -71,7 +77,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             } else {
                 this.selectedUser = undefined;
             }
-            this.disabledBtnAction();
+            this.changeFlagCheked();
         });
         this._sandwichSrv.currentDictState$
         .takeUntil(this.ngUnsubscribe)
@@ -227,15 +233,45 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
     setCheckedAllFlag() {
         this.flagChecked = !this.flagChecked;
-        this.listUsers.map((user: UserSelectNode) => {
-            if (!user.deleted) {
-                user.isChecked = this.flagChecked;
+        this.listUsers.forEach(user => {
+            if (this.flagChecked) {
+                user.isChecked = true;
+            }   else {
+                user.isChecked = false;
             }
-            return user;
         });
+        if (this.flagChecked) {
+            this.countcheckedField = this.listUsers.length;
+        }   else {
+            this.countcheckedField = 0;
+        }
+        this.disabledBtnDeleted();
+    }
+
+    changeFlagCheked() {
+        this.countcheckedField = 0;
+        this.listUsers.forEach(user => {
+            if (user.isChecked) {
+                this.countcheckedField += 1;
+            }
+        });
+        if (this.countcheckedField === this.listUsers.length) {
+            this.flagChecked = true;
+        }
+
+        if (this.countcheckedField === 0) {
+                this.flagChecked = false;
+        }
+        this.disabledBtnDeleted();
     }
     setFlagChecked(event, user: UserSelectNode) {
         user.isChecked = !user.isChecked;
+        if (user.isChecked) {
+            this.countcheckedField += 1;
+        }   else {
+            this.countcheckedField -= 1;
+        }
+        this.disabledBtnDeleted();
     }
     LocSelectedUser() {
         this.isLoading = true;
@@ -261,7 +297,39 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         });
     }
 
-    disabledBtnAction() {
+    DeliteLogicalUser() {
+       // const arrayRequests = [];
+        // this.listUsers.forEach((user: UserSelectNode) => {
+        //     if (user.isChecked) {
+
+        //         console.log(url);
+        //     //     arrayRequests.push(
+        //     //         this._pipeSrv.read({
+        //     //             [url]: ALL_ROWS,
+        //     //         }).then(res => {
+        //     //             console.log(res);
+        //     //         })
+        //     //     );
+        //     //     url = '';
+        //     // }
+        //     }
+        // });
+        // const url = this._createUrlForSop(73748);
+        // this._pipeSrv.read({
+        //     [url]: ALL_ROWS,
+        // }).then(result => {
+        //     console.log(result);
+        // }).catch(error => {
+        //     console.log(error);
+        // });
+    //    if (arrayRequests.length > 0) {
+    //         Promise.all([...arrayRequests]).then(result => {
+    //             console.log(result);
+    //         });
+    //     }
+    }
+
+   private disabledBtnAction() {
         if (this.selectedUser) {
             this.buttons.buttons.map((button: BtnActionFields, index) => {
                 if (this.selectedUser.deleted) {
@@ -287,6 +355,25 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             });
         }
     }
+
+    private disabledBtnDeleted() {
+        if (this.countcheckedField === 0) {
+            this.buttons.buttons[2].disabled = true;
+            this.buttons.moreButtons[2].disabled = true;
+        } else {
+            this.buttons.buttons[2].disabled = false;
+            this.buttons.moreButtons[2].disabled = false;
+        }
+    }
+    // private btnDisabledDelite() {
+    //     this.buttons.bo
+    // }
+
+    private _createUrlForSop(isn_user) {
+        const url = `EraseUser?isn_user=${isn_user}`;
+        return url;
+    }
+
     private _checkMarkNode() {
         let check = false;
         this.listUsers.forEach(node => {
