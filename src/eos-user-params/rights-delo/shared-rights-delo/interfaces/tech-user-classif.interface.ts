@@ -15,4 +15,5 @@ export interface ITechUserClassifConst {
 export interface IConfigUserTechClassif {
     apiInstance: 'DEPARTMENT' | 'DOCGROUP_CL' | 'RUBRIC_CL';
     waitClassif: IOpenClassifParams;
+    label: 'CLASSIF_NAME' | 'CARD_NAME';
 }

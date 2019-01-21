@@ -14,4 +14,5 @@ export interface IChengeItemAbsolute {
     data: any;
     due?: string;
     user_cl?: boolean;
+    funcNum?: number;
 }
