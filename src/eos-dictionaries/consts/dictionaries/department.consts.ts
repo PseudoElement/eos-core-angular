@@ -101,7 +101,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             type: 'text',
             foreignKey: 'FULLNAME',
             forNode: false,
-            length: 1500,
+            length: 2000,
             vistype: E_VISIBLE_TIPE.onlyChild,
         }),
         Object.assign({}, COMMON_FIELD_FULLNAME, {
@@ -109,7 +109,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             title: 'Полное наименование должности',
             type: 'text',
             foreignKey: 'FULLNAME',
-            length: 1500,
+            length: 2000,
             forNode: true,
             vistype: E_VISIBLE_TIPE.onlyNode,
         }), {
