@@ -272,8 +272,8 @@ export class UserParamApiSrv {
                     user['DEPARTMENT_DYTU'] = findDepartInfo[0].DUTY;
                     user['DEPARTMENT_DELETE'] = findDepartInfo[0].DELETED;
                 }else {
-                    user['DEPARTMENT_SURNAME'] = 'Технический';
-                    user['DEPARTMENT_DYTU'] = 'пользовалтель';
+                    user['DEPARTMENT_SURNAME'] = '';
+                    user['DEPARTMENT_DYTU'] = '';
                     user['DEPARTMENT_DELETE'] = 0;
                 }
             });

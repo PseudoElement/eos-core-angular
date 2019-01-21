@@ -100,7 +100,7 @@
                         >
                         <span></span>
                     </label> -->
-                    <div class="table-title user-select-node"  [ngClass]="user.deleted ? 'disabled' : ''">
+                    <div class="table-title user-select-node"  [ngClass]="{'disabled': user.deleted, 'delitedDue': user.deletedOffFace}">
                         <label class="checkbox minus-checkbox">
                         <input  [checked]="user.isChecked" [disabled]="user.deleted ? true : false"  type="checkbox" (change)="setFlagChecked($event, user)">
                         <span class="eos-icon eos-icon-checkbox-black"></span>
@@ -111,10 +111,21 @@
                         placement="bottom" containerClass="tooltip-info" container="body"
                         >{{user.department}}</span>
                         <span
-                        class="user-list-first-colomn"
-                        tooltip="{{user.dueName}}"
-                        placement="bottom" containerClass="tooltip-info" container="body"
-                        >{{user.dueName}}</span>
+                            class="user-list-first-colomn"
+                            tooltip="{{user.fullDueName}}"
+                            placement="bottom"
+                            containerClass="tooltip-info"
+                            container="body"
+                            >{{user.fullDueName}}
+                        </span>
+                        <!-- <span *ngIf="user.deletedOffFace"
+                            class="user-list-first-colomn"
+                            tooltip="{{user.dueName}}"
+                            placement="bottom"
+                            containerClass="tooltip-info"
+                            container="body"
+                            >{{user.dueName}} (Должностное лицо удалено логически)
+                        </span> -->
                         <span class="user-list-third-colomn">
                             <span *ngIf="user.deleted" class="eos-icon eos-icon-bin-forever-grey small"></span>
                             <span *ngIf="user.blockedUser && !user.deleted" class="eos-icon eos-icon-Blockeduser-Yellow  small"></span>

@@ -28,7 +28,7 @@ export class UserSelectNode {
         this.department = data['DEPARTMENT'] || '...';
         this.deleted = (data.DELETED && data.ORACLE_ID === null) ? true : false;
         this.oracle_id = data.ORACLE_ID;
-        this.dueName = `${data['DEPARTMENT_SURNAME']} - ${data['DEPARTMENT_DYTU']}`;
+        this.dueName = data['DEPARTMENT_SURNAME'];
         this.dueDytu = data['DEPARTMENT_DYTU'];
         this.official = this.dueDytu + '-' + this.dueName;
         this.isChecked = false;
@@ -36,4 +36,22 @@ export class UserSelectNode {
         this.blockedUser =  (+data.DELETED > 0) && (+data.LOGIN_ATTEMPTS < +sysParam) ? true : false;
         this.blockedSystem = (+data.DELETED > 0) && (+data.LOGIN_ATTEMPTS >= +sysParam) ? true : false;
     }
+    get fullDueName () {
+        let name = '';
+        if (this.deleted) {
+            name = this.name + ' - Пользователь удален';
+        }
+        if (this.deletedOffFace) {
+            name = this.dueName + '- Должностное лицо удалено';
+        }
+
+        if (!this.deleted && !this.deletedOffFace) {
+            name =  this.dueName + '-' +  this.dueDytu;
+            if (name === '-') {
+                name = 'Технический пользователь';
+            }
+        }
+        return name;
+    }
+
 }
