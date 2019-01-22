@@ -174,7 +174,7 @@ export class EosDateMaskDirective implements ControlValueAccessor {
     private parseDate(value: string): Date {
         value = (value && 'string' === typeof value) ? value.trim() : value;
         if (value) {
-            if (DATE_INPUT_PATERN.test(value)) { // if correct format
+            if (this.isValidDate(value)) { // if correct format
                 // convert to UTC format then to Date
                 this.dateValue = new Date(value.replace(DATE_INPUT_PATERN, '$3-$2-$1T00:00:00.000Z'));
             } else if (DATE_JSON_PATTERN.test(value)) {
@@ -188,4 +188,26 @@ export class EosDateMaskDirective implements ControlValueAccessor {
         return this.dateValue;
     }
 
+    private isValidDate(dateString): boolean {
+        if (!DATE_INPUT_PATERN.test(dateString)) {
+            return false;
+        }
+
+        const parts = dateString.split('.');
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10);
+        const year = parseInt(parts[2], 10);
+
+        if (year < 1000 || year > 3000 || month === 0 || month > 12) {
+            return false;
+        }
+
+        const monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+
+        if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) {
+            monthLength[1] = 29;
+        }
+
+        return (day > 0 && day <= monthLength[month - 1]);
+    }
 }

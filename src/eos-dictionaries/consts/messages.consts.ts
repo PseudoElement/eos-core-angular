@@ -149,13 +149,13 @@ export const WARN_ELEMENT_DELETED: IMessage = {
 export const INFO_PERSONE_DONT_HAVE_CABINET: IMessage = {
     type: 'info',
     title: 'Внимание:',
-    msg: 'У выбранного должностного лица отсутвует свой кабинет.'
+    msg: 'У выбранного должностного лица отсутствует свой кабинет.'
 };
 
 export const WARN_NO_BINDED_ORGANIZATION: IMessage = {
     type: 'warning',
     title: 'Предупреждение:',
-    msg: 'У подразделение нет собственной организации. Удаление невозможно'
+    msg: 'У подразделения нет собственной организации. Удаление невозможно'
 };
 
 export const DANGER_EDIT_ONLY_DEPARTMENTS_ALLOWED: IMessage = {

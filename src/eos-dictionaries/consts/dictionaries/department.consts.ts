@@ -2,7 +2,7 @@ import {E_DICT_TYPE, E_VISIBLE_TIPE, IDepartmentDictionaryDescriptor} from 'eos-
 import {NOT_EMPTY_STRING} from '../input-validation';
 import {SEARCH_TYPES} from '../search-types';
 import {ISelectOption} from 'eos-common/interfaces';
-import {COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_CODE, COMMON_FIELDS} from './_common';
+import { COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_CODE, COMMON_FIELDS, COMMON_FIELD_NOTE } from './_common';
 
 export const ROLES_IN_WORKFLOW: ISelectOption[] = [
     {value: 0, title: 'Не указана'},
@@ -68,6 +68,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         title: 'Parent ID',
         length: 248,
     },
+        Object.assign({}, COMMON_FIELD_NOTE, {length: 255}),
         Object.assign({}, COMMON_FIELD_CODE, {length: 20}),
         Object.assign({}, COMMON_FIELD_NAME, {
             key: 'title',
@@ -89,7 +90,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             key: 'DUTY',
             title: 'Краткое наименование должности',
             type: 'string',
-            length: 236,
+            length: 255,
             pattern: NOT_EMPTY_STRING,
             required: true,
             forNode: true,
@@ -100,6 +101,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             type: 'text',
             foreignKey: 'FULLNAME',
             forNode: false,
+            length: 2000,
             vistype: E_VISIBLE_TIPE.onlyChild,
         }),
         Object.assign({}, COMMON_FIELD_FULLNAME, {
@@ -107,7 +109,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             title: 'Полное наименование должности',
             type: 'text',
             foreignKey: 'FULLNAME',
-            length: 1998,
+            length: 2000,
             forNode: true,
             vistype: E_VISIBLE_TIPE.onlyNode,
         }), {
