@@ -197,7 +197,11 @@ export class BaseUserSrv implements OnDestroy, OnInit {
             if (item.PARM_NAME === 'RESOLUTION_CONTROLLER') {
                 d[item.PARM_NAME] = '';
             } else {
-                 d[item.PARM_NAME] = item.PARM_VALUE;
+                if (String(item.PARM_VALUE) === 'null') {
+                    d[item.PARM_NAME] = '';
+                }   else {
+                     d[item.PARM_NAME] = item.PARM_VALUE;
+                }
             }
         });
         return { rec: d };

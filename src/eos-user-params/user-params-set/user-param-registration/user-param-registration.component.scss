@@ -108,6 +108,15 @@
     .table-templates {
         padding-left: 7%;
     }
+
+    .readonlyInput{
+        .form-group .form-control.readonly
+        {
+            border-color: #e6e6e6;
+            padding-left: 5px;
+        }
+
+    }
 }
 
 .rc-doc-left-column {
@@ -123,3 +132,5 @@
     background-color: grey;
     opacity: 0.5;
 }
+
+
