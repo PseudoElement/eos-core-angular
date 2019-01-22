@@ -115,6 +115,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.selectedUser = user;
         this.selectedUser.isSelected = true;
         this.rtUserService.changeSelectedUser(user);
+        this.disabledBtnAction();
     }
 
     RedactUser() {
@@ -215,6 +216,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._apiSrv.devideUsers();
         this._pagSrv._initPaginationConfig(true);
         this._pagSrv.changePagination(this._pagSrv.paginationConfig);
+        this.countMaxSize = this._pagSrv.countMaxSize;
     }
 
     ActionTehnicalUser() {
@@ -222,6 +224,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._apiSrv.devideUsers();
         this._pagSrv._initPaginationConfig(true);
         this._pagSrv.changePagination(this._pagSrv.paginationConfig);
+        this.countMaxSize = this._pagSrv.countMaxSize;
     }
 
     OpenAddressManagementWindow() {
@@ -341,14 +344,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         if (this.selectedUser) {
             this.buttons.buttons.map((button: BtnActionFields, index) => {
                 if (this.selectedUser.deleted) {
-                    if (button.name === ('RedactUser' || 'DeliteLogicalUser' || 'LocSelectedUser' ||  'LocSelectedUser' || 'OpenAddressManagementWindow' || 'OpenStreamScanSystem' || 'OpenRightsSystemCaseDelo' || 'ActionTehnicalUser')) {
                     button.disabled = true;
-                    }
                 }else {
                     button.disabled = false;
                 }
                 return button;
             });
+            this.buttons.buttons[0].disabled = false;
             this.buttons.moreButtons[3].disabled = false;
             this.buttons.moreButtons[2].disabled = false;
         }   else {
@@ -361,7 +363,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
           this.buttons.moreButtons[3].disabled = true;
           this.buttons.moreButtons[2].disabled = true;
         }
-
     }
 
     // private disabledBtnDeleted() {

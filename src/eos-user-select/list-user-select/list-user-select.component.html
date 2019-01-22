@@ -77,11 +77,12 @@
         </div>
         <div *ngIf="!isLoading; else spiner" class="eos-node-list">
             <div *ngIf="listUsers.length; else emptyCert"
-                class="block"
+                class="block "
                 [ngStyle]="{'width.px': tableWidth}"
                 #listContent>
                 <div
                     *ngFor="let user of listUsers"
+                    class="user-item"
                     [ngClass]="{'highlighted': user.isSelected}"
                     (click)="selectedNode(user)"
                     (dblclick)="RedactUser(user)">
