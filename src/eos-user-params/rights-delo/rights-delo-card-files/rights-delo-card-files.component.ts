@@ -68,6 +68,9 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     globalMainCard;
     flagForFirstShowSelect = false;
     flagNewDataWhenChanging = false;
+    arrayDataThatIsNotSaved = [];
+    flagForMergeForTheFirstTime = false;
+    arrayForAllDataForCurrentUsercard = [];
     private quaryDepartment = {
         DEPARTMENT: {
             criteries: {
@@ -198,6 +201,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     }
 
     prepDataAttachField(data) {
+      //  console.log(data);
         if (data === 'Empty') {
             this.prepDataAttach.rec = {};
         } else {
@@ -270,12 +274,13 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     checkData() {
         this.flagNewDataWhenChanging  = true;
     }
-    newDataWhenChanging() {
+    newDataWhenChanging(count) {
         if (this.flagNewDataWhenChanging) {
         let valueDefForFoldersAvailable = '';
         let valueDefForHideInaccessible = '';
         let valueDefForHideInaccessiblePrj = '';
         let flagToCheckForThePresenceOfTheDesiredCabinet = false;
+        let currentDataForCurrentUsercard;
         const userId = this._userParamsSetSrv.userContextId;
         const arrayForValueSrchContactFields = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
         const arrayKeys = this.arrayKeysCheckboxforCabinets;
@@ -310,12 +315,30 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                     }
                 }
             }
-        if (this.allDataForCurrentUsercard['USER_CABINET_List'].length > 0) {
-            for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
-                if (this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'] === this.currentIsnCabinet) {
-                    this.allDataForCurrentUsercard['USER_CABINET_List'][i]['FOLDERS_AVAILABLE'] = valueDefForFoldersAvailable;
-                    this.allDataForCurrentUsercard['USER_CABINET_List'][i]['HIDE_INACCESSIBLE'] = +valueDefForHideInaccessible;
-                    this.allDataForCurrentUsercard['USER_CABINET_List'][i]['HIDE_INACCESSIBLE_PRJ'] = +valueDefForHideInaccessiblePrj;
+            this.arrayDataThatIsNotSaved.push({
+                CompositePrimaryKey: '' + this.currentIsnCabinet + ' ' + +userId,
+                    DEPARTMENT_DUE: this.allDataForCurrentUsercard['DUE'],
+                    FOLDERS_AVAILABLE: valueDefForFoldersAvailable,
+                    HIDE_CONF_RESOL: 0,
+                    HIDE_INACCESSIBLE: +valueDefForHideInaccessible,
+                    HIDE_INACCESSIBLE_PRJ: +valueDefForHideInaccessiblePrj,
+                    HOME_CABINET: 1,
+                    ISN_CABINET: this.currentIsnCabinet,
+                    ISN_LCLASSIF: +userId,
+                    IS_ASSISTANT: 0,
+                    ORDER_WORK: null
+            });
+            if (count === 2) {
+                currentDataForCurrentUsercard = this.arrayForAllDataForCurrentUsercard[this.arrayForAllDataForCurrentUsercard.length - 2];
+            } else if (count === 1) {
+                currentDataForCurrentUsercard = this.arrayForAllDataForCurrentUsercard[this.arrayForAllDataForCurrentUsercard.length - 1];
+            }
+        if (currentDataForCurrentUsercard['USER_CABINET_List'].length > 0) {
+            for (let i = 0; i < currentDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
+                if ((currentDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'] === this.currentIsnCabinet) || this.flagForMergeForTheFirstTime) {
+                    currentDataForCurrentUsercard['USER_CABINET_List'][i]['FOLDERS_AVAILABLE'] = valueDefForFoldersAvailable;
+                    currentDataForCurrentUsercard['USER_CABINET_List'][i]['HIDE_INACCESSIBLE'] = +valueDefForHideInaccessible;
+                    currentDataForCurrentUsercard['USER_CABINET_List'][i]['HIDE_INACCESSIBLE_PRJ'] = +valueDefForHideInaccessiblePrj;
                     this.arrayUpdateData.push({
                         ISN_CABINET: +this.currentIsnCabinet,
                         ISN_LCLASSIF: +userId,
@@ -324,13 +347,14 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                         HOME_CABINET: 0,
                         HIDE_INACCESSIBLE: +valueDefForHideInaccessible,
                         HIDE_INACCESSIBLE_PRJ: +valueDefForHideInaccessiblePrj,
-                        DUE_CARD: this.allDataForCurrentUsercard['DUE']
+                        DUE_CARD: currentDataForCurrentUsercard['DUE']
                 });
                 flagToCheckForThePresenceOfTheDesiredCabinet = true;
-                } else if (i === (this.allDataForCurrentUsercard['USER_CABINET_List'].length - 1) && !flagToCheckForThePresenceOfTheDesiredCabinet) {
-                    this.allDataForCurrentUsercard['USER_CABINET_List'].push({
+                this.flagForMergeForTheFirstTime = false;
+                } else if (i === (currentDataForCurrentUsercard['USER_CABINET_List'].length - 1) && !flagToCheckForThePresenceOfTheDesiredCabinet) {
+                    currentDataForCurrentUsercard['USER_CABINET_List'].push({
                         CompositePrimaryKey: '' + this.currentIsnCabinet + ' ' + +userId,
-                        DEPARTMENT_DUE: this.allDataForCurrentUsercard['DUE'],
+                        DEPARTMENT_DUE: currentDataForCurrentUsercard['DUE'],
                         FOLDERS_AVAILABLE: valueDefForFoldersAvailable,
                         HIDE_CONF_RESOL: 0,
                         HIDE_INACCESSIBLE: +valueDefForHideInaccessible,
@@ -349,15 +373,15 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                         HOME_CABINET: 0,
                         HIDE_INACCESSIBLE: +valueDefForHideInaccessible,
                         HIDE_INACCESSIBLE_PRJ: +valueDefForHideInaccessiblePrj,
-                        DUE_CARD: this.allDataForCurrentUsercard['DUE']
+                        DUE_CARD: currentDataForCurrentUsercard['DUE']
                 });
                 break;
                 }
             }
         } else {
-            this.allDataForCurrentUsercard['USER_CABINET_List'].push({
+            currentDataForCurrentUsercard['USER_CABINET_List'].push({
                 CompositePrimaryKey: '' + this.currentIsnCabinet + ' ' + +userId,
-                DEPARTMENT_DUE: this.allDataForCurrentUsercard['DUE'],
+                DEPARTMENT_DUE: currentDataForCurrentUsercard['DUE'],
                 FOLDERS_AVAILABLE: valueDefForFoldersAvailable,
                 HIDE_CONF_RESOL: 0,
                 HIDE_INACCESSIBLE: +valueDefForHideInaccessible,
@@ -376,14 +400,14 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 HOME_CABINET: 1,
                 HIDE_INACCESSIBLE: +valueDefForHideInaccessible,
                 HIDE_INACCESSIBLE_PRJ: +valueDefForHideInaccessiblePrj,
-                DUE_CARD: this.allDataForCurrentUsercard['DUE']
+                DUE_CARD: currentDataForCurrentUsercard['DUE']
         });
         }
         this.flagNewDataWhenChanging = false;
         }
     }
       createObjRequestForAttach(): any[] {
-      this.newDataWhenChanging();
+      this.newDataWhenChanging(1);
         const req = [];
         const userId = this._userParamsSetSrv.userContextId;
             if (this.arrayNewData.length > 0) {
@@ -490,8 +514,10 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                             this.flagForFirstShowSelect = true;
                             this.allDataForCurrentCabinet = this.allData[j]['USER_CABINET_List'][0];
                             this.allDataForCurrentUsercard = this.allData[j];
+                            this.flagForMergeForTheFirstTime = true;
                         } else {
                             let str = '';
+                            this.flagForMergeForTheFirstTime = false;
                             this.settingValuesForFieldsCabinets('Empty');
                             this.allDataForCurrentCabinet = this.allData[j]['USER_CABINET_List'];
                             this.allDataForCurrentUsercard = this.allData[j];
@@ -507,6 +533,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 this.fieldKeysforCardFiles[i][2] = false;
             }
         }
+        this.arrayForAllDataForCurrentUsercard.push(this.allDataForCurrentUsercard);
         this.currentSelectCard();
         this.currentSelectedWord = word;
     }
@@ -534,13 +561,12 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                         if (this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'] === dataCabinetDepartment[0]['ISN_CABINET']) {
                             this.settingValuesForFieldsCabinets(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
                             this.flagForFirstShowSelect = false;
-                        } else {
+                        } else if ((i === this.allDataForCurrentUsercard['USER_CABINET_List'].length - 1) && this.flagForFirstShowSelect === true) {
                             this.settingValuesForFieldsCabinets('Empty');
                             this.flagForFirstShowSelect = false;
                         }
                    }
-                }
-                   // this.selectOnClick(null, selectForCabinetsName.options[0]);
+                  }
                 }
                 this.selectOnClick(null, selectForCabinetsName.options[0]);
                 this.flagCurrentDataCabinetDepartment = true;
@@ -563,23 +589,24 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         });
     }
     selectOnClick(event, dataAtTheStart) {
-      this.newDataWhenChanging();
       if (dataAtTheStart !== null) {
-        setTimeout(() => {
+        this.newDataWhenChanging(2);
+   // setTimeout(() => {
         for (let z = 0; z < this.arrayForCurrentCabinets.length; z++) {
           if (dataAtTheStart.title === this.arrayForCurrentCabinets[z][0] &&
             dataAtTheStart.value === this.arrayForCurrentCabinets[z][2]) {
-                this.currentIsnCabinet = this.arrayForCurrentCabinets[z][1];
-                for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
-                    if (this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'] === this.currentIsnCabinet) {
-                        this.settingValuesForFieldsCabinets(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
+                    this.currentIsnCabinet = this.arrayForCurrentCabinets[z][1];
+                    for (let i = 0; i < this.arrayDataThatIsNotSaved.length; i++) {
+                        if (this.arrayDataThatIsNotSaved[i]['ISN_CABINET'] === this.currentIsnCabinet) {
+                            this.settingValuesForFieldsCabinets(this.arrayDataThatIsNotSaved[i]);
+                        }
                     }
-                }
-                break;
+               break;
             }
         }
-    }, 500);
+  //  }, 500);
       } else {
+        this.newDataWhenChanging(1);
       if (this.allDataForCurrentUsercard['USER_CABINET_List'].length > 0) {
        loop1:
         for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
