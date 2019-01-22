@@ -202,7 +202,12 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         if (event.target.tagName === 'SPAN') { // click to checkbox
             const value = !(+item.value);
-            if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department || E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor || E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject)) {
+            if (
+                    !value &&
+                    (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department ||
+                    item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor ||
+                    item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject)
+                ) {
                 this._deleteAllDep(item);
             }
             if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup)) {

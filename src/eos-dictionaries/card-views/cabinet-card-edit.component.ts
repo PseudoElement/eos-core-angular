@@ -236,7 +236,7 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                     rkpd: userAccess.HIDE_INACCESSIBLE_PRJ
                 };
                 this.cabinetFolders.forEach((folder) => {
-                    cUser[folder.key] = userAccess.FOLDERS_AVAILABLE.indexOf(folder.key + '') > -1;
+                    cUser[folder.key] = userAccess.FOLDERS_AVAILABLE.indexOf(folder.charKey + '') > -1;
                 });
                 this.cabinetUsers.push(cUser);
             }

@@ -385,7 +385,7 @@ export class EosDataConvertService {
                             });
                             inputs['printInfo.PRINT_SURNAME'] = new StringInput({
                                 key: 'printInfo.PRINT_SURNAME',
-                                label: 'И.О. Фамилия в дательном падеже',
+                                label: 'И.О. Фамилия',
                                 dict: 'printInfo',
                                 value: data['printInfo']['PRINT_SURNAME'],
                                 pattern: NOT_EMPTY_STRING,
@@ -567,7 +567,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['DEPARTMENT_RP'],
                                 pattern: NOT_EMPTY_STRING,
-                                length: 248,
+                                length: 2000,
                                 disabled: !editMode,
                             });
                         }
