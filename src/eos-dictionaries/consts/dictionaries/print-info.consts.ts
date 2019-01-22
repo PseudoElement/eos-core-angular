@@ -24,7 +24,7 @@ export const PRINT_INFO_DICT: IDictionaryDescriptor = {
         type: 'number'
     }, {
         key: 'PRINT_SURNAME',
-        title: 'И.О. Фамилия в дательном падеже',
+        title: 'И.О. Фамилия',
         type: 'string',
         pattern: NOT_EMPTY_STRING,
     }, {
@@ -49,7 +49,7 @@ export const PRINT_INFO_DICT: IDictionaryDescriptor = {
         key: 'DEPARTMENT_RP',
         title: 'Наименование в родительном падеже (чего?)',
         type: 'string',
-        length: 248,
+        length: 2000,
         pattern: NOT_EMPTY_STRING,
     }, {
         key: 'NOT_USE_IN_DUTY',

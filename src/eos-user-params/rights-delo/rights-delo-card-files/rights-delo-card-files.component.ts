@@ -298,8 +298,12 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                     }
                 } else {
                     if (this.newDataAttach.rec[arrayKeys[i][0]] === true) {
-                        if (i === 9) {
+                        if (i === 7) {
                             valueDefForFoldersAvailable += arrayForValueSrchContactFields[6];
+                        } else if (i === 8) {
+                            valueDefForFoldersAvailable += arrayForValueSrchContactFields[7];
+                        } else if (i === 9) {
+                            valueDefForFoldersAvailable += arrayForValueSrchContactFields[8];
                         } else {
                             valueDefForFoldersAvailable += arrayForValueSrchContactFields[i];
                         }
@@ -317,7 +321,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                         ISN_LCLASSIF: +userId,
                         FOLDERS_AVAILABLE: valueDefForFoldersAvailable,
                         ORDER_WORK: null,
-                        HOME_CABINET: 1,
+                        HOME_CABINET: 0,
                         HIDE_INACCESSIBLE: +valueDefForHideInaccessible,
                         HIDE_INACCESSIBLE_PRJ: +valueDefForHideInaccessiblePrj,
                         DUE_CARD: this.allDataForCurrentUsercard['DUE']
@@ -342,7 +346,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                         ISN_LCLASSIF: +userId,
                         FOLDERS_AVAILABLE: valueDefForFoldersAvailable,
                         ORDER_WORK: null,
-                        HOME_CABINET: 1,
+                        HOME_CABINET: 0,
                         HIDE_INACCESSIBLE: +valueDefForHideInaccessible,
                         HIDE_INACCESSIBLE_PRJ: +valueDefForHideInaccessiblePrj,
                         DUE_CARD: this.allDataForCurrentUsercard['DUE']
@@ -358,7 +362,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 HIDE_CONF_RESOL: 0,
                 HIDE_INACCESSIBLE: +valueDefForHideInaccessible,
                 HIDE_INACCESSIBLE_PRJ: +valueDefForHideInaccessiblePrj,
-                HOME_CABINET: 0,
+                HOME_CABINET: 1,
                 ISN_CABINET: this.currentIsnCabinet,
                 ISN_LCLASSIF: +userId,
                 IS_ASSISTANT: 0,
@@ -530,6 +534,9 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                         if (this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'] === dataCabinetDepartment[0]['ISN_CABINET']) {
                             this.settingValuesForFieldsCabinets(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
                             this.flagForFirstShowSelect = false;
+                        } else {
+                            this.settingValuesForFieldsCabinets('Empty');
+                            this.flagForFirstShowSelect = false;
                         }
                    }
                 }
@@ -563,25 +570,21 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
           if (dataAtTheStart.title === this.arrayForCurrentCabinets[z][0] &&
             dataAtTheStart.value === this.arrayForCurrentCabinets[z][2]) {
                 this.currentIsnCabinet = this.arrayForCurrentCabinets[z][1];
-              /*  for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
+                for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
                     if (this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'] === this.currentIsnCabinet) {
-                        console.log('Попапллллл');
-                        console.log(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
                         this.settingValuesForFieldsCabinets(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
                     }
-                }*/
-              //  this.settingValuesForFieldsCabinets('Empty');
-              //  this.settingValuesForFieldsCabinets(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
+                }
                 break;
             }
         }
-    }, 1000);
+    }, 500);
       } else {
       if (this.allDataForCurrentUsercard['USER_CABINET_List'].length > 0) {
        loop1:
         for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
             for (let z = 0; z < this.arrayForCurrentCabinets.length; z++) {
-            if (event.target.value === this.allDataForCurrentUsercard['USER_CABINET_List'][i]['DEPARTMENT_DUE'] &&
+            if (
             event.target.selectedOptions['0']['innerHTML'] === this.arrayForCurrentCabinets[z][0] &&
             this.arrayForCurrentCabinets[z][1] === this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET']) {
              this.currentIsnCabinet = this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'];

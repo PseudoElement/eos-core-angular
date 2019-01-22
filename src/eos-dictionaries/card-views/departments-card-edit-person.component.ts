@@ -1,3 +1,4 @@
+import { RussianName, RussianNameProcessor } from './../utils/Declination';
 import { Component, Injector, OnChanges } from '@angular/core';
 import { BaseCardEditComponent } from 'eos-dictionaries/card-views/base-card-edit.component';
 import { FieldsDecline } from 'eos-dictionaries/interfaces/fields-decline.inerface';
@@ -79,6 +80,30 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                     res['NAME_TP'] = name;
                     res['NAME_VP'] = name;
                 }
+
+                // const rn = new RussianName('Петрова Зоя Сергеевна');
+                const rn = new RussianName(res['SURNAME'], res['NAME'], res['PATRON'],
+                    res['gender'] ? RussianNameProcessor.sexM : RussianNameProcessor.sexF
+                    );
+                res.NAME_DP = rn.firstName(rn.gcaseDat);
+                res.NAME_PP = rn.firstName(rn.gcasePred);
+                res.NAME_RP = rn.firstName(rn.gcaseRod);
+                res.NAME_TP = rn.firstName(rn.gcaseTvor);
+                res.NAME_VP = rn.firstName(rn.gcaseVin);
+                res.PATRON_DP = rn.middleName(rn.gcaseDat);
+                res.PATRON_PP = rn.middleName(rn.gcasePred);
+                res.PATRON_RP = rn.middleName(rn.gcaseRod);
+                res.PATRON_TP = rn.middleName(rn.gcaseTvor);
+                res.PATRON_VP = rn.middleName(rn.gcaseVin);
+                res.SURNAME_DP = rn.lastName(rn.gcaseDat);
+                res.SURNAME_PP = rn.lastName(rn.gcasePred);
+                res.SURNAME_RP = rn.lastName(rn.gcaseRod);
+                res.SURNAME_TP = rn.lastName(rn.gcaseTvor);
+                res.SURNAME_VP = rn.lastName(rn.gcaseVin);
+
+                res.PRINT_SURNAME = this._genIOFamily(rn, rn.gcaseIm);
+                res.PRINT_SURNAME_DP = this._genFamilyIO(rn, rn.gcaseDat);
+                res.PRINT_SURNAME_RP = this._genFamilyIO(rn, rn.gcaseRod);
                 if (res) {
                     Object.keys(res).forEach((key) => {
                         if (key !== 'PRINT_DEPARTMENT') {
@@ -89,6 +114,41 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             });
 
         this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.currentNode.parent.data.rec['CLASSIF_NAME']);
+    }
+    private _genFamilyIO(rn: RussianName, gcase): string {
+        let res = rn.lastName(gcase);
+
+        const s1 = rn.firstName(gcase);
+        const s2 = rn.middleName(gcase);
+        if (s1 || s2) {
+            res += ' ';
+        }
+        if (s1) {
+            res += s1[0] + '.';
+        }
+        if (s2) {
+            res += s2[0] + '.';
+        }
+        return res;
+    }
+
+    private _genIOFamily(rn: RussianName, gcase): string {
+        let res = '';
+        let s = rn.firstName(gcase);
+        if (s) {
+            res += s[0] + '.';
+        }
+        s = rn.middleName(gcase);
+        if (s) {
+            res += s[0] + '.';
+        }
+        if (res.length > 1) {
+            res += ' ';
+        }
+
+        res += rn.lastName(gcase);
+
+        return res;
     }
 
     private updateForm(formChanges: any) {

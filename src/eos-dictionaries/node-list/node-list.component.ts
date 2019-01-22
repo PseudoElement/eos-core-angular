@@ -220,58 +220,81 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         }
     }
 
-
     moveUp(): void {
         if (!this.dictSrv.viewParameters.showAllSubnodes) {
-            const _idx = this.nodes.findIndex((node) => node.isSelected);
-            if (_idx > 0) {
-                const item = this.nodes[_idx - 1];
-                this.nodes[_idx - 1] = this.nodes[_idx];
-                this.nodes[_idx] = item;
-                this.userOrdered(this.nodes);
-            }
-        } else {
-            const _idx = this.nodes.findIndex((node) => node.isSelected);
-            let targ_idx = _idx - 1;
-            for (let i = targ_idx; i >= 0; i--) {
-                if (this.nodes[_idx].originalParentId === this.nodes[i].originalParentId) {
-                    targ_idx = i;
-                    if (targ_idx >= 0) {
-                        const item = this.nodes[targ_idx];
-                        this.nodes[targ_idx] = this.nodes[_idx];
-                        this.nodes[_idx] = item;
-                        this.userOrdered(this.nodes);
+            for (let i = 0; i < this.nodes.length; i++) {
+                const element = this.nodes[i];
+                if (element.marked) {
+                    if (i > 0) {
+                        const item = this.nodes[i - 1];
+                        if (!item.marked) {
+                            this.nodes[i - 1] = this.nodes[i];
+                            this.nodes[i] = item;
+                        }
                     }
-                    break;
                 }
             }
+            this.userOrdered(this.nodes);
+        } else {
+            for (let m = 0; m < this.nodes.length; m++) {
+                const element = this.nodes[m];
+                if (element.marked) {
+                    let targ_idx = m - 1;
+                    for (let i = targ_idx; i >= 0; i--) {
+                        if (element.originalParentId === this.nodes[i].originalParentId) {
+                            targ_idx = i;
+                            if (targ_idx >= 0) {
+                                const item = this.nodes[targ_idx];
+                                if (!item.marked) {
+                                    this.nodes[targ_idx] = this.nodes[m];
+                                    this.nodes[m] = item;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            this.userOrdered(this.nodes);
         }
     }
 
     moveDown(): void {
         if (!this.dictSrv.viewParameters.showAllSubnodes) {
-            const _idx = this.nodes.findIndex((node) => node.isSelected);
-            if (_idx < this.nodes.length - 1) {
-                const item = this.nodes[_idx + 1];
-                this.nodes[_idx + 1] = this.nodes[_idx];
-                this.nodes[_idx] = item;
-                this.userOrdered(this.nodes);
-            }
-        } else {
-            const _idx = this.nodes.findIndex((node) => node.isSelected);
-            let targ_idx = _idx + 1;
-            for (let i = targ_idx; i < this.nodes.length; i++) {
-                if (this.nodes[_idx].originalId !== this.nodes[i].originalParentId) {
-                    targ_idx = i;
-                    if (targ_idx < this.nodes.length) {
-                        const item = this.nodes[targ_idx];
-                        this.nodes[targ_idx] = this.nodes[_idx];
-                        this.nodes[_idx] = item;
-                        this.userOrdered(this.nodes);
+            for (let i = this.nodes.length - 1; i >= 0; i--) {
+                const element = this.nodes[i];
+                if (element.marked) {
+                    if (i < this.nodes.length - 1) {
+                        const item = this.nodes[i + 1];
+                        if (!item.marked) {
+                            this.nodes[i + 1] = this.nodes[i];
+                            this.nodes[i] = item;
+                        }
                     }
-                    break;
                 }
             }
+            this.userOrdered(this.nodes);
+        } else {
+            for (let m = this.nodes.length - 1; m >= 0; m--) {
+                const element = this.nodes[m];
+                if (element.marked) {
+                    let targ_idx = m + 1;
+                    for (let i = targ_idx; i < this.nodes.length; i++) {
+                        if (this.nodes[m].originalId !== this.nodes[i].originalParentId) {
+                            targ_idx = i;
+                            if (targ_idx < this.nodes.length) {
+                                const item = this.nodes[targ_idx];
+                                if (!item.marked) {
+                                    this.nodes[targ_idx] = this.nodes[m];
+                                    this.nodes[m] = item;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            this.userOrdered(this.nodes);
         }
     }
 
