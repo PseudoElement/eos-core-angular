@@ -55,7 +55,7 @@ export class TreeUserNode {
         if (this._title) {
             return this._title;
         } else {
-            return this.data['CLASSIF_NAME'];
+            return this.cardFlag === 0 ? this.data['CLASSIF_NAME'] : this.data['CARD_NAME'];
         }
     }
     set title(title: string) {
@@ -112,7 +112,8 @@ export class TreeUserNode {
 
     constructor(
         // private treeSrv: TreeUserSelectService,
-        public data: DEPARTMENT | any
+        public data: DEPARTMENT | any,
+        public cardFlag
     ) {
         this.parentId = data['PARENT_DUE'] ? data['PARENT_DUE'] : null;
         this.id = data['DUE'];

@@ -35,7 +35,7 @@ export class TreeUserSelectComponent implements OnInit {
     });
 }
     ngOnInit() {
-        this.id = this.actRoute.snapshot.params['nodeId'];
+        this.id = this.actRoute.snapshot.params['nodeId'] || '0.';
         this.isLoading = true;
         this.treeSrv.init(this.currMode)
         .then(() => {
@@ -51,6 +51,8 @@ export class TreeUserSelectComponent implements OnInit {
             titleDue: this.currMode === 0 ? 'Все подразделения' : this.currMode === 1 ? 'Все картотеки' : 'Все организации'
         });
         this.ngOnInit();
+        this._router.navigate(['user_param', '0.']);
+        this.treeSrv.changeListUsers.next();
     }
 
     @HostListener('window:resize')
@@ -69,7 +71,7 @@ export class TreeUserSelectComponent implements OnInit {
                 .then((_node) => {
                     node.isExpanded = true;
                     node.updating = false;
-                });
+            });
         }
     }
 

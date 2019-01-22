@@ -133,7 +133,7 @@ export const Allbuttons: BtnAction = {
         CreateUser,
         RedactUser,
        // DeliteLogicalUser,
-        ActionMode,
+        // ActionMode,
         LocSelectedUser,
         OpenAddressManagementWindow,
        // OpenStreamScanSystem,

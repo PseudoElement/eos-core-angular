@@ -71,7 +71,7 @@ export class UserParamApiSrv {
     getUsers(dueDep?: string): Promise<any> {
         this.dueDep = dueDep || '0.';
         let q;
-        if (!dueDep) {
+        if (!dueDep || dueDep === '0.') {
             q = ALL_ROWS;
         } else {
             q = PipRX.criteries({DUE_DEP: `${dueDep}%`});
@@ -128,6 +128,14 @@ export class UserParamApiSrv {
             this.users_pagination.UsersList = this.Allcustomer.filter(user => {
                 if (user.data.DUE_DEP || user.deleted) {
                     return user;
+                }
+            }).sort(function(a, b){
+                if (a.data.DELETED === 1 && b.data.DELETED !== 1) {
+                    return -1;
+                }  else if (a.data.DELETED !== 1 && b.data.DELETED === 1) {
+                    return 1;
+                }   else {
+                    return 0;
                 }
             });
         }
@@ -213,13 +221,13 @@ export class UserParamApiSrv {
                         LOGIN_ATTEMPTS: 0
                     };
                 }
+                ARRAY_QUERY_SET_DELETE.push({
+                    method: 'MERGE',
+                    requestUri: `USER_CL(${user.id})`,
+                    data: data
+                });
+                data = {};
             }
-            ARRAY_QUERY_SET_DELETE.push({
-                method: 'MERGE',
-                requestUri: `USER_CL(${user.id})`,
-                data: data
-            });
-            data = {};
         });
         if (ARRAY_QUERY_SET_DELETE.length > 0) {
          return  this.setData(ARRAY_QUERY_SET_DELETE).then(response => {

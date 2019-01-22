@@ -61,8 +61,8 @@
                 <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')">Подразделение
                     <span *ngIf ="srtConfig.department.checked" [ngClass]="getClassOrder(srtConfig.department.upDoun)"></span>
                 </span>
-                <span class="user-list-first-colomn likeLink"(click)="sortPageList('official')">Должностное лицо
-                    <span *ngIf ="srtConfig.official.checked" [ngClass]="getClassOrder(srtConfig.official.upDoun)"></span>
+                <span class="user-list-first-colomn likeLink"(click)="sortPageList('dueName')">Должностное лицо
+                    <span *ngIf ="srtConfig.dueName.checked" [ngClass]="getClassOrder(srtConfig.dueName.upDoun)"></span>
                 </span>
                 <!-- <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
                     <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>
