@@ -40,6 +40,7 @@ import { RightDepertmentComponent } from './rights-delo/rights-delo-absolute-rig
 import {GrifsComponent} from './rights-delo/right-limited-access/grifs/grifs-component';
 import { RightAbsoluteDocGroupComponent } from './rights-delo/rights-delo-absolute-rights/right-doc-group/right-doc-group.component';
 import { ListDocsTreeComponent } from './shared/list-docs-tree/list-docs-tree.component';
+import {UserPaginationService} from './shared/services/users-pagination.service';
 
 @NgModule({
     declarations: [
@@ -93,7 +94,8 @@ import { ListDocsTreeComponent } from './shared/list-docs-tree/list-docs-tree.co
         UserParamsService,
         InputParamControlService,
         EmailAddressService,
-        LimitedAccesseService
+        LimitedAccesseService,
+        UserPaginationService
     ]
 })
 export class EosUserParamsModule {}

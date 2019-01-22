@@ -5,27 +5,134 @@
         }
     }
 
-    // .table-header {
-    //     .user-title-name {
+    .table-header {
+            span{
+        }
 
-    //     }
-    // }
-
+    }
+    .table-title{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        padding-left: 10px;
+        .likeLink{
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            cursor: pointer;
+            color: #2196f3;
+            > span{
+                margin-left: 8px;
+            }
+        }
+    }
     .eos-node-list {
         background: $white;
 
         .user-select-node {
             line-height: 30px;
+            cursor: pointer;
         }
 
         .user-select-empty-list {
             margin-left: 20px;
         }
     }
+    .table-header-wrapper
+    {
+        display: flex;
+        justify-content: space-between;
+        padding-left: 20px;
+    }
+    .selected-node-title{
+        padding: 11px 0;
+        align-self: center;
+        -ms-grid-column: 2;
+        grid-column: 2;
+        max-height: 74px;
+    }
+    .selected-node-title {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .item-count {
+        align-self: center;
+        height: 100%;
+        width: fit-content;
+        display: inline-block;
+        border-left-width: 1px;
+        border-left-style: solid;
+        -ms-grid-column: 4;
+        grid-column: 4;
+    }
+    .item-count-content {
+        padding: 0 $grid-gutter-width / 2;
+        line-height: 24px;
+        font-size: 16px;
+        .counter {
+            margin-left: 20px;
+            padding: 6.5px 10px;
+            background: $disabled-color-main-theme;
+            border-radius: 2px;
+            color: $white;
+        }
+    }
 
     .user-list-first-colomn {
+        width: 400px;
+        display: inline-block;
+        margin-left: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: bottom;
+        line-height: 32px;
+        height: 32px;
+        padding-right: 2px;
+    }
+    .user-list-third-colomn{
+        width: 150px;
+        display: inline-block;
+        margin-left: 20px;
+    }
+    .user-list-fourth-colomn{
         width: 200px;
         display: inline-block;
         margin-left: 20px;
+    }
+    .disabled{
+        cursor: not-allowed!important;
+        color: lightgray
+    }
+    .delitedDue{
+        background-color: #f5f0f0;
+    }
+    .spiner-wrapper{
+        width: 100%;
+        height:calc(100vh - 370px);
+        display: flex;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+    }
+    .group-checkbox {
+        padding-left: 0;
+        input[type="checkbox"] {
+            &:checked+span {
+                background-image: url("../assets/icons/Checkbox-Square-V-Blue.svg");
+            }
+            +span {
+                background-image: url("../assets/icons/Checkbox-Square-Minus-Blue.svg");
+            }
+        }
+    }
+    .table-wrapper{
+        overflow: visible;
+    }
+    .dropdown-menu{
+        width: 355px;
     }
 }

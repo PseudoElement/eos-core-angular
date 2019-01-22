@@ -13,6 +13,7 @@ import { PipRX } from 'eos-rest/services/pipRX.service';
 import { CB_PRINT_INFO } from 'eos-rest/interfaces/structures';
 import { TreeDictionaryDescriptor } from 'eos-dictionaries/core/tree-dictionary-descriptor';
 import { IImage } from 'eos-dictionaries/interfaces/image.interface';
+import { IHierCL } from 'eos-rest';
 
 export class DepartmentRecordDescriptor extends RecordDescriptor {
     dictionary: DepartmentDictionaryDescriptor;
@@ -82,8 +83,8 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
 
     getBoss(departmentDue: string): Promise<any> {
         return this.apiSrv.read({
-            'DEPARTMENT_CL': PipRX.criteries({
-                'PARENT_DUE': departmentDue,
+            'DEPARTMENT': PipRX.criteries({
+                'DEPARTMENT_DUE': departmentDue,
                 'IS_NODE': '1',
                 'POST_H': '1',
             })
@@ -140,6 +141,18 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
             default:
                 return this.id;
         }
+    }
+
+    getRoot(): Promise<any[]> {
+        return this.getData({ criteries: { DUE: '0%', LAYER: '0:2'/*, IS_NODE: '0'*/ } }, 'WEIGHT');
+    }
+
+    getChildren(record: IHierCL): Promise<any[]> {
+        const _children = {
+            DUE: '0%',
+            ISN_HIGH_NODE: record.ISN_NODE + '',
+        };
+        return this.getData({ criteries: _children }, 'DUE');
     }
 
     getRelated(rec: any, orgDUE: string): Promise<any> {
