@@ -16,6 +16,7 @@ import {RightUserSelectComponent} from './right-user-select/right-user-select.co
 import {DepartUserSelectComponent} from './depart-user-select/depart-user-select.component';
 import {CabinetUserComponent} from './cabinet-user/cabinet-user.component';
 import {UserSystemComponent} from './user-system/user-system.component';
+import {BtnActionComponent} from './btn-action/btn-action.component';
 /*     ----Services----     */
 import { TreeUserSelectService } from './shered/services/tree-user-select.service';
 import { RtUserSelectService } from './shered/services/rt-user-select.service';
@@ -29,7 +30,8 @@ import { RtUserSelectService } from './shered/services/rt-user-select.service';
         RightUserSelectComponent,
         DepartUserSelectComponent,
         UserSystemComponent,
-        CabinetUserComponent
+        CabinetUserComponent,
+        BtnActionComponent,
     ],
     entryComponents: [
         CreateUserComponent

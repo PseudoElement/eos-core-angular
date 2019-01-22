@@ -3,7 +3,7 @@ import { Subject } from 'rxjs/Subject';
 import { EosStorageService } from '../../app/services/eos-storage.service';
 import { PAGES_SELECT, LS_PAGE_LENGTH } from 'eos-user-select/shered/consts/pagination-user-select.consts';
 import { IPaginationUserConfig } from 'eos-user-select/shered/consts/pagination-user-select.interfaces';
-import {UserParamApiSrv} from '../../eos-user-params/shared/services/user-params-api.service';
+import {UserPaginationService} from '../../eos-user-params/shared/services/users-pagination.service';
 
 
 @Component({
@@ -22,11 +22,11 @@ export class UserSelectPaginationComponent {
     private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
-        private _user_service: UserParamApiSrv,
+        private _user_pagination: UserPaginationService,
         private _storageSrv: EosStorageService,
     ) {
 
-        _user_service.paginationConfig$.takeUntil(this.ngUnsubscribe)
+        _user_pagination.paginationConfig$.takeUntil(this.ngUnsubscribe)
             .subscribe((config: IPaginationUserConfig) => {
                 if (config) {
                     this.config = config;
@@ -38,19 +38,19 @@ export class UserSelectPaginationComponent {
     public setPageLength(length: number): void {
         this._storageSrv.setItem(LS_PAGE_LENGTH, length, true);
         this.config.length = length;
-        this._user_service.changePagination(this.config);
+        this._user_pagination.changePagination(this.config);
     }
 
     public showMore() {
         this.config.current++;
-        this._user_service.changePagination(this.config);
+        this._user_pagination.changePagination(this.config);
     }
 
     public showPage(page: number): void {
         if (page !== this.config.current) {
             this.config.current = page;
             this.config.start = page;
-            this._user_service.changePagination(this.config);
+            this._user_pagination.changePagination(this.config);
         }
     }
 
