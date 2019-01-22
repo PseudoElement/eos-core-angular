@@ -666,7 +666,8 @@ export class EosDictionary {
         if (node && !node.relatedLoaded) {
             switch (this.descriptor.id) {
                 case 'departments':
-                    const orgDUE = node.getParentData('DUE_LINK_ORGANIZ', 'rec');
+                    // const orgDUE = node.getParentData('DUE_LINK_ORGANIZ', 'rec');
+                    const orgDUE = node.data.rec.DUE_LINK_ORGANIZ;
                     return Promise.all([
                         this.descriptor.getRelated(node.data.rec, orgDUE),
                         this.descriptor.getRelatedSev(node.data.rec)

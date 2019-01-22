@@ -61,7 +61,7 @@
         </div>
     </div>
 
-        <div *ngIf="item.restrictRegistrationFiling && flagToDisplayTheRightSide"
+        <div *ngIf="item.restrictRegistrationFiling && flagToDisplayTheRightSide && flagForHidenCheckboxRestrictRegistrationFiling"
              class="tree-elements"
              [hidden]="!item.openFolder"
              [ngClass]="{'highlighted': item.restrictRegistrationFiling.data.isSelected}">

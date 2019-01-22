@@ -1,0 +1,41 @@
+.btn-action-wrapper{
+    height: 48px;
+    .btn-action-flex{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .btn{
+        height: 48px;
+        width: 48px;
+    }
+
+    .activemore,.activeShow {
+        background-color: #2196f3;
+    }
+    .menu-list{
+        border-top: solid 1px #e6e6e6;
+    }
+    .menu-link{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        .btn-icon{
+            margin-left: 10px;
+        }
+        .btn-title{
+            font-size: 13px;
+            margin-left: 20px;
+        }
+    }
+    .disabled{
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+}
+
+@media (max-width: 1200px) {
+    .buttons-list {
+       display: none;
+    }
+}
