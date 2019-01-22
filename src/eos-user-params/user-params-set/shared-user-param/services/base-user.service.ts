@@ -285,7 +285,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
                     method: 'MERGE',
                     requestUri: `USER_CL(${userId})/USER_PARMS_List(\'${userId} ${key}\')`,
                     data: {
-                        PARM_VALUE: `${this.newData.rec[key]}`
+                        PARM_VALUE: `${this.newData.rec[key] === null ? '' : this.newData.rec[key]}`
                     }
                 });
             }
