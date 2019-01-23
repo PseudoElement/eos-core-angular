@@ -4,6 +4,7 @@ import { BaseCardEditComponent } from './base-card-edit.component';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { WARN_NO_BINDED_ORGANIZATION } from '../consts/messages.consts';
 import {AbstractControl, ValidatorFn} from '@angular/forms';
+import { DynamicInputBase } from 'eos-common/dynamic-form-input/dynamic-input-base';
 
 @Component({
     selector: 'eos-departments-card-edit-department',
@@ -54,6 +55,15 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
             }
             return error ? {valueError: error} : null;
         };
+    }
+
+    clickNumcreation () {
+        const dib: DynamicInputBase = this.inputs['rec.indexDep'].dib;
+        dib.forceTooltip();
+        const c = this.form.controls['rec.DEPARTMENT_INDEX'];
+        c.markAsDirty();
+
+
     }
 
     chooseOrganiz() {

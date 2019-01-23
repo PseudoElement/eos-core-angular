@@ -75,6 +75,7 @@
                     [readonly]="!(this.isNewRecord && this.editMode)"></eos-dynamic-input>
                 <eos-dynamic-input [input]="inputs['rec.NUMCREATION_FLAG']"
                                    [form]="form"
+                                   (click)="this.clickNumcreation()"
                                    [readonly]="!editMode"></eos-dynamic-input>
             </div>
         </div>
