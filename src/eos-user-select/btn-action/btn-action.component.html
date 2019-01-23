@@ -23,7 +23,12 @@
         <!-- кнопка еще -->
         <div class="btn-group" dropdown #dropdown="bs-dropdown">
             <button class="btn btn-primary-light" Button dropdownToggle [ngClass]=" dropdown.isOpen ? 'activemore' : ''">
-                <span [ngClass]="dropdown.isOpen ? 'eos-icon eos-icon-fab-white small': 'eos-icon eos-icon-fab-blue small'"></span>
+                <span
+                    tooltip="Показать меню"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                    trigger="hover"
+                    [ngClass]="dropdown.isOpen ? 'eos-icon eos-icon-fab-white small': 'eos-icon eos-icon-fab-blue small'"></span>
             </button>
             <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
                 role="menu" aria-labelledby="button-basic">
