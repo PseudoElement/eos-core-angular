@@ -31,6 +31,7 @@ import {
     WARN_ELEMENT_DELETED,
     WARN_LOGIC_CLOSE,
     WARN_LOGIC_OPEN,
+    DANGER_DEPART_IS_LDELETED,
 } from '../consts/messages.consts';
 
 import {RECENT_URL} from 'app/consts/common.consts';
@@ -365,8 +366,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     }
 
     setDictMode(mode: number) {
-        this._dictSrv.setDictMode(mode);
-        this.nodeList.updateViewFields([]);
+        if (mode === 0 && this.treeNode.isDeleted) {
+            this._msgSrv.addNewMessage(DANGER_DEPART_IS_LDELETED);
+        } else {
+            this._dictSrv.setDictMode(mode);
+            this.nodeList.updateViewFields([]);
+        }
     }
 
     /**

@@ -48,7 +48,7 @@ export class TreeComponent implements OnInit {
 
     onSelect(evt: Event, node: EosDictionaryNode) {
         evt.stopPropagation();
-        if (!node.isDeleted) {
+        if (!node.isDeleted || this._dictSrv.currentDictionary.id === 'cabinet') {
             const _path = node.getPath();
             this._router.navigate(_path);
         }
