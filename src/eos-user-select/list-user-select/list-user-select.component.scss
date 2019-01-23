@@ -38,7 +38,13 @@
         .user-select-empty-list {
             margin-left: 20px;
         }
+        .user-item{
+            &:hover{
+                background-color: #e3f2fd
+            }
+        }
     }
+
     .table-header-wrapper
     {
         display: flex;
@@ -108,7 +114,7 @@
         color: lightgray
     }
     .delitedDue{
-        background-color: #f5f0f0;
+        color: #e0dbdb;
     }
     .spiner-wrapper{
         width: 100%;
@@ -135,4 +141,5 @@
     .dropdown-menu{
         width: 355px;
     }
+
 }

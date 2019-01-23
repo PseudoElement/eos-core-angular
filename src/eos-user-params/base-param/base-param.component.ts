@@ -128,8 +128,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         const url = `CreateLogin?pass='${data['pass']}'&isn_user=${id}`;
                         qPass = this._apiSrv.getData({[url]: ALL_ROWS});
                     } else {
-                        console.log('нету пока сопа для изменения пароля');
-                        qPass = Promise.resolve(); // TODO вызвать соп для смены пароля
+                        const url = `ChangePassword?isn_user=${id}&pass='${data['pass']}'`;
+                        qPass = this._apiSrv.getData({[url]: ALL_ROWS});
                     }
                 } else {
                     qPass = Promise.resolve();

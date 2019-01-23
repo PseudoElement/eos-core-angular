@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
-
 import { UserSelectNode } from './user-node-select';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { CreateUserComponent } from './createUser/createUser.component';
@@ -13,6 +12,7 @@ import {IUserSort, SortsList} from '../shered/interfaces/user-select.interface';
 import {HelpersSortFunctions} from '../shered/helpers/sort.helper';
 import {Allbuttons} from '../shered/consts/btn-action.consts';
 import {BtnAction, BtnActionFields} from '../shered/interfaces/btn-action.interfase';
+import {TreeUserSelectService} from '../shered/services/tree-user-select.service';
 // import { PipRX} from 'eos-rest';
 // import { ALL_ROWS } from 'eos-rest/core/consts';
 @Component({
@@ -33,6 +33,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     buttons: BtnAction;
     flagChecked: boolean;
     countMaxSize: number;
+
     // количество выбранных пользователей
     countcheckedField: number;
     private ngUnsubscribe: Subject<any> = new Subject();
@@ -44,6 +45,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private _router: Router,
         private rtUserService: RtUserSelectService,
         private _sandwichSrv: EosSandwichService,
+        private _treeSrv: TreeUserSelectService,
       //  private _pipeSrv: PipRX,
     ) {
         this.helpersClass = new HelpersSortFunctions();
@@ -51,23 +53,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._route.params
             .takeUntil(this.ngUnsubscribe)
             .subscribe(param => {
-                this.countcheckedField = 0;
-                this.titleCurrentDue = this._apiSrv.configList.titleDue;
-                this.flagChecked = false;
-                this.isLoading = true;
-                this._apiSrv.getUsers(param['nodeId'])
-                .then((data: UserSelectNode[]) => {
-                        this.listUsers = data;
-                        if (this.listUsers && this.listUsers.length) {
-                            this.selectedNode(this.listUsers[0]);
-                        }   else {
-                            this.selectedUser = undefined;
-                        }
-                        this.disabledBtnAction();
-                        this.changeFlagCheked();
-                        this.isLoading = false;
-                        this.countMaxSize = this._pagSrv.countMaxSize;
-                });
+              this.initView(param['nodeId']);
             });
         this._pagSrv.NodeList$.takeUntil(this.ngUnsubscribe).subscribe((data) => {
            this.flagChecked = false;
@@ -80,11 +66,35 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             this.disabledBtnAction();
             this.changeFlagCheked();
         });
+
+        this._treeSrv.changeListUsers$.takeUntil(this.ngUnsubscribe).subscribe(r => {
+            this.initView();
+        });
         this._sandwichSrv.currentDictState$
         .takeUntil(this.ngUnsubscribe)
         .subscribe((state: boolean[]) => {
                 this.currentState = state;
             });
+    }
+
+    initView(param?) {
+        this.countcheckedField = 0;
+        this.titleCurrentDue = this._apiSrv.configList.titleDue;
+        this.flagChecked = false;
+        this.isLoading = true;
+        this._apiSrv.getUsers(param || '0.')
+        .then((data: UserSelectNode[]) => {
+                this.listUsers = data;
+                if (this.listUsers && this.listUsers.length) {
+                    this.selectedNode(this.listUsers[0]);
+                }   else {
+                    this.selectedUser = undefined;
+                }
+                this.disabledBtnAction();
+                this.changeFlagCheked();
+                this.isLoading = false;
+                this.countMaxSize = this._pagSrv.countMaxSize;
+        });
     }
     ngOnInit() {
         this.buttons = Allbuttons;
@@ -105,6 +115,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.selectedUser = user;
         this.selectedUser.isSelected = true;
         this.rtUserService.changeSelectedUser(user);
+        this.disabledBtnAction();
     }
 
     RedactUser() {
@@ -180,7 +191,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             upDoun: false,
             checked: false,
         };
-        this.srtConfig.official =  {
+        this.srtConfig.dueName =  {
             upDoun: false,
             checked: false,
         };
@@ -205,6 +216,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._apiSrv.devideUsers();
         this._pagSrv._initPaginationConfig(true);
         this._pagSrv.changePagination(this._pagSrv.paginationConfig);
+        this.countMaxSize = this._pagSrv.countMaxSize;
     }
 
     ActionTehnicalUser() {
@@ -212,6 +224,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._apiSrv.devideUsers();
         this._pagSrv._initPaginationConfig(true);
         this._pagSrv.changePagination(this._pagSrv.paginationConfig);
+        this.countMaxSize = this._pagSrv.countMaxSize;
     }
 
     OpenAddressManagementWindow() {
@@ -331,14 +344,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         if (this.selectedUser) {
             this.buttons.buttons.map((button: BtnActionFields, index) => {
                 if (this.selectedUser.deleted) {
-                    if (button.name === ('RedactUser' || 'DeliteLogicalUser' || 'LocSelectedUser' ||  'LocSelectedUser' || 'OpenAddressManagementWindow' || 'OpenStreamScanSystem' || 'OpenRightsSystemCaseDelo' || 'ActionTehnicalUser')) {
                     button.disabled = true;
-                    }
                 }else {
                     button.disabled = false;
                 }
                 return button;
             });
+            this.buttons.buttons[0].disabled = false;
             this.buttons.moreButtons[3].disabled = false;
             this.buttons.moreButtons[2].disabled = false;
         }   else {
@@ -351,7 +363,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
           this.buttons.moreButtons[3].disabled = true;
           this.buttons.moreButtons[2].disabled = true;
         }
-
     }
 
     // private disabledBtnDeleted() {
