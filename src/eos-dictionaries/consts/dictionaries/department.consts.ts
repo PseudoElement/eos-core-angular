@@ -282,6 +282,10 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             title: 'Номерообразование НП',
             type: 'boolean',
         }, {
+            key: 'EXPEDITION_FLAG',
+            title: 'Отправка документов по реестрам',
+            type: 'boolean',
+        }, {
             key: 'photo',
             type: 'dictionary',
             title: 'Фото'
@@ -301,7 +305,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     editFields: ['CARD_FLAG', 'CARD_NAME', 'CODE', 'DUTY', 'IS_NODE', 'NOTE', 'SURNAME', 'indexPerson', 'POST_H', 'PHONE_LOCAL', 'PHONE',
         'FAX', 'E_MAIL', 'NUM_CAB', 'START_DATE', 'END_DATE', 'fullPosition', 'SKYPE', 'printInfo', 'sev', 'organization', 'cabinet',
         'user', 'photo', 'ID_GAS_PS', 'NUMCREATION_FLAG',
-        'title', 'DUE_LINK_ORGANIZ', 'indexDep', 'fullTitle', 'ISN_PHOTO'],
+        'title', 'DUE_LINK_ORGANIZ', 'indexDep', 'fullTitle', 'ISN_PHOTO', 'EXPEDITION_FLAG'],
     // ['fio', 'position', 'description', 'title', 'phone', 'email', 'rooms', 'associatedUsers']
     allVisibleFields: ['SURNAME', 'DUTY', 'fullTitle', 'fullPosition', 'SKYPE', /* 'DEPARTMENT_DUE', */ 'ORDER_NUM', 'indexDep', 'POST_H',
         'CARD_FLAG',
