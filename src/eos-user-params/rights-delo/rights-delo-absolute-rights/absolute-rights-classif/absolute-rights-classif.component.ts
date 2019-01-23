@@ -3,7 +3,7 @@ import { NodeAbsoluteRight } from '../node-absolute';
 import { IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { IChengeItemAbsolute } from 'eos-user-params/rights-delo/shared-rights-delo/interfaces/right-delo.intefaces';
 import { RightClassifNode } from './absolute-rights-classif-node';
-import { TECH_USER_CLASSIF, E_CLASSIF_ID } from 'eos-user-params/rights-delo/shared-rights-delo/consts/tech-user-classif.consts';
+import { TECH_USER_CLASSIF } from 'eos-user-params/rights-delo/shared-rights-delo/consts/tech-user-classif.consts';
 import { ITechUserClassifConst, E_TECH_USER_CLASSIF_CONTENT, IConfigUserTechClassif } from 'eos-user-params/rights-delo/shared-rights-delo/interfaces/tech-user-classif.interface';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { OPEN_CLASSIF_DEPARTMENT_ONLI_NODE, OPEN_CLASSIF_DOCGROUP_CL_ONLI_NODE, OPEN_CLASSIF_RUBRIC_CL_ONLI_NODE, OPEN_CLASSIF_CARDINDEX } from 'app/consts/query-classif.consts';
@@ -76,73 +76,22 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                 };
         }
     }
-    addInstance(config: IConfigUserTechClassif, node: RightClassifNode, oldPage?: boolean): Promise<any> {
-        return this._waitClassifSrv.openClassif(config.waitClassif, oldPage)
+    addInstance(config: IConfigUserTechClassif, node: RightClassifNode): Promise<any> {
+        return this._waitClassifSrv.openClassif(config.waitClassif)
         .then((data: string) => {
             return this.getEntyti(data.split('|').join('||'), config);
         })
         .then((data: any[]) => {
             if (this._checkRepeat(node, data, config)) {
                 this._msgSrv.addNewMessage(EMPTY_ADD_ELEMENT_WARN);
-                this.isShell = false;
                 return;
             }
-            const newList: NodeDocsTree[] = [];
-            data.forEach(entity => {
-                const newTechRight = {
-                    ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
-                    FUNC_NUM: node.key,
-                    CLASSIF_ID: E_CLASSIF_ID[node.key],
-                    DUE: entity['DUE'],
-                    ALLOWED: 1,
-                };
-                const d = {
-                    userTech: newTechRight,
-                    instance: entity
-                };
-                newList.push(new NodeDocsTree(entity['DUE'], entity[config.label], !!newTechRight['ALLOWED'], d));
-
-                this.selectedNode.pushChange({
-                    method: 'POST',
-                    due: entity.DUE,
-                    funcNum: node.key,
-                    data: newTechRight,
-                });
-
-            });
-            node.listContent = node.listContent.concat(newList);
-            // const nodes: NodeDocsTree[] = [];
-            // data.forEach((doc: DOCGROUP_CL) => {
-            //     const node = this._createNode({
-            //         ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
-            //         FUNC_NUM: +this.selectedNode.key + 1,
-            //         DUE: doc.DUE,
-            //         ALLOWED: 0
-            //     },
-            //     doc);
-
-            //     /* добавляем изменения */
-            //     this.selectedNode.pushChange({
-            //         method: 'POST',
-            //         due: node.DUE,
-            //         data: node.data['rightDocGroup']
-            //     });
-
-
-            //     nodes.push(node);
-            // });
-
-            // this.isShell = false;
-            // this.list = this.list.concat(nodes);
-            // this.Changed.emit();
-        })
-        .catch(() => {
-            console.log('catch()');
+            return data;
         });
     }
     private _init () {
         if (this.selectedNode.isCreate || !this.curentUser['TECH_RIGHTS']) {
-            const techRights: string = new Array(39).fill('1').join('');
+            const techRights: string = '1'.repeat(39);
             const chenge: IChengeItemAbsolute = {
                 method: 'MERGE',
                 user_cl: true,
@@ -151,8 +100,15 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                 }
             };
             this.selectedNode.pushChange(chenge);
-            // this.Changed.emit();
             this.curentUser['TECH_RIGHTS'] = techRights;
+        } else {  // строке в индексах с пробеломи присваиваем 0
+            const arr = this.curentUser['TECH_RIGHTS'].split('');
+            arr.forEach((i,  index) => {
+                if (i === ' ') {
+                    arr[index] = '0';
+                }
+            });
+            this.curentUser['TECH_RIGHTS'] = arr.join('');
         }
         TECH_USER_CLASSIF.forEach((item: ITechUserClassifConst) => {
             this.listClassif.push(new RightClassifNode(item, this.curentUser, this.selectedNode, this));

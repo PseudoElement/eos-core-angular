@@ -94,13 +94,6 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
         });
     }
     DeleteDoc() {
-        // this.curentNode.parent.deleteChild(this.curentNode);
-        // if (this.curentNode.children.length) {
-        //     this.curentNode.children.forEach(node => {
-        //         node.parent = this.curentNode.parent;
-        //         this.curentNode.parent.addChildren(node);
-        //     });
-        // }
         this.list = this.list.filter(node => node !== this.curentNode);
         this.selectedNode.pushChange({
             method: 'DELETE',

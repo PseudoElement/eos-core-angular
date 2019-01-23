@@ -180,13 +180,18 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
     }
     cancel() {
-        this.btnDisabled = true;
-        this.ngOnDestroy();
-        this._userParamsSetSrv.getUserIsn()
-        .then(() => {
-            this.init();
-            this.ngOnInit();
+        this.listRight.forEach(i => {
+            if (i.touched) {
+                console.log(i.change);
+            }
         });
+        // this.btnDisabled = true;
+        // this.ngOnDestroy();
+        // this._userParamsSetSrv.getUserIsn()
+        // .then(() => {
+        //     this.init();
+        //     this.ngOnInit();
+        // });
     }
     clickLable(event, item: NodeAbsoluteRight) {
         event.preventDefault();
@@ -275,7 +280,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     private _createList(constanta: IInputParamControl[]): NodeAbsoluteRight[] {
         const fields = [];
         constanta.forEach((node: IInputParamControl) => {
-            fields.push(new NodeAbsoluteRight(node, +this.arrDeloRight[+node['key']], this.form.get(node['key'])));
+            fields.push(new NodeAbsoluteRight(node, +this.arrDeloRight[+node['key']], this.form.get(node['key']), this.curentUser));
         });
         return fields;
     }

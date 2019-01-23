@@ -199,6 +199,7 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
 ];
 
 export const E_CLASSIF_ID = {
+    1: 104,
     8: 107,
     9: 105,
     10: 104,

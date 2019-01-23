@@ -5,6 +5,7 @@ import { USER_TECH } from 'eos-rest';
 import { E_CLASSIF_ID } from 'eos-user-params/rights-delo/shared-rights-delo/consts/tech-user-classif.consts';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { AbsoluteRightsClassifComponent } from './absolute-rights-classif.component';
+import { IChengeItemAbsolute } from 'eos-user-params/rights-delo/shared-rights-delo/interfaces/right-delo.intefaces';
 
 export class RightClassifNode {
     // isExpanded: boolean = false;
@@ -39,12 +40,25 @@ export class RightClassifNode {
     set value (v) {
         this._valueLast = this._value;
         this._value = +v;
+
+        const right = this._curentUser['TECH_RIGHTS'].split('');
+        right[this.key - 1] = this._value.toString();
+        const chenge: IChengeItemAbsolute = {
+            method: 'MERGE',
+            user_cl: true,
+            data: {
+                TECH_RIGHTS: right.join(''),
+            }
+        };
+        this._parentNode.pushChange(chenge);
+        this._component.Changed.emit();
+
         if (this.type !== E_TECH_USER_CLASSIF_CONTENT.none) {
             if (!this._valueLast && v && this.type !== E_TECH_USER_CLASSIF_CONTENT.limitation) { // создать корневой елемент
                 const newNode = {
                     ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
                     FUNC_NUM: this.key,
-                    CLASSIF_ID: E_CLASSIF_ID[this.key],
+                    CLASSIF_ID: E_CLASSIF_ID[(this.key.toString())],
                     DUE: '0.',
                     ALLOWED: 1,
                 };
@@ -57,8 +71,12 @@ export class RightClassifNode {
                 });
             }
             if (this._valueLast && !v) { // удалить все элементы
+                console.log('delete element');
                 if (this._listUserTech.length) {
                     console.log('удалить все элементы', E_TECH_USER_CLASSIF_CONTENT[this.type]);
+                    this._deletAll();
+                    this._curentUser['USER_TECH_List'] = this._curentUser['USER_TECH_List'].filter((i: USER_TECH) => i['FUNC_NUM'] !== this.key);
+                    this.listContent = [];
                 }
             }
         }
@@ -93,24 +111,70 @@ export class RightClassifNode {
         this._valueLast = v;
     }
     addInstance() {
-        const oldPage: boolean = this.type === E_TECH_USER_CLASSIF_CONTENT.limitation;
-        this._component.addInstance(this._config, this, oldPage);
+        this.isShell = true;
+        this._component.addInstance(this._config, this)
+        .then(data => {
+            const newList: NodeDocsTree[] = [];
+            data.forEach(entity => {
+                const newTechRight = {
+                    ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
+                    FUNC_NUM: this.key,
+                    CLASSIF_ID: E_CLASSIF_ID[(this.key.toString())],
+                    DUE: entity['DUE'],
+                    ALLOWED: 1,
+                };
+                const d = {
+                    userTech: newTechRight,
+                    instance: entity
+                };
+                newList.push(new NodeDocsTree(entity['DUE'], entity[this._config.label], !!newTechRight['ALLOWED'], d));
+
+                this._parentNode.pushChange({
+                    method: 'POST',
+                    due: entity.DUE,
+                    funcNum: this.key,
+                    data: newTechRight,
+                });
+                this._listUserTech.push(newTechRight);
+
+            });
+            this.listContent = this.listContent.concat(newList);
+            this._component.Changed.emit();
+            this.isShell = false;
+        })
+        .catch(() => {
+            this.isShell = false;
+        });
     }
     DeleteInstance() {
-        // if (this.curentSelectedNode.DUE !== '0.') {
-            console.log('DeleteInstance()', this.curentSelectedNode);
-        // }
+        if (this.curentSelectedNode.DUE !== '0.') {
+            this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode);
+            this._parentNode.pushChange({
+                method: 'DELETE',
+                due: this.curentSelectedNode.DUE,
+                funcNum: this.key,
+                data: this.curentSelectedNode.data['userTech']
+            });
+            this.curentSelectedNode = null;
+            this._component.Changed.emit();
+        }
     }
     select(node: NodeDocsTree) {
-        console.log('select()', node);
         if (node.DUE !== '0.') {
             this.curentSelectedNode = node;
         } else {
             this.curentSelectedNode = null;
         }
     }
-    checkedNode(n: NodeDocsTree) {
-        console.log('checkedNode()', n);
+    checkedNode(node: NodeDocsTree) {
+        node.data['userTech']['ALLOWED'] = node.allowed;
+        this._parentNode.pushChange({
+            method: 'MERGE',
+            due: node.DUE,
+            funcNum: this.key,
+            data: node.data['userTech']
+        });
+        this._component.Changed.emit();
     }
     private _createListContent (userTech: any[], listContent: NodeDocsTree[]) {
         this.isLoading = true;
@@ -129,6 +193,16 @@ export class RightClassifNode {
                 listContent.push(new NodeDocsTree(uT['DUE'], item['CLASSIF_NAME'], uT['ALLOWED'], d));
             });
             this.isLoading = false;
+        });
+    }
+    private _deletAll() {
+        this._listUserTech.forEach((node) => {
+            this._parentNode.pushChange({
+                method: 'DELETE',
+                due: node.DUE,
+                funcNum: this.key,
+                data: node,
+            });
         });
     }
 }
