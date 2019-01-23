@@ -500,7 +500,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         this.btnDisabled = false;
     }
     selectedNode(word, event) {
-        if (word !== 'No main card') {
         this.isMarkNode = true;
         this.flagNoCardIndexSelected = false;
         for (let i = 0; i < this.fieldKeysforCardFiles.length; i++) {
@@ -536,7 +535,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         this.arrayForAllDataForCurrentUsercard.push(this.allDataForCurrentUsercard);
         this.currentSelectCard();
         this.currentSelectedWord = word;
-    }
     }
     currentSelectCard() {
         let dataCabinetDepartmentForDefault;
@@ -665,7 +663,12 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                if (this.fieldKeysforCardFiles[i][3] === true || this.flagNoMainCard) {
                 this.flagCurrentDataCabinetDepartment = false;
                 this.flagNoCardIndexSelected = true;
-                this.selectedNode('No main card', null);
+                for (let j = 0; j < this.fieldKeysforCardFiles.length; j++) {
+                    if (this.fieldKeysforCardFiles[j][4] === true) {
+                        this.selectedNode(this.fieldKeysforCardFiles[j][1], null);
+                        break;
+                    }
+                }
                } else {
                 this.selectedNode(this.fieldKeysforCardFiles[this.globalIndexMainCard][1], null);
                }
