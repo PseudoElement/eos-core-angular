@@ -106,12 +106,12 @@ export const OpenStreamScanSystem: BtnActionFields = {
 
 export const OpenRightsSystemCaseDelo: BtnActionFields = {
     name: 'OpenRightsSystemCaseDelo',
-    title: 'Окно прав пользователя в системе Дело',
-    disabledClass: 'eos-icon eos-icon-D-Grey small',
-    enableClass: 'eos-icon eos-icon-D-Blue small',
-    tooltip: 'Открыть окно настроек прав пользователя в системе Дело',
+    title: 'Окно прав пользователя в системе Надзор',
+    disabledClass: 'eos-icon eos-icon-H-Grey small',
+    enableClass: 'eos-icon eos-icon-H-Blue small',
+    tooltip: 'Открыть окно настроек прав пользователя в системе Надзор',
     disabled: false,
-    activeClass: 'eos-icon eos-icon-D-Blue small',
+    activeClass: 'eos-icon eos-icon-H-Blue small',
     activeBtnClass: '',
     isActive: false,
 };
