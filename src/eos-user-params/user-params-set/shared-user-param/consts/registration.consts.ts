@@ -36,12 +36,12 @@ export const REGISTRATION_USER: IBaseUsers = {
         {
             key: 'AUTOSTAMP',
             type: 'boolean',
-            title: 'Автоматическая печать регистрация штампа(входящий)'
+            title: 'Автоматическая печать регистрационного штампа (входящий)'
         },
         {
             key: 'AUTOSTAMP1',
             type: 'boolean',
-            title: 'Автоматическая печать регистрация штампа(исходящий)'
+            title: 'Автоматическая печать регистрационного штампа (исходящий)'
         },
         {
             key: 'SECURLEVEL',

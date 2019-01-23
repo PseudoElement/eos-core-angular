@@ -149,13 +149,13 @@ export const WARN_ELEMENT_DELETED: IMessage = {
 export const INFO_PERSONE_DONT_HAVE_CABINET: IMessage = {
     type: 'info',
     title: 'Внимание:',
-    msg: 'У выбранного должностного лица отсутвует свой кабинет.'
+    msg: 'У выбранного должностного лица отсутствует свой кабинет.'
 };
 
 export const WARN_NO_BINDED_ORGANIZATION: IMessage = {
     type: 'warning',
     title: 'Предупреждение:',
-    msg: 'У подразделение нет собственной организации. Удаление невозможно'
+    msg: 'У подразделения нет собственной организации. Удаление невозможно'
 };
 
 export const DANGER_EDIT_ONLY_DEPARTMENTS_ALLOWED: IMessage = {
@@ -175,8 +175,15 @@ export const DANGER_EDIT_YEAR_INVALID: IMessage = {
     title: 'Ошибка редактирования',
     msg: 'Неверно задан год'
 };
+
 export const DANGER_NUMCREATION_NP_CHANGE: IMessage = {
     type: 'danger',
     title: 'Предупреждение: ',
     msg: 'Указанное значение или значения больше ранее уже использовались в нумерации НП. Изменение значения счетчика невозможно.'
+};
+
+export const DANGER_ORGANIZ_NO_SEV: IMessage = {
+    type: 'danger',
+    title: 'Предупреждение: ',
+    msg: 'У выбранной организации не задан индекс СЭВ.'
 };

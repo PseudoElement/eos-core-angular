@@ -1,7 +1,7 @@
 <div class="input-user-wrapper input-user-card-index-rights-wrapper">
     <div  *ngIf="flagCardFileAvailability">
     <eos-rights-delo-header
-        title="Права в картотеках"
+        [title]="titleHeader"
         (submitForm)="submit()"
         (cancelForm)="cancel()"
         [statusBtnSub]="btnDisabled"
@@ -26,16 +26,17 @@
                     (click)="OpenClassiv()">
                     <span class="eos-icon eos-icon-plus-blue small"></span>
                 </button>
-                <!--<button
+                <button
                     class="btn btn-primary-light"
                     tooltip="Удалить"
                     placement="bottom"
                     container="body"
                     containerClass="tooltip-info"
                     aria-readonly="false"
+                    [ngClass]="{'hiden-btn': btnMinusHiden}"
                     (click)="removeDocuments()">
                     <span class="eos-icon eos-icon-minus-blue small"></span>
-                </button>-->
+                </button>
     </div>
     <div class="content-list" *ngIf="!isLoading">
     <div *ngFor="let item of treeHierarchyOnTheRightSide" class="inline-block item-card">
@@ -60,7 +61,7 @@
         </div>
     </div>
 
-        <div *ngIf="item.restrictRegistrationFiling && flagToDisplayTheRightSide"
+        <div *ngIf="item.restrictRegistrationFiling && flagToDisplayTheRightSide && flagForHidenCheckboxRestrictRegistrationFiling"
              class="tree-elements"
              [hidden]="!item.openFolder"
              [ngClass]="{'highlighted': item.restrictRegistrationFiling.data.isSelected}">

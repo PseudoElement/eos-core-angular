@@ -41,7 +41,6 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                         });
                     });
                 }
-
             });
             this.init();
             this.prepInputsAttach = this.getObjectInputFields(CABINETS_USER.fieldsChild);
@@ -53,15 +52,55 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             });
         });
     }
+
+    init() {
+        this.prepareDataParam();
+              const allData = this._userParamsSetSrv.hashUserContext;
+              this.sortedData = this.linearSearchKeyForData(this.constUserParam.fields, allData);
+              this.prepareData = this.convData(this.sortedData);
+              this.inputs = this.getInputs();
+              this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+              this.subscribeChangeForm();
+      }
+
+      subscribeChangeForm() {
+        this.subscriptions.push(
+            this.form.valueChanges
+                .debounceTime(200)
+                .subscribe(newVal => {
+                    let changed = false;
+                    Object.keys(newVal).forEach(path => {
+                        this.oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
+                         if (this.changeByPath(path, newVal[path])) {
+                            changed = true;
+                         }
+                    });
+                    this.isChangeForm = changed;
+                    if ((this.isChangeFormAttach || this.isChangeForm) === true) {
+                        this.formChanged.emit(true);
+                    } else {
+                           this.formChanged.emit(false);
+                }
+            })
+        );
+        this.subscriptions.push(
+            this.form.statusChanges.subscribe(status => {
+                if (this._currentFormStatus !== status) {
+                    this.formInvalid.emit(status === 'INVALID');
+                }
+                this._currentFormStatus = status;
+            })
+        );
+    }
     setTab(i: number) {
         this.currTab = i;
     }
     getControlAuthor(): Promise<any> {
         const ControlAuthor = this._userParamsSetSrv.hashUserContext['RESOLUTION_CONTROLLER'];
         this.dueForLink = ControlAuthor;
-        if (ControlAuthor === null) {
+        if (String(ControlAuthor) === 'null') {
             this.controller = false;
-            return Promise.resolve();
+            return Promise.resolve(false);
         } else {
             this.controller = true;
             return  this._userParamsSetSrv.getDepartmentFromUser(ControlAuthor);
@@ -91,6 +130,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             if  (data) {
                 this.form.controls['rec.RESOLUTION_CONTROLLER'].patchValue(String(this.dueForLink));
                 this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(data[0]['CLASSIF_NAME']));
+                this.controller = true;
             }
         })
         .catch(error => {
@@ -98,8 +138,12 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
         });
     }
 
+    clearControlAuthor() {
+        this.form.controls['rec.RESOLUTION_CONTROLLER'].patchValue('');
+        this.form.controls['rec.CONTROLL_AUTHOR'].patchValue('');
+        this.controller = false;
+    }
     showInfoUser() {
-        console.log('show info');
         this._router.navigate(['/spravochniki/departments', this.dueForLink, 'view', '0']);
     }
     afterInit() {
@@ -121,7 +165,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             this.formAttach.controls['rec.HILITE_PRJ_RC_INCREMENT'].disable();
         }
         if (this.form.controls['rec.FOLDER_ITEM_LIMIT_RESULT'].value === 'null') {
-            this.form.controls['rec.FOLDER_ITEM_LIMIT_RESULT'].patchValue('0', {emitEvent: false});
+            this.form.controls['rec.FOLDER_ITEM_LIMIT_RESULT'].patchValue('', {emitEvent: false});
         }
         this.subscriptions.push(
             this.formAttach.valueChanges
@@ -133,8 +177,12 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                             changed = true;
                         }
                     });
-                    this.formChanged.emit(changed);
-                    this.isChangeFormAttach = changed;
+                   this.isChangeFormAttach = changed;
+                    if ((this.isChangeFormAttach || this.isChangeForm) === true) {
+                        this.formChanged.emit(true);
+                    } else {
+                           this.formChanged.emit(false);
+                }
             })
         );
         this.subscriptions.push(
@@ -220,6 +268,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     }
 
     cancel() {
+        let val = null;
         if (this.isChangeForm || this.isChangeFormAttach) {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
             this.isChangeForm = false;
@@ -228,6 +277,12 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             this.ngOnDestroy();
             this.init();
             this.afterInit();
+            val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
+            if (val !== '' &&  val !== null) {
+                this.controller = true;
+            }   else {
+                this.controller = false;
+            }
         }
     }
 

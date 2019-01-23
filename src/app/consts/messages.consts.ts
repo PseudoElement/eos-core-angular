@@ -88,6 +88,11 @@ export const NAVIGATE_TO_ELEMENT_WARN: IMessage = {
 };
 export const EMPTY_ADD_ELEMENT_WARN: IMessage = {
     type: 'warning',
-    title: '',
-    msg: 'Нет елементов для добавления'
+    title: 'Предупреждение:',
+    msg: 'Нет елементов для добавления.'
+};
+export const DUE_DEP_OCCUPATION: IMessage = {
+    title: 'Предупреждение:',
+    msg: 'Должностное лицо уже привязано к пользователю.',
+    type: 'warning'
 };

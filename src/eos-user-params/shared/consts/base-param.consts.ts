@@ -24,6 +24,13 @@ export const BASE_PARAM_INPUTS: IInputParamControl[] = [
         key: 'NOTE2',
         label: 'ПРИМЕЧАНИЯ',
     },
+    {
+        controlType: E_FIELD_TYPE.string,
+        key: 'DUE_DEP_NAME',
+        label: 'ДОЛЖНОСТНОЕ ЛИЦО',
+        required: true,
+        data: '',
+    },
 ];
 
 export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
@@ -58,14 +65,6 @@ export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
                 value: ''
             }
         ],
-    },
-    {
-        controlType: E_FIELD_TYPE.string,
-        key: 'DUE_DEP_NAME',
-        label: 'ДОЛЖНОСТНОЕ ЛИЦО',
-        disabled: true,
-        readonly: true,
-        data: '',
     },
 ];
 

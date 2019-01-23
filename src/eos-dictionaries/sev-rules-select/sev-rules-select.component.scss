@@ -1,0 +1,120 @@
+.sev-rules-select-modal {
+    width: 600px;
+
+    .modal-header {
+        padding: 0 20px;
+        .pull-right {
+            font-size: 0;
+        }
+    }
+    .edit-block {
+        display: inline-block;
+        white-space: nowrap;
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+    .spinner-container {
+        position: relative;
+        height: 300px;
+        .center-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            //width: 200px;
+            //height: 200px;
+        }
+    }
+    .edit-control {
+        display: inline-block;
+        width: 45%;
+    }
+
+    .modal-body {
+
+        padding: 20px;
+
+    }
+
+    .modal-body-container {
+        display: block;
+    }
+
+    .divTable-wrapper {
+        min-height: 150px;
+        max-height: 200px;
+        border: 1px solid black;
+        overflow: auto;
+    }
+
+    .buttons-row {
+        padding: 5px;
+        // min-height: 100px;
+        // border: 1px solid black;
+    }
+    .btn-add,
+    .btn-del,
+    .btn-sortdn,
+    .btn-sortup {
+        content: "";
+        height: 24px;
+        width: 24px;
+    }
+
+    .btn-sortup {
+        background-image: url("../assets/icons/Arrow-Blue.svg");
+        transform: rotate(90deg);
+    }
+    .btn-sortdn {
+        background-image: url("../assets/icons/Arrow-Blue.svg");
+        transform: rotate(-90deg);
+    }
+    .btn-add {
+        background-image: url("../assets/icons/Open-Close-Folder-Blue.svg");
+        transform: rotate(90deg);
+    }
+    .btn-del {
+        background-image: url("../assets/icons/Open-Close-Folder-Blue.svg");
+        transform: rotate(-90deg);
+    }
+
+    .divTable{
+        display: table;
+        // border: 0.1px solid #999999;
+        width: 100%;
+    }
+    .divTableHeaderRow {
+        display: table-row;
+    }
+    .divTableRow {
+        display: table-row;
+        cursor: pointer;
+        &:hover {
+            background-color: $highlight-color-main-theme;
+            color: $secondary-font-color-main-theme;
+        }
+    }
+    .divTableHeading {
+        background-color: #EEE;
+
+        display: table-header-group;
+    }
+    .divTableCell, .divTableHead {
+        // border: 1px solid #999999;
+        display: table-cell;
+        padding: 3px 10px;
+    }
+    .divTableHeading {
+        background-color: #EEE;
+        display: table-header-group;
+        font-weight: bold;
+    }
+    .divTableFoot {
+        background-color: #EEE;
+        display: table-footer-group;
+        font-weight: bold;
+    }
+    .divTableBody {
+        display: table-row-group;
+    }
+}

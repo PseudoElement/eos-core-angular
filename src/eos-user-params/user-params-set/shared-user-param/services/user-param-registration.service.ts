@@ -219,6 +219,15 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
     setTab(i: number) {
         this.currTab = i;
     }
+    clearField() {
+        const value = this.form.controls['rec.ORGGROUP_NAME'].value;
+        if (String(value) === 'null' || value === '') {
+            return;
+        }   else {
+            this.form.controls['rec.ORGGROUP_NAME'].patchValue('');
+            this.form.controls['rec.ORGGROUP'].patchValue( '', {emitEvent: false, });
+        }
+    }
     afterInit() {
         const allData = this._userParamsSetSrv.hashUserContext;
         this.openAccordion();
@@ -1142,10 +1151,8 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
     submit() {
         if (this.newData || this.newDataAttach || this.prepareData) {
             const userId = '' + this._userParamsSetSrv.userContextId;
-           // console.log(userId);
             this.formChanged.emit(false);
             this.isChangeForm = false;
-          //   this._userParamsSetSrv.getUserIsn(userId);
             if (this.newData && this.newDataAttach) {
                 this.userParamApiSrv
                 .setData(this.createObjRequestForAll())
@@ -1320,6 +1327,9 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                     this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
                     this.formChanged.emit(changed);
                     this.isChangeForm = changed;
+                    if (this.newData) {
+                        this.newData.rec['ORGGROUP'] = '';
+                    }
                     this.subscribeChangeForm();
                 })
                 .catch(err => {
@@ -1370,7 +1380,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
         } else {
              !node ?   node = this.form.controls['rec.ORGGROUP'].value : node = node;
         }
-        if (node !== null) {
+        if (String(node) !== 'null') {
             const query = {
                 ORGANIZ_CL: {
                     criteries: {

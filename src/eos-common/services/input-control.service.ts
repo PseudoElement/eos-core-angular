@@ -73,7 +73,9 @@ export class InputControlService {
      * @param inDict must it be unic in dictionary
      */
     unicValueValidator(path: string, inDict: boolean): ValidatorFn {
-        return (control: AbstractControl): { [key: string]: any } => this._dictSrv.isUnique(control.value, path, inDict);
+        return (control: AbstractControl): { [key: string]: any } => {
+            return this._dictSrv.isUnique(control.value, path, inDict);
+        };
     }
 
     dateCompareValidator(commparePath: string, operand: 'lt' | 'gt'): ValidatorFn {
@@ -113,7 +115,7 @@ export class InputControlService {
             const value = control.value;
             let error = null;
             if (value && value instanceof Date) {
-                if (isNaN(value.getTime())) {
+                if (isNaN(value.getTime()) || !this.isValidDate(value)) {
                     error = {'wrongDate': true};
                 } else {
                     const ts = value.setHours(0, 0, 0, 0);
@@ -127,6 +129,28 @@ export class InputControlService {
             return error;
         };
     }
+    isValidDate (dateValue: Date): boolean {
+        const day = dateValue.getDate();
+        const month = dateValue.getMonth() + 1;
+        const year = dateValue.getFullYear();
+
+        if (isNaN(day) || isNaN(month) || isNaN(year)) {
+            return false;
+        }
+
+        if (year < 1000 || year > 3000 || month === 0 || month > 12) {
+            return false;
+        }
+
+        const monthLength = [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ];
+
+        if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) {
+            monthLength[1] = 29;
+        }
+
+        return (day > 0 && day <= monthLength[month - 1]);
+    }
+
 
     /**
      * add input to group

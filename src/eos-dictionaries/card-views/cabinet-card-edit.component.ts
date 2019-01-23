@@ -216,17 +216,13 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
             this.reorderCabinetOwners();
         });
 
-        // this.folderList = data.rec.FOLDER_List;
-
-        this.cabinetFolders = data.rec.FOLDER_List
-            .map((folder) => CABINET_FOLDERS.find((fConst) =>
-                    fConst.key === folder.FOLDER_KIND)).filter( (el) => el);
+        this.cabinetFolders = CABINET_FOLDERS;
 
         this.accessHeaders = [{
-            title: 'Ограничение доступа РК',
+            title: 'Ограничение доступа к РК',
             key: 'rk'
         }, {
-            title: 'Ограничение доступа РКПД',
+            title: 'Ограничение доступа к РКПД',
             key: 'rkpd'
         }];
 
@@ -240,7 +236,7 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                     rkpd: userAccess.HIDE_INACCESSIBLE_PRJ
                 };
                 this.cabinetFolders.forEach((folder) => {
-                    cUser[folder.key] = userAccess.FOLDERS_AVAILABLE.indexOf(folder.key + '') > -1;
+                    cUser[folder.key] = userAccess.FOLDERS_AVAILABLE.indexOf(folder.charKey + '') > -1;
                 });
                 this.cabinetUsers.push(cUser);
             }

@@ -1,8 +1,12 @@
+import { RulesSelectComponent } from './../sev-rules-select/sev-rules-select.component';
 import { Component, Injector, OnInit, OnChanges, SimpleChanges, NgZone } from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
-import {PipRX} from '../../eos-rest';
-import { WARN_NO_BINDED_ORGANIZATION } from 'eos-dictionaries/consts/messages.consts';
+import { PipRX, SEV_ASSOCIATION } from '../../eos-rest';
+import { WARN_NO_BINDED_ORGANIZATION, DANGER_ORGANIZ_NO_SEV } from 'eos-dictionaries/consts/messages.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+import { ALL_ROWS, _ES } from 'eos-rest/core/consts';
+import { SevIndexHelper } from 'eos-rest/services/sevIndex-helper';
 
 @Component({
     selector: 'eos-sev-participant-card-edit',
@@ -12,12 +16,19 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 export class SevParticipantCardEditComponent extends BaseCardEditComponent implements OnChanges, OnInit {
     _orgName: any;
     hasOrganization: any;
+    modalWindow: BsModalRef;
+
+    private _usedRulesString;
+    private _usedRules;
+    private _listRules;
+
 
     constructor(
         injector: Injector,
         private _apiSrv: PipRX,
         private _zone: NgZone,
-        private msgSrv: EosMessageService,
+        private _msgSrv: EosMessageService,
+        private _modalSrv: BsModalService,
     ) {
         super(injector);
     }
@@ -33,29 +44,19 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
     }
 
     ngOnInit(): void {
+        this._usedRules = [];
+        this._listRules = [];
         const i = this.inputs['rec.ISN_CHANNEL'];
         i.options = [];
 
-        const req = {'SEV_CHANNEL': []};
-        this._apiSrv
-            .read(req)
+        const req_ch = {'SEV_CHANNEL': []};
+        this._apiSrv.read(req_ch)
             .then((rdata: any[]) => {
                 rdata.forEach((d) => {
                     i.options.push({ title: d['CLASSIF_NAME'], value: d['ISN_LCLASSIF']});
                 });
             });
-
-        // const v = [this.endYearValueValidator()];
-        // if (this.form.controls['rec.END_YEAR'].validator) {
-        //     v.push(this.form.controls['rec.END_YEAR'].validator);
-        // }
-        // this.form.controls['rec.END_YEAR'].setValidators(v);
-        // this.previousValues = {};
-        // this.previousValues['rec.END_YEAR'] = this.form.controls['rec.END_YEAR'].value;
-        // this.previousValues['rec.YEAR_NUMBER'] = this.form.controls['rec.YEAR_NUMBER'].value;
-        // setTimeout(() => {
-        //     this._updateButtons();
-        // });
+        this._readDBLists();
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -81,14 +82,23 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
 
     bindOrganization(orgDue: string) {
         const dues = orgDue ? orgDue.split('|') : [''];
-        this.dictSrv.bindOrganization(dues[0])
-            .then((org) => {
-                if (org) {
-                    this._orgName = org['CLASSIF_NAME'];
-                    this.setValue('rec.DUE_ORGANIZ', org.DUE);
-                    this.setValue('rec.CLASSIF_NAME', org['CLASSIF_NAME']);
-                }
-            });
+        const due = dues[0];
+        this._apiSrv.read<SEV_ASSOCIATION>({ SEV_ASSOCIATION: [SevIndexHelper.CompositePrimaryKey(due, 'ORGANIZ_CL')] })
+            .then (rSevIndex => {
+            console.log(rSevIndex);
+            if (rSevIndex && rSevIndex.length) {
+                this.dictSrv.bindOrganization(dues[0])
+                    .then((org) => {
+                        if (org) {
+                            this._orgName = org['CLASSIF_NAME'];
+                            this.setValue('rec.DUE_ORGANIZ', org.DUE);
+                            this.setValue('rec.CLASSIF_NAME', org['CLASSIF_NAME']);
+                        }
+                    });
+            } else {
+                this._msgSrv.addNewMessage(DANGER_ORGANIZ_NO_SEV);
+            }
+        });
     }
 
     unbindOrganization() {
@@ -97,21 +107,82 @@ export class SevParticipantCardEditComponent extends BaseCardEditComponent imple
             this.data.organization = null;
             this.setValue('rec.DUE_LINK_ORGANIZ', null);
         } else {
-            this.msgSrv.addNewMessage(WARN_NO_BINDED_ORGANIZATION);
+            this._msgSrv.addNewMessage(WARN_NO_BINDED_ORGANIZATION);
         }
     }
 
+    chooseRules() {
+        this.modalWindow = null;
+            this.modalWindow = this._modalSrv.show(RulesSelectComponent, {class: 'sev-rules-select-modal modal-lg'});
+            this.modalWindow.content.initbyLists(this._listRules, this._usedRules);
+
+        if (this.modalWindow) {
+            const subscription = this.modalWindow.content.onChoose.subscribe((res) => {
+                this._usedRulesString = this._updateUsedRules(res.list, res.used);
+                subscription.unsubscribe();
+            });
+        }
+    }
+
+    getStringUsedRules (): string {
+        if (this._usedRulesString) {
+            return this._usedRulesString;
+        }
+        return '...';
+    }
+
+    private _readDBLists(): any {
+        const query_list = ALL_ROWS;
+        const req_list = {'SEV_RULE': query_list};
+        this._apiSrv.read(req_list).then(list => {
+            this._listRules = list;
+            if (list && list.length && !this.isNewRecord) {
+                this._readUsedRules(list);
+            }
+        });
+    }
+
+    private _readUsedRules(list: any) {
+        const query_used = {criteries: {['ISN_PARTICIPANT']: String(this.data.rec['ISN_LCLASSIF'])}};
+        const req_used = {'SEV_PARTICIPANT_RULE': query_used };
+        this._apiSrv.read(req_used).then(used => {
+            if (used && used.length) {
+                used.forEach(el => {
+                    const n = list.find( e => el['ISN_RULE'] === e['ISN_LCLASSIF']);
+                    if (n) {
+                        this._usedRules.push(n);
+                    }
+                });
+                this._usedRulesString = this._updateUsedRules(list, this._usedRules);
+            }
+        });
+    }
+
+    private _updateUsedRules(list: any, used: any): string {
+        let res = '';
+        const spdata = [];
+        for (let i = 0; i < used.length; i++) {
+            const element = list.find( l => used[i]['ISN_LCLASSIF'] === l['ISN_LCLASSIF']);
+            if (element) {
+                res += element['CLASSIF_NAME'] + '; ';
+                const ob = {
+                    __metadata: { __type: 'SEV_PARTICIPANT_RULE' },
+                    CompositePrimaryKey: String(this.data.rec['ISN_LCLASSIF']) + ' ' + String(element['ISN_LCLASSIF']),
+                    ISN_PARTICIPANT: Number(this.data.rec['ISN_LCLASSIF']),
+                    ISN_RULE: Number(element['ISN_LCLASSIF']),
+                    ORDERNUM: i + 1,
+                    _State: _ES.Added,
+                };
+                spdata.push(ob);
+            }
+        }
+        this.data.SEV_PARTICIPANT_RULE_List = spdata;
+
+        return res;
+    }
 
     private updateForm(changes: SimpleChanges) {
-        // if ((Number(this.previousValues['rec.END_YEAR']) !== Number(changes['rec.END_YEAR']))) {
-        //     this.previousValues['rec.END_YEAR'] = this.form.controls['rec.END_YEAR'].value;
-        //     this._updateButtons();
-        // }
-        // if ((Number(this.previousValues['rec.YEAR_NUMBER']) !== Number(changes['rec.YEAR_NUMBER']))) {
-        //     this.previousValues['rec.YEAR_NUMBER'] = this.form.controls['rec.YEAR_NUMBER'].value;
-        //     this.form.controls['rec.END_YEAR'].updateValueAndValidity();
-        //     this._updateButtons();
-        // }
     }
+
 
 }

@@ -418,6 +418,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         dictionary = this._dictSrv.currentDictionary;
         editDescr = dictionary.getEditDescriptor();
         data = dictionary.getNewNode({rec: recParams}, this.treeNode);
+        this._dictSrv.clearCurrentNode();
 
         this.modalWindow.content.fieldsDescription = editDescr;
         this.modalWindow.content.dictionaryId = dictionary.id;

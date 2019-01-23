@@ -36,6 +36,9 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     flagForTheNextRequest = false;
     flagForOpenFolder = false;
     flagCardFileAvailability = false;
+    flagForHidenCheckboxRestrictRegistrationFiling = false;
+  //  flagForButtonAddIfCheck = false;
+    lastKeyForSelect;
     listNode: IInputParamControlForIndexRight[] = CARD_INDEXS_RIGHTS;
     listDocumentGroups: IInputParamControl[] = DOCUMENT_GROUPS;
     listRestrictRegistrationFiling: IInputParamControl[] = RESTRICT_REGISTRATION_FILING;
@@ -58,6 +61,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     arrayDataDocumentsForPost = [];
     arrayDataDocumentsForDelete = [];
     btnAddHiden = true;
+    btnMinusHiden = true;
     strForSubscribe = '';
     form: FormGroup;
     isLoading = false;
@@ -71,6 +75,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     prepDataAttach = {};
     dataUserCardDocgroup;
     dataDocgroupCl;
+    titleHeader: string;
     private quaryDepartment = {
         DEPARTMENT: {
             criteries: {
@@ -95,6 +100,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         const due: string[] = [];
         this.userCard = new Map<string, USERCARD>();
         this.curentUser = this._userParamsSetSrv.curentUser;
+        this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Права в картотеках`;
         this.curentUser['USERCARD_List'].forEach((card: USERCARD) => {
             this.userCard.set(card['DUE'], card);
             due.push(card['DUE']);
@@ -345,7 +351,15 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         event.preventDefault();
         event.stopPropagation();
         const newClassif = '0.';
-        if (event.target.tagName === 'SPAN') {
+        if (event.target.tagName === 'LABEL') {
+            if (type === 'card') {
+                this.selectNodeOnTheRightSide(item.card);
+            } else if (type === 'restrict') {
+                this.selectNodeOnTheRightSide(item.restrictRegistrationFiling);
+            } else if (type === 'documents') {
+                this.selectNodeOnTheRightSide(item);
+            }
+        } else {
         if (type === 'card') {
         if (this.form.controls[item.card.key].value === false) {
             for (let i = 0; i < Array.from(this.userCard).length; i++) {
@@ -378,6 +392,11 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     });
                 }
             }
+            if (this.lastKeyForSelect === item.card.key) {
+                this.btnAddHiden = false;
+            }
+            this.flagForHidenCheckboxRestrictRegistrationFiling = true;
+          //  this.flagForButtonAddIfCheck = true;
         } else if (this.form.controls[item.card.key].value === true) {
             for (let i = 0; i < Array.from(this.userCard).length; i++) {
                 if (item.card.key === Array.from(this.userCard)[i][0]) {
@@ -387,7 +406,6 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     Array.from(this.userCard)[i][1]['FLAG_NEW_FUNCLIST_REMOVE'] = true;
                 }
             }
-            // !!
             for (let a = 0; a < this.listDocumentGroups.length; a++) {
                 if (this.listDocumentGroups[a].key === item.card.key) {
                   this.listDocumentGroups[a]['value'] = 0;
@@ -401,6 +419,11 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 }
             }
+            if (this.lastKeyForSelect === item.card.key) {
+                this.btnAddHiden = true;
+            }
+            this.flagForHidenCheckboxRestrictRegistrationFiling = false;
+           // this.flagForButtonAddIfCheck = false;
         }
     } else if (type === 'restrict') {
         if (this.form.controls[item.restrictRegistrationFiling.key].value === false) {
@@ -475,14 +498,6 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         }
     }
     this.btnDisabled = false;
-    } else if (event.target.tagName === 'LABEL') {
-        if (type === 'card') {
-            this.selectNodeOnTheRightSide(item.card);
-        } else if (type === 'restrict') {
-            this.selectNodeOnTheRightSide(item.restrictRegistrationFiling);
-        } else if (type === 'documents') {
-            this.selectNodeOnTheRightSide(item);
-        }
     }
     }
     changeByPath(path: string, value: any) {
@@ -539,9 +554,10 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         }
       }
 
-      if (req.length === 0 && this.flagAddDocuments) {
-          this.flagForTheNextRequest = true;
-      }
+      if (this.flagAddDocuments) {
+        this.flagForTheNextRequest = true;
+        this.flagAddDocuments = false;
+    }
 
         return req;
     }
@@ -616,7 +632,7 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
     }
 }
     return req;
-    }
+}
 
     cancel() {
     }
@@ -646,6 +662,11 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
             }
             this.selectedNodeOnTheRigthSide = this.allDocuments[node['INDEX_FOR_SELECT']];
             this.selectedNodeOnTheRigthSide['data']['isSelected'] = true;
+            if (this.selectedNodeOnTheRigthSide.label === 'Все группы документов') {
+                this.btnMinusHiden = true;
+            } else {
+                this.btnMinusHiden = false;
+            }
         } else {
         if (this.selectedNodeOnTheRigthSide) {
             this.selectedNodeOnTheRigthSide['data']['isSelected'] = false;
@@ -653,9 +674,15 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
         this.selectedNodeOnTheRigthSide = node;
         if (this.selectedNodeOnTheRigthSide.label === 'Ограничить картотекой регистрации') {
             this.btnAddHiden = true;
+            this.btnMinusHiden = true;
+        } else if (this.selectedNodeOnTheRigthSide.value === 0) {
+            this.btnAddHiden = true;
+            this.btnMinusHiden = true;
         } else {
             this.btnAddHiden = false;
+            this.btnMinusHiden = true;
         }
+        this.lastKeyForSelect = this.selectedNodeOnTheRigthSide.key;
         this.selectedNodeOnTheRigthSide['data']['isSelected'] = true;
     }
     }

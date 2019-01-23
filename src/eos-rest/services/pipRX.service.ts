@@ -156,6 +156,8 @@ export class PipRX extends PipeUtils {
                 // encode id because of hash issue
                 result.push([this._cfg.dataApiUrl, r._et, '/?ids=', encodeURIComponent(idss[i]), url].join(''));
             }
+        } else if (typeof ids === 'string' || typeof  ids === 'number') {
+            result.push([this._cfg.dataApiUrl, r._et, '/?ids=', encodeURIComponent(ids.toString()), url].join(''));
         } else {
             result.push(this._cfg.dataApiUrl + r._et + url.replace('&', '?'));
         }

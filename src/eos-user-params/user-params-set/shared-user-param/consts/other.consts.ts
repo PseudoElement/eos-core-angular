@@ -53,19 +53,6 @@ export const OTHER_USER: IBaseUsers = {
             type: 'select',
             title: '',
             options: [
-                {value: 'NULL', title: ''},
-                {value: '3774', title: 'Почта'},
-                {value: '3776', title: 'Заказная почта'},
-                {value: '3772', title: 'Нарочный'},
-                {value: '3773', title: 'Курьер'},
-                {value: '3775', title: 'Фельдсвязь'},
-                {value: '1', title: 'E-MAIL'},
-                {value: '3777', title: 'Телефонограмма'},
-                {value: '3779', title: 'Спецсвязь'},
-                {value: '3778', title: 'Факс'},
-                {value: '2', title: 'СЭВ'},
-                {value: '3', title: 'МЭДО'},
-                {value: '4', title: 'VipNet'},
             ]
         },
         {
@@ -76,7 +63,7 @@ export const OTHER_USER: IBaseUsers = {
             options: [
                 {value: '0', title: 'Оригинал(ы)'},
                 {value: '1', title: 'Копию(и)'},
-                {value: '2', title: 'Первыму оригинал(ы), остальным копии'},
+                {value: '2', title: 'Первому оригинал(ы), остальным копии'},
                 {value: '3', title: 'Вручную'}
             ]
         },

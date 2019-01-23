@@ -198,6 +198,10 @@ export class EosDictService {
         this._initPaginationConfig();
     }
 
+    clearCurrentNode() {
+        this.currentNode = null;
+    }
+
     bindOrganization(orgDue: string) {
         if (orgDue && this.currentDictionary) {
             return this.currentDictionary.bindOrganization(orgDue);
@@ -904,13 +908,18 @@ export class EosDictService {
 
     private preSave(dictionary: EosDictionary, data: any): Promise<any> {
         if (data && data.rec) {
+            if (dictionary.id === 'sev-participant') {
+
+            }
             if (dictionary.id === 'departments' && data.rec.IS_NODE) {
                 this.departmentsSrv.addDuty(data.rec.DUTY);
                 this.departmentsSrv.addFullname(data.rec.FULLNAME);
-
-
                 if (1 * data.rec.POST_H === 1) {
-                    return dictionary.getBoss(data, this.treeNode)
+                    let parent: EosDictionaryNode = null ;
+                    if (this.treeNode && ((!data.rec.PARENT_DUE) || (this.treeNode.id === data.rec.PARENT_DUE))) {
+                        parent = this.treeNode;
+                    }
+                    return dictionary.getBoss(data, parent)
                         .then((boss) => {
                             if (boss && boss.id !== data.rec.DUE) {
                                 const changeBoss = Object.assign({}, CONFIRM_CHANGE_BOSS);
@@ -951,7 +960,7 @@ export class EosDictService {
                     });
             }
             if (dictionary.id === 'reestrtype') {
-                if (data.rec['ISN_DELIVERY'] === data.rec._orig['ISN_DELIVERY'].toString()) {
+                if (!data.rec._orig || (data.rec['ISN_DELIVERY'] === data.rec._orig['ISN_DELIVERY'].toString())) {
                     return Promise.resolve(null);
                 }
                 const reestrDesriptor = dictionary.descriptor as ReestrtypeDictionaryDescriptor;

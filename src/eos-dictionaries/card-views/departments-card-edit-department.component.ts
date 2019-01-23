@@ -60,7 +60,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
         const config = this.dictSrv.getApiConfig();
         if (config) {
             const pageUrl = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?';
-            const params = 'Classif=ORGANIZ_CL&value_id=__ClassifIds&skip_deleted=True&select_nodes=False&select_leaf=True&return_due=True';
+            const params = 'Classif=CONTACT&value_id=__ClassifIds&skip_deleted=True&select_nodes=False&select_leaf=True&return_due=True';
             this._zone.runOutsideAngular(() => {
                 window.open(pageUrl + params, 'clhoose', 'width=1050,height=800,resizable=1,status=1,top=20,left=20');
                 window['endPopup'] = (due) => {

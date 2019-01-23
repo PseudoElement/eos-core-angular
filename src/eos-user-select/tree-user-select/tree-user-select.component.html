@@ -34,10 +34,10 @@
     let-level="level">
     <!-- <div style="width: 400px; height: 50px;"></div> -->
     <ng-container *ngIf="node && (!node.isDeleted || showDeleted)">
-        <div class="node"
+        <div
             #el
             (click)="onSelect($event, node)"
-            [ngClass]="{'highlighted' : node.isActive}"
+            [ngClass]="{'highlighted' : node.isActive, 'node': true, 'activeTree': node.id === id}"
             [ngStyle]="{'padding-left.px': getPadding(level)}">
             <!-- span class="fake-padding"></span -->
             <div class="tree-btn"
