@@ -119,7 +119,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
 
     RedactUser() {
-        if (this.selectedUser) {
+        if (this.selectedUser && !this.selectedUser.deleted) {
             this._router.navigate(['user-params-set'], {
                 queryParams: {isn_cl: this.selectedUser.id}
             });
