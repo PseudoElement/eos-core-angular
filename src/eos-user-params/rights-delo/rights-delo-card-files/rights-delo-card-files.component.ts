@@ -71,6 +71,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     arrayDataThatIsNotSaved = [];
     flagForMergeForTheFirstTime = false;
     arrayForAllDataForCurrentUsercard = [];
+    indexOldMainCheckbox = -1;
     private quaryDepartment = {
         DEPARTMENT: {
             criteries: {
@@ -256,9 +257,11 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             this.formChanged.emit(false);
             this.isChangeForm = false;
             // this._userParamsSetSrv.getUserIsn();
+            this.updateOldMainCheckbox(this.indexOldMainCheckbox);
             this.userParamApiSrv
                 .setData(this.createObjRequestForAll())
                 .then(data => {
+                    console.log('Strong');
                    // this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.allData = this._userParamsSetSrv.userCard;
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
@@ -458,7 +461,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     choosingMainCheckbox() {
         let flag = true;
         let flagIfNotMainCard = true;
-        let tmpI = -1;
         const arr = [];
         this.flagNoMainCard = false;
         for (let i = 0; i < this.fieldKeysforCardFiles.length; i++) {
@@ -471,11 +473,11 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 this.fieldKeysforCardFiles[i][3] = true;
                 this.mainCheckbox[this.fieldKeysforCardFiles[i][0]] = 1;
             } else if (this.fieldKeysforCardFiles[i][0] === key && this._userParamsSetSrv.hashUserContexHomeCard[key] === 1 && flag) {
-                tmpI = i;
+                this.indexOldMainCheckbox = i;
                 flagIfNotMainCard = false;
             } else {
                 this.fieldKeysforCardFiles[i][3] = false;
-                if ((this.fieldKeysforCardFiles.length - 1) === i && flagIfNotMainCard && tmpI === -1) {
+                if ((this.fieldKeysforCardFiles.length - 1) === i && flagIfNotMainCard && this.indexOldMainCheckbox === -1) {
                     this.fieldKeysforCardFiles[arr[0]][2] = true;
                     this.fieldKeysforCardFiles[arr[0]][3] = true;
                     this.mainCheckbox[this.fieldKeysforCardFiles[arr[0]][0]] = 1;
@@ -489,15 +491,19 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
           }
         }
 
-        if (tmpI !== -1 && flag) {
+        if (this.indexOldMainCheckbox !== -1 && flag) {
             this.oldMainCheckbox = {};
-            this.fieldKeysforCardFiles[tmpI][2] = true;
-            this.fieldKeysforCardFiles[tmpI][3] = true;
-            this.globalIndexMainCard = tmpI;
-            this.oldMainCheckbox[this.fieldKeysforCardFiles[tmpI][0]] = 0;
-            this.selectedNode(this.fieldKeysforCardFiles[tmpI][1], null);
+            this.fieldKeysforCardFiles[this.indexOldMainCheckbox][2] = true;
+            this.fieldKeysforCardFiles[this.indexOldMainCheckbox][3] = true;
+            this.globalIndexMainCard = this.indexOldMainCheckbox;
+            this.oldMainCheckbox[this.fieldKeysforCardFiles[this.indexOldMainCheckbox][0]] = 0;
+            this.selectedNode(this.fieldKeysforCardFiles[this.indexOldMainCheckbox][1], null);
         }
         this.btnDisabled = false;
+    }
+    updateOldMainCheckbox(index) {
+        this.oldMainCheckbox = {};
+        this.oldMainCheckbox[this.fieldKeysforCardFiles[index][0]] = 0;
     }
     selectedNode(word, event) {
         this.isMarkNode = true;
