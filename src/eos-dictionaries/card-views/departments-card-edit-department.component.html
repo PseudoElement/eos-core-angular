@@ -80,7 +80,9 @@
                 <eos-dynamic-input class ="pull-left"
                                    [input]="inputs['rec.NUMCREATION_FLAG']"
                                    [form]="form"
-                                   [readonly]="!editMode"></eos-dynamic-input>           </div>
+                                   (click)="this.clickNumcreation()"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+            </div>
         </div>
         <div class="col-2 pull-right">
             <ng-container *ngIf="hasCard">

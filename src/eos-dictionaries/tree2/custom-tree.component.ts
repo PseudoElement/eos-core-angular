@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-import {EosDictService} from '../services/eos-dict.service';
+// import {EosDictService} from '../services/eos-dict.service';
 
 const BIG_PANEL = 340,
     SMALL_PANEL = 260,
@@ -35,10 +35,10 @@ export class CustomTreeComponent implements OnInit {
 
     constructor(
         private _router: Router,
-        private _dictSrv: EosDictService,
+        // private _dictSrv: EosDictService,
     ) {
         // this.data = _dictSrv.currentDictionary.descriptor.getCustomTreeData();
-        this._dictSrv = _dictSrv;
+        // this._dictSrv = _dictSrv;
         // this._dictDiscr = _dictDiscr;
     }
 

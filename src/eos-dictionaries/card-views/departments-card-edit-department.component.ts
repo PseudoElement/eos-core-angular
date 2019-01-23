@@ -62,8 +62,6 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
         dib.forceTooltip();
         const c = this.form.controls['rec.DEPARTMENT_INDEX'];
         c.markAsDirty();
-
-
     }
 
     chooseOrganiz() {

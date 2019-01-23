@@ -48,6 +48,11 @@ export enum E_FIELD_TYPE {
     radio,
 }
 
+export interface IDictionaryLink {
+    pk: string;
+    fk: string;
+    label: string;
+}
 export interface IFieldDescriptor {
     key: string;
     title: string;
@@ -65,6 +70,7 @@ export interface IFieldDescriptor {
     vistype?: E_VISIBLE_TIPE;
     default?: any;
     dictionaryId?: string;
+    dictionaryLink?: IDictionaryLink;
     password?: boolean;
     groupLabel?: string;
     minValue?: number;
@@ -91,6 +97,7 @@ export interface IFieldDescriptorBase {
     readonly dictionaryId?: string;
     readonly password?: boolean;
     readonly groupLabel?: string;
+    readonly dictionaryLink?: IDictionaryLink;
 }
 
 export interface IFieldView extends IFieldDescriptorBase {

@@ -426,9 +426,11 @@ export class EosDictionary {
                 updatefields.forEach((field) => {
                     if ((field.dictionaryId !== undefined)) {
                         field.options.splice(0, field.options.length);
-                        related[field.dictionaryId].forEach((rel) =>
-                            field.options.push({value: rel.ISN_LCLASSIF, title: rel.CLASSIF_NAME})
-                        );
+                        related[field.dictionaryId].forEach((rel) => {
+                            const fn = (field.dictionaryLink ? field.dictionaryLink.pk : 'ISN_LCLASSIF');
+                            const ln = (field.dictionaryLink ? field.dictionaryLink.label : 'CLASSIF_NAME');
+                            field.options.push({value: rel[fn], title: rel[ln]});
+                        });
                     }
                 });
             });
