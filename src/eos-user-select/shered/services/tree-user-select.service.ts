@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { PipRX, DEPARTMENT } from 'eos-rest';
 import { TreeUserNode } from 'eos-user-select/tree-user-select/core/tree-user-node';
 import { E_MODES_USER_SELECT } from '../interfaces/user-select.interface';
-
+import {Subject} from 'rxjs/Subject';
 const DEPARTMENT_QUERY = {DEPARTMENT: PipRX.criteries({
     LAYER: '1:2',
     IS_NODE: '0',
@@ -11,13 +11,18 @@ const DEPARTMENT_QUERY = {DEPARTMENT: PipRX.criteries({
 @Injectable()
 export class TreeUserSelectService {
     root: TreeUserNode;
+    cardFlag: number;
+    public changeListUsers = new Subject();
     private _showDeleted: boolean;
     private _nodes: Map<string, TreeUserNode>;
+    get changeListUsers$() {
+        return this.changeListUsers.asObservable();
+    }
     constructor (
         private apiSrv: PipRX
     ) {
         this._nodes = new Map<string, TreeUserNode>();
-        this.root = new TreeUserNode({DUE: '0.', IS_NODE: 0});
+        this.root = new TreeUserNode({DUE: '0.', IS_NODE: 0}, 0);
     }
     init(mode: E_MODES_USER_SELECT): Promise<any> {
         this._nodes.clear();
@@ -26,10 +31,12 @@ export class TreeUserSelectService {
         const query = Object.assign({}, DEPARTMENT_QUERY);
 
         if (mode === E_MODES_USER_SELECT.card) {
+            this.cardFlag = 1;
             query.DEPARTMENT.criteries['CARD_FLAG'] = '1';
             this.root.title = 'Все картотеки';
         } else {
             delete query.DEPARTMENT.criteries['CARD_FLAG'];
+            this.cardFlag = 0;
             this.root.title = 'Все подразделения';
         }
 
@@ -48,7 +55,7 @@ export class TreeUserSelectService {
                 if (_node) {
                     _node.updateData(nodeData);
                 } else {
-                    _node = new TreeUserNode(nodeData);
+                    _node = new TreeUserNode(nodeData, this.cardFlag);
                     if (_node) {
                         this._nodes.set(_node.id, _node);
                     }
@@ -128,11 +135,21 @@ export class TreeUserSelectService {
     }
     private getSubtree(d: DEPARTMENT) {
         const layer = d.DUE.split('.').length - 1; // calc child layer with DUE
-        const criteries = {
-            DUE: d.DUE + '%',
-            IS_NODE: '0',
-            LAYER: (layer + 1) + '',
-        };
+        let criteries;
+        if (this.cardFlag === 1) {
+             criteries = {
+                DUE: d.DUE + '%',
+                IS_NODE: '0',
+                LAYER: (layer + 1) + '',
+                CARD_FLAG: this.cardFlag.toString()
+            };
+        }   else {
+             criteries = {
+                DUE: d.DUE + '%',
+                IS_NODE: '0',
+                LAYER: (layer + 1) + '',
+            };
+        }
         return this.apiSrv.read<DEPARTMENT>({DEPARTMENT: PipRX.criteries(criteries)});
     }
 }
