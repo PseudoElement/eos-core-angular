@@ -134,12 +134,12 @@
                 [readonly]="false"
             ></eos-dynamic-input>
         </div>
-        <div class="user-input-group">
+        <div class="user-input-group readonlyInput">
             <span>Помещать новые организации в группу: </span>
             <eos-dynamic-input class="inline-block"
             [input]="inputs['rec.ORGGROUP_NAME']"
             [form]="form"
-            [readonly]="false"></eos-dynamic-input>
+            [readonly]="true"></eos-dynamic-input>
             <button
                 class="btn add-storage"
                 tooltip="Выбор из справочника"
@@ -148,6 +148,14 @@
                 (click)='openClassif()'
                 ></span>
             </button>
+            <button
+            class="btn add-storage"
+            tooltip="Очистить поле"
+            containerClass="tooltip-info">
+            <span class="eos-icon eos-icon-close-blue small"
+            (click)='clearField()'
+            ></span>
+        </button>
         </div>
 </div>
 <!------------------------------------------------------------------------->
