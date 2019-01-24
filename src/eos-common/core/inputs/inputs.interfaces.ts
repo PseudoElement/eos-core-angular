@@ -10,8 +10,8 @@ export interface IBaseInput {
     order?: number;
     pattern?: RegExp;
     readonly?: boolean;
-    isUnique?: boolean;
-    uniqueInDict?: boolean;
+    isUnique?: boolean;     // Значение должно быть уникальным в пределах вершины.
+    uniqueInDict?: boolean; // Значение должно быть уникальным в пределах справочника.
     hideLabel?: boolean;
     forNode?: boolean;
     options?: any[];
