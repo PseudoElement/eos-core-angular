@@ -113,7 +113,11 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                 }
             });
 
-        this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.currentNode.parent.data.rec['CLASSIF_NAME']);
+        if (this.dictSrv.currentNode) {
+            this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.currentNode.parent.data.rec['CLASSIF_NAME']);
+        } else {
+            this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.treeNodeTitle);
+        }
     }
     private _genFamilyIO(rn: RussianName, gcase): string {
         let res = rn.lastName(gcase);

@@ -40,7 +40,7 @@ export class EosDictService {
     currentTab: number;
 
     // private dictionary: EosDictionary;
-    private treeNode: EosDictionaryNode; // record selected in tree
+    private _treeNode: EosDictionaryNode; // record selected in tree
     private _listNode: EosDictionaryNode; // record selected in list
     private _currentList: EosDictionaryNode[];
     private _visibleListNodes: EosDictionaryNode[];
@@ -107,6 +107,9 @@ export class EosDictService {
 
     get userOrdered(): boolean {
         return this.currentDictionary && this.currentDictionary.userOrdered;
+    }
+    get treeNodeTitle(): any {
+        return this._treeNode.title;
     }
 
     get order() {
@@ -212,10 +215,10 @@ export class EosDictService {
 
     createRepresentative(): Promise<IRecordOperationResult[]> {
         const dictionary = this.currentDictionary;
-        if (dictionary && this.treeNode) {
+        if (dictionary && this._treeNode) {
             this.updateViewParameters({updatingList: true});
 
-            return dictionary.getFullNodeInfo(this.treeNode.id)
+            return dictionary.getFullNodeInfo(this._treeNode.id)
                 .then((_fullData) => {
                     const _represData: any[] = [];
                     if (_fullData && _fullData.data && _fullData.data.organization['ISN_NODE']) {
@@ -240,7 +243,7 @@ export class EosDictService {
                 })
                 .then((represData) => {
                     if (represData.length) {
-                        return dictionary.createRepresentative(represData, this.treeNode);
+                        return dictionary.createRepresentative(represData, this._treeNode);
                     } else {
                         this._msgSrv.addNewMessage(WARN_NOT_ELEMENTS_FOR_REPRESENTATIVE);
                         return [];
@@ -321,7 +324,7 @@ export class EosDictService {
     }
 
     closeDictionary() {
-        this.treeNode = this._listNode = this._srchCriteries = null;
+        this._treeNode = this._listNode = this._srchCriteries = null;
         this._initViewParameters();
         this._dictMode = 0;
         this._dictMode$.next(0);
@@ -351,7 +354,7 @@ export class EosDictService {
     }
 
     expandNode(nodeId: string): Promise<EosDictionaryNode> {
-        if (this.treeNode.id === nodeId) {
+        if (this._treeNode.id === nodeId) {
             this.updateViewParameters({updatingList: true});
         }
         return this._dictionaries[0].expandNode(nodeId)
@@ -369,9 +372,9 @@ export class EosDictService {
      */
 
     selectTreeNode(nodeId: string): Promise<EosDictionaryNode> {
-        let p = Promise.resolve(this.treeNode);
+        let p = Promise.resolve(this._treeNode);
         if (nodeId) {
-            if (!this.treeNode || this.treeNode.id !== nodeId) {
+            if (!this._treeNode || this._treeNode.id !== nodeId) {
                 this.updateViewParameters({updatingList: true});
                 p = this.getTreeNode(nodeId);
             }
@@ -410,7 +413,7 @@ export class EosDictService {
 
     // temporary fix
     selectCustomTreeNode(): Promise<EosDictionaryNode> {
-        let p = Promise.resolve(this.treeNode);
+        let p = Promise.resolve(this._treeNode);
         const dictionary = this._dictionaries[0];
         if (dictionary && dictionary.root) {
             this.updateViewParameters({updatingList: true});
@@ -499,15 +502,15 @@ export class EosDictService {
     addNode(data: any): Promise<EosDictionaryNode> {
         const dictionary = this.currentDictionary;
 
-        if (this.treeNode) {
+        if (this._treeNode) {
             return this.preSave(dictionary, data)
-                .then(() => dictionary.descriptor.addRecord(data, this.treeNode.data))
+                .then(() => dictionary.descriptor.addRecord(data, this._treeNode.data))
                 .then((results) => {
                     return this._reloadList(true)
                         .then(() => {
                             if (dictionary.descriptor.type !== E_DICT_TYPE.linear &&
                                 dictionary.descriptor.type !== E_DICT_TYPE.custom) {
-                                this._treeNode$.next(this.treeNode);
+                                this._treeNode$.next(this._treeNode);
                                 const keyFld = dictionary.descriptor.record.keyField.foreignKey;
 
                                 results.forEach((res) => {
@@ -618,7 +621,7 @@ export class EosDictService {
 
     search(searchString: string, params: ISearchSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
-        this._srchCriteries = dictionary.getSearchCriteries(searchString, params, this.treeNode);
+        this._srchCriteries = dictionary.getSearchCriteries(searchString, params, this._treeNode);
         return this._search(params.deleted);
     }
 
@@ -633,15 +636,15 @@ export class EosDictService {
     fullSearch(data: any, params: ISearchSettings) {
         const dictionary = this.currentDictionary;
         if (data.srchMode === 'person') {
-            this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this.treeNode)];
+            this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
             if (data.person['PHONE']) {
                 data.person['PHONE_LOCAL'] = data.person['PHONE'];
                 delete data.person['PHONE'];
             }
-            this._srchCriteries.push(dictionary.getFullsearchCriteries(data, params, this.treeNode));
+            this._srchCriteries.push(dictionary.getFullsearchCriteries(data, params, this._treeNode));
             return this._search(params.deleted);
         } else {
-            this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this.treeNode)];
+            this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
             return this._search(params.deleted);
         }
     }
@@ -719,10 +722,10 @@ export class EosDictService {
 
         const dictionary = this.currentDictionary;
 
-        if (dictionary && this.treeNode) {
-            dictionary.setNodeUserOrder(this.treeNode.id, _order);
+        if (dictionary && this._treeNode) {
+            dictionary.setNodeUserOrder(this._treeNode.id, _order);
             this._reorderList(dictionary);
-            this._storageSrv.setUserOrder(dictionary.id, this.treeNode.id, _order);
+            this._storageSrv.setUserOrder(dictionary.id, this._treeNode.id, _order);
         }
     }
 
@@ -758,8 +761,8 @@ export class EosDictService {
             if (inDict) {
                 records = Array.from(this.currentDictionary.nodes.values());
             } else {
-                if (this.treeNode) {
-                    records = this.treeNode.children;
+                if (this._treeNode) {
+                    records = this._treeNode.children;
                 } else if (this.currentNode) {
                     records = this.currentNode.neighbors;
                 }
@@ -916,8 +919,8 @@ export class EosDictService {
                 this.departmentsSrv.addFullname(data.rec.FULLNAME);
                 if (1 * data.rec.POST_H === 1) {
                     let parent: EosDictionaryNode = null ;
-                    if (this.treeNode && ((!data.rec.PARENT_DUE) || (this.treeNode.id === data.rec.PARENT_DUE))) {
-                        parent = this.treeNode;
+                    if (this._treeNode && ((!data.rec.PARENT_DUE) || (this._treeNode.id === data.rec.PARENT_DUE))) {
+                        parent = this._treeNode;
                     }
                     return dictionary.getBoss(data, parent)
                         .then((boss) => {
@@ -944,7 +947,7 @@ export class EosDictService {
 
             if (dictionary.id === 'region') {
                 const params = {deleted: true, mode: SEARCH_MODES.totalDictionary};
-                const _srchCriteries = dictionary.getSearchCriteries(data.rec['CLASSIF_NAME'], params, this.treeNode);
+                const _srchCriteries = dictionary.getSearchCriteries(data.rec['CLASSIF_NAME'], params, this._treeNode);
 
                 return dictionary.descriptor.search(_srchCriteries)
                     .then((nodes: any[]) =>
@@ -1034,8 +1037,8 @@ export class EosDictService {
 
     private _reorderList(dictionary: EosDictionary) {
         if (dictionary) {
-            if (/* !this.viewParameters.searchResults && */ this.viewParameters.userOrdered && this.treeNode) {
-                this._currentList = dictionary.reorderList(this._currentList, this.viewParameters.showAllSubnodes, this.treeNode.id);
+            if (/* !this.viewParameters.searchResults && */ this.viewParameters.userOrdered && this._treeNode) {
+                this._currentList = dictionary.reorderList(this._currentList, this.viewParameters.showAllSubnodes, this._treeNode.id);
             } else {
                 this._currentList = dictionary.reorderList(this._currentList, this.viewParameters.showAllSubnodes);
             }
@@ -1089,7 +1092,7 @@ export class EosDictService {
         const dictionary = this.currentDictionary;
         if (dictionary) {
             if (this._dictMode !== 0) {
-                pResult = dictionary.searchByParentData(this._dictionaries[0], this.treeNode);
+                pResult = dictionary.searchByParentData(this._dictionaries[0], this._treeNode);
             } else if (this._srchCriteries) {
                 if (!afterAdd) {
                     pResult = dictionary.search(this._srchCriteries);
@@ -1097,10 +1100,10 @@ export class EosDictService {
                     pResult = Promise.resolve(this._currentList);
                 }
             } else if (this.viewParameters.showAllSubnodes) {
-                pResult = dictionary.getAllChildren(this.treeNode);
+                pResult = dictionary.getAllChildren(this._treeNode);
             } else {
                 this.viewParameters.searchResults = false;
-                pResult = dictionary.getChildren(this.treeNode);
+                pResult = dictionary.getChildren(this._treeNode);
             }
         }
 
@@ -1110,16 +1113,16 @@ export class EosDictService {
     }
 
     private _selectTreeNode(node: EosDictionaryNode) {
-        if (this.treeNode !== node) {
+        if (this._treeNode !== node) {
             this._srchCriteries = null;
 
-            if (this.treeNode) {
-                if (this.treeNode.children) {
-                    this.treeNode.children.forEach((child) => child.marked = false);
+            if (this._treeNode) {
+                if (this._treeNode.children) {
+                    this._treeNode.children.forEach((child) => child.marked = false);
                 }
-                this.treeNode.isActive = false;
+                this._treeNode.isActive = false;
             }
-            this.treeNode = node;
+            this._treeNode = node;
             if (node) {
                 node.isActive = true;
                 this._setCurrentList(this.currentDictionary, node.children);
