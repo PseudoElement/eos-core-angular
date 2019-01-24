@@ -1,8 +1,14 @@
 
 <div  class="cabinet-user-wr" *ngIf=CabinetInfo>
 <span class="cabinet-title">{{CabinetInfo.CABINET_LIST.CABINET_NAME}}</span>
-<span class="" *ngIf=CabinetInfo.HOME_CABINET>
-    <img class="icon_key" src="assets/icons/Keyfile-Blue.svg">
+<span class="" *ngIf=CabinetInfo.CUSTOM_FIELD_MAIN
+    tooltip="Пользователь - владелец кабинета"
+    placement="bottom"
+    containerClass="tooltip-info"
+    trigger="hover"
+    container="body"
+>
+<img class="icon_key" src="assets/icons/Keyfile-Blue.svg">
 </span>
 </div>
 
