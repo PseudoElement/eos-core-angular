@@ -1,10 +1,7 @@
 
 <div  class="cabinet-user-wr" *ngIf=CabinetInfo>
-<span class="cabinet-title">{{CabinetInfo.CABINET_LIST.CABINET_NAME}}</span>
+<a  [routerLink]="['/spravochniki','cabinet', CabinetInfo.CABINET_LIST.ISN_CABINET, 'view', '0']"   class="cabinet-title">{{CabinetInfo.CABINET_LIST.CABINET_NAME}}</a>
 <span class="" *ngIf=CabinetInfo.HOME_CABINET>
     <img class="icon_key" src="assets/icons/Keyfile-Blue.svg">
 </span>
 </div>
-
-
-

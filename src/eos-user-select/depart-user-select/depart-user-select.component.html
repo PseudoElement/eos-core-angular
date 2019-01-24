@@ -10,7 +10,7 @@
         </div>
         <div class="info-mail">
             <span class="rt-grey">E-Mail</span>
-            <span class="rt-black rt-blue">{{department.E_MAIL || 'не указан'}}</span>
+            <a *ngIf='department.E_MAIL' href="mailto:department.E_MAIL">{{department.E_MAIL}}</a>
         </div>
     </div>
     <ng-content ></ng-content>

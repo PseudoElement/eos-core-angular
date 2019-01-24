@@ -42,7 +42,7 @@
                     </div>
                     <div class="is-user">
                         <span class="is-user-title">Является пользователем</span>
-                        <span class="is-user-login">{{CurrentUser.login}}</span>
+                        <a  [routerLink]="['/user-params-set','base-param']"  [queryParams]="{'isn_cl': CurrentUser.id}">{{CurrentUser.login}}</a>
                     </div>
                 </div>
 
