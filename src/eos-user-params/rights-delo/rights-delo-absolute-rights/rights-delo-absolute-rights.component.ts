@@ -104,20 +104,26 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     submit() {
         this.btnDisabled = true;
+        let qUserCl;
         if (this.arrNEWDeloRight.join('') !== this.arrDeloRight.join('')) {
-            this.queryForSave.push({
+            const q = {
                 method: 'MERGE',
                 requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})`,
                 data: {
                     DELO_RIGHTS: this.arrNEWDeloRight.join('')
                 }
-            });
+            };
+            qUserCl = q;
+            this.queryForSave.push(q);
         }
         this.listRight.forEach((node: NodeAbsoluteRight) => {
             if (node.touched) {
 
                 node.change.forEach(ch => {
-                    this.queryForSave.push(this._createBatch(ch, node));
+                    const batch = this._createBatch(ch, node, qUserCl);
+                    if (batch) {
+                        this.queryForSave.push(batch);
+                    }
                 });
                 node.deleteChange();
             }
@@ -140,18 +146,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
     }
     cancel() {
-        this.listRight.forEach(i => {
-            if (i.touched) {
-                console.log(i.change);
-            }
+        this.btnDisabled = true;
+        this.ngOnDestroy();
+        this._userParamsSetSrv.getUserIsn()
+        .then(() => {
+            this.init();
+            this.ngOnInit();
         });
-        // this.btnDisabled = true;
-        // this.ngOnDestroy();
-        // this._userParamsSetSrv.getUserIsn()
-        // .then(() => {
-        //     this.init();
-        //     this.ngOnInit();
-        // });
     }
     clickLable(event, item: NodeAbsoluteRight) {
         event.preventDefault();
@@ -302,25 +303,29 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.checkChange();
     }
 
-    private _createBatch(chenge: IChengeItemAbsolute, node: NodeAbsoluteRight) {
+    private _createBatch(chenge: IChengeItemAbsolute, node: NodeAbsoluteRight, qUserCl) {
         const uId = this._userParamsSetSrv.userContextId;
         let url = '';
         switch (node.contentProp) {
             case E_RIGHT_DELO_ACCESS_CONTENT.department:
             case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor:
             case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject:
-            url = `USERDEP_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.due} ${chenge.data['FUNC_NUM']}')`}`;
+                url = `/USERDEP_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.due} ${chenge.data['FUNC_NUM']}')`}`;
                 break;
             case E_RIGHT_DELO_ACCESS_CONTENT.docGroup:
-            url = `USER_RIGHT_DOCGROUP_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.data['FUNC_NUM']} ${chenge.due}')`}`;
+                url = `/USER_RIGHT_DOCGROUP_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.data['FUNC_NUM']} ${chenge.due}')`}`;
                 break;
-            // case E_RIGHT_DELO_ACCESS_CONTENT.classif:
-            // url = `USER_RIGHT_DOCGROUP_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.data['FUNC_NUM']} ${chenge.due}')`}`;
-            //     break;
+            case E_RIGHT_DELO_ACCESS_CONTENT.classif:
+                if (chenge.user_cl && qUserCl) {
+                    qUserCl['data'] = Object.assign(qUserCl['data'], chenge.data);
+                    return false;
+                }
+                url = `/USER_TECH_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.data['FUNC_NUM']} ${chenge.due}')`}`;
+                break;
         }
         const batch = {
             method: chenge.method,
-            requestUri: `USER_CL(${uId})/${url}`,
+            requestUri: `USER_CL(${uId})${url}`,
         };
         if (chenge.method === 'POST' || chenge.method === 'MERGE') {
             delete chenge.data['CompositePrimaryKey'];

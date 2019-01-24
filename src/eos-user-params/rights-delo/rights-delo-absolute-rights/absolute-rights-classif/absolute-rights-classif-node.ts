@@ -167,7 +167,7 @@ export class RightClassifNode {
         }
     }
     checkedNode(node: NodeDocsTree) {
-        node.data['userTech']['ALLOWED'] = node.allowed;
+        node.data['userTech']['ALLOWED'] = +node.allowed;
         this._parentNode.pushChange({
             method: 'MERGE',
             due: node.DUE,
