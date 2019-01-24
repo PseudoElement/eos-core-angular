@@ -1,7 +1,6 @@
 import { ITechUserClassifConst, E_TECH_USER_CLASSIF_CONTENT, IConfigUserTechClassif } from 'eos-user-params/rights-delo/shared-rights-delo/interfaces/tech-user-classif.interface';
 import { NodeAbsoluteRight } from '../node-absolute';
 import { IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { USER_TECH } from 'eos-rest';
 import { E_CLASSIF_ID } from 'eos-user-params/rights-delo/shared-rights-delo/consts/tech-user-classif.consts';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { AbsoluteRightsClassifComponent } from './absolute-rights-classif.component';
@@ -55,6 +54,7 @@ export class RightClassifNode {
 
         if (this.type !== E_TECH_USER_CLASSIF_CONTENT.none) {
             if (!this._valueLast && v && this.type !== E_TECH_USER_CLASSIF_CONTENT.limitation) { // создать корневой елемент
+                console.log('создать корневой элемент');
                 const newNode = {
                     ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
                     FUNC_NUM: this.key,
@@ -63,6 +63,7 @@ export class RightClassifNode {
                     ALLOWED: 1,
                 };
                 this._listUserTech.push(newNode);
+                this._component.userTechList.push(newNode);
                 this._parentNode.pushChange({
                     method: 'POST',
                     due: newNode.DUE,
@@ -71,12 +72,11 @@ export class RightClassifNode {
                 });
             }
             if (this._valueLast && !v) { // удалить все элементы
-                console.log('delete element');
+                this._isExpanded = false;
                 if (this._listUserTech.length) {
                     console.log('удалить все элементы', E_TECH_USER_CLASSIF_CONTENT[this.type]);
                     this._deletAll();
-                    this._curentUser['USER_TECH_List'] = this._curentUser['USER_TECH_List'].filter((i: USER_TECH) => i['FUNC_NUM'] !== this.key);
-                    this.listContent = [];
+                    // this._curentUser['USER_TECH_List'] = this._curentUser['USER_TECH_List'].filter((i: USER_TECH) => i['FUNC_NUM'] !== this.key);
                 }
             }
         }
@@ -96,8 +96,8 @@ export class RightClassifNode {
         this._parentNode = pNode;
         this._component = component;
         const v = +(this._curentUser['TECH_RIGHTS'][item.key - 1]);
-        if ((this.type !== E_TECH_USER_CLASSIF_CONTENT.none) && this._curentUser['USER_TECH_List'].length) {
-           this._listUserTech = this._curentUser['USER_TECH_List'].filter((i: USER_TECH) => i['FUNC_NUM'] === this.key);
+        if ((this.type !== E_TECH_USER_CLASSIF_CONTENT.none) && !this._parentNode.isCreate) {
+           this._listUserTech = this._component.userTechList.filter((i) => i['FUNC_NUM'] === this.key);
         }
         if (this.type !== E_TECH_USER_CLASSIF_CONTENT.none) {
             this._config = this._component.getConfig(this.type);
@@ -136,7 +136,7 @@ export class RightClassifNode {
                     data: newTechRight,
                 });
                 this._listUserTech.push(newTechRight);
-
+                this._component.userTechList.push(newTechRight);
             });
             this.listContent = this.listContent.concat(newList);
             this._component.Changed.emit();
@@ -185,7 +185,7 @@ export class RightClassifNode {
         this._component.getEntyti(arr.join('||'), this._config)
         .then(data => {
             data.forEach(item => {
-                const uT = userTech.find(i => i['DUE'] = item['DUE']);
+                const uT = userTech.find(i => i['DUE'] === item['DUE']);
                 const d = {
                     userTech: uT,
                     instance: item
@@ -196,13 +196,22 @@ export class RightClassifNode {
         });
     }
     private _deletAll() {
-        this._listUserTech.forEach((node) => {
-            this._parentNode.pushChange({
-                method: 'DELETE',
-                due: node.DUE,
-                funcNum: this.key,
-                data: node,
-            });
-        });
+        let count = this._component.userTechList.length;
+        for (let i = 0; i < count; i++) {
+            const node = this._component.userTechList[i];
+            if (node['FUNC_NUM'] === this.key) {
+                this._parentNode.pushChange({
+                    method: 'DELETE',
+                    due: node.DUE,
+                    funcNum: this.key,
+                    data: node,
+                });
+                this._component.userTechList.splice(i, 1);
+                i--;
+                count = this._component.userTechList.length;
+            }
+        }
+        this.listContent = [];
+        this._listUserTech = [];
     }
 }

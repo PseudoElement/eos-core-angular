@@ -1,4 +1,4 @@
-<div class="list-docs-tree">
+<div class="list-docs-tree" *ngIf="list && list.length">
     <ng-container *ngTemplateOutlet="treeTmpl; context: {items: list}"></ng-container>
 </div>
 

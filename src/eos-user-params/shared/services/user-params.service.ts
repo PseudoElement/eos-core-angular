@@ -7,6 +7,7 @@ import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class UserParamsService {
+    userTechList: any[] = [];
     public SubEmail: Subject<any> = new Subject();
     private _isTechUser: boolean;
     private _userContext: IParamUserCl;
@@ -154,6 +155,7 @@ export class UserParamsService {
         .then(([user, sys]) => {
             this._sysParams = sys;
             this._userContext = user[0];
+            this._userContext.USER_TECH_List.forEach(item => this.userTechList.push(Object.assign({}, item)));
             this._userContext['DUE_DEP_NAME'] = '';
             this._isTechUser = !this._userContext['DUE_DEP'];
             this._userContext['isTechUser'] = !this._userContext['DUE_DEP'];
@@ -238,6 +240,9 @@ export class UserParamsService {
             }
             return false;
         });
+    }
+    deleteItemUserTechList(v) {
+        // реализовать удаление элемента.
     }
 
     fetchExpandUser() {}

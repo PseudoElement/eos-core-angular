@@ -32,7 +32,6 @@ export class NodeAbsoluteRight {
         }
         if (!this._value && v) {
             this.isCreate = true;
-            this._change = [];
         }
         this._value = v;
         this.control.patchValue(!!v);

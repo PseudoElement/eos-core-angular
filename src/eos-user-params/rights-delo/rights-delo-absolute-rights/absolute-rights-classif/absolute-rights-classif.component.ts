@@ -11,6 +11,7 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EMPTY_ADD_ELEMENT_WARN } from 'app/consts/messages.consts';
+import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 
 
 @Component({
@@ -23,16 +24,18 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     @Input() selectedNode: NodeAbsoluteRight;
     @Input() curentUser: IParamUserCl;
     @Output() Changed = new EventEmitter();
+    userTechList;
     isLoading: boolean = false;
     isShell: Boolean = false;
     listClassif: RightClassifNode[] = [];
     constructor (
         private _apiSrv: UserParamApiSrv,
         private _msgSrv: EosMessageService,
-        // private _userParmSrv: UserParamsService,
+        private _userParmSrv: UserParamsService,
         private _waitClassifSrv: WaitClassifService,
-        // private apiSrv: UserParamApiSrv,
-    ) {}
+    ) {
+        this.userTechList = this._userParmSrv.userTechList;
+    }
     ngOnInit() {
         // console.log();
         // console.log(USER_TECH);
@@ -113,6 +116,9 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         TECH_USER_CLASSIF.forEach((item: ITechUserClassifConst) => {
             this.listClassif.push(new RightClassifNode(item, this.curentUser, this.selectedNode, this));
         });
+        if (this.selectedNode.isCreate) {
+            this.selectedNode.isCreate = false;
+        }
     }
     private _checkRepeat(node: RightClassifNode, entity: any[], config: IConfigUserTechClassif): boolean {
         const list: NodeDocsTree[] = node.listContent;

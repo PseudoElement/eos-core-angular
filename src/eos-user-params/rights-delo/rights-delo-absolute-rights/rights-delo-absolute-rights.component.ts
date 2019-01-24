@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { NodeAbsoluteRight } from './node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
-import { USERDEP } from 'eos-rest';
+import { USERDEP, USER_TECH } from 'eos-rest';
 import { RestError } from 'eos-rest/core/rest-error';
 
 export const QUERY = [
@@ -77,7 +77,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     init() {
         this.curentUser = this._userParamsSetSrv.curentUser;
         this.titleHeader =  `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Абсолютные права`;
-        this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || new Array(37).fill(0).join('');
+        this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
         this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split('');
         this.arrNEWDeloRight = this.curentUser['DELO_RIGHTS'].split('');
         this.fields = this._writeValue(ABSOLUTE_RIGHTS);
@@ -115,48 +115,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         this.listRight.forEach((node: NodeAbsoluteRight) => {
             if (node.touched) {
-
-                /* костыль для технолога */
-                if (node.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.classif) {
-                    let m = '';
-                    if (node.value) {
-                        m = 'POST';
-                        this.queryForSave.push({
-                            method: 'MERGE',
-                            requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})`,
-                            data: {
-                                TECH_RIGHTS: new Array(30).fill('1').join('')
-                            }
-                        });
-                    } else {
-                        m = 'DELETE';
-                        this.queryForSave.push({
-                            method: 'MERGE',
-                            requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})`,
-                            data: {
-                                TECH_RIGHTS: ''
-                            }
-                        });
-                    }
-                    QUERY.forEach(item => {
-                        const param = node.value ? '' : `('${this._userParamsSetSrv.userContextId} ${item.FUNC_NUM} 0.')`;
-                        const q = {
-                            method: m,
-                            requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USER_TECH_List${param}`
-                        };
-                        if (node.value) {
-                            q['data'] = {
-                                ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
-                                FUNC_NUM: item.FUNC_NUM,
-                                DUE: '0.',
-                                CLASSIF_ID: item.CLASSIF_ID,
-                                ALLOWED: 1
-                            };
-                        }
-                        this.queryForSave.push(q);
-                    });
-                }
-                /* костыль для технолога */
 
                 node.change.forEach(ch => {
                     this.queryForSave.push(this._createBatch(ch, node));
@@ -213,6 +171,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             }
             if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup)) {
                 this._deleteAllDocGroup(item);
+            }
+            if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.classif)) {
+                this._deleteAllClassif(item);
             }
 
             item.value = +value;
@@ -320,6 +281,26 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
         this.checkChange();
     }
+    private _deleteAllClassif(node: NodeAbsoluteRight) {
+        node.deleteChange();
+        this.curentUser.USER_TECH_List.forEach((li: USER_TECH) => {
+            node.pushChange({
+                method: 'DELETE',
+                due: li.DUE,
+                funcNum: li.FUNC_NUM,
+                data: li
+            });
+        });
+        node.pushChange({
+            method: 'MERGE',
+            user_cl: true,
+            data: {
+                TECH_RIGHTS: ''
+            }
+        });
+        this._userParamsSetSrv.userTechList.splice(0, this._userParamsSetSrv.userTechList.length);
+        this.checkChange();
+    }
 
     private _createBatch(chenge: IChengeItemAbsolute, node: NodeAbsoluteRight) {
         const uId = this._userParamsSetSrv.userContextId;
@@ -333,6 +314,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             case E_RIGHT_DELO_ACCESS_CONTENT.docGroup:
             url = `USER_RIGHT_DOCGROUP_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.data['FUNC_NUM']} ${chenge.due}')`}`;
                 break;
+            // case E_RIGHT_DELO_ACCESS_CONTENT.classif:
+            // url = `USER_RIGHT_DOCGROUP_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.data['FUNC_NUM']} ${chenge.due}')`}`;
+            //     break;
         }
         const batch = {
             method: chenge.method,
