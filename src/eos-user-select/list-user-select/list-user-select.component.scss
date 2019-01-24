@@ -124,16 +124,8 @@
         align-content: center;
         justify-content: center;
     }
-    .group-checkbox {
+    .user-check-label{
         padding-left: 0;
-        input[type="checkbox"] {
-            &:checked+span {
-                background-image: url("../assets/icons/Checkbox-Square-V-Blue.svg");
-            }
-            +span {
-                background-image: url("../assets/icons/Checkbox-Square-Minus-Blue.svg");
-            }
-        }
     }
     .table-wrapper{
         overflow: visible;

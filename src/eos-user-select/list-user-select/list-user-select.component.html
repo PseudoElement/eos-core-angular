@@ -53,9 +53,11 @@
             <!-- [ngClass]="flagChecked ? eos-icon-checkbox-square-blue : eos-icon-checkbox-square-minus-blue" -->
             <div class="table-title">
              <div class="checkbox">
-                <label  [ngClass]="{'group-checkbox': true}">
+                <label class="user-check-label">
                     <input  [checked]="flagChecked"  type="checkbox" (change)="setCheckedAllFlag()">
-                    <span></span>
+                    <div>
+                        <span class="eos-icon small" [ngClass]="flagChecked ? 'eos-icon-checkbox-square-v-blue' : 'eos-icon-checkbox-square-minus-blue'"></span>
+                    </div>
                 </label>
              </div>
                 <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')">Подразделение
