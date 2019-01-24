@@ -178,9 +178,30 @@
                     [readonly]="true"
                 ></eos-dynamic-input>
             </div>
-             <span class ="eos-icon eos-icon-folder-blue small" (click)="openClassifDepartment()"></span>
-             <span [ngClass] ="getClass" (click)="controller ? showInfoUser() : 'false'"></span>
-             <span class="eos-icon eos-icon-close-blue small" (click)="clearControlAuthor()"></span>
+             <span
+                class ="eos-icon eos-icon-folder-blue small"
+                (click)="openClassifDepartment()"
+                tooltip='Добавить/Изменить'
+                placement="bottom"
+                containerClass="tooltip-info"
+                container="body"
+              ></span>
+             <span
+                [ngClass] ="getClass"
+                (click)="controller ? showInfoUser() : 'false'"
+                tooltip='Подробная информация'
+                placement="bottom"
+                containerClass="tooltip-info"
+                container="body"
+              ></span>
+             <span
+                [ngClass] = 'getClassClearBtn'
+                (click)="clearControlAuthor()"
+                tooltip='Удалить'
+                placement="bottom"
+                containerClass="tooltip-info"
+                container="body"
+              ></span>
         </div>
         <div class="control-state" >
             <eos-dynamic-input
