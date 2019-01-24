@@ -762,7 +762,14 @@ export class EosDictService {
                 records = Array.from(this.currentDictionary.nodes.values());
             } else {
                 if (this._treeNode) {
-                    records = this._treeNode.children;
+                    if ((this.currentDictionary.id === this._treeNode.dictionaryId) && this.currentDictionary.id !== 'cabinet') {
+                        records = this._treeNode.children;
+                    } else {
+                        // cabinet costyl
+                        records = Array.from(this.currentDictionary.nodes.values());
+                        const due = this._treeNode.id;
+                        records = records.filter(r => r.data.rec['DUE'] === due );
+                    }
                 } else if (this.currentNode) {
                     records = this.currentNode.neighbors;
                 }
