@@ -158,10 +158,10 @@ export const WARN_NO_BINDED_ORGANIZATION: IMessage = {
     msg: 'У подразделения нет собственной организации. Удаление невозможно'
 };
 
-export const DANGER_EDIT_ONLY_DEPARTMENTS_ALLOWED: IMessage = {
+export const DANGER_EDIT_DICT_NOTALLOWED: IMessage = {
     type: 'danger',
     title: 'Ошибка редактирования',
-    msg: 'Редактирование "Счетчика номерообразования НП" доступно только справочнику "подразделения"'
+    msg: 'Редактирование "Счетчика номерообразования НП" доступно только справочникам "Подразделения" и "Группы документов"'
 };
 
 export const DANGER_EDIT_ON_ROOT: IMessage = {

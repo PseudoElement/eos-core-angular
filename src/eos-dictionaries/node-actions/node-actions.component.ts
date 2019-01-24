@@ -150,7 +150,7 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.CounterNP:
                     if (this._dictSrv && this._dictSrv.listNode) {
-                        _enabled = this._dictSrv.listNode.isNode;
+                        _enabled = this._dictSrv.listNode.isNode || this._dictSrv.currentDictionary.id === 'docgroup';
                     } else {
                         _enabled = false;
                     }
