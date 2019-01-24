@@ -1,6 +1,6 @@
 import { IFieldDescriptor, IFieldDescriptorBase, E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ISelectOption } from 'eos-common/interfaces';
-import {E_VISIBLE_TIPE} from '../interfaces/dictionary.interfaces';
+import {E_VISIBLE_TIPE, IDictionaryLink} from '../interfaces/dictionary.interfaces';
 
 export class FieldDescriptor implements IFieldDescriptorBase {
     readonly key: string;
@@ -23,6 +23,7 @@ export class FieldDescriptor implements IFieldDescriptorBase {
     readonly groupLabel?: string;
     readonly minValue?: number;
     readonly maxValue?: number;
+    readonly dictionaryLink?: IDictionaryLink;
 
     constructor(data: IFieldDescriptor) {
         if (data.key) {
@@ -65,6 +66,7 @@ export class FieldDescriptor implements IFieldDescriptorBase {
         this.dictionaryId = data.dictionaryId;
 
         this.password = !!data.password;
+        this.dictionaryLink = data.dictionaryLink;
         if (data.groupLabel) {
             this.groupLabel = data.groupLabel;
         }

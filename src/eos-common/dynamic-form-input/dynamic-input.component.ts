@@ -3,10 +3,21 @@ import { InputBase } from '../core/inputs/input-base';
 import { FormGroup } from '@angular/forms';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 
+
+export class ErrorTooltip {
+    visible = false;
+    message = '';
+    placement = 'bottom';
+    class = 'tooltip-error';
+    container = '';
+    force = false;
+}
+
 @Component({
     selector: 'eos-dynamic-input',
     templateUrl: 'dynamic-input.component.html'
 })
+
 export class DynamicInputComponent {
     @Input() input: InputBase<any>;
     @Input() form: FormGroup;
@@ -16,12 +27,5 @@ export class DynamicInputComponent {
     @Input() hideLabel: boolean;
 
     types = E_FIELD_TYPE;
-
-    tooltip: any = {
-        visible: false,
-        message: '',
-        placement: 'bottom',
-        class: 'tooltip-error',
-        container: ''
-    };
+    tooltip: ErrorTooltip = new ErrorTooltip;
 }

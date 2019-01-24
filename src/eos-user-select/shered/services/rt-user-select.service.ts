@@ -93,7 +93,17 @@ export class RtUserSelectService {
             }
         };
         return this.apiSrv.read(queryUser).then(res => {
-            return res[0];
+            const query = {
+                CB_PRINT_INFO: {
+                    criteries: {
+                        ISN_OWNER:  String(res[0]['ISN_LCLASSIF'])
+                    }
+                }
+            };
+            return this.apiSrv.read(query).then(fullname => {
+                res[1] = fullname[0];
+                return res;
+            });
         });
     }
 
@@ -146,21 +156,29 @@ export class RtUserSelectService {
     }
 
 
-    getInfoCabinet(isn_cl): Promise<any> {
+    getInfoCabinet(isn_cl, due?): Promise<any> {
         let cab_list = '';
         this.UserCabinetInfo = [];
         return this.getUserCabinets(isn_cl).then(resultCabinet => {
             if (resultCabinet.length > 0) {
                 const leng = resultCabinet.length;
-                for (let i = 0; i < leng; i++) {
+                for (let i = 0; i < leng; i += 1) {
                     i === length - 1 ? cab_list += (resultCabinet as any)[i].ISN_CABINET
                      : cab_list += (resultCabinet as any)[i].ISN_CABINET + '||';
                 }
                 return this.getCabinetName(cab_list).then(resultCabName => {
                     const lengt = resultCabinet.length;
-                    for (let i = 0; i < lengt; i++) {
+                    for (let i = 0; i < lengt; i += 1) {
                         this.UserCabinetInfo[i] = resultCabinet[i];
                         this.UserCabinetInfo[i].CABINET_LIST = resultCabName[i];
+                        // ищем кабинет , вадельцем которого является пользователь
+                        if (due) {
+                            if (due === resultCabName[i]['ISN_CABINET']) {
+                                this.UserCabinetInfo[i]['CUSTOM_FIELD_MAIN'] = true;
+                            }   else {
+                                this.UserCabinetInfo[i]['CUSTOM_FIELD_MAIN'] = false;
+                            }
+                        }
                     }
 
                     return this.UserCabinetInfo;

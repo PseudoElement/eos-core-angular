@@ -198,6 +198,26 @@ export class RecordDescriptor {
 
     getFieldValue(field: IFieldView, data: any): any {
         if (field) {
+            if (!data.__relfield) {
+                data.__relfield = {};
+            }
+            if (data.__relfield[field.dictionaryId]) {
+                return data.__relfield[field.dictionaryId][field.dictionaryLink.label];
+            }
+            if ((field.type === E_FIELD_TYPE.dictionary) && field.dictionaryId && field.dictionaryLink) {
+                if (data['rec'][field.dictionaryLink.fk]) {
+                    const dict = this.dictionary.relatedData[field.dictionaryId];
+                    if (dict) {
+                        const el = dict.find(e => {
+                            return e.DUE === data['rec'][field.dictionaryLink.fk];
+                        });
+                        if (el) {
+                            data.__relfield[field.dictionaryId] = el;
+                            return el[field.dictionaryLink.label];
+                        }
+                    }
+                }
+            }
             switch (field.key) {
                 case 'sev':
                     return data.sev ? data.sev.GLOBAL_ID : '';

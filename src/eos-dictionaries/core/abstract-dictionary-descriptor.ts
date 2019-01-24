@@ -28,6 +28,7 @@ export abstract class AbstractDictionaryDescriptor {
     /**
      * decription of dictionary fields
      */
+    relatedData: {};
     abstract record: RecordDescriptor;
     editOnlyNodes = false;
     readonly id: string;
@@ -402,16 +403,8 @@ export abstract class AbstractDictionaryDescriptor {
             }
         });
 
-
-        // this.metadata.relations.forEach((relation) => {
-        //     if (s.find(i => i === relation.__type)) {
-        //         reqs.push(
-        //             this.apiSrv.read({[relation.__type]: []}));
-        //     }
-        // });
         return Promise.all(reqs)
             .then((responses) => {
-
                 return this.associateRelationType(tables, responses);
             });
     }
@@ -501,6 +494,7 @@ export abstract class AbstractDictionaryDescriptor {
         tables.forEach((tab, idx) => {
             related[tab] = responses[idx];
         });
+        this.relatedData = related;
         return related;
     }
 
