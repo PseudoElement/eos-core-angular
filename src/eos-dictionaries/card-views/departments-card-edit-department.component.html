@@ -2,21 +2,21 @@
     <div class="clearfix">
         <div class="col-1 pull-left">
             <eos-dynamic-input [input]="inputs['rec.CODE']"
-                [form]="form"
-                [readonly]="!editMode"></eos-dynamic-input>
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
             <eos-dynamic-input [input]="inputs['rec.indexDep']"
-                [form]="form"
-                [readonly]="!editMode"></eos-dynamic-input>
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
         </div>
         <div class="col-2 pull-right">
             <div class="col-2 pull-right">
                 <eos-dynamic-input [input]="inputs['rec.title']"
-                    [form]="form"
-                    [readonly]="!editMode"></eos-dynamic-input>
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
                 <div class="duty-flag">
                     <eos-dynamic-input [input]="inputs['printInfo.NOT_USE_IN_DUTY']"
-                        [form]="form"
-                        [readonly]="!editMode"></eos-dynamic-input>
+                                       [form]="form"
+                                       [readonly]="!editMode"></eos-dynamic-input>
                 </div>
             </div>
         </div>
@@ -24,8 +24,8 @@
     <div class="clearfix">
         <div class="col-1 pull-left">
             <eos-dynamic-input [input]="inputs['sev.GLOBAL_ID']"
-                [form]="form"
-                [readonly]="!editMode"></eos-dynamic-input>
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
             <eos-dynamic-input [input]="inputs['rec.ID_GAS_PS']"
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
@@ -33,8 +33,8 @@
         <div class="col-2 pull-right">
             <div class="department-fullname">
                 <eos-dynamic-input [input]="inputs['rec.fullTitle']"
-                    [form]="form"
-                    [readonly]="!editMode"></eos-dynamic-input>
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
             </div>
         </div>
     </div>
@@ -45,23 +45,23 @@
     <div class="clearfix">
         <div class="col-1 pull-left">
             <eos-dynamic-input [input]="inputs['rec.START_DATE']"
-                [form]="form"
-                [readonly]="!editMode"></eos-dynamic-input>
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
             <eos-dynamic-input [input]="inputs['rec.END_DATE']"
-                [form]="form"
-                [readonly]="!editMode"></eos-dynamic-input>
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
         </div>
         <div class="col-2 pull-right">
             <eos-dynamic-input [input]="inputs['printInfo.DEPARTMENT_RP']"
-                [form]="form"
-                [readonly]="!editMode"></eos-dynamic-input>
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
             <div class="form-group">
                 <div class="organization-wrapper">
                     <label [ngClass]="{'unimportant-text': !editMode }">Организация <a
-                *ngIf="editMode && hasCard"
-                (click)="chooseOrganiz()">[выбрать]</a> <a
-                *ngIf="editMode && hasCard"
-                (click)="unbindOrganization()">[удалить]</a></label>
+                        *ngIf="editMode && hasCard"
+                        (click)="chooseOrganiz()">[выбрать]</a> <a
+                        *ngIf="editMode && hasCard"
+                        (click)="unbindOrganization()">[удалить]</a></label>
                     <p class="form-control-static m-font">{{orgName}}</p>
                 </div>
             </div>
@@ -71,24 +71,31 @@
         <div class="col-1 pull-left">
             <div class="card-flag">
                 <eos-dynamic-input [input]="inputs['rec.CARD_FLAG']"
-                    [form]="form"
-                    [readonly]="!(this.isNewRecord && this.editMode)"></eos-dynamic-input>
-                <eos-dynamic-input [input]="inputs['rec.NUMCREATION_FLAG']"
                                    [form]="form"
+                                   [readonly]="!(this.isNewRecord && this.editMode)"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.EXPEDITION_FLAG']"
+                                   [form]="form"
+                                   (click)="this.clickNumcreation()"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input class ="pull-left"
+                                   [input]="inputs['rec.NUMCREATION_FLAG']"
+                                   [form]="form"
+                                   (click)="this.clickNumcreation()"
                                    [readonly]="!editMode"></eos-dynamic-input>
             </div>
         </div>
         <div class="col-2 pull-right">
             <ng-container *ngIf="hasCard">
                 <eos-dynamic-input [input]="inputs['rec.CARD_NAME']"
-                    [form]="form"
-                    [readonly]="!(this.isNewRecord && this.editMode)"></eos-dynamic-input>
+                                   [form]="form"
+                                   [readonly]="!(this.isNewRecord && this.editMode)"></eos-dynamic-input>
             </ng-container>
-            <eos-dynamic-input class="department-note"
-                [input]="inputs['rec.NOTE']"
-                [form]="form"
-                [readonly]="!editMode"></eos-dynamic-input>
+
         </div>
     </div>
+    <eos-dynamic-input class="department-note"
+                       [input]="inputs['rec.NOTE']"
+                       [form]="form"
+                       [readonly]="!editMode"></eos-dynamic-input>
 
 </div>

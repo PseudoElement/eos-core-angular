@@ -1,3 +1,4 @@
+import { ErrorTooltip } from './dynamic-input.component';
 import { Input, OnChanges, OnDestroy } from '@angular/core';
 import { InputBase } from '../core/inputs/input-base';
 import { FormGroup, AbstractControl } from '@angular/forms';
@@ -9,7 +10,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     @Input() form: FormGroup;
     @Input() readonly: boolean;
     @Input() disabled: boolean;
-    @Input() inputTooltip: any;
+    @Input() inputTooltip: ErrorTooltip;
     @Input() isGroup: boolean;
     @Input() hideLabel: boolean;
 
@@ -43,16 +44,28 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     }
 
     onBlur() {
-        this.updateMessage();
+        this._updateMessage();
         this.toggleTooltip(false);
+    }
+
+    forceTooltip() {
+        // this._updateMessage();
+        this.inputTooltip.force = true;
     }
 
     ngOnChanges() {
         const control = this.control;
+        this.input.dib = this;
         if (control) {
             this.ngOnDestroy();
             this.subscriptions.push(control.statusChanges.subscribe((status) => {
-                this.inputTooltip.visible = this.inputTooltip.visible && control.invalid && control.dirty;
+                if (this.inputTooltip.force) {
+                    this._updateMessage();
+                    this.inputTooltip.visible = true;
+                    this.inputTooltip.force = false;
+                } else {
+                    this.inputTooltip.visible = (this.inputTooltip.visible && control.invalid && control.dirty);
+                }
             }));
         }
     }
@@ -66,7 +79,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
         return this.form.controls[this.input.key];
     }
 
-    private updateMessage() {
+    private _updateMessage() {
         let msg = '';
         const control = this.control;
         if (control && control.errors) {

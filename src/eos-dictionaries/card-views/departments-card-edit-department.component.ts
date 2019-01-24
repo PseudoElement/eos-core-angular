@@ -4,6 +4,7 @@ import { BaseCardEditComponent } from './base-card-edit.component';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { WARN_NO_BINDED_ORGANIZATION } from '../consts/messages.consts';
 import {AbstractControl, ValidatorFn} from '@angular/forms';
+import { DynamicInputBase } from 'eos-common/dynamic-form-input/dynamic-input-base';
 
 @Component({
     selector: 'eos-departments-card-edit-department',
@@ -56,11 +57,19 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
         };
     }
 
+    clickNumcreation () {
+        const dib: DynamicInputBase = this.inputs['rec.indexDep'].dib;
+        dib.forceTooltip();
+        const c = this.form.controls['rec.DEPARTMENT_INDEX'];
+        c.markAsDirty();
+    }
+
     chooseOrganiz() {
         const config = this.dictSrv.getApiConfig();
         if (config) {
             const pageUrl = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?';
-            const params = 'Classif=CONTACT&value_id=__ClassifIds&skip_deleted=True&select_nodes=False&select_leaf=True&return_due=True';
+            const params = 'Classif=CONTACT&value_id=__ClassifIds&skip_deleted=True&select_nodes=False&select_leaf=True&return_due=True&search-filter={"CONT.NOT_LINK_DEPARTMENT":"Null"}"';
+            // &search-filter={"CONT.NOT_LINK_DEPARTMENT":"Null"}"
             this._zone.runOutsideAngular(() => {
                 window.open(pageUrl + params, 'clhoose', 'width=1050,height=800,resizable=1,status=1,top=20,left=20');
                 window['endPopup'] = (due) => {

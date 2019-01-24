@@ -232,9 +232,14 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             title: '',
         }, {
             key: 'organization',
-            title: 'Структура Организаций',
+            title: 'Организация',
             type: 'dictionary',
             dictionaryId: 'ORGANIZ_CL',
+            dictionaryLink: {
+                pk: 'DUE',
+                fk: 'DUE_LINK_ORGANIZ',
+                label: 'CLASSIF_NAME',
+            },
             options: [],
         }, {
             key: 'cabinet',
@@ -282,6 +287,10 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             title: 'Номерообразование НП',
             type: 'boolean',
         }, {
+            key: 'EXPEDITION_FLAG',
+            title: 'Отправка документов по реестрам',
+            type: 'boolean',
+        }, {
             key: 'photo',
             type: 'dictionary',
             title: 'Фото'
@@ -301,12 +310,12 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     editFields: ['CARD_FLAG', 'CARD_NAME', 'CODE', 'DUTY', 'IS_NODE', 'NOTE', 'SURNAME', 'indexPerson', 'POST_H', 'PHONE_LOCAL', 'PHONE',
         'FAX', 'E_MAIL', 'NUM_CAB', 'START_DATE', 'END_DATE', 'fullPosition', 'SKYPE', 'printInfo', 'sev', 'organization', 'cabinet',
         'user', 'photo', 'ID_GAS_PS', 'NUMCREATION_FLAG',
-        'title', 'DUE_LINK_ORGANIZ', 'indexDep', 'fullTitle', 'ISN_PHOTO'],
+        'title', 'DUE_LINK_ORGANIZ', 'indexDep', 'fullTitle', 'ISN_PHOTO', 'EXPEDITION_FLAG'],
     // ['fio', 'position', 'description', 'title', 'phone', 'email', 'rooms', 'associatedUsers']
     allVisibleFields: ['SURNAME', 'DUTY', 'fullTitle', 'fullPosition', 'SKYPE', /* 'DEPARTMENT_DUE', */ 'ORDER_NUM', 'indexDep', 'POST_H',
         'CARD_FLAG',
-        'CARD_NAME', 'NOTE', 'START_DATE', 'END_DATE', 'PHONE_LOCAL', 'PHONE', 'FAX', 'E_MAIL', 'NUM_CAB', 'organization', 'ID_GAS_PS',
-        'NUMCREATION_FLAG' /*, 'printInfo', 'sev',
-'organization', 'cabinet', 'user'*/],
+        'CARD_NAME', 'NOTE', 'START_DATE', 'END_DATE', 'PHONE_LOCAL', 'PHONE', 'FAX', 'E_MAIL', 'NUM_CAB', 'ID_GAS_PS',
+        'NUMCREATION_FLAG' , 'organization', /*, 'printInfo', 'sev',
+, 'cabinet', 'user'*/],
 };
 /* tslint:enable:max-line-length */

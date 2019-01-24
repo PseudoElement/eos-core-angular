@@ -29,8 +29,6 @@ export class NodeListItemComponent implements OnInit, OnChanges {
     viewFields: IFieldView[];
     custom: IFieldView[];
 
-    customValues: any = {};
-
     constructor(
         private _storageSrv: EosStorageService,
         private _dictSrv: EosDictService,

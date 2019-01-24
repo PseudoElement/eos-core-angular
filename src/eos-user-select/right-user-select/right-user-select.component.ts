@@ -13,7 +13,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     showDep: boolean;
     CurrentUser: USER_CL;
     UserCabinetInfo:  any;
-    DueInfo: DEPARTMENT;
+    DueInfo: string;
     role: string | boolean;
     flagSustem: boolean;
     opened: boolean;
@@ -67,28 +67,30 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     }
 
     getInfo(isn, due?): void {
+        let isn_cabinet = null;
         if (!due) {
             this.isPhoto = false;
         }
         this._selectedUser.getUserIsn(isn, due)
         .then((result: [USER_CL, DEPARTMENT]) => {
             this.getObjectForSystems(result);
-           if (result[1].toString() === '[object Object]') {
-            this.DueInfo = result[1];
-            this.isPhoto =  this.DueInfo.ISN_PHOTO;
+           if (result[1].toString() !== '5') {
+            this.DueInfo = `${result[1][1]['SURNAME']} ${result[1][1]['NAME']} ${result[1][1]['PATRON']}`;
+            this.isPhoto =  result[1][0]['ISN_PHOTO'];
+            isn_cabinet =  result[1][0]['ISN_CABINET'];
             this.showDep = true;
            }else {
             this.DueInfo = null;
             this.showDep = false;
            }
             this.role = this.getRoleForUser(result[0]['USER_PARMS_List']);
-            this._selectedUser.getInfoCabinet(isn)
+            this._selectedUser.getInfoCabinet(isn, isn_cabinet)
             .then((res: [USER_CL, DEPARTMENT]) => {
                 this.UserCabinetInfo = res;
                 setTimeout(() => {
                 this.chooseTemplate = 'main';
             }, 500);
-             });
+        });
         });
     }
 

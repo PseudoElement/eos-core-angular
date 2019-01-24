@@ -187,3 +187,9 @@ export const DANGER_ORGANIZ_NO_SEV: IMessage = {
     title: 'Предупреждение: ',
     msg: 'У выбранной организации не задан индекс СЭВ.'
 };
+
+export const DANGER_DEPART_IS_LDELETED: IMessage = {
+    type: 'danger',
+    title: 'Предупреждение: ',
+    msg: 'Выбранное подразделение логически удалено.'
+};
