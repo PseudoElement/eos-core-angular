@@ -16,7 +16,7 @@
             .rt-grey{
                 color: #646464;
                 line-height: 10px;
-                text-transform: uppercase;
+                text-transform: initial;
                 margin-bottom: 8px;
             }
             .rt-black{
@@ -24,13 +24,15 @@
                 color: #000000;
                 overflow: hidden;
                 line-height: 32px;
-                text-transform: capitalize;
-
-
+                text-transform: initial;
             }
             .rt-blue{
                 color: #2196f3;
                 text-transform: lowercase;
+            }
+            .email-tittle{
+                color: #646464;
+                text-transform: initial;
             }
         }
         .info-mail{

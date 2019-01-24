@@ -2,15 +2,16 @@
     <div class="info-wr">
         <div class="info-job">
             <span class="rt-grey">Должность</span>
-            <span class="rt-black">{{department.DUTY || 'не указан'}}</span>
+            <span class="rt-black">{{department.DUTY || 'Не указана'}}</span>
         </div>
         <div class="info-pfone">
             <span class="rt-grey">Телефон</span>
-            <span class="rt-black">{{department.PHONE || 'не указан'}}</span>
+            <span class="rt-black">{{department.PHONE || 'Не указан'}}</span>
         </div>
         <div class="info-mail">
             <span class="rt-grey">E-Mail</span>
             <a *ngIf='department.E_MAIL' href="mailto:department.E_MAIL">{{department.E_MAIL}}</a>
+            <span class="rt-black" *ngIf='!department.E_MAIL' >Не указан</span>
         </div>
     </div>
     <ng-content ></ng-content>

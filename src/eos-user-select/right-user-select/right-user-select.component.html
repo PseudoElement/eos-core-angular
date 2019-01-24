@@ -25,13 +25,13 @@
                     <div class="info-wr">
                         <div class="info-role">
                             <span class="rt-grey">Роль</span>
-                            <span class="rt-black"*ngIf="CurrentUser">
+                            <span class="rt-role-name"*ngIf="CurrentUser">
                                 {{role}}
                             </span>
                         </div>
                         <div class='info-note'>
                                 <span class="rt-grey">Подразделение</span>
-                                <span class="rt-black" *ngIf="CurrentUser">{{CurrentUser.data.NOTE || 'не указан'}}</span>
+                                <span class="rt-role-name" *ngIf="CurrentUser">{{CurrentUser.data.NOTE || 'Не указано'}}</span>
                         </div>
                 </div>
 
