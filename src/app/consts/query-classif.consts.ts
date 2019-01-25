@@ -14,3 +14,9 @@ export const OPEN_CLASSIF_DOCGROUP_CL: IOpenClassifParams = {
     selectNodes: true,
     selectMulty: true,
 };
+
+export const OPEN_CLASSIF_CARDINDEX: IOpenClassifParams = {
+    classif: 'CARDINDEX',
+    return_due: true,
+    selectMulty: true,
+};
