@@ -29,6 +29,12 @@ export class UserParamsComponent implements OnDestroy, OnInit {
             .subscribe(param => {
                 this.pageId = param['field-id'];
             });
+
+            this._navSrv.StateSandwich$
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((state: boolean) => {
+                this.isShowAccordion = state;
+            });
         this._route.queryParams
             .takeUntil(this.ngUnsubscribe)
             .subscribe(qParam => {
@@ -44,11 +50,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                     .catch(() => {
                         this._router.navigate(['user_param']);
                     });
-            });
-        this._navSrv.StateSandwich$
-            .takeUntil(this.ngUnsubscribe)
-            .subscribe((state: boolean) => {
-                this.isShowAccordion = state;
+                    this.isShowAccordion = true;
             });
     }
 
