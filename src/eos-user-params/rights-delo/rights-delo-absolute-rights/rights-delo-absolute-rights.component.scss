@@ -20,7 +20,7 @@
     .left-block-list-absolute-rights {
         display: inline-block;
         width: 50%;
-        max-height: 70vh;
+        max-height: calc(100vh - 280px);
         border: 1px solid $border-color-main-theme;
         overflow-y: auto;
         margin-bottom: 20px;

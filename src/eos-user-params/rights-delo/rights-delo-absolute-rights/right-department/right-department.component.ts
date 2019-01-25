@@ -8,6 +8,7 @@ import { UserParamsService } from 'eos-user-params/shared/services/user-params.s
 import { NodeAbsoluteRight } from '../node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { NodeListDepAbsolute } from './node-list-dep';
+import { RestError } from 'eos-rest/core/rest-error';
 
 @Component({
     selector: 'eos-right-absolute-department',
@@ -47,6 +48,19 @@ export class RightDepertmentComponent implements OnInit {
                 this.isLoading = false;
                 if (this.selectedNode.isCreate) {
                     this.addDep();
+                }
+            })
+            .catch(e => {
+                if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
+                    return undefined;
+                } else {
+                    const errMessage = e.message ? e.message : e;
+                    this._msgSrv.addNewMessage({
+                        type: 'danger',
+                        title: 'Ошибка обработки. Ответ сервера:',
+                        msg: errMessage
+                    });
+                    return null;
                 }
             });
     }

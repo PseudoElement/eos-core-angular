@@ -139,9 +139,14 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     }
 
     clearControlAuthor() {
-        this.form.controls['rec.RESOLUTION_CONTROLLER'].patchValue('');
-        this.form.controls['rec.CONTROLL_AUTHOR'].patchValue('');
-        this.controller = false;
+        const val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
+        if (String(val) === 'null' || val === '') {
+            return;
+        }   else {
+            this.form.controls['rec.RESOLUTION_CONTROLLER'].patchValue('');
+            this.form.controls['rec.CONTROLL_AUTHOR'].patchValue('');
+            this.controller = false;
+        }
     }
     showInfoUser() {
         this._router.navigate(['/spravochniki/departments', this.dueForLink, 'view', '0']);
@@ -398,5 +403,9 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
         }
         get getClass() {
             return this.controller ? 'eos-icon eos-icon-info-blue small' : 'eos-icon eos-icon-info-grey small';
+        }
+        get getClassClearBtn() {
+            const val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
+            return    val !== '' && String(val) !== 'null' ? 'eos-icon eos-icon-close-blue small' : 'eos-icon eos-icon-close-grey small';
         }
 }
