@@ -471,7 +471,9 @@ export class EosDictService {
             .then((dictionary) => {
                 let resNode: EosDictionaryNode = null;
                 return this.preSave(dictionary, data)
-                    .then(() => dictionary.updateNodeData(node, data))
+                    .then((rrr) => {
+                        return dictionary.updateNodeData(node, data);
+                    })
                     .then((results) => {
                         const keyFld = dictionary.descriptor.record.keyField.foreignKey;
 
@@ -492,7 +494,7 @@ export class EosDictService {
                     .then(() => resNode);
             })
             .catch((err) => {
-                if (node.dictionaryId === 'reestrtype' && err === 'cancel') {
+                if (err === 'cancel') {
                     return Promise.reject('cancel');
                 }
                 this._errHandler(err);
@@ -504,7 +506,9 @@ export class EosDictService {
 
         if (this._treeNode) {
             return this.preSave(dictionary, data)
-                .then(() => dictionary.descriptor.addRecord(data, this._treeNode.data))
+                .then((res) => {
+                    return dictionary.descriptor.addRecord(data, this._treeNode.data);
+                })
                 .then((results) => {
                     return this._reloadList(true)
                         .then(() => {
@@ -531,10 +535,15 @@ export class EosDictService {
                             }
                         });
                 })
-                .catch((err) => this._errHandler(err));
-        } else {
-            return Promise.reject('No selected node');
-        }
+                .catch((err) => {
+                    if (err === 'cancel') {
+                        return Promise.reject('cancel');
+                    }
+                    this._errHandler(err);
+                });
+            } else {
+                return Promise.reject('No selected node');
+            }
     }
 
     errHandler(err: RestError | any) {
@@ -944,7 +953,7 @@ export class EosDictService {
                                             return dictionary.updateNodeData(boss, boss.data);
                                         } else {
                                             data.rec['POST_H'] = 0;
-                                            return null;
+                                            return Promise.reject('cancel');
                                         }
                                     });
                             }

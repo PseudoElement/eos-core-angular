@@ -415,6 +415,8 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                     this.cardEditRef.newData.rec['ISN_DELIVERY'] = oldDelivery;
                     this.cardEditRef.form.controls['rec.ISN_DELIVERY'].setValue(oldDelivery, this.cardEditRef.inputs['rec.ISN_DELIVERY'].options);
                     return null;
+                } else if (err === 'cancel') {
+                    return null;
                 }
                 this._errHandler(err);
             });

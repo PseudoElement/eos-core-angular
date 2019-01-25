@@ -84,7 +84,13 @@ export class CreateNodeComponent {
 
         this._dictSrv.addNode(data)
             .then((node: EosDictionaryNode) => this._afterAdding(node, hide))
-            .catch((err) => this._errHandler(err));
+            .catch((err) => {
+                if (err === 'cancel') {
+                    this.upadating = false;
+                } else {
+                    return this._errHandler(err);
+                }
+            });
     }
 
     private _afterAdding(node: EosDictionaryNode, hide: boolean): void {
