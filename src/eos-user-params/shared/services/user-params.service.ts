@@ -7,6 +7,7 @@ import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class UserParamsService {
+    userTechList: any[] = [];
     public SubEmail: Subject<any> = new Subject();
     private _isTechUser: boolean;
     private _userContext: IParamUserCl;
@@ -146,7 +147,7 @@ export class UserParamsService {
                     ISN_LCLASSIF: isn_cl ? isn_cl : (this.userContextId + '')
                 }
             },
-            expand: 'USER_PARMS_List,USERCARD_List/USER_CABINET_List,USER_RIGHT_DOCGROUP_List,USERDEP_List,USERCARD_List/USER_CARD_DOCGROUP_List,NTFY_USER_EMAIL_List'
+            expand: 'USER_PARMS_List,USERCARD_List/USER_CABINET_List,USER_RIGHT_DOCGROUP_List,USERDEP_List,USERCARD_List/USER_CARD_DOCGROUP_List,NTFY_USER_EMAIL_List,USER_TECH_List'
         };
         const _user = this._pipSrv.getData<USER_CL>(queryUser);
         const _sys = this.fetchSysParams();
@@ -154,6 +155,8 @@ export class UserParamsService {
         .then(([user, sys]) => {
             this._sysParams = sys;
             this._userContext = user[0];
+            this.userTechList = [];
+            this._userContext.USER_TECH_List.forEach(item => this.userTechList.push(Object.assign({}, item)));
             this._userContext['DUE_DEP_NAME'] = '';
             this._isTechUser = !this._userContext['DUE_DEP'];
             this._userContext['isTechUser'] = !this._userContext['DUE_DEP'];
@@ -238,6 +241,9 @@ export class UserParamsService {
             }
             return false;
         });
+    }
+    deleteItemUserTechList(v) {
+        // реализовать удаление элемента.
     }
 
     fetchExpandUser() {}
