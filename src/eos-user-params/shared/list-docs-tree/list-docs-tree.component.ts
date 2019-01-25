@@ -16,7 +16,9 @@ export class ListDocsTreeComponent implements OnInit, OnChanges {
         // this._createStructure(this.listNode);
     }
     ngOnChanges(changes: SimpleChanges) {
-        this._createStructure(this.listNode);
+        if (this.listNode.length) {
+            this._createStructure(this.listNode);
+        }
     }
 
     clickLable(event, item: NodeDocsTree) {
@@ -32,10 +34,11 @@ export class ListDocsTreeComponent implements OnInit, OnChanges {
     }
     private _createStructure(liNodes: NodeDocsTree[]) {
         this.list = [];
+        const minLength = this._findMinLength(liNodes);
         liNodes.forEach((node: NodeDocsTree) => {
             node.children = [];
             node.parent = null;
-            if (node.link.length === 1) {
+            if (node.link.length === minLength) {
                 this.list.push(node);
             } else {
                 this._findParent(node);
@@ -46,7 +49,7 @@ export class ListDocsTreeComponent implements OnInit, OnChanges {
     private _findParent(node: NodeDocsTree) {
         let parent: NodeDocsTree = null;
         let index = node.link.length - 2;
-        while (!parent) {
+        while (!parent && (index >= 0)) {
             const parentName = node.link[index];
             this.listNode.some((n: NodeDocsTree) => {
                 if (n.link.length - 1 === index && n.link[index] === parentName) {
@@ -74,5 +77,15 @@ export class ListDocsTreeComponent implements OnInit, OnChanges {
         this.curentNode = item;
         this.curentNode.isSelected = true;
         this.select.emit(item);
+    }
+    private _findMinLength (liNodes: NodeDocsTree[]): number {
+        let min = liNodes[0].link.length;
+        liNodes.forEach(node => {
+            const count = node.link.length;
+            if (count < min) {
+                min = count;
+            }
+        });
+        return min;
     }
 }

@@ -113,5 +113,10 @@
 </ng-template>
 
 <ng-template #classif>
-    <div>Все справочники</div>
+    <eos-absolute-rights-classif
+        style="width: 100%;"
+        [selectedNode]="selectedNode"
+        [curentUser]="curentUser"
+        (Changed)="checkChange()"
+    ></eos-absolute-rights-classif>
 </ng-template>

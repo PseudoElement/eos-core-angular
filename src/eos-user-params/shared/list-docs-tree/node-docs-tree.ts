@@ -15,7 +15,7 @@ export class NodeDocsTree implements IListDocsTree {
     }
     set allowed(value: boolean) {
         this._allowed = value;
-        this.data['rightDocGroup']['ALLOWED'] = +value;
+        // this.data['rightDocGroup']['ALLOWED'] = +value;
     }
     constructor(due: string, label: string, allowed: boolean, data?: any) {
         this.DUE = due;
