@@ -156,7 +156,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
     }
 
     private updateForm(formChanges: any) {
-        if ((this.data.rec.POST_H * 1 === 1) && !(this.data.cabinet)) {
+        if (/*(this.data.rec.POST_H * 1 === 1) &&*/ !(this.data.cabinet && Object.keys(this.data.cabinet).length !== 0)) {
             if (formChanges['rec.POST_H'] * 1 === 1) {
                 if (!this.bossWarning) {
                     this.bossWarning = true;
