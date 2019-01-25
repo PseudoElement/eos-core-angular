@@ -206,7 +206,7 @@ export class UserParamApiSrv {
         const ARRAY_QUERY_SET_DELETE = [];
         let data = {};
         users.forEach((user: UserSelectNode) => {
-            if (user.isChecked) {
+            if (user.isChecked || user.selectedMark) {
                   if (user.blockedUser) {
                     data = {
                         DELETED : 0,

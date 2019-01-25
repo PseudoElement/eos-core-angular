@@ -56,7 +56,7 @@
                 <label class="user-check-label">
                     <input  [checked]="flagChecked"  type="checkbox" (change)="setCheckedAllFlag()">
                     <div>
-                        <span class="eos-icon small" [ngClass]="flagChecked ? 'eos-icon-checkbox-square-v-blue' : 'eos-icon-checkbox-square-minus-blue'"></span>
+                        <span class="eos-icon small" [ngClass]="getflagChecked"></span>
                     </div>
                 </label>
              </div>
@@ -86,7 +86,6 @@
                     *ngFor="let user of listUsers"
                     class="user-item"
                     [ngClass]="{'highlighted': user.isSelected}"
-                    (click)="selectedNode(user)"
                     (dblclick)="RedactUser(user)">
                     <!-- <label
                         class="checkbox-inline"
@@ -104,37 +103,39 @@
                         <span></span>
                     </label> -->
                     <div class="table-title user-select-node"  [ngClass]="{'disabled': user.deleted, 'delitedDue': user.deletedOffFace}">
-                        <label class="checkbox minus-checkbox">
-                        <input  [checked]="user.isChecked" [disabled]="user.deleted ? true : false"  type="checkbox" (change)="setFlagChecked($event, user)">
+                        <label class="checkbox">
+                        <input  [checked]="(user.isChecked && !user.selectedMark) || user.selectedMark" [disabled]="user.deleted ? true : false"  type="checkbox" (change)="setFlagChecked($event, user)">
                         <span class="eos-icon eos-icon-checkbox-black"></span>
                         </label>
-                        <span
-                        class="user-list-first-colomn"
-                        tooltip="{{user.department}}"
-                        placement="bottom" containerClass="tooltip-info" container="body"
-                        >{{user.department}}</span>
-                        <span
+                        <div class="user-select-node-t"   (click)="selectedNode(user)">
+                            <span
                             class="user-list-first-colomn"
-                            tooltip="{{user.fullDueName}}"
-                            placement="bottom"
-                            containerClass="tooltip-info"
-                            container="body"
-                            >{{user.fullDueName}}
-                        </span>
-                        <!-- <span *ngIf="user.deletedOffFace"
-                            class="user-list-first-colomn"
-                            tooltip="{{user.dueName}}"
-                            placement="bottom"
-                            containerClass="tooltip-info"
-                            container="body"
-                            >{{user.dueName}} (Должностное лицо удалено логически)
-                        </span> -->
-                        <span class="user-list-third-colomn">
-                            <span *ngIf="user.deleted" class="eos-icon eos-icon-bin-forever-grey small"></span>
-                            <span *ngIf="user.blockedUser && !user.deleted" class="eos-icon eos-icon-Blockeduser-Yellow  small"></span>
-                            <span *ngIf="user.blockedSystem" class="eos-icon eos-icon-Blockeduser-Red  small"></span>
-                        </span>
-                        <span class="user-list-fourth-colomn">{{user.login}}</span>
+                            tooltip="{{user.department}}"
+                            placement="bottom" containerClass="tooltip-info" container="body"
+                            >{{user.department}}</span>
+                            <span
+                                class="user-list-first-colomn"
+                                tooltip="{{user.fullDueName}}"
+                                placement="bottom"
+                                containerClass="tooltip-info"
+                                container="body"
+                                >{{user.fullDueName}}
+                            </span>
+                            <!-- <span *ngIf="user.deletedOffFace"
+                                class="user-list-first-colomn"
+                                tooltip="{{user.dueName}}"
+                                placement="bottom"
+                                containerClass="tooltip-info"
+                                container="body"
+                                >{{user.dueName}} (Должностное лицо удалено логически)
+                            </span> -->
+                            <span class="user-list-third-colomn">
+                                <span *ngIf="user.deleted" class="eos-icon eos-icon-bin-forever-grey small"></span>
+                                <span *ngIf="user.blockedUser && !user.deleted" class="eos-icon eos-icon-Blockeduser-Yellow  small"></span>
+                                <span *ngIf="user.blockedSystem" class="eos-icon eos-icon-Blockeduser-Red  small"></span>
+                            </span>
+                            <span class="user-list-fourth-colomn">{{user.login}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
