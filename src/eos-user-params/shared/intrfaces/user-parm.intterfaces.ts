@@ -1,5 +1,6 @@
  import { E_FIELD_TYPE } from 'eos-parameters/parametersSystem/shared/interfaces/parameters.interfaces';
 import { USER_CL } from 'eos-rest';
+import { NodeDocsTree } from '../list-docs-tree/node-docs-tree';
 
 export interface IInputParamControl {
     controlType: E_FIELD_TYPE;
@@ -55,6 +56,9 @@ export interface IListDocsTree {
     DUE: string;
     label: string;
     allowed: boolean;
+    children: NodeDocsTree[];
+    parent: NodeDocsTree;
+    layer: number;
 }
 
 export interface NpUserLinks {

@@ -29,6 +29,9 @@ export class WaitClassifService {
         });
     }
     private _prepareUrl(params: IOpenClassifParams, oldPage): string {
+        if (!oldPage) {
+            oldPage = (params.classif === 'CARDINDEX') || (params.classif === 'USER_CL');
+        }
         let url = oldPage ? '../Pages/Classif/ChooseClassif.aspx?' : '../Eos.Delo.JsControls/Classif/ChooseClassif.aspx?';
         url += `Classif=${params.classif}`;
         url += params.return_due ? '&return_due=true' : '';

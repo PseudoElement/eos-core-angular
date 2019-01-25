@@ -201,6 +201,16 @@ export class UserParamApiSrv {
         const query = {DOCGROUP_CL: q};
         return this.getData<DOCGROUP_CL>(query);
     }
+    getEntity<T>(apiInstance: string, due?: string): Promise<T[]>  {
+        let q;
+        if (!due) {
+            q = ALL_ROWS;
+        } else {
+            q = PipRX.criteries({DUE: due});
+        }
+        const query = {[apiInstance]: q};
+        return this.getData<T>(query);
+    }
 
     blokedUser(users: UserSelectNode[]): Promise<any> {
         const ARRAY_QUERY_SET_DELETE = [];

@@ -1,0 +1,62 @@
+<div class="user-tech-classif" *ngIf="isLoading">
+    <div *ngFor="let node of listClassif"
+        class="right-classif-node">
+
+        <span *ngIf="node.expandable"
+            class="eos-icon icon list-triangle small"
+            (click)="expendList(node)"
+            [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded, 'eos-icon-close-folder-blue': !node.isExpanded}"
+        ></span>
+
+        <label class="checkbox classif-list-tech-user">
+            <input type="checkbox"
+                hide
+                [(ngModel)]="node.value"
+            >
+            <span class="eos-icon eos-icon-checkbox-square-blue x-small">
+            </span>
+            {{node.label}}
+        </label>
+
+        <div *ngIf="node.expandable && node.isExpanded">
+            <div *ngIf="!node.isLoading; else spiner" class="content-classif-node">
+                <div class="buttons-classif-node">
+                    <button
+                        class="btn"
+                        triggers="hover"
+                        tooltip="Добавить"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        (click)="node.addInstance()"
+                    >
+                        <span class="eos-icon eos-icon-plus-blue small"></span>
+                    </button>
+                    <button
+                        class="btn"
+                        tooltip="Удалить"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        [disabled]="!node.curentSelectedNode"
+                        (click)="node.DeleteInstance()"
+                    >
+                        <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+                    </button>
+                </div>
+
+                <eos-list-doc-tree
+                    class="tree-classif-node"
+                    [listNode]="node.listContent"
+                    (select)="node.select($event)"
+                    (checkedNode)="node.checkedNode($event)"
+                ></eos-list-doc-tree>
+
+            </div>
+        </div>
+        <div *ngIf="node.isShell" class="shell"></div>
+    </div>
+</div>
+
+
+<ng-template #spiner>
+        <eos-spinner size="lg"></eos-spinner>
+</ng-template>

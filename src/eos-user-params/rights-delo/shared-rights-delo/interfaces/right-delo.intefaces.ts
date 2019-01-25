@@ -11,6 +11,8 @@ export enum E_RIGHT_DELO_ACCESS_CONTENT {
 }
 export interface IChengeItemAbsolute {
     method: 'POST'|'DELETE'|'MERGE';
-    due: string;
     data: any;
+    due?: string;
+    user_cl?: boolean;
+    funcNum?: number;
 }
