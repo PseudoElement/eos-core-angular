@@ -37,8 +37,6 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         this.userTechList = this._userParmSrv.userTechList;
     }
     ngOnInit() {
-        // console.log();
-        // console.log(USER_TECH);
         this._init();
         this.isLoading = true;
     }

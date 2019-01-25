@@ -8,6 +8,7 @@ import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { DOCGROUP_CL, USER_RIGHT_DOCGROUP } from 'eos-rest';
 import { OPEN_CLASSIF_DOCGROUP_CL } from 'app/consts/query-classif.consts';
+import { RestError } from 'eos-rest/core/rest-error';
 
 @Component({
     selector: 'eos-right-absolute-doc-group',
@@ -139,6 +140,19 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
             }
 
             this.isLoading = false;
+        })
+        .catch(e => {
+            if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
+                return undefined;
+            } else {
+                const errMessage = e.message ? e.message : e;
+                this._msgSrv.addNewMessage({
+                    type: 'danger',
+                    title: 'Ошибка обработки. Ответ сервера:',
+                    msg: errMessage
+                });
+                return null;
+            }
         });
     }
     private _createNode(rDoc, doc: DOCGROUP_CL): NodeDocsTree {
