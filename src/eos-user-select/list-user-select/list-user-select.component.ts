@@ -56,7 +56,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
               this.initView(param['nodeId']);
             });
         this._pagSrv.NodeList$.takeUntil(this.ngUnsubscribe).subscribe((data) => {
-           this.flagChecked = false;
+           this.flagChecked = null;
            this.listUsers  = data;
            if (this.listUsers && this.listUsers.length) {
             this.selectedNode(this.listUsers[0]);
@@ -80,7 +80,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     initView(param?) {
         this.countcheckedField = 0;
         this.titleCurrentDue = this._apiSrv.configList.titleDue;
-        this.flagChecked = false;
+        this.flagChecked = null;
         this.isLoading = true;
         this._apiSrv.getUsers(param || '0.')
         .then((data: UserSelectNode[]) => {
@@ -112,9 +112,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         if (!user.deleted) {
             if (this.selectedUser) {
                 this.selectedUser.isSelected = false;
+                this.selectedUser.selectedMark = false;
             }
             this.selectedUser = user;
             this.selectedUser.isSelected = true;
+            if (!this.selectedUser.isChecked) {
+                this.selectedUser.selectedMark = true;
+            }
             this.rtUserService.changeSelectedUser(user);
             this.disabledBtnAction();
         }
@@ -250,8 +254,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
     }
     setCheckedAllFlag() {
-        this.flagChecked = !this.flagChecked;
+        if (this.flagChecked === null || this.flagChecked === false) {
+            this.flagChecked = true;
+        }else {
+            this.flagChecked = null;
+        }
+
         this.listUsers.forEach(user => {
+            user.selectedMark = false;
             if (this.flagChecked) {
                 user.isChecked = true;
             }   else {
@@ -269,33 +279,45 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     changeFlagCheked() {
         this.countcheckedField = 0;
         this.listUsers.forEach(user => {
-            if (user.isChecked) {
+            if (user.isChecked || user.selectedMark) {
                 this.countcheckedField += 1;
             }
         });
-        if (this.countcheckedField === this.listUsers.length) {
-            this.flagChecked = true;
-        }
-
-        if (this.countcheckedField === 0) {
-                this.flagChecked = false;
-        }
+        this.updateFlafListen();
       // this.disabledBtnDeleted();
     }
     setFlagChecked(event, user: UserSelectNode) {
-        user.isChecked = !user.isChecked;
+        if (user.selectedMark) {
+            user.selectedMark = false;
+        }   else {
+            user.isChecked = !user.isChecked;
+        }
         if (user.isChecked) {
             this.countcheckedField += 1;
         }   else {
             this.countcheckedField -= 1;
         }
+        this.updateFlafListen();
      // this.disabledBtnDeleted();
+    }
+
+    updateFlafListen() {
+        if (this.countcheckedField === this.listUsers.length) {
+            this.flagChecked = true;
+        }
+        if (this.countcheckedField === 0) {
+            this.flagChecked = null;
+        }
+
+        if (this.countcheckedField > 0 && this.countcheckedField < this.listUsers.length) {
+            this.flagChecked = false;
+        }
     }
     LocSelectedUser() {
         this.isLoading = true;
         this._apiSrv.blokedUser(this.listUsers).then(user => {
             this.listUsers = this.listUsers.map(users => {
-                if (users.isChecked) {
+                if (users.isChecked || users.selectedMark) {
                     if (users.blockedUser) {
                         users.blockedUser = false;
                     }   else {
@@ -311,6 +333,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 users.isChecked = false;
                 return users;
             });
+            if (this.listUsers && this.listUsers.length) {
+                this.selectedNode(this.listUsers[0]);
+                } else {
+                    this.selectedUser = undefined;
+                }
+            this.changeFlagCheked();
             this.isLoading = false;
         });
     }
@@ -346,6 +374,17 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     //         });
     //     }
     // }
+
+    get getflagChecked() {
+        switch (this.flagChecked) {
+            case true:
+            return 'eos-icon-checkbox-square-v-blue';
+            case false:
+            return 'eos-icon-checkbox-square-minus-blue';
+            default:
+            return 'eos-icon-checkbox-square-blue';
+        }
+    }
 
    private disabledBtnAction() {
         if (this.selectedUser) {
