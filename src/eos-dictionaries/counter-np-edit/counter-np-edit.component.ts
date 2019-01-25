@@ -8,12 +8,18 @@ import { DANGER_NUMCREATION_NP_CHANGE } from 'eos-dictionaries/consts/messages.c
 import { CONFIRM_NUMCREATION_NP_CHANGE } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
-const NUMCREATION_TABLE_NAME    = 'NP_NUMCREATION';
-const DEPARTMENTS_F_LABEL       = 'CLASSIF_NAME';
-const DEPARTMENTS_F_ID          = 'ISN_NODE';
-const NUMCREATION_F_ID          = 'BASE_ID';
-const NUMCREATION_F_YEAR        = 'YEAR_NUMBER';
-const NUMCREATION_F_VAL         = 'CURRENT_NUMBER';
+let NUM_TABLE_NAME: string;
+let NUM_ID_NAME: string;
+let NODE_NUM_NAME: string;
+let IS_DOCGOUP: boolean;
+
+const NODE_ID_NAME = 'ISN_NODE';
+const NODE_LABEL_NAME = 'CLASSIF_NAME';
+const NUM_YEAR_NAME = 'YEAR_NUMBER';
+const NUM_VALUE_NAME = 'CURRENT_NUMBER';
+const ISN_NUM_BASE = 'ISN_NUM_BASE';
+const NODE_HIGH_NAME = 'PARENT_DUE';
+const FLAG_MAX = 'FLAG_MAX';
 
 
 @Component({
@@ -33,8 +39,8 @@ export class CounterNpEditComponent {
     yearPattern = YEAR_PATTERN;
 
     protected apiSrv: PipRX;
-    private _dep_node = {};
-    private _baseid: string;
+    private _node = {};
+    private _baseId: string;
 
     constructor(
         public bsModalRef: BsModalRef,
@@ -52,28 +58,45 @@ export class CounterNpEditComponent {
      * @param dndata EosDictionaryNode.data.rec - use departament's data.rec.CLASSIF_NAME and data.rec.ISN_NODE
      * if null - use main counter with base_id = '-1'
      */
-    public initbyNodeData(dndata: any) {
+    public initByNodeData(dndata: any) {
+        this._init();
         this.isUpdating = true;
-        this._dep_node = dndata;
+
         if (!dndata) {
-            this._dep_node = {};
-            this._dep_node[DEPARTMENTS_F_LABEL] = 'Главный счетчик';
-            this._dep_node[DEPARTMENTS_F_ID] = String(-1);
+            this._node = {};
+            this._node[NODE_LABEL_NAME] = 'Главный счетчик';
+            this._node[NODE_ID_NAME] = String(-1);
+        } else {
+            this._node = dndata;
+            const highId = dndata[NODE_HIGH_NAME];
+            if (!dndata[NODE_NUM_NAME] && highId !== null) {
+                this.isUpdating = false;
+                this._dictSrv.currentDictionary.getFullNodeInfo(highId)
+                    .then(highNode => {
+                        if (highNode) {
+                            this.initByNodeData(highNode.data.rec);
+                        }
+                    });
+            } else if (highId === null) {
+                this._node[NODE_LABEL_NAME] = 'Корневой элемент';
+            }
         }
-        this._baseid = String(this._dep_node[DEPARTMENTS_F_ID]);
+
+        this._baseId = String(this._node[NODE_ID_NAME]);
         if (!this.editValueYear) {
             this.editValueYear = (new Date).getFullYear();
         }
-        const query = {criteries: {[NUMCREATION_F_ID]: String(this._baseid)}};
-        const req = {[NUMCREATION_TABLE_NAME]: query};
-        this.apiSrv.read(req).then((cnts) => {
-            this.nodes = cnts.filter(d => {
-                return d[NUMCREATION_F_ID] === this._baseid;
-            });
-            this.isUpdating = false;
-            return cnts;
-        }).catch(err => this._errHandler(err));
-
+        const query = {criteries: {[NUM_ID_NAME]: String(this._baseId), [FLAG_MAX]: String(1)}};
+        const req = {[NUM_TABLE_NAME]: query};
+        this.apiSrv.read(req)
+            .then((cnts) => {
+                this.nodes = cnts.filter(d => {
+                    return String(d[NUM_ID_NAME]) === this._baseId;
+                });
+                this.isUpdating = false;
+                return cnts;
+            })
+            .catch(err => this._errHandler(err));
     }
 
     public hideModal(): void {
@@ -81,44 +104,44 @@ export class CounterNpEditComponent {
     }
 
     public save() {
-        if (!this._baseid) {
+        if (!this._baseId) {
             return;
         }
-        const query = {criteries: {[NUMCREATION_F_YEAR]: String(this.editValueYear)}};
-        const req = {[NUMCREATION_TABLE_NAME]: query};
+        const query = {criteries: {[NUM_YEAR_NAME]: String(this.editValueYear)}};
+        const req = {[NUM_TABLE_NAME]: query};
         this.editValueNum = Number(this.editValueNum);
         const isValid = true;
+        const dt = this._getData();
+
         this.apiSrv.read(req).then((data) => {
             // TODO: check exists years somewhere (ticket 96979)
             // isValid = ?
             return data;
         }).then((data) => {
             if (isValid) {
-                const old_value = this._getNodeValue(this.editValueYear);
+                const old_value = this._getNodeValue();
                 const _confrm = Object.assign({}, CONFIRM_NUMCREATION_NP_CHANGE);
-                _confrm.body = _confrm.body.replace('{{old_value}}', String(old_value))
-                                .replace('{{new_value}}', String(this.editValueNum));
-                this._confirmSrv
-                    .confirm(_confrm)
+                _confrm.body = _confrm.body
+                    .replace('{{old_value}}', String(old_value))
+                    .replace('{{new_value}}', String(this.editValueNum));
+                this._confirmSrv.confirm(_confrm)
                     .then((confirmed: boolean) => {
                         if (confirmed) {
                             const chr = [
                                 {
                                     method: 'POST',
-                                    data: {
-                                        [NUMCREATION_F_ID]  : String(this._baseid),
-                                        [NUMCREATION_F_YEAR]: Number(this.editValueYear),
-                                        [NUMCREATION_F_VAL] : Number(this.editValueNum),
-                                    },
-                                    requestUri: NUMCREATION_TABLE_NAME,
+                                    data: dt,
+                                    requestUri: NUM_TABLE_NAME,
                                 },
                             ];
                             this._updateRecord(chr).then(() => {
-                                this.initbyNodeData(this._dep_node);
+                                if (this._node[NODE_ID_NAME] === String(-1)) {
+                                    this._node = null;
+                                }
+                                this.initByNodeData(this._node);
                             }).catch(err => this._errHandler(err));
                         }
-                    })
-                    .catch(err => this._errHandler(err));
+                    }).catch(err => this._errHandler(err));
             } else {
                 this._msgSrv.addNewMessage(DANGER_NUMCREATION_NP_CHANGE);
             }
@@ -126,12 +149,38 @@ export class CounterNpEditComponent {
     }
 
     public getNodeTitle() {
-        return this._dep_node[DEPARTMENTS_F_LABEL];
+        return this._node[NODE_LABEL_NAME];
     }
 
     public rowClick(node: any) {
-        this.editValueNum = node[NUMCREATION_F_VAL];
-        this.editValueYear = node[NUMCREATION_F_YEAR];
+        this.editValueNum = node[NUM_VALUE_NAME];
+        this.editValueYear = node[NUM_YEAR_NAME];
+    }
+
+    private _init() {
+        if (this._dictSrv.currentDictionary.id === 'docgroup') {
+            NUM_TABLE_NAME = 'NUMCREATION';
+            NUM_ID_NAME = 'ISN_DOCGROUP';
+            NODE_NUM_NAME = 'DOCNUMBER_FLAG';
+            IS_DOCGOUP = true;
+        } else {
+            NUM_TABLE_NAME = 'NP_NUMCREATION';
+            NUM_ID_NAME = 'BASE_ID';
+            NODE_NUM_NAME = 'NUMCREATION_FLAG';
+            IS_DOCGOUP = false;
+        }
+    }
+
+    private _getData() {
+        const res = {
+            [NUM_ID_NAME]  : String(this._baseId),
+            [NUM_YEAR_NAME]: Number(this.editValueYear),
+            [NUM_VALUE_NAME] : Number(this.editValueNum),
+        };
+        if (IS_DOCGOUP) {
+            Object.assign(res, {[ISN_NUM_BASE]: String(-1)});
+        }
+        return res;
     }
 
     private _updateRecord(chr: any/*originalData: any, updates: any*/): Promise<any> {
@@ -150,14 +199,12 @@ export class CounterNpEditComponent {
         this.hideModal();
     }
 
-    private _getNodeValue(editValueYear: number): number {
+    private _getNodeValue(): number {
         let res = 0;
-        const node = this.nodes.find(n => n[NUMCREATION_F_YEAR] === this.editValueYear);
+        const node = this.nodes.find(n => n[NUM_YEAR_NAME] === this.editValueYear);
         if (node) {
-            res = node[NUMCREATION_F_VAL];
+            res = node[NUM_VALUE_NAME];
         }
         return res;
     }
-
-
 }

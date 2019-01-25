@@ -39,16 +39,34 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         private dragulaService: DragulaService,
         public bsModalRef: BsModalRef,
     ) {
+
+
+
         dragulaService.setOptions('template-bag', {
-            moves: (el, source, handle, sibling) => {
-                return !el.classList.contains('disabled');
-            },
+            // moves: (el, source, handle, sibling) => {
+            //     // if (source.id === 'availble') {
+            //     //     return false;
+            //     // }
+            //     return !el.classList.contains('disabled');
+            // },
             copy: (el, source) => {
-                return el.classList.contains('separator') && source.id !== 'selected';
+                return source.id !== 'selected';
+                // return el.classList.contains('separator') && source.id !== 'selected';
             },
+            removeOnSpill: true,
+            copySortSource: true,
+            accepts: (el, target, source, sibling) => {
+                if (source.id === 'availble' && target.id === source.id) {
+                    return false;
+                }
+                return true;
+            }
         });
 
-        this.subscriptions.push(dragulaService.dropModel.subscribe(() => {
+        this.subscriptions.push(dragulaService.dropModel.subscribe(( [hz, el, target, source, sourceModel, targetModel, item] ) => {
+            if (target.id === 'availble') {
+            }
+            this.updateTemplate();
             this.generateTemplate();
         }));
 
@@ -205,10 +223,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     }
 
     private updateAvailableItems() {
-        let items = this.forProject ? PRJ_TEMPLATE_ELEMENTS : DOC_TEMPLATE_ELEMENTS;
-        items = items.filter((elem) =>
-            elem.key === '-' || elem.key === '/' || this.templateItems.findIndex((tplElem) => tplElem.key === elem.key) === -1
-        );
+        const items = (this.forProject ? PRJ_TEMPLATE_ELEMENTS : DOC_TEMPLATE_ELEMENTS).slice(0);
         this.availableItems = items;
     }
 

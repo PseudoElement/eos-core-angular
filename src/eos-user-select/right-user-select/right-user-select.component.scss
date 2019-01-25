@@ -58,13 +58,15 @@
                 line-height: 10px;
                 text-transform: uppercase;
             }
-            .rt-black{
+            .rt-black, .rt-role-name{
                 display: inline-block;
                 line-height: 32px;
                 color: #000000;
-                text-transform: capitalize;
                 overflow: hidden;
                 max-height: 32px;
+            }
+            .rt-black{
+                text-transform: capitalize;
             }
 
         }

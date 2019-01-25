@@ -42,4 +42,11 @@ export class NodeFieldComponent {
         }
         return this.field.value;
     }
+
+    specialIcon () {
+        if (this.node.data.rec['DOCNUMBER_FLAG'] || this.node.data.rec['NUMCREATION_FLAG']) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -25,13 +25,13 @@
                     <div class="info-wr">
                         <div class="info-role">
                             <span class="rt-grey">Роль</span>
-                            <span class="rt-black"*ngIf="CurrentUser">
+                            <span class="rt-role-name"*ngIf="CurrentUser">
                                 {{role}}
                             </span>
                         </div>
                         <div class='info-note'>
                                 <span class="rt-grey">Подразделение</span>
-                                <span class="rt-black" *ngIf="CurrentUser">{{CurrentUser.data.NOTE || 'не указан'}}</span>
+                                <span class="rt-role-name" *ngIf="CurrentUser">{{CurrentUser.data.NOTE || 'Не указано'}}</span>
                         </div>
                 </div>
 
@@ -42,14 +42,14 @@
                     </div>
                     <div class="is-user">
                         <span class="is-user-title">Является пользователем</span>
-                        <span class="is-user-login">{{CurrentUser.login}}</span>
+                        <a  [routerLink]="['/user-params-set','base-param']"  [queryParams]="{'isn_cl': CurrentUser.id}">{{CurrentUser.login}}</a>
                     </div>
                 </div>
 
                     <eos-depart-user-select [showComponent]="showDep" [department]="DueInfo"></eos-depart-user-select>
                 <div class="rt-sustem">
                     <div class="sustem-tab-rw" (click)='openedSustem()'>
-                            <span class="sustem-title">Доступ к системам</span>
+                            <span class="sustem-title">ДОСТУП К СИСТЕМАМ</span>
                             <span class="sustem-open">
                                 <span class="eos-icon eos-icon-arrow-v-blue-bottom small"  *ngIf='!opened'></span>
                                 <span class="eos-icon eos-icon-arrow-v-blue-top small" *ngIf='opened'></span>

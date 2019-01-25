@@ -26,7 +26,7 @@ import {
     WARN_EDIT_ERROR,
     WARN_ELEMENT_PROTECTED,
     WARN_LOGIC_DELETE,
-    DANGER_EDIT_ONLY_DEPARTMENTS_ALLOWED,
+    DANGER_EDIT_DICT_NOTALLOWED,
     WARN_SELECT_NODE,
     WARN_ELEMENT_DELETED,
     WARN_LOGIC_CLOSE,
@@ -516,14 +516,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     }
 
     private _editCounterNP(isMainNP: boolean) {
-        if (this.dictionaryId !== 'departments') {
-            this._msgSrv.addNewMessage(DANGER_EDIT_ONLY_DEPARTMENTS_ALLOWED);
+        if (this.dictionaryId !== 'departments' && this.dictionaryId !== 'docgroup') {
+            this._msgSrv.addNewMessage(DANGER_EDIT_DICT_NOTALLOWED);
             return;
         }
         this.modalWindow = null;
         if (isMainNP) {
             this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg'});
-            this.modalWindow.content.initbyNodeData(null);
+            this.modalWindow.content.initByNodeData(null);
         } else {
             const node = this._dictSrv.listNode;
             if (node) {
@@ -531,7 +531,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                     this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
                 } else {
                     this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg'});
-                    this.modalWindow.content.initbyNodeData(node.data.rec);
+                    this.modalWindow.content.initByNodeData(node.data.rec);
                 }
             } else {
                 this._msgSrv.addNewMessage(WARN_EDIT_ERROR);

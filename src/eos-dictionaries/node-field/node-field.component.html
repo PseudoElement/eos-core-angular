@@ -28,7 +28,14 @@
                 <span class="folder small eos-icon"
                     (click)="viewNode($event)"
                     [ngClass]="{'eos-icon-folder-blue': !node.isDeleted, 'eos-icon-folder-grey': node.isDeleted}"></span>
-            </div>{{field.value}}
+                <span class="special small eos-icon"
+                    *ngIf="specialIcon()"
+                    [ngClass]="'eos-icon-checkbox-blue'"></span>
+
+            </div>
+            <div class="text">
+            {{field.value}}
+            </div>
         </ng-container>
     </ng-container>
 </div>
