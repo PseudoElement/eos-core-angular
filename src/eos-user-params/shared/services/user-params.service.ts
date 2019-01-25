@@ -155,6 +155,7 @@ export class UserParamsService {
         .then(([user, sys]) => {
             this._sysParams = sys;
             this._userContext = user[0];
+            this.userTechList = [];
             this._userContext.USER_TECH_List.forEach(item => this.userTechList.push(Object.assign({}, item)));
             this._userContext['DUE_DEP_NAME'] = '';
             this._isTechUser = !this._userContext['DUE_DEP'];

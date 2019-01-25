@@ -131,7 +131,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.apiSrv.setData(this.queryForSave)
         .then(() => {
             this.queryForSave = [];
-            this.btnDisabled = true;
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
         })
         .catch((e) => {
@@ -204,6 +203,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         if (this.arrNEWDeloRight.join('') !== this.arrDeloRight.join('')) {
             c = true;
         }
+        // this.btnDisabled = true;
         this.btnDisabled = !c;
     }
     private _writeValue(constanta: IInputParamControl[]): IInputParamControl[] {

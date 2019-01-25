@@ -50,11 +50,12 @@ export class RightClassifNode {
             }
         };
         this._parentNode.pushChange(chenge);
-        this._component.Changed.emit();
+        setTimeout(() => {
+            this._component.Changed.emit();
+        }, 0);
 
         if (this.type !== E_TECH_USER_CLASSIF_CONTENT.none) {
             if (!this._valueLast && v && this.type !== E_TECH_USER_CLASSIF_CONTENT.limitation) { // создать корневой елемент
-                console.log('создать корневой элемент');
                 const newNode = {
                     ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
                     FUNC_NUM: this.key,
@@ -74,9 +75,7 @@ export class RightClassifNode {
             if (this._valueLast && !v) { // удалить все элементы
                 this._isExpanded = false;
                 if (this._listUserTech.length) {
-                    console.log('удалить все элементы', E_TECH_USER_CLASSIF_CONTENT[this.type]);
                     this._deletAll();
-                    // this._curentUser['USER_TECH_List'] = this._curentUser['USER_TECH_List'].filter((i: USER_TECH) => i['FUNC_NUM'] !== this.key);
                 }
             }
         }
@@ -190,7 +189,8 @@ export class RightClassifNode {
                     userTech: uT,
                     instance: item
                 };
-                listContent.push(new NodeDocsTree(uT['DUE'], item['CLASSIF_NAME'], uT['ALLOWED'], d));
+                const label = uT['DUE'] === '0.' ? this._config.rootLabel : item[this._config.label];
+                listContent.push(new NodeDocsTree(uT['DUE'], label, uT['ALLOWED'], d));
             });
             this.isLoading = false;
         });

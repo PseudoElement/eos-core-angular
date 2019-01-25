@@ -58,24 +58,28 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                     apiInstance: 'DEPARTMENT',
                     waitClassif: OPEN_CLASSIF_DEPARTMENT_ONLI_NODE,
                     label: 'CLASSIF_NAME',
+                    rootLabel: 'Все подразделения',
                 };
             case E_TECH_USER_CLASSIF_CONTENT.docGroup:
                 return {
                     apiInstance: 'DOCGROUP_CL',
                     waitClassif: OPEN_CLASSIF_DOCGROUP_CL_ONLI_NODE,
                     label: 'CLASSIF_NAME',
+                    rootLabel: 'Все группы документов',
                 };
             case E_TECH_USER_CLASSIF_CONTENT.rubric:
                 return {
                     apiInstance: 'RUBRIC_CL',
                     waitClassif: OPEN_CLASSIF_RUBRIC_CL_ONLI_NODE,
                     label: 'CLASSIF_NAME',
+                    rootLabel: 'Все рубрики',
                 };
             case E_TECH_USER_CLASSIF_CONTENT.limitation: // неоходимо выбрать из картотек
                 return {
                     apiInstance: 'DEPARTMENT',
                     waitClassif: OPEN_CLASSIF_CARDINDEX,
                     label: 'CARD_NAME',
+                    rootLabel: 'Центральная картотека',
                 };
         }
     }
