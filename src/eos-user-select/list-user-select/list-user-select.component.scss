@@ -36,8 +36,11 @@
         }
         .user-select-node-t{
             display: flex;
-            margin-left: -30px;
-            >span{
+            align-items: center;
+            justify-content: flex-start;
+            width: calc(100% - 52px);
+            span{
+                margin-left: 0px;
                 padding-left: 5px;
             }
         }
