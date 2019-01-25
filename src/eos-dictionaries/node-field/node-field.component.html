@@ -28,11 +28,14 @@
                 <span class="folder small eos-icon"
                     (click)="viewNode($event)"
                     [ngClass]="{'eos-icon-folder-blue': !node.isDeleted, 'eos-icon-folder-grey': node.isDeleted}"></span>
+            </div>
+            <div class="table-field-ico"
+                *ngIf="(field.key === 'CLASSIF_NAME' || field.foreignKey === 'CLASSIF_NAME')">
                 <span class="special small eos-icon"
                     *ngIf="specialIcon()"
                     [ngClass]="'eos-icon-checkbox-blue'"></span>
-
             </div>
+
             <div class="text">
             {{field.value}}
             </div>
