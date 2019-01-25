@@ -2,9 +2,8 @@ import { Component, Injector, OnInit, Output, EventEmitter } from '@angular/core
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { BaseRightsDeloSrv } from '../shared-rights-delo/services/base-rights-delo.service';
 import { CARD_FILES_USER } from '../shared-rights-delo/consts/card-files.consts';
-import { /*BsModalService,*/ BsModalRef } from 'ngx-bootstrap';
+import { BsModalRef } from 'ngx-bootstrap';
 import { UserParamsService } from '../../shared/services/user-params.service';
-// import { CardFilesDirectoryModalComponent } from './card-files-directory-modal/card-files-directory-modal.component';
 import { EosUtils } from 'eos-common/core/utils';
 import { PARM_SUCCESS_SAVE, PARM_NO_MAIN_CARD } from '../shared-rights-delo/consts/eos-user-params.const';
 import { WaitClassifService } from 'app/services/waitClassif.service';
@@ -73,6 +72,8 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     globalMainCard;
     flagForFirstShowSelect = false;
     flagNewDataWhenChanging = false;
+    flagIfFirstMainCard = false;
+    flagForIndexFirstMainCard = false;
     arrayDataThatIsNotSaved = [];
     flagForMergeForTheFirstTime = false;
     arrayForAllDataForCurrentUsercard = [];
@@ -97,8 +98,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             }
         }
     };
-    constructor(/*private _modalSrv: BsModalService,*/
-         injector: Injector,
+    constructor(injector: Injector,
         private servApi: UserParamApiSrv,
         private _msgSrv: EosMessageService,
         private _waitClassifSrv: WaitClassifService ) {
@@ -122,7 +122,12 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         .then(data => {
              this.servApi.getData(this.quareUsercard)
              .then(data2 => {
-               if (data2.length > 0) {
+               if (data2.length === 0) {
+                   this.flagIfFirstMainCard = true;
+                   this.flagForFirstMainCard = true;
+                   this.flagForIndexFirstMainCard = true;
+               }
+                this.flagCardFileAvailability = true;
                 for (let i = 0; i < data.length; i++) {
                 this.fieldKeysforCardFiles.push([data[i]['DUE'], data[i]['CARD_NAME'], false, false, false]);
                 CARD_FILES_USER.fields.push({
@@ -137,10 +142,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                        }
                     }
                 }
-                this.flagCardFileAvailability = true;
-            } else {
-                this.flagCardFileAvailability = false;
-            }
                 this.servApi.getData(this.quaryCabinet).then(data4 => {
                     for (let j = 0; j < data4.length; j++) {
                             this.arrayForCurrentCabinets.push([data4[j]['CABINET_NAME'], data4[j]['ISN_CABINET'], data4[j]['DUE']]);
@@ -188,7 +189,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                   this.form.controls['rec.' + CARD_FILES_USER.fields[i]['key']].disable();
                 }
             }
-        this.allData = this._userParamsSetSrv.userCard;
+      //  this.allData = this._userParamsSetSrv.userCard;
          }
     settingValuesForFieldsCabinets(value) {
                             this.prepDataAttachField(value);
@@ -525,7 +526,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
           }
         }
 
-        if (this.indexOldMainCheckbox !== -1 && flag) {
+        if ((this.indexOldMainCheckbox !== -1 && flag) || (Object.keys(this._userParamsSetSrv.hashUserContexHomeCard).length === 0 && !this.flagForFirstMainCard)) {
             this.oldMainCheckbox = {};
             this.fieldKeysforCardFiles[this.indexOldMainCheckbox][2] = true;
             this.fieldKeysforCardFiles[this.indexOldMainCheckbox][3] = true;
@@ -711,9 +712,13 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 );
             }
             this.prepInputsAttach = this.getObjectInputFields(this.fieldKeysforCardFilesCabinets);
+
             for (let i = 0; i < this.newDataCard.length; i++) {
                 for (let j = 0; j < this.fieldKeysforCardFiles.length; j++) {
                     if (this.fieldKeysforCardFiles[j][0] === this.newDataCard[i]) {
+                        if (this.flagForIndexFirstMainCard) {
+                            this.indexOldMainCheckbox = j;
+                        }
                         this.fieldKeysforCardFiles[j][4] = true;
                         this.form.controls['rec.' + this.newDataCard[i]].disable();
                         break;
@@ -723,21 +728,21 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
            this.updateAllData();
         })
         .then(() => {
+        if (this.flagIfFirstMainCard) {
+           setTimeout(() => {
+               this.choosingMainCheckbox();
+           }, 1000);
+            this.fieldKeysforCardFilesCabinets = [];
+            this.flagIfFirstMainCard = false;
+        }
             this.newDataCard = [];
             this.Changed.emit();
         })
         .catch(() => {
             this.isShell = false;
         });
-      /*  this.modalCollection = this._modalSrv.show(CardFilesDirectoryModalComponent, {
-            class: 'directory-modal',
-            ignoreBackdropClick: true
-        });
-        this.modalCollection.content.closeCollection.subscribe(() => {
-            this.updatePageCard();
-            this.modalCollection.hide();
-        });*/
     }
+
     updateAllData() {
         if (this.allData.length === this._userParamsSetSrv.userCard.length) {
             setTimeout(() => {
@@ -745,6 +750,8 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             }, 100);
         } else {
             this.allData = this._userParamsSetSrv.userCard;
+                 this.newDataCard = [];
+                 this.Changed.emit();
         }
     }
     removeCardFile() {
