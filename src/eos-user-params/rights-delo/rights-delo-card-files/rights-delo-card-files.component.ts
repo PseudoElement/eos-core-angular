@@ -2,11 +2,14 @@ import { Component, Injector, OnInit, Output, EventEmitter } from '@angular/core
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { BaseRightsDeloSrv } from '../shared-rights-delo/services/base-rights-delo.service';
 import { CARD_FILES_USER } from '../shared-rights-delo/consts/card-files.consts';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { /*BsModalService,*/ BsModalRef } from 'ngx-bootstrap';
 import { UserParamsService } from '../../shared/services/user-params.service';
-import { CardFilesDirectoryModalComponent } from './card-files-directory-modal/card-files-directory-modal.component';
+// import { CardFilesDirectoryModalComponent } from './card-files-directory-modal/card-files-directory-modal.component';
 import { EosUtils } from 'eos-common/core/utils';
 import { PARM_SUCCESS_SAVE, PARM_NO_MAIN_CARD } from '../shared-rights-delo/consts/eos-user-params.const';
+import { WaitClassifService } from 'app/services/waitClassif.service';
+import { OPEN_CLASSIF_CARDINDEX } from 'app/consts/query-classif.consts';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
 
 @Component({
     selector: 'eos-rights-delo-card-files',
@@ -17,6 +20,8 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     @Output() Changed = new EventEmitter();
     modalCollection: BsModalRef;
     _userParamsSetSrv: UserParamsService;
+    isShell: Boolean = false;
+    newDataCard;
     newDataAttach;
     arrayValuesFoldersAvailable = [];
     isLoading = false;
@@ -92,7 +97,11 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             }
         }
     };
-    constructor(private _modalSrv: BsModalService, injector: Injector, private servApi: UserParamApiSrv ) {
+    constructor(/*private _modalSrv: BsModalService,*/
+         injector: Injector,
+        private servApi: UserParamApiSrv,
+        private _msgSrv: EosMessageService,
+        private _waitClassifSrv: WaitClassifService ) {
         super(injector, CARD_FILES_USER);
         for (let i = 0; i < this.arrayKeysCheckboxforCabinets.length; i++) {
             this.fieldKeysforCardFilesCabinets.push(
@@ -202,7 +211,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     }
 
     prepDataAttachField(data) {
-      //  console.log(data);
         if (data === 'Empty') {
             this.prepDataAttach.rec = {};
         } else {
@@ -251,17 +259,18 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         return _value !== oldValue;
     }
     submit() {
-        if (this.newDataAttach || this.prepareData || this.newData2) {
+        if (this.newDataCard || this.newDataAttach || this.prepareData || this.newData2) {
             if (!this.flagNoMainCard) {
             const userId = '' + this._userParamsSetSrv.userContextId;
             this.formChanged.emit(false);
             this.isChangeForm = false;
             // this._userParamsSetSrv.getUserIsn();
-            this.updateOldMainCheckbox(this.indexOldMainCheckbox);
+            if (this.indexOldMainCheckbox !== -1) {
+                this.updateOldMainCheckbox(this.indexOldMainCheckbox);
+            }
             this.userParamApiSrv
                 .setData(this.createObjRequestForAll())
                 .then(data => {
-                    console.log('Strong');
                    // this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.allData = this._userParamsSetSrv.userCard;
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
@@ -447,12 +456,37 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         this.arrayUpdateData = [];
        return req;
     }
+    createObjRequestForCard() {
+        const req = [];
+        const userId = this._userParamsSetSrv.userContextId;
+
+        for (let i = 0; i < this.newDataCard.length; i++) {
+            req.push({
+                method: 'POST',
+                requestUri: `USER_CL(${userId})/USERCARD_List`,
+                data: {
+                    ISN_LCLASSIF: `${userId}`,
+                    DUE: `${this.newDataCard[i]}`,
+                    HOME_CARD: `${this.flagForFirstMainCard === true ? '1' : '0'}`,
+                    FUNCLIST: '010000000000010010'
+                }
+            });
+            this.prepareData.rec[this.newDataCard[i]] = '010000000000010010'; // Then
+            this.flagForFirstMainCard = false;
+        }
+        this.inputs = this.getInputs();
+        this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+        this.subscribeChangeForm();
+        return req;
+    }
     createObjRequestForAll() {
         let newReq;
         if (this.newDataAttach) {
         const reqAttach = this.createObjRequestForAttach();
         const req = this.createObjRequest();
         newReq = req.concat(reqAttach);
+        } else if (this.newDataCard) {
+            return this.createObjRequestForCard();
         } else {
          return this.createObjRequest();
         }
@@ -646,14 +680,72 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
 }
     }
     addCardFile() {
-        this.modalCollection = this._modalSrv.show(CardFilesDirectoryModalComponent, {
+        this.isShell = true;
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_CARDINDEX, true)
+        .then((data: string) => {
+            return data.split('|');
+        })
+        .then(data => {
+            if (this._checkRepeat(data)) {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: '',
+                    msg: 'Нет картотек для добавления'
+                });
+                this.isShell = false;
+                return;
+            }
+            this.newDataCard = data;
+            this.submit();
+            this.prepareDataParam();
+            this.inputs = this.getInputs();
+            this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+            this.fieldKeysforCardFilesCabinets = [];
+            for (let i = 0; i < this.arrayKeysCheckboxforCabinets.length; i++) {
+                this.fieldKeysforCardFilesCabinets.push(
+                    {
+                        key: this.arrayKeysCheckboxforCabinets[i][0],
+                        type: 'boolean',
+                        title: this.arrayKeysCheckboxforCabinets[i][1]
+                    }
+                );
+            }
+            this.prepInputsAttach = this.getObjectInputFields(this.fieldKeysforCardFilesCabinets);
+            for (let i = 0; i < this.newDataCard.length; i++) {
+                for (let j = 0; j < this.fieldKeysforCardFiles.length; j++) {
+                    if (this.fieldKeysforCardFiles[j][0] === this.newDataCard[i]) {
+                        this.fieldKeysforCardFiles[j][4] = true;
+                        this.form.controls['rec.' + this.newDataCard[i]].disable();
+                        break;
+                    }
+                }
+            }
+           this.updateAllData();
+        })
+        .then(() => {
+            this.newDataCard = [];
+            this.Changed.emit();
+        })
+        .catch(() => {
+            this.isShell = false;
+        });
+      /*  this.modalCollection = this._modalSrv.show(CardFilesDirectoryModalComponent, {
             class: 'directory-modal',
             ignoreBackdropClick: true
         });
         this.modalCollection.content.closeCollection.subscribe(() => {
             this.updatePageCard();
             this.modalCollection.hide();
-        });
+        });*/
+    }
+    updateAllData() {
+        if (this.allData.length === this._userParamsSetSrv.userCard.length) {
+            setTimeout(() => {
+                this.updateAllData();
+            }, 100);
+        } else {
+            this.allData = this._userParamsSetSrv.userCard;
+        }
     }
     removeCardFile() {
         for (let i = 0; i < this.fieldKeysforCardFiles.length; i++) {
@@ -685,5 +777,24 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 break;
             }
         }
+    }
+
+    private _checkRepeat(arrDoc): boolean {
+        for (let i = 0; i < this.fieldKeysforCardFiles.length; i++) {
+            const index = arrDoc.findIndex(doc => doc === this.fieldKeysforCardFiles[i][0] && this.fieldKeysforCardFiles[i][4] === true);
+
+            if (index !== -1) {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: '',
+                    msg: `Картотека \'${this.fieldKeysforCardFiles[i][1]}\' не будет добавлена так как она уже существует`
+                });
+                arrDoc.splice(index, 1);
+            }
+        }
+        if (arrDoc.length) {
+            return false;
+        }
+        return true;
     }
 }
