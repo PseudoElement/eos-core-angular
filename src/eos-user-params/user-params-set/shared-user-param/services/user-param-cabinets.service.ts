@@ -30,27 +30,30 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
         injector: Injector,
          ) {
         super(injector, CABINETS_USER);
-        this.getNameSortCabinets().then( sortName => {
-            CABINETS_USER.fields.map(fields => {
-                if (fields.key === 'CABSORT_ISN_DOCGROUP_LIST') {
-                    fields.options.splice(0, fields.options.length);
-                        sortName.forEach(element => {
-                            fields.options.push({
-                                value: element.ISN_LIST,
-                                title: element.NAME
+        this._userParamsSetSrv.getUserIsn(this._userParamsSetSrv.userContextId.toString()).then(datai => {
+            this.getNameSortCabinets().then( sortName => {
+                        CABINETS_USER.fields.map(fields => {
+                            if (fields.key === 'CABSORT_ISN_DOCGROUP_LIST') {
+                                fields.options.splice(0, fields.options.length);
+                                    sortName.forEach(element => {
+                                        fields.options.push({
+                                            value: element.ISN_LIST,
+                                            title: element.NAME
+                                    });
+                                });
+                            }
                         });
+                        this.init();
+                        this.prepInputsAttach = this.getObjectInputFields(CABINETS_USER.fieldsChild);
+                        this.afterInit();
+                        this.getControlAuthor().then(data => {
+                            if (data) {
+                                this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(data[0]['CLASSIF_NAME']), {emitEvent: false});
+                        }
                     });
-                }
-            });
-            this.init();
-            this.prepInputsAttach = this.getObjectInputFields(CABINETS_USER.fieldsChild);
-            this.afterInit();
-            this.getControlAuthor().then(data => {
-                if (data) {
-                    this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(data[0]['CLASSIF_NAME']), {emitEvent: false});
-                }
-            });
+                });
         });
+
     }
 
     init() {
@@ -97,6 +100,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     }
     getControlAuthor(): Promise<any> {
         const ControlAuthor = this._userParamsSetSrv.hashUserContext['RESOLUTION_CONTROLLER'];
+        console.log( this._userParamsSetSrv.hashUserContext);
         this.dueForLink = ControlAuthor;
         if (String(ControlAuthor) === 'null') {
             this.controller = false;
@@ -275,6 +279,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     cancel() {
         let val = null;
         if (this.isChangeForm || this.isChangeFormAttach) {
+            this._userParamsSetSrv.getUserIsn(this._userParamsSetSrv.userContextId.toString()).then(datai => {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
             this.isChangeForm = false;
             this.isChangeFormAttach = false;
@@ -282,13 +287,19 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             this.ngOnDestroy();
             this.init();
             this.afterInit();
+            this.getControlAuthor().then(data => {
+                if (data) {
+                    this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(data[0]['CLASSIF_NAME']), {emitEvent: false});
+            }
             val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
             if (val !== '' &&  val !== null) {
                 this.controller = true;
             }   else {
                 this.controller = false;
             }
-        }
+        });
+        });
+    }
     }
 
     submit() {
@@ -394,6 +405,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                     this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                     this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
                     this.formChanged.emit(changed);
+                    this.controller = false;
                     this.isChangeForm = changed;
                     this.subscribeChangeForm();
                 })
