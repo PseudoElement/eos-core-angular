@@ -5,6 +5,7 @@ import { FormGroup } from '@angular/forms';
 import { EosUtils } from 'eos-common/core/utils';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
+import { RestError } from 'eos-rest/core/rest-error';
 @Injectable()
 export class UserParamCabinetsSrv extends BaseUserSrv {
     readonly fieldGroupsForCabinets: string[] = ['Папки', 'Поручения'];
@@ -52,6 +53,8 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                         }
                     });
                 });
+        }).catch(err => {
+            this.cathError(err);
         });
 
     }
@@ -100,7 +103,6 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     }
     getControlAuthor(): Promise<any> {
         const ControlAuthor = this._userParamsSetSrv.hashUserContext['RESOLUTION_CONTROLLER'];
-        console.log( this._userParamsSetSrv.hashUserContext);
         this.dueForLink = ControlAuthor;
         if (String(ControlAuthor) === 'null') {
             this.controller = false;
@@ -298,6 +300,8 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 this.controller = false;
             }
         });
+        }).catch(err => {
+            this.cathError(err);
         });
     }
     }
@@ -410,8 +414,21 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                     this.subscribeChangeForm();
                 })
                 .catch(err => {
-                    throw err;
+                   this.cathError(err);
                 });
+        }
+        cathError(e) {
+                if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
+                    return undefined;
+                } else {
+                    const errMessage = e.message ? e.message : e;
+                    this.msgSrv.addNewMessage({
+                        type: 'danger',
+                        title: 'Ошибка обработки. Ответ сервера:',
+                        msg: errMessage
+                    });
+                    return null;
+                }
         }
         get getClass() {
             return this.controller ? 'eos-icon eos-icon-info-blue small' : 'eos-icon eos-icon-info-grey small';
