@@ -81,11 +81,18 @@
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
     </div>
-    <eos-dynamic-input [hidden]="!(rcType == 3)"
-                       [input]="inputs['rec.PRJ_NUM_FLAG']"
-                       [form]="form"
-                       [readonly]="!editMode"></eos-dynamic-input>
-
+    <div class="clearfix">
+        <eos-dynamic-input class="pull-left"
+                           [hidden]="!(rcType == 3)"
+                           [input]="inputs['rec.PRJ_NUM_FLAG']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input class="pull-right"
+                           [hidden]="!(rcType == 3)"
+                           [input]="inputs['rec.INITIATIVE_RESOLUTION']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+    </div>
     <ng-container *ngIf="isPrjFlag">
         <eos-dynamic-input [input]="inputs['rec.PRJ_DEL_AFTER_REG']"
                            [form]="form"
