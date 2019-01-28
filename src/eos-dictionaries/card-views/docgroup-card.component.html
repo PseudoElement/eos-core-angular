@@ -49,7 +49,14 @@
                            [readonly]="!editMode"></eos-dynamic-input>
     </div>
     <div class="row-wrapper">
-        <eos-dynamic-input class="rc-type"
+        <eos-dynamic-input *ngIf="isNode"
+                           class="rc-type"
+                           [input]="inputs['rec.RC_TYPE_NODE']"
+                           [form]="form"
+                           [disabled]="havesRC"
+                           [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input *ngIf="!isNode"
+                           class="rc-type"
                            [input]="inputs['rec.RC_TYPE']"
                            [form]="form"
                            [disabled]="havesRC"

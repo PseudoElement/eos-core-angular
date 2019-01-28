@@ -4,6 +4,12 @@ import { SEARCH_TYPES } from '../search-types';
 import {COMMON_FIELDS, COMMON_FIELD_CODE, COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_NOTE} from './_common';
 import { ISelectOption } from 'eos-common/interfaces';
 
+export const RK_TYPE_OPTIONS_NODE: ISelectOption[] = [
+    { value: 1, title: 'Входящие' },
+    { value: 3, title: 'Исходящие' },
+    { value: 2, title: 'Письма граждан' }
+];
+
 export const RK_TYPE_OPTIONS: ISelectOption[] = [
     { value: 0, title: 'Не определена' },
     { value: 1, title: 'Входящие' },
@@ -49,6 +55,12 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         title: 'Вид РК',
         type: 'select',
         options: RK_TYPE_OPTIONS,
+        default: 3,
+    }, {
+        key: 'RC_TYPE_NODE',
+        title: 'Вид РК',
+        type: 'select',
+        options: RK_TYPE_OPTIONS_NODE,
         default: 3,
     }, {
         key: 'DOCGROUP_INDEX',
@@ -140,7 +152,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     editFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME', 'NOTE', 'IS_COPYCOUNT', 'ACCESS_MODE_FIXED', 'E_DOCUMENT', 'PRJ_TEST_UNIQ_FLAG',
         'PRJ_DEL_AFTER_REG', 'PRJ_APPLY_EXEC_EDS', 'PRJ_APPLY2_EDS', 'PRJ_APPLY_EDS', 'PRJ_AUTO_REG', 'PRJ_SHABLON', 'PRJ_NUM_FLAG',
         'TEST_UNIQ_FLAG', 'ENCRYPT_FLAG', 'EDS_FLAG', 'SHABLON', 'DOCNUMBER_FLAG', 'DOCGROUP_INDEX', 'RC_TYPE', 'INITIATIVE_RESOLUTION',
-        'ACCESS_MODE'],
+        'ACCESS_MODE', 'RC_TYPE_NODE'],
     searchFields: ['CODE', 'CLASSIF_NAME'],
     fullSearchFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME', 'DOCGROUP_INDEX', 'NOTE'],
     quickViewFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME', 'NOTE', 'DOCGROUP_INDEX', 'RC_TYPE' ],

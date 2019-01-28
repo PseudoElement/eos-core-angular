@@ -23,7 +23,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
     }
 
     get isNode(): boolean {
-        return this.getValue('rec.IS_NODE');
+        return this.data.rec['IS_NODE'] === 1;
     }
 
     get eDocument(): boolean {
@@ -81,7 +81,14 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
 
         const tpl = formChanges['rec.SHABLON'];
 
-        if (this._isChanged('rec.RC_TYPE', formChanges)) {
+        let isRcTypeChanged = this._isChanged('rec.RC_TYPE', formChanges);
+
+        if (this._isChanged('rec.RC_TYPE_NODE', formChanges)) {
+            this.setValue('rec.RC_TYPE', this.getValue('rec.RC_TYPE_NODE'));
+            isRcTypeChanged = true;
+        }
+
+        if (isRcTypeChanged) {
             if (this.rcType * 1 === 3) {
                 this._restorePrevious('rec.SHABLON');
                 this._restorePrevious('rec.PRJ_NUM_FLAG');
@@ -93,7 +100,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
             }
         }
 
-        if (this._isChanged('rec.RC_TYPE', formChanges) || this._isChanged('rec.PRJ_NUM_FLAG', formChanges)) {
+        if (isRcTypeChanged || this._isChanged('rec.PRJ_NUM_FLAG', formChanges)) {
             if (!this.isPrjFlag) {
                 this.setValue('rec.PRJ_SHABLON', null);
             } else {
@@ -109,6 +116,8 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
 
         // toggle auto remove flag
         this.toggleInput(this.isPrjFlag, 'rec.PRJ_DEL_AFTER_REG', formChanges, updates);
+
+        this.setValue('rec.RC_TYPE_NODE', this.getValue('rec.RC_TYPE'));
 
         if (UNIQ_CHECK_EXPR.test(tpl)) {
             this.setValue('rec.TEST_UNIQ_FLAG', false);

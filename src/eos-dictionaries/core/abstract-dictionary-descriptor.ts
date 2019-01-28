@@ -198,7 +198,7 @@ export abstract class AbstractDictionaryDescriptor {
         return _criteries;
     }
 
-    getNewRecord(preSetData: {}): {} {
+    getNewRecord(preSetData: {}, parentNode?: EosDictionaryNode): {} {
         const fields = this.record.getFieldSet(E_FIELD_SET.edit);
         const newRec = {
             rec: {}
