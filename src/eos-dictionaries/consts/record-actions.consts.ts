@@ -154,6 +154,18 @@ const RECORD_ACTION_COUNTERNP: IAction = {
     buttonClass: null
 };
 
+const RECORD_ACTION_COUNTER: IAction = {
+    type: E_RECORD_ACTIONS.counter,
+    group: E_ACTION_GROUPS.item,
+    title: 'Cчетчик номерообразования',
+    hint: 'Cчетчик номерообразования',
+    iconClass: 'eos-icon eos-icon-info-blue small',
+    disabledIconClass: 'eos-icon eos-icon-info-grey small',
+    activeIconClass: null,
+    hoverIconClass: 'eos-icon eos-icon-info-blue small',
+    buttonClass: null
+};
+
 const RECORD_ACTION_NOMENKL_CLS: IAction = {
     type: E_RECORD_ACTIONS.CloseSelected,
     group: E_ACTION_GROUPS.item,
@@ -238,6 +250,7 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTIONS_ADDITIONAL_FIELDS,
     RECORD_ACTION_COUNTERNPMAIN,
     RECORD_ACTION_COUNTERNP,
+    RECORD_ACTION_COUNTER,
     RECORD_ACTION_NOMENKL_CLS,
     RECORD_ACTION_NOMENKL_OPS,
 ];

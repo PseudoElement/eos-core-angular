@@ -34,6 +34,7 @@ export class CounterNpEditComponent {
     editValueNum: number;
     editValueYear: number;
     nodes: any[];
+    title = 'Счетчик номерообразования НП';
 
     valuePattern = NUMERIC_PATTERN;
     yearPattern = YEAR_PATTERN;
@@ -159,6 +160,7 @@ export class CounterNpEditComponent {
 
     private _init() {
         if (this._dictSrv.currentDictionary.id === 'docgroup') {
+            this.title = 'Счетчик номерообразования';
             NUM_TABLE_NAME = 'NUMCREATION';
             NUM_ID_NAME = 'ISN_DOCGROUP';
             NODE_NUM_NAME = 'DOCNUMBER_FLAG';

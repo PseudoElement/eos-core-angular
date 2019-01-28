@@ -306,6 +306,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.CounterNP:
                 this._editCounterNP(false);
                 break;
+            case E_RECORD_ACTIONS.counter:
+                this._editCounterNP(false);
+                break;
             case E_RECORD_ACTIONS.CloseSelected:
                 this._closeItems();
                 break;
