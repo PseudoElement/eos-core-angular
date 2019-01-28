@@ -46,7 +46,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private rtUserService: RtUserSelectService,
         private _sandwichSrv: EosSandwichService,
         private _treeSrv: TreeUserSelectService,
-      //  private _pipeSrv: PipRX,
+       // private _pipeSrv: PipRX,
     ) {
         this.helpersClass = new HelpersSortFunctions();
         this.initSort();
@@ -110,17 +110,32 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
 
     selectedNode(user: UserSelectNode) {
         if (!user.deleted) {
-            if (this.selectedUser) {
-                this.selectedUser.isSelected = false;
-                this.selectedUser.selectedMark = false;
+            this.selectedNodeSetFlags(user);
+        } else {
+            const searchSelected = this.listUsers.filter(userList => {
+                return userList.deleted === false;
+            });
+            if (searchSelected.length > 0) {
+                this.selectedNodeSetFlags(searchSelected[0]);
+            }   else {
+                this.rtUserService.changeSelectedUser(null);
+                this.disabledBtnAction();
+                return;
             }
-            this.selectedUser = user;
-            this.selectedUser.isSelected = true;
-            if (!this.selectedUser.isChecked) {
-                this.selectedUser.selectedMark = true;
-            }
-            this.rtUserService.changeSelectedUser(user);
-            this.disabledBtnAction();
+        }
+        this.rtUserService.changeSelectedUser(user);
+        this.disabledBtnAction();
+    }
+
+    selectedNodeSetFlags(user) {
+        if (this.selectedUser) {
+            this.selectedUser.isSelected = false;
+            this.selectedUser.selectedMark = false;
+        }
+        this.selectedUser = user;
+        this.selectedUser.isSelected = true;
+        if (!this.selectedUser.isChecked) {
+            this.selectedUser.selectedMark = true;
         }
     }
 
@@ -157,12 +172,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             this.createUserModal.hide();
         });
     }
-    // showDeep() {
-    //     this._apiSrv.flagTehnicalUsers = !this._apiSrv.flagTehnicalUsers;
-    //   //  this._apiSrv.devideUsers();
-    //     this._pagSrv._initPaginationConfig(true);
-    //     this._pagSrv.changePagination(this._pagSrv.paginationConfig);
-    // }
 
     sortPageList(nameSort: string) {
      this.currentSort = nameSort;
@@ -259,7 +268,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }else {
             this.flagChecked = null;
         }
-
         this.listUsers.forEach(user => {
             user.selectedMark = false;
             if (this.flagChecked) {
@@ -273,18 +281,18 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }   else {
             this.countcheckedField = 0;
         }
-      // this.disabledBtnDeleted();
+        this.disabledBtnDeleted();
     }
 
     changeFlagCheked() {
         this.countcheckedField = 0;
         this.listUsers.forEach(user => {
-            if (user.isChecked || user.selectedMark) {
+            if ((user.isChecked || user.selectedMark) && !user.deleted) {
                 this.countcheckedField += 1;
             }
         });
         this.updateFlafListen();
-      // this.disabledBtnDeleted();
+        this.disabledBtnDeleted();
     }
     setFlagChecked(event, user: UserSelectNode) {
         if (user.selectedMark) {
@@ -292,26 +300,32 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }   else {
             user.isChecked = !user.isChecked;
         }
-        if (user.isChecked) {
+        if (user.isChecked && !user.deleted) {
             this.countcheckedField += 1;
         }   else {
             this.countcheckedField -= 1;
         }
         this.updateFlafListen();
-     // this.disabledBtnDeleted();
+        this.disabledBtnDeleted();
     }
 
     updateFlafListen() {
-        if (this.countcheckedField === this.listUsers.length) {
+        const leng = this.filterForFlagChecked().length;
+        if (this.countcheckedField === leng) {
             this.flagChecked = true;
         }
         if (this.countcheckedField === 0) {
             this.flagChecked = null;
         }
 
-        if (this.countcheckedField > 0 && this.countcheckedField < this.listUsers.length) {
+        if (this.countcheckedField > 0 && this.countcheckedField < leng) {
             this.flagChecked = false;
         }
+    }
+    filterForFlagChecked() {
+        return this.listUsers.filter((user: UserSelectNode) => {
+            return !user.deleted;
+        });
     }
     LocSelectedUser() {
         this.isLoading = true;
@@ -346,31 +360,22 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     // DeliteLogicalUser() {
     //    const arrayRequests = [];
     //     this.listUsers.forEach((user: UserSelectNode) => {
-    //         if (user.isChecked) {
-
-    //             console.log(url);
-    //         //     arrayRequests.push(
-    //         //         this._pipeSrv.read({
-    //         //             [url]: ALL_ROWS,
-    //         //         }).then(res => {
-    //         //             console.log(res);
-    //         //         })
-    //         //     );
-    //         //     url = '';
-    //         // }
+    //         if ((user.isChecked && !user.deleted) || (user.selectedMark)) {
+    //             let  url = this._createUrlForSop(user.id);
+    //             arrayRequests.push(
+    //                 this._pipeSrv.read({
+    //                     [url]: ALL_ROWS,
+    //                 })
+    //             );
+    //             url = '';
     //         }
     //     });
-    //     const url = this._createUrlForSop(73748);
-    //     this._pipeSrv.read({
-    //         [url]: ALL_ROWS,
-    //     }).then(result => {
-    //         console.log(result);
-    //     }).catch(error => {
-    //         console.log(error);
-    //     });
+
     //    if (arrayRequests.length > 0) {
     //         Promise.all([...arrayRequests]).then(result => {
     //             console.log(result);
+    //         }).catch(error => {
+    //             console.log(error);
     //         });
     //     }
     // }
@@ -411,15 +416,19 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
     }
 
-    // private disabledBtnDeleted() {
-    //     if (this.countcheckedField === 0) {
-    //         this.buttons.buttons[2].disabled = true;
-    //         this.buttons.moreButtons[2].disabled = true;
-    //     } else {
-    //         this.buttons.buttons[2].disabled = false;
-    //         this.buttons.moreButtons[2].disabled = false;
-    //     }
-    // }
+    private disabledBtnDeleted() {
+        if (this.countcheckedField === 0) {
+            this.buttons.buttons[2].disabled = true;
+            this.buttons.moreButtons[2].disabled = true;
+            this.buttons.buttons[3].disabled = true;
+            this.buttons.moreButtons[3].disabled = true;
+        } else {
+            this.buttons.buttons[2].disabled = false;
+            this.buttons.moreButtons[2].disabled = false;
+            this.buttons.buttons[3].disabled = false;
+            this.buttons.moreButtons[3].disabled = false;
+        }
+    }
     // private btnDisabledDelite() {
     //     this.buttons.bo
     // }

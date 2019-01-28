@@ -42,7 +42,7 @@ export class UserSelectNode {
             name = this.name + ' - Пользователь удален';
         }
         if (this.deletedOffFace) {
-            name = this.dueName + '- Должностное лицо удалено';
+            name = this.dueName + '- Должностное лицо логически удалено';
         }
 
         if (!this.deleted && !this.deletedOffFace) {
