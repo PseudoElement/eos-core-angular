@@ -75,7 +75,12 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         .then((result: [USER_CL, DEPARTMENT]) => {
             this.getObjectForSystems(result);
            if (result[1].toString() !== '5') {
-            this.DueInfo = `${result[1][1]['SURNAME']} ${result[1][1]['NAME']} ${result[1][1]['PATRON']}`;
+               if (result[1][1] === undefined) {
+                this.DueInfo = `${result[1][0]['SURNAME']}`;
+               }    else {
+                this.DueInfo = `${result[1][1]['SURNAME']} ${result[1][1]['NAME']} ${result[1][1]['PATRON']}`;
+               }
+          //   this.DueInfo = `${result[1][1]['SURNAME']} ${result[1][1]['NAME']} ${result[1][1]['PATRON']}`;
             this.isPhoto =  result[1][0]['ISN_PHOTO'];
             isn_cabinet =  result[1][0]['ISN_CABINET'];
             this.showDep = true;
