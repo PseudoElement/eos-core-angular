@@ -316,9 +316,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 url = `/USER_RIGHT_DOCGROUP_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.data['FUNC_NUM']} ${chenge.due}')`}`;
                 break;
             case E_RIGHT_DELO_ACCESS_CONTENT.classif:
-                if (chenge.user_cl && qUserCl) {
-                    qUserCl['data'] = Object.assign(qUserCl['data'], chenge.data);
-                    return false;
+                if (chenge.user_cl) {
+                    if (qUserCl) {
+                        qUserCl['data'] = Object.assign(qUserCl['data'], chenge.data);
+                        return false;
+                    } else {
+                        break;
+                    }
                 }
                 url = `/USER_TECH_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.data['FUNC_NUM']} ${chenge.due}')`}`;
                 break;

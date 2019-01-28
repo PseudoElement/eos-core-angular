@@ -20,16 +20,16 @@ export class UserParamOtherSrv extends BaseUserSrv {
         super(injector, OTHER_USER);
         this.getList().then(list => {
             OTHER_USER.fields.map(field => {
-                if (field.key === 'RS_OUTER_DEFAULT_DELIVERY') {
+                if (field.key === 'RS_OUTER_DEFAULT_DELIVERY' && field.options.length === 0) {
                     list.forEach(item => {
                         field.options.push(
                             {value: item.ISN_LCLASSIF, title: item.CLASSIF_NAME},
                         );
                     });
                 }
+                return field;
             });
             this.getDefaultsValues().then(defaultInit => {
-                this.constUserParam.fields = this.constUserParam.fields.concat(this.constUserParam.fieldsTemplates);
                 this.init();
                 this.initShablony = defaultInit;
                 this.saveDefaultValue = (defaultInit as Array<any>).slice();

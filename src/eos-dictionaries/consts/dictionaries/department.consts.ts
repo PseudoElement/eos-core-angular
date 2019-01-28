@@ -7,7 +7,7 @@ import { COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_CODE, COMMON_FIE
 export const ROLES_IN_WORKFLOW: ISelectOption[] = [
     {value: 0, title: 'Не указана'},
     {value: 1, title: 'Начальник'},
-    {value: 2, title: 'Секретарь'}
+    /*{value: 2, title: 'Секретарь'} removed via Bug 93716 */
 ];
 
 export const GENDERS: ISelectOption[] = [

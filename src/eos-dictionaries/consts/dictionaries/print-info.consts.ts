@@ -49,7 +49,7 @@ export const PRINT_INFO_DICT: IDictionaryDescriptor = {
         key: 'DEPARTMENT_RP',
         title: 'Наименование в родительном падеже (чего?)',
         type: 'string',
-        length: 2000,
+        length: 255,
         pattern: NOT_EMPTY_STRING,
     }, {
         key: 'NOT_USE_IN_DUTY',
