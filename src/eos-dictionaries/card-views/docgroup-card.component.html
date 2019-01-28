@@ -11,8 +11,7 @@
         <eos-dynamic-input [input]="inputs['rec.DOCGROUP_INDEX']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
-        <eos-dynamic-input [hidden]="eDocument"
-                           [input]="inputs['rec.DOCNUMBER_FLAG']"
+        <eos-dynamic-input [input]="inputs['rec.DOCNUMBER_FLAG']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
     </div>
@@ -28,6 +27,7 @@
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input class="pull-right"
+                           [hidden] = "eDocument"
                            [input]="inputs['rec.IS_COPYCOUNT']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
