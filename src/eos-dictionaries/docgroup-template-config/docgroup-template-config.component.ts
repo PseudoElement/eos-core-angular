@@ -39,9 +39,6 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         private dragulaService: DragulaService,
         public bsModalRef: BsModalRef,
     ) {
-
-
-
         dragulaService.setOptions('template-bag', {
             // moves: (el, source, handle, sibling) => {
             //     // if (source.id === 'availble') {
@@ -67,7 +64,6 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
             if (target.id === 'availble') {
             }
             this.updateTemplate();
-            this.generateTemplate();
         }));
 
         this.subscriptions.push(dragulaService.drag.subscribe(() => {
@@ -158,8 +154,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
      */
     addToTemplate() {
         if (this.selected[0]) {
-            this.templateItems.push(this.selected[0]);
-            this.selected[0] = null;
+            this.templateItems.push(Object.assign(this.selected[0]));
             this.updateTemplate();
         }
     }
