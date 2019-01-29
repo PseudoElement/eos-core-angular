@@ -132,7 +132,7 @@ export const Allbuttons: BtnAction = {
     buttons: [
         CreateUser,
         RedactUser,
-       // DeliteLogicalUser,
+        DeliteLogicalUser,
         // ActionMode,
         LocSelectedUser,
         OpenAddressManagementWindow,
@@ -142,7 +142,7 @@ export const Allbuttons: BtnAction = {
     moreButtons: [
         CreateUser,
         RedactUser,
-       // DeliteLogicalUser,
+        DeliteLogicalUser,
         ActionModeMore,
         ActionTehnicalUser,
         LocSelectedUser,
