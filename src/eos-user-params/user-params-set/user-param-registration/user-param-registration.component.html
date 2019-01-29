@@ -143,18 +143,18 @@
             <button
                 class="btn add-storage"
                 tooltip="Выбор из справочника"
-                containerClass="tooltip-info">
-                <span class="eos-icon eos-icon-folder-blue small"
-                (click)='openClassif()'
-                ></span>
+                triggers="hover"
+                containerClass="tooltip-info"
+                 (click)="openClassif()">
+                <span class="eos-icon eos-icon-folder-blue small"></span>
             </button>
             <button
             class="btn add-storage"
             tooltip="Очистить поле"
-            containerClass="tooltip-info">
-            <span class="eos-icon eos-icon-close-blue small"
-            (click)='clearField()'
-            ></span>
+            containerClass="tooltip-info"
+            triggers="hover"
+            (click)="clearField()">
+            <span class="eos-icon eos-icon-close-blue small"></span>
         </button>
         </div>
 </div>
