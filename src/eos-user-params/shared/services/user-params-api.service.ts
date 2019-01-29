@@ -243,7 +243,7 @@ export class UserParamApiSrv {
          return  this.setData(ARRAY_QUERY_SET_DELETE).then(response => {
              return response;
             }).catch(error => {
-                console.log('error');
+                console.log(error);
             });
         }   else {
             return Promise.resolve(false);
