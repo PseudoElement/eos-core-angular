@@ -9,6 +9,94 @@
         display: inline-block;
     }
 
+    header {
+        background-color: #fafafa;
+        color: black;
+        border: 1px solid $border-color-main-theme;
+    }
+    .edit-header {
+        min-height: $item-height;
+        text-align: left;
+        margin: 0 auto;
+        width: 800px;
+        display: -ms-grid;
+        display: grid; // sass-lint:disable-line no-duplicate-properties
+        -ms-grid-columns: 20px 1fr 153px;
+        grid-template-columns: 20px 1fr 153px;
+        &.edited {
+            -ms-grid-columns: 0 1fr 210px;
+            grid-template-columns: 0 1fr 210px;
+        }
+        /*
+        .btn {
+            padding: 1px 6px;
+        }
+        */
+        a:hover {
+            text-decoration: none;
+        }
+        div {
+            display: inline-block;
+        }
+        .move-wrapper,
+        .buttons-wrapper,
+        .action-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+        .move-wrapper {
+            -ms-grid-column: 1;
+            grid-column: 1;
+            -ms-grid-row: 1;
+            grid-row: 1;
+            .btn {
+                height: $item-height;
+                width: $item-width;
+            }
+        }
+        .name-wrapper {
+            -ms-grid-row-align: center;
+            align-self: center;
+            -ms-grid-column: 2;
+            grid-column: 2;
+            -ms-grid-row: 1;
+            grid-row: 1;
+            &.edited {
+                padding-left: 20px;
+                padding-right: 10px;
+            }
+            .edit-title {
+                font-size: 18px;
+                max-height: 52px;
+            }
+        }
+        .buttons-wrapper {
+            -ms-grid-column: 3;
+            grid-column: 3;
+            -ms-grid-row: 1;
+            grid-row: 1;
+            height: $item-height;
+            .btn {
+                min-width: 88px;
+            }
+            .btn+.btn {
+                margin-left: 10px;
+            }
+        }
+        .action-wrapper {
+            -ms-grid-column: 3;
+            grid-column: 3;
+            -ms-grid-row: 1;
+            grid-row: 1;
+            .btn {
+                height: $item-height;
+                margin: -8px 0;
+                width: $item-width;
+            }
+        }
+    }
+
     .base-param-main {
         padding: 20px;
         max-height: calc(100vh - 260px);
@@ -39,7 +127,6 @@
         }
 
         .icon-electronic {
-            cursor: pointer;
             margin-bottom: -8px;
             margin-left: 10px;
         }
