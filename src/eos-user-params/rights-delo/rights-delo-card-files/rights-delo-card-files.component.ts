@@ -78,6 +78,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     flagForMergeForTheFirstTime = false;
     arrayForAllDataForCurrentUsercard = [];
     indexOldMainCheckbox = -1;
+    indexForOldIndex = -1;
     private quaryDepartment = {
         DEPARTMENT: {
             criteries: {
@@ -498,6 +499,9 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         let flagIfNotMainCard = true;
         const arr = [];
         this.flagNoMainCard = false;
+        if (this.indexForOldIndex !== -1) {
+            this.indexOldMainCheckbox = this.indexForOldIndex;
+        }
         for (let i = 0; i < this.fieldKeysforCardFiles.length; i++) {
             for (const key in this._userParamsSetSrv.hashUserContexHomeCard) {
             if (this.fieldKeysforCardFiles[i][2] === true) {
@@ -506,6 +510,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 flagIfNotMainCard = false;
                 this.fieldKeysforCardFiles[i][2] = true;
                 this.fieldKeysforCardFiles[i][3] = true;
+                this.indexForOldIndex = i;
                 this.mainCheckbox[this.fieldKeysforCardFiles[i][0]] = 1;
             } else if (this.fieldKeysforCardFiles[i][0] === key && this._userParamsSetSrv.hashUserContexHomeCard[key] === 1 && flag) {
                 this.indexOldMainCheckbox = i;
