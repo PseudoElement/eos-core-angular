@@ -401,6 +401,69 @@
             </form>
         </div>
     </div>
+    <!--FOR Docgroups-->
+    <div [hidden]="dictId !== 'docgroup'"
+        *ngIf="searchModel"
+        class="row full-search-form">
+        <form id="cabinet">
+            <button [disabled]="noSearchData"
+                type="submit"
+                (click)="fullSearch()"
+                class="hidden-submit">Найти</button>
+                <div class="second-col">
+                    <div class="form-group unimportant-text">
+                        <label class="s-font"
+                            for="title">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
+                        <div class="search-fld">
+                            <input id="title"
+                                name="title"
+                                type="text"
+                                class="form-control light"
+                                [(ngModel)]="searchModel['CLASSIF_NAME']"
+                                placeholder="{{fieldsDescription.rec['CLASSIF_NAME']?.title}}"
+                                maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
+                            <a class="clear-btn"
+                                [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
+                                (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        </div>
+                    </div>
+
+                    <div class="form-group unimportant-text">
+                        <label class="s-font"
+                            for="fullTitle">{{fieldsDescription.rec['FULLNAME']?.title}}</label>
+                        <div class="search-fld">
+                            <input id="fullTitle"
+                                name="fullTitle"
+                                type="text"
+                                class="form-control light"
+                                [(ngModel)]="searchModel['FULLNAME']"
+                                placeholder="{{fieldsDescription.rec['FULLNAME']?.title}}"
+                                maxlength="{{fieldsDescription.rec['FULLNAME']?.length}}">
+                            <a class="clear-btn"
+                                [ngClass]="{'hide': !searchModel['FULLNAME']}"
+                                (click)="searchModel['FULLNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        </div>
+                    </div>
+                    <div class="form-group unimportant-text">
+                        <label class="s-font"
+                            for="note">{{fieldsDescription.rec['NOTE']?.title}}</label>
+                        <div class="search-fld">
+                            <input id="note"
+                                name="note"
+                                type="text"
+                                class="form-control light"
+                                [(ngModel)]="searchModel['NOTE']"
+                                placeholder="{{fieldsDescription.rec['NOTE']?.title}}"
+                                maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
+                            <a class="clear-btn"
+                                [ngClass]="{'hide': !searchModel['NOTE']}"
+                                (click)="searchModel['NOTE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        </div>
+                    </div>
+                </div>
+        </form>
+    </div>
+
     <!--FOR Rubricator-->
     <div [hidden]="dictId !== 'rubricator'"
         class="row full-search-form">
