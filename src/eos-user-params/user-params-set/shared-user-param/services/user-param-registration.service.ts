@@ -266,6 +266,9 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
         for (let i = 0; i < this.constUserParam.disabledFields.length; i++) {
             this.formAttach.controls['rec.' + this.constUserParam.disabledFields[i]].disable();
         }
+        this.subscribeFormAttach();
+    }
+    subscribeFormAttach() {
         this.subscriptions.push(
             this.formAttach.valueChanges
                 .debounceTime(200)
@@ -367,6 +370,8 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                     dataInput.rec[key] = true;
                 } else if (this.prepDataAttach.rec[key] === '0') {
                     dataInput.rec[key] = false;
+                } else if (key === 'RCSEND_RESOLUTIONS' || key === 'RCSEND_ADDRESSEES') {
+                    dataInput.rec[key] = this.prepDataAttach.rec[key];
                 }
             } else {
                 dataInput.rec[key] = this.prepDataAttach.rec[key];
@@ -382,6 +387,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                     this.arrayOfIndexesRcsend.push(this.objectDataRcsend[keyName]);
                 }
                 this.arrayOfIndexesRcsend.push(this.objectDataRcsend[keyName]);
+
             } else if (keyName.indexOf('MAILRECEIVE') === 0 && keyName !== 'MAILRECEIVE_TAKE_RUBRICS_RK_RADIO' && keyName !== 'MAILRECEIVE_NOTIFY_ABOUT_REGISTRATION_OR_REFUSAL_FROM_IT_RADIO') {
                 if (Number(this.arrayOfIndexesMailReceive.indexOf(this.objectDataMailreceive[keyName])) === -1) {
                     this.arrayOfIndexesMailReceive.push(this.objectDataMailreceive[keyName]);
@@ -468,7 +474,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
         const arrayKeysSubsetsForResolutionExecutorOrganizationExecutive = ['RCSEND_EXECUTOR_EXECUTIVE_ADDRESSED',
         'RCSEND_EXECUTOR_EXECUTIVE_ADDRESSED_FULL_NAME', 'RCSEND_EXECUTOR_ORGANIZATION_EXECUTIVE_ADDRESSED_SUBDIVISION',
         'RCSEND_EXECUTOR_ORGANIZATION_EXECUTIVE_POSITION'];
-        const arrayKeyForRadioButton = ['RCSEND_FOR_MULTIPOINT_DOCUMENTS_SEND_RADIO', 'RCSEND_RESOLUTIONS_RADIO', 'RCSEND_ADDRESSEES_RADIO'];
+        const arrayKeyForRadioButton = ['RCSEND_FOR_MULTIPOINT_DOCUMENTS_SEND_RADIO', 'RCSEND_RESOLUTIONS', 'RCSEND_RESOLUTIONS_RADIO', 'RCSEND_ADDRESSEES_RADIO', 'RCSEND_ADDRESSEES'];
         if (event.target.checked) {
             this.prepDataAttach.rec[keyName] = '1';
             this.arrayOfIndexesRcsend.push(this.objectDataRcsend[keyName]);
@@ -1132,7 +1138,6 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
     arrayKeyForRadioButton.forEach( key => {
         this.prepDataAttach.rec[key] = this.formAttach.controls['rec.' + key].value;
       });
-
        this.inputAttach = this.getInputAttach();
        this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
     }
@@ -1302,7 +1307,6 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 return newStringForResend;
             }
         }
-
         createObjRequestForAll() {
             const req = this.createObjRequest();
             const reqAttach = this.createObjRequestForAttach();
@@ -1331,6 +1335,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                         this.newData.rec['ORGGROUP'] = '';
                     }
                     this.subscribeChangeForm();
+                    this.subscribeFormAttach();
                 })
                 .catch(err => {
                     throw err;

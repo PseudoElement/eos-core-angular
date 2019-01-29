@@ -86,12 +86,14 @@ export class UserParamApiSrv {
                 this.devideUsers();
                 this.initConfigTitle(dueDep);
                 this.users_pagination._initPaginationConfig();
-                   return this.users_pagination.UsersList.slice((this.users_pagination.paginationConfig.start - 1)
-                    * this.users_pagination.paginationConfig.length,
-                     this.users_pagination.paginationConfig.current
-                    * this.users_pagination.paginationConfig.length);
+                   return this.users_pagination.UsersList;
                 });
             });
+            // перенес в list-user-select.component что бы включить сортировку в выборку
+            // .slice((this.users_pagination.paginationConfig.start - 1)
+            //         * this.users_pagination.paginationConfig.length,
+            //          this.users_pagination.paginationConfig.current
+            //         * this.users_pagination.paginationConfig.length);
     }
     getSysParamForBlockedUser() {
         const QUERY = {

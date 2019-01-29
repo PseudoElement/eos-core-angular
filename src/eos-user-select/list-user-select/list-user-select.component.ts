@@ -84,7 +84,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.isLoading = true;
         this._apiSrv.getUsers(param || '0.')
         .then((data: UserSelectNode[]) => {
-                this.listUsers = data;
+            this._pagSrv.UsersList =  this.helpersClass.sort(data, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+                this.listUsers = this._pagSrv.UsersList.slice((this._pagSrv.paginationConfig.start - 1)
+                * this._pagSrv.paginationConfig.length,
+                 this._pagSrv.paginationConfig.current
+                * this._pagSrv.paginationConfig.length);
                 if (this.listUsers && this.listUsers.length) {
                     this.selectedNode(this.listUsers[0]);
                 }   else {
@@ -195,11 +199,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._pagSrv.changePagination(this._pagSrv.paginationConfig);
     }
     getClassOrder(flag) {
-       // console.log(flag);
         if (flag) {
-            return 'icon eos-icon small eos-icon-arrow-blue-top';
-        }
             return 'icon eos-icon small eos-icon-arrow-blue-bottom';
+        }
+        return 'icon eos-icon small eos-icon-arrow-blue-top';
     }
 
     initSort() {
