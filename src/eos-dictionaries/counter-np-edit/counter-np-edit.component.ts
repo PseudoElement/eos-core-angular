@@ -25,6 +25,10 @@ class CounterDeclarator {
     rootLabel: string;
     mainLabel: string;
     appendObject?: any;
+    defaultRecord?: {
+        year: number,
+        value: number,
+    };
 }
 
 const numDeclarators: CounterDeclarator [] = [
@@ -45,6 +49,10 @@ const numDeclarators: CounterDeclarator [] = [
         dbNodeName : 'NUMCREATION_FLAG',
         rootLabel: 'Главный счетчик',
         mainLabel : 'Счетчик номерообразования НП',
+        defaultRecord: {
+            year: 1000,
+            value: 1,
+        }
     }
 ];
 
@@ -111,6 +119,7 @@ export class CounterNpEditComponent {
                             this.initByNodeData(highNode.data.rec);
                         }
                     });
+                return;
             } else if (highId === null) {
                 this._node[NODE_LABEL_NAME] = this._decl.rootLabel;
             }
@@ -120,17 +129,20 @@ export class CounterNpEditComponent {
         if (!this.editValueYear) {
             this.editValueYear = (new Date).getFullYear();
         }
-        const query = {criteries: {[this._decl.dbNumIdName]: String(this._baseId), [FLAG_MAX]: String(1)}};
-        const req = {[this._decl.dbTableName]: query, orderby: NUM_YEAR_NAME};
-        this.apiSrv.read(req)
-            .then((cnts) => {
-                this.nodes = cnts.filter(d => {
-                    return String(d[this._decl.dbNumIdName]) === this._baseId;
-                });
-                this.isUpdating = false;
-                return cnts;
-            })
-            .catch(err => this._errHandler(err));
+        this._readRecords().then (() => {
+            if (this._decl.defaultRecord) {
+                const def_value = this._getNodeValue(this._decl.defaultRecord.year);
+                if (!def_value) {
+                   this._save(this._decl.defaultRecord.year, this._decl.defaultRecord.value);
+                } else {
+                    const last_value = this._getNodeValue(this.editValueYear);
+                    if (!last_value && this.editValueYear === (new Date).getFullYear()
+                        && !this.editValueNum) {
+                        this.editValueNum = def_value;
+                    }
+                }
+            }
+        });
     }
 
     public getTitleLabel(): string {
@@ -159,7 +171,7 @@ export class CounterNpEditComponent {
             return data;
         }).then((data) => {
             if (isValid) {
-                const old_value = this._getNodeValue();
+                const old_value = this._getNodeValue(this.editValueYear);
                 if (old_value) {
                     const _confrm = Object.assign({}, CONFIRM_NUMCREATION_NP_CHANGE);
                     _confrm.body = _confrm.body
@@ -168,12 +180,12 @@ export class CounterNpEditComponent {
                     this._confirmSrv.confirm(_confrm)
                         .then((confirmed: boolean) => {
                             if (confirmed) {
-                                this._save();
+                                this._save(this.editValueYear, this.editValueNum);
                             }
                             return Promise.resolve(null);
                         }).catch(err => this._errHandler(err));
                 } else {
-                    this._save();
+                    this._save(this.editValueYear, this.editValueNum);
                 }
             } else {
                 this._msgSrv.addNewMessage(DANGER_NUMCREATION_NP_CHANGE);
@@ -190,19 +202,40 @@ export class CounterNpEditComponent {
         this.editValueYear = node[NUM_YEAR_NAME];
     }
 
+    private _readRecords(): Promise<any> {
+        const query = { criteries: { [this._decl.dbNumIdName]: String(this._baseId), [FLAG_MAX]: String(1) } };
+        const req = { [this._decl.dbTableName]: query, orderby: NUM_YEAR_NAME };
+        return this.apiSrv.read(req)
+            .then((cnts) => {
+                this.nodes = cnts.filter(d => {
+                    return String(d[this._decl.dbNumIdName]) === this._baseId;
+                });
+                this.isUpdating = false;
+                return Promise.resolve(cnts);
+            })
+            .catch(err => this._errHandler(err));
+    }
+
     private _init(dictId: string): CounterDeclarator {
         return numDeclarators.find(r => r.dictId === dictId);
     }
 
-    private _getData() {
-        const res = {
+    private _makeBatchData(year: number, value: number) {
+        const dt = {
             [this._decl.dbNumIdName]  : String(this._baseId),
-            [NUM_YEAR_NAME]: Number(this.editValueYear),
-            [NUM_VALUE_NAME] : Number(this.editValueNum),
+            [NUM_YEAR_NAME]: Number(year),
+            [NUM_VALUE_NAME] : Number(value),
         };
         if (this._decl.appendObject) {
-            Object.assign(res, this._decl.appendObject);
+            Object.assign(dt, this._decl.appendObject);
         }
+        const res = [
+            {
+                method: 'POST',
+                data: dt,
+                requestUri: this._decl.dbTableName,
+            },
+        ];
         return res;
     }
 
@@ -217,19 +250,9 @@ export class CounterNpEditComponent {
         }
     }
 
-    private _save() {
-        const dt = this._getData();
-        const chr = [
-            {
-                method: 'POST',
-                data: dt,
-                requestUri: this._decl.dbTableName,
-            },
-        ];
+    private _save(year: number, value: number) {
+        const chr = this._makeBatchData(year, value);
         this._updateRecord(chr).then(() => {
-            // if (this._node[NODE_ID_NAME] === String(-1)) {
-            //     this._node = null;
-            // }
             this.initByNodeData(this._initialData);
         }).catch(err => this._errHandler(err));
 
@@ -240,9 +263,9 @@ export class CounterNpEditComponent {
         this.hideModal();
     }
 
-    private _getNodeValue(): number {
+    private _getNodeValue(year_value: number): number {
         let res = 0;
-        const node = this.nodes.find(n => n[NUM_YEAR_NAME] === this.editValueYear);
+        const node = this.nodes.find(n => n[NUM_YEAR_NAME] === year_value);
         if (node) {
             res = node[NUM_VALUE_NAME];
         }
