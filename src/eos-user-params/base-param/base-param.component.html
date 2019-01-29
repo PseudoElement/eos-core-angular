@@ -1,11 +1,79 @@
 <div class="base-param-wrapper" *ngIf="!isLoading">
-    <eos-user-header
+        <header>
+                <div class="edit-header"
+                    [ngClass]="{'edited': editMode}">
+                    <!-- <div class="move-wrapper">
+                        <div>
+                            <button *ngIf="!editMode"
+                                [disabled]="disManager(true, tt1)"
+                                #tt1="bs-tooltip"
+                                class="btn btn-primary-light"
+                                aria-hidden="true"
+                                (click)="prev()"
+                                tooltip="Предыдущая"
+                                placement="bottom"
+                                containerClass="tooltip-info"><span class="eos-icon eos-icon-arrow-v-blue-left small"></span></button>
+                            <button *ngIf="node && !editMode"
+                                [disabled]="disManager(false, tt2)"
+                                #tt2="bs-tooltip"
+                                class="btn btn-primary-light"
+                                aria-hidden="true"
+                                (click)="next()"
+                                tooltip="Следующая"
+                                placement="bottom"
+                                containerClass="tooltip-info"><span class="eos-icon eos-icon-arrow-v-blue-right small"></span></button>
+                        </div>
+                    </div> -->
+                    <div class="name-wrapper"
+                        [ngClass]="{'edited': editMode}">
+                        <span class="edit-title primary-text long-title">{{title}}</span>
+                    </div>
+                    <div class="buttons-wrapper"
+                        *ngIf="editMode">
+                        <div>
+                            <button class="btn btn-primary upper"
+                                (click)="cancel()">Отменить</button>
+                            <button class="btn btn-primary-full upper"
+                                [disabled]="stateHeaderSubmit"
+                                (click)="submit()">Сохранить</button>
+                        </div>
+                    </div>
+                    <div class="action-wrapper"
+                        *ngIf="!editMode">
+                        <div class="pull-right">
+                            <button class="btn btn-primary-light"
+                                aria-hidden="true"
+                                (click)="edit()"
+                                tooltip="Редактировать"
+                                placement="bottom"
+                                containerClass="tooltip-info"><span class="eos-icon eos-icon-edit-blue small"></span></button>
+                            <a class="btn btn-primary-light"
+                                routerLink="{{selfLink}}"
+                                [queryParams]="{isn_cl: curentUser['ISN_LCLASSIF']}"
+                                aria-hidden="true"
+                                tooltip="Открыть в новом окне"
+                                placement="bottom"
+                                containerClass="tooltip-info"
+                                target="_blank"><span class="eos-icon eos-icon-external-link-blue small"></span></a>
+                            <button class="btn btn-primary-light"
+                                aria-hidden="true"
+                                (click)="close()"
+                                tooltip="Закрыть"
+                                placement="bottom"
+                                containerClass="tooltip-info">
+                        <span class="eos-icon eos-icon-close-blue small"></span>
+                    </button>
+                        </div>
+                    </div>
+                </div>
+            </header>
+    <!-- <eos-user-header
         [title]="title"
         [statusBtnSub]="stateHeaderSubmit"
         [isDefault]="false"
         (submitForm)="submit()"
         (cancelForm)="cancel()"
-    ></eos-user-header>
+    ></eos-user-header> -->
     <div class="base-param-main">
         <!-- Логин и Аутентификация с помощью ОС -->
         <div class="wrapper-password">
@@ -13,12 +81,12 @@
                 class="base-text-input base-login-input"
                 [input]="inputs['CLASSIF_NAME']"
                 [form]="form"
-                [readonly]="false"
+                [readonly]="inputs['CLASSIF_NAME'].disabled"
             ></eos-dynamic-input>
             <eos-dynamic-input
                 [input]="inputs['USERTYPE']"
                 [form]="form"
-                [readonly]="false"
+                [readonly]="inputs['USERTYPE'].disabled"
                 class="mt-ceck base-text-input"
             ></eos-dynamic-input>
         </div>
@@ -189,8 +257,9 @@
                 [form]="formAccess"
                 [readonly]="formAccess.get('5').disabled"
             ></eos-dynamic-input>
-            <span class="eos-icon eos-icon-electronic-signature-blue small icon-electronic"
-                tooltip="Посмотреть сертификаты ЭП"
+            <span class="eos-icon small icon-electronic"
+                [ngClass]="{'eos-icon-electronic-signature-blue pointer': editMode, 'eos-icon-electronic-signature-grey': !editMode}"
+                [tooltip]="editMode ? 'Посмотреть сертификаты ЭП' : null"
                 placement="bottom"
                 containerClass="tooltip-info"
             ></span>

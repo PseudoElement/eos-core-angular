@@ -1156,6 +1156,8 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
     submit() {
         if (this.newData || this.newDataAttach || this.prepareData) {
             const userId = '' + this._userParamsSetSrv.userContextId;
+            this.subscribeChangeForm();
+            this.subscribeFormAttach();
             this.formChanged.emit(false);
             this.isChangeForm = false;
             if (this.newData && this.newDataAttach) {

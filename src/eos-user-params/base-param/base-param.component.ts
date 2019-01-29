@@ -24,6 +24,7 @@ import { DUE_DEP_OCCUPATION } from 'app/consts/messages.consts';
 })
 
 export class ParamsBaseParamComponent implements OnInit, OnDestroy {
+    editMode = false;
     title: string;
     curentUser: IParamUserCl;
     stateHeaderSubmit: boolean = true;
@@ -46,6 +47,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     isLoading: Boolean = true;
     isShell: Boolean = false;
     errorPass: boolean = false;
+    selfLink = null;
     private _sysParams;
     private _descSrv;
     private _newData = {};
@@ -62,14 +64,16 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private _inputCtrlSrv: InputParamControlService,
         private _waitClassifSrv: WaitClassifService,
         private _userParamSrv: UserParamsService
-    ) {}
+    ) {
+        this.selfLink = this._router.url.split('?')[0];
+    }
     ngOnInit () {
         this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
         this.curentUser = this._userParamSrv.curentUser;
         this.title = `${this.curentUser['SURNAME_PATRON']} (${this.curentUser['CLASSIF_NAME']})`;
-        this.inputFields = this._descSrv.fillValueInputField(BASE_PARAM_INPUTS);
-        this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT);
-        this.accessField = this._descSrv.fillValueAccessField(BASE_PARAM_ACCESS_INPUT);
+        this.inputFields = this._descSrv.fillValueInputField(BASE_PARAM_INPUTS, !this.editMode);
+        this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
+        this.accessField = this._descSrv.fillValueAccessField(BASE_PARAM_ACCESS_INPUT, !this.editMode);
 
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
@@ -88,6 +92,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.isLoading = false;
     }
     ngOnDestroy() {
+        this.isLoading = true;
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
@@ -175,9 +180,24 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
     }
     cancel() {
-        this.form.patchValue(this._dataDb['form']);
-        this.formControls.patchValue(this._dataDb['formControls']);
-        this.formAccess.patchValue(this._dataDb['formAccess']);
+        // this.form.patchValue(this._dataDb['form']);
+        // this.formControls.patchValue(this._dataDb['formControls']);
+        // this.formAccess.patchValue(this._dataDb['formAccess']);
+        this.ngOnDestroy();
+        this.editMode = !this.editMode;
+        setTimeout(() => {
+            this.ngOnInit();
+        }, 0);
+    }
+    edit() {
+        this.ngOnDestroy();
+        this.editMode = !this.editMode;
+        setTimeout(() => {
+            this.ngOnInit();
+        }, 0);
+    }
+    close() {
+        this._router.navigate(['user_param']);
     }
     checkPass() {
         if (this.formControls.get('pass').value && this.formControls.get('passRepeated').value) {
