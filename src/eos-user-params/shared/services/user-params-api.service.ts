@@ -183,14 +183,9 @@ export class UserParamApiSrv {
         const query = {DEPARTMENT: q};
         return this.getData<DEPARTMENT>(query);
     }
-    grtDepartmentParent(due?: string): Promise<DEPARTMENT[]> {
-        let q;
-        if (!due) {
-            q = ALL_ROWS;
-        } else {
-            q = PipRX.criteries({ISN_NODE: due});
-        }
-        const query = {DEPARTMENT: q};
+
+    getDepartment(due?: Array<string>): Promise<DEPARTMENT[]> {
+        const query = {DEPARTMENT: due};
         return this.getData<DEPARTMENT>(query);
     }
     getDocGroup(due?: string): Promise<DOCGROUP_CL[]> {
@@ -266,21 +261,22 @@ export class UserParamApiSrv {
 
     updateDepartMent(pageList, tabs) {
         const setQueryResult = new Set();
-        let stringQuery: string = '';
+        let stringQuery: Array<string> = [];
         let valueForPadQuery = [];
         let padQuery;
         let parseStringUserDue = [];
         pageList.forEach(user => {
             if (user.DUE_DEP) {
-                stringQuery += user.DUE_DEP + '|';
+                stringQuery.push(user.DUE_DEP);
             }
         });
-        stringQuery === '' ? stringQuery = '0000' : stringQuery = stringQuery;
-        return  this.grtDepartment(stringQuery)
+        stringQuery.length === 0 ? stringQuery = ['0000'] : stringQuery = stringQuery;
+        return  this.getDepartment(stringQuery)
         .then(departments => {
             departments.forEach(el => {
-                if (el.ISN_HIGH_NODE) {
-                    setQueryResult.add(el.ISN_HIGH_NODE);
+                if (el.ISN_HIGH_NODE  >= 0) {
+                     parseStringUserDue = el.DUE.split('.');
+                    setQueryResult.add(parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.');
                 }
             });
             pageList.map(user => {
@@ -298,8 +294,8 @@ export class UserParamApiSrv {
                 }
             });
             valueForPadQuery = Array.from(setQueryResult);
-            valueForPadQuery.length > 0 ? padQuery =  valueForPadQuery.join('|') : padQuery = '0000';
-                return  this.grtDepartmentParent(padQuery)
+            valueForPadQuery.length > 0 ? padQuery =  valueForPadQuery : padQuery = ['0000'];
+                return  this.getDepartment(padQuery)
                 .then(deepInfo => {
                     pageList.map(user => {
                     const findDue = deepInfo.filter(dueDeep => {
@@ -311,9 +307,9 @@ export class UserParamApiSrv {
                         }
                     });
                     if (findDue.length > 0) {
-                        user['DEPARTMENT'] = tabs === 0 ? findDue[0].CLASSIF_NAME : findDue[0].CARD_NAME;
+                        user['DEPARTMENT'] = tabs === 0 ? (findDue[0].DUE === '0.' ? 'Все подраздения' : findDue[0].CLASSIF_NAME)   : findDue[0].CARD_NAME;
                     } else {
-                        user['DEPARTMENT'] = '';
+                        user['DEPARTMENT'] = '...';
                     }
                 });
                 return pageList;
