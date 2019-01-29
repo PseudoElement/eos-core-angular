@@ -40,7 +40,7 @@
     </div>
     <div class="content-list" *ngIf="!isLoading">
     <div *ngFor="let item of treeHierarchyOnTheRightSide" class="inline-block item-card">
-        <div *ngIf="(item.restrictRegistrationFiling || item.documents) && flagToDisplayTheRightSide"
+        <div *ngIf="item.documents && flagToDisplayTheRightSide"
              class="tree-btn inline-block"
              (click)="openFolder($event, item)">
                     <span class="eos-icon tringle-size icon"
@@ -61,7 +61,7 @@
         </div>
     </div>
 
-        <div *ngIf="item.restrictRegistrationFiling && flagToDisplayTheRightSide && flagForHidenCheckboxRestrictRegistrationFiling"
+        <div *ngIf="item.restrictRegistrationFiling && flagToDisplayTheRightSide"
              class="tree-elements"
              [hidden]="!item.openFolder"
              [ngClass]="{'highlighted': item.restrictRegistrationFiling.data.isSelected}">

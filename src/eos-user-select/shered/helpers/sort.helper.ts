@@ -5,13 +5,13 @@ export class HelpersSortFunctions {
     }
     sort(pageList: UserSelectNode[], flag, key): UserSelectNode[] {
             return pageList.sort(function(a, b){
-                if (a[key] > b[key]) {
+                if (String(a[key]).toLowerCase() > String(b[key]).toLowerCase()) {
                   return  flag ? -1 : 1;
-                }  else if (a[key] < b[key]) {
+                }  else if (String(a[key]).toLowerCase() < String(b[key]).toLowerCase()) {
                     return flag ? 1 : -1;
                 }   else {
                     return 0;
                 }
-            });
+         });
     }
 }
