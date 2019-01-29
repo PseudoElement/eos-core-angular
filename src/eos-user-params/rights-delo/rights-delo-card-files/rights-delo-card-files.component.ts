@@ -469,10 +469,10 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                     ISN_LCLASSIF: `${userId}`,
                     DUE: `${this.newDataCard[i]}`,
                     HOME_CARD: `${this.flagForFirstMainCard === true ? '1' : '0'}`,
-                    FUNCLIST: '010000000000010010'
+                    FUNCLIST: '010000000000010010000'
                 }
             });
-            this.prepareData.rec[this.newDataCard[i]] = '010000000000010010'; // Then
+            this.prepareData.rec[this.newDataCard[i]] = '010000000000010010000'; // Then
             this.flagForFirstMainCard = false;
         }
         this.inputs = this.getInputs();
