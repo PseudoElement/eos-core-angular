@@ -5,6 +5,7 @@ import { FormGroup } from '@angular/forms';
 import { EosUtils } from 'eos-common/core/utils';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
+import { RestError } from 'eos-rest/core/rest-error';
 @Injectable()
 export class UserParamCabinetsSrv extends BaseUserSrv {
     readonly fieldGroupsForCabinets: string[] = ['Папки', 'Поручения'];
@@ -30,27 +31,32 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
         injector: Injector,
          ) {
         super(injector, CABINETS_USER);
-        this.getNameSortCabinets().then( sortName => {
-            CABINETS_USER.fields.map(fields => {
-                if (fields.key === 'CABSORT_ISN_DOCGROUP_LIST') {
-                    fields.options.splice(0, fields.options.length);
-                        sortName.forEach(element => {
-                            fields.options.push({
-                                value: element.ISN_LIST,
-                                title: element.NAME
+        this._userParamsSetSrv.getUserIsn(this._userParamsSetSrv.userContextId.toString()).then(datai => {
+            this.getNameSortCabinets().then( sortName => {
+                        CABINETS_USER.fields.map(fields => {
+                            if (fields.key === 'CABSORT_ISN_DOCGROUP_LIST') {
+                                fields.options.splice(0, fields.options.length);
+                                    sortName.forEach(element => {
+                                        fields.options.push({
+                                            value: element.ISN_LIST,
+                                            title: element.NAME
+                                    });
+                                });
+                            }
                         });
+                        this.init();
+                        this.prepInputsAttach = this.getObjectInputFields(CABINETS_USER.fieldsChild);
+                        this.afterInit();
+                        this.getControlAuthor().then(data => {
+                            if (data) {
+                                this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(data[0]['CLASSIF_NAME']), {emitEvent: false});
+                        }
                     });
-                }
-            });
-            this.init();
-            this.prepInputsAttach = this.getObjectInputFields(CABINETS_USER.fieldsChild);
-            this.afterInit();
-            this.getControlAuthor().then(data => {
-                if (data) {
-                    this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(data[0]['CLASSIF_NAME']), {emitEvent: false});
-                }
-            });
+                });
+        }).catch(err => {
+            this.cathError(err);
         });
+
     }
 
     init() {
@@ -275,6 +281,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     cancel() {
         let val = null;
         if (this.isChangeForm || this.isChangeFormAttach) {
+            this._userParamsSetSrv.getUserIsn(this._userParamsSetSrv.userContextId.toString()).then(datai => {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
             this.isChangeForm = false;
             this.isChangeFormAttach = false;
@@ -282,13 +289,21 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             this.ngOnDestroy();
             this.init();
             this.afterInit();
+            this.getControlAuthor().then(data => {
+                if (data) {
+                    this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(data[0]['CLASSIF_NAME']), {emitEvent: false});
+            }
             val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
             if (val !== '' &&  val !== null) {
                 this.controller = true;
             }   else {
                 this.controller = false;
             }
-        }
+        });
+        }).catch(err => {
+            this.cathError(err);
+        });
+    }
     }
 
     submit() {
@@ -394,12 +409,26 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                     this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                     this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
                     this.formChanged.emit(changed);
+                    this.controller = false;
                     this.isChangeForm = changed;
                     this.subscribeChangeForm();
                 })
                 .catch(err => {
-                    throw err;
+                   this.cathError(err);
                 });
+        }
+        cathError(e) {
+                if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
+                    return undefined;
+                } else {
+                    const errMessage = e.message ? e.message : e;
+                    this.msgSrv.addNewMessage({
+                        type: 'danger',
+                        title: 'Ошибка обработки. Ответ сервера:',
+                        msg: errMessage
+                    });
+                    return null;
+                }
         }
         get getClass() {
             return this.controller ? 'eos-icon eos-icon-info-blue small' : 'eos-icon eos-icon-info-grey small';

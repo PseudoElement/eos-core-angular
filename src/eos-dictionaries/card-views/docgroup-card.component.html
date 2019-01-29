@@ -11,8 +11,7 @@
         <eos-dynamic-input [input]="inputs['rec.DOCGROUP_INDEX']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
-        <eos-dynamic-input [hidden]="eDocument"
-                           [input]="inputs['rec.DOCNUMBER_FLAG']"
+        <eos-dynamic-input [input]="inputs['rec.DOCNUMBER_FLAG']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
     </div>
@@ -28,6 +27,7 @@
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input class="pull-right"
+                           [hidden] = "eDocument"
                            [input]="inputs['rec.IS_COPYCOUNT']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
@@ -49,7 +49,14 @@
                            [readonly]="!editMode"></eos-dynamic-input>
     </div>
     <div class="row-wrapper">
-        <eos-dynamic-input class="rc-type"
+        <eos-dynamic-input *ngIf="isNode"
+                           class="rc-type"
+                           [input]="inputs['rec.RC_TYPE_NODE']"
+                           [form]="form"
+                           [disabled]="havesRC"
+                           [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input *ngIf="!isNode"
+                           class="rc-type"
                            [input]="inputs['rec.RC_TYPE']"
                            [form]="form"
                            [disabled]="havesRC"
@@ -74,11 +81,18 @@
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
     </div>
-    <eos-dynamic-input [hidden]="!(rcType == 3)"
-                       [input]="inputs['rec.PRJ_NUM_FLAG']"
-                       [form]="form"
-                       [readonly]="!editMode"></eos-dynamic-input>
-
+    <div class="clearfix">
+        <eos-dynamic-input class="pull-left"
+                           [hidden]="!(rcType == 3)"
+                           [input]="inputs['rec.PRJ_NUM_FLAG']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input class="pull-right"
+                           [hidden]="!(rcType == 3)"
+                           [input]="inputs['rec.INITIATIVE_RESOLUTION']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+    </div>
     <ng-container *ngIf="isPrjFlag">
         <eos-dynamic-input [input]="inputs['rec.PRJ_DEL_AFTER_REG']"
                            [form]="form"

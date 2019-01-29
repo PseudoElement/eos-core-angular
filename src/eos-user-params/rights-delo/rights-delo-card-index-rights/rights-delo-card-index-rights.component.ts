@@ -215,23 +215,37 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         this.currentElementsForCards = [];
         this.listConcatRigthSide = [];
         this.treeHierarchyOnTheRightSide = [];
+        let dataCurrentDocument;
 
        for (let t = 0; t < this.listDocumentGroups.length; t++) {
            for (let z = 0; z < this.allData.length; z++) {
                if (this.listDocumentGroups[t]['key'] === this.allData[z]['DUE']) {
+                  if (this.allData[z]['USER_CARD_DOCGROUP_List'].length > 0) {
+                      for (let f = 0; f < this.allData[z]['USER_CARD_DOCGROUP_List'].length; f++) {
+                          if ((+dataCurrentListNode.key + 1) === this.allData[z]['USER_CARD_DOCGROUP_List'][f]['FUNC_NUM']) {
+                            dataCurrentDocument = [this.allData[z]['USER_CARD_DOCGROUP_List'][f]];
+                            break;
+                          } else {
+                            dataCurrentDocument = null;
+                          }
+                      }
+                  } else {
+                    dataCurrentDocument = null;
+                  }
                 this.treeHierarchyOnTheRightSide.push({
                     card: this.listDocumentGroups[t],
                     openFolder: !this.listDocumentGroups[t]['FLAG_FOR_OPEN_FOLDER'] ? false : true,
                     restrictRegistrationFiling: dataCurrentListNode['data']['rightContent'] === E_RIGHT_DELO_ACCESS_CONTENT.docGroupCard ?
                      this.listRestrictRegistrationFiling[t] : null,
-                     documents: this.allData[z]['USER_CARD_DOCGROUP_List'].length ? (+dataCurrentListNode.key + 1) === this.allData[z]['USER_CARD_DOCGROUP_List'][0]['FUNC_NUM'] ? [this.allData[z]['USER_CARD_DOCGROUP_List'][0]] : null : null
+                     documents: dataCurrentDocument
                 });
                for (let q = 1; q < this.allData[z]['USER_CARD_DOCGROUP_List'].length; q++) {
-                 if (q > 0 && this.treeHierarchyOnTheRightSide[this.treeHierarchyOnTheRightSide.length - 1].documents !== null &&
-                    (+dataCurrentListNode.key + 1) === this.allData[z]['USER_CARD_DOCGROUP_List'][q]['FUNC_NUM']) {
-                    this.treeHierarchyOnTheRightSide[this.treeHierarchyOnTheRightSide.length - 1].documents.push(this.allData[z]['USER_CARD_DOCGROUP_List'][q]);
+                 if (q > 1 && this.treeHierarchyOnTheRightSide[this.treeHierarchyOnTheRightSide.length - 1].documents !== null &&
+                    (+dataCurrentListNode.key + 1) === this.allData[z]['USER_CARD_DOCGROUP_List'][q]['FUNC_NUM'] &&
+                    this.allData[z]['USER_CARD_DOCGROUP_List'][q]['DUE'] !== '0.') {
+                        this.treeHierarchyOnTheRightSide[this.treeHierarchyOnTheRightSide.length - 1].documents.push(this.allData[z]['USER_CARD_DOCGROUP_List'][q]);
                    }
-                }
+               }
             }
         }
        }
@@ -365,6 +379,9 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
             for (let i = 0; i < Array.from(this.userCard).length; i++) {
                 if (item.card.key === Array.from(this.userCard)[i][0]) {
                     let str = Array.from(this.userCard)[i][1]['FUNCLIST'];
+                    if (this.indexForCards > 18 && str.length === 18) {
+                        str += '000';
+                    }
                     str = this.setCharAt(str, this.indexForCards, '1');
                     Array.from(this.userCard)[i][1]['FUNCLIST'] = str;
                     Array.from(this.userCard)[i][1]['FLAG_NEW_FUNCLIST'] = true;

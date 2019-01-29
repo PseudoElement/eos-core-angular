@@ -104,7 +104,7 @@
                     </label> -->
                     <div class="table-title user-select-node"  [ngClass]="{'disabled': user.deleted, 'delitedDue': user.deletedOffFace}">
                         <label class="checkbox">
-                        <input  [checked]="(user.isChecked && !user.selectedMark) || user.selectedMark" [disabled]="user.deleted ? true : false"  type="checkbox" (change)="setFlagChecked($event, user)">
+                        <input *ngIf='!user.deleted'  [checked]="(user.isChecked && !user.selectedMark) || user.selectedMark" [disabled]="user.deleted ? true : false"  type="checkbox" (change)="setFlagChecked($event, user)">
                         <span class="eos-icon eos-icon-checkbox-black"></span>
                         </label>
                         <div class="user-select-node-t"   (click)="selectedNode(user)">
