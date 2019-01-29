@@ -75,7 +75,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     flagIfFirstMainCard = false;
     flagForIndexFirstMainCard = false;
     arrayDataThatIsNotSaved = [];
-    flagForMergeForTheFirstTime = false;
     arrayForAllDataForCurrentUsercard = [];
     indexOldMainCheckbox = -1;
     indexForOldIndex = -1;
@@ -349,7 +348,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             }
         if (currentDataForCurrentUsercard['USER_CABINET_List'].length > 0) {
             for (let i = 0; i < currentDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
-                if ((currentDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'] === this.currentIsnCabinet) || this.flagForMergeForTheFirstTime) {
+                if (currentDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'] === this.currentIsnCabinet) {
                     currentDataForCurrentUsercard['USER_CABINET_List'][i]['FOLDERS_AVAILABLE'] = valueDefForFoldersAvailable;
                     currentDataForCurrentUsercard['USER_CABINET_List'][i]['HIDE_INACCESSIBLE'] = +valueDefForHideInaccessible;
                     currentDataForCurrentUsercard['USER_CABINET_List'][i]['HIDE_INACCESSIBLE_PRJ'] = +valueDefForHideInaccessiblePrj;
@@ -364,7 +363,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                         DUE_CARD: currentDataForCurrentUsercard['DUE']
                 });
                 flagToCheckForThePresenceOfTheDesiredCabinet = true;
-                this.flagForMergeForTheFirstTime = false;
                 } else if (i === (currentDataForCurrentUsercard['USER_CABINET_List'].length - 1) && !flagToCheckForThePresenceOfTheDesiredCabinet) {
                     currentDataForCurrentUsercard['USER_CABINET_List'].push({
                         CompositePrimaryKey: '' + this.currentIsnCabinet + ' ' + +userId,
@@ -559,10 +557,8 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                             this.flagForFirstShowSelect = true;
                             this.allDataForCurrentCabinet = this.allData[j]['USER_CABINET_List'][0];
                             this.allDataForCurrentUsercard = this.allData[j];
-                            this.flagForMergeForTheFirstTime = true;
                         } else {
                             let str = '';
-                            this.flagForMergeForTheFirstTime = false;
                             this.settingValuesForFieldsCabinets('Empty');
                             this.allDataForCurrentCabinet = this.allData[j]['USER_CABINET_List'];
                             this.allDataForCurrentUsercard = this.allData[j];
@@ -635,7 +631,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     selectOnClick(event, dataAtTheStart) {
       if (dataAtTheStart !== null) {
         this.newDataWhenChanging(2);
-   // setTimeout(() => {
+    setTimeout(() => { // For a while
         for (let z = 0; z < this.arrayForCurrentCabinets.length; z++) {
           if (dataAtTheStart.title === this.arrayForCurrentCabinets[z][0] &&
             dataAtTheStart.value === this.arrayForCurrentCabinets[z][2]) {
@@ -648,7 +644,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                break;
             }
         }
-  //  }, 500);
+    }, 500);
       } else {
         this.newDataWhenChanging(1);
       if (this.allDataForCurrentUsercard['USER_CABINET_List'].length > 0) {
