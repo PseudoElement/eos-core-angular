@@ -37,6 +37,12 @@
         }
         .info-mail{
             margin-bottom: 8px;
+            a{
+                display: block;
+                width: 100%;
+                overflow: hidden;
+
+            }
         }
         .info-pfone, .info-mail{
             padding: 20px 0px 0px 0px;

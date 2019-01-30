@@ -19,6 +19,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     opened: boolean;
     chooseTemplate: string;
     isPhoto: boolean|number;
+    departmentInfo: DEPARTMENT;
     destroySubsriber: Subject<any> = new Subject();
     constructor(
         private _sandwichSrv: EosSandwichService,
@@ -75,6 +76,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         .then((result: [USER_CL, DEPARTMENT]) => {
             this.getObjectForSystems(result);
            if (result[1].toString() !== '5') {
+               this.departmentInfo = result[1][0];
                if (result[1][1] === undefined) {
                 this.DueInfo = `${result[1][0]['SURNAME']}`;
                }    else {
