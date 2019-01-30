@@ -84,6 +84,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
         this.dictSrv.bindOrganization(dues[0])
             .then((org) => {
                 if (org) {
+                    this.data.__relfield['ORGANIZ_CL'] = org;
                     this._orgName = org['CLASSIF_NAME'];
                     this.setValue('rec.DUE_LINK_ORGANIZ', org.DUE);
                 }
@@ -92,8 +93,10 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
 
     unbindOrganization() {
         if (this.hasOrganization) {
+            this.dictSrv.unbindOrganization();
             this._orgName = '';
             this.data.organization = null;
+            this.data.__relfield['ORGANIZ_CL'] = null;
             this.setValue('rec.DUE_LINK_ORGANIZ', null);
         } else {
             this.msgSrv.addNewMessage(WARN_NO_BINDED_ORGANIZATION);

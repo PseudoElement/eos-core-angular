@@ -92,6 +92,10 @@ export class EosDictionary {
         };
     }
 
+    unbindOrganization() {
+        // todo: решить с data.__relfield
+    }
+
     bindOrganization(orgDue: string): Promise<any> {
         if (orgDue && (this.descriptor.type === E_DICT_TYPE.department ||
             this.descriptor.id === 'sev-participant')) {
