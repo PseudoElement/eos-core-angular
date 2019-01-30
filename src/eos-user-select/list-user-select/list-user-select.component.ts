@@ -116,6 +116,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
 
     selectedNode(user: UserSelectNode) {
        if (!user) {
+           this.selectedUser.isSelected = false;
            this.selectedUser = undefined;
            this.rtUserService.changeSelectedUser(null);
        } else {
@@ -130,6 +131,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.selectedNodeSetFlags(searchSelected[0]);
                 this.rtUserService.changeSelectedUser(searchSelected[0]);
             }   else {
+                this.selectedUser.isSelected = false;
                 this.selectedUser = undefined;
                 this.rtUserService.changeSelectedUser(null);
                 this.disabledBtnAction();
@@ -453,8 +455,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 return button;
             });
             this.buttons.buttons[0].disabled = false;
-            this.buttons.moreButtons[3].disabled = false;
-            this.buttons.moreButtons[2].disabled = false;
         }   else {
             this.buttons.buttons.map((button: BtnActionFields, index) => {
                 if (index > 0) {
@@ -462,8 +462,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 }
                 return button;
             });
-          this.buttons.moreButtons[3].disabled = true;
-          this.buttons.moreButtons[2].disabled = true;
         }
     }
 
