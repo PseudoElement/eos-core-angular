@@ -16,37 +16,7 @@
         <div class="table-header">
             <!-- header action -->
             <eos-btn-action [buttons]='buttons' (showAction)='showAction($event)'></eos-btn-action>
-            <!-- <button
-                class="btn"
-                tooltip="Создать пользователя"
-                [placement]="currentState[0] ? 'bottom' : 'right'"
-                container="body"
-                containerClass="tooltip-info"
-                (click)="createUser()"
-            >
-                    <span class="eos-icon eos-icon-plus-blue small"></span>
-            </button>
-            <button
-                class="btn"
-                tooltip="Редактировать пользователя"
-                [placement]="currentState[0] ? 'bottom' : 'right'"
-                container="body"
-                containerClass="tooltip-info"
-                (click)="editUser()"
-            >
-                <span class="eos-icon eos-icon-edit-blue small"></span>
-            </button>
-            <button
-                class="btn"
-                tooltip="Удалить логически"
-                [placement]="currentState[0] ? 'bottom' : 'right'"
-                container="body"
-                containerClass="tooltip-info"
-                (click)="removeLogicaly()"
-            >
-                <span class="eos-icon eos-icon-bin-blue small"></span>
-            </button>
-            <button (click)="showDeep()">показать тех.польз</button> -->
+
         </div>
         <div class="table-header">
             <!-- header -->
@@ -63,8 +33,8 @@
                 <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')">Подразделение
                     <span *ngIf ="srtConfig.department.checked" [ngClass]="getClassOrder(srtConfig.department.upDoun)"></span>
                 </span>
-                <span class="user-list-first-colomn likeLink"(click)="sortPageList('dueName')">Должностное лицо
-                    <span *ngIf ="srtConfig.dueName.checked" [ngClass]="getClassOrder(srtConfig.dueName.upDoun)"></span>
+                <span class="user-list-first-colomn likeLink"(click)="sortPageList('fullDueName')">Должностное лицо
+                    <span *ngIf ="srtConfig.fullDueName.checked" [ngClass]="getClassOrder(srtConfig.fullDueName.upDoun)"></span>
                 </span>
                 <!-- <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
                     <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>
@@ -87,27 +57,13 @@
                     class="user-item"
                     [ngClass]="{'highlighted': user.isSelected}"
                     (dblclick)="RedactUser(user)">
-                    <!-- <label
-                        class="checkbox-inline"
-                        [tooltip]="user.marked ? markTemp : notMarkTemp"
-                        containerClass="tooltip-info"
-                        container="body"
-                        (click)="checkboxClick($event)"
-                        placement="bottom"
-                    >
-                        <input
-                            type="checkbox"
-                            [(ngModel)]="user.marked || user.selectedMark"
-                            (ngModelChange)="markNode($event, user)"
-                        >
-                        <span></span>
-                    </label> -->
                     <div class="table-title user-select-node"  [ngClass]="{'disabled': user.deleted, 'delitedDue': user.deletedOffFace}">
-                        <label class="checkbox">
-                        <input *ngIf='!user.deleted'  [checked]="(user.isChecked && !user.selectedMark) || user.selectedMark" [disabled]="user.deleted ? true : false"  type="checkbox" (change)="setFlagChecked($event, user)">
-                        <span class="eos-icon eos-icon-checkbox-black"></span>
+                        <span *ngIf='user.deleted' class="deleted-user-border"></span>
+                        <label *ngIf='!user.deleted' class="checkbox">
+                            <input   [checked]="(user.isChecked && !user.selectedMark) || user.selectedMark" [disabled]="user.deleted ? true : false"  type="checkbox" (change)="setFlagChecked($event, user)">
+                            <span class="eos-icon eos-icon-checkbox-black"></span>
                         </label>
-                        <div class="user-select-node-t"   (click)="selectedNode(user)">
+                        <div class="user-select-node-t"   (click)="!user.deleted ? selectedNode(user) : false">
                             <span
                             class="user-list-first-colomn"
                             tooltip="{{user.department}}"
@@ -121,14 +77,6 @@
                                 container="body"
                                 >{{user.fullDueName}}
                             </span>
-                            <!-- <span *ngIf="user.deletedOffFace"
-                                class="user-list-first-colomn"
-                                tooltip="{{user.dueName}}"
-                                placement="bottom"
-                                containerClass="tooltip-info"
-                                container="body"
-                                >{{user.dueName}} (Должностное лицо удалено логически)
-                            </span> -->
                             <span class="user-list-third-colomn">
                                 <span *ngIf="user.deleted" class="eos-icon eos-icon-bin-forever-grey small"></span>
                                 <span *ngIf="user.blockedUser && !user.deleted" class="eos-icon eos-icon-Blockeduser-Yellow  small"></span>
