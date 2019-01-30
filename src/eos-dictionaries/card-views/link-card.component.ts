@@ -1,4 +1,4 @@
-import { Component, Injector } from '@angular/core';
+import {Component, Injector, OnChanges, SimpleChanges} from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 
 @Component({
@@ -6,7 +6,7 @@ import { BaseCardEditComponent } from './base-card-edit.component';
     templateUrl: 'link-card.component.html',
     styleUrls: ['./link-card.component.scss']
 })
-export class LinkCardComponent extends BaseCardEditComponent {
+export class LinkCardComponent extends BaseCardEditComponent implements OnChanges {
     constructor(injector: Injector) {
         super(injector);
     }
@@ -35,5 +35,34 @@ export class LinkCardComponent extends BaseCardEditComponent {
         const isn = this.getValue('rec.ISN_LCLASSIF');
         const isn_pair = this.getValue('rec.ISN_PARE_LINK');
         return (isn === null) || !(isn === isn_pair);
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (this.form) {
+            this.unsubscribe();
+            this._subscribeOnChanges();
+        }
+    }
+
+    private _subscribeOnChanges() {
+        this.formChanges$ = this.form.valueChanges.subscribe((fc) => this._updateForm(fc));
+    }
+
+    private _updateForm(formChanges: any) {
+        this.unsubscribe();
+
+        if (formChanges['rec.LINK_TYPE'] === '0') {
+            this.setValue('rec.LINK_TYPE', null);
+            this.setValue('rec.LINK_DIR', null);
+            this.setValue('PARE_LINK_Ref.LINK_TYPE', null);
+            this.setValue('PARE_LINK_Ref.LINK_DIR', null);
+        } else {
+            if (this.getValue('rec.LINK_DIR') === null) {
+                this.setValue('rec.LINK_DIR', 0);
+                this.setValue('PARE_LINK_Ref.LINK_DIR', 1);
+            }
+        }
+
+        this._subscribeOnChanges();
     }
 }
