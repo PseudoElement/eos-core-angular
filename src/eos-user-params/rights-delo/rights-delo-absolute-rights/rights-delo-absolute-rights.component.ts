@@ -14,33 +14,6 @@ import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { USERDEP, USER_TECH } from 'eos-rest';
 import { RestError } from 'eos-rest/core/rest-error';
 
-export const QUERY = [
-    {
-        FUNC_NUM: 8,
-        CLASSIF_ID: 107
-    },
-    {
-        FUNC_NUM: 9,
-        CLASSIF_ID: 105
-    },
-    {
-        FUNC_NUM: 10,
-        CLASSIF_ID: 104
-    },
-    {
-        FUNC_NUM: 14,
-        CLASSIF_ID: 119
-    },
-    {
-        FUNC_NUM: 18,
-        CLASSIF_ID: 120
-    },
-    {
-        FUNC_NUM: 29,
-        CLASSIF_ID: 0
-    },
-];
-
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
     templateUrl: 'rights-delo-absolute-rights.component.html'
