@@ -114,6 +114,14 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         }
         this.prepInputsAttach = this.getObjectInputFields(this.fieldKeysforCardFilesCabinets);
     }
+
+    hideToolTip() {
+        const element = document.querySelector('.tooltip');
+        if (element) {
+            element.setAttribute('style', 'display: none');
+        }
+    }
+
     ngOnInit() {
         const allDataCard = this._userParamsSetSrv.userCard;
         this.allData = allDataCard;
@@ -558,15 +566,9 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                             this.allDataForCurrentCabinet = this.allData[j]['USER_CABINET_List'][0];
                             this.allDataForCurrentUsercard = this.allData[j];
                         } else {
-                            let str = '';
                             this.settingValuesForFieldsCabinets('Empty');
                             this.allDataForCurrentCabinet = this.allData[j]['USER_CABINET_List'];
                             this.allDataForCurrentUsercard = this.allData[j];
-                            if (event !== null) {
-                            str += event.target.control.id;
-                            str = str.substr(4, str.length);
-                            this.currentDueCard = str;
-                        }
                         }
                     }
                 }
@@ -646,13 +648,14 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         }
     }, 500);
       } else {
+          // event.target.selectedOptions['0']['innerHTML'] //For Chrome, in IE not working
         this.newDataWhenChanging(1);
       if (this.allDataForCurrentUsercard['USER_CABINET_List'].length > 0) {
        loop1:
         for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
             for (let z = 0; z < this.arrayForCurrentCabinets.length; z++) {
             if (
-            event.target.selectedOptions['0']['innerHTML'] === this.arrayForCurrentCabinets[z][0] &&
+            event.srcElement[event.srcElement.selectedIndex].innerHTML === this.arrayForCurrentCabinets[z][0] &&
             this.arrayForCurrentCabinets[z][1] === this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET']) {
              this.currentIsnCabinet = this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'];
                 this.settingValuesForFieldsCabinets(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
@@ -660,7 +663,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 break loop1;
             } else {
                 if (event.target.value === this.arrayForCurrentCabinets[z][2] &&
-                    event.target.selectedOptions['0']['innerHTML'] === this.arrayForCurrentCabinets[z][0] &&
+                    event.srcElement[event.srcElement.selectedIndex].innerHTML === this.arrayForCurrentCabinets[z][0] &&
                     this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'] !== this.arrayForCurrentCabinets[z][1]) {
                     this.currentIsnCabinet = this.arrayForCurrentCabinets[z][1];
                     break;
@@ -673,7 +676,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     } else {
             for (let z = 0; z < this.arrayForCurrentCabinets.length; z++) {
                if (event.target.value === this.arrayForCurrentCabinets[z][2] &&
-                event.target.selectedOptions['0']['innerHTML'] === this.arrayForCurrentCabinets[z][0]) {
+                event.srcElement[event.srcElement.selectedIndex].innerHTML === this.arrayForCurrentCabinets[z][0]) {
                 this.currentIsnCabinet = this.arrayForCurrentCabinets[z][1];
             }
         }

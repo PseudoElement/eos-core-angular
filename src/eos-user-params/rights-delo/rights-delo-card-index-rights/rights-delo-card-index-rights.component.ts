@@ -108,6 +108,13 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         this.quaryDepartment.DEPARTMENT.criteries['DUE'] = due.join('||');
         this.msgSrv = injector.get(EosMessageService);
     }
+
+    hideToolTip() {
+        const element = document.querySelector('.tooltip');
+        if (element) {
+            element.setAttribute('style', 'display: none');
+        }
+    }
     ngOnInit() {
         this.isLoading = true;
         this.listDocumentGroups = [];

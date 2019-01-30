@@ -6,9 +6,10 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
-import { DOCGROUP_CL, USER_RIGHT_DOCGROUP } from 'eos-rest';
+import { DOCGROUP_CL } from 'eos-rest';
 import { OPEN_CLASSIF_DOCGROUP_CL } from 'app/consts/query-classif.consts';
 import { RestError } from 'eos-rest/core/rest-error';
+import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 
 @Component({
     selector: 'eos-right-absolute-doc-group',
@@ -22,9 +23,10 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
     list: NodeDocsTree[] = [];
     curentNode: NodeDocsTree;
     isShell: Boolean = false;
+    rDocgroup: any[];
     constructor (
         private _msgSrv: EosMessageService,
-        // private _userParmSrv: UserParamsService,
+        private _userParmSrv: UserParamsService,
         private _waitClassifSrv: WaitClassifService,
         private apiSrv: UserParamApiSrv,
     ) {}
@@ -40,7 +42,7 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
         }
     }
     checkedNode(node: NodeDocsTree) {
-        node.data['rightDocGroup']['ALLOWED'] = node.allowed;
+        node.data['rightDocGroup']['ALLOWED'] = +node.allowed;
         this.selectedNode.pushChange({
             method: 'MERGE',
             due: node.DUE,
@@ -67,13 +69,13 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
             }
             const nodes: NodeDocsTree[] = [];
             data.forEach((doc: DOCGROUP_CL) => {
-                const node = this._createNode({
+                const rDocgroup = {
                     ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
                     FUNC_NUM: +this.selectedNode.key + 1,
                     DUE: doc.DUE,
                     ALLOWED: 0
-                },
-                doc);
+                };
+                const node = this._createNode(rDocgroup, doc);
 
                 /* добавляем изменения */
                 this.selectedNode.pushChange({
@@ -82,7 +84,7 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
                     data: node.data['rightDocGroup']
                 });
 
-
+                this.rDocgroup.push(rDocgroup);
                 nodes.push(node);
             });
 
@@ -101,19 +103,22 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
             due: this.curentNode.DUE,
             data: this.curentNode.data['rightDocGroup']
         });
+        const index = this.rDocgroup.findIndex(item => item['DUE'] === this.curentNode['DUE']);
+        this.rDocgroup.splice(index, 1);
         this.curentNode = null;
         this.Changed.emit();
     }
 
     private _init() {
+        this.rDocgroup = this._userParmSrv.userRightDocgroupList;
         this.isLoading = true;
-        const str = this.curentUser.USER_RIGHT_DOCGROUP_List.map(i => i.DUE);
+        const str = this.rDocgroup.map(i => i.DUE);
         if (this.selectedNode.isCreate) {
             str.push('0.');
         }
         this.apiSrv.getDocGroup(str.join('||'))
         .then((data: DOCGROUP_CL[]) => {
-            this.curentUser.USER_RIGHT_DOCGROUP_List.forEach((item: USER_RIGHT_DOCGROUP) => {
+            this.rDocgroup.forEach((item) => {
                 data.forEach((doc: DOCGROUP_CL) => {
                     if (item.DUE === doc.DUE) {
                         this.list.push(this._createNode(item, doc));
@@ -135,6 +140,7 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
                             due: rightDocGroup.DUE,
                             data: rightDocGroup
                         });
+                        this.rDocgroup.push(rightDocGroup);
                     }
                 });
             }

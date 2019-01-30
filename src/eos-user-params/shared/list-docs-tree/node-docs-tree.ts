@@ -10,7 +10,7 @@ export class NodeDocsTree implements IListDocsTree {
     link: string[];
     isSelected: boolean = false;
     private _allowed: boolean;
-    get allowed() {
+    get allowed(): boolean {
         return this._allowed;
     }
     set allowed(value: boolean) {
