@@ -172,10 +172,19 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
      * use with arrows
      */
     addToTemplate() {
-        if (this.selected[0]) {
-            this.templateItems.push(Object.assign(this.selected[0]));
+        if (this.selected[0] && this.isEnabled(this.selected[0])) {
+            const obj = Object.assign(this.selected[0]);
+            this.selected[1] = obj;
+            this.templateItems.push(obj);
             this.updateTemplate();
         }
+
+        // IE fix for hidding elements... hate this
+        const element: HTMLElement = document.getElementById('selected');
+        const parent = element.parentElement;
+        parent.removeChild(element);
+        parent.appendChild(element);
+
     }
 
     /**
