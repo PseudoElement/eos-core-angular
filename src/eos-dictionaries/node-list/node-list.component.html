@@ -1,5 +1,6 @@
-<div class="table-wrapper usual-border">
+<div class="table-wrapper usual-border" id="sizeholder">
     <div class="table-header">
+            <!-- (window:resize)="onResize($event)" -->
         <div class="table-header-content"
              [ngStyle]="{'width.%': 100, 'left.px': headerOffset}">
             <div *ngIf="params.markItems"

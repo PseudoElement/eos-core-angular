@@ -27,7 +27,7 @@
                         tooltip="Добавить"
                         placement="bottom"
                         containerClass="tooltip-info"
-                        (click)="node.addInstance()"
+                        (click)="[node.addInstance(),  hideToolTip()]"
                     >
                         <span class="eos-icon eos-icon-plus-blue small"></span>
                     </button>
@@ -37,7 +37,7 @@
                         placement="bottom"
                         containerClass="tooltip-info"
                         [disabled]="!node.curentSelectedNode"
-                        (click)="node.DeleteInstance()"
+                        (click)="[node.DeleteInstance(), hideToolTip()]"
                     >
                         <span class="eos-icon eos-icon-bin-forever-blue small"></span>
                     </button>

@@ -94,6 +94,12 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             return data;
         });
     }
+    hideToolTip() {
+        const element = document.querySelector('.tooltip');
+        if (element) {
+            element.setAttribute('style', 'display: none');
+        }
+    }
     private _init () {
         if (this.selectedNode.isCreate || !this.curentUser['TECH_RIGHTS']) {
             const techRights: string = '1'.repeat(39);

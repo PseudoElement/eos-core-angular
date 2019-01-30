@@ -1,4 +1,4 @@
-import {Component, ViewChild, OnDestroy, OnInit, Inject, ChangeDetectorRef, AfterContentInit, AfterContentChecked} from '@angular/core';
+import { Component, ViewChild, OnDestroy, OnInit, Inject, ChangeDetectorRef, AfterContentInit, AfterContentChecked } from '@angular/core';
 import {SortableComponent, BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
@@ -37,8 +37,13 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     headerOffset = 0;
     viewFields: IFieldView[] = [];
 
+
     private ngUnsubscribe: Subject<any> = new Subject();
     private nodeListElement: Element;
+    private _recalcCounter: number;
+    private _recalcW: number;
+    private _recalcH: number;
+    private _holder;
 
     constructor(
         @Inject(DOCUMENT) document,
@@ -89,8 +94,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     ngOnInit() {
+        this._holder = document.getElementById('sizeholder');
         const c = this.viewFields.length + this.customFields.length;
-
+        this._recalcCounter = 0;
         this.viewFields.forEach((_f) => {
             const element = document.getElementById('vf_' + _f.key);
             if (element) {
@@ -106,11 +112,18 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 this.min_length[_f.key] = 100 / c;
             }
         });
-
     }
 
     ngAfterContentChecked() {
-        // TODO: remove freq. updates
+        if ((this._recalcW !== this._holder.clientWidth) || (this._recalcH !== this._holder.clientHeight)) {
+            this._recalcCounter = 0;
+        }
+        if (this._recalcCounter > 3) {
+            return;
+        }
+        this._recalcW = this._holder.clientWidth;
+        this._recalcH = this._holder.clientHeight;
+        this._recalcCounter++;
         this._countColumnWidth();
     }
 
@@ -147,6 +160,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 vField.customTitle = _title ? _title.customTitle : null;
             });
             this.dictSrv.orderBy(this.orderBy, false);
+            this._recalcCounter = 0;
             subscription.unsubscribe();
         });
     }

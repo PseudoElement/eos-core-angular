@@ -10,6 +10,7 @@ import {
     VALID_TEMPLATE_EXPR,
     VALID_PRJ_TEMPLATE_EXPR,
     ORDER_NUM_TEMPLATE_ITEM_EXPR,
+    DGTplElement,
 } from './docgroup-template-config.consts';
 
 @Component({
@@ -39,21 +40,35 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         private dragulaService: DragulaService,
         public bsModalRef: BsModalRef,
     ) {
+
+
+        // declare namespace dragula {
+        //     interface DragulaOptions {
+        //         containers?: Element[];
+        //         isContainer?: (el?: Element) => boolean;
+        //         moves?: (el?: Element, container?: Element, handle?: Element, sibling?: Element) => boolean;
+        //         accepts?: (el?: Element, target?: Element, source?: Element, sibling?: Element) => boolean;
+        //         invalid?: (el?: Element, target?: Element) => boolean;
+        //         direction?: string;
+        //         copy?: ((el: Element, source: Element) => boolean) | boolean;
+        //         revertOnSpill?: boolean;
+        //         removeOnSpill?: boolean;
+        //         delay?: boolean | number;
+        //         mirrorContainer?: Element;
+        //         ignoreInputTextSelection?: boolean;
+        //     }
         dragulaService.setOptions('template-bag', {
-            // moves: (el, source, handle, sibling) => {
-            //     // if (source.id === 'availble') {
-            //     //     return false;
-            //     // }
-            //     return !el.classList.contains('disabled');
-            // },
             copy: (el, source) => {
-                return source.id !== 'selected';
-                // return el.classList.contains('separator') && source.id !== 'selected';
+                return source.id !== 'selected' && !el.classList.contains('disabled');
             },
             removeOnSpill: true,
             copySortSource: true,
+            ignoreInputTextSelection: true,
+            invalid: (el?: Element, target?: Element) => {
+                return el.classList.contains('disabled');
+            },
             accepts: (el, target, source, sibling) => {
-                if (source.id === 'availble' && target.id === source.id) {
+                if (target.id === 'availble' && target.id === source.id) {
                     return false;
                 }
                 return true;
@@ -94,8 +109,12 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         this.updateAvailableItems();
     }
 
-    isEnabled(item: any): boolean {
+    isEnabled(item: DGTplElement): boolean {
         // check if complex elements already in template
+        if (((item.isNotUnique === void 0) || !item.isNotUnique) && this.templateItems.findIndex((elem) => elem.key === item.key) !== -1) {
+            return false;
+        }
+
         let res = this.templateItems.findIndex((elem) => SINGLE_TEMPLATE_ITEM_EXPR.test(elem.key)) === -1;
         if (res && this.templateItems.length) {
             // disable complex elements for non empty template
