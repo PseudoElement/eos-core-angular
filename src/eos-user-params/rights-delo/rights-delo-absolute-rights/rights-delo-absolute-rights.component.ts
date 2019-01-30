@@ -13,6 +13,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { USERDEP, USER_TECH } from 'eos-rest';
 import { RestError } from 'eos-rest/core/rest-error';
+import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
 
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
@@ -76,6 +77,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.subForm.unsubscribe();
     }
     submit() {
+        if (this._checkCreatePRJNotEmptyAllowed()) {
+            this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
+            return;
+        }
         this.btnDisabled = true;
         let qUserCl;
         if (this.arrNEWDeloRight.join('') !== this.arrDeloRight.join('')) {
@@ -91,7 +96,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         this.listRight.forEach((node: NodeAbsoluteRight) => {
             if (node.touched) {
-
                 node.change.forEach(ch => {
                     const batch = this._createBatch(ch, node, qUserCl);
                     if (batch) {
@@ -246,6 +250,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.checkChange();
     }
     private _deleteAllDocGroup(item: NodeAbsoluteRight) {
+        item.deleteChange();
         this.curentUser.USER_RIGHT_DOCGROUP_List.forEach(li => {
             item.pushChange({
                 method: 'DELETE',
@@ -253,6 +258,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 data: li
             });
         });
+        this._userParamsSetSrv.userRightDocgroupList.splice(0, this._userParamsSetSrv.userRightDocgroupList.length);
         this.checkChange();
     }
     private _deleteAllClassif(node: NodeAbsoluteRight) {
@@ -310,5 +316,18 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             batch['data'] = chenge.data;
         }
         return batch;
+    }
+    private _checkCreatePRJNotEmptyAllowed(): boolean {
+        let allowed = true;
+        this.listRight.forEach((node: NodeAbsoluteRight) => {
+            if (node.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup && node.touched) {
+                node.change.forEach((ch: IChengeItemAbsolute) => {
+                    if (ch.data['ALLOWED']) {
+                        allowed = false;
+                    }
+                });
+            }
+        });
+        return allowed;
     }
 }
