@@ -318,11 +318,12 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         return batch;
     }
     private _checkCreatePRJNotEmptyAllowed(): boolean {
-        let allowed = true;
+        let allowed = false;
         this.listRight.forEach((node: NodeAbsoluteRight) => {
-            if (node.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup && node.touched) {
-                node.change.forEach((ch: IChengeItemAbsolute) => {
-                    if (ch.data['ALLOWED']) {
+            if (node.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup && node.touched && node.value) {
+                allowed = true;
+                this._userParamsSetSrv.userRightDocgroupList.forEach(item => {
+                    if (item['ALLOWED']) {
                         allowed = false;
                     }
                 });

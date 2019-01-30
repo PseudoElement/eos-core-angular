@@ -20,7 +20,7 @@ export class NodeAbsoluteRight {
     get change (): IChengeItemAbsolute[] {
         return this._change;
     }
-    get value() {
+    get value(): number {
         return this._value;
     }
 
