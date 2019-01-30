@@ -145,7 +145,7 @@
                 tooltip="Выбор из справочника"
                 triggers="hover"
                 containerClass="tooltip-info"
-                 (click)="openClassif()">
+                 (click)="[openClassif(), hideToolTip()]">
                 <span class="eos-icon eos-icon-folder-blue small"></span>
             </button>
             <button
@@ -153,7 +153,7 @@
             tooltip="Очистить поле"
             containerClass="tooltip-info"
             triggers="hover"
-            (click)="clearField()">
+            (click)="[clearField(), hideToolTip()]">
             <span class="eos-icon eos-icon-close-blue small"></span>
         </button>
         </div>

@@ -16,6 +16,12 @@ export class UserParamRegistrationComponent extends UserParamRegistrationSrv {
         super(injector);
         this.flagBacground = false;
     }
+    hideToolTip() {
+        const element = document.querySelector('.tooltip');
+        if (element) {
+            element.setAttribute('style', 'display: none');
+        }
+    }
 
     openClassif() {
         const query: IOpenClassifParams = {

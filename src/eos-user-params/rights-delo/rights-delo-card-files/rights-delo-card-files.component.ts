@@ -114,6 +114,14 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         }
         this.prepInputsAttach = this.getObjectInputFields(this.fieldKeysforCardFilesCabinets);
     }
+
+    hideToolTip() {
+        const element = document.querySelector('.tooltip');
+        if (element) {
+            element.setAttribute('style', 'display: none');
+        }
+    }
+
     ngOnInit() {
         const allDataCard = this._userParamsSetSrv.userCard;
         this.allData = allDataCard;
