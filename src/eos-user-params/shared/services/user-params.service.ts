@@ -8,6 +8,7 @@ import { Subject } from 'rxjs/Subject';
 @Injectable()
 export class UserParamsService {
     userTechList: any[] = [];
+    userRightDocgroupList: any[] = [];
     public SubEmail: Subject<any> = new Subject();
     private _isTechUser: boolean;
     private _userContext: IParamUserCl;
@@ -156,7 +157,9 @@ export class UserParamsService {
             this._sysParams = sys;
             this._userContext = user[0];
             this.userTechList = [];
+            this.userRightDocgroupList = [];
             this._userContext.USER_TECH_List.forEach(item => this.userTechList.push(Object.assign({}, item)));
+            this._userContext.USER_RIGHT_DOCGROUP_List.forEach(item => this.userRightDocgroupList.push(Object.assign({}, item)));
             /*
                 КОСТЫЛЬ!
                 Обрезаем 40-й элемент так как запись в базу пока ограничена длинной 39
