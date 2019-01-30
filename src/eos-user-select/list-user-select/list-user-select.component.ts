@@ -103,7 +103,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.isLoading = false;
                 this.countMaxSize = this._pagSrv.countMaxSize;
         }).catch(error => {
-            this.cathError(error);
+           console.log(error);
         });
     }
     ngOnInit() {
@@ -116,7 +116,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
 
     selectedNode(user: UserSelectNode) {
        if (!user) {
-           this.selectedUser.isSelected = false;
            this.selectedUser = undefined;
            this.rtUserService.changeSelectedUser(null);
        } else {

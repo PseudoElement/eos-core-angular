@@ -96,7 +96,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
                 this.UserCabinetInfo = res;
                 setTimeout(() => {
                 this.chooseTemplate = 'main';
-            }, 500);
+            }, 100);
         });
         });
     }
