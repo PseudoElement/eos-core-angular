@@ -3,12 +3,12 @@ import { IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterf
 import { USERDEP, DEPARTMENT } from 'eos-rest';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { WaitClassifService } from 'app/services/waitClassif.service';
-import { OPEN_CLASSIF_DEPARTMENT_FOR_RIGHT } from 'eos-user-params/rights-delo/shared-rights-delo/consts/absolute-rights.consts';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { NodeAbsoluteRight } from '../node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { NodeListDepAbsolute } from './node-list-dep';
 import { RestError } from 'eos-rest/core/rest-error';
+import { OPEN_CLASSIF_DEPARTMENT_FULL } from 'app/consts/query-classif.consts';
 
 @Component({
     selector: 'eos-right-absolute-department',
@@ -73,7 +73,7 @@ export class RightDepertmentComponent implements OnInit {
     }
     addDep() {
         this.isShell = true;
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT_FOR_RIGHT)
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT_FULL)
         .then((data: string) => {
             if (data === '') {
                 throw new Error();
