@@ -156,6 +156,10 @@ export class RightClassifNode {
                 funcNum: this.key,
                 data: this.curentSelectedNode.data['userTech']
             });
+            const index = this._listUserTech.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
+            this._listUserTech.splice(index, 1);
+            const index2 = this._component.userTechList.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
+            this._component.userTechList.splice(index2, 1);
             this.curentSelectedNode = null;
             this._component.Changed.emit();
         }
