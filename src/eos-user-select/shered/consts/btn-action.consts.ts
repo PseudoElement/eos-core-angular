@@ -94,7 +94,7 @@ export const OpenAddressManagementWindow: BtnActionFields = {
 };
 export const OpenStreamScanSystem: BtnActionFields = {
     name: 'OpenStreamScanSystem',
-    title: 'Окно прав пользователя в системе Поточное сканирование',
+    title: 'Окно прав пользователя в Поточное сканир...',
     disabledClass: 'eos-icon eos-icon-Sc-Grey small',
     enableClass: 'eos-icon eos-icon-Sc-Blue small',
     tooltip: 'Открыть окно настроек прав пользователя в системе Поточное сканирование',
@@ -136,7 +136,7 @@ export const Allbuttons: BtnAction = {
         // ActionMode,
         LocSelectedUser,
         OpenAddressManagementWindow,
-       // OpenStreamScanSystem,
+        OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
     ],
     moreButtons: [
@@ -147,7 +147,7 @@ export const Allbuttons: BtnAction = {
         ActionTehnicalUser,
         LocSelectedUser,
         OpenAddressManagementWindow,
-      //  OpenStreamScanSystem,
+        OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
     ],
     moreButtonCheck: {

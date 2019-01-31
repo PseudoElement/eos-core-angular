@@ -18,8 +18,10 @@ import {BtnAction, BtnActionFields} from '../shered/interfaces/btn-action.interf
 import {TreeUserSelectService} from '../shered/services/tree-user-select.service';
 import { RestError } from 'eos-rest/core/rest-error';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-// import { PipRX} from 'eos-rest';
-// import { ALL_ROWS } from 'eos-rest/core/consts';
+import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
+import {CONFIRM_DELETE, CONFIRM_SCANSYST} from '../shered/consts/confirm-users.const';
+import { PipRX} from 'eos-rest';
+import { ALL_ROWS } from 'eos-rest/core/consts';
 @Component({
     selector: 'eos-list-user-select',
     templateUrl: 'list-user-select.component.html'
@@ -38,7 +40,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     buttons: BtnAction;
     flagChecked: boolean;
     countMaxSize: number;
-    msgSrv: EosMessageService;
 
     // количество выбранных пользователей
     countcheckedField: number;
@@ -52,7 +53,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private rtUserService: RtUserSelectService,
         private _sandwichSrv: EosSandwichService,
         private _treeSrv: TreeUserSelectService,
-       // private _pipeSrv: PipRX,
+        private _confirmSrv: ConfirmWindowService,
+        private _pipeSrv: PipRX,
+        private _msgSrv: EosMessageService,
     ) {
         this.helpersClass = new HelpersSortFunctions();
         this.initSort();
@@ -107,7 +110,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.isLoading = false;
                 this.countMaxSize = this._pagSrv.countMaxSize;
         }).catch(error => {
-           console.log(error);
+            error.message = 'Серверная ошибка,  обратитесь к системному администратору';
+           this.cathError(error);
         });
     }
     ngOnInit() {
@@ -119,9 +123,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
 
     selectedNode(user: UserSelectNode) {
+        let flagUserSelected: boolean = true;
        if (!user) {
-           this.selectedUser = undefined;
            this.rtUserService.changeSelectedUser(null);
+           flagUserSelected = false;
        } else {
             if (!user.deleted) {
                 this.selectedNodeSetFlags(user);
@@ -134,16 +139,18 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.selectedNodeSetFlags(searchSelected[0]);
                 this.rtUserService.changeSelectedUser(searchSelected[0]);
             }   else {
-                this.selectedUser.isSelected = false;
-                this.selectedUser = undefined;
+                flagUserSelected = false;
+                if (this.selectedUser.hasOwnProperty('isSelected')) {
+                    this.selectedUser.isSelected = false;
+                }
                 this.rtUserService.changeSelectedUser(null);
-                this.disabledBtnAction();
+                this.disabledBtnAction(flagUserSelected);
                 return;
             }
             }
        }
        this.updateFlafListen();
-        this.disabledBtnAction();
+        this.disabledBtnAction(flagUserSelected);
     }
 
     selectedNodeSetFlags(user) {
@@ -292,6 +299,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             });
         }
     }
+
+    OpenStreamScanSystem() {
+        this._confirmSrv.confirm(CONFIRM_SCANSYST).then(res => {
+        });
+    }
     setCheckedAllFlag() {
         const leng = this.filterForFlagChecked().length;
         if (leng === 0) {
@@ -383,32 +395,42 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             this.updateFlafListen();
             this.isLoading = false;
         }).catch(error => {
+            error.message = 'Не удалось заблокировать пользователя,  обратитесь к системному администратору';
             this.cathError(error);
         });
     }
 
-    // DeliteLogicalUser() {
-    //    const arrayRequests = [];
-    //     this.listUsers.forEach((user: UserSelectNode) => {
-    //         if ((user.isChecked && !user.deleted) || (user.selectedMark)) {
-    //             let  url = this._createUrlForSop(user.id);
-    //             arrayRequests.push(
-    //                 this._pipeSrv.read({
-    //                     [url]: ALL_ROWS,
-    //                 })
-    //             );
-    //             url = '';
-    //         }
-    //     });
+    DeliteLogicalUser() {
+        this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
+            if (confirmation) {
+                let arrayRequests = [];
+                const deletedUsers = [];
+                    this.listUsers.forEach((user: UserSelectNode) => {
+                        if ((user.isChecked && !user.deleted) || (user.selectedMark)) {
+                            let  url = this._createUrlForSop(user.id);
+                            deletedUsers.push(user.id);
+                            arrayRequests.push(
+                                this._pipeSrv.read({
+                                    [url]: ALL_ROWS,
+                                })
+                            );
+                            url = '';
+                        }
+                    });
 
-    //    if (arrayRequests.length > 0) {
-    //         Promise.all([...arrayRequests]).then(result => {
-    //             console.log(result);
-    //         }).catch(error => {
-    //             console.log(error);
-    //         });
-    //     }
-    // }
+                   if (arrayRequests.length > 0) {
+                     return   Promise.all([...arrayRequests]).then(result => {
+                            this.initView();
+                            arrayRequests = [];
+                        });
+                    }
+            }
+        }).catch(error => {
+            error.message = 'Не удалось удалить пользователя, обратитесь к системному администратору';
+            this.cathError(error);
+        });
+
+    }
 
     get getflagChecked() {
         switch (this.flagChecked) {
@@ -426,7 +448,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             return undefined;
         } else {
             const errMessage = e.message ? e.message : e;
-            this.msgSrv.addNewMessage({
+            this._msgSrv.addNewMessage({
                 type: 'danger',
                 title: 'Ошибка обработки. Ответ сервера:',
                 msg: errMessage
@@ -434,25 +456,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             return null;
         }
     }
-   private disabledBtnAction() {
-        if (this.selectedUser) {
-            this.buttons.buttons.map((button: BtnActionFields, index) => {
-                if (this.selectedUser.deleted) {
-                    button.disabled = true;
-                }else {
-                    button.disabled = false;
-                }
-                return button;
-            });
-            this.buttons.buttons[0].disabled = false;
-        }   else {
-            this.buttons.buttons.map((button: BtnActionFields, index) => {
-                if (index > 0) {
-                    button.disabled = true;
-                }
-                return button;
-            });
-        }
+   private disabledBtnAction(flagUserSelected) {
+        this.buttons.buttons.map((button: BtnActionFields, index) => {
+            if (index > 0) {
+                !flagUserSelected ?  button.disabled = true :  button.disabled = false;
+            }
+            return button;
+        });
     }
 
     private disabledBtnDeleted() {
@@ -465,10 +475,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
     }
 
-    // private _createUrlForSop(isn_user) {
-    //     const url = `EraseUser?isn_user=${isn_user}`;
-    //     return url;
-    // }
+    private _createUrlForSop(isn_user) {
+        const url = `EraseUser?isn_user=${isn_user}`;
+        return url;
+    }
 
     private _checkMarkNode() {
         let check = false;
