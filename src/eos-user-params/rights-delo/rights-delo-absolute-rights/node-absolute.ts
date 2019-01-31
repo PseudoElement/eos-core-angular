@@ -33,8 +33,9 @@ export class NodeAbsoluteRight {
         if (!this._value && v) {
             this.isCreate = true;
         }
-        if (v && this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.all) {
+        if (v && this.isCreate && this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.all) {
                 v = 2; // для параметров с радио "всех и не заполненных", значение по умолчанию "не заполненных"
+                this.isCreate = false;
             }
         this._value = v;
         this.control.patchValue(!!v);
