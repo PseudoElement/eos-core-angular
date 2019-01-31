@@ -13,7 +13,7 @@ export interface IConfig {
 }
 export interface IUserSort {
     department?: IUserCheckSort;
-    dueName?: IUserCheckSort;
+    fullDueName?: IUserCheckSort;
     tip?: IUserCheckSort;
     login?: IUserCheckSort;
 }
@@ -22,4 +22,4 @@ export interface IUserCheckSort {
     upDoun: boolean;
     checked: boolean;
 }
-export enum SortsList {department, dueName, tip, login}
+export enum SortsList {department, fullDueName, tip, login}

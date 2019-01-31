@@ -43,8 +43,8 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         this._selectedUser.changerUser
             .takeUntil(this.destroySubsriber)
             .subscribe(currentUser => {
+                this.CurrentUser = currentUser;
                 if (currentUser) {
-                    this.CurrentUser = currentUser;
                     if (this.flagRtBlock) {
                         this.chooseTemplate = 'spinner';
                         this.geyInfo();
@@ -96,7 +96,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
                 this.UserCabinetInfo = res;
                 setTimeout(() => {
                 this.chooseTemplate = 'main';
-            }, 500);
+            }, 100);
         });
         });
     }
