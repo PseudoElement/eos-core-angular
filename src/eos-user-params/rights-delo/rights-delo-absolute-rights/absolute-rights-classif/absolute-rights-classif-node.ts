@@ -42,11 +42,13 @@ export class RightClassifNode {
 
         const right = this._curentUser['TECH_RIGHTS'].split('');
         right[this.key - 1] = this._value.toString();
+        const newTechRight = right.join('');
+        this._curentUser['TECH_RIGHTS'] = newTechRight;
         const chenge: IChengeItemAbsolute = {
             method: 'MERGE',
             user_cl: true,
             data: {
-                TECH_RIGHTS: right.join(''),
+                TECH_RIGHTS: newTechRight,
             }
         };
         this._parentNode.pushChange(chenge);

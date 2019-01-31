@@ -37,6 +37,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     rightContent: boolean;
     listRight: NodeAbsoluteRight[] = [];
     titleHeader: string;
+    techRingtOrig: string;
 
 
     constructor (
@@ -50,6 +51,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
 
     init() {
         this.curentUser = this._userParamsSetSrv.curentUser;
+        this.techRingtOrig = this.curentUser.TECH_RIGHTS;
         this.titleHeader =  `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Абсолютные права`;
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
         this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split('');
@@ -138,6 +140,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         if (event.target.tagName === 'SPAN') { // click to checkbox
             const value = !(+item.value);
+
+            item.value = +value;
+
             if (
                     !value &&
                     (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department ||
@@ -153,7 +158,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this._deleteAllClassif(item);
             }
 
-            item.value = +value;
 
             if (item !== this.selectedNode && item.isCreate) {
                 this.selectNode(item);
@@ -263,7 +267,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     private _deleteAllClassif(node: NodeAbsoluteRight) {
         node.deleteChange();
+        console.log(this.curentUser.USER_TECH_List);
         this.curentUser.USER_TECH_List.forEach((li: USER_TECH) => {
+            console.log('dont empty');
             node.pushChange({
                 method: 'DELETE',
                 due: li.DUE,
@@ -271,13 +277,15 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 data: li
             });
         });
-        node.pushChange({
-            method: 'MERGE',
-            user_cl: true,
-            data: {
-                TECH_RIGHTS: ''
-            }
-        });
+        if (this.techRingtOrig) {
+            node.pushChange({
+                method: 'MERGE',
+                user_cl: true,
+                data: {
+                    TECH_RIGHTS: ''
+                }
+            });
+        }
         this._userParamsSetSrv.userTechList.splice(0, this._userParamsSetSrv.userTechList.length);
         this.checkChange();
     }

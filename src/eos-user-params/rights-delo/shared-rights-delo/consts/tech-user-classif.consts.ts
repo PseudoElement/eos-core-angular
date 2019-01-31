@@ -173,7 +173,7 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
     },
     {
         key: 35,
-        label: 'Управление концентратором',
+        label: 'Буфер электронных сообщений',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     },
     {
