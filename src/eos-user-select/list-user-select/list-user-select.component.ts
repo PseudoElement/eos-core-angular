@@ -19,7 +19,7 @@ import {TreeUserSelectService} from '../shered/services/tree-user-select.service
 import { RestError } from 'eos-rest/core/rest-error';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
-import {CONFIRM_DELETE, CONFIRM_SCANSYST} from '../shered/consts/confirm-users.const';
+import {CONFIRM_DELETE} from '../shered/consts/confirm-users.const';
 import { PipRX} from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 @Component({
@@ -301,8 +301,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
 
     OpenStreamScanSystem() {
-        this._confirmSrv.confirm(CONFIRM_SCANSYST).then(res => {
-        });
+        this._router.navigate(['user-params-set/', 'rights-delo', 'inline-scaning'], {
+            queryParams: {isn_cl: this.selectedUser.id}
+      });
+        // this._confirmSrv.confirm(CONFIRM_SCANSYST).then(res => {
+        // });
     }
     setCheckedAllFlag() {
         const leng = this.filterForFlagChecked().length;
