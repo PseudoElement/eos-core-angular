@@ -58,28 +58,32 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.initSort();
         this._route.params
             .takeUntil(this.ngUnsubscribe)
-            .subscribe(param => {
-              this.initView(param['nodeId']);
-            });
-        this._pagSrv.NodeList$.takeUntil(this.ngUnsubscribe).subscribe((data) => {
-           this.flagChecked = null;
-           this.listUsers  = data;
-           if (this.listUsers && this.listUsers.length) {
-            this.selectedNode(this.listUsers[0]);
-            } else {
-                this.selectedNode(null);
-            }
-            this.changeFlagCheked();
+                .subscribe(param => {
+                    this.initView(param['nodeId']);
+        });
+        this._pagSrv.NodeList$
+            .takeUntil(this.ngUnsubscribe)
+                .subscribe((data) => {
+                    this.flagChecked = null;
+                    this.listUsers  = data;
+                    if (this.listUsers && this.listUsers.length) {
+                        this.selectedNode(this.listUsers[0]);
+                    } else {
+                        this.selectedNode(null);
+                    }
+                    this.updateFlafListen();
         });
 
-        this._treeSrv.changeListUsers$.takeUntil(this.ngUnsubscribe).subscribe(r => {
-            this.initView();
+        this._treeSrv.changeListUsers$
+            .takeUntil(this.ngUnsubscribe)
+                .subscribe(r => {
+                     this.initView();
         });
         this._sandwichSrv.currentDictState$
-        .takeUntil(this.ngUnsubscribe)
-        .subscribe((state: boolean[]) => {
-                this.currentState = state;
-            });
+            .takeUntil(this.ngUnsubscribe)
+                .subscribe((state: boolean[]) => {
+                    this.currentState = state;
+        });
     }
 
     initView(param?) {
@@ -99,7 +103,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 }   else {
                     this.selectedNode(null);
                 }
-                this.changeFlagCheked();
+                this.updateFlafListen();
                 this.isLoading = false;
                 this.countMaxSize = this._pagSrv.countMaxSize;
         }).catch(error => {
@@ -138,6 +142,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
             }
        }
+       this.updateFlafListen();
         this.disabledBtnAction();
     }
 
@@ -288,81 +293,67 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
     }
     setCheckedAllFlag() {
-        let lenght = 0;
-        const everyDelete = this.listUsers.filter(user => {
-            if (!user.deleted) {
-                lenght += 1;
-            }
-            return user.deleted !== true;
-        });
-        if (everyDelete.length === 0) {
+        const leng = this.filterForFlagChecked().length;
+        if (leng === 0) {
             this.flagChecked = null;
         }   else {
-            if (this.flagChecked === null || this.flagChecked === false) {
-                this.flagChecked = true;
-            }else {
-                this.flagChecked = null;
-            }
-            this.listUsers.forEach(user => {
-                user.selectedMark = false;
-                if (this.flagChecked) {
-                    user.isChecked = true;
-                }   else {
-                    user.isChecked = false;
-                }
-            });
-            if (this.flagChecked) {
-                this.countcheckedField = lenght;
-            }   else {
-                this.countcheckedField = 0;
-            }
+        if (this.flagChecked === null || this.flagChecked === false) {
+            this.flagChecked = true;
+        }else {
+            this.flagChecked = null;
         }
-        console.log( this.flagChecked);
-        this.disabledBtnDeleted();
     }
-
-    changeFlagCheked() {
-        this.countcheckedField = 0;
         this.listUsers.forEach(user => {
-            if ((user.isChecked || user.selectedMark) && !user.deleted) {
-                this.countcheckedField += 1;
+            user.selectedMark = false;
+                if (this.flagChecked && !user.deleted) {
+                    user.isChecked = true;
+                }  else {
+                    user.isChecked = false;
             }
         });
         this.updateFlafListen();
         this.disabledBtnDeleted();
     }
+
     setFlagChecked(event, user: UserSelectNode) {
         if (user.selectedMark) {
             user.selectedMark = false;
         }   else {
             user.isChecked = !user.isChecked;
         }
-        if (user.isChecked && !user.deleted) {
-            this.countcheckedField += 1;
-        }   else {
-            this.countcheckedField -= 1;
-        }
         this.updateFlafListen();
         this.disabledBtnDeleted();
     }
 
     updateFlafListen() {
+        this.countCheckedField();
         const leng = this.filterForFlagChecked().length;
-        if (this.countcheckedField === leng) {
-            this.flagChecked = true;
-        }
-        if (this.countcheckedField === 0) {
+        if (leng === 0) {
             this.flagChecked = null;
+        }   else {
+            if (this.countcheckedField === leng) {
+                        this.flagChecked = true;
+                    }
+                    if (this.countcheckedField === 0) {
+                        this.flagChecked = null;
+                    }
+
+                    if (this.countcheckedField > 0 && this.countcheckedField < leng) {
+                        this.flagChecked = false;
+                    }
         }
 
-        if (this.countcheckedField > 0 && this.countcheckedField < leng) {
-            this.flagChecked = false;
-        }
     }
     filterForFlagChecked() {
         return this.listUsers.filter((user: UserSelectNode) => {
             return !user.deleted;
         });
+    }
+
+    countCheckedField() {
+        this.countcheckedField = this.listUsers.filter((user: UserSelectNode) => {
+            return user.isChecked || user.selectedMark;
+        }).length;
     }
     LocSelectedUser() {
         this.isLoading = true;
@@ -389,7 +380,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 } else {
                     this.selectedUser = undefined;
                 }
-            this.changeFlagCheked();
+            this.updateFlafListen();
             this.isLoading = false;
         }).catch(error => {
             this.cathError(error);
