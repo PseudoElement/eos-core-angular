@@ -55,6 +55,10 @@ export const SUB_PARAMS_LIST_NAV_FOR_RIGHTS_DELO: IParamAccordionList[] = [
         title: 'Ограничение доступа',
         url: 'access-limitation'
     },
+    {
+        title: 'Права в поточном сканировании',
+        url: 'inline-scaning'
+    },
 ];
 export const USER_PARAMS_LIST_NAV: IParamAccordionList[] = [
     {

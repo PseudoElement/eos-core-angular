@@ -47,10 +47,14 @@
                 padding: 0;
 
                 .subItem {
+                    cursor: pointer;
                     padding: 12px 15px;
                     height: 42px;
                     border-bottom: 1px solid $border-color-main-theme;
                     background: $white;
+                    &:hover{
+                        background-color:#e3f2fd;
+                    }
 
                     &.active-link {
                         background: $highlight-color-main-theme;

@@ -3,7 +3,7 @@
         <div class="buttons-list" *ngFor= 'let button of buttons.buttons'>
             <div class="btn-group">
                     <div
-                        [tooltip]="button.title"
+                        [tooltip]="button.tooltip"
                         #itemTooltip="bs-tooltip"
                         placement="bottom"
                         containerClass="tooltip-info"
