@@ -229,9 +229,15 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     private _createList(constanta: IInputParamControl[]): NodeAbsoluteRight[] {
         const fields = [];
-        constanta.forEach((node: IInputParamControl) => {
+        for (const node of constanta) {
+            /*
+                Проверка: правило контрольности
+            */
+            if (node.key === '14' && !(+this.curentUser['USER_PARMS_HASH']['RC_CTRL'])) {
+                continue;
+            }
             fields.push(new NodeAbsoluteRight(node, +this.arrDeloRight[+node['key']], this.form.get(node['key']), this.curentUser));
-        });
+        }
         return fields;
     }
     private _deleteAllDep(item: NodeAbsoluteRight) {
