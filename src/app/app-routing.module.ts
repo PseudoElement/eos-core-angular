@@ -19,6 +19,7 @@ import { LoginComponent } from './login/login.component';
 import { ParametersSystemComponent } from '../eos-parameters/parametersSystem/parametersSystem.component';
 import { UserParamsComponent } from 'eos-user-params/eos-user-params.component';
 import { UserSelectComponent } from 'eos-user-select/eos-user-select.component';
+import { PermissionsGuard } from './guards/permissions.guard';
 /// import { environment } from 'environments/environment';
 
 const childrenDictionariesComponent = [{
@@ -146,7 +147,7 @@ const routes: Routes = [{
     data: { title: 'user page' }
 }, {
     path: 'parameters',
-    canActivate: [AuthorizedGuard],
+    canActivate: [AuthorizedGuard, PermissionsGuard],
     children: [
         {
             path: ':id',
@@ -165,7 +166,7 @@ const routes: Routes = [{
     ]
 }, {
     path: 'user-params-set',
-    canActivate: [AuthorizedGuard],
+    canActivate: [AuthorizedGuard, PermissionsGuard],
     children: [
         {
             path: ':field-id',
