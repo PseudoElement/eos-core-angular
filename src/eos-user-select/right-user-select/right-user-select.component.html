@@ -4,13 +4,9 @@
                 <div class="rt-avatar" *ngIf="DueInfo else unset">
                     <div class="avatar-wr">
                        <a [routerLink]="['/spravochniki','departments', CurrentUser['data']['DUE_DEP'], 'view' ]">
-                         <img *ngIf='isPhoto'
+                         <img
                             class="avatar-img"
-                            src="../image.ashx/{{isPhoto}}/110"
-                            alt="Фотография должностного лица">
-                        <img *ngIf='!isPhoto'
-                            class="avatar-img"
-                            src="assets/images/no-user.png"
+                            [src]="urlPhoto"
                             alt="Фотография должностного лица">
                         </a>
                     </div>
