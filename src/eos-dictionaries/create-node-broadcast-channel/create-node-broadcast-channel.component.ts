@@ -6,6 +6,7 @@ import {EosDeskService} from '../../app/services/eos-desk.service';
 import {EosDepartmentsService} from '../services/eos-department-service';
 import {EosBreadcrumbsService} from '../../app/services/eos-breadcrumbs.service';
 import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
+import {ConfirmWindowService} from 'eos-common/confirm-window/confirm-window.service';
 
 @Component({
     selector: 'eos-create-node-broadcast-channel',
@@ -20,9 +21,10 @@ export class CreateNodeBroadcastChannelComponent extends CreateNodeComponent {
         protected _breadcrumbsSrv: EosBreadcrumbsService,
         protected _msgSrv: EosMessageService,
         protected _channelSrv: EosBroadcastChannelService,
+        protected _confirmSrv: ConfirmWindowService,
         departmentsSrv: EosDepartmentsService,
     ) {
-        super(_deskSrv, _dictSrv, _breadcrumbsSrv, _msgSrv, departmentsSrv);
+        super(_deskSrv, _dictSrv, _breadcrumbsSrv, _msgSrv, _confirmSrv, departmentsSrv);
     }
 
     public create(hide = true) {
