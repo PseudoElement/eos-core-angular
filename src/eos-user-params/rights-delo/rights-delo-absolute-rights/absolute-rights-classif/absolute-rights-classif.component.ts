@@ -84,7 +84,10 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     addInstance(config: IConfigUserTechClassif, node: RightClassifNode): Promise<any> {
         return this._waitClassifSrv.openClassif(config.waitClassif)
         .then((data: string) => {
-            return this.getEntyti(data.split('|').join('||'), config);
+            if (data.length) {
+                return this.getEntyti(data.split('|').join('||'), config);
+            }
+            return Promise.reject('');
         })
         .then((data: any[]) => {
             if (this._checkRepeat(node, data, config)) {
