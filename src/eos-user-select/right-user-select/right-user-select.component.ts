@@ -19,6 +19,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     opened: boolean;
     chooseTemplate: string;
     isPhoto: boolean|number;
+    urlPhoto: string = '';
     departmentInfo: DEPARTMENT;
     destroySubsriber: Subject<any> = new Subject();
     constructor(
@@ -86,6 +87,11 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             this.isPhoto =  result[1][0]['ISN_PHOTO'];
             isn_cabinet =  result[1][0]['ISN_CABINET'];
             this.showDep = true;
+            if (this.isPhoto) {
+                this.urlPhoto = `../image.ashx/${this.isPhoto}/110`;
+            }   else {
+                this.urlPhoto = 'assets/images/no-user.png';
+            }
            }else {
             this.DueInfo = null;
             this.showDep = false;
