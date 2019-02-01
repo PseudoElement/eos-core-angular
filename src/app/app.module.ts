@@ -50,6 +50,7 @@ import { WaitClassifService } from './services/waitClassif.service';
 /* guards */
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
 import { CanDeactivateGuard } from './guards/can-deactivate.guard';
+import { PermissionsGuard } from './guards/permissions.guard';
 /* end guards */
 
 
@@ -99,6 +100,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
         AuthorizedGuard,
         UnauthorizedGuard,
         CanDeactivateGuard,
+        PermissionsGuard,
         EosBreadcrumbsService,
         EosDeskService,
         EosErrorHandler,
