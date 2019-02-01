@@ -1,4 +1,14 @@
-import { Component, ViewChild, OnDestroy, OnInit, Inject, ChangeDetectorRef, AfterContentInit, AfterContentChecked } from '@angular/core';
+import {
+    Component,
+    ViewChild,
+    OnDestroy,
+    OnInit,
+    Inject,
+    ChangeDetectorRef,
+    AfterContentInit,
+    AfterContentChecked,
+    NgZone
+} from '@angular/core';
 import {SortableComponent, BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
@@ -9,7 +19,6 @@ import {IDictionaryViewParameters, IFieldView, IOrderBy, E_FIELD_SET} from 'eos-
 import {LongTitleHintComponent} from '../long-title-hint/long-title-hint.component';
 import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
 import {ColumnSettingsComponent} from '../column-settings/column-settings.component';
-import {AdditionalFieldsComponent} from '../additional-fields/additional-fields.component';
 import {EosUtils} from 'eos-common/core/utils';
 import {DOCUMENT} from '@angular/common';
 
@@ -50,6 +59,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         private dictSrv: EosDictService,
         private modalSrv: BsModalService,
         private cdr: ChangeDetectorRef,
+        private _zone: NgZone,
     ) {
 
         dictSrv.visibleList$.takeUntil(this.ngUnsubscribe)
@@ -166,12 +176,12 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     openAdditionalFields(node: EosDictionaryNode) {
-        this.modalWindow = this.modalSrv.show(AdditionalFieldsComponent, {class: 'additional-fields-modal modal-lg'});
-        this.modalWindow.content.nodeDescription = node.title;
-        this.modalWindow.content.data = node.data;
-        this.modalWindow.content.nodes = this.nodes;
-        this.modalWindow.content.init('3');
-     }
+        let url = '../WebRC/AR_EDITOR/AR_EDITOR.aspx#docgrp={{DUE}}';
+        url = url.replace('{{DUE}}', node.data.rec['DUE']);
+        this._zone.runOutsideAngular(() => {
+            window.open(url, 'addFields');
+        });
+    }
 
     getMarkedTitles(): string[] {
         return this.nodes
