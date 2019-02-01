@@ -8,6 +8,8 @@ import { NTFY_USER_EMAIL } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { IMessage } from 'eos-common/interfaces';
+import { RestError } from 'eos-rest/core/rest-error';
+
 @Component({
     selector: 'eos-params-email-address',
     styleUrls: ['email-address.component.scss'],
@@ -60,6 +62,13 @@ export class ParamEmailAddressComponent implements OnInit {
         this.umailsInfo.length > 0 ? this.newEmail = this.umailsInfo[0].EMAIL : this.newEmail = '';
 
     }
+
+    hideToolTip() {
+        const element = document.querySelector('.tooltip');
+        if (element) {
+            element.setAttribute('style', 'display: none');
+        }
+    }
     clearForm(): void {
         this.umailsInfo.splice(0, this.umailsInfo.length);
         this.resetForm();
@@ -94,13 +103,9 @@ export class ParamEmailAddressComponent implements OnInit {
                     this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                 }
             });
-        }).catch(res => {
-            const m: IMessage = {
-                type: 'warning',
-                title: 'Ошибка сервера',
-                msg: '',
-            };
-            this._msgSrv.addNewMessage(m);
+        }).catch(error => {
+            error.message =  'Ошибка сервера';
+            this.cathError(error);
         });
     }
     backForm(event): void {
@@ -221,6 +226,9 @@ export class ParamEmailAddressComponent implements OnInit {
                 };
                 this._msgSrv.addNewMessage(m);
             }
+        }).catch(error => {
+            error.message =  'Ошибка сервера';
+            this.cathError(error);
         });
     }
     validEmail(email: string): boolean {
@@ -246,6 +254,9 @@ export class ParamEmailAddressComponent implements OnInit {
             this.myForm.valueChanges.subscribe(data => {
                 this.checkChanges(data);
                 });
+        }).catch(error => {
+            error.message =  'Ошибка сервера';
+            this.cathError(error);
         });
       }
 
@@ -380,5 +391,18 @@ export class ParamEmailAddressComponent implements OnInit {
             return a.WEIGHT - b.WEIGHT;
         });
       }
+     private cathError(e) {
+        if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
+            return undefined;
+        } else {
+            const errMessage = e.message ? e.message : e;
+            this._msgSrv.addNewMessage({
+                type: 'danger',
+                title: 'Ошибка обработки. Ответ сервера:',
+                msg: errMessage
+            });
+            return null;
+        }
+}
 
 }
