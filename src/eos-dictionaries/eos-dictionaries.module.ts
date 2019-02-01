@@ -74,6 +74,8 @@ import {NomenklCardComponent} from './card-views/nomenkl-card.component';
 import {CounterNpEditComponent} from './counter-np-edit/counter-np-edit.component';
 import {CustomTreeComponent} from './tree2/custom-tree.component';
 import { RulesSelectComponent } from './sev-rules-select/sev-rules-select.component';
+import { AdvCardRKEditComponent } from './adv-card/adv-card-rk.component';
+import { RKDefaultValuesCardComponent } from './adv-card/rk-default-values/rk-default-values.component';
 
 @NgModule({
     declarations: [
@@ -81,6 +83,8 @@ import { RulesSelectComponent } from './sev-rules-select/sev-rules-select.compon
         CardEditComponent,
         ColumnSettingsComponent,
         CounterNpEditComponent,
+        AdvCardRKEditComponent,
+        RKDefaultValuesCardComponent,
         RulesSelectComponent,
         DepartmentsCardEditDepartmentComponent,
         DepartmentsCardEditPersonComponent,
@@ -125,6 +129,8 @@ import { RulesSelectComponent } from './sev-rules-select/sev-rules-select.compon
     entryComponents: [
         ColumnSettingsComponent,
         CounterNpEditComponent,
+        AdvCardRKEditComponent,
+        RKDefaultValuesCardComponent,
         RulesSelectComponent,
         CreateNodeComponent,
         CreateNodeBroadcastChannelComponent,
@@ -155,6 +161,8 @@ import { RulesSelectComponent } from './sev-rules-select/sev-rules-select.compon
         SandwichComponent,
         ColumnSettingsComponent,
         CounterNpEditComponent,
+        AdvCardRKEditComponent,
+        RKDefaultValuesCardComponent,
         RulesSelectComponent,
     ],
     providers: [

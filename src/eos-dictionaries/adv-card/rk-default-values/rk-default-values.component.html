@@ -1,0 +1,65 @@
+<div>
+    <label>{{inputs['rec.SPECIMEN'].label}}</label>
+
+    <eos-dynamic-input [input]="inputs['rec.SPECIMEN']"
+                    [form]="form"
+                    [readonly]="!editMode" ></eos-dynamic-input>
+
+    <eos-dynamic-input [input]="inputs['rec.CONSISTS']"
+                    [form]="form"
+                    [readonly]="!editMode" ></eos-dynamic-input>
+
+
+    <label>{{inputs['rec.TERM_EXEC'].label}}</label>
+    <eos-dynamic-input [input]="inputs['rec.SPECIMEN']"
+                                    [form]="form"
+                                    [readonly]="!editMode" ></eos-dynamic-input>
+    <label>дня (дней) от даты регистрации</label>
+
+    Доступ
+    <eos-dynamic-input [input]="inputs['rec.SECURLEVEL']"
+                                    [form]="form"
+                                    [readonly]="!editMode" ></eos-dynamic-input>
+    Доставка
+    <eos-dynamic-input [input]="inputs['rec.ISN_DELIVERY']"
+                        [form]="form"
+                        [readonly]="!editMode" ></eos-dynamic-input>
+    Содержание
+    <eos-dynamic-input [input]="inputs['rec.ANNOTAT']"
+                        [form]="form"
+                        [readonly]="!editMode" >
+    </eos-dynamic-input>
+
+    Кому адресован
+    <eos-dynamic-input [input]="inputs['rec.WHO_ISN_LIST']"
+                        [form]="form"
+                        [readonly]="!editMode" >
+    </eos-dynamic-input>
+
+    Файлы
+    <eos-dynamic-input [input]="inputs['rec.FILE']"
+                                    [form]="form"
+                                    [readonly]="!editMode" >
+    </eos-dynamic-input>
+    <div> Передача документов
+        Отметка о передаче
+        <eos-dynamic-input [input]="inputs['rec.JOURNAL_ISN_LIST']"
+                            [form]="form"
+                            [readonly]="!editMode" >
+        </eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.JOURNAL_PARM']"
+                            [form]="form"
+                            [readonly]="!editMode" >
+        </eos-dynamic-input>
+
+
+    </div>
+
+
+
+
+
+
+
+
+</div>

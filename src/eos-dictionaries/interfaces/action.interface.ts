@@ -25,6 +25,7 @@ export enum E_RECORD_ACTIONS {
     counter,
     CloseSelected,
     OpenSelected,
+    AdvancedCardRK,
     // createRepresentative,
     // slantForForms,
     /* to be extended */

@@ -1,0 +1,44 @@
+<div class="modal-header">
+    <h4 class="xl-font primary-text pull-left">{{getTitleLabel()}}</h4>
+</div>
+<div class="spinner-container text-center" *ngIf="isUpdating" >
+    <eos-spinner size="lg"></eos-spinner>
+</div>
+<div class="modal-body" *ngIf="!isUpdating">
+    <div class="l-font pull-left">
+        <!-- <span>{{getNodeTitle()}}</span> -->
+    </div>
+    <div class="modal-body-container">
+
+        <div class="tab-buttons">
+            <div class="tab-button" *ngFor="let item of tabs"
+                [ngClass]="{'active': item.tag === activeTab.tag}"
+                (click)="clickTab(item)">
+                {{item.title}}
+            </div>
+        </div>
+
+        <ng-container [ngSwitch]="activeTab.tag">
+            <ng-container *ngSwitchCase="0">
+                <ng-container *ngTemplateOutlet="defaultEdit"></ng-container>
+            </ng-container>
+        </ng-container>
+    </div>
+</div>
+<div>
+    <button>Ведение списков</button>
+    <button>Записать</button>
+    <button>Выход</button>
+</div>
+
+<ng-template #defaultEdit>
+    <eos-rk-default-values
+        style="width: 100%;"
+        [dataController]="dataController"
+        [fieldsDescription]="fieldsDescrDefault"
+        [form]="form"
+        [editMode]="true"
+        [data]="valuesDefault"
+        [inputs]="inputsDefault">
+    </eos-rk-default-values>
+</ng-template>

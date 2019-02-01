@@ -1,3 +1,4 @@
+import { AdvCardRKEditComponent } from './../adv-card/adv-card-rk.component';
 import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subject} from 'rxjs/Subject';
@@ -299,6 +300,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 break;
             case E_RECORD_ACTIONS.additionalFields:
                 this._openAdditionalFields();
+                break;
+            case E_RECORD_ACTIONS.AdvancedCardRK:
+                this._openAdvancedCardRK();
                 break;
             case E_RECORD_ACTIONS.CounterNPMain:
                 this._editCounterNP(true);
@@ -605,6 +609,28 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             this.nodeList.openAdditionalFields(node);
         } else {
             this._msgSrv.addNewMessage(WARN_SELECT_NODE);
+        }
+    }
+
+    private _openAdvancedCardRK () {
+
+        this.modalWindow = null;
+        const node = this._dictSrv.listNode;
+        if (node) {
+            if (node.data.PROTECTED) {
+                this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
+            } else {
+                this.modalWindow = this._modalSrv.show(AdvCardRKEditComponent, {class: 'adv-card-rk-modal modal-lg'});
+                this.modalWindow.content.initByNodeData(node.data.rec);
+            }
+        } else {
+            this._msgSrv.addNewMessage(WARN_EDIT_ERROR);
+        }
+
+        if (this.modalWindow) {
+            const subscription = this.modalWindow.content.onChoose.subscribe(() => {
+                subscription.unsubscribe();
+            });
         }
     }
 }
