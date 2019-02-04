@@ -485,6 +485,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         this.inputs = this.getInputs();
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
         this.subscribeChangeForm();
+        this.newDataCard = [];
         return req;
     }
     createObjRequestForAll() {
@@ -701,10 +702,14 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 return;
             }
             this.newDataCard = data;
-            this.submit();
+           for (let i = 0; i < this.newDataCard.length; i++) {
+           this.prepareData.rec[this.newDataCard[i]] = '010000000000010010000'; // Then
+        }
+            this.flagForFirstMainCard = false;
             this.prepareDataParam();
             this.inputs = this.getInputs();
             this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+            this.subscribeChangeForm();
             this.fieldKeysforCardFilesCabinets = [];
             for (let i = 0; i < this.arrayKeysCheckboxforCabinets.length; i++) {
                 this.fieldKeysforCardFilesCabinets.push(
@@ -739,7 +744,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             this.fieldKeysforCardFilesCabinets = [];
             this.flagIfFirstMainCard = false;
         }
-            this.newDataCard = [];
             this.Changed.emit();
         })
         .catch(() => {
