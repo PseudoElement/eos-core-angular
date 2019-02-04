@@ -3,7 +3,7 @@ import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api
 import { CARD_INDEXS_RIGHTS, DOCUMENT_GROUPS, RESTRICT_REGISTRATION_FILING, ALL_DOCUMENTS } from '../shared-rights-delo/consts/card-index-rights.consts';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { IParamUserCl, IInputParamControlForIndexRight, IInputParamControl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { USERCARD, DEPARTMENT } from 'eos-rest';
+import { USERCARD, /* DEPARTMENT*/ } from 'eos-rest';
 import { FormGroup } from '@angular/forms';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
@@ -16,6 +16,7 @@ import {LimitedAccesseService} from '../../shared/services/limited-access.servic
 import { EosUtils } from 'eos-common/core/utils';
 import { Subscription } from 'rxjs/Rx';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
+import { NodeRightInFileCard } from './node-in-file-card';
 
 @Component({
     selector: 'eos-rights-delo-card-index-rights',
@@ -27,6 +28,13 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     list: NodeDocsTree[] = [];
     dataForm;
     curentUser: IParamUserCl;
+    selectedNode2: NodeRightInFileCard;
+    listRight: NodeRightInFileCard[] = [];
+    arrayNadzorRight: string[];
+    arrayNEWNadzorRight: string[];
+    fields: IInputParamControlForIndexRight[];
+    subForm: Subscription;
+    indexForRightFileCard = -1;
     selectedNode: IInputParamControlForIndexRight;
     selectedNodeOnTheRigthSide: IInputParamControlForIndexRight;
     btnDisabled: boolean = true;
@@ -83,12 +91,12 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
             }
         }
     };
-    private quaryDocgroupCl = {
+   /* private quaryDocgroupCl = {
         DOCGROUP_CL: {
             criteries: {
             }
         }
-    };
+    }; */
     constructor(
         injector: Injector,
         private _userParamsSetSrv: UserParamsService,
@@ -96,11 +104,13 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         private inputCtrlSrv: InputParamControlService,
         private _waitClassifSrv: WaitClassifService,
         private _limitservise: LimitedAccesseService,
+        private _inputCtrlSrv: InputParamControlService
     ) {
+        this.init();
         const due: string[] = [];
         this.userCard = new Map<string, USERCARD>();
-        this.curentUser = this._userParamsSetSrv.curentUser;
-        this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Права в картотеках`;
+      //  this.curentUser = this._userParamsSetSrv.curentUser;
+      //  this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Права в картотеках`;
         this.curentUser['USERCARD_List'].forEach((card: USERCARD) => {
             this.userCard.set(card['DUE'], card);
             due.push(card['DUE']);
@@ -108,8 +118,24 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         this.quaryDepartment.DEPARTMENT.criteries['DUE'] = due.join('||');
         this.msgSrv = injector.get(EosMessageService);
     }
+    init() {
+      //  console.log('First');
+        this.curentUser = this._userParamsSetSrv.curentUser;
+        this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Права в картотеках`;
+        this.curentUser['FUNCLIST'] = this.curentUser['FUNCLIST'] || '0'.repeat(21);
+        this.arrayNadzorRight = this.curentUser['FUNCLIST'].split('');
+        this.arrayNEWNadzorRight = this.curentUser['FUNCLIST'].split('');
+        this.fields = this._writeValue(CARD_INDEXS_RIGHTS);
+        this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
+        this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
+        this.listRight = this._createListRight(CARD_INDEXS_RIGHTS);
+      //  console.log(this.listRight);
+     //   console.log(this.form);
+    }
     ngOnInit() {
-        this.isLoading = true;
+        this.selectNode(this.listRight[0]);
+      //  console.log(this.selectedNode2);
+     /*   this.isLoading = true;
         this.listDocumentGroups = [];
         this.allDocuments = [];
 
@@ -126,6 +152,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
             data.forEach((d: DEPARTMENT) => {
                 const card = this.userCard.get(d['DUE']);
                 card['department'] = d;
+                console.log(card);
                 this.allData.push(card);
               });
               this.fieldsForRightSideCards = data;
@@ -186,29 +213,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     this.isLoading = false;
                 });
         }).catch(data => console.log(data));
-      /*  this.inputs = this.getInputAttach();
-        this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-        this.subscriptions = this.form.valueChanges
-                       .subscribe();*/
-    }
-    }
-    oldElement(data, oldIndex) {
-        for (let i = 0; i < this.oldIndex.length; i++) {
-        const tmp = this.userCard.get(data[oldIndex[i]][0]);
-        this.strForSubscribe = '';
-        if (this.booleanFromSubscribe === undefined) {
-            this.booleanFromSubscribe = this.booleanDataForm;
-        }
-
-        for (const key of Object.keys(this.booleanFromSubscribe)) {
-            if (this.booleanFromSubscribe[key] === true) {
-                this.strForSubscribe += '1';
-            } else if (this.booleanFromSubscribe[key] === false) {
-                this.strForSubscribe += '0';
-            }
-        }
-        tmp['NEW_FUNCLIST'] = this.strForSubscribe;
-    }
+    }*/
     }
     updateForm(dataCurrentListNode) {
         this.indexForCards = dataCurrentListNode['key'];
@@ -653,7 +658,7 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
 
     cancel() {
     }
-    selectNode(node) {
+   /* selectNode(node) {
         if (this.selectedNode) {
             this.selectedNode['data']['isSelected'] = false;
         }
@@ -669,7 +674,7 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
         this.selectNodeOnTheRightSide(firstElement);
         this.inputs = this.getInputAttach();
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-    }
+    } */
 
     selectNodeOnTheRightSide(node) {
         if (node['INDEX_FOR_SELECT'] !== undefined || null) {
@@ -740,5 +745,124 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
         this.updateForm(this.selectedNode);
         this.inputs = this.getInputAttach();
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+    }
+
+  /*  checkChange() {
+        let c = false;
+        this.listRight.forEach(li => { // проверяем список на изменения
+            if (li.touched) {
+                c = true;
+            }
+        });
+        if (this.arrNEWDeloRight.join('') !== this.arrDeloRight.join('')) {
+            c = true;
+        }
+        // this.btnDisabled = true;
+        this.btnDisabled = !c;
+    } */
+
+    selectNode(node: NodeRightInFileCard) {
+        if (this.selectedNode2 !== node) {
+            if (this.selectedNode2) {
+                this.selectedNode2.isSelected = false;
+            }
+            this.selectedNode2 = node;
+            this.selectedNode2.isSelected = true;
+           // this._viewContent();
+        }
+    }
+
+    clickLable(event, item: NodeRightInFileCard) {
+        this.selectNode(item);
+        console.log(event);
+
+        for (let i = 0; i < this.listNode.length; i++) {
+            if (this.listNode[i].label === event.target.innerText) {
+                this.indexForRightFileCard = +this.listNode[i] + 1;
+            }
+        }
+       /* event.preventDefault();
+        event.stopPropagation();
+        if (event.target.tagName === 'LABEL') {
+            this.selectNode(item);
+        } */
+      /*  if (event.target.tagName === 'SPAN') { // click to checkbox
+            const value = !(+item.value);
+            if (
+                    !value &&
+                    (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department ||
+                    item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor ||
+                    item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject)
+                ) {
+                this._deleteAllDep(item);
+            }
+            if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup)) {
+                this._deleteAllDocGroup(item);
+            }
+            if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.classif)) {
+                this._deleteAllClassif(item);
+            }
+            console.log(item.contentProp);
+
+            item.value = +value;
+
+            if (item !== this.selectedNode && item.isCreate) {
+                this.selectNode(item);
+            }
+        }*/
+    }
+
+  /*  private _viewContent() {
+        this.rightContent = false;
+        switch (this.selectedNode2.contentProp2) {
+            case E_RIGHT_DELO_ACCESS_CONTENT.all:
+                if (this.formGroupAll) {
+                    this.subs['all'].unsubscribe();
+                    this.formGroupAll = null;
+                }
+                this.formGroupAll = new FormGroup({
+                        all: new FormControl(this.selectedNode.value ? this.arrNEWDeloRight[+this.selectedNode.key] : '0')
+                });
+                setTimeout(() => {
+                    this.selectedNode.value ? this.formGroupAll.enable({emitEvent: false}) : this.formGroupAll.disable({emitEvent: false});
+                }, 0);
+                this.subs['all'] = this.formGroupAll.valueChanges
+                    .subscribe(data => {
+                        this.selectedNode.value = +data['all'];
+                        this.checkChange();
+                    });
+                this.rightContent = true;
+                break;
+            case E_RIGHT_DELO_ACCESS_CONTENT.classif:
+            case E_RIGHT_DELO_ACCESS_CONTENT.docGroup:
+            case E_RIGHT_DELO_ACCESS_CONTENT.department:
+            case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject:
+                if (this.selectedNode.value) {
+                    setTimeout(() => {
+                        this.rightContent = true;
+                    }, 0);
+                }
+                break;
+        }
+    } */
+
+    private _writeValue(constanta: IInputParamControlForIndexRight[]): IInputParamControlForIndexRight[] {
+        const fields = [];
+        constanta.forEach((node: IInputParamControlForIndexRight) => {
+            fields.push(Object.assign({value: !!+this.arrayNadzorRight[+node['key']]}, node));
+        });
+        return fields;
+    }
+
+    private _createListRight(constanta: IInputParamControlForIndexRight[]): NodeRightInFileCard[] {
+        const fields = [];
+        constanta.forEach((node: IInputParamControlForIndexRight) => {
+          //  console.log(node);
+          //  console.log(this.form.get(node['key']));
+          //  console.log(this.curentUser);
+            fields.push(new NodeRightInFileCard(node, this.form.get(node['key']), this.curentUser));
+        });
+    //    console.log(fields);
+        return fields;
     }
 }

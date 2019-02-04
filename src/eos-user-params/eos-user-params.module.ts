@@ -27,6 +27,8 @@ import { RightsDeloCardFilesComponent } from './rights-delo/rights-delo-card-fil
 import { RightsDeloAbsoluteRightsComponent } from './rights-delo/rights-delo-absolute-rights/rights-delo-absolute-rights.component';
 import { CardFilesDirectoryModalComponent } from './rights-delo/rights-delo-card-files/card-files-directory-modal/card-files-directory-modal.component';
 import { RightsDeloCardIndexRightsComponent } from './rights-delo/rights-delo-card-index-rights/rights-delo-card-index-rights.component';
+import { RightSideDocGroupInFileCardComponent } from './rights-delo/rights-delo-card-index-rights/right-side-doc-group-in-file-card/right-side-doc-group-in-file-card.component';
+import { RightSideListCardComponent } from './rights-delo/rights-delo-card-index-rights/right-side-list-card/right-side-list-card.component';
 import { RightPanelForDocumentGroupsComponent } from './rights-delo/right-panel-for-document-groups/right-panel-for-document-groups.component';
 import { ParamsBaseParamComponent } from './base-param/base-param.component';
 import { InputParamControlService } from './shared/services/input-param-control.service';
@@ -62,6 +64,8 @@ import {UserPaginationService} from './shared/services/users-pagination.service'
         RightsDeloAbsoluteRightsComponent,
         CardFilesDirectoryModalComponent,
         RightsDeloCardIndexRightsComponent,
+        RightSideDocGroupInFileCardComponent,
+        RightSideListCardComponent,
         ParamsBaseParamComponent,
         EmailFormComponent,
         RightPanelForDocumentGroupsComponent,

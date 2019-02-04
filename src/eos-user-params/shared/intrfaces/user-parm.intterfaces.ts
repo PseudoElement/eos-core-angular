@@ -23,6 +23,7 @@ export interface IInputParamControl {
 }
 
 export interface IInputParamControlForIndexRight {
+      controlType: E_FIELD_TYPE;
       key?: string;
       value?: any;
       dict?: string;

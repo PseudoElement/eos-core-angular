@@ -1,5 +1,5 @@
 <div class="input-user-wrapper input-user-card-index-rights-wrapper">
-    <div  *ngIf="flagCardFileAvailability">
+    <!--<div  *ngIf="flagCardFileAvailability">-->
     <eos-rights-delo-header
         [title]="titleHeader"
         (submitForm)="submit()"
@@ -8,14 +8,28 @@
     ></eos-rights-delo-header>
 <div class="user-input-group">
 <div class="left-block-list-side">
-<div *ngFor="let item of listNode" (click)="selectNode(item)" [ngClass]="{'highlighted': item.data.isSelected}">
-    <label>
+<div *ngFor="let item of listRight" [ngClass]="{'highlighted': item.isSelected}">
+    <div [formGroup]="form">
+    <label (click)="clickLable($event, item)">
         <span>{{item.label}}</span>
     </label>
+    </div>
 </div>
 </div>
 <div class="right-block-list-side">
-    <div *ngIf="flagToDisplayTheRightSide" class="usual-border border-bottom toolbar-line">
+    <ng-container [ngSwitch]="selectedNode2.contentProp2">
+        <ng-container *ngSwitchCase="0">
+            <ng-container *ngTemplateOutlet="docGroup"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="2">
+                <ng-container *ngTemplateOutlet="none"></ng-container>
+            </ng-container>
+    </ng-container>
+</div>
+</div>
+</div>
+<!--</div>-->
+    <!--<div *ngIf="flagToDisplayTheRightSide" class="usual-border border-bottom toolbar-line">
                 <button
                     class="btn btn-primary-light"
                     tooltip="Добавить"
@@ -36,8 +50,25 @@
                     [ngClass]="{'hiden-btn': btnMinusHiden}"
                     (click)="removeDocuments()">
                     <span class="eos-icon eos-icon-minus-blue small"></span>
-                </button>
-    </div>
+                </button>-->
+
+<!-- Правая часть(картотеки с документами) -->
+<ng-template #docGroup>
+    <eos-right-side-doc-group-in-file-card
+        style="width: 100%;"
+        [selectedNode2]="selectedNode2"
+        [curentUser]="curentUser"
+    ></eos-right-side-doc-group-in-file-card>
+</ng-template>
+<!-- Правая часть(картотеки) -->
+<ng-template #none>
+    <eos-right-side-list-card
+        style="width: 100%;"
+        [selectedNode2]="selectedNode2"
+        [curentUser]="curentUser"
+    ></eos-right-side-list-card>
+</ng-template>
+   <!-- </div>
     <div class="content-list" *ngIf="!isLoading">
     <div *ngFor="let item of treeHierarchyOnTheRightSide" class="inline-block item-card">
         <div *ngIf="item.documents && flagToDisplayTheRightSide"
@@ -100,14 +131,14 @@
              </div>
              </div>
 </div>
+</div>-->
+<!--</div>
 </div>
-</div>
-</div>
-</div>
-<div *ngIf="!flagCardFileAvailability">
+</div>-->
+<!--<div *ngIf="!flagCardFileAvailability">
 <h1 class="warning-record">Отсутствуют картотеки!</h1>
-</div>
-</div>
+</div>-->
+
 
 <div class="spinner-wrapper" *ngIf="isLoading && flagCardFileAvailability">
         <eos-spinner [size]="'lg'"></eos-spinner>

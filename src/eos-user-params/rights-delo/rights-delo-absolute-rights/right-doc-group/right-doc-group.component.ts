@@ -108,9 +108,11 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
     private _init() {
         this.isLoading = true;
         const str = this.curentUser.USER_RIGHT_DOCGROUP_List.map(i => i.DUE);
+       // console.log(str);
         if (this.selectedNode.isCreate) {
             str.push('0.');
         }
+      //  console.log(str);
         this.apiSrv.getDocGroup(str.join('||'))
         .then((data: DOCGROUP_CL[]) => {
             this.curentUser.USER_RIGHT_DOCGROUP_List.forEach((item: USER_RIGHT_DOCGROUP) => {
@@ -139,6 +141,7 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
                 });
             }
 
+            console.log(this.list);
             this.isLoading = false;
         })
         .catch(e => {

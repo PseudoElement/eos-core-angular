@@ -124,6 +124,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         TECH_USER_CLASSIF.forEach((item: ITechUserClassifConst) => {
             this.listClassif.push(new RightClassifNode(item, this.curentUser, this.selectedNode, this));
         });
+        console.log(this.listClassif);
         if (this.selectedNode.isCreate) {
             this.selectedNode.isCreate = false;
         }

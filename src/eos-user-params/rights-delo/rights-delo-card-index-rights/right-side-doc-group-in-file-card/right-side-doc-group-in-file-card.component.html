@@ -1,0 +1,54 @@
+<div  class="input-user-side-doc-group-in-file-card" *ngIf="!isLoading">
+    <div *ngFor="let item of listAllData"
+    class="right-classif-node">
+        <span *ngIf="item[1]"
+            class="eos-icon icon list-triangle small"
+            (click)="openDocumentList(item[2])"
+            [ngClass]="{'eos-icon-open-folder-blue': item[2].openDocumentTree, 'eos-icon-close-folder-blue': !item[2].openDocumentTree}"
+        ></span>
+
+        <div [formGroup]="form">
+        <label class="checkbox classif-list-tech-user" (click)="checkedNode($event, item[0])">
+            <input type="checkbox"
+            hidden
+            [formControlName]="item[0].key"
+            [id]="item[0].key" />
+            <span class="eos-icon eos-icon-checkbox-square-blue x-small">
+                </span>
+                {{item[0].label}}
+        </label>
+    </div>
+    <div *ngIf="item[1]">
+<div *ngIf="item[2].openDocumentTree">
+        <div class="content-classif-node">
+        <div class="buttons-classif-node">
+                <button
+                    class="btn"
+                    triggers="hover"
+                    tooltip="Добавить"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                >
+                    <span class="eos-icon eos-icon-plus-blue small"></span>
+                </button>
+                <button
+                    class="btn"
+                    tooltip="Удалить"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                >
+                    <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+                </button>
+            </div>
+    <eos-list-doc-tree
+        [listNode]="item[1]"
+        (select)="select($event)"
+        (checkedNode)="checkedNode($event, null)"
+    ></eos-list-doc-tree>
+    </div>
+</div>
+</div>
+    </div>
+</div>
+
+<div *ngIf="isShell" class="shell"></div>
