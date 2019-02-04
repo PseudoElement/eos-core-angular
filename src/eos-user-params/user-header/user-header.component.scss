@@ -1,0 +1,30 @@
+header {
+    z-index: 0;
+    position: relative;
+    .header-wrapper{
+        background-color: #fafafa;
+        color: black;
+        border: 1px solid #e6e6e6;
+        min-height: 48px;
+        text-align: left;
+        margin: 0 auto;
+        width: 800px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+        .title-wrapper{
+            font-size: 18px;
+            max-height: 52px;
+        }
+
+    }
+    .title-wrapper {
+        overflow: hidden;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        word-wrap: break-word;
+        white-space: normal;
+        text-overflow: ellipsis;
+    }
+}
