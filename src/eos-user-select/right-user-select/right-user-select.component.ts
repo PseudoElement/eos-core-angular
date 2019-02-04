@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy} from '@angular/core';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { USER_CL, DEPARTMENT, USER_PARMS } from 'eos-rest';
 import { Subject } from 'rxjs/Subject';
+
 @Component({
     selector: 'eos-right-user-select',
     templateUrl: 'right-user-select.component.html'
@@ -22,6 +23,8 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     urlPhoto: string = '';
     departmentInfo: DEPARTMENT;
     destroySubsriber: Subject<any> = new Subject();
+    flagFirstGetInfo: boolean = true;
+    CurrentUserForShowTemplate: USER_CL = null;
     constructor(
       //  private _sandwichSrv: EosSandwichService,
         private _selectedUser: RtUserSelectService,
@@ -44,22 +47,28 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         this._selectedUser.changerUser
             .takeUntil(this.destroySubsriber)
             .subscribe(currentUser => {
-                this.CurrentUser = currentUser;
-                console.log(currentUser);
+                this.CurrentUserForShowTemplate  = currentUser;
+                if (currentUser && this.flagFirstGetInfo) {
+                    this.chooseTemplate = 'spinner';
+                    this.geyInfo(currentUser);
+                    this.CurrentUser = currentUser;
+                    this.flagFirstGetInfo = false;
+                }
                 if (currentUser &&  this.CurrentUser['id'] !== currentUser.id ) {
                     // if (this.flagRtBlock) {
                     //     this.chooseTemplate = 'spinner';
                     //     this.geyInfo();
                     // }
                          this.chooseTemplate = 'spinner';
-                        this.geyInfo();
+                         this.geyInfo(currentUser);
+                         this.CurrentUser = currentUser;
                 }
             });
     }
-    geyInfo() {
-        const isn = this.CurrentUser['data']['ISN_LCLASSIF'];
-        if ( this.CurrentUser['data']['DUE_DEP'] !== null) {
-            const due =  this.CurrentUser['data']['DUE_DEP'];
+    geyInfo(currentUser) {
+        const isn = currentUser['data']['ISN_LCLASSIF'];
+        if ( currentUser['data']['DUE_DEP'] !== null) {
+            const due =  currentUser['data']['DUE_DEP'];
                 this.getInfo(isn, due);
             }else {
                 this.getInfo(isn);
@@ -156,6 +165,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             split[23] === '1' ?  this._selectedUser.ArraySystemHelper.MobNet.checked = true : this._selectedUser.ArraySystemHelper.MobNet.checked = false;
             split[26] === '1' ?  this._selectedUser.ArraySystemHelper.Informer.checked = true : this._selectedUser.ArraySystemHelper.Informer.checked = false;
             this.flagSustem = true;
+            this._selectedUser.subjectScan.next(this._selectedUser.ArraySystemHelper.Pscan.checked);
     }
     fillDeloField(delo: boolean, delo_deloweb: boolean, delowebLGO: boolean, delowebKL: boolean ): void {
         this._selectedUser.ArraySystemHelper.delo.checked = delo;

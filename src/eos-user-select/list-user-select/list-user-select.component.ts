@@ -39,6 +39,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     helpersClass: any;
     buttons: BtnAction;
     flagChecked: boolean;
+    flagScan: boolean = null;
     countMaxSize: number;
 
     // количество выбранных пользователей
@@ -67,6 +68,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._pagSrv.NodeList$
             .takeUntil(this.ngUnsubscribe)
                 .subscribe((data) => {
+                    this.flagScan = null;
                     this.flagChecked = null;
                     this.listUsers  = data;
                     if (this.listUsers && this.listUsers.length) {
@@ -87,11 +89,18 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 .subscribe((state: boolean[]) => {
                     this.currentState = state;
         });
+
+        this.rtUserService.subjectScan.takeUntil(this.ngUnsubscribe).subscribe(flagBtnScan => {
+            this.flagScan = !flagBtnScan;
+                this.buttons.buttons[5].disabled = this.flagScan;
+                this.buttons.moreButtons[7].disabled = this.flagScan;
+        });
     }
 
     initView(param?) {
         this.countcheckedField = 0;
         this.titleCurrentDue = this._apiSrv.configList.titleDue;
+        this.flagScan = null;
         this.flagChecked = null;
         this.isLoading = true;
         this._apiSrv.getUsers(param || '0.')
@@ -110,7 +119,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.isLoading = false;
                 this.countMaxSize = this._pagSrv.countMaxSize;
         }).catch(error => {
-            error.message = 'Серверная ошибка,  обратитесь к системному администратору';
+           error.message = 'Серверная ошибка,  обратитесь к системному администратору';
            this.cathError(error);
         });
     }
@@ -140,7 +149,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.rtUserService.changeSelectedUser(searchSelected[0]);
             }   else {
                 flagUserSelected = false;
-                if (this.selectedUser.hasOwnProperty('isSelected')) {
+                if (this.selectedUser && this.selectedUser.hasOwnProperty('isSelected')) {
                     this.selectedUser.isSelected = false;
                 }
                 this.rtUserService.changeSelectedUser(null);
@@ -149,7 +158,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
             }
        }
-       this.updateFlafListen();
+        this.updateFlafListen();
         this.disabledBtnAction(flagUserSelected);
     }
 
@@ -464,6 +473,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
             return button;
         });
+        if (this.flagScan !== null) {
+            this.buttons.buttons[5].disabled = this.flagScan;
+            this.buttons.moreButtons[7].disabled = this.flagScan;
+        }
     }
 
     private disabledBtnDeleted() {
