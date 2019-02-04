@@ -74,6 +74,15 @@
             }
         }
     }
+    .disable {
+        pointer-events: none;
+        cursor: no-drop;
+        background-color: #eeee;
+        .panel-title{
+            color: #dedad6!important;
+        }
+    }
+
 }
 
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy} from '@angular/core';
-import {EosSandwichService} from 'eos-dictionaries/services/eos-sandwich.service';
+// import {EosSandwichService} from 'eos-dictionaries/services/eos-sandwich.service';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { USER_CL, DEPARTMENT, USER_PARMS } from 'eos-rest';
 import { Subject } from 'rxjs/Subject';
@@ -23,7 +23,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     departmentInfo: DEPARTMENT;
     destroySubsriber: Subject<any> = new Subject();
     constructor(
-        private _sandwichSrv: EosSandwichService,
+      //  private _sandwichSrv: EosSandwichService,
         private _selectedUser: RtUserSelectService,
     ) {
         this.isPhoto = false;
@@ -31,25 +31,28 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         this.flagSustem = false;
         this.opened = false;
         this.showDep = false;
-        this._sandwichSrv.currentDictState$
-            .takeUntil(this.destroySubsriber)
-            .subscribe(result => {
-            this.flagRtBlock = result[1];
-            if (this.flagRtBlock && this.CurrentUser) {
-                this.chooseTemplate = 'spinner';
-                    this.geyInfo();
-                }
-            });
+        // this._sandwichSrv.currentDictState$
+        //     .takeUntil(this.destroySubsriber)
+        //     .subscribe(result => {
+        //     this.flagRtBlock = result[1];
+        //     if (this.flagRtBlock && this.CurrentUser) {
+        //         this.chooseTemplate = 'spinner';
+        //             this.geyInfo();
+        //         }
+        //     });
 
         this._selectedUser.changerUser
             .takeUntil(this.destroySubsriber)
             .subscribe(currentUser => {
                 this.CurrentUser = currentUser;
-                if (currentUser) {
-                    if (this.flagRtBlock) {
-                        this.chooseTemplate = 'spinner';
+                console.log(currentUser);
+                if (currentUser &&  this.CurrentUser['id'] !== currentUser.id ) {
+                    // if (this.flagRtBlock) {
+                    //     this.chooseTemplate = 'spinner';
+                    //     this.geyInfo();
+                    // }
+                         this.chooseTemplate = 'spinner';
                         this.geyInfo();
-                    }
                 }
             });
     }

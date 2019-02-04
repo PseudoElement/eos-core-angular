@@ -1,14 +1,14 @@
 
 
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
-import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
-import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
-import { UserSelectNode } from './user-node-select';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap';
-import { CreateUserComponent } from './createUser/createUser.component';
+import {Component, OnDestroy, OnInit } from '@angular/core';
+import {ActivatedRoute, Router } from '@angular/router';
+import {Subject } from 'rxjs/Subject';
+import {UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
+import {UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
+import {UserSelectNode } from './user-node-select';
+import {BsModalService, BsModalRef } from 'ngx-bootstrap';
+import {CreateUserComponent } from './createUser/createUser.component';
 import {RtUserSelectService} from '../shered/services/rt-user-select.service';
 import { EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.service';
 import {IUserSort, SortsList} from '../shered/interfaces/user-select.interface';
@@ -16,12 +16,12 @@ import {HelpersSortFunctions} from '../shered/helpers/sort.helper';
 import {Allbuttons} from '../shered/consts/btn-action.consts';
 import {BtnAction, BtnActionFields} from '../shered/interfaces/btn-action.interfase';
 import {TreeUserSelectService} from '../shered/services/tree-user-select.service';
-import { RestError } from 'eos-rest/core/rest-error';
-import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
+import {RestError } from 'eos-rest/core/rest-error';
+import {EosMessageService } from 'eos-common/services/eos-message.service';
+import {ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import {CONFIRM_DELETE} from '../shered/consts/confirm-users.const';
-import { PipRX} from 'eos-rest';
-import { ALL_ROWS } from 'eos-rest/core/consts';
+import {PipRX} from 'eos-rest';
+import {ALL_ROWS } from 'eos-rest/core/consts';
 @Component({
     selector: 'eos-list-user-select',
     templateUrl: 'list-user-select.component.html'
@@ -301,9 +301,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
 
     OpenStreamScanSystem() {
-        this._router.navigate(['user-params-set/', 'rights-delo', 'inline-scaning'], {
-            queryParams: {isn_cl: this.selectedUser.id}
-      });
+        this._router.navigate(['user-params-set/', 'inline-scaning']);
         // this._confirmSrv.confirm(CONFIRM_SCANSYST).then(res => {
         // });
     }

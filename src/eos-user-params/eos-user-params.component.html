@@ -12,9 +12,6 @@
         <ng-container *ngSwitchCase="'base-param'">
             <eos-params-base-param></eos-params-base-param>
         </ng-container>
-        <ng-container *ngSwitchCase="'inline-scaning'">
-        <!-- <eos-params-inline-scaning></eos-params-inline-scaning> -->
-        </ng-container>
     </ng-container>
 </div>
 
@@ -30,6 +27,7 @@
             panelClass="param-field"
             [isDisabled]="!item.subList"
             [(isOpen)]="item.isOpen"
+            [ngClass] = "item.disabled ? 'disable' : ''"
             [routerLink]="!item.subList ? ['/user-params-set', item.url] : null"
             [routerLinkActive]="!item.subList ? 'active-link' : 'null'"
         >
