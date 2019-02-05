@@ -11,32 +11,38 @@
             class=" email-create btn btn-primary"
             (click)="openModal(template)"
             tooltip="Добавить E-MAIL"
-            triggers="hover"
             placement="top"
             containerClass="tooltip-info">
             <span class="eos-icon eos-icon-plus-blue small"></span>
         </button>
-        <button
-            [disabled]="getaccess"
-            type="button"
-            class=" email-edit btn btn-primary"
-            (click)="openModal(template, true)"
-            tooltip="Ограничение рассылки"
-            triggers="hover"
-            placement="top"
-            containerClass="tooltip-info">
-            <span [ngClass]="getaccess ? 'eos-icon eos-icon-edit-grey small' : 'eos-icon eos-icon-edit-blue small'"></span>
-        </button>
-        <button
-            [disabled]="getaccess"
-            class="email-delite  btn btn-primary"
-            (click)='deliteEmailFild()'
-            tooltip="Удалить E-MAIL"
-            triggers="hover"
-            placement="top"
-            containerClass="tooltip-info">
-            <span [ngClass]="getaccess ? 'eos-icon eos-icon-bin-grey small' : 'eos-icon eos-icon-bin-blue small'"></span>
-        </button>
+        <div class="btn-group">
+            <div
+                tooltip="Ограничение рассылки"
+                placement="top"
+                #itemTooltip="bs-tooltip"
+                containerClass="tooltip-info">
+                <button
+                    [disabled]="getaccess"
+                    type="button"
+                    class=" email-edit btn btn-primary"
+                    (click)="itemTooltip.hide(); openModal(template, true)">
+                    <span [ngClass]="getaccess ? 'eos-icon eos-icon-edit-grey small' : 'eos-icon eos-icon-edit-blue small'"></span>
+                </button>
+            </div>
+        </div>
+        <div class="btn-group">
+                <div  tooltip="Удалить E-MAIL"
+                    #itemTooltip="bs-tooltip"
+                    placement="top"
+                    containerClass="tooltip-info">
+                    <button
+                        [disabled]="getaccess"
+                        class="email-delite  btn btn-primary"
+                        (click)="itemTooltip.hide(); deliteEmailFild()">
+                        <span [ngClass]="getaccess ? 'eos-icon eos-icon-bin-grey small' : 'eos-icon eos-icon-bin-blue small'"></span>
+                    </button>
+                </div>
+        </div>
         <div class="btn-group">
             <div  tooltip="Переместить вверх"
                 #itemTooltip="bs-tooltip"
