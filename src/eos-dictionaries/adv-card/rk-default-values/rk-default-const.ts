@@ -1,7 +1,27 @@
 import { E_FIELD_TYPE } from './../../interfaces/dictionary.interfaces';
 
+export class TDFSelect {
+    dictId: string;
+    dictKey: string;
+    dictKeyTitle: string;
+    criteries?: any;
+}
+export class TDFSelectOption {
+    value: any;
+    title: string;
+}
 
-export const RKDefaultFields = [
+export class TDefaultField {
+    key: string;
+    type: E_FIELD_TYPE;
+    title: string;
+    dict?: TDFSelect;
+    options?: TDFSelectOption[];
+    value?: any;
+
+}
+
+export const RKDefaultFields: TDefaultField[] = [
     // {
     //     key: 'SPECIMEN',
     //     title: 'Экз №',
@@ -29,12 +49,19 @@ export const RKDefaultFields = [
         title: 'Адресаты',
         // classif_id: NULL
     }, {
+        // Внешние адресаты - вид отправки
         key: 'SEND_ISN_DELIVERY',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Вид доставки',
         // classif_id:  112
+        dict: {
+            dictId: 'DELIVERY_CL',
+            dictKey: 'ISN_LCLASSIF',
+            dictKeyTitle: 'CLASSIF_NAME',
+        }
+
     }, {
         key: 'SECURLEVEL_M',
         // Default type:  'M',
@@ -43,11 +70,17 @@ export const RKDefaultFields = [
         title: 'Гриф доступа',
         // classif_id: NULL
     }, {
+        // Доступ
         key: 'SECURLEVEL',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Гриф доступа РК',
+        dict: {
+            dictId: 'SECURITY_CL',
+            dictKey: 'SECURLEVEL',
+            dictKeyTitle: 'GRIF_NAME',
+        }
         // classif_id:  111
         // справочник.
     }, {
@@ -81,10 +114,15 @@ export const RKDefaultFields = [
     }, {
         key: 'ISN_DELIVERY',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2',
         title: 'Доставка РК',
         // classif_id:  112
+        dict: {
+            dictId: 'DELIVERY_CL',
+            dictKey: 'ISN_LCLASSIF',
+            dictKeyTitle: 'CLASSIF_NAME',
+        }
     }, {
         key: 'JOURNAL_FROM_FORWARD_W',
         // Default type:  'W',
@@ -198,16 +236,18 @@ export const RKDefaultFields = [
         title: 'Корреспондент',
         // classif_id: NULL
     }, {
+        // с отметкой об отправке
         key: 'SEND_MARKSEND',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Отметить отправку',
         // classif_id: NULL
     }, {
+        // Внешние адресаты - с отметкой об отправке
         key: 'SEND_OUTER_MARKSEND',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Отметить отправку',
         // classif_id: NULL
@@ -242,7 +282,7 @@ export const RKDefaultFields = [
     }, {
         key: 'JOURNAL_NOMENC_PARM',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.buttons,
         // kind_doc '1,2,3',
         title: 'Параметр копирования оригинал/копия',
         // classif_id: NULL
@@ -268,9 +308,10 @@ export const RKDefaultFields = [
         title: 'Параметр копирования оригинал/копия',
         // classif_id: NULL
     }, {
+        // радиобуттоны
         key: 'SEND_DEP_PARM',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Параметр копирования оригинал/копия',
         // classif_id: NULL
@@ -338,9 +379,10 @@ export const RKDefaultFields = [
         title: 'Положить во 2 папку текущего кабинета',
         // classif_id: NULL
     }, {
+        // Примечание
         key: 'NOTE',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.text,
         // kind_doc '1,2,3',
         title: 'Примечание',
         // classif_id: NULL
@@ -368,7 +410,7 @@ export const RKDefaultFields = [
     }, {
         key: 'ANNOTAT',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.text,
         // kind_doc '1,2,3',
         title: 'Содержание РК',
         // classif_id: NULL
@@ -389,19 +431,27 @@ export const RKDefaultFields = [
 
         // classif_id: NULL
     }, {
+        // Адресаты
         key: 'SEND_ISN_LIST_DEP',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список адресатов ДЛ',
         // classif_id:  545
     }, {
+        // Внешние адресаты - Адресаты
         key: 'SEND_ISN_LIST_ORGANIZ',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список адресатов организаций',
         // classif_id:  545
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '630', ISN_LCLASSIF: '-99', },
+        }
     }, {
         key: 'JOURNAL_WHERE_REDIRECTION_W',
         // Default type:  'W',
@@ -433,10 +483,17 @@ export const RKDefaultFields = [
     }, {
         key: 'JOURNAL_ISN_LIST',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ для записи в ЖПД',
         // classif_id:  545
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
+
     }, {
         key: 'JOURNAL_ISN_LIST_W',
         // Default type:  'W',
@@ -480,16 +537,26 @@ export const RKDefaultFields = [
         title: 'Список подписывающих РК',
         // classif_id:  545
     }, {
+        /* кому адресован */
+        // select isn_list, name, all_flag, WEIGHT FROM user_lists where classif_id = 104 and isn_lclassif = -99 Order by user_lists.weight asc
         key: 'WHO_ISN_LIST',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2',
         title: 'Список получателей РК',
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+
+        }
         // classif_id:  545
     }, {
+        // Рубрики
         key: 'RUBRIC_LIST',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список рубрик',
         // classif_id:  545
@@ -515,11 +582,18 @@ export const RKDefaultFields = [
         title: 'Текущий  кабинет в качестве кабинета регистрации',
         // classif_id: NULL
     }, {
+        // Select ISN_TEMPLATE ISN, DESCRIPTION NAME, DELETED, WEIGHT From DOC_TEMPLATES Where LOWER(CATEGORY) LIKE 'файлы документов' Order By WEIGHT
         key: 'FILE',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Файлы',
+        dict: {
+            dictId: 'DOC_TEMPLATES',
+            dictKey: 'ISN_TEMPLATE',
+            dictKeyTitle: 'DESCRIPTION',
+            criteries: { CATEGORY: '%файлы документов%'}
+        }
         // classif_id: NULL
     }, {
         key: 'FILE_M',

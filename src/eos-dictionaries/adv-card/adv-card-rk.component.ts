@@ -5,8 +5,8 @@ import { AdvCardRKDataCtrl, ACRK_GROUP } from './adv-card-rk-datactrl';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
-const NODE_LABEL_NAME = 'CLASSIF_NAME';
 
+const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
     tag: number;
     title: string;
@@ -52,14 +52,14 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
     fieldsDescrDefault: any;
     inputsDefault: any;
 
-    protected apiSrv: PipRX;
+    // protected apiSrv: PipRX;
     private _node = {};
 
     // private _initialData: any;
 
     constructor(
         public bsModalRef: BsModalRef,
-        apiSrv: PipRX,
+        private apiSrv: PipRX,
         private _dataSrv: EosDataConvertService,
         private _inputCtrlSrv: InputControlService,
 
@@ -74,12 +74,18 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
 
 
     ngOnInit() {
-        this.dataController = new AdvCardRKDataCtrl();
+        this.dataController = new AdvCardRKDataCtrl(this.apiSrv);
         this.fieldsDescrDefault = this.dataController.getDescriptions(ACRK_GROUP.defaultRKValues);
-        this.valuesDefault = this.dataController.getValues(ACRK_GROUP.defaultRKValues);
-        this.inputsDefault = this.getInputs();
-        const isNode = false;
-        this.form = this._inputCtrlSrv.toFormGroup(this.inputsDefault, isNode);
+        // this.valuesDefault = this.dataController.getValues(ACRK_GROUP.defaultRKValues);
+        this.dataController.loadDictsOptions(ACRK_GROUP.defaultRKValues).then (d => {
+            this.dataController.readValues1(3670).then (values => {
+                this.valuesDefault = values[0];
+                this.inputsDefault = this.getInputs();
+                const isNode = false;
+                this.form = this._inputCtrlSrv.toFormGroup(this.inputsDefault, isNode);
+                this.isUpdating = false;
+            });
+        });
         // this.createComponent('a');
     }
     ngOnDestroy() {
@@ -87,12 +93,14 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
     }
 
     getInputs() {
-        const i: any = {rec: {}};
+
+        const i: any = {rec: {} };
         this.fieldsDescrDefault.forEach(element => {
             if (!element.foreignKey) {
                 element.foreignKey = element.key;
             }
-            i.rec[element.key] = element;
+            const t = i.rec;
+            t[element.key] = element;
         });
         // Object.keys(this.prepareData.rec).forEach(key => {
         //     if ((this._fieldsType[key] === 'boolean' || this._fieldsType[key] === 'toggle') && !this.prepInputs.rec[key].formatDbBinary) {
@@ -127,7 +135,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
             this._node = dndata;
         }
         this.activeTab = tabs[0];
-        this.isUpdating = false;
     }
 
     public hideModal(): void {
