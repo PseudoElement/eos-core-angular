@@ -860,7 +860,7 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
           //  console.log(node);
           //  console.log(this.form.get(node['key']));
           //  console.log(this.curentUser);
-            fields.push(new NodeRightInFileCard(node, this.form.get(node['key']), this.curentUser));
+            fields.push(new NodeRightInFileCard(node, +this.arrayNadzorRight[+node['key']], this.form.get(node['key']), this.curentUser));
         });
     //    console.log(fields);
         return fields;

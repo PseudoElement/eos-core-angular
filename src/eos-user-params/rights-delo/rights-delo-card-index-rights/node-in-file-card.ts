@@ -43,8 +43,10 @@ export class NodeRightInFileCard {
     private _value: number;
     private _valueDb: number;
     private _change: IChengeItemInFileCard[] = [];
-    constructor (node: IInputParamControlForIndexRight, con: AbstractControl, curentUser: IParamUserCl) {
+    constructor (node: IInputParamControlForIndexRight, v: number, con: AbstractControl, curentUser: IParamUserCl) {
         this._constData = node;
+        this._value = v;
+        this._valueDb = v;
         this.control = con;
        // console.log(this._constData);
       //  this._curentUser = curentUser;
