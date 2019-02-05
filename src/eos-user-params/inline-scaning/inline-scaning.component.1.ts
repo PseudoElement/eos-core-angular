@@ -40,8 +40,6 @@ export class InlineScaningComponent implements OnInit {
     public link: string = '81284';
     public title: string = 'Miko Tamako';
     public inputs;
-    public disableBtn: boolean = true;
-    public countChecnged: number = 0;
     private inputFields: any;
     private form: FormGroup;
 
@@ -50,7 +48,6 @@ export class InlineScaningComponent implements OnInit {
         private _userParamSrv: UserParamsService,
         private _formHelper: FormHelperService,
         ) {
-            this.countChecnged = 0;
 
     }
     ngOnInit() {
@@ -59,39 +56,15 @@ export class InlineScaningComponent implements OnInit {
         this.inputFields =  this._formHelper.fillInputFields(BASE_PARAM_INPUTS);
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
-        this.subscribeForm();
+        console.log(this.form);
+
     }
 
     submit() {
         console.log(this._formHelper);
     }
-    cancel(event) {
-        this.editMode = event;
-        this.setDisableOrEneble();
-    }
+    cancel() {
 
-    edit(event) {
-        this.editMode = event;
-       this.setDisableOrEneble();
-
-    }
-
-    setDisableOrEneble() {
-        for (const key in this.form.controls) {
-            if (this.form.controls.hasOwnProperty(key)) {
-                if (this.editMode) {
-                    this.form.controls[key].enable({onlySelf: true, emitEvent: false});
-                }   else {
-                    this.form.controls[key].disable({onlySelf: true, emitEvent: false});
-                }
-            }
-        }
-    }
-
-    private subscribeForm() {
-        this.form.valueChanges.subscribe(value => {
-           this.disableBtn = this._formHelper.changesForm(this.inputFields, value);
-        });
     }
 }
 
