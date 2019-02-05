@@ -84,7 +84,14 @@ export class InlineScaningComponent implements OnInit {
         this.subscribeForm();
     }
 
-    submit() {
+    preparethisInputFields() {
+        const newVal = this.newData['STREAM_SCAN_RIGHTS'].slice(0, 3).split('');
+        this.inputFields.forEach((inp: IInputParamControl, index) => {
+            inp.value = String(newVal[index]) === '1' ? true : false;
+        });
+    }
+
+    submit(event) {
         this.flagShow = false;
         const query = [];
         query.push({
@@ -93,8 +100,12 @@ export class InlineScaningComponent implements OnInit {
             data: this.newData
         });
          this.apiSrv.batch(query, '').then((data: any) => {
-            this.flagShow = true;
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+            this._userParamSrv.getUserIsn(String(this.curentUser.ISN_LCLASSIF)).then(response => {
+                this.flagShow = true;
+                this.disableBtn = true;
+                this.preparethisInputFields();
+            });
         }).catch(e => {
             this.flagShow = true;
             this.cathError(e);

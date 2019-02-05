@@ -310,7 +310,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
 
     OpenStreamScanSystem() {
-        this._router.navigate(['user-params-set/', 'inline-scaning']);
+        this._router.navigate(['user-params-set/', 'inline-scaning'],
+        {
+            queryParams: {isn_cl: this.selectedUser.id}
+      }
+        );
         // this._confirmSrv.confirm(CONFIRM_SCANSYST).then(res => {
         // });
     }

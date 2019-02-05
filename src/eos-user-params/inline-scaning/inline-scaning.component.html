@@ -6,7 +6,7 @@
 (submitEmit) = 'submit($event)'
 (cancelEmit) = 'cancel($event)'
 (editEmit) = 'edit($event)'
-(closeEmit) = 'close($enent)'
+(closeEmit) = 'close($event)'
 ></eos-user-params-header>
 <div class="flow-scan">
     <div *ngIf='flagShow' class="flow-scan-wrapper">
@@ -53,8 +53,9 @@
                     <span class="flow-form-title">Печать штрих кода</span>
             </div>
         </div>
+        <div class="spinner-wrapper" *ngIf="!flagShow">
+                <eos-spinner [size]="'lg'"></eos-spinner>
+        </div>
 </div>
-<div class="spinner-wrapper" *ngIf="!flagShow">
-        <eos-spinner [size]="'lg'"></eos-spinner>
-    </div>
+
 </div>
