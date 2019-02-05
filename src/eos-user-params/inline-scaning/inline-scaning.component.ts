@@ -101,11 +101,9 @@ export class InlineScaningComponent implements OnInit {
         });
          this.apiSrv.batch(query, '').then((data: any) => {
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-            this._userParamSrv.getUserIsn(String(this.curentUser.ISN_LCLASSIF)).then(response => {
                 this.flagShow = true;
                 this.disableBtn = true;
                 this.preparethisInputFields();
-            });
         }).catch(e => {
             this.flagShow = true;
             this.cathError(e);
