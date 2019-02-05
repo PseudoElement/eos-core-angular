@@ -43,7 +43,6 @@ import { AbsoluteRightsClassifComponent } from './rights-delo/rights-delo-absolu
 import {UserPaginationService} from './shared/services/users-pagination.service';
 import {UserHeaderComponent} from '../eos-user-params/user-header/user-header.component';
 import {InlineScaningComponent} from '../eos-user-params/inline-scaning/inline-scaning.component';
-import {FormHelperService} from '../eos-user-params/shared/services/form-helper.services';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -99,7 +98,6 @@ import {FormHelperService} from '../eos-user-params/shared/services/form-helper.
         EmailAddressService,
         LimitedAccesseService,
         UserPaginationService,
-        FormHelperService,
     ]
 })
 export class EosUserParamsModule {}

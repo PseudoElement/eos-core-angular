@@ -11,9 +11,11 @@ export class UserHeaderComponent {
     @Input() title: string;
     @Input() link: string;
     @Input() disableBtn: boolean;
+    @Input() selfLink: string;
     @Output() submitEmit = new EventEmitter<any>();
     @Output() cancelEmit = new EventEmitter<any>();
     @Output() editEmit = new EventEmitter<boolean>();
+    @Output() closeEmit = new EventEmitter<boolean>();
     constructor () {
 
     }
@@ -31,6 +33,8 @@ export class UserHeaderComponent {
     }
     close() {
         this.editMode = false;
+        this.closeEmit.emit(false);
+
     }
 
 
