@@ -22,6 +22,8 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     isShell: Boolean = false;
     newDataCard;
     newDataAttach;
+    arrayForDataFileCardCabinet = [];
+    arrayForAllDataFileCardCabinet = [];
     arrayValuesFoldersAvailable = [];
     isLoading = false;
     listCabinets = [];
@@ -453,7 +455,22 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             }
             if (this.arrayUpdateData.length > 0) {
                 for (let i = 0; i < this.arrayUpdateData.length; i++) {
-                req.push({
+                    if (this.arrayForAllDataFileCardCabinet.length) {
+                        for (let j = 0; j < this.arrayForAllDataFileCardCabinet.length; j++) {
+                            if (this.arrayForAllDataFileCardCabinet[j]['ISN_CABINET'] !== this.arrayUpdateData[i]['ISN_CABINET']) {
+                                req.push({
+                                    method: 'MERGE',
+                                    requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${this.arrayUpdateData[i]['DUE_CARD']}\')/USER_CABINET_List(\'${this.arrayUpdateData[i]['ISN_CABINET']} ${userId}\')`,
+                                    data: {
+                                              FOLDERS_AVAILABLE: this.arrayUpdateData[i]['FOLDERS_AVAILABLE'],
+                                              HIDE_INACCESSIBLE: this.arrayUpdateData[i]['HIDE_INACCESSIBLE'],
+                                              HIDE_INACCESSIBLE_PRJ: this.arrayUpdateData[i]['HIDE_INACCESSIBLE_PRJ'],
+                                    }
+                                });
+                            }
+                        }
+                    } else {
+               req.push({
                     method: 'MERGE',
                     requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${this.arrayUpdateData[i]['DUE_CARD']}\')/USER_CABINET_List(\'${this.arrayUpdateData[i]['ISN_CABINET']} ${userId}\')`,
                     data: {
@@ -464,9 +481,40 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 });
             }
             }
+            }
         this.arrayNewData = [];
         this.arrayUpdateData = [];
        return req;
+    }
+    createRequestForNewFileCards() {
+        this.newDataWhenChanging(1);
+        const req = [];
+        const userId = this._userParamsSetSrv.userContextId;
+        for (let a = 0; a < this.allData.length; a++) {
+        for (let i = 0; i < this.arrayForDataFileCardCabinet.length; i++) {
+                if (this.allData[a]['DUE'] === this.arrayForDataFileCardCabinet[i]['DEPARTMENT_DUE']) {
+                    for (let j = 0; j < this.allData[a]['USER_CABINET_List'].length; j++) {
+                        if (this.allData[a]['USER_CABINET_List'][j]['FOLDERS_AVAILABLE'] !== '') {
+                        req.push({
+                            method: 'POST',
+                            requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${this.allData[a]['DUE']}\')/USER_CABINET_List`,
+                            data: {
+                                    ISN_CABINET: this.allData[a]['USER_CABINET_List'][j]['ISN_CABINET'],
+                                    ISN_LCLASSIF: this.allData[a]['USER_CABINET_List'][j]['ISN_LCLASSIF'],
+                                    FOLDERS_AVAILABLE: this.allData[a]['USER_CABINET_List'][j]['FOLDERS_AVAILABLE'],
+                                    ORDER_WORK: null,
+                                    HOME_CABINET: this.allData[a]['USER_CABINET_List'][j]['HOME_CABINET'],
+                                    HIDE_INACCESSIBLE: this.allData[a]['USER_CABINET_List'][j]['HIDE_INACCESSIBLE'],
+                                    HIDE_INACCESSIBLE_PRJ: this.allData[a]['USER_CABINET_List'][j]['HIDE_INACCESSIBLE_PRJ']
+                            }
+                        });
+                    }
+                    }
+                }
+        }
+        }
+       this.arrayForDataFileCardCabinet = [];
+        return req;
     }
     createObjRequestForCard() {
         const req = [];
@@ -492,18 +540,17 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     }
     createObjRequestForAll() {
         let newReq;
-        if (this.newDataAttach && !this.newDataCard) {
+        if (this.arrayForDataFileCardCabinet.length) {
+            const req = this.createObjRequest();
+            const reqForCard = this.createObjRequestForCard();
+            const reqAttach = this.createObjRequestForAttach();
+            const reqForFreshCabinet = this.createRequestForNewFileCards();
+            newReq = req.concat(reqForCard).concat(reqForFreshCabinet).concat(reqAttach);
+            return newReq;
+        } else if (this.newDataAttach && !this.newDataCard) {
         const reqAttach = this.createObjRequestForAttach();
         const req = this.createObjRequest();
         newReq = req.concat(reqAttach);
-        } else if (this.newDataCard && !this.newDataAttach) {
-            return this.createObjRequestForCard();
-        } else if (this.newDataCard && this.newDataAttach) {
-            const reqAttach = this.createObjRequestForAttach();
-            const req = this.createObjRequest();
-            const reqForCard = this.createObjRequestForCard();
-            newReq = req.concat(reqForCard).concat(reqAttach);
-            return reqForCard;
         } else {
          return this.createObjRequest();
         }
@@ -697,7 +744,7 @@ this.startEventCabinet = event;
 }
     addCardFile() {
         const userId = this._userParamsSetSrv.userContextId;
-        const cabinetDataset = [];
+        let cabinetDataset = [];
         let quaryCabinetData;
         let newElementForAllData;
         let currentCabinet;
@@ -760,6 +807,7 @@ this.startEventCabinet = event;
 
         this.servApi.getData(quaryCabinetData)
         .then(data3 => {
+         cabinetDataset = [];
             for (let t = 0; t < data3.length; t++) {
                 currentCabinet = {
                     CompositePrimaryKey: '' + data3[t]['ISN_CABINET'] + ' ' + userId,
@@ -774,7 +822,9 @@ this.startEventCabinet = event;
                     IS_ASSISTANT: 0
                 };
                 cabinetDataset.push(currentCabinet);
+                this.arrayForAllDataFileCardCabinet.push(currentCabinet);
             }
+            this.arrayForDataFileCardCabinet.push(currentCabinet);
         }).then(() => {
             newElementForAllData = {
               DUE: this.newDataCard[p],
