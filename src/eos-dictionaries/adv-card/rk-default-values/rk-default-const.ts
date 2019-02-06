@@ -54,7 +54,8 @@ export const RKDefaultFields: TDefaultField[] = [
         // Default type:  'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
-        title: 'Вид доставки',
+        // title: 'Вид доставки',
+        title: 'Вид отправки',
         // classif_id:  112
         dict: {
             dictId: 'DELIVERY_CL',
@@ -75,7 +76,8 @@ export const RKDefaultFields: TDefaultField[] = [
         // Default type:  'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
-        title: 'Гриф доступа РК',
+        // title: 'Гриф доступа РК',
+        title: 'Доступ',
         dict: {
             dictId: 'SECURITY_CL',
             dictKey: 'SECURLEVEL',
@@ -116,7 +118,8 @@ export const RKDefaultFields: TDefaultField[] = [
         // Default type:  'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2',
-        title: 'Доставка РК',
+        // title: 'Доставка РК',
+        title: 'Доставка',
         // classif_id:  112
         dict: {
             dictId: 'DELIVERY_CL',
@@ -241,7 +244,8 @@ export const RKDefaultFields: TDefaultField[] = [
         // Default type:  'D',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
-        title: 'Отметить отправку',
+        // title: 'Отметить отправку',
+        title: 'с отметкой об отправке',
         // classif_id: NULL
     }, {
         // Внешние адресаты - с отметкой об отправке
@@ -249,7 +253,8 @@ export const RKDefaultFields: TDefaultField[] = [
         // Default type:  'D',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
-        title: 'Отметить отправку',
+        // title: 'Отметить отправку',
+        title: 'с отметкой об отправке',
         // classif_id: NULL
     }, {
         key: 'SEND_CB_SENDING_TYPE',
@@ -280,12 +285,25 @@ export const RKDefaultFields: TDefaultField[] = [
         title: 'Параметр заполнения жпд для всех док-тов/только с бум.оригиналом',
         // classif_id: NULL
     }, {
+        // Списать в дело радиобуттоны
         key: 'JOURNAL_NOMENC_PARM',
         // Default type:  'D',
         type: E_FIELD_TYPE.buttons,
         // kind_doc '1,2,3',
         title: 'Параметр копирования оригинал/копия',
         // classif_id: NULL
+        options: [
+            {
+                value: '0',
+                title: 'оригинал',
+            }, {
+                value: '1',
+                title: 'копию',
+            }, {
+                value: '2',
+                title: 'эл. экз',
+            },
+        ]
     }, {
         key: 'JOURNAL_NOMENC_PARM_W',
         // Default type:  'W',
@@ -299,6 +317,21 @@ export const RKDefaultFields: TDefaultField[] = [
         type: E_FIELD_TYPE.buttons,
         // kind_doc '1,2,3',
         title: 'Параметр копирования оригинал/копия',
+        options: [
+            {
+                value: '0',
+                title: 'оригинала',
+            }, {
+                value: '1',
+                title: 'копии',
+            }, {
+                value: '2',
+                title: 'первому оригинал, остальным копии',
+            }, {
+                value: '3',
+                title: 'вручную',
+            },
+        ]
         // classif_id: NULL
     }, {
         key: 'JOURNAL_PARM_W',
@@ -308,12 +341,27 @@ export const RKDefaultFields: TDefaultField[] = [
         title: 'Параметр копирования оригинал/копия',
         // classif_id: NULL
     }, {
-        // радиобуттоны
+        // Внутренние адресаты - радиобуттоны
         key: 'SEND_DEP_PARM',
         // Default type:  'D',
-        type: E_FIELD_TYPE.boolean,
+        type: E_FIELD_TYPE.buttons,
         // kind_doc '1,2,3',
         title: 'Параметр копирования оригинал/копия',
+        options: [
+            {
+                value: '0',
+                title: 'оригинал',
+            }, {
+                value: '1',
+                title: 'копии',
+            }, {
+                value: '2',
+                title: 'первому оригинал, остальным копии',
+            }, {
+                value: '3',
+                title: 'ел. экз.',
+            },
+        ]
         // classif_id: NULL
     }, {
         key: 'JOURNAL_NOMENC_DOC_PARM',
@@ -412,7 +460,8 @@ export const RKDefaultFields: TDefaultField[] = [
         // Default type:  'D',
         type: E_FIELD_TYPE.text,
         // kind_doc '1,2,3',
-        title: 'Содержание РК',
+        // title: 'Содержание РК',
+        title: 'Содержание',
         // classif_id: NULL
     }, {
         key: 'CONSISTS_M',
@@ -431,20 +480,28 @@ export const RKDefaultFields: TDefaultField[] = [
 
         // classif_id: NULL
     }, {
-        // Адресаты
+        // Внутренние адресаты - Адресаты
         key: 'SEND_ISN_LIST_DEP',
         // Default type:  'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
-        title: 'Список адресатов ДЛ',
+        // title: 'Список адресатов ДЛ',
+        title: 'Адресаты',
         // classif_id:  545
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
     }, {
         // Внешние адресаты - Адресаты
         key: 'SEND_ISN_LIST_ORGANIZ',
         // Default type:  'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
-        title: 'Список адресатов организаций',
+        // title: 'Список адресатов организаций',
+        title: 'Адресаты',
         // classif_id:  545
         dict: {
             dictId: 'USER_LISTS',
@@ -485,7 +542,8 @@ export const RKDefaultFields: TDefaultField[] = [
         // Default type:  'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
-        title: 'Список ДЛ для записи в ЖПД',
+        // title: 'Список ДЛ для записи в ЖПД',
+        title: 'Отметка о передаче',
         // classif_id:  545
         dict: {
             dictId: 'USER_LISTS',
@@ -543,7 +601,8 @@ export const RKDefaultFields: TDefaultField[] = [
         // Default type:  'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2',
-        title: 'Список получателей РК',
+        // title: 'Список получателей РК',
+        title: 'Кому адресован',
         dict: {
             dictId: 'USER_LISTS',
             dictKey: 'ISN_LIST',
@@ -558,7 +617,8 @@ export const RKDefaultFields: TDefaultField[] = [
         // Default type:  'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
-        title: 'Список рубрик',
+        // title: 'Список рубрик',
+        title: 'Рубрики',
         // classif_id:  545
     }, {
         key: 'TERM_EXEC',

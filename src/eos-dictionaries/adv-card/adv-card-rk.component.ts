@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
 import {PipRX} from '../../eos-rest';
-import { AdvCardRKDataCtrl, ACRK_GROUP } from './adv-card-rk-datactrl';
+import { AdvCardRKDataCtrl, ACRK_GROUP, DEFAULTS_LIST_NAME } from './adv-card-rk-datactrl';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
@@ -49,6 +49,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
 
 
     valuesDefault: any;
+    valuesDG: any;
     fieldsDescrDefault: any;
     inputsDefault: any;
 
@@ -79,7 +80,8 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
         // this.valuesDefault = this.dataController.getValues(ACRK_GROUP.defaultRKValues);
         this.dataController.loadDictsOptions(ACRK_GROUP.defaultRKValues).then (d => {
             this.dataController.readValues1(3670).then (values => {
-                this.valuesDefault = values[0];
+                this.valuesDG = values[0];
+                this.valuesDefault = this._makeDataObj(this.valuesDG[DEFAULTS_LIST_NAME]);
                 this.inputsDefault = this.getInputs();
                 const isNode = false;
                 this.form = this._inputCtrlSrv.toFormGroup(this.inputsDefault, isNode);
@@ -92,6 +94,17 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
         // this.componentRef.destroy();
     }
 
+    _makeDataObj (data: any) {
+        const res = { rec: {}};
+
+        for (let i = 0; i < data.length; i++) {
+            const el = data[i];
+            res.rec[el['DEFAULT_ID']] = el['VALUE'];
+        }
+
+        // {rec: this.valuesDG[DEFAULTS_LIST_NAME] };
+        return res;
+    }
     getInputs() {
 
         const i: any = {rec: {} };

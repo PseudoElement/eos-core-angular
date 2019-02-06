@@ -1,111 +1,116 @@
-<div>
-    <label>{{inputs['rec.SPECIMEN'].label}}</label>
-
-    <eos-dynamic-input [input]="inputs['rec.SPECIMEN']"
-                    [form]="form"
-                    [readonly]="!editMode" ></eos-dynamic-input>
-
-    <eos-dynamic-input [input]="inputs['rec.CONSISTS']"
-                    [form]="form"
-                    [readonly]="!editMode" ></eos-dynamic-input>
-
-
-    <label>{{inputs['rec.TERM_EXEC'].label}}</label>
-    <eos-dynamic-input [input]="inputs['rec.TERM_EXEC']"
-                                    [form]="form"
-                                    [readonly]="!editMode" ></eos-dynamic-input>
-    <label>дня (дней) от даты регистрации</label>
-
-    Доступ
-    <eos-dynamic-input [input]="inputs['rec.SECURLEVEL']"
-                                    [form]="form"
-                                    [readonly]="!editMode" ></eos-dynamic-input>
-    Доставка
-    <eos-dynamic-input [input]="inputs['rec.ISN_DELIVERY']"
+<div class="eos-rk-default-values card-content-wrapper">
+    <div class="clearfix">
+        <div class="col-1">
+            <label>{{inputs['rec.SPECIMEN'].label}}</label>
+            <eos-dynamic-input [input]="inputs['rec.SPECIMEN']"
+                            [form]="form"
+                            [readonly]="!editMode" ></eos-dynamic-input>
+        </div>
+        <div class="col-2">
+                <eos-dynamic-input [input]="inputs['rec.CONSISTS']"
                         [form]="form"
                         [readonly]="!editMode" ></eos-dynamic-input>
-    Содержание
+        </div>
+    </div>
+    <div class="clearfix">
+        <span>
+        <div class="col-with-label">
+                <label>{{inputs['rec.TERM_EXEC'].label}}</label>
+                <eos-dynamic-input [input]="inputs['rec.TERM_EXEC']"
+                                    [form]="form"
+                                    [readonly]="!editMode" ></eos-dynamic-input>
+        </div>
+        <!-- <div class="col-2"> -->
+            <label>дня (дней) от даты регистрации</label>
+        </span>
+        <!-- </div> -->
+    </div>
+    <div class="clearfix">
+        <div class="col50 padr10">
+            <eos-dynamic-input [input]="inputs['rec.SECURLEVEL']"
+                                        [form]="form"
+                                        [readonly]="!editMode" ></eos-dynamic-input>
+        </div>
+
+        <div class="col50 padl10">
+            <eos-dynamic-input [input]="inputs['rec.ISN_DELIVERY']"
+                            [form]="form"
+                            [readonly]="!editMode" ></eos-dynamic-input>
+        </div>
+    </div>
     <eos-dynamic-input [input]="inputs['rec.ANNOTAT']"
                         [form]="form"
-                        [readonly]="!editMode" >
-    </eos-dynamic-input>
+                        [readonly]="!editMode" ></eos-dynamic-input>
 
-    Кому адресован
     <eos-dynamic-input [input]="inputs['rec.WHO_ISN_LIST']"
                         [form]="form"
-                        [readonly]="!editMode" >
-    </eos-dynamic-input>
+                        [readonly]="!editMode" ></eos-dynamic-input>
 
-    Файлы
     <eos-dynamic-input [input]="inputs['rec.FILE']"
                                     [form]="form"
-                                    [readonly]="!editMode" >
-    </eos-dynamic-input>
+                                    [readonly]="!editMode" ></eos-dynamic-input>
 
-    <div class="items-group"> Передача документов
-        Отметка о передаче
+
+    <p class="xl-font paragraph-title">Передача документов</p>
+    <div class="items-group">
         <eos-dynamic-input [input]="inputs['rec.JOURNAL_ISN_LIST']"
                             [form]="form"
-                            [readonly]="!editMode" >
-        </eos-dynamic-input>
-        радиобуттоны
+                            [readonly]="!editMode" ></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['rec.JOURNAL_PARM']"
+                            [hideLabel]="true"
                             [form]="form"
-                            [readonly]="!editMode" >
-        </eos-dynamic-input>
+                            [readonly]="!editMode" ></eos-dynamic-input>
     </div>
 
+
+    <p class="xl-font paragraph-title">Списать в Дело</p>
     <div class="items-group">
-        Списать в Дело
-        радиобуттоны
+        поле с выбором
         <eos-dynamic-input [input]="inputs['rec.JOURNAL_NOMENC_PARM']"
                             [form]="form"
+                            [hideLabel]="true"
                             [readonly]="!editMode">
         </eos-dynamic-input>
     </div>
 
-    <div class="items-group"> Внутренние адресаты
-        Адресаты
-        <eos-dynamic-input [input]="inputs['rec.JOURNAL_NOMENC_PARM']"
+    <p class="xl-font paragraph-title">Внутренние адресаты</p>
+    <div class="items-group">
+
+        <eos-dynamic-input [input]="inputs['rec.SEND_ISN_LIST_DEP']"
                             [form]="form"
-                            [readonly]="!editMode">
-        </eos-dynamic-input>
-        с отметкой об отправке
+                            [readonly]="!editMode"></eos-dynamic-input>
+
         <eos-dynamic-input [input]="inputs['rec.SEND_MARKSEND']"
                             [form]="form"
-                            [readonly]="!editMode">
-        </eos-dynamic-input>
-        радиобуттоны
+                            [readonly]="!editMode"></eos-dynamic-input>
+
         <eos-dynamic-input [input]="inputs['rec.SEND_DEP_PARM']"
                             [form]="form"
-                            [readonly]="!editMode">
-        </eos-dynamic-input>
+                            [hideLabel]="true"
+                            [readonly]="!editMode"></eos-dynamic-input>
     </div>
-    <div class="items-group">  Внешние адресаты
-        Адресаты
+
+    <p class="xl-font paragraph-title">Внешние адресаты</p>
+    <div class="items-group">
+
         <eos-dynamic-input [input]="inputs['rec.SEND_ISN_LIST_ORGANIZ']"
                             [form]="form"
-                            [readonly]="!editMode">
-        </eos-dynamic-input>
-        Вид отправки
+                            [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['rec.SEND_ISN_DELIVERY']"
                             [form]="form"
-                            [readonly]="!editMode">
-        </eos-dynamic-input>
-        с отметкой об отправке
+                            [readonly]="!editMode"></eos-dynamic-input>
+
         <eos-dynamic-input [input]="inputs['rec.SEND_OUTER_MARKSEND']"
                             [form]="form"
-                            [readonly]="!editMode">
-        </eos-dynamic-input>
+                            [readonly]="!editMode"> </eos-dynamic-input>
 
     </div>
-    Примечание
+    <p class="xl-font paragraph-title"></p>
     <eos-dynamic-input [input]="inputs['rec.NOTE']"
         [form]="form"
-        [readonly]="!editMode">
-    </eos-dynamic-input>
+        [readonly]="!editMode"> </eos-dynamic-input>
 
-    Рубрики
+
     <eos-dynamic-input [input]="inputs['rec.RUBRIC_LIST']"
         [form]="form"
         [readonly]="!editMode">

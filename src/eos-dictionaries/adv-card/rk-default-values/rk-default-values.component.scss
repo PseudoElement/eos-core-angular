@@ -1,3 +1,45 @@
-.items-group {
-    border: solid 1px;
+.eos-rk-default-values {
+
+
+    &.card-content-wrapper {
+        padding: 20px 20px 0 0;
+    }
+    .items-group {
+    //     // border: solid 1px;
+        padding-left: 20px;
+    }
+    .clearfix {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .col-1 {
+        // width: 178px;
+        display: inline-block;
+        vertical-align: bottom;
+        padding-right: 20px;
+    }
+    .col-2 {
+        width: 83%;
+        display: inline-block;
+        vertical-align: bottom;
+    }
+    .col-with-label {
+        display: inline-block;
+    }
+    .col50 {
+        display: inline-block;
+        width: 49%;
+    }
+    .padl10 {
+        padding-left: 10px;
+    }
+    .padr10 {
+        padding-right: 10px;
+    }
+    // .table {
+    //     display: table;
+    // }
+    // .header {
+    //     display: table-header-group;
+    // }
 }

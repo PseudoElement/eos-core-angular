@@ -1,5 +1,5 @@
 <div [formGroup]="form">
-    <label [hidden]="input.hideLabel" [attr.for]="input.key">{{input.label}}</label>
+    <label [hidden]="input.hideLabel || hideLabel" [attr.for]="input.key">{{input.label}}</label>
     <div class="eos-switch btn-group readonly" *ngIf="readonly">
         <label class="btn btn-primary switch-item text-uppercase btn-readonly"
                [ngClass]="{'btn-primary-full':control?.value === opt.value, 'disabled': disabled}"
