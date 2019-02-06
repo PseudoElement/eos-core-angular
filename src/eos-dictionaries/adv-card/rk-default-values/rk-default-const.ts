@@ -22,18 +22,7 @@ export class TDefaultField {
 }
 
 export const RKDefaultFields: TDefaultField[] = [
-    // {
-    //     key: 'SPECIMEN',
-    //     title: 'Экз №',
-    //     value: '',
-    //     type: E_FIELD_TYPE.numberIncrement,
-    // },
-    // {
-    //     key: 'CONSISTS',
-    //     title: 'Состав',
-    //     value: '',
-    //     type: E_FIELD_TYPE.string,
-    // },
+
     {
         key: 'TERM_EXEC_TYPE',
         // Default type:  'D',
@@ -44,7 +33,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'SND_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Адресаты',
         // classif_id: NULL
@@ -62,13 +51,13 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LCLASSIF',
             dictKeyTitle: 'CLASSIF_NAME',
         }
-
     }, {
         key: 'SECURLEVEL_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
-        title: 'Гриф доступа',
+        // title: 'Гриф доступа',
+        title: 'Доступ',
         // classif_id: NULL
     }, {
         // Доступ
@@ -95,7 +84,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'DOC_DATE_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Дата регистрации',
         // classif_id: NULL
@@ -109,7 +98,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'ISN_DELIVERY_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2',
         title: 'Доставка',
         // classif_id: NULL
@@ -171,7 +160,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'ISN_CABINET_REG_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Кабинет регистрации',
         // classif_id: NULL
@@ -213,16 +202,17 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'ISN_CARD_REG_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Картотека регистрации',
         // classif_id: NULL
     }, {
         key: 'DOCWHO_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2',
-        title: 'Кому',
+        // title: 'Кому',
+        title: 'Кому адресован',
         // classif_id: NULL
     }, {
         key: 'CONTROL_STATE',
@@ -234,7 +224,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'CORRESP_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2',
         title: 'Корреспондент',
         // classif_id: NULL
@@ -401,9 +391,10 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'TERM_EXEC_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
-        title: 'Плановая дата',
+        // title: 'Плановая дата',
+        title: 'Срок исп. (План. дата)',
         // classif_id: NULL
     }, {
         key: 'DOCSIGN_M',
@@ -437,21 +428,21 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'FREE_NUM_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Рег. №',
         // classif_id: NULL
     }, {
         key: 'RUB_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Рубрики',
         // classif_id: NULL
     }, {
         key: 'ANNOTAT_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Содержание',
         // classif_id: NULL
@@ -466,7 +457,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'CONSISTS_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Состав',
         // classif_id: NULL
@@ -658,7 +649,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'FILE_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Файлы',
         // classif_id: NULL

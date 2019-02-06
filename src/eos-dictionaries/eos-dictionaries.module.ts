@@ -1,3 +1,4 @@
+import { RKDefaultValuesReqCardComponent } from './adv-card/rk-default-values/rk-default-reqs.component';
 import { SevParticipantCardEditComponent } from './card-views/sev-participant-card-edit.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -85,6 +86,7 @@ import { RKDefaultValuesCardComponent } from './adv-card/rk-default-values/rk-de
         CounterNpEditComponent,
         AdvCardRKEditComponent,
         RKDefaultValuesCardComponent,
+        RKDefaultValuesReqCardComponent,
         RulesSelectComponent,
         DepartmentsCardEditDepartmentComponent,
         DepartmentsCardEditPersonComponent,

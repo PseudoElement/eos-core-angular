@@ -20,9 +20,13 @@
 
         <ng-container [ngSwitch]="activeTab.tag">
             <ng-container *ngSwitchCase="0">
-                <ng-container *ngTemplateOutlet="defaultEdit"></ng-container>
+                <ng-container *ngTemplateOutlet="defaultEdit1"></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="1">
+                <ng-container *ngTemplateOutlet="defaultEdit2"></ng-container>
             </ng-container>
         </ng-container>
+
     </div>
 </div>
 <div>
@@ -31,7 +35,7 @@
     <button>Выход</button>
 </div>
 
-<ng-template #defaultEdit>
+<ng-template #defaultEdit1>
     <eos-rk-default-values
         style="width: 100%;"
         [dataController]="dataController"
@@ -42,3 +46,16 @@
         [inputs]="inputsDefault">
     </eos-rk-default-values>
 </ng-template>
+
+<ng-template #defaultEdit2>
+        <eos-rk-default-reqs
+            style="width: 100%;"
+            [dataController]="dataController"
+            [fieldsDescription]="fieldsDescrDefault"
+            [form]="form"
+            [editMode]="true"
+            [data]="valuesDefault"
+            [inputs]="inputsDefault">
+        </eos-rk-default-reqs>
+</ng-template>
+
