@@ -130,10 +130,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 });
                 if (data && data['pass']) {
                     if (this.curentUser['IS_PASSWORD'] === 0) {
-                        const url = `CreateLogin?pass='${data['pass']}'&isn_user=${id}`;
+                        const url = `CreateLogin?pass='${encodeURI(data['pass'])}'&isn_user=${id}`;
                         qPass = this._apiSrv.getData({[url]: ALL_ROWS});
                     } else {
-                        const url = `ChangePassword?isn_user=${id}&pass='${data['pass']}'`;
+                        const url = `ChangePassword?isn_user=${id}&pass='${encodeURI(data['pass'])}'`;
                         qPass = this._apiSrv.getData({[url]: ALL_ROWS});
                     }
                 } else {
