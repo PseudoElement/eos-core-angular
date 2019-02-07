@@ -1,14 +1,14 @@
 
 
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
-import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
-import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
-import { UserSelectNode } from './user-node-select';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap';
-import { CreateUserComponent } from './createUser/createUser.component';
+import {Component, OnDestroy, OnInit } from '@angular/core';
+import {ActivatedRoute, Router } from '@angular/router';
+import {Subject } from 'rxjs/Subject';
+import {UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
+import {UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
+import {UserSelectNode } from './user-node-select';
+import {BsModalService, BsModalRef } from 'ngx-bootstrap';
+import {CreateUserComponent } from './createUser/createUser.component';
 import {RtUserSelectService} from '../shered/services/rt-user-select.service';
 import { EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.service';
 import {IUserSort, SortsList} from '../shered/interfaces/user-select.interface';
@@ -16,12 +16,12 @@ import {HelpersSortFunctions} from '../shered/helpers/sort.helper';
 import {Allbuttons} from '../shered/consts/btn-action.consts';
 import {BtnAction, BtnActionFields} from '../shered/interfaces/btn-action.interfase';
 import {TreeUserSelectService} from '../shered/services/tree-user-select.service';
-import { RestError } from 'eos-rest/core/rest-error';
-import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
+import {RestError } from 'eos-rest/core/rest-error';
+import {EosMessageService } from 'eos-common/services/eos-message.service';
+import {ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import {CONFIRM_DELETE} from '../shered/consts/confirm-users.const';
-import { PipRX} from 'eos-rest';
-import { ALL_ROWS } from 'eos-rest/core/consts';
+import {PipRX} from 'eos-rest';
+import {ALL_ROWS } from 'eos-rest/core/consts';
 @Component({
     selector: 'eos-list-user-select',
     templateUrl: 'list-user-select.component.html'
@@ -39,6 +39,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     helpersClass: any;
     buttons: BtnAction;
     flagChecked: boolean;
+    flagScan: boolean = null;
     countMaxSize: number;
 
     // количество выбранных пользователей
@@ -67,6 +68,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._pagSrv.NodeList$
             .takeUntil(this.ngUnsubscribe)
                 .subscribe((data) => {
+                    this.flagScan = null;
                     this.flagChecked = null;
                     this.listUsers  = data;
                     if (this.listUsers && this.listUsers.length) {
@@ -87,11 +89,18 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 .subscribe((state: boolean[]) => {
                     this.currentState = state;
         });
+
+        this.rtUserService.subjectScan.takeUntil(this.ngUnsubscribe).subscribe(flagBtnScan => {
+            this.flagScan = !flagBtnScan;
+                this.buttons.buttons[5].disabled = this.flagScan;
+                this.buttons.moreButtons[7].disabled = this.flagScan;
+        });
     }
 
     initView(param?) {
         this.countcheckedField = 0;
         this.titleCurrentDue = this._apiSrv.configList.titleDue;
+        this.flagScan = null;
         this.flagChecked = null;
         this.isLoading = true;
         this._apiSrv.getUsers(param || '0.')
@@ -110,7 +119,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.isLoading = false;
                 this.countMaxSize = this._pagSrv.countMaxSize;
         }).catch(error => {
-            error.message = 'Серверная ошибка,  обратитесь к системному администратору';
+           error.message = 'Серверная ошибка,  обратитесь к системному администратору';
            this.cathError(error);
         });
     }
@@ -140,7 +149,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.rtUserService.changeSelectedUser(searchSelected[0]);
             }   else {
                 flagUserSelected = false;
-                if (this.selectedUser.hasOwnProperty('isSelected')) {
+                if (this.selectedUser && this.selectedUser.hasOwnProperty('isSelected')) {
                     this.selectedUser.isSelected = false;
                 }
                 this.rtUserService.changeSelectedUser(null);
@@ -149,7 +158,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
             }
        }
-       this.updateFlafListen();
+        this.updateFlafListen();
         this.disabledBtnAction(flagUserSelected);
     }
 
@@ -301,9 +310,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
 
     OpenStreamScanSystem() {
-        this._router.navigate(['user-params-set/', 'rights-delo', 'inline-scaning'], {
+        this._router.navigate(['user-params-set/', 'inline-scaning'],
+        {
             queryParams: {isn_cl: this.selectedUser.id}
-      });
+      }
+        );
         // this._confirmSrv.confirm(CONFIRM_SCANSYST).then(res => {
         // });
     }
@@ -466,6 +477,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
             return button;
         });
+        if (this.flagScan !== null) {
+            this.buttons.buttons[5].disabled = this.flagScan;
+            this.buttons.moreButtons[7].disabled = this.flagScan;
+        }
     }
 
     private disabledBtnDeleted() {
