@@ -91,9 +91,11 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'JOURNAL_ISN_NOMENC',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.dictLink,
         // kind_doc '1,2,3',
-        title: 'Дело для записи в ЖПД',
+        // title: 'Дело для записи в ЖПД',
+        title: 'Списать в дело',
+
         // classif_id:  119
     }, {
         key: 'ISN_DELIVERY_M',

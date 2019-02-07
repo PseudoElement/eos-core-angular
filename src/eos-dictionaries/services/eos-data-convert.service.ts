@@ -44,6 +44,27 @@ export class EosDataConvertService {
                         descr = fieldsDescription['rec'];
                         Object.keys(descr).forEach((_key) => {
                             switch (descr[_key].type) {
+
+                                case E_FIELD_TYPE.dictLink:
+                                    inputs[_dict + '.' + _key] = new StringInput({
+                                        key: _dict + '.' + descr[_key].foreignKey,
+                                        label: descr[_key].title,
+                                        required: descr[_key].required,
+                                        pattern: descr[_key].pattern,
+                                        isUnique: descr[_key].isUnique,
+                                        uniqueInDict: descr[_key].uniqueInDict,
+                                        forNode: descr[_key].forNode,
+                                        value: data[_dict][descr[_key].foreignKey]
+                                            || descr[_key].default,
+                                        length: descr[_key].length,
+                                        readonly: descr[_key].readonly,
+                                        disabled: descr[_key].readonly || !editMode,
+                                        password: descr[_key].password,
+                                        groupLabel: descr[_key].groupLabel
+                                    });
+                                    inputs[_dict + '.' + _key].controlType = E_FIELD_TYPE.dictLink;
+                                break;
+
                                 case E_FIELD_TYPE.numberIncrement:
                                     inputs[_dict + '.' + _key] = new NumberIncrementInput({
                                         key: _dict + '.' + descr[_key].foreignKey,

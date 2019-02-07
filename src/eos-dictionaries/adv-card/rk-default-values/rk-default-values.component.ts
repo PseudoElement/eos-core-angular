@@ -32,4 +32,8 @@ export class RKDefaultValuesCardComponent implements OnChanges {
         // }
         // console.log('form:', this.form);
     }
+
+    journalNomencClick() {
+        console.log('1');
+    }
 }

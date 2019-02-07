@@ -25,6 +25,7 @@ export class DynamicInputComponent {
     @Input() disabled: boolean;
     @Input() isGroup: boolean;
     @Input() hideLabel: boolean;
+    @Input() event1: Function;
 
     types = E_FIELD_TYPE;
     tooltip: ErrorTooltip = new ErrorTooltip;

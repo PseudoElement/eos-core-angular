@@ -1,7 +1,14 @@
+
 .eos-rk-default-reqs {
+
+    &.card-content-wrapper {
+        padding: 20px 20px 0 0;
+    }
+
+
     .form-group {
         margin: 0px;
-        margin-bottom: 0px;
+        margin-left: 40px;
     }
 }
 

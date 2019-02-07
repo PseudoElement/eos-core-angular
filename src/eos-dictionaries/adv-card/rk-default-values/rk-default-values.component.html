@@ -65,12 +65,14 @@
 
     <p class="xl-font paragraph-title">Списать в Дело</p>
     <div class="items-group">
-        поле с выбором
+        <eos-dynamic-input [input]="inputs['rec.JOURNAL_ISN_NOMENC']"
+                            [form]="form"
+                            [event1]="journalNomencClick"
+                            [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['rec.JOURNAL_NOMENC_PARM']"
                             [form]="form"
                             [hideLabel]="true"
-                            [readonly]="!editMode">
-        </eos-dynamic-input>
+                            [readonly]="!editMode"></eos-dynamic-input>
     </div>
 
     <p class="xl-font paragraph-title">Внутренние адресаты</p>
@@ -99,7 +101,6 @@
         <eos-dynamic-input [input]="inputs['rec.SEND_ISN_DELIVERY']"
                             [form]="form"
                             [readonly]="!editMode"></eos-dynamic-input>
-
         <eos-dynamic-input [input]="inputs['rec.SEND_OUTER_MARKSEND']"
                             [form]="form"
                             [readonly]="!editMode"> </eos-dynamic-input>
