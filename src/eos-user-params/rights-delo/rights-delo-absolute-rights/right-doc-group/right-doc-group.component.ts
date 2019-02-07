@@ -111,6 +111,7 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
 
     private _init() {
         this.rDocgroup = this._userParmSrv.userRightDocgroupList;
+        console.log(this.rDocgroup);
         this.isLoading = true;
         const str = this.rDocgroup.map(i => i.DUE);
         if (this.selectedNode.isCreate) {

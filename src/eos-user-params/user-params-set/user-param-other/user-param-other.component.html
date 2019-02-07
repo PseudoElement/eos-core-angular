@@ -180,20 +180,38 @@
             </div>
             <hr>
             <div class="user-input-group">
-                <eos-dynamic-input class="restrict-by-document-groups"
+                <!-- <eos-dynamic-input class="restrict-by-document-groups"
                 [input]="inputs['rec.REESTR_RESTRACTION_DOCGROUP']"
                 [form]="form"
-                [readonly]="false"></eos-dynamic-input>
-                <button
-            class="btn add-storage"
-            tooltip="Выбор из справочника"
-            containerClass="tooltip-info"
-            (click)="selectfromTheDirectory()"
-        >
-                <span class="eos-icon eos-icon-folder-blue small"></span>
-        </button>
+                [readonly]="false">
+            </eos-dynamic-input> -->
+            <div *ngIf='list.length > 0'>
+                <span *ngFor= "let node of list">{{node.label}}</span>
             </div>
-
+            <div style="display: inline" class=""
+           >
+                <button
+                tooltip="Выбор из справочника"
+                #tooltipTemp = 'bs-tooltip'
+                containerClass="tooltip-info"
+                    class="btn add-storage"
+                    (click)="tooltipTemp.hide(); selectfromTheDirectory()">
+                    <span class="eos-icon eos-icon-folder-blue small"></span>
+                </button>
+            </div>
+            <div style="display: inline" class=""
+           >
+                <button
+                [disabled] ="list.length === 0"
+                tooltip="Удалить"
+                #tooltipTemp = 'bs-tooltip'
+                containerClass="tooltip-info"
+                    class="btn add-storage"
+                    (click)="tooltipTemp.hide(); deleteDirectory()">
+                    <span class="eos-icon eos-icon-close-blue small"></span>
+                </button>
+            </div>
+        </div>
 </div>
 <!--------------------------2--------------------------------------------->
 <!--------------------------3--------------------------------------------->

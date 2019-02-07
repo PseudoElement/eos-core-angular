@@ -53,6 +53,7 @@ export const OTHER_USER: IBaseUsers = {
             type: 'select',
             title: '',
             options: [
+
             ]
         },
         {
