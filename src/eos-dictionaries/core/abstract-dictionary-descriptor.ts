@@ -379,6 +379,10 @@ export abstract class AbstractDictionaryDescriptor {
             });
     }
 
+    confirmSave(nodeData: EosDictionaryNode, confirmSrv): Promise<boolean> {
+        return Promise.resolve(true);
+    }
+
     // getFullRelated(): Promise<any> {
     //     const reqs = [];
     //     this.metadata.relations.forEach((relation) => {
