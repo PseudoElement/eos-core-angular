@@ -34,6 +34,36 @@ export const CARD_INDEXS_RIGHTS: IInputParamControlForIndexRight[] = [
             }
         },
         {
+            //    controlType: E_FIELD_TYPE.boolean,
+                key: '18',
+                // key: 'CARD_INDEX_RIGHTS_EDITING_ADDITIONAL_DETAILS',
+                label: 'Редактирование доп.реквизитов',
+                data: {
+                    isSelected: false,
+                    rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroupCard
+                }
+            },
+            {
+            //    controlType: E_FIELD_TYPE.boolean,
+                key: '19',
+                // key: 'CARD_INDEX_RIGHTS_EDITING_RUBRICS',
+                label: 'Редактирование рубрик',
+                data: {
+                    isSelected: false,
+                    rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroupCard
+                }
+            },
+            {
+            //    controlType: E_FIELD_TYPE.boolean,
+                key: '20',
+                // key: 'CARD_INDEX_RIGHTS_EDITING_BUNDLE',
+                label: 'Редактирование связок',
+                data: {
+                    isSelected: false,
+                    rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroupCard
+                }
+            },
+        {
           //  controlType: E_FIELD_TYPE.boolean,
             key: '3',
             // key: 'CARD_INDEX_RIGHTS_RC_REMOVAL',
@@ -181,36 +211,6 @@ export const CARD_INDEXS_RIGHTS: IInputParamControlForIndexRight[] = [
             data: {
                 isSelected: false,
                 rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroup
-            }
-        },
-        {
-        //    controlType: E_FIELD_TYPE.boolean,
-            key: '18',
-            // key: 'CARD_INDEX_RIGHTS_EDITING_ADDITIONAL_DETAILS',
-            label: 'Редактирование доп.реквизитов',
-            data: {
-                isSelected: false,
-                rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroupCard
-            }
-        },
-        {
-        //    controlType: E_FIELD_TYPE.boolean,
-            key: '19',
-            // key: 'CARD_INDEX_RIGHTS_EDITING_RUBRICS',
-            label: 'Редактирование рубрик',
-            data: {
-                isSelected: false,
-                rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroupCard
-            }
-        },
-        {
-        //    controlType: E_FIELD_TYPE.boolean,
-            key: '20',
-            // key: 'CARD_INDEX_RIGHTS_EDITING_BUNDLE',
-            label: 'Редактирование связок',
-            data: {
-                isSelected: false,
-                rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroupCard
             }
         }
 ];
