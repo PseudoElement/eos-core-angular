@@ -179,17 +179,19 @@
                             </div>
             </div>
             <hr>
-            <div class="user-input-group">
+            <div class="user-input-group fl">
                 <!-- <eos-dynamic-input class="restrict-by-document-groups"
                 [input]="inputs['rec.REESTR_RESTRACTION_DOCGROUP']"
                 [form]="form"
                 [readonly]="false">
             </eos-dynamic-input> -->
-            <div *ngIf='list.length > 0'>
-                <span *ngFor= "let node of list">{{node.label}}</span>
+            <div class="user-input-group-wr">
+                <div class="user-input-group-hi" *ngIf='list.length > 0'>
+                    <span *ngFor= "let node of list">{{node.label}}</span>
+                </div>
             </div>
-            <div style="display: inline" class=""
-           >
+
+            <div style="display: inline" class="btn-action">
                 <button
                 tooltip="Выбор из справочника"
                 #tooltipTemp = 'bs-tooltip'

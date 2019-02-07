@@ -48,7 +48,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     _userParamsSetSrv: UserParamsService;
     _waitClassifSrv: WaitClassifService;
     _router: Router;
-    private _fieldsType = {};
+    public _fieldsType = {};
     constructor(
         injector: Injector,
         paramModel,

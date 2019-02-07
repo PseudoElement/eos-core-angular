@@ -44,7 +44,6 @@ export class UserParamsComponent implements OnDestroy, OnInit {
             .subscribe(qParam => {
                 if (!qParam['isn_cl'] && !this._userParamService.isUserContexst) {
                     this._router.navigate(['user_param']);
-                    console.log(this._userParamService.curentUser);
                     return;
                 }
                 this.isLoading = true;
