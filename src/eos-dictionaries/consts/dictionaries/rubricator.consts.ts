@@ -27,7 +27,7 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
     Object.assign({}, COMMON_FIELD_CODE, {
         key: 'RUBRIC_CODE',
         required: true,
-        length: 20,
+        length: 248,
         isUnique: true,
         uniqueInDict: true,
     }),

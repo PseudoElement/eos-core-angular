@@ -214,10 +214,15 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     }
 
     save(): void {
-        this.disableSave = true;
         const _data = this.cardEditRef.getNewData();
-        this._save(_data)
-            .then((node: EosDictionaryNode) => this._afterSaving(node));
+        this._confirmSave(_data)
+            .then((res: boolean) => {
+                if (res) {
+                    this.disableSave = true;
+                    this._save(_data)
+                        .then((node: EosDictionaryNode) => this._afterSaving(node));
+                }
+             });
     }
 
     disManager(mod: boolean, tooltip: any): boolean {
@@ -403,6 +408,10 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         } else {
             return Promise.resolve(true);
         }
+    }
+
+    private _confirmSave(data): Promise<boolean> {
+        return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv);
     }
 
     private _save(data: any): Promise<any> {
