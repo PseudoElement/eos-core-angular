@@ -55,31 +55,37 @@ export const SUB_PARAMS_LIST_NAV_FOR_RIGHTS_DELO: IParamAccordionList[] = [
         title: 'Ограничение доступа',
         url: 'access-limitation'
     },
-    {
-        title: 'Права в поточном сканировании',
-        url: 'inline-scaning'
-    },
+
 ];
 export const USER_PARAMS_LIST_NAV: IParamAccordionList[] = [
     {
         title: 'Основные данные',
-        url: 'base-param'
+        url: 'base-param',
+        disabled: false,
     },
     {
         title: 'Права в системе АИК «Надзор»',
         url: 'rights-delo',
         subList: SUB_PARAMS_LIST_NAV_FOR_RIGHTS_DELO,
-        isOpen: false
+        isOpen: false,
+        disabled: false,
     },
     {
         title: 'Настройки пользователя',
         url: 'param-set',
         subList: SUB_PARAMS_LIST_NAV,
-        isOpen: false
+        isOpen: false,
+        disabled: false,
     },
     {
         title: 'Ведение адресов электронной почты',
-        url: 'email-address'
+        url: 'email-address',
+        disabled: false,
+    },
+    {
+        title: 'Права в поточном сканировании',
+        url: 'inline-scaning',
+        disabled: false,
     },
 ];
 

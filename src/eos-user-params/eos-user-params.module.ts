@@ -41,7 +41,8 @@ import { RightAbsoluteDocGroupComponent } from './rights-delo/rights-delo-absolu
 import { ListDocsTreeComponent } from './shared/list-docs-tree/list-docs-tree.component';
 import { AbsoluteRightsClassifComponent } from './rights-delo/rights-delo-absolute-rights/absolute-rights-classif/absolute-rights-classif.component';
 import {UserPaginationService} from './shared/services/users-pagination.service';
-
+import {UserHeaderComponent} from '../eos-user-params/user-header/user-header.component';
+import {InlineScaningComponent} from '../eos-user-params/inline-scaning/inline-scaning.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -73,6 +74,8 @@ import {UserPaginationService} from './shared/services/users-pagination.service'
         ListDocsTreeComponent,
         LinksLimitedComponent,
         AbsoluteRightsClassifComponent,
+        UserHeaderComponent,
+        InlineScaningComponent,
     ],
     entryComponents: [
         CardFilesDirectoryModalComponent,
@@ -94,7 +97,7 @@ import {UserPaginationService} from './shared/services/users-pagination.service'
         InputParamControlService,
         EmailAddressService,
         LimitedAccesseService,
-        UserPaginationService
+        UserPaginationService,
     ]
 })
 export class EosUserParamsModule {}

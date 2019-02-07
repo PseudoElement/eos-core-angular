@@ -80,4 +80,5 @@ export interface IParamAccordionList {
     url?: string;
     subList?: IParamAccordionList[];
     isOpen?: boolean;
+    disabled?: boolean;
 }
