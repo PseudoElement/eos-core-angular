@@ -1,4 +1,4 @@
-<div *ngIf="CurrentUser" class="fullWidth" [ngSwitch]="chooseTemplate">
+<div *ngIf="CurrentUserForShowTemplate" class="fullWidth" [ngSwitch]="chooseTemplate">
         <div  *ngSwitchCase= "'main'">
             <div class="rt-user">
                 <div class="rt-avatar" *ngIf="DueInfo else unset">

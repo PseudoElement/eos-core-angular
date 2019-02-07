@@ -1,0 +1,61 @@
+<eos-user-params-header
+[title] = 'title'
+[link] = 'link'
+[selfLink] = 'selfLink'
+[disableBtn] = "disableBtn"
+(submitEmit) = 'submit($event)'
+(cancelEmit) = 'cancel($event)'
+(editEmit) = 'edit($event)'
+(closeEmit) = 'close($event)'
+></eos-user-params-header>
+<div class="flow-scan">
+    <div *ngIf='flagShow' class="flow-scan-wrapper">
+        <div class="flow-info">
+            <div class="flow-info-deep">
+                <span class="flow-login">
+                    Имя:  <span>{{curentUser.CLASSIF_NAME}}</span>
+                </span>
+                <span class="flow-surname">
+                    ФИО:  <span>{{curentUser.SURNAME_PATRON}}</span>
+                </span>
+            </div>
+            <div class="flow-info-deep">
+                <span class="flow-department">
+                    Подразделение:  <span>{{curentUser.NOTE}}</span>
+                </span>
+            </div>
+
+        </div>
+        <div class="flow-form">
+            <div class="flow-form-item">
+                <eos-dynamic-input
+                [input]="inputs['STREAM_SCAN_RIGHTS_BD']"
+                [form]="form"
+                [readonly]="false"
+                ></eos-dynamic-input>
+                <span class="flow-form-title">Сканирование на запись в БД</span>
+            </div>
+
+            <div class="flow-form-item">
+                <eos-dynamic-input
+                [input]="inputs['STREAM_SCAN_RIGHTS_ARM']"
+                [form]="form"
+                [readonly]="false"
+                ></eos-dynamic-input>
+                    <span class="flow-form-title">Настройка АРМ сканирования</span>
+            </div>
+            <div class="flow-form-item">
+                <eos-dynamic-input
+                [input]="inputs['STREAM_SCAN_RIGHTS_BAR_CODE']"
+                [form]="form"
+                [readonly]="false"
+                ></eos-dynamic-input>
+                    <span class="flow-form-title">Печать штрих кода</span>
+            </div>
+        </div>
+        <div class="spinner-wrapper" *ngIf="!flagShow">
+                <eos-spinner [size]="'lg'"></eos-spinner>
+        </div>
+</div>
+
+</div>
