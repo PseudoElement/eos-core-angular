@@ -29,7 +29,7 @@ export class DynamicInputLinkButtonComponent extends DynamicInputBase {
 
     getDisplayValue () {
         if (this.input.options) {
-            return this.input.options['title'];
+            return this.input.options[0]['title'];
         }
         return '...';
     }

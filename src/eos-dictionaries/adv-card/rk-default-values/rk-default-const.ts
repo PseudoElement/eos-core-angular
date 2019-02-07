@@ -5,6 +5,7 @@ export class TDFSelect {
     dictKey: string;
     dictKeyTitle: string;
     criteries?: any;
+    _cache?: any;
 }
 export class TDFSelectOption {
     value: any;
@@ -95,6 +96,13 @@ export const RKDefaultFields: TDefaultField[] = [
         // kind_doc '1,2,3',
         // title: 'Дело для записи в ЖПД',
         title: 'Списать в дело',
+        dict: {
+            dictId: 'NOMENKL_CL',
+            dictKey: 'ISN_LCLASSIF',
+            dictKeyTitle: 'CLASSIF_NAME',
+            // criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
+
 
         // classif_id:  119
     }, {

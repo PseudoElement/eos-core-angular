@@ -5,6 +5,7 @@ import { AdvCardRKDataCtrl, ACRK_GROUP, DEFAULTS_LIST_NAME } from './adv-card-rk
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
+import { TDefaultField, TDFSelectOption } from './rk-default-values/rk-default-const';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -78,10 +79,11 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
         this.dataController = new AdvCardRKDataCtrl(this.apiSrv);
         this.fieldsDescrDefault = this.dataController.getDescriptions(ACRK_GROUP.defaultRKValues);
         // this.valuesDefault = this.dataController.getValues(ACRK_GROUP.defaultRKValues);
-        this.dataController.loadDictsOptions(ACRK_GROUP.defaultRKValues).then (d => {
-            this.dataController.readValues1(3670).then (values => {
-                this.valuesDG = values[0];
-                this.valuesDefault = this._makeDataObj(this.valuesDG[DEFAULTS_LIST_NAME]);
+
+        this.dataController.readValues1(3670).then (values => {
+            this.valuesDG = values[0];
+            this.valuesDefault = this._makeDataObj(this.valuesDG[DEFAULTS_LIST_NAME]);
+            this.dataController.loadDictsOptions(ACRK_GROUP.defaultRKValues, this.valuesDefault, this.updateLinks).then (d => {
                 this.inputsDefault = this.getInputs();
                 const isNode = false;
                 this.form = this._inputCtrlSrv.toFormGroup(this.inputsDefault, isNode);
@@ -92,6 +94,13 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
     }
     ngOnDestroy() {
         // this.componentRef.destroy();
+    }
+
+    updateLinks (el: TDefaultField, options: TDFSelectOption[], data: any) {
+        if (el.key === 'JOURNAL_ISN_NOMENC') {
+            const rec = data[0];
+            options[0].title = rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
+        }
     }
 
     _makeDataObj (data: any) {
@@ -115,23 +124,9 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
             const t = i.rec;
             t[element.key] = element;
         });
-        // Object.keys(this.prepareData.rec).forEach(key => {
-        //     if ((this._fieldsType[key] === 'boolean' || this._fieldsType[key] === 'toggle') && !this.prepInputs.rec[key].formatDbBinary) {
-        //         if (this.prepareData.rec[key] === 'YES') {
-        //             dataInput.rec[key] = true;
-        //         } else {
-        //             dataInput.rec[key] = false;
-        //         }
-        //     } else if (this.prepInputs.rec[key].formatDbBinary) {
-        //         if (this.prepareData.rec[key] === '1') {
-        //             dataInput.rec[key] = true;
-        //         } else {
-        //             dataInput.rec[key] = false;
-        //         }
-        //     } else {
-        //         dataInput.rec[key] = this.prepareData.rec[key];
-        //     }
-        // });
+
+        // select classif_name , nom_number , year_number , e_document from nomenkl_cl where isn_lclassif =4057175
+
         return this._dataSrv.getInputs(i, this.valuesDefault);
     }
     clickTab (item: Ttab) {

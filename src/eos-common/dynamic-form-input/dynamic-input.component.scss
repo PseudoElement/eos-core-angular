@@ -176,8 +176,9 @@ eos-dynamic-input {
            position: absolute;
            right: 2px;
            top: 5px;
-
-
+        }
+        input {
+            background-color: lightgrey;
         }
     }
 }

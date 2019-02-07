@@ -46,7 +46,7 @@ export class EosDataConvertService {
                             switch (descr[_key].type) {
 
                                 case E_FIELD_TYPE.dictLink:
-                                    inputs[_dict + '.' + _key] = new StringInput({
+                                    inputs[_dict + '.' + _key] = new DropdownInput({
                                         key: _dict + '.' + descr[_key].foreignKey,
                                         label: descr[_key].title,
                                         required: descr[_key].required,
@@ -56,10 +56,11 @@ export class EosDataConvertService {
                                         forNode: descr[_key].forNode,
                                         value: data[_dict][descr[_key].foreignKey]
                                             || descr[_key].default,
-                                        length: descr[_key].length,
+                                        // length: descr[_key].length,
                                         readonly: descr[_key].readonly,
                                         disabled: descr[_key].readonly || !editMode,
-                                        password: descr[_key].password,
+                                        // password: descr[_key].password,
+                                        options: descr[_key].options,
                                         groupLabel: descr[_key].groupLabel
                                     });
                                     inputs[_dict + '.' + _key].controlType = E_FIELD_TYPE.dictLink;

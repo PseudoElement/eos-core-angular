@@ -102,19 +102,55 @@ export class AdvCardRKDataCtrl {
     //             return this.associateRelationType(tables, responses);
     //         });
     // }
+    readDictLinkValue(el: TDefaultField, value: any, updateLink: Function = null): Promise<any> {
+        const dict = el.dict;
+        if (dict) {
+            let query: any; // {criteries: {[NUM_YEAR_NAME]: String(this.editValueYear)}};
+            if (el.dict.criteries) {
+                query = { criteries: el.dict.criteries};
+            } else {
+                query = { criteries: {}};
+            }
+            query.criteries[dict.dictKey] = value;
 
-    loadDictsOptions (group: ACRK_GROUP): Promise<any> {
+
+            const req = {[el.dict.dictId]: query};
+
+            return this._apiSrv.read(req).then((data) => {
+                const opts: TDFSelectOption[] = [];
+                for (let index = 0; index < data.length; index++) {
+                    const element = data[index];
+                    opts.push ({value: element[el.dict.dictKey], title: element[el.dict.dictKeyTitle]});
+                }
+
+                if (updateLink) {
+                    updateLink(el, opts, data);
+                }
+                el.options = opts;
+                // el.dict._cache = data;
+                this.loadedDicts[el.dict.dictId] = opts;
+                return data;
+            });
+
+        }
+        return Promise.resolve(null);
+    }
+
+    loadDictsOptions (group: ACRK_GROUP, values: any, updateLink: Function = null): Promise<any> {
         const reqs = [];
         const fields = this.getDescriptions(group);
 
         for (let i = 0; i < fields.length; i++) {
             const el: TDefaultField = fields[i];
-            if (el.type !== E_FIELD_TYPE.select) {
+            if (!el.dict) {
                 continue;
             }
-
-            if (el.dict) {
-                if (this.loadedDicts[el.dict.dictId]) {
+            if (el.type === E_FIELD_TYPE.dictLink) {
+                reqs.push(this.readDictLinkValue(el, values.rec[el.key], updateLink));
+            } else if (el.type === E_FIELD_TYPE.select) {
+                if (this.loadedDicts[el.dict.dictId] &&
+                    this.loadedDicts[el.dict.dictId]._idptr &&
+                    this.loadedDicts[el.dict.dictId]._idptr === el.dict) {
                     el.options = this.loadedDicts[el.dict.dictId];
                 } else {
                     let query: any; // {criteries: {[NUM_YEAR_NAME]: String(this.editValueYear)}};
@@ -134,6 +170,7 @@ export class AdvCardRKDataCtrl {
                         }
                         el.options = opts;
                         this.loadedDicts[el.dict.dictId] = opts;
+                        this.loadedDicts[el.dict.dictId]._idptr = el.dict;
                         return data;
                     }));
                 }
