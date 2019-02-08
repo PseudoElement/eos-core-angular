@@ -1,12 +1,11 @@
 import { Injectable, Injector } from '@angular/core';
 import { BaseUserSrv } from './base-user.service';
 import { OTHER_USER } from '../consts/other.consts';
-import { E_FIELD_TYPE } from '../../../shared/intrfaces/user-params.interfaces';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { IOpenClassifParams } from 'eos-common/interfaces';
-import { DOCGROUP_CL } from 'eos-rest';
+import { DOCGROUP_CL, DEPARTMENT } from 'eos-rest';
 import { NodeDocsTree } from '../../../../eos-user-params/shared/list-docs-tree/node-docs-tree';
-import {PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
+import {PARM_SUCCESS_SAVE, PARM_ERROR_SEND_FROM, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
 @Injectable()
 export class UserParamOtherSrv extends BaseUserSrv {
     readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов', 'Шаблоны'];
@@ -21,13 +20,21 @@ export class UserParamOtherSrv extends BaseUserSrv {
     flagBacground: boolean = false;
     listDocGroup: NodeDocsTree[] = [];
     list: NodeDocsTree[] = [];
+    link = this._userParamsSetSrv.userContextId;
+    selfLink: string;
+    editFlag: boolean = false;
     countError = 0;
     newDataForSave = new Map();
-    private fieldsType = {};
+    sendFrom: string = '';
+    saveValueSendForm: string = '';
+    isLoading: boolean;
     constructor( injector: Injector) {
         super(injector, OTHER_USER);
+        this.isLoading = true;
+        this.selfLink = this._router.url.split('?')[0];
         const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/, '||');
-        Promise.all([this.getDocGroupName(paramsDoc), this.getList(), this.getDefaultsValues()]).then(result => {
+        const ADDR_EXP = String(this._userParamsSetSrv.hashUserContext['ADDR_EXPEDITION']);
+        Promise.all([this.getDocGroupName(paramsDoc), this.getList(), this.getDefaultsValues(), this.getDepartMentName(ADDR_EXP, true)]).then(result => {
             OTHER_USER.fields.map(field => {
                 if (field.key === 'RS_OUTER_DEFAULT_DELIVERY' && field.options.length === 1) {
                     result[1].forEach(item => {
@@ -41,36 +48,67 @@ export class UserParamOtherSrv extends BaseUserSrv {
             if (result[0].length > 0) {
                 this.getListDoc(result[0]);
             }
+
+            if (result[3].length > 0) {
+                this.saveValueSendForm = (result[3][0] as DEPARTMENT).CLASSIF_NAME;
+                this.sendFrom = (result[3][0] as DEPARTMENT).CLASSIF_NAME;
+            }
             this.init();
             this.initShablony = result[2];
             this.saveDefaultValue = ( result[2] as Array<any>).slice();
         }).catch(error => {
+            this.isLoading = false;
             console.log(error);
         });
     }
-
+    hideToolTip() {
+        const element = document.querySelector('.tooltip');
+        if (element) {
+            element.setAttribute('style', 'display: none');
+        }
+    }
     init() {
-        this.prepareDataParam();
+             this.prepareDataParam();
               const allData = this._userParamsSetSrv.hashUserContext;
               this.sortedData = this.linearSearchKeyForData(this.constUserParam.fields, allData);
               this.prepareData = this.convData(this.sortedData);
               this.inputs = this.getInputs();
               this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+              this.disableForEditAllForm(this.editFlag);
               // меняем значения на одинаковые для слижения за изменениями формы
               this.changeInpetsValue(this.inputs );
               this.checngeFormValue();
               this.subscribeChangeForm();
+              this.isLoading = false;
       }
+      getInputs() {
+        const dataInput = {rec: {}};
+        Object.keys(this.prepareData.rec).forEach(key => {
+            if ((this._fieldsType[key] === 'boolean' || this._fieldsType[key] === 'toggle') && !this.prepInputs.rec[key].formatDbBinary) {
+                if (this.prepareData.rec[key] === 'YES' || this.prepareData.rec[key] === '1') {
+                    dataInput.rec[key] = true;
+                } else {
+                    dataInput.rec[key] = false;
+                }
+            } else {
+                dataInput.rec[key] = this.prepareData.rec[key];
+            }
+        });
+        return this.dataSrv.getInputs(this.prepInputs, dataInput);
+    }
       changeInpetsValue(iputs) {
           const inpval1 = String(iputs['rec.RS_OUTER_DEFAULT_DELIVERY'].value);
           const inpval2 = String(iputs['rec.REESTR_RESTRACTION_DOCGROUP'].value);
-
+          const inpval3 = String(iputs['rec.ADDR_EXPEDITION'].value);
           if (inpval1  === 'undefined' || inpval1 === 'null') {
              iputs['rec.RS_OUTER_DEFAULT_DELIVERY'].value = '';
           }
           if (inpval2 === 'null' || inpval2 ===  'undefined') {
               iputs['rec.REESTR_RESTRACTION_DOCGROUP'].value = '';
           }
+          if (inpval3 === 'null' || inpval3 ===  'undefined') {
+            iputs['rec.ADDR_EXPEDITION'].value = '';
+        }
         }
 
         checngeFormValue() {
@@ -81,7 +119,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
             }
             if (inpval2 === 'null' || inpval2 === 'undefined') {
               this.form.controls['rec.RS_OUTER_DEFAULT_DELIVERY'].patchValue('', {eventEmit: false});
-              console.log('hy');
             }
       }
 
@@ -172,15 +209,32 @@ export class UserParamOtherSrv extends BaseUserSrv {
             return arrayDateMain;
         });
     }
+    edit(event) {
+        this.editFlag = event;
+        this.disableForEditAllForm(event);
+    }
+
+    disableForEditAllForm(event) {
+        Object.keys(this.inputs).forEach(key => {
+            if (!event) {
+                this.form.controls[key].disable({onlySelf: true, emitEvent: false});
+            }   else {
+                this.form.controls[key].enable({onlySelf: true, emitEvent: false});
+            }
+        });
+    }
     submit() {
+        this.isLoading = true;
+        this.formChanged.emit(false);
+        this.isChangeForm = false;
         this.userParamApiSrv
                 .setData(this.createObjRequest())
                 .then(data => {
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                     const userId = this._userParamsSetSrv.userContextId;
                     this._userParamsSetSrv.getUserIsn(String(userId));
-                    this.formChanged.emit(false);
-                    this.isChangeForm = false;
+                    this.saveValueSendForm = this.sendFrom;
+                    this.isLoading = false;
                 })
                 .catch(data => console.log(data));
     }
@@ -209,24 +263,25 @@ export class UserParamOtherSrv extends BaseUserSrv {
       });
         return req;
     }
-    cancel() {
+    cancellation(event?) {
         if (this.isChangeForm) {
            this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
-           this.isChangeForm = false;
-           this.formChanged.emit(false);
-           this.ngOnDestroy();
+           this.sendFrom = this.saveValueSendForm;
            const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/, '||');
+           this.list = [];
+           this.listDocGroup = [];
            this.getDocGroupName(paramsDoc).then(result => {
                 if (result.length > 0) {
                     this.getListDoc(result);
                 }
            });
-           this.init();
         }
+        this.fillFormDefaultValues(this.inputs);
+        this.editFlag = event;
+        this.disableForEditAllForm(event);
     }
 
     default() {
-       // const changed = true;
         const D = this.prepInputs._list.slice();
         this.queryObjForDefault = this.getObjQueryInputsFieldForDefault(D.splice(0, 17));
         return this.getData(this.queryObjForDefault).then(data => {
@@ -234,6 +289,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
                 const newInputsForDefaultsValues = this.getInputs();
                 this.changeInpetsValue(newInputsForDefaultsValues);
                 this.fillFormDefaultValues(newInputsForDefaultsValues);
+                this.sendFrom = '';
                 this.list = [];
                 this.listDocGroup = [];
                 // this.inputs = this.getInputs();
@@ -258,10 +314,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
     setTab(i: number) {
         this.currTab = i;
     }
-    prepareDataParam() {
-        this.prepInputs = this.getObjectInputFields(this.constUserParam.fields);
-        this.queryObj = this.getObjQueryInputsField2(this.prepInputs._list);
-    }
     getObjQueryInputsField2(inputs: Array<any>) {
         return {
         [this.constUserParam.apiInstance]: {
@@ -273,24 +325,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
        };
     }
 
-    getObjectInputFields(fields) {
-        const inputs: any = { _list: [], rec: {} };
-        fields.forEach(field => {
-            this.fieldsType[field.key] = field.type;
-            inputs._list.push(field.key);
-            inputs.rec[field.key] = {
-                title: field.title,
-                type: E_FIELD_TYPE[field.type],
-                foreignKey: field.key,
-                pattern: field.pattern,
-                length: field.length,
-                options: field.options,
-                readonly: !!field.readonly,
-                formatDbBinary: !!field.formatDbBinary
-            };
-        });
-        return inputs;
-    }
     convData(data: Object) {
         const d = {};
      for (const key of Object.keys(data)) {
@@ -328,6 +362,48 @@ export class UserParamOtherSrv extends BaseUserSrv {
         }, '');
         const substrIsn = new_ISN.substr(0, new_ISN.length - 1);
         this.form.controls['rec.REESTR_RESTRACTION_DOCGROUP'].patchValue(substrIsn);
+    }
+
+    sendFromChoose() {
+        this.flagBacground = true;
+        const params: IOpenClassifParams = {
+            classif: 'DEPARTMENT',
+            selectMulty: false,
+            selectLeafs: false,
+            selectNodes: true,
+        };
+        this._waitClassifSrv.openClassif(params).then(isn => {
+            this.flagBacground = false;
+            this.getDepartMentName(String(isn)).then((res: DEPARTMENT[]) => {
+                this.setFillSendFrom(res);
+            });
+        }).catch(error => {
+            this.flagBacground = false;
+        });
+    }
+
+    setFillSendFrom(res: DEPARTMENT[]) {
+        if (res.length > 0) {
+            const depart = res[0];
+            this.sendFrom = depart.CLASSIF_NAME;
+            if (depart.EXPEDITION_FLAG <= 0) {
+                this.msgSrv.addNewMessage(PARM_ERROR_SEND_FROM);
+            }   else {
+                this.form.controls['rec.ADDR_EXPEDITION'].patchValue(depart.DUE);
+            }
+        }
+    }
+    clearSendFrom() {
+        const val =   this.form.controls['rec.ADDR_EXPEDITION'].value;
+        if (val !== '' && String(val) !== 'null') {
+            this.sendFrom = '';
+            this.form.controls['rec.ADDR_EXPEDITION'].patchValue('');
+        }
+
+        this.sendFrom = '';
+    }
+    close() {
+        this._router.navigate(['user_param']);
     }
 
     private checkAddedTree(due: string): boolean {
@@ -391,5 +467,20 @@ export class UserParamOtherSrv extends BaseUserSrv {
       }
       return Promise.resolve([]);
     }
+
+    private  getDepartMentName(param: string, flagWhatToChoose?: boolean): Promise<any> {
+        if (param !== 'null' && param !== '') {
+            const crit = flagWhatToChoose ? 'DUE' : 'ISN_NODE';
+            const query = {
+                DEPARTMENT: {
+                    criteries: {
+                        [crit]: param
+                    }
+                }
+            };
+            return  this.userParamApiSrv.getData(query);
+        }
+        return Promise.resolve([4]);
+      }
 
 }

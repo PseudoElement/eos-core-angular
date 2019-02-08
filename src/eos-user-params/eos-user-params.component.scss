@@ -92,6 +92,10 @@
     position: absolute;
     top: 25vh;
 }
+.scrollWrapper{
+    overflow: auto;
+    max-height: calc(100vh - 283px);
+}
 
 @media(min-width: 1600px) {
     .nav-accordion {

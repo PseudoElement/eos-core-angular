@@ -136,6 +136,12 @@ export const OTHER_USER: IBaseUsers = {
             length: 255,
         },
         {
+            key: 'ADDR_EXPEDITION',
+            title: '',
+            type: 'text',
+            length: 255,
+        },
+        {
             key: 'Визуализация документа',
             type: 'string',
             title: ''
