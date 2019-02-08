@@ -21,3 +21,10 @@ export const PARM_CANCEL_CHANGE: IMessage = {
     msg: '',
     dismissOnTimeout: 2000
 };
+
+export const PARM_ERROR_SEND_FROM: IMessage = {
+    type: 'warning',
+    title: 'Выбранное значение нельзя сохранить',
+    msg: 'Выбранное подразделение не отмечено, как подразделение для отправки документов по реестрам',
+    dismissOnTimeout: 60000
+};
