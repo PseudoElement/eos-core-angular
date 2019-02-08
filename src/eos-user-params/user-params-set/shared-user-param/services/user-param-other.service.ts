@@ -223,7 +223,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
             }
         });
     }
-    submit() {
+    submit(event?) {
         this.isLoading = true;
         this.formChanged.emit(false);
         this.isChangeForm = false;
@@ -281,7 +281,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
         this.disableForEditAllForm(event);
     }
 
-    default() {
+    default(event?) {
         const D = this.prepInputs._list.slice();
         this.queryObjForDefault = this.getObjQueryInputsFieldForDefault(D.splice(0, 17));
         return this.getData(this.queryObjForDefault).then(data => {
@@ -402,7 +402,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
 
         this.sendFrom = '';
     }
-    close() {
+    close(event) {
         this._router.navigate(['user_param']);
     }
 
