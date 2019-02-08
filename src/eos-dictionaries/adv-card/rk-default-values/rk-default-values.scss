@@ -1,3 +1,19 @@
+.no-margin {
+
+    .form-group
+    {
+        margin: 0px;
+    }
+}
+
+.margin10 {
+    .form-group
+    {
+        margin-bottom: 10px;
+    }
+}
+
+
 
 .eos-rk-mandatory {
 
@@ -9,6 +25,13 @@
         margin: 0px;
         margin-left: 40px;
     }
+
+    .form-group
+    {
+        margin: 0px;
+        margin-left: 40px;
+    }
+
 }
 .eos-rk-writes {
     .items-group {
@@ -60,6 +83,8 @@
     .padr10 {
         padding-right: 10px;
     }
+
+
     // .table {
     //     display: table;
     // }

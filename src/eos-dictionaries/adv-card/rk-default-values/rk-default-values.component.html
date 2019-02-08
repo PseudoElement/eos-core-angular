@@ -1,13 +1,14 @@
 <div class="eos-rk-default-values card-content-wrapper">
+    <div class="items-group">
     <div class="clearfix">
         <div class="col-1">
             <label>{{inputs['rec.SPECIMEN'].label}}</label>
-            <eos-dynamic-input [input]="inputs['rec.SPECIMEN']"
+            <eos-dynamic-input class="no-margin" [input]="inputs['rec.SPECIMEN']"
                             [form]="form"
                             [readonly]="!editMode" ></eos-dynamic-input>
         </div>
         <div class="col-2">
-                <eos-dynamic-input [input]="inputs['rec.CONSISTS']"
+                <eos-dynamic-input class="no-margin" [input]="inputs['rec.CONSISTS']"
                         [form]="form"
                         [readonly]="!editMode" ></eos-dynamic-input>
         </div>
@@ -50,10 +51,10 @@
                                     [form]="form"
                                     [readonly]="!editMode" ></eos-dynamic-input>
 
-
+    </div>
     <p class="xl-font paragraph-title">Передача документов</p>
     <div class="items-group">
-        <eos-dynamic-input [input]="inputs['rec.JOURNAL_ISN_LIST']"
+        <eos-dynamic-input class="margin10" [input]="inputs['rec.JOURNAL_ISN_LIST']"
                             [form]="form"
                             [readonly]="!editMode" ></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['rec.JOURNAL_PARM']"
@@ -65,8 +66,9 @@
 
     <p class="xl-font paragraph-title">Списать в Дело</p>
     <div class="items-group">
-        <eos-dynamic-input [input]="inputs['rec.JOURNAL_ISN_NOMENC']"
+        <eos-dynamic-input class="margin10" [input]="inputs['rec.JOURNAL_ISN_NOMENC']"
                             [form]="form"
+                            [hideLabel]="true"
                             [event1]="journalNomencClick"
                             [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['rec.JOURNAL_NOMENC_PARM']"
@@ -78,11 +80,11 @@
     <p class="xl-font paragraph-title">Внутренние адресаты</p>
     <div class="items-group">
 
-        <eos-dynamic-input [input]="inputs['rec.SEND_ISN_LIST_DEP']"
+        <eos-dynamic-input class="no-margin" [input]="inputs['rec.SEND_ISN_LIST_DEP']"
                             [form]="form"
                             [readonly]="!editMode"></eos-dynamic-input>
 
-        <eos-dynamic-input [input]="inputs['rec.SEND_MARKSEND']"
+        <eos-dynamic-input class="no-margin" [input]="inputs['rec.SEND_MARKSEND']"
                             [form]="form"
                             [readonly]="!editMode"></eos-dynamic-input>
 
@@ -98,7 +100,7 @@
         <eos-dynamic-input [input]="inputs['rec.SEND_ISN_LIST_ORGANIZ']"
                             [form]="form"
                             [readonly]="!editMode"></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs['rec.SEND_ISN_DELIVERY']"
+        <eos-dynamic-input class="no-margin" [input]="inputs['rec.SEND_ISN_DELIVERY']"
                             [form]="form"
                             [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['rec.SEND_OUTER_MARKSEND']"
