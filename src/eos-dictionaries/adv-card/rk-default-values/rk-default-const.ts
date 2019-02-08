@@ -22,6 +22,14 @@ export class TDefaultField {
 
 }
 
+export const RKFieldsFict: TDefaultField[] = [
+    {
+        key: 'helper1',
+        type: E_FIELD_TYPE.boolean,
+        title: '',
+    },
+];
+
 export const RKDefaultFields: TDefaultField[] = [
 
     {
@@ -128,30 +136,42 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'JOURNAL_FROM_FORWARD_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
-        title: 'Заполнение ЖПД по журналу пересылок РК',
+        // title: 'Заполнение ЖПД по журналу пересылок РК',
+        title: 'По значению Журнала пересылки РК',
+
         // classif_id: NULL
     }, {
         key: 'JOURNAL_FROM_WHO_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2',
-        title: 'Заполнение ЖПД по значению реквизита Кому',
+        // title: 'Заполнение ЖПД по значению реквизита Кому',
+        title: 'По значению реквизита "Кому" (адресован)',
         // classif_id: NULL
     }, {
         key: 'JOURNAL_ISN_NOMENC_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.dictLink,
         // kind_doc '1,2,3',
-        title: 'Значение для записи для дела ЖПД',
+        // title: 'Значение для записи для дела ЖПД',
         // classif_id:  119
+        title: 'Списать в дело',
+        dict: {
+            dictId: 'NOMENKL_CL',
+            dictKey: 'ISN_LCLASSIF',
+            dictKeyTitle: 'CLASSIF_NAME',
+            // criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
+
     }, {
         key: 'TERM_EXEC_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.numberIncrement,
         // kind_doc '1,2,3',
-        title: 'Значение при записи для срока исполнения РК',
+        // title: 'Значение при записи для срока исполнения РК',
+        title: 'Срок исп. (План. дата)',
         // classif_id: NULL
     }, {
         key: 'EXE_ISN_LIST',
@@ -191,9 +211,10 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'CARD_WHO_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2',
-        title: 'Картотека ДЛ получателя РК',
+        // title: 'Картотека ДЛ получателя РК',
+        title: 'по значению реквизита "Кому (адресован)'
         // classif_id: NULL
     }, {
         key: 'CARD_SIGN_W',
@@ -307,10 +328,22 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'JOURNAL_NOMENC_PARM_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.buttons,
         // kind_doc '1,2,3',
         title: 'Параметр копирования оригинал/копия',
         // classif_id: NULL
+        options: [
+            {
+                value: '0',
+                title: 'оригинал',
+            }, {
+                value: '1',
+                title: 'копию',
+            }, {
+                value: '2',
+                title: 'эл. экз',
+            },
+        ]
     }, {
         key: 'JOURNAL_PARM',
         // Default type:  'D',
@@ -336,10 +369,25 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'JOURNAL_PARM_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.buttons,
         // kind_doc '1,2,3',
         title: 'Параметр копирования оригинал/копия',
         // classif_id: NULL
+        options: [
+            {
+                value: '0',
+                title: 'оригинала',
+            }, {
+                value: '1',
+                title: 'копии',
+            }, {
+                value: '2',
+                title: 'первому оригинал, остальным копии',
+            }, {
+                value: '3',
+                title: 'вручную',
+            },
+        ]
     }, {
         // Внутренние адресаты - радиобуттоны
         key: 'SEND_DEP_PARM',
@@ -394,9 +442,10 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'FORWARD_WHO_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2',
-        title: 'Пересылка ДЛ получателю РК',
+        // title: 'Пересылка ДЛ получателю РК',
+        title: 'По значению реквизита "Кому" (адресован)',
         // classif_id: NULL
     }, {
         key: 'TERM_EXEC_M',
@@ -416,16 +465,18 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'FOLDER6_DEST_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
-        title: 'Положить в 6 папку текущего кабинета',
+        // title: 'Положить в 6 папку текущего кабинета',
+        title: '"В Дело"',
         // classif_id: NULL
     }, {
         key: 'FOLDER2_DEST_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
-        title: 'Положить во 2 папку текущего кабинета',
+        // title: 'Положить во 2 папку текущего кабинета',
+        title: '"На исполнение"',
         // classif_id: NULL
     }, {
         // Примечание
@@ -556,9 +607,15 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'JOURNAL_ISN_LIST_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ для записи в ЖПД при записи',
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
         // classif_id:  545
     }, {
         key: 'JOURNAL_WHO_REDIRECTION_W',
@@ -577,9 +634,17 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'FORWARD_ISN_LIST_DEP_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
-        title: 'Список ДЛ для пересылок',
+        // title: 'Список ДЛ для пересылок',
+        title: 'Переслать РК (Журнал пересылок РК)',
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
+
         // classif_id:  545
     }, {
         key: 'FORWARD_WHO_EMPTY_W',
@@ -638,10 +703,20 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'ISN_CABINET_REG_CURR_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.buttons,
         // kind_doc '1,2,3',
-        title: 'Текущий  кабинет в качестве кабинета регистрации',
+        // title: 'Текущий  кабинет в качестве кабинета регистрации',
         // classif_id: NULL
+        title: '',
+        options: [
+            {
+                value: '1',
+                title: 'Текущий кабинет регистратора',
+            } , {
+                value: '0',
+                title: 'Кабинет ДЛ первой пересылки РК',
+            },
+        ],
     }, {
         // Select ISN_TEMPLATE ISN, DESCRIPTION NAME, DELETED, WEIGHT From DOC_TEMPLATES Where LOWER(CATEGORY) LIKE 'файлы документов' Order By WEIGHT
         key: 'FILE',
@@ -666,10 +741,18 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'CARD_ISN_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
-        title: 'Фиксированная картотека',
+        // title: 'Фиксированная картотека',
+        title: '',
         // classif_id:  104
+        dict: {
+            dictId: 'DEPARTMENT',
+            dictKey: 'ISN_NODE',
+            dictKeyTitle: 'CARD_NAME',
+            criteries: { CARD_FLAG: '1', DELETED: '0', },
+        }
+        // SELECT	ISN_NODE,  				CARD_NAME,  				DELETED,  				WEIGHT   FROM		DEPARTMENT  WHERE	CARD_FLAG = 1 AND DELETED = 0
     }, {
         key: 'ISN_CARD_REG_W',
         // Default type:  'W',

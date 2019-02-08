@@ -21,7 +21,7 @@ const tabs: Ttab [] = [
 ];
 
 
-
+// Реквизит "Срок исполнения" может быть заполнен только в одном месте
 
 @Component({
     selector: 'eos-adv-card-rk',
@@ -97,7 +97,9 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
     }
 
     updateLinks (el: TDefaultField, options: TDFSelectOption[], data: any) {
-        if (el.key === 'JOURNAL_ISN_NOMENC') {
+        if (el.key === 'JOURNAL_ISN_NOMENC' ||
+            el.key === 'JOURNAL_ISN_NOMENC_W'
+            ) {
             const rec = data[0];
             options[0].title = rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
         }

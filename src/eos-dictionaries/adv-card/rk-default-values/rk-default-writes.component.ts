@@ -5,11 +5,11 @@ import { FormGroup } from '@angular/forms';
 
 
 @Component({
-    selector: 'eos-rk-default-reqs',
-    templateUrl: 'rk-default-reqs.component.html',
+    selector: 'eos-rk-writes',
+    templateUrl: 'rk-default-writes.component.html',
 })
 
-export class RKDefaultValuesReqCardComponent implements OnChanges {
+export class RKWritesCardComponent implements OnChanges {
     @Input() dataController: AdvCardRKDataCtrl;
     @Input() fieldsDescription: any;
     @Input() data: any;

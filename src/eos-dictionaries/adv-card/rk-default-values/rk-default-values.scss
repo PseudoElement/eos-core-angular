@@ -1,21 +1,30 @@
 
-.eos-rk-default-reqs {
+.eos-rk-mandatory {
 
     &.card-content-wrapper {
         padding: 20px 20px 0 0;
     }
-
 
     .form-group {
         margin: 0px;
         margin-left: 40px;
     }
 }
+.eos-rk-writes {
+    .items-group {
+        //     // border: solid 1px;
+            padding-left: 20px;
+        }
+        .clearfix {
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .col-with-label {
+            display: inline-block;
+        }
 
-
+}
 .eos-rk-default-values {
-
-
     &.card-content-wrapper {
         padding: 20px 20px 0 0;
     }

@@ -25,6 +25,9 @@
             <ng-container *ngSwitchCase="1">
                 <ng-container *ngTemplateOutlet="defaultEdit2"></ng-container>
             </ng-container>
+            <ng-container *ngSwitchCase="2">
+                <ng-container *ngTemplateOutlet="defaultEdit3"></ng-container>
+            </ng-container>
         </ng-container>
 
     </div>
@@ -48,7 +51,7 @@
 </ng-template>
 
 <ng-template #defaultEdit2>
-    <eos-rk-default-reqs
+    <eos-rk-mandatory
         style="width: 100%;"
         [dataController]="dataController"
         [fieldsDescription]="fieldsDescrDefault"
@@ -56,6 +59,17 @@
         [editMode]="true"
         [data]="valuesDefault"
         [inputs]="inputsDefault">
-    </eos-rk-default-reqs>
+    </eos-rk-mandatory>
 </ng-template>
 
+<ng-template #defaultEdit3>
+    <eos-rk-writes
+        style="width: 100%;"
+        [dataController]="dataController"
+        [fieldsDescription]="fieldsDescrDefault"
+        [form]="form"
+        [editMode]="true"
+        [data]="valuesDefault"
+        [inputs]="inputsDefault">
+    </eos-rk-writes>
+</ng-template>
