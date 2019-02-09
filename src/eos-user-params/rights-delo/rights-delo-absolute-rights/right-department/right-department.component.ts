@@ -85,7 +85,7 @@ export class RightDepertmentComponent implements OnInit {
                 this._msgSrv.addNewMessage({
                     type: 'warning',
                     title: '',
-                    msg: 'Нет елементов для добавления'
+                    msg: 'Нет элементов для добавления'
                 });
                 this.isShell = false;
                 return;
