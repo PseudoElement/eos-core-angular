@@ -1,5 +1,5 @@
 <div [formGroup]="form">
-    <label [hidden]="input.hideLabel"
+    <label [hidden]="input.hideLabel || hideLabel"
            [attr.for]="input.key">{{input.label}}</label>
     <p *ngIf="readonly"
        class="form-control-static m-font"

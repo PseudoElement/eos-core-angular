@@ -16,29 +16,34 @@
     </div>
 
     <!-- Переслать РК (Журнал пересылок РК) -->
-    <p class="xl-font paragraph-title"></p>
+    <p class="xl-font paragraph-title">Переслать РК (Журнал пересылок РК)</p>
     <div class="items-group">
-    <eos-dynamic-input class="no-margin" [input]="inputs['rec.FORWARD_ISN_LIST_DEP_W']"
-        [form]="form"
-        [readonly]="!editMode"> </eos-dynamic-input>
+        <eos-dynamic-input class="no-margin" [input]="inputs['rec.FORWARD_ISN_LIST_DEP_W']"
+            [form]="form"
+            [hideLabel]="true"
+            [readonly]="!editMode"> </eos-dynamic-input>
         <!-- По значению реквизита "Кому" (адресован) -->
-    <eos-dynamic-input [input]="inputs['rec.FORWARD_WHO_W']"
-        [form]="form"
-        [readonly]="!editMode"> </eos-dynamic-input>
-
-        кнопка
+        <span>
+            <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['rec.FORWARD_WHO_W']"
+                [form]="form"
+                [readonly]="!editMode"> </eos-dynamic-input>
+                <button class="inline-with-label">Дополнительно</button>
+        </span>
     </div>
     <p class="xl-font paragraph-title">Передача документов</p>
     <div class="items-group">
         <eos-dynamic-input class="no-margin" [input]="inputs['rec.JOURNAL_ISN_LIST_W']"
         [form]="form"
+        [hideLabel]="true"
         [readonly]="!editMode"> </eos-dynamic-input>
 
-    <!-- По значению реквизита "Кому" (адресован) -->
-    <eos-dynamic-input class="no-margin" [input]="inputs['rec.JOURNAL_FROM_WHO_W']"
-        [form]="form"
-        [readonly]="!editMode"> </eos-dynamic-input>
-        кнопка
+        <span>
+            <!-- По значению реквизита "Кому" (адресован) -->
+            <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['rec.JOURNAL_FROM_WHO_W']"
+                [form]="form"
+                [readonly]="!editMode"> </eos-dynamic-input>
+                <button class="inline-with-label">Дополнительно</button>
+        </span>
     <!-- По значению Журнала пересылки РК -->
     <eos-dynamic-input class="no-margin" [input]="inputs['rec.JOURNAL_FROM_FORWARD_W']"
         [form]="form"

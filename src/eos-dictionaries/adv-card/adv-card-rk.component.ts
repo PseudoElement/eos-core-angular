@@ -5,7 +5,7 @@ import { AdvCardRKDataCtrl, ACRK_GROUP, DEFAULTS_LIST_NAME } from './adv-card-rk
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { TDefaultField, TDFSelectOption } from './rk-default-values/rk-default-const';
+import { TDefaultField, TDFSelectOption, RKFieldsFict } from './rk-default-values/rk-default-const';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -118,13 +118,21 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
     }
     getInputs() {
 
-        const i: any = {rec: {} };
+        const i: any = {rec: {}};
         this.fieldsDescrDefault.forEach(element => {
             if (!element.foreignKey) {
                 element.foreignKey = element.key;
             }
             const t = i.rec;
             t[element.key] = element;
+        });
+        const a: any = RKFieldsFict;
+        a.forEach(element => {
+            if (!element.foreignKey) {
+                element.foreignKey = element.key;
+            }
+            // const t = i.fict;
+            // t[element.key] = element;
         });
 
         // select classif_name , nom_number , year_number , e_document from nomenkl_cl where isn_lclassif =4057175

@@ -39,6 +39,7 @@ export class EosDataConvertService {
             Object.keys(fieldsDescription).forEach((_dict) => {
                 let descr = fieldsDescription[_dict];
                 switch (_dict) {
+                    case 'fict':
                     case 'PARE_LINK_Ref':
                     case 'rec':
                         descr = fieldsDescription['rec'];
