@@ -6,6 +6,8 @@
         </div>
         <div class="buttons-wrapper" *ngIf="editMode">
             <div>
+                <button *ngIf='defaultBtn' class="btn btn-primary"
+                    (click)="default()">Поумолчанию</button>
                 <button class="btn btn-primary"
                     (click)="cancel()">Отменить</button>
                 <button class="btn btn-primary-full"

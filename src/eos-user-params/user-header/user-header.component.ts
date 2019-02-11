@@ -12,17 +12,22 @@ export class UserHeaderComponent {
     @Input() link: string;
     @Input() disableBtn: boolean;
     @Input() selfLink: string;
+    @Input() defaultBtn?: boolean;
+    @Output() defaultEmit = new EventEmitter<any>();
     @Output() submitEmit = new EventEmitter<any>();
-    @Output() cancelEmit = new EventEmitter<any>();
+    @Output() cancelEmit = new EventEmitter<boolean>();
     @Output() editEmit = new EventEmitter<boolean>();
     @Output() closeEmit = new EventEmitter<boolean>();
     constructor () {
 
     }
+    default() {
+        this.defaultEmit.emit('');
+    }
 
     cancel() {
         this.editMode = false;
-        this.cancelEmit.emit('');
+        this.cancelEmit.emit(false);
     }
     submit() {
         this.submitEmit.emit('');
