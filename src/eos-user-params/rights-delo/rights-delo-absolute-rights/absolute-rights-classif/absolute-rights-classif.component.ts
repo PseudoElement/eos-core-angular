@@ -82,7 +82,6 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         }
     }
     addInstance(config: IConfigUserTechClassif, node: RightClassifNode): Promise<any> {
-        console.log(node);
         return this._waitClassifSrv.openClassif(config.waitClassif)
         .then((data: string) => {
             if (data.length) {
