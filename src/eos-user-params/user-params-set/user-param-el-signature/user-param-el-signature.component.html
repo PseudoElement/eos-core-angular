@@ -1,0 +1,128 @@
+<div class="input-user-wrapper input-user-directories-wrapper" *ngIf="inputs">
+    <eos-user-params-header
+    [title] = 'titleHeader'
+    [link] = 'link'
+    [selfLink] = 'selfLink'
+    [disableBtn] = "btnDisabled"
+    [defaultBtn] = 'true'
+    (submitEmit) = 'submit($event)'
+    (cancelEmit) = 'cancellation($event)'
+    (editEmit) = 'edit($event)'
+    (closeEmit) = 'close($event)'
+    (defaultEmit) = 'default($event)'
+></eos-user-params-header>
+</div>
+<div class="input-user-wrapper input-user-other-rk-forwarding-wrapper scrollWrapper signature">
+    <div class="user-input-group">
+        <span class="l-font">Объект поддержки ЭП и шифрования</span>
+        <hr>
+        <div class="signature-wr">
+            <eos-dynamic-input
+            class="inline-block"
+            [input]="inputs['CRYPTO_ACTIVEX']"
+            [form]="form"
+            [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+            class="inline-block"
+            [input]="inputs['CRYPTO_INITSTR']"
+            [form]="form"
+            [readonly]="false"
+            ></eos-dynamic-input>
+        </div>
+        <div class="signature-wr">
+            <eos-dynamic-input
+            class="inline-block"
+            [input]="inputs['SIGN_BASE64']"
+            [form]="form"
+            [readonly]="false"
+            ></eos-dynamic-input>
+        </div>
+    </div>
+    <div class="user-input-group">
+        <span class="l-font">Объект поддержки работы с инфраструктурой открытых ключей</span>
+        <div class="signature-wr">
+            <eos-dynamic-input
+                class="inline-block"
+                [input]="inputs['PKI_ACTIVEX']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                class="inline-block"
+                [input]="inputs['PKI_INITSTR']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+        </div>
+    </div>
+    <div class="user-input-group">
+        <button
+        (click)='openPopup()'
+        tooltip="Открыть"
+        #itemTooltip="bs-tooltip"
+        placement="bottom"
+        containerClass="tooltip-info"
+        trigger="hover">Хранилища сертификатов пользователя</button>
+
+        <button
+        (click)='openPopup()'
+        tooltip="Открыть"
+        #itemTooltip="bs-tooltip"
+        placement="bottom"
+        containerClass="tooltip-info"
+        trigger="hover">Хранилища прочих сертификатов</button>
+    </div>
+    <div class="user-input-group">
+            <eos-dynamic-input
+                class="inline-block"
+                [input]="inputs['REMOTE_CRYPTO_SERVER']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <hr>
+    </div>
+    <div class="user-input-group">
+        <span class="l-font">Объект поддержки ЭП и шифрования</span>
+            <eos-dynamic-input
+                class="inline-block"
+                [input]="inputs['WEB_CRYPTO_ACTIVEX']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                class="inline-block"
+                [input]="inputs['WEB_CRYPTO_INITSTR']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <hr>
+    </div>
+    <div class="user-input-group">
+            <span class="l-font">Объект поддержки работы с инфраструктурой открытых ключей</span>
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputs['WEB_PKI_ACTIVEX']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+                <eos-dynamic-input
+                    class="inline-block"
+                    [input]="inputs['WEB_PKI_INITSTR']"
+                    [form]="form"
+                    [readonly]="false"
+                ></eos-dynamic-input>
+                <hr>
+    </div>
+    <div class="user-input-group">
+            <button
+                (click)='openPopup()'
+                tooltip="Открыть"
+                #itemTooltip="bs-tooltip"
+                placement="bottom"
+                containerClass="tooltip-info"
+                trigger="hover"> Хранилища сертификатов для сервера удаленной проверки</button>
+    </div>
+</div>
+<eos-signature-popup></eos-signature-popup>
+
