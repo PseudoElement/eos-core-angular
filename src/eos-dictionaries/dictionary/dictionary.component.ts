@@ -32,6 +32,7 @@ import {
     WARN_LOGIC_CLOSE,
     WARN_LOGIC_OPEN,
     DANGER_DEPART_IS_LDELETED,
+    DANGER_DEPART_NO_NUMCREATION,
 } from '../consts/messages.consts';
 
 import {RECENT_URL} from 'app/consts/common.consts';
@@ -532,6 +533,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             if (node) {
                 if (node.data.PROTECTED) {
                     this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
+                } else if (this.dictionaryId === 'departments' && node.data.rec['NUMCREATION_FLAG'] !== 1) {
+                    this._msgSrv.addNewMessage(DANGER_DEPART_NO_NUMCREATION);
                 } else {
                     this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg'});
                     this.modalWindow.content.initByNodeData(node.data.rec);
