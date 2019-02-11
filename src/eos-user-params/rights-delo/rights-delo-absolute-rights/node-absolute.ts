@@ -99,6 +99,7 @@ export class NodeAbsoluteRight {
         if ((this._change[index].method === 'POST') && (node.method === 'MERGE')) {
             node.method = 'POST';
             this._change.splice(index, 1, node);
+            return;
         }
         if ((this._change[index].method === 'POST') && (node.method === 'DELETE')) {
             this._change.splice(index, 1);
@@ -108,9 +109,11 @@ export class NodeAbsoluteRight {
         if (this._change[index].method === 'DELETE') {
             node.method = 'MERGE';
             this._change.splice(index, 1, node);
+            return;
         }
         if (this._change[index].method === 'MERGE' && (node.method === 'DELETE')) {
             this._change.splice(index, 1, node);
+            return;
         }
         if (this._change[index].method === 'MERGE' && (node.method === 'MERGE')) {
             this._change.splice(index, 1);
