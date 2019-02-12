@@ -32,9 +32,9 @@ export class UserParamOtherSrv extends BaseUserSrv {
         super(injector, OTHER_USER);
         this.isLoading = true;
         this.selfLink = this._router.url.split('?')[0];
-        const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/, '||');
+        const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/g, '||');
         const ADDR_EXP = String(this._userParamsSetSrv.hashUserContext['ADDR_EXPEDITION']);
-        Promise.all([this.getDocGroupName(paramsDoc), this.getList(), this.getDefaultsValues(), this.getDepartMentName(ADDR_EXP, true)]).then(result => {
+        Promise.all([this.getDocGroupName(paramsDoc, true), this.getList(), this.getDefaultsValues(), this.getDepartMentName(ADDR_EXP, true)]).then(result => {
             OTHER_USER.fields.map(field => {
                 if (field.key === 'RS_OUTER_DEFAULT_DELIVERY' && field.options.length === 1) {
                     result[1].forEach(item => {
@@ -58,7 +58,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
             this.saveDefaultValue = ( result[2] as Array<any>).slice();
         }).catch(error => {
             this.isLoading = false;
-            console.log(error);
         });
     }
     hideToolTip() {
@@ -133,7 +132,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
                      if (!this.getFactValueFuck(newVal[val], val)) {
                          this.setNewData(newVal, val, true);
                          count_error += 1;
-                     }  else {
+                     } else {
                         this.setNewData(newVal, val, false);
                      }
                     });
@@ -141,6 +140,10 @@ export class UserParamOtherSrv extends BaseUserSrv {
                         this.formChanged.emit(true);
                         this.isChangeForm = true;
                     }else {
+                        this.formChanged.emit(false);
+                        this.isChangeForm = false;
+                    }
+                    if (!this.form.controls['rec.REESTR_DATE_INTERVAL'].valid || !this.form.controls['rec.REESTR_COPY_COUNT'].valid) {
                         this.formChanged.emit(false);
                         this.isChangeForm = false;
                     }
@@ -270,7 +273,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
            const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/, '||');
            this.list = [];
            this.listDocGroup = [];
-           this.getDocGroupName(paramsDoc).then(result => {
+           this.getDocGroupName(paramsDoc, true).then(result => {
                 if (result.length > 0) {
                     this.getListDoc(result);
                 }
@@ -339,6 +342,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
             selectMulty: true,
             selectLeafs: false,
             selectNodes: true,
+            return_due: true,
         };
         this._waitClassifSrv.openClassif(params).then(isn => {
             this.flagBacground = false;
@@ -371,6 +375,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
             selectMulty: false,
             selectLeafs: false,
             selectNodes: true,
+            return_due: true
         };
         this._waitClassifSrv.openClassif(params).then(isn => {
             this.flagBacground = false;
@@ -454,12 +459,14 @@ export class UserParamOtherSrv extends BaseUserSrv {
         });
         return min;
     }
-  private  getDocGroupName(param: string): Promise<any> {
+  private  getDocGroupName(param: string, flag?: boolean): Promise<any> {
+      let crit = '';
       if (param !== 'null' && param !== '') {
+      flag ? crit = 'ISN_NODE' : crit = 'DUE';
           const query = {
               DOCGROUP_CL: {
                   criteries: {
-                      ISN_NODE:  param
+                      [crit]:  param
                   }
               }
           };
@@ -470,13 +477,8 @@ export class UserParamOtherSrv extends BaseUserSrv {
 
     private  getDepartMentName(param: string, flagWhatToChoose?: boolean): Promise<any> {
         if (param !== 'null' && param !== '') {
-            const crit = flagWhatToChoose ? 'DUE' : 'ISN_NODE';
             const query = {
-                DEPARTMENT: {
-                    criteries: {
-                        [crit]: param
-                    }
-                }
+                DEPARTMENT: [param]
             };
             return  this.userParamApiSrv.getData(query);
         }
