@@ -24,9 +24,9 @@ export class UserParamElSignatureComponent {
     public selfLink: string;
     public link: number;
     public control: AbstractControl;
+    public form: FormGroup;
+    public inputs: any;
     private inputFields: any;
-    private form: FormGroup;
-     private inputs: any;
      private modalRef: BsModalRef;
     constructor(
         private _userSrv: UserParamsService,
