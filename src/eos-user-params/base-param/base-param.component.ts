@@ -157,7 +157,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     this.formControls.get('passRepeated').reset();
                 }
                 this._newData = {};
-                // console.log(f, pass);
                 this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                 this._userParamSrv.getUserIsn()
                 .then(() => {
@@ -208,16 +207,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     close() {
         this._router.navigate(['user_param']);
     }
-    checkPass() {
-        if (this.formControls.get('pass').value && this.formControls.get('passRepeated').value) {
-            this.errorPass = this.formControls.get('pass').value !== this.formControls.get('passRepeated').value;
-            if (this.errorPass) {
-                this.formControls.get('passRepeated').setErrors({repeat: true});
-            }
-        } else {
-        this.errorPass = false;
-        }
-    }
+
     showDepartment() {
         this.isShell = true;
         let dueDep = '';
@@ -372,6 +362,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             if (data['pass'] && data['passRepeated']) {
                 pass = data['pass'] === data['passRepeated'];
             }
+            this.checkchangPass(data['pass'], data['passRepeated']);
             this._newData['formControls'] = (pass || role) ? this._newData['formControls'] : null;
             change = change ? change : pass || role;
         }
@@ -382,4 +373,20 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         this.stateHeaderSubmit = !change || state;
     }
+
+    private checkchangPass(data1, data2) {
+        if (data1 !== '' && data2 !== '') {
+            this.errorPass = data1 !== data2;
+            if (this.errorPass) {
+                this.formControls.get('passRepeated').setErrors({repeat: true});
+            }   else {
+                this.errorPass = false;
+            }
+        }  else if (data1 !== '' || data2 !== '') {
+            this.errorPass = true;
+        } else {
+            this.errorPass = false;
+        }
+    }
+
 }
