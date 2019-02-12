@@ -51,7 +51,7 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
     private _updateForm(formChanges: any) {
         this.unsubscribe();
 
-        if (formChanges['rec.LINK_TYPE'] === '0') {
+        if (!formChanges['rec.LINK_TYPE'] || formChanges['rec.LINK_TYPE'] === '0') {
             this.setValue('rec.LINK_TYPE', null);
             this.setValue('rec.LINK_DIR', null);
             this.setValue('PARE_LINK_Ref.LINK_TYPE', null);

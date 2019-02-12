@@ -514,8 +514,10 @@ export class EosDictService {
                     return dictionary.descriptor.addRecord(data, this._treeNode.data);
                 })
                 .then((results) => {
+                    this.updateViewParameters({updatingList: true});
                     return this._reloadList(true)
                         .then(() => {
+                            this.updateViewParameters({updatingList: false});
                             if (dictionary.descriptor.type !== E_DICT_TYPE.linear &&
                                 dictionary.descriptor.type !== E_DICT_TYPE.custom) {
                                 this._treeNode$.next(this._treeNode);
