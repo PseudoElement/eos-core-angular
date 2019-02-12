@@ -223,7 +223,7 @@ export abstract class AbstractDictionaryDescriptor {
     getRelated(rec: any, ..._args): Promise<any> {
         const reqs = [];
         this.metadata.relations.forEach((relation) => {
-            if (rec[relation.sf]) {
+            if (rec[relation.sf] && !relation.noDirectRead) {
                 reqs.push(this.apiSrv
                     .read({
                         [relation.__type]: PipRX.criteries({[relation.tf]: rec[relation.sf] + ''})

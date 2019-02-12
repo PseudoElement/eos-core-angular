@@ -86,9 +86,16 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'SECURLEVEL_FILE',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
-        title: 'Гриф доступа файла РК',
+        // title: 'Гриф доступа файла РК',
+        title: 'Доступ',
+        dict: {
+            dictId: 'SECURITY_CL',
+            dictKey: 'SECURLEVEL',
+            dictKeyTitle: 'GRIF_NAME',
+        }
+
         // classif_id:  111
     }, {
         key: 'DOC_DATE_M',
@@ -578,10 +585,16 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'REF_FILE_ACCESS_LIST',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ для доступа к файлу РК',
         // classif_id:  545
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
     }, {
         key: 'JOURNAL_WHO_EMPTY_W',
         // Default type:  'W',

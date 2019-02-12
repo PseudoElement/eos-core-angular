@@ -28,13 +28,16 @@
             <ng-container *ngSwitchCase="2">
                 <ng-container *ngTemplateOutlet="defaultEdit3"></ng-container>
             </ng-container>
+            <ng-container *ngSwitchCase="3">
+                <ng-container *ngTemplateOutlet="defaultEdit4"></ng-container>
+            </ng-container>
         </ng-container>
 
     </div>
 </div>
 <div>
     <button>Ведение списков</button>
-    <button>Записать</button>
+    <button (click)="save()" >Записать</button>
     <button>Выход</button>
 </div>
 
@@ -72,4 +75,16 @@
         [data]="valuesDefault"
         [inputs]="inputsDefault">
     </eos-rk-writes>
+</ng-template>
+
+<ng-template #defaultEdit4>
+    <eos-rk-files
+        style="width: 100%;"
+        [dataController]="dataController"
+        [fieldsDescription]="fieldsDescrDefault"
+        [form]="form"
+        [editMode]="true"
+        [data]="valuesDefault"
+        [inputs]="inputsDefault">
+    </eos-rk-files>
 </ng-template>

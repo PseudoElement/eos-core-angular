@@ -6,6 +6,9 @@ import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-conver
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { TDefaultField, TDFSelectOption, RKFieldsFict } from './rk-default-values/rk-default-const';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { EosUtils } from 'eos-common/core/utils';
+import { Subscription } from 'rxjs/Subscription';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -37,6 +40,7 @@ const tabs: Ttab [] = [
 export class AdvCardRKEditComponent implements OnDestroy, OnInit {
     // @ViewChild('tabContainer', { read: ViewContainerRef }) container;
     @Output() onChoose: EventEmitter<any> = new EventEmitter<any>();
+    @Output() formChanged: EventEmitter<any> = new EventEmitter<any>();
 
     // componentRef: ComponentRef <RKDefaultValuesCardComponent>;
 
@@ -53,9 +57,11 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
     valuesDG: any;
     fieldsDescrDefault: any;
     inputsDefault: any;
+    private subscriptions: Subscription[];
 
     // protected apiSrv: PipRX;
     private _node = {};
+    private isn_node: number;
 
     // private _initialData: any;
 
@@ -64,6 +70,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
         private apiSrv: PipRX,
         private _dataSrv: EosDataConvertService,
         private _inputCtrlSrv: InputControlService,
+        private _msgSrv: EosMessageService,
 
         // private _dictSrv: EosDictService,
         // private _msgSrv: EosMessageService,
@@ -72,28 +79,38 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
         this.apiSrv = apiSrv;
         this.isUpdating = true;
         this.tabs = tabs;
+        this.isn_node = 3670;
+        this.subscriptions = [];
     }
 
 
     ngOnInit() {
-        this.dataController = new AdvCardRKDataCtrl(this.apiSrv);
+        this.dataController = new AdvCardRKDataCtrl(this.apiSrv, this._msgSrv);
         this.fieldsDescrDefault = this.dataController.getDescriptions(ACRK_GROUP.defaultRKValues);
         // this.valuesDefault = this.dataController.getValues(ACRK_GROUP.defaultRKValues);
 
-        this.dataController.readValues1(3670).then (values => {
+        this.dataController.readValues1(this.isn_node).then (values => {
             this.valuesDG = values[0];
             this.valuesDefault = this._makeDataObj(this.valuesDG[DEFAULTS_LIST_NAME]);
             this.dataController.loadDictsOptions(ACRK_GROUP.defaultRKValues, this.valuesDefault, this.updateLinks).then (d => {
                 this.inputsDefault = this.getInputs();
+                this._updateOptions(this.inputsDefault);
                 const isNode = false;
                 this.form = this._inputCtrlSrv.toFormGroup(this.inputsDefault, isNode);
+                this._subscribeToChanges();
                 this.isUpdating = false;
             });
         });
         // this.createComponent('a');
     }
+
     ngOnDestroy() {
-        // this.componentRef.destroy();
+        this.subscriptions.forEach((subscr) => {
+            if (subscr) {
+                subscr.unsubscribe();
+            }
+        });
+        this.subscriptions = [];
     }
 
     updateLinks (el: TDefaultField, options: TDFSelectOption[], data: any) {
@@ -103,6 +120,24 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
             const rec = data[0];
             options[0].title = rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
         }
+    }
+
+    save(): void {
+        this.dataController.save(this.isn_node, this.inputsDefault);
+
+    }
+
+    _updateOptions(values: any[]) {
+        console.log(values);
+        const v = values['rec.SECURLEVEL_FILE'];
+        v.options.push (
+            {
+                value: '-1', title: 'Список ДЛ'
+            }, {
+                value: '-2', title: 'Фигуранты РК'
+            }
+        );
+
     }
 
     _makeDataObj (data: any) {
@@ -164,86 +199,46 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
     }
 
     public saveWithConfirmation() {
-        // if (!this._baseId) {
-        //     return;
-        // }
-        // const query = {criteries: {[NUM_YEAR_NAME]: String(this.editValueYear)}};
-        // const req = {[this._decl.dbTableName]: query};
-        // this.editValueNum = Number(this.editValueNum);
-        // const isValid = true;
-
-        // this.apiSrv.read(req).then((data) => {
-        //     // TODO: check exists years somewhere (ticket 96979)
-        //     // isValid = ?
-        //     return data;
-        // }).then((data) => {
-        //     if (isValid) {
-        //         const old_value = this._getNodeValue(this.editValueYear);
-        //         if (old_value) {
-        //             const _confrm = Object.assign({}, CONFIRM_NUMCREATION_NP_CHANGE);
-        //             _confrm.body = _confrm.body
-        //                 .replace('{{old_value}}', String(old_value))
-        //                 .replace('{{new_value}}', String(this.editValueNum));
-        //             this._confirmSrv.confirm(_confrm)
-        //                 .then((confirmed: boolean) => {
-        //                     if (confirmed) {
-        //                         this._save(this.editValueYear, this.editValueNum);
-        //                     }
-        //                     return Promise.resolve(null);
-        //                 }).catch(err => this._errHandler(err));
-        //         } else {
-        //             this._save(this.editValueYear, this.editValueNum);
-        //         }
-        //     } else {
-        //         this._msgSrv.addNewMessage(DANGER_NUMCREATION_NP_CHANGE);
-        //     }
-        // }).catch(err => this._errHandler(err));
     }
 
-    // private _init(dictId: string): CounterDeclarator {
-    //     // return numDeclarators.find(r => r.dictId === dictId);
-    // }
+    private _subscribeToChanges() {
+        this.subscriptions.push(this.form.valueChanges.subscribe((newVal) => {
+            let changed = false;
+            Object.keys(newVal).forEach((path) => {
+                if (this._changeByPath(path, newVal[path])) {
+                    changed = true;
+                }
+            });
+            this.formChanged.emit(changed);
+        }));
+    }
 
-    // private _makeBatchData(year: number, value: number) {
-    //     const dt = {
-    //         [this._decl.dbNumIdName]  : String(this._baseId),
-    //         [NUM_YEAR_NAME]: Number(year),
-    //         [NUM_VALUE_NAME] : Number(value),
-    //     };
-    //     if (this._decl.appendObject) {
-    //         Object.assign(dt, this._decl.appendObject);
-    //     }
-    //     const res = [
-    //         {
-    //             method: 'POST',
-    //             data: dt,
-    //             requestUri: this._decl.dbTableName,
-    //         },
-    //     ];
-    //     return res;
-    // }
+    private _changeByPath(path: string, value: any) {
+        let _value = null;
+        if (typeof value === 'boolean') {
+            _value = +value;
+        } else if (value === 'null') {
+            _value = null;
+        } else if (value instanceof Date) {
+            _value = EosUtils.dateToString(value);
+        } else if (value === '') { // fix empty strings in IE
+            _value = null;
+        } else {
+            _value = value;
+        }
+        // this.newData = EosUtils.setValueByPath(this.newData, path, _value);
+        // const oldValue = EosUtils.getValueByPath(this.data, path, false);
 
-    // private _updateRecord(chr: any/*originalData: any, updates: any*/): Promise<any> {
-    //     if (chr.length) {
-    //         return this.apiSrv.batch(chr, '')
-    //             .then(() => {
-    //                 return Promise.resolve(null);
-    //             });
-    //     } else {
-    //         return Promise.resolve(null);
-    //     }
-    // }
+        // if (oldValue !== _value) {
+        //     this.data = EosUtils.setValueByPath(this.data, path, _value);
+        //     if (path === 'type') {
+        //         this.init(_value);
+        //     }
+        //     // console.warn('changed', path, oldValue, 'to', _value, this.data.rec);
+        // }
 
-    // private _save(year: number, value: number) {
-    //     // const chr = this._makeBatchData(year, value);
-    //     // this._updateRecord(chr).then(() => {
-    //     //     this.initByNodeData(this._initialData);
-    //     // }).catch(err => this._errHandler(err));
+        // return _value !== oldValue;
+    }
 
-    // }
 
-    // private _errHandler(err: any) {
-    //     this._dictSrv.errHandler(err);
-    //     this.hideModal();
-    // }
 }

@@ -207,7 +207,7 @@ export class PipeUtils {
 
                         for (let j = 0; j < l.length; j++) {
                             l[j].__metadata = l[j].__metadata || {};
-                            l[j].__metadata.__type = pr.__type || pr.name.replace('_List', '');
+                            l[j].__metadata.__tAR_DOCGROUP_Listype = pr.__type || pr.name.replace('_List', '');
 
                             if (!l[j].hasOwnProperty(pr.tf)) {
                                 l[j][pr.tf] = it[pr.sf];

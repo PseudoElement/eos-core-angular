@@ -78,6 +78,7 @@ import {CustomTreeComponent} from './tree2/custom-tree.component';
 import { RulesSelectComponent } from './sev-rules-select/sev-rules-select.component';
 import { AdvCardRKEditComponent } from './adv-card/adv-card-rk.component';
 import { RKDefaultValuesCardComponent } from './adv-card/rk-default-values/rk-default-values.component';
+import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-files.component';
 
 @NgModule({
     declarations: [
@@ -89,6 +90,7 @@ import { RKDefaultValuesCardComponent } from './adv-card/rk-default-values/rk-de
         RKDefaultValuesCardComponent,
         RKMandatoryCardComponent,
         RKWritesCardComponent,
+        RKFilesCardComponent,
         RulesSelectComponent,
         DepartmentsCardEditDepartmentComponent,
         DepartmentsCardEditPersonComponent,

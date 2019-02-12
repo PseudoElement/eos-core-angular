@@ -1,7 +1,9 @@
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { RKDefaultFields, TDefaultField, TDFSelectOption } from './rk-default-values/rk-default-const';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
-import { PipRX, DOCGROUP_CL } from 'eos-rest';
+import { PipRX, DOCGROUP_CL, DOC_DEFAULT_VALUE } from 'eos-rest';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { SUCCESS_SAVE } from 'eos-dictionaries/consts/messages.consts';
 
 const DOCGROUP_TABLE = 'DOCGROUP_CL';
 const DOCGROUP_UID_NAME = 'ISN_NODE';
@@ -16,6 +18,7 @@ export class AdvCardRKDataCtrl {
     loadedDicts: any;
     constructor (
         private _apiSrv: PipRX,
+        private _msgSrv: EosMessageService,
     ) {
         this.loadedDicts = {};
     }
@@ -182,6 +185,62 @@ export class AdvCardRKDataCtrl {
         });
 
 
+    }
+
+    keys(data: Object): string[] {
+        if (data) {
+            return Object.keys(data);
+        } else {
+            return [];
+        }
+    }
+
+    save(isn_node: number, inputs: any[] ): void {
+        this._apiSrv
+            .read<DOCGROUP_CL>({
+                DOCGROUP_CL: PipRX.criteries({'ISN_NODE': String(isn_node)}),
+                expand: DEFAULTS_LIST_NAME,
+                foredit: true,
+            })
+            .then(([docGroup]) => {
+                this._apiSrv.entityHelper.prepareForEdit(docGroup);
+
+                this.keys(inputs).forEach((key) => {
+                    const input = inputs[key];
+                    const path = key.split('.');
+                    let value = input.value;
+                    const g = docGroup[DEFAULTS_LIST_NAME].find (f => f.DEFAULT_ID === path[1]);
+                    if (g) {
+                        if (value === true) {
+                            value = '1';
+                        }
+                        if (g.VALUE !== value) {
+                            g.VALUE = value;
+                            g._State = 'MERGE';
+                        }
+                    } else if (value) {
+                        const newd = <DOC_DEFAULT_VALUE> {
+                            _State: 'POST',
+                            VALUE: value,
+                            DEFAULT_ID : key,
+                            // DUE: docGroup['DUE'],
+                            // CompositePrimaryKey: g['DUE'] + ' ' + key,
+                        };
+                        // Object.assign(newd, this._nodes.get(isn_node.toString()).data);
+                        docGroup[DEFAULTS_LIST_NAME].push(newd);
+                    }
+                });
+
+                const changes = this._apiSrv.changeList([docGroup]);
+                console.log(changes);
+                this._apiSrv.batch(changes, '')
+                    .then(() => {
+                        this._msgSrv.addNewMessage(SUCCESS_SAVE);
+                    })
+                    .catch((err) => {
+                        this._msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка записи'});
+                    });
+            });
     }
 
 
