@@ -137,7 +137,6 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
 
     private _appendCategoryOldChange(changes) {
         const changeData = [];
-        
         if (this._findedNodes) {
             this.prepareForEdit(this._findedNodes);
             this._findedNodes.forEach(el => {
