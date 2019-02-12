@@ -1,10 +1,11 @@
-import {Component} from '@angular/core';
+import { Component, TemplateRef } from '@angular/core';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { Router} from '@angular/router';
 import {ELECTRONIC_SIGNATURE} from '../shared-user-param/consts/electronic-signature';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, AbstractControl } from '@angular/forms';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import {FormHelperService} from '../../shared/services/form-helper.services';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 // import { PipRX } from 'eos-rest/services/pipRX.service';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 // import { Subscription } from 'rxjs/Rx';
@@ -22,14 +23,17 @@ export class UserParamElSignatureComponent {
     public titleHeader: string;
     public selfLink: string;
     public link: number;
+    public control: AbstractControl;
     private inputFields: any;
     private form: FormGroup;
      private inputs: any;
+     private modalRef: BsModalRef;
     constructor(
         private _userSrv: UserParamsService,
         private _router: Router,
         private _inputCtrlSrv: InputParamControlService,
         private _formHelper: FormHelperService,
+        private _modalService: BsModalService,
     ) {
         this.titleHeader = this._userSrv.curentUser.CLASSIF_NAME;
         this.link = this._userSrv.curentUser['ISN_LCLASSIF'];
@@ -45,9 +49,12 @@ export class UserParamElSignatureComponent {
     }
 
     subscribeForm() {
-
+        this.form.valueChanges.subscribe(data => {
+            console.log(data);
+        });
     }
-    openPopup() {
-
+    openPopup(template: TemplateRef<any>, controlName) {
+        this.control = this.form.controls[controlName];
+        this.modalRef = this._modalService.show(template);
     }
 }

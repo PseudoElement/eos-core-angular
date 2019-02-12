@@ -58,7 +58,7 @@
     </div>
     <div class="user-input-group">
         <button
-        (click)='openPopup()'
+        (click)="openPopup(template, 'CERT_USER_STORES')"
         tooltip="Открыть"
         #itemTooltip="bs-tooltip"
         placement="bottom"
@@ -66,7 +66,7 @@
         trigger="hover">Хранилища сертификатов пользователя</button>
 
         <button
-        (click)='openPopup()'
+        (click)="openPopup(template, 'CERT_OTHER_STORES')"
         tooltip="Открыть"
         #itemTooltip="bs-tooltip"
         placement="bottom"
@@ -116,7 +116,7 @@
     </div>
     <div class="user-input-group">
             <button
-                (click)='openPopup()'
+                (click)="openPopup(template, 'CERT_WEB_STORES')"
                 tooltip="Открыть"
                 #itemTooltip="bs-tooltip"
                 placement="bottom"
@@ -124,5 +124,14 @@
                 trigger="hover"> Хранилища сертификатов для сервера удаленной проверки</button>
     </div>
 </div>
-<eos-signature-popup></eos-signature-popup>
-
+<ng-template #template>
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">Modal</h4>
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <eos-signature-popup  [input]='control'  [form]='form'></eos-signature-popup>
+        </div>
+</ng-template>

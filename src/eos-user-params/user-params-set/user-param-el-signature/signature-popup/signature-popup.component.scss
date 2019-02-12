@@ -1,1 +1,28 @@
 
+.input-user-wrapper{
+    .nav-signature{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+
+}
+.modal-dialog{
+    width: 800px;
+}
+.modal-header{
+    background: #2196f3
+}
+.sert-list{
+    max-width: 95%;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    span {
+        position: absolute;
+        right: 0;
+    }
+    }
