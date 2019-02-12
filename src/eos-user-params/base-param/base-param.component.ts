@@ -16,7 +16,6 @@ import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { Router } from '@angular/router';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
-import { DUE_DEP_OCCUPATION } from 'app/consts/messages.consts';
 import {NavParamService} from 'app/services/nav-param.service';
 @Component({
     selector: 'eos-params-base-param',
@@ -223,19 +222,17 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         let dueDep = '';
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
         .then((data: string) => {
-            dueDep = data;
-            return this._userParamSrv.ceckOccupationDueDep(dueDep, this._userParamSrv.userContextId);
-        })
-        .then((access: boolean) => {
-            if (!access) {
-                this._msgSrv.addNewMessage(DUE_DEP_OCCUPATION);
+            if (data === '') {
                 throw new Error();
             }
+            dueDep = data;
             return this._userParamSrv.getDepartmentFromUser(dueDep);
         })
         .then((data: DEPARTMENT[]) => {
+            return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true);
+        })
+        .then((dep: DEPARTMENT) => {
             this.isShell = false;
-            const dep = data[0];
             this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
             this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
         })

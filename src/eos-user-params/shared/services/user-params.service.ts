@@ -4,6 +4,7 @@ import { USER_CL, DEPARTMENT, USERCARD } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IParamUserCl } from '../intrfaces/user-parm.intterfaces';
 import { Subject } from 'rxjs/Subject';
+import { IMessage } from 'eos-common/interfaces';
 
 @Injectable()
 export class UserParamsService {
@@ -233,7 +234,7 @@ export class UserParamsService {
         };
         return this._pipSrv.getData<USER_CL>(queryUser);
     }
-    ceckOccupationDueDep(dueDep: string, isn?: number): Promise<boolean> {/* проверяем прикреплино ли должностное лицо к пользователю */
+    ceckOccupationDueDep(dueDep: string, dep: DEPARTMENT, isn?: boolean) {/* проверяем прикреплино ли должностное лицо к пользователю */
         const query = {
             USER_CL: {
                 criteries: {
@@ -241,16 +242,22 @@ export class UserParamsService {
                 }
             }
         };
+        const mess: IMessage = {
+            title: 'Предупреждение:',
+            msg: '',
+            type: 'warning'
+        };
         return this._pipSrv.getData<USER_CL>(query)
         .then((u: USER_CL[]) => {
-            const user = u[0];
-            if (!user) {
-                return true;
+            if (!u.length) {
+                return dep;
             }
-            if (isn) {
-                return user['ISN_LCLASSIF'] === isn;
+            mess.msg = `Пользователь "${u[0].SURNAME_PATRON}" уже ассоциирован с выбранным ДЛ "${dep.CLASSIF_NAME}".`;
+            if (isn && u[0]['ISN_LCLASSIF'] === this.userContextId) {
+                mess.msg = `Пользователь ${this.curentUser.SURNAME_PATRON} уже ассоциирован с выбранным ДЛ`;
             }
-            return false;
+            this._msgSrv.addNewMessage(mess);
+            throw new Error();
         });
     }
     deleteItemUserTechList(v) {
