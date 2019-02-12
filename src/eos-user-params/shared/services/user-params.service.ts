@@ -5,6 +5,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IParamUserCl } from '../intrfaces/user-parm.intterfaces';
 import { Subject } from 'rxjs/Subject';
 import { IMessage } from 'eos-common/interfaces';
+import { ALL_ROWS } from 'eos-rest/core/consts';
 
 @Injectable()
 export class UserParamsService {
@@ -144,11 +145,7 @@ export class UserParamsService {
     ) {}
     getUserIsn(isn_cl: string = this.userContextId.toString()): Promise<boolean> {
         const queryUser = {
-            USER_CL: {
-                criteries: {
-                    ISN_LCLASSIF: isn_cl ? isn_cl : (this.userContextId + '')
-                }
-            },
+            [`USER_CL(${+isn_cl})`]: ALL_ROWS,
             expand: 'USER_PARMS_List,USERCARD_List/USER_CABINET_List,USER_RIGHT_DOCGROUP_List,USERDEP_List,USERCARD_List/USER_CARD_DOCGROUP_List,NTFY_USER_EMAIL_List,USER_TECH_List'
         };
         const _user = this._pipSrv.getData<USER_CL>(queryUser);
