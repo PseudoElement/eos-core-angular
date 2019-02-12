@@ -11,7 +11,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
-import { DUE_DEP_OCCUPATION } from 'app/consts/messages.consts';
+// import { DUE_DEP_OCCUPATION } from 'app/consts/messages.consts';
 
 @Component({
     selector: 'eos-param-create-user',
@@ -135,19 +135,17 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         let dueDep = '';
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
         .then((data: string) => {
-            dueDep = data;
-            return this._userParamSrv.ceckOccupationDueDep(dueDep);
-        })
-        .then((access: boolean) => {
-            if (!access) {
-                this._msgSrv.addNewMessage(DUE_DEP_OCCUPATION);
+            if (data === '') {
                 throw new Error();
             }
+            dueDep = data;
             return this._userParamSrv.getDepartmentFromUser(dueDep);
         })
         .then((data: DEPARTMENT[]) => {
+            return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0]);
+        })
+        .then((dep: DEPARTMENT) => {
             this.isShell = false;
-            const dep: DEPARTMENT = data[0];
             this.data['dueDL'] = dep['DUE'];
             this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
         })

@@ -16,7 +16,6 @@ import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { Router } from '@angular/router';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
-import { DUE_DEP_OCCUPATION } from 'app/consts/messages.consts';
 import {NavParamService} from 'app/services/nav-param.service';
 @Component({
     selector: 'eos-params-base-param',
@@ -157,7 +156,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     this.formControls.get('passRepeated').reset();
                 }
                 this._newData = {};
-                // console.log(f, pass);
                 this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                 this._userParamSrv.getUserIsn()
                 .then(() => {
@@ -208,34 +206,23 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     close() {
         this._router.navigate(['user_param']);
     }
-    checkPass() {
-        if (this.formControls.get('pass').value && this.formControls.get('passRepeated').value) {
-            this.errorPass = this.formControls.get('pass').value !== this.formControls.get('passRepeated').value;
-            if (this.errorPass) {
-                this.formControls.get('passRepeated').setErrors({repeat: true});
-            }
-        } else {
-        this.errorPass = false;
-        }
-    }
+
     showDepartment() {
         this.isShell = true;
         let dueDep = '';
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
         .then((data: string) => {
-            dueDep = data;
-            return this._userParamSrv.ceckOccupationDueDep(dueDep, this._userParamSrv.userContextId);
-        })
-        .then((access: boolean) => {
-            if (!access) {
-                this._msgSrv.addNewMessage(DUE_DEP_OCCUPATION);
+            if (data === '') {
                 throw new Error();
             }
+            dueDep = data;
             return this._userParamSrv.getDepartmentFromUser(dueDep);
         })
         .then((data: DEPARTMENT[]) => {
+            return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true);
+        })
+        .then((dep: DEPARTMENT) => {
             this.isShell = false;
-            const dep = data[0];
             this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
             this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
         })
@@ -372,6 +359,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             if (data['pass'] && data['passRepeated']) {
                 pass = data['pass'] === data['passRepeated'];
             }
+            this.checkchangPass(data['pass'], data['passRepeated']);
             this._newData['formControls'] = (pass || role) ? this._newData['formControls'] : null;
             change = change ? change : pass || role;
         }
@@ -382,4 +370,20 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         this.stateHeaderSubmit = !change || state;
     }
+
+    private checkchangPass(data1, data2) {
+        if (data1 !== '' && data2 !== '') {
+            this.errorPass = data1 !== data2;
+            if (this.errorPass) {
+                this.formControls.get('passRepeated').setErrors({repeat: true});
+            }   else {
+                this.errorPass = false;
+            }
+        }  else if (data1 !== '' || data2 !== '') {
+            this.errorPass = true;
+        } else {
+            this.errorPass = false;
+        }
+    }
+
 }

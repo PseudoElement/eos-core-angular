@@ -18,7 +18,7 @@ export class AuthService {
     }
 
     public login(user: string, passwd: string): Promise<any> {
-        const _url = this._cfg.authApiUrl + 'Login?app=api&' + 'username=' + user + '&pass=' + passwd;
+        const _url = this._cfg.authApiUrl + 'Login?app=api&' + 'username=' + user + '&pass=' + encodeURIComponent(passwd);
         const r = this._http.get(_url, HTTP_OPTIONS).toPromise()
             .then((resp) => {
                 if (resp.text() && resp.text().indexOf('error:') > -1) {

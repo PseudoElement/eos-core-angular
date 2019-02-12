@@ -273,9 +273,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     private _deleteAllClassif(node: NodeAbsoluteRight) {
         node.deleteChange();
-        console.log(this.curentUser.USER_TECH_List);
         this.curentUser.USER_TECH_List.forEach((li: USER_TECH) => {
-            console.log('dont empty');
             node.pushChange({
                 method: 'DELETE',
                 due: li.DUE,
