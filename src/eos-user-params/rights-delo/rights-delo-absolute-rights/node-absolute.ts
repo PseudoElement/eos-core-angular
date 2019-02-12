@@ -20,7 +20,7 @@ export class NodeAbsoluteRight {
     get change (): IChengeItemAbsolute[] {
         return this._change;
     }
-    get value() {
+    get value(): number {
         return this._value;
     }
 
@@ -33,10 +33,13 @@ export class NodeAbsoluteRight {
         if (!this._value && v) {
             this.isCreate = true;
         }
+        if (v && this.isCreate && this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.all) {
+                v = 2; // для параметров с радио "всех и не заполненных", значение по умолчанию "не заполненных"
+                this.isCreate = false;
+            }
         this._value = v;
         this.control.patchValue(!!v);
     }
-    private _curentUser: IParamUserCl;
     private _constData: IInputParamControl;
     private _value: number;
     private _valueDb: number;
@@ -46,7 +49,6 @@ export class NodeAbsoluteRight {
         this._value = v;
         this._valueDb = v;
         this.control = con;
-        this._curentUser = curentUser;
     }
     pushChange(node: IChengeItemAbsolute) {
         if (this._change.length && (this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department ||
@@ -70,12 +72,7 @@ export class NodeAbsoluteRight {
             if (node.user_cl) {
                 const index = this._change.findIndex((item: IChengeItemAbsolute) => item.user_cl);
                 if (index >= 0) {
-                    if (node['data']['TECH_RIGHTS'] === this._curentUser.TECH_RIGHTS) {
-                        this._change.splice(index, 1);
-                        this._checkTouched();
-                    } else {
                         this._change.splice(index, 1, node);
-                    }
                     return;
                 }
             }
@@ -102,6 +99,7 @@ export class NodeAbsoluteRight {
         if ((this._change[index].method === 'POST') && (node.method === 'MERGE')) {
             node.method = 'POST';
             this._change.splice(index, 1, node);
+            return;
         }
         if ((this._change[index].method === 'POST') && (node.method === 'DELETE')) {
             this._change.splice(index, 1);
@@ -111,9 +109,11 @@ export class NodeAbsoluteRight {
         if (this._change[index].method === 'DELETE') {
             node.method = 'MERGE';
             this._change.splice(index, 1, node);
+            return;
         }
         if (this._change[index].method === 'MERGE' && (node.method === 'DELETE')) {
             this._change.splice(index, 1, node);
+            return;
         }
         if (this._change[index].method === 'MERGE' && (node.method === 'MERGE')) {
             this._change.splice(index, 1);

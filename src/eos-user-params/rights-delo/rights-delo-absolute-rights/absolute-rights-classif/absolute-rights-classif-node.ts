@@ -42,11 +42,13 @@ export class RightClassifNode {
 
         const right = this._curentUser['TECH_RIGHTS'].split('');
         right[this.key - 1] = this._value.toString();
+        const newTechRight = right.join('');
+        this._curentUser['TECH_RIGHTS'] = newTechRight;
         const chenge: IChengeItemAbsolute = {
             method: 'MERGE',
             user_cl: true,
             data: {
-                TECH_RIGHTS: right.join(''),
+                TECH_RIGHTS: newTechRight,
             }
         };
         this._parentNode.pushChange(chenge);
@@ -154,6 +156,10 @@ export class RightClassifNode {
                 funcNum: this.key,
                 data: this.curentSelectedNode.data['userTech']
             });
+            const index = this._listUserTech.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
+            this._listUserTech.splice(index, 1);
+            const index2 = this._component.userTechList.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
+            this._component.userTechList.splice(index2, 1);
             this.curentSelectedNode = null;
             this._component.Changed.emit();
         }

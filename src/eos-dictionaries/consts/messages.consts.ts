@@ -193,3 +193,9 @@ export const DANGER_DEPART_IS_LDELETED: IMessage = {
     title: 'Предупреждение: ',
     msg: 'Выбранное подразделение логически удалено.'
 };
+
+export const DANGER_DEPART_NO_NUMCREATION: IMessage = {
+    type: 'danger',
+    title: 'Предупреждение: ',
+    msg: 'В выбранном подразделении не взведен флаг номерообразования'
+};

@@ -46,12 +46,14 @@ export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
         key: 'pass',
         label: 'ПАРОЛЬ',
         pattern: /^\S+$/,
+        value: '',
     },
     {
         controlType: E_FIELD_TYPE.string,
         key: 'passRepeated',
         label: 'ПОВТОРИТЕ ПАРОЛЬ',
         pattern: /^\S+$/,
+        value: '',
     },
     {
         controlType: E_FIELD_TYPE.select,

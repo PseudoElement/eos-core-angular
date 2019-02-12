@@ -1054,6 +1054,8 @@ export interface DEPARTMENT extends IHierCL, IStamp {
      */
     WDUE: string;
 
+    EXPEDITION_FLAG: number;
+
 }
 
 /**

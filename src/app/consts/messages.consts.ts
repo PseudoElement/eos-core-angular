@@ -96,3 +96,8 @@ export const DUE_DEP_OCCUPATION: IMessage = {
     msg: 'Должностное лицо уже привязано к пользователю.',
     type: 'warning'
 };
+export const ENPTY_ALLOWED_CREATE_PRJ: IMessage = {
+    title: 'Предупреждение:',
+    msg: 'Пользователю дано право на создание РКПД, но нет разрешения ни на одну группу документов!\nУкажите группу документов для создания РКПД.',
+    type: 'warning'
+};

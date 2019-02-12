@@ -205,6 +205,10 @@ export class EosDictService {
         this.currentNode = null;
     }
 
+    unbindOrganization () {
+        this.currentDictionary.unbindOrganization();
+    }
+
     bindOrganization(orgDue: string) {
         if (orgDue && this.currentDictionary) {
             return this.currentDictionary.bindOrganization(orgDue);

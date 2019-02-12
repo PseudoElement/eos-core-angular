@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy} from '@angular/core';
-import {EosSandwichService} from 'eos-dictionaries/services/eos-sandwich.service';
+// import {EosSandwichService} from 'eos-dictionaries/services/eos-sandwich.service';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { USER_CL, DEPARTMENT, USER_PARMS } from 'eos-rest';
 import { Subject } from 'rxjs/Subject';
+
 @Component({
     selector: 'eos-right-user-select',
     templateUrl: 'right-user-select.component.html'
@@ -19,10 +20,13 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     opened: boolean;
     chooseTemplate: string;
     isPhoto: boolean|number;
+    urlPhoto: string = '';
     departmentInfo: DEPARTMENT;
     destroySubsriber: Subject<any> = new Subject();
+    flagFirstGetInfo: boolean = true;
+    CurrentUserForShowTemplate: USER_CL = null;
     constructor(
-        private _sandwichSrv: EosSandwichService,
+      //  private _sandwichSrv: EosSandwichService,
         private _selectedUser: RtUserSelectService,
     ) {
         this.isPhoto = false;
@@ -30,32 +34,41 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         this.flagSustem = false;
         this.opened = false;
         this.showDep = false;
-        this._sandwichSrv.currentDictState$
-            .takeUntil(this.destroySubsriber)
-            .subscribe(result => {
-            this.flagRtBlock = result[1];
-            if (this.flagRtBlock && this.CurrentUser) {
-                this.chooseTemplate = 'spinner';
-                    this.geyInfo();
-                }
-            });
+        // this._sandwichSrv.currentDictState$
+        //     .takeUntil(this.destroySubsriber)
+        //     .subscribe(result => {
+        //     this.flagRtBlock = result[1];
+        //     if (this.flagRtBlock && this.CurrentUser) {
+        //         this.chooseTemplate = 'spinner';
+        //             this.geyInfo();
+        //         }
+        //     });
 
         this._selectedUser.changerUser
             .takeUntil(this.destroySubsriber)
             .subscribe(currentUser => {
-                if (currentUser) {
+                this.CurrentUserForShowTemplate  = currentUser;
+                if (currentUser && this.flagFirstGetInfo) {
+                    this.chooseTemplate = 'spinner';
+                    this.geyInfo(currentUser);
                     this.CurrentUser = currentUser;
-                    if (this.flagRtBlock) {
-                        this.chooseTemplate = 'spinner';
-                        this.geyInfo();
-                    }
+                    this.flagFirstGetInfo = false;
+                }
+                if (currentUser &&  this.CurrentUser['id'] !== currentUser.id ) {
+                    // if (this.flagRtBlock) {
+                    //     this.chooseTemplate = 'spinner';
+                    //     this.geyInfo();
+                    // }
+                         this.chooseTemplate = 'spinner';
+                         this.geyInfo(currentUser);
+                         this.CurrentUser = currentUser;
                 }
             });
     }
-    geyInfo() {
-        const isn = this.CurrentUser['data']['ISN_LCLASSIF'];
-        if ( this.CurrentUser['data']['DUE_DEP'] !== null) {
-            const due =  this.CurrentUser['data']['DUE_DEP'];
+    geyInfo(currentUser) {
+        const isn = currentUser['data']['ISN_LCLASSIF'];
+        if ( currentUser['data']['DUE_DEP'] !== null) {
+            const due =  currentUser['data']['DUE_DEP'];
                 this.getInfo(isn, due);
             }else {
                 this.getInfo(isn);
@@ -86,6 +99,11 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             this.isPhoto =  result[1][0]['ISN_PHOTO'];
             isn_cabinet =  result[1][0]['ISN_CABINET'];
             this.showDep = true;
+            if (this.isPhoto) {
+                this.urlPhoto = `../image.ashx/${this.isPhoto}/110`;
+            }   else {
+                this.urlPhoto = 'assets/images/no-user.png';
+            }
            }else {
             this.DueInfo = null;
             this.showDep = false;
@@ -96,7 +114,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
                 this.UserCabinetInfo = res;
                 setTimeout(() => {
                 this.chooseTemplate = 'main';
-            }, 500);
+            }, 100);
         });
         });
     }
@@ -147,6 +165,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             split[23] === '1' ?  this._selectedUser.ArraySystemHelper.MobNet.checked = true : this._selectedUser.ArraySystemHelper.MobNet.checked = false;
             split[26] === '1' ?  this._selectedUser.ArraySystemHelper.Informer.checked = true : this._selectedUser.ArraySystemHelper.Informer.checked = false;
             this.flagSustem = true;
+            this._selectedUser.subjectScan.next(this._selectedUser.ArraySystemHelper.Pscan.checked);
     }
     fillDeloField(delo: boolean, delo_deloweb: boolean, delowebLGO: boolean, delowebKL: boolean ): void {
         this._selectedUser.ArraySystemHelper.delo.checked = delo;

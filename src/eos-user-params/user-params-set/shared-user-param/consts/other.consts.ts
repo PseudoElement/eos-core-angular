@@ -53,6 +53,7 @@ export const OTHER_USER: IBaseUsers = {
             type: 'select',
             title: '',
             options: [
+                {value: '', title: ''}
             ]
         },
         {
@@ -131,6 +132,12 @@ export const OTHER_USER: IBaseUsers = {
         {
             key: 'REESTR_RESTRACTION_DOCGROUP',
             title: 'Ограничить группами документов',
+            type: 'text',
+            length: 255,
+        },
+        {
+            key: 'ADDR_EXPEDITION',
+            title: '',
             type: 'text',
             length: 255,
         },

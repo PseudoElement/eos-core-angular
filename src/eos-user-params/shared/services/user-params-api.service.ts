@@ -116,14 +116,6 @@ export class UserParamApiSrv {
                 if ((user.data.DUE_DEP && !user.deleted) || (user.data.DUE_DEP === null && !user.deleted)) {
                     return user;
                 }
-            }).sort(function(a, b){
-                if (a.data.DUE_DEP === null && b.data.DUE_DEP !== null) {
-                    return -1;
-                }  else if (a.data.DUE_DEP !== null && b.data.DUE_DEP === null) {
-                    return 1;
-                }   else {
-                    return 0;
-                }
             });
         }
         if (!this.flagTehnicalUsers && this.flagDelitedPermanantly) {
@@ -131,28 +123,11 @@ export class UserParamApiSrv {
                 if (user.data.DUE_DEP || user.deleted) {
                     return user;
                 }
-            }).sort(function(a, b){
-                if (a.data.DELETED === 1 && b.data.DELETED !== 1) {
-                    return -1;
-                }  else if (a.data.DELETED !== 1 && b.data.DELETED === 1) {
-                    return 1;
-                }   else {
-                    return 0;
-                }
             });
         }
 
         if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
             this.users_pagination.UsersList = this.Allcustomer.slice();
-            this.users_pagination.UsersList.sort(function(a, b){
-                if (a.data.DUE_DEP === null && b.data.DUE_DEP !== null) {
-                    return -1;
-                }  else if (a.data.DUE_DEP !== null && b.data.DUE_DEP === null) {
-                    return 1;
-                }   else {
-                    return 0;
-                }
-            });
         }
 
         if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {

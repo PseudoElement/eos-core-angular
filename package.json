@@ -7,6 +7,7 @@
     "update-build": "node ./build-version.js",
     "start": "ng serve",
     "build": "ng build",
+    "dev": "ng build --watch",
     "postinstall": "node ./postinstall.js && node ./build-version",
     "test": "ng test",
     "saas-lint": "./node_modules/sass-lint/bin/sass-lint.js -c ./.sass-lint.yml -v -q",

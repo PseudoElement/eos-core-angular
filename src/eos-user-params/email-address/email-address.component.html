@@ -11,42 +11,64 @@
             class=" email-create btn btn-primary"
             (click)="openModal(template)"
             tooltip="Добавить E-MAIL"
+            placement="top"
             containerClass="tooltip-info">
             <span class="eos-icon eos-icon-plus-blue small"></span>
         </button>
-        <button
-            [disabled]="getaccess"
-            type="button"
-            class=" email-edit btn btn-primary"
-            (click)="openModal(template, true)"
-            tooltip="Ограничение рассылки"
-            containerClass="tooltip-info">
-            <span class="eos-icon eos-icon-edit-blue small"></span>
-        </button>
-        <button
-            [disabled]="getaccess"
-            class="email-delite  btn btn-primary"
-            (click)='deliteEmailFild()'
-            tooltip="Удалить E-MAIL"
-            containerClass="tooltip-info">
-            <span class="eos-icon eos-icon-bin-blue sma"></span>
-        </button>
-        <button
-            [disabled]="currentIndex == 0 || getaccess"
-            class="stepTop  btn btn-primary"
-            (click)='upWeight()'
-            tooltip="Переместить вверх"
-            containerClass="tooltip-info">
-            <span class=" eos-icon eos-icon-arrow-v-blue-top small"></span>
-        </button>
-        <button
-            [disabled]="currentIndex == umailsInfo.length - 1 || getaccess"
-            class="stepBottom  btn btn-primary"
-            (click)='downWeight()'
-            tooltip="Переместить вниз"
-            containerClass="tooltip-info">
-            <span class="eos-icon eos-icon-arrow-v-blue-bottom small"></span>
-        </button>
+        <div class="btn-group">
+            <div
+                tooltip="Ограничение рассылки"
+                placement="top"
+                #itemTooltip="bs-tooltip"
+                containerClass="tooltip-info">
+                <button
+                    [disabled]="getaccess"
+                    type="button"
+                    class=" email-edit btn btn-primary"
+                    (click)="itemTooltip.hide(); openModal(template, true)">
+                    <span [ngClass]="getaccess ? 'eos-icon eos-icon-edit-grey small' : 'eos-icon eos-icon-edit-blue small'"></span>
+                </button>
+            </div>
+        </div>
+        <div class="btn-group">
+                <div  tooltip="Удалить E-MAIL"
+                    #itemTooltip="bs-tooltip"
+                    placement="top"
+                    containerClass="tooltip-info">
+                    <button
+                        [disabled]="getaccess"
+                        class="email-delite  btn btn-primary"
+                        (click)="itemTooltip.hide(); deliteEmailFild()">
+                        <span [ngClass]="getaccess ? 'eos-icon eos-icon-bin-grey small' : 'eos-icon eos-icon-bin-blue small'"></span>
+                    </button>
+                </div>
+        </div>
+        <div class="btn-group">
+            <div  tooltip="Переместить вверх"
+                #itemTooltip="bs-tooltip"
+                placement="top"
+                containerClass="tooltip-info">
+                <button
+                    [disabled]="currentIndex == 0 || getaccess"
+                    class="stepTop btn btn-primary-light"
+                    (click)="itemTooltip.hide(); upWeight()">
+                    <span [ngClass]="(currentIndex == 0 || getaccess) ? 'eos-icon eos-icon-arrow-v-grey-top small' : 'eos-icon eos-icon-arrow-v-blue-top small'"></span>
+                </button>
+            </div>
+        </div>
+        <div class="btn-group">
+            <div tooltip="Переместить вниз"
+                #itemTooltip="bs-tooltip"
+                placement="top"
+                containerClass="tooltip-info">
+                <button
+                    [disabled]="currentIndex == umailsInfo.length - 1 || getaccess"
+                    class="stepBottom btn btn-primary-light"
+                    (click)="itemTooltip.hide(); downWeight()">
+                    <span [ngClass]="(currentIndex == umailsInfo.length - 1 || getaccess) ? 'eos-icon eos-icon-arrow-v-grey-bottom small' : 'eos-icon eos-icon-arrow-v-blue-bottom small'"></span>
+                </button>
+            </div>
+        </div>
     </div>
     <div class="email-wr">
         <div class="email-header">
@@ -69,7 +91,12 @@
                                                     <span class="eos-icon eos-icon-checkbox-black"></span>
                                                     </label>
                                             </span>
-                                            <span [ngClass]="{current: currentIndex === i}" class="emali-list-last">
+                                            <span
+                                            [tooltip]="group.controls['params'].value"
+                                            triggers="hover"
+                                            placement="auto"
+                                            containerClass="tooltip-info"
+                                             [ngClass]="{current: currentIndex === i}" class="emali-list-last">
                                                     <input formControlName="params"   type="text" readonly="readonly" class="readonly" >
                                             </span>
                                 </div>

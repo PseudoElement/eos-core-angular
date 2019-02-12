@@ -3,17 +3,11 @@ import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api
 import { CARD_INDEXS_RIGHTS, DOCUMENT_GROUPS, RESTRICT_REGISTRATION_FILING, ALL_DOCUMENTS } from '../shared-rights-delo/consts/card-index-rights.consts';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { IParamUserCl, IInputParamControlForIndexRight, IInputParamControl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { USERCARD, /* DEPARTMENT*/ } from 'eos-rest';
+import { USERCARD } from 'eos-rest';
 import { FormGroup } from '@angular/forms';
-import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { E_RIGHT_DELO_ACCESS_CONTENT } from '../shared-rights-delo/interfaces/right-delo.intefaces';
 import { PARM_SUCCESS_SAVE, PARM_ERROR_ON_BACKEND } from '../shared-rights-delo/consts/eos-user-params.const';
-import { WaitClassifService } from 'app/services/waitClassif.service';
-import { OPEN_CLASSIF_DOCGR } from '../../../eos-user-select/shered/consts/create-user.consts';
-import {LimitedAccesseService} from '../../shared/services/limited-access.service';
-import { EosUtils } from 'eos-common/core/utils';
 import { Subscription } from 'rxjs/Rx';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { NodeRightInFileCard } from './node-in-file-card';
@@ -45,9 +39,8 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     flagRemoveDocuments = false;
     flagForTheNextRequest = false;
     flagForOpenFolder = false;
-    flagCardFileAvailability = false;
+    flagCardFileAvailability = true;
     flagForHidenCheckboxRestrictRegistrationFiling = false;
-  //  flagForButtonAddIfCheck = false;
     lastKeyForSelect;
     listNode: IInputParamControlForIndexRight[] = CARD_INDEXS_RIGHTS;
     listDocumentGroups: IInputParamControl[] = DOCUMENT_GROUPS;
@@ -93,26 +86,15 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
             }
         }
     };
-   /* private quaryDocgroupCl = {
-        DOCGROUP_CL: {
-            criteries: {
-            }
-        }
-    }; */
     constructor(
         injector: Injector,
         private _userParamsSetSrv: UserParamsService,
         private servApi: UserParamApiSrv,
-        private inputCtrlSrv: InputParamControlService,
-        private _waitClassifSrv: WaitClassifService,
-        private _limitservise: LimitedAccesseService,
         private _inputCtrlSrv: InputParamControlService
     ) {
         this.init();
         const due: string[] = [];
         this.userCard = new Map<string, USERCARD>();
-      //  this.curentUser = this._userParamsSetSrv.curentUser;
-      //  this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Права в картотеках`;
         this.curentUser['USERCARD_List'].forEach((card: USERCARD) => {
             this.userCard.set(card['DUE'], card);
             due.push(card['DUE']);
@@ -121,8 +103,10 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         this.msgSrv = injector.get(EosMessageService);
     }
     init() {
-      //  console.log('First');
         this.curentUser = this._userParamsSetSrv.curentUser;
+        if (this.curentUser['USERCARD_List'].length === 0) {
+            this.flagCardFileAvailability = false;
+        }
         this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Права в картотеках`;
         this.curentUser['FUNCLIST'] = this.curentUser['FUNCLIST'] || '0'.repeat(21);
         this.arrayNadzorRight = this.curentUser['FUNCLIST'].split('');
@@ -133,8 +117,13 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         this.listRight = this._createListRight(CARD_INDEXS_RIGHTS);
        /* this.subForm = this.form.valueChanges
             .subscribe(data => console.log(data));*/
-      //  console.log(this.listRight);
-     //   console.log(this.form);
+    }
+
+    hideToolTip() {
+        const element = document.querySelector('.tooltip');
+        if (element) {
+            element.setAttribute('style', 'display: none');
+        }
     }
     ngOnInit() {
         this.selectNode(this.listRight[0]);
@@ -219,7 +208,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         }).catch(data => console.log(data));
     }*/
     }
-    updateForm(dataCurrentListNode) {
+  /*  updateForm(dataCurrentListNode) {
         this.indexForCards = dataCurrentListNode['key'];
         this.currentElementsForCards = [];
         this.listConcatRigthSide = [];
@@ -536,49 +525,28 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
             // console.log('changed', path, oldValue, 'to', _value, this.prepDataAttach.rec);
         }
         return _value !== oldValue;
- }
+    } */
     submit() {
-      //  if (!this.btnDisabled) {
             this.servApi
                 .setData(this.createObjRequestForAttach())
                 .then(data => {
-                 //   if (this.flagToDisplayTheRightSide) {
                     this.servApi.setData(this.createObjRequestForAttachAfterBackend2())
                     .then(data2 => {
                        this._userParamsSetSrv.getUserIsn('' + this.userCard.get(Array.from(this.userCard)[0][0])['ISN_LCLASSIF']);
                        this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                   //    this.btnDisabled = true;
                     })
                     .catch(data2 => console.log(data2));
-               /* } else {
-                    this._userParamsSetSrv.getUserIsn('' + this.userCard.get(Array.from(this.userCard)[0][0])['ISN_LCLASSIF']);
-                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                  //  this.btnDisabled = true;
-                } */
                 })
                 // tslint:disable-next-line:no-console
                 .catch(() => this.msgSrv.addNewMessage(PARM_ERROR_ON_BACKEND));
-         //   }
-    }
-    parseStringFromLocalStorage(s1, s2, s3) {
-        let newStr = '';
-        const arrayForNone = [1, 4, 5, 6, 7, 8, 9, 10, 11, 16];
-        const arrayForDocGroup = [0, 17];
-        const arrayForDocGroupCard = [2, 3, 12, 13, 14, 15, 18, 19, 20];
-        for (let i = 0; i < 21; i++) {
-            newStr += arrayForNone.indexOf(i) ? s1.charAt(i) : arrayForDocGroup.indexOf(i) ? s2.charAt(i) : arrayForDocGroupCard.indexOf(i) ? s3.charAt(i) : '0';
-        }
-        return newStr;
     }
     createObjRequestForAttach() {
         const req = [];
         let newDataFromLocalStorageFuncFileCards;
         newDataFromLocalStorageFuncFileCards = JSON.parse(localStorage.getItem('FuncFileCards'));
-      //  console.log(newDataFromLocalStorageFuncFileCards);
         if (newDataFromLocalStorageFuncFileCards) {
         for (let i = 0; i < newDataFromLocalStorageFuncFileCards.length; i++) {
             const tmp = this.userCard.get(newDataFromLocalStorageFuncFileCards[i][0]);
-           // console.log(tmp);
              if (newDataFromLocalStorageFuncFileCards[i][1]['FLAG_NEW_FUNCLIST'] === true ||
              newDataFromLocalStorageFuncFileCards[i][1]['FLAG_NEW_FUNCLIST_REMOVE'] === true) {
                 req.push({
@@ -594,16 +562,8 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
            }
         }
     }
-  //  localStorage.removeItem('FuncFileCards');
 }
-
-
-     /* if (this.flagAddDocuments) {
-        this.flagForTheNextRequest = true;
-        this.flagAddDocuments = false;
-      } */
-
-   // console.log(req);
+console.log(req);
         return req;
     }
     createObjRequestForAttachAfterBackend2() {
@@ -619,24 +579,14 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         newArrayDataDocumentsForMerge = JSON.parse(localStorage.getItem('arrayDataDocumentsForMerge'));
         newArrayDataDocumentsForDelete = JSON.parse(localStorage.getItem('arrayDataDocumentsForDelete'));
 
-
-      //  console.log(newArrayDataDocumentsForMergeFirst);
-     //   console.log(newDataFromLocalStorageFuncFileCards);
-      //  console.log(newArrayDataDocumentsForMerge);
-      //  console.log(newArrayDataDocumentsForDelete);
-      //  console.log(newArrayDataDocumentsForPost);
       if (newDataFromLocalStorageFuncFileCards && newArrayDataDocumentsForMergeFirst) {
         for (let i = 0; i < newDataFromLocalStorageFuncFileCards.length; i++) {
             const tmp = newDataFromLocalStorageFuncFileCards[i][1];
             for (let j = 0; j < newArrayDataDocumentsForMergeFirst.length; j++) {
                 if (newDataFromLocalStorageFuncFileCards[i][0] === newArrayDataDocumentsForMergeFirst[j]['DUE_CARD']) {
                     for (let w = 0; w < newDataFromLocalStorageFuncFileCards[i][1]['USER_CARD_DOCGROUP_List'].length; w++) {
-                      //  console.log(newDataFromLocalStorageFuncFileCards[i][1]['USER_CARD_DOCGROUP_List']);
-                      //  console.log(newArrayDataDocumentsForPost[j]['DUE']);
                         if (newDataFromLocalStorageFuncFileCards[i][1]['USER_CARD_DOCGROUP_List'][w]['DUE'] === newArrayDataDocumentsForMergeFirst[j]['DUE'] &&
                         newDataFromLocalStorageFuncFileCards[i][1]['USER_CARD_DOCGROUP_List'][w]['FUNC_NUM'] === (+this.selectedNode2.key + 1)) {
-                          //  console.log(tmp['ISN_LCLASSIF']);
-                          //  console.log(tmp['DUE']);
                             req.push({
                                 method: 'MERGE',
             requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')` +
@@ -649,53 +599,9 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     }
                 }
             }
-           // for (let t = 0; t < newArrayDataDocumentsForMerge.length; t++) {}
         }
         localStorage.removeItem('FuncFileCards');
         localStorage.removeItem('arrayDataDocumentsForMergeFirst');
-    }
-
- //   console.log(newArrayDataDocumentsForMerge);
-    if (newArrayDataDocumentsForMerge) {
-        for (let e = 0; e < Array.from(this.userCard).length; e++) {
-            const tmp = Array.from(this.userCard)[e][1];
-            for (let f = 0; f < tmp['USER_CARD_DOCGROUP_List'].length; f++) {
-            for (let t = 0; t < newArrayDataDocumentsForMerge.length; t++) {
-                if (newArrayDataDocumentsForMerge[t]['DUE_CARD'] === Array.from(this.userCard)[e][0] &&
-                newArrayDataDocumentsForMerge[t]['DUE'] === tmp['USER_CARD_DOCGROUP_List'][f]['DUE']) {
-                    req.push({
-                        method: 'MERGE',
-    requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')` +
-    `/USER_CARD_DOCGROUP_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']} ${tmp.USER_CARD_DOCGROUP_List[f]['DUE']} ${tmp.USER_CARD_DOCGROUP_List[f]['FUNC_NUM']}\')`,
-                        data: {
-                            ALLOWED: newArrayDataDocumentsForMerge[t]['ALLOWED'] === true ? 1 : 0
-                        }
-                    });
-                }
-            }
-        }
-        }
-        localStorage.removeItem('arrayDataDocumentsForMerge');
-    }
-
-  //  console.log(newArrayDataDocumentsForDelete);
-    if (newArrayDataDocumentsForDelete) {
-        for (let e = 0; e < Array.from(this.userCard).length; e++) {
-            const tmp = Array.from(this.userCard)[e][1];
-            for (let f = 0; f < tmp['USER_CARD_DOCGROUP_List'].length; f++) {
-            for (let t = 0; t < newArrayDataDocumentsForDelete.length; t++) {
-                if (newArrayDataDocumentsForDelete[t]['DUE_CARD'] === Array.from(this.userCard)[e][0] &&
-                newArrayDataDocumentsForDelete[t]['DUE'] === tmp['USER_CARD_DOCGROUP_List'][f]['DUE']) {
-                    req.push({
-                        method: 'DELETE',
-        requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')` +
-        `/USER_CARD_DOCGROUP_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']} ${tmp.USER_CARD_DOCGROUP_List[f]['DUE']} ${tmp.USER_CARD_DOCGROUP_List[f]['FUNC_NUM']}\')`
-                    });
-                }
-            }
-        }
-        }
-        localStorage.removeItem('arrayDataDocumentsForDelete');
     }
 
     if (newArrayDataDocumentsForPost) {
@@ -715,37 +621,43 @@ requestUri: `USER_CL(${newArrayDataDocumentsForPost[i]['ISN_LCLASSIF']})/USERCAR
         localStorage.removeItem('ArrayDataDocumentsForPost');
     }
 
-      //  console.log(Array.from(this.userCard));
-
-       /* for (let i = 0; i < newArrayDataDocumentsForPost.length; i++) {
-            req.push({
-                method: 'POST',
-requestUri: `USER_CL(${newArrayDataDocumentsForPost[i]['ISN_LCLASSIF']})/USERCARD_List(\'${newArrayDataDocumentsForPost[i]['ISN_LCLASSIF']} ${newArrayDataDocumentsForPost[i]['DUE_CARD']}\')/USER_CARD_DOCGROUP_List()`,
-                data: {
-                    ISN_LCLASSIF: newArrayDataDocumentsForPost[i]['ISN_LCLASSIF'],
-                    DUE_CARD: newArrayDataDocumentsForPost[i]['DUE'],
-                    DUE: newArrayDataDocumentsForPost[i]['DUE_CARD'],
-                    FUNC_NUM: newArrayDataDocumentsForPost[i]['FUNC_NUM'],
-                    ALLOWED: newArrayDataDocumentsForPost[i]['ALLOWED']
-                }
-            });
-        } */
-       /* req.push({
-            method: 'POST',
-requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')/USER_CARD_DOCGROUP_List()`,
-            data: {
-                ISN_LCLASSIF: tmp['ISN_LCLASSIF'],
-                DUE_CARD: tmp['DUE'],
-                DUE: tmp.USER_CARD_DOCGROUP_List[w]['DUE'],
-                FUNC_NUM: tmp.USER_CARD_DOCGROUP_List[w]['FUNC_NUM'],
-                ALLOWED: tmp.USER_CARD_DOCGROUP_List[w]['ALLOWED']
-            }
-        });*/
-     //   console.log(newDataFromLocalStorageFuncFileCards);
-      //  console.log(req);
-        return req;
+    if (newArrayDataDocumentsForMerge) {
+        for (let t = 0; t < newArrayDataDocumentsForMerge.length; t++) {
+                req.push({
+                    method: 'MERGE',
+requestUri: `USER_CL(${newArrayDataDocumentsForMerge[t]['ISN_LCLASSIF']})/USERCARD_List(\'${newArrayDataDocumentsForMerge[t]['ISN_LCLASSIF']} ${newArrayDataDocumentsForMerge[t]['DUE_CARD']}\')` +
+`/USER_CARD_DOCGROUP_List(\'${newArrayDataDocumentsForMerge[t]['ISN_LCLASSIF']} ${newArrayDataDocumentsForMerge[t]['DUE_CARD']} ${newArrayDataDocumentsForMerge[t]['DUE']} ${newArrayDataDocumentsForMerge[t]['FUNC_NUM']}\')`,
+                    data: {
+                        ALLOWED: newArrayDataDocumentsForMerge[t]['ALLOWED'] === true ? 1 : 0
+                    }
+                });
+        }
+        localStorage.removeItem('arrayDataDocumentsForMerge');
     }
-    createObjRequestForAttachAfterBackend() {
+
+    if (newArrayDataDocumentsForDelete) {
+        for (let e = 0; e < Array.from(this.userCard).length; e++) {
+            const tmp = Array.from(this.userCard)[e][1];
+            for (let f = 0; f < tmp['USER_CARD_DOCGROUP_List'].length; f++) {
+            for (let t = 0; t < newArrayDataDocumentsForDelete.length; t++) {
+                if (newArrayDataDocumentsForDelete[t]['DUE_CARD'] === Array.from(this.userCard)[e][0] &&
+                newArrayDataDocumentsForDelete[t]['DUE'] === tmp['USER_CARD_DOCGROUP_List'][f]['DUE']) {
+                    req.push({
+                        method: 'DELETE',
+        requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')` +
+        `/USER_CARD_DOCGROUP_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']} ${tmp.USER_CARD_DOCGROUP_List[f]['DUE']} ${tmp.USER_CARD_DOCGROUP_List[f]['FUNC_NUM']}\')`
+                    });
+                }
+            }
+        }
+        }
+        localStorage.removeItem('arrayDataDocumentsForDelete');
+    }
+    console.log(req);
+    return req;
+    }
+
+  /*  createObjRequestForAttachAfterBackend() {
         const req = [];
         this.arrayOfNewChanges = [];
         for (let i = 0; i < this.userCard.size; i++) {
@@ -816,29 +728,12 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
     }
 }
     return req;
-}
+    } */
 
     cancel() {
     }
-   /* selectNode(node) {
-        if (this.selectedNode) {
-            this.selectedNode['data']['isSelected'] = false;
-        }
-        this.selectedNode = node;
-        this.selectedNode['data']['isSelected'] = true;
-        if (node.data.rightContent === E_RIGHT_DELO_ACCESS_CONTENT.none) {
-            this.flagToDisplayTheRightSide = false;
-        } else {
-            this.flagToDisplayTheRightSide = true;
-        }
-        this.updateForm(node);
-        const firstElement = this.treeHierarchyOnTheRightSide[0]['card'];
-        this.selectNodeOnTheRightSide(firstElement);
-        this.inputs = this.getInputAttach();
-        this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-    } */
 
-    selectNodeOnTheRightSide(node) {
+   /* selectNodeOnTheRightSide(node) {
         if (node['INDEX_FOR_SELECT'] !== undefined || null) {
             this.btnAddHiden = true;
             if (this.selectedNodeOnTheRigthSide) {
@@ -907,20 +802,6 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
         this.updateForm(this.selectedNode);
         this.inputs = this.getInputAttach();
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-    }
-
-  /*  checkChange() {
-        let c = false;
-        this.listRight.forEach(li => { // проверяем список на изменения
-            if (li.touched) {
-                c = true;
-            }
-        });
-        if (this.arrNEWDeloRight.join('') !== this.arrDeloRight.join('')) {
-            c = true;
-        }
-        // this.btnDisabled = true;
-        this.btnDisabled = !c;
     } */
 
     selectNode(node: NodeRightInFileCard) {
@@ -930,84 +811,18 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
             }
             this.selectedNode2 = node;
             this.selectedNode2.isSelected = true;
-           // this._viewContent();
         }
     }
 
     clickLable(event, item: NodeRightInFileCard) {
         this.selectNode(item);
-      //  console.log(event);
-       // console.log(item);
 
         for (let i = 0; i < this.listNode.length; i++) {
             if (this.listNode[i].label === event.target.innerText) {
                 this.indexForRightFileCard = +this.listNode[i] + 1;
             }
         }
-       /* event.preventDefault();
-        event.stopPropagation();
-        if (event.target.tagName === 'LABEL') {
-            this.selectNode(item);
-        } */
-      /*  if (event.target.tagName === 'SPAN') { // click to checkbox
-            const value = !(+item.value);
-            if (
-                    !value &&
-                    (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department ||
-                    item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor ||
-                    item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject)
-                ) {
-                this._deleteAllDep(item);
-            }
-            if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup)) {
-                this._deleteAllDocGroup(item);
-            }
-            if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.classif)) {
-                this._deleteAllClassif(item);
-            }
-            console.log(item.contentProp);
-
-            item.value = +value;
-
-            if (item !== this.selectedNode && item.isCreate) {
-                this.selectNode(item);
-            }
-        }*/
     }
-
-  /*  private _viewContent() {
-        this.rightContent = false;
-        switch (this.selectedNode2.contentProp2) {
-            case E_RIGHT_DELO_ACCESS_CONTENT.all:
-                if (this.formGroupAll) {
-                    this.subs['all'].unsubscribe();
-                    this.formGroupAll = null;
-                }
-                this.formGroupAll = new FormGroup({
-                        all: new FormControl(this.selectedNode.value ? this.arrNEWDeloRight[+this.selectedNode.key] : '0')
-                });
-                setTimeout(() => {
-                    this.selectedNode.value ? this.formGroupAll.enable({emitEvent: false}) : this.formGroupAll.disable({emitEvent: false});
-                }, 0);
-                this.subs['all'] = this.formGroupAll.valueChanges
-                    .subscribe(data => {
-                        this.selectedNode.value = +data['all'];
-                        this.checkChange();
-                    });
-                this.rightContent = true;
-                break;
-            case E_RIGHT_DELO_ACCESS_CONTENT.classif:
-            case E_RIGHT_DELO_ACCESS_CONTENT.docGroup:
-            case E_RIGHT_DELO_ACCESS_CONTENT.department:
-            case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject:
-                if (this.selectedNode.value) {
-                    setTimeout(() => {
-                        this.rightContent = true;
-                    }, 0);
-                }
-                break;
-        }
-    } */
 
     private _writeValue(constanta: IInputParamControlForIndexRight[]): IInputParamControlForIndexRight[] {
         const fields = [];
@@ -1020,12 +835,8 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
     private _createListRight(constanta: IInputParamControlForIndexRight[]): NodeRightInFileCard[] {
         const fields = [];
         constanta.forEach((node: IInputParamControlForIndexRight) => {
-          //  console.log(node);
-          //  console.log(this.form.get(node['key']));
-          //  console.log(this.curentUser);
             fields.push(new NodeRightInFileCard(node, +this.arrayNadzorRight[+node['key']], this.form.get(node['key']), this.curentUser));
         });
-    //    console.log(fields);
         return fields;
     }
 }

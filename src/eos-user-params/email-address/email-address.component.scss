@@ -43,10 +43,11 @@
            height: 48px;
            margin-top: 2px;
            background-color: #fafafa;
-           padding: 0px 20px;
            .first,.last,.seconds{
             display: inline-flex;
             align-items: center;
+            padding-left: 20px;
+            padding-right: 20px;
            }
            .first{
                 width: 45%;
@@ -56,7 +57,7 @@
            .seconds{
             width: 30%;
             height: 100%;
-            text-align: left;
+            justify-content: center
 
            }
            .last{
@@ -107,6 +108,8 @@
             overflow: hidden;
             border-left: none;
             border-right: none;
+            display: inline-flex;
+            justify-content: center
         }
         .emali-list-last{
             width: 30%;

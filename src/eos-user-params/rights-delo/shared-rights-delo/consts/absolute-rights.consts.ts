@@ -1,7 +1,6 @@
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { E_RIGHT_DELO_ACCESS_CONTENT } from '../interfaces/right-delo.intefaces';
 import { IInputParamControl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { IOpenClassifParams } from 'eos-common/interfaces';
 
 export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
@@ -299,10 +298,4 @@ export const CONTROL_ALL_NOTALL: IInputParamControl = {
             value: '2'
         }
     ]
-};
-
-export const OPEN_CLASSIF_DEPARTMENT_FOR_RIGHT: IOpenClassifParams = {
-    classif: 'DEPARTMENT',
-    return_due: true,
-    selectNodes: false,
 };

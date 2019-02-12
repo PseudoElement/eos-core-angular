@@ -13,33 +13,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { USERDEP, USER_TECH } from 'eos-rest';
 import { RestError } from 'eos-rest/core/rest-error';
-
-export const QUERY = [
-    {
-        FUNC_NUM: 8,
-        CLASSIF_ID: 107
-    },
-    {
-        FUNC_NUM: 9,
-        CLASSIF_ID: 105
-    },
-    {
-        FUNC_NUM: 10,
-        CLASSIF_ID: 104
-    },
-    {
-        FUNC_NUM: 14,
-        CLASSIF_ID: 119
-    },
-    {
-        FUNC_NUM: 18,
-        CLASSIF_ID: 120
-    },
-    {
-        FUNC_NUM: 29,
-        CLASSIF_ID: 0
-    },
-];
+import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
 
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
@@ -63,6 +37,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     rightContent: boolean;
     listRight: NodeAbsoluteRight[] = [];
     titleHeader: string;
+    techRingtOrig: string;
 
 
     constructor (
@@ -76,6 +51,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
 
     init() {
         this.curentUser = this._userParamsSetSrv.curentUser;
+        this.techRingtOrig = this.curentUser.TECH_RIGHTS;
         this.titleHeader =  `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Абсолютные права`;
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
         this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split('');
@@ -103,6 +79,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.subForm.unsubscribe();
     }
     submit() {
+        if (this._checkCreatePRJNotEmptyAllowed()) {
+            this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
+            return;
+        }
         this.btnDisabled = true;
         let qUserCl;
         if (this.arrNEWDeloRight.join('') !== this.arrDeloRight.join('')) {
@@ -118,7 +98,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         this.listRight.forEach((node: NodeAbsoluteRight) => {
             if (node.touched) {
-
                 node.change.forEach(ch => {
                     const batch = this._createBatch(ch, node, qUserCl);
                     if (batch) {
@@ -161,6 +140,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         if (event.target.tagName === 'SPAN') { // click to checkbox
             const value = !(+item.value);
+
+            item.value = +value;
+
             if (
                     !value &&
                     (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department ||
@@ -176,7 +158,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this._deleteAllClassif(item);
             }
 
-            item.value = +value;
 
             if (item !== this.selectedNode && item.isCreate) {
                 this.selectNode(item);
@@ -248,9 +229,15 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     private _createList(constanta: IInputParamControl[]): NodeAbsoluteRight[] {
         const fields = [];
-        constanta.forEach((node: IInputParamControl) => {
+        for (const node of constanta) {
+            /*
+                Проверка: правило контрольности
+            */
+            if (node.key === '14' && !(+this.curentUser['USER_PARMS_HASH']['RC_CTRL'])) {
+                continue;
+            }
             fields.push(new NodeAbsoluteRight(node, +this.arrDeloRight[+node['key']], this.form.get(node['key']), this.curentUser));
-        });
+        }
         return fields;
     }
     private _deleteAllDep(item: NodeAbsoluteRight) {
@@ -273,6 +260,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.checkChange();
     }
     private _deleteAllDocGroup(item: NodeAbsoluteRight) {
+        item.deleteChange();
         this.curentUser.USER_RIGHT_DOCGROUP_List.forEach(li => {
             item.pushChange({
                 method: 'DELETE',
@@ -280,6 +268,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 data: li
             });
         });
+        this._userParamsSetSrv.userRightDocgroupList.splice(0, this._userParamsSetSrv.userRightDocgroupList.length);
         this.checkChange();
     }
     private _deleteAllClassif(node: NodeAbsoluteRight) {
@@ -292,13 +281,15 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 data: li
             });
         });
-        node.pushChange({
-            method: 'MERGE',
-            user_cl: true,
-            data: {
-                TECH_RIGHTS: ''
-            }
-        });
+        if (this.techRingtOrig) {
+            node.pushChange({
+                method: 'MERGE',
+                user_cl: true,
+                data: {
+                    TECH_RIGHTS: ''
+                }
+            });
+        }
         this._userParamsSetSrv.userTechList.splice(0, this._userParamsSetSrv.userTechList.length);
         this.checkChange();
     }
@@ -337,5 +328,19 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             batch['data'] = chenge.data;
         }
         return batch;
+    }
+    private _checkCreatePRJNotEmptyAllowed(): boolean {
+        let allowed = false;
+        this.listRight.forEach((node: NodeAbsoluteRight) => {
+            if (node.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup && node.touched && node.value) {
+                allowed = true;
+                this._userParamsSetSrv.userRightDocgroupList.forEach(item => {
+                    if (item['ALLOWED']) {
+                        allowed = false;
+                    }
+                });
+            }
+        });
+        return allowed;
     }
 }

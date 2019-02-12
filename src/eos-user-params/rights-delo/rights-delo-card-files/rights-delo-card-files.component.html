@@ -18,9 +18,9 @@
                   class="btn btn-primary-light"
                   tooltip="Добавить картотеку"
                   placement="bottom"
-                  container="body"
+                  triggers="hover"
                   containerClass="tooltip-info"
-                  (click)="addCardFile()">
+                  (click)="[addCardFile(), hideToolTip()]">
                 <span class="eos-icon eos-icon-plus-blue small"></span>
                 </button>
                 <button
@@ -29,8 +29,8 @@
                   placement="bottom"
                   container="body"
                   containerClass="tooltip-info"
-                  (click)="removeCardFile()">
-                <span class="eos-icon eos-icon-minus-blue small"></span>
+                  (click)="[removeCardFile(), hideToolTip()]">
+                  <span class="eos-icon eos-icon-bin-forever-blue small"></span>
                 </button>
                 <button
                   class="btn btn-primary-light"
@@ -38,7 +38,7 @@
                   placement="bottom"
                   container="body"
                   containerClass="tooltip-info"
-                  (click)="choosingMainCheckbox()">
+                  (click)="[choosingMainCheckbox(), hideToolTip()]">
                   <span>
                     <img class="icon_key" src="assets/icons/Keyfile-Blue.svg" />
                   </span>

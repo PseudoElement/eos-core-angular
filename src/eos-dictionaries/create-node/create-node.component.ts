@@ -8,6 +8,7 @@ import { CardEditComponent } from 'eos-dictionaries/card-views/card-edit.compone
 import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import { EosDepartmentsService } from '../services/eos-department-service';
 import { SUCCESS_SAVE } from '../consts/messages.consts';
+import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 
 @Component({
     selector: 'eos-create-node',
@@ -35,6 +36,7 @@ export class CreateNodeComponent {
         protected _dictSrv: EosDictService,
         protected _breadcrumbsSrv: EosBreadcrumbsService,
         protected _msgSrv: EosMessageService,
+        protected _confirmSrv: ConfirmWindowService,
         departmentsSrv: EosDepartmentsService,
     ) {
         this.dutysList = departmentsSrv.dutys;
@@ -64,12 +66,16 @@ export class CreateNodeComponent {
      * @param hide indicates whether to close the modal window after or open new one
      */
     public create(hide = true) {
-        this.upadating = true;
         const data = this.cardEditRef.getNewData();
-
         Object.assign(data.rec, this.nodeData.rec); // update with predefined data
 
-        this._sendDataOnCreate(data, hide);
+        this._confirmSave(data)
+            .then((res: boolean) => {
+                if (res) {
+                    this.upadating = true;
+                    this._sendDataOnCreate(data, hide);
+                }
+            });
     }
 
     /**
@@ -107,6 +113,11 @@ export class CreateNodeComponent {
             this.onOpen.emit(true);
         }
     }
+
+    private _confirmSave(data): Promise<boolean> {
+        return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv);
+    }
+
     /**
      * Separate error massage from error and show it to user by using EosMessageService
      */

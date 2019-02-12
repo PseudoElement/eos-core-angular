@@ -34,7 +34,7 @@
                             <button class="btn btn-primary upper"
                                 (click)="cancel()">Отменить</button>
                             <button class="btn btn-primary-full upper"
-                                [disabled]="stateHeaderSubmit"
+                                [disabled]="stateHeaderSubmit || errorPass"
                                 (click)="submit()">Сохранить</button>
                         </div>
                     </div>
@@ -109,7 +109,6 @@
                     <input class="form-control m-font"
                         [formControlName]="controls['pass'].key"
                         [id]="controls['pass'].key"
-                        (blur)="checkPass()"
                         type="text"
                         [readonly]="controls['pass'].readonly"
                         [ngClass]="{'readonly': readonly}"
@@ -126,7 +125,6 @@
                     <input class="form-control m-font"
                         [formControlName]="controls['passRepeated'].key"
                         [id]="controls['passRepeated'].key"
-                        (blur)="checkPass()"
                         type="text"
                         [readonly]="controls['passRepeated'].readonly"
                         [ngClass]="{'readonly': readonly}"

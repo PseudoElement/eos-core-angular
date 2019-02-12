@@ -1,8 +1,8 @@
-import {DictionaryDescriptor} from './dictionary-descriptor';
-import {ALL_ROWS} from '../../eos-rest/core/consts';
-import {IDictionaryDescriptor, IRecordOperationResult} from '../interfaces';
-import {PipRX} from '../../eos-rest/services/pipRX.service';
-import {EosUtils} from '../../eos-common/core/utils';
+import { EosUtils } from '../../eos-common/core/utils';
+import { ALL_ROWS } from '../../eos-rest/core/consts';
+import { PipRX } from '../../eos-rest/services/pipRX.service';
+import { IDictionaryDescriptor, IRecordOperationResult } from '../interfaces';
+import { DictionaryDescriptor } from './dictionary-descriptor';
 
 export class LinkDictionaryDescriptor extends DictionaryDescriptor {
 
@@ -84,8 +84,10 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
         const results: IRecordOperationResult[] = [];
         Object.keys(updates).forEach((key) => {
             if (updates[key]) {
-                const data = EosUtils.deepUpdate(originalData[key], updates[key]);
-                changeData.push(data);
+                if (key.indexOf('_') !== 0) {
+                    const data = EosUtils.deepUpdate(originalData[key], updates[key]);
+                    changeData.push(data);
+                }
             }
         });
 

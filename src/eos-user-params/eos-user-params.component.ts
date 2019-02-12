@@ -29,11 +29,15 @@ export class UserParamsComponent implements OnDestroy, OnInit {
             .subscribe(param => {
                 this.pageId = param['field-id'];
             });
-
-            this._navSrv.StateSandwich$
+        this._navSrv.StateSandwich$
             .takeUntil(this.ngUnsubscribe)
             .subscribe((state: boolean) => {
                 this.isShowAccordion = state;
+            });
+        this._navSrv.StateScanDelo
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((state: boolean) => {
+                this.setTabsSCan(state);
             });
         this._route.queryParams
             .takeUntil(this.ngUnsubscribe)
@@ -45,13 +49,16 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 this.isLoading = true;
                 this._userParamService.getUserIsn(qParam['isn_cl'])
                     .then((data: boolean) => {
+                        this.checkTabScan();
                         this.isLoading = false;
+
                     })
                     .catch(() => {
                         this._router.navigate(['user_param']);
                     });
                     this.isShowAccordion = true;
             });
+
     }
 
     ngOnInit() {
@@ -60,6 +67,18 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     ngOnDestroy(): void {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
+    }
+
+    private checkTabScan(): void {
+        if (this._userParamService.curentUser['ACCESS_SYSTEMS'][3] === '1') {
+            this.accordionList[4].disabled = false;
+        }   else {
+            this.accordionList[4].disabled = true;
+        }
+    }
+
+    private setTabsSCan(flag: boolean): void {
+        this.accordionList[4].disabled = flag;
     }
     private openAccordion() {
         this.accordionList.forEach((item: IParamAccordionList) => {

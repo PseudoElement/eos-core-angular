@@ -9,6 +9,7 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class RtUserSelectService {
     subject: Subject<any> = new Subject();
+    subjectScan: Subject<any> = new Subject();
      ArraySystemHelper = {
         delo: {
             label: 'Дело',
@@ -74,6 +75,9 @@ export class RtUserSelectService {
         private _msgSrv: EosMessageService
     ) {
         this.UserCabinetInfo = [];
+    }
+    get checkScanBtn() {
+        return this.subjectScan.asObservable();
     }
 
     get changerUser(): Observable<any> {

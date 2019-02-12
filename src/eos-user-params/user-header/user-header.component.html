@@ -1,0 +1,46 @@
+
+<header>
+    <div class="header-wr">
+        <div class="title-wrapper">
+            <span class="edit-title primary-text">{{title}}</span>
+        </div>
+        <div class="buttons-wrapper" *ngIf="editMode">
+            <div>
+                <button *ngIf='defaultBtn' class="btn btn-primary"
+                    (click)="default()">Поумолчанию</button>
+                <button class="btn btn-primary"
+                    (click)="cancel()">Отменить</button>
+                <button class="btn btn-primary-full"
+                    [disabled]="disableBtn"
+                    (click)="submit()">Сохранить</button>
+            </div>
+        </div>
+        <div class="action-wrapper"
+                        *ngIf="!editMode">
+                        <div class="pull-right">
+                            <button class="btn btn-primary-light"
+                                aria-hidden="true"
+                                (click)="edit()"
+                                tooltip="Редактировать"
+                                placement="bottom"
+                                containerClass="tooltip-info"><span class="eos-icon eos-icon-edit-blue small"></span></button>
+                            <a class="btn btn-primary-light"
+                                routerLink="{{selfLink}}"
+                                [queryParams]="{isn_cl: link}"
+                                aria-hidden="true"
+                                tooltip="Открыть в новом окне"
+                                placement="bottom"
+                                containerClass="tooltip-info"
+                                target="_blank"><span class="eos-icon eos-icon-external-link-blue small"></span></a>
+                            <button class="btn btn-primary-light"
+                                aria-hidden="true"
+                                (click)="close()"
+                                tooltip="Закрыть"
+                                placement="bottom"
+                                containerClass="tooltip-info">
+                        <span class="eos-icon eos-icon-close-blue small"></span>
+                    </button>
+                        </div>
+                    </div>
+    </div>
+</header>
