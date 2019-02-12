@@ -83,14 +83,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.fields = this._writeValue(ABSOLUTE_RIGHTS);
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
-        console.log(this.form);
         this.listRight = this._createList(ABSOLUTE_RIGHTS);
         this.subForm = this.form.valueChanges
             .subscribe(() => {
-               /* this.listRight.forEach(node => {
+               this.listRight.forEach(node => {
                     this.arrNEWDeloRight[+node.key] = node.value.toString();
                 });
-                this.checkChange(); */
+                this.checkChange();
                 setTimeout(() => {
                     this._viewContent();
                 }, 0);
@@ -176,7 +175,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.classif)) {
                 this._deleteAllClassif(item);
             }
-            console.log(item.contentProp);
 
             item.value = +value;
 
@@ -194,7 +192,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this.selectedNode.isSelected = true;
             this._viewContent();
         }
-       // console.log(this.selectedNode);
     }
     checkChange() {
         let c = false;
@@ -218,7 +215,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     private _viewContent() {
         this.rightContent = false;
-        console.log(this.selectedNode.contentProp);
         switch (this.selectedNode.contentProp) {
             case E_RIGHT_DELO_ACCESS_CONTENT.all:
                 if (this.formGroupAll) {
@@ -253,11 +249,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     private _createList(constanta: IInputParamControl[]): NodeAbsoluteRight[] {
         const fields = [];
         constanta.forEach((node: IInputParamControl) => {
-         //   console.log(this.arrDeloRight[+node['key']]);
-           // console.log(node['key']);
             fields.push(new NodeAbsoluteRight(node, +this.arrDeloRight[+node['key']], this.form.get(node['key']), this.curentUser));
         });
-       // console.log(fields);
         return fields;
     }
     private _deleteAllDep(item: NodeAbsoluteRight) {
@@ -313,7 +306,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     private _createBatch(chenge: IChengeItemAbsolute, node: NodeAbsoluteRight, qUserCl) {
         const uId = this._userParamsSetSrv.userContextId;
         let url = '';
-        console.log(node.contentProp);
         switch (node.contentProp) {
             case E_RIGHT_DELO_ACCESS_CONTENT.department:
             case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor:

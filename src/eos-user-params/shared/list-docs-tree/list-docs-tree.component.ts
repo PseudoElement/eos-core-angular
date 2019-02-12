@@ -16,9 +16,7 @@ export class ListDocsTreeComponent implements OnInit, OnChanges {
         // this._createStructure(this.listNode);
     }
     ngOnChanges(changes: SimpleChanges) {
-        console.log(this.listNode);
         if (this.listNode.length) {
-            console.log(this.listNode);
             this._createStructure(this.listNode);
         }
     }

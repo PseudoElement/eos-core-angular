@@ -28,6 +28,7 @@ import { RightsDeloAbsoluteRightsComponent } from './rights-delo/rights-delo-abs
 import { CardFilesDirectoryModalComponent } from './rights-delo/rights-delo-card-files/card-files-directory-modal/card-files-directory-modal.component';
 import { RightsDeloCardIndexRightsComponent } from './rights-delo/rights-delo-card-index-rights/rights-delo-card-index-rights.component';
 import { RightSideDocGroupInFileCardComponent } from './rights-delo/rights-delo-card-index-rights/right-side-doc-group-in-file-card/right-side-doc-group-in-file-card.component';
+import { RightSideDocGroupAndRestrictionInFileCardComponent } from './rights-delo/rights-delo-card-index-rights/right-side-doc-group-and-restriction-in-file-card/right-side-doc-group-and-restriction-in-file-card.component';
 import { RightSideListCardComponent } from './rights-delo/rights-delo-card-index-rights/right-side-list-card/right-side-list-card.component';
 import { RightPanelForDocumentGroupsComponent } from './rights-delo/right-panel-for-document-groups/right-panel-for-document-groups.component';
 import { ParamsBaseParamComponent } from './base-param/base-param.component';
@@ -65,6 +66,7 @@ import {UserPaginationService} from './shared/services/users-pagination.service'
         CardFilesDirectoryModalComponent,
         RightsDeloCardIndexRightsComponent,
         RightSideDocGroupInFileCardComponent,
+        RightSideDocGroupAndRestrictionInFileCardComponent,
         RightSideListCardComponent,
         ParamsBaseParamComponent,
         EmailFormComponent,

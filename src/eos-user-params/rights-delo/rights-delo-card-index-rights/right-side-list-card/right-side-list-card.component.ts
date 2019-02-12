@@ -11,6 +11,7 @@ import { DOCUMENT_GROUPS } from '../../shared-rights-delo/consts/card-index-righ
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { FormGroup } from '@angular/forms';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
+import { IChengeItemInFileCard } from '../../shared-rights-delo/interfaces/right-delo.intefaces';
 
 @Component({
     selector: 'eos-right-side-list-card',
@@ -35,6 +36,12 @@ export class RightSideListCardComponent implements OnInit {
     form: FormGroup;
     allData = [];
     listAllData = [];
+    get aaa () {
+        return Array.from(this.userCard);
+    }
+    get change (): IChengeItemInFileCard[] {
+        return this._change;
+    }
     private quaryDepartment = {
         DEPARTMENT: {
             criteries: {
@@ -42,6 +49,7 @@ export class RightSideListCardComponent implements OnInit {
             }
         }
     };
+    private _change: IChengeItemInFileCard[] = [];
     constructor(
         private apiSrv: UserParamApiSrv,
         private _userParamsSetSrv: UserParamsService,
@@ -72,26 +80,112 @@ export class RightSideListCardComponent implements OnInit {
         }
     }
 
-    checkedNode(node, item) {
-    //    event.preventDefault();
-   //     event.stopPropagation();
-   if (node.type === 'click') {
+    setCharAt(str, index, chr) {
+        if (index > str.length - 1) {
+             return str;
+            }
+        return str.substr(0, index) + chr + str.substr(+index + 1);
+    }
+
+    checkedNode(event, item) {
+        let str;
+        let newDataFromLocalStorageFuncFileCards = null;
+      //  const newArray = [];
+ /*  if (node.type === 'click') {
         if (this.form.controls[item.key].value === false) {
             console.log(node);
             console.log(item);
         } else {
             node.data['rightDocGroup']['ALLOWED'] = node.allowed;
        }
-     /*   if (this.form.controls[item.card.key].value === false) {
-
-        } else*/
-      /*  this.selectedNode2.pushChange({
-            method: 'MERGE',
-            due: node.DUE,
-            data: node.data['rightDocGroup']
-        }); */
         this.Changed.emit();
+   }*/
+   if (event.target.tagName === 'LABEL') {} else {
+    if (localStorage.getItem('FuncFileCards') !== null) {
+        newDataFromLocalStorageFuncFileCards = JSON.parse(localStorage.getItem('FuncFileCards'));
     }
+    if (this.form.controls[item.key].value === false) {
+        for (let i = 0; i < this.listAllData.length; i++) {
+            if (this.listAllData[i][0]['key'] === item.key) {
+                for (let j = 0; j < Array.from(this.userCard).length; j++) {
+                    if (this.listAllData[i][0]['key'] === Array.from(this.userCard)[j][0]) {
+                        console.log('ListCard');
+                        if (newDataFromLocalStorageFuncFileCards !== null) {
+                            str = newDataFromLocalStorageFuncFileCards[j][1]['FUNCLIST'];
+                            if (+this.selectedNode2.key > 18 && str.length === 18) {
+                                str += '000';
+                            }
+                            str = this.setCharAt(str, +this.selectedNode2.key, '1');
+                            Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
+                            Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
+                            localStorage.removeItem('FuncFileCards');
+                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                          } else {
+                            str = Array.from(this.userCard)[j][1]['FUNCLIST'];
+                            if (+this.selectedNode2.key > 18 && str.length === 18) {
+                                str += '000';
+                            }
+                            str = this.setCharAt(str, +this.selectedNode2.key, '1');
+                            Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
+                            Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
+                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                          }
+                    }
+                }
+                break;
+        }
+    }
+    } else if (this.form.controls[item.key].value === true) {
+        for (let i = 0; i < this.listAllData.length; i++) {
+            if (this.listAllData[i][0]['key'] === item.key) {
+                for (let j = 0; j < Array.from(this.userCard).length; j++) {
+                    if (this.listAllData[i][0]['key'] === Array.from(this.userCard)[j][0]) {
+                        if (newDataFromLocalStorageFuncFileCards !== null) {
+                            str = newDataFromLocalStorageFuncFileCards[j][1]['FUNCLIST'];
+                            str = this.setCharAt(str, +this.selectedNode2.key, '0');
+                            Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
+                            Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
+                            localStorage.removeItem('FuncFileCards');
+                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                          } else {
+                            str = Array.from(this.userCard)[j][1]['FUNCLIST'];
+                            str = this.setCharAt(str, +this.selectedNode2.key, '0');
+                            Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
+                            Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
+                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                          }
+                    }
+                }
+              this.listAllData[i].splice(1, 2);
+            }
+        }
+    }
+}
+}
+
+createObjRequestForAttach() {
+    const req = [];
+    console.log(Array.from(this.userCard));
+    for (let i = 0; i < Array.from(this.userCard).length; i++) {
+        const tmp = this.userCard.get(Array.from(this.userCard)[i][0]);
+         if (Array.from(this.userCard)[i][1]['FLAG_NEW_FUNCLIST'] === true ||
+         Array.from(this.userCard)[i][1]['FLAG_NEW_FUNCLIST_REMOVE'] === true) {
+            req.push({
+            method: 'MERGE',
+            requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')`,
+            data: {
+                FUNCLIST: tmp['FUNCLIST']
+            }
+        });
+       if (Array.from(this.userCard)[i][1]['FLAG_NEW_FUNCLIST'] === true) {
+       Array.from(this.userCard)[i][1]['FLAG_NEW_DOCUMENTS'] = true;
+       Array.from(this.userCard)[i][1]['FLAG_NEW_FUNCLIST'] = false;
+       }
+    }
+  }
+
+console.log(req);
+    return req;
 }
 
     openDocumentList(node) {
@@ -120,6 +214,14 @@ export class RightSideListCardComponent implements OnInit {
                  });
             }
 
+            for (let q = 0; q < this.listCards.length; q++) {
+                this.listAllData[q] = [];
+                if (this.allData[q]['DUE'] === this.listCards[q]['key']) {
+                    this.listCards[q]['value'] = +this.allData[q]['FUNCLIST'].charAt(+this.selectedNode2.key);
+                }
+                this.listAllData[q].push(this.listCards[q]);
+            }
+
             this.inputs = this._inputCtrlSrv.generateInputs(this.listCards);
                 this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
                 this.isLoading = false;
@@ -138,30 +240,4 @@ export class RightSideListCardComponent implements OnInit {
                 }
             });
     }
-
-  /*  private _createNode(rDoc, doc: DOCGROUP_CL): NodeDocsTree {
-        return new NodeDocsTree(
-            doc.DUE,
-            doc.CLASSIF_NAME,
-            !!rDoc.ALLOWED,
-            {
-                rightDocGroup: rDoc,
-                docGroup: doc
-            }
-        );
-    }
-    private _writeValue(constanta: IInputParamControlForIndexRight[]): IInputParamControlForIndexRight[] {
-        const fields = [];
-        constanta.forEach((node: IInputParamControlForIndexRight) => {
-            fields.push(Object.assign({value: !!+this.arrayNadzorRight[+node['key']]}, node));
-        });
-        return fields;
-    }
-    private _createListCard(constanta: IInputParamControl[]): NodeRightInFileCard[] {
-        const fields = [];
-        constanta.forEach((node: IInputParamControl) => {
-            fields.push(new NodeRightInFileCard(node, this.form.get(node['key']), this.curentUser));
-        });
-        return fields;
-    }*/
 }

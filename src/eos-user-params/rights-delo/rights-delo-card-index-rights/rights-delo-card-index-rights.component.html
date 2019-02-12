@@ -17,13 +17,70 @@
 </div>
 </div>
 <div class="right-block-list-side">
-    <ng-container [ngSwitch]="selectedNode2.contentProp2">
+    <ng-container [ngSwitch]="selectedNode2.key">
         <ng-container *ngSwitchCase="0">
             <ng-container *ngTemplateOutlet="docGroup"></ng-container>
         </ng-container>
+        <ng-container *ngSwitchCase="1">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
         <ng-container *ngSwitchCase="2">
-                <ng-container *ngTemplateOutlet="none"></ng-container>
-            </ng-container>
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="18">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="19">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="20">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="3">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="4">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="5">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="6">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="7">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="8">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="9">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="10">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="11">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="12">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="13">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="14">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="15">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="16">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="17">
+            <ng-container *ngTemplateOutlet="docGroup"></ng-container>
+        </ng-container>
     </ng-container>
 </div>
 </div>
@@ -59,6 +116,14 @@
         [selectedNode2]="selectedNode2"
         [curentUser]="curentUser"
     ></eos-right-side-doc-group-in-file-card>
+</ng-template>
+<!-- Правая часть(картотеки с документами и огрничением) -->
+<ng-template #docGroupCard>
+    <eos-right-side-doc-group-and-restriction-in-file-card
+        style="width: 100%;"
+        [selectedNode2]="selectedNode2"
+        [curentUser]="curentUser"
+    ></eos-right-side-doc-group-and-restriction-in-file-card>
 </ng-template>
 <!-- Правая часть(картотеки) -->
 <ng-template #none>

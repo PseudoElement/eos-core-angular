@@ -9,7 +9,6 @@ export class NodeAbsoluteRight {
     control: AbstractControl;
 
     get contentProp(): E_RIGHT_DELO_ACCESS_CONTENT {
-      //  console.log(this._constData.data['rightContent']);
         return this._constData.data['rightContent'];
     }
     get key() {

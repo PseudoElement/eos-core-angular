@@ -17,6 +17,7 @@ import { EosUtils } from 'eos-common/core/utils';
 import { Subscription } from 'rxjs/Rx';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { NodeRightInFileCard } from './node-in-file-card';
+import { RightSideListCardComponent } from './right-side-list-card/right-side-list-card.component';
 
 @Component({
     selector: 'eos-rights-delo-card-index-rights',
@@ -25,6 +26,7 @@ import { NodeRightInFileCard } from './node-in-file-card';
 
 export class RightsDeloCardIndexRightsComponent implements OnInit {
     @Output() formChanged = new EventEmitter();
+    rightSideListCardComponent: RightSideListCardComponent;
     list: NodeDocsTree[] = [];
     dataForm;
     curentUser: IParamUserCl;
@@ -37,7 +39,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     indexForRightFileCard = -1;
     selectedNode: IInputParamControlForIndexRight;
     selectedNodeOnTheRigthSide: IInputParamControlForIndexRight;
-    btnDisabled: boolean = true;
+    btnDisabled: boolean = false;
     isChangeForm = false;
     flagAddDocuments = false;
     flagRemoveDocuments = false;
@@ -129,6 +131,8 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
         this.listRight = this._createListRight(CARD_INDEXS_RIGHTS);
+       /* this.subForm = this.form.valueChanges
+            .subscribe(data => console.log(data));*/
       //  console.log(this.listRight);
      //   console.log(this.form);
     }
@@ -534,34 +538,49 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         return _value !== oldValue;
  }
     submit() {
-        if (!this.btnDisabled) {
+      //  if (!this.btnDisabled) {
             this.servApi
                 .setData(this.createObjRequestForAttach())
                 .then(data => {
-                    if (this.flagToDisplayTheRightSide) {
-                    this.servApi.setData(this.createObjRequestForAttachAfterBackend())
+                 //   if (this.flagToDisplayTheRightSide) {
+                    this.servApi.setData(this.createObjRequestForAttachAfterBackend2())
                     .then(data2 => {
                        this._userParamsSetSrv.getUserIsn('' + this.userCard.get(Array.from(this.userCard)[0][0])['ISN_LCLASSIF']);
                        this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                       this.btnDisabled = true;
+                   //    this.btnDisabled = true;
                     })
                     .catch(data2 => console.log(data2));
-                } else {
+               /* } else {
                     this._userParamsSetSrv.getUserIsn('' + this.userCard.get(Array.from(this.userCard)[0][0])['ISN_LCLASSIF']);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                    this.btnDisabled = true;
-                }
+                  //  this.btnDisabled = true;
+                } */
                 })
                 // tslint:disable-next-line:no-console
                 .catch(() => this.msgSrv.addNewMessage(PARM_ERROR_ON_BACKEND));
-            }
+         //   }
+    }
+    parseStringFromLocalStorage(s1, s2, s3) {
+        let newStr = '';
+        const arrayForNone = [1, 4, 5, 6, 7, 8, 9, 10, 11, 16];
+        const arrayForDocGroup = [0, 17];
+        const arrayForDocGroupCard = [2, 3, 12, 13, 14, 15, 18, 19, 20];
+        for (let i = 0; i < 21; i++) {
+            newStr += arrayForNone.indexOf(i) ? s1.charAt(i) : arrayForDocGroup.indexOf(i) ? s2.charAt(i) : arrayForDocGroupCard.indexOf(i) ? s3.charAt(i) : '0';
+        }
+        return newStr;
     }
     createObjRequestForAttach() {
         const req = [];
-        for (let i = 0; i < this.userCard.size; i++) {
-            const tmp = this.userCard.get(Array.from(this.userCard)[i][0]);
-             if (Array.from(this.userCard)[i][1]['FLAG_NEW_FUNCLIST'] === true ||
-             Array.from(this.userCard)[i][1]['FLAG_NEW_FUNCLIST_REMOVE'] === true) {
+        let newDataFromLocalStorageFuncFileCards;
+        newDataFromLocalStorageFuncFileCards = JSON.parse(localStorage.getItem('FuncFileCards'));
+      //  console.log(newDataFromLocalStorageFuncFileCards);
+        if (newDataFromLocalStorageFuncFileCards) {
+        for (let i = 0; i < newDataFromLocalStorageFuncFileCards.length; i++) {
+            const tmp = this.userCard.get(newDataFromLocalStorageFuncFileCards[i][0]);
+           // console.log(tmp);
+             if (newDataFromLocalStorageFuncFileCards[i][1]['FLAG_NEW_FUNCLIST'] === true ||
+             newDataFromLocalStorageFuncFileCards[i][1]['FLAG_NEW_FUNCLIST_REMOVE'] === true) {
                 req.push({
                 method: 'MERGE',
                 requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')`,
@@ -569,18 +588,161 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     FUNCLIST: tmp['FUNCLIST']
                 }
             });
-           if (Array.from(this.userCard)[i][1]['FLAG_NEW_FUNCLIST'] === true) {
-           Array.from(this.userCard)[i][1]['FLAG_NEW_DOCUMENTS'] = true;
-           Array.from(this.userCard)[i][1]['FLAG_NEW_FUNCLIST'] = false;
+           if (newDataFromLocalStorageFuncFileCards[i][1]['FLAG_NEW_FUNCLIST'] === true) {
+            newDataFromLocalStorageFuncFileCards['FLAG_NEW_DOCUMENTS'] = true;
+            newDataFromLocalStorageFuncFileCards[i][1]['FLAG_NEW_FUNCLIST'] = false;
            }
         }
-      }
+    }
+  //  localStorage.removeItem('FuncFileCards');
+}
 
-      if (this.flagAddDocuments) {
+
+     /* if (this.flagAddDocuments) {
         this.flagForTheNextRequest = true;
         this.flagAddDocuments = false;
+      } */
+
+   // console.log(req);
+        return req;
+    }
+    createObjRequestForAttachAfterBackend2() {
+        const req = [];
+        let newDataFromLocalStorageFuncFileCards;
+        let newArrayDataDocumentsForPost;
+        let newArrayDataDocumentsForMergeFirst;
+        let newArrayDataDocumentsForMerge;
+        let newArrayDataDocumentsForDelete;
+        newDataFromLocalStorageFuncFileCards = JSON.parse(localStorage.getItem('FuncFileCards'));
+        newArrayDataDocumentsForPost = JSON.parse(localStorage.getItem('ArrayDataDocumentsForPost'));
+        newArrayDataDocumentsForMergeFirst = JSON.parse(localStorage.getItem('arrayDataDocumentsForMergeFirst'));
+        newArrayDataDocumentsForMerge = JSON.parse(localStorage.getItem('arrayDataDocumentsForMerge'));
+        newArrayDataDocumentsForDelete = JSON.parse(localStorage.getItem('arrayDataDocumentsForDelete'));
+
+
+      //  console.log(newArrayDataDocumentsForMergeFirst);
+     //   console.log(newDataFromLocalStorageFuncFileCards);
+      //  console.log(newArrayDataDocumentsForMerge);
+      //  console.log(newArrayDataDocumentsForDelete);
+      //  console.log(newArrayDataDocumentsForPost);
+      if (newDataFromLocalStorageFuncFileCards && newArrayDataDocumentsForMergeFirst) {
+        for (let i = 0; i < newDataFromLocalStorageFuncFileCards.length; i++) {
+            const tmp = newDataFromLocalStorageFuncFileCards[i][1];
+            for (let j = 0; j < newArrayDataDocumentsForMergeFirst.length; j++) {
+                if (newDataFromLocalStorageFuncFileCards[i][0] === newArrayDataDocumentsForMergeFirst[j]['DUE_CARD']) {
+                    for (let w = 0; w < newDataFromLocalStorageFuncFileCards[i][1]['USER_CARD_DOCGROUP_List'].length; w++) {
+                      //  console.log(newDataFromLocalStorageFuncFileCards[i][1]['USER_CARD_DOCGROUP_List']);
+                      //  console.log(newArrayDataDocumentsForPost[j]['DUE']);
+                        if (newDataFromLocalStorageFuncFileCards[i][1]['USER_CARD_DOCGROUP_List'][w]['DUE'] === newArrayDataDocumentsForMergeFirst[j]['DUE'] &&
+                        newDataFromLocalStorageFuncFileCards[i][1]['USER_CARD_DOCGROUP_List'][w]['FUNC_NUM'] === (+this.selectedNode2.key + 1)) {
+                          //  console.log(tmp['ISN_LCLASSIF']);
+                          //  console.log(tmp['DUE']);
+                            req.push({
+                                method: 'MERGE',
+            requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')` +
+            `/USER_CARD_DOCGROUP_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']} ${tmp.USER_CARD_DOCGROUP_List[w]['DUE']} ${tmp.USER_CARD_DOCGROUP_List[w]['FUNC_NUM']}\')`,
+                                data: {
+                                    ALLOWED: tmp.USER_CARD_DOCGROUP_List[w]['ALLOWED']
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+           // for (let t = 0; t < newArrayDataDocumentsForMerge.length; t++) {}
+        }
+        localStorage.removeItem('FuncFileCards');
+        localStorage.removeItem('arrayDataDocumentsForMergeFirst');
     }
 
+ //   console.log(newArrayDataDocumentsForMerge);
+    if (newArrayDataDocumentsForMerge) {
+        for (let e = 0; e < Array.from(this.userCard).length; e++) {
+            const tmp = Array.from(this.userCard)[e][1];
+            for (let f = 0; f < tmp['USER_CARD_DOCGROUP_List'].length; f++) {
+            for (let t = 0; t < newArrayDataDocumentsForMerge.length; t++) {
+                if (newArrayDataDocumentsForMerge[t]['DUE_CARD'] === Array.from(this.userCard)[e][0] &&
+                newArrayDataDocumentsForMerge[t]['DUE'] === tmp['USER_CARD_DOCGROUP_List'][f]['DUE']) {
+                    req.push({
+                        method: 'MERGE',
+    requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')` +
+    `/USER_CARD_DOCGROUP_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']} ${tmp.USER_CARD_DOCGROUP_List[f]['DUE']} ${tmp.USER_CARD_DOCGROUP_List[f]['FUNC_NUM']}\')`,
+                        data: {
+                            ALLOWED: newArrayDataDocumentsForMerge[t]['ALLOWED'] === true ? 1 : 0
+                        }
+                    });
+                }
+            }
+        }
+        }
+        localStorage.removeItem('arrayDataDocumentsForMerge');
+    }
+
+  //  console.log(newArrayDataDocumentsForDelete);
+    if (newArrayDataDocumentsForDelete) {
+        for (let e = 0; e < Array.from(this.userCard).length; e++) {
+            const tmp = Array.from(this.userCard)[e][1];
+            for (let f = 0; f < tmp['USER_CARD_DOCGROUP_List'].length; f++) {
+            for (let t = 0; t < newArrayDataDocumentsForDelete.length; t++) {
+                if (newArrayDataDocumentsForDelete[t]['DUE_CARD'] === Array.from(this.userCard)[e][0] &&
+                newArrayDataDocumentsForDelete[t]['DUE'] === tmp['USER_CARD_DOCGROUP_List'][f]['DUE']) {
+                    req.push({
+                        method: 'DELETE',
+        requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')` +
+        `/USER_CARD_DOCGROUP_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']} ${tmp.USER_CARD_DOCGROUP_List[f]['DUE']} ${tmp.USER_CARD_DOCGROUP_List[f]['FUNC_NUM']}\')`
+                    });
+                }
+            }
+        }
+        }
+        localStorage.removeItem('arrayDataDocumentsForDelete');
+    }
+
+    if (newArrayDataDocumentsForPost) {
+        for (let i = 0; i < newArrayDataDocumentsForPost.length; i++) {
+            req.push({
+                method: 'POST',
+requestUri: `USER_CL(${newArrayDataDocumentsForPost[i]['ISN_LCLASSIF']})/USERCARD_List(\'${newArrayDataDocumentsForPost[i]['ISN_LCLASSIF']} ${newArrayDataDocumentsForPost[i]['DUE_CARD']}\')/USER_CARD_DOCGROUP_List()`,
+                data: {
+                    ISN_LCLASSIF: newArrayDataDocumentsForPost[i]['ISN_LCLASSIF'],
+                    DUE_CARD: newArrayDataDocumentsForPost[i]['DUE_CARD'],
+                    DUE: newArrayDataDocumentsForPost[i]['DUE'],
+                    FUNC_NUM: newArrayDataDocumentsForPost[i]['FUNC_NUM'],
+                    ALLOWED: newArrayDataDocumentsForPost[i]['ALLOWED']
+                }
+            });
+        }
+        localStorage.removeItem('ArrayDataDocumentsForPost');
+    }
+
+      //  console.log(Array.from(this.userCard));
+
+       /* for (let i = 0; i < newArrayDataDocumentsForPost.length; i++) {
+            req.push({
+                method: 'POST',
+requestUri: `USER_CL(${newArrayDataDocumentsForPost[i]['ISN_LCLASSIF']})/USERCARD_List(\'${newArrayDataDocumentsForPost[i]['ISN_LCLASSIF']} ${newArrayDataDocumentsForPost[i]['DUE_CARD']}\')/USER_CARD_DOCGROUP_List()`,
+                data: {
+                    ISN_LCLASSIF: newArrayDataDocumentsForPost[i]['ISN_LCLASSIF'],
+                    DUE_CARD: newArrayDataDocumentsForPost[i]['DUE'],
+                    DUE: newArrayDataDocumentsForPost[i]['DUE_CARD'],
+                    FUNC_NUM: newArrayDataDocumentsForPost[i]['FUNC_NUM'],
+                    ALLOWED: newArrayDataDocumentsForPost[i]['ALLOWED']
+                }
+            });
+        } */
+       /* req.push({
+            method: 'POST',
+requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')/USER_CARD_DOCGROUP_List()`,
+            data: {
+                ISN_LCLASSIF: tmp['ISN_LCLASSIF'],
+                DUE_CARD: tmp['DUE'],
+                DUE: tmp.USER_CARD_DOCGROUP_List[w]['DUE'],
+                FUNC_NUM: tmp.USER_CARD_DOCGROUP_List[w]['FUNC_NUM'],
+                ALLOWED: tmp.USER_CARD_DOCGROUP_List[w]['ALLOWED']
+            }
+        });*/
+     //   console.log(newDataFromLocalStorageFuncFileCards);
+      //  console.log(req);
         return req;
     }
     createObjRequestForAttachAfterBackend() {
@@ -774,7 +936,8 @@ requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF
 
     clickLable(event, item: NodeRightInFileCard) {
         this.selectNode(item);
-        console.log(event);
+      //  console.log(event);
+       // console.log(item);
 
         for (let i = 0; i < this.listNode.length; i++) {
             if (this.listNode[i].label === event.target.innerText) {
