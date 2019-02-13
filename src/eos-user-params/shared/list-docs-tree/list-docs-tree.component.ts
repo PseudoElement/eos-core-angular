@@ -32,6 +32,10 @@ export class ListDocsTreeComponent implements OnInit, OnChanges {
             this.checkedNode.emit(item);
         }
     }
+    onExpand(evt: Event, node: NodeDocsTree) {
+        evt.stopPropagation();
+        node.isExpanded = !node.isExpanded;
+    }
     private _createStructure(liNodes: NodeDocsTree[]) {
         this.list = [];
         this._resetNodes(liNodes);
