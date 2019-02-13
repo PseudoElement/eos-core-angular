@@ -6,12 +6,12 @@
     (transitionend)="transitionEnd()">
     <div class="tree-wrapper block"
         #tree
-        [ngClass]="{'open-tree': currentState[0] && !hideTree,
+        [ngClass]="{'open-tree': currentState[0] && !hideTree && !accessDenied,
                     'has-spinner': ((hasCustomTree && !customTreeData) || !treeNodes.length) }"
-        [hidden]="this.dictionary?.descriptor.type === dictTypes.linear">
-        <eos-spinner *ngIf="((hasCustomTree && !customTreeData) || !treeNodes.length)" size="lg">
+        [hidden]="this.dictionary?.descriptor.type === dictTypes.linear || accessDenied" >
+        <eos-spinner *ngIf="((hasCustomTree && !customTreeData) || !treeNodes.length) && !accessDenied" size="lg">
         </eos-spinner>
-        <eos-tree *ngIf="treeNodes.length && !hasCustomTree"
+        <eos-tree *ngIf="treeNodes.length && !hasCustomTree && !accessDenied"
             [nodes]="treeNodes"
             [showDeleted]="params.showDeleted"></eos-tree>
         <eos-custom-tree *ngIf="hasCustomTree && customTreeData"
@@ -91,7 +91,7 @@
                     </ng-template>
                 </div>
             </div>
-            <div class="first-line" [hidden]="params.hideTopMenu">
+            <div class="first-line" [hidden]="params.hideTopMenu || accessDenied">
                 <div class="controller pull-left">
                     <eos-node-actions (action)="doAction($event)"></eos-node-actions>
                 </div>

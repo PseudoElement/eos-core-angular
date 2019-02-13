@@ -37,7 +37,7 @@ export const CONFIRM_SUBNODES_RESTORE: IConfirmWindow = {
 
 export const CONFIRM_NUMCREATION_NP_CHANGE: IConfirmWindow = {
     title: 'Подтверждение изменения',
-    body: 'Вы хотите изменить значение счетчика с "{{old_value}}" на "{{new_value}}"? ',
+    body: 'Вы хотите изменить значение счетчика с "{{old_value}}" на "{{new_value}}" для НП {{year}} года?',
     okTitle: 'Да',
     cancelTitle: 'Нет'
 };

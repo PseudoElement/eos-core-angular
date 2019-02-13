@@ -14,7 +14,7 @@ import {EosDictionary} from '../core/eos-dictionary';
 import {E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters} from 'eos-dictionaries/interfaces';
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
 import {EosMessageService} from 'eos-common/services/eos-message.service';
-import {EosStorageService} from 'app/services/eos-storage.service';
+import {EosStorageService, SI_RUBRICUNOQDISABLE} from 'app/services/eos-storage.service';
 import {EosSandwichService} from '../services/eos-sandwich.service';
 import {EosBreadcrumbsService} from '../../app/services/eos-breadcrumbs.service';
 
@@ -33,6 +33,7 @@ import {
     WARN_LOGIC_OPEN,
     DANGER_DEPART_IS_LDELETED,
     DANGER_DEPART_NO_NUMCREATION,
+    DANGER_ACCESS_DENIED_DICT,
 } from '../consts/messages.consts';
 
 import {RECENT_URL} from 'app/consts/common.consts';
@@ -42,6 +43,7 @@ import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.in
 import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
 import {CounterNpEditComponent} from '../counter-np-edit/counter-np-edit.component';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
+import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -106,6 +108,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     hasCustomTable: boolean;
     hasCustomTree: boolean;
 
+    accessDenied: boolean;
+
+
     fonConf = {
         width: 0 + 'px',
         height: 0 + 'px',
@@ -119,7 +124,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     private _nodeId: string;
 
     private ngUnsubscribe: Subject<any> = new Subject();
-
     constructor(
         _route: ActivatedRoute,
         private _router: Router,
@@ -128,13 +132,22 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         private _storageSrv: EosStorageService,
         private _modalSrv: BsModalService,
         private _confirmSrv: ConfirmWindowService,
+        private _eaps: EosAccessPermissionsService,
         private _sandwichSrv: EosSandwichService,
+        // private appCtx: AppContext,
         _bcSrv: EosBreadcrumbsService,
     ) {
+        this.accessDenied = false;
         _route.params.subscribe((params) => {
             if (params) {
 
                 this.dictionaryId = params.dictionaryId;
+                if (!this._eaps.isAccessGrantedForDictionary(this.dictionaryId)) {
+                    this.accessDenied = true;
+                    this._msgSrv.addNewMessage(DANGER_ACCESS_DENIED_DICT);
+                    return;
+                }
+                this.accessDenied = false;
                 this._nodeId = params.nodeId;
                 if (this.dictionaryId) {
                     this._dictSrv.openDictionary(this.dictionaryId)
@@ -316,6 +329,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.OpenSelected:
                 this._openItems();
                 break;
+            case E_RECORD_ACTIONS.RubricUniqueSwitcher: {
+                this._rubricSetUniqueDisable((evt.params && evt.params['SET_DISABLED'] === 1) || (!evt.params));
+                break;
+            }
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -376,6 +393,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             this._dictSrv.setDictMode(mode);
             this.nodeList.updateViewFields([]);
         }
+    }
+
+    private _rubricSetUniqueDisable(value: boolean): any {
+        this._storageSrv.setItem(SI_RUBRICUNOQDISABLE, value);
     }
 
     /**

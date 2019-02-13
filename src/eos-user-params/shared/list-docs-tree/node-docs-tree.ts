@@ -9,13 +9,13 @@ export class NodeDocsTree implements IListDocsTree {
     layer: number;
     link: string[];
     isSelected: boolean = false;
+    isExpanded: boolean = true;
     private _allowed: boolean;
     get allowed(): boolean {
         return this._allowed;
     }
     set allowed(value: boolean) {
         this._allowed = value;
-        // this.data['rightDocGroup']['ALLOWED'] = +value;
     }
     constructor(due: string, label: string, allowed: boolean, data?: any) {
         this.DUE = due;
@@ -32,5 +32,10 @@ export class NodeDocsTree implements IListDocsTree {
         if (this.children.length) {
             this.children = this.children.filter((chld) => chld !== node);
         }
+    }
+    reset() {
+        this.children = [];
+        this.parent = null;
+        this.layer = null;
     }
 }

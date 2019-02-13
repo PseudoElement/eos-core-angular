@@ -199,3 +199,9 @@ export const DANGER_DEPART_NO_NUMCREATION: IMessage = {
     title: 'Предупреждение: ',
     msg: 'В выбранном подразделении не взведен флаг номерообразования'
 };
+
+export const DANGER_ACCESS_DENIED_DICT: IMessage = {
+    type: 'danger',
+    title: 'Предупреждение: ',
+    msg: 'Недостаточно прав доступа к справочнику'
+};
