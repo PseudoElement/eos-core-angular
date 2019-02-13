@@ -123,12 +123,11 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
         const changes = this.apiSrv.changeList(records);
 
         if (changes.length) {
-            records.forEach((record) =>{
+            records.forEach((record) => {
                 changes.push(Object.assign(EosUtils.deepUpdate({}, changes[0]), {
-                    requestUri: 'LINK_CL(' + record.ISN_PARE_LINK +')'}));
+                    requestUri: 'LINK_CL(' + record.ISN_PARE_LINK + ')'}));
             });
         }
-    
         return this.apiSrv.batch(changes, '');
     }
 
