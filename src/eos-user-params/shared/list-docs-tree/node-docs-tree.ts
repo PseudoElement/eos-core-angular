@@ -33,4 +33,9 @@ export class NodeDocsTree implements IListDocsTree {
             this.children = this.children.filter((chld) => chld !== node);
         }
     }
+    reset() {
+        this.children = [];
+        this.parent = null;
+        this.layer = null;
+    }
 }

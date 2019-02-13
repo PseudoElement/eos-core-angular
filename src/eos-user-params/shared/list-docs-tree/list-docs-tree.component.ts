@@ -34,10 +34,9 @@ export class ListDocsTreeComponent implements OnInit, OnChanges {
     }
     private _createStructure(liNodes: NodeDocsTree[]) {
         this.list = [];
+        this._resetNodes(liNodes);
         const minLength = this._findMinLength(liNodes);
         liNodes.forEach((node: NodeDocsTree) => {
-            node.children = [];
-            node.parent = null;
             if (node.link.length === minLength) {
                 this.list.push(node);
             } else {
@@ -87,5 +86,10 @@ export class ListDocsTreeComponent implements OnInit, OnChanges {
             }
         });
         return min;
+    }
+    private _resetNodes (liNodes: NodeDocsTree[]) {
+        liNodes.forEach((node: NodeDocsTree) => {
+            node.reset();
+        });
     }
 }
