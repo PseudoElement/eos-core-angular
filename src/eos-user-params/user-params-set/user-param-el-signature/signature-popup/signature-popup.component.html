@@ -3,12 +3,12 @@
     <button class="btn" containerClass="tooltip-info" tooltip='Добавить хранилище'(click)="openModal2(templateNested)">
         <span class="eos-icon eos-icon-plus-blue small"></span>
     </button>
-    <button class="btn" containerClass="tooltip-info" tooltip='Удалить хранилище'>
+    <button class="btn" containerClass="tooltip-info" (click)="deleteStores()" tooltip='Удалить хранилище'>
         <span class="eos-icon eos-icon-close-blue small"></span>
     </button>
 </div>
-<div class="signature-list" *ngIf='items'>
-    <div *ngFor='let list of items' class="signature-item">
+<div class="signature-list" *ngIf='listCertStores'>
+    <div *ngFor='let list of listCertStores' class="signature-item">
         <div
         class="list"
         [ngClass]="{'highlighted': list.isSelected}"

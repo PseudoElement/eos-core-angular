@@ -16,11 +16,10 @@ export class SignaturePopupComponent implements OnInit {
     @Input() inputName: string;
     @Input() input: FormControl;
     @Input() form: FormGroup;
-    public items: IListCertStotes[] = [];
     public  CurrentSelect: IListCertStotes;
     public InfoSert: Array<string> = [];
     public currentName: string;
-    public listCertStores: IListCertStotes[];
+    public listCertStores: IListCertStotes[] = [];
     private listCertNode: Observable<any> = new Observable();
     private modalRef: BsModalRef | null;
     private modalRef2: BsModalRef;
@@ -44,15 +43,14 @@ export class SignaturePopupComponent implements OnInit {
   });
     }
     getItems() {
-        console.log(this.form.controls);
         this.certStoresService.formControlInit = this.form.controls['CRYPTO_INITSTR'];
         let certStores = [];
         if (typeof this.form.controls[this.inputName].value === 'string' && this.form.controls[this.inputName].value !== '') {
             certStores = this.form.controls[this.inputName].value.split('\t');
         }
         this.certStoresService.initCarma(certStores);
-        this.items =  this.certStoresService.getListCetsStores;
-        this.listCertStores = this.items;
+        this.listCertStores =  this.certStoresService.getListCetsStores;
+
     }
 
     showCert(template: TemplateRef<any>, list: IListCertStotes) {
@@ -95,8 +93,8 @@ export class SignaturePopupComponent implements OnInit {
     showCertInfo(certId: string) {
         this.certStoresService.showCert(certId);
     }
-    addStories() {
-
+    deleteStores() {
+        this.form.controls[this.inputName].patchValue(this.certStoresService.deleteStores());
     }
 
 
