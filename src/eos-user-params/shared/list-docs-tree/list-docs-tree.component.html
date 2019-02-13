@@ -14,20 +14,32 @@
     let-node="node">
     <div
         [ngClass]="{'highlighted': node.isSelected}"
-        [ngStyle]="{'padding-left.px': node.layer * 30}">
+        [ngStyle]="{'padding-left.px': node.layer * 27}">
 
-        <label class="checkbox" (click)="clickLable($event, node)">
-            <input type="checkbox"
-                hide
-                [checked]="node.allowed"
-            >
-            <span class="eos-icon eos-icon-checkbox-square-blue x-small">
-            </span>
-            {{node.label}}
-        </label>
+        <div class="tree-node-due">
+            <!-- icon for open -->
+            <div class="tree-btn"
+                (click)="onExpand($event, node)">
+                <span *ngIf="node.children.length"
+                    class="eos-icon tringle-size icon"
+                    [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded, 'eos-icon-close-folder-blue': !node.isExpanded}"
+                ></span>
+            </div>
+
+            <!-- checkbox and label -->
+            <label class="checkbox tree-checkbox" (click)="clickLable($event, node)">
+                <input type="checkbox"
+                    hide
+                    [checked]="node.allowed"
+                >
+                <span class="eos-icon eos-icon-checkbox-square-blue x-small">
+                </span>
+                {{node.label}}
+            </label>
+        </div>
 
     </div>
-    <ng-container *ngIf="node.children.length">
+    <ng-container *ngIf="node.children.length && node.isExpanded">
         <ng-container *ngTemplateOutlet="treeTmpl; context: {items: node.children}"></ng-container>
     </ng-container>
 </ng-template>

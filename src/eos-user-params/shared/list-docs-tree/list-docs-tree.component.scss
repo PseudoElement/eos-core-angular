@@ -1,1 +1,17 @@
+.tree-node-due {
+    position: relative;
+
+    .tree-btn {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        vertical-align: top;
+        margin-right: 8px;
+    }
+
+    .tree-checkbox {
+        margin-left: 30px;
+    }
+}
 
