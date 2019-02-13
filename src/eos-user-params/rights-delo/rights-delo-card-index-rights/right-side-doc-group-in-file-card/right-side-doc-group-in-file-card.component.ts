@@ -76,6 +76,13 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
         this._init();
     }
 
+    hideToolTip() {
+        const element = document.querySelector('.tooltip');
+        if (element) {
+            element.setAttribute('style', 'display: none');
+        }
+    }
+
     select(node: NodeDocsTree) {
         if (node.DUE !== '0.') {
             this.curentNode = node;

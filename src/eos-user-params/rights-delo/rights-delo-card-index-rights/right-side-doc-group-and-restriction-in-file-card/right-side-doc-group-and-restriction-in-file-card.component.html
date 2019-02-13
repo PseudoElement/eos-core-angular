@@ -28,7 +28,7 @@
                     tooltip="Добавить"
                     placement="bottom"
                     containerClass="tooltip-info"
-                    (click)="addDocuments(item)"
+                    (click)="[addDocuments(item), hideToolTip()]"
                 >
                     <span class="eos-icon eos-icon-plus-blue small"></span>
                 </button>
@@ -38,7 +38,7 @@
                     placement="bottom"
                     containerClass="tooltip-info"
                     [disabled]="!curentNode"
-                    (click)="removeDocuments()"
+                    (click)="[removeDocuments(), hideToolTip()]"
                 >
                     <span class="eos-icon eos-icon-bin-forever-blue small"></span>
                 </button>

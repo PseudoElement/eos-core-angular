@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Injector, OnInit, Output, EventEmitter, HostListener } from '@angular/core';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { BaseRightsDeloSrv } from '../shared-rights-delo/services/base-rights-delo.service';
 import { CARD_FILES_USER } from '../shared-rights-delo/consts/card-files.consts';
@@ -128,6 +128,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     ngOnInit() {
         const allDataCard = this._userParamsSetSrv.userCard;
         this.allData = allDataCard;
+        console.log(this.allData);
         this.isLoading = true;
         this.servApi.getData(this.quaryDepartment)
         .then(data => {
@@ -603,6 +604,35 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         }
         this.btnDisabled = false;
     }
+    @HostListener('click', ['$event'])
+    onClick(event) {
+        console.log(event);
+        if (event.target.id === 'rec.SELECT_FOR_CABINETS_NAME') {
+            console.log(this.arrayForCurrentCabinets);
+            console.log(this.allDataForCurrentCabinet);
+            console.log(this.allDataForCurrentUsercard['USER_CABINET_List']);
+           /* for (let i = 0; i < this.allDataForCurrentCabinet.length; i++) {
+                if (this.allDataForCurrentCabinet[i]['HOME_CABINET'] === 1) {
+                    event.target[3]['style']['fontWeight'] = 'bold';
+                }
+            }*/
+        }
+    }
+    choosingMainCabinet(event) {
+        const element = document.getElementsByClassName('user-input-main-cabinet')[0];
+        const elementTwo = document.getElementsByClassName('option')[0];
+      //  const elementCabinet = document.getElementById('list-cabinet');
+      //  console.log(elementCabinet);
+       // console.log(event);
+        if (element) {
+            element.setAttribute('style', 'font-weight: bold');
+        }
+      //  console.log(elementTwo);
+        if (elementTwo) {
+       //     console.log(elementTwo);
+            element.setAttribute('style', 'font-weight: bold');
+        }
+    }
     updateOldMainCheckbox(index) {
         this.oldMainCheckbox = {};
         this.oldMainCheckbox[this.fieldKeysforCardFiles[index][0]] = 0;
@@ -619,7 +649,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                         this.globalMainCard = this.fieldKeysforCardFiles[i][0];
                         if (this.allData[j]['USER_CABINET_List'].length > 0) {
                             this.flagForFirstShowSelect = true;
-                            this.allDataForCurrentCabinet = this.allData[j]['USER_CABINET_List'][0];
+                            this.allDataForCurrentCabinet = this.allData[j]['USER_CABINET_List'];
                             this.allDataForCurrentUsercard = this.allData[j];
                         } else {
                             this.settingValuesForFieldsCabinets('Empty');
@@ -647,10 +677,12 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             }
         };
         const selectForCabinetsName = CARD_FILES_USER.fields.find(elem => elem.key === 'SELECT_FOR_CABINETS_NAME');
+     //   console.log(selectForCabinetsName);
         selectForCabinetsName['options'] = [];
 
         this.servApi.getData(quareCabinetDepartment).then(dataCabinetDepartment => {
             dataCabinetDepartmentForDefault = dataCabinetDepartment;
+         //   console.log(dataCabinetDepartment);
         if (!this.flagNoCardIndexSelected) {
             if (dataCabinetDepartment.length > 0) {
                 for (let j = 0; j < dataCabinetDepartment.length; j++) {
@@ -676,6 +708,8 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             this.flagCurrentDataCabinetDepartment = false;
         }
         }).then(() => {
+            console.log(selectForCabinetsName);
+           // selectForCabinetsName['options'][0].setAttribute('style', 'font-weight: bold');
            this.init();
         }).then(() => {
             if (this.flagCurrentDataCabinetDepartment) {
@@ -688,6 +722,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         });
     }
     selectOnClick(event, dataAtTheStart) {
+        console.log(event);
       if (dataAtTheStart !== null) {
         this.newDataWhenChanging(2);
     setTimeout(() => { // For a while
@@ -708,6 +743,8 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
           // event.target.selectedOptions['0']['innerHTML'] //For Chrome, in IE not working
         this.newDataWhenChanging(1);
       if (this.allDataForCurrentUsercard['USER_CABINET_List'].length > 0) {
+        //  event.target[3]['style']['fontWeight'] = 'bold';
+       //   console.log(this.allDataForCurrentUsercard);
        loop1:
         for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
             for (let z = 0; z < this.arrayForCurrentCabinets.length; z++) {
