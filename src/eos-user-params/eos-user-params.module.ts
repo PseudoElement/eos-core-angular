@@ -45,6 +45,7 @@ import {UserHeaderComponent} from '../eos-user-params/user-header/user-header.co
 import {InlineScaningComponent} from '../eos-user-params/inline-scaning/inline-scaning.component';
 import {UserParamElSignatureComponent} from '../eos-user-params/user-params-set/user-param-el-signature/user-param-el-signature.component';
 import {SignaturePopupComponent} from '../eos-user-params/user-params-set/user-param-el-signature/signature-popup/signature-popup.component';
+import {SignatureAddComponent} from '../eos-user-params/user-params-set/user-param-el-signature/signature-popup/signature-add/signature-add.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -79,7 +80,8 @@ import {SignaturePopupComponent} from '../eos-user-params/user-params-set/user-p
         UserHeaderComponent,
         InlineScaningComponent,
         UserParamElSignatureComponent,
-        SignaturePopupComponent
+        SignaturePopupComponent,
+        SignatureAddComponent,
     ],
     entryComponents: [
         CardFilesDirectoryModalComponent,

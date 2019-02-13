@@ -3,6 +3,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { CertStoresService, IListCertStotes } from '../../../../eos-parameters/parametersSystem/param-web/cert-stores.service';
 import { Observable } from 'rxjs/Observable';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import {Subject} from 'rxjs/Subject';
+
 @Component({
     selector: 'eos-signature-popup',
     styleUrls: ['signature-popup.component.scss'],
@@ -11,14 +13,18 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 })
 
 export class SignaturePopupComponent implements OnInit {
+    @Input() inputName: string;
     @Input() input: FormControl;
     @Input() form: FormGroup;
     public items: IListCertStotes[] = [];
     public  CurrentSelect: IListCertStotes;
     public InfoSert: Array<string> = [];
     public currentName: string;
+    public listCertStores: IListCertStotes[];
     private listCertNode: Observable<any> = new Observable();
-    private modalRef: BsModalRef;
+    private modalRef: BsModalRef | null;
+    private modalRef2: BsModalRef;
+    private ngUnsubscribe: Subject<void> = new Subject<void>();
     constructor(
         public certStoresService: CertStoresService,
         private _modalService: BsModalService,
@@ -31,15 +37,22 @@ export class SignaturePopupComponent implements OnInit {
     }
     ngOnInit() {
       this.getItems();
+      this.certStoresService.updateFormControlStore$
+      .takeUntil(this.ngUnsubscribe)
+      .subscribe((data: string) => {
+        this.form.controls[this.inputName].patchValue(data);
+  });
     }
     getItems() {
+        console.log(this.form.controls);
         this.certStoresService.formControlInit = this.form.controls['CRYPTO_INITSTR'];
         let certStores = [];
-        if (typeof this.input.value === 'string' && this.input.value !== '') {
-            certStores = this.input.value.split('\t');
+        if (typeof this.form.controls[this.inputName].value === 'string' && this.form.controls[this.inputName].value !== '') {
+            certStores = this.form.controls[this.inputName].value.split('\t');
         }
         this.certStoresService.initCarma(certStores);
         this.items =  this.certStoresService.getListCetsStores;
+        this.listCertStores = this.items;
     }
 
     showCert(template: TemplateRef<any>, list: IListCertStotes) {
@@ -48,11 +61,25 @@ export class SignaturePopupComponent implements OnInit {
         this.listCertNode
         .subscribe(data => {
             this.InfoSert = data;
-            this.modalRef = this._modalService.show(template);
+            this.modalRef = this._modalService.show(template, { class: 'modal-sm' });
         }, error => {
             this.InfoSert = [];
-            this.modalRef = this._modalService.show(template);
+            this.modalRef = this._modalService.show(template, { class: 'modal-sm' });
         });
+    }
+
+    openModal2(template: TemplateRef<any>) {
+        this.modalRef2 = this._modalService.show(template, { class: 'second' });
+      }
+    closeFirstModal() {
+        if (!this.modalRef) {
+            return;
+        }
+        this.modalRef.hide();
+        this.modalRef = null;
+    }
+    closeAddCertModal() {
+        this.modalRef2.hide();
     }
 
     checkboxClick(e: Event) {
@@ -68,4 +95,9 @@ export class SignaturePopupComponent implements OnInit {
     showCertInfo(certId: string) {
         this.certStoresService.showCert(certId);
     }
+    addStories() {
+
+    }
+
+
 }

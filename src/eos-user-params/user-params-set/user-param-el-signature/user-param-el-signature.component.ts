@@ -26,8 +26,15 @@ export class UserParamElSignatureComponent {
     public control: AbstractControl;
     public form: FormGroup;
     public inputs: any;
+    public nameButton: string;
+    public controlName: string;
     private inputFields: any;
      private modalRef: BsModalRef;
+     private mapBtnName = new Map([
+      ['CERT_WEB_STORES', 'Хранилища сертификатов для сервера удаленной проверки'],
+      ['CERT_OTHER_STORES', 'Хранилища прочих сертификатов'],
+      ['CERT_USER_STORES', 'Хранилища сертификатов пользователя']
+     ]);
     constructor(
         private _userSrv: UserParamsService,
         private _router: Router,
@@ -54,7 +61,9 @@ export class UserParamElSignatureComponent {
         });
     }
     openPopup(template: TemplateRef<any>, controlName) {
+        this.nameButton = this.mapBtnName.get(controlName);
         this.control = this.form.controls[controlName];
+        this.controlName = controlName;
         this.modalRef = this._modalService.show(template);
     }
 }
