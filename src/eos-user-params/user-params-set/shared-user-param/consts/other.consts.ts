@@ -1,8 +1,8 @@
 import { IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
-
+const REG_MIN_VAL: RegExp = /^[1-9]{0,2}$/;
 export const OTHER_USER: IBaseUsers = {
     id: 'other',
-    title: 'Прочее',
+    title: 'Прочие',
     apiInstance: 'USER_PARMS',
     fields: [
         {
@@ -117,17 +117,20 @@ export const OTHER_USER: IBaseUsers = {
         {
             key: 'REESTR_NOT_INCLUDED',
             type: 'boolean',
-            title: 'Каждый адресат в свой реестр'
+            title: 'Не включенным в реестр'
         },
         {
             key: 'REESTR_DATE_INTERVAL',
             type: 'numberIncrement',
-            title: 'Дата передачи документов не позднее ( дней ):'
+            title: 'Дата передачи документов не позднее ( дней ):',
+            pattern: REG_MIN_VAL
         },
         {
             key: 'REESTR_COPY_COUNT',
             type: 'numberIncrement',
-            title: 'Количество копий:'
+            title: 'Количество копий:',
+            pattern: REG_MIN_VAL
+
         },
         {
             key: 'REESTR_RESTRACTION_DOCGROUP',
