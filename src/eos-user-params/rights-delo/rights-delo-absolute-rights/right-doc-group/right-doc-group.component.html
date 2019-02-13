@@ -11,11 +11,12 @@
     </button>
     <button
         class="btn"
+        #del="bs-tooltip"
         tooltip="Удалить"
         placement="bottom"
         containerClass="tooltip-info"
         [disabled]="!curentNode"
-        (click)="DeleteDoc()"
+        (click)="DeleteDoc(); del.hide()"
     >
         <span class="eos-icon eos-icon-bin-forever-blue small"></span>
     </button>

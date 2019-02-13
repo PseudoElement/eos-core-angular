@@ -85,16 +85,19 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         this.btnDisabled = true;
         let qUserCl;
-        if (this.arrNEWDeloRight.join('') !== this.arrDeloRight.join('')) {
+        const strNewDeloRight = this.arrNEWDeloRight.join('');
+        const strDeloRight = this.arrDeloRight.join('');
+        if (strNewDeloRight !== strDeloRight) {
             const q = {
                 method: 'MERGE',
                 requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})`,
                 data: {
-                    DELO_RIGHTS: this.arrNEWDeloRight.join('')
+                    DELO_RIGHTS: strNewDeloRight
                 }
             };
             qUserCl = q;
             this.queryForSave.push(q);
+            this.arrDeloRight = strNewDeloRight.split('');
         }
         this.listRight.forEach((node: NodeAbsoluteRight) => {
             if (node.touched) {

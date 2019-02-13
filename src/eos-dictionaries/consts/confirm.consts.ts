@@ -27,3 +27,10 @@ export const CONFIRM_DOCGROUP_CHECK_DUPLINDEXES: IConfirmWindow = {
     okTitle: 'Да',
     cancelTitle: 'Нет'
 };
+
+export const CONFIRM_LINK_CHECK_CATEGORY: IConfirmWindow = {
+    title: 'Подтвердите действие:',
+    body: 'Выбранная категория уже принадлежит другой паре связок, назначить категорию текущей паре?',
+    okTitle: 'Да',
+    cancelTitle: 'Нет'
+};

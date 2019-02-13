@@ -38,6 +38,11 @@
             padding-right: 40px;
         }
     }
+    .user-content-wr {
+        display: flex;
+        flex-direction: column;
+
+    }
     .fl {
         display: flex;
         align-content: flex-start;
@@ -62,6 +67,9 @@
         .btn-action + div {
             margin-left: 1px;
         }
+    }
+    .title-user-content {
+        padding-left: 20px;
     }
     .send-from {
         display: flex;

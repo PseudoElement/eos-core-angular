@@ -43,6 +43,9 @@ export class TreeUserSelectService {
         return this.apiSrv.read<DEPARTMENT>(query)
         .then(data => {
             this.updateNodes(data, true);
+        })
+        .catch(e => {
+            return null;
         });
     }
 

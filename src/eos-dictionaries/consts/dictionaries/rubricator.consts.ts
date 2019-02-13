@@ -13,7 +13,7 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
     defaultOrder: 'CLASSIF_NAME',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
-        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes'
+        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes', 'RubricUniqueSwitcher'
     ],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',

@@ -176,6 +176,7 @@ export class CounterNpEditComponent {
                     const _confrm = Object.assign({}, CONFIRM_NUMCREATION_NP_CHANGE);
                     _confrm.body = _confrm.body
                         .replace('{{old_value}}', String(old_value))
+                        .replace('{{year}}', String(this.editValueYear))
                         .replace('{{new_value}}', String(this.editValueNum));
                     this._confirmSrv.confirm(_confrm)
                         .then((confirmed: boolean) => {
