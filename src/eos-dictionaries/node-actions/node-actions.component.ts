@@ -1,3 +1,4 @@
+import { RUBRICATOR_DICT } from './../consts/dictionaries/rubricator.consts';
 import {Component, EventEmitter, OnDestroy, Output} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
@@ -5,8 +6,10 @@ import 'rxjs/add/operator/combineLatest';
 
 import {EosDictService} from '../services/eos-dict.service';
 import {EosDictionary} from '../core/eos-dictionary';
-import {COMMON_ADD_MENU, DEPARTMENT_ADD_MENU, MORE_RECORD_ACTIONS, ORGANIZ_ADD_MENU, RECORD_ACTIONS} from '../consts/record-actions.consts';
+import {COMMON_ADD_MENU, DEPARTMENT_ADD_MENU, MORE_RECORD_ACTIONS, ORGANIZ_ADD_MENU, RECORD_ACTIONS, RUBRIC_UNIQ_ADD_MENU} from '../consts/record-actions.consts';
 import {E_DICT_TYPE, E_RECORD_ACTIONS, IAction, IActionButton, IActionEvent, IDictionaryViewParameters} from 'eos-dictionaries/interfaces';
+import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { EosStorageService, SI_RUBRICUNOQDISABLE } from 'app/services/eos-storage.service';
 
 @Component({
     selector: 'eos-node-actions',
@@ -21,9 +24,11 @@ export class NodeActionsComponent implements OnDestroy {
     moreButtons: IActionButton[];
 
     ADD_ACTION = E_RECORD_ACTIONS.add;
+    RUBRIC_ACTION1 = E_RECORD_ACTIONS.RubricUniqueSwitcher;
     isTree: boolean;
 
     addMenu: any;
+    rubricUniqMenu: any;
 
     private dictionary: EosDictionary;
     private _nodeSelected = false;
@@ -38,7 +43,12 @@ export class NodeActionsComponent implements OnDestroy {
 
     private ngUnsubscribe: Subject<any> = new Subject();
 
-    constructor(_dictSrv: EosDictService) {
+    constructor(
+        _dictSrv: EosDictService,
+        private _eaps: EosAccessPermissionsService,
+        private _storageSrv: EosStorageService,
+
+        ) {
         this._initButtons();
 
         _dictSrv.listDictionary$
@@ -66,6 +76,7 @@ export class NodeActionsComponent implements OnDestroy {
         // console.log('action', item.type, params);
         if (item.enabled) {
             this.action.emit({ action: item.type, params: params });
+            this._update();
         } else {
             e.stopPropagation();
         }
@@ -93,6 +104,9 @@ export class NodeActionsComponent implements OnDestroy {
                 this.addMenu = COMMON_ADD_MENU;
             }
         }
+
+        this.rubricUniqMenu = RUBRIC_UNIQ_ADD_MENU;
+
         this.buttons.forEach(btn => this._updateButton(btn));
         this.moreButtons.forEach(btn => this._updateButton(btn));
     }
@@ -157,6 +171,13 @@ export class NodeActionsComponent implements OnDestroy {
                         _enabled = false;
                     }
                     break;
+                case E_RECORD_ACTIONS.RubricUniqueSwitcher: {
+                    _enabled = this._eaps.isAccessGrantedForDictionary(RUBRICATOR_DICT.id);
+                    const d: boolean = this._storageSrv.getItem(SI_RUBRICUNOQDISABLE);
+                    this.rubricUniqMenu[0].active = !d;
+                    this.rubricUniqMenu[1].active = d;
+                    break;
+                }
             }
         }
         button.show = _show;

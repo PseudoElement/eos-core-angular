@@ -1,6 +1,11 @@
 import { Injectable } from '@angular/core';
 import { LS_EDIT_CARD } from '../consts/common.consts';
 
+/**
+ * Do not check unique CLASSIF_NAME for rubricator
+ */
+export const SI_RUBRICUNOQDISABLE = 'rubricSetUniqueDisabled';
+
 @Injectable()
 export class EosStorageService {
     /**

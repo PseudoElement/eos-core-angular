@@ -14,7 +14,7 @@ import {EosDictionary} from '../core/eos-dictionary';
 import {E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters} from 'eos-dictionaries/interfaces';
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
 import {EosMessageService} from 'eos-common/services/eos-message.service';
-import {EosStorageService} from 'app/services/eos-storage.service';
+import {EosStorageService, SI_RUBRICUNOQDISABLE} from 'app/services/eos-storage.service';
 import {EosSandwichService} from '../services/eos-sandwich.service';
 import {EosBreadcrumbsService} from '../../app/services/eos-breadcrumbs.service';
 
@@ -329,6 +329,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.OpenSelected:
                 this._openItems();
                 break;
+            case E_RECORD_ACTIONS.RubricUniqueSwitcher: {
+                this._rubricSetUniqueDisable((evt.params && evt.params['SET_DISABLED'] === 1) || (!evt.params));
+                break;
+            }
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -389,6 +393,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             this._dictSrv.setDictMode(mode);
             this.nodeList.updateViewFields([]);
         }
+    }
+
+    private _rubricSetUniqueDisable(value: boolean): any {
+        this._storageSrv.setItem(SI_RUBRICUNOQDISABLE, value);
     }
 
     /**
