@@ -118,6 +118,20 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
         }
     }
 
+    markBooleanData(records: any[], fieldName: string, boolValue, cascade = false): Promise<any[]> {
+        records.forEach((record) => record[fieldName] = +boolValue);
+        const changes = this.apiSrv.changeList(records);
+
+        if (changes.length) {
+            records.forEach((record) =>{
+                changes.push(Object.assign(EosUtils.deepUpdate({}, changes[0]), {
+                    requestUri: 'LINK_CL(' + record.ISN_PARE_LINK +')'}));
+            });
+        }
+    
+        return this.apiSrv.batch(changes, '');
+    }
+
     confirmSave(nodeData: any, confirmSrv: ConfirmWindowService): Promise<boolean> {
         const linkType = this._getRecField(nodeData, LINK_TYPE);
         if (linkType) {
