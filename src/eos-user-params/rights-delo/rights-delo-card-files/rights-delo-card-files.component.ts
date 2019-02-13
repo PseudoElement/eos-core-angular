@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, Injector, OnInit, Output, EventEmitter } from '@angular/core';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { BaseRightsDeloSrv } from '../shared-rights-delo/services/base-rights-delo.service';
 import { CARD_FILES_USER } from '../shared-rights-delo/consts/card-files.consts';
