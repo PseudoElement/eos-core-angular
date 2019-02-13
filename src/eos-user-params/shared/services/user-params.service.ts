@@ -266,6 +266,9 @@ export class UserParamsService {
 
     fetchExpandUser() {}
     private _errorHandler (err) {
+        if (err.code === 434) {
+            return;
+        }
         const errMessage = err.message ? err.message : err;
         this._msgSrv.addNewMessage({
             type: 'danger',
