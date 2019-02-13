@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { IMessage } from '../../eos-common/core/message.interface';
 import { Subscription } from 'rxjs/Subscription';
+import {environment} from '../../environments/environment';
 
 @Component({
     selector: 'eos-login',
@@ -18,6 +19,9 @@ export class LoginComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _route: ActivatedRoute,
     ) {
+        if (environment.production) {
+            window.location.href = '../login.aspx';
+        }
         this._subscription = this._msgSrv.messages$.subscribe((messages: IMessage[]) => {
             const _i = messages.length - 1;
             if (messages.length && messages[_i].authMsg) {
