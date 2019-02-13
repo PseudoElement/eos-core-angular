@@ -10,7 +10,7 @@ import {PARM_SUCCESS_SAVE, PARM_ERROR_SEND_FROM, PARM_CANCEL_CHANGE } from '../c
 export class UserParamOtherSrv extends BaseUserSrv {
     readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов', 'Шаблоны'];
     readonly fieldTemplates: string[] = ['Имя шаблона', 'Значение по умолчанию', 'Текущее значение'];
-    readonly constPrepareForm = ['RS_OUTER_DEFAULT_DELIVERY', 'REESTR_RESTRACTION_DOCGROUP', 'ADDR_EXPEDITION'];
+    readonly constPrepareForm = ['RS_OUTER_DEFAULT_DELIVERY', 'REESTR_RESTRACTION_DOCGROUP', 'ADDR_EXPEDITION', 'REESTR_COPY_COUNT', 'REESTR_DATE_INTERVAL'];
     currTab = 0;
     dataAttachDb;
     inputAttach;
