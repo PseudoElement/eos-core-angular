@@ -2,7 +2,7 @@ import { IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
 
 export const OTHER_USER: IBaseUsers = {
     id: 'other',
-    title: 'Прочее',
+    title: 'Прочие',
     apiInstance: 'USER_PARMS',
     fields: [
         {
@@ -117,7 +117,7 @@ export const OTHER_USER: IBaseUsers = {
         {
             key: 'REESTR_NOT_INCLUDED',
             type: 'boolean',
-            title: 'Каждый адресат в свой реестр'
+            title: 'Не включенным в реестр'
         },
         {
             key: 'REESTR_DATE_INTERVAL',
