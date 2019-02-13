@@ -14,7 +14,7 @@ import { IParamAccordionList } from './shared/intrfaces/user-params.interfaces';
 export class UserParamsComponent implements OnDestroy, OnInit {
     accordionList: IParamAccordionList[] = USER_PARAMS_LIST_NAV;
     isShowAccordion: boolean;
-    isLoading: boolean = false;
+    isLoading: boolean = true;
     isNewUser: boolean = false;
     pageId: 'param-set' | 'email-address' | 'rights-delo' | 'base-param';
     private ngUnsubscribe: Subject<any> = new Subject();
@@ -42,11 +42,11 @@ export class UserParamsComponent implements OnDestroy, OnInit {
         this._route.queryParams
             .takeUntil(this.ngUnsubscribe)
             .subscribe(qParam => {
+                this.isLoading = true;
                 if (!qParam['isn_cl'] && !this._userParamService.isUserContexst) {
                     this._router.navigate(['user_param']);
                     return;
                 }
-                this.isLoading = true;
                 this._userParamService.getUserIsn(qParam['isn_cl'])
                     .then((data: boolean) => {
                         this.checkTabScan();
