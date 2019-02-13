@@ -196,7 +196,7 @@ const routes: Routes = [{
     ]
 }, {
     path: 'user_param',
-    canActivate: [AuthorizedGuard],
+    canActivate: [AuthorizedGuard, PermissionsGuard],
     data: {
         title: 'Пользователи',
         showInBreadcrumb: true

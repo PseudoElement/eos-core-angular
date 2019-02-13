@@ -10,6 +10,7 @@ import {PARM_SUCCESS_SAVE, PARM_ERROR_SEND_FROM, PARM_CANCEL_CHANGE } from '../c
 export class UserParamOtherSrv extends BaseUserSrv {
     readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов', 'Шаблоны'];
     readonly fieldTemplates: string[] = ['Имя шаблона', 'Значение по умолчанию', 'Текущее значение'];
+    readonly constPrepareForm = ['RS_OUTER_DEFAULT_DELIVERY', 'REESTR_RESTRACTION_DOCGROUP', 'ADDR_EXPEDITION', 'REESTR_COPY_COUNT', 'REESTR_DATE_INTERVAL'];
     currTab = 0;
     dataAttachDb;
     inputAttach;
@@ -28,13 +29,14 @@ export class UserParamOtherSrv extends BaseUserSrv {
     sendFrom: string = '';
     saveValueSendForm: string = '';
     isLoading: boolean;
+
     constructor( injector: Injector) {
         super(injector, OTHER_USER);
         this.isLoading = true;
         this.selfLink = this._router.url.split('?')[0];
-        const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/, '||');
+        const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/g, '||');
         const ADDR_EXP = String(this._userParamsSetSrv.hashUserContext['ADDR_EXPEDITION']);
-        Promise.all([this.getDocGroupName(paramsDoc), this.getList(), this.getDefaultsValues(), this.getDepartMentName(ADDR_EXP, true)]).then(result => {
+        Promise.all([this.getDocGroupName(paramsDoc, true), this.getList(), this.getDefaultsValues(), this.getDepartMentName(ADDR_EXP, true)]).then(result => {
             OTHER_USER.fields.map(field => {
                 if (field.key === 'RS_OUTER_DEFAULT_DELIVERY' && field.options.length === 1) {
                     result[1].forEach(item => {
@@ -58,7 +60,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
             this.saveDefaultValue = ( result[2] as Array<any>).slice();
         }).catch(error => {
             this.isLoading = false;
-            console.log(error);
         });
     }
     hideToolTip() {
@@ -76,7 +77,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
               this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
               this.disableForEditAllForm(this.editFlag);
               // меняем значения на одинаковые для слижения за изменениями формы
-              this.changeInpetsValue(this.inputs );
+              this.changeInpetsValue(this.inputs);
               this.checngeFormValue();
               this.subscribeChangeForm();
               this.isLoading = false;
@@ -97,29 +98,21 @@ export class UserParamOtherSrv extends BaseUserSrv {
         return this.dataSrv.getInputs(this.prepInputs, dataInput);
     }
       changeInpetsValue(iputs) {
-          const inpval1 = String(iputs['rec.RS_OUTER_DEFAULT_DELIVERY'].value);
-          const inpval2 = String(iputs['rec.REESTR_RESTRACTION_DOCGROUP'].value);
-          const inpval3 = String(iputs['rec.ADDR_EXPEDITION'].value);
-          if (inpval1  === 'undefined' || inpval1 === 'null') {
-             iputs['rec.RS_OUTER_DEFAULT_DELIVERY'].value = '';
-          }
-          if (inpval2 === 'null' || inpval2 ===  'undefined') {
-              iputs['rec.REESTR_RESTRACTION_DOCGROUP'].value = '';
-          }
-          if (inpval3 === 'null' || inpval3 ===  'undefined') {
-            iputs['rec.ADDR_EXPEDITION'].value = '';
-        }
+        this.constPrepareForm.forEach(key => {
+            const value = String(iputs['rec.' + key].value);
+            if (value === 'null' || value === 'undefined') {
+                iputs['rec.' + key].value = '';
+              }
+        });
         }
 
         checngeFormValue() {
-            const inpval1 = String(this.form.controls['rec.REESTR_RESTRACTION_DOCGROUP'].value);
-            const inpval2 = String(this.form.controls['rec.RS_OUTER_DEFAULT_DELIVERY'].value);
-            if (inpval1 === 'null' || inpval1 === 'undefined') {
-              this.form.controls['rec.REESTR_RESTRACTION_DOCGROUP'].patchValue('', {eventEmit: false});
-            }
-            if (inpval2 === 'null' || inpval2 === 'undefined') {
-              this.form.controls['rec.RS_OUTER_DEFAULT_DELIVERY'].patchValue('', {eventEmit: false});
-            }
+            this.constPrepareForm.forEach(key => {
+                const value = String(this.form.controls['rec.' + key].value);
+                if (value === 'null' || value === 'undefined') {
+                    this.form.controls['rec.' + key].patchValue('', {eventEmit: false});
+                  }
+            });
       }
 
 
@@ -133,7 +126,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
                      if (!this.getFactValueFuck(newVal[val], val)) {
                          this.setNewData(newVal, val, true);
                          count_error += 1;
-                     }  else {
+                     } else {
                         this.setNewData(newVal, val, false);
                      }
                     });
@@ -141,6 +134,10 @@ export class UserParamOtherSrv extends BaseUserSrv {
                         this.formChanged.emit(true);
                         this.isChangeForm = true;
                     }else {
+                        this.formChanged.emit(false);
+                        this.isChangeForm = false;
+                    }
+                    if (!this.form.controls['rec.REESTR_DATE_INTERVAL'].valid || !this.form.controls['rec.REESTR_COPY_COUNT'].valid) {
                         this.formChanged.emit(false);
                         this.isChangeForm = false;
                     }
@@ -270,7 +267,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
            const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/, '||');
            this.list = [];
            this.listDocGroup = [];
-           this.getDocGroupName(paramsDoc).then(result => {
+           this.getDocGroupName(paramsDoc, true).then(result => {
                 if (result.length > 0) {
                     this.getListDoc(result);
                 }
@@ -339,6 +336,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
             selectMulty: true,
             selectLeafs: false,
             selectNodes: true,
+            return_due: true,
         };
         this._waitClassifSrv.openClassif(params).then(isn => {
             this.flagBacground = false;
@@ -371,6 +369,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
             selectMulty: false,
             selectLeafs: false,
             selectNodes: true,
+            return_due: true
         };
         this._waitClassifSrv.openClassif(params).then(isn => {
             this.flagBacground = false;
@@ -454,12 +453,14 @@ export class UserParamOtherSrv extends BaseUserSrv {
         });
         return min;
     }
-  private  getDocGroupName(param: string): Promise<any> {
+  private  getDocGroupName(param: string, flag?: boolean): Promise<any> {
+      let crit = '';
       if (param !== 'null' && param !== '') {
+      flag ? crit = 'ISN_NODE' : crit = 'DUE';
           const query = {
               DOCGROUP_CL: {
                   criteries: {
-                      ISN_NODE:  param
+                      [crit]:  param
                   }
               }
           };
@@ -470,13 +471,8 @@ export class UserParamOtherSrv extends BaseUserSrv {
 
     private  getDepartMentName(param: string, flagWhatToChoose?: boolean): Promise<any> {
         if (param !== 'null' && param !== '') {
-            const crit = flagWhatToChoose ? 'DUE' : 'ISN_NODE';
             const query = {
-                DEPARTMENT: {
-                    criteries: {
-                        [crit]: param
-                    }
-                }
+                DEPARTMENT: [param]
             };
             return  this.userParamApiSrv.getData(query);
         }

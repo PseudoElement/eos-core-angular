@@ -7,12 +7,12 @@
         <div class="buttons-wrapper" *ngIf="editMode">
             <div>
                 <button *ngIf='defaultBtn' class="btn btn-primary"
-                    (click)="default()">Поумолчанию</button>
+                    (click)="default()">ПО УМОЛЧАНИЮ</button>
                 <button class="btn btn-primary"
-                    (click)="cancel()">Отменить</button>
+                    (click)="cancel()">ОТМЕНИТЬ</button>
                 <button class="btn btn-primary-full"
                     [disabled]="disableBtn"
-                    (click)="submit()">Сохранить</button>
+                    (click)="submit()">СОХРАНИТЬ</button>
             </div>
         </div>
         <div class="action-wrapper"
