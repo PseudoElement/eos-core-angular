@@ -1,3 +1,4 @@
+import { EosAccessPermissionsService } from './services/eos-access-permissions.service';
 import { SevParticipantCardEditComponent } from './card-views/sev-participant-card-edit.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -165,6 +166,7 @@ import { RulesSelectComponent } from './sev-rules-select/sev-rules-select.compon
         EosSevRulesService,
         EosDictService,
         EosSandwichService,
+        EosAccessPermissionsService,
     ],
 })
 export class EosDictionariesModule { }

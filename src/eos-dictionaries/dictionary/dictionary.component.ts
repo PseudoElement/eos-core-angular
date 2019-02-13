@@ -43,9 +43,7 @@ import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.in
 import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
 import {CounterNpEditComponent} from '../counter-np-edit/counter-np-edit.component';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
-import { AppContext } from 'eos-rest/services/appContext.service';
-import { E_TECH_RIGHT } from 'eos-rest/interfaces/rightName';
-import { NADZORDICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
+import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -134,8 +132,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         private _storageSrv: EosStorageService,
         private _modalSrv: BsModalService,
         private _confirmSrv: ConfirmWindowService,
+        private _eaps: EosAccessPermissionsService,
         private _sandwichSrv: EosSandwichService,
-        private appCtx: AppContext,
+        // private appCtx: AppContext,
         _bcSrv: EosBreadcrumbsService,
     ) {
         this.accessDenied = false;
@@ -143,7 +142,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             if (params) {
 
                 this.dictionaryId = params.dictionaryId;
-                if (!this._checkAccess()) {
+                if (!this._eaps.isAccessGrantedForDictionary(this.dictionaryId)) {
                     this.accessDenied = true;
                     this._msgSrv.addNewMessage(DANGER_ACCESS_DENIED_DICT);
                     return;
@@ -390,18 +389,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             this._dictSrv.setDictMode(mode);
             this.nodeList.updateViewFields([]);
         }
-    }
-
-    private _checkAccess () {
-        const r: string = this.appCtx.CurrentUser.TECH_RIGHTS;
-        const dNadzor =  NADZORDICTIONARIES.find (n => n.id === this.dictionaryId);
-        if (dNadzor) {
-            if (r[E_TECH_RIGHT.NadzorCL - 1] === '1') {
-                return true;
-            }
-            return false;
-        }
-        return true;
     }
 
     /**
