@@ -78,7 +78,7 @@ export class RightDepertmentComponent implements OnInit {
             if (data === '') {
                 throw new Error();
             }
-            return this._userParmSrv.getDepartmentFromUser(data.split('|').join('||'));
+            return this._userParmSrv.getDepartmentFromUser(data.split('|'));
         })
         .then((data: DEPARTMENT[]) => {
             if (this._checkRepeat(data)) {

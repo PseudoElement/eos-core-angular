@@ -175,7 +175,7 @@ export class UserParamsService {
             this.SubEmail.next(this._userContext);
             this._createHash();
             if (!this._isTechUser) {
-                return this.getDepartmentFromUser(this._userContext['DUE_DEP']);
+                return this.getDepartmentFromUser([this._userContext['DUE_DEP']]);
             }
             return Promise.resolve([]);
         })
@@ -212,41 +212,27 @@ export class UserParamsService {
         });
     }
 
-    getDepartmentFromUser (dueDep: string): Promise<any> {
-        const queryDueDep = {
-            DEPARTMENT: {
-                criteries: {
-                    DUE: dueDep
-                }
-            }
-        };
-        return this._pipSrv.getData<DEPARTMENT>(queryDueDep);
+    getDepartmentFromUser (dueDep: string[]): Promise<DEPARTMENT[]> {
+        return this._pipSrv.getData<DEPARTMENT>({DEPARTMENT: dueDep});
     }
 
-    getUserByIsn (isn) {
-        const queryUser = {
-            USER_CL: {
-                criteries: {
-                    ISN_LCLASSIF: isn
-                }
-            }
-        };
-        return this._pipSrv.getData<USER_CL>(queryUser);
-    }
+    // getUserByIsn (isn) {
+    //     const queryUser = {
+    //         USER_CL: {
+    //             criteries: {
+    //                 ISN_LCLASSIF: isn
+    //             }
+    //         }
+    //     };
+    //     return this._pipSrv.getData<USER_CL>(queryUser);
+    // }
     ceckOccupationDueDep(dueDep: string, dep: DEPARTMENT, isn?: boolean) {/* проверяем прикреплино ли должностное лицо к пользователю */
-        const query = {
-            USER_CL: {
-                criteries: {
-                    DUE_DEP: dueDep
-                }
-            }
-        };
         const mess: IMessage = {
             title: 'Предупреждение:',
             msg: '',
             type: 'warning'
         };
-        return this._pipSrv.getData<USER_CL>(query)
+        return this._pipSrv.getData<USER_CL>({USER_CL: PipRX.criteries({DUE_DEP: dueDep})})
         .then((u: USER_CL[]) => {
             if (!u.length) {
                 return dep;

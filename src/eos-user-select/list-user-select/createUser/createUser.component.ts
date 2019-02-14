@@ -55,7 +55,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
                 if (this.initDue) {
                     this.data['dueDL'] = this.initDue;
-                    this._userParamSrv.getDepartmentFromUser(this.initDue).then((dt) => {
+                    this._userParamSrv.getDepartmentFromUser([this.initDue]).then((dt) => {
                         this.form.controls['DUE_DEP_NAME'].patchValue(dt[0]['SURNAME']);
                     });
                 }
@@ -139,7 +139,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 throw new Error();
             }
             dueDep = data;
-            return this._userParamSrv.getDepartmentFromUser(dueDep);
+            return this._userParamSrv.getDepartmentFromUser([dueDep]);
         })
         .then((data: DEPARTMENT[]) => {
             return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0]);
