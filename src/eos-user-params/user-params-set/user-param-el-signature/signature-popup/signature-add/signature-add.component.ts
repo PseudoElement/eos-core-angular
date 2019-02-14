@@ -26,6 +26,7 @@ export class SignatureAddComponent implements OnInit {
     public listStores:  IListStores[];
 
     public listStores$: any;
+    public sheckSelect: string;
     private mapBtnName = new Map([
         ['CERT_WEB_STORES', 'sslm'],
         ['CERT_OTHER_STORES', 'sscu'],
@@ -116,6 +117,7 @@ export class SignatureAddComponent implements OnInit {
     }
     init() {
         this.certSystemStore = this.mapBtnName.get(this.inputName);
+        this.sheckSelect = this.mapBtnName.get(this.inputName);
 
     }
     ngOnInit() {

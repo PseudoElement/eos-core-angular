@@ -10,9 +10,15 @@ export const ELECTRONIC_SIGNATURE: IInputParamControl[] =
             readonly: false,
         },
         {
+            controlType: E_FIELD_TYPE.boolean,
+            key: 'WEB_EDS_VERIFY_ON_SERVER',
+            label: 'Проверка ЭП на WEB-сервере',
+            readonly: false,
+        },
+        {
             controlType: E_FIELD_TYPE.string,
             key: 'CRYPTO_INITSTR',
-            label: 'Строка инициализации',
+            label: 'Строка инициализации:',
             readonly: false,
         },
         {
@@ -24,13 +30,13 @@ export const ELECTRONIC_SIGNATURE: IInputParamControl[] =
         {
             controlType: E_FIELD_TYPE.string,
             key: 'PKI_ACTIVEX',
-            label: 'Название объекта',
+            label: 'Название объекта:',
             readonly: false,
         },
         {
             controlType: E_FIELD_TYPE.string,
             key: 'PKI_INITSTR',
-            label: 'Строка инициализации',
+            label: 'Строка инициализации:',
             readonly: false,
         },
         {
@@ -54,25 +60,25 @@ export const ELECTRONIC_SIGNATURE: IInputParamControl[] =
         {
             controlType: E_FIELD_TYPE.string,
             key: 'WEB_CRYPTO_ACTIVEX',
-            label: 'Название объекта',
+            label: 'Название объекта:',
             readonly: false,
         },
         {
             controlType: E_FIELD_TYPE.string,
             key: 'WEB_CRYPTO_INITSTR',
-            label: 'Строка инициализации',
+            label: 'Строка инициализации:',
             readonly: false,
         },
         {
             controlType: E_FIELD_TYPE.string,
             key: 'WEB_PKI_ACTIVEX',
-            label: 'Название объекта',
+            label: 'Название объекта:',
             readonly: false,
         },
         {
             controlType: E_FIELD_TYPE.string,
             key: 'WEB_PKI_INITSTR',
-            label: 'Строка инициализации',
+            label: 'Строка инициализации:',
             readonly: false,
         },
         {

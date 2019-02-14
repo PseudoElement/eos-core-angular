@@ -10,11 +10,6 @@ import { PipRX } from 'eos-rest/services/pipRX.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../shared-user-param/consts/eos-user-params.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 
-
-// import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-// import { Subscription } from 'rxjs/Rx';
-// import { USER_PARMS } from 'eos-rest';
-// import { WaitClassifService } from 'app/services/waitClassif.service';
 @Component({
     selector: 'eos-user-param-el-signature',
     styleUrls: ['user-param-el-signature.component.scss'],
@@ -34,6 +29,8 @@ export class UserParamElSignatureComponent {
     public btnDisabled: boolean = false;
     public isLoading: boolean = true;
     public editFlag: boolean = false;
+
+    public disablebtnCarma: boolean = false;
     // sendFrom: string = '';
     // saveValueSendForm: string = '';
     private inputFields: any;
@@ -44,6 +41,9 @@ export class UserParamElSignatureComponent {
       ['CERT_OTHER_STORES', 'Хранилища прочих сертификатов'],
       ['CERT_USER_STORES', 'Хранилища сертификатов пользователя']
      ]);
+
+     private readonly first  = ['CRYPTO_ACTIVEX', 'CRYPTO_INITSTR', 'SIGN_BASE64', 'PKI_ACTIVEX', 'PKI_INITSTR'];
+     private readonly  second = ['WEB_CRYPTO_ACTIVEX', 'WEB_CRYPTO_INITSTR', 'WEB_PKI_ACTIVEX', 'WEB_PKI_INITSTR'];
      private listForQuery: Array<string> = [];
     constructor(
         private _userSrv: UserParamsService,
@@ -54,7 +54,7 @@ export class UserParamElSignatureComponent {
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
     ) {
-        this.titleHeader = this._userSrv.curentUser.CLASSIF_NAME;
+        this.titleHeader = this._userSrv.curentUser.CLASSIF_NAME + ' - ' + 'Электронная подпись';
         this.link = this._userSrv.curentUser['ISN_LCLASSIF'];
         this.selfLink = this._router.url.split('?')[0];
         this.init();
@@ -196,6 +196,7 @@ export class UserParamElSignatureComponent {
     edit(event) {
         this.editFlag = event;
         this.disableForEditAllForm(event);
+        this.disableOrEnabel();
 
     }
     close(event) {
@@ -219,5 +220,25 @@ export class UserParamElSignatureComponent {
                 }
             }
         };
+    }
+
+    disableOrEnabel() {
+        const value = this.form.controls['REMOTE_CRYPTO_SERVER'].value;
+        this.disablebtnCarma = value;
+        if (value) {
+            this.second.forEach(el => {
+                this.form.controls[el].enable({emitEvent: false});
+            });
+            this.first.forEach(el => {
+                this.form.controls[el].disable({emitEvent: false});
+            });
+        } else {
+            this.second.forEach(el => {
+                this.form.controls[el].disable({emitEvent: false});
+            });
+            this.first.forEach(el => {
+                this.form.controls[el].enable({emitEvent: false});
+            });
+        }
     }
 }

@@ -67,7 +67,7 @@ export class SignaturePopupComponent implements OnInit {
     }
 
     openModal2(template: TemplateRef<any>) {
-        this.modalRef2 = this._modalService.show(template, { class: 'second' });
+        this.modalRef2 = this._modalService.show(template, { class: 'seconds' });
       }
     closeFirstModal() {
         if (!this.modalRef) {
