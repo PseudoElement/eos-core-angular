@@ -57,6 +57,12 @@ export const PARM_ERR_OPEN_CERT_STORES: IMessage = {
     msg: 'Не удается найти указанный файл',
     dismissOnTimeout: 5000
 };
+export const CARMA_UNIC_VALUE: IMessage = {
+    type: 'warning',
+    title: 'Данное хранилище уже выбранно',
+    msg: 'Выберите другое хранилище.',
+    dismissOnTimeout: 5000
+};
 
 export const REG_RANGE_0_30 = /^[1-2]?\d$|^30$/;
 export const REG_RANGE_0_60 = /^[1-5]?\d$|^60$/;
