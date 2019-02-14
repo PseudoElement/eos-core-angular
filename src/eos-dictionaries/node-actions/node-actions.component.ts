@@ -34,6 +34,7 @@ export class NodeActionsComponent implements OnDestroy {
     private _nodeSelected = false;
     private _viewParams: IDictionaryViewParameters;
     private _dictSrv: EosDictService;
+    private _visibleCount: number;
 
     get haveMoreButtons(): boolean {
         let have = false;
@@ -53,9 +54,10 @@ export class NodeActionsComponent implements OnDestroy {
 
         _dictSrv.listDictionary$
             .takeUntil(this.ngUnsubscribe)
-            .combineLatest(_dictSrv.openedNode$, _dictSrv.viewParameters$)
-            .subscribe(([dict, node, params]) => {
+            .combineLatest(_dictSrv.openedNode$, _dictSrv.viewParameters$, _dictSrv.visibleList$)
+            .subscribe(([dict, node, params, list]) => {
                 this.dictionary = dict;
+                this._visibleCount = list.length;
                 this._nodeSelected = !!node;
                 this._viewParams = params;
                 this._update();
@@ -126,7 +128,7 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.moveUp:
                 case E_RECORD_ACTIONS.moveDown:
                     _show = this._viewParams.userOrdered && !this._viewParams.searchResults;
-                    _enabled = _enabled && this._nodeSelected;
+                    _enabled = _enabled && this._nodeSelected && this._visibleCount > 1;
                     break;
 
                 case E_RECORD_ACTIONS.CloseSelected:
