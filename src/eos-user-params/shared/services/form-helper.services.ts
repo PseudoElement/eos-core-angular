@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { IInputParamControl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 @Injectable()
 export class FormHelperService {
 
@@ -25,6 +26,9 @@ export class FormHelperService {
                 case 'STREAM_SCAN_RIGHTS_BAR_CODE':
                 setVal(f, index);
                 return;
+                default:
+                setVal(f, index);
+                return;
             }
         });
 
@@ -41,6 +45,36 @@ export class FormHelperService {
                 }
             }
         }
+    }
+
+    fillInputFieldsSetParams(inputFields: IInputParamControl[]) {
+        const user_param = this._userSrv.curentUser['USER_PARMS_HASH'];
+        const arrayFills: IInputParamControl[]  = [];
+        inputFields.forEach((inputVal: IInputParamControl, index) => {
+            const f: IInputParamControl = Object.assign({}, inputVal);
+            arrayFills.push(f);
+            if (f.controlType === E_FIELD_TYPE.boolean) {
+              if (String(user_param[f['key']]) !==  'null' && String(user_param[f['key']]) !==  'undefined') {
+                if (user_param[f['key']] === 'NO') {
+                    f['value']  = false;
+                }   else {
+                    f['value']  = true;
+                }
+              } else {
+                f['value']  = false;
+              }
+            }
+
+            if (f.controlType === E_FIELD_TYPE.string) {
+                if (String(user_param[f['key']]) !== 'null' && String(user_param[f['key']]) !==  'undefined') {
+                    f['value'] = user_param[f['key']];
+                }   else {
+                    f['value']  = '';
+                }
+            }
+
+        });
+        return arrayFills;
     }
 
     changesForm(inputs: IInputParamControl[], newVal) {

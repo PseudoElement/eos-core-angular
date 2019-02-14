@@ -12,6 +12,7 @@ import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tr
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EMPTY_ADD_ELEMENT_WARN } from 'app/consts/messages.consts';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
+import { IEnt } from 'eos-rest';
 
 
 @Component({
@@ -48,6 +49,10 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         .catch(e => {
             return [];
         });
+    }
+    createEntyti<T extends IEnt>(ent: any, typeName: string): T {
+        ent.__metadata = { __type: typeName };
+        return ent;
     }
     getConfig (mode: E_TECH_USER_CLASSIF_CONTENT): IConfigUserTechClassif {
         switch (mode) {

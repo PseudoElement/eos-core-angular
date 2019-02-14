@@ -1,0 +1,69 @@
+<div class="input-user-wrapper input-user-directories-wrapper">
+<div class="nav-signature">
+    <button class="btn" containerClass="tooltip-info" tooltip='Добавить хранилище'(click)="openModal2(templateNested)">
+        <span class="eos-icon eos-icon-plus-blue small"></span>
+    </button>
+    <button class="btn" containerClass="tooltip-info" (click)="deleteStores()" tooltip='Удалить хранилище'>
+        <span class="eos-icon eos-icon-close-blue small"></span>
+    </button>
+</div>
+<div class="signature-list" *ngIf='listCertStores'>
+    <div *ngFor='let list of listCertStores' class="signature-item">
+        <div
+        class="list"
+        [ngClass]="{'highlighted': list.isSelected}"
+        (click)="selectedNode(list)"
+        (dblclick)="showCert(template, list)"
+    >
+        <label
+            class="checkbox-inline"
+            [tooltip]="list.marked ? markTemp : notMarkTemp"
+            containerClass="tooltip-info"
+            container="body"
+            (click)="checkboxClick($event)"
+            placement="bottom"
+        >
+            <input
+                type="checkbox"
+                [(ngModel)]="list.marked || list.selectedMark"
+                (ngModelChange)="markNode($event, list)"
+            >
+            <span></span>
+        </label>
+        {{list.Location}}: {{list.Name}}
+    </div>
+    </div>
+</div>
+
+
+<ng-template #template>
+        <div class="modal-header">
+                <h4 class="modal-title pull-left">{{currentName}}</h4>
+              <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf='InfoSert.length > 0; else unset'>
+                <div class="sert-list" *ngFor="let sert of InfoSert">
+                    {{sert}}
+                    <span class="info-icon eos-icon eos-icon-info-blue x-small" (click)="showCertInfo(sert)"></span>
+                </div>
+             </div>
+             <ng-template #unset>
+                <p>Сертефикаты отсутствуют</p>
+              </ng-template>
+        </div>
+      </ng-template>
+
+      <ng-template #templateNested>
+        <div class="modal-header">
+          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef2.hide(); closeFirstModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- <button *ngIf="modalRef" type="button" class="btn btn-danger" (click)="closeFirstModal()">X</button> -->
+          <eos-signature-add (closeAddCertModal)="closeAddCertModal()" [inputName]='inputName' [input]='input' [form] ='form'></eos-signature-add>
+        </div>
+      </ng-template>
