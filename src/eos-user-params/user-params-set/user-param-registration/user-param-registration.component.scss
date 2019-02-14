@@ -1,4 +1,8 @@
 .input-user-registration-rk-forwarding-wrapper {
+    .scrollWrapper{
+        overflow: auto;
+        max-height: calc(100vh - 330px);
+    }
 
     .tabs-wrapper {
         margin: 0;
