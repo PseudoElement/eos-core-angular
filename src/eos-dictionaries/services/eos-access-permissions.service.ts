@@ -30,5 +30,9 @@ export class EosAccessPermissionsService {
         }
         return true;
     }
+    isAccessGrantedForUsers(): boolean {
+        const r: string = this.appCtx.CurrentUser.TECH_RIGHTS;
+        return (r[E_TECH_RIGHT.Users - 1] === '1');
+    }
 
 }
