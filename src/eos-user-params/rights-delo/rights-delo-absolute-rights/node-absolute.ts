@@ -44,11 +44,13 @@ export class NodeAbsoluteRight {
     private _value: number;
     private _valueDb: number;
     private _change: IChengeItemAbsolute[] = [];
-    constructor (node: IInputParamControl, v: number, con: AbstractControl, curentUser: IParamUserCl) {
+    private _curentUser: IParamUserCl;
+    constructor (node: IInputParamControl, v: number, con: AbstractControl, user: IParamUserCl) {
         this._constData = node;
         this._value = v;
         this._valueDb = v;
         this.control = con;
+        this._curentUser = user;
     }
     pushChange(node: IChengeItemAbsolute) {
         if (this._change.length && (this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department ||
@@ -72,7 +74,12 @@ export class NodeAbsoluteRight {
             if (node.user_cl) {
                 const index = this._change.findIndex((item: IChengeItemAbsolute) => item.user_cl);
                 if (index >= 0) {
+                    if (this._curentUser['TECH_RIGHTS'] === node.data['TECH_RIGHTS']) {
+                        this._change.splice(index, 1);
+                        this._checkTouched();
+                    } else {
                         this._change.splice(index, 1, node);
+                    }
                     return;
                 }
             }
