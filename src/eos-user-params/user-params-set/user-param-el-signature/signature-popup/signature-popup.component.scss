@@ -1,0 +1,49 @@
+:host{
+}
+
+.signature-list{
+    margin-top: 10px;
+    max-height: 400px;
+    overflow: auto;
+}
+.input-user-wrapper{
+    .nav-signature{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        button:first-child {
+            margin-left: 12px;
+        }
+        button{
+            margin-right: 10px;
+        }
+    }
+
+
+}
+.modal-dialog{
+    width: 800px;
+}
+.modal-header{
+    background: #2196f3
+}
+.modal-add-store{
+    height: 429px;
+    background-color: #fff;
+}
+.seconds{
+    left: calc(50% - 300px);
+}
+.sert-list{
+    max-width: 95%;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    span {
+        position: absolute;
+        right: 0;
+    }
+}
+

@@ -43,6 +43,9 @@ import { AbsoluteRightsClassifComponent } from './rights-delo/rights-delo-absolu
 import {UserPaginationService} from './shared/services/users-pagination.service';
 import {UserHeaderComponent} from '../eos-user-params/user-header/user-header.component';
 import {InlineScaningComponent} from '../eos-user-params/inline-scaning/inline-scaning.component';
+import {UserParamElSignatureComponent} from '../eos-user-params/user-params-set/user-param-el-signature/user-param-el-signature.component';
+import {SignaturePopupComponent} from '../eos-user-params/user-params-set/user-param-el-signature/signature-popup/signature-popup.component';
+import {SignatureAddComponent} from '../eos-user-params/user-params-set/user-param-el-signature/signature-popup/signature-add/signature-add.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -76,6 +79,9 @@ import {InlineScaningComponent} from '../eos-user-params/inline-scaning/inline-s
         AbsoluteRightsClassifComponent,
         UserHeaderComponent,
         InlineScaningComponent,
+        UserParamElSignatureComponent,
+        SignaturePopupComponent,
+        SignatureAddComponent,
     ],
     entryComponents: [
         CardFilesDirectoryModalComponent,

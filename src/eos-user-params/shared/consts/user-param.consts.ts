@@ -21,6 +21,10 @@ export const SUB_PARAMS_LIST_NAV: IParamAccordionList[] = [
         title: 'Справочники',
         url: 'dictionary'
     },
+    {
+        title: 'Электронная подпись',
+        url: 'el-signature'
+    },
     // {
     //     title: 'Электронная почта',
     //     url: 'mail'

@@ -1,0 +1,49 @@
+:host{
+
+    .signature{
+        padding-bottom: 20px;
+    }
+
+    .input-flex{
+        display: flex;
+        justify-content: space-between;
+        padding-right: 10px;
+        align-items: center;
+        input{
+            width: 250px!important;
+        }
+        button{
+            width: 315px;
+          }
+
+    }
+    .user-input-group{
+        button{
+            margin-top: 15px;
+            padding: 5px;
+            background-color: #fff;
+            /* border: none; */
+            color: #2196f3;
+            border-color: #2196f3;
+            border: 1px solid;
+            &:hover{
+                color: #fff;
+                background-color: #2196f3;
+                border-color: #2196f3;
+            }
+        }
+        button[disabled], button[disabled]:hover{
+            border: 1px solid #999999;
+            background-color: #cccccc;
+            color: #666666;
+          }
+    }
+    .cust-input {
+        input{
+            background-color: aqua;
+        }
+    }
+    .input-user-other-rk-forwarding-wrapper .inline-block {
+        width: 315px;
+    }
+}
