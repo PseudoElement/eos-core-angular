@@ -41,3 +41,10 @@ export const CONFIRM_NUMCREATION_NP_CHANGE: IConfirmWindow = {
     okTitle: 'Да',
     cancelTitle: 'Нет'
 };
+
+export const CONFIRM_REESTRTYPE_DELIVERY_CHANGE: IConfirmWindow = {
+    title: 'Подтверждение изменения',
+    body: 'У данного типа реестров есть не отправленные реестры. Сменить вид отправки для всех этих реестров?',
+    okTitle: 'Да',
+    cancelTitle: 'Нет'
+};

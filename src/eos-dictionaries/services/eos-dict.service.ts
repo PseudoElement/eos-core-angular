@@ -28,7 +28,7 @@ import {RestError} from 'eos-rest/core/rest-error';
 import {DictionaryDescriptorService} from 'eos-dictionaries/core/dictionary-descriptor.service';
 import {IAppCfg} from 'eos-common/interfaces';
 import {CabinetDictionaryDescriptor} from '../core/cabinet-dictionary-descriptor';
-import { CONFIRM_CHANGE_BOSS, CONFIRM_CHANGE_REESTR } from '../consts/confirm.consts';
+import { CONFIRM_CHANGE_BOSS } from '../consts/confirm.consts';
 import {ConfirmWindowService} from 'eos-common/confirm-window/confirm-window.service';
 import { ReestrtypeDictionaryDescriptor } from '../core/reestrtype-dictionary-descriptor';
 import { _ES } from '../../eos-rest/core/consts';
@@ -993,32 +993,20 @@ export class EosDictService {
                     if (!recs || recs.length === 0) {
                         return Promise.resolve(null);
                     }
-                    const saveReestr = CONFIRM_CHANGE_REESTR;
-                    return this.confirmSrv.confirm(saveReestr)
-                        .then((confirm: boolean) => {
-                            if (confirm) {
-                                data['REESTR_NEW'] = [];
-                                for (let i = 0; i < recs.length; i++) {
-                                    data['REESTR_NEW'].push({
-                                        'ISN_REESTR': recs[i]['ISN_REESTR'],
-                                        'ISN_DELIVERY': data.rec['ISN_DELIVERY'],
-                                        __metadata: {__type: 'REESTR_NEW'},
-                                        _State: _ES.Modified,
-                                        _orig: {
-                                            'ISN_REESTR': recs[i]['ISN_REESTR'],
-                                            'ISN_DELIVERY': recs[i]['ISN_DELIVERY'],
-                                            __metadata: {__type: 'REESTR_NEW'}
-                                        }
-                                    });
-                                }
-                                return Promise.resolve(null);
-                                // boss.data.rec['POST_H'] = 0;
-                                // return dictionary.updateNodeData(boss, boss.data);
-                            } else {
-                                data.rec['ISN_DELIVERY'] = data.rec._orig['ISN_DELIVERY'].toString();
-                                return Promise.reject('cancel');
+                    data['REESTR_NEW'] = [];
+                    for (let i = 0; i < recs.length; i++) {
+                        data['REESTR_NEW'].push({
+                            'ISN_REESTR': recs[i]['ISN_REESTR'],
+                            'ISN_DELIVERY': data.rec['ISN_DELIVERY'],
+                            __metadata: {__type: 'REESTR_NEW'},
+                            _State: _ES.Modified,
+                            _orig: {
+                                'ISN_REESTR': recs[i]['ISN_REESTR'],
+                                'ISN_DELIVERY': recs[i]['ISN_DELIVERY'],
+                                __metadata: {__type: 'REESTR_NEW'}
                             }
                         });
+                    }
                 });
             }
         }
