@@ -672,10 +672,14 @@ export class EosDictService {
     }
 
     orderBy(orderBy: IOrderBy, clearUserOrder = true) {
+
         if (this.currentDictionary) {
             this.currentDictionary.orderBy = orderBy;
             if (clearUserOrder) {
-                this.updateViewParameters({userOrdered: false});
+                if (this.viewParameters.userOrdered) {
+                    this.toggleUserOrder(false);
+                    this.currentDictionary.orderBy = orderBy;
+                }
             }
             this._reorderList(this.currentDictionary);
         }
