@@ -5,6 +5,7 @@ import { E_CLASSIF_ID } from 'eos-user-params/rights-delo/shared-rights-delo/con
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { AbsoluteRightsClassifComponent } from './absolute-rights-classif.component';
 import { IChengeItemAbsolute } from 'eos-user-params/rights-delo/shared-rights-delo/interfaces/right-delo.intefaces';
+import { USER_TECH } from 'eos-rest';
 
 export class RightClassifNode {
     // isExpanded: boolean = false;
@@ -58,13 +59,13 @@ export class RightClassifNode {
 
         if (this.type !== E_TECH_USER_CLASSIF_CONTENT.none) {
             if (!this._valueLast && v && this.type !== E_TECH_USER_CLASSIF_CONTENT.limitation) { // создать корневой елемент
-                const newNode = {
+                const newNode: USER_TECH = this._component.createEntyti<USER_TECH>({
                     ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
                     FUNC_NUM: this.key,
                     CLASSIF_ID: E_CLASSIF_ID[(this.key.toString())],
                     DUE: '0.',
                     ALLOWED: 1,
-                };
+                }, 'USER_TECH');
                 this._listUserTech.push(newNode);
                 this._component.userTechList.push(newNode);
                 this._parentNode.pushChange({
@@ -117,13 +118,13 @@ export class RightClassifNode {
         .then(data => {
             const newList: NodeDocsTree[] = [];
             data.forEach(entity => {
-                const newTechRight = {
+                const newTechRight: USER_TECH = this._component.createEntyti<USER_TECH>({
                     ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
                     FUNC_NUM: this.key,
                     CLASSIF_ID: E_CLASSIF_ID[(this.key.toString())],
                     DUE: entity['DUE'],
                     ALLOWED: 1,
-                };
+                }, 'USER_TECH');
                 const d = {
                     userTech: newTechRight,
                     instance: entity

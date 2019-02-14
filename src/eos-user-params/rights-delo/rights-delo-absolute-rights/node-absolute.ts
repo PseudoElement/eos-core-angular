@@ -74,7 +74,7 @@ export class NodeAbsoluteRight {
             if (node.user_cl) {
                 const index = this._change.findIndex((item: IChengeItemAbsolute) => item.user_cl);
                 if (index >= 0) {
-                    if (this._curentUser['TECH_RIGHTS'] === node.data['TECH_RIGHTS']) {
+                    if (this._curentUser._orig['TECH_RIGHTS'] === node.data['TECH_RIGHTS']) {
                         this._change.splice(index, 1);
                         this._checkTouched();
                     } else {
