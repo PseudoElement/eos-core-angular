@@ -75,6 +75,7 @@
                   placement="bottom"
                   container="body"
                   containerClass="tooltip-info"
+                  [disabled]="flagForDisableButtonMainCabinet"
                   (click)="[choosingMainCabinet($event), hideToolTip()]">
                   <span>
                     <img class="icon_key" src="assets/icons/Keyfile-Blue.svg" />
