@@ -300,7 +300,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     }
     OpenClassiv(): void {
         this.bacgHeader = true;
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DOCGR, true)
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DOCGR)
         .then(result_classif => {
             const newClassif = result_classif !== '' || null || undefined ? result_classif : '0.';
             this._limitservise.getCodeNameDOCGROUP(String(newClassif))

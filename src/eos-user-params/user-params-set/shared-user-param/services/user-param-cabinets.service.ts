@@ -127,7 +127,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     }
     openClassifDepartment() {
         this.bacgHeader = true;
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
         .then((data: string) => {
             this.dueForLink = data;
             return this._userParamsSetSrv.getDepartmentFromUser([data]);
