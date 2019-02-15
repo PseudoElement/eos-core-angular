@@ -384,10 +384,10 @@ export class UserParamOtherSrv extends BaseUserSrv {
     setFillSendFrom(res: DEPARTMENT[]) {
         if (res.length > 0) {
             const depart = res[0];
-            this.sendFrom = depart.CLASSIF_NAME;
             if (depart.EXPEDITION_FLAG <= 0) {
                 this.msgSrv.addNewMessage(PARM_ERROR_SEND_FROM);
             }   else {
+                this.sendFrom = depart.CLASSIF_NAME;
                 this.form.controls['rec.ADDR_EXPEDITION'].patchValue(depart.DUE);
             }
         }
