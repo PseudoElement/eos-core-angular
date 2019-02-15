@@ -6,8 +6,8 @@ export class WaitClassifService {
             return 'classif';
         };
     }
-    openClassif(params: IOpenClassifParams, oldPage: boolean = false): Promise<String> { // 0.2SV.2T1.
-        const url = this._prepareUrl(params, oldPage);
+    openClassif(params: IOpenClassifParams): Promise<String> {
+        const url = this._prepareUrl(params);
         const w = window.open(url, 'name', 'left=10,top=200,width=1000,height=500');
         return new Promise((resolve, reject) => {
             window['endPopup'] = (data, flag) => {
@@ -28,10 +28,8 @@ export class WaitClassifService {
             }, 500);
         });
     }
-    private _prepareUrl(params: IOpenClassifParams, oldPage): string {
-        if (!oldPage) {
-            oldPage = (params.classif === 'CARDINDEX') || (params.classif === 'USER_CL');
-        }
+    private _prepareUrl(params: IOpenClassifParams): string {
+        const oldPage = (params.classif === 'CARDINDEX') || (params.classif === 'USER_CL');
         let url = oldPage ? '../Pages/Classif/ChooseClassif.aspx?' : '../Eos.Delo.JsControls/Classif/ChooseClassif.aspx?';
         url += `Classif=${params.classif}`;
         url += params.return_due ? '&return_due=true' : '';

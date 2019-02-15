@@ -64,7 +64,7 @@ export class UserParamRCSrv extends BaseUserSrv {
             selectLeafs: true,
             selectNodes: false,
         };
-        this._waitClassifSrv.openClassif(query, false).then(data => {
+        this._waitClassifSrv.openClassif(query).then(data => {
             this.addRcDocToInput(data);
             this.flagBacground = false;
         }).catch(error => {
