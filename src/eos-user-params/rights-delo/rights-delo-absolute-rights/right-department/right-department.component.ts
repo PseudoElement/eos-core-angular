@@ -132,7 +132,12 @@ export class RightDepertmentComponent implements OnInit {
         });
     }
     DeleteDep() {
-        this.curentUser['USERDEP_List'] = this.curentUser['USERDEP_List'].filter(i => i['DUE'] !== this.selectedDep.userDep['DUE']);
+        this.curentUser['USERDEP_List'] = this.curentUser['USERDEP_List'].filter(i => {
+            if (i['DUE'] === this.selectedDep.userDep['DUE']) {
+                return i['FUNC_NUM'] !== this.selectedDep.userDep['FUNC_NUM'];
+            }
+            return true;
+        });
         const i = this.listUserDep.findIndex(n => n === this.selectedDep);
         this.listUserDep.splice(i, 1);
         if (!this.listUserDep.length) {
