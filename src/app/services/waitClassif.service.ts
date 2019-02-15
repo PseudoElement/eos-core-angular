@@ -1,7 +1,18 @@
+import { Injectable } from '@angular/core';
 import { IOpenClassifParams } from 'eos-common/interfaces';
+import { ApiCfg } from 'eos-rest/core/api-cfg';
 
+const LIST_OLD_PAGES: string[] = [
+    'CARDINDEX',
+    'USER_CL',
+    'ORGANIZ_CL',
+];
+const OLD_VIEW_URL: string = 'Pages/Classif/ChooseClassif.aspx?';
+const NEW_VIEW_URL: string = 'Eos.Delo.JsControls/Classif/ChooseClassif.aspx?';
+
+@Injectable()
 export class WaitClassifService {
-    constructor() {
+    constructor(private _apiCfg: ApiCfg) {
         window['Rootpath'] = function() {
             return 'classif';
         };
@@ -29,8 +40,8 @@ export class WaitClassifService {
         });
     }
     private _prepareUrl(params: IOpenClassifParams): string {
-        const oldPage = (params.classif === 'CARDINDEX') || (params.classif === 'USER_CL');
-        let url = oldPage ? '../Pages/Classif/ChooseClassif.aspx?' : '../Eos.Delo.JsControls/Classif/ChooseClassif.aspx?';
+        let url = this._apiCfg.webBaseUrl;
+        url += LIST_OLD_PAGES.includes(params.classif) ? OLD_VIEW_URL : NEW_VIEW_URL;
         url += `Classif=${params.classif}`;
         url += params.return_due ? '&return_due=true' : '';
         url += params.id ? `&value_id=${params.id}_Ids&name_id=${params.id}` : '';
@@ -50,6 +61,9 @@ export class WaitClassifService {
         if (params.nomenkl_jou !== undefined && params.nomenkl_jou !== null) {
             url += `&nomenkl_jou=${params.nomenkl_jou}`;
         }
+
+        // CONTACT
+        // ORGANIZ_CL
 
         return url;
     }
