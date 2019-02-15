@@ -55,7 +55,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
                 if (this.initDue) {
                     this.data['dueDL'] = this.initDue;
-                    this._userParamSrv.getDepartmentFromUser(this.initDue).then((dt) => {
+                    this._userParamSrv.getDepartmentFromUser([this.initDue]).then((dt) => {
                         this.form.controls['DUE_DEP_NAME'].patchValue(dt[0]['SURNAME']);
                     });
                 }
@@ -116,7 +116,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
     selectUser() {
         this.isShell = true;
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL, true)
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
         .then(data => {
             this.data['ISN_USER_COPY'] = data;
             return this._getUserCl(data);
@@ -139,7 +139,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 throw new Error();
             }
             dueDep = data;
-            return this._userParamSrv.getDepartmentFromUser(dueDep);
+            return this._userParamSrv.getDepartmentFromUser([dueDep]);
         })
         .then((data: DEPARTMENT[]) => {
             return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0]);

@@ -109,7 +109,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             return Promise.resolve(false);
         } else {
             this.controller = true;
-            return  this._userParamsSetSrv.getDepartmentFromUser(ControlAuthor);
+            return  this._userParamsSetSrv.getDepartmentFromUser([ControlAuthor]);
         }
     }
 
@@ -127,10 +127,10 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     }
     openClassifDepartment() {
         this.bacgHeader = true;
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
         .then((data: string) => {
             this.dueForLink = data;
-            return this._userParamsSetSrv.getDepartmentFromUser(data);
+            return this._userParamsSetSrv.getDepartmentFromUser([data]);
         }).then(data => {
             this.bacgHeader = false;
             if  (data) {

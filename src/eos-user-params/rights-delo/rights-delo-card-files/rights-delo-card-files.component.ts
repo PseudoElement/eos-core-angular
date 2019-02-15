@@ -749,7 +749,7 @@ this.startEventCabinet = event;
         let newElementForAllData;
         let currentCabinet;
         this.isShell = true;
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_CARDINDEX, true)
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_CARDINDEX)
         .then((data: string) => {
             return data.split('|');
         })

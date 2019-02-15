@@ -203,6 +203,9 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
     formAttach: FormGroup;
     _currentFormStatus;
     prepDataAttach = {rec: {}};
+
+    nameAuthorControl: string;
+    saveNameAuthorControl: string;
     constructor( injector: Injector ) {
         super(injector, REGISTRATION_USER);
         this.init();
@@ -210,6 +213,9 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
         this.afterInit();
         this.getListOrgGroup().then(list => {
           if (list) {
+              this.nameAuthorControl = list[0]['CLASSIF_NAME'];
+              this.saveNameAuthorControl = list[0]['CLASSIF_NAME'];
+
             this.form.controls['rec.ORGGROUP_NAME'].patchValue( list[0]['CLASSIF_NAME'], {
                 emitEvent: false,
             });
@@ -1156,6 +1162,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
     submit() {
         if (this.newData || this.newDataAttach || this.prepareData) {
             const userId = '' + this._userParamsSetSrv.userContextId;
+            this.saveNameAuthorControl = this.nameAuthorControl;
             this.subscribeChangeForm();
             this.subscribeFormAttach();
             this.formChanged.emit(false);
@@ -1336,6 +1343,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                     if (this.newData) {
                         this.newData.rec['ORGGROUP'] = '';
                     }
+                    this.nameAuthorControl = '';
                     this.subscribeChangeForm();
                     this.subscribeFormAttach();
                 })
@@ -1379,6 +1387,9 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
             this.isChangeForm = false;
             this.init();
             this.afterInit();
+            this.form.controls['rec.ORGGROUP_NAME'].patchValue( this.saveNameAuthorControl, {
+                emitEvent: false,
+            });
     }
     protected getListOrgGroup(node?: string, classfi?: boolean): Promise<any> {
         if (classfi) {
