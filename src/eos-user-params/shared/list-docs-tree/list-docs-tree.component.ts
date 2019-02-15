@@ -28,8 +28,10 @@ export class ListDocsTreeComponent implements OnInit, OnChanges {
             this._selectNode(item);
         }
         if (event.target.tagName === 'SPAN') { // click to checkbox
-            item.allowed = !item.allowed;
-            this.checkedNode.emit(item);
+            if (item.isviewAllowed) {
+                item.isAllowed = !item.isAllowed;
+                this.checkedNode.emit(item);
+            }
         }
     }
     onExpand(evt: Event, node: NodeDocsTree) {

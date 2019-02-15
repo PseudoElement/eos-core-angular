@@ -22,7 +22,7 @@ export class RightDepertmentComponent implements OnInit {
     isLoading: boolean = false;
     userDep: USERDEP[];
     funcNum: number;
-    userDepFuncNumber;
+    userDepFuncNumber: USERDEP[];
     listUserDep: NodeListDepAbsolute[] = [];
     depList: DEPARTMENT[];
     isShell: Boolean = false;
@@ -39,11 +39,11 @@ export class RightDepertmentComponent implements OnInit {
         this.userDep = this.curentUser['USERDEP_List'];
         this.funcNum = +this.selectedNode.key + 1;
         this.userDepFuncNumber = this.userDep.filter(i => i['FUNC_NUM'] === this.funcNum);
-        const str = this.userDepFuncNumber.map(i => i.DUE);
+        const str: string[] = this.userDepFuncNumber.map(i => i.DUE);
         this.apiSrv.grtDepartment(str.join('||'))
-            .then(data => {
-                this.userDepFuncNumber.forEach(ud => {
-                    this.listUserDep.push(new NodeListDepAbsolute(ud, data.find(d => d.DUE === ud.DUE)));
+            .then((data: DEPARTMENT[]) => {
+                this.userDepFuncNumber.forEach((ud: USERDEP) => {
+                    this.listUserDep.push(new NodeListDepAbsolute(ud, data.find((d: DEPARTMENT) => d.DUE === ud.DUE)));
                 });
                 this.isLoading = false;
                 if (this.selectedNode.isCreate) {
@@ -93,23 +93,20 @@ export class RightDepertmentComponent implements OnInit {
 
             const newNodes: NodeListDepAbsolute[] = [];
             data.forEach((dep: DEPARTMENT) => {
-                const newNode = new NodeListDepAbsolute(
-                    {
-                        ISN_LCLASSIF: this._userParmSrv.userContextId,
-                        DUE: dep.DUE,
-                        FUNC_NUM: this.funcNum,
-                        WEIGHT: this._getMaxWeight(),
-                        DEEP: 1,
-                        ALLOWED: null,
-                    },
-                    dep,
-                    true
-                );
-                this.curentUser.USERDEP_List.push(newNode.userDep);
+                const newUserDep: USERDEP = this._userParmSrv.createEntyti<USERDEP>({
+                    ISN_LCLASSIF: this._userParmSrv.userContextId,
+                    DUE: dep.DUE,
+                    FUNC_NUM: this.funcNum,
+                    WEIGHT: this._getMaxWeight(),
+                    DEEP: 1,
+                    ALLOWED: null,
+                }, 'USERDEP');
+                const newNode = new NodeListDepAbsolute(newUserDep, dep, true);
+                this.curentUser.USERDEP_List.push(newUserDep);
                 this.selectedNode.pushChange({
                     method: 'POST',
-                    due: newNode.userDep.DUE,
-                    data: newNode.userDep
+                    due: newUserDep.DUE,
+                    data: newUserDep
                 });
                 newNodes.push(newNode);
             });
