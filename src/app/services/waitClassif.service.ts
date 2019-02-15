@@ -62,8 +62,7 @@ export class WaitClassifService {
             url += `&nomenkl_jou=${params.nomenkl_jou}`;
         }
 
-        // CONTACT
-        // ORGANIZ_CL
+        url += params.classif === 'CONTACT' || params.classif === 'ORGANIZ_CL' ? '&app=nadzor' : '';
 
         return url;
     }
