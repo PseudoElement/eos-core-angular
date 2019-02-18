@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserParamApiSrv } from './user-params-api.service';
-import { USER_CL, DEPARTMENT, USERCARD, PipRX } from 'eos-rest';
+import { USER_CL, DEPARTMENT, USERCARD, PipRX, IEnt } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IParamUserCl } from '../intrfaces/user-parm.intterfaces';
 import { Subject } from 'rxjs/Subject';
@@ -250,6 +250,10 @@ export class UserParamsService {
     }
 
     fetchExpandUser() {}
+    createEntyti<T extends IEnt>(ent: any, typeName: string): T {
+        ent.__metadata = { __type: typeName };
+        return ent;
+    }
     private _errorHandler (err) {
         if (err.code === 434) {
             return;
