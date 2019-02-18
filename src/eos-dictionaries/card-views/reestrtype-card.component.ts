@@ -33,6 +33,9 @@ export class ReestrtypeCardComponent extends BaseCardEditComponent implements On
     }
 
     private updateForm(formChanges: any) {
+        if (this.isNewRecord) {
+            return;
+        }
         const oldDelivery = this.data.rec._orig['ISN_DELIVERY'];
 
         if (this._deliv_checkneed && (oldDelivery !== formChanges['rec.ISN_DELIVERY'])) {
