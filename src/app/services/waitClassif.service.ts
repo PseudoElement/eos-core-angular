@@ -41,7 +41,7 @@ export class WaitClassifService {
     }
     private _prepareUrl(params: IOpenClassifParams): string {
         let url = this._apiCfg.webBaseUrl;
-        url += LIST_OLD_PAGES.includes(params.classif) ? OLD_VIEW_URL : NEW_VIEW_URL;
+        url += (LIST_OLD_PAGES.indexOf(params.classif) !== -1) ? OLD_VIEW_URL : NEW_VIEW_URL;
         url += `Classif=${params.classif}`;
         url += params.return_due ? '&return_due=true' : '';
         url += params.id ? `&value_id=${params.id}_Ids&name_id=${params.id}` : '';
