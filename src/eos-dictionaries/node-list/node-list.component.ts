@@ -179,7 +179,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         let url = '../WebRC/AR_EDITOR/AR_EDITOR.aspx#docgrp={{DUE}}';
         url = url.replace('{{DUE}}', node.data.rec['DUE']);
         this._zone.runOutsideAngular(() => {
-            window.open(url, 'addFields', 'width=1050,height=800,resizable=1,status=1,top=20,left=20');
+            window.open(url, 'addFields', 'resizable=1,status=1,top=20,left=20');
         });
     }
 
