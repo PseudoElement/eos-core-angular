@@ -76,12 +76,15 @@ export class NodeActionsComponent implements OnDestroy {
 
     doAction(e: MouseEvent, item: IActionButton, params?: any) {
         // console.log('action', item.type, params);
+        const tooltip_fix = e.currentTarget['disabled'];
+        e.currentTarget['disabled'] = true;
         if (item.enabled) {
             this.action.emit({ action: item.type, params: params });
             this._update();
         } else {
             e.stopPropagation();
         }
+        e.currentTarget['disabled'] = tooltip_fix;
     }
 
     menuMng(e: MouseEvent, enabled: boolean, menu: any) {
@@ -130,7 +133,7 @@ export class NodeActionsComponent implements OnDestroy {
                     _show = this._viewParams.userOrdered && !this._viewParams.searchResults;
                     _enabled = _enabled && this._visibleCount > 1 && this._viewParams.hasMarked;
                     break;
-
+                case E_RECORD_ACTIONS.additionalFields:
                 case E_RECORD_ACTIONS.CloseSelected:
                 case E_RECORD_ACTIONS.OpenSelected:
                 case E_RECORD_ACTIONS.restore:
