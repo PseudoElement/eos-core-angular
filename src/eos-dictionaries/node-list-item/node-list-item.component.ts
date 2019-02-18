@@ -99,8 +99,9 @@ export class NodeListItemComponent implements OnInit, OnChanges {
 
     private openNode() {
         if (/*!this.node.isDeleted && */ this.node.id !== '') {
-            this._dictSrv.openNode(this.node.id);
-            this.mark.emit(true);
+            this._dictSrv.openNode(this.node.id).then( () => {
+                this.mark.emit(true);
+            });
         }
     }
 

@@ -128,7 +128,7 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.moveUp:
                 case E_RECORD_ACTIONS.moveDown:
                     _show = this._viewParams.userOrdered && !this._viewParams.searchResults;
-                    _enabled = _enabled && this._nodeSelected && this._visibleCount > 1;
+                    _enabled = _enabled && this._visibleCount > 1 && this._viewParams.hasMarked;
                     break;
 
                 case E_RECORD_ACTIONS.CloseSelected:
