@@ -1,3 +1,4 @@
+import { RKFilesConInputComponent } from './adv-card/rk-default-values/rk-input-files-con.component';
 import { RKWritesCardComponent } from './adv-card/rk-default-values/rk-default-writes.component';
 import { RKMandatoryCardComponent } from './adv-card/rk-default-values/rk-default-mandatory.component';
 import { SevParticipantCardEditComponent } from './card-views/sev-participant-card-edit.component';
@@ -90,6 +91,7 @@ import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-fi
         RKDefaultValuesCardComponent,
         RKMandatoryCardComponent,
         RKWritesCardComponent,
+        RKFilesConInputComponent,
         RKFilesCardComponent,
         RulesSelectComponent,
         DepartmentsCardEditDepartmentComponent,

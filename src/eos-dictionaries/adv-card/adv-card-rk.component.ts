@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
 import {PipRX} from '../../eos-rest';
-import { AdvCardRKDataCtrl, ACRK_GROUP, DEFAULTS_LIST_NAME } from './adv-card-rk-datactrl';
+import { AdvCardRKDataCtrl, ACRK_GROUP, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME } from './adv-card-rk-datactrl';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
@@ -57,11 +57,13 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
     valuesDG: any;
     fieldsDescrDefault: any;
     inputsDefault: any;
+    newData: any;
     private subscriptions: Subscription[];
 
     // protected apiSrv: PipRX;
     private _node = {};
     private isn_node: number;
+
 
     // private _initialData: any;
 
@@ -87,11 +89,14 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this.dataController = new AdvCardRKDataCtrl(this.apiSrv, this._msgSrv);
         this.fieldsDescrDefault = this.dataController.getDescriptions(ACRK_GROUP.defaultRKValues);
-        // this.valuesDefault = this.dataController.getValues(ACRK_GROUP.defaultRKValues);
 
-        this.dataController.readValues1(this.isn_node).then (values => {
+        this.dataController.readValues(this.isn_node).then (values => {
             this.valuesDG = values[0];
-            this.valuesDefault = this._makeDataObj(this.valuesDG[DEFAULTS_LIST_NAME]);
+            this.valuesDefault = {
+                [DEFAULTS_LIST_NAME]:  this._makeDataObjDef(this.valuesDG[DEFAULTS_LIST_NAME]),
+                [FILE_CONSTRAINT_LIST_NAME]: this._makeDataObjFileCon(this.valuesDG[FILE_CONSTRAINT_LIST_NAME]),
+                };
+            console.log(this.valuesDefault);
             this.dataController.loadDictsOptions(ACRK_GROUP.defaultRKValues, this.valuesDefault, this.updateLinks).then (d => {
                 this.inputsDefault = this.getInputs();
                 this._updateOptions(this.inputsDefault);
@@ -123,7 +128,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
     }
 
     save(): void {
-        this.dataController.save(this.isn_node, this.inputsDefault);
+        this.dataController.save(this.isn_node, this.inputsDefault, this.newData);
 
     }
 
@@ -140,18 +145,19 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
 
     }
 
-    _makeDataObj (data: any) {
-        const res = { rec: {}};
+    _makeDataObjFileCon (data: any): any {
+        return null;
+    }
 
+    _makeDataObjDef (data: any) {
+        const res = { };
         for (let i = 0; i < data.length; i++) {
             const el = data[i];
-            res.rec[el['DEFAULT_ID']] = el['VALUE'];
+            res[el['DEFAULT_ID']] = el['VALUE'];
         }
-
-        // {rec: this.valuesDG[DEFAULTS_LIST_NAME] };
         return res;
     }
-    getInputs() {
+    getInputs(): any {
 
         const i: any = {rec: {}};
         this.fieldsDescrDefault.forEach(element => {
@@ -213,7 +219,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
         }));
     }
 
-    private _changeByPath(path: string, value: any) {
+    private _changeByPath(path: string, value: any): boolean {
         let _value = null;
         if (typeof value === 'boolean') {
             _value = +value;
@@ -226,8 +232,8 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
         } else {
             _value = value;
         }
-        // this.newData = EosUtils.setValueByPath(this.newData, path, _value);
-        // const oldValue = EosUtils.getValueByPath(this.data, path, false);
+        this.newData = EosUtils.setValueByPath(this.newData, path, _value);
+        const oldValue = EosUtils.getValueByPath(this.valuesDefault, path, false);
 
         // if (oldValue !== _value) {
         //     this.data = EosUtils.setValueByPath(this.data, path, _value);
@@ -237,7 +243,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
         //     // console.warn('changed', path, oldValue, 'to', _value, this.data.rec);
         // }
 
-        // return _value !== oldValue;
+        return _value !== oldValue;
     }
 
 
