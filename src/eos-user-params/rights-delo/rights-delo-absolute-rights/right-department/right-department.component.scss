@@ -1,4 +1,17 @@
 .right-dep-list {
+
+    .right-dep-list-content {
+        max-height: calc(100vh - 280px);
+        display: flex;
+        overflow-y: auto;
+        flex-direction: column;
+
+        .list-tree-dep {
+            flex: 1 1 auto;
+            overflow-y: auto;
+        }
+    }
+
     .spiner-wrapper {
         margin-top: 50px;
         display: flex;

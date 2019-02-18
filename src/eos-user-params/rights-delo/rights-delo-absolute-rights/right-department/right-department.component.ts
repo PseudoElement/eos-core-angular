@@ -1,14 +1,14 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { IParamUserCl, INodeDocsTreeCfg } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { USERDEP, DEPARTMENT } from 'eos-rest';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { NodeAbsoluteRight } from '../node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { NodeListDepAbsolute } from './node-list-dep';
 import { RestError } from 'eos-rest/core/rest-error';
 import { OPEN_CLASSIF_DEPARTMENT_FULL } from 'app/consts/query-classif.consts';
+import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 
 @Component({
     selector: 'eos-right-absolute-department',
@@ -23,10 +23,10 @@ export class RightDepertmentComponent implements OnInit {
     userDep: USERDEP[];
     funcNum: number;
     userDepFuncNumber: USERDEP[];
-    listUserDep: NodeListDepAbsolute[] = [];
+    listUserDep: NodeDocsTree[] = [];
     depList: DEPARTMENT[];
     isShell: Boolean = false;
-    selectedDep: NodeListDepAbsolute;
+    selectedDep: NodeDocsTree;
 
     constructor (
         private _msgSrv: EosMessageService,
@@ -38,17 +38,29 @@ export class RightDepertmentComponent implements OnInit {
         this.isLoading = true;
         this.userDep = this.curentUser['USERDEP_List'];
         this.funcNum = +this.selectedNode.key + 1;
+        if (this.selectedNode.isCreate) {
+            this.addDep();
+            this.isLoading = false;
+            return;
+        }
         this.userDepFuncNumber = this.userDep.filter(i => i['FUNC_NUM'] === this.funcNum);
         const str: string[] = this.userDepFuncNumber.map(i => i.DUE);
         this.apiSrv.grtDepartment(str.join('||'))
             .then((data: DEPARTMENT[]) => {
-                this.userDepFuncNumber.forEach((ud: USERDEP) => {
-                    this.listUserDep.push(new NodeListDepAbsolute(ud, data.find((d: DEPARTMENT) => d.DUE === ud.DUE)));
+                data.forEach((dep: DEPARTMENT) => {
+                    const userDep: USERDEP = this.userDepFuncNumber.find((ud: USERDEP) => dep.DUE === ud.DUE);
+                    const cfg: INodeDocsTreeCfg = {
+                        due: userDep.DUE,
+                        label: dep.CLASSIF_NAME,
+                        viewAllowed: false,
+                        data: {
+                            dep: dep,
+                            userDep: userDep,
+                        },
+                    };
+                    this.listUserDep.push(new NodeDocsTree(cfg));
                 });
                 this.isLoading = false;
-                if (this.selectedNode.isCreate) {
-                    this.addDep();
-                }
             })
             .catch(e => {
                 if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
@@ -64,12 +76,8 @@ export class RightDepertmentComponent implements OnInit {
                 }
             });
     }
-    selectNode(dep) {
-        if (this.selectedDep) {
-            this.selectedDep['isSelected'] = false;
-        }
+    selectNode(dep: NodeDocsTree) {
         this.selectedDep = dep;
-        this.selectedDep['isSelected'] = true;
     }
     addDep() {
         this.isShell = true;
@@ -91,7 +99,7 @@ export class RightDepertmentComponent implements OnInit {
                 return;
             }
 
-            const newNodes: NodeListDepAbsolute[] = [];
+            const newNodes: NodeDocsTree[] = [];
             data.forEach((dep: DEPARTMENT) => {
                 const newUserDep: USERDEP = this._userParmSrv.createEntyti<USERDEP>({
                     ISN_LCLASSIF: this._userParmSrv.userContextId,
@@ -101,7 +109,16 @@ export class RightDepertmentComponent implements OnInit {
                     DEEP: 1,
                     ALLOWED: null,
                 }, 'USERDEP');
-                const newNode = new NodeListDepAbsolute(newUserDep, dep, true);
+                const cfg: INodeDocsTreeCfg = {
+                    due: newUserDep.DUE,
+                    label: dep.CLASSIF_NAME,
+                    viewAllowed: false,
+                    data: {
+                        dep: dep,
+                        userDep: newUserDep,
+                    },
+                };
+                const newNode = new NodeDocsTree(cfg);
                 this.curentUser.USERDEP_List.push(newUserDep);
                 this.selectedNode.pushChange({
                     method: 'POST',
@@ -130,21 +147,19 @@ export class RightDepertmentComponent implements OnInit {
     }
     DeleteDep() {
         this.curentUser['USERDEP_List'] = this.curentUser['USERDEP_List'].filter(i => {
-            if (i['DUE'] === this.selectedDep.userDep['DUE']) {
-                return i['FUNC_NUM'] !== this.selectedDep.userDep['FUNC_NUM'];
+            if (i['DUE'] === this.selectedDep.DUE) {
+                return i['FUNC_NUM'] !== this.selectedDep.data.userDep['FUNC_NUM'];
             }
             return true;
         });
-        const i = this.listUserDep.findIndex(n => n === this.selectedDep);
-        this.listUserDep.splice(i, 1);
+        this.listUserDep = this.listUserDep.filter(n => n !== this.selectedDep);
         if (!this.listUserDep.length) {
             this.selectedNode.value = 0;
         }
-        this.selectedDep.createEntity = false;
         this.selectedNode.pushChange({
             method: 'DELETE',
-            due: this.selectedDep.userDep.DUE,
-            data: this.selectedDep.userDep
+            due: this.selectedDep.DUE,
+            data: this.selectedDep.data.userDep
         });
         this.selectedDep = null;
         this.Changed.emit();
@@ -162,8 +177,8 @@ export class RightDepertmentComponent implements OnInit {
         return w;
     }
     private _checkRepeat(arrDep: DEPARTMENT[]) {
-        this.listUserDep.forEach((node: NodeListDepAbsolute) => {
-            const index = arrDep.findIndex(doc => doc.DUE === node.department.DUE);
+        this.listUserDep.forEach((node: NodeDocsTree) => {
+            const index = arrDep.findIndex((doc: DEPARTMENT) => doc.DUE === node.DUE);
             if (index !== -1) {
                 this._msgSrv.addNewMessage({
                     type: 'warning',

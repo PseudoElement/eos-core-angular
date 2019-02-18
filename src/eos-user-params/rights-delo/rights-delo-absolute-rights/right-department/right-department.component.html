@@ -1,27 +1,29 @@
 <div class="right-dep-list">
-    <div *ngIf="!isLoading; else spiner">
-        <button
-            class="btn"
-            tooltip="Добавить должностное лицо/подразделение"
-            placement="bottom"
-            triggers="hover"
-            containerClass="tooltip-info"
-            (click)="addDep()"
-        >
-            <span class="eos-icon eos-icon-plus-blue small"></span>
-        </button>
-        <button
-            class="btn"
-            tooltip="Удалить должностное лицо/подразделение"
-            #itemTooltip= 'bs-tooltip'
-            placement="bottom"
-            triggers="hover"
-            containerClass="tooltip-info"
-            [disabled]="!selectedDep"
-            (click)="itemTooltip.hide(); DeleteDep()"
-        >
-            <span class="eos-icon eos-icon-bin-forever-blue small"></span>
-        </button>
+    <div *ngIf="!isLoading; else spiner" class="right-dep-list-content">
+        <div>
+            <button
+                class="btn"
+                tooltip="Добавить должностное лицо/подразделение"
+                placement="bottom"
+                triggers="hover"
+                containerClass="tooltip-info"
+                (click)="addDep()"
+            >
+                <span class="eos-icon eos-icon-plus-blue small"></span>
+            </button>
+            <button
+                class="btn"
+                tooltip="Удалить должностное лицо/подразделение"
+                #itemTooltip= 'bs-tooltip'
+                placement="bottom"
+                triggers="hover"
+                containerClass="tooltip-info"
+                [disabled]="!selectedDep"
+                (click)="itemTooltip.hide(); DeleteDep()"
+            >
+                <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+            </button>
+        </div>
 
         <div *ngIf="selectedNode && selectedNode.contentProp === 8">
             <label class="checkbox">
@@ -34,10 +36,14 @@
             </label>
         </div>
 
-        <div *ngFor="let dep of listUserDep"
-            (click)="selectNode(dep)"
-            [ngClass]="{'highlighted': dep.isSelected}">
-        {{dep['department'].CLASSIF_NAME}}</div>
+        <div class="list-tree-dep">
+            <eos-list-doc-tree
+                class="tree-classif-node"
+                [listNode]="listUserDep"
+                (select)="selectNode($event)"
+            ></eos-list-doc-tree>
+        </div>
+
     </div>
 </div>
 
