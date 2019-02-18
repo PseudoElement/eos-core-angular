@@ -64,8 +64,12 @@ export class ListDocsTreeComponent implements OnInit, OnChanges {
             });
             index--;
         }
-        parent.addChildren(node);
-        node.parent = parent;
+        if (parent) {
+            parent.addChildren(node);
+            node.parent = parent;
+        } else {
+            this.list.push(node);
+        }
     }
     private _writeLayer(li: NodeDocsTree[], layer: number) {
         li.forEach((node: NodeDocsTree) => {
