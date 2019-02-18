@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, HostListener } from '@angular/core';
 import { IParamUserCl, IInputParamControl, IInputParamControlForIndexRight } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
@@ -114,6 +114,10 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
         ALLOWED: event['allowed']
     };
 
+    if (localStorage.getItem('arrayDataDocumentsForMerge') !== null) {
+        this.arrayDataDocumentsForMerge = JSON.parse(localStorage.getItem('arrayDataDocumentsForMerge'));
+    }
+
     for (let i = 0; i < this.arrayDataDocumentsForMerge.length; i++) {
         if (this.arrayDataDocumentsForMerge[i]['DUE'] === rightDocGroup['DUE'] &&
         this.arrayDataDocumentsForMerge[i]['DUE_CARD'] === rightDocGroup['DUE_CARD'] &&
@@ -131,6 +135,9 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
     if (localStorage.getItem('FuncFileCards') !== null) {
         newDataFromLocalStorageFuncFileCards = JSON.parse(localStorage.getItem('FuncFileCards'));
     }
+    if (localStorage.getItem('arrayDataDocumentsForMergeFirst') !== null) {
+        this.arrayDataDocumentsForMergeFirst = JSON.parse(localStorage.getItem('arrayDataDocumentsForMergeFirst'));
+    }
     if (this.form.controls[item.key].value === false) {
         for (let i = 0; i < this.listAllData.length; i++) {
             if (this.listAllData[i][0]['key'] === item.key) {
@@ -144,7 +151,7 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                             str = this.setCharAt(str, +this.selectedNode2.key, '1');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                            localStorage.removeItem('FuncFileCards');
+                           // localStorage.removeItem('FuncFileCards');
                             localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
@@ -202,7 +209,14 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                 };
                 arrayDoc.push(this._createNode(rightDocGroup, doc));
                 if (this.listAllData[i].length !== 3) {
-                   Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].push(rightDocGroup);
+                   for (let k = 0; k < Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length; k++) {
+                       if (Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][k]['DUE'] === rightDocGroup['DUE'] &&
+                       Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][k]['FUNC_NUM'] === rightDocGroup['FUNC_NUM']) {
+                           break;
+                       } else if ((Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length - 1) === k) {
+                           Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].push(rightDocGroup);
+                       }
+                   }
                    this.listAllData[i].push(arrayDoc);
                    this.listAllData[i].push({openDocumentTree: false});
                    this.arrayDataDocumentsForMergeFirst.push(rightDocGroup);
@@ -223,20 +237,14 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                         str = this.setCharAt(str, +this.selectedNode2.key, '0');
                         Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                         Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                        for (let s = 0; s < Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length; s++) {
-                            if (Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][s]['FUNC_NUM'] === +this.selectedNode2.key + 1) {
-                            }
-                        }
+                        Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'] = [];
                         localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                       } else {
                         str = Array.from(this.userCard)[j][1]['FUNCLIST'];
                         str = this.setCharAt(str, +this.selectedNode2.key, '0');
                         Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                         Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                        for (let s = 0; s < Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length; s++) {
-                        if (Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][s]['FUNC_NUM'] === +this.selectedNode2.key + 1) {
-                        }
-                        }
+                        Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'] = [];
                         localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                       }
                       for (let r = 0; r < this.arrayDataDocumentsForMergeFirst.length; r++) {
@@ -253,8 +261,24 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
         }
     }
 }
-    }
 }
+}
+
+@HostListener('click', ['$event'])
+    onClick(event) {
+        if (localStorage.getItem('FlagToClearData') !== null) {
+            let flagFromLH = JSON.parse(localStorage.getItem('FlagToClearData'));
+            if (flagFromLH) {
+                this.arrayUserCardDocgroupWithCurrentFunclist = [];
+                this.arrayDataDocumentsForMergeFirst = [];
+                this.arrayDataDocumentsForMerge = [];
+                this.arrayDataDocumentsForPost = [];
+                this.arrayDataDocumentsForDelete = [];
+                flagFromLH = false;
+                localStorage.setItem('FlagToClearData', JSON.stringify(false));
+            }
+        }
+    }
 
     openDocumentList(node) {
         node.openDocumentTree = !node.openDocumentTree;
@@ -268,7 +292,15 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
             const newClassif = result_classif !== '' || null || undefined ? result_classif : '0.';
             this._limitservise.getCodeNameDOCGROUP(String(newClassif))
             .then(result => {
-
+                if (this._checkRepeat(result, item)) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: '',
+                        msg: 'Нет документов для добавления'
+                    });
+                    this.isShell = false;
+                    return;
+                }
                 for (let i = 0; i < this.listAllData.length; i++) {
                     if (this.listAllData[i][0]['key'] === item[0]['key']) {
                         for (let j = 0; j < result.length; j++) {
@@ -285,6 +317,7 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                     }
                     }
                 }
+                this.arrayDataDocumentsForPost = [];
             }).then(() => {
                 item[2].openDocumentTree = !item[2].openDocumentTree;
                 setTimeout(() => {
@@ -299,22 +332,41 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
 
     removeDocuments() {
      let tmp;
+     let flagTmp = false;
         if (this.curentNode.DUE !== '0.') {
             for (let i = 0; i < this.listAllData.length; i++) {
                 if (this.listAllData[i][1] !== (null || undefined)) {
                     for (let j = 0; j < this.listAllData[i][1].length; j++) {
                         if (this.listAllData[i][1][j] === this.curentNode) {
-                            tmp = {
-                            ISN_LCLASSIF: this.allData[0]['ISN_LCLASSIF'],
-                            FUNC_NUM: +this.selectedNode2.key + 1, // +1
-                            DUE_CARD: this.listAllData[i][0]['key'],
-                            DUE: this.curentNode['DUE'],
-                            ALLOWED: 0
-                            };
-                            this.arrayDataDocumentsForDelete.push(tmp);
-                            localStorage.setItem('arrayDataDocumentsForDelete', JSON.stringify(this.arrayDataDocumentsForDelete));
                             this.listAllData[i][1].splice(j, 1);
                             this.listAllData[i][2].openDocumentTree = !this.listAllData[i][2].openDocumentTree;
+                            for (let a = 0; a < this.arrayDataDocumentsForPost.length; a++) {
+                                if (this.arrayDataDocumentsForPost[a]['DUE'] === this.curentNode['DUE']) {
+                                    this.arrayDataDocumentsForPost.splice(a, 1);
+                                    flagTmp = true;
+                                    localStorage.setItem('ArrayDataDocumentsForPost', JSON.stringify(this.arrayDataDocumentsForPost));
+                                }
+                            }
+                            for (let a = 0; a < this.arrayDataDocumentsForMerge.length; a++) {
+                                if (this.arrayDataDocumentsForMerge[a]['DUE'] === this.curentNode['DUE']) {
+                                    this.arrayDataDocumentsForMerge.splice(a, 1);
+                                    flagTmp = true;
+                                    localStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
+                                }
+                            }
+                            if (!flagTmp) {
+                                tmp = {
+                                    ISN_LCLASSIF: this.allData[0]['ISN_LCLASSIF'],
+                                    FUNC_NUM: +this.selectedNode2.key + 1, // +1
+                                    DUE_CARD: this.listAllData[i][0]['key'],
+                                    DUE: this.curentNode['DUE'],
+                                    ALLOWED: 0
+                                    };
+                                    this.arrayDataDocumentsForDelete.push(tmp);
+                                    localStorage.setItem('arrayDataDocumentsForDelete', JSON.stringify(this.arrayDataDocumentsForDelete));
+                                    this.arrayDataDocumentsForDelete = [];
+                                    flagTmp = false;
+                            }
                             setTimeout(() => {
                                 this.listAllData[i][2].openDocumentTree = !this.listAllData[i][2].openDocumentTree;
                             }, 1);
@@ -336,6 +388,7 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                 card['department'] = d;
                 this.allData.push(card);
             });
+         //   console.log(this.allData);
             for (let i = 0; i < this.allData.length; i++) {
                 this.listCards.push({
                     controlType: E_FIELD_TYPE.boolean,
@@ -390,6 +443,7 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                             })
                             .then(() => {
                                 if (j === (this.allData[i]['USER_CARD_DOCGROUP_List'].length - 1) && this.list.length) {
+                                 //   console.log(this.list);
                                     this.listAllData[i].push(this.list);
                                     this.listAllData[i].push({openDocumentTree: false});
                                     this.list = [];
@@ -424,6 +478,15 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
     }
 
     private _createNode(rDoc, doc: DOCGROUP_CL): NodeDocsTree {
+      /*  const cfg: INodeDocsTreeCfg = {
+            due: newUserDep.DUE,
+            label: dep.CLASSIF_NAME,
+            viewAllowed: false,
+            data: {
+                dep: dep,
+                userDep: newUserDep,
+            },
+        };*/
         return new NodeDocsTree(
             doc.DUE,
             doc.CLASSIF_NAME,
@@ -433,5 +496,28 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                 docGroup: doc
             }
         );
+    }
+
+    private _checkRepeat(arrDoc, item): boolean {
+        for (let i = 0; i < this.listAllData.length; i++) {
+            if (this.listAllData[i][1] !== undefined && this.listAllData[i][0]['key'] === item[0]['key']) {
+            for (let j = 0; j < this.listAllData[i][1].length; j++) {
+                const index = arrDoc.findIndex(doc => doc['DUE'] === this.listAllData[i][1][j]['DUE']);
+
+                if (index !== -1) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: '',
+                        msg: `Документ \'${arrDoc[index]['CLASSIF_NAME']}\' не будет добавлен так как он уже существует`
+                    });
+                    arrDoc.splice(index, 1);
+                }
+            }
+        }
+    }
+            if (arrDoc.length) {
+                return false;
+            }
+        return true;
     }
 }

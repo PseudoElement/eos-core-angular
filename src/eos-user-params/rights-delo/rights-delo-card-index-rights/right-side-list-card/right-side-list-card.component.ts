@@ -11,7 +11,7 @@ import { DOCUMENT_GROUPS } from '../../shared-rights-delo/consts/card-index-righ
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { FormGroup } from '@angular/forms';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
-import { IChengeItemInFileCard } from '../../shared-rights-delo/interfaces/right-delo.intefaces';
+// import { IChengeItemInFileCard } from '../../shared-rights-delo/interfaces/right-delo.intefaces';
 
 @Component({
     selector: 'eos-right-side-list-card',
@@ -26,22 +26,14 @@ export class RightSideListCardComponent implements OnInit {
     arrayNadzorRight: string[];
     list: NodeDocsTree[] = [];
     curentSelectedNode: NodeDocsTree;
-   // curentNode: NodeDocsTree;
     userCard: Map<string, USERCARD>;
     isShell: Boolean = false;
     listCards: IInputParamControl[] = DOCUMENT_GROUPS;
-   // listCards: NodeRightInFileCard[] = [];
     fields: IInputParamControlForIndexRight[];
     inputs;
     form: FormGroup;
     allData = [];
     listAllData = [];
-    get aaa () {
-        return Array.from(this.userCard);
-    }
-    get change (): IChengeItemInFileCard[] {
-        return this._change;
-    }
     private quaryDepartment = {
         DEPARTMENT: {
             criteries: {
@@ -49,7 +41,6 @@ export class RightSideListCardComponent implements OnInit {
             }
         }
     };
-    private _change: IChengeItemInFileCard[] = [];
     constructor(
         private apiSrv: UserParamApiSrv,
         private _userParamsSetSrv: UserParamsService,
@@ -63,8 +54,6 @@ export class RightSideListCardComponent implements OnInit {
             this.userCard.set(card['DUE'], card);
             due.push(card['DUE']);
         });
-       // this.curentUser['FUNCLIST'] = this.curentUser['FUNCLIST'] || '0'.repeat(21);
-        console.log(this.curentUser);
         this.quaryDepartment.DEPARTMENT.criteries['DUE'] = due.join('||');
     }
 
@@ -90,16 +79,6 @@ export class RightSideListCardComponent implements OnInit {
     checkedNode(event, item) {
         let str;
         let newDataFromLocalStorageFuncFileCards = null;
-      //  const newArray = [];
- /*  if (node.type === 'click') {
-        if (this.form.controls[item.key].value === false) {
-            console.log(node);
-            console.log(item);
-        } else {
-            node.data['rightDocGroup']['ALLOWED'] = node.allowed;
-       }
-        this.Changed.emit();
-   }*/
    if (event.target.tagName === 'LABEL') {} else {
     if (localStorage.getItem('FuncFileCards') !== null) {
         newDataFromLocalStorageFuncFileCards = JSON.parse(localStorage.getItem('FuncFileCards'));
@@ -109,7 +88,6 @@ export class RightSideListCardComponent implements OnInit {
             if (this.listAllData[i][0]['key'] === item.key) {
                 for (let j = 0; j < Array.from(this.userCard).length; j++) {
                     if (this.listAllData[i][0]['key'] === Array.from(this.userCard)[j][0]) {
-                        console.log('ListCard');
                         if (newDataFromLocalStorageFuncFileCards !== null) {
                             str = newDataFromLocalStorageFuncFileCards[j][1]['FUNCLIST'];
                             if (+this.selectedNode2.key > 18 && str.length === 18) {
@@ -118,7 +96,7 @@ export class RightSideListCardComponent implements OnInit {
                             str = this.setCharAt(str, +this.selectedNode2.key, '1');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                            localStorage.removeItem('FuncFileCards');
+                           // localStorage.removeItem('FuncFileCards');
                             localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
@@ -145,7 +123,7 @@ export class RightSideListCardComponent implements OnInit {
                             str = this.setCharAt(str, +this.selectedNode2.key, '0');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                            localStorage.removeItem('FuncFileCards');
+                          //  localStorage.removeItem('FuncFileCards');
                             localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
@@ -165,7 +143,6 @@ export class RightSideListCardComponent implements OnInit {
 
 createObjRequestForAttach() {
     const req = [];
-    console.log(Array.from(this.userCard));
     for (let i = 0; i < Array.from(this.userCard).length; i++) {
         const tmp = this.userCard.get(Array.from(this.userCard)[i][0]);
          if (Array.from(this.userCard)[i][1]['FLAG_NEW_FUNCLIST'] === true ||
@@ -184,7 +161,6 @@ createObjRequestForAttach() {
     }
   }
 
-console.log(req);
     return req;
 }
 
@@ -195,7 +171,6 @@ console.log(req);
     private _init() {
         this.isLoading = true;
         this.listCards = [];
-      //  const str = [];
         this.apiSrv.getData(this.quaryDepartment)
         .then(data => {
             data.forEach((d: DEPARTMENT) => {

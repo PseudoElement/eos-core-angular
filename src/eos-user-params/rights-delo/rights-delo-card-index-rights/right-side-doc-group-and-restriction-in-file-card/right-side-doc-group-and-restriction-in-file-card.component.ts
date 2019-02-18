@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, HostListener } from '@angular/core';
 import { IParamUserCl, IInputParamControl, IInputParamControlForIndexRight } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
@@ -112,6 +112,10 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
       ALLOWED: event['allowed']
   };
 
+  if (localStorage.getItem('arrayDataDocumentsForMerge') !== null) {
+    this.arrayDataDocumentsForMerge = JSON.parse(localStorage.getItem('arrayDataDocumentsForMerge'));
+}
+
   for (let i = 0; i < this.arrayDataDocumentsForMerge.length; i++) {
     if (this.arrayDataDocumentsForMerge[i]['DUE'] === rightDocGroup['DUE'] &&
     this.arrayDataDocumentsForMerge[i]['DUE_CARD'] === rightDocGroup['DUE_CARD'] &&
@@ -127,6 +131,9 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
    if (event.target.tagName === 'LABEL') {} else {
     if (localStorage.getItem('FuncFileCards') !== null) {
         newDataFromLocalStorageFuncFileCards = JSON.parse(localStorage.getItem('FuncFileCards'));
+    }
+    if (localStorage.getItem('arrayDataDocumentsForMergeFirst') !== null) {
+        this.arrayDataDocumentsForMergeFirst = JSON.parse(localStorage.getItem('arrayDataDocumentsForMergeFirst'));
     }
 
    if (item.label !== 'Ограничить картотекой регистрации') {
@@ -148,7 +155,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                             }
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                            localStorage.removeItem('FuncFileCards');
+                          //  localStorage.removeItem('FuncFileCards');
                             localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
@@ -210,7 +217,14 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                 };
                 arrayDoc.push(this._createNode(rightDocGroup, doc));
                 if (this.listAllData[i].length !== 3) {
-                    Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].push(rightDocGroup);
+                    for (let k = 0; k < Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length; k++) {
+                        if (Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][k]['DUE'] === rightDocGroup['DUE'] &&
+                        Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][k]['FUNC_NUM'] === rightDocGroup['FUNC_NUM']) {
+                            break;
+                        } else if ((Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length - 1) === k) {
+                            Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].push(rightDocGroup);
+                        }
+                    }
                     this.listAllData[i].push(arrayDoc);
                     this.listAllData[i].push({openDocumentTree: false});
                     this.arrayDataDocumentsForMergeFirst.push(rightDocGroup);
@@ -256,7 +270,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                           }
                     }
                 }
-              this.listAllData[i].splice(1, 2);
+              this.listAllData[i].splice(2, 2);
             }
         }
     }
@@ -275,7 +289,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                             str = this.setCharAt(str, +this.selectedNode2.key, '2');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                            localStorage.removeItem('FuncFileCards');
+                           // localStorage.removeItem('FuncFileCards');
                             localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
@@ -333,9 +347,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                 };
                 arrayDoc.push(this._createNode(rightDocGroup, doc));
                 if (this.listAllData[i].length !== 3) {
-                    Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].push(rightDocGroup);
-                    this.listAllData[i].push(arrayDoc);
-                    this.listAllData[i].push({openDocumentTree: false});
                     this.arrayDataDocumentsForMergeFirst.push(rightDocGroup);
                     localStorage.setItem('arrayDataDocumentsForMergeFirst', JSON.stringify(this.arrayDataDocumentsForMergeFirst));
                 }
@@ -354,21 +365,13 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                             str = this.setCharAt(str, +this.selectedNode2.key, '1');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                            for (let s = 0; s < Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length; s++) {
-                                if (Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][s]['FUNC_NUM'] === +this.selectedNode2.key + 1) {
-                                }
-                            }
-                            localStorage.removeItem('FuncFileCards');
+                          //  localStorage.removeItem('FuncFileCards');
                             localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
                             str = this.setCharAt(str, +this.selectedNode2.key, '1');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                            for (let s = 0; s < Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length; s++) {
-                                if (Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][s]['FUNC_NUM'] === +this.selectedNode2.key + 1) {
-                                }
-                                }
                             localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           }
                     }
@@ -380,6 +383,22 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
 }
 }
 }
+
+@HostListener('click', ['$event'])
+    onClick(event) {
+        if (localStorage.getItem('FlagToClearData') !== null) {
+            let flagFromLH = JSON.parse(localStorage.getItem('FlagToClearData'));
+            if (flagFromLH) {
+                this.arrayUserCardDocgroupWithCurrentFunclist = [];
+                this.arrayDataDocumentsForMergeFirst = [];
+                this.arrayDataDocumentsForMerge = [];
+                this.arrayDataDocumentsForPost = [];
+                this.arrayDataDocumentsForDelete = [];
+                flagFromLH = false;
+                localStorage.setItem('FlagToClearData', JSON.stringify(false));
+            }
+        }
+    }
 
     openDocumentList(node) {
         node.openDocumentTree = !node.openDocumentTree;
@@ -393,6 +412,18 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
             const newClassif = result_classif !== '' || null || undefined ? result_classif : '0.';
             this._limitservise.getCodeNameDOCGROUP(String(newClassif))
             .then(result => {
+                if (this._checkRepeat(result, item)) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: '',
+                        msg: 'Нет документов для добавления'
+                    });
+                    this.isShell = false;
+                    return;
+                }
+                if (localStorage.getItem('ArrayDataDocumentsForPost') !== null) {
+                    this.arrayDataDocumentsForPost = JSON.parse(localStorage.getItem('ArrayDataDocumentsForPost'));
+                }
                 for (let i = 0; i < this.listAllData.length; i++) {
                     if (this.listAllData[i][0]['key'] === item[0]['key']) {
                         for (let j = 0; j < result.length; j++) {
@@ -409,6 +440,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                     }
                     }
                 }
+              //  this.arrayDataDocumentsForPost = [];
             }).then(() => {
                 item[3].openDocumentTree = !item[3].openDocumentTree;
                 setTimeout(() => {
@@ -423,24 +455,47 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
 
     removeDocuments() {
         let tmp;
+        let flagTmp = false;
+      //  console.log(this.curentNode);
         if (this.curentNode.DUE !== '0.') {
+          //  console.log(this.listAllData);
             for (let i = 0; i < this.listAllData.length; i++) {
-                if (this.listAllData[i][1] !== (null || undefined)) {
-                    for (let j = 0; j < this.listAllData[i][1].length; j++) {
-                        if (this.listAllData[i][1][j] === this.curentNode) {
-                            tmp = {
-                                ISN_LCLASSIF: this.allData[0]['ISN_LCLASSIF'],
-                                FUNC_NUM: +this.selectedNode2.key + 1, // +1
-                                DUE_CARD: this.listAllData[i][0]['key'],
-                                DUE: this.curentNode['DUE'],
-                                ALLOWED: 0
-                                };
-                                this.arrayDataDocumentsForDelete.push(tmp);
-                                localStorage.setItem('arrayDataDocumentsForDelete', JSON.stringify(this.arrayDataDocumentsForDelete));
-                            this.listAllData[i][1].splice(j, 1);
-                            this.listAllData[i][2].openDocumentTree = !this.listAllData[i][2].openDocumentTree;
+              //  console.log(this.listAllData[i][2]);
+                if (this.listAllData[i][2] !== (null || undefined)) {
+                    for (let j = 0; j < this.listAllData[i][2].length; j++) {
+                     //   console.log(this.listAllData[i][2][j]);
+                        if (this.listAllData[i][2][j] === this.curentNode) {
+                            this.listAllData[i][2].splice(j, 1);
+                            this.listAllData[i][3].openDocumentTree = !this.listAllData[i][3].openDocumentTree;
+                            for (let a = 0; a < this.arrayDataDocumentsForPost.length; a++) {
+                                if (this.arrayDataDocumentsForPost[a]['DUE'] === this.curentNode['DUE']) {
+                                    this.arrayDataDocumentsForPost.splice(a, 1);
+                                    flagTmp = true;
+                                    localStorage.setItem('ArrayDataDocumentsForPost', JSON.stringify(this.arrayDataDocumentsForPost));
+                                }
+                            }
+                            for (let a = 0; a < this.arrayDataDocumentsForMerge.length; a++) {
+                                if (this.arrayDataDocumentsForMerge[a]['DUE'] === this.curentNode['DUE']) {
+                                    this.arrayDataDocumentsForMerge.splice(a, 1);
+                                    flagTmp = true;
+                                    localStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
+                                }
+                            }
+                            if (!flagTmp) {
+                                tmp = {
+                                    ISN_LCLASSIF: this.allData[0]['ISN_LCLASSIF'],
+                                    FUNC_NUM: +this.selectedNode2.key + 1, // +1
+                                    DUE_CARD: this.listAllData[i][0]['key'],
+                                    DUE: this.curentNode['DUE'],
+                                    ALLOWED: 0
+                                    };
+                                    this.arrayDataDocumentsForDelete.push(tmp);
+                                    localStorage.setItem('arrayDataDocumentsForDelete', JSON.stringify(this.arrayDataDocumentsForDelete));
+                                    this.arrayDataDocumentsForDelete = [];
+                                    flagTmp = false;
+                            }
                             setTimeout(() => {
-                                this.listAllData[i][2].openDocumentTree = !this.listAllData[i][2].openDocumentTree;
+                                this.listAllData[i][3].openDocumentTree = !this.listAllData[i][3].openDocumentTree;
                             }, 1);
                         }
                     }
@@ -568,5 +623,29 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                 docGroup: doc
             }
         );
+    }
+
+    private _checkRepeat(arrDoc, item): boolean {
+        for (let i = 0; i < this.listAllData.length; i++) {
+            if (this.listAllData[i][2] !== undefined && this.listAllData[i][0]['key'] === item[0]['key']) {
+            for (let j = 0; j < this.listAllData[i][2].length; j++) {
+
+                const index = arrDoc.findIndex(doc => doc['DUE'] === this.listAllData[i][2][j]['DUE']);
+
+                if (index !== -1) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: '',
+                        msg: `Документ \'${arrDoc[index]['CLASSIF_NAME']}\' не будет добавлен так как он уже существует`
+                    });
+                    arrDoc.splice(index, 1);
+            }
+            }
+        }
+    }
+            if (arrDoc.length) {
+                return false;
+            }
+        return true;
     }
 }

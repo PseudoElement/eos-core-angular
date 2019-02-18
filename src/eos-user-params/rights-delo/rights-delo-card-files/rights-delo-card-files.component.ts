@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, Injector, OnInit, Output, EventEmitter } from '@angular/core';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { BaseRightsDeloSrv } from '../shared-rights-delo/services/base-rights-delo.service';
 import { CARD_FILES_USER } from '../shared-rights-delo/consts/card-files.consts';
@@ -500,6 +500,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         this.newDataWhenChanging(1);
         const req = [];
         const userId = this._userParamsSetSrv.userContextId;
+        console.log(this.arrayForDataFileCardCabinet);
         for (let a = 0; a < this.allData.length; a++) {
         for (let i = 0; i < this.arrayForDataFileCardCabinet.length; i++) {
                 if (this.allData[a]['DUE'] === this.arrayForDataFileCardCabinet[i]['DEPARTMENT_DUE']) {
@@ -548,25 +549,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         this.newDataCard = [];
         return req;
     }
-   /* createObjRequestForMainCabinet() {
-        const req = [];
-        const userId = this._userParamsSetSrv.userContextId;
-
-        req.push({
-            method: 'MERGE',
-            requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${this.allData[a]['DUE']}\')/USER_CABINET_List(\'${this.arrayUpdateData[i]['ISN_CABINET']} ${userId}\')`,
-            data: {
-                HOME_CABINET: `${this.mainCheckbox[Object.keys(this.mainCheckbox)[0]]}`
-            }
-        });
-        req.push({
-            method: 'MERGE',
-            requestUri: `USER_CL(${userId})/USERCARD_List(\'${userId} ${this.allData[a]['DUE']}\')/USER_CABINET_List(\'${this.arrayUpdateData[i]['ISN_CABINET']} ${userId}\')`,
-            data: {
-                HOME_CABINET: `${this.oldMainCheckbox[Object.keys(this.oldMainCheckbox)[0]]}`
-            }
-        });
-    }*/
     createObjRequestForAll() {
         let newReq;
         if (this.arrayForDataFileCardCabinet.length) {
@@ -632,146 +614,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         }
         this.btnDisabled = false;
     }
-    @HostListener('click', ['$event'])
-    onClick(event) {
-     //   console.log(event);
-     //   console.log(this.arrayWithOldMainCabinet);
-    //    console.log(this.arrayWithNewMainCabinet);
-        if (event.target.id === 'rec.SELECT_FOR_CABINETS_NAME') {
-            let temporaryArray = [];
-            let increment = 1;
-            const flagForRepeat = true;
-           /* for (let j = 0; j < this.allDataForCurrentCabinet.length; j++) {
-                for (let e = 0; e < this.arrayWithOldMainCabinet.length; e++) {
-                    if (this.arrayWithOldMainCabinet[e][0] === this.allDataForCurrentCabinet[j]['ISN_CABINET'] &&
-                    this.arrayWithOldMainCabinet[e][1] === this.allDataForCurrentCabinet[j]['DEPARTMENT_DUE']) {
-                        console.log('Paris');
-                        flagForRepeat = false;
-                    }
-                }
-            }*/
-         //   console.log(this.arrayForCurrentCabinets);
-            console.log(this.allDataForCurrentCabinet);
-        //    console.log(this.allDataForCurrentUsercard['USER_CABINET_List']);
-            if (flagForRepeat) {
-            loop1:
-            for (let i = 0; i < this.arrayForCurrentCabinets.length; i++) {
-            for (let j = 0; j < this.allDataForCurrentCabinet.length; j++) {
-                if (this.arrayForCurrentCabinets[i][1] === this.allDataForCurrentCabinet[j]['ISN_CABINET'] &&
-                    this.arrayForCurrentCabinets[i][2] === this.allDataForCurrentCabinet[j]['DEPARTMENT_DUE']) {
-                        if (this.allDataForCurrentCabinet[j]['HOME_CABINET'] === 1) {
-                            while (true) {
-                                if (event.target[increment].innerHTML === this.arrayForCurrentCabinets[i][0]) {
-                                    this.currentEventSelectCabinet = event;
-                                    this.currentIncrementForEventSelectCabinet = increment;
-                                      event.target[increment]['style']['fontWeight'] = 'bold';
-                                    //  console.log(this.allDataForCurrentCabinet[j]['ISN_CABINET']);
-                                   //   console.log(this.arrayForCurrentCabinets[i][1]);
-                                      console.log(event);
-                                       /*  if (this.oldIncrementForMainCabinet !== undefined) {
-                                             event.target[this.oldIncrementForMainCabinet]['style']['fontWeight'] = 'normal';
-                                         } */
-                                         temporaryArray.push(this.arrayForCurrentCabinets[i][1]);
-                                         temporaryArray.push(this.arrayForCurrentCabinets[i][2]);
-                                         temporaryArray.push(increment);
-                                         this.arrayWithOldMainCabinet.push(temporaryArray);
-                                       //  this.oldIncrementForMainCabinet = increment;
-                                         temporaryArray = [];
-                                         this.subscribeChangeForm();
-                                    break loop1;
-                                } else {
-                                    increment++;
-                                }
-                            }
-                        }
-                    }
-            }
-        }
-    }
-        }
-    }
-    choosingMainCabinet(event) {
-        const element = document.getElementsByClassName('user-input-main-cabinet')[0];
-        let temporaryArray = [];
-        let incrementForLoop = 1;
-        // let tmp;
-        if (element) {
-            element.setAttribute('style', 'font-weight: bold');
-
-           // console.log(this.dataForCurrentCabinet);
-
-            for (let i = 0; i < this.arrayForCurrentCabinets.length; i++) {
-                for (let j = 0; j < this.allDataForCurrentCabinet.length; j++) {
-                    if (this.arrayForCurrentCabinets[i][1] === this.allDataForCurrentCabinet[j]['ISN_CABINET'] &&
-                        this.arrayForCurrentCabinets[i][2] === this.allDataForCurrentCabinet[j]['DEPARTMENT_DUE'] &&
-                        this.arrayForCurrentCabinets[i][0] === this.dataForCurrentCabinet) {
-                            temporaryArray.push(this.arrayForCurrentCabinets[i][1]);
-                            temporaryArray.push(this.arrayForCurrentCabinets[i][2]);
-                            this.arrayWithNewMainCabinet.push(temporaryArray);
-                            this.allDataForCurrentCabinet[j]['HOME_CABINET'] = 1;
-                            while (true) {
-                                if (this.currentEventSelectCabinet.target[incrementForLoop].innerHTML === this.dataForCurrentCabinet) {
-                                    this.currentEventSelectCabinet.target[incrementForLoop]['style']['fontWeight'] = 'bold';
-                                   // this.currentIndexMainCabinet = incrementForLoop;
-                                    break;
-                                } else {
-                                    incrementForLoop++;
-                                }
-                            }
-                            this.currentEventSelectCabinet.target[this.currentIncrementForEventSelectCabinet]['style']['fontWeight'] = 'normal';
-                            console.log(this.currentIncrementForEventSelectCabinet);
-                          //  console.log(this.arrayWithOldMainCabinet);
-                         //   console.log(this.allDataForCurrentCabinet[j]);
-                           /* for (let u = 0; u < this.arrayWithOldMainCabinet.length; u++) {
-                                if (this.arrayWithOldMainCabinet[u][0] === this.allDataForCurrentCabinet[j]['ISN_CABINET'] &&
-                                this.arrayWithOldMainCabinet[u][1] === this.allDataForCurrentCabinet[j]['DEPARTMENT_DUE']) {
-                                    console.log(this.arrayWithOldMainCabinet[u][2]);
-                            this.currentEventSelectCabinet.target[this.arrayWithOldMainCabinet[u][2]]['style']['fontWeight'] = 'normal';
-                                }
-                            }*/
-                          //  console.log(this.currentEventSelectCabinet);
-                          //  console.log(this.currentIncrementForEventSelectCabinet);
-                          /*  tmp = {
-                                CompositePrimaryKey: this.allDataForCurrentCabinet[j]['CompositePrimaryKey'],
-                                DEPARTMENT_DUE: this.allDataForCurrentCabinet[j]['DEPARTMENT_DUE'],
-                                FOLDERS_AVAILABLE: this.allDataForCurrentCabinet[j]['FOLDERS_AVAILABLE'],
-                                HIDE_CONF_RESOL: this.allDataForCurrentCabinet[j]['HIDE_CONF_RESOL'],
-                                HIDE_INACCESSIBLE: this.allDataForCurrentCabinet[j]['HIDE_INACCESSIBLE'],
-                                HIDE_INACCESSIBLE_PRJ: this.allDataForCurrentCabinet[j]['HIDE_INACCESSIBLE_PRJ'],
-                                HOME_CABINET: 1,
-                                ISN_CABINET: this.allDataForCurrentCabinet[j]['ISN_CABINET'],
-                                ISN_LCLASSIF: this.allDataForCurrentCabinet[j]['ISN_LCLASSIF'],
-                                IS_ASSISTANT: this.allDataForCurrentCabinet[j]['IS_ASSISTANT'],
-                                ORDER_WORK: this.allDataForCurrentCabinet[j]['ORDER_WORK']
-                            };*/
-                        /*  for (let r = 0; r < this.allData.length; r++) {
-                                if (this.allData[r]['USER_CABINET_List'].length) {
-                                    for (let q = 0; q < this.allData[r]['USER_CABINET_List'].length; q++) {
-                                       if (this.allData[r]['USER_CABINET_List'][q]['ISN_CABINET'] === this.arrayForCurrentCabinets[i][1] &&
-                                        this.allData[r]['USER_CABINET_List'][q]['DEPARTMENT_DUE'] === this.arrayForCurrentCabinets[i][2]) {
-                                            this.allData[r]['USER_CABINET_List'][q]['HOME_CABINET'] = 1;
-                                          // this.allData[r]['USER_CABINET_List'].splice(q, 1);
-                                          // this.allData[r]['USER_CABINET_List'].push(tmp);
-                                        }
-                                    }
-                                }
-                          } */
-                           // this.allDataForCurrentCabinet.splice(j, 1);
-                           // this.allDataForCurrentCabinet.push(tmp);
-                            for (let t = 0; t < this.arrayWithOldMainCabinet.length; t++) {
-                                if (this.arrayWithOldMainCabinet[t][0] === this.allDataForCurrentCabinet[j]['ISN_CABINET'] &&
-                                this.arrayWithOldMainCabinet[t][1] === this.allDataForCurrentCabinet[j]['DEPARTMENT_DUE']) {
-                                    this.allDataForCurrentCabinet[j]['HOME_CABINET'] = 0;
-                                }
-                            }
-                            temporaryArray = [];
-                        }
-                }
-            }
-        }
-      //  console.log(event);
-      //  console.log(element);
-    }
     updateOldMainCheckbox(index) {
         this.oldMainCheckbox = {};
         this.oldMainCheckbox[this.fieldKeysforCardFiles[index][0]] = 0;
@@ -816,12 +658,10 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             }
         };
         const selectForCabinetsName = CARD_FILES_USER.fields.find(elem => elem.key === 'SELECT_FOR_CABINETS_NAME');
-     //   console.log(selectForCabinetsName);
         selectForCabinetsName['options'] = [];
 
         this.servApi.getData(quareCabinetDepartment).then(dataCabinetDepartment => {
             dataCabinetDepartmentForDefault = dataCabinetDepartment;
-         //   console.log(dataCabinetDepartment);
         if (!this.flagNoCardIndexSelected) {
             if (dataCabinetDepartment.length > 0) {
                 for (let j = 0; j < dataCabinetDepartment.length; j++) {
@@ -847,8 +687,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             this.flagCurrentDataCabinetDepartment = false;
         }
         }).then(() => {
-// console.log(selectForCabinetsName);
-           // selectForCabinetsName['options'][0].setAttribute('style', 'font-weight: bold');
            this.init();
         }).then(() => {
             if (this.flagCurrentDataCabinetDepartment) {
@@ -861,7 +699,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         });
     }
     selectOnClick(event, dataAtTheStart) {
-    //   console.log(event);
       if (dataAtTheStart !== null) {
         this.newDataWhenChanging(2);
     setTimeout(() => { // For a while
@@ -879,19 +716,17 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         }
     }, 500);
       } else {
-        const element = document.getElementsByClassName('user-input-main-cabinet')[0];
+      /*  const element = document.getElementsByClassName('user-input-main-cabinet')[0];
 
         if (this.currentEventSelectCabinet.target[this.currentIncrementForEventSelectCabinet].innerHTML !== event.srcElement[event.srcElement.selectedIndex].innerHTML) {
             element.setAttribute('style', 'font-weight: normal');
         } else {
             element.setAttribute('style', 'font-weight: bold');
-        }
+        } */
           // event.target.selectedOptions['0']['innerHTML'] //For Chrome, in IE not working
         this.newDataWhenChanging(1);
       if (this.allDataForCurrentUsercard['USER_CABINET_List'].length > 0) {
           this.dataForCurrentCabinet = event.srcElement[event.srcElement.selectedIndex].innerHTML;
-        //  event.target[3]['style']['fontWeight'] = 'bold';
-       //   console.log(this.allDataForCurrentUsercard);
        loop1:
         for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
             for (let z = 0; z < this.arrayForCurrentCabinets.length; z++) {
@@ -940,6 +775,7 @@ this.startEventCabinet = event;
             return data.split('|');
         })
         .then(data => {
+            console.log(data);
             if (this._checkRepeat(data)) {
                 this._msgSrv.addNewMessage({
                     type: 'warning',
@@ -991,9 +827,11 @@ this.startEventCabinet = event;
                 }
             };
 
+            console.log(quaryCabinetData);
         this.servApi.getData(quaryCabinetData)
         .then(data3 => {
          cabinetDataset = [];
+         console.log(data3);
             for (let t = 0; t < data3.length; t++) {
                 currentCabinet = {
                     CompositePrimaryKey: '' + data3[t]['ISN_CABINET'] + ' ' + userId,

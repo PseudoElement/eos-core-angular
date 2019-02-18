@@ -18,10 +18,18 @@
             display: inline-block;
         }
 
+         .restrict-registration-filing {
+            width: 97.35%;
+            margin: 0 0 0 5px !important;
+            border-left: 1px solid #e6e6e6;
+            border-right: 1px solid #e6e6e6;
+            padding-left: 5px;
+        }
+
         .content-classif-node {
 
             .buttons-classif-node {
-                padding-left: 10px;
+                padding-left: 16px;
                 background: $light-grey-1;
                 border: 1px solid $border-color-main-theme;
                 margin: 0 5px;
