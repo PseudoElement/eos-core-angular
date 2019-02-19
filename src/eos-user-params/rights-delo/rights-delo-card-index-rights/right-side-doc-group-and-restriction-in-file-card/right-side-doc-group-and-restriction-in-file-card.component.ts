@@ -393,6 +393,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                 this.arrayDataDocumentsForMergeFirst = [];
                 this.arrayDataDocumentsForMerge = [];
                 this.arrayDataDocumentsForPost = [];
+                console.log(this.arrayDataDocumentsForDelete);
                 this.arrayDataDocumentsForDelete = [];
                 flagFromLH = false;
                 sessionStorage.setItem('FlagToClearData', JSON.stringify(false));
@@ -492,7 +493,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                                     };
                                     this.arrayDataDocumentsForDelete.push(tmp);
                                     sessionStorage.setItem('arrayDataDocumentsForDelete', JSON.stringify(this.arrayDataDocumentsForDelete));
-                                    this.arrayDataDocumentsForDelete = [];
                                     flagTmp = false;
                             }
                             setTimeout(() => {

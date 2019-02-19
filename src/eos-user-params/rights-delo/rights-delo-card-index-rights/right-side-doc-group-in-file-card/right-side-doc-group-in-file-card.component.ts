@@ -142,6 +142,7 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
         this.arrayDataDocumentsForMergeFirst = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForMergeFirst'));
     }
     if (this.form.controls[item.key].value === false) {
+        console.log(this.listAllData);
         for (let i = 0; i < this.listAllData.length; i++) {
             if (this.listAllData[i][0]['key'] === item.key) {
                 for (let j = 0; j < Array.from(this.userCard).length; j++) {
@@ -231,6 +232,7 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
             }
     }
     } else if (this.form.controls[item.key].value === true) {
+        console.log(this.listAllData);
         for (let i = 0; i < this.listAllData.length; i++) {
             if (this.listAllData[i][0]['key'] === item.key) {
                 for (let j = 0; j < Array.from(this.userCard).length; j++) {
@@ -367,7 +369,6 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                                     };
                                     this.arrayDataDocumentsForDelete.push(tmp);
                                     sessionStorage.setItem('arrayDataDocumentsForDelete', JSON.stringify(this.arrayDataDocumentsForDelete));
-                                    this.arrayDataDocumentsForDelete = [];
                                     flagTmp = false;
                             }
                             setTimeout(() => {
