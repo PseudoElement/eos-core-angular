@@ -323,5 +323,8 @@ export class UserParamsProfSertComponent  implements OnInit {
             this.btnDisabled = false;
         }
     }
+    default(event) {
+        return;
+    }
 
 }
