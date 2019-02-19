@@ -1,20 +1,16 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 import { NodeDocsTree } from './node-docs-tree';
 
 @Component({
     selector: 'eos-list-doc-tree',
     templateUrl: 'list-docs-tree.component.html',
 })
-export class ListDocsTreeComponent implements OnInit, OnChanges {
+export class ListDocsTreeComponent implements OnChanges {
     @Input() listNode: NodeDocsTree[];
     @Output() select = new EventEmitter();
     @Output() checkedNode = new EventEmitter();
     list: NodeDocsTree[] = [];
     curentNode: NodeDocsTree;
-
-    ngOnInit() {
-        // this._createStructure(this.listNode);
-    }
     ngOnChanges(changes: SimpleChanges) {
         if (this.listNode.length) {
             this._createStructure(this.listNode);

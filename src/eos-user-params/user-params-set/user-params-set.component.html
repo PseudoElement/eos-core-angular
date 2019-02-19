@@ -31,6 +31,9 @@
         <ng-container *ngSwitchCase="'el-signature'">
             <eos-user-param-el-signature></eos-user-param-el-signature>
         </ng-container>
+        <ng-container *ngSwitchCase="'prof-sert'">
+            <eos-prof-sert></eos-prof-sert>
+        </ng-container>
         <ng-container *ngSwitchCase="'search'">
             <eos-user-param-search
             (formChanged)="recordChanged($event)"

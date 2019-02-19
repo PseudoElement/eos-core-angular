@@ -345,23 +345,34 @@ export class UserParamOtherSrv extends BaseUserSrv {
             selectNodes: true,
             return_due: true,
         };
+
         this._waitClassifSrv.openClassif(params).then(isn => {
             this.flagBacground = false;
-            this.getDocGroupName(String(isn)).then((res: DOCGROUP_CL[]) => {
-                res.forEach((doc: DOCGROUP_CL) => {
-                    if (!this.checkAddedTree(doc.DUE)) {
-                        const cfg: INodeDocsTreeCfg = {
-                            due: doc.DUE,
-                            label: doc.CLASSIF_NAME,
-                            allowed: true,
-                            data: doc,
-                        };
-                        this.listDocGroup.push(new NodeDocsTree(cfg));
-                    }
+            if (String(isn) === '') {
+                this.msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение',
+                    msg: 'Выберите значение',
+                    dismissOnTimeout: 5000,
                 });
-                this._createStructure(this.listDocGroup);
-                this.PatchValForm();
-            });
+                throw new Error();
+            }   else {
+                this.getDocGroupName(String(isn)).then((res: DOCGROUP_CL[]) => {
+                    res.forEach((doc: DOCGROUP_CL) => {
+                        if (!this.checkAddedTree(doc.DUE)) {
+                            const cfg: INodeDocsTreeCfg = {
+                                due: doc.DUE,
+                                label: doc.CLASSIF_NAME,
+                                allowed: true,
+                                data: doc,
+                            };
+                            this.listDocGroup.push(new NodeDocsTree(cfg));
+                        }
+                    });
+                    this._createStructure(this.listDocGroup);
+                    this.PatchValForm();
+                });
+            }
         }).catch(error => {
             this.flagBacground = false;
         });
