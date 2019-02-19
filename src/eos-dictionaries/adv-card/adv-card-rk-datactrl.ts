@@ -1,5 +1,5 @@
 import { ALL_ROWS } from 'eos-rest/core/consts';
-import { RKDefaultFields, TDefaultField, TDFSelectOption } from './rk-default-values/rk-default-const';
+import { RKDefaultFields, TDefaultField, TDFSelectOption, RKFilesConstraints } from './rk-default-values/rk-default-const';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { PipRX, DOCGROUP_CL } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -10,9 +10,9 @@ const DOCGROUP_UID_NAME = 'ISN_NODE';
 export const DEFAULTS_LIST_NAME = 'DOC_DEFAULT_VALUE_List';
 export const FILE_CONSTRAINT_LIST_NAME = 'DG_FILE_CONSTRAINT_List';
 
-export enum ACRK_GROUP {
-    defaultRKValues,
-}
+// export enum ACRK_GROUP {
+//     defaultRKValues,
+// }
 
 export class AdvCardRKDataCtrl {
     name: string;
@@ -25,13 +25,11 @@ export class AdvCardRKDataCtrl {
     }
 
 
-    getDescriptions(group: ACRK_GROUP): any {
-        switch (group) {
-            case ACRK_GROUP.defaultRKValues:
-                return RKDefaultFields;
-            default:
-                break;
-        }
+    getDescriptions(): any {
+        return {
+            [DEFAULTS_LIST_NAME]:  RKDefaultFields,
+            [FILE_CONSTRAINT_LIST_NAME]: RKFilesConstraints,
+        };
     }
 
 
@@ -175,46 +173,49 @@ export class AdvCardRKDataCtrl {
         return Promise.resolve(null);
     }
 
-    loadDictsOptions (group: ACRK_GROUP, values: any, updateLink: Function = null): Promise<any> {
+    loadDictsOptions (values: any, updateLink: Function = null): Promise<any> {
         const reqs = [];
-        const fields = this.getDescriptions(group);
+        const fields = this.getDescriptions();
 
-        for (let i = 0; i < fields.length; i++) {
-            const el: TDefaultField = fields[i];
-            if (!el.dict) {
-                continue;
-            }
-            if (el.type === E_FIELD_TYPE.dictLink) {
-                reqs.push(this.readDictLinkValue(el, values.rec[el.key], updateLink));
-            } else if (el.type === E_FIELD_TYPE.select) {
-                if (this.loadedDicts[el.dict.dictId] &&
-                    this.loadedDicts[el.dict.dictId]._idptr &&
-                    this.loadedDicts[el.dict.dictId]._idptr === el.dict) {
-                    el.options = this.loadedDicts[el.dict.dictId];
-                } else {
-                    let query: any; // {criteries: {[NUM_YEAR_NAME]: String(this.editValueYear)}};
-                    if (el.dict.criteries) {
-                        query = { criteries: el.dict.criteries};
+        Object.keys(fields).forEach ((key) => {
+            for (let i = 0; i < fields[key].length; i++) {
+                const el: TDefaultField = fields[key][i];
+                if (!el.dict) {
+                    continue;
+                }
+                if (el.type === E_FIELD_TYPE.dictLink) {
+                    reqs.push(this.readDictLinkValue(el, values[key][el.key], updateLink));
+                } else if (el.type === E_FIELD_TYPE.select) {
+                    if (this.loadedDicts[el.dict.dictId] &&
+                        this.loadedDicts[el.dict.dictId]._idptr &&
+                        this.loadedDicts[el.dict.dictId]._idptr === el.dict) {
+                        el.options = this.loadedDicts[el.dict.dictId];
                     } else {
-                        query = ALL_ROWS;
-                    }
-
-                    const req = {[el.dict.dictId]: query};
-
-                    reqs.push(this._apiSrv.read(req).then((data) => {
-                        const opts: TDFSelectOption[] = [];
-                        for (let index = 0; index < data.length; index++) {
-                            const element = data[index];
-                            opts.push ({value: element[el.dict.dictKey], title: element[el.dict.dictKeyTitle]});
+                        let query: any; // {criteries: {[NUM_YEAR_NAME]: String(this.editValueYear)}};
+                        if (el.dict.criteries) {
+                            query = { criteries: el.dict.criteries};
+                        } else {
+                            query = ALL_ROWS;
                         }
-                        el.options = opts;
-                        this.loadedDicts[el.dict.dictId] = opts;
-                        this.loadedDicts[el.dict.dictId]._idptr = el.dict;
-                        return data;
-                    }));
+
+                        const req = {[el.dict.dictId]: query};
+
+                        reqs.push(this._apiSrv.read(req).then((data) => {
+                            const opts: TDFSelectOption[] = [];
+                            for (let index = 0; index < data.length; index++) {
+                                const element = data[index];
+                                opts.push ({value: element[el.dict.dictKey], title: element[el.dict.dictKeyTitle]});
+                            }
+                            el.options = opts;
+                            this.loadedDicts[el.dict.dictId] = opts;
+                            this.loadedDicts[el.dict.dictId]._idptr = el.dict;
+                            return data;
+                        }));
+                    }
                 }
             }
-        }
+        });
+
         return Promise.all(reqs)
             .then((responses) => {
             return responses;

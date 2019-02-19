@@ -2,13 +2,13 @@
     <div class="items-group">
     <div class="clearfix">
         <div class="col-1">
-            <label>{{inputs['rec.SPECIMEN'].label}}</label>
-            <eos-dynamic-input class="no-margin" [input]="inputs['rec.SPECIMEN']"
+            <label>{{inputs['DOC_DEFAULT_VALUE_List.SPECIMEN'].label}}</label>
+            <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SPECIMEN']"
                             [form]="form"
                             [readonly]="!editMode" ></eos-dynamic-input>
         </div>
         <div class="col-2">
-                <eos-dynamic-input class="no-margin" [input]="inputs['rec.CONSISTS']"
+                <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.CONSISTS']"
                         [form]="form"
                         [readonly]="!editMode" ></eos-dynamic-input>
         </div>
@@ -16,8 +16,8 @@
     <div class="clearfix">
         <span>
         <div class="col-with-label">
-                <label>{{inputs['rec.TERM_EXEC'].label}}</label>
-                <eos-dynamic-input [input]="inputs['rec.TERM_EXEC']"
+                <label>{{inputs['DOC_DEFAULT_VALUE_List.TERM_EXEC'].label}}</label>
+                <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.TERM_EXEC']"
                                     [form]="form"
                                     [readonly]="!editMode" ></eos-dynamic-input>
         </div>
@@ -28,36 +28,36 @@
     </div>
     <div class="clearfix">
         <div class="col50 padr10">
-            <eos-dynamic-input [input]="inputs['rec.SECURLEVEL']"
+            <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL']"
                                         [form]="form"
                                         [readonly]="!editMode" ></eos-dynamic-input>
         </div>
 
         <div class="col50 padl10">
-            <eos-dynamic-input [input]="inputs['rec.ISN_DELIVERY']"
+            <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.ISN_DELIVERY']"
                             [form]="form"
                             [readonly]="!editMode" ></eos-dynamic-input>
         </div>
     </div>
-    <eos-dynamic-input [input]="inputs['rec.ANNOTAT']"
+    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.ANNOTAT']"
                         [form]="form"
                         [readonly]="!editMode" ></eos-dynamic-input>
 
-    <eos-dynamic-input [input]="inputs['rec.WHO_ISN_LIST']"
+    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.WHO_ISN_LIST']"
                         [form]="form"
                         [readonly]="!editMode" ></eos-dynamic-input>
 
-    <eos-dynamic-input [input]="inputs['rec.FILE']"
+    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.FILE']"
                                     [form]="form"
                                     [readonly]="!editMode" ></eos-dynamic-input>
 
     </div>
     <p class="xl-font paragraph-title">Передача документов</p>
     <div class="items-group">
-        <eos-dynamic-input class="margin10" [input]="inputs['rec.JOURNAL_ISN_LIST']"
+        <eos-dynamic-input class="margin10" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST']"
                             [form]="form"
                             [readonly]="!editMode" ></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs['rec.JOURNAL_PARM']"
+        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM']"
                             [hideLabel]="true"
                             [form]="form"
                             [readonly]="!editMode" ></eos-dynamic-input>
@@ -66,12 +66,12 @@
 
     <p class="xl-font paragraph-title">Списать в Дело</p>
     <div class="items-group">
-        <eos-dynamic-input class="margin10" [input]="inputs['rec.JOURNAL_ISN_NOMENC']"
+        <eos-dynamic-input class="margin10" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC']"
                             [form]="form"
                             [hideLabel]="true"
                             [event1]="journalNomencClick"
                             [readonly]="!editMode"></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs['rec.JOURNAL_NOMENC_PARM']"
+        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM']"
                             [form]="form"
                             [hideLabel]="true"
                             [readonly]="!editMode"></eos-dynamic-input>
@@ -80,15 +80,15 @@
     <p class="xl-font paragraph-title">Внутренние адресаты</p>
     <div class="items-group">
 
-        <eos-dynamic-input class="no-margin" [input]="inputs['rec.SEND_ISN_LIST_DEP']"
+        <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_ISN_LIST_DEP']"
                             [form]="form"
                             [readonly]="!editMode"></eos-dynamic-input>
 
-        <eos-dynamic-input class="no-margin" [input]="inputs['rec.SEND_MARKSEND']"
+        <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_MARKSEND']"
                             [form]="form"
                             [readonly]="!editMode"></eos-dynamic-input>
 
-        <eos-dynamic-input [input]="inputs['rec.SEND_DEP_PARM']"
+        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_DEP_PARM']"
                             [form]="form"
                             [hideLabel]="true"
                             [readonly]="!editMode"></eos-dynamic-input>
@@ -97,24 +97,24 @@
     <p class="xl-font paragraph-title">Внешние адресаты</p>
     <div class="items-group">
 
-        <eos-dynamic-input [input]="inputs['rec.SEND_ISN_LIST_ORGANIZ']"
+        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_ISN_LIST_ORGANIZ']"
                             [form]="form"
                             [readonly]="!editMode"></eos-dynamic-input>
-        <eos-dynamic-input class="no-margin" [input]="inputs['rec.SEND_ISN_DELIVERY']"
+        <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_ISN_DELIVERY']"
                             [form]="form"
                             [readonly]="!editMode"></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs['rec.SEND_OUTER_MARKSEND']"
+        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_OUTER_MARKSEND']"
                             [form]="form"
                             [readonly]="!editMode"> </eos-dynamic-input>
 
     </div>
     <p class="xl-font paragraph-title"></p>
-    <eos-dynamic-input [input]="inputs['rec.NOTE']"
+    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.NOTE']"
         [form]="form"
         [readonly]="!editMode"> </eos-dynamic-input>
 
 
-    <eos-dynamic-input [input]="inputs['rec.RUBRIC_LIST']"
+    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.RUBRIC_LIST']"
         [form]="form"
         [readonly]="!editMode">
     </eos-dynamic-input>

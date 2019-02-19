@@ -41,8 +41,10 @@ export class EosDataConvertService {
                 switch (_dict) {
                     case 'fict':
                     case 'PARE_LINK_Ref':
+                    case 'DG_FILE_CONSTRAINT_List':
+                    case 'DOC_DEFAULT_VALUE_List':
                     case 'rec':
-                        descr = fieldsDescription['rec'];
+                        descr = fieldsDescription[_dict];
                         Object.keys(descr).forEach((_key) => {
                             switch (descr[_key].type) {
 

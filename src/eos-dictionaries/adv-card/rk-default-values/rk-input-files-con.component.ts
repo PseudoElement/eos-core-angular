@@ -6,6 +6,7 @@ import { FormGroup } from '@angular/forms';
 @Component({
     selector: 'eos-rk-input-files',
     templateUrl: 'rk-input-files-con.component.html',
+    styleUrls: ['./rk-input-files-con.component.scss']
 })
 
 export class RKFilesConInputComponent implements OnChanges {
@@ -34,5 +35,8 @@ export class RKFilesConInputComponent implements OnChanges {
         //     this.changeLog.push(`propName: currentValue = cur, previousValue = prev`);*/
         // }
         // console.log('form:', this.form);
+    }
+    dbg() {
+        return true;
     }
 }

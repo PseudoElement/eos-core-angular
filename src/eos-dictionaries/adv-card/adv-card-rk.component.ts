@@ -1,7 +1,7 @@
 import { Component, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
 import {PipRX} from '../../eos-rest';
-import { AdvCardRKDataCtrl, ACRK_GROUP, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME } from './adv-card-rk-datactrl';
+import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME } from './adv-card-rk-datactrl';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
@@ -55,8 +55,8 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
 
     valuesDefault: any;
     valuesDG: any;
-    fieldsDescrDefault: any;
-    inputsDefault: any;
+    descriptions: any;
+    inputs: any;
     newData: any;
     private subscriptions: Subscription[];
 
@@ -88,7 +88,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
 
     ngOnInit() {
         this.dataController = new AdvCardRKDataCtrl(this.apiSrv, this._msgSrv);
-        this.fieldsDescrDefault = this.dataController.getDescriptions(ACRK_GROUP.defaultRKValues);
+        this.descriptions = this.dataController.getDescriptions();
 
         this.dataController.readValues(this.isn_node).then (values => {
             this.valuesDG = values[0];
@@ -97,11 +97,11 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
                 [FILE_CONSTRAINT_LIST_NAME]: this._makeDataObjFileCon(this.valuesDG[FILE_CONSTRAINT_LIST_NAME]),
                 };
             console.log(this.valuesDefault);
-            this.dataController.loadDictsOptions(ACRK_GROUP.defaultRKValues, this.valuesDefault, this.updateLinks).then (d => {
-                this.inputsDefault = this.getInputs();
-                this._updateOptions(this.inputsDefault);
+            this.dataController.loadDictsOptions(this.valuesDefault, this.updateLinks).then (d => {
+                this.inputs = this.getInputs();
+                this._updateOptions(this.inputs);
                 const isNode = false;
-                this.form = this._inputCtrlSrv.toFormGroup(this.inputsDefault, isNode);
+                this.form = this._inputCtrlSrv.toFormGroup(this.inputs, isNode);
                 this._subscribeToChanges();
                 this.isUpdating = false;
             });
@@ -128,13 +128,13 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
     }
 
     save(): void {
-        this.dataController.save(this.isn_node, this.inputsDefault, this.newData);
+        this.dataController.save(this.isn_node, this.inputs, this.newData);
 
     }
 
     _updateOptions(values: any[]) {
         console.log(values);
-        const v = values['rec.SECURLEVEL_FILE'];
+        const v = values['DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE'];
         v.options.push (
             {
                 value: '-1', title: 'Список ДЛ'
@@ -146,7 +146,14 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
     }
 
     _makeDataObjFileCon (data: any): any {
-        return null;
+        const res = { };
+        for (let i = 0; i < data.length; i++) {
+            const el = data[i];
+            res[el['CATEGORY'] + '.' + 'EXTENSIONS'] = el['EXTENSIONS'];
+            res[el['CATEGORY'] + '.' + 'MAX_SIZE'] = el['MAX_SIZE'];
+            res[el['CATEGORY'] + '.' + 'ONE_FILE'] = el['ONE_FILE'];
+        }
+        return res;
     }
 
     _makeDataObjDef (data: any) {
@@ -157,24 +164,31 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
         }
         return res;
     }
-    getInputs(): any {
 
-        const i: any = {rec: {}};
-        this.fieldsDescrDefault.forEach(element => {
-            if (!element.foreignKey) {
-                element.foreignKey = element.key;
+    getInputs(): any {
+        const i: any = {};
+        for (const key in this.descriptions) {
+            if (this.descriptions.hasOwnProperty(key)) {
+                const r = this.descriptions[key];
+                i[key] = {};
+                r.forEach(element => {
+                    if (!element.foreignKey) {
+                        element.foreignKey = element.key;
+                    }
+                    const t = i[key];
+                    t[element.key] = element;
+                });
+                const a: any = RKFieldsFict;
+                a.forEach(element => {
+                    if (!element.foreignKey) {
+                        element.foreignKey = element.key;
+                    }
+                    // const t = i.fict;
+                    // t[element.key] = element;
+                });
             }
-            const t = i.rec;
-            t[element.key] = element;
-        });
-        const a: any = RKFieldsFict;
-        a.forEach(element => {
-            if (!element.foreignKey) {
-                element.foreignKey = element.key;
-            }
-            // const t = i.fict;
-            // t[element.key] = element;
-        });
+
+        }
 
         // select classif_name , nom_number , year_number , e_document from nomenkl_cl where isn_lclassif =4057175
 

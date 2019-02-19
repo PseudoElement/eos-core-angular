@@ -1,74 +1,48 @@
 <div class="eos-rk-files card-content-wrapper">
 
-        <p class="xl-font paragraph-title">Ограничения на прикрепляемые файлы</p>
+    <p class="xl-font paragraph-title">Ограничения на прикрепляемые файлы</p>
 
     <eos-rk-input-files
-        [inputSize]="inputs['rec.SECURLEVEL_FILE']"
-        [inputCb]="inputs['rec.SECURLEVEL_FILE']"
-        [inputExt]="inputs['rec.SECURLEVEL_FILE']"
+        [inputSize]="inputs['DG_FILE_CONSTRAINT_List.DOC_RC.MAX_SIZE']"
+        [inputCb]="inputs['DG_FILE_CONSTRAINT_List.DOC_RC.ONE_FILE']"
+        [inputExt]="inputs['DG_FILE_CONSTRAINT_List.DOC_RC.EXTENSIONS']"
         [form]="form"
         [editMode]="editMode"
         title="Файлы РК">
     </eos-rk-input-files>
-    <!-- <eos-rk-input-files
-        [inputs]="inputs"
+    <eos-rk-input-files
+        [inputSize]="inputs['DG_FILE_CONSTRAINT_List.RESOLUTION.MAX_SIZE']"
+        [inputCb]="inputs['DG_FILE_CONSTRAINT_List.RESOLUTION.ONE_FILE']"
+        [inputExt]="inputs['DG_FILE_CONSTRAINT_List.RESOLUTION.EXTENSIONS']"
         [form]="form"
         [editMode]="editMode"
         title="Файлы поручений">
     </eos-rk-input-files>
     <eos-rk-input-files
-        [inputs]="inputs"
+        [inputSize]="inputs['DG_FILE_CONSTRAINT_List.REPLY.MAX_SIZE']"
+        [inputCb]="inputs['DG_FILE_CONSTRAINT_List.REPLY.ONE_FILE']"
+        [inputExt]="inputs['DG_FILE_CONSTRAINT_List.REPLY.EXTENSIONS']"
         [form]="form"
         [editMode]="editMode"
         title="Файлы отчетов исполнителей">
-    </eos-rk-input-files> -->
+    </eos-rk-input-files>
 
-    UPDATE dg_file_constraint SET max_size = 2, one_file = 0, extensions = '' WHERE isn_docgroup = 3670 AND category = 'DOC_RC' AND max_size = 1 AND one_file = 0 AND extensions = ''
+    <!-- UPDATE dg_file_constraint SET max_size = 2, one_file = 0, extensions = '' WHERE isn_docgroup = 3670 AND category = 'DOC_RC' AND max_size = 1 AND one_file = 0 AND extensions = ''
     UPDATE dg_file_constraint SET max_size = NULL, one_file = 0, extensions = '' WHERE isn_docgroup = 3670 AND category = 'RESOLUTION' AND max_size IS NULL AND one_file = 0 AND extensions = ''
-    UPDATE dg_file_constraint SET max_size = NULL, one_file = 0, extensions = '' WHERE isn_docgroup = 3670 AND category = 'REPLY' AND max_size IS NULL AND one_file = 0 AND extensions = ''
+    UPDATE dg_file_constraint SET max_size = NULL, one_file = 0, extensions = '' WHERE isn_docgroup = 3670 AND category = 'REPLY' AND max_size IS NULL AND one_file = 0 AND extensions = '' -->
 
-    <!-- <p class="xl-font paragraph-title"></p>
-
-    Мах размер
-    Мбайт
-    Один файл
-    с расширением
-
-    <p class="xl-font paragraph-title">Файлы поручений</p>
-
-    Мах размер
-    Мбайт
-    Один файл
-    с расширением
-
-    <p class="xl-font paragraph-title">Файлы отчетов исполнителей</p>
-
-    Мах размер
-    Мбайт
-    Один файл
-    с расширением
-
-    <p class="xl-font paragraph-title"></p>
- -->
     <p class="xl-font paragraph-title"></p>
     <div class="items-group clearfix">
         <div class="col-1">
-        <eos-dynamic-input [input]="inputs['rec.SECURLEVEL_FILE']"
+        <eos-dynamic-input [input]="inputs['DG_FILE_CONSTRAINT_List.SECURLEVEL_FILE']"
                                         [form]="form"
                                         [readonly]="!editMode" ></eos-dynamic-input>
         </div>
         <div class="col-2">
-        <eos-dynamic-input [input]="inputs['rec.REF_FILE_ACCESS_LIST']"
+        <eos-dynamic-input [input]="inputs['DG_FILE_CONSTRAINT_List.REF_FILE_ACCESS_LIST']"
                                         [form]="form"
                                         [hideLabel]="true"
                                         [readonly]="!editMode" ></eos-dynamic-input>
         </div>
     </div>
-
-
-
-
-
-
-
 </div>

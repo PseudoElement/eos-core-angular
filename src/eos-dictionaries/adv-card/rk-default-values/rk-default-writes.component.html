@@ -4,8 +4,8 @@
     <div class="items-group">
             <span>
             <div class="col-with-label">
-                    <label>{{inputs['rec.TERM_EXEC_W'].label}}</label>
-                    <eos-dynamic-input class="no-margin" [input]="inputs['rec.TERM_EXEC_W']"
+                    <label>{{inputs['DOC_DEFAULT_VALUE_List.TERM_EXEC_W'].label}}</label>
+                    <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.TERM_EXEC_W']"
                                         [form]="form"
                                         [readonly]="!editMode" ></eos-dynamic-input>
             </div>
@@ -18,13 +18,13 @@
     <!-- Переслать РК (Журнал пересылок РК) -->
     <p class="xl-font paragraph-title">Переслать РК (Журнал пересылок РК)</p>
     <div class="items-group">
-        <eos-dynamic-input class="no-margin" [input]="inputs['rec.FORWARD_ISN_LIST_DEP_W']"
+        <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_ISN_LIST_DEP_W']"
             [form]="form"
             [hideLabel]="true"
             [readonly]="!editMode"> </eos-dynamic-input>
         <!-- По значению реквизита "Кому" (адресован) -->
         <span>
-            <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['rec.FORWARD_WHO_W']"
+            <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_WHO_W']"
                 [form]="form"
                 [readonly]="!editMode"> </eos-dynamic-input>
                 <button class="inline-with-label">Дополнительно</button>
@@ -32,25 +32,25 @@
     </div>
     <p class="xl-font paragraph-title">Передача документов</p>
     <div class="items-group">
-        <eos-dynamic-input class="no-margin" [input]="inputs['rec.JOURNAL_ISN_LIST_W']"
+        <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST_W']"
         [form]="form"
         [hideLabel]="true"
         [readonly]="!editMode"> </eos-dynamic-input>
 
         <span>
             <!-- По значению реквизита "Кому" (адресован) -->
-            <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['rec.JOURNAL_FROM_WHO_W']"
+            <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_FROM_WHO_W']"
                 [form]="form"
                 [readonly]="!editMode"> </eos-dynamic-input>
                 <button class="inline-with-label">Дополнительно</button>
         </span>
     <!-- По значению Журнала пересылки РК -->
-    <eos-dynamic-input class="no-margin" [input]="inputs['rec.JOURNAL_FROM_FORWARD_W']"
+    <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_FROM_FORWARD_W']"
         [form]="form"
         [readonly]="!editMode"> </eos-dynamic-input>
 
         <!-- Радиобуттоны -->
-    <eos-dynamic-input class="no-margin" [input]="inputs['rec.JOURNAL_PARM_W']"
+    <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W']"
         [form]="form"
         [hideLabel]="true"
         [readonly]="!editMode"> </eos-dynamic-input>
@@ -60,14 +60,14 @@
     <div class="items-group">
 
     <!-- Списать в дело -->
-    <eos-dynamic-input class="margin10" [input]="inputs['rec.JOURNAL_ISN_NOMENC_W']"
+    <eos-dynamic-input class="margin10" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W']"
         [form]="form"
         [hideLabel]="true"
         [event1]="journalNomencClick_W"
         [readonly]="!editMode"></eos-dynamic-input>
 
     <!-- Радиобуттоны -->
-    <eos-dynamic-input [input]="inputs['rec.JOURNAL_NOMENC_PARM_W']"
+    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W']"
         [form]="form"
         [hideLabel]="true"
         [readonly]="!editMode"> </eos-dynamic-input>
@@ -85,7 +85,7 @@
     <p class="xl-font paragraph-title">Кабинет регистрации</p>
     <div class="items-group">
 
-    <eos-dynamic-input [input]="inputs['rec.ISN_CABINET_REG_CURR_W']"
+    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.ISN_CABINET_REG_CURR_W']"
         [form]="form"
         [hideLabel]="true"
         [readonly]="!editMode"> </eos-dynamic-input>
@@ -102,7 +102,7 @@
     <eos-dynamic-input [input]="inputs['fict.helper1']"
         [form]="form"
         [readonly]="!editMode"> </eos-dynamic-input>
-    <eos-dynamic-input [input]="inputs['rec.CARD_ISN_W']"
+    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_ISN_W']"
         [form]="form"
         [hideLabel]="true"
         [readonly]="!editMode"> </eos-dynamic-input>
@@ -115,7 +115,7 @@
 
 
     <!-- по значению реквизита "Кому (адресован) -->
-    <eos-dynamic-input [input]="inputs['rec.CARD_WHO_W']"
+    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_WHO_W']"
         [form]="form"
         [readonly]="!editMode"> </eos-dynamic-input>
     </div>
@@ -125,10 +125,10 @@
     <span class="inline-with-label">
         Положить РК в папку:
         <!-- "На исполнение"  -->
-        <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['rec.FOLDER2_DEST_W']"
+        <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.FOLDER2_DEST_W']"
             [form]="form"
             [readonly]="!editMode"> </eos-dynamic-input>
-        <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['rec.FOLDER6_DEST_W']"
+        <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.FOLDER6_DEST_W']"
             [form]="form"
             [readonly]="!editMode"> </eos-dynamic-input>
 

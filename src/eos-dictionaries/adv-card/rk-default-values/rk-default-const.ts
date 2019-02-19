@@ -30,8 +30,73 @@ export const RKFieldsFict: TDefaultField[] = [
     },
 ];
 
-export const RKDefaultFields: TDefaultField[] = [
 
+
+export const RKFilesConstraints: TDefaultField[] = [
+    {
+        key: 'DOC_RC.EXTENSIONS',
+        type: E_FIELD_TYPE.string,
+        title: 'С расширением',
+    }, {
+        key: 'DOC_RC.MAX_SIZE',
+        type: E_FIELD_TYPE.numberIncrement,
+        title: '',
+    }, {
+        key: 'DOC_RC.ONE_FILE',
+        type: E_FIELD_TYPE.boolean,
+        title: 'Один файл',
+    }, {
+        key: 'PRJ_RC.EXTENSIONS',
+        type: E_FIELD_TYPE.string,
+        title: 'С расширением',
+    }, {
+        key: 'PRJ_RC.MAX_SIZE',
+        type: E_FIELD_TYPE.numberIncrement,
+        title: '',
+    }, {
+        key: 'PRJ_RC.ONE_FILE',
+        type: E_FIELD_TYPE.boolean,
+        title: 'Один файл',
+    }, {
+        key: 'PRJ_VISA_SIGN.EXTENSIONS',
+        type: E_FIELD_TYPE.string,
+        title: 'С расширением',
+    }, {
+        key: 'PRJ_VISA_SIGN.MAX_SIZE',
+        type: E_FIELD_TYPE.numberIncrement,
+        title: '',
+    }, {
+        key: 'PRJ_VISA_SIGN.ONE_FILE',
+        type: E_FIELD_TYPE.boolean,
+        title: 'Один файл',
+    }, {
+        key: 'REPLY.EXTENSIONS',
+        type: E_FIELD_TYPE.string,
+        title: 'С расширением',
+    }, {
+        key: 'REPLY.MAX_SIZE',
+        type: E_FIELD_TYPE.numberIncrement,
+        title: '',
+    }, {
+        key: 'REPLY.ONE_FILE',
+        type: E_FIELD_TYPE.boolean,
+        title: 'Один файл',
+    }, {
+        key: 'RESOLUTION.EXTENSIONS',
+        type: E_FIELD_TYPE.string,
+        title: 'С расширением',
+    }, {
+        key: 'RESOLUTION.MAX_SIZE',
+        type: E_FIELD_TYPE.numberIncrement,
+        title: '',
+    }, {
+        key: 'RESOLUTION.ONE_FILE',
+        type: E_FIELD_TYPE.boolean,
+        title: 'Один файл',
+    },
+];
+
+export const RKDefaultFields: TDefaultField[] = [
     {
         key: 'TERM_EXEC_TYPE',
         // Default type:  'D',
