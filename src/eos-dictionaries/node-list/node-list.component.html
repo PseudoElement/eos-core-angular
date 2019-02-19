@@ -19,8 +19,7 @@
                      class="item l-font"
                      [attr.id]="'vf_'+field.key"
                      [ngStyle]="{'min-width.%': min_length[field.key]}">
-                    <span class="text"
-                          [ngClass]="{'selected-text': orderBy}"
+                    <span class="text selected-text"
                           (click)="orderByField(field.key)">{{field.customTitle || field.title}}</span>
                     <span class="order-icon">
                         <span *ngIf="orderBy?.fieldKey === field.key"
@@ -37,8 +36,7 @@
                      [class.left-shadowed]="first&&(isShifted())"
                      [attr.id]="'vf_'+field.key"
                     [ngStyle]="{'min-width.%': min_length[field.key]}">
-                    <span class="text"
-                          [ngClass]="{'selected-text': orderBy}"
+                    <span class="text selected-text"
                           (click)="orderByField(field.key)">{{field.customTitle || field.title}}</span><span class="order-icon">
                     <span *ngIf="orderBy?.fieldKey === field.key"
                           class="eos-icon small"

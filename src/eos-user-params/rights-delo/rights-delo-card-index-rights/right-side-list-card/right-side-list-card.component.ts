@@ -80,8 +80,8 @@ export class RightSideListCardComponent implements OnInit {
         let str;
         let newDataFromLocalStorageFuncFileCards = null;
    if (event.target.tagName === 'LABEL') {} else {
-    if (localStorage.getItem('FuncFileCards') !== null) {
-        newDataFromLocalStorageFuncFileCards = JSON.parse(localStorage.getItem('FuncFileCards'));
+    if (sessionStorage.getItem('FuncFileCards') !== null) {
+        newDataFromLocalStorageFuncFileCards = JSON.parse(sessionStorage.getItem('FuncFileCards'));
     }
     if (this.form.controls[item.key].value === false) {
         for (let i = 0; i < this.listAllData.length; i++) {
@@ -96,8 +96,8 @@ export class RightSideListCardComponent implements OnInit {
                             str = this.setCharAt(str, +this.selectedNode2.key, '1');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                           // localStorage.removeItem('FuncFileCards');
-                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                           // sessionStorage.removeItem('FuncFileCards');
+                           sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
                             if (+this.selectedNode2.key > 18 && str.length === 18) {
@@ -106,7 +106,7 @@ export class RightSideListCardComponent implements OnInit {
                             str = this.setCharAt(str, +this.selectedNode2.key, '1');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                            sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           }
                     }
                 }
@@ -123,14 +123,14 @@ export class RightSideListCardComponent implements OnInit {
                             str = this.setCharAt(str, +this.selectedNode2.key, '0');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                          //  localStorage.removeItem('FuncFileCards');
-                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                          //  sessionStorage.removeItem('FuncFileCards');
+                          sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
                             str = this.setCharAt(str, +this.selectedNode2.key, '0');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                            sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           }
                     }
                 }

@@ -49,6 +49,9 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             return [];
         });
     }
+    createEntyti<T>(ent: any, typeName: string): T {
+        return this._userParmSrv.createEntyti<T>(ent, typeName);
+    }
     getConfig (mode: E_TECH_USER_CLASSIF_CONTENT): IConfigUserTechClassif {
         switch (mode) {
             case E_TECH_USER_CLASSIF_CONTENT.department:

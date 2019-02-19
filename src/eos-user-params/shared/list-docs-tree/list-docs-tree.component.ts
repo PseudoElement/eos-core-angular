@@ -28,8 +28,10 @@ export class ListDocsTreeComponent implements OnInit, OnChanges {
             this._selectNode(item);
         }
         if (event.target.tagName === 'SPAN') { // click to checkbox
-            item.allowed = !item.allowed;
-            this.checkedNode.emit(item);
+            if (item.isviewAllowed) {
+                item.isAllowed = !item.isAllowed;
+                this.checkedNode.emit(item);
+            }
         }
     }
     onExpand(evt: Event, node: NodeDocsTree) {
@@ -62,8 +64,12 @@ export class ListDocsTreeComponent implements OnInit, OnChanges {
             });
             index--;
         }
-        parent.addChildren(node);
-        node.parent = parent;
+        if (parent) {
+            parent.addChildren(node);
+            node.parent = parent;
+        } else {
+            this.list.push(node);
+        }
     }
     private _writeLayer(li: NodeDocsTree[], layer: number) {
         li.forEach((node: NodeDocsTree) => {

@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, HostListener } from '@angular/core';
-import { IParamUserCl, IInputParamControl, IInputParamControlForIndexRight } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { IParamUserCl, IInputParamControl, IInputParamControlForIndexRight, INodeDocsTreeCfg } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { USERCARD, DEPARTMENT, DOCGROUP_CL } from 'eos-rest';
@@ -109,11 +109,11 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
       FUNC_NUM: +this.selectedNode2.key + 1, // +1
       DUE_CARD: event.data.rightDocGroup['DUE_CARD'],
       DUE: event['DUE'],
-      ALLOWED: event['allowed']
+      ALLOWED: event['isAllowed']
   };
 
-  if (localStorage.getItem('arrayDataDocumentsForMerge') !== null) {
-    this.arrayDataDocumentsForMerge = JSON.parse(localStorage.getItem('arrayDataDocumentsForMerge'));
+  if (sessionStorage.getItem('arrayDataDocumentsForMerge') !== null) {
+    this.arrayDataDocumentsForMerge = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForMerge'));
 }
 
   for (let i = 0; i < this.arrayDataDocumentsForMerge.length; i++) {
@@ -126,14 +126,14 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
 }
 
     this.arrayDataDocumentsForMerge.push(rightDocGroup);
-    localStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
+    sessionStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
 } else {
    if (event.target.tagName === 'LABEL') {} else {
-    if (localStorage.getItem('FuncFileCards') !== null) {
-        newDataFromLocalStorageFuncFileCards = JSON.parse(localStorage.getItem('FuncFileCards'));
+    if (sessionStorage.getItem('FuncFileCards') !== null) {
+        newDataFromLocalStorageFuncFileCards = JSON.parse(sessionStorage.getItem('FuncFileCards'));
     }
-    if (localStorage.getItem('arrayDataDocumentsForMergeFirst') !== null) {
-        this.arrayDataDocumentsForMergeFirst = JSON.parse(localStorage.getItem('arrayDataDocumentsForMergeFirst'));
+    if (sessionStorage.getItem('arrayDataDocumentsForMergeFirst') !== null) {
+        this.arrayDataDocumentsForMergeFirst = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForMergeFirst'));
     }
 
    if (item.label !== 'Ограничить картотекой регистрации') {
@@ -155,8 +155,8 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                             }
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                          //  localStorage.removeItem('FuncFileCards');
-                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                          //  sessionStorage.removeItem('FuncFileCards');
+                          sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
                             if (+this.selectedNode2.key > 18 && str.length === 18) {
@@ -169,7 +169,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                             }
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                            sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           }
                 rightDocGroup = {
                     ISN_LCLASSIF: this.allData[i]['ISN_LCLASSIF'],
@@ -228,7 +228,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                     this.listAllData[i].push(arrayDoc);
                     this.listAllData[i].push({openDocumentTree: false});
                     this.arrayDataDocumentsForMergeFirst.push(rightDocGroup);
-                    localStorage.setItem('arrayDataDocumentsForMergeFirst', JSON.stringify(this.arrayDataDocumentsForMergeFirst));
+                    sessionStorage.setItem('arrayDataDocumentsForMergeFirst', JSON.stringify(this.arrayDataDocumentsForMergeFirst));
                 }
             }
         }
@@ -249,7 +249,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                                 if (Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][s]['FUNC_NUM'] === +this.selectedNode2.key + 1) {
                                 }
                             }
-                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                            sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
                             str = this.setCharAt(str, +this.selectedNode2.key, '0');
@@ -259,13 +259,13 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                                 if (Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][s]['FUNC_NUM'] === +this.selectedNode2.key + 1) {
                                 }
                                 }
-                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                                sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           }
                           for (let r = 0; r < this.arrayDataDocumentsForMergeFirst.length; r++) {
                             if (this.arrayDataDocumentsForMergeFirst[r]['DUE_CARD'] === item.key &&
                             this.arrayDataDocumentsForMergeFirst[r]['FUNC_NUM'] === (+this.selectedNode2.key + 1)) {
                                 this.arrayDataDocumentsForMergeFirst.splice(r, 1);
-                                localStorage.setItem('arrayDataDocumentsForMergeFirst', JSON.stringify(this.arrayDataDocumentsForMergeFirst));
+                                sessionStorage.setItem('arrayDataDocumentsForMergeFirst', JSON.stringify(this.arrayDataDocumentsForMergeFirst));
                             }
                           }
                     }
@@ -289,8 +289,8 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                             str = this.setCharAt(str, +this.selectedNode2.key, '2');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                           // localStorage.removeItem('FuncFileCards');
-                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                           // sessionStorage.removeItem('FuncFileCards');
+                           sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
                             if (+this.selectedNode2.key > 18 && str.length === 18) {
@@ -299,7 +299,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                             str = this.setCharAt(str, +this.selectedNode2.key, '2');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                            sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           }
                 rightDocGroup = {
                     ISN_LCLASSIF: this.allData[i]['ISN_LCLASSIF'],
@@ -348,7 +348,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                 arrayDoc.push(this._createNode(rightDocGroup, doc));
                 if (this.listAllData[i].length !== 3) {
                     this.arrayDataDocumentsForMergeFirst.push(rightDocGroup);
-                    localStorage.setItem('arrayDataDocumentsForMergeFirst', JSON.stringify(this.arrayDataDocumentsForMergeFirst));
+                    sessionStorage.setItem('arrayDataDocumentsForMergeFirst', JSON.stringify(this.arrayDataDocumentsForMergeFirst));
                 }
             }
         }
@@ -365,14 +365,14 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                             str = this.setCharAt(str, +this.selectedNode2.key, '1');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                          //  localStorage.removeItem('FuncFileCards');
-                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                          //  sessionStorage.removeItem('FuncFileCards');
+                          sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
                             str = this.setCharAt(str, +this.selectedNode2.key, '1');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                            localStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                            sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           }
                     }
                 }
@@ -386,8 +386,8 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
 
 @HostListener('click', ['$event'])
     onClick(event) {
-        if (localStorage.getItem('FlagToClearData') !== null) {
-            let flagFromLH = JSON.parse(localStorage.getItem('FlagToClearData'));
+        if (sessionStorage.getItem('FlagToClearData') !== null) {
+            let flagFromLH = JSON.parse(sessionStorage.getItem('FlagToClearData'));
             if (flagFromLH) {
                 this.arrayUserCardDocgroupWithCurrentFunclist = [];
                 this.arrayDataDocumentsForMergeFirst = [];
@@ -395,7 +395,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                 this.arrayDataDocumentsForPost = [];
                 this.arrayDataDocumentsForDelete = [];
                 flagFromLH = false;
-                localStorage.setItem('FlagToClearData', JSON.stringify(false));
+                sessionStorage.setItem('FlagToClearData', JSON.stringify(false));
             }
         }
     }
@@ -407,11 +407,12 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
     addDocuments(item): void {
         this.bacgHeader = true;
         let rightDocGroup;
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DOCGR, true)
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DOCGR)
         .then(result_classif => {
             const newClassif = result_classif !== '' || null || undefined ? result_classif : '0.';
             this._limitservise.getCodeNameDOCGROUP(String(newClassif))
             .then(result => {
+                console.log(result);
                 if (this._checkRepeat(result, item)) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
@@ -421,8 +422,8 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                     this.isShell = false;
                     return;
                 }
-                if (localStorage.getItem('ArrayDataDocumentsForPost') !== null) {
-                    this.arrayDataDocumentsForPost = JSON.parse(localStorage.getItem('ArrayDataDocumentsForPost'));
+                if (sessionStorage.getItem('ArrayDataDocumentsForPost') !== null) {
+                    this.arrayDataDocumentsForPost = JSON.parse(sessionStorage.getItem('ArrayDataDocumentsForPost'));
                 }
                 for (let i = 0; i < this.listAllData.length; i++) {
                     if (this.listAllData[i][0]['key'] === item[0]['key']) {
@@ -436,7 +437,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                         };
                         this.listAllData[i][2].push(this._createNode(rightDocGroup, result[j]));
                         this.arrayDataDocumentsForPost.push(rightDocGroup);
-                        localStorage.setItem('ArrayDataDocumentsForPost', JSON.stringify(this.arrayDataDocumentsForPost));
+                        sessionStorage.setItem('ArrayDataDocumentsForPost', JSON.stringify(this.arrayDataDocumentsForPost));
                     }
                     }
                 }
@@ -471,14 +472,14 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                                 if (this.arrayDataDocumentsForPost[a]['DUE'] === this.curentNode['DUE']) {
                                     this.arrayDataDocumentsForPost.splice(a, 1);
                                     flagTmp = true;
-                                    localStorage.setItem('ArrayDataDocumentsForPost', JSON.stringify(this.arrayDataDocumentsForPost));
+                                    sessionStorage.setItem('ArrayDataDocumentsForPost', JSON.stringify(this.arrayDataDocumentsForPost));
                                 }
                             }
                             for (let a = 0; a < this.arrayDataDocumentsForMerge.length; a++) {
                                 if (this.arrayDataDocumentsForMerge[a]['DUE'] === this.curentNode['DUE']) {
                                     this.arrayDataDocumentsForMerge.splice(a, 1);
                                     flagTmp = true;
-                                    localStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
+                                    sessionStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
                                 }
                             }
                             if (!flagTmp) {
@@ -490,7 +491,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                                     ALLOWED: 0
                                     };
                                     this.arrayDataDocumentsForDelete.push(tmp);
-                                    localStorage.setItem('arrayDataDocumentsForDelete', JSON.stringify(this.arrayDataDocumentsForDelete));
+                                    sessionStorage.setItem('arrayDataDocumentsForDelete', JSON.stringify(this.arrayDataDocumentsForDelete));
                                     this.arrayDataDocumentsForDelete = [];
                                     flagTmp = false;
                             }
@@ -614,15 +615,16 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
     }
 
     private _createNode(rDoc, doc: DOCGROUP_CL): NodeDocsTree {
-        return new NodeDocsTree(
-            doc.DUE,
-            doc.CLASSIF_NAME,
-            !!rDoc.ALLOWED,
-            {
+        const cfg: INodeDocsTreeCfg = {
+            due: doc.DUE,
+            label: doc.CLASSIF_NAME,
+            allowed: !!rDoc.ALLOWED,
+            data: {
                 rightDocGroup: rDoc,
                 docGroup: doc
             }
-        );
+        };
+        return new NodeDocsTree(cfg);
     }
 
     private _checkRepeat(arrDoc, item): boolean {

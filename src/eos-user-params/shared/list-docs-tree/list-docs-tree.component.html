@@ -27,15 +27,16 @@
             </div>
 
             <!-- checkbox and label -->
-            <label class="checkbox tree-checkbox" (click)="clickLable($event, node)">
+            <label *ngIf="node.isviewAllowed" class="checkbox tree-checkbox" (click)="clickLable($event, node)">
                 <input type="checkbox"
                     hide
-                    [checked]="node.allowed"
+                    [checked]="node.isAllowed"
                 >
                 <span class="eos-icon eos-icon-checkbox-square-blue x-small">
                 </span>
                 {{node.label}}
             </label>
+            <label *ngIf="!node.isviewAllowed" class="tree-text" (click)="clickLable($event, node)">{{node.label}}</label>
         </div>
 
     </div>

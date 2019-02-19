@@ -5,10 +5,11 @@ import { CARD_FILES_USER } from '../shared-rights-delo/consts/card-files.consts'
 import { BsModalRef } from 'ngx-bootstrap';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosUtils } from 'eos-common/core/utils';
-import { PARM_SUCCESS_SAVE, PARM_NO_MAIN_CARD } from '../shared-rights-delo/consts/eos-user-params.const';
+import { PARM_NO_MAIN_CARD } from '../shared-rights-delo/consts/eos-user-params.const';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_CARDINDEX } from 'app/consts/query-classif.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 
 @Component({
     selector: 'eos-rights-delo-card-files',
@@ -298,7 +299,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                       this.selectOnClick(this.startEventCabinet, null);
                    }
                     this.allData = this._userParamsSetSrv.userCard;
-                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                    this.msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                     this._userParamsSetSrv.getUserIsn(userId);
                 })
                 // tslint:disable-next-line:no-console
@@ -716,17 +717,9 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         }
     }, 500);
       } else {
-      /*  const element = document.getElementsByClassName('user-input-main-cabinet')[0];
-
-        if (this.currentEventSelectCabinet.target[this.currentIncrementForEventSelectCabinet].innerHTML !== event.srcElement[event.srcElement.selectedIndex].innerHTML) {
-            element.setAttribute('style', 'font-weight: normal');
-        } else {
-            element.setAttribute('style', 'font-weight: bold');
-        } */
           // event.target.selectedOptions['0']['innerHTML'] //For Chrome, in IE not working
         this.newDataWhenChanging(1);
       if (this.allDataForCurrentUsercard['USER_CABINET_List'].length > 0) {
-          this.dataForCurrentCabinet = event.srcElement[event.srcElement.selectedIndex].innerHTML;
        loop1:
         for (let i = 0; i < this.allDataForCurrentUsercard['USER_CABINET_List'].length; i++) {
             for (let z = 0; z < this.arrayForCurrentCabinets.length; z++) {
@@ -736,7 +729,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
              this.currentIsnCabinet = this.allDataForCurrentUsercard['USER_CABINET_List'][i]['ISN_CABINET'];
                 this.settingValuesForFieldsCabinets(this.allDataForCurrentUsercard['USER_CABINET_List'][i]);
                 this.postOrMergeQuery = 'MERGE';
-                this.flagForDisableButtonMainCabinet = false;
                 break loop1;
             } else {
                 if (event.target.value === this.arrayForCurrentCabinets[z][2] &&
@@ -746,7 +738,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                     break;
                 }
                 this.postOrMergeQuery = 'POST';
-                this.flagForDisableButtonMainCabinet = true;
                 this.settingValuesForFieldsCabinets('Empty');
             }
           }
@@ -770,8 +761,9 @@ this.startEventCabinet = event;
         let newElementForAllData;
         let currentCabinet;
         this.isShell = true;
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_CARDINDEX, true)
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_CARDINDEX)
         .then((data: string) => {
+            console.log(data);
             return data.split('|');
         })
         .then(data => {

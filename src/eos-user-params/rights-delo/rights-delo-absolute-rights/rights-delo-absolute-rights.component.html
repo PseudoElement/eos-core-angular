@@ -83,8 +83,8 @@
 
     <!-- Подраздиления (Ограничить картотекой Автора) -->
 <ng-template #department>
-    <!-- department!!!<br>{{selectedNode | json}} -->
     <eos-right-absolute-department
+    style="width: 100%;"
         [selectedNode]="selectedNode"
         [curentUser]="curentUser"
         (Changed)="checkChange()"

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserParamApiSrv } from './user-params-api.service';
-import { USER_CL, DEPARTMENT, USERCARD } from 'eos-rest';
+import { USER_CL, DEPARTMENT, USERCARD, PipRX, IEnt } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IParamUserCl } from '../intrfaces/user-parm.intterfaces';
 import { Subject } from 'rxjs/Subject';
@@ -141,7 +141,8 @@ export class UserParamsService {
     }
     constructor (
         private _pipSrv: UserParamApiSrv,
-        private _msgSrv: EosMessageService
+        private _msgSrv: EosMessageService,
+        private _pipRx: PipRX,
     ) {}
     getUserIsn(isn_cl: string = this.userContextId.toString()): Promise<boolean> {
         const queryUser = {
@@ -174,7 +175,7 @@ export class UserParamsService {
             this.SubEmail.next(this._userContext);
             this._createHash();
             if (!this._isTechUser) {
-                return this.getDepartmentFromUser(this._userContext['DUE_DEP']);
+                return this.getDepartmentFromUser([this._userContext['DUE_DEP']]);
             }
             return Promise.resolve([]);
         })
@@ -183,6 +184,7 @@ export class UserParamsService {
                 this._userContextDeparnment = data[0];
                 this._userContext['DUE_DEP_NAME'] = this._userContextDeparnment['CLASSIF_NAME'];
             }
+            this._userContext = this._pipRx.entityHelper.prepareForEdit(this._userContext);
             return true;
         })
         .catch(err => {
@@ -210,41 +212,27 @@ export class UserParamsService {
         });
     }
 
-    getDepartmentFromUser (dueDep: string): Promise<any> {
-        const queryDueDep = {
-            DEPARTMENT: {
-                criteries: {
-                    DUE: dueDep
-                }
-            }
-        };
-        return this._pipSrv.getData<DEPARTMENT>(queryDueDep);
+    getDepartmentFromUser (dueDep: string[]): Promise<DEPARTMENT[]> {
+        return this._pipSrv.getData<DEPARTMENT>({DEPARTMENT: dueDep});
     }
 
-    getUserByIsn (isn) {
-        const queryUser = {
-            USER_CL: {
-                criteries: {
-                    ISN_LCLASSIF: isn
-                }
-            }
-        };
-        return this._pipSrv.getData<USER_CL>(queryUser);
-    }
+    // getUserByIsn (isn) {
+    //     const queryUser = {
+    //         USER_CL: {
+    //             criteries: {
+    //                 ISN_LCLASSIF: isn
+    //             }
+    //         }
+    //     };
+    //     return this._pipSrv.getData<USER_CL>(queryUser);
+    // }
     ceckOccupationDueDep(dueDep: string, dep: DEPARTMENT, isn?: boolean) {/* проверяем прикреплино ли должностное лицо к пользователю */
-        const query = {
-            USER_CL: {
-                criteries: {
-                    DUE_DEP: dueDep
-                }
-            }
-        };
         const mess: IMessage = {
             title: 'Предупреждение:',
             msg: '',
             type: 'warning'
         };
-        return this._pipSrv.getData<USER_CL>(query)
+        return this._pipSrv.getData<USER_CL>({USER_CL: PipRX.criteries({DUE_DEP: dueDep})})
         .then((u: USER_CL[]) => {
             if (!u.length) {
                 return dep;
@@ -262,6 +250,10 @@ export class UserParamsService {
     }
 
     fetchExpandUser() {}
+    createEntyti<T extends IEnt>(ent: any, typeName: string): T {
+        ent.__metadata = { __type: typeName };
+        return ent;
+    }
     private _errorHandler (err) {
         if (err.code === 434) {
             return;

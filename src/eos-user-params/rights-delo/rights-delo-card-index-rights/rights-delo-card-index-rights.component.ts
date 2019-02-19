@@ -110,12 +110,12 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     this.servApi.setData(this.createObjRequestForAttachAfterBackend2())
                     .then(data2 => {
                        this._userParamsSetSrv.getUserIsn('' + this.userCard.get(Array.from(this.userCard)[0][0])['ISN_LCLASSIF']);
-                       localStorage.setItem('FlagToClearData', JSON.stringify(true));
-                       localStorage.removeItem('FuncFileCards');
-                       localStorage.removeItem('arrayDataDocumentsForMerge');
-                       localStorage.removeItem('ArrayDataDocumentsForPost');
-                       localStorage.removeItem('arrayDataDocumentsForDelete');
-                       localStorage.removeItem('arrayDataDocumentsForMergeFirst');
+                       sessionStorage.setItem('FlagToClearData', JSON.stringify(true));
+                       sessionStorage.removeItem('FuncFileCards');
+                       sessionStorage.removeItem('arrayDataDocumentsForMerge');
+                       sessionStorage.removeItem('ArrayDataDocumentsForPost');
+                       sessionStorage.removeItem('arrayDataDocumentsForDelete');
+                       sessionStorage.removeItem('arrayDataDocumentsForMergeFirst');
                        this.msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                     })
                     .catch(data2 => console.log(data2));
@@ -126,7 +126,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     createObjRequestForAttach() {
         const req = [];
         let newDataFromLocalStorageFuncFileCards;
-        newDataFromLocalStorageFuncFileCards = JSON.parse(localStorage.getItem('FuncFileCards'));
+        newDataFromLocalStorageFuncFileCards = JSON.parse(sessionStorage.getItem('FuncFileCards'));
         if (newDataFromLocalStorageFuncFileCards) {
         for (let i = 0; i < newDataFromLocalStorageFuncFileCards.length; i++) {
             const tmp = this.userCard.get(newDataFromLocalStorageFuncFileCards[i][0]);
@@ -155,11 +155,11 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         let newArrayDataDocumentsForMergeFirst;
         let newArrayDataDocumentsForMerge;
         let newArrayDataDocumentsForDelete;
-        newDataFromLocalStorageFuncFileCards = JSON.parse(localStorage.getItem('FuncFileCards'));
-        newArrayDataDocumentsForPost = JSON.parse(localStorage.getItem('ArrayDataDocumentsForPost'));
-        newArrayDataDocumentsForMergeFirst = JSON.parse(localStorage.getItem('arrayDataDocumentsForMergeFirst'));
-        newArrayDataDocumentsForMerge = JSON.parse(localStorage.getItem('arrayDataDocumentsForMerge'));
-        newArrayDataDocumentsForDelete = JSON.parse(localStorage.getItem('arrayDataDocumentsForDelete'));
+        newDataFromLocalStorageFuncFileCards = JSON.parse(sessionStorage.getItem('FuncFileCards'));
+        newArrayDataDocumentsForPost = JSON.parse(sessionStorage.getItem('ArrayDataDocumentsForPost'));
+        newArrayDataDocumentsForMergeFirst = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForMergeFirst'));
+        newArrayDataDocumentsForMerge = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForMerge'));
+        newArrayDataDocumentsForDelete = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForDelete'));
 
       if (newDataFromLocalStorageFuncFileCards && newArrayDataDocumentsForMergeFirst) {
         for (let i = 0; i < newDataFromLocalStorageFuncFileCards.length; i++) {

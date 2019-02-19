@@ -216,7 +216,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 throw new Error();
             }
             dueDep = data;
-            return this._userParamSrv.getDepartmentFromUser(dueDep);
+            return this._userParamSrv.getDepartmentFromUser([dueDep]);
         })
         .then((data: DEPARTMENT[]) => {
             return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true);

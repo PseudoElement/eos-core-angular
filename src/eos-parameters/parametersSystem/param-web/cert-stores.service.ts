@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
 import { Subject } from 'rxjs/Subject';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { PARM_NOT_CARMA_SERVER, PARM_ERR_OPEN_CERT_STORES } from '../shared/consts/eos-parameters.const';
+import { PARM_NOT_CARMA_SERVER, PARM_ERR_OPEN_CERT_STORES, CARMA_UNIC_VALUE } from '../shared/consts/eos-parameters.const';
 import { AbstractControl } from '@angular/forms';
 import { IListStores } from '../shared/consts/web.consts';
 import { Observable } from 'rxjs/Observable';
@@ -26,6 +26,7 @@ export class CertStoresService {
     private orderByAscend: boolean = true;
     private formControlStore: AbstractControl;
     private formControlInitString: AbstractControl;
+   private unicStoreName: Set<string> = new Set();
     constructor(
         private carmaService: CarmaHttpService,
         private msgSrv: EosMessageService
@@ -104,9 +105,14 @@ export class CertStoresService {
         }
     }
     addStores(node: IListStores) {
-        this.listsCetsStores.push(this.createListCertStotes(node));
-        this.updateFormControl$.next(this.createStringForUpdate());
-        this.carmaService.SetCurrentStores(this.listsCetsStores);
+        if (this.unicStoreName.has(node.name)) {
+            this.msgSrv.addNewMessage(CARMA_UNIC_VALUE);
+        }else {
+            this.unicStoreName.add(node.name);
+            this.listsCetsStores.push(this.createListCertStotes(node));
+            this.updateFormControl$.next(this.createStringForUpdate());
+            this.carmaService.SetCurrentStores(this.listsCetsStores);
+        }
     }
     showListCertNode() {
         if (this.isCarmaServer) {
@@ -137,6 +143,9 @@ export class CertStoresService {
                 if (node === this.currentSelectedNode) {
                     this.currentSelectedNode = null;
                     this._currentSelectedNode$.next(null);
+                }
+                if (this.unicStoreName.has(node.Name)) {
+                    this.unicStoreName.delete(node.Name);
                 }
                 this.listsCetsStores.splice(i, 1);
                 i --;
@@ -176,8 +185,10 @@ export class CertStoresService {
     }
 
     private createListCetsStores(): IListCertStotes[] {
+        this.unicStoreName.clear();
         const a = [];
         this.initCarmaStores.forEach(elem => {
+            this.unicStoreName.add(elem.Name);
             a.push(Object.assign({
                 marked: false,
                 isSelected: false,

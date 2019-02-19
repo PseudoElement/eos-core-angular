@@ -28,6 +28,9 @@
             [btnDisabled]="!isChanged || disableSave">
             </eos-user-param-directories>
         </ng-container>
+        <ng-container *ngSwitchCase="'el-signature'">
+            <eos-user-param-el-signature></eos-user-param-el-signature>
+        </ng-container>
         <ng-container *ngSwitchCase="'search'">
             <eos-user-param-search
             (formChanged)="recordChanged($event)"

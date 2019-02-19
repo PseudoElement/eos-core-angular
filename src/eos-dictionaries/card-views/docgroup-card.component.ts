@@ -119,6 +119,10 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
 
         this.setValue('rec.RC_TYPE_NODE', this.getValue('rec.RC_TYPE'));
 
+        if (this.eDocument && this.getValue('rec.IS_COPYCOUNT')) {
+            this.setValue('rec.IS_COPYCOUNT', false);
+        }
+
         if (UNIQ_CHECK_EXPR.test(tpl)) {
             this.setValue('rec.TEST_UNIQ_FLAG', false);
         }
