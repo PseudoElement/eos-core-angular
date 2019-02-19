@@ -56,7 +56,7 @@ export class SignatureAddComponent implements OnInit {
                                 title: arr[arr.length - 1],
                                 name: arr[arr.length - 1],
                                 selected: false,
-                                location: 'sslm',
+                                location: this.certSystemStore === 'sslm' ? 'ssml' : 'sscu',
                                 address: arr[arr.length - 2] || ''
                             });
                         });

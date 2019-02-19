@@ -49,6 +49,7 @@ import {InlineScaningComponent} from '../eos-user-params/inline-scaning/inline-s
 import {UserParamElSignatureComponent} from '../eos-user-params/user-params-set/user-param-el-signature/user-param-el-signature.component';
 import {SignaturePopupComponent} from '../eos-user-params/user-params-set/user-param-el-signature/signature-popup/signature-popup.component';
 import {SignatureAddComponent} from '../eos-user-params/user-params-set/user-param-el-signature/signature-popup/signature-add/signature-add.component';
+import {UserParamsProfSertComponent} from '../eos-user-params/user-params-set/user-param-prof-sert/user-params-prof-sert.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -88,6 +89,7 @@ import {SignatureAddComponent} from '../eos-user-params/user-params-set/user-par
         UserParamElSignatureComponent,
         SignaturePopupComponent,
         SignatureAddComponent,
+        UserParamsProfSertComponent,
     ],
     entryComponents: [
         CardFilesDirectoryModalComponent,
