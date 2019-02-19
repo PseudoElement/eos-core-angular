@@ -155,7 +155,7 @@ export class RightClassifNode {
         });
     }
     DeleteInstance() {
-        if (this.curentSelectedNode.DUE !== '0.') {
+        if (this.curentSelectedNode) {
             this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode);
             this._parentNode.pushChange({
                 method: 'DELETE',
@@ -172,10 +172,10 @@ export class RightClassifNode {
         }
     }
     select(node: NodeDocsTree) {
-        if (node.DUE !== '0.') {
-            this.curentSelectedNode = node;
-        } else {
+        if (node.DUE === '0.' && this.type !== E_TECH_USER_CLASSIF_CONTENT.limitation) {
             this.curentSelectedNode = null;
+        } else {
+            this.curentSelectedNode = node;
         }
     }
     checkedNode(node: NodeDocsTree) {
