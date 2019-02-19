@@ -33,15 +33,25 @@ export class UserParamRegistrationComponent extends UserParamRegistrationSrv {
         this.flagBacground = true;
         this._waitClassifSrv.openClassif(query)
         .then(data => {
-            this.getListOrgGroup((data as string), true).then(list => {
-               if (list) {
-                this.nameAuthorControl  = list[0]['CLASSIF_NAME'];
-                this.form.controls['rec.ORGGROUP_NAME'].patchValue( list[0]['CLASSIF_NAME'], {
-                    emitEvent: false,
+            if (String(data) === '') {
+                this.msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение',
+                    msg: 'Выберите значение',
+                    dismissOnTimeout: 5000,
                 });
-               }
-               this.flagBacground = false;
-            });
+                throw new Error();
+            }   else {
+                this.getListOrgGroup((data as string), true).then(list => {
+                   if (list) {
+                    this.nameAuthorControl  = list[0]['CLASSIF_NAME'];
+                    this.form.controls['rec.ORGGROUP_NAME'].patchValue( list[0]['CLASSIF_NAME'], {
+                        emitEvent: false,
+                    });
+                   }
+                   this.flagBacground = false;
+                });
+            }
         }).catch(error => {
             this.flagBacground = false;
         });
