@@ -138,7 +138,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     ngOnInit() {
         const allDataCard = this._userParamsSetSrv.userCard;
         this.allData = allDataCard;
-       // console.log(this.allData);
         this.isLoading = true;
         this.servApi.getData(this.quaryDepartment)
         .then(data => {
@@ -501,7 +500,6 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         this.newDataWhenChanging(1);
         const req = [];
         const userId = this._userParamsSetSrv.userContextId;
-        console.log(this.arrayForDataFileCardCabinet);
         for (let a = 0; a < this.allData.length; a++) {
         for (let i = 0; i < this.arrayForDataFileCardCabinet.length; i++) {
                 if (this.allData[a]['DUE'] === this.arrayForDataFileCardCabinet[i]['DEPARTMENT_DUE']) {
@@ -763,11 +761,9 @@ this.startEventCabinet = event;
         this.isShell = true;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_CARDINDEX)
         .then((data: string) => {
-            console.log(data);
             return data.split('|');
         })
         .then(data => {
-            console.log(data);
             if (this._checkRepeat(data)) {
                 this._msgSrv.addNewMessage({
                     type: 'warning',
@@ -819,11 +815,9 @@ this.startEventCabinet = event;
                 }
             };
 
-            console.log(quaryCabinetData);
         this.servApi.getData(quaryCabinetData)
         .then(data3 => {
          cabinetDataset = [];
-         console.log(data3);
             for (let t = 0; t < data3.length; t++) {
                 currentCabinet = {
                     CompositePrimaryKey: '' + data3[t]['ISN_CABINET'] + ' ' + userId,

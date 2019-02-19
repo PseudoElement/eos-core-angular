@@ -11,7 +11,6 @@ import { DOCUMENT_GROUPS } from '../../shared-rights-delo/consts/card-index-righ
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { FormGroup } from '@angular/forms';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
-// import { IChengeItemInFileCard } from '../../shared-rights-delo/interfaces/right-delo.intefaces';
 
 @Component({
     selector: 'eos-right-side-list-card',
@@ -96,7 +95,6 @@ export class RightSideListCardComponent implements OnInit {
                             str = this.setCharAt(str, +this.selectedNode2.key, '1');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                           // sessionStorage.removeItem('FuncFileCards');
                            sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];

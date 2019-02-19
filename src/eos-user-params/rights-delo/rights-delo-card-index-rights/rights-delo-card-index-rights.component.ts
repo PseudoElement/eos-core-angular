@@ -230,7 +230,6 @@ requestUri: `USER_CL(${newArrayDataDocumentsForMerge[t]['ISN_LCLASSIF']})/USERCA
         }
         }
     }
-    console.log(req);
     return req;
     }
 

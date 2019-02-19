@@ -155,7 +155,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                             }
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                          //  sessionStorage.removeItem('FuncFileCards');
                           sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
@@ -289,7 +288,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                             str = this.setCharAt(str, +this.selectedNode2.key, '2');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                           // sessionStorage.removeItem('FuncFileCards');
                            sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
@@ -365,7 +363,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                             str = this.setCharAt(str, +this.selectedNode2.key, '1');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                          //  sessionStorage.removeItem('FuncFileCards');
                           sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
@@ -393,7 +390,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                 this.arrayDataDocumentsForMergeFirst = [];
                 this.arrayDataDocumentsForMerge = [];
                 this.arrayDataDocumentsForPost = [];
-                console.log(this.arrayDataDocumentsForDelete);
                 this.arrayDataDocumentsForDelete = [];
                 flagFromLH = false;
                 sessionStorage.setItem('FlagToClearData', JSON.stringify(false));
@@ -413,7 +409,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
             const newClassif = result_classif !== '' || null || undefined ? result_classif : '0.';
             this._limitservise.getCodeNameDOCGROUP(String(newClassif))
             .then(result => {
-                console.log(result);
                 if (this._checkRepeat(result, item)) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
@@ -442,7 +437,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                     }
                     }
                 }
-              //  this.arrayDataDocumentsForPost = [];
             }).then(() => {
                 item[3].openDocumentTree = !item[3].openDocumentTree;
                 setTimeout(() => {
@@ -458,14 +452,10 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
     removeDocuments() {
         let tmp;
         let flagTmp = false;
-      //  console.log(this.curentNode);
         if (this.curentNode.DUE !== '0.') {
-          //  console.log(this.listAllData);
             for (let i = 0; i < this.listAllData.length; i++) {
-              //  console.log(this.listAllData[i][2]);
                 if (this.listAllData[i][2] !== (null || undefined)) {
                     for (let j = 0; j < this.listAllData[i][2].length; j++) {
-                     //   console.log(this.listAllData[i][2][j]);
                         if (this.listAllData[i][2][j] === this.curentNode) {
                             this.listAllData[i][2].splice(j, 1);
                             this.listAllData[i][3].openDocumentTree = !this.listAllData[i][3].openDocumentTree;

@@ -105,10 +105,7 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
    let newDataFromLocalStorageFuncFileCards = null;
    const arrayDoc = [];
 
-   console.log(event);
-
   if (!event.target) {
-      console.log(event);
       rightDocGroup = {
         ISN_LCLASSIF: event.data.rightDocGroup['ISN_LCLASSIF'],
         FUNC_NUM: +this.selectedNode2.key + 1, // +1
@@ -142,7 +139,6 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
         this.arrayDataDocumentsForMergeFirst = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForMergeFirst'));
     }
     if (this.form.controls[item.key].value === false) {
-        console.log(this.listAllData);
         for (let i = 0; i < this.listAllData.length; i++) {
             if (this.listAllData[i][0]['key'] === item.key) {
                 for (let j = 0; j < Array.from(this.userCard).length; j++) {
@@ -155,7 +151,6 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                             str = this.setCharAt(str, +this.selectedNode2.key, '1');
                             Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                           // sessionStorage.removeItem('FuncFileCards');
                            sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                           } else {
                             str = Array.from(this.userCard)[j][1]['FUNCLIST'];
@@ -232,7 +227,6 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
             }
     }
     } else if (this.form.controls[item.key].value === true) {
-        console.log(this.listAllData);
         for (let i = 0; i < this.listAllData.length; i++) {
             if (this.listAllData[i][0]['key'] === item.key) {
                 for (let j = 0; j < Array.from(this.userCard).length; j++) {
@@ -392,7 +386,6 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                 card['department'] = d;
                 this.allData.push(card);
             });
-         //   console.log(this.allData);
             for (let i = 0; i < this.allData.length; i++) {
                 this.listCards.push({
                     controlType: E_FIELD_TYPE.boolean,
@@ -447,7 +440,6 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                             })
                             .then(() => {
                                 if (j === (this.allData[i]['USER_CARD_DOCGROUP_List'].length - 1) && this.list.length) {
-                                 //   console.log(this.list);
                                     this.listAllData[i].push(this.list);
                                     this.listAllData[i].push({openDocumentTree: false});
                                     this.list = [];
@@ -482,7 +474,6 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
     }
 
     private _createNode(rDoc, doc: DOCGROUP_CL): NodeDocsTree {
-        console.log(!!rDoc.ALLOWED);
         const cfg: INodeDocsTreeCfg = {
             due: doc.DUE,
             label: doc.CLASSIF_NAME,
