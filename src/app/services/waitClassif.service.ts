@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { IOpenClassifParams } from 'eos-common/interfaces';
-import { ApiCfg } from 'eos-rest/core/api-cfg';
 
 const LIST_OLD_PAGES: string[] = [
     'CARDINDEX',
@@ -12,7 +11,7 @@ const NEW_VIEW_URL: string = 'Eos.Delo.JsControls/Classif/ChooseClassif.aspx?';
 
 @Injectable()
 export class WaitClassifService {
-    constructor(private _apiCfg: ApiCfg) {
+    constructor() {
         window['Rootpath'] = function() {
             return 'classif';
         };
@@ -40,7 +39,7 @@ export class WaitClassifService {
         });
     }
     private _prepareUrl(params: IOpenClassifParams): string {
-        let url = this._apiCfg.webBaseUrl;
+        let url = '../';
         url += (LIST_OLD_PAGES.indexOf(params.classif) !== -1) ? OLD_VIEW_URL : NEW_VIEW_URL;
         url += `Classif=${params.classif}`;
         url += params.return_due ? '&return_due=true' : '';
