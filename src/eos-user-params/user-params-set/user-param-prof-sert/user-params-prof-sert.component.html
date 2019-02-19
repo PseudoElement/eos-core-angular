@@ -4,7 +4,7 @@
     [link] = 'link'
     [selfLink] = 'selfLink'
     [disableBtn] = "!btnDisabled"
-    [defaultBtn] = 'true'
+    [defaultBtn] = 'false'
     (submitEmit) = 'submit($event)'
     (cancelEmit) = 'cancellation($event)'
     (editEmit) = 'edit($event)'
@@ -13,8 +13,135 @@
 ></eos-user-params-header>
 </div>
 
-<div class="input-user-wrapper input-user-other-rk-forwarding-wrapper scrollWrapper signature">
-    <div class="user-input-group">
-        sdf
+<div class="input-user-wrapper input-user-other-rk-forwarding-wrapper signature">
+    <div class="edit-bacground" *ngIf='!editFlag'></div>
+    <div class="user-input-group ">
+        <span class="sert-title">Добавить сертификат для подписания прикрепленных файлов</span>
+        <hr>
+        <div class="form-group flex-wr">
+            <span class="new-sert-name">{{selectedFromAllList ? selectedFromAllList.whom : null  || 'сертификат не выбран'}}</span>
+            <div class="">
+                <button
+                class="btn btn-primary-light"
+                tooltip= 'Выбрать сертификат'
+                containerClass="tooltip-info"
+                placement="bottom"
+                (click) = 'chooseSertificate(template)'>
+                    <span class="eos-icon eos-icon-download small"></span>
+                </button>
+                <button
+                    tooltip='Показать сертификат'
+                    [disabled]= '!selectedFromAllList'
+                    class="btn btn-primary-light"
+                    containerClass="tooltip-info"
+                    placement="bottom"
+                    (click)='showSert(selectedFromAllList.id)'>
+                    <span class="eos-icon eos-icon-info-blue small"></span>
+                </button>
+                <button
+                    class="btn btn-primary-light"
+                    tooltip='Добавить сертификат'
+                    containerClass="tooltip-info"
+                    placement="bottom"
+                    [disabled]= '!selectedFromAllList'
+                    (click)= 'addSertificate(selectedFromAllList)'>
+                        <span class="eos-icon eos-icon-plus-blue small"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="scrollWrapper">
+       <div class="sert-table">
+           <div class="sert-table-nav">
+               <button
+               [disabled]="!listsSertInfo || listsSertInfo.length === 0"
+               class="btn btn-primary-light"
+               tooltip='Показать сертификат'
+               containerClass="tooltip-info"
+               (click) = 'showSert()'
+               ><span class="eos-icon eos-icon-info-blue small"></span></button>
+               <button
+               [disabled]="!listsSertInfo || listsSertInfo.length === 0"
+               class="btn btn-primary-light"
+               tooltip='Удалить сертификат'
+               containerClass="tooltip-info"
+               (click) = 'deleteSertificate()'
+               ><span class="eos-icon eos-icon-close-blue small"></span></button>
+           </div>
+           <div class="sert-table-head">
+               <span class="sert-table-whom">Кому выдан</span>
+               <span class="sert-table-serial">Серийный номер</span>
+               <span class="sert-table-who">Кем выдан</span>
+           </div>
+           <div class="sert-table-body">
+               <div class="sert-table-content" *ngFor='let listSert of listsSertInfo' >
+                <div [ngStyle]="{'color': !listSert.valid ? '#fdc309' : 'black'}" (click)="selectCurent(listSert)" [ngClass]="{selected: listSert.selected}" class="sert-info-wr" *ngIf='!listSert.delete'>
+                    <span
+                        tooltip="{{listSert.whom}}"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        container="body"
+                    class="whom">{{listSert.whom}}</span>
+                    <span
+                        tooltip="{{listSert.sn}}"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        container="body"
+                    class="serial">{{listSert.sn}}</span>
+                    <span
+                    tooltip="{{listSert.who}}"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                    container="body"
+                    class="who">{{listSert.who}}</span>
+                </div>
+               </div>
+           </div>
+       </div>
     </div>
 </div>
+<ng-template #template>
+    <div class="modal-header">
+        <div class="modal-flex-wr">
+                <h4 class="modal-title pull-left">Выбор сертификата</h4>
+                <div class="modal-button">
+                        <button
+                        [disabled]='!selectedSertificatePopup'
+                        class="btn btn-primary-light"
+                       (click)= 'modalRef.hide(); addSert()'>
+                       выбрать
+                   </button>
+                   <button
+                       class="btn btn-primary-light"
+                       (click)= 'modalRef.hide()'>
+                      отмена
+                   </button>
+                </div>
+        </div>
+
+    </div>
+    <div class="modal-body">
+            <div class="sert-table-head">
+                    <span class="sert-table-whom">Кому выдан</span>
+                    <span class="sert-table-serial">Серийный номер</span>
+                    <span class="sert-table-who">Кем выдан</span>
+                </div>
+                <div class="sert-table-body">
+                    <div [ngStyle]="{'color': !listall.valid ? '#fdc309' : 'black'}" (click)="selectCurentListAll(listall)"
+                     [ngClass]="{selected: listall.selected}" class="sert-table-content" *ngFor='let listall of alllistSertInfo'>
+                        <span [tooltip]='listall.whom'
+                        containerClass="tooltip-info"
+                       class="whom">{{listall.whom}}</span>
+                        <span
+                        [tooltip]='listall.sn'
+                        containerClass="tooltip-info"
+                       class="serial">{{listall.sn}}</span>
+                        <span
+                        [tooltip]='listall.who'
+                        containerClass="tooltip-info"
+                        class="who">{{listall.who}}</span>
+                    </div>
+                </div>
+    </div>
+</ng-template>

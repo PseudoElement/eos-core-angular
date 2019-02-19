@@ -339,4 +339,12 @@ export class CarmaHttpService extends CarmaConnectionInterface {
             senderCertId: certId
         });
     }
+
+    GetCertInfo2(certId: string): Promise<any> {
+        return this.request({
+            mode: this.mode_getcertinfo2,
+            senderCertId: certId,
+            needExtraction: true,
+        }).toPromise();
+    }
 }
