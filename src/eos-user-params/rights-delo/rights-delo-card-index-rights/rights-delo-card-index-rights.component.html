@@ -8,106 +8,113 @@
     ></eos-rights-delo-header>
 <div class="user-input-group">
 <div class="left-block-list-side">
-<div *ngFor="let item of listNode" (click)="selectNode(item)" [ngClass]="{'highlighted': item.data.isSelected}">
-    <label>
+<div *ngFor="let item of listRight" [ngClass]="{'highlighted': item.isSelected}">
+    <div [formGroup]="form">
+    <label (click)="clickLable($event, item)">
         <span>{{item.label}}</span>
     </label>
+    </div>
 </div>
 </div>
 <div class="right-block-list-side">
-    <div *ngIf="flagToDisplayTheRightSide" class="usual-border border-bottom toolbar-line">
-                <button
-                    class="btn btn-primary-light"
-                    tooltip="Добавить"
-                    placement="bottom"
-                    triggers="hover"
-                    containerClass="tooltip-info"
-                    [ngClass]="{'hiden-btn': btnAddHiden}"
-                    (click)="[OpenClassiv(), hideToolTip()]">
-                    <span class="eos-icon eos-icon-plus-blue small"></span>
-                </button>
-                <button
-                    class="btn btn-primary-light"
-                    tooltip="Удалить"
-                    placement="bottom"
-                    triggers="hover"
-                    containerClass="tooltip-info"
-                    aria-readonly="false"
-                    [ngClass]="{'hiden-btn': btnMinusHiden}"
-                    (click)="[removeDocuments(),  hideToolTip()]">
-                    <span class="eos-icon eos-icon-minus-blue small"></span>
-                </button>
-    </div>
-    <div class="content-list" *ngIf="!isLoading">
-    <div *ngFor="let item of treeHierarchyOnTheRightSide" class="inline-block item-card">
-        <div *ngIf="item.documents && flagToDisplayTheRightSide"
-             class="tree-btn inline-block"
-             (click)="openFolder($event, item)">
-                    <span class="eos-icon tringle-size icon"
-                          [ngClass]="{'eos-icon-open-folder-blue': item.openFolder, 'eos-icon-close-folder-blue': !item.openFolder}" ></span>
-                </div>
-        <div class="card-item">
-        <div [formGroup]="form" [ngClass]="{'highlighted': item.card.data.isSelected}">
-            <label class="checkbox" (click)="checkData($event, item, 'card')">
-                <input type="checkbox"
-                    hide
-                    [formControlName]="item.card.key"
-                    [id]="item.card.key"
-                >
-                <span class="eos-icon eos-icon-checkbox-square-blue x-small">
-                </span>
-                {{item.card.label}}
-            </label>
-        </div>
-    </div>
+    <ng-container [ngSwitch]="selectedNode2.key">
+        <ng-container *ngSwitchCase="0">
+            <ng-container *ngTemplateOutlet="docGroup"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="1">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="2">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="18">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="19">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="20">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="3">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="4">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="5">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="6">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="7">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="8">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="9">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="10">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="11">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="12">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="13">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="14">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="15">
+            <ng-container *ngTemplateOutlet="docGroupCard"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="16">
+            <ng-container *ngTemplateOutlet="none"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="17">
+            <ng-container *ngTemplateOutlet="docGroup"></ng-container>
+        </ng-container>
+    </ng-container>
+</div>
+</div>
 
-        <div *ngIf="item.restrictRegistrationFiling && flagToDisplayTheRightSide"
-             class="tree-elements"
-             [hidden]="!item.openFolder"
-             [ngClass]="{'highlighted': item.restrictRegistrationFiling.data.isSelected}">
-             <div [formGroup]="form">
-                 <label class="checkbox"
-                        (click)="checkData($event, item, 'restrict')">
-                     <input type="checkbox"
-                         hide
-                         [formControlName]="item.restrictRegistrationFiling.key"
-                         [id]="item.restrictRegistrationFiling.key"
-                     >
-                     <span class="eos-icon eos-icon-checkbox-square-blue x-small">
-                     </span>
-                     {{item.restrictRegistrationFiling.label}}
-                 </label>
-             </div>
-             </div>
-        <div *ngIf="item.documents && flagToDisplayTheRightSide"
-             class="tree-elements"
-             [hidden]="!item.openFolder">
-             <div *ngFor="let item2 of item.documents"
-                  [ngClass]="{'highlighted': allDocuments[item2.INDEX_FOR_SELECT].data.isSelected}">
-             <div [formGroup]="form">
-                 <label class="checkbox"
-                        (click)="checkData($event, item2, 'documents')">
-                     <input type="checkbox"
-                         hide
-                         [formControlName]="item2.DUE_DOCUMENT"
-                         [id]="item2.DUE_DOCUMENT"
-                     >
-                     <span class="eos-icon eos-icon-checkbox-square-blue x-small">
-                     </span>
-                     {{item2.NAME}}
-                 </label>
-             </div>
-             </div>
-             </div>
-</div>
-</div>
-</div>
-</div>
+<!-- Правая часть(картотеки с документами) -->
+<ng-template #docGroup>
+    <eos-right-side-doc-group-in-file-card
+        style="width: 100%;"
+        [selectedNode2]="selectedNode2"
+        [curentUser]="curentUser"
+    ></eos-right-side-doc-group-in-file-card>
+</ng-template>
+<!-- Правая часть(картотеки с документами и огрничением) -->
+<ng-template #docGroupCard>
+    <eos-right-side-doc-group-and-restriction-in-file-card
+        style="width: 100%;"
+        [selectedNode2]="selectedNode2"
+        [curentUser]="curentUser"
+    ></eos-right-side-doc-group-and-restriction-in-file-card>
+</ng-template>
+<!-- Правая часть(картотеки) -->
+<ng-template #none>
+    <eos-right-side-list-card
+        style="width: 100%;"
+        [selectedNode2]="selectedNode2"
+        [curentUser]="curentUser"
+    ></eos-right-side-list-card>
+</ng-template>
 </div>
 <div *ngIf="!flagCardFileAvailability">
 <h1 class="warning-record">Отсутствуют картотеки!</h1>
 </div>
 </div>
+
 
 <div class="spinner-wrapper" *ngIf="isLoading && flagCardFileAvailability">
         <eos-spinner [size]="'lg'"></eos-spinner>
