@@ -1,4 +1,4 @@
-import { IListDocsTree } from '../intrfaces/user-parm.intterfaces';
+import { IListDocsTree, INodeDocsTreeCfg } from '../intrfaces/user-parm.intterfaces';
 
 export class NodeDocsTree implements IListDocsTree {
     DUE: string;
@@ -10,17 +10,13 @@ export class NodeDocsTree implements IListDocsTree {
     link: string[];
     isSelected: boolean = false;
     isExpanded: boolean = true;
-    private _allowed: boolean;
-    get allowed(): boolean {
-        return this._allowed;
-    }
-    set allowed(value: boolean) {
-        this._allowed = value;
-    }
-    constructor(due: string, label: string, allowed: boolean, data?: any) {
+    isAllowed: boolean;
+    isviewAllowed: boolean;
+    constructor({due, label, allowed, data, viewAllowed}: INodeDocsTreeCfg) {
         this.DUE = due;
         this.label = label;
-        this._allowed = allowed;
+        this.isAllowed = allowed;
+        this.isviewAllowed = viewAllowed === undefined ? true : viewAllowed;
         this.data = data;
         this.link = due.split('.');
         this.link.pop();

@@ -6,6 +6,7 @@ import { IOpenClassifParams } from 'eos-common/interfaces';
 import { DOCGROUP_CL, DEPARTMENT } from 'eos-rest';
 import { NodeDocsTree } from '../../../../eos-user-params/shared/list-docs-tree/node-docs-tree';
 import {PARM_SUCCESS_SAVE, PARM_ERROR_SEND_FROM, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
+import { INodeDocsTreeCfg } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 @Injectable()
 export class UserParamOtherSrv extends BaseUserSrv {
     readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов', 'Шаблоны'];
@@ -161,7 +162,13 @@ export class UserParamOtherSrv extends BaseUserSrv {
     }
     getListDoc(list: DOCGROUP_CL[]) {
         list.forEach((item: DOCGROUP_CL) => {
-            this.listDocGroup.push(new NodeDocsTree(item.DUE, item.CLASSIF_NAME, true, item));
+            const cfg: INodeDocsTreeCfg = {
+                due: item.DUE,
+                label: item.CLASSIF_NAME,
+                allowed: true,
+                data: item,
+            };
+            this.listDocGroup.push(new NodeDocsTree(cfg));
         });
         this._createStructure(this.listDocGroup);
     }
@@ -343,7 +350,13 @@ export class UserParamOtherSrv extends BaseUserSrv {
             this.getDocGroupName(String(isn)).then((res: DOCGROUP_CL[]) => {
                 res.forEach((doc: DOCGROUP_CL) => {
                     if (!this.checkAddedTree(doc.DUE)) {
-                        this.listDocGroup.push(new NodeDocsTree(doc.DUE, doc.CLASSIF_NAME, true, doc));
+                        const cfg: INodeDocsTreeCfg = {
+                            due: doc.DUE,
+                            label: doc.CLASSIF_NAME,
+                            allowed: true,
+                            data: doc,
+                        };
+                        this.listDocGroup.push(new NodeDocsTree(cfg));
                     }
                 });
                 this._createStructure(this.listDocGroup);
@@ -384,10 +397,10 @@ export class UserParamOtherSrv extends BaseUserSrv {
     setFillSendFrom(res: DEPARTMENT[]) {
         if (res.length > 0) {
             const depart = res[0];
-            this.sendFrom = depart.CLASSIF_NAME;
             if (depart.EXPEDITION_FLAG <= 0) {
                 this.msgSrv.addNewMessage(PARM_ERROR_SEND_FROM);
             }   else {
+                this.sendFrom = depart.CLASSIF_NAME;
                 this.form.controls['rec.ADDR_EXPEDITION'].patchValue(depart.DUE);
             }
         }

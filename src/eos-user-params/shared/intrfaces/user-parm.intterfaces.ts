@@ -23,6 +23,7 @@ export interface IInputParamControl {
 }
 
 export interface IInputParamControlForIndexRight {
+      controlType: E_FIELD_TYPE;
       key?: string;
       value?: any;
       dict?: string;
@@ -55,10 +56,18 @@ export interface IParamUserCl extends USER_CL {
 export interface IListDocsTree {
     DUE: string;
     label: string;
-    allowed: boolean;
+    isAllowed: boolean;
     children: NodeDocsTree[];
     parent: NodeDocsTree;
     layer: number;
+}
+
+export interface INodeDocsTreeCfg {
+    due: string;
+    label: string;
+    allowed?: boolean;
+    data?: any;
+    viewAllowed?: boolean;
 }
 
 export interface NpUserLinks {

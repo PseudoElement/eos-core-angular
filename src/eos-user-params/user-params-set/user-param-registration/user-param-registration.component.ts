@@ -31,10 +31,11 @@ export class UserParamRegistrationComponent extends UserParamRegistrationSrv {
             selectNodes: true,
         };
         this.flagBacground = true;
-        this._waitClassifSrv.openClassif(query, true)
+        this._waitClassifSrv.openClassif(query)
         .then(data => {
             this.getListOrgGroup((data as string), true).then(list => {
                if (list) {
+                this.nameAuthorControl  = list[0]['CLASSIF_NAME'];
                 this.form.controls['rec.ORGGROUP_NAME'].patchValue( list[0]['CLASSIF_NAME'], {
                     emitEvent: false,
                 });

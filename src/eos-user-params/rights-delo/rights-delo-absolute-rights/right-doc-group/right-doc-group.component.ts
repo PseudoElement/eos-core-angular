@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { NodeAbsoluteRight } from '../node-absolute';
-import { IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { IParamUserCl, INodeDocsTreeCfg } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 // import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { WaitClassifService } from 'app/services/waitClassif.service';
@@ -42,7 +42,7 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
         }
     }
     checkedNode(node: NodeDocsTree) {
-        node.data['rightDocGroup']['ALLOWED'] = +node.allowed;
+        node.data['rightDocGroup']['ALLOWED'] = +node.isAllowed;
         this.selectedNode.pushChange({
             method: 'MERGE',
             due: node.DUE,
@@ -163,15 +163,16 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
         });
     }
     private _createNode(rDoc, doc: DOCGROUP_CL): NodeDocsTree {
-        return new NodeDocsTree(
-            doc.DUE,
-            doc.CLASSIF_NAME,
-            !!rDoc.ALLOWED,
-            {
+        const cfg: INodeDocsTreeCfg = {
+            due: doc.DUE,
+            label: doc.CLASSIF_NAME,
+            allowed: !!rDoc.ALLOWED,
+            data: {
                 rightDocGroup: rDoc,
                 docGroup: doc
-            }
-        );
+            },
+        };
+        return new NodeDocsTree(cfg);
     }
     private _checkRepeat(arrDoc: DOCGROUP_CL[]): boolean {
         this.list.forEach((node: NodeDocsTree) => {

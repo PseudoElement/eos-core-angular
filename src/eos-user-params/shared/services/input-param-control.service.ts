@@ -6,7 +6,7 @@ import { DateInput } from 'eos-common/core/inputs/date-input';
 // import { ISelectInput } from 'eos-common/interfaces';
 // import { ButtonsInput } from 'eos-common/core/inputs/buttons-input';
 import { StringInput } from 'eos-common/core/inputs/string-input';
-import { IInputParamControl } from '../intrfaces/user-parm.intterfaces';
+import { IInputParamControl, IInputParamControlForIndexRight } from '../intrfaces/user-parm.intterfaces';
 import { FormGroup, FormControl, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { NOT_EMPTY_STRING } from 'eos-common/consts/common.consts';
 import { EosUtils } from 'eos-common/core/utils';
@@ -15,6 +15,36 @@ import { RadioInput } from 'eos-common/core/inputs/radio-input';
 
 export class InputParamControlService {
     generateInputs(inputs: IInputParamControl[]) {
+        const set = {};
+        inputs.forEach(input => {
+            switch (input.controlType) {
+                case E_FIELD_TYPE.text:
+                    set[input.key] = new TextInput(input);
+                    break;
+                case E_FIELD_TYPE.boolean:
+                    set[input.key] = new CheckboxInput(input);
+                    break;
+                case E_FIELD_TYPE.date:
+                    set[input.key] = new DateInput(input);
+                    break;
+                case E_FIELD_TYPE.select:
+                    set[input.key] = new DropdownInput(Object.assign({options: []}, input));
+                    break;
+                case E_FIELD_TYPE.radio:
+                    set[input.key] = new RadioInput(input);
+                    break;
+                // case E_FIELD_TYPE.buttons:
+                //     set[input.key] = new ButtonsInput(<ISelectInput>input);
+                //     break;
+                default:
+                    set[input.key] = new StringInput(input);
+                    break;
+            }
+        });
+        return set;
+    }
+
+    generateInputs2(inputs: IInputParamControlForIndexRight[]) {
         const set = {};
         inputs.forEach(input => {
             switch (input.controlType) {

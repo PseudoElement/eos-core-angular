@@ -5,10 +5,11 @@ import { CARD_FILES_USER } from '../shared-rights-delo/consts/card-files.consts'
 import { BsModalRef } from 'ngx-bootstrap';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosUtils } from 'eos-common/core/utils';
-import { PARM_SUCCESS_SAVE, PARM_NO_MAIN_CARD } from '../shared-rights-delo/consts/eos-user-params.const';
+import { PARM_NO_MAIN_CARD } from '../shared-rights-delo/consts/eos-user-params.const';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_CARDINDEX } from 'app/consts/query-classif.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 
 @Component({
     selector: 'eos-rights-delo-card-files',
@@ -32,6 +33,15 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
     arrayForCurrentCabinets = [];
     arrayNewData = [];
     arrayUpdateData = [];
+    arrayWithOldMainCabinet = [];
+    arrayWithNewMainCabinet = [];
+    dataForCurrentCabinet;
+    arrayWithDataForOldMainCabinet = [];
+    oldIncrementForMainCabinet;
+    flagForDisableButtonMainCabinet = false;
+    currentEventSelectCabinet;
+    currentIncrementForEventSelectCabinet;
+    currentIndexMainCabinet;
     allData;
     arrayKeysCheckboxforCabinets = [
         ['USER_ACCOUNTS_RECEIVED', 'Поступившие'],
@@ -288,7 +298,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                       this.selectOnClick(this.startEventCabinet, null);
                    }
                     this.allData = this._userParamsSetSrv.userCard;
-                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                    this.msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                     this._userParamsSetSrv.getUserIsn(userId);
                 })
                 // tslint:disable-next-line:no-console
@@ -619,7 +629,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                         this.globalMainCard = this.fieldKeysforCardFiles[i][0];
                         if (this.allData[j]['USER_CABINET_List'].length > 0) {
                             this.flagForFirstShowSelect = true;
-                            this.allDataForCurrentCabinet = this.allData[j]['USER_CABINET_List'][0];
+                            this.allDataForCurrentCabinet = this.allData[j]['USER_CABINET_List'];
                             this.allDataForCurrentUsercard = this.allData[j];
                         } else {
                             this.settingValuesForFieldsCabinets('Empty');
@@ -749,7 +759,7 @@ this.startEventCabinet = event;
         let newElementForAllData;
         let currentCabinet;
         this.isShell = true;
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_CARDINDEX, true)
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_CARDINDEX)
         .then((data: string) => {
             return data.split('|');
         })

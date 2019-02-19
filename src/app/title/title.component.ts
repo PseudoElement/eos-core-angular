@@ -10,8 +10,6 @@ export class TitleComponent {
     /* todo: define it or remove. Mocked now*/
     title = 'Администрирование системы';
     openDelo() {
-        let url = document.location.href.split('#')[0];
-        url = url.slice(0, url.lastIndexOf('Classif')) + 'main.aspx';
-        document.location.assign(url);
+        document.location.assign('../main.aspx');
     }
 }

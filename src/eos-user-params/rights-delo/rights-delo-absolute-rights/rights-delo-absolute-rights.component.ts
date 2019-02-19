@@ -62,7 +62,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.listRight = this._createList(ABSOLUTE_RIGHTS);
         this.subForm = this.form.valueChanges
             .subscribe(() => {
-                this.listRight.forEach(node => {
+               this.listRight.forEach(node => {
                     this.arrNEWDeloRight[+node.key] = node.value.toString();
                 });
                 this.checkChange();

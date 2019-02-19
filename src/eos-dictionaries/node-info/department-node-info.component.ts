@@ -7,6 +7,8 @@ import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {DictionaryDescriptorService} from '../core/dictionary-descriptor.service';
 import {EosDictionary} from '../core/eos-dictionary';
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
+import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
 
 @Component({
     selector: 'eos-department-node-info',
@@ -23,7 +25,9 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
 
     constructor(
         private _modalSrv: BsModalService,
-        private _descrSrv: DictionaryDescriptorService
+        private _descrSrv: DictionaryDescriptorService,
+        private _eaps: EosAccessPermissionsService,
+        private _msgSrv: EosMessageService,
     ) {
         super();
     }
@@ -71,15 +75,23 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
     }
 
     createUser() {
-        this.createUserModal = this._modalSrv.show(CreateUserComponent, {
-            class: 'param-create-user',
-            ignoreBackdropClick: true,
-        });
-        this.createUserModal.content.initDue = this.node.data.rec['DUE'];
-        this.createUserModal.content.initLogin = this.fioTogin(this.node.data.rec['CLASSIF_NAME']);
-        this.createUserModal.content.closedModal.subscribe(() => {
-            this.createUserModal.hide();
-        });
+        if (this._eaps.isAccessGrantedForUsers()) {
+            this.createUserModal = this._modalSrv.show(CreateUserComponent, {
+                class: 'param-create-user',
+                ignoreBackdropClick: true,
+            });
+            this.createUserModal.content.initDue = this.node.data.rec['DUE'];
+            this.createUserModal.content.initLogin = this.fioTogin(this.node.data.rec['CLASSIF_NAME']);
+            this.createUserModal.content.closedModal.subscribe(() => {
+                this.createUserModal.hide();
+            });
+        } else {
+            this._msgSrv.addNewMessage({
+                type: 'warning',
+                title: 'Предупреждение:',
+                msg: 'У Вас нет права изменять параметры модуля "Пользователи"',
+            });
+        }
     }
 
 
