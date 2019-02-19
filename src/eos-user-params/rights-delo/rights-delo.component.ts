@@ -18,7 +18,7 @@ export class ParamsRightsDeloComponent implements OnInit {
     constructor(
         private _route: ActivatedRoute,
         private _confirmSrv: ConfirmWindowService,
-        private _userParamDescSrv: UserParamsDescriptorSrv
+        private _userParamDescSrv: UserParamsDescriptorSrv,
     ) {
         this._route.params.subscribe(param => {
             if (param['sub-field']) {

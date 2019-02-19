@@ -174,6 +174,7 @@ const routes: Routes = [{
                 {
                     path: ':sub-field',
                     component: UserParamsComponent,
+                    canDeactivate: [CanDeactivateGuard],
                     data: {
                         showNav: true
                     }
@@ -182,6 +183,7 @@ const routes: Routes = [{
                     path: '',
                     pathMatch: 'full',
                     component: UserParamsComponent,
+                    canDeactivate: [CanDeactivateGuard],
                     data: {
                         showNav: true
                     }

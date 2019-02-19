@@ -2,13 +2,7 @@ import { Component, EventEmitter, Output, OnInit, ViewChild, TemplateRef } from 
 import { CollectionService, ICollectionList } from './collection.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-
-export const CONFIRM_SAVE_ON_LEAVE = {
-    title: 'Имеются несохранённые изменения',
-    body: 'Внесённые изменения могут быть потеряны.',
-    okTitle: 'Сохранить и закрыть',
-    cancelTitle: 'Закрыть без сохранения'
-};
+import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 
 @Component({
     selector: 'eos-param-auth-collection',

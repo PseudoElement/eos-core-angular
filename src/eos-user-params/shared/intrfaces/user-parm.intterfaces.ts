@@ -76,3 +76,7 @@ export interface NpUserLinks {
     CHECKED?: boolean;
     ACTION?: string;
 }
+export interface IUserSetChanges {
+    isChange: boolean;
+    disableSave?: boolean;
+}

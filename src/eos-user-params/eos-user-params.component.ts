@@ -1,10 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { UserParamsService } from './shared/services/user-params.service';
 import { NavParamService } from 'app/services/nav-param.service';
 import { USER_PARAMS_LIST_NAV } from './shared/consts/user-param.consts';
 import { IParamAccordionList } from './shared/intrfaces/user-params.interfaces';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
+import { IUserSetChanges } from './shared/intrfaces/user-parm.intterfaces';
 
 @Component({
     selector: 'eos-user-params',
@@ -18,11 +21,14 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     isNewUser: boolean = false;
     pageId: 'param-set' | 'email-address' | 'rights-delo' | 'base-param';
     private ngUnsubscribe: Subject<any> = new Subject();
+    private _isChanged: boolean;
+    private _disableSave: boolean;
     constructor (
         private _navSrv: NavParamService,
         private _router: Router,
         private _route: ActivatedRoute,
-        private _userParamService: UserParamsService
+        private _userParamService: UserParamsService,
+        private _confirmSrv: ConfirmWindowService,
     ) {
         this._route.params
             .takeUntil(this.ngUnsubscribe)
@@ -58,6 +64,12 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                     });
                     this.isShowAccordion = true;
             });
+            this._userParamService.hasChanges$
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe(({isChange, disableSave}: IUserSetChanges) => {
+                this._isChanged = isChange;
+                this._disableSave = disableSave;
+            });
 
     }
 
@@ -67,6 +79,28 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     ngOnDestroy(): void {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
+    }
+
+    canDeactivate (nextState?: RouterStateSnapshot): Promise<boolean> | boolean {
+        if (this._isChanged) {
+            return this._confirmSrv
+                .confirm(Object.assign({}, CONFIRM_SAVE_ON_LEAVE, { confirmDisabled: this._disableSave }))
+                .then(doSave => {
+                    if (doSave) {
+                        this._userParamService.saveChenges();
+                        this._isChanged = false;
+                        return true;
+                    } else {
+                        this._isChanged = false;
+                        return true;
+                    }
+                })
+                .catch((err) => {
+                    return false;
+                });
+        } else {
+            return Promise.resolve(true);
+        }
     }
 
     private checkTabScan(): void {
