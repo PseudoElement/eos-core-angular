@@ -1,10 +1,10 @@
 <div class="input-user-wrapper input-user-directories-wrapper">
 <div class="nav-signature">
-    <button class="btn" containerClass="tooltip-info" tooltip='Добавить хранилище'(click)="openModal2(templateNested)">
+    <button class="btn btn-primary-light" containerClass="tooltip-info" tooltip='Добавить хранилище'(click)="openModal2(templateNested)">
         <span class="eos-icon eos-icon-plus-blue small"></span>
     </button>
-    <button class="btn" containerClass="tooltip-info" (click)="deleteStores()" tooltip='Удалить хранилище'>
-        <span class="eos-icon eos-icon-close-blue small"></span>
+    <button class="btn btn-primary-light" containerClass="tooltip-info" (click)="deleteStores()" tooltip='Удалить хранилище'>
+        <span class="eos-icon eos-icon-bin-forever-blue small"></span>
     </button>
 </div>
 <div class="signature-list" *ngIf='listCertStores'>
