@@ -74,7 +74,6 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         key: 'SHABLON',
         title: 'Шаблон',
         type: 'string',
-        required: true,
     }, {
         key: 'EDS_FLAG',
         title: 'ЭП',
@@ -95,7 +94,6 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         key: 'PRJ_SHABLON',
         title: 'Шаблон проекта',
         type: 'string',
-        required: true,
     }, {
         key: 'PRJ_WEIGHT',
         title: 'Вес в списке для проектов',
