@@ -104,8 +104,8 @@
             </span>
             <span class="send-from-btn-choose">
                 <button
-                [disabled] = "!editFlag"
-                    class="btn"
+                    [disabled] = "!editFlag"
+                    class="btn btn-primary-light"
                     tooltip="Выбор из справочника"
                     triggers="hover"
                     containerClass="tooltip-info"
@@ -119,7 +119,7 @@
                     tooltip="Очистить"
                     #tooltipTemp = 'bs-tooltip'
                     containerClass="tooltip-info"
-                    class="btn"
+                    class="btn btn-primary-light"
                     (click)="clearSendFrom()">
                     <span class="eos-icon eos-icon-close-blue small"></span>
                 </button>
@@ -231,7 +231,7 @@
                         <div style="display: inline" class="btn-action">
                             <button
                                 [disabled] = "!editFlag"
-                                class="btn btn-padd"
+                                class="btn btn-primary-light btn-padd"
                                 tooltip="Выбор из справочника"
                                 triggers="hover"
                                 containerClass="tooltip-info"
@@ -246,7 +246,7 @@
                                 trigers='hover'
                                 #tooltipTemp = 'bs-tooltip'
                                 containerClass="tooltip-info"
-                                class="btn add-storage"
+                                class="btn btn-primary-light add-storage"
                                 (click)="deleteDirectory()">
                                 <span class="eos-icon eos-icon-close-blue small"></span>
                             </button>
