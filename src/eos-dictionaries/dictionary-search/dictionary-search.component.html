@@ -405,7 +405,7 @@
     <div [hidden]="dictId !== 'docgroup'"
         *ngIf="searchModel"
         class="row full-search-form">
-        <form id="cabinet">
+        <form id="docgroup">
             <button [disabled]="noSearchData"
                 type="submit"
                 (click)="fullSearch()"
@@ -413,10 +413,26 @@
                 <div class="second-col">
                     <div class="form-group unimportant-text">
                         <label class="s-font"
-                            for="title">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
+                               for="docCode">{{fieldsDescription.rec['CODE']?.title}}</label>
                         <div class="search-fld">
-                            <input id="title"
-                                name="title"
+                            <input id="docCode"
+                                   name="docCode"
+                                   type="text"
+                                   class="form-control light"
+                                   [(ngModel)]="searchModel['CODE']"
+                                   placeholder="{{fieldsDescription.rec['CODE']?.title}}"
+                                   maxlength="{{fieldsDescription.rec['CODE']?.length}}">
+                            <a class="clear-btn"
+                               [ngClass]="{'hide': !searchModel['CODE']}"
+                               (click)="searchModel['CODE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        </div>
+                    </div>
+                    <div class="form-group unimportant-text">
+                        <label class="s-font"
+                            for="docName">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
+                        <div class="search-fld">
+                            <input id="docName"
+                                name="docName"
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['CLASSIF_NAME']"
@@ -430,10 +446,10 @@
 
                     <div class="form-group unimportant-text">
                         <label class="s-font"
-                            for="fullTitle">{{fieldsDescription.rec['FULLNAME']?.title}}</label>
+                            for="docFullTitle">{{fieldsDescription.rec['FULLNAME']?.title}}</label>
                         <div class="search-fld">
-                            <input id="fullTitle"
-                                name="fullTitle"
+                            <input id="docFullTitle"
+                                name="docFullTitle"
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['FULLNAME']"
@@ -445,11 +461,26 @@
                         </div>
                     </div>
                     <div class="form-group unimportant-text">
-                        <label class="s-font"
-                            for="note">{{fieldsDescription.rec['NOTE']?.title}}</label>
+                        <label class="s-font" for="docIndex">{{fieldsDescription.rec['DOCGROUP_INDEX']?.title}}</label>
                         <div class="search-fld">
-                            <input id="note"
-                                name="note"
+                            <input id="docIndex"
+                                   name="docIndex"
+                                   type="text"
+                                   class="form-control light"
+                                   [(ngModel)]="searchModel['DOCGROUP_INDEX']"
+                                   placeholder="{{fieldsDescription.rec['DOCGROUP_INDEX']?.title}}"
+                                   maxlength="{{fieldsDescription.rec['DOCGROUP_INDEX']?.length}}">
+                            <a class="clear-btn"
+                               [ngClass]="{'hide': !searchModel['DOCGROUP_INDEX']}"
+                               (click)="searchModel['DOCGROUP_INDEX'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                        </div>
+                    </div>
+                    <div class="form-group unimportant-text">
+                        <label class="s-font"
+                            for="docNote">{{fieldsDescription.rec['NOTE']?.title}}</label>
+                        <div class="search-fld">
+                            <input id="docNote"
+                                name="docNote"
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['NOTE']"
