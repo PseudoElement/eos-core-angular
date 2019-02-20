@@ -329,10 +329,10 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
         });
     }
 
-    removeDocuments() {
+    removeDocuments(item) {
      let tmp;
      let flagTmp = false;
-        if (this.curentNode.DUE !== '0.') {
+        if ((this.curentNode.DUE !== '0.')  && (this.curentNode['data']['rightDocGroup']['DUE_CARD'] === item[0]['key'])) {
             for (let i = 0; i < this.listAllData.length; i++) {
                 if (this.listAllData[i][1] !== (null || undefined)) {
                     for (let j = 0; j < this.listAllData[i][1].length; j++) {

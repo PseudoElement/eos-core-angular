@@ -7,12 +7,12 @@ import { USERCARD } from 'eos-rest';
 import { FormGroup } from '@angular/forms';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { PARM_ERROR_ON_BACKEND } from '../shared-rights-delo/consts/eos-user-params.const';
 import { Subscription } from 'rxjs/Rx';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { NodeRightInFileCard } from './node-in-file-card';
 import { RightSideListCardComponent } from './right-side-list-card/right-side-list-card.component';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
+import { EMPTY_ALLOWED_CREATE_REGISTRATION_OF_DOCUMENTS } from 'app/consts/messages.consts';
 import { RightSideDocGroupAndRestrictionInFileCardComponent } from './right-side-doc-group-and-restriction-in-file-card/right-side-doc-group-and-restriction-in-file-card.component';
 
 @Component({
@@ -47,6 +47,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     userCard: Map<string, USERCARD>;
     msgSrv: EosMessageService;
     subscriptions: Subscription;
+    flagEmptyAllowedCreateRofD = true;
     newDataAttach;
     inputs;
     strForSubscribe = '';
@@ -78,6 +79,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         this.msgSrv = injector.get(EosMessageService);
     }
     init() {
+        sessionStorage.clear();
         this.curentUser = this._userParamsSetSrv.curentUser;
         if (this.curentUser['USERCARD_List'].length === 0) {
             this.flagCardFileAvailability = false;
@@ -107,6 +109,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
             this.servApi
                 .setData(this.createObjRequestForAttach())
                 .then(data => {
+                    if (this.flagEmptyAllowedCreateRofD) {
                     this.servApi.setData(this.createObjRequestForAttachAfterBackend2())
                     .then(data2 => {
                        this._userParamsSetSrv.getUserIsn('' + this.userCard.get(Array.from(this.userCard)[0][0])['ISN_LCLASSIF']);
@@ -119,14 +122,17 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                        this.msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                     })
                     .catch(data2 => console.log(data2));
+                }
                 })
                 // tslint:disable-next-line:no-console
-                .catch(() => this.msgSrv.addNewMessage(PARM_ERROR_ON_BACKEND));
+                .catch(data3 => console.log(data3));
     }
     createObjRequestForAttach() {
         const req = [];
         let newDataFromLocalStorageFuncFileCards;
+        let newArrayDataDocumentsForMerge;
         newDataFromLocalStorageFuncFileCards = JSON.parse(sessionStorage.getItem('FuncFileCards'));
+        newArrayDataDocumentsForMerge = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForMerge'));
         if (newDataFromLocalStorageFuncFileCards) {
         for (let i = 0; i < newDataFromLocalStorageFuncFileCards.length; i++) {
             const tmp = this.userCard.get(newDataFromLocalStorageFuncFileCards[i][0]);
@@ -146,7 +152,20 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         }
     }
 }
-        return req;
+
+
+if (newArrayDataDocumentsForMerge !== null) {
+for (let t = 0; t < newArrayDataDocumentsForMerge.length; t++) {
+    if (newArrayDataDocumentsForMerge[t]['FUNC_NUM'] === 1 && newArrayDataDocumentsForMerge[t]['DUE'] === '0.' && !newArrayDataDocumentsForMerge[t]['ALLOWED']) {
+        this.msgSrv.addNewMessage(EMPTY_ALLOWED_CREATE_REGISTRATION_OF_DOCUMENTS);
+        this.flagEmptyAllowedCreateRofD = false;
+        return [];
+    } else if ((newArrayDataDocumentsForMerge.length - 1) === t) {
+        this.flagEmptyAllowedCreateRofD = true;
+    }
+}
+}
+    return req;
     }
     createObjRequestForAttachAfterBackend2() {
         const req = [];
