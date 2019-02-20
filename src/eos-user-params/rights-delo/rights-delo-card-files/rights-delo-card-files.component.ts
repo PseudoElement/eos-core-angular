@@ -500,8 +500,10 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         this.newDataWhenChanging(1);
         const req = [];
         const userId = this._userParamsSetSrv.userContextId;
+        console.log(this.arrayForDataFileCardCabinet);
         for (let a = 0; a < this.allData.length; a++) {
         for (let i = 0; i < this.arrayForDataFileCardCabinet.length; i++) {
+            if (this.arrayForDataFileCardCabinet[i] !== undefined) {
                 if (this.allData[a]['DUE'] === this.arrayForDataFileCardCabinet[i]['DEPARTMENT_DUE']) {
                     for (let j = 0; j < this.allData[a]['USER_CABINET_List'].length; j++) {
                         if (this.allData[a]['USER_CABINET_List'][j]['FOLDERS_AVAILABLE'] !== '') {
@@ -521,6 +523,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                     }
                     }
                 }
+            }
         }
         }
        this.arrayForDataFileCardCabinet = [];
@@ -764,6 +767,7 @@ this.startEventCabinet = event;
             return data.split('|');
         })
         .then(data => {
+            console.log(data);
             if (this._checkRepeat(data)) {
                 this._msgSrv.addNewMessage({
                     type: 'warning',
@@ -817,6 +821,7 @@ this.startEventCabinet = event;
 
         this.servApi.getData(quaryCabinetData)
         .then(data3 => {
+            console.log(data3);
          cabinetDataset = [];
             for (let t = 0; t < data3.length; t++) {
                 currentCabinet = {
