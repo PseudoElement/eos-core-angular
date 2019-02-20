@@ -37,6 +37,38 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
         return (isn === null) || !(isn === isn_pair);
     }
 
+    get leftDirectionTitle(): string {
+        let title = '';
+        switch (String(this.linkType)) {
+            case String(1):
+                title = 'Первичный документ';
+                break;
+            case String(2):
+                title = 'Инициативный документ';
+                break;
+            case String(3):
+                title = 'Проект документа';
+                break;
+        }
+        return title;
+    }
+
+    get rightDirectionTitle(): string {
+        let title = '';
+        switch (String(this.linkType)) {
+            case String(1):
+                title = 'Повторный документ';
+                break;
+            case String(2):
+                title = 'Проект документа';
+                break;
+            case String(3):
+                title = 'Утвержденный документ';
+                break;
+        }
+        return title;
+    }
+
     ngOnChanges(changes: SimpleChanges) {
         if (this.form) {
             this.unsubscribe();
