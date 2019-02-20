@@ -154,7 +154,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
 }
 
 
-if (newArrayDataDocumentsForMerge !== null) {
+ if (newArrayDataDocumentsForMerge !== null) {
 for (let t = 0; t < newArrayDataDocumentsForMerge.length; t++) {
     if (newArrayDataDocumentsForMerge[t]['FUNC_NUM'] === 1 && newArrayDataDocumentsForMerge[t]['DUE'] === '0.' && !newArrayDataDocumentsForMerge[t]['ALLOWED']) {
         this.msgSrv.addNewMessage(EMPTY_ALLOWED_CREATE_REGISTRATION_OF_DOCUMENTS);

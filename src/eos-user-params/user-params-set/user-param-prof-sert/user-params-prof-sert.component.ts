@@ -45,6 +45,7 @@ export class UserParamsProfSertComponent  implements OnInit {
     public selfLink: string;
     public titleHeader: string;
     public link;
+    public flagHideBtn: boolean = false;
 
     private DBserts: Array<any> = [];
     private modalRef: BsModalRef;
@@ -208,6 +209,7 @@ export class UserParamsProfSertComponent  implements OnInit {
             if (this.checkSert()) {
                 if (findsert.length) {
                     findsert[0].delete = false;
+                    this.selectCurent(findsert[0]);
                 }   else {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
@@ -221,7 +223,10 @@ export class UserParamsProfSertComponent  implements OnInit {
                 newSert.create = true;
                 newSert.selected = false;
                 this.listsSertInfo.push(newSert);
+                this.selectCurent(this.listsSertInfo[this.listsSertInfo.length - 1]);
         }
+
+        this.flagHideBtn = false;
         this.checkchanges();
     }
 
@@ -243,6 +248,9 @@ export class UserParamsProfSertComponent  implements OnInit {
                 const newSelected = filterNotDelete[filterNotDelete.length - 1];
                 this.selectList = newSelected;
                 this.selectList.selected = true;
+                this.flagHideBtn = false;
+            }   else {
+                this.flagHideBtn = true;
             }
         }
         this.checkchanges();

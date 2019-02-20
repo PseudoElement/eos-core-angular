@@ -1,76 +1,86 @@
-<div class="add-cert-stores-wrapper">
-        <div class="modal-header add-cert-wr">
-                <h5 class="modal-title pull-left">Выбор рабочего хранилища сертификатов</h5>
-                <div>
-                        <button (click)='cancel()'>отменить</button>
-                        <button [disabled]='!currentSelectNode' (click)='submit()'>сохранить</button>
-                </div>
-              </div>
-    <div class="add-cert-stores">
-        <div class="input-wrap">
-            <label
-                for="selectStores"
-            >
-                Расположение хранилища
-            </label>
-            <br>
-            <div class="eos-select"
-            >
-                <select
-                    class="form-control m-font"
-                    id="selectStores"
-                    [(ngModel)]="certSystemStore"
-                >
-                <option  value="sscu" *ngIf="sheckSelect !== 'sslm'">
-                    Учетная запись пользователя
-                </option>
-                <option value="sslm">
-                    Учетная запись компьютера
-                </option>
-                <option value="sss">
-                    Учетная запись службы
-                </option>
-                </select>
-            </div>
-        </div>
-        <div class="input-wrap pull-right">
-            <label for="adress">
-                Адрес хранилища
-            </label>
-            <div>
-                <input class="form-control m-font"
-                    id="adress"
-                    type="text"
-                    placeholder="Адрес хранилища"
-                    autocomplete="off"
-                    [(ngModel)]="certSystemAddress"
-                >
-                <button
-                    class="adres-search btn"
-                    (click)="searchStore()"
-                >
-                    <span class="eos-icon eos-icon-search-blue small"></span>
-                </button>
-            </div>
-        </div>
-        <div class="list-stores">
-            <ul
-                *ngIf="listStores$ | async"
-            >
-                <li
-                    *ngFor="let list of listStores"
-                    [ngClass]="{highlighted: list.selected}"
-                    (click)="selectNode(list)"
-                    (dblclick)="submit()"
-                >
-                    {{list.title}}
-                </li>
-            </ul>
+
+<div class="modal-header" style="background-color:#2196f3">
+    <div class= "add-cert-wr">
+        <h5 class="modal-title">Выбор рабочего хранилища сертификатов</h5>
+        <div>
+            <button class="btn btn-primary " (click)='cancel()'>отменить</button>
+            <button class="btn btn-primary" [disabled]='!currentSelectNode' (click)='submit()'>сохранить</button>
         </div>
     </div>
+        <!-- <button type="button" class="close pull-right" aria-label="Close" (click)=""> -->
+          <!-- <span aria-hidden="true">&times;</span> -->
+        <!-- </button> -->
 </div>
+      <div class="modal-body">
+            <div class="add-cert-stores-wrapper">
+                <div class="add-cert-stores">
+                    <div class="input-wrap">
+                        <label
+                            for="selectStores"
+                        >
+                            Расположение хранилища
+                        </label>
+                        <br>
+                        <div class="eos-select"
+                        >
+                            <select
+                                class="form-control m-font"
+                                id="selectStores"
+                                [(ngModel)]="certSystemStore"
+                            >
+                            <option  value="sscu" *ngIf="sheckSelect !== 'sslm'">
+                                Учетная запись пользователя
+                            </option>
+                            <option value="sslm">
+                                Учетная запись компьютера
+                            </option>
+                            <option value="sss">
+                                Учетная запись службы
+                            </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-wrap pull-right">
+                        <label for="adress">
+                            Адрес хранилища
+                        </label>
+                        <div>
+                            <input class="form-control m-font"
+                                id="adress"
+                                type="text"
+                                placeholder="Адрес хранилища"
+                                autocomplete="off"
+                                [(ngModel)]="certSystemAddress"
+                            >
+                            <button
+                                class="adres-search btn"
+                                (click)="searchStore()"
+                            >
+                                <span class="eos-icon eos-icon-search-blue small"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="list-stores">
+                        <ul
+                            *ngIf="listStores$ | async"
+                        >
+                            <li
+                                *ngFor="let list of listStores"
+                                [ngClass]="{highlighted: list.selected}"
+                                (click)="selectNode(list)"
+                                (dblclick)="submit()"
+                            >
+                                {{list.title}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-<ng-template #emptyStores>
-    <h3>Произведите поиск хранилища</h3>
-</ng-template>
+            <ng-template #emptyStores>
+                <h3>Произведите поиск хранилища</h3>
+            </ng-template>
+
+
+      </div>
 
