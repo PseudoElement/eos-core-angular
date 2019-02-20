@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
+import { Component, Output, EventEmitter, OnDestroy, OnInit, OnChanges, ViewChild } from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
 import {PipRX} from '../../eos-rest';
 import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME } from './adv-card-rk-datactrl';
@@ -9,6 +9,7 @@ import { TDefaultField, TDFSelectOption, RKFieldsFict } from './rk-default-value
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EosUtils } from 'eos-common/core/utils';
 import { Subscription } from 'rxjs/Subscription';
+import { RKBasePage } from './rk-default-values/rk-base-page';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -37,29 +38,31 @@ const tabs: Ttab [] = [
 //     entryComponents: [ RKDefaultValuesCardComponent ],
 //     // bootstrap: [ App ]
 // })
-export class AdvCardRKEditComponent implements OnDestroy, OnInit {
-    // @ViewChild('tabContainer', { read: ViewContainerRef }) container;
+export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     @Output() onChoose: EventEmitter<any> = new EventEmitter<any>();
     @Output() formChanged: EventEmitter<any> = new EventEmitter<any>();
-
-    // componentRef: ComponentRef <RKDefaultValuesCardComponent>;
 
     isUpdating = true;
     nodes: any[];
     tabs: Ttab [];
     dataController: AdvCardRKDataCtrl;
-
+    // changeEvent: Subject<any> = new Subject();
     activeTab: Ttab;
     form: FormGroup;
 
 
-    valuesDefault: any;
-    valuesDG: any;
+    values: any;
+
     descriptions: any;
     inputs: any;
     newData: any;
+    storedValuesDG: any;
+    editValues: any;
+    // protected formChanges$: Subscription;
     private subscriptions: Subscription[];
 
+    @ViewChild('currentPage')
+    private currentPage: RKBasePage;
     // protected apiSrv: PipRX;
     private _node = {};
     private isn_node: number;
@@ -83,21 +86,29 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
         this.tabs = tabs;
         this.isn_node = 3670;
         this.subscriptions = [];
+        this.editValues = {};
     }
 
+    ngOnChanges() {
+        // if (this.form) {
+        //     this.unsubscribe();
+        //     this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this.updateForm(formChanges));
+        // }
+    }
 
     ngOnInit() {
         this.dataController = new AdvCardRKDataCtrl(this.apiSrv, this._msgSrv);
         this.descriptions = this.dataController.getDescriptions();
 
         this.dataController.readValues(this.isn_node).then (values => {
-            this.valuesDG = values[0];
-            this.valuesDefault = {
-                [DEFAULTS_LIST_NAME]:  this._makeDataObjDef(this.valuesDG[DEFAULTS_LIST_NAME]),
-                [FILE_CONSTRAINT_LIST_NAME]: this._makeDataObjFileCon(this.valuesDG[FILE_CONSTRAINT_LIST_NAME]),
+            this.storedValuesDG = values[0];
+            this.values = {
+                [DEFAULTS_LIST_NAME]:  this._makeDataObjDef(this.storedValuesDG[DEFAULTS_LIST_NAME]),
+                [FILE_CONSTRAINT_LIST_NAME]: this._makeDataObjFileCon(this.storedValuesDG[FILE_CONSTRAINT_LIST_NAME]),
                 };
-            console.log(this.valuesDefault);
-            this.dataController.loadDictsOptions(this.valuesDefault, this.updateLinks).then (d => {
+            this.editValues = this._makePrevValues(this.values);
+
+            this.dataController.loadDictsOptions(this.values, this.updateLinks).then (d => {
                 this.inputs = this.getInputs();
                 this._updateOptions(this.inputs);
                 const isNode = false;
@@ -106,7 +117,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
                 this.isUpdating = false;
             });
         });
-        // this.createComponent('a');
     }
 
     ngOnDestroy() {
@@ -129,7 +139,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
 
     save(): void {
         this.dataController.save(this.isn_node, this.inputs, this.newData);
-
     }
 
     _updateOptions(values: any[]) {
@@ -183,23 +192,20 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
                     if (!element.foreignKey) {
                         element.foreignKey = element.key;
                     }
-                    // const t = i.fict;
-                    // t[element.key] = element;
                 });
             }
 
         }
-
         // select classif_name , nom_number , year_number , e_document from nomenkl_cl where isn_lclassif =4057175
 
-        return this._dataSrv.getInputs(i, this.valuesDefault);
+        return this._dataSrv.getInputs(i, this.values);
     }
+
     clickTab (item: Ttab) {
         this.activeTab = item;
     }
 
     public initByNodeData(dndata: any) {
-        // this._initialData = dndata;
         this.isUpdating = true;
 
         if (!dndata) {
@@ -233,31 +239,59 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit {
         }));
     }
 
+    private _makePrevValues(values: any): any {
+        const res = {};
+        for (const k1 in values) {
+            if (values.hasOwnProperty(k1)) {
+                const e1 = values[k1];
+                for (const k2 in e1) {
+                    if (e1.hasOwnProperty(k2)) {
+                        const e2 = e1[k2];
+                        res[k1 + '.' + k2] = e2;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+
+    private _getPrevValue (path: string): any {
+        return this.editValues[path];
+    }
+
+    private _setPrevValue (path: string, value: any) {
+        this.editValues[path] = value;
+    }
+
     private _changeByPath(path: string, value: any): boolean {
         let _value = null;
+        let prevValue = this._getPrevValue(path);
         if (typeof value === 'boolean') {
-            _value = +value;
+            if (prevValue === undefined) {
+                prevValue = '0';
+            }
+            _value = String(+value);
         } else if (value === 'null') {
             _value = null;
         } else if (value instanceof Date) {
             _value = EosUtils.dateToString(value);
         } else if (value === '') { // fix empty strings in IE
             _value = null;
-        } else {
+        } else if (value) {
             _value = value;
         }
         this.newData = EosUtils.setValueByPath(this.newData, path, _value);
-        const oldValue = EosUtils.getValueByPath(this.valuesDefault, path, false);
 
-        // if (oldValue !== _value) {
-        //     this.data = EosUtils.setValueByPath(this.data, path, _value);
-        //     if (path === 'type') {
-        //         this.init(_value);
-        //     }
-        //     // console.warn('changed', path, oldValue, 'to', _value, this.data.rec);
-        // }
+        if (prevValue === undefined) {
+            prevValue = null;
+        }
 
-        return _value !== oldValue;
+        if (String(_value) !== String(prevValue)) {
+            this._setPrevValue(path, _value);
+            this.currentPage.onDataChanged(path, prevValue, _value);
+            return true;
+        }
+        return false;
     }
 
 

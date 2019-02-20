@@ -14,11 +14,11 @@
             [id]="input.key"
             [readonly]="readonly"
             [ngClass]="{'readonly': readonly}">
-        <span
+        <span *ngIf="!readonly"
                 class="decrease fa fa-minus"
                 (click)="onDecrease()"
         ></span>
-        <span
+        <span *ngIf="!readonly"
                 class="increase fa fa-plus"
                 (click)="onIncrease()"
         ></span>

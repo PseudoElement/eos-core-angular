@@ -17,6 +17,7 @@ export const FILE_CONSTRAINT_LIST_NAME = 'DG_FILE_CONSTRAINT_List';
 export class AdvCardRKDataCtrl {
     name: string;
     loadedDicts: any;
+
     constructor (
         private _apiSrv: PipRX,
         private _msgSrv: EosMessageService,
@@ -50,69 +51,63 @@ export class AdvCardRKDataCtrl {
             return data;
         });
     }
+
+    _calcChangesFor(docGroup: any, data: any ): any {
+        const changes = [];
+        // , [DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME]
+        this.keys(data[DEFAULTS_LIST_NAME]).forEach((key) => {
+            const value = data[DEFAULTS_LIST_NAME][key];
+            // const discrs = this.getDescriptions()[key];
+            const g = docGroup[DEFAULTS_LIST_NAME].find (f => f.DEFAULT_ID === key);
+            if (g) {
+                if (g['DEFAULT_ID'] === 'RUB_M') {
+                    console.log('1');
+                }
+
+                if (g.VALUE !== String(value)) {
+                    if (value === null) {
+                        changes.push (
+                            {
+                                method: 'DELETE',
+                                data: '',
+                                requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DOC_DEFAULT_VALUE_List(\''
+                                    + docGroup['DUE'] + ' ' + g['DEFAULT_ID'] + '\')'
+                            }
+                        );
+                    } else {
+                        changes.push (
+                            {
+                                method: 'MERGE',
+                                data: {VALUE: String(value) },
+                                requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DOC_DEFAULT_VALUE_List(\''
+                                    + docGroup['DUE'] + ' ' + g['DEFAULT_ID'] + '\')'
+                            }
+                        );
+                    }
+                }
+            } else if (value) {
+                if (key === 'RUB_M') {
+                    console.log('2');
+                }
+                changes.push (
+                    {
+                        method: 'MERGE',
+                        data: { VALUE: String(value) },
+                        requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DOC_DEFAULT_VALUE_List(\''
+                            + docGroup['DUE'] + '\ ' + key + '\')'
+                    }
+                );
+            }
+        });
+        return changes;
+    }
+
     save(isn_node: number, inputs: any[], data: any): void {
         this.readValues(isn_node)
             .then(([docGroup]) => {
                 this._apiSrv.entityHelper.prepareForEdit(docGroup);
-                // docGroup.DOC_DEFAULT_VALUE_List[0].VALUE = '11';
-                // docGroup.DOC_DEFAULT_VALUE_List[0]._State = 'MERGE';
-                // (<any>docGroup.DOC_DEFAULT_VALUE_List[0])['DEFAULT_ID'] = docGroup.DOC_DEFAULT_VALUE_List[0]['CompositePrimaryKey'];
-                const changes = [];
-                this.keys(data['rec']).forEach((key) => {
-                    const value = data['rec'][key];
-                    const g = docGroup[DEFAULTS_LIST_NAME].find (f => f.DEFAULT_ID === key);
-                    if (g) {
-                        // if (value === true) {
-                        //     value = '1';
-                        // }
-                        if (g.VALUE !== String(value)) {
-                            changes.push (
-                                {
-                                    method: 'MERGE',
-                                    data: {VALUE: value },
-                                    requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DOC_DEFAULT_VALUE_List(\''
-                                        + docGroup['DUE'] + ' ' + g['DEFAULT_ID'] + '\')'
-                                }
-                            );
-                        }
-                    }
-                });
+                const changes = this._calcChangesFor(docGroup, data);
 
-                // this.keys(inputs).forEach((key) => {
-                //     const input = inputs[key];
-                //     const path = key.split('.');
-                //     let value = input.value;
-                //     const g = docGroup[DEFAULTS_LIST_NAME].find (f => f.DEFAULT_ID === path[1]);
-                //     if (g) {
-                //         if (value === true) {
-                //             value = '1';
-                //         }
-                //         if (g.VALUE !== value) {
-                //             changes.push (
-                //                 {
-                //                     method: 'MERGE',
-                //                     data: {VALUE: value },
-                //                     requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DOC_DEFAULT_VALUE_List(\''
-                //                         + docGroup['DUE'] + ' ' + g['DEFAULT_ID'] + '\')'
-                //                 }
-                //             );
-                //         }
-                // //     } else if (value) {
-                // //         const newd = <DOC_DEFAULT_VALUE> {
-                // //             _State: 'POST',
-                // //             VALUE: value,
-                // //             DEFAULT_ID : key,
-                // //             // DUE: docGroup['DUE'],
-                // //             // CompositePrimaryKey: g['DUE'] + ' ' + key,
-                // //         };
-                // //         // Object.assign(newd, this._nodes.get(isn_node.toString()).data);
-                // //         docGroup[DEFAULTS_LIST_NAME].push(newd);
-                //     }
-                // });
-
-                const changes1 = this._apiSrv.changeList([docGroup]);
-                console.log(changes);
-                console.log(changes1);
                 this._apiSrv.batch(changes, '')
                     .then(() => {
                         this._msgSrv.addNewMessage(SUCCESS_SAVE);
@@ -122,27 +117,11 @@ export class AdvCardRKDataCtrl {
                     });
             });
     }
-    // getRelatedFields(tables: string[]): Promise<any> {
-    //     const reqs = [];
-    //     tables.forEach( t => {
-    //         if (t) {
-    //             const md = this.metadata.relations.find( rel => t === rel.__type);
-    //             if (md) {
-    //                 reqs.push(this.apiSrv
-    //                     .read({[t]: []}));
-    //             }
-    //         }
-    //     });
 
-    //     return Promise.all(reqs)
-    //         .then((responses) => {
-    //             return this.associateRelationType(tables, responses);
-    //         });
-    // }
     readDictLinkValue(el: TDefaultField, value: any, updateLink: Function = null): Promise<any> {
         const dict = el.dict;
         if (dict) {
-            let query: any; // {criteries: {[NUM_YEAR_NAME]: String(this.editValueYear)}};
+            let query: any;
             if (el.dict.criteries) {
                 query = { criteries: el.dict.criteries};
             } else {
@@ -202,10 +181,12 @@ export class AdvCardRKDataCtrl {
 
                         reqs.push(this._apiSrv.read(req).then((data) => {
                             const opts: TDFSelectOption[] = [];
+                            opts.push ({value: '', title: '...'});
                             for (let index = 0; index < data.length; index++) {
                                 const element = data[index];
                                 opts.push ({value: element[el.dict.dictKey], title: element[el.dict.dictKeyTitle]});
                             }
+
                             el.options = opts;
                             this.loadedDicts[el.dict.dictId] = opts;
                             this.loadedDicts[el.dict.dictId]._idptr = el.dict;
@@ -231,26 +212,4 @@ export class AdvCardRKDataCtrl {
             return [];
         }
     }
-
-
-
-
-    // getObjectInputFields(fields) {
-    //     const inputs: any = { _list: [], rec: {} };
-    //     fields.forEach(field => {
-    //         this.fieldsType[field.key] = field.type;
-    //         inputs._list.push(field.key);
-    //         inputs.rec[field.key] = {
-    //             title: field.title,
-    //             type: E_FIELD_TYPE[field.type],
-    //             foreignKey: field.key,
-    //             pattern: field.pattern,
-    //             length: field.length,
-    //             options: field.options,
-    //             readonly: !!field.readonly,
-    //             formatDbBinary: !!field.formatDbBinary
-    //         };
-    //     });
-    //     return inputs;
-    // }
 }

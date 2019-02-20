@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { AdvCardRKDataCtrl } from '../adv-card-rk-datactrl';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
 
@@ -14,7 +15,7 @@ export class RKFilesConInputComponent implements OnChanges {
     @Input() inputSize: any;
     @Input() inputCb: any;
     @Input() inputExt: any;
-    // @Input() dataController: AdvCardRKDataCtrl;
+    @Input() dataController: AdvCardRKDataCtrl;
     // @Input() fieldsDescription: any;
     // @Input() data: any;
     // @Input() inputs: any;
@@ -35,6 +36,7 @@ export class RKFilesConInputComponent implements OnChanges {
         //     this.changeLog.push(`propName: currentValue = cur, previousValue = prev`);*/
         // }
         // console.log('form:', this.form);
+
     }
     dbg() {
         return true;

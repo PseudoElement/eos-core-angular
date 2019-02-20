@@ -42,13 +42,14 @@
 </div>
 
 <ng-template #defaultEdit1>
-    <eos-rk-default-values
+    <eos-rk-default-values #currentPage
         style="width: 100%;"
         [dataController]="dataController"
         [fieldsDescription]="fieldsDescrDefault"
         [form]="form"
         [editMode]="true"
-        [data]="valuesDefault"
+        [data]="editValues"
+        [dgStoredValues]="storedValuesDG"
         [inputs]="inputs">
     </eos-rk-default-values>
 </ng-template>
@@ -60,7 +61,7 @@
         [fieldsDescription]="fieldsDescrDefault"
         [form]="form"
         [editMode]="true"
-        [data]="valuesDefault"
+        [data]="values"
         [inputs]="inputs">
     </eos-rk-mandatory>
 </ng-template>
@@ -72,7 +73,7 @@
         [fieldsDescription]="fieldsDescrDefault"
         [form]="form"
         [editMode]="true"
-        [data]="valuesDefault"
+        [data]="values"
         [inputs]="inputs">
     </eos-rk-writes>
 </ng-template>
@@ -84,7 +85,7 @@
         [fieldsDescription]="fieldsDescrDefault"
         [form]="form"
         [editMode]="true"
-        [data]="valuesDefault"
+        [data]="values"
         [inputs]="inputs">
     </eos-rk-files>
 </ng-template>

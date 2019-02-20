@@ -5,7 +5,7 @@
             <label>{{inputs['DOC_DEFAULT_VALUE_List.SPECIMEN'].label}}</label>
             <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SPECIMEN']"
                             [form]="form"
-                            [readonly]="!editMode" ></eos-dynamic-input>
+                            [readonly]="!editMode || isEDoc" ></eos-dynamic-input>
         </div>
         <div class="col-2">
                 <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.CONSISTS']"
@@ -56,11 +56,12 @@
     <div class="items-group">
         <eos-dynamic-input class="margin10" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST']"
                             [form]="form"
-                            [readonly]="!editMode" ></eos-dynamic-input>
+                            [readonly]="!editMode || isEDoc" ></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM']"
                             [hideLabel]="true"
                             [form]="form"
-                            [readonly]="!editMode" ></eos-dynamic-input>
+                            [hidden]="isEDoc"
+                            [readonly]="!editMode || isEDoc" ></eos-dynamic-input>
     </div>
 
 
@@ -86,12 +87,14 @@
 
         <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_MARKSEND']"
                             [form]="form"
-                            [readonly]="!editMode"></eos-dynamic-input>
+                            [hidden]="!flagEn_intAddr"
+                            [readonly]="!editMode || !flagEn_intAddr"></eos-dynamic-input>
 
         <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_DEP_PARM']"
                             [form]="form"
+                            [hidden]="!flagEn_intAddr"
                             [hideLabel]="true"
-                            [readonly]="!editMode"></eos-dynamic-input>
+                            [readonly]="!editMode || !flagEn_intAddr"></eos-dynamic-input>
     </div>
 
     <p class="xl-font paragraph-title">Внешние адресаты</p>
@@ -102,10 +105,12 @@
                             [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_ISN_DELIVERY']"
                             [form]="form"
-                            [readonly]="!editMode"></eos-dynamic-input>
+                            [hidden]="!flagEn_extAddr"
+                            [readonly]="!editMode || !flagEn_extAddr"></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_OUTER_MARKSEND']"
                             [form]="form"
-                            [readonly]="!editMode"> </eos-dynamic-input>
+                            [hidden]="!flagEn_extAddr"
+                            [readonly]="!editMode || !flagEn_extAddr"> </eos-dynamic-input>
 
     </div>
     <p class="xl-font paragraph-title"></p>

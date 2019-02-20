@@ -31,6 +31,83 @@ export const RKFieldsFict: TDefaultField[] = [
 ];
 
 
+// export const RKFilesConstraints = [
+//     { DOC_RC: [
+//             {
+//                 key: 'EXTENSIONS',
+//                 type: E_FIELD_TYPE.string,
+//                 title: 'С расширением',
+//             }, {
+//                 key: 'MAX_SIZE',
+//                 type: E_FIELD_TYPE.numberIncrement,
+//                 title: '',
+//             }, {
+//                 key: 'ONE_FILE',
+//                 type: E_FIELD_TYPE.boolean,
+//                 title: 'Один файл',
+//             },
+//         ], },
+//     { PRJ_RC: [
+//             {
+//             key: 'EXTENSIONS',
+//             type: E_FIELD_TYPE.string,
+//             title: 'С расширением',
+//         }, {
+//             key: 'MAX_SIZE',
+//             type: E_FIELD_TYPE.numberIncrement,
+//             title: '',
+//         }, {
+//             key: 'ONE_FILE',
+//             type: E_FIELD_TYPE.boolean,
+//             title: 'Один файл',
+//         },
+
+//     ], },
+//     { PRJ_VISA_SIGN: [
+
+//     {
+//         key: 'EXTENSIONS',
+//         type: E_FIELD_TYPE.string,
+//         title: 'С расширением',
+//     }, {
+//         key: 'MAX_SIZE',
+//         type: E_FIELD_TYPE.numberIncrement,
+//         title: '',
+//     }, {
+//         key: 'ONE_FILE',
+//         type: E_FIELD_TYPE.boolean,
+//         title: 'Один файл',
+//     },], },
+//     { REPLY: [
+//     {
+//         key: 'EXTENSIONS',
+//         type: E_FIELD_TYPE.string,
+//         title: 'С расширением',
+//     }, {
+//         key: 'MAX_SIZE',
+//         type: E_FIELD_TYPE.numberIncrement,
+//         title: '',
+//     }, {
+//         key: 'ONE_FILE',
+//         type: E_FIELD_TYPE.boolean,
+//         title: 'Один файл',
+//     }, ], },
+//     { RESOLUTION: [
+//         {
+//             key: 'EXTENSIONS',
+//             type: E_FIELD_TYPE.string,
+//             title: 'С расширением',
+//         }, {
+//             key: 'MAX_SIZE',
+//             type: E_FIELD_TYPE.numberIncrement,
+//             title: '',
+//         }, {
+//             key: 'ONE_FILE',
+//             type: E_FIELD_TYPE.boolean,
+//             title: 'Один файл',
+//         },
+//     ], },
+// ];
 
 export const RKFilesConstraints: TDefaultField[] = [
     {
