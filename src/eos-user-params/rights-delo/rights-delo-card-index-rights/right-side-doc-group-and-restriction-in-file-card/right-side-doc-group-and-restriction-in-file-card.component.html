@@ -37,7 +37,7 @@
                     tooltip="Удалить"
                     placement="bottom"
                     containerClass="tooltip-info"
-                    [disabled]="item[2][0]['isSelected']"
+                    [disabled]="item[4]['buttonDisable']"
                     (click)="[removeDocuments(item), hideToolTip()]"
                 >
                     <span class="eos-icon eos-icon-bin-forever-blue small"></span>
@@ -53,7 +53,7 @@
                 </label>
     <eos-list-doc-tree
         [listNode]="item[2]"
-        (select)="select($event)"
+        (select)="select($event, item[4])"
         (checkedNode)="checkedNode($event, null)"
     ></eos-list-doc-tree>
     </div>
