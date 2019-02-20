@@ -8,6 +8,7 @@ import { FormGroup } from '@angular/forms';
 import { E_FIELD_TYPE, IBaseUsers } from '../../shared/intrfaces/user-params.interfaces';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import {Router} from '@angular/router';
 @Component({
     selector: 'eos-user-param-external-application',
     templateUrl: 'user-param-external-application.component.html'
@@ -22,6 +23,9 @@ export class UserParamEAComponent {
     public form: FormGroup;
     public sortedData;
     public editFlag: boolean = false;
+    public titleHeader: string;
+    public link: number;
+    public selfLink: string;
     private newData = new Map();
     private prepDate;
     private listForQuery: Array<string> = [];
@@ -31,7 +35,11 @@ export class UserParamEAComponent {
         private _inputCntlSrv: InputControlService,
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
+        private _route: Router,
         ) {
+            this.titleHeader = this._userParamsSetSrv.curentUser.CLASSIF_NAME + ' - ' + 'Внешние приложения';
+            this.link = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
+            this.selfLink = this._route.url.split('?')[0];
             this.init();
     }
     init() {
@@ -136,7 +144,7 @@ export class UserParamEAComponent {
            }
         }
     }
-    submit() {
+    submit(event?) {
         this.apiSrv.batch(this.createObjRequest(), '').then(response => {
             this.btnDisabled = true;
             this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
@@ -170,7 +178,7 @@ export class UserParamEAComponent {
           });
             return req;
         }
-    cancellation(event) {
+    cancellation(event?) {
         if (!this.btnDisabled) {
             this._msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
         }
@@ -183,7 +191,7 @@ export class UserParamEAComponent {
             this.form.controls[key].patchValue(inputsForDefault[key].value);
         });
     }
-    edit(event) {
+    edit(event?) {
         this.editFlag = event;
         this.disableForEditAllForm(event);
     }
@@ -198,10 +206,10 @@ export class UserParamEAComponent {
             }
         });
     }
-    close() {
-       // this._router.navigate(['user_param']);
+    close(event?) {
+       this._route.navigate(['user_param']);
     }
-    defaults() {
+    defaults(event?) {
         const defaultListName = this.getQueryDefaultList(this.listForQuery);
         this.apiSrv.read(defaultListName).then(result => {
             this.fillFormDefault(result);
