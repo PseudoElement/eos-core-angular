@@ -1,6 +1,12 @@
 .counter-np-modal {
     width: 400px;
 
+    .docgroup {
+        clear: both;
+        margin-bottom: 30px;
+        margin-top: 40px;
+    }
+
     .modal-header {
         padding: 0 20px;
         .pull-right {

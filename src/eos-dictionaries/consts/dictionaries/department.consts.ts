@@ -26,7 +26,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     iconName: 'eos-icon-department-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'import', 'export', 'importPhotos',
         'createRepresentative', 'tableCustomization', 'showAllSubnodes', 'edit', 'view', 'slantForForms', 'restore', 'remove', 'removeHard',
-        'showDeleted', 'tuneFields', 'CounterNPMain', 'CounterNP'],
+        'showDeleted', 'tuneFields', 'counterDepartmentMain', 'counterDepartment', 'counterDepartmentRK'],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
     modeField: 'IS_NODE',
