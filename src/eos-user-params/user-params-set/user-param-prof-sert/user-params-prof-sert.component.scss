@@ -6,7 +6,7 @@
     background-color: #e3f2fd;
 }
 .sert-table-nav{
-    margin-left: 10px;
+    margin-left: 18px;
 }
 .sert-table-body{
     padding: 7px 0px;
@@ -22,6 +22,9 @@
         padding: 10px 11px;
         background-color: #fafafa;
     }
+    .sert-table-whom{
+        padding-left: 20px;
+    }
 }
 .scrollWrapper{
     overflow: auto;
@@ -34,6 +37,7 @@
     padding: 6px;
     overflow: hidden;
     margin-right: 13px;
+    margin-left: 20px;
 }
 .sert-table-content{
     span{
@@ -59,10 +63,14 @@
             margin-right: 5px;
         }
     }
+    .whom{
+        padding-left: 10px;
+    }
 }
 .sert-title{
     display: inline-block;
     padding-top: 20px;
+    padding-left: 20px;
 }
 .flex-wr{
     display: flex;
@@ -103,4 +111,7 @@
     button{
         border: 1px solid #2196f3;
     }
+}
+.user-input-group button:hover{
+    background-color: #ffff;
 }

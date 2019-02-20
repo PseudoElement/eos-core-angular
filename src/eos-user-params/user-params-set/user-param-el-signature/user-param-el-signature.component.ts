@@ -12,7 +12,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 
 @Component({
     selector: 'eos-user-param-el-signature',
-    styleUrls: ['user-param-el-signature.component.scss'],
+    // styleUrls: ['user-param-el-signature.component.scss'],
     templateUrl: 'user-param-el-signature.component.html',
     providers: [FormHelperService],
 })
@@ -101,7 +101,7 @@ export class UserParamElSignatureComponent {
         this.nameButton = this.mapBtnName.get(controlName);
         this.control = this.form.controls[controlName];
         this.controlName = controlName;
-        this.modalRef = this._modalService.show(template);
+        this.modalRef = this._modalService.show(template, {class: 'modal-mode'});
     }
 
     getFactValueFuck(newValue: any, val: string): boolean {
@@ -130,10 +130,11 @@ export class UserParamElSignatureComponent {
     }
 
     submit(event?) {
-        this.btnDisabled = true;
+
         this.apiSrv
                 .batch(this.createObjRequest(), '')
                 .then(data => {
+                    this.btnDisabled = false;
                     this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                     const userId = this._userSrv.userContextId;
                     this._userSrv.getUserIsn(String(userId));

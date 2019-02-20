@@ -59,15 +59,15 @@ export class SignaturePopupComponent implements OnInit {
         this.listCertNode
         .subscribe(data => {
             this.InfoSert = data;
-            this.modalRef = this._modalService.show(template, { class: 'modal-sm' });
+            this.modalRef = this._modalService.show(template, { class: 'modal-mode' });
         }, error => {
             this.InfoSert = [];
-            this.modalRef = this._modalService.show(template, { class: 'modal-sm' });
+            this.modalRef = this._modalService.show(template, { class: 'modal-mode' });
         });
     }
 
     openModal2(template: TemplateRef<any>) {
-        this.modalRef2 = this._modalService.show(template, { class: 'seconds' });
+        this.modalRef2 = this._modalService.show(template, { class: 'modal-mode' });
       }
     closeFirstModal() {
         if (!this.modalRef) {
