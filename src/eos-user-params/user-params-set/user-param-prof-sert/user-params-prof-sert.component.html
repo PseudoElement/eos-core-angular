@@ -15,34 +15,32 @@
 
 <div class="input-user-wrapper input-user-other-rk-forwarding-wrapper signature">
     <div class="edit-bacground" *ngIf='!editFlag'></div>
-    <div class="user-input-group ">
+    <div class=" ">
         <span class="sert-title">Добавить сертификат для подписания прикрепленных файлов</span>
         <hr>
         <div class="form-group flex-wr">
             <span class="new-sert-name">{{selectedFromAllList ? selectedFromAllList.whom : null  || 'сертификат не выбран'}}</span>
             <div class="">
                 <button
-                class="btn btn-primary-light"
-                tooltip= 'Выбрать сертификат'
-                containerClass="tooltip-info"
-                placement="bottom"
-                (click) = 'chooseSertificate(template)'>
+                    [disabled] = "!alllistSertInfo.length"
+                    class="btn btn-primary-light"
+                    tooltip= 'Выбрать сертификат'
+                    containerClass="tooltip-info"
+                    (click) = 'chooseSertificate(template)'>
                     <span class="eos-icon eos-icon-download small"></span>
                 </button>
                 <button
-                    tooltip='Показать сертификат'
-                    [disabled]= '!selectedFromAllList'
-                    class="btn btn-primary-light"
-                    containerClass="tooltip-info"
-                    placement="bottom"
-                    (click)='showSert(selectedFromAllList.id)'>
-                    <span class="eos-icon eos-icon-info-blue small"></span>
-                </button>
+                [disabled]= '!selectedFromAllList'
+                class="btn btn-primary-light"
+                tooltip='Показать сертификат'
+                containerClass="tooltip-info"
+                (click)='showSert(selectedFromAllList.id)'
+                ><span class="eos-icon eos-icon-info-blue small"></span></button>
+
                 <button
-                    class="btn btn-primary-light"
-                    tooltip='Добавить сертификат'
-                    containerClass="tooltip-info"
-                    placement="bottom"
+                class="btn btn-primary-light"
+                tooltip='Добавить сертификат'
+                containerClass="tooltip-info"
                     [disabled]= '!selectedFromAllList'
                     (click)= 'addSertificate(selectedFromAllList)'>
                         <span class="eos-icon eos-icon-plus-blue small"></span>
@@ -55,14 +53,14 @@
        <div class="sert-table">
            <div class="sert-table-nav">
                <button
-               [disabled]="!listsSertInfo || listsSertInfo.length === 0"
+               [disabled]="!listsSertInfo || listsSertInfo.length === 0 || flagHideBtn"
                class="btn btn-primary-light"
                tooltip='Показать сертификат'
                containerClass="tooltip-info"
                (click) = 'showSert()'
                ><span class="eos-icon eos-icon-info-blue small"></span></button>
                <button
-               [disabled]="!listsSertInfo || listsSertInfo.length === 0"
+               [disabled]="!listsSertInfo || listsSertInfo.length === 0 || flagHideBtn"
                class="btn btn-primary-light"
                tooltip='Удалить сертификат'
                containerClass="tooltip-info"
