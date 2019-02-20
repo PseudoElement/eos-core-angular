@@ -25,7 +25,6 @@ import { ParamsRightsDeloComponent } from './rights-delo/rights-delo.component';
 import { RightsDeloHeaderComponent } from './rights-delo/shared-rights-delo/rights-delo-header/rights-delo-header.component';
 import { RightsDeloCardFilesComponent } from './rights-delo/rights-delo-card-files/rights-delo-card-files.component';
 import { RightsDeloAbsoluteRightsComponent } from './rights-delo/rights-delo-absolute-rights/rights-delo-absolute-rights.component';
-import { CardFilesDirectoryModalComponent } from './rights-delo/rights-delo-card-files/card-files-directory-modal/card-files-directory-modal.component';
 import { RightsDeloCardIndexRightsComponent } from './rights-delo/rights-delo-card-index-rights/rights-delo-card-index-rights.component';
 import { RightSideDocGroupInFileCardComponent } from './rights-delo/rights-delo-card-index-rights/right-side-doc-group-in-file-card/right-side-doc-group-in-file-card.component';
 import { RightSideDocGroupAndRestrictionInFileCardComponent } from './rights-delo/rights-delo-card-index-rights/right-side-doc-group-and-restriction-in-file-card/right-side-doc-group-and-restriction-in-file-card.component';
@@ -68,7 +67,6 @@ import {UserParamsProfSertComponent} from '../eos-user-params/user-params-set/us
         RightsDeloHeaderComponent,
         RightsDeloCardFilesComponent,
         RightsDeloAbsoluteRightsComponent,
-        CardFilesDirectoryModalComponent,
         RightsDeloCardIndexRightsComponent,
         RightSideDocGroupInFileCardComponent,
         RightSideDocGroupAndRestrictionInFileCardComponent,
@@ -90,9 +88,6 @@ import {UserParamsProfSertComponent} from '../eos-user-params/user-params-set/us
         SignaturePopupComponent,
         SignatureAddComponent,
         UserParamsProfSertComponent,
-    ],
-    entryComponents: [
-        CardFilesDirectoryModalComponent,
     ],
     imports: [
         BrowserModule,
