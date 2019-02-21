@@ -31,7 +31,14 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
         // this.changeEvent.next([path, prevValue, newValue]);
         switch (path) {
             case 'DOC_DEFAULT_VALUE_List.SEND_ISN_LIST_DEP': {
-                this.flagEn_intAddr = newValue ? true : false;
+                if (newValue) {
+                    this.flagEn_intAddr = true;
+                    this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.SEND_DEP_PARM'].options, [1, 3]);
+                } else {
+                    this.flagEn_intAddr = false;
+                    this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.SEND_DEP_PARM'].options, null, false);
+                }
+
                 break;
             }
             case 'DOC_DEFAULT_VALUE_List.SEND_ISN_LIST_ORGANIZ': {
@@ -45,6 +52,8 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
 
     onTabInit (dgStoredValues: any, values: any[]) {
 
+        super.onTabInit(dgStoredValues, values);
+
         for (const key in values) {
             if (values.hasOwnProperty(key)) {
                 const value = values[key];
@@ -52,20 +61,9 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
             }
         }
 
-    super.onTabInit(dgStoredValues, values);
-
-        // for (const key in values) {
-        //     if (values.hasOwnProperty(key)) {
-        //         const e = values[key];
-        //         for (const k in e) {
-        //             if (e.hasOwnProperty(k)) {
-        //                 const path = key + '.' + k;
-        //                 const value = e[k];
-        //                 this.onDataChanged(path, value, value);
-        //             }
-        //         }
-        //     }
-        // }
+        if (this.isEDoc) {
+            this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM'].options, null, false);
+        }
     }
 
 }

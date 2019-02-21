@@ -27,33 +27,39 @@
             <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_WHO_W']"
                 [form]="form"
                 [readonly]="!editMode"> </eos-dynamic-input>
-                <button class="inline-with-label">Дополнительно</button>
+                <button class="inline-with-label"
+                    [ngClass]="forward_who_w ? '' : 'disabled'"
+                    [disabled]="!forward_who_w">Дополнительно</button>
         </span>
     </div>
+
     <p class="xl-font paragraph-title">Передача документов</p>
+
     <div class="items-group">
         <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST_W']"
         [form]="form"
         [hideLabel]="true"
-        [readonly]="!editMode"> </eos-dynamic-input>
+        [readonly]="!editMode || isEDoc"> </eos-dynamic-input>
 
         <span>
             <!-- По значению реквизита "Кому" (адресован) -->
             <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_FROM_WHO_W']"
                 [form]="form"
-                [readonly]="!editMode"> </eos-dynamic-input>
-                <button class="inline-with-label">Дополнительно</button>
+                [readonly]="!editMode || isEDoc"> </eos-dynamic-input>
+                <button class="inline-with-label"
+                    [ngClass]="isEDoc ? 'disabled' : ''"
+                    [disabled]="isEDoc">Дополнительно</button>
         </span>
     <!-- По значению Журнала пересылки РК -->
     <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_FROM_FORWARD_W']"
         [form]="form"
-        [readonly]="!editMode"> </eos-dynamic-input>
+        [readonly]="!editMode || isEDoc"> </eos-dynamic-input>
 
         <!-- Радиобуттоны -->
     <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W']"
         [form]="form"
         [hideLabel]="true"
-        [readonly]="!editMode"> </eos-dynamic-input>
+        [readonly]="!editMode || isEDoc"> </eos-dynamic-input>
     </div>
 
     <p class="xl-font paragraph-title">Списать в дело</p>
@@ -74,6 +80,53 @@
     </div>
     <p class="xl-font paragraph-title">Картотека регистрации</p>
     <div class="items-group">
+        <!-- <div>
+            <div class="elem-input-radio">
+                <label class="radio inline-block">
+                    <input type="radio" value="0" id="fict.KR_CURRENT">
+                    Текущая картотека регистратора
+                </label>
+            </div>
+            <div class="elem-input-radio">
+                <label class="radio inline-block">
+                    <input type="radio" value="1" id="fict.KR_CURRENT">
+                    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W']"
+                    [form]="form"
+                    [hideLabel]="true"
+                    [readonly]="!editMode"> </eos-dynamic-input>
+                </label>
+            </div>
+        </div>
+ -->    <div class="shrinked">
+            <eos-dynamic-input [input]="inputs['fict.KR_CURRENT']"
+                [form]="form"
+                [hideLabel]="true"
+                [readonly]="!editMode"> </eos-dynamic-input>
+
+            <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W']"
+                class="radio-position-1"
+                [form]="form"
+                [disabled]="enKart1Select!=='1'"
+                [hideLabel]="true"
+                [readonly]="!editMode"> </eos-dynamic-input>
+        </div>
+
+        <div class="shrinked2">
+            <label>Если журнал пересылки пуст, то:</label>
+            <eos-dynamic-input [input]="inputs['fict.KR_CURRENT_IF']"
+                [form]="form"
+                [hideLabel]="true"
+                [readonly]="!editMode || enKart1Select!=='2' "> </eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W']"
+                class="radio-position-2"
+                [form]="form"
+                [disabled]="enKart1Select!=='2' || enKart2Select!=='1'"
+                [hideLabel]="true"
+                [readonly]="!editMode"> </eos-dynamic-input>
+        </div>
+
+<!--
+
     Текущая картотека регистратора
     выбор
     Картотека первой пересылки РК
@@ -81,6 +134,21 @@
         Текущая картотека
         выбор
 
+        DELETE FROM doc_default_VALUE WHERE default_id = 'ISN_CARD_REG_FORWARD_W' AND isn_docgroup = 3670
+        DELETE FROM doc_default_VALUE WHERE default_id = 'ISN_CARD_REG_W' AND isn_docgroup = 3670
+        INSERT INTO doc_default_VALUE ( default_id, isn_docgroup, value ) VALUES ( 'ISN_CARD_REG_CURR_W', 3670, '1' )
+
+        DELETE FROM doc_default_VALUE WHERE default_id = 'ISN_CARD_REG_FORWARD_W' AND isn_docgroup = 3670
+        DELETE FROM doc_default_VALUE WHERE default_id = 'ISN_CARD_REG_CURR_W' AND isn_docgroup = 3670
+        INSERT INTO doc_default_VALUE ( default_id, isn_docgroup, value ) VALUES ( 'ISN_CARD_REG_W', 3670, '15660' )
+
+        DELETE FROM doc_default_VALUE WHERE default_id = 'ISN_CARD_REG_W' AND isn_docgroup = 3670
+        INSERT INTO doc_default_VALUE ( default_id, isn_docgroup, value ) VALUES ( 'ISN_CARD_REG_FORWARD_W', 3670, '1' )
+
+        DELETE FROM doc_default_VALUE WHERE default_id = 'ISN_CARD_REG_CURR_W' AND isn_docgroup = 3670
+        INSERT INTO doc_default_VALUE ( default_id, isn_docgroup, value ) VALUES ( 'ISN_CARD_REG_FORWARD_W', 3670, '1' )
+        INSERT INTO doc_default_VALUE ( default_id, isn_docgroup, value ) VALUES ( 'ISN_CARD_REG_W', 3670, '1422' )
+ -->
     </div>
     <p class="xl-font paragraph-title">Кабинет регистрации</p>
     <div class="items-group">
@@ -99,21 +167,19 @@
     <p class="xl-font paragraph-title">Доп. картотеки РК</p>
     <div class="items-group">
 
-    <eos-dynamic-input [input]="inputs['fict.helper1']"
-        [form]="form"
-        [readonly]="!editMode"> </eos-dynamic-input>
     <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_ISN_W']"
         [form]="form"
         [hideLabel]="true"
         [readonly]="!editMode"> </eos-dynamic-input>
+        <!-- DELETE FROM doc_default_VALUE WHERE default_id = 'CARD_ISN_W' AND isn_docgroup = 3670
+        INSERT INTO doc_default_VALUE ( default_id, isn_docgroup, value ) VALUES ( 'CARD_ISN_W', 3670, '0' ) -->
 
-    галочка выбор
+    <!-- галочка выбор
     INSERT INTO doc_default_VALUE ( default_id, isn_docgroup, value ) VALUES ( 'CARD_ISN_W', 3670, '0' )
     UPDATE doc_default_VALUE SET value = '19802' WHERE default_id = 'CARD_ISN_W' AND isn_docgroup = 3670
 
     INSERT INTO doc_default_VALUE ( default_id, isn_docgroup, value ) VALUES ( 'CARD_WHO_W', 3670, '1' )
-
-
+ -->
     <!-- по значению реквизита "Кому (адресован) -->
     <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_WHO_W']"
         [form]="form"
@@ -121,20 +187,19 @@
     </div>
     <p class="xl-font paragraph-title"></p>
     <div class="items-group">
+        <span class="inline-with-label">
+            Положить РК в папку:
+            <!-- "На исполнение"  -->
+            <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.FOLDER2_DEST_W']"
+                [form]="form"
+                [readonly]="!editMode"> </eos-dynamic-input>
+            <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.FOLDER6_DEST_W']"
+                [form]="form"
+                [readonly]="!editMode"> </eos-dynamic-input>
 
-    <span class="inline-with-label">
-        Положить РК в папку:
-        <!-- "На исполнение"  -->
-        <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.FOLDER2_DEST_W']"
-            [form]="form"
-            [readonly]="!editMode"> </eos-dynamic-input>
-        <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.FOLDER6_DEST_W']"
-            [form]="form"
-            [readonly]="!editMode"> </eos-dynamic-input>
-
-        - текущего кабинета регистратора
-    </span>
+            - текущего кабинета регистратора
+        </span>
     </div>
-
+    <p class="xl-font paragraph-title"></p>
 
 </div>

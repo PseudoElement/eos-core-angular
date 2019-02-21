@@ -1,5 +1,5 @@
 import { ALL_ROWS } from 'eos-rest/core/consts';
-import { RKDefaultFields, TDefaultField, TDFSelectOption, RKFilesConstraints } from './rk-default-values/rk-default-const';
+import { RKDefaultFields, TDefaultField, TDFSelectOption, RKFilesConstraints, RKFictControls } from './rk-default-values/rk-default-const';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { PipRX, DOCGROUP_CL } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -9,6 +9,7 @@ const DOCGROUP_TABLE = 'DOCGROUP_CL';
 const DOCGROUP_UID_NAME = 'ISN_NODE';
 export const DEFAULTS_LIST_NAME = 'DOC_DEFAULT_VALUE_List';
 export const FILE_CONSTRAINT_LIST_NAME = 'DG_FILE_CONSTRAINT_List';
+export const FICT_CONTROLS_LIST_NAME = 'fict';
 
 // export enum ACRK_GROUP {
 //     defaultRKValues,
@@ -30,6 +31,7 @@ export class AdvCardRKDataCtrl {
         return {
             [DEFAULTS_LIST_NAME]:  RKDefaultFields,
             [FILE_CONSTRAINT_LIST_NAME]: RKFilesConstraints,
+            [FICT_CONTROLS_LIST_NAME]: RKFictControls,
         };
     }
 
@@ -54,10 +56,8 @@ export class AdvCardRKDataCtrl {
 
     _calcChangesFor(docGroup: any, data: any ): any {
         const changes = [];
-        // , [DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME]
         this.keys(data[DEFAULTS_LIST_NAME]).forEach((key) => {
             const value = data[DEFAULTS_LIST_NAME][key];
-            // const discrs = this.getDescriptions()[key];
             const g = docGroup[DEFAULTS_LIST_NAME].find (f => f.DEFAULT_ID === key);
             if (g) {
                 if (g['DEFAULT_ID'] === 'RUB_M') {

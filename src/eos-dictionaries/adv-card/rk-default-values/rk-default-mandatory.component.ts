@@ -1,6 +1,5 @@
-import { AdvCardRKDataCtrl } from '../adv-card-rk-datactrl';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, OnChanges, SimpleChanges } from '@angular/core';
+import { RKBasePage } from './rk-base-page';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
 
@@ -9,27 +8,16 @@ import { FormGroup } from '@angular/forms';
     templateUrl: 'rk-default-mandatory.component.html',
 })
 
-export class RKMandatoryCardComponent implements OnChanges {
-    @Input() dataController: AdvCardRKDataCtrl;
-    @Input() fieldsDescription: any;
-    @Input() data: any;
-    @Input() inputs: any;
-    @Input() form: FormGroup;
-    @Input() editMode: boolean;
-    type: any;
-    output: any;
-    constructor(
-        // private _dataSrv: EosDataConvertService,
-    ) {
-    }
+export class RKMandatoryCardComponent extends RKBasePage implements OnChanges {
 
     ngOnChanges(changes: SimpleChanges) {
-        // for (let propName in changes) {
-        //     /*let chng = changes[propName];
-        //     let cur  = JSON.stringify(chng.currentValue);
-        //     let prev = JSON.stringify(chng.previousValue);
-        //     this.changeLog.push(`propName: currentValue = cur, previousValue = prev`);*/
-        // }
-        // console.log('form:', this.form);
     }
+
+    onDataChanged(path: string, prevValue: any, newValue: any): any {
+    }
+
+    onTabInit (dgStoredValues: any, values: any[]) {
+        super.onTabInit(dgStoredValues, values);
+    }
+
 }

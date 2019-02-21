@@ -31,83 +31,39 @@ export const RKFieldsFict: TDefaultField[] = [
 ];
 
 
-// export const RKFilesConstraints = [
-//     { DOC_RC: [
-//             {
-//                 key: 'EXTENSIONS',
-//                 type: E_FIELD_TYPE.string,
-//                 title: 'С расширением',
-//             }, {
-//                 key: 'MAX_SIZE',
-//                 type: E_FIELD_TYPE.numberIncrement,
-//                 title: '',
-//             }, {
-//                 key: 'ONE_FILE',
-//                 type: E_FIELD_TYPE.boolean,
-//                 title: 'Один файл',
-//             },
-//         ], },
-//     { PRJ_RC: [
-//             {
-//             key: 'EXTENSIONS',
-//             type: E_FIELD_TYPE.string,
-//             title: 'С расширением',
-//         }, {
-//             key: 'MAX_SIZE',
-//             type: E_FIELD_TYPE.numberIncrement,
-//             title: '',
-//         }, {
-//             key: 'ONE_FILE',
-//             type: E_FIELD_TYPE.boolean,
-//             title: 'Один файл',
-//         },
+export const RKFictControls: TDefaultField[] = [
+    {
+        key: 'KR_CURRENT',
+        type: E_FIELD_TYPE.radio,
+        title: 'Картотека Регистрации',
+        options: [
+            {
+                value: '0',
+                title: 'Текущая картотека регистратора',
+            }, {
+                value: '1',
+                title: '',
+            }, {
+                value: '2',
+                title: 'Картотека первой пересылки РК',
+            },
+        ]
+    }, {
+        key: 'KR_CURRENT_IF',
+        type: E_FIELD_TYPE.radio,
+        title: 'Если журнал пересылки РК пуст, то',
+        options: [
+            {
+                value: '0',
+                title: 'Текущая картотека',
+            }, {
+                value: '1',
+                title: '',
+            }
+        ]
+    }
 
-//     ], },
-//     { PRJ_VISA_SIGN: [
-
-//     {
-//         key: 'EXTENSIONS',
-//         type: E_FIELD_TYPE.string,
-//         title: 'С расширением',
-//     }, {
-//         key: 'MAX_SIZE',
-//         type: E_FIELD_TYPE.numberIncrement,
-//         title: '',
-//     }, {
-//         key: 'ONE_FILE',
-//         type: E_FIELD_TYPE.boolean,
-//         title: 'Один файл',
-//     },], },
-//     { REPLY: [
-//     {
-//         key: 'EXTENSIONS',
-//         type: E_FIELD_TYPE.string,
-//         title: 'С расширением',
-//     }, {
-//         key: 'MAX_SIZE',
-//         type: E_FIELD_TYPE.numberIncrement,
-//         title: '',
-//     }, {
-//         key: 'ONE_FILE',
-//         type: E_FIELD_TYPE.boolean,
-//         title: 'Один файл',
-//     }, ], },
-//     { RESOLUTION: [
-//         {
-//             key: 'EXTENSIONS',
-//             type: E_FIELD_TYPE.string,
-//             title: 'С расширением',
-//         }, {
-//             key: 'MAX_SIZE',
-//             type: E_FIELD_TYPE.numberIncrement,
-//             title: '',
-//         }, {
-//             key: 'ONE_FILE',
-//             type: E_FIELD_TYPE.boolean,
-//             title: 'Один файл',
-//         },
-//     ], },
-// ];
+];
 
 export const RKFilesConstraints: TDefaultField[] = [
     {
@@ -911,9 +867,15 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'ISN_CARD_REG_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Фиксированная картотека для записи в качестве картотеки регистрации',
+        dict: {
+            dictId: 'DEPARTMENT',
+            dictKey: 'ISN_NODE',
+            dictKeyTitle: 'CARD_NAME',
+            criteries: { CARD_FLAG: '1', DELETED: '0', },
+        }
         // classif_id:  104
     }, {
         key: 'SPECIMEN',

@@ -223,7 +223,7 @@ export class EosDataConvertService {
                                         key: _dict + '.' + descr[_key].foreignKey,
                                         label: descr[_key].title,
                                         forNode: descr[_key].forNode,
-                                        value: data[_dict][descr[_key].foreignKey],
+                                        value: data[_dict] ? data[_dict][descr[_key].foreignKey] : null,
                                         readonly: descr[_key].readonly,
                                         disabled: descr[_key].readonly || !editMode,
                                         options: descr[_key].options,

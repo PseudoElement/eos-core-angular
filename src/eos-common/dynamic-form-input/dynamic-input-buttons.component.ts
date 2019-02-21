@@ -20,4 +20,8 @@ export class DynamicInputButtonsComponent extends DynamicInputSelectComponent {
             this.control.setValue(option.value);
         }
     }
+
+    optIsDisabled(opt: any): boolean {
+        return (this.disabled || opt['disabled']);
+    }
 }

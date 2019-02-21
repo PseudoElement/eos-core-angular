@@ -10,13 +10,22 @@
     </div>
     <div class="modal-body-container">
 
-        <div class="tab-buttons">
+
+
+        <div class="tab-buttons eos-switch btn-group">
+                <a *ngFor="let item of tabs"
+                    class="tab-button btn btn-primary switch-item text-uppercase"
+                    [ngClass]="{'btn-primary-full':item.tag === activeTab.tag}"
+                    (click)="clickTab(item)">{{item.title}}</a>
+        </div>
+        <p class="xl-font paragraph-title no-marigin-bottom"></p>
+        <!-- <div class="tab-buttons">
             <div class="tab-button" *ngFor="let item of tabs"
                 [ngClass]="{'active': item.tag === activeTab.tag}"
                 (click)="clickTab(item)">
                 {{item.title}}
             </div>
-        </div>
+        </div> -->
 
         <ng-container [ngSwitch]="activeTab.tag">
             <ng-container *ngSwitchCase="0">
@@ -55,37 +64,40 @@
 </ng-template>
 
 <ng-template #defaultEdit2>
-    <eos-rk-mandatory
+    <eos-rk-mandatory #currentPage
         style="width: 100%;"
         [dataController]="dataController"
         [fieldsDescription]="fieldsDescrDefault"
         [form]="form"
         [editMode]="true"
-        [data]="values"
+        [data]="editValues"
+        [dgStoredValues]="storedValuesDG"
         [inputs]="inputs">
     </eos-rk-mandatory>
 </ng-template>
 
 <ng-template #defaultEdit3>
-    <eos-rk-writes
+    <eos-rk-writes #currentPage
         style="width: 100%;"
         [dataController]="dataController"
         [fieldsDescription]="fieldsDescrDefault"
         [form]="form"
         [editMode]="true"
-        [data]="values"
+        [data]="editValues"
+        [dgStoredValues]="storedValuesDG"
         [inputs]="inputs">
     </eos-rk-writes>
 </ng-template>
 
 <ng-template #defaultEdit4>
-    <eos-rk-files
+    <eos-rk-files #currentPage
         style="width: 100%;"
         [dataController]="dataController"
         [fieldsDescription]="fieldsDescrDefault"
         [form]="form"
         [editMode]="true"
-        [data]="values"
+        [data]="editValues"
+        [dgStoredValues]="storedValuesDG"
         [inputs]="inputs">
     </eos-rk-files>
 </ng-template>

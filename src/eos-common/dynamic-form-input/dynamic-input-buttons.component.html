@@ -8,7 +8,7 @@
     <div class="eos-switch btn-group" *ngIf="!readonly">
         <a *ngFor="let opt of buttons"
            class="btn btn-primary switch-item text-uppercase"
-           [ngClass]="{'btn-primary-full':control?.value === opt.value, 'disabled': disabled}"
+           [ngClass]="{'btn-primary-full':control?.value === opt.value, 'disabled': optIsDisabled(opt), 'btn-readonly':optIsDisabled(opt)}"
            (click)="switchTo(opt)">{{opt.title}}</a>
     </div>
 </div>

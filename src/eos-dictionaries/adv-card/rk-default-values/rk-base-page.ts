@@ -31,8 +31,6 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
     }
 
     onDataChanged(path: string, prevValue: any, newValue: any): any {
-        // this.changeEvent.next([path, prevValue, newValue]);
-        console.log('1');
     }
 
     onTabInit (dgStoredValues: any, values: any[]) {
@@ -57,5 +55,22 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
             }
         }
     }
+
+    /**
+     * Set item.disabled = !val
+     * @param options array of options
+     * @param listEnabled array of numbers to be set val (other be seted !val). If null - set to all
+     * @param val value
+     */
+    setEnabledOptions(options: any[], listEnabled: number[] = null, val: boolean = true): any {
+        for (let i = 0; i < options.length; i++) {
+            if (!listEnabled || listEnabled.find( e => e === i)) {
+                options[i]['disabled'] = !val;
+            } else {
+                options[i]['disabled'] = val;
+            }
+        }
+    }
+
 
 }
