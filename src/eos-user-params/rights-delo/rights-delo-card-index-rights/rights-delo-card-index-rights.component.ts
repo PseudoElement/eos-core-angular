@@ -113,12 +113,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     this.servApi.setData(this.createObjRequestForAttachAfterBackend2())
                     .then(data2 => {
                        this._userParamsSetSrv.getUserIsn('' + this.userCard.get(Array.from(this.userCard)[0][0])['ISN_LCLASSIF']);
-                       sessionStorage.setItem('FlagToClearData', JSON.stringify(true));
-                       sessionStorage.removeItem('FuncFileCards');
-                       sessionStorage.removeItem('arrayDataDocumentsForMerge');
-                       sessionStorage.removeItem('ArrayDataDocumentsForPost');
-                       sessionStorage.removeItem('arrayDataDocumentsForDelete');
-                       sessionStorage.removeItem('arrayDataDocumentsForMergeFirst');
+                       sessionStorage.clear();
                        this.msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                     })
                     .catch(data2 => console.log(data2));
@@ -181,6 +176,7 @@ for (let t = 0; t < newArrayDataDocumentsForMerge.length; t++) {
         newArrayDataDocumentsForDelete = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForDelete'));
 
       if (newDataFromLocalStorageFuncFileCards && newArrayDataDocumentsForMergeFirst) {
+      //  newArrayDataDocumentsForMergeFirst = newArrayDataDocumentsForMergeFirst.filter((e, i) => !(i % 2));
         for (let i = 0; i < newDataFromLocalStorageFuncFileCards.length; i++) {
             const tmp = newDataFromLocalStorageFuncFileCards[i][1];
             for (let j = 0; j < newArrayDataDocumentsForMergeFirst.length; j++) {
