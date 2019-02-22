@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { IParamUserCl, IInputParamControl, IInputParamControlForIndexRight, INodeDocsTreeCfg } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
@@ -42,11 +42,11 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
     arrayNewData = [];
     listAllData = [];
     tmpUserCardDocgroup = [];
-    arrayUserCardDocgroupWithCurrentFunclist = [];
     arrayDataDocumentsForMergeFirst = [];
     arrayDataDocumentsForDelete = [];
     arrayDataDocumentsForMerge = [];
     arrayDataDocumentsForPost = [];
+    arrayFuncFileCards = null;
     private quaryDepartment = {
         DEPARTMENT: {
             criteries: {
@@ -104,7 +104,6 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
         let rightDocGroup;
         let doc;
         let str;
-        let newDataFromLocalStorageFuncFileCards = null;
         const arrayDoc = [];
 
         if (!event.target) {
@@ -118,6 +117,8 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
 
             if (sessionStorage.getItem('arrayDataDocumentsForMerge') !== null) {
                 this.arrayDataDocumentsForMerge = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForMerge'));
+            } else {
+                this.arrayDataDocumentsForMerge = [];
             }
 
             for (let i = 0; i < this.arrayDataDocumentsForMerge.length; i++) {
@@ -132,21 +133,24 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
             this.arrayDataDocumentsForMerge.push(rightDocGroup);
             sessionStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
         } else {
-        if (event.target.tagName === 'LABEL') {
-        } else {
+        setTimeout(() => {
             if (sessionStorage.getItem('FuncFileCards') !== null) {
-                newDataFromLocalStorageFuncFileCards = JSON.parse(sessionStorage.getItem('FuncFileCards'));
+                this.arrayFuncFileCards = JSON.parse(sessionStorage.getItem('FuncFileCards'));
+            } else {
+                this.arrayFuncFileCards = null;
             }
             if (sessionStorage.getItem('arrayDataDocumentsForMergeFirst') !== null) {
                 this.arrayDataDocumentsForMergeFirst = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForMergeFirst'));
+            } else {
+                this.arrayDataDocumentsForMergeFirst = [];
             }
-            if (this.form.controls[item.key].value === false) {
+            if (this.form.controls[item.key].value === true) {
                 for (let i = 0; i < this.listAllData.length; i++) {
                     if (this.listAllData[i][0]['key'] === item.key) {
                         for (let j = 0; j < Array.from(this.userCard).length; j++) {
                             if (this.listAllData[i][0]['key'] === Array.from(this.userCard)[j][0]) {
-                                if (newDataFromLocalStorageFuncFileCards !== null) {
-                                    str = newDataFromLocalStorageFuncFileCards[j][1]['FUNCLIST'];
+                                if (this.arrayFuncFileCards !== null) {
+                                    str = this.arrayFuncFileCards[j][1]['FUNCLIST'];
                                     if (+this.selectedNode2.key > 18 && str.length === 18) {
                                         str += '000';
                                     }
@@ -209,44 +213,34 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                             WEIGHT: 0
                         };
                         arrayDoc.push(this._createNode(rightDocGroup, doc));
-                        if (this.listAllData[i].length !== 3) {
-                        for (let k = 0; k < Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length; k++) {
-                            if (Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][k]['DUE'] === rightDocGroup['DUE'] &&
-                            Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][k]['FUNC_NUM'] === rightDocGroup['FUNC_NUM']) {
-                                break;
-                            } else if ((Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length - 1) === k) {
-                                Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].push(rightDocGroup);
-                            }
-                        }
                         this.listAllData[i].push(arrayDoc);
                         this.listAllData[i].push({openDocumentTree: false});
                         this.listAllData[i].push({buttonDisable: true});
                         this.arrayDataDocumentsForMergeFirst.push(rightDocGroup);
                         sessionStorage.setItem('arrayDataDocumentsForMergeFirst', JSON.stringify(this.arrayDataDocumentsForMergeFirst));
-                        }
                     }
                 }
                 break;
                 }
             }
-            } else if (this.form.controls[item.key].value === true) {
+            } else if (this.form.controls[item.key].value === false) {
                 for (let i = 0; i < this.listAllData.length; i++) {
                     if (this.listAllData[i][0]['key'] === item.key) {
                         for (let j = 0; j < Array.from(this.userCard).length; j++) {
                             if (item.key === Array.from(this.userCard)[j][0]) {
-                            if (newDataFromLocalStorageFuncFileCards !== null) {
-                                str = newDataFromLocalStorageFuncFileCards[j][1]['FUNCLIST'];
+                            if (this.arrayFuncFileCards !== null) {
+                                str = this.arrayFuncFileCards[j][1]['FUNCLIST'];
                                 str = this.setCharAt(str, +this.selectedNode2.key, '0');
                                 Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                                 Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                                Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'] = [];
+                             //   Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'] = [];
                                 sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                             } else {
                                 str = Array.from(this.userCard)[j][1]['FUNCLIST'];
                                 str = this.setCharAt(str, +this.selectedNode2.key, '0');
                                 Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                                 Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                                Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'] = [];
+                              //  Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'] = [];
                                 sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                             }
                             for (let r = 0; r < this.arrayDataDocumentsForMergeFirst.length; r++) {
@@ -262,25 +256,8 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                     }
                 }
             }
-        }
-        }
-    }
-
-@HostListener('click', ['$event'])
-    onClick(event) {
-        if (sessionStorage.getItem('FlagToClearData') !== null) {
-            let flagFromLH = JSON.parse(sessionStorage.getItem('FlagToClearData'));
-            if (flagFromLH) {
-                this.arrayUserCardDocgroupWithCurrentFunclist = [];
-                this.arrayDataDocumentsForMergeFirst = [];
-                this.arrayDataDocumentsForMerge = [];
-                this.arrayDataDocumentsForPost = [];
-                this.arrayDataDocumentsForDelete = [];
-                flagFromLH = false;
-                sessionStorage.clear();
-                sessionStorage.setItem('FlagToClearData', JSON.stringify(false));
-            }
-        }
+    });
+}
     }
 
     openDocumentList(node) {
@@ -303,6 +280,11 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                     });
                     this.isShell = false;
                     return;
+                }
+                if (sessionStorage.getItem('ArrayDataDocumentsForPost') !== null) {
+                    this.arrayDataDocumentsForPost = JSON.parse(sessionStorage.getItem('ArrayDataDocumentsForPost'));
+                } else {
+                    this.arrayDataDocumentsForPost = [];
                 }
                 for (let i = 0; i < this.listAllData.length; i++) {
                     if (this.listAllData[i][0]['key'] === item[0]['key']) {
@@ -366,6 +348,11 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                                     DUE: this.curentNode['DUE'],
                                     ALLOWED: 0
                                     };
+                                    if (sessionStorage.getItem('arrayDataDocumentsForDelete') !== null) {
+                                        this.arrayDataDocumentsForDelete = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForDelete'));
+                                    } else {
+                                        this.arrayDataDocumentsForDelete = [];
+                                    }
                                     this.arrayDataDocumentsForDelete.push(tmp);
                                     sessionStorage.setItem('arrayDataDocumentsForDelete', JSON.stringify(this.arrayDataDocumentsForDelete));
                                     flagTmp = false;

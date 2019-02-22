@@ -113,12 +113,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     this.servApi.setData(this.createObjRequestForAttachAfterBackend2())
                     .then(data2 => {
                        this._userParamsSetSrv.getUserIsn('' + this.userCard.get(Array.from(this.userCard)[0][0])['ISN_LCLASSIF']);
-                       sessionStorage.setItem('FlagToClearData', JSON.stringify(true));
-                       sessionStorage.removeItem('FuncFileCards');
-                       sessionStorage.removeItem('arrayDataDocumentsForMerge');
-                       sessionStorage.removeItem('ArrayDataDocumentsForPost');
-                       sessionStorage.removeItem('arrayDataDocumentsForDelete');
-                       sessionStorage.removeItem('arrayDataDocumentsForMergeFirst');
+                       sessionStorage.clear();
                        this.msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                     })
                     .catch(data2 => console.log(data2));
@@ -135,20 +130,14 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         newArrayDataDocumentsForMerge = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForMerge'));
         if (newDataFromLocalStorageFuncFileCards) {
         for (let i = 0; i < newDataFromLocalStorageFuncFileCards.length; i++) {
-            const tmp = this.userCard.get(newDataFromLocalStorageFuncFileCards[i][0]);
-             if (newDataFromLocalStorageFuncFileCards[i][1]['FLAG_NEW_FUNCLIST'] === true ||
-             newDataFromLocalStorageFuncFileCards[i][1]['FLAG_NEW_FUNCLIST_REMOVE'] === true) {
+             if (newDataFromLocalStorageFuncFileCards[i][1]['FLAG_NEW_FUNCLIST'] === true) {
                 req.push({
                 method: 'MERGE',
-                requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')`,
+                requestUri: `USER_CL(${newDataFromLocalStorageFuncFileCards[i][1]['ISN_LCLASSIF']})/USERCARD_List(\'${newDataFromLocalStorageFuncFileCards[i][1]['ISN_LCLASSIF']} ${newDataFromLocalStorageFuncFileCards[i][1]['DUE']}\')`,
                 data: {
-                    FUNCLIST: tmp['FUNCLIST']
+                    FUNCLIST: newDataFromLocalStorageFuncFileCards[i][1]['FUNCLIST']
                 }
             });
-           if (newDataFromLocalStorageFuncFileCards[i][1]['FLAG_NEW_FUNCLIST'] === true) {
-            newDataFromLocalStorageFuncFileCards['FLAG_NEW_DOCUMENTS'] = true;
-            newDataFromLocalStorageFuncFileCards[i][1]['FLAG_NEW_FUNCLIST'] = false;
-           }
         }
     }
 }
@@ -169,39 +158,28 @@ for (let t = 0; t < newArrayDataDocumentsForMerge.length; t++) {
     }
     createObjRequestForAttachAfterBackend2() {
         const req = [];
-        let newDataFromLocalStorageFuncFileCards;
         let newArrayDataDocumentsForPost;
         let newArrayDataDocumentsForMergeFirst;
         let newArrayDataDocumentsForMerge;
         let newArrayDataDocumentsForDelete;
-        newDataFromLocalStorageFuncFileCards = JSON.parse(sessionStorage.getItem('FuncFileCards'));
         newArrayDataDocumentsForPost = JSON.parse(sessionStorage.getItem('ArrayDataDocumentsForPost'));
         newArrayDataDocumentsForMergeFirst = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForMergeFirst'));
         newArrayDataDocumentsForMerge = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForMerge'));
         newArrayDataDocumentsForDelete = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForDelete'));
 
-      if (newDataFromLocalStorageFuncFileCards && newArrayDataDocumentsForMergeFirst) {
-        for (let i = 0; i < newDataFromLocalStorageFuncFileCards.length; i++) {
-            const tmp = newDataFromLocalStorageFuncFileCards[i][1];
-            for (let j = 0; j < newArrayDataDocumentsForMergeFirst.length; j++) {
-                if (newDataFromLocalStorageFuncFileCards[i][0] === newArrayDataDocumentsForMergeFirst[j]['DUE_CARD']) {
-                    for (let w = 0; w < newDataFromLocalStorageFuncFileCards[i][1]['USER_CARD_DOCGROUP_List'].length; w++) {
-                        if (newDataFromLocalStorageFuncFileCards[i][1]['USER_CARD_DOCGROUP_List'][w]['DUE'] === newArrayDataDocumentsForMergeFirst[j]['DUE'] &&
-                        newDataFromLocalStorageFuncFileCards[i][1]['USER_CARD_DOCGROUP_List'][w]['FUNC_NUM'] === (+this.selectedNode2.key + 1)) {
-                            req.push({
-                                method: 'MERGE',
-            requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')` +
-            `/USER_CARD_DOCGROUP_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']} ${tmp.USER_CARD_DOCGROUP_List[w]['DUE']} ${newArrayDataDocumentsForMergeFirst[j]['FUNC_NUM']}\')`,
-                                data: {
-                                    ALLOWED: tmp.USER_CARD_DOCGROUP_List[w]['ALLOWED']
-                                }
-                            });
-                        }
+        if (newArrayDataDocumentsForMergeFirst) {
+            for (let i = 0; i < newArrayDataDocumentsForMergeFirst.length; i++) {
+                const tmp = newArrayDataDocumentsForMergeFirst;
+                req.push({
+                    method: 'MERGE',
+requestUri: `USER_CL(${tmp[i]['ISN_LCLASSIF']})/USERCARD_List(\'${tmp[i]['ISN_LCLASSIF']} ${tmp[i]['DUE_CARD']}\')` +
+`/USER_CARD_DOCGROUP_List(\'${tmp[i]['ISN_LCLASSIF']} ${tmp[i]['DUE_CARD']} ${tmp[i]['DUE']} ${tmp[i]['FUNC_NUM']}\')`,
+                    data: {
+                        ALLOWED: tmp[i]['ALLOWED']
                     }
-                }
+                });
             }
         }
-    }
 
     if (newArrayDataDocumentsForPost) {
         for (let i = 0; i < newArrayDataDocumentsForPost.length; i++) {
@@ -249,6 +227,8 @@ requestUri: `USER_CL(${newArrayDataDocumentsForMerge[t]['ISN_LCLASSIF']})/USERCA
         }
         }
     }
+
+    sessionStorage.clear();
     return req;
     }
 

@@ -76,13 +76,14 @@ export class RightSideListCardComponent implements OnInit {
     }
 
     checkedNode(event, item) {
+        this.form.valueChanges.subscribe(() => {
         let str;
         let newDataFromLocalStorageFuncFileCards = null;
    if (event.target.tagName === 'LABEL') {} else {
     if (sessionStorage.getItem('FuncFileCards') !== null) {
         newDataFromLocalStorageFuncFileCards = JSON.parse(sessionStorage.getItem('FuncFileCards'));
     }
-    if (this.form.controls[item.key].value === false) {
+    if (this.form.controls[item.key].value === true) {
         for (let i = 0; i < this.listAllData.length; i++) {
             if (this.listAllData[i][0]['key'] === item.key) {
                 for (let j = 0; j < Array.from(this.userCard).length; j++) {
@@ -111,7 +112,7 @@ export class RightSideListCardComponent implements OnInit {
                 break;
         }
     }
-    } else if (this.form.controls[item.key].value === true) {
+    } else if (this.form.controls[item.key].value === false) {
         for (let i = 0; i < this.listAllData.length; i++) {
             if (this.listAllData[i][0]['key'] === item.key) {
                 for (let j = 0; j < Array.from(this.userCard).length; j++) {
@@ -137,6 +138,7 @@ export class RightSideListCardComponent implements OnInit {
         }
     }
 }
+    });
 }
 
 createObjRequestForAttach() {
