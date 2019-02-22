@@ -8,11 +8,12 @@
         ></span>
 
         <div [formGroup]="form">
-        <label class="checkbox classif-list-tech-user" (click)="checkedNode($event, item[0])">
+        <label class="checkbox classif-list-tech-user">
             <input type="checkbox"
             hidden
             [formControlName]="item[0].key"
-            [id]="item[0].key" />
+            [id]="item[0].key"
+            (click)="checkedNode($event, item[0])" />
             <span class="eos-icon eos-icon-checkbox-square-blue x-small">
                 </span>
                 {{item[0].label}}

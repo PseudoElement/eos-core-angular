@@ -101,8 +101,12 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
     }
 
     checkedNode(event, item) {
+        let rightDocGroup;
+        let doc;
+        let str;
+        const arrayDoc = [];
+
         if (!event.target) {
-            let rightDocGroup;
             rightDocGroup = {
                 ISN_LCLASSIF: event.data.rightDocGroup['ISN_LCLASSIF'],
                 FUNC_NUM: +this.selectedNode2.key + 1, // +1
@@ -129,14 +133,7 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
             this.arrayDataDocumentsForMerge.push(rightDocGroup);
             sessionStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
         } else {
-        this.form.valueChanges.subscribe(() => {
-        let rightDocGroup;
-        let doc;
-        let str;
-        const arrayDoc = [];
-
-        if (event.target.tagName === 'LABEL') {
-        } else {
+        setTimeout(() => {
             if (sessionStorage.getItem('FuncFileCards') !== null) {
                 this.arrayFuncFileCards = JSON.parse(sessionStorage.getItem('FuncFileCards'));
             } else {
@@ -216,22 +213,11 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                             WEIGHT: 0
                         };
                         arrayDoc.push(this._createNode(rightDocGroup, doc));
-                        if (this.listAllData[i].length !== 3) {
-                        for (let k = 0; k < Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length; k++) {
-                            if (Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][k]['DUE'] === rightDocGroup['DUE'] &&
-                            Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][k]['FUNC_NUM'] === rightDocGroup['FUNC_NUM']) {
-                                break;
-                            } else if ((Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length - 1) === k) {
-                                Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].push(rightDocGroup);
-                            }
-                        }
                         this.listAllData[i].push(arrayDoc);
                         this.listAllData[i].push({openDocumentTree: false});
                         this.listAllData[i].push({buttonDisable: true});
                         this.arrayDataDocumentsForMergeFirst.push(rightDocGroup);
-                      //  console.log(this.arrayDataDocumentsForMergeFirst);
                         sessionStorage.setItem('arrayDataDocumentsForMergeFirst', JSON.stringify(this.arrayDataDocumentsForMergeFirst));
-                        }
                     }
                 }
                 break;
@@ -247,14 +233,14 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                                 str = this.setCharAt(str, +this.selectedNode2.key, '0');
                                 Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                                 Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                                Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'] = [];
+                             //   Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'] = [];
                                 sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                             } else {
                                 str = Array.from(this.userCard)[j][1]['FUNCLIST'];
                                 str = this.setCharAt(str, +this.selectedNode2.key, '0');
                                 Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                                 Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                                Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'] = [];
+                              //  Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'] = [];
                                 sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                             }
                             for (let r = 0; r < this.arrayDataDocumentsForMergeFirst.length; r++) {
@@ -270,28 +256,9 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                     }
                 }
             }
-        }
     });
 }
     }
-
-/*@HostListener('click', ['$event'])
-    onClick(event) {
-        if (sessionStorage.getItem('FlagToClearData') !== null) {
-            let flagFromLH = JSON.parse(sessionStorage.getItem('FlagToClearData'));
-            if (flagFromLH) {
-                console.log(this.arrayDataDocumentsForDelete);
-                this.arrayUserCardDocgroupWithCurrentFunclist = [];
-                this.arrayDataDocumentsForMergeFirst = [];
-                this.arrayDataDocumentsForMerge = [];
-                this.arrayDataDocumentsForPost = [];
-                this.arrayDataDocumentsForDelete = [];
-                flagFromLH = false;
-                sessionStorage.clear();
-                sessionStorage.setItem('FlagToClearData', JSON.stringify(false));
-            }
-        }
-    }*/
 
     openDocumentList(node) {
         node.openDocumentTree = !node.openDocumentTree;
@@ -373,7 +340,6 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                                     sessionStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
                                 }
                             }
-                            console.log(flagTmp);
                             if (!flagTmp) {
                                 tmp = {
                                     ISN_LCLASSIF: this.allData[0]['ISN_LCLASSIF'],
@@ -388,7 +354,6 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                                         this.arrayDataDocumentsForDelete = [];
                                     }
                                     this.arrayDataDocumentsForDelete.push(tmp);
-                                    console.log(this.arrayDataDocumentsForDelete);
                                     sessionStorage.setItem('arrayDataDocumentsForDelete', JSON.stringify(this.arrayDataDocumentsForDelete));
                                     flagTmp = false;
                             }

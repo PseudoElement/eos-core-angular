@@ -224,21 +224,11 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                             WEIGHT: 0
                         };
                         arrayDoc.push(this._createNode(rightDocGroup, doc));
-                        if (this.listAllData[i].length !== 3) {
-                            for (let k = 0; k < Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length; k++) {
-                                if (Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][k]['DUE'] === rightDocGroup['DUE'] &&
-                                Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][k]['FUNC_NUM'] === rightDocGroup['FUNC_NUM']) {
-                                    break;
-                                } else if ((Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length - 1) === k) {
-                                    Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].push(rightDocGroup);
-                                }
-                            }
                             this.listAllData[i].push(arrayDoc);
                             this.listAllData[i].push({openDocumentTree: false});
                             this.listAllData[i].push({buttonDisable: true});
                             this.arrayDataDocumentsForMergeFirst.push(rightDocGroup);
                             sessionStorage.setItem('arrayDataDocumentsForMergeFirst', JSON.stringify(this.arrayDataDocumentsForMergeFirst));
-                        }
                     }
                 }
                         break;
@@ -254,21 +244,13 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                                     str = this.setCharAt(str, +this.selectedNode2.key, '0');
                                     Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                                     Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                                    for (let s = 0; s < Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length; s++) {
-                                        if (Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][s]['FUNC_NUM'] === +this.selectedNode2.key + 1) {
-                                        }
-                                    }
                                     sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                                 } else {
                                     str = Array.from(this.userCard)[j][1]['FUNCLIST'];
                                     str = this.setCharAt(str, +this.selectedNode2.key, '0');
                                     Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                                     Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                                    for (let s = 0; s < Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length; s++) {
-                                        if (Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][s]['FUNC_NUM'] === +this.selectedNode2.key + 1) {
-                                        }
-                                        }
-                                        sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                                    sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                                 }
                                 for (let r = 0; r < this.arrayDataDocumentsForMergeFirst.length; r++) {
                                     if (this.arrayDataDocumentsForMergeFirst[r]['DUE_CARD'] === item.key &&
@@ -284,7 +266,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                 }
             }
         } else {
-            console.log(item);
             if (item.value === true) {
                 for (let i = 0; i < this.listAllData.length; i++) {
 
@@ -310,55 +291,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                                     Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
                                     sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                                 }
-                        rightDocGroup = {
-                            ISN_LCLASSIF: this.allData[i]['ISN_LCLASSIF'],
-                            FUNC_NUM: +this.selectedNode2.key + 1, // +1
-                            DUE_CARD: item.key,
-                            DUE: '0.',
-                            ALLOWED: 1
-                        };
-                        doc = {
-                            ACCESS_MODE: 0,
-                            ACCESS_MODE_FIXED: 0,
-                            CLASSIF_NAME: 'Все группы документов',
-                            CODE: null,
-                            DELETED: 1,
-                            DOCGROUP_INDEX: null,
-                            DOCNUMBER_FLAG: 1,
-                            DUE: '0.',
-                            EDS_FLAG: null,
-                            ENCRYPT_FLAG: null,
-                            E_DOCUMENT: 0,
-                            FULLNAME: null,
-                            INITIATIVE_RESOLUTION: 0,
-                            ISN_HIGH_NODE: null,
-                            ISN_LCLASSIF: 0,
-                            ISN_NODE: 0,
-                            IS_COPYCOUNT: 0,
-                            IS_NODE: 0,
-                            NOTE: null,
-                            PARENT_DUE: null,
-                            PRJ_APPLY2_EDS: null,
-                            PRJ_APPLY_EDS: null,
-                            PRJ_APPLY_EXEC_EDS: 0,
-                            PRJ_AUTO_REG: null,
-                            PRJ_DEL_AFTER_REG: null,
-                            PRJ_NUM_FLAG: null,
-                            PRJ_SHABLON: null,
-                            PRJ_TEST_UNIQ_FLAG: null,
-                            PRJ_WEIGHT: null,
-                            PROTECTED: 1,
-                            PROTECT_DEL_PRJ_STATUS: null,
-                            RC_TYPE: 0,
-                            SHABLON: null,
-                            TEST_UNIQ_FLAG: 0,
-                            WEIGHT: 0
-                        };
-                        arrayDoc.push(this._createNode(rightDocGroup, doc));
-                        if (this.listAllData[i].length !== 3) {
-                            this.arrayDataDocumentsForMergeFirst.push(rightDocGroup);
-                            sessionStorage.setItem('arrayDataDocumentsForMergeFirst', JSON.stringify(this.arrayDataDocumentsForMergeFirst));
-                        }
                     }
                 }
                         break;
@@ -388,7 +320,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                 }
             }
             }
-        }, 500);
+        });
             }
     }
 
