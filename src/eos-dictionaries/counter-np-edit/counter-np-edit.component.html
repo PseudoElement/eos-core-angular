@@ -9,6 +9,17 @@
         <span>{{getNodeTitle()}}</span>
     </div>
     <div class="modal-body-container">
+        <div *ngIf="isCounterRK" class="edit-content docgroup">
+            <label>Группа документов</label>
+            <div class="eos-select">
+                 <select class="form-control m-font" #docGroup
+                         [ngClass]="{'placeholder': !currentDocgroup}"
+                         [value]="currentDocgroup"
+                         (change)="onChangeDocgroup(docGroup.value)">
+                    <option *ngFor="let opt of docGroupOptions" [value]="opt.value">{{opt.title}}</option>
+                </select>
+            </div>
+        </div>
         <div class="divTable" *ngIf="nodes">
                 <div class="divTableHeading">
                     <div class="divTableHeaderRow">

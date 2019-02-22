@@ -1,13 +1,12 @@
 import {Component, Output, EventEmitter} from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
-import {PipRX} from '../../eos-rest';
+import {DOCGROUP_CL, PipRX} from '../../eos-rest';
 import {EosDictService} from '../services/eos-dict.service';
 import { YEAR_PATTERN, NUMERIC_PATTERN } from 'eos-common/consts/common.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { DANGER_NUMCREATION_NP_CHANGE } from 'eos-dictionaries/consts/messages.consts';
-import { CONFIRM_NUMCREATION_NP_CHANGE } from 'app/consts/confirms.const';
+import { CONFIRM_NUMCREATION_CHANGE } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-
 
 const NODE_ID_NAME = 'ISN_NODE';
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
@@ -17,14 +16,26 @@ const NODE_HIGH_NAME = 'PARENT_DUE';
 const FLAG_MAX = 'FLAG_MAX';
 
 const ERROR_MESSAGE_NOSUPPORT = 'Справочник не поддерживается';
+
+export enum E_COUNTER_TYPE {
+    counterDepartmentMain,
+    counterDepartment,
+    counterDepartmentRK,
+    counterDocgroup
+}
+
 class CounterDeclarator {
+    type: E_COUNTER_TYPE;
     dictId: string;
     dbTableName: string;
     dbNumIdName: string;
+    dbBaseIdName?: string;
     dbNodeName: string;
     rootLabel: string;
     mainLabel: string;
     appendObject?: any;
+    isCounterRK?: boolean;
+    criteries?: any;
     defaultRecord?: {
         year: number,
         value: number,
@@ -33,16 +44,43 @@ class CounterDeclarator {
 
 const numDeclarators: CounterDeclarator [] = [
     {
+        type: E_COUNTER_TYPE.counterDocgroup,
         dictId : 'docgroup',
         dbTableName : 'NUMCREATION',
         dbNumIdName : 'ISN_DOCGROUP',
         dbNodeName : 'DOCNUMBER_FLAG',
         rootLabel : 'Корневой элемент',
         mainLabel : 'Счетчик номерообразования',
+        criteries: {
+            'ISN_NUM_BASE': '-1', 
+        },
         appendObject : {
             'ISN_NUM_BASE': '-1',
         }
     }, {
+        type: E_COUNTER_TYPE.counterDepartmentRK,
+        dictId : 'departments',
+        dbTableName : 'NUMCREATION',
+        dbNumIdName : 'ISN_NUM_BASE',
+        dbBaseIdName: 'ISN_DOCGROUP',
+        dbNodeName : 'NUMCREATION_FLAG',
+        rootLabel : 'Корневой элемент',
+        mainLabel : 'Счетчик номерообразования',
+        isCounterRK : true,
+    }, {
+        type: E_COUNTER_TYPE.counterDepartmentMain,
+        dictId : 'departments',
+        dbTableName : 'NP_NUMCREATION',
+        dbNumIdName : 'BASE_ID',
+        dbNodeName : 'NUMCREATION_FLAG',
+        rootLabel : 'Главный счетчик',
+        mainLabel : 'Счетчик номерообразования НП',
+        defaultRecord: {
+            year: 1000,
+            value: 1,
+        }
+    }, {
+        type: E_COUNTER_TYPE.counterDepartment,
         dictId: 'departments',
         dbTableName: 'NP_NUMCREATION',
         dbNumIdName : 'BASE_ID',
@@ -69,6 +107,9 @@ export class CounterNpEditComponent {
     editValueYear: number;
     nodes: any[];
 
+    currentDocgroup: String;
+    docGroupOptions = [];
+
     valuePattern = NUMERIC_PATTERN;
     yearPattern = YEAR_PATTERN;
 
@@ -94,9 +135,9 @@ export class CounterNpEditComponent {
      * @param dndata EosDictionaryNode.data.rec - use departament's data.rec.CLASSIF_NAME and data.rec.ISN_NODE
      * if null - use main counter with base_id = '0'
      */
-    public initByNodeData(dndata: any) {
+    public initByNodeData(type: E_COUNTER_TYPE, dndata: any) {
         this._initialData = dndata;
-        this._decl = this._init(this._dictSrv.currentDictionary.id);
+        this._decl = this._init(type);
         if (!this._decl) {
             this._errHandler(ERROR_MESSAGE_NOSUPPORT);
             return;
@@ -111,12 +152,12 @@ export class CounterNpEditComponent {
         } else {
             this._node = dndata;
             const highId = dndata[NODE_HIGH_NAME];
-            if (!dndata[this._decl.dbNodeName] && highId !== null) {
+            if (!this._decl.isCounterRK && !dndata[this._decl.dbNodeName] && highId !== null) {
                 this.isUpdating = false;
                 this._dictSrv.currentDictionary.getFullNodeInfo(highId)
                     .then(highNode => {
                         if (highNode) {
-                            this.initByNodeData(highNode.data.rec);
+                            this.initByNodeData(type, highNode.data.rec);
                         }
                     });
                 return;
@@ -145,11 +186,23 @@ export class CounterNpEditComponent {
         });
     }
 
+    public onChangeDocgroup(newValue) {
+        this.currentDocgroup = newValue;
+        this.initByNodeData(this._decl.type, this._initialData);
+    }
+
     public getTitleLabel(): string {
         if (this._decl) {
             return this._decl.mainLabel;
         }
         return '';
+    }
+
+    get isCounterRK(): boolean {
+        if (this._decl) {
+            return !!this._decl.isCounterRK;
+        }
+        return false;
     }
 
     public hideModal(): void {
@@ -173,7 +226,7 @@ export class CounterNpEditComponent {
             if (isValid) {
                 const old_value = this._getNodeValue(this.editValueYear);
                 if (old_value) {
-                    const _confrm = Object.assign({}, CONFIRM_NUMCREATION_NP_CHANGE);
+                    const _confrm = Object.assign({}, CONFIRM_NUMCREATION_CHANGE);
                     _confrm.body = _confrm.body
                         .replace('{{old_value}}', String(old_value))
                         .replace('{{year}}', String(this.editValueYear))
@@ -204,21 +257,37 @@ export class CounterNpEditComponent {
     }
 
     private _readRecords(): Promise<any> {
-        const query = { criteries: { [this._decl.dbNumIdName]: String(this._baseId), [FLAG_MAX]: String(1) } };
+        const criteries = { [this._decl.dbNumIdName]: String(this._baseId), [FLAG_MAX]: String(1) };
+        if (this._decl.criteries) {
+            Object.assign(criteries, this._decl.criteries);
+        }
+
+        const query = { criteries: criteries };
         const req = { [this._decl.dbTableName]: query, orderby: NUM_YEAR_NAME };
         return this.apiSrv.read(req)
             .then((cnts) => {
                 this.nodes = cnts.filter(d => {
-                    return String(d[this._decl.dbNumIdName]) === this._baseId;
+                    let res = String(d[this._decl.dbNumIdName]) === this._baseId;
+                    if (res && this._decl.isCounterRK) {
+                        const dbBaseId = String(d[this._decl.dbBaseIdName]);
+                        if (this.currentDocgroup === undefined && dbBaseId !== String(-1)) {
+                            this.currentDocgroup = dbBaseId;
+                        }
+                        res = this.currentDocgroup !== null && dbBaseId === this.currentDocgroup;
+                    }
+                    return res;
                 });
-                this.isUpdating = false;
-                return Promise.resolve(cnts);
+                return this._fillDocGroup()
+                    .then(() => {
+                        this.isUpdating = false;
+                        return Promise.resolve(cnts);
+                    });
             })
             .catch(err => this._errHandler(err));
     }
 
-    private _init(dictId: string): CounterDeclarator {
-        return numDeclarators.find(r => r.dictId === dictId);
+    private _init(type: E_COUNTER_TYPE): CounterDeclarator {
+        return numDeclarators.find(r => r.type === type);
     }
 
     private _makeBatchData(year: number, value: number) {
@@ -227,6 +296,11 @@ export class CounterNpEditComponent {
             [NUM_YEAR_NAME]: Number(year),
             [NUM_VALUE_NAME] : Number(value),
         };
+
+        if (this.isCounterRK) {
+            Object.assign(dt, {ISN_DOCGROUP: this.currentDocgroup});
+        }
+
         if (this._decl.appendObject) {
             Object.assign(dt, this._decl.appendObject);
         }
@@ -254,7 +328,7 @@ export class CounterNpEditComponent {
     private _save(year: number, value: number) {
         const chr = this._makeBatchData(year, value);
         this._updateRecord(chr).then(() => {
-            this.initByNodeData(this._initialData);
+            this.initByNodeData(this._decl.type, this._initialData);
         }).catch(err => this._errHandler(err));
 
     }
@@ -271,5 +345,24 @@ export class CounterNpEditComponent {
             res = node[NUM_VALUE_NAME];
         }
         return res;
+    }
+
+    private _fillDocGroup(): Promise<any> {
+        this.docGroupOptions = [];
+        if (this._decl.isCounterRK) {
+            return this.apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries({
+                    DOCNUMBER_FLAG: String(1),
+                    SHABLON: '%{E}%',
+                })})
+            .then((records) => {
+                records.forEach((rec) => {
+                    this.docGroupOptions.push({title: rec.CLASSIF_NAME, value: String(rec.ISN_NODE)});
+                    if (this.currentDocgroup === undefined) {
+                        this.currentDocgroup = String(rec.ISN_NODE);
+                    }
+                });
+            });
+        }
+        return Promise.resolve(null);
     }
 }
