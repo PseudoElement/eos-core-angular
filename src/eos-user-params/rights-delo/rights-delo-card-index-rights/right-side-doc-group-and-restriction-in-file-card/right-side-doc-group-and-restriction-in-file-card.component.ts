@@ -497,8 +497,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                                     this.isLoading = false;
                                 }
                             });
-                          //  })
-                          //  .then(() => {
                                 if (j === (this.allData[i]['USER_CARD_DOCGROUP_List'].length - 1) && this.list.length) {
                                     this.listAllData[i].push(this.list);
                                     this.listAllData[i].push({openDocumentTree: false});
@@ -510,7 +508,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                                     this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
                                     this.isLoading = false;
                                 }
-                       //     });
                 }
             } else if (i === (this.allData.length - 1)) {
                 this.inputs = this._inputCtrlSrv.generateInputs(this.listCards);
