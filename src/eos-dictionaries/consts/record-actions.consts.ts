@@ -130,8 +130,8 @@ const RECORD_ACTION_DELETE_HARD: IAction = {
     buttonClass: null
 };
 
-const RECORD_ACTION_COUNTERNPMAIN: IAction = {
-    type: E_RECORD_ACTIONS.CounterNPMain,
+const RECORD_ACTION_COUNTER_DEPARTMENT_MAIN: IAction = {
+    type: E_RECORD_ACTIONS.counterDepartmentMain,
     group: E_ACTION_GROUPS.item,
     title: 'Главный счетчик номерообразования НП',
     hint: 'Главный счетчик номерообразования НП',
@@ -142,11 +142,11 @@ const RECORD_ACTION_COUNTERNPMAIN: IAction = {
     buttonClass: null
 };
 
-const RECORD_ACTION_COUNTERNP: IAction = {
-    type: E_RECORD_ACTIONS.CounterNP,
+const RECORD_ACTION_COUNTER_DEPARTMENT: IAction = {
+    type: E_RECORD_ACTIONS.counterDepartment,
     group: E_ACTION_GROUPS.item,
-    title: 'счетчик номерообразования НП',
-    hint: 'счетчик номерообразования НП',
+    title: 'Cчетчик номерообразования НП',
+    hint: 'Cчетчик номерообразования НП',
     iconClass: 'eos-icon eos-icon-info-blue small',
     disabledIconClass: 'eos-icon eos-icon-info-grey small',
     activeIconClass: null,
@@ -154,8 +154,20 @@ const RECORD_ACTION_COUNTERNP: IAction = {
     buttonClass: null
 };
 
-const RECORD_ACTION_COUNTER: IAction = {
-    type: E_RECORD_ACTIONS.counter,
+const RECORD_ACTION_COUNTER_DOCGROUP: IAction = {
+    type: E_RECORD_ACTIONS.counterDocgroup,
+    group: E_ACTION_GROUPS.item,
+    title: 'Cчетчик номерообразования',
+    hint: 'Cчетчик номерообразования',
+    iconClass: 'eos-icon eos-icon-info-blue small',
+    disabledIconClass: 'eos-icon eos-icon-info-grey small',
+    activeIconClass: null,
+    hoverIconClass: 'eos-icon eos-icon-info-blue small',
+    buttonClass: null
+};
+
+const RECORD_ACTION_COUNTER_DEPARTMENT_RK: IAction = {
+    type: E_RECORD_ACTIONS.counterDepartmentRK,
     group: E_ACTION_GROUPS.item,
     title: 'Cчетчик номерообразования',
     hint: 'Cчетчик номерообразования',
@@ -260,9 +272,10 @@ export const RECORD_ACTIONS: IAction[] = [
     // RECORD_ACTION_CREATE_ORGANISATION_AGENT,
     RECORD_ACTION_SHOW_SETTINGS,
     RECORD_ACTIONS_ADDITIONAL_FIELDS,
-    RECORD_ACTION_COUNTERNPMAIN,
-    RECORD_ACTION_COUNTERNP,
-    RECORD_ACTION_COUNTER,
+    RECORD_ACTION_COUNTER_DEPARTMENT,
+    RECORD_ACTION_COUNTER_DEPARTMENT_MAIN,
+    RECORD_ACTION_COUNTER_DEPARTMENT_RK,
+    RECORD_ACTION_COUNTER_DOCGROUP,
     RECORD_ACTION_NOMENKL_CLS,
     RECORD_ACTION_NOMENKL_OPS,
 ];

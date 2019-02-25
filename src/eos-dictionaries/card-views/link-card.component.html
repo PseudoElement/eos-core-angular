@@ -50,7 +50,7 @@
     <div *ngIf="((!isLinkTypeNull) && (linkType != 0))"
          class="clear-both">
         <div class="display-flex">
-            <div class="margin-t">Инициативный документ</div>
+            <div class="margin-t">{{leftDirectionTitle}}</div>
             <div class="full-width">
                 <div class="display-flex">
                     <ng-container *ngIf="!direction; then arrowLeft else nonArrow"></ng-container>
@@ -67,7 +67,7 @@
                     <ng-container *ngIf="!direction; then arrowRight else nonArrow"></ng-container>
                 </div>
             </div>
-            <div class="margin-t">Проект документа</div>
+            <div class="margin-t">{{rightDirectionTitle}}</div>
         </div>
     </div>
  </div>

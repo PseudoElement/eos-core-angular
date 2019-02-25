@@ -41,7 +41,7 @@ import {NodeListComponent} from '../node-list/node-list.component';
 import {CreateNodeComponent} from '../create-node/create-node.component';
 import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.interfaces';
 import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
-import {CounterNpEditComponent} from '../counter-np-edit/counter-np-edit.component';
+import {CounterNpEditComponent, E_COUNTER_TYPE} from '../counter-np-edit/counter-np-edit.component';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
 import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
 
@@ -314,14 +314,17 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.additionalFields:
                 this._openAdditionalFields();
                 break;
-            case E_RECORD_ACTIONS.CounterNPMain:
-                this._editCounterNP(true);
+            case E_RECORD_ACTIONS.counterDepartmentMain:
+                this._editCounter(E_COUNTER_TYPE.counterDepartmentMain);
                 break;
-            case E_RECORD_ACTIONS.CounterNP:
-                this._editCounterNP(false);
+            case E_RECORD_ACTIONS.counterDepartment:
+                this._editCounter(E_COUNTER_TYPE.counterDepartment);
                 break;
-            case E_RECORD_ACTIONS.counter:
-                this._editCounterNP(false);
+            case E_RECORD_ACTIONS.counterDepartmentRK:
+                this._editCounter(E_COUNTER_TYPE.counterDepartmentRK);
+                break;
+            case E_RECORD_ACTIONS.counterDocgroup:
+                this._editCounter(E_COUNTER_TYPE.counterDocgroup);
                 break;
             case E_RECORD_ACTIONS.CloseSelected:
                 this._closeItems();
@@ -540,25 +543,25 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         this._dictSrv.setFlagForMarked(fieldName, false, false);
     }
 
-    private _editCounterNP(isMainNP: boolean) {
+    private _editCounter(type: E_COUNTER_TYPE) {
         if (this.dictionaryId !== 'departments' && this.dictionaryId !== 'docgroup') {
             this._msgSrv.addNewMessage(DANGER_EDIT_DICT_NOTALLOWED);
             return;
         }
         this.modalWindow = null;
-        if (isMainNP) {
+        if (type === E_COUNTER_TYPE.counterDepartmentMain) {
             this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg'});
-            this.modalWindow.content.initByNodeData(null);
+            this.modalWindow.content.initByNodeData(type, null);
         } else {
             const node = this._dictSrv.listNode;
             if (node) {
                 if (node.data.PROTECTED) {
                     this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
-                } else if (this.dictionaryId === 'departments' && node.data.rec['NUMCREATION_FLAG'] !== 1) {
-                    this._msgSrv.addNewMessage(DANGER_DEPART_NO_NUMCREATION);
+                } else if (type === E_COUNTER_TYPE.counterDepartment && node.data.rec['NUMCREATION_FLAG'] !== 1) {
+                        this._msgSrv.addNewMessage(DANGER_DEPART_NO_NUMCREATION);
                 } else {
                     this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg'});
-                    this.modalWindow.content.initByNodeData(node.data.rec);
+                    this.modalWindow.content.initByNodeData(type, node.data.rec);
                 }
             } else {
                 this._msgSrv.addNewMessage(WARN_EDIT_ERROR);

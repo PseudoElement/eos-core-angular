@@ -1,10 +1,10 @@
 <div class="input-user-wrapper input-user-directories-wrapper">
 <div class="nav-signature">
-    <button class="btn" containerClass="tooltip-info" tooltip='Добавить хранилище'(click)="openModal2(templateNested)">
+    <button class="btn btn-primary-light" containerClass="tooltip-info" tooltip='Добавить хранилище'(click)="openModal2(templateNested)">
         <span class="eos-icon eos-icon-plus-blue small"></span>
     </button>
-    <button class="btn" containerClass="tooltip-info" (click)="deleteStores()" tooltip='Удалить хранилище'>
-        <span class="eos-icon eos-icon-close-blue small"></span>
+    <button class="btn btn-primary-light" containerClass="tooltip-info" (click)="deleteStores()" tooltip='Удалить хранилище'>
+        <span class="eos-icon eos-icon-bin-forever-blue small"></span>
     </button>
 </div>
 <div class="signature-list" *ngIf='listCertStores'>
@@ -57,13 +57,5 @@
       </ng-template>
 
       <ng-template #templateNested>
-        <div class="modal-header">
-          <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef2.hide(); closeFirstModal()">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <!-- <button *ngIf="modalRef" type="button" class="btn btn-danger" (click)="closeFirstModal()">X</button> -->
-          <eos-signature-add (closeAddCertModal)="closeAddCertModal()" [inputName]='inputName' [input]='input' [form] ='form'></eos-signature-add>
-        </div>
+            <eos-signature-add (closeAddCertModal)="closeAddCertModal()" [inputName]='inputName' [input]='input' [form] ='form'></eos-signature-add>
       </ng-template>

@@ -101,3 +101,8 @@ export const ENPTY_ALLOWED_CREATE_PRJ: IMessage = {
     msg: 'Пользователю дано право на создание РКПД, но нет разрешения ни на одну группу документов!\nУкажите группу документов для создания РКПД.',
     type: 'warning'
 };
+export const EMPTY_ALLOWED_CREATE_REGISTRATION_OF_DOCUMENTS: IMessage = {
+    title: 'Предупреждение:',
+    msg: 'Пользователю дано право на регистрацию документов, но нет разрешения ни на одну группу документов!\nУкажите группу документов для регистрации.',
+    type: 'warning'
+};

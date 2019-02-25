@@ -8,11 +8,12 @@
         ></span>
 
         <div [formGroup]="form">
-        <label class="checkbox classif-list-tech-user" (click)="checkedNode($event, item[0])">
+        <label class="checkbox classif-list-tech-user">
             <input type="checkbox"
             hidden
             [formControlName]="item[0].key"
-            [id]="item[0].key" />
+            [id]="item[0].key"
+            (click)="checkedNode($event, item[0])" />
             <span class="eos-icon eos-icon-checkbox-square-blue x-small">
                 </span>
                 {{item[0].label}}
@@ -37,8 +38,8 @@
                     tooltip="Удалить"
                     placement="bottom"
                     containerClass="tooltip-info"
-                    [disabled]="!curentNode"
-                    (click)="[removeDocuments(), hideToolTip()]"
+                    [disabled]="item[4]['buttonDisable']"
+                    (click)="[removeDocuments(item), hideToolTip()]"
                 >
                     <span class="eos-icon eos-icon-bin-forever-blue small"></span>
                 </button>
@@ -53,7 +54,7 @@
                 </label>
     <eos-list-doc-tree
         [listNode]="item[2]"
-        (select)="select($event)"
+        (select)="select($event, item[4])"
         (checkedNode)="checkedNode($event, null)"
     ></eos-list-doc-tree>
     </div>

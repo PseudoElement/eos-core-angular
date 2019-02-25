@@ -25,7 +25,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     defaultOrder: 'CLASSIF_NAME',
     visible: true,
     iconName: 'eos-icon-folder-group-blue',
-    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'counter',
+    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'counterDocgroup',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes' , 'additionalFields'],
     keyField: 'DUE',
@@ -74,7 +74,6 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         key: 'SHABLON',
         title: 'Шаблон',
         type: 'string',
-        required: true,
     }, {
         key: 'EDS_FLAG',
         title: 'ЭП',
@@ -95,7 +94,6 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         key: 'PRJ_SHABLON',
         title: 'Шаблон проекта',
         type: 'string',
-        required: true,
     }, {
         key: 'PRJ_WEIGHT',
         title: 'Вес в списке для проектов',
