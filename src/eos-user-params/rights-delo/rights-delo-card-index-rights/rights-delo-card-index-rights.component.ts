@@ -144,9 +144,9 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
             }
         }
 
-        if (newArrayDataDocumentsForPost !== null) {
-            for (let s = 0; s < newDataFromLocalStorageFuncFileCards.length; s++) {
-                for (let i = 0; i < newArrayDataDocumentsForPost.length; i++) {
+        if (newArrayDataDocumentsForPost !== null && newDataFromLocalStorageFuncFileCards !== null) {
+            for (let i = 0; i < newArrayDataDocumentsForPost.length; i++) {
+                 for (let s = 0; s < newDataFromLocalStorageFuncFileCards.length; s++) {
                     if (newArrayDataDocumentsForPost[i]['DUE_CARD'] === newDataFromLocalStorageFuncFileCards[s][0]) {
                         if (newArrayDataDocumentsForPost[i]['FUNC_NUM'] === 1 && newArrayDataDocumentsForPost[i]['DUE'] !== '0.') {
                             this.flagEmptyAllowedCreateRofD = true;
