@@ -669,17 +669,30 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'JOURNAL_WHERE_REDIRECTION_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ  по которому будет производиться переадресация  в ЖПД',
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
+
         // classif_id: NULL
     }, {
         key: 'FORWARD_WHERE_REDIRECTION_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ  по которому будетпроизводиться переадресация  при пересылке',
         // classif_id:  545
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
     }, {
         key: 'REF_FILE_ACCESS_LIST',
         // Default type:  'D',
@@ -696,9 +709,15 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'JOURNAL_WHO_EMPTY_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ для ЖПД если поле "Кому" пусто',
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
         // classif_id:  545
     }, {
         key: 'JOURNAL_ISN_LIST',
@@ -731,17 +750,29 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'JOURNAL_WHO_REDIRECTION_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ для которых должна быть применена переадресация в ЖПД',
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
         // classif_id:  545
     }, {
         key: 'FORWARD_WHO_REDIRECTION_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ для которых должна быть применена переадресация при пересылке',
         // classif_id:  545
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
     }, {
         key: 'FORWARD_ISN_LIST_DEP_W',
         // Default type:  'W',
@@ -760,10 +791,16 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'FORWARD_WHO_EMPTY_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ для пересылок если поле "Кому" пусто',
         // classif_id:  545
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
     }, {
         key: 'SIGN_ISN_LIST',
         // Default type:  'D',

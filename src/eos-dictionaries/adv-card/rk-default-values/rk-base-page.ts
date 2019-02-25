@@ -64,7 +64,9 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
      */
     setEnabledOptions(options: any[], listEnabled: number[] = null, val: boolean = true): any {
         for (let i = 0; i < options.length; i++) {
-            if (!listEnabled || listEnabled.find( e => e === i)) {
+            if (!listEnabled || -1 !== listEnabled.findIndex( e => {
+                return Number(e) === Number(i);
+            })) {
                 options[i]['disabled'] = !val;
             } else {
                 options[i]['disabled'] = val;
