@@ -19,7 +19,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     isShowAccordion: boolean;
     isLoading: boolean = true;
     isNewUser: boolean = false;
-    pageId: 'param-set' | 'email-address' | 'rights-delo' | 'base-param';
+    pageId: string;
     private ngUnsubscribe: Subject<any> = new Subject();
     private _isChanged: boolean;
     private _disableSave: boolean;
@@ -34,16 +34,6 @@ export class UserParamsComponent implements OnDestroy, OnInit {
             .takeUntil(this.ngUnsubscribe)
             .subscribe(param => {
                 this.pageId = param['field-id'];
-            });
-        this._navSrv.StateSandwich$
-            .takeUntil(this.ngUnsubscribe)
-            .subscribe((state: boolean) => {
-                this.isShowAccordion = state;
-            });
-        this._navSrv.StateScanDelo
-            .takeUntil(this.ngUnsubscribe)
-            .subscribe((state: boolean) => {
-                this.setTabsSCan(state);
             });
         this._route.queryParams
             .takeUntil(this.ngUnsubscribe)
@@ -64,13 +54,22 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                     });
                     this.isShowAccordion = true;
             });
-            this._userParamService.hasChanges$
+        this._userParamService.hasChanges$
             .takeUntil(this.ngUnsubscribe)
             .subscribe(({isChange, disableSave}: IUserSetChanges) => {
                 this._isChanged = isChange;
                 this._disableSave = disableSave;
             });
-
+        this._navSrv.StateSandwich$
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((state: boolean) => {
+                this.isShowAccordion = state;
+            });
+        this._navSrv.StateScanDelo
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe((state: boolean) => {
+                this.setTabsSCan(state);
+            });
     }
 
     ngOnInit() {

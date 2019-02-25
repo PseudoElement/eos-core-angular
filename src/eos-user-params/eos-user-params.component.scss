@@ -1,15 +1,27 @@
+.user-params-set {
+    display: block;
+    width: 800px;
+    margin: auto;
+    background: $white;
+    border: 1px solid $border-color-main-theme;
+}
+
 .nav-accordion {
     min-width: $dictionary-block-width;
     height: 100vh;
-    background: #fff;
+    background: $white;
     position: absolute;
     top: 97px;
     left: -$dictionary-block-width;
     border-right: 1px solid $border-color-main-theme;
     transition: .3s;
 
-    &.isShow {
+    &.show-accordion {
         left: 0;
+    }
+
+    .panel-group {
+        margin-bottom: 0;
     }
 
     .panel {
@@ -102,7 +114,7 @@
         min-width: $dictionary-block-width-big-display;
         left: -$dictionary-block-width-big-display;
 
-        &.isShow {
+        &.show-accordion {
             left: 0;
         }
     }

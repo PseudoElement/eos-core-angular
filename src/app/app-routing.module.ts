@@ -169,31 +169,17 @@ const routes: Routes = [{
     canActivate: [AuthorizedGuard, PermissionsGuard],
     children: [
         {
-            path: ':field-id',
-            children: [
-                {
-                    path: ':sub-field',
-                    component: UserParamsComponent,
-                    canDeactivate: [CanDeactivateGuard],
-                    data: {
-                        showNav: true
-                    }
-                },
-                {
-                    path: '',
-                    pathMatch: 'full',
-                    component: UserParamsComponent,
-                    canDeactivate: [CanDeactivateGuard],
-                    data: {
-                        showNav: true
-                    }
-                }
-            ]
-        },
-        {
             path: '',
             pathMatch: 'full',
             redirectTo: 'base-param',
+        },
+        {
+            path: ':field-id',
+            component: UserParamsComponent,
+            canDeactivate: [CanDeactivateGuard],
+            data: {
+                showNav: true
+            },
         },
     ]
 }, {
