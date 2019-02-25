@@ -126,35 +126,70 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         const req = [];
         let newDataFromLocalStorageFuncFileCards;
         let newArrayDataDocumentsForMerge;
+        let newArrayDataDocumentsForPost;
         newDataFromLocalStorageFuncFileCards = JSON.parse(sessionStorage.getItem('FuncFileCards'));
         newArrayDataDocumentsForMerge = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForMerge'));
+        newArrayDataDocumentsForPost = JSON.parse(sessionStorage.getItem('ArrayDataDocumentsForPost'));
         if (newDataFromLocalStorageFuncFileCards) {
-        for (let i = 0; i < newDataFromLocalStorageFuncFileCards.length; i++) {
-             if (newDataFromLocalStorageFuncFileCards[i][1]['FLAG_NEW_FUNCLIST'] === true) {
-                req.push({
-                method: 'MERGE',
-                requestUri: `USER_CL(${newDataFromLocalStorageFuncFileCards[i][1]['ISN_LCLASSIF']})/USERCARD_List(\'${newDataFromLocalStorageFuncFileCards[i][1]['ISN_LCLASSIF']} ${newDataFromLocalStorageFuncFileCards[i][1]['DUE']}\')`,
-                data: {
-                    FUNCLIST: newDataFromLocalStorageFuncFileCards[i][1]['FUNCLIST']
+            for (let i = 0; i < newDataFromLocalStorageFuncFileCards.length; i++) {
+                if (newDataFromLocalStorageFuncFileCards[i][1]['FLAG_NEW_FUNCLIST'] === true) {
+                    req.push({
+                    method: 'MERGE',
+                    requestUri: `USER_CL(${newDataFromLocalStorageFuncFileCards[i][1]['ISN_LCLASSIF']})/USERCARD_List(\'${newDataFromLocalStorageFuncFileCards[i][1]['ISN_LCLASSIF']} ${newDataFromLocalStorageFuncFileCards[i][1]['DUE']}\')`,
+                    data: {
+                        FUNCLIST: newDataFromLocalStorageFuncFileCards[i][1]['FUNCLIST']
+                        }
+                    });
                 }
-            });
+            }
         }
-    }
-}
 
+        if (newArrayDataDocumentsForPost !== null) {
+            for (let s = 0; s < newDataFromLocalStorageFuncFileCards.length; s++) {
+                for (let i = 0; i < newArrayDataDocumentsForPost.length; i++) {
+                    if (newArrayDataDocumentsForPost[i]['DUE_CARD'] === newDataFromLocalStorageFuncFileCards[s][0]) {
+                        if (newArrayDataDocumentsForPost[i]['FUNC_NUM'] === 1 && newArrayDataDocumentsForPost[i]['DUE'] !== '0.') {
+                            this.flagEmptyAllowedCreateRofD = true;
+                        }
+                    }
+                }
+            }
+        } else if (newArrayDataDocumentsForMerge !== null) { // Если пользователь захотел убрать checkbox 'Все группы документов'
+        loop1:
+            for (let t = 0; t < newArrayDataDocumentsForMerge.length; t++) {
+                if (newArrayDataDocumentsForMerge[t]['FUNC_NUM'] === 1 && newArrayDataDocumentsForMerge[t]['DUE'] === '0.' && !newArrayDataDocumentsForMerge[t]['ALLOWED']) {
+                    for (let s = 0; s < newDataFromLocalStorageFuncFileCards.length; s++) {
+                        if (newArrayDataDocumentsForMerge[t]['DUE_CARD'] === newDataFromLocalStorageFuncFileCards[s][0]) {
+                            for (let e = 0; e < newDataFromLocalStorageFuncFileCards[s][1]['USER_CARD_DOCGROUP_List'].length; e++) {
+                                if ((newDataFromLocalStorageFuncFileCards[s][1]['USER_CARD_DOCGROUP_List'].length - 1) === e && this.flagEmptyAllowedCreateRofD === false) {
+                                    this.msgSrv.addNewMessage(EMPTY_ALLOWED_CREATE_REGISTRATION_OF_DOCUMENTS);
+                                    return [];
+                                }
+                                if (newDataFromLocalStorageFuncFileCards[s][1]['USER_CARD_DOCGROUP_List'][e]['FUNC_NUM'] === 1 &&
+                                newDataFromLocalStorageFuncFileCards[s][1]['USER_CARD_DOCGROUP_List'][e]['DUE'] !== '0.') {
+                                } else if ((newDataFromLocalStorageFuncFileCards[s][1]['USER_CARD_DOCGROUP_List'].length - 1) === e) {
+                                    if (newArrayDataDocumentsForPost !== null) { // Если пользователь добавляет документы для регистрации РК и хочет убрать ch с 'ВГД'
+                                        for (let i = 0; i < newArrayDataDocumentsForPost.length; i++) {
+                                            if (newArrayDataDocumentsForPost[i]['FUNC_NUM'] === 1 && newArrayDataDocumentsForPost[i]['DUE'] !== '0.') {
+                                                this.flagEmptyAllowedCreateRofD = true;
+                                                break loop1;
+                                            }
+                                        }
+                                    }
+                                    this.msgSrv.addNewMessage(EMPTY_ALLOWED_CREATE_REGISTRATION_OF_DOCUMENTS);
+                                    this.flagEmptyAllowedCreateRofD = false;
+                                    return [];
+                                }
+                            }
+                        }
+                    }
+                } else if ((newArrayDataDocumentsForMerge.length - 1) === t) {
+                    this.flagEmptyAllowedCreateRofD = true;
+                }
+            }
+        }
 
- if (newArrayDataDocumentsForMerge !== null) {
-for (let t = 0; t < newArrayDataDocumentsForMerge.length; t++) {
-    if (newArrayDataDocumentsForMerge[t]['FUNC_NUM'] === 1 && newArrayDataDocumentsForMerge[t]['DUE'] === '0.' && !newArrayDataDocumentsForMerge[t]['ALLOWED']) {
-        this.msgSrv.addNewMessage(EMPTY_ALLOWED_CREATE_REGISTRATION_OF_DOCUMENTS);
-        this.flagEmptyAllowedCreateRofD = false;
-        return [];
-    } else if ((newArrayDataDocumentsForMerge.length - 1) === t) {
-        this.flagEmptyAllowedCreateRofD = true;
-    }
-}
-}
-    return req;
+        return req;
     }
     createObjRequestForAttachAfterBackend2() {
         const req = [];
