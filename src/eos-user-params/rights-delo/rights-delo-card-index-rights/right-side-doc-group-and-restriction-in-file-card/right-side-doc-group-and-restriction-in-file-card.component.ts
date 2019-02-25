@@ -380,7 +380,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
 
     removeDocuments(item) {
         let tmp;
-        let flagTmp = false;
         if ((this.curentNode.DUE !== '0.') && (this.curentNode['data']['rightDocGroup']['DUE_CARD'] === item[0]['key'])) {
             item[4]['buttonDisable'] = true;
             for (let i = 0; i < this.listAllData.length; i++) {
@@ -392,18 +391,15 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                             for (let a = 0; a < this.arrayDataDocumentsForPost.length; a++) {
                                 if (this.arrayDataDocumentsForPost[a]['DUE'] === this.curentNode['DUE']) {
                                     this.arrayDataDocumentsForPost.splice(a, 1);
-                                    flagTmp = true;
                                     sessionStorage.setItem('ArrayDataDocumentsForPost', JSON.stringify(this.arrayDataDocumentsForPost));
                                 }
                             }
                             for (let a = 0; a < this.arrayDataDocumentsForMerge.length; a++) {
                                 if (this.arrayDataDocumentsForMerge[a]['DUE'] === this.curentNode['DUE']) {
                                     this.arrayDataDocumentsForMerge.splice(a, 1);
-                                    flagTmp = true;
                                     sessionStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
                                 }
                             }
-                            if (!flagTmp) {
                                 tmp = {
                                     ISN_LCLASSIF: this.allData[0]['ISN_LCLASSIF'],
                                     FUNC_NUM: +this.selectedNode2.key + 1, // +1
@@ -418,8 +414,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                                     }
                                     this.arrayDataDocumentsForDelete.push(tmp);
                                     sessionStorage.setItem('arrayDataDocumentsForDelete', JSON.stringify(this.arrayDataDocumentsForDelete));
-                                    flagTmp = false;
-                            }
                             setTimeout(() => {
                                 this.listAllData[i][3].openDocumentTree = !this.listAllData[i][3].openDocumentTree;
                             }, 1);
@@ -476,6 +470,8 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                 }
             }
 
+            this.apiSrv.getDocGroup(this.stringForQuery.join('||'))
+                        .then((data2: DOCGROUP_CL[]) => {
             for (let i = 0; i < this.allData.length; i++) {
                 this.listAllData[i] = [];
                 this.list = [];
@@ -483,8 +479,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                 this.listAllData[i].push(this.listRestrictRegistrationFiling[i]);
                 if (this.allData[i]['USER_CARD_DOCGROUP_List'].length > 0) {
                 for (let j = 0; j < this.allData[i]['USER_CARD_DOCGROUP_List'].length; j++) {
-                        this.apiSrv.getDocGroup(this.stringForQuery.join('||'))
-                        .then((data2: DOCGROUP_CL[]) => {
                             data2.forEach((doc: DOCGROUP_CL) => {
                                 if (this.allData[i]['USER_CARD_DOCGROUP_List'][j]['FUNC_NUM'] === +this.selectedNode2.key + 1) {
                                 if (this.allData[i]['USER_CARD_DOCGROUP_List'][j]['DUE'] === doc['DUE']) {
@@ -503,8 +497,8 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                                     this.isLoading = false;
                                 }
                             });
-                            })
-                            .then(() => {
+                          //  })
+                          //  .then(() => {
                                 if (j === (this.allData[i]['USER_CARD_DOCGROUP_List'].length - 1) && this.list.length) {
                                     this.listAllData[i].push(this.list);
                                     this.listAllData[i].push({openDocumentTree: false});
@@ -516,7 +510,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                                     this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
                                     this.isLoading = false;
                                 }
-                            });
+                       //     });
                 }
             } else if (i === (this.allData.length - 1)) {
                 this.inputs = this._inputCtrlSrv.generateInputs(this.listCards);
@@ -524,6 +518,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                 this.isLoading = false;
             }
             }
+            });
             })
             .catch(e => {
                 if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
