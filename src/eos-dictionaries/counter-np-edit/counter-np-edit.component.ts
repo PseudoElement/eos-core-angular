@@ -52,7 +52,7 @@ const numDeclarators: CounterDeclarator [] = [
         rootLabel : 'Корневой элемент',
         mainLabel : 'Счетчик номерообразования',
         criteries: {
-            'ISN_NUM_BASE': '-1', 
+            'ISN_NUM_BASE': '-1',
         },
         appendObject : {
             'ISN_NUM_BASE': '-1',
