@@ -1,3 +1,4 @@
+import { NOT_EMPTY_MULTYSTRING } from './../consts/common.consts';
 import {Injectable} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 
@@ -180,7 +181,9 @@ export class InputControlService {
 
             if (input.pattern) {
                 validators.push(Validators.pattern(input.pattern));
-            } else if (input.controlType === E_FIELD_TYPE.text || input.controlType === E_FIELD_TYPE.string) {
+            } else if (input.controlType === E_FIELD_TYPE.text) {
+                validators.push(Validators.pattern(NOT_EMPTY_MULTYSTRING));
+            } else if (input.controlType === E_FIELD_TYPE.string) {
                 validators.push(Validators.pattern(NOT_EMPTY_STRING));
             }
             if (input.isUnique) {
