@@ -40,6 +40,7 @@ export class NomenklCardComponent extends BaseCardEditComponent implements OnCha
         setTimeout(() => {
             this._updateButtons();
         });
+
     }
 
     endYearValueValidator(): ValidatorFn {
@@ -70,7 +71,9 @@ export class NomenklCardComponent extends BaseCardEditComponent implements OnCha
             this.unsubscribe();
             this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this.updateForm(formChanges));
         }
-
+        setTimeout(() => {
+            this._updateButtons();
+        }, 100);
     }
 
     private updateForm(changes: SimpleChanges) {
