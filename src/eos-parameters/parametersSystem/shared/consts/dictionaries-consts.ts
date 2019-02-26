@@ -6,7 +6,7 @@ export const DICTIONARIES_PARAM: IBaseParameters = {
     apiInstance: 'USER_PARMS',
     fields: [
         {
-            key: 'DICT_RUBRIC_UNIQUE_CHECK',
+            key: 'UNIQ_RUBRIC_CL',
             type: 'boolean',
             title: 'Рубрикатор - Проверка уникальности наименования рубрик'
         },
