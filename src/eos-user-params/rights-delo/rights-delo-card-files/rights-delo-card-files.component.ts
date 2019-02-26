@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Injector, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { BaseRightsDeloSrv } from '../shared-rights-delo/services/base-rights-delo.service';
 import { CARD_FILES_USER } from '../shared-rights-delo/consts/card-files.consts';
@@ -16,7 +16,7 @@ import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
     templateUrl: 'rights-delo-card-files.component.html'
 })
 
-export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements OnInit {
+export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements OnInit, OnDestroy {
     @Output() Changed = new EventEmitter();
     modalCollection: BsModalRef;
     _userParamsSetSrv: UserParamsService;
@@ -179,6 +179,18 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
               this.isLoading = false;
         }).catch(error => console.log(error));
         }).catch(error => console.log(error));
+    }
+    ngOnDestroy() {
+        const arrayIndexForRemoveFromAllData = [];
+        for (let i = 0; i < this.allData.length; i++) {
+            if (!this.allData[i]['CompositePrimaryKey']) {
+                arrayIndexForRemoveFromAllData.push(i);
+            }
+        }
+
+        for (let j = arrayIndexForRemoveFromAllData.length - 1; j >= 0; j--) {
+            this.allData.splice(arrayIndexForRemoveFromAllData[j], 1);
+        }
     }
     updatePageCard() {
         this.fieldKeysforCardFilesCabinets = [];
