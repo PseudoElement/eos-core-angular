@@ -66,7 +66,6 @@
         <ul *dropdownMenu
             class="dropdown-menu action-menu"
             role="menu">
-            sdagdsa
             <ng-container *ngFor="let item of moreButtons">
                 <li *ngIf="item.show"
                     role="menuitem"
@@ -80,7 +79,7 @@
                         tooltip="{{item.hint}}"
                         placement="bottom"
                         containerClass="tooltip-info"
-                        *ngIf="item.type !== ADD_ACTION && item.type !== RUBRIC_ACTION1"
+                        *ngIf="item.type !== ADD_ACTION"
                         (click)="doAction($event, item); menuMng($event, item.enabled, dropdown)">
                         <div class="menu-icon">
                             <span [ngClass]="item.enabled ? item.iconClass : item.disabledIconClass"></span>
@@ -97,7 +96,7 @@
                         tooltip="{{item.hint}}"
                         placement="bottom"
                         containerClass="tooltip-info"
-                        *ngIf="item.type === ADD_ACTION || item.type === RUBRIC_ACTION1"
+                        *ngIf="item.type === ADD_ACTION"
                         (click)="isTree ? stopCloseMenu($event) : doAction($event, item)">
                         <div class="menu-icon">
                             <span [ngClass]="item.enabled ? item.iconClass : item.disabledIconClass"></span>
@@ -112,20 +111,6 @@
                                 role="menu">
                                 <li class="menuitem"
                                     *ngFor="let type of addMenu"
-                                    role="menuitem">
-                                    <a class="dropdown-item m-font has-padding"
-                                        (click)="doAction($event, item, type.params)"><span class="title m-font">{{type.title}}</span></a>
-                                </li>
-                            </ul>
-                        </ng-container>
-
-                        <ng-container *ngIf="isTree && item.type === RUBRIC_ACTION1">
-                            <ul *dropdownMenu
-                                class="dropdown-menu second"
-                                role="menu">
-                                <li class="menuitem"
-                                    *ngFor="let type of rubricUniqMenu"
-                                    [ngClass]="{'highlighted': type.active}"
                                     role="menuitem">
                                     <a class="dropdown-item m-font has-padding"
                                         (click)="doAction($event, item, type.params)"><span class="title m-font">{{type.title}}</span></a>

@@ -19,6 +19,9 @@ export const EOS_PARAMETERS_TAB = [{
     title: 'Контекст РК(РКПД)',
     url: 'context-rc'
 }, {
+    title: 'Справочники',
+    url: 'dictionaries'
+}, {
     title: 'Прочие',
     url: 'other'
 }, {
