@@ -49,4 +49,19 @@ export class NodeFieldComponent {
         }
         return false;
     }
+    getIcon() {
+        if (this.node.isDeleted) {
+            if (this.node.data.rec['CARD_FLAG']) {
+                return 'eos-icon-card-index-grey';
+            } else {
+                return 'eos-icon-folder-grey';
+            }
+        } else {
+            if (this.node.data.rec['CARD_FLAG']) {
+                return 'eos-icon-card-index-blue';
+            } else {
+                return 'eos-icon-folder-blue';
+            }
+        }
+    }
 }
