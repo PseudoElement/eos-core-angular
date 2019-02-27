@@ -30,6 +30,9 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
     onDataChanged(path: string, prevValue: any, newValue: any): any {
         // this.changeEvent.next([path, prevValue, newValue]);
         switch (path) {
+            case 'DOC_DEFAULT_VALUE_List.SEND_OUTER_MARKSEND': {
+                break;
+            }
             case 'DOC_DEFAULT_VALUE_List.SEND_ISN_LIST_DEP': {
                 if (newValue) {
                     this.flagEn_intAddr = true;
@@ -44,7 +47,7 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
             case 'DOC_DEFAULT_VALUE_List.SEND_ISN_LIST_ORGANIZ': {
                 this.flagEn_extAddr = newValue ? true : false;
                 this.valueSecondarySet('DOC_DEFAULT_VALUE_List.SEND_ISN_DELIVERY', this.flagEn_extAddr);
-                this.valueSecondarySet('DOC_DEFAULT_VALUE_List.SEND_OUTER_MARKSEND', this.flagEn_extAddr);
+                // this.valueSecondarySet('DOC_DEFAULT_VALUE_List.SEND_OUTER_MARKSEND', this.flagEn_extAddr);
                 break;
             }
         }

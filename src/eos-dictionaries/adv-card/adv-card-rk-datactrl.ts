@@ -54,52 +54,77 @@ export class AdvCardRKDataCtrl {
         });
     }
 
-    _calcChangesFor(docGroup: any, data: any ): any {
+    _calcChangesFor(docGroup: any, newData: any ): any {
+        const fields = this.getDescriptions();
         const changes = [];
-        this.keys(data[DEFAULTS_LIST_NAME]).forEach((key) => {
-            const value = data[DEFAULTS_LIST_NAME][key];
-            const g = docGroup[DEFAULTS_LIST_NAME].find (f => f.DEFAULT_ID === key);
-            if (g) {
-                if (g['DEFAULT_ID'] === 'RUB_M') {
-                    console.log('1');
-                }
-
-                if (g.VALUE !== String(value)) {
-                    if (value === null) {
+        if (!newData) {
+            return null;
+        }
+        this.keys(newData[DEFAULTS_LIST_NAME]).forEach((key) => {
+            const newValue = newData[DEFAULTS_LIST_NAME][key];
+            const savedData = docGroup[DEFAULTS_LIST_NAME].find (f => f.DEFAULT_ID === key);
+            const field = fields[DEFAULTS_LIST_NAME].find(i => i.key === key);
+            const type: E_FIELD_TYPE = field.type;
+            if (savedData) {
+                const savedValue = this._fromDBValueByType(savedData.VALUE, type);
+                if (savedValue !== newValue) {
+                    if (!this._isNeedToStoreByType(newValue, type)) {
                         changes.push (
                             {
                                 method: 'DELETE',
                                 data: '',
                                 requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DOC_DEFAULT_VALUE_List(\''
-                                    + docGroup['DUE'] + ' ' + g['DEFAULT_ID'] + '\')'
+                                    + docGroup['DUE'] + ' ' + savedData['DEFAULT_ID'] + '\')'
                             }
                         );
                     } else {
                         changes.push (
                             {
                                 method: 'MERGE',
-                                data: {VALUE: String(value) },
+                                data: {VALUE: String(newValue) },
                                 requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DOC_DEFAULT_VALUE_List(\''
-                                    + docGroup['DUE'] + ' ' + g['DEFAULT_ID'] + '\')'
+                                    + docGroup['DUE'] + ' ' + savedData['DEFAULT_ID'] + '\')'
                             }
                         );
                     }
                 }
-            } else if (value) {
-                if (key === 'RUB_M') {
-                    console.log('2');
+            } else if (newValue) {
+                if (this._isNeedToStoreByType(newValue, type)) {
+                    changes.push (
+                        {
+                            method: 'POST',
+                            data: { VALUE: String(newValue), DEFAULT_ID: key },
+                            requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DOC_DEFAULT_VALUE_List'
+                        }
+                    );
                 }
-                changes.push (
-                    {
-                        method: 'MERGE',
-                        data: { VALUE: String(value) },
-                        requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DOC_DEFAULT_VALUE_List(\''
-                            + docGroup['DUE'] + '\ ' + key + '\')'
-                    }
-                );
             }
         });
         return changes;
+    }
+
+    _isNeedToStoreByType(value: any, type: E_FIELD_TYPE): boolean {
+        switch (type) {
+            case E_FIELD_TYPE.boolean: {
+                if (!value || value === '0') {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    _fromDBValueByType(value: any, type: E_FIELD_TYPE): any {
+        switch (type) {
+            case E_FIELD_TYPE.boolean: {
+                if (!value) {
+                    return '0';
+                }
+            }
+        }
+        if (value === 'null') {
+            return null;
+        }
+        return value;
     }
 
     save(isn_node: number, inputs: any[], data: any): void {
@@ -107,14 +132,15 @@ export class AdvCardRKDataCtrl {
             .then(([docGroup]) => {
                 this._apiSrv.entityHelper.prepareForEdit(docGroup);
                 const changes = this._calcChangesFor(docGroup, data);
-
-                this._apiSrv.batch(changes, '')
-                    .then(() => {
-                        this._msgSrv.addNewMessage(SUCCESS_SAVE);
-                    })
-                    .catch((err) => {
-                        this._msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка записи'});
-                    });
+                if (changes) {
+                    this._apiSrv.batch(changes, '')
+                        .then(() => {
+                            this._msgSrv.addNewMessage(SUCCESS_SAVE);
+                        })
+                        .catch((err) => {
+                            this._msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка записи'});
+                        });
+                }
             });
     }
 

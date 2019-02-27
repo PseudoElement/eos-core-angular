@@ -10,6 +10,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EosUtils } from 'eos-common/core/utils';
 import { Subscription } from 'rxjs/Subscription';
 import { RKBasePage } from './rk-default-values/rk-base-page';
+import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -184,6 +185,15 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                     if (!element.foreignKey) {
                         element.foreignKey = element.key;
                     }
+                    if (element.type === E_FIELD_TYPE.boolean) {
+                        if (this.values[key][element.key] === '0') {
+                            this.values[key][element.key] = null;
+                        }
+                    } else if (this.values[key]) {
+                        if (this.values[key][element.key] === 'null') {
+                            this.values[key][element.key] = null;
+                        }
+                    }
                     const t = i[key];
                     t[element.key] = element;
                 });
@@ -266,7 +276,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     private _changeByPath(path: string, value: any): boolean {
         let _value = null;
         let prevValue = this._getPrevValue(path);
-        if (typeof value === 'boolean') {
+     if (typeof value === 'boolean') {
             if (prevValue === undefined) {
                 prevValue = '0';
             }
