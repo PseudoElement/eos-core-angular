@@ -207,7 +207,7 @@ export class UserParamEAComponent {
         });
     }
     close(event?) {
-       this._route.navigate(['user_param']);
+        this._route.navigate(['user_param', JSON.parse(sessionStorage.getItem('lastNodeDue'))]);
     }
     defaults(event?) {
         const defaultListName = this.getQueryDefaultList(this.listForQuery);

@@ -101,7 +101,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
 
     initView(param?) {
         this.countcheckedField = 0;
-        this.titleCurrentDue = this._apiSrv.configList.titleDue;
+        if (!param || param === '0.') {
+            this._apiSrv.configList.shooseTab === 0 ? this.titleCurrentDue = 'Все подразделения' : this.titleCurrentDue = 'Все картотеки';
+        } else {
+            this.titleCurrentDue = this._apiSrv.configList.titleDue;
+        }
         this.flagScan = null;
         this.flagChecked = null;
         this.isLoading = true;

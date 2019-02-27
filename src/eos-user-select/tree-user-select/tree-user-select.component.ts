@@ -39,7 +39,7 @@ export class TreeUserSelectComponent implements OnInit {
     ngOnInit() {
         this.id = this.actRoute.snapshot.params['nodeId'] || '0.';
         this.isLoading = true;
-        sessionStorage.setItem('sss', JSON.stringify(this.id));
+        sessionStorage.setItem('lastNodeDue', JSON.stringify(this.id));
         this.currMode = +sessionStorage.getItem('key');
         this.treeSrv.init(this.currMode)
         .then(() => {
@@ -57,7 +57,7 @@ export class TreeUserSelectComponent implements OnInit {
         });
         // this.ngOnInit();
         this.id = this.actRoute.snapshot.params['nodeId'] || '0.';
-        sessionStorage.setItem('sss', JSON.stringify('0.'));
+        sessionStorage.setItem('lastNodeDue', JSON.stringify('0.'));
         this.treeSrv.init(this.currMode)
         .then(() => {
             this.nodes = [this.treeSrv.root];
@@ -94,7 +94,7 @@ export class TreeUserSelectComponent implements OnInit {
             titleDue: node.title
         });
         this._store.removeItem('page_number_user_settings');
-        sessionStorage.setItem('sss', JSON.stringify(node.id));
+        sessionStorage.setItem('lastNodeDue', JSON.stringify(node.id));
         this._router.navigate(['user_param', node.id]);
     }
 

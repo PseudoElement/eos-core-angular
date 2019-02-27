@@ -78,7 +78,7 @@ export class TreeUserSelectService {
                 if (_node && nodeIds.findIndex((id) => id === _node.id) === -1) {
                     _node.isExpanded = false;
                     _node.expandable = false;
-                    if (_node.id === JSON.parse(sessionStorage.getItem('sss'))) {
+                    if (_node.id === JSON.parse(sessionStorage.getItem('lastNodeDue'))) {
                      this.lastNodeSelected = _node;
                     }
                     nodeIds.push(_node.id);
