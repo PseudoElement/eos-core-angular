@@ -289,7 +289,7 @@ export class UserParamsProfSertComponent  implements OnInit {
     }
     close(event) {
         this.editFlag = event;
-        this._router.navigate(['user_param']);
+        this._router.navigate(['user_param', JSON.parse(sessionStorage.getItem('lastNodeDue'))]);
     }
 
     getQueryCreate(): Array<any> {

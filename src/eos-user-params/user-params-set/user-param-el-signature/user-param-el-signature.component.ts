@@ -201,7 +201,7 @@ export class UserParamElSignatureComponent {
 
     }
     close(event) {
-        this._router.navigate(['user_param']);
+        this._router.navigate(['user_param', JSON.parse(sessionStorage.getItem('lastNodeDue'))]);
     }
 
     default(event) {

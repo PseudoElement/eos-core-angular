@@ -13,13 +13,15 @@ export class TreeUserSelectService {
     root: TreeUserNode;
     cardFlag: number;
     public changeListUsers = new Subject();
+    public lastNodeSelected: TreeUserNode;
     private _showDeleted: boolean;
     private _nodes: Map<string, TreeUserNode>;
+
     get changeListUsers$() {
         return this.changeListUsers.asObservable();
     }
     constructor (
-        private apiSrv: PipRX
+        private apiSrv: PipRX,
     ) {
         this._nodes = new Map<string, TreeUserNode>();
         this.root = new TreeUserNode({DUE: '0.', IS_NODE: 0}, 0);
@@ -43,12 +45,22 @@ export class TreeUserSelectService {
         return this.apiSrv.read<DEPARTMENT>(query)
         .then(data => {
             this.updateNodes(data, true);
+            if (this.lastNodeSelected) {
+                const paren = this.lastNodeSelected.parent;
+                this.openParent(paren);
+            }
         })
         .catch(e => {
             return null;
         });
     }
-
+    openParent(node: TreeUserNode) {
+        node.isExpanded = true;
+        node.expandable = true;
+        if (node.parent) {
+            this.openParent(node.parent);
+        }
+    }
     updateNodes(data: DEPARTMENT[], updateTree = false): TreeUserNode[] {
         const nodeIds: string[] = [];
         data.forEach((nodeData) => {
@@ -64,6 +76,11 @@ export class TreeUserSelectService {
                     }
                 }
                 if (_node && nodeIds.findIndex((id) => id === _node.id) === -1) {
+                    _node.isExpanded = false;
+                    _node.expandable = false;
+                    if (_node.id === JSON.parse(sessionStorage.getItem('lastNodeDue'))) {
+                     this.lastNodeSelected = _node;
+                    }
                     nodeIds.push(_node.id);
                 }
             }
