@@ -21,7 +21,7 @@ export class TreeUserSelectService {
         return this.changeListUsers.asObservable();
     }
     constructor (
-        private apiSrv: PipRX
+        private apiSrv: PipRX,
     ) {
         this._nodes = new Map<string, TreeUserNode>();
         this.root = new TreeUserNode({DUE: '0.', IS_NODE: 0}, 0);

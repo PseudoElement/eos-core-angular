@@ -22,6 +22,7 @@ import {ConfirmWindowService } from '../../eos-common/confirm-window/confirm-win
 import {CONFIRM_DELETE} from '../shered/consts/confirm-users.const';
 import {PipRX} from 'eos-rest';
 import {ALL_ROWS } from 'eos-rest/core/consts';
+import {EosStorageService} from '../../app/services/eos-storage.service';
 @Component({
     selector: 'eos-list-user-select',
     templateUrl: 'list-user-select.component.html'
@@ -57,6 +58,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private _confirmSrv: ConfirmWindowService,
         private _pipeSrv: PipRX,
         private _msgSrv: EosMessageService,
+        private _storage: EosStorageService,
     ) {
         this.helpersClass = new HelpersSortFunctions();
         this.initSort();
@@ -111,8 +113,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                  this._pagSrv.paginationConfig.current
                 * this._pagSrv.paginationConfig.length);
                 if (this.listUsers && this.listUsers.length) {
-                    this.selectedNode(this.listUsers[0]);
-                }   else {
+                    this.selectedNode(this.findSelectedSaveUsers()[0] ? this.findSelectedSaveUsers()[0] : this.listUsers[0]);
+                    this._storage.removeItem('selected_user_save');
+                } else {
                     this.selectedNode(null);
                 }
                 this.updateFlafListen();
@@ -122,6 +125,16 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
            error.message = 'Серверная ошибка,  обратитесь к системному администратору';
            this.cathError(error);
         });
+    }
+    findSelectedSaveUsers(): UserSelectNode[]| boolean {
+        const save_selectedUser: UserSelectNode = this._storage.getItem('selected_user_save');
+        if (save_selectedUser) {
+            return this.listUsers.filter((user: UserSelectNode) => {
+                    return save_selectedUser.id === user.id;
+            });
+        } else {
+            return false;
+        }
     }
     ngOnInit() {
         this.buttons = Allbuttons;
@@ -181,6 +194,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
       }
         if (this.selectedUser && !this.selectedUser.deleted) {
+            this._storage.setItem('selected_user_save', this.selectedUser, false);
             this._router.navigate(['user-params-set'], {
                 queryParams: {isn_cl: this.selectedUser.id}
             });
