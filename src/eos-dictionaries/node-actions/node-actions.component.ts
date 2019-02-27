@@ -1,4 +1,3 @@
-import { RUBRICATOR_DICT } from './../consts/dictionaries/rubricator.consts';
 import {Component, EventEmitter, OnDestroy, Output} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
@@ -8,8 +7,6 @@ import {EosDictService} from '../services/eos-dict.service';
 import {EosDictionary} from '../core/eos-dictionary';
 import {COMMON_ADD_MENU, DEPARTMENT_ADD_MENU, MORE_RECORD_ACTIONS, ORGANIZ_ADD_MENU, RECORD_ACTIONS, RUBRIC_UNIQ_ADD_MENU} from '../consts/record-actions.consts';
 import {E_DICT_TYPE, E_RECORD_ACTIONS, IAction, IActionButton, IActionEvent, IDictionaryViewParameters} from 'eos-dictionaries/interfaces';
-import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
-import { EosStorageService, SI_RUBRICUNOQDISABLE } from 'app/services/eos-storage.service';
 
 @Component({
     selector: 'eos-node-actions',
@@ -24,7 +21,6 @@ export class NodeActionsComponent implements OnDestroy {
     moreButtons: IActionButton[];
 
     ADD_ACTION = E_RECORD_ACTIONS.add;
-    RUBRIC_ACTION1 = E_RECORD_ACTIONS.RubricUniqueSwitcher;
     isTree: boolean;
 
     addMenu: any;
@@ -46,8 +42,8 @@ export class NodeActionsComponent implements OnDestroy {
 
     constructor(
         _dictSrv: EosDictService,
-        private _eaps: EosAccessPermissionsService,
-        private _storageSrv: EosStorageService,
+        // private _eaps: EosAccessPermissionsService,
+        // private _storageSrv: EosStorageService,
 
         ) {
         this._initButtons();
@@ -177,13 +173,6 @@ export class NodeActionsComponent implements OnDestroy {
                         _enabled = false;
                     }
                     break;
-                case E_RECORD_ACTIONS.RubricUniqueSwitcher: {
-                    _enabled = this._eaps.isAccessGrantedForDictionary(RUBRICATOR_DICT.id);
-                    const d: boolean = this._storageSrv.getItem(SI_RUBRICUNOQDISABLE);
-                    this.rubricUniqMenu[0].active = !d;
-                    this.rubricUniqMenu[1].active = d;
-                    break;
-                }
             }
         }
         button.show = _show;

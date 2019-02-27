@@ -1,0 +1,15 @@
+<div class="input-param-wrapper input-param-prj-wrapper" *ngIf="inputs">
+    <eos-param-header
+        [title]="titleHeader"
+        (submitForm)="submit()"
+        (cancelForm)="cancel()"
+        [statusBtnSub]="btnDisabled"
+    ></eos-param-header>
+    <div class="param-input-group">
+        <eos-dynamic-input
+            [input]="inputs['rec.UNIQ_RUBRIC_CL']"
+            [form]="form"
+            [readonly]="!getRightsRubric()"
+        ></eos-dynamic-input>
+    </div>
+</div>

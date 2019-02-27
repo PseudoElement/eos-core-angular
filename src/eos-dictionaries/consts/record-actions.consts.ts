@@ -246,18 +246,6 @@ const RECORD_ACTIONS_ADDITIONAL_FIELDS: IAction = {
     buttonClass: null
 };
 
-const DICT_ACTION_RUBRIC_UNIQUE: IAction = {
-    type: E_RECORD_ACTIONS.RubricUniqueSwitcher,
-    group: E_ACTION_GROUPS.common,
-    title: 'Проверка уникальности наименования рубрик',
-    hint: 'Проверка уникальности наименования рубрик',
-    iconClass: 'eos-icon eos-icon-clip-blue small',
-    disabledIconClass: 'eos-icon eos-icon-info-grey small',
-    activeIconClass: null,
-    hoverIconClass: 'eos-icon eos-icon-info-blue small',
-    buttonClass: null
-};
-
 export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_CREATE,
     RECORD_ACTIONS_EDIT,
@@ -293,7 +281,6 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_SHOW_ALL_RECORDS,
     // RECORD_ACTION_CREATE_ORGANISATION_AGENT,
     RECORD_ACTIONS_ADDITIONAL_FIELDS,
-    DICT_ACTION_RUBRIC_UNIQUE,
     RECORD_ACTION_SHOW_SETTINGS,
 ];
 
