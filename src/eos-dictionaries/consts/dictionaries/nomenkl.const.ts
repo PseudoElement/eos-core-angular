@@ -112,7 +112,7 @@ export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLA
         title: '',
         length: 100,
         options: [{value: 0, title: 'Текущее'}, {value: 1, title: 'Переходящее'}],
-        default: 1,
+        // default: 1,
     },
         Object.assign({}, COMMON_FIELD_NAME, {
             title: 'Заголовок',

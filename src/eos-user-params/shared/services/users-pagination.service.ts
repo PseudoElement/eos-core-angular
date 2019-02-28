@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { USER_CL} from 'eos-rest';
-import { Subject } from 'rxjs/Subject';
+import {Injectable} from '@angular/core';
+import {USER_CL} from 'eos-rest';
+import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import {IPaginationConfig} from '../../../eos-dictionaries/node-list-pagination/node-list-pagination.interfaces';
-import { EosStorageService } from '../../../../src/app/services/eos-storage.service';
-import { PAGES_SELECT, LS_PAGE_LENGTH } from 'eos-user-select/shered/consts/pagination-user-select.consts';
+import {EosStorageService} from '../../../../src/app/services/eos-storage.service';
+import {PAGES_SELECT, LS_PAGE_LENGTH} from 'eos-user-select/shered/consts/pagination-user-select.consts';
 
 @Injectable()
 export class UserPaginationService {
@@ -45,8 +45,14 @@ export class UserPaginationService {
         if (update) {
             this._fixCurrentPage();
         } else {
-            this.paginationConfig.current = 1;
-            this.paginationConfig.start = 1;
+            const pagination_number_save = this._storageSrv.getItem('page_number_user_settings');
+            if (pagination_number_save) {
+                this.paginationConfig.current = pagination_number_save;
+                this.paginationConfig.start = pagination_number_save;
+            }   else {
+                this.paginationConfig.current = 1;
+                this.paginationConfig.start = 1;
+            }
             this._paginationConfig$.next(this.paginationConfig);
         }
         this.countMaxSize = this.paginationConfig.itemsQty;

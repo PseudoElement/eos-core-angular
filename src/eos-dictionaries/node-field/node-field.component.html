@@ -27,7 +27,8 @@
                 *ngIf="node.isNode && (field.key === 'CLASSIF_NAME' || field.foreignKey === 'CLASSIF_NAME')">
                 <span class="folder small eos-icon"
                     (click)="viewNode($event)"
-                    [ngClass]="{'eos-icon-folder-blue': !node.isDeleted, 'eos-icon-folder-grey': node.isDeleted}"></span>
+                    [ngClass]="getIcon()" >
+                </span>
             </div>
             <div class="table-field-ico"
                 *ngIf="(field.key === 'CLASSIF_NAME' || field.foreignKey === 'CLASSIF_NAME')">
