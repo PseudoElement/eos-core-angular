@@ -1,4 +1,3 @@
-import { RUBRICATOR_DICT } from './../consts/dictionaries/rubricator.consts';
 import {Component, Output, Input, EventEmitter, ViewChild, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { FormGroup } from '@angular/forms';
@@ -9,7 +8,6 @@ import { EosDataConvertService } from '../services/eos-data-convert.service';
 import { DictionaryDescriptorService } from '../core/dictionary-descriptor.service';
 import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
 import {EosSevRulesService} from '../services/eos-sev-rules.service';
-import { SI_RUBRICUNOQDISABLE, EosStorageService } from 'app/services/eos-storage.service';
 
 @Component({
     selector: 'eos-card-edit',
@@ -41,7 +39,6 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         private _dictSrv: DictionaryDescriptorService,
         private _channelSrv: EosBroadcastChannelService,
         private _rulesSrv: EosSevRulesService,
-        private _storageSrv: EosStorageService,
     ) {
         this.subscriptions = [];
      }
@@ -98,13 +95,13 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         }
     }
     afterGetInputs(inputs: any) {
-        if (this.dictionaryId === RUBRICATOR_DICT.id) {
-            const d: boolean = this._storageSrv.getItem(SI_RUBRICUNOQDISABLE);
-            if (d) {
-                inputs['rec.CLASSIF_NAME'].isUnique = false;
-            }
+        // if (this.dictionaryId === RUBRICATOR_DICT.id) {
+        //     const d: boolean = this._storageSrv.getItem(SI_RUBRICUNOQDISABLE);
+        //     if (d) {
+        //         inputs['rec.CLASSIF_NAME'].isUnique = false;
+        //     }
 
-        }
+        // }
     }
 
     /**

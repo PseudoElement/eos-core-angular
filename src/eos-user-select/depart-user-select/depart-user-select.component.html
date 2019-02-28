@@ -6,7 +6,7 @@
         </div>
         <div class="info-pfone">
             <span class="rt-grey">ТЕЛЕФОН</span>
-            <span class="rt-black">{{department.PHONE || 'Не указан'}}</span>
+            <span class="rt-black">{{department.PHONE ? department.PHONE : department.PHONE_LOCAL ? department.PHONE_LOCAL : 'Не указан'}}</span>
         </div>
         <div class="info-mail">
             <span class="rt-grey">E-MAIL</span>

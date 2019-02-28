@@ -26,7 +26,6 @@ export enum E_RECORD_ACTIONS {
     counterDocgroup,
     CloseSelected,
     OpenSelected,
-    RubricUniqueSwitcher,
     // createRepresentative,
     // slantForForms,
     /* to be extended */

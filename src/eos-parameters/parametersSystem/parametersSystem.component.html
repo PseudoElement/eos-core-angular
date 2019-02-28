@@ -49,6 +49,13 @@
                 [btnDisabled]="!isChanged || disableSave"
             ></eos-param-prj-rc>
         </ng-container>
+        <ng-container *ngSwitchCase="'dictionaries'">
+            <eos-param-dictionaries
+                (formChanged)="recordChanged($event)"
+                (formInvalid)="turnOffSave($event)"
+                [btnDisabled]="!isChanged || disableSave"
+            ></eos-param-dictionaries>
+        </ng-container>
         <ng-container *ngSwitchCase="'rc'">
             <eos-param-rc
                 (formChanged)="recordChanged($event)"

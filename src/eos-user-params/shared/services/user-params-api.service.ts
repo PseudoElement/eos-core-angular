@@ -15,7 +15,7 @@ export class UserParamApiSrv {
     sysParam: any;
     dueDep: any;
     configList: IConfig = {
-        shooseTab: 0,
+        shooseTab: +sessionStorage.getItem('key') ? +sessionStorage.getItem('key') : 0,
         titleDue: '',
     };
     confiList$: Subject<IConfig>;

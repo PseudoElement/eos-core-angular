@@ -48,6 +48,7 @@ export class UserSelectPaginationComponent {
 
     public showPage(page: number): void {
         if (page !== this.config.current) {
+            this._storageSrv.setItem('page_number_user_settings', page, false);
             this.config.current = page;
             this.config.start = page;
             this._user_pagination.changePagination(this.config);

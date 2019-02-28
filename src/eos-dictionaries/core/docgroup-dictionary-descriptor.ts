@@ -37,8 +37,9 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
             return this.apiSrv.read({DOCGROUP_CL: PipRX.criteries({DOCGROUP_INDEX: index})})
                 .then((records) => {
                     if (records.length) {
-                        const fNode = records.find((r) => r[ISN_NODE] === isn_node);
-                        if (!fNode || fNode[DOCGROUP_INDEX] !== index) {
+                        const fNode = records.find((r) => r[ISN_NODE] !== isn_node && r[DOCGROUP_INDEX] === index);
+                        // const fNode = records.find((r) => r[ISN_NODE] === isn_node);
+                        if (fNode) {
                             return this._confimDuplindex(index, confirmSrv);
                         }
                     }
