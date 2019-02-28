@@ -263,6 +263,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                     }
                 } else {
                     let flag = true;
+                    if (newDataFromLocalStorageFuncFileCards !== null) {
                     for (let v = 0; v < newDataFromLocalStorageFuncFileCards.length; v++) {
                         if (newArrayDataDocumentsForDelete[i]['DUE_CARD'] === newDataFromLocalStorageFuncFileCards[v][0]) {
                             for (let b = 0; b < newDataFromLocalStorageFuncFileCards[v][1]['USER_CARD_DOCGROUP_List'].length; b++) {
@@ -297,22 +298,25 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                         }
                     }
                 }
-            }
-        }
-
-        loop1:
-        for (let i = 0; i < arrayNewDocumentsForCurrentCurd.length; i++) {
-            for (let j = 0; j < arrayNewDocumentsForCurrentCurd[i].length; j++) {
-                if (arrayNewDocumentsForCurrentCurd[i][j]['ALLOWED']) {
-                    this.flagEmptyAllowedCreateRofD = true;
-                    continue loop1;
-                } else if ((arrayNewDocumentsForCurrentCurd[i].length - 1) === j) {
-                    this.msgSrv.addNewMessage(EMPTY_ALLOWED_CREATE_REGISTRATION_OF_DOCUMENTS);
-                    this.flagEmptyAllowedCreateRofD = false;
-                    return [];
                 }
             }
         }
+
+        if (arrayNewDocumentsForCurrentCurd !== null) {
+        loop1:
+            for (let i = 0; i < arrayNewDocumentsForCurrentCurd.length; i++) {
+                for (let j = 0; j < arrayNewDocumentsForCurrentCurd[i].length; j++) {
+                    if (arrayNewDocumentsForCurrentCurd[i][j]['ALLOWED']) {
+                        this.flagEmptyAllowedCreateRofD = true;
+                        continue loop1;
+                    } else if ((arrayNewDocumentsForCurrentCurd[i].length - 1) === j) {
+                        this.msgSrv.addNewMessage(EMPTY_ALLOWED_CREATE_REGISTRATION_OF_DOCUMENTS);
+                        this.flagEmptyAllowedCreateRofD = false;
+                        return [];
+                    }
+                }
+            }
+    }
 
         return req;
     }
@@ -341,7 +345,6 @@ requestUri: `USER_CL(${tmp[i]['ISN_LCLASSIF']})/USERCARD_List(\'${tmp[i]['ISN_LC
             }
         }
 
-        console.log(newArrayDataDocumentsForPost);
     if (newArrayDataDocumentsForPost) {
         for (let i = 0; i < newArrayDataDocumentsForPost.length; i++) {
             req.push({
@@ -372,24 +375,15 @@ requestUri: `USER_CL(${newArrayDataDocumentsForMerge[t]['ISN_LCLASSIF']})/USERCA
     }
 
     if (newArrayDataDocumentsForDelete) {
-        for (let e = 0; e < Array.from(this.userCard).length; e++) {
-            const tmp = Array.from(this.userCard)[e][1];
-            for (let f = 0; f < tmp['USER_CARD_DOCGROUP_List'].length; f++) {
             for (let t = 0; t < newArrayDataDocumentsForDelete.length; t++) {
-                if (newArrayDataDocumentsForDelete[t]['DUE_CARD'] === Array.from(this.userCard)[e][0] &&
-                newArrayDataDocumentsForDelete[t]['DUE'] === tmp['USER_CARD_DOCGROUP_List'][f]['DUE']) {
                     req.push({
                         method: 'DELETE',
-        requestUri: `USER_CL(${tmp['ISN_LCLASSIF']})/USERCARD_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']}\')` +
-        `/USER_CARD_DOCGROUP_List(\'${tmp['ISN_LCLASSIF']} ${tmp['DUE']} ${tmp.USER_CARD_DOCGROUP_List[f]['DUE']} ${tmp.USER_CARD_DOCGROUP_List[f]['FUNC_NUM']}\')`
+        requestUri: `USER_CL(${newArrayDataDocumentsForDelete[t]['ISN_LCLASSIF']})/USERCARD_List(\'${newArrayDataDocumentsForDelete[t]['ISN_LCLASSIF']} ${newArrayDataDocumentsForDelete[t]['DUE_CARD']}\')` +
+        `/USER_CARD_DOCGROUP_List(\'${newArrayDataDocumentsForDelete[t]['ISN_LCLASSIF']} ${newArrayDataDocumentsForDelete[t]['DUE_CARD']} ${newArrayDataDocumentsForDelete[t]['DUE']} ${newArrayDataDocumentsForDelete[t]['FUNC_NUM']}\')`
                     });
                 }
-            }
-        }
-        }
     }
 
-    console.log(req);
     sessionStorage.clear();
     return req;
     }
