@@ -32,12 +32,14 @@
                 <button
                 [disabled]= '!selectedFromAllList'
                 class="btn btn-primary-light"
+                triggers="hover:click"
                 tooltip='Показать сертификат'
                 containerClass="tooltip-info"
                 (click)='showSert(selectedFromAllList.id)'
                 ><span class="eos-icon eos-icon-info-blue small"></span></button>
 
                 <button
+                triggers="hover:click"
                 class="btn btn-primary-light"
                 tooltip='Добавить сертификат'
                 containerClass="tooltip-info"
@@ -52,20 +54,25 @@
     <div class="scrollWrapper">
        <div class="sert-table">
            <div class="sert-table-nav">
-               <button
-               [disabled]="!listsSertInfo || listsSertInfo.length === 0 || flagHideBtn"
-               class="btn btn-primary-light"
-               tooltip='Показать сертификат'
-               containerClass="tooltip-info"
-               (click) = 'showSert()'
-               ><span class="eos-icon eos-icon-info-blue small"></span></button>
-               <button
-               [disabled]="!listsSertInfo || listsSertInfo.length === 0 || flagHideBtn"
-               class="btn btn-primary-light"
-               tooltip='Удалить сертификат'
-               containerClass="tooltip-info"
-               (click) = 'deleteSertificate()'
-               ><span class="eos-icon eos-icon-bin-forever-blue small"></span></button>
+               <div
+                triggers="hover:click"
+                tooltip='Показать сертификат'
+                containerClass="tooltip-info">
+                    <button class="btn btn-primary-light"
+                    [disabled]="!listsSertInfo || listsSertInfo.length === 0 || flagHideBtn"
+                    (click) = 'showSert()'
+                    ><span class="eos-icon eos-icon-info-blue small"></span></button>
+               </div>
+               <div
+                triggers="hover:click"
+                tooltip='Удалить сертификат'
+                containerClass="tooltip-info">
+                    <button
+                    class="btn btn-primary-light"
+                    [disabled]="!listsSertInfo || listsSertInfo.length === 0 || flagHideBtn"
+                    (click) = 'deleteSertificate()'
+                    ><span class="eos-icon eos-icon-bin-forever-blue small"></span></button></div>
+
            </div>
            <div class="sert-table-head">
                <span class="sert-table-whom">Кому выдан</span>

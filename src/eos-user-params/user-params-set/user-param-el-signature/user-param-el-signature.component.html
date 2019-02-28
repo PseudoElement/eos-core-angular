@@ -68,18 +68,20 @@
             (click)="openPopup(template, 'CERT_USER_STORES')"
             tooltip="Открыть"
             #itemTooltip="bs-tooltip"
-            placement="bottom"
             containerClass="tooltip-info"
+            container="body"
             trigger="hover">Хранилища сертификатов пользователя</button>
-
-            <button
-            [disabled] = "!editFlag || disablebtnCarma"
-            (click)="openPopup(template, 'CERT_OTHER_STORES')"
+            <div
             tooltip="Открыть"
             #itemTooltip="bs-tooltip"
-            placement="bottom"
             containerClass="tooltip-info"
-            trigger="hover">Хранилища прочих сертификатов</button>
+            trigger="hover"
+            container="body"
+            >
+            <button
+            (click)="openPopup(template, 'CERT_OTHER_STORES')"
+            [disabled] = "!editFlag || disablebtnCarma">Хранилища прочих сертификатов</button>
+            </div>
         </div>
     </div>
     <div class="user-input-group">

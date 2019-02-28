@@ -281,6 +281,7 @@ export class UserParamsProfSertComponent  implements OnInit {
         });
         if (this.listsSertInfo.length) {
             this.selectCurent(this.listsSertInfo[0]);
+            this.flagHideBtn = false;
         }
         this.checkchanges();
     }
