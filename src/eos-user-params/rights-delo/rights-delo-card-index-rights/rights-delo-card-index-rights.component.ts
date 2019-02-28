@@ -131,6 +131,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         let newArrayDataDocumentsForMerge;
         let newArrayDataDocumentsForDelete;
         let newArrayDataDocumentsForPost;
+        this.flagEmptyAllowedCreateRofD = true;
         newDataFromLocalStorageFuncFileCards = JSON.parse(sessionStorage.getItem('FuncFileCards'));
         newArrayDataDocumentsForMerge = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForMerge'));
         newArrayDataDocumentsForDelete = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForDelete'));

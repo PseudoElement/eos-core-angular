@@ -41,7 +41,6 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
     arrayDataDocumentsForMerge = [];
     arrayDataDocumentsForPost = [];
     arrayDataDocumentsForDelete = [];
-   // arrayFlagsForDisableButtonRemove = [];
     arrayFuncFileCards = null;
     noSelectNode = true;
     inputs;
@@ -253,7 +252,22 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                                         sessionStorage.setItem('arrayDataDocumentsForMergeFirst', JSON.stringify(this.arrayDataDocumentsForMergeFirst));
                                     }
                                 }
+                                for (let h = this.arrayDataDocumentsForMerge.length - 1; h >= 0; h--) {
+                                    if (this.arrayDataDocumentsForMerge[h]['DUE_CARD'] === item.key &&
+                                        this.arrayDataDocumentsForMerge[h]['FUNC_NUM'] === (+this.selectedNode2.key + 1)) {
+                                            this.arrayDataDocumentsForMerge.splice(h, 1);
+                                    }
+                                }
+                                for (let k = this.arrayDataDocumentsForPost.length - 1; k >= 0; k--) {
+                                    if (this.arrayDataDocumentsForPost[k]['DUE_CARD'] === item.key &&
+                                        this.arrayDataDocumentsForPost[k]['FUNC_NUM'] === (+this.selectedNode2.key + 1)) {
+                                            this.arrayDataDocumentsForPost.splice(k, 1);
+                                    }
+                                }
                             }
+                            sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                            sessionStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
+                            sessionStorage.setItem('ArrayDataDocumentsForPost', JSON.stringify(this.arrayDataDocumentsForPost));
                         }
                     this.listAllData[i].splice(2, 3);
                     }
