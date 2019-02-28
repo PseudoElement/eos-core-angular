@@ -234,7 +234,6 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                                 str = this.setCharAt(str, +this.selectedNode2.key, '0');
                                 Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
                                 Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                                sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                                 for (let z = Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].length - 1; z >= 0; z--) {
                                     if (Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'][z]['FUNC_NUM'] === +this.selectedNode2.key + 1) {
                                         Array.from(this.userCard)[j][1]['USER_CARD_DOCGROUP_List'].splice(z, 1);
@@ -247,7 +246,23 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                                     sessionStorage.setItem('arrayDataDocumentsForMergeFirst', JSON.stringify(this.arrayDataDocumentsForMergeFirst));
                                 }
                             }
+
+                            for (let h = this.arrayDataDocumentsForMerge.length - 1; h >= 0; h--) {
+                                if (this.arrayDataDocumentsForMerge[h]['DUE_CARD'] === item.key &&
+                                    this.arrayDataDocumentsForMerge[h]['FUNC_NUM'] === (+this.selectedNode2.key + 1)) {
+                                        this.arrayDataDocumentsForMerge.splice(h, 1);
+                                }
                             }
+                            for (let k = this.arrayDataDocumentsForPost.length - 1; k >= 0; k--) {
+                                if (this.arrayDataDocumentsForPost[k]['DUE_CARD'] === item.key &&
+                                    this.arrayDataDocumentsForPost[k]['FUNC_NUM'] === (+this.selectedNode2.key + 1)) {
+                                        this.arrayDataDocumentsForPost.splice(k, 1);
+                                }
+                            }
+                            }
+                            sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                            sessionStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
+                            sessionStorage.setItem('ArrayDataDocumentsForPost', JSON.stringify(this.arrayDataDocumentsForPost));
                         }
                     this.listAllData[i].splice(1, 3);
                     }
