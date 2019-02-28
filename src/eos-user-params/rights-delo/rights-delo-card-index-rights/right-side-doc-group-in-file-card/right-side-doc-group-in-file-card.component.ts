@@ -319,6 +319,12 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
 
     removeDocuments(item) {
         let tmp;
+        let flag = true;
+        if (sessionStorage.getItem('ArrayDataDocumentsForPost') !== null) {
+            this.arrayDataDocumentsForPost = JSON.parse(sessionStorage.getItem('ArrayDataDocumentsForPost'));
+        } else {
+            this.arrayDataDocumentsForPost = [];
+        }
         if ((this.curentNode.DUE !== '0.') && (this.curentNode['data']['rightDocGroup']['DUE_CARD'] === item[0]['key'])) {
             item[3]['buttonDisable'] = true;
             for (let i = 0; i < this.listAllData.length; i++) {
@@ -327,8 +333,16 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                         if (this.listAllData[i][1][j] === this.curentNode) {
                             this.listAllData[i][1].splice(j, 1);
                             this.listAllData[i][2].openDocumentTree = !this.listAllData[i][2].openDocumentTree;
+                            tmp = {
+                                ISN_LCLASSIF: this.allData[0]['ISN_LCLASSIF'],
+                                FUNC_NUM: +this.selectedNode2.key + 1, // +1
+                                DUE_CARD: this.listAllData[i][0]['key'],
+                                DUE: this.curentNode['DUE'],
+                                ALLOWED: 0
+                                };
                             for (let a = 0; a < this.arrayDataDocumentsForPost.length; a++) {
                                 if (this.arrayDataDocumentsForPost[a]['DUE'] === this.curentNode['DUE']) {
+                                    flag = false;
                                     this.arrayDataDocumentsForPost.splice(a, 1);
                                     sessionStorage.setItem('ArrayDataDocumentsForPost', JSON.stringify(this.arrayDataDocumentsForPost));
                                 }
@@ -339,19 +353,24 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                                     sessionStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
                                 }
                             }
-                                tmp = {
-                                    ISN_LCLASSIF: this.allData[0]['ISN_LCLASSIF'],
-                                    FUNC_NUM: +this.selectedNode2.key + 1, // +1
-                                    DUE_CARD: this.listAllData[i][0]['key'],
-                                    DUE: this.curentNode['DUE'],
-                                    ALLOWED: 0
-                                    };
+                            for (let x = 0; x < Array.from(this.userCard).length; x++) {
+                                if (Array.from(this.userCard)[x][0] === tmp['DUE_CARD']) {
+                                    for (let z = 0; z < Array.from(this.userCard)[x][1]['USER_CARD_DOCGROUP_List'].length; z++) {
+                                        if (Array.from(this.userCard)[x][1]['USER_CARD_DOCGROUP_List'][z]['FUNC_NUM'] === tmp['FUNC_NUM'] &&
+                                        Array.from(this.userCard)[x][1]['USER_CARD_DOCGROUP_List'][z]['DUE'] === tmp['DUE']) {
+                                            Array.from(this.userCard)[x][1]['USER_CARD_DOCGROUP_List'].splice(z, 1);
+                                        }
+                                    }
+                                }
+                            }
+                            if (flag) {
                                     if (sessionStorage.getItem('arrayDataDocumentsForDelete') !== null) {
                                         this.arrayDataDocumentsForDelete = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForDelete'));
                                     } else {
                                         this.arrayDataDocumentsForDelete = [];
                                     }
                                     this.arrayDataDocumentsForDelete.push(tmp);
+                                }
                                     sessionStorage.setItem('arrayDataDocumentsForDelete', JSON.stringify(this.arrayDataDocumentsForDelete));
                                     sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                             setTimeout(() => {
