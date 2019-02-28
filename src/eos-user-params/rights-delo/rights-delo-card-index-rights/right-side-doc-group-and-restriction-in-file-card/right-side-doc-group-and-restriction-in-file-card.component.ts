@@ -360,6 +360,12 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
 
     removeDocuments(item) {
         let tmp;
+        let flag = true;
+        if (sessionStorage.getItem('ArrayDataDocumentsForPost') !== null) {
+            this.arrayDataDocumentsForPost = JSON.parse(sessionStorage.getItem('ArrayDataDocumentsForPost'));
+        } else {
+            this.arrayDataDocumentsForPost = [];
+        }
         if ((this.curentNode.DUE !== '0.') && (this.curentNode['data']['rightDocGroup']['DUE_CARD'] === item[0]['key'])) {
             item[4]['buttonDisable'] = true;
             for (let i = 0; i < this.listAllData.length; i++) {
@@ -368,9 +374,17 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                         if (this.listAllData[i][2][j] === this.curentNode) {
                             this.listAllData[i][2].splice(j, 1);
                             this.listAllData[i][3].openDocumentTree = !this.listAllData[i][3].openDocumentTree;
+                            tmp = {
+                                ISN_LCLASSIF: this.allData[0]['ISN_LCLASSIF'],
+                                FUNC_NUM: +this.selectedNode2.key + 1, // +1
+                                DUE_CARD: this.listAllData[i][0]['key'],
+                                DUE: this.curentNode['DUE'],
+                                ALLOWED: 0
+                                };
                             for (let a = 0; a < this.arrayDataDocumentsForPost.length; a++) {
                                 if (this.arrayDataDocumentsForPost[a]['DUE'] === this.curentNode['DUE']) {
                                     this.arrayDataDocumentsForPost.splice(a, 1);
+                                    flag = false;
                                     sessionStorage.setItem('ArrayDataDocumentsForPost', JSON.stringify(this.arrayDataDocumentsForPost));
                                 }
                             }
@@ -380,29 +394,24 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                                     sessionStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
                                 }
                             }
-                                tmp = {
-                                    ISN_LCLASSIF: this.allData[0]['ISN_LCLASSIF'],
-                                    FUNC_NUM: +this.selectedNode2.key + 1, // +1
-                                    DUE_CARD: this.listAllData[i][0]['key'],
-                                    DUE: this.curentNode['DUE'],
-                                    ALLOWED: 0
-                                    };
+                            for (let x = 0; x < Array.from(this.userCard).length; x++) {
+                                if (Array.from(this.userCard)[x][0] === tmp['DUE_CARD']) {
+                                    for (let z = 0; z < Array.from(this.userCard)[x][1]['USER_CARD_DOCGROUP_List'].length; z++) {
+                                        if (Array.from(this.userCard)[x][1]['USER_CARD_DOCGROUP_List'][z]['FUNC_NUM'] === tmp['FUNC_NUM'] &&
+                                        Array.from(this.userCard)[x][1]['USER_CARD_DOCGROUP_List'][z]['DUE'] === tmp['DUE']) {
+                                            Array.from(this.userCard)[x][1]['USER_CARD_DOCGROUP_List'].splice(z, 1);
+                                        }
+                                    }
+                                }
+                            }
+                            if (flag) {
                                     if (sessionStorage.getItem('arrayDataDocumentsForDelete') !== null) {
                                         this.arrayDataDocumentsForDelete = JSON.parse(sessionStorage.getItem('arrayDataDocumentsForDelete'));
                                     } else {
                                         this.arrayDataDocumentsForDelete = [];
                                     }
                                     this.arrayDataDocumentsForDelete.push(tmp);
-                                    for (let x = 0; x < Array.from(this.userCard).length; x++) {
-                                        if (Array.from(this.userCard)[x][0] === tmp['DUE_CARD']) {
-                                            for (let z = 0; z < Array.from(this.userCard)[x][1]['USER_CARD_DOCGROUP_List'].length; z++) {
-                                                if (Array.from(this.userCard)[x][1]['USER_CARD_DOCGROUP_List'][z]['FUNC_NUM'] === tmp['FUNC_NUM'] &&
-                                                Array.from(this.userCard)[x][1]['USER_CARD_DOCGROUP_List'][z]['DUE'] === tmp['DUE']) {
-                                                    Array.from(this.userCard)[x][1]['USER_CARD_DOCGROUP_List'].splice(z, 1);
-                                                }
-                                            }
-                                        }
-                                    }
+                                }
                                     sessionStorage.setItem('arrayDataDocumentsForDelete', JSON.stringify(this.arrayDataDocumentsForDelete));
                             setTimeout(() => {
                                 this.listAllData[i][3].openDocumentTree = !this.listAllData[i][3].openDocumentTree;
