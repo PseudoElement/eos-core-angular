@@ -33,6 +33,17 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
             case 'DOC_DEFAULT_VALUE_List.SEND_OUTER_MARKSEND': {
                 break;
             }
+
+            case 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST': {
+                if (newValue) {
+                    this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM'].options, null, true);
+                } else {
+                    this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM'].options, null, false);
+                    this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM', null);
+                }
+
+                break;
+            }
             case 'DOC_DEFAULT_VALUE_List.SEND_ISN_LIST_DEP': {
                 if (newValue) {
                     this.flagEn_intAddr = true;
