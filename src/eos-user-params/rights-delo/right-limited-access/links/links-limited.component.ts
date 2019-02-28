@@ -1,4 +1,4 @@
-import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, OnInit, Output, EventEmitter, OnDestroy} from '@angular/core';
 import {LimitedAccesseService} from '../../../shared/services/limited-access.service';
 import { FormGroup, FormControl, FormArray} from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
@@ -7,7 +7,7 @@ import { Subject } from 'rxjs/Subject';
     styleUrls: ['links-limited.component.scss'],
     templateUrl: 'links-limited.component.html'
 })
-export class LinksLimitedComponent implements OnInit {
+export class LinksLimitedComponent implements OnInit, OnDestroy {
     public myForm: FormGroup;
     public formArray: FormArray = new FormArray([]);
     public oldDate: Array<{[key: string]: string}>;
@@ -34,10 +34,14 @@ export class LinksLimitedComponent implements OnInit {
             this.oldDate = info.slice();
             this.createArrayFormControll(info);
             this.createFrom();
-            this.myForm.valueChanges.subscribe(chenges => {
+            this.myForm.valueChanges.takeUntil(this.Unsub).subscribe(chenges => {
                this.checkChenges(chenges);
             });
         });
+    }
+    ngOnDestroy() {
+        this.Unsub.next();
+        this.Unsub.complete();
     }
     createFrom() {
         this.myForm = new FormGroup({'links':   this.formArray});

@@ -6,7 +6,7 @@ import { PARM_SUCCESS_SAVE } from '../consts/eos-user-params.const';
 import { FormGroup } from '@angular/forms';
 import { USER_PARAMS_LIST_REGISTRATION_EMAIL_NAV } from '../consts/registration.consts';
 import { IParamAccordionList } from '../../../shared/intrfaces/user-params.interfaces';
-
+import { Subject } from 'rxjs/Subject';
 @Injectable()
 export class UserParamRegistrationSrv extends BaseUserSrv {
     readonly fieldGroupsForRegistration: string[] = ['Доп. операции', 'Корр./адресаты',
@@ -206,6 +206,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
 
     nameAuthorControl: string;
     saveNameAuthorControl: string;
+     _ngUnsubscribe: Subject<any> = new Subject();
     constructor( injector: Injector ) {
         super(injector, REGISTRATION_USER);
         this.init();
@@ -220,6 +221,9 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                 emitEvent: false,
             });
           }
+        });
+        this._userParamsSetSrv.saveData$.takeUntil(this._ngUnsubscribe).subscribe(() => {
+            this.submit();
         });
     }
     setTab(i: number) {
@@ -274,6 +278,32 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
         }
         this.subscribeFormAttach();
     }
+    subscribeChangeForm() {
+        this.subscriptions.push(
+            this.form.valueChanges
+                .debounceTime(200)
+                .subscribe(newVal => {
+                    let changed = false;
+                    Object.keys(newVal).forEach(path => {
+                        this.oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
+                         if (this.changeByPath(path, newVal[path])) {
+                            changed = true;
+                         }
+                    });
+                this.formChanged.emit(changed);
+                this.isChangeForm = changed;
+                this._pushState();
+            })
+        );
+        this.subscriptions.push(
+            this.form.statusChanges.subscribe(status => {
+                if (this._currentFormStatus !== status) {
+                    this.formInvalid.emit(status === 'INVALID');
+                }
+                this._currentFormStatus = status;
+            })
+        );
+    }
     subscribeFormAttach() {
         this.subscriptions.push(
             this.formAttach.valueChanges
@@ -287,6 +317,7 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                     });
                     this.formChanged.emit(changed);
                     this.isChangeForm = changed;
+                    this._pushState();
             })
         );
         this.subscriptions.push(
@@ -1425,5 +1456,8 @@ export class UserParamRegistrationSrv extends BaseUserSrv {
                     item.isOpen = true;
                 }
             });
+        }
+        private _pushState () {
+            this._userParamsSetSrv.setChangeState({isChange: this.isChangeForm});
         }
 }

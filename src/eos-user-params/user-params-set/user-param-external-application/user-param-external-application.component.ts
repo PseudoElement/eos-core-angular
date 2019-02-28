@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { EXTERNAL_APPLICATION_USER } from '../../user-params-set/shared-user-param/consts/external-application.consts';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
@@ -9,12 +9,15 @@ import { E_FIELD_TYPE, IBaseUsers } from '../../shared/intrfaces/user-params.int
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import {Router} from '@angular/router';
+
+import { Subject } from 'rxjs/Subject';
+
 @Component({
     selector: 'eos-user-param-external-application',
     templateUrl: 'user-param-external-application.component.html'
 })
 
-export class UserParamEAComponent {
+export class UserParamEAComponent implements OnDestroy {
     public btnDisabled: boolean = true;
     public _fieldsType = {};
     public prepInputs;
@@ -29,6 +32,7 @@ export class UserParamEAComponent {
     private newData = new Map();
     private prepDate;
     private listForQuery: Array<string> = [];
+    private _ngUnsubscribe: Subject<any> = new Subject();
     constructor (
         private dataSrv: EosDataConvertService,
         private _userParamsSetSrv: UserParamsService,
@@ -41,7 +45,16 @@ export class UserParamEAComponent {
             this.link = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
             this.selfLink = this._route.url.split('?')[0];
             this.init();
+            this._userParamsSetSrv.saveData$
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this.submit();
+            });
     }
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+       }
     init() {
         this.prepInputs = this.getObjectInputFields(this.constUserParam.fields);
         const allData = this._userParamsSetSrv.hashUserContext;
@@ -127,6 +140,7 @@ export class UserParamEAComponent {
             }else {
                this.btnDisabled = true;
             }
+            this._pushState();
             count_error = 0;
         });
     }
@@ -239,4 +253,7 @@ export class UserParamEAComponent {
             }
         };
     }
+    private _pushState () {
+        this._userParamsSetSrv.setChangeState({isChange: !this.btnDisabled});
+      }
 }

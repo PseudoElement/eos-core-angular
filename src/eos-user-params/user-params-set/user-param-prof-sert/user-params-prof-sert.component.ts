@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { CarmaHttpService } from 'app/services/carmaHttp.service';
 import { Router} from '@angular/router';
@@ -8,6 +8,7 @@ import { PipRX } from 'eos-rest/services/pipRX.service';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../shared-user-param/consts/eos-user-params.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import {Observable} from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 export interface Istore {
     Location: string;
     Address?: string;
@@ -34,7 +35,7 @@ interface SertInfo {
 })
 
 
-export class UserParamsProfSertComponent  implements OnInit {
+export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
     public selectedSertificatePopup: SertInfo;
     public listsSertInfo: Array<SertInfo> = [];
     public alllistSertInfo: Array<SertInfo> = [];
@@ -46,9 +47,9 @@ export class UserParamsProfSertComponent  implements OnInit {
     public titleHeader: string;
     public link;
     public flagHideBtn: boolean = false;
-
     private DBserts: Array<any> = [];
     private modalRef: BsModalRef;
+    private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public certStoresService: CarmaHttpService,
         private _userSrv: UserParamsService,
@@ -62,8 +63,16 @@ export class UserParamsProfSertComponent  implements OnInit {
         this.selectedSertificatePopup  = null;
         this.link = this._userSrv.userContextId;
         this.getSerts();
+        this._userSrv.saveData$
+        .takeUntil(this._ngUnsubscribe)
+        .subscribe(() => {
+            this.submit(null);
+        });
     }
-
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+    }
     ngOnInit() {
         const arrPromise = [];
         const store: Istore[] =  [{Location: 'sscu', Address: '', Name: 'My'}];
@@ -331,9 +340,13 @@ export class UserParamsProfSertComponent  implements OnInit {
         } else {
             this.btnDisabled = false;
         }
+        this._pushState();
     }
     default(event) {
         return;
     }
+    private _pushState () {
+        this._userSrv.setChangeState({isChange: this.btnDisabled});
+      }
 
 }

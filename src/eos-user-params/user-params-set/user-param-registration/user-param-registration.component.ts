@@ -1,4 +1,4 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, OnDestroy } from '@angular/core';
 import { UserParamRegistrationSrv } from '../shared-user-param/services/user-param-registration.service';
 import {IOpenClassifParams} from '../../../eos-common/interfaces/interfaces';
 @Component({
@@ -6,7 +6,7 @@ import {IOpenClassifParams} from '../../../eos-common/interfaces/interfaces';
     templateUrl: 'user-param-registration.component.html'
 })
 
-export class UserParamRegistrationComponent extends UserParamRegistrationSrv {
+export class UserParamRegistrationComponent extends UserParamRegistrationSrv implements OnDestroy {
     userId: string;
     disableSave: boolean;
     isChanged: boolean;
@@ -55,5 +55,9 @@ export class UserParamRegistrationComponent extends UserParamRegistrationSrv {
         }).catch(error => {
             this.flagBacground = false;
         });
+    }
+    ngOnDestroy() {
+         this._ngUnsubscribe.next();
+         this._ngUnsubscribe.complete();
     }
 }

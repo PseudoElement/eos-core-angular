@@ -1,4 +1,4 @@
-import { Component, TemplateRef } from '@angular/core';
+import { Component, TemplateRef, OnDestroy } from '@angular/core';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { Router} from '@angular/router';
 import {ELECTRONIC_SIGNATURE} from '../shared-user-param/consts/electronic-signature';
@@ -9,7 +9,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../shared-user-param/consts/eos-user-params.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-
+import { Subject } from 'rxjs/Subject';
 @Component({
     selector: 'eos-user-param-el-signature',
     // styleUrls: ['user-param-el-signature.component.scss'],
@@ -17,7 +17,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
     providers: [FormHelperService],
 })
 
-export class UserParamElSignatureComponent {
+export class UserParamElSignatureComponent implements OnDestroy {
     public titleHeader: string;
     public selfLink: string;
     public link: number;
@@ -45,6 +45,7 @@ export class UserParamElSignatureComponent {
      private readonly first  = ['CRYPTO_ACTIVEX', 'CRYPTO_INITSTR', 'SIGN_BASE64', 'PKI_ACTIVEX', 'PKI_INITSTR'];
      private readonly  second = ['WEB_CRYPTO_ACTIVEX', 'WEB_CRYPTO_INITSTR', 'WEB_PKI_ACTIVEX', 'WEB_PKI_INITSTR'];
      private listForQuery: Array<string> = [];
+     private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         private _userSrv: UserParamsService,
         private _router: Router,
@@ -58,6 +59,10 @@ export class UserParamElSignatureComponent {
         this.link = this._userSrv.curentUser['ISN_LCLASSIF'];
         this.selfLink = this._router.url.split('?')[0];
         this.init();
+    }
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
     }
 
     init() {
@@ -94,6 +99,7 @@ export class UserParamElSignatureComponent {
             }else {
                 this.btnDisabled = false;
             }
+            this._pushState();
             count_error = 0;
         });
     }
@@ -242,4 +248,7 @@ export class UserParamElSignatureComponent {
             });
         }
     }
+    private _pushState () {
+        this._userSrv.setChangeState({isChange: this.btnDisabled});
+      }
 }
