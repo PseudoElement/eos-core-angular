@@ -1,4 +1,4 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, OnDestroy } from '@angular/core';
 import { UserParamOtherSrv } from '../shared-user-param/services/user-param-other.service';
 import { OTHER_USER } from '../shared-user-param/consts/other.consts';
 
@@ -7,7 +7,7 @@ import { OTHER_USER } from '../shared-user-param/consts/other.consts';
     templateUrl: 'user-param-other.component.html'
 })
 
-export class UserParamOtherForwardingComponent extends UserParamOtherSrv {
+export class UserParamOtherForwardingComponent extends UserParamOtherSrv implements OnDestroy {
     userId: string;
     disableSave: boolean;
     isChanged: boolean;
@@ -16,4 +16,9 @@ export class UserParamOtherForwardingComponent extends UserParamOtherSrv {
     constructor( injector: Injector ) {
         super(injector);
     }
+
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+       }
 }

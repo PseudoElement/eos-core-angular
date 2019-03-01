@@ -29,7 +29,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     public grifsForm: FormGroup;
     public LinksForm: FormGroup;
     public myForm: FormGroup;
-    public tabsForAccessLimited = ['Группы документов', 'Грифы', 'Связки'];
+    public tabsForAccessLimited = ['Группы документов', 'Грифы', /* 'Связки' */];
     public currTab = 0;
     titleHeader: string;
     private ArrayForm: FormArray;
