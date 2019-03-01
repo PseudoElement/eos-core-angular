@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { FormGroup } from '@angular/forms';
@@ -11,6 +11,7 @@ import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs/Subject';
 const BASE_PARAM_INPUTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
@@ -41,7 +42,7 @@ const BASE_PARAM_INPUTS: IInputParamControl[] = [
     providers: [FormHelperService]
 })
 
-export class InlineScaningComponent implements OnInit {
+export class InlineScaningComponent implements OnInit, OnDestroy {
     public editMode = false;
     public curentUser: IParamUserCl;
     public link: number;
@@ -54,6 +55,7 @@ export class InlineScaningComponent implements OnInit {
     private inputFields: any;
     private form: FormGroup;
     private newData = {};
+    private _ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
         private _inputCtrlSrv: InputParamControlService,
@@ -67,6 +69,10 @@ export class InlineScaningComponent implements OnInit {
             this.selfLink = this._router.url.split('?')[0];
 
     }
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+    }
     ngOnInit() {
         this.curentUser = this._userParamSrv.curentUser;
         this.title = `${this.curentUser['SURNAME_PATRON']} (${this.curentUser['CLASSIF_NAME']})`;
@@ -74,6 +80,11 @@ export class InlineScaningComponent implements OnInit {
         this._userParamSrv.getUserIsn(String(this.curentUser.ISN_LCLASSIF)).then(data => {
             this.init();
             this.flagShow = true;
+        });
+        this._userParamSrv.saveData$
+        .takeUntil(this._ngUnsubscribe)
+        .subscribe(() => {
+            this.submit(null);
         });
     }
 
@@ -142,6 +153,7 @@ export class InlineScaningComponent implements OnInit {
         this.form.valueChanges.subscribe(value => {
            let string = '';
            this.disableBtn = this._formHelper.changesForm(this.inputFields, value);
+           this._pushState();
            Object.keys(value).forEach(key => {
             string += value[key] ? 1 : 0;
            });
@@ -172,4 +184,8 @@ export class InlineScaningComponent implements OnInit {
         }
         this._msgSrv.addNewMessage(m);
     }
+
+    private _pushState () {
+        this._userParamSrv.setChangeState({isChange: !this.disableBtn});
+  }
 }

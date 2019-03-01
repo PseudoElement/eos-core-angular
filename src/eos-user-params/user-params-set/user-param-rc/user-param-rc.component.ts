@@ -1,4 +1,4 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, OnDestroy } from '@angular/core';
 import { UserParamRCSrv } from '../shared-user-param/services/user-param-rc.service';
 
 @Component({
@@ -6,9 +6,15 @@ import { UserParamRCSrv } from '../shared-user-param/services/user-param-rc.serv
     templateUrl: 'user-param-rc.component.html'
 })
 
-export class UserParamRCComponent extends UserParamRCSrv {
+export class UserParamRCComponent extends UserParamRCSrv implements OnDestroy {
     prepInputsAttach;
     constructor( injector: Injector ) {
         super(injector);
     }
+
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+    }
+
 }

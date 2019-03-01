@@ -5,6 +5,7 @@ import { FormGroup } from '@angular/forms';
 import {  PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../consts/eos-user-params.const';
 // import { E_FIELD_TYPE } from '../../../shared/intrfaces/user-params.interfaces';
 import { DIRECTORIES_USER } from '../consts/directories.consts';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class UserParamDirectoriesSrv extends BaseUserSrv {
@@ -17,11 +18,43 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
     formAttach: FormGroup;
     prepInputsAttach;
     _currentFormAttachStatus;
+   _ngUnsubscribe: Subject<any> = new Subject();
     constructor( injector: Injector ) {
         super(injector, DIRECTORIES_USER);
         this.init();
             this.prepInputsAttach = this.getObjectInputFields(DIRECTORIES_USER.fieldsChild);
             this.afterInit();
+            this._userParamsSetSrv.saveData$
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this.submit();
+            });
+    }
+    subscribeChangeForm() {
+        this.subscriptions.push(
+            this.form.valueChanges
+                .debounceTime(200)
+                .subscribe(newVal => {
+                    let changed = false;
+                    Object.keys(newVal).forEach(path => {
+                        this.oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
+                         if (this.changeByPath(path, newVal[path])) {
+                            changed = true;
+                         }
+                    });
+                this.formChanged.emit(changed);
+                this.isChangeForm = changed;
+                this._pushState();
+            })
+        );
+        this.subscriptions.push(
+            this.form.statusChanges.subscribe(status => {
+                if (this._currentFormStatus !== status) {
+                    this.formInvalid.emit(status === 'INVALID');
+                }
+                this._currentFormStatus = status;
+            })
+        );
     }
     afterInit() {
         const allData = this._userParamsSetSrv.hashUserContext;
@@ -42,6 +75,7 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
                     });
                     this.formChanged.emit(changed);
                     this.isChangeFormAttach = changed;
+                    this._pushState();
             })
         );
         this.subscriptions.push(
@@ -188,4 +222,7 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
                 throw err;
             });
     }
+    private _pushState () {
+        this._userParamsSetSrv.setChangeState({isChange: this.isChangeForm || this.isChangeFormAttach});
+      }
 }

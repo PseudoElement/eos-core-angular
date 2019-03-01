@@ -4,7 +4,7 @@ import { RC_USER } from '../consts/rc.consts';
 import {IOpenClassifParams} from '../../../../eos-common/interfaces/interfaces';
 import { EosUtils } from 'eos-common/core/utils';
 import {PARM_CANCEL_CHANGE,  PARM_SUCCESS_SAVE } from '../consts/eos-user-params.const';
-
+import { Subject } from 'rxjs/Subject';
 @Injectable()
 export class UserParamRCSrv extends BaseUserSrv {
     dataAttachDb;
@@ -16,12 +16,18 @@ export class UserParamRCSrv extends BaseUserSrv {
     flagBacground: boolean;
     defaultFlag = false;
     disabledFlagDelite = false;
+    _ngUnsubscribe: Subject<any> = new Subject();
     constructor( injector: Injector ) {
         super(injector, RC_USER);
         this.flagBacground = false;
         this.cutentTab = 0;
         this.init();
         this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value);
+        this._userParamsSetSrv.saveData$
+        .takeUntil(this._ngUnsubscribe)
+        .subscribe(() => {
+            this.submit();
+        });
     }
     afterInitUserSearch() {
         this.userParamApiSrv.getData(Object.assign({}, {a: 1}))
@@ -204,6 +210,7 @@ export class UserParamRCSrv extends BaseUserSrv {
                     });
                 this.formChanged.emit(changed);
                 this.isChangeForm = changed;
+                this._pushState();
             })
         );
         this.subscriptions.push(
@@ -215,4 +222,7 @@ export class UserParamRCSrv extends BaseUserSrv {
             })
         );
     }
+    private _pushState () {
+        this._userParamsSetSrv.setChangeState({isChange: this.isChangeForm});
+      }
 }

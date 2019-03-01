@@ -7,6 +7,7 @@ import {OPEN_CLASSIF_DOCGR } from '../../../eos-user-select/shered/consts/create
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { IMessage } from 'eos-common/interfaces';
+import { Subject } from 'rxjs/Subject';
 @Component({
     selector: 'eos-right-limited-access',
     styleUrls: ['right-limited-access.component.scss'],
@@ -28,10 +29,11 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     public grifsForm: FormGroup;
     public LinksForm: FormGroup;
     public myForm: FormGroup;
-    public tabsForAccessLimited = ['Группы документов', 'Грифы', 'Связки'];
+    public tabsForAccessLimited = ['Группы документов', 'Грифы', /* 'Связки' */];
     public currTab = 0;
     titleHeader: string;
     private ArrayForm: FormArray;
+    private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
        private _limitservise: LimitedAccesseService,
        private _msgSrv: EosMessageService,
@@ -43,6 +45,11 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.flagLinks = true;
         this.bacgHeader = false;
         this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ограничение доступа`;
+        this._userServices.saveData$
+        .takeUntil(this._ngUnsubscribe)
+        .subscribe(() => {
+            this.saveAllForm();
+        });
     }
     clearForm(): void {
         sessionStorage.removeItem(String(this._userServices.userContextId));
@@ -241,6 +248,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                 count_error++;
               }
               count_error > 0 ? this.statusBtnSub = false : this.statusBtnSub = true;
+              this._pushState();
               count_error = 0;
       }
 
@@ -262,22 +270,30 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     SubscribtGrifs(event) {
         this.flagGrifs = event.flag;
         this.grifsForm = event.form;
+        this._pushState();
     }
     SubscribLInks(event) {
         this.flagLinks = event.flag;
         this.LinksForm = event.form;
+        this._pushState();
     }
     ngOnDestroy() {
         this._limitservise.GrifForm = undefined;
      //   this._limitservise.LinksFrom = undefined;
         sessionStorage.removeItem(`${this._userServices.userContextId}`);
         sessionStorage.removeItem('links');
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
     }
     get getBtn() {
         if ( !this.statusBtnSub || !this.flagGrifs || !this.flagLinks) {
             return false;
         }
         return true;
+    }
+
+    private _pushState () {
+        this._userServices.setChangeState({isChange: !this.getBtn});
     }
 
 }

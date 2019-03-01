@@ -36,6 +36,10 @@
     }
     .email-wr{
         width: 100%;
+        max-height: calc(100vh - 330px);
+        height: 100vh;
+        overflow-x: hidden;
+        overflow-y: auto;
        .email-header{
            width: 100%;
            display: flex;
@@ -83,7 +87,7 @@
             height: 100%;
             text-align: left;
             border-top: none;
-            height: 30px;
+            height: 38px;
             line-height: 30px;
             background-color: #fff;
             cursor: pointer;

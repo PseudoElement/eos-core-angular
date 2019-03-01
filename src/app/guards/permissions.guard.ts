@@ -28,6 +28,9 @@ export class PermissionsGuard implements CanActivate {
                     });
                 }
                 return access;
+            })
+            .catch(() => {
+                return false;
             });
     }
     private _getContext(): Promise<USER_CL[]> {

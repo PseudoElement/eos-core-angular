@@ -2,16 +2,19 @@ import { Injectable } from '@angular/core';
 import { UserParamApiSrv } from './user-params-api.service';
 import { USER_CL, DEPARTMENT, USERCARD, PipRX, IEnt } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { IParamUserCl } from '../intrfaces/user-parm.intterfaces';
+import { IParamUserCl, IUserSetChanges } from '../intrfaces/user-parm.intterfaces';
 import { Subject } from 'rxjs/Subject';
 import { IMessage } from 'eos-common/interfaces';
 import { ALL_ROWS } from 'eos-rest/core/consts';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class UserParamsService {
     userTechList: any[] = [];
     userRightDocgroupList: any[] = [];
     public SubEmail: Subject<any> = new Subject();
+    private _saveFromAsk$: Subject<void> = new Subject<void>();
+    private _hasChanges$: Subject<IUserSetChanges> = new Subject<IUserSetChanges>();
     private _isTechUser: boolean;
     private _userContext: IParamUserCl;
     private _userContextDeparnment: DEPARTMENT;
@@ -123,21 +126,14 @@ export class UserParamsService {
           }
           return null;
       }
-
-  /*  get hashUserAbsoluteRights () {
-        if (this._userContext) {
-            const hash: any = {};
-            for (let i = 0; i < this._userContext['ISN_CLASSIF'].length; i++) {
-                hash[this._userContext['ISN_CLASSIF'][i]] = this._userContext['DELO_RIGHTS'][i];
-            }
-            console.log(hash);
-            return hash;
-        }
-        return null;
-    }*/
-
     get isUserContexst () {
         return !!this._userContext;
+    }
+    get saveData$ (): Observable<void> {
+        return this._saveFromAsk$.asObservable();
+    }
+    get hasChanges$ (): Observable<IUserSetChanges> {
+        return this._hasChanges$.asObservable();
     }
     constructor (
         private _pipSrv: UserParamApiSrv,
@@ -253,6 +249,12 @@ export class UserParamsService {
     createEntyti<T extends IEnt>(ent: any, typeName: string): T {
         ent.__metadata = { __type: typeName };
         return ent;
+    }
+    saveChenges() {
+        this._saveFromAsk$.next();
+    }
+    setChangeState(state: IUserSetChanges) {
+        this._hasChanges$.next(state);
     }
     private _errorHandler (err) {
         if (err.code === 434) {

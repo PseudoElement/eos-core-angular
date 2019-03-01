@@ -67,7 +67,6 @@ export class GrifsComponent implements OnInit, OnDestroy {
         });
     }
 
-
     relaseDate(res: Array<any>) {
         const arraData = [];
         let arrObj = {};

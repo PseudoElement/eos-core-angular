@@ -90,6 +90,13 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._subscribeControls();
 
         this.isLoading = false;
+
+        this._userParamSrv
+        .saveData$
+        .takeUntil(this._ngUnsubscribe)
+        .subscribe(() => {
+            this.submit();
+        });
     }
     ngOnDestroy() {
         this.isLoading = true;
@@ -370,6 +377,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             change = change ? change : c;
         }
         this.stateHeaderSubmit = !change || state;
+        this._pushState();
     }
 
     private checkchangPass(data1, data2) {
@@ -386,5 +394,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this.errorPass = false;
         }
     }
+    private _pushState () {
+        this._userParamSrv.setChangeState({isChange: !this.stateHeaderSubmit});
+      }
 
 }

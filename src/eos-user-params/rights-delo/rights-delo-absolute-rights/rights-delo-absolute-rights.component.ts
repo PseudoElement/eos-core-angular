@@ -7,13 +7,13 @@ import { UserParamsService } from 'eos-user-params/shared/services/user-params.s
 import { FormGroup, FormControl } from '@angular/forms';
 import { E_RIGHT_DELO_ACCESS_CONTENT, IChengeItemAbsolute } from '../shared-rights-delo/interfaces/right-delo.intefaces';
 import { RadioInput } from 'eos-common/core/inputs/radio-input';
-import { Subscription } from 'rxjs/Subscription';
 import { NodeAbsoluteRight } from './node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { USERDEP, USER_TECH } from 'eos-rest';
 import { RestError } from 'eos-rest/core/rest-error';
 import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
@@ -32,12 +32,12 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     form: FormGroup;
     formGroupAll: FormGroup;
     subs = {};
-    subForm: Subscription;
     queryForSave = [];
     rightContent: boolean;
     listRight: NodeAbsoluteRight[] = [];
     titleHeader: string;
     techRingtOrig: string;
+    private _ngUnsubscribe: Subject<any> = new Subject();
 
 
     constructor (
@@ -60,7 +60,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
         this.listRight = this._createList(ABSOLUTE_RIGHTS);
-        this.subForm = this.form.valueChanges
+        this.form.valueChanges
+            .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {
                this.listRight.forEach(node => {
                     this.arrNEWDeloRight[+node.key] = node.value.toString();
@@ -70,13 +71,19 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     this._viewContent();
                 }, 0);
             });
+        this._userParamsSetSrv.saveData$
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this.submit();
+            });
     }
     ngOnInit() {
         this.selectNode(this.listRight[0]);
         this.inputAll = {all: new RadioInput(CONTROL_ALL_NOTALL)};
     }
     ngOnDestroy() {
-        this.subForm.unsubscribe();
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
     }
     submit() {
         if (this._checkCreatePRJNotEmptyAllowed()) {
@@ -84,6 +91,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             return;
         }
         this.btnDisabled = true;
+        this._pushState();
         let qUserCl;
         const strNewDeloRight = this.arrNEWDeloRight.join('');
         const strDeloRight = this.arrDeloRight.join('');
@@ -128,6 +136,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     cancel() {
         this.btnDisabled = true;
+        this._pushState();
         this.ngOnDestroy();
         this._userParamsSetSrv.getUserIsn()
         .then(() => {
@@ -189,6 +198,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         // this.btnDisabled = true;
         this.btnDisabled = !c;
+        this._pushState();
     }
     private _writeValue(constanta: IInputParamControl[]): IInputParamControl[] {
         const fields = [];
@@ -345,5 +355,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             }
         });
         return allowed;
+    }
+    private _pushState () {
+        this._userParamsSetSrv.setChangeState({isChange: !this.btnDisabled});
     }
 }

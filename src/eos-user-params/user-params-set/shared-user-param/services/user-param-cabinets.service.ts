@@ -6,6 +6,7 @@ import { EosUtils } from 'eos-common/core/utils';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 import { RestError } from 'eos-rest/core/rest-error';
+import { Subject } from 'rxjs/Subject';
 @Injectable()
 export class UserParamCabinetsSrv extends BaseUserSrv {
     readonly fieldGroupsForCabinets: string[] = ['Папки', 'Поручения'];
@@ -27,6 +28,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     bacgHeader = false;
     formAttach: FormGroup;
     prepDataAttach = {rec: {}};
+     _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         injector: Injector,
          ) {
@@ -56,7 +58,9 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
         }).catch(err => {
             this.cathError(err);
         });
-
+        this._userParamsSetSrv.saveData$.takeUntil(this._ngUnsubscribe).subscribe(() => {
+            this.submit();
+        });
     }
 
     init() {
@@ -82,6 +86,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                          }
                     });
                     this.isChangeForm = changed;
+                    this._pushState();
                     if ((this.isChangeFormAttach || this.isChangeForm) === true) {
                         this.formChanged.emit(true);
                     } else {
@@ -189,6 +194,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                         }
                     });
                    this.isChangeFormAttach = changed;
+                   this._pushState();
                     if ((this.isChangeFormAttach || this.isChangeForm) === true) {
                         this.formChanged.emit(true);
                     } else {
@@ -437,4 +443,8 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             const val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
             return    val !== '' && String(val) !== 'null' ? 'eos-icon eos-icon-close-blue small' : 'eos-icon eos-icon-close-grey small';
         }
+
+    private _pushState () {
+        this._userParamsSetSrv.setChangeState({isChange: this.isChangeForm || this.isChangeFormAttach});
+    }
 }

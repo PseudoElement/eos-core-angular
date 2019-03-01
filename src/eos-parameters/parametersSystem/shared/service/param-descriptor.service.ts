@@ -3,11 +3,11 @@ import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class ParamDescriptorSrv {
-    private _saveFromAskSubject = new Subject<any>();
+    private _saveFromAskSubject$ = new Subject<any>();
     get saveData$ () {
-        return this._saveFromAskSubject.asObservable();
+        return this._saveFromAskSubject$.asObservable();
     }
     saveDataFromAsk() {
-        this._saveFromAskSubject.next();
+        this._saveFromAskSubject$.next();
     }
 }

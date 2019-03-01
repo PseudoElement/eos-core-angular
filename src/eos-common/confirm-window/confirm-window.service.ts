@@ -8,7 +8,7 @@ export class ConfirmWindowService {
 
     constructor(private _bsModalSrv: BsModalService) { }
 
-    confirm(content: IConfirmWindow): Promise<boolean> {
+    confirm(content: IConfirmWindow): Promise<boolean> { // TODO unsubscribe, memory leak
         const bsModalRef: BsModalRef = this._bsModalSrv.show(ConfirmWindowComponent);
         const _wnd: IConfirmWindowContent = bsModalRef.content;
 
