@@ -1,7 +1,12 @@
 .input-user-registration-rk-forwarding-wrapper {
+    eos-dynamic-input{
+        font-size: 14px;
+    }
     .scrollWrapper{
         overflow: auto;
         max-height: calc(100vh - 330px);
+        padding-left: 30px;
+        padding-right: 30px;
     }
 
     .tabs-wrapper {

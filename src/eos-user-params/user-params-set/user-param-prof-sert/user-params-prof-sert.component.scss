@@ -7,6 +7,7 @@
 }
 .sert-table-nav{
     margin-left: 18px;
+    display: flex;
 }
 .sert-table-body{
     padding: 7px 0px;
@@ -84,8 +85,8 @@
     top: 0;
     right: 0;
     bottom: 0;
-    background-color: #eeee;
-    opacity: 0.4;
+    background-color: #eee;
+    opacity: 0.5;
     z-index: 1;
 }
 .modal-body{

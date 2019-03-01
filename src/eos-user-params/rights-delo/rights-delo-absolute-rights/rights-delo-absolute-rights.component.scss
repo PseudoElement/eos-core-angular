@@ -1,4 +1,7 @@
 .input-user-absolute-rights-wrapper {
+    .absolute-flex{
+        display: flex;
+    }
     .list-group-item {
         background: $light-grey-1;
         cursor: pointer;
@@ -18,20 +21,19 @@
     }
 
     .left-block-list-absolute-rights {
-        display: inline-block;
-        width: 50%;
         max-height: calc(100vh - 280px);
         border: 1px solid $border-color-main-theme;
         overflow-y: auto;
-        margin-bottom: 20px;
+        flex-basis: 50%;
+        padding-left: 10px;
     }
 
     .right-block-list-absolute-rights {
         display: inline-flex;
-        width: 49%;
-        vertical-align: top;
+        padding-left: 10px;
+        flex-basis: 50%;
         // max-height: 70vh;
-      //  margin-bottom: 20px;
+      // margin-bottom: 20px;
     }
 
     .list-card-files {

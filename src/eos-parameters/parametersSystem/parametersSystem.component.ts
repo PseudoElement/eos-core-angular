@@ -55,20 +55,16 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
             return this._confirmSrv
                 .confirm(Object.assign({}, CONFIRM_SAVE_ON_LEAVE, { confirmDisabled: this.disableSave }))
                 .then(doSave => {
-                    if (doSave) { // тут нужно сохранить
-                        // console.log('saveFromData');
+                    if (doSave) {
                         this._paramDescSrv.saveDataFromAsk();
                         this.isChanged = false;
-                        return true; // временная заглушка
-                        // const _data = this.cardEditRef.getNewData();
-                        // return this._save(_data).then(node => !!node);
+                        return true;
                     } else {
                         this.isChanged = false;
                         return true;
                     }
                 })
                 .catch((err) => {
-                    // console.log('cancel reason', err);
                     return false;
                 });
         } else {

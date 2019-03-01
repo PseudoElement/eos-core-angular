@@ -1,5 +1,5 @@
-import { Component, OnInit, TemplateRef} from '@angular/core';
-import {EmailAddressService} from '../shared/services/email-address.service';
+import { Component, OnInit, TemplateRef, OnDestroy} from '@angular/core';
+import { EmailAddressService} from '../shared/services/email-address.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { UserParamsService } from '../shared/services/user-params.service';
@@ -9,6 +9,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'eos-params-email-address',
@@ -16,7 +17,7 @@ import { RestError } from 'eos-rest/core/rest-error';
     templateUrl: './email-address.component.html'
 })
 
-export class ParamEmailAddressComponent implements OnInit {
+export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     public isDefault = false;
     public statusBtnSub: boolean = true;
     public username: string;
@@ -39,6 +40,7 @@ export class ParamEmailAddressComponent implements OnInit {
     public myForm: FormGroup;
     titleHeader: string;
     private ArrayForm: FormArray;
+    private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
        private _emailService: EmailAddressService,
        private modalService: BsModalService,
@@ -60,8 +62,16 @@ export class ParamEmailAddressComponent implements OnInit {
         this.umailsInfo.length > 0 ? this.currentIndex = 0 : this.currentIndex = null;
         this.prevIndex = 0;
         this.umailsInfo.length > 0 ? this.newEmail = this.umailsInfo[0].EMAIL : this.newEmail = '';
-
+        this._userServices.saveData$
+        .takeUntil(this._ngUnsubscribe)
+        .subscribe(() => {
+            this.saveAllForm(null);
+        });
     }
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+       }
 
     hideToolTip() {
         const element = document.querySelector('.tooltip');
@@ -308,6 +318,7 @@ export class ParamEmailAddressComponent implements OnInit {
                 count_error++;
               }
               count_error > 0 ? this.statusBtnSub = false : this.statusBtnSub = true;
+              this._pushState();
               count_error = 0;
       }
 
@@ -403,6 +414,9 @@ export class ParamEmailAddressComponent implements OnInit {
             });
             return null;
         }
-}
+    }
+private _pushState () {
+    this._userServices.setChangeState({isChange: !this.statusBtnSub});
+  }
 
 }

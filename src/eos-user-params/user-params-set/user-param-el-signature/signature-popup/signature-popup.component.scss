@@ -4,6 +4,12 @@
     margin-top: 10px;
     max-height: 400px;
     overflow: auto;
+    .list{
+        cursor: pointer;
+        &:hover{
+            background-color: #e3f2fd
+        }
+    }
 }
 .input-user-wrapper{
     .nav-signature{
@@ -35,6 +41,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     position: relative;
+    padding-right: 20px;
     span {
         position: absolute;
         right: 0;

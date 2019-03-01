@@ -2,6 +2,10 @@
     .scrollWrapper{
         overflow: auto;
         max-height: calc(100vh - 330px);
+        padding: 0 30px;
+    }
+    eos-dynamic-input{
+        font-size: 14px;
     }
 
     .tabs-wrapper {

@@ -1,10 +1,24 @@
 .input-user-rc-wrapper {
+    .l-font{
+        font-size: 15px;
+    }
+    .l-font-t{
+        padding-left: 30px;
+    }
     .multiple-document-groups-select-rc {
         width: 73%;
     }
+    .scrollWrapper{
+        overflow: auto;
+        max-height: calc(100vh - 330px);
+        padding: 0 30px;
+    }
+    eos-dynamic-input{
+        font-size: 14px;
+    }
 
     label {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .inline-block {
@@ -91,6 +105,7 @@
     .rc-doc-margin{
         margin: 0 23px;
     }
+
 
 }
 .bcgFixed{

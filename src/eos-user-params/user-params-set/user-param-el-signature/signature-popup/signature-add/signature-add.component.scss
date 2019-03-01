@@ -12,4 +12,10 @@
 .list-stores{
     max-height: 315px;
     overflow: auto;
+    li{
+        cursor: pointer;
+        &:hover{
+            background-color: #e3f2fd
+        }
+    }
 }

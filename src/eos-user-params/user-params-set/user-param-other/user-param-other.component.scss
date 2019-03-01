@@ -1,4 +1,11 @@
 .input-user-other-rk-forwarding-wrapper {
+    .scrollWrapper{
+        padding-top: 10px;
+        padding-left: 20px;
+    }
+    eos-dynamic-input{
+        font-size: 14px;
+    }
 
     .tabs-wrapper {
         margin: 0;
@@ -143,7 +150,7 @@
     }
 
     .eos-template-list{
-        padding: 0 20px;
+        padding: 10px 20px;
         .template-list-wrapper{
             display: flex;
             justify-content: space-between;
@@ -160,6 +167,9 @@
                 margin-bottom: 0;
             }
         }
+    }
+    .last{
+        margin-left: -21px;
     }
 }
 

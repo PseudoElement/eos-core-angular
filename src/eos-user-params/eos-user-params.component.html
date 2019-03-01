@@ -1,13 +1,7 @@
-<div *ngIf="!isLoading">
+<div *ngIf="!isLoading" class="user-params-set">
     <ng-container [ngSwitch]="pageId">
-        <ng-container *ngSwitchCase="'param-set'">
-            <eos-user-params-set></eos-user-params-set>
-        </ng-container>
         <ng-container *ngSwitchCase="'email-address'">
             <eos-params-email-address></eos-params-email-address>
-        </ng-container>
-        <ng-container *ngSwitchCase="'rights-delo'">
-            <eos-params-rights-delo></eos-params-rights-delo>
         </ng-container>
         <ng-container *ngSwitchCase="'base-param'">
             <eos-params-base-param></eos-params-base-param>
@@ -15,45 +9,109 @@
         <ng-container *ngSwitchCase="'inline-scaning'">
             <eos-inline-scaning></eos-inline-scaning>
         </ng-container>
+
+        <!-- components in right-delo -->
+        <ng-container *ngSwitchCase="'absolute-rights'">
+            <eos-rights-delo-absolute-rights></eos-rights-delo-absolute-rights>
+        </ng-container>
+        <ng-container *ngSwitchCase="'card-index-rights'">
+            <eos-rights-delo-card-index-rights></eos-rights-delo-card-index-rights>
+        </ng-container>
+        <ng-container *ngSwitchCase="'access-limitation'">
+            <eos-right-limited-access></eos-right-limited-access>
+        </ng-container>
+        <ng-container *ngSwitchCase="'card-files'">
+                <eos-rights-delo-card-files></eos-rights-delo-card-files>
+        </ng-container>
+
+        <!-- components in user-params-set -->
+        <ng-container *ngSwitchCase="'registration'">
+            <eos-user-param-registration></eos-user-param-registration>
+        </ng-container>
+        <ng-container *ngSwitchCase="'cabinets'">
+            <eos-user-param-cabinets></eos-user-param-cabinets>
+        </ng-container>
+        <ng-container *ngSwitchCase="'rc'">
+            <eos-user-param-rc></eos-user-param-rc>
+        </ng-container>
+        <ng-container *ngSwitchCase="'dictionary'">
+            <eos-user-param-directories></eos-user-param-directories>
+        </ng-container>
+        <ng-container *ngSwitchCase="'el-signature'">
+            <eos-user-param-el-signature></eos-user-param-el-signature>
+        </ng-container>
+        <ng-container *ngSwitchCase="'prof-sert'">
+            <eos-prof-sert></eos-prof-sert>
+        </ng-container>
+        <ng-container *ngSwitchCase="'search'">
+            <eos-user-param-search></eos-user-param-search>
+        </ng-container>
+        <ng-container *ngSwitchCase="'visualization'">
+            <eos-user-param-visualization></eos-user-param-visualization>
+        </ng-container>
+        <ng-container *ngSwitchCase="'external-application'">
+            <eos-user-param-external-application></eos-user-param-external-application>
+        </ng-container>
+        <ng-container *ngSwitchCase="'other'">
+            <eos-user-param-other></eos-user-param-other>
+        </ng-container>
     </ng-container>
 </div>
 
 <nav
     class="nav-accordion"
-    [ngClass]="{isShow: isShowAccordion}"
+    [ngClass]="{'show-accordion': isShowAccordion}"
 >
+    <ng-template ngFor let-list [ngForOf]="accordionList">
+        <ng-container *ngTemplateOutlet="list.subList ? itemListTree : itemList; context: {item: list}"></ng-container>
+    </ng-template>
+</nav>
+<div class="spinner-wrapper" *ngIf="isLoading">
+    <eos-spinner [size]="'lg'"></eos-spinner>
+</div>
+
+<ng-template #itemListTree let-item="item">
     <accordion>
         <accordion-group
-            *ngFor="let item of accordionList"
             class="param-field-wrap"
             panelClass="param-field"
             [isDisabled]="!item.subList"
             [(isOpen)]="item.isOpen"
             [ngClass] = "item.disabled ? 'disable' : ''"
-            [routerLink]="!item.subList ? ['/user-params-set', item.url] : null"
-            [routerLinkActive]="!item.subList ? 'active-link' : 'null'"
         >
             <div accordion-heading>
                 {{item.title}}
                 <span
-                    *ngIf="item.subList"
                     class="icon eos-icon small float-right pull-right"
                     [ngClass]="{'eos-icon-arrow-v-blue-bottom': !item.isOpen, 'eos-icon-arrow-v-blue-top': item.isOpen}"
                 ></span>
             </div>
-            <div *ngIf="item.subList">
-                <div
-                    *ngFor="let subItem of item.subList"
-                    class="subItem"
-                    [routerLink]="['/user-params-set/' + item.url, subItem.url]"
-                    routerLinkActive="active-link"
-                >
-                    {{subItem.title}}
-                </div>
+            <div
+                *ngFor="let subItem of item.subList"
+                class="subItem"
+                [routerLink]="['/user-params-set', subItem.url]"
+                routerLinkActive="active-link"
+            >
+                {{subItem.title}}
             </div>
         </accordion-group>
     </accordion>
-</nav>
-<div class="spinner-wrapper" *ngIf="isLoading">
-    <eos-spinner [size]="'lg'"></eos-spinner>
-</div>
+</ng-template>
+
+<ng-template #itemList let-item="item">
+    <accordion>
+        <accordion-group
+            class="param-field-wrap"
+            panelClass="param-field"
+            [isDisabled]="!item.subList"
+            [(isOpen)]="item.isOpen"
+            [ngClass] = "item.disabled ? 'disable' : ''"
+            [routerLink]="['/user-params-set', item.url]"
+            routerLinkActive="active-link"
+        >
+            <div accordion-heading>
+                {{item.title}}
+            </div>
+        </accordion-group>
+    </accordion>
+</ng-template>

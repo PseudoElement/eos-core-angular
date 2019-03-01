@@ -7,6 +7,8 @@ import { DOCGROUP_CL, DEPARTMENT } from 'eos-rest';
 import { NodeDocsTree } from '../../../../eos-user-params/shared/list-docs-tree/node-docs-tree';
 import {PARM_SUCCESS_SAVE, PARM_ERROR_SEND_FROM, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
 import { INodeDocsTreeCfg } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { Subject } from 'rxjs/Subject';
+
 @Injectable()
 export class UserParamOtherSrv extends BaseUserSrv {
     readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов', 'Шаблоны'];
@@ -30,6 +32,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
     sendFrom: string = '';
     saveValueSendForm: string = '';
     isLoading: boolean;
+     _ngUnsubscribe: Subject<any> = new Subject();
 
     constructor( injector: Injector) {
         super(injector, OTHER_USER);
@@ -61,6 +64,12 @@ export class UserParamOtherSrv extends BaseUserSrv {
             this.saveDefaultValue = ( result[2] as Array<any>).slice();
         }).catch(error => {
             this.isLoading = false;
+        });
+
+        this._userParamsSetSrv.saveData$
+        .takeUntil(this._ngUnsubscribe)
+        .subscribe(() => {
+            this.submit();
         });
     }
     hideToolTip() {
@@ -142,6 +151,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
                         this.formChanged.emit(false);
                         this.isChangeForm = false;
                     }
+                    this._pushState();
                     count_error = 0;
             })
         );
@@ -501,6 +511,9 @@ export class UserParamOtherSrv extends BaseUserSrv {
             return  this.userParamApiSrv.getData(query);
         }
         return Promise.resolve([4]);
+      }
+      private _pushState () {
+        this._userParamsSetSrv.setChangeState({isChange: this.isChangeForm});
       }
 
 }
