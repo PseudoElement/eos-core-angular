@@ -1,7 +1,7 @@
 <div class="eos-rk-writes card-content-wrapper">
         <!-- Срок исп. (План. дата)
         дня (дней) от исх. даты корреспондента -->
-    <div class="items-group">
+    <div class="items-group" *ngIf="!isEDoc" >
             <span>
             <div class="col-with-label">
                     <label>{{inputs['DOC_DEFAULT_VALUE_List.TERM_EXEC_W'].label}}</label>
@@ -17,20 +17,17 @@
 
     <!-- Переслать РК (Журнал пересылок РК) -->
     <p class="xl-font paragraph-title">Переслать РК (Журнал пересылок РК)</p>
-    <div class="items-group">
-        <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_ISN_LIST_DEP_W']"
-            [form]="form"
-            [hideLabel]="true"
-            [readonly]="!editMode"> </eos-dynamic-input>
+    <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_ISN_LIST_DEP_W']"
+        [form]="form"
+        [hideLabel]="true"
+        [readonly]="!editMode"> </eos-dynamic-input>
+    <div class="items-group" *ngIf="!isEDoc">
         <!-- По значению реквизита "Кому" (адресован) -->
-        <!-- <span> -->
-            <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_WHO_W']"
+            <eos-dynamic-input class="no-margin inline-with-label"
+                [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_WHO_W']"
                 [form]="form"
                 [readonly]="!editMode"> </eos-dynamic-input>
-                <!-- <button class="inline-with-label"
-                    [ngClass]="forward_who_w ? '' : 'disabled'"
-                    [disabled]="!forward_who_w">Дополнительно</button> -->
-        <!-- </span> -->
+
         <div class="items-group" *ngIf="forward_who_w" >
         <p class="xl-font no-margin">Дополнительные правила</p>
         <!-- <div class="items-group"> -->
@@ -59,61 +56,74 @@
         </div>
     </div>
 
-
-    <p class="xl-font paragraph-title">Передача документов</p>
-
-    <div class="items-group">
-        <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST_W']"
+    <!-- По значению реквизита "Подписал" -->
+    <eos-dynamic-input *ngIf="isEDoc"
+        class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_SIGN_W']"
         [form]="form"
-        [hideLabel]="true"
-        [readonly]="!editMode || isEDoc"> </eos-dynamic-input>
+        [readonly]="!editMode"> </eos-dynamic-input>
+    <!-- По значению реквизита "Исполнитель" -->
+    <eos-dynamic-input *ngIf="isEDoc"
+        class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_EXEC_W']"
+        [form]="form"
+        [readonly]="!editMode"> </eos-dynamic-input>
 
-        <!-- <span> -->
-            <!-- По значению реквизита "Кому" (адресован) -->
-            <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_FROM_WHO_W']"
-                [form]="form"
-                [readonly]="!editMode || isEDoc"> </eos-dynamic-input>
-                <!-- <button class="inline-with-label"
-                    [ngClass]="isEDoc ? 'disabled' : ''"
-                    [disabled]="isEDoc">Дополнительно</button> -->
-        <!-- </span> -->
-        <div class="items-group" *ngIf="journal_who_w" >
-                <p class="xl-font no-margin">Дополнительные правила</p>
-                <!-- <div class="items-group"> -->
-                    <span>
+
+    <div *ngIf="!isEDoc">
+        <p class="xl-font paragraph-title">Передача документов</p>
+
+        <div class="items-group">
+            <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST_W']"
+            [form]="form"
+            [hideLabel]="true"
+            [readonly]="!editMode || isEDoc"> </eos-dynamic-input>
+
+            <!-- <span> -->
+                <!-- По значению реквизита "Кому" (адресован) -->
+                <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_FROM_WHO_W']"
+                    [form]="form"
+                    [readonly]="!editMode || isEDoc"> </eos-dynamic-input>
+                    <!-- <button class="inline-with-label"
+                        [ngClass]="isEDoc ? 'disabled' : ''"
+                        [disabled]="isEDoc">Дополнительно</button> -->
+            <!-- </span> -->
+            <div class="items-group" *ngIf="journal_who_w" >
+                    <p class="xl-font no-margin">Дополнительные правила</p>
+                    <!-- <div class="items-group"> -->
+                        <span>
+                            <label class="adv-col1">Если "Кому"</label>
+                            <label class="adv-col2">пусто</label>
+                            <label class="adv-col3">то</label>
+                            <eos-dynamic-input class="no-margin adv-col4" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_WHO_EMPTY_W']"
+                                [form]="form"
+                                [hideLabel]="true"
+                                [readonly]="!editMode"> </eos-dynamic-input>
+                        </span>
+                        <span>
                         <label class="adv-col1">Если "Кому"</label>
-                        <label class="adv-col2">пусто</label>
-                        <label class="adv-col3">то</label>
-                        <eos-dynamic-input class="no-margin adv-col4" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_WHO_EMPTY_W']"
+                        <eos-dynamic-input class="no-margin adv-col2" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_WHO_REDIRECTION_W']"
                             [form]="form"
                             [hideLabel]="true"
                             [readonly]="!editMode"> </eos-dynamic-input>
-                    </span>
-                    <span>
-                    <label class="adv-col1">Если "Кому"</label>
-                    <eos-dynamic-input class="no-margin adv-col2" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_WHO_REDIRECTION_W']"
-                        [form]="form"
-                        [hideLabel]="true"
-                        [readonly]="!editMode"> </eos-dynamic-input>
-                    <label class="adv-col3">то</label>
-                    <eos-dynamic-input class="no-margin adv-col4" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_WHERE_REDIRECTION_W']"
-                        [form]="form"
-                        [hideLabel]="true"
-                        [readonly]="!editMode"> </eos-dynamic-input>
-                    </span>
-                <!-- </div> -->
-        </div>
-    <!-- По значению Журнала пересылки РК -->
-    <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_FROM_FORWARD_W']"
-        [form]="form"
-        [readonly]="!editMode || isEDoc"> </eos-dynamic-input>
+                        <label class="adv-col3">то</label>
+                        <eos-dynamic-input class="no-margin adv-col4" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_WHERE_REDIRECTION_W']"
+                            [form]="form"
+                            [hideLabel]="true"
+                            [readonly]="!editMode"> </eos-dynamic-input>
+                        </span>
+                    <!-- </div> -->
+            </div>
+            <!-- По значению Журнала пересылки РК -->
+            <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_FROM_FORWARD_W']"
+                [form]="form"
+                [readonly]="!editMode || isEDoc"> </eos-dynamic-input>
 
-        <!-- Радиобуттоны -->
-    <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W']"
-        [form]="form"
-        [readonly]="!en_journal_param_w"
-        [hideLabel]="true"
-        [readonly]="!editMode || isEDoc"> </eos-dynamic-input>
+                <!-- Радиобуттоны -->
+            <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W']"
+                [form]="form"
+                [readonly]="!en_journal_param_w"
+                [hideLabel]="true"
+                [readonly]="!editMode || isEDoc"> </eos-dynamic-input>
+        </div>
     </div>
 
     <p class="xl-font paragraph-title">Списать в дело</p>
@@ -235,7 +245,24 @@
     INSERT INTO doc_default_VALUE ( default_id, isn_docgroup, value ) VALUES ( 'CARD_WHO_W', 3670, '1' )
  -->
     <!-- по значению реквизита "Кому (адресован) -->
-    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_WHO_W']"
+    <eos-dynamic-input *ngIf="!isEDoc"
+        class="no-margin"
+        [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_WHO_W']"
+        [form]="form"
+        [readonly]="!editMode"> </eos-dynamic-input>
+    <eos-dynamic-input *ngIf="isEDoc"
+        class="no-margin"
+        [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_SIGN_W']"
+        [form]="form"
+        [readonly]="!editMode"> </eos-dynamic-input>
+    <eos-dynamic-input *ngIf="isEDoc"
+        class="no-margin"
+        [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_EXEC_W']"
+        [form]="form"
+        [readonly]="!editMode"> </eos-dynamic-input>
+    <eos-dynamic-input *ngIf="isEDoc"
+        class="no-margin"
+        [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_VISA_W']"
         [form]="form"
         [readonly]="!editMode"> </eos-dynamic-input>
     </div>

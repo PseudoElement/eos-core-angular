@@ -85,7 +85,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         this.apiSrv = apiSrv;
         this.isUpdating = true;
         this.tabs = tabs;
-        this.isn_node = 3670;
         this.subscriptions = [];
         this.editValues = {};
     }
@@ -98,26 +97,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
     ngOnInit() {
-        this.dataController = new AdvCardRKDataCtrl(this.apiSrv, this._msgSrv);
-        this.descriptions = this.dataController.getDescriptions();
-
-        this.dataController.readValues(this.isn_node).then (values => {
-            this.storedValuesDG = values[0];
-            this.values = {
-                [DEFAULTS_LIST_NAME]:  this._makeDataObjDef(this.storedValuesDG[DEFAULTS_LIST_NAME]),
-                [FILE_CONSTRAINT_LIST_NAME]: this._makeDataObjFileCon(this.storedValuesDG[FILE_CONSTRAINT_LIST_NAME]),
-                };
-            this.editValues = this._makePrevValues(this.values);
-
-            this.dataController.loadDictsOptions(this.values, this.updateLinks).then (d => {
-                this.inputs = this.getInputs();
-                this._updateOptions(this.inputs);
-                const isNode = false;
-                this.form = this._inputCtrlSrv.toFormGroup(this.inputs, isNode);
-                this._subscribeToChanges();
-                this.isUpdating = false;
-            });
-        });
     }
 
     ngOnDestroy() {
@@ -134,7 +113,11 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             el.key === 'JOURNAL_ISN_NOMENC_W'
             ) {
             const rec = data[0];
-            options[0].title = rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
+            if (rec['DUE'] === '0.') {
+                options[0].title = '...';
+            } else {
+                options[0].title = rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
+            }
         }
     }
 
@@ -217,13 +200,35 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     public initByNodeData(dndata: any) {
         this.isUpdating = true;
-
+        this.isn_node = dndata['ISN_NODE'];
         if (!dndata) {
             this._node = {};
         } else {
             this._node = dndata;
         }
         this.activeTab = tabs[0];
+
+        this.dataController = new AdvCardRKDataCtrl(this.apiSrv, this._msgSrv);
+        this.descriptions = this.dataController.getDescriptions();
+
+        this.dataController.readValues(this.isn_node).then (values => {
+            this.storedValuesDG = values[0];
+            this.values = {
+                [DEFAULTS_LIST_NAME]:  this._makeDataObjDef(this.storedValuesDG[DEFAULTS_LIST_NAME]),
+                [FILE_CONSTRAINT_LIST_NAME]: this._makeDataObjFileCon(this.storedValuesDG[FILE_CONSTRAINT_LIST_NAME]),
+                };
+            this.editValues = this._makePrevValues(this.values);
+
+            this.dataController.loadDictsOptions(this.values, this.updateLinks).then (d => {
+                this.inputs = this.getInputs();
+                this._updateOptions(this.inputs);
+                const isNode = false;
+                this.form = this._inputCtrlSrv.toFormGroup(this.inputs, isNode);
+                this._subscribeToChanges();
+                this.isUpdating = false;
+            });
+        });
+
     }
 
     public hideModal(): void {
@@ -274,31 +279,32 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
     private _changeByPath(path: string, value: any): boolean {
-        let _value = null;
-        let prevValue = this._getPrevValue(path);
-     if (typeof value === 'boolean') {
-            if (prevValue === undefined) {
-                prevValue = '0';
-            }
-            _value = String(+value);
-        } else if (value === 'null') {
-            _value = null;
-        } else if (value instanceof Date) {
-            _value = EosUtils.dateToString(value);
-        } else if (value === '') { // fix empty strings in IE
-            _value = null;
-        } else if (value) {
-            _value = value;
-        }
-        this.newData = EosUtils.setValueByPath(this.newData, path, _value);
+        const type: E_FIELD_TYPE = this.inputs[path].controlType;
+        value = this.dataController.fixDBValueByType(value, type);
+        const prevValue = this.dataController.fixDBValueByType(this._getPrevValue(path), type);
+        // const field = fields[DEFAULTS_LIST_NAME].find(i => i.key === key);
+        // const type: E_FIELD_TYPE = field.type;
 
-        if (prevValue === undefined) {
-            prevValue = null;
-        }
+    //  let _value = null;
+    //  if (typeof value === 'boolean') {
+    //         if (prevValue === undefined) {
+    //             prevValue = '0';
+    //         }
+    //         _value = String(+value);
+    //     } else if (value === 'null') {
+    //         _value = null;
+    //     } else if (value instanceof Date) {
+    //         _value = EosUtils.dateToString(value);
+    //     } else if (value === '') { // fix empty strings in IE
+    //         _value = null;
+    //     } else if (value) {
+    //         _value = value;
+    //     }
+        this.newData = EosUtils.setValueByPath(this.newData, path, value);
 
-        if (String(_value) !== String(prevValue)) {
-            this._setPrevValue(path, _value);
-            this.currentPage.onDataChanged(path, prevValue, _value);
+        if (value !== prevValue) {
+            this._setPrevValue(path, value);
+            this.currentPage.onDataChanged(path, prevValue, value);
             return true;
         }
         return false;

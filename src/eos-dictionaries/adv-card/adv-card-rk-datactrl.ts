@@ -1,5 +1,5 @@
 import { ALL_ROWS } from 'eos-rest/core/consts';
-import { RKDefaultFields, TDefaultField, TDFSelectOption, RKFilesConstraints, RKFictControls } from './rk-default-values/rk-default-const';
+import { RKDefaultFields, TDefaultField, TDFSelectOption, RKFilesConstraints, RKFictControls, RKFilesConstraintsFields } from './rk-default-values/rk-default-const';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { PipRX, DOCGROUP_CL } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -60,13 +60,39 @@ export class AdvCardRKDataCtrl {
         if (!newData) {
             return null;
         }
+        this.keys(newData[FILE_CONSTRAINT_LIST_NAME]).forEach((key) => {
+            const savedData = docGroup[FILE_CONSTRAINT_LIST_NAME].find (f => f.CATEGORY === key);
+            for (const sk in RKFilesConstraintsFields) {
+                if (RKFilesConstraintsFields.hasOwnProperty(sk)) {
+                    const f = RKFilesConstraintsFields[sk];
+                    const spath = key + '.' + f;
+                    const field = fields[FILE_CONSTRAINT_LIST_NAME].find(i => i.key === spath);
+                    const type: E_FIELD_TYPE = field.type;
+                    const t1 = newData[FILE_CONSTRAINT_LIST_NAME];
+                    const t2 = t1[key];
+                    const t3 = t2[f];
+                    const newValue = this.fixDBValueByType(t3, type);
+                    if (savedData) {
+                        const savedValue = this.fixDBValueByType(savedData.VALUE, type);
+                        if (savedValue !== newValue) {
+                        }
+                    } else {
+
+                    }
+
+
+                }
+            }
+
+        });
+
         this.keys(newData[DEFAULTS_LIST_NAME]).forEach((key) => {
-            const newValue = newData[DEFAULTS_LIST_NAME][key];
             const savedData = docGroup[DEFAULTS_LIST_NAME].find (f => f.DEFAULT_ID === key);
             const field = fields[DEFAULTS_LIST_NAME].find(i => i.key === key);
             const type: E_FIELD_TYPE = field.type;
+            const newValue = this.fixDBValueByType(newData[DEFAULTS_LIST_NAME][key], type);
             if (savedData) {
-                const savedValue = this._fromDBValueByType(savedData.VALUE, type);
+                const savedValue = this.fixDBValueByType(savedData.VALUE, type);
                 if (savedValue !== newValue) {
                     if (!this._isNeedToStoreByType(newValue, type)) {
                         changes.push (
@@ -104,6 +130,9 @@ export class AdvCardRKDataCtrl {
     }
 
     _isNeedToStoreByType(value: any, type: E_FIELD_TYPE): boolean {
+        if (!value) {
+            return false;
+        }
         switch (type) {
             case E_FIELD_TYPE.boolean: {
                 if (!value || value === '0') {
@@ -113,12 +142,25 @@ export class AdvCardRKDataCtrl {
         }
         return true;
     }
-    _fromDBValueByType(value: any, type: E_FIELD_TYPE): any {
+    fixDBValueByType(value: any, type: E_FIELD_TYPE): any {
+        if (value === undefined) {
+            return null;
+        } else if (value === '') {
+            return null;
+        }
         switch (type) {
             case E_FIELD_TYPE.boolean: {
-                if (!value) {
-                    return '0';
+                if (!value || value === '0') {
+                    return null;
+                } else {
+                    return '1';
                 }
+            }
+            case E_FIELD_TYPE.select: {
+                if (value === '') {
+                    return null;
+                }
+                break;
             }
         }
         if (value === 'null') {

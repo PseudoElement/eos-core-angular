@@ -65,6 +65,12 @@ export const RKFictControls: TDefaultField[] = [
 
 ];
 
+export const RKFilesConstraintsFields: string[] = [
+    'EXTENSIONS',
+    'MAX_SIZE',
+    'ONE_FILE',
+];
+
 export const RKFilesConstraints: TDefaultField[] = [
     {
         key: 'DOC_RC.EXTENSIONS',
@@ -302,9 +308,10 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'CARD_VISA_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
-        title: 'Картотека визажиста РК',
+        // title: 'Картотека визажиста РК',
+        title: 'По значению реквизита "Визы"'
         // classif_id: NULL
     }, {
         key: 'ISN_CARD_REG_FORWARD_W',
@@ -324,16 +331,18 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'CARD_SIGN_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
-        title: 'Картотека ДЛ, подписавшего РК',
+        title: 'По значению реквизита "Подписал"'
+        // title: 'Картотека ДЛ, подписавшего РК',
         // classif_id: NULL
     }, {
         key: 'CARD_EXEC_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
-        title: 'Картотека исполнителя РК',
+        // title: 'Картотека исполнителя РК',
+        title: 'По значению реквизита "Исполнитель"'
         // classif_id: NULL
     }, {
         key: 'ISN_CARD_REG_M',
@@ -533,16 +542,18 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'FORWARD_EXEC_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
-        title: 'Пересылка ДЛ исполнителю РК',
+        title: 'По значению реквизита "Исполнитель"'
+        // title: 'Пересылка ДЛ исполнителю РК',
         // classif_id: NULL
     }, {
         key: 'FORWARD_SIGN_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
-        title: 'Пересылка ДЛ подписавшему РК',
+        title: 'По значению реквизита "Подписал"'
+        // title: 'Пересылка ДЛ подписавшему РК',
         // classif_id: NULL
     }, {
         key: 'FORWARD_WHO_W',

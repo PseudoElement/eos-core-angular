@@ -1,13 +1,14 @@
 <div class="eos-rk-default-values card-content-wrapper">
     <div class="items-group">
     <div class="clearfix">
-        <div class="col-1">
+        <div class="col-1" *ngIf="!isEDoc">
             <label>{{inputs['DOC_DEFAULT_VALUE_List.SPECIMEN'].label}}</label>
             <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SPECIMEN']"
                             [form]="form"
                             [readonly]="!editMode || isEDoc" ></eos-dynamic-input>
         </div>
-        <div class="col-2">
+        <div
+            [ngClass]="{'col-2': !isEDoc}">
                 <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.CONSISTS']"
                         [form]="form"
                         [readonly]="!editMode" ></eos-dynamic-input>
@@ -52,18 +53,21 @@
                                     [readonly]="!editMode" ></eos-dynamic-input>
 
     </div>
-    <p class="xl-font paragraph-title">Передача документов</p>
-    <div class="items-group">
-        <eos-dynamic-input class="margin10" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST']"
-                            [form]="form"
-                            [readonly]="!editMode || isEDoc" ></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM']"
-                            [hideLabel]="true"
-                            [form]="form"
-                            [hidden]="isEDoc"
-                            [readonly]="!editMode || isEDoc" ></eos-dynamic-input>
+    <div [hidden]="isEDoc">
+        <p class="xl-font paragraph-title">Передача документов </p>
+        <div class="items-group">
+            <eos-dynamic-input class="margin10" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST']"
+                                [form]="form"
+                                [disabled]="isEDoc"
+                                [readonly]="!editMode || isEDoc" ></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM']"
+                                [hideLabel]="true"
+                                [form]="form"
+                                [disabled]="isEDoc"
+                                [hidden]="isEDoc || !flagEn_doc"
+                                [readonly]="!editMode || isEDoc" ></eos-dynamic-input>
+        </div>
     </div>
-
 
     <p class="xl-font paragraph-title">Списать в Дело</p>
     <div class="items-group">
@@ -74,6 +78,7 @@
                             [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM']"
                             [form]="form"
+                            [hidden]="!flagEn_spinnum"
                             [hideLabel]="true"
                             [readonly]="!editMode"></eos-dynamic-input>
     </div>
