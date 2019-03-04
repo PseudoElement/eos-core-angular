@@ -1,0 +1,23 @@
+<div class="eos-rk-input-files">
+    <p class="xl-font paragraph-title">{{title}}</p>
+
+    <div class="items-group">
+        <div class="col-1">
+            <label>Max размер, Мбайт</label>
+            <eos-dynamic-input class="no-margin" [input]="inputSize"
+                                [hideLabel]="true"
+                                [form]="form"
+                                [readonly]="!editMode" ></eos-dynamic-input>
+        </div>
+        <div class="col-2">
+            <eos-dynamic-input class="no-margin" [input]="inputCb"
+                            [form]="form"
+                            [readonly]="!editMode" ></eos-dynamic-input>
+        </div>
+        <div class="col-3">
+                <eos-dynamic-input class="no-margin" [input]="inputExt"
+                            [form]="form"
+                            [readonly]="!editMode" ></eos-dynamic-input>
+        </div>
+    </div>
+</div>

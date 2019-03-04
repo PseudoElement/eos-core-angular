@@ -62,6 +62,7 @@ export interface IRelationDef {
     __type: string;
     sf: string;
     tf: string;
+    noDirectRead?: boolean;
 }
 
 export interface IViewModelResponse {

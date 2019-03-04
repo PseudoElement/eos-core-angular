@@ -1,0 +1,145 @@
+.adv-card-rk-modal {
+    width: 800px;
+    min-height: 500px;
+
+    .inline-with-label {
+        display: inline-block;
+    }
+
+    .no-marigin-bottom {
+        margin-bottom: 0px;
+    }
+
+    .tab-buttons {
+        padding: 0 20px;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .tab-button{
+        display: inline-block;
+        width: 25%;
+    }
+
+    .bottom-buttons {
+        padding: 10px;
+        display: inline-block;
+    }
+
+    .bottom-buttons-clearfix {
+        min-width: 450px;
+        display: inline-block;
+    }
+
+
+    label {
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 10px;
+        color: $label-color;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        white-space: nowrap;
+        &.checkbox,
+        &.radio {
+            color: $grey;
+            line-height: 24px;
+            padding: 4px 0;
+            font-size: 14px;
+            vertical-align: middle;
+            text-transform: none;
+            margin-bottom: 0;
+        }
+        &.checkbox-inline,
+        &.radio-inline {
+            padding-left: 12px;
+        }
+    }
+
+
+
+
+
+
+
+
+
+    .modal-header {
+        padding: 0 20px;
+        .pull-right {
+            font-size: 0;
+        }
+    }
+    .edit-block {
+        display: inline-block;
+        white-space: nowrap;
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+    .spinner-container {
+        position: relative;
+        height: 300px;
+        .center-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            //width: 200px;
+            //height: 200px;
+        }
+    }
+    .edit-control {
+        display: inline-block;
+        width: 45%;
+    }
+
+    .modal-body {
+
+        padding: 10px 20px 0px 20px;
+
+    }
+
+    .modal-body-container {
+        display: block;
+    }
+
+    .divTable{
+        display: table;
+        border: 1px solid #999999;
+        width: 100%;
+    }
+    .divTableHeaderRow {
+        display: table-row;
+    }
+    .divTableRow {
+        display: table-row;
+        cursor: pointer;
+        &:hover {
+            background-color: $highlight-color-main-theme;
+            color: $secondary-font-color-main-theme;
+        }
+    }
+    .divTableHeading {
+        background-color: #EEE;
+
+        display: table-header-group;
+    }
+    .divTableCell, .divTableHead {
+        border: 1px solid #999999;
+        display: table-cell;
+        padding: 3px 10px;
+    }
+    .divTableHeading {
+        background-color: #EEE;
+        display: table-header-group;
+        font-weight: bold;
+    }
+    .divTableFoot {
+        background-color: #EEE;
+        display: table-footer-group;
+        font-weight: bold;
+    }
+    .divTableBody {
+        display: table-row-group;
+    }
+}

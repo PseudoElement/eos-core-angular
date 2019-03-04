@@ -23,6 +23,19 @@ const RECORD_ACTION_CREATE: IAction = {
     hoverIconClass: 'eos-icon eos-icon-plus-dark-blue small',
     buttonClass: null
 };
+
+const RECORD_ACTION_ADVCARDRK: IAction = {
+    type: E_RECORD_ACTIONS.AdvancedCardRK,
+    group: E_ACTION_GROUPS.common,
+    title: 'Заполнение реквизитов РК',
+    hint: 'Заполнение реквизитов РК',
+    iconClass: 'eos-icon eos-icon-clip-blue small',
+    disabledIconClass: 'eos-icon eos-icon-clip-grey small',
+    activeIconClass: '',
+    hoverIconClass: 'eos-icon eos-icon-repair-clip-blue small',
+    buttonClass: null
+};
+
 const RECORD_ACTION_LOGIC_DELETE: IAction = {
     type: E_RECORD_ACTIONS.remove,
     group: E_ACTION_GROUPS.group,
@@ -281,6 +294,7 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_SHOW_ALL_RECORDS,
     // RECORD_ACTION_CREATE_ORGANISATION_AGENT,
     RECORD_ACTIONS_ADDITIONAL_FIELDS,
+    RECORD_ACTION_ADVCARDRK,
     RECORD_ACTION_SHOW_SETTINGS,
 ];
 

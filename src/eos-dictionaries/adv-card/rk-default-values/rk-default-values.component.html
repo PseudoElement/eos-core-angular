@@ -1,0 +1,132 @@
+<div class="eos-rk-default-values card-content-wrapper">
+    <div class="items-group">
+    <div class="clearfix">
+        <div class="col-1" *ngIf="!isEDoc">
+            <label>{{inputs['DOC_DEFAULT_VALUE_List.SPECIMEN'].label}}</label>
+            <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SPECIMEN']"
+                            [form]="form"
+                            [readonly]="!editMode || isEDoc" ></eos-dynamic-input>
+        </div>
+        <div
+            [ngClass]="{'col-2': !isEDoc}">
+                <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.CONSISTS']"
+                        [form]="form"
+                        [readonly]="!editMode" ></eos-dynamic-input>
+        </div>
+    </div>
+    <div class="clearfix">
+        <span>
+        <div class="col-with-label">
+                <label>{{inputs['DOC_DEFAULT_VALUE_List.TERM_EXEC'].label}}</label>
+                <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.TERM_EXEC']"
+                                    [form]="form"
+                                    [readonly]="!editMode" ></eos-dynamic-input>
+        </div>
+            <label>дня (дней) от даты регистрации</label>
+        </span>
+    </div>
+    <div class="clearfix">
+        <div class="col50 padr10">
+            <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL']"
+                                        [form]="form"
+                                        [readonly]="!editMode" ></eos-dynamic-input>
+        </div>
+
+        <div class="col50 padl10">
+            <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.ISN_DELIVERY']"
+                            [form]="form"
+                            [readonly]="!editMode" ></eos-dynamic-input>
+        </div>
+    </div>
+    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.ANNOTAT']"
+                        [form]="form"
+                        [readonly]="!editMode" ></eos-dynamic-input>
+
+    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.WHO_ISN_LIST']"
+                        [form]="form"
+                        [readonly]="!editMode" ></eos-dynamic-input>
+
+    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.FILE']"
+                                    [form]="form"
+                                    [readonly]="!editMode" ></eos-dynamic-input>
+
+    </div>
+    <div [hidden]="isEDoc">
+        <p class="xl-font paragraph-title">Передача документов </p>
+        <div class="items-group">
+            <eos-dynamic-input class="margin10" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST']"
+                                [form]="form"
+                                [disabled]="isEDoc"
+                                [readonly]="!editMode || isEDoc" ></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM']"
+                                [hideLabel]="true"
+                                [form]="form"
+                                [disabled]="isEDoc"
+                                [hidden]="isEDoc || !flagEn_doc"
+                                [readonly]="!editMode || isEDoc" ></eos-dynamic-input>
+        </div>
+    </div>
+
+    <p class="xl-font paragraph-title">Списать в Дело</p>
+    <div class="items-group">
+        <eos-dynamic-input class="margin10" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC']"
+                            [form]="form"
+                            [hideLabel]="true"
+                            [event1]="journalNomencClick"
+                            [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM']"
+                            [form]="form"
+                            [hidden]="!flagEn_spinnum"
+                            [hideLabel]="true"
+                            [readonly]="!editMode"></eos-dynamic-input>
+    </div>
+
+    <p class="xl-font paragraph-title">Внутренние адресаты</p>
+    <div class="items-group">
+
+        <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_ISN_LIST_DEP']"
+                            [form]="form"
+                            [readonly]="!editMode"></eos-dynamic-input>
+
+        <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_MARKSEND']"
+                            [form]="form"
+                            [hidden]="!flagEn_intAddr"
+                            [readonly]="!editMode || !flagEn_intAddr"></eos-dynamic-input>
+
+        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_DEP_PARM']"
+                            [form]="form"
+                            [hidden]="!flagEn_intAddr"
+                            [hideLabel]="true"
+                            [readonly]="!editMode || !flagEn_intAddr"></eos-dynamic-input>
+    </div>
+
+    <p class="xl-font paragraph-title">Внешние адресаты</p>
+    <div class="items-group">
+
+        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_ISN_LIST_ORGANIZ']"
+                            [form]="form"
+                            [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_ISN_DELIVERY']"
+                            [form]="form"
+                            [hidden]="!flagEn_extAddr"
+                            [readonly]="!editMode || !flagEn_extAddr"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_OUTER_MARKSEND']"
+                            [form]="form"
+                            [hidden]="!flagEn_extAddr"
+                            [readonly]="!editMode || !flagEn_extAddr"> </eos-dynamic-input>
+
+    </div>
+    <p class="xl-font paragraph-title"></p>
+    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.NOTE']"
+        [form]="form"
+        [readonly]="!editMode"> </eos-dynamic-input>
+
+
+    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.RUBRIC_LIST']"
+        [form]="form"
+        [readonly]="!editMode">
+    </eos-dynamic-input>
+
+
+
+</div>

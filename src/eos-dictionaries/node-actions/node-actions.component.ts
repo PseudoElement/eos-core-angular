@@ -40,12 +40,7 @@ export class NodeActionsComponent implements OnDestroy {
 
     private ngUnsubscribe: Subject<any> = new Subject();
 
-    constructor(
-        _dictSrv: EosDictService,
-        // private _eaps: EosAccessPermissionsService,
-        // private _storageSrv: EosStorageService,
-
-        ) {
+    constructor(_dictSrv: EosDictService) {
         this._initButtons();
 
         _dictSrv.listDictionary$
@@ -158,6 +153,8 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.createRepresentative:
                     _enabled = _enabled && !this._viewParams.searchResults;
+                    break;
+                case E_RECORD_ACTIONS.AdvancedCardRK:
                     break;
                 case E_RECORD_ACTIONS.tableCustomization:
                     break;

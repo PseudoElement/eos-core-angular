@@ -170,6 +170,7 @@ export class CounterNpEditComponent {
         if (!this.editValueYear) {
             this.editValueYear = (new Date).getFullYear();
         }
+
         this._readRecords().then (() => {
             if (this._decl.defaultRecord) {
                 const def_value = this._getNodeValue(this._decl.defaultRecord.year);
