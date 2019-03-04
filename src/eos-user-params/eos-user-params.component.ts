@@ -78,6 +78,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     ngOnDestroy(): void {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
+        localStorage.removeItem('lastNodeDue');
     }
 
     canDeactivate (nextState?: RouterStateSnapshot): Promise<boolean> | boolean {

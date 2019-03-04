@@ -221,7 +221,7 @@ export class UserParamEAComponent implements OnDestroy {
         });
     }
     close(event?) {
-        this._route.navigate(['user_param', JSON.parse(sessionStorage.getItem('lastNodeDue'))]);
+        this._route.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
     defaults(event?) {
         const defaultListName = this.getQueryDefaultList(this.listForQuery);

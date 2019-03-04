@@ -321,7 +321,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
 
     OpenRightsSystemCaseDelo() {
         if (this.selectedUser) {
-            this._router.navigate(['user-params-set/', 'rights-delo', 'card-files'], {
+            this._router.navigate(['user-params-set/', 'card-files'], {
                   queryParams: {isn_cl: this.selectedUser.id}
             });
         }
