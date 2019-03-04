@@ -150,6 +150,34 @@ export class AdvCardRKDataCtrl {
         });
     }
 
+    public fixDBValueByType(value: any, type: E_FIELD_TYPE): any {
+        if (value === undefined) {
+            return null;
+        } else if (value === '') {
+            return null;
+        }
+        switch (type) {
+            case E_FIELD_TYPE.boolean: {
+                if (!value || value === '0') {
+                    return null;
+                } else {
+                    return '1';
+                }
+            }
+            case E_FIELD_TYPE.select: {
+                if (value === '') {
+                    return null;
+                }
+                break;
+            }
+        }
+        if (value === 'null') {
+            return null;
+        }
+        return value;
+    }
+
+
     public calcHash (obj: any): string {
         let res: string = '';
 
@@ -207,9 +235,9 @@ export class AdvCardRKDataCtrl {
                     const t1 = newData[FILE_CONSTRAINT_LIST_NAME];
                     const t2 = t1[key];
                     const t3 = t2[f];
-                    const newValue = this._fixDBValueByType(t3, type);
+                    const newValue = this.fixDBValueByType(t3, type);
                     if (savedData) {
-                        const savedValue = this._fixDBValueByType(savedData[f], type);
+                        const savedValue = this.fixDBValueByType(savedData[f], type);
                         if (savedValue !== newValue) {
                         }
                     } else {
@@ -226,9 +254,9 @@ export class AdvCardRKDataCtrl {
             const savedData = docGroup[DEFAULTS_LIST_NAME].find (f => f.DEFAULT_ID === key);
             const field = fields[DEFAULTS_LIST_NAME].find(i => i.key === key);
             const type: E_FIELD_TYPE = field.type;
-            const newValue = this._fixDBValueByType(newData[DEFAULTS_LIST_NAME][key], type);
+            const newValue = this.fixDBValueByType(newData[DEFAULTS_LIST_NAME][key], type);
             if (savedData) {
-                const savedValue = this._fixDBValueByType(savedData.VALUE, type);
+                const savedValue = this.fixDBValueByType(savedData.VALUE, type);
                 if (savedValue !== newValue) {
                     if (!this._isNeedToStoreByType(newValue, type)) {
                         changes.push (
@@ -278,32 +306,5 @@ export class AdvCardRKDataCtrl {
         }
         return true;
     }
-    private _fixDBValueByType(value: any, type: E_FIELD_TYPE): any {
-        if (value === undefined) {
-            return null;
-        } else if (value === '') {
-            return null;
-        }
-        switch (type) {
-            case E_FIELD_TYPE.boolean: {
-                if (!value || value === '0') {
-                    return null;
-                } else {
-                    return '1';
-                }
-            }
-            case E_FIELD_TYPE.select: {
-                if (value === '') {
-                    return null;
-                }
-                break;
-            }
-        }
-        if (value === 'null') {
-            return null;
-        }
-        return value;
-    }
-
 
 }
