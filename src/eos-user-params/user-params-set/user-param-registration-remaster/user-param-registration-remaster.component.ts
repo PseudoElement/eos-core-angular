@@ -1,0 +1,164 @@
+import {Component, OnInit} from '@angular/core';
+import { UserParamsService } from '../../shared/services/user-params.service';
+import { Router} from '@angular/router';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../../../eos-user-params/user-params-set/shared-user-param/consts/eos-user-params.const';
+import { PipRX } from 'eos-rest/services/pipRX.service';
+import {RemasterService} from '../shared-user-param/services/remaster-service';
+
+@Component({
+    selector: 'eos-registration-remaster',
+    styleUrls: ['user-param-registration-remaster.component.scss'],
+    templateUrl: 'user-param-registration-remaster.component.html'
+})
+
+export class UserParamRegistrationRemasterComponent implements OnInit {
+    readonly fieldGroupsForRegistration: string[] = ['Доп. операции', 'Корр./адресаты', 'Эл. почта', 'Сканирование', 'Автопоиск', 'СЭВ', 'РКПД'];
+    public currTab = 0;
+    public hash: Map<any, string>;
+    public defaultValues: any;
+    public isLoading: boolean = false;
+    public EmailChangeFlag: boolean = false;
+    public DopOperationChangeFlag: boolean = false;
+    public editFlag: boolean = false;
+    private newValuesMap = new Map();
+    private newValuesDopOperation: Map<string, any> = new Map();
+
+    constructor(
+        private _userSrv: UserParamsService,
+        private _apiSrv: PipRX,
+        private _route: Router,
+        private _msgSrv: EosMessageService,
+        private _RemasterService: RemasterService,
+        ) {
+            this.hash = this._userSrv.hashUserContext;
+    }
+    ngOnInit() {
+        this._apiSrv.read(this.getObjQueryInputsField()).then(data => {
+            this.create_hash_default(data);
+            this.isLoading = true;
+        }).catch(error => {
+            console.log(error);
+        });
+    }
+    create_hash_default(data) {
+        const hashDefault = {};
+        data.forEach(item => {
+            hashDefault[item['PARM_NAME']] = item.PARM_VALUE;
+        });
+        this.defaultValues = hashDefault;
+    }
+    get btnDisabled(): boolean {
+        if (this.EmailChangeFlag || this.DopOperationChangeFlag) {
+            return true;
+        }
+        return false;
+    }
+
+    getObjQueryInputsField() {
+        return {
+            USER_PARMS: {
+                    criteries: {
+                        ISN_USER_OWNER: '-99'
+                }
+            }
+        };
+    }
+    setTab(i: number) {
+        this.currTab = i;
+    }
+
+    getChanges($event) {
+        const value = $event;
+        if (value) {
+            this.EmailChangeFlag = true;
+            value.forEach(val => {
+                this.newValuesMap.set(val['key'], val.value);
+            });
+        } else {
+            this.EmailChangeFlag = false;
+            this.newValuesMap.delete('RCSEND');
+            this.newValuesMap.delete('MAILRECIVE');
+            this.newValuesMap.delete('RECEIP_EMAIL');
+        }
+    }
+
+    emitChanges($event) {
+        if ($event) {
+            this.DopOperationChangeFlag = $event.btn;
+            this.newValuesDopOperation = $event.data;
+        } else {
+            this.DopOperationChangeFlag = false;
+            this.newValuesDopOperation.clear();
+        }
+    }
+
+    edit(event) {
+        this.editFlag = event;
+    }
+    submit(event) {
+        this._apiSrv.batch(this.createObjRequest(), '').then(response => {
+            this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+            this.EmailChangeFlag = false;
+            this.DopOperationChangeFlag = false;
+            const userId = this._userSrv.userContextId;
+            this._userSrv.getUserIsn(String(userId)).then(res => {
+                this.hash = this._userSrv.hashUserContext;
+                this._RemasterService.submitEmit.next();
+            });
+        });
+    }
+
+    createObjRequest(): any[] {
+        const req = [];
+        const userId = this._userSrv.userContextId;
+        Array.from(this.newValuesMap).forEach(val => {
+            let parn_Val;
+            if (typeof val[1] === 'boolean') {
+                val[1] === false ? parn_Val = 'NO' : parn_Val = 'YES';
+            } else {
+                String(val[1]) === 'null' ? parn_Val = '' : parn_Val = val[1];
+            }
+            req.push({
+                    method: 'MERGE',
+                    requestUri: `USER_CL(${userId})/USER_PARMS_List(\'${userId} ${val[0]}\')`,
+                    data: {
+                        PARM_VALUE: `${parn_Val}`
+                }
+            });
+          });
+
+          Array.from(this.newValuesDopOperation).forEach(val => {
+            let parn_Val;
+            if (typeof val[1] === 'boolean') {
+                val[1] === false ? parn_Val = 'NO' : parn_Val = 'YES';
+            } else {
+                String(val[1]) === 'null' ? parn_Val = '' : parn_Val = val[1];
+            }
+            req.push({
+                    method: 'MERGE',
+                    requestUri: `USER_CL(${userId})/USER_PARMS_List(\'${userId} ${val[0]}\')`,
+                    data: {
+                        PARM_VALUE: `${parn_Val}`
+                }
+            });
+          });
+            return req;
+        }
+
+    cancel(event) {
+        if (this.btnDisabled) {
+            this._msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+            this.getChanges(false);
+            this.emitChanges(false);
+        }
+        this.editFlag = event;
+        this._RemasterService.cancelEmit.next();
+    }
+    close(event?) {
+        this._route.navigate(['user_param']);
+     }
+    default(event) {
+        this._RemasterService.defaultEmit.next();
+    }
+}

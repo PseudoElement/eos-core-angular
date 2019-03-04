@@ -1,0 +1,97 @@
+<div class="user-input-group">
+    <eos-dynamic-input
+    class="registration-boolean-automatically-call-function-forwarded-RC"
+    [input]="inputs['rec.AUTOSEND']"
+    [form]="form"
+    [readonly]="false"
+></eos-dynamic-input>
+</div>
+<hr>
+<div class="user-input-group">
+    <span class="l-font">Автоматически записывать РК в папку</span>
+    <hr>
+    <eos-dynamic-input
+    [input]="inputs['rec.AUTOLOAD_TO_EXEC_CURR_CAB']"
+    [form]="form"
+    [readonly]="false"
+></eos-dynamic-input>
+<eos-dynamic-input
+    [input]="inputs['rec.AUTOLOAD_TO_DELO_CURR_CAB']"
+    [form]="form"
+    [readonly]="false"
+></eos-dynamic-input>
+</div>
+<hr>
+<div class="user-input-group">
+    <eos-dynamic-input
+    [input]="inputs['rec.AUTOSTAMP']"
+    [form]="form"
+    [readonly]="false"
+></eos-dynamic-input>
+<eos-dynamic-input
+    [input]="inputs['rec.AUTOSTAMP1']"
+    [form]="form"
+    [readonly]="false"
+></eos-dynamic-input>
+</div>
+<hr>
+<div class="user-input-group">
+    <span class="l-font">"Доступ"</span>
+<hr>
+<eos-dynamic-input
+class="inline-block"
+        [input]="inputs['rec.SECURLEVEL']"
+        [form]="form"
+        [readonly]="false"
+></eos-dynamic-input>
+</div>
+<hr>
+<div class="user-input-group">
+    <span class="l-font">"Доставка"</span>
+<hr>
+<eos-dynamic-input
+class="inline-block"
+        [input]="inputs['rec.DELIVERY_TYPE']"
+        [form]="form"
+        [readonly]="false"
+></eos-dynamic-input>
+</div>
+<hr>
+<div class="user-input-group">
+    <span class="l-font">"Проверка повторности"</span>
+    <hr>
+    <eos-dynamic-input
+    [input]="inputs['rec.TESTRAPID_ONSAVE']"
+    [form]="form"
+    [readonly]="false"
+></eos-dynamic-input>
+<eos-dynamic-input
+    [input]="inputs['rec.TESTRAPID_USECORRESP']"
+    [form]="form"
+    [readonly]="false"
+></eos-dynamic-input>
+</div>
+<hr>
+<div class="user-input-group">
+    <span class="l-font">"Регистрация РК из РКПД"</span>
+<hr>
+<eos-dynamic-input
+class="inline-block"
+        [input]="inputs['rec.PRJ2RC_DIALOG']"
+        [form]="form"
+        [readonly]="false"
+></eos-dynamic-input>
+</div>
+<hr>
+<div class="user-input-group">
+    <eos-dynamic-input
+    [input]="inputs['rec.FILELOCK']"
+    [form]="form"
+    [readonly]="false"
+></eos-dynamic-input>
+<eos-dynamic-input
+    [input]="inputs['rec.FILE_DONTDEL']"
+    [form]="form"
+    [readonly]="false"
+></eos-dynamic-input>
+</div>

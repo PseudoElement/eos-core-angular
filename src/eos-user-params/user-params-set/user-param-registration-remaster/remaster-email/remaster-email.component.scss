@@ -1,0 +1,23 @@
+:host{
+
+    eos-dynamic-input{
+        font-size: 13px;
+    }
+    .accord-wr{
+        padding-left: 10px;
+    }
+    .input_wrapper{
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        .list-triangle{
+            position: absolute;
+            top: 2px;
+            left: -30px;
+        }
+    }
+    .receipe-email{
+        width: 387px;
+    }
+
+}

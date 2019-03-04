@@ -1,0 +1,78 @@
+
+<accordion *ngIf='templRender'>
+    <accordion-group *ngFor="let item of listForAccordion" [heading]="item.title">
+        <div class="accord-wr">
+            <ng-container *ngTemplateOutlet="treeTmpl; context:{items: item.tree, margin: 0}"></ng-container>
+        </div>
+    </accordion-group>
+</accordion>
+
+<ng-template #treeTmpl let-item="items" let-mar="margin">
+    <div *ngFor="let node of item">
+        <ng-container *ngTemplateOutlet="treeNodeTmpl; context:{node: node, m: mar}"></ng-container>
+    </div>
+</ng-template>
+
+<ng-template #treeNodeTmpl let-node="node" let-mar="m">
+    <div>
+        <div [ngClass] = "node.key === 'RECEIP_EMAIL' ? 'receipe-email' : ''" class="input_wrapper" [ngStyle]="{'margin-left.px': mar}">
+            <span *ngIf="node.key === 'RCSEND_FOR_MULTIPOINT_DOCUMENTS_SEND_RADIO'">Для "многопунктовых" документов отправлять</span>
+            <span *ngIf="node.children.length"
+                class="eos-icon icon list-triangle"
+                (click)="triggerNode(node)"
+                [ngClass]="node.isOpen ? 'eos-icon-open-folder-blue' : 'eos-icon-close-folder-blue'"
+            ></span>
+            <eos-dynamic-input
+                [input]="inputs['rec.' + node.key]"
+                [form]="form"
+                [readonly]="false"
+                (change) = "node.children.length ? triggerChildren(node): setParent(node)"
+            ></eos-dynamic-input>
+        </div>
+    </div>
+    <div *ngIf="node.isOpen">
+        <ng-container *ngIf="node.children.length">
+            <ng-container *ngTemplateOutlet="treeTmpl; context: {items: node.children, margin: mar + 20}"></ng-container>
+        </ng-container>
+    </div>
+</ng-template>
+
+
+
+
+<accordion *ngIf="templRenderMailResive">
+    <accordion-group [heading]="'Параметры регистрации'" >
+        <div class="accord-wr" *ngFor="let item of templRenderMailResive">
+            <ng-container *ngTemplateOutlet="treeNodeTmpl2; context:{items: item, margin: 0}"></ng-container>
+        </div>
+    </accordion-group>
+</accordion>
+<ng-template #treeTmpl2 let-item="items" let-mar="margin">
+    <div *ngFor="let node of item">
+        <ng-container *ngTemplateOutlet="treeNodeTmpl2; context:{items: node, m: mar}"></ng-container>
+    </div>
+</ng-template>
+
+
+<ng-template #treeNodeTmpl2 let-node="items" let-mar="m">
+<div>
+    <div class="input_wrapper" [ngStyle]="{'margin-left.px': mar}">
+        <span *ngIf="node.children.length"
+            class="eos-icon icon list-triangle"
+            (click)="triggerNode(node)"
+            [ngClass]="node.isOpen ? 'eos-icon-open-folder-blue' : 'eos-icon-close-folder-blue'"
+        ></span>
+        <eos-dynamic-input
+            [input]="inputsMailResive['rec.' + node.key]"
+            [form]="formMailResuve"
+            [readonly]="false"
+            (change)="triggerMailReceive(node)"
+        ></eos-dynamic-input>
+    </div>
+</div>
+<div *ngIf="node.isOpen">
+    <ng-container *ngIf="node.children.length">
+        <ng-container *ngTemplateOutlet="treeTmpl2; context: {items: node.children, margin: mar + 20}"></ng-container>
+    </ng-container>
+</div>
+</ng-template>
