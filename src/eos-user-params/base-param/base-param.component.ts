@@ -211,7 +211,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }, 0);
     }
     close() {
-        this._router.navigate(['user_param', JSON.parse(sessionStorage.getItem('lastNodeDue'))]);
+        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
         // this._router.navigate(['user_param']);
     }
 

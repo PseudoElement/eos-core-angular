@@ -41,7 +41,7 @@ export class UserParamEAComponent implements OnDestroy {
         private _msgSrv: EosMessageService,
         private _route: Router,
         ) {
-            this.titleHeader = this._userParamsSetSrv.curentUser.CLASSIF_NAME + ' - ' + 'Внешние приложения';
+            this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
             this.link = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
             this.selfLink = this._route.url.split('?')[0];
             this.init();
@@ -221,7 +221,7 @@ export class UserParamEAComponent implements OnDestroy {
         });
     }
     close(event?) {
-        this._route.navigate(['user_param', JSON.parse(sessionStorage.getItem('lastNodeDue'))]);
+        this._route.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
     defaults(event?) {
         const defaultListName = this.getQueryDefaultList(this.listForQuery);
