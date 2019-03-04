@@ -10,7 +10,8 @@ import { UserParamsComponent } from './eos-user-params.component';
 import { UserParamApiSrv } from './shared/services/user-params-api.service';
 import { UserParamsDescriptorSrv } from './shared/services/user-params-descriptor.service';
 import { UserParamHeaderComponent } from './shared/user-param-header/user-header.component';
-import { UserParamRegistrationComponent } from './user-params-set/user-param-registration/user-param-registration.component';
+// import { UserParamRegistrationComponent } from './user-params-set/user-param-registration/user-param-registration.component';
+import { UserParamRegistrationRemasterComponent } from './user-params-set/user-param-registration-remaster/user-param-registration-remaster.component';
 import { UserParamCabinetsComponent } from './user-params-set/user-param-cabinets/user-param-cabinets.component';
 import { UserParamRCComponent } from './user-params-set/user-param-rc/user-param-rc.component';
 import { UserParamDirectoriesComponent } from './user-params-set/user-param-directories/user-param-directories.component';
@@ -47,11 +48,15 @@ import {UserParamElSignatureComponent} from '../eos-user-params/user-params-set/
 import {SignaturePopupComponent} from '../eos-user-params/user-params-set/user-param-el-signature/signature-popup/signature-popup.component';
 import {SignatureAddComponent} from '../eos-user-params/user-params-set/user-param-el-signature/signature-popup/signature-add/signature-add.component';
 import {UserParamsProfSertComponent} from '../eos-user-params/user-params-set/user-param-prof-sert/user-params-prof-sert.component';
+import {RemasterEmailComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-email/remaster-email.component';
+import {RemasterService} from '../eos-user-params/user-params-set/shared-user-param/services/remaster-service';
+import {RemasterDopOperationComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-dop/remaster-dop-operation.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
         UserParamHeaderComponent,
-        UserParamRegistrationComponent,
+      //  UserParamRegistrationComponent,
+        UserParamRegistrationRemasterComponent,
         UserParamCabinetsComponent,
         UserParamRCComponent,
         UserParamDirectoriesComponent,
@@ -84,6 +89,8 @@ import {UserParamsProfSertComponent} from '../eos-user-params/user-params-set/us
         SignaturePopupComponent,
         SignatureAddComponent,
         UserParamsProfSertComponent,
+        RemasterEmailComponent,
+        RemasterDopOperationComponent,
     ],
     imports: [
         BrowserModule,
@@ -103,6 +110,7 @@ import {UserParamsProfSertComponent} from '../eos-user-params/user-params-set/us
         EmailAddressService,
         LimitedAccesseService,
         UserPaginationService,
+        RemasterService,
     ]
 })
 export class EosUserParamsModule {}
