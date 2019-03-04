@@ -50,6 +50,8 @@ export interface IFieldDescriptor {
     default?: any;
     maxValue?: number;
     minValue?: number;
+    keyPosition?: number| string;
+    parent?: any;
 }
 
 export interface ISelectOption {
