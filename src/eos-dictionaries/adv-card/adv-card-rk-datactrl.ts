@@ -11,10 +11,6 @@ export const DEFAULTS_LIST_NAME = 'DOC_DEFAULT_VALUE_List';
 export const FILE_CONSTRAINT_LIST_NAME = 'DG_FILE_CONSTRAINT_List';
 export const FICT_CONTROLS_LIST_NAME = 'fict';
 
-// export enum ACRK_GROUP {
-//     defaultRKValues,
-// }
-
 export class AdvCardRKDataCtrl {
     name: string;
     loadedDicts: any;
@@ -37,7 +33,6 @@ export class AdvCardRKDataCtrl {
 
 
     readValues(uid: number): Promise<any> {
-        // http://91.236.200.124/NP23/OData.svc/DOCGROUP_CL?criteries={%22ISN_NODE%22:%223670%22}&$expand=DOC_DEFAULT_VALUE_List
 
         const query = {
             criteries: { [DOCGROUP_UID_NAME]: String(uid) },
@@ -54,7 +49,148 @@ export class AdvCardRKDataCtrl {
         });
     }
 
-    _calcChangesFor(docGroup: any, newData: any ): any {
+    public save(isn_node: number, inputs: any[], data: any): Promise<any> {
+        return this.readValues(isn_node)
+            .then(([docGroup]) => {
+                this._apiSrv.entityHelper.prepareForEdit(docGroup);
+                const changes = this._calcChangesFor(docGroup, data);
+                if (changes) {
+                    this._apiSrv.batch(changes, '')
+                        .then(() => {
+                            this._msgSrv.addNewMessage(SUCCESS_SAVE);
+                        })
+                        .catch((err) => {
+                            this._msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка записи'});
+                        });
+                }
+            });
+    }
+
+
+    public readDictLinkValue(el: TDefaultField, value: any, updateLink: Function = null): Promise<any> {
+        const dict = el.dict;
+        if (dict) {
+            let query: any;
+            if (el.dict.criteries) {
+                query = { criteries: el.dict.criteries};
+            } else {
+                query = { criteries: {}};
+            }
+            query.criteries[dict.dictKey] = value;
+
+
+            const req = {[el.dict.dictId]: query};
+
+            return this._apiSrv.read(req).then((data) => {
+                const opts: TDFSelectOption[] = [];
+                for (let index = 0; index < data.length; index++) {
+                    const element = data[index];
+                    opts.push ({value: element[el.dict.dictKey], title: element[el.dict.dictKeyTitle]});
+                }
+
+                if (updateLink) {
+                    updateLink(el, opts, data);
+                }
+                el.options = opts;
+                // el.dict._cache = data;
+                this.loadedDicts[el.dict.dictId] = opts;
+                return data;
+            });
+
+        }
+        return Promise.resolve(null);
+    }
+
+    public loadDictsOptions (values: any, updateLink: Function = null): Promise<any> {
+        const reqs = [];
+        const fields = this.getDescriptions();
+
+        Object.keys(fields).forEach ((key) => {
+            for (let i = 0; i < fields[key].length; i++) {
+                const el: TDefaultField = fields[key][i];
+                if (!el.dict) {
+                    continue;
+                }
+                if (el.type === E_FIELD_TYPE.dictLink) {
+                    reqs.push(this.readDictLinkValue(el, values[key][el.key], updateLink));
+                } else if (el.type === E_FIELD_TYPE.select) {
+                    const hash = this.calcHash(el.dict);
+                    if (this.loadedDicts[hash]) {
+                        el.options = this.loadedDicts[hash];
+                    } else {
+                        let query: any;
+                        if (el.dict.criteries) {
+                            query = { criteries: el.dict.criteries};
+                        } else {
+                            query = ALL_ROWS;
+                        }
+                        this.loadedDicts[hash] = [];
+
+                        const req = {[el.dict.dictId]: query};
+
+                        reqs.push(this._apiSrv.read(req).then((data) => {
+                            const opts: TDFSelectOption[] = this.loadedDicts[hash];
+                            opts.push ({value: '', title: '...'});
+                            for (let index = 0; index < data.length; index++) {
+                                const element = data[index];
+                                opts.push ({value: element[el.dict.dictKey], title: element[el.dict.dictKeyTitle]});
+                            }
+
+                            el.options = opts;
+                            return data;
+                        }));
+                    }
+                }
+            }
+        });
+
+        return Promise.all(reqs)
+            .then((responses) => {
+            return responses;
+        });
+    }
+
+    public calcHash (obj: any): string {
+        let res: string = '';
+
+        if (obj) {
+            if (obj.dictId) {
+                res += obj.dictId + ';';
+            }
+            if (obj.criteries) {
+                for (const key in obj.criteries) {
+                    if (obj.criteries.hasOwnProperty(key)) {
+                        const element = obj.criteries[key];
+                        res += key + '=' + String(element) + ';';
+                    }
+                }
+            }
+        }
+        return this.hashFnv32a(res);
+    }
+
+    public hashFnv32a(str): string {
+        let hash = 0;
+        let i = 0;
+        const len = str.length;
+        while ( i < len ) {
+            // tslint:disable-next-line:no-bitwise
+            hash  = ((hash << 5) - hash + str.charCodeAt(i++)) << 0;
+        }
+
+        // tslint:disable-next-line:no-bitwise
+        return ('0000000' + (hash >>> 0).toString(16)).substr(-8);
+    }
+
+    public keys(data: Object): string[] {
+        if (data) {
+            return Object.keys(data);
+        } else {
+            return [];
+        }
+    }
+
+    private _calcChangesFor(docGroup: any, newData: any ): any {
         const fields = this.getDescriptions();
         const changes = [];
         if (!newData) {
@@ -71,9 +207,9 @@ export class AdvCardRKDataCtrl {
                     const t1 = newData[FILE_CONSTRAINT_LIST_NAME];
                     const t2 = t1[key];
                     const t3 = t2[f];
-                    const newValue = this.fixDBValueByType(t3, type);
+                    const newValue = this._fixDBValueByType(t3, type);
                     if (savedData) {
-                        const savedValue = this.fixDBValueByType(savedData[f], type);
+                        const savedValue = this._fixDBValueByType(savedData[f], type);
                         if (savedValue !== newValue) {
                         }
                     } else {
@@ -90,9 +226,9 @@ export class AdvCardRKDataCtrl {
             const savedData = docGroup[DEFAULTS_LIST_NAME].find (f => f.DEFAULT_ID === key);
             const field = fields[DEFAULTS_LIST_NAME].find(i => i.key === key);
             const type: E_FIELD_TYPE = field.type;
-            const newValue = this.fixDBValueByType(newData[DEFAULTS_LIST_NAME][key], type);
+            const newValue = this._fixDBValueByType(newData[DEFAULTS_LIST_NAME][key], type);
             if (savedData) {
-                const savedValue = this.fixDBValueByType(savedData.VALUE, type);
+                const savedValue = this._fixDBValueByType(savedData.VALUE, type);
                 if (savedValue !== newValue) {
                     if (!this._isNeedToStoreByType(newValue, type)) {
                         changes.push (
@@ -129,7 +265,7 @@ export class AdvCardRKDataCtrl {
         return changes;
     }
 
-    _isNeedToStoreByType(value: any, type: E_FIELD_TYPE): boolean {
+    private _isNeedToStoreByType(value: any, type: E_FIELD_TYPE): boolean {
         if (!value) {
             return false;
         }
@@ -142,7 +278,7 @@ export class AdvCardRKDataCtrl {
         }
         return true;
     }
-    fixDBValueByType(value: any, type: E_FIELD_TYPE): any {
+    private _fixDBValueByType(value: any, type: E_FIELD_TYPE): any {
         if (value === undefined) {
             return null;
         } else if (value === '') {
@@ -169,146 +305,5 @@ export class AdvCardRKDataCtrl {
         return value;
     }
 
-    save(isn_node: number, inputs: any[], data: any): Promise<any> {
-        return this.readValues(isn_node)
-            .then(([docGroup]) => {
-                this._apiSrv.entityHelper.prepareForEdit(docGroup);
-                const changes = this._calcChangesFor(docGroup, data);
-                if (changes) {
-                    this._apiSrv.batch(changes, '')
-                        .then(() => {
-                            this._msgSrv.addNewMessage(SUCCESS_SAVE);
-                        })
-                        .catch((err) => {
-                            this._msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка записи'});
-                        });
-                }
-            });
-    }
 
-    readDictLinkValue(el: TDefaultField, value: any, updateLink: Function = null): Promise<any> {
-        const dict = el.dict;
-        if (dict) {
-            let query: any;
-            if (el.dict.criteries) {
-                query = { criteries: el.dict.criteries};
-            } else {
-                query = { criteries: {}};
-            }
-            query.criteries[dict.dictKey] = value;
-
-
-            const req = {[el.dict.dictId]: query};
-
-            return this._apiSrv.read(req).then((data) => {
-                const opts: TDFSelectOption[] = [];
-                for (let index = 0; index < data.length; index++) {
-                    const element = data[index];
-                    opts.push ({value: element[el.dict.dictKey], title: element[el.dict.dictKeyTitle]});
-                }
-
-                if (updateLink) {
-                    updateLink(el, opts, data);
-                }
-                el.options = opts;
-                // el.dict._cache = data;
-                this.loadedDicts[el.dict.dictId] = opts;
-                return data;
-            });
-
-        }
-        return Promise.resolve(null);
-    }
-
-    loadDictsOptions (values: any, updateLink: Function = null): Promise<any> {
-        const reqs = [];
-        const fields = this.getDescriptions();
-
-        Object.keys(fields).forEach ((key) => {
-            for (let i = 0; i < fields[key].length; i++) {
-                const el: TDefaultField = fields[key][i];
-                if (!el.dict) {
-                    continue;
-                }
-                if (el.type === E_FIELD_TYPE.dictLink) {
-                    reqs.push(this.readDictLinkValue(el, values[key][el.key], updateLink));
-                } else if (el.type === E_FIELD_TYPE.select) {
-                    const hash = this.calcHash(el.dict);
-                    console.log(hash);
-                    if (this.loadedDicts[hash]) {
-                        el.options = this.loadedDicts[hash];
-                    } else {
-                        let query: any; // {criteries: {[NUM_YEAR_NAME]: String(this.editValueYear)}};
-                        if (el.dict.criteries) {
-                            query = { criteries: el.dict.criteries};
-                        } else {
-                            query = ALL_ROWS;
-                        }
-                        this.loadedDicts[hash] = [];
-
-                        const req = {[el.dict.dictId]: query};
-
-                        reqs.push(this._apiSrv.read(req).then((data) => {
-                            const opts: TDFSelectOption[] = this.loadedDicts[hash];
-                            opts.push ({value: '', title: '...'});
-                            for (let index = 0; index < data.length; index++) {
-                                const element = data[index];
-                                opts.push ({value: element[el.dict.dictKey], title: element[el.dict.dictKeyTitle]});
-                            }
-
-                            el.options = opts;
-                            // this.loadedDicts[el.dict.dictId] = opts;
-                            // this.loadedDicts[el.dict.dictId]._idptr = el.dict;
-                            return data;
-                        }));
-                    }
-                }
-            }
-        });
-
-        return Promise.all(reqs)
-            .then((responses) => {
-            return responses;
-        });
-    }
-
-    calcHash (obj: any): string {
-        let res: string = '';
-
-        if (obj) {
-            if (obj.dictId) {
-                res += obj.dictId + ';';
-            }
-            if (obj.criteries) {
-                for (const key in obj.criteries) {
-                    if (obj.criteries.hasOwnProperty(key)) {
-                        const element = obj.criteries[key];
-                        res += key + '=' + String(element) + ';';
-                    }
-                }
-            }
-        }
-        return this.hashFnv32a(res);
-    }
-
-    hashFnv32a(str): string {
-        let hash = 0;
-        let i = 0;
-        const len = str.length;
-        while ( i < len ) {
-            // tslint:disable-next-line:no-bitwise
-            hash  = ((hash << 5) - hash + str.charCodeAt(i++)) << 0;
-        }
-
-        // tslint:disable-next-line:no-bitwise
-        return ('0000000' + (hash >>> 0).toString(16)).substr(-8);
-    }
-
-    keys(data: Object): string[] {
-        if (data) {
-            return Object.keys(data);
-        } else {
-            return [];
-        }
-    }
 }

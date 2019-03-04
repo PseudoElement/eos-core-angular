@@ -16,7 +16,6 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
     enKart2Select: any;
     en_journal_param_w: boolean;
     _initFict: boolean;
-    // enaddRules1: boolean;
 
     ngOnChanges(changes: SimpleChanges) {
     }
@@ -55,40 +54,29 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
                 }
                 this.enKart1Select = newValue;
                 if (newValue === '0') {
-                    // DELETE FROM doc_default_VALUE WHERE default_id = 'ISN_CARD_REG_FORWARD_W' AND isn_docgroup = 3670
-                    // DELETE FROM doc_default_VALUE WHERE default_id = 'ISN_CARD_REG_W' AND isn_docgroup = 3670
-                    // INSERT INTO doc_default_VALUE ( default_id, isn_docgroup, value ) VALUES ( 'ISN_CARD_REG_CURR_W', 3670, '1' )
-                    // this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W', null, false);
                     this.setValue('fict.ISN_CARD_REG_W_1', null);
                     this.setValue('fict.ISN_CARD_REG_W_2', null);
-                    // this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W', null);
                     this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_CURR_W', '1');
-                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', null, false);
+                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', null);
                 }
                 if (newValue === '1') {
-                    // DELETE FROM doc_default_VALUE WHERE default_id = 'ISN_CARD_REG_FORWARD_W' AND isn_docgroup = 3670
-                    // DELETE FROM doc_default_VALUE WHERE default_id = 'ISN_CARD_REG_CURR_W' AND isn_docgroup = 3670
-                    // INSERT INTO doc_default_VALUE ( default_id, isn_docgroup, value ) VALUES ( 'ISN_CARD_REG_W', 3670, '15660' )
-                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', null, false);
-                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_CURR_W', null, false);
-                    // this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W', '0');
+                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', null);
+                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_CURR_W', null);
                     this.setValue('fict.ISN_CARD_REG_W_2', null);
-                    this.setValue('fict.ISN_CARD_REG_W_1', '0', true);
+                    this.setValue('fict.ISN_CARD_REG_W_1', '0');
 
                 }
                 if (newValue === '2') {
-                    // DELETE FROM doc_default_VALUE WHERE default_id = 'ISN_CARD_REG_W' AND isn_docgroup = 3670
-                    // INSERT INTO doc_default_VALUE ( default_id, isn_docgroup, value ) VALUES ( 'ISN_CARD_REG_FORWARD_W', 3670, '1' )
                     this.setValue('fict.ISN_CARD_REG_W_1', null);
                     this.setValue('fict.ISN_CARD_REG_W_2', null);
-                    this.setValue('fict.KR_CURRENT_IF', '0', false);
+                    this.setValue('fict.KR_CURRENT_IF', '0');
 
-                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W', null, false);
-                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_CURR_W', '1', false);
-                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', '1', false);
+                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W', null);
+                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_CURR_W', '1');
+                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', '1');
                 } else {
                     if (this.getValue('fict.KR_CURRENT_IF', null)) {
-                        this.setValue('fict.KR_CURRENT_IF', null, false);
+                        this.setValue('fict.KR_CURRENT_IF', null);
                     }
                     this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM'].options, null, false);
                 }
@@ -103,19 +91,16 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
                     break;
                 }
                 if (newValue === null || prevValue !== '1') {
-                    this.setValue('fict.ISN_CARD_REG_W_2', null, false);
+                    this.setValue('fict.ISN_CARD_REG_W_2', null);
                 }
                 if (newValue === '0') {
-                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_CURR_W', '1', false);
-                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', '1', false);
-                    this.setValue('fict.ISN_CARD_REG_W_2', null, false);
+                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_CURR_W', '1');
+                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', '1');
+                    this.setValue('fict.ISN_CARD_REG_W_2', null);
                 } else if (newValue === '1') {
-                    // DELETE FROM doc_default_VALUE WHERE default_id = 'ISN_CARD_REG_CURR_W' AND isn_docgroup = 3670
-                    // INSERT INTO doc_default_VALUE ( default_id, isn_docgroup, value ) VALUES ( 'ISN_CARD_REG_FORWARD_W', 3670, '1' )
-                    // INSERT INTO doc_default_VALUE ( default_id, isn_docgroup, value ) VALUES ( 'ISN_CARD_REG_W', 3670, '1422' )
-                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_CURR_W', null, false);
-                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', '1', false);
-                    this.setValue('fict.ISN_CARD_REG_W_2', '0', false);
+                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_CURR_W', null);
+                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', '1');
+                    this.setValue('fict.ISN_CARD_REG_W_2', '0');
                 }
 
                 break;
@@ -123,13 +108,13 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
 
             case 'fict.ISN_CARD_REG_W_1': {
                 if (this.enKart1Select === '1') {
-                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W', newValue, false);
+                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W', newValue);
                 }
                 break;
             }
             case 'fict.ISN_CARD_REG_W_2': {
                 if (this.enKart1Select === '2' && this.enKart2Select === '1') {
-                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W', newValue, false);
+                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W', newValue);
                 }
                 break;
             }
@@ -191,7 +176,5 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
             }
         }
         this._initFict = false;
-
     }
-
 }

@@ -19,14 +19,6 @@
                     (click)="clickTab(item)">{{item.title}}</a>
         </div>
         <p class="xl-font paragraph-title no-marigin-bottom"></p>
-        <!-- <div class="tab-buttons">
-            <div class="tab-button" *ngFor="let item of tabs"
-                [ngClass]="{'active': item.tag === activeTab.tag}"
-                (click)="clickTab(item)">
-                {{item.title}}
-            </div>
-        </div> -->
-
         <ng-container [ngSwitch]="activeTab.tag">
             <ng-container *ngSwitchCase="0">
                 <ng-container *ngTemplateOutlet="defaultEdit1"></ng-container>
@@ -54,12 +46,6 @@
         <button class="btn btn-primary upper"
             (click)="cancel()">Отменить</button>
 </div>
-<!-- <div>
-
-    <button>Ведение списков</button>
-    <button (click)="save()" >Записать</button>
-    <button>Выход</button>
-</div> -->
 
 <ng-template #defaultEdit1>
     <eos-rk-default-values #currentPage

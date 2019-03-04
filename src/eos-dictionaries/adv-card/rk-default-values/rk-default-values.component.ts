@@ -15,13 +15,6 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
     flagEn_doc: boolean;
     flagEn_spinnum: boolean;
 
-    // type: any;
-    // output: any;
-    // constructor(
-    //     // private _dataSrv: EosDataConvertService,
-    // ) {
-    // }
-
     ngOnChanges(changes: SimpleChanges) {
     }
 
@@ -30,7 +23,6 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
     }
 
     onDataChanged(path: string, prevValue: any, newValue: any): any {
-        // this.changeEvent.next([path, prevValue, newValue]);
         switch (path) {
             // Передача документов
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST': {
@@ -100,12 +92,6 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
                 this.onDataChanged(key, value, value);
             }
         }
-        // for (const key in values) {
-        //     if (values.hasOwnProperty(key)) {
-        //         const value = values[key];
-        //         this.onDataChanged(key, value, value);
-        //     }
-        // }
 
         if (this.isEDoc) {
             this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM'].options, null, false);

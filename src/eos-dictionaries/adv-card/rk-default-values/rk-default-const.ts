@@ -935,7 +935,6 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKeyTitle: 'CARD_NAME',
             criteries: { CARD_FLAG: '1', DELETED: '0', },
         }
-        // SELECT	ISN_NODE,  				CARD_NAME,  				DELETED,  				WEIGHT   FROM		DEPARTMENT  WHERE	CARD_FLAG = 1 AND DELETED = 0
     }, {
         key: 'ISN_CARD_REG_W',
         // Default type:  'W',
@@ -959,17 +958,3 @@ export const RKDefaultFields: TDefaultField[] = [
     },
 
 ];
-// UPDATE doc_default_VALUE SET value = '555' WHERE default_id = 'SPECIMEN' AND isn_docgroup = 3670
-
-// export const RKDefaultFields = {
-//     rec: {
-//         FIELD_1: {
-//             label: 'Экз №',
-//             value: '',
-//             type: E_FIELD_TYPE.numberIncrement,
-//             foreignKey: 'FIELD_1',
-//         },
-//     }
-
-// };
-

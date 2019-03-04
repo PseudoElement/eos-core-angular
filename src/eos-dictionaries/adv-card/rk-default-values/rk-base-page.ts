@@ -17,13 +17,6 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
     isEDoc: boolean;
 
     ngOnChanges(changes: SimpleChanges) {
-        // for (let propName in changes) {
-        //     /*let chng = changes[propName];
-        //     let cur  = JSON.stringify(chng.currentValue);
-        //     let prev = JSON.stringify(chng.previousValue);
-        //     this.changeLog.push(`propName: currentValue = cur, previousValue = prev`);*/
-        // }
-        // console.log('form:', this.form);
     }
 
 
@@ -46,7 +39,7 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
         this.onTabInit(this.dgStoredValues, this.data);
     }
 
-    setValue (path: string, value: any, emit = true) {
+    setValue (path: string, value: any) {
         console.log(path, value);
         const control = this.form.controls[path];
         if (control) {

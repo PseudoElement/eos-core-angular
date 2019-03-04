@@ -32,13 +32,7 @@ const tabs: Ttab [] = [
     selector: 'eos-adv-card-rk',
     templateUrl: 'adv-card-rk.component.html',
 })
-// @NgModule({
-//     declarations: [
-//         ,
-//     ],
-//     entryComponents: [ RKDefaultValuesCardComponent ],
-//     // bootstrap: [ App ]
-// })
+
 export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     @Output() onChoose: EventEmitter<any> = new EventEmitter<any>();
     @Output() formChanged: EventEmitter<any> = new EventEmitter<any>();
@@ -69,22 +63,14 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     private _node = {};
     private isn_node: number;
 
-
-
-    // private _initialData: any;
-
     constructor(
         public bsModalRef: BsModalRef,
-        private apiSrv: PipRX,
+        private _apiSrv: PipRX,
         private _dataSrv: EosDataConvertService,
         private _inputCtrlSrv: InputControlService,
         private _msgSrv: EosMessageService,
 
-        // private _dictSrv: EosDictService,
-        // private _msgSrv: EosMessageService,
-        // private _confirmSrv: ConfirmWindowService,
     ) {
-        this.apiSrv = apiSrv;
         this.isUpdating = true;
         this.tabs = tabs;
         this.subscriptions = [];
@@ -93,10 +79,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
     ngOnChanges() {
-        // if (this.form) {
-        //     this.unsubscribe();
-        //     this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this.updateForm(formChanges));
-        // }
     }
 
     ngOnInit() {
@@ -136,8 +118,55 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         this.bsModalRef.hide();
     }
 
-    _updateOptions(values: any[]) {
-        console.log(values);
+    public clickTab (item: Ttab) {
+        this.activeTab = item;
+    }
+
+    public initByNodeData(dndata: any) {
+        this.isUpdating = true;
+        this.isn_node = dndata['ISN_NODE'];
+        if (!dndata) {
+            this._node = {};
+        } else {
+            this._node = dndata;
+        }
+        this.activeTab = tabs[0];
+
+        this.dataController = new AdvCardRKDataCtrl(this._apiSrv, this._msgSrv);
+        this.descriptions = this.dataController.getDescriptions();
+
+        this.dataController.readValues(this.isn_node).then (values => {
+            this.storedValuesDG = values[0];
+            this.values = {
+                [DEFAULTS_LIST_NAME]:  this._makeDataObjDef(this.storedValuesDG[DEFAULTS_LIST_NAME]),
+                [FILE_CONSTRAINT_LIST_NAME]: this._makeDataObjFileCon(this.storedValuesDG[FILE_CONSTRAINT_LIST_NAME]),
+                };
+            this.editValues = this._makePrevValues(this.values);
+
+            this.dataController.loadDictsOptions(this.values, this.updateLinks).then (d => {
+                this.inputs = this._getInputs();
+                this._updateOptions(this.inputs);
+                const isNode = false;
+                this.form = this._inputCtrlSrv.toFormGroup(this.inputs, isNode);
+                this._subscribeToChanges();
+                this.isUpdating = false;
+            });
+        });
+
+    }
+
+    public hideModal(): void {
+        this.bsModalRef.hide();
+    }
+
+    public getTitleLabel() {
+        return 'Реквизиты РК "' + this._node[NODE_LABEL_NAME] + '"';
+    }
+
+    public saveWithConfirmation() {
+    }
+
+    private _updateOptions(values: any[]) {
         const v = values['DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE'];
         v.options.push (
             {
@@ -149,7 +178,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     }
 
-    _makeDataObjFileCon (data: any): any {
+    private _makeDataObjFileCon (data: any): any {
         const res = { };
         for (let i = 0; i < data.length; i++) {
             const el = data[i];
@@ -160,7 +189,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         return res;
     }
 
-    _makeDataObjDef (data: any) {
+    private _makeDataObjDef (data: any) {
         const res = { };
         for (let i = 0; i < data.length; i++) {
             const el = data[i];
@@ -169,7 +198,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         return res;
     }
 
-    getInputs(): any {
+    private _getInputs(): any {
         const i: any = {};
         for (const key in this.descriptions) {
             if (this.descriptions.hasOwnProperty(key)) {
@@ -191,66 +220,10 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                     const t = i[key];
                     t[element.key] = element;
                 });
-                // const a: any = RKFieldsFict;
-                // a.forEach(element => {
-                //     if (!element.foreignKey) {
-                //         element.foreignKey = element.key;
-                //     }
-                // });
             }
 
         }
-        // select classif_name , nom_number , year_number , e_document from nomenkl_cl where isn_lclassif =4057175
-
         return this._dataSrv.getInputs(i, this.values);
-    }
-
-    clickTab (item: Ttab) {
-        this.activeTab = item;
-    }
-
-    public initByNodeData(dndata: any) {
-        this.isUpdating = true;
-        this.isn_node = dndata['ISN_NODE'];
-        if (!dndata) {
-            this._node = {};
-        } else {
-            this._node = dndata;
-        }
-        this.activeTab = tabs[0];
-
-        this.dataController = new AdvCardRKDataCtrl(this.apiSrv, this._msgSrv);
-        this.descriptions = this.dataController.getDescriptions();
-
-        this.dataController.readValues(this.isn_node).then (values => {
-            this.storedValuesDG = values[0];
-            this.values = {
-                [DEFAULTS_LIST_NAME]:  this._makeDataObjDef(this.storedValuesDG[DEFAULTS_LIST_NAME]),
-                [FILE_CONSTRAINT_LIST_NAME]: this._makeDataObjFileCon(this.storedValuesDG[FILE_CONSTRAINT_LIST_NAME]),
-                };
-            this.editValues = this._makePrevValues(this.values);
-
-            this.dataController.loadDictsOptions(this.values, this.updateLinks).then (d => {
-                this.inputs = this.getInputs();
-                this._updateOptions(this.inputs);
-                const isNode = false;
-                this.form = this._inputCtrlSrv.toFormGroup(this.inputs, isNode);
-                this._subscribeToChanges();
-                this.isUpdating = false;
-            });
-        });
-
-    }
-
-    public hideModal(): void {
-        this.bsModalRef.hide();
-    }
-
-    public getTitleLabel() {
-        return 'Реквизиты РК "' + this._node[NODE_LABEL_NAME] + '"';
-    }
-
-    public saveWithConfirmation() {
     }
 
     private _subscribeToChanges() {
@@ -293,24 +266,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         const type: E_FIELD_TYPE = this.inputs[path].controlType;
         value = this.dataController.fixDBValueByType(value, type);
         const prevValue = this.dataController.fixDBValueByType(this._getPrevValue(path), type);
-        // const field = fields[DEFAULTS_LIST_NAME].find(i => i.key === key);
-        // const type: E_FIELD_TYPE = field.type;
 
-    //  let _value = null;
-    //  if (typeof value === 'boolean') {
-    //         if (prevValue === undefined) {
-    //             prevValue = '0';
-    //         }
-    //         _value = String(+value);
-    //     } else if (value === 'null') {
-    //         _value = null;
-    //     } else if (value instanceof Date) {
-    //         _value = EosUtils.dateToString(value);
-    //     } else if (value === '') { // fix empty strings in IE
-    //         _value = null;
-    //     } else if (value) {
-    //         _value = value;
-    //     }
         this.newData = EosUtils.setValueByPath(this.newData, path, value);
 
         if (value !== prevValue) {
