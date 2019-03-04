@@ -40,7 +40,7 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
     }
 
     setValue (path: string, value: any) {
-        console.log(path, value);
+        // console.log(path, value);
         const control = this.form.controls[path];
         if (control) {
             control.setValue(value /*, {emitEvent: emit} */);
