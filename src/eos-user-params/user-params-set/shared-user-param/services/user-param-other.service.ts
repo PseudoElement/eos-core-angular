@@ -436,7 +436,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
         this.sendFrom = '';
     }
     close(event) {
-        this._router.navigate(['user_param', JSON.parse(sessionStorage.getItem('lastNodeDue'))]);
+        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 
     private checkAddedTree(due: string): boolean {

@@ -299,7 +299,7 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
     }
     close(event) {
         this.editFlag = event;
-        this._router.navigate(['user_param', JSON.parse(sessionStorage.getItem('lastNodeDue'))]);
+        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 
     getQueryCreate(): Array<any> {
