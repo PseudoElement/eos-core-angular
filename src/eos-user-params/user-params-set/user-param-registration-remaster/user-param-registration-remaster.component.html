@@ -26,7 +26,7 @@
         <eos-dop-operation [userData] = 'hash'  [defaultValues] = 'defaultValues' (pushChange)="emitChanges($event)"></eos-dop-operation>
     </div>
     <div [hidden]="currTab !== 1" class="clearfix">
-
+        <eos-remaster-addresses [userData] = 'hash'  [defaultValues] = 'defaultValues' (pushChange)="emitChangesAddresses($event)"></eos-remaster-addresses>
     </div>
     <div [hidden]="currTab !== 2" class="clearfix">
         <eos-remaster-email (pushChenge) = 'getChanges($event)' [userData] = 'hash' [defaultValues] = 'defaultValues'

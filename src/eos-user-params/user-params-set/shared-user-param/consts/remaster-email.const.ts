@@ -1344,3 +1344,26 @@ export const REGISTRATION_DOP_OPERATION: IBaseUsers = {
         },
     ]
 };
+
+export const REGISTRATION_ADDRESSES: IBaseUsers = {
+    id: 'registration',
+    title: 'Регистрация',
+    apiInstance: 'USER_PARMS',
+    fields: [
+        {
+            key: 'CORR_SIGN',
+            type: 'boolean',
+            title: 'Заполнять поле "Подписал" (Корреспондент) из справочника'
+        },
+        {
+            key: 'ADDR_WHOUM',
+            type: 'boolean',
+            title: 'Заполнять поле "Кому" (Адресат) из справочника '
+        },
+        {
+            key: 'ORGGROUP',
+            title: '',
+            type: 'string'
+        },
+    ]
+};

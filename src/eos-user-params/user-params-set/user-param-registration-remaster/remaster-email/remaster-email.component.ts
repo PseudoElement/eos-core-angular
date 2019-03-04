@@ -46,11 +46,12 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
     public formMailResuve: FormGroup;
     public listForAccordion: Array<Accordion> = [];
     public templRenderMailResive;
+    public flagEdit: boolean = false;
     public templRender: TreeItem[] = [];
     @Input() userData;
     @Input() defaultValues;
     @Output() pushChenge = new EventEmitter<any>();
-    private mapDefault: any = {};
+    public mapDefault: any = {};
     private hashKeyDBString = new Map();
     private mapNewValue = new Map();
     private mapNewValueMailResive = new Map();
@@ -81,6 +82,16 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         this._RemasterService.defaultEmit.takeUntil(this.ngUnsubscribe).subscribe(() => {
             this.default();
         });
+        this._RemasterService.submitEmit.takeUntil(this.ngUnsubscribe).subscribe(() => {
+            this.setNewValInputs();
+        });
+        this._RemasterService.editEmit.takeUntil(this.ngUnsubscribe).subscribe(data => {
+            this.flagEdit = true;
+            this.form.enable({emitEvent: false});
+            this.formMailResuve.enable({emitEvent: false});
+            this.disableFormMailResive();
+            this.disableForm();
+        });
     }
     ngOnInit() {
       this.initEmail();
@@ -97,7 +108,11 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
-
+    setNewValInputs() {
+        Object.keys(this.form.controls).forEach(inp => {
+            this.inputs[inp].value = this.form.controls[inp].value;
+        });
+    }
     initEmail() {
         this.preparedItemForInputs =  this.parse_Create(this.fieldsConst.fields, 'userData', 'RCSEND');
         this.prepareInputs = this.formHelp.getObjectInputFields(this.fieldsConst.fields);
@@ -105,7 +120,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         this.inputs = this.dataSrv.getInputs(this.prepareInputs, {rec: this.preparedItemForInputs});
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
         this.alwaysDisabledMethod();
-        this.disableForm();
+        this.form.disable({emitEvent: false});
         this.templRender = this.createTree(this.fieldsConst.fields);
         this.sliceArrayForTemplate();
         this.subscriberFormRcSend();
@@ -116,7 +131,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         this.prepareDataMailResive = this.formHelp.convData(this.preparedItemForInputsMailREsive);
         this.inputsMailResive = this.dataSrv.getInputs(this.prepareInputsMailREsive, {rec: this.preparedItemForInputsMailREsive});
         this.formMailResuve = this.inputCtrlSrv.toFormGroup(this.inputsMailResive);
-        this.disableFormMailResive();
+        this.formMailResuve.disable({emitEvent: false});
         this.templRenderMailResive = this.createTree(this.fieldsConstMailResive.fields);
         this.subscriberFormMailResive();
     }
@@ -476,6 +491,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         this.initMailResive();
         this.ErrorRcSend = false;
         this.ErrorMailRecive = false;
+        this.flagEdit = false;
         this.mapNewValue.clear();
         this.mapNewValueMailResive.clear();
     }

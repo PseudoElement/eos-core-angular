@@ -20,9 +20,12 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
     public isLoading: boolean = false;
     public EmailChangeFlag: boolean = false;
     public DopOperationChangeFlag: boolean = false;
+    public AddressesChengeFlag: boolean = false;
     public editFlag: boolean = false;
     private newValuesMap = new Map();
     private newValuesDopOperation: Map<string, any> = new Map();
+    private newValuesAddresses: Map<string, any> = new Map();
+
 
     constructor(
         private _userSrv: UserParamsService,
@@ -49,7 +52,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
         this.defaultValues = hashDefault;
     }
     get btnDisabled(): boolean {
-        if (this.EmailChangeFlag || this.DopOperationChangeFlag) {
+        if (this.EmailChangeFlag || this.DopOperationChangeFlag || this.AddressesChengeFlag) {
             return true;
         }
         return false;
@@ -92,15 +95,24 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             this.newValuesDopOperation.clear();
         }
     }
+    emitChangesAddresses($event) {
+        if ($event) {
+            this.AddressesChengeFlag = $event.btn;
+            this.newValuesAddresses = $event.data;
+        } else {
+            this.AddressesChengeFlag = false;
+            this.newValuesAddresses.clear();
+        }
+    }
 
     edit(event) {
         this.editFlag = event;
+        this._RemasterService.editEmit.next(this.editFlag);
     }
     submit(event) {
         this._apiSrv.batch(this.createObjRequest(), '').then(response => {
             this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-            this.EmailChangeFlag = false;
-            this.DopOperationChangeFlag = false;
+            this.defaultSetFlagBtn();
             const userId = this._userSrv.userContextId;
             this._userSrv.getUserIsn(String(userId)).then(res => {
                 this.hash = this._userSrv.hashUserContext;
@@ -108,49 +120,52 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             });
         });
     }
+    defaultSetFlagBtn() {
+        this.getChanges(false);
+        this.emitChanges(false);
+        this.emitChangesAddresses(false);
+    }
 
     createObjRequest(): any[] {
         const req = [];
         const userId = this._userSrv.userContextId;
-        Array.from(this.newValuesMap).forEach(val => {
-            let parn_Val;
-            if (typeof val[1] === 'boolean') {
-                val[1] === false ? parn_Val = 'NO' : parn_Val = 'YES';
-            } else {
-                String(val[1]) === 'null' ? parn_Val = '' : parn_Val = val[1];
-            }
-            req.push({
-                    method: 'MERGE',
-                    requestUri: `USER_CL(${userId})/USER_PARMS_List(\'${userId} ${val[0]}\')`,
-                    data: {
-                        PARM_VALUE: `${parn_Val}`
-                }
-            });
-          });
-
-          Array.from(this.newValuesDopOperation).forEach(val => {
-            let parn_Val;
-            if (typeof val[1] === 'boolean') {
-                val[1] === false ? parn_Val = 'NO' : parn_Val = 'YES';
-            } else {
-                String(val[1]) === 'null' ? parn_Val = '' : parn_Val = val[1];
-            }
-            req.push({
-                    method: 'MERGE',
-                    requestUri: `USER_CL(${userId})/USER_PARMS_List(\'${userId} ${val[0]}\')`,
-                    data: {
-                        PARM_VALUE: `${parn_Val}`
-                }
-            });
-          });
-            return req;
+        if (this.newValuesMap.size) {
+            req.concat(this.pushIntoArrayRequest(req, this.newValuesMap, userId ));
         }
+        if (this.newValuesDopOperation.size) {
+            req.concat(this.pushIntoArrayRequest(req, this.newValuesDopOperation, userId ));
+        }
+        if (this.newValuesAddresses.size) {
+            req.concat(this.pushIntoArrayRequest(req, this.newValuesAddresses, userId ));
+        }
+        return req;
+    }
+
+    pushIntoArrayRequest(storeReq: Array<any>, data: Map<string, any>, id): Array<any> {
+        Array.from(data).forEach(val => {
+            let parn_Val;
+            if (typeof val[1] === 'boolean') {
+                val[1] === false ? parn_Val = 'NO' : parn_Val = 'YES';
+            } else {
+                String(val[1]) === 'null' ? parn_Val = '' : parn_Val = val[1];
+            }
+            storeReq.push({
+                    method: 'MERGE',
+                    requestUri: `USER_CL(${id})/USER_PARMS_List(\'${id} ${val[0]}\')`,
+                    data: {
+                        PARM_VALUE: `${parn_Val}`
+                }
+            });
+          });
+          return storeReq;
+    }
 
     cancel(event) {
         if (this.btnDisabled) {
             this._msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
             this.getChanges(false);
             this.emitChanges(false);
+            this.emitChangesAddresses(false);
         }
         this.editFlag = event;
         this._RemasterService.cancelEmit.next();

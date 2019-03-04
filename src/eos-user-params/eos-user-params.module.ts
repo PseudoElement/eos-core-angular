@@ -51,6 +51,7 @@ import {UserParamsProfSertComponent} from '../eos-user-params/user-params-set/us
 import {RemasterEmailComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-email/remaster-email.component';
 import {RemasterService} from '../eos-user-params/user-params-set/shared-user-param/services/remaster-service';
 import {RemasterDopOperationComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-dop/remaster-dop-operation.component';
+import {RemasterAddressesComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-addresses/remaster-addresses.conponent';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -91,6 +92,7 @@ import {RemasterDopOperationComponent} from '../eos-user-params/user-params-set/
         UserParamsProfSertComponent,
         RemasterEmailComponent,
         RemasterDopOperationComponent,
+        RemasterAddressesComponent,
     ],
     imports: [
         BrowserModule,
