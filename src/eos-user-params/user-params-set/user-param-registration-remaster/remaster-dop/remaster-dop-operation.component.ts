@@ -18,12 +18,12 @@ export class RemasterDopOperationComponent implements OnInit, OnDestroy {
     @Input() userData;
     @Input() defaultValues;
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
+    public inputs;
+    public form: FormGroup;
 
     private prepareInputs;
     private prapareData;
-    private inputs;
     private countError: number = 0;
-    private form: FormGroup;
     private prepareDefaultForm;
     private ngUnsub: Subject<any> = new Subject();
     private newDataMap: Map<string, any> = new Map();

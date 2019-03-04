@@ -46,11 +46,11 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
     public formMailResuve: FormGroup;
     public listForAccordion: Array<Accordion> = [];
     public templRenderMailResive;
+    public templRender: TreeItem[] = [];
     @Input() userData;
     @Input() defaultValues;
     @Output() pushChenge = new EventEmitter<any>();
     private mapDefault: any = {};
-    private templRender: TreeItem[] = [];
     private hashKeyDBString = new Map();
     private mapNewValue = new Map();
     private mapNewValueMailResive = new Map();
