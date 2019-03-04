@@ -160,9 +160,12 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.counterDocgroup:
                     break;
+                case E_RECORD_ACTIONS.counterDocgroupRKPD:
+                    break;
                 case E_RECORD_ACTIONS.counterDepartmentMain:
                     break;
                 case E_RECORD_ACTIONS.counterDepartmentRK:
+                case E_RECORD_ACTIONS.counterDepartmentRKPD:
                 case E_RECORD_ACTIONS.counterDepartment:
                     if (this._dictSrv && this._dictSrv.listNode) {
                         _enabled = this._dictSrv.listNode.isNode;

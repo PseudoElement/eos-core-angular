@@ -26,7 +26,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     visible: true,
     iconName: 'eos-icon-folder-group-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'counterDocgroup',
-        'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
+        'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization', 'counterDocgroupRKPD',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes' , 'additionalFields',
         'AdvancedCardRK'],
     keyField: 'DUE',

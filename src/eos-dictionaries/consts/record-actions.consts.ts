@@ -170,8 +170,20 @@ const RECORD_ACTION_COUNTER_DEPARTMENT: IAction = {
 const RECORD_ACTION_COUNTER_DOCGROUP: IAction = {
     type: E_RECORD_ACTIONS.counterDocgroup,
     group: E_ACTION_GROUPS.item,
-    title: 'Cчетчик номерообразования',
-    hint: 'Cчетчик номерообразования',
+    title: 'Cчетчик номерообразования РК',
+    hint: 'Cчетчик номерообразования РК',
+    iconClass: 'eos-icon eos-icon-info-blue small',
+    disabledIconClass: 'eos-icon eos-icon-info-grey small',
+    activeIconClass: null,
+    hoverIconClass: 'eos-icon eos-icon-info-blue small',
+    buttonClass: null
+};
+
+const RECORD_ACTION_COUNTER_DOCGROUP_RKPD: IAction = {
+    type: E_RECORD_ACTIONS.counterDocgroupRKPD,
+    group: E_ACTION_GROUPS.item,
+    title: 'Cчетчик номерообразования РКПД',
+    hint: 'Cчетчик номерообразования РКПД',
     iconClass: 'eos-icon eos-icon-info-blue small',
     disabledIconClass: 'eos-icon eos-icon-info-grey small',
     activeIconClass: null,
@@ -182,8 +194,20 @@ const RECORD_ACTION_COUNTER_DOCGROUP: IAction = {
 const RECORD_ACTION_COUNTER_DEPARTMENT_RK: IAction = {
     type: E_RECORD_ACTIONS.counterDepartmentRK,
     group: E_ACTION_GROUPS.item,
-    title: 'Cчетчик номерообразования',
-    hint: 'Cчетчик номерообразования',
+    title: 'Cчетчик номерообразования РК',
+    hint: 'Cчетчик номерообразования РК',
+    iconClass: 'eos-icon eos-icon-info-blue small',
+    disabledIconClass: 'eos-icon eos-icon-info-grey small',
+    activeIconClass: null,
+    hoverIconClass: 'eos-icon eos-icon-info-blue small',
+    buttonClass: null
+};
+
+const RECORD_ACTION_COUNTER_DEPARTMENT_RKPD: IAction = {
+    type: E_RECORD_ACTIONS.counterDepartmentRKPD,
+    group: E_ACTION_GROUPS.item,
+    title: 'Cчетчик номерообразования РКПД',
+    hint: 'Cчетчик номерообразования РКПД',
     iconClass: 'eos-icon eos-icon-info-blue small',
     disabledIconClass: 'eos-icon eos-icon-info-grey small',
     activeIconClass: null,
@@ -276,7 +300,9 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_COUNTER_DEPARTMENT,
     RECORD_ACTION_COUNTER_DEPARTMENT_MAIN,
     RECORD_ACTION_COUNTER_DEPARTMENT_RK,
+    RECORD_ACTION_COUNTER_DEPARTMENT_RKPD,
     RECORD_ACTION_COUNTER_DOCGROUP,
+    RECORD_ACTION_COUNTER_DOCGROUP_RKPD,
     RECORD_ACTION_NOMENKL_CLS,
     RECORD_ACTION_NOMENKL_OPS,
 ];
