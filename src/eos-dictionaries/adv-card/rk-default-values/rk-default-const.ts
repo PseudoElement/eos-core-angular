@@ -19,6 +19,7 @@ export class TDefaultField {
     dict?: TDFSelect;
     options?: TDFSelectOption[];
     value?: any;
+    default?: any;
 
 }
 
@@ -61,6 +62,29 @@ export const RKFictControls: TDefaultField[] = [
                 title: '',
             }
         ]
+    }, {
+        key: 'ISN_CARD_REG_W_1',
+        type: E_FIELD_TYPE.select,
+        title: '',
+        default: null,
+        dict: {
+            dictId: 'DEPARTMENT',
+            dictKey: 'ISN_NODE',
+            dictKeyTitle: 'CARD_NAME',
+            criteries: { CARD_FLAG: '1', DELETED: '0', },
+        }
+    }, {
+        key: 'ISN_CARD_REG_W_2',
+        type: E_FIELD_TYPE.select,
+        title: '',
+        default: null,
+        dict: {
+            dictId: 'DEPARTMENT',
+            dictKey: 'ISN_NODE',
+            dictKeyTitle: 'CARD_NAME',
+            criteries: { CARD_FLAG: '1', DELETED: '0', },
+        }
+
     }
 
 ];

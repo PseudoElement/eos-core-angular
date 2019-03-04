@@ -46,12 +46,22 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
         this.onTabInit(this.dgStoredValues, this.data);
     }
 
-    setValue (path: string, value: any) {
+    setValue (path: string, value: any, emit = true) {
+        console.log(path, value);
         const control = this.form.controls[path];
         if (control) {
-            control.setValue(value);
+            control.setValue(value /*, {emitEvent: emit} */);
         }
     }
+
+    getValue (path: string, valueIfUndefined: any): any {
+        const control = this.form.controls[path];
+        if (control) {
+            return control.value;
+        }
+        return valueIfUndefined;
+    }
+
     valueSecondarySet(path: string, storeOrClear: boolean) {
         const control = this.form.controls[path];
         if (control) {

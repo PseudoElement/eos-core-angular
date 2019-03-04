@@ -44,11 +44,22 @@
 
     </div>
 </div>
-<div>
+<div class="bottom-buttons">
+        <button class="btn btn-primary-full upper"
+            [disabled]="true">Ведение списков</button>
+        <div class="bottom-buttons-clearfix"></div>
+        <button class="btn btn-primary-full upper"
+            [disabled]="!isChanged"
+            (click)="save()">Записать</button>
+        <button class="btn btn-primary upper"
+            (click)="cancel()">Отменить</button>
+</div>
+<!-- <div>
+
     <button>Ведение списков</button>
     <button (click)="save()" >Записать</button>
     <button>Выход</button>
-</div>
+</div> -->
 
 <ng-template #defaultEdit1>
     <eos-rk-default-values #currentPage

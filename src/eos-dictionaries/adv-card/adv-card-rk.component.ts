@@ -5,7 +5,7 @@ import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME } from
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { TDefaultField, TDFSelectOption, RKFieldsFict } from './rk-default-values/rk-default-const';
+import { TDefaultField, TDFSelectOption } from './rk-default-values/rk-default-const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EosUtils } from 'eos-common/core/utils';
 import { Subscription } from 'rxjs/Subscription';
@@ -59,6 +59,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     newData: any;
     storedValuesDG: any;
     editValues: any;
+    isChanged: boolean;
     // protected formChanges$: Subscription;
     private subscriptions: Subscription[];
 
@@ -67,6 +68,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     // protected apiSrv: PipRX;
     private _node = {};
     private isn_node: number;
+
 
 
     // private _initialData: any;
@@ -87,6 +89,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         this.tabs = tabs;
         this.subscriptions = [];
         this.editValues = {};
+        this.isChanged = false;
     }
 
     ngOnChanges() {
@@ -122,7 +125,15 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
     save(): void {
-        this.dataController.save(this.isn_node, this.inputs, this.newData);
+        this.dataController.save(this.isn_node, this.inputs, this.newData).then (r => {
+            this.bsModalRef.hide();
+        }).catch (err => {
+
+        });
+    }
+
+    cancel(): void {
+        this.bsModalRef.hide();
     }
 
     _updateOptions(values: any[]) {
@@ -180,12 +191,12 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                     const t = i[key];
                     t[element.key] = element;
                 });
-                const a: any = RKFieldsFict;
-                a.forEach(element => {
-                    if (!element.foreignKey) {
-                        element.foreignKey = element.key;
-                    }
-                });
+                // const a: any = RKFieldsFict;
+                // a.forEach(element => {
+                //     if (!element.foreignKey) {
+                //         element.foreignKey = element.key;
+                //     }
+                // });
             }
 
         }
@@ -303,6 +314,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         this.newData = EosUtils.setValueByPath(this.newData, path, value);
 
         if (value !== prevValue) {
+            this.isChanged = true;
             this._setPrevValue(path, value);
             this.currentPage.onDataChanged(path, prevValue, value);
             return true;

@@ -73,7 +73,7 @@ export class AdvCardRKDataCtrl {
                     const t3 = t2[f];
                     const newValue = this.fixDBValueByType(t3, type);
                     if (savedData) {
-                        const savedValue = this.fixDBValueByType(savedData.VALUE, type);
+                        const savedValue = this.fixDBValueByType(savedData[f], type);
                         if (savedValue !== newValue) {
                         }
                     } else {
@@ -169,8 +169,8 @@ export class AdvCardRKDataCtrl {
         return value;
     }
 
-    save(isn_node: number, inputs: any[], data: any): void {
-        this.readValues(isn_node)
+    save(isn_node: number, inputs: any[], data: any): Promise<any> {
+        return this.readValues(isn_node)
             .then(([docGroup]) => {
                 this._apiSrv.entityHelper.prepareForEdit(docGroup);
                 const changes = this._calcChangesFor(docGroup, data);
@@ -233,10 +233,10 @@ export class AdvCardRKDataCtrl {
                 if (el.type === E_FIELD_TYPE.dictLink) {
                     reqs.push(this.readDictLinkValue(el, values[key][el.key], updateLink));
                 } else if (el.type === E_FIELD_TYPE.select) {
-                    if (this.loadedDicts[el.dict.dictId] &&
-                        this.loadedDicts[el.dict.dictId]._idptr &&
-                        this.loadedDicts[el.dict.dictId]._idptr === el.dict) {
-                        el.options = this.loadedDicts[el.dict.dictId];
+                    const hash = this.calcHash(el.dict);
+                    console.log(hash);
+                    if (this.loadedDicts[hash]) {
+                        el.options = this.loadedDicts[hash];
                     } else {
                         let query: any; // {criteries: {[NUM_YEAR_NAME]: String(this.editValueYear)}};
                         if (el.dict.criteries) {
@@ -244,11 +244,12 @@ export class AdvCardRKDataCtrl {
                         } else {
                             query = ALL_ROWS;
                         }
+                        this.loadedDicts[hash] = [];
 
                         const req = {[el.dict.dictId]: query};
 
                         reqs.push(this._apiSrv.read(req).then((data) => {
-                            const opts: TDFSelectOption[] = [];
+                            const opts: TDFSelectOption[] = this.loadedDicts[hash];
                             opts.push ({value: '', title: '...'});
                             for (let index = 0; index < data.length; index++) {
                                 const element = data[index];
@@ -256,8 +257,8 @@ export class AdvCardRKDataCtrl {
                             }
 
                             el.options = opts;
-                            this.loadedDicts[el.dict.dictId] = opts;
-                            this.loadedDicts[el.dict.dictId]._idptr = el.dict;
+                            // this.loadedDicts[el.dict.dictId] = opts;
+                            // this.loadedDicts[el.dict.dictId]._idptr = el.dict;
                             return data;
                         }));
                     }
@@ -269,8 +270,38 @@ export class AdvCardRKDataCtrl {
             .then((responses) => {
             return responses;
         });
+    }
 
+    calcHash (obj: any): string {
+        let res: string = '';
 
+        if (obj) {
+            if (obj.dictId) {
+                res += obj.dictId + ';';
+            }
+            if (obj.criteries) {
+                for (const key in obj.criteries) {
+                    if (obj.criteries.hasOwnProperty(key)) {
+                        const element = obj.criteries[key];
+                        res += key + '=' + String(element) + ';';
+                    }
+                }
+            }
+        }
+        return this.hashFnv32a(res);
+    }
+
+    hashFnv32a(str): string {
+        let hash = 0;
+        let i = 0;
+        const len = str.length;
+        while ( i < len ) {
+            // tslint:disable-next-line:no-bitwise
+            hash  = ((hash << 5) - hash + str.charCodeAt(i++)) << 0;
+        }
+
+        // tslint:disable-next-line:no-bitwise
+        return ('0000000' + (hash >>> 0).toString(16)).substr(-8);
     }
 
     keys(data: Object): string[] {

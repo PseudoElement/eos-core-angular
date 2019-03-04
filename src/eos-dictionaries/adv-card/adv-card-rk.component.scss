@@ -29,6 +29,16 @@
         // }
     }
 
+    .bottom-buttons {
+        padding: 10px;
+        display: inline-block;
+    }
+
+    .bottom-buttons-clearfix {
+        min-width: 450px;
+        display: inline-block;
+    }
+
 
     label {
         font-weight: normal;
