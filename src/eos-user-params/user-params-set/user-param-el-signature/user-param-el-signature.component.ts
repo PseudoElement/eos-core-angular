@@ -55,7 +55,7 @@ export class UserParamElSignatureComponent implements OnDestroy {
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
     ) {
-        this.titleHeader = this._userSrv.curentUser.CLASSIF_NAME + ' - ' + 'Электронная подпись';
+        this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Электронная подпись';
         this.link = this._userSrv.curentUser['ISN_LCLASSIF'];
         this.selfLink = this._router.url.split('?')[0];
         this.init();

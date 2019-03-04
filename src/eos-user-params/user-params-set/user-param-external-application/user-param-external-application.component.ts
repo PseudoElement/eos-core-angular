@@ -41,7 +41,7 @@ export class UserParamEAComponent implements OnDestroy {
         private _msgSrv: EosMessageService,
         private _route: Router,
         ) {
-            this.titleHeader = this._userParamsSetSrv.curentUser.CLASSIF_NAME + ' - ' + 'Внешние приложения';
+            this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
             this.link = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
             this.selfLink = this._route.url.split('?')[0];
             this.init();
