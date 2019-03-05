@@ -197,7 +197,7 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
                 isDeleted: dd.DELETED === 0 ? false : true,
                 isActive: dd.DUE === this._filterDUE,
                 expandable: false,
-                isExpanded: true,
+                isExpanded: false,
                 updating: false,
                 children: [],
                 data: {DEPARTMENT_INDEX : dd.DEPARTMENT_INDEX },
@@ -215,14 +215,24 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
             r = this.findTreeParent(res, d.parent);
             if (r) {
                 r.expandable = true;
-                r.isExpanded = false;
                 r.children.push(d);
                 res.splice(i, 1);
                 i--;
             }
             i++;
         }
-        res.find((f) => f.id === NP_NOM_ROOT_DUE).isExpanded = true;
+
+        r = this._activeTreeNode;
+        if (r) {
+            while (r) {
+                r = this.findTreeParent(res, r.parent);
+                if (r) {
+                    r.isExpanded = true;
+                }
+            }
+        } else {
+            res.find((f) => f.id === NP_NOM_ROOT_DUE).isExpanded = true;
+        }
         this._treeData = res;
     }
 
