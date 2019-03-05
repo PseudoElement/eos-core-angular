@@ -28,7 +28,7 @@ build_job:
     - 'npm install'
     - 'npm run build-prod'
   only:
-    - master
+    - dev
   artifacts:
     expire_in: 1 week
     paths:
@@ -57,6 +57,8 @@ publish_job:
     - '$TF delete -detect -recursive $LOCAL_FOLDER'
     - '$TF add -noignore -recursive $LOCAL_FOLDER |echo skip errors || true'
     - '$TF checkin $LOCAL_FOLDER -comment:"${COMMENT_TEXT}" -override:"Automated Build Process" -recursive'
+  only:
+    - dev
 
 ## cleanup stage
 
@@ -68,4 +70,6 @@ cleanup_job:
   script:
     - 'echo rm -r -f  $LOCAL_FOLDER'
     - '$TF workspace -delete $TMP_WORKSPACE'
+  only:
+    - dev
   when: always
