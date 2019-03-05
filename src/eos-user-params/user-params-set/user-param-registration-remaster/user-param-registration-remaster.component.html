@@ -40,4 +40,12 @@
         <eos-auto-search (pushChange) = 'emitChangesAutoSearch($event)' [userData] = 'hash' [defaultValues] = 'defaultValues'
         ></eos-auto-search>
     </div>
+    <div [hidden]="currTab !== 5" class="clearfix">
+        <eos-remaster-seb (pushChange) = 'emitChangesSab($event)' [userData] = 'hash' [defaultValues] = 'defaultValues'
+        ></eos-remaster-seb>
+    </div>
+    <div [hidden]="currTab !== 6" class="clearfix">
+        <!-- <eos-remaster-rc (pushChange) = 'emitChangesRc($event)' [userData] = 'hash' [defaultValues] = 'defaultValues'
+        ></eos-remaster-rc> -->
+    </div>
 </div>

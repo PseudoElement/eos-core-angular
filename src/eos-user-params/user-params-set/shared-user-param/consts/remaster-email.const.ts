@@ -1577,3 +1577,20 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
         },
     ]
 };
+
+export const REGISTRATION_SEB: IBaseUsers =  {
+    id: 'registration',
+    title: 'Регистрация',
+    apiInstance: 'USER_PARMS',
+    fields: [{
+        key: 'SEV_HIDE_SENDING',
+        type: 'boolean',
+        title: 'Скрыть операцию "Отправить сообщение СЭВ"'
+    },
+    {
+        key: 'SEV_ALLOW_DELIVERY',
+        type: 'boolean',
+        title: 'Учитывать вид отправки'
+    },
+    ]
+};

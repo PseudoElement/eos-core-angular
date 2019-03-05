@@ -23,12 +23,16 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
     public AddressesChengeFlag: boolean = false;
     public ScanChengeFlag: boolean = false;
     public AutoSearchChangeFlag: boolean = false;
+    public SabChangeFlag: boolean = false;
+    public RcChangeflag: boolean = false;
     public editFlag: boolean = false;
     private newValuesMap = new Map();
     private newValuesDopOperation: Map<string, any> = new Map();
     private newValuesAddresses: Map<string, any> = new Map();
     private newValuesScan: Map<string, any> = new Map();
     private newValuesAutoSearch: Map<string, any> = new Map();
+    private newValuesSab: Map<string, any> = new Map();
+    private newValuesRc: Map<string, any> = new Map();
 
 
     constructor(
@@ -64,7 +68,9 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             || this.DopOperationChangeFlag
             || this.AddressesChengeFlag
             || this.ScanChengeFlag
-            || this.AutoSearchChangeFlag) {
+            || this.AutoSearchChangeFlag
+            || this.SabChangeFlag
+            ) {
             return true;
         }
         return false;
@@ -134,6 +140,24 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             this.newValuesAutoSearch.clear();
         }
     }
+    emitChangesSab($event) {
+        if ($event) {
+            this.SabChangeFlag = $event.btn;
+            this.newValuesSab = $event.data;
+        } else {
+            this.SabChangeFlag = false;
+            this.newValuesSab.clear();
+        }
+    }
+    emitChangesRc($event) {
+        if ($event) {
+            this.RcChangeflag = $event.btn;
+            this.newValuesRc = $event.data;
+        } else {
+            this.RcChangeflag = false;
+            this.newValuesRc.clear();
+        }
+    }
 
     edit(event) {
         this.editFlag = event;
@@ -156,6 +180,8 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
         this.emitChangesAddresses(false);
         this.emitChangesScan(false);
         this.emitChangesAutoSearch(false);
+        this.emitChangesSab(false);
+        this.emitChangesRc(false);
     }
 
     createObjRequest(): any[] {
@@ -175,6 +201,12 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
         }
         if (this.newValuesAutoSearch.size) {
             req.concat(this.pushIntoArrayRequest(req, this.newValuesAutoSearch, userId));
+        }
+        if (this.newValuesSab.size) {
+            req.concat(this.pushIntoArrayRequest(req, this.newValuesSab, userId));
+        }
+        if (this.newValuesRc.size) {
+            req.concat(this.pushIntoArrayRequest(req, this.newValuesRc, userId));
         }
         return req;
     }
@@ -206,6 +238,8 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             this.emitChangesAddresses(false);
             this.emitChangesScan(false);
             this.emitChangesAutoSearch(false);
+            this.emitChangesSab(false);
+            this.emitChangesRc(false);
         }
         this.editFlag = event;
         this._RemasterService.cancelEmit.next();
