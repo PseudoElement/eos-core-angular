@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 // import {Observable} from 'rxjs/Observable';
 import {Subject} from 'rxjs/Subject';
 import {PipRX} from 'eos-rest/services/pipRX.service';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
 @Injectable()
 export class RemasterService {
     cancelEmit: Subject<any> = new Subject();
@@ -10,6 +11,7 @@ export class RemasterService {
     editEmit:  Subject<any> = new Subject();
     constructor(
        private _apiSrv: PipRX,
+       private _msg: EosMessageService,
     ) {
 
     }
@@ -25,7 +27,11 @@ export class RemasterService {
         return this._apiSrv.read(query).then(res => {
             return res;
         }).catch(error => {
-            console.log(error);
+            this._msg.addNewMessage({
+                title: 'Ошибка',
+                type: 'danger',
+                msg: error.message || 'Не установленно соединение с базой'
+            });
         });
     }
     getScanShablonBarCode(): Promise<any> {
@@ -40,7 +46,11 @@ export class RemasterService {
       return  this._apiSrv.read(query).then(res => {
         return res;
       }).catch(error => {
-          console.log(error);
+        this._msg.addNewMessage({
+            title: 'Ошибка',
+            type: 'danger',
+            msg: error.message || 'Не установленно соединение с базой'
+        });
       });
     }
 
@@ -56,7 +66,11 @@ export class RemasterService {
       return  this._apiSrv.read(query).then(res => {
         return res;
       }).catch(error => {
-          console.log(error);
+        this._msg.addNewMessage({
+            title: 'Ошибка',
+            type: 'danger',
+            msg: error.message || 'Не установленно соединение с базой'
+        });
       });
     }
 
@@ -71,7 +85,26 @@ export class RemasterService {
       return  this._apiSrv.read(query).then(res => {
         return res;
       }).catch(error => {
-          console.log(error);
+        this._msg.addNewMessage({
+            title: 'Ошибка',
+            type: 'danger',
+            msg: error.message || 'Не установленно соединение с базой'
+        });
       });
+    }
+
+    getLink_Type() {
+        const query = {
+            FORMAT_CL: { ar: true }
+        };
+    return  this._apiSrv.read(query).then(res => {
+        return res;
+    }).catch(error => {
+        this._msg.addNewMessage({
+            title: 'Ошибка',
+            type: 'danger',
+            msg: error.message || 'Не установленно соединение с базой'
+        });
+    });
     }
 }

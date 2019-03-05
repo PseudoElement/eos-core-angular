@@ -22,11 +22,13 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
     public DopOperationChangeFlag: boolean = false;
     public AddressesChengeFlag: boolean = false;
     public ScanChengeFlag: boolean = false;
+    public AutoSearchChangeFlag: boolean = false;
     public editFlag: boolean = false;
     private newValuesMap = new Map();
     private newValuesDopOperation: Map<string, any> = new Map();
     private newValuesAddresses: Map<string, any> = new Map();
     private newValuesScan: Map<string, any> = new Map();
+    private newValuesAutoSearch: Map<string, any> = new Map();
 
 
     constructor(
@@ -43,7 +45,11 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             this.create_hash_default(data);
             this.isLoading = true;
         }).catch(error => {
-            console.log(error);
+            this._msgSrv.addNewMessage({
+                title: 'Предупреждение',
+                type: 'warning',
+                msg: error.message || 'Не установленно соединение с базой'
+            });
         });
     }
     create_hash_default(data) {
@@ -54,7 +60,11 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
         this.defaultValues = hashDefault;
     }
     get btnDisabled(): boolean {
-        if (this.EmailChangeFlag || this.DopOperationChangeFlag || this.AddressesChengeFlag || this.ScanChengeFlag) {
+        if (this.EmailChangeFlag
+            || this.DopOperationChangeFlag
+            || this.AddressesChengeFlag
+            || this.ScanChengeFlag
+            || this.AutoSearchChangeFlag) {
             return true;
         }
         return false;
@@ -115,6 +125,15 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             this.newValuesScan.clear();
         }
     }
+    emitChangesAutoSearch($event) {
+        if ($event) {
+            this.AutoSearchChangeFlag = $event.btn;
+            this.newValuesAutoSearch = $event.data;
+        } else {
+            this.AutoSearchChangeFlag = false;
+            this.newValuesAutoSearch.clear();
+        }
+    }
 
     edit(event) {
         this.editFlag = event;
@@ -136,6 +155,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
         this.emitChanges(false);
         this.emitChangesAddresses(false);
         this.emitChangesScan(false);
+        this.emitChangesAutoSearch(false);
     }
 
     createObjRequest(): any[] {
@@ -152,6 +172,9 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
         }
         if (this.newValuesScan.size) {
             req.concat(this.pushIntoArrayRequest(req, this.newValuesScan, userId));
+        }
+        if (this.newValuesAutoSearch.size) {
+            req.concat(this.pushIntoArrayRequest(req, this.newValuesAutoSearch, userId));
         }
         return req;
     }
@@ -182,6 +205,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             this.emitChanges(false);
             this.emitChangesAddresses(false);
             this.emitChangesScan(false);
+            this.emitChangesAutoSearch(false);
         }
         this.editFlag = event;
         this._RemasterService.cancelEmit.next();

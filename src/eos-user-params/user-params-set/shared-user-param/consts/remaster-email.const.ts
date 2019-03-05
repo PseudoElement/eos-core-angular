@@ -1402,3 +1402,178 @@ export const REGISTRATION_SCAN: IBaseUsers = {
         }
     ]
 };
+export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
+    id: 'registration',
+    title: 'Регистрация',
+    apiInstance: 'USER_PARMS',
+    fields: [
+        {
+            key: 'LINKED_SEARCHPARAM',
+            type: 'select',
+            title: '',
+            options: [
+                {value: '1', title: 'Рег. № всех видов документов'},
+                {value: '2', title: 'Рег. № входящих документов'},
+                {value: '3', title: 'Рег. № писем граждан'},
+                {value: '4', title: 'Рег. № входящих документов и писем граждан'},
+                {value: '5', title: 'Рег. № исходящих документов'},
+                {value: '6', title: 'Исходящему № корреспондента'},
+                {value: '7', title: 'Исходящему № сопроводительного документа'},
+                {value: '8', title: 'Исходящему № корреспондента и сопр. документа'},
+                {value: '9', title: 'Рег. № проектов документов'}
+            ]
+        },
+        {
+            key: 'LINKED_SEARCHVALUE',
+            type: 'select',
+            title: '',
+            options: [
+                {value: '1', title: 'Точное'},
+                {value: '2', title: 'Начало номера'},
+                {value: '3', title: 'Подстрока'},
+                {value: '4', title: 'Порядковый'}
+            ]
+        },
+        {
+            key: 'LINKED_SEARCHYEAR',
+            type: 'select',
+            title: '',
+            options: [
+                {value: '1', title: 'Нет'},
+                {value: '2', title: 'Текущий'},
+                {value: '3', title: 'Предыдущий'}
+            ]
+        },
+        {
+            key: 'LINKED_LINKTYPE',
+            type: 'select',
+            title: '',
+            options: [
+                {value: '0', title: ''},
+                {value: '1', title: 'Исполнено'},
+                {value: '2', title: 'Во исполнение'},
+                {value: '3', title: 'Первичный'},
+                {value: '4', title: 'Повторный'},
+                {value: '5', title: 'Зарегистрирован'},
+                {value: '6', title: 'Проект'},
+                {value: '3786', title: 'В дополнение'},
+                {value: '3787', title: 'Дополнен'},
+                {value: '4057035', title: 'В отмену'},
+                {value: '4057036', title: 'Отменен'},
+                {value: '3788', title: 'Общий автор'},
+                {value: '3790', title: 'Ответ на'},
+                {value: '3791', title: 'Обращение'},
+                {value: '4410', title: 'Запрос'},
+                {value: '4411', title: 'Ответ на запрос'},
+                {value: '4057038', title: 'Факс'},
+                {value: '4057039', title: 'Оригинал'}
+            ]
+        },
+        {
+            key: 'LINKED_WIN_SHOW',
+            type: 'boolean',
+            title: 'Всегда показывать список найденных документов'
+        },
+        {
+            key: 'DEF_SEARCH_CITIZEN_SURNAME',
+            type: 'boolean',
+            title: 'Фамилия',
+            keyPosition: 5
+        },
+        {
+            key: 'DEF_SEARCH_CITIZEN_SURNAME_RADIO',
+            type: 'radio',
+            title: '',
+            options: [
+                {value: '3', title: 'по началу'},
+                {value: '1', title: 'по подстроке'},
+                {value: '2', title: 'на равенство'}
+            ],
+            keyPosition: 0,
+        },
+        {
+            key: 'DEF_SEARCH_CITIZEN_CITY',
+            type: 'boolean',
+            title: 'Город',
+            keyPosition: 6
+        },
+        {
+            key: 'DEF_SEARCH_CITIZEN_CITY_RADIO',
+            type: 'radio',
+            title: '',
+            options: [
+                {value: '3', title: 'по началу'},
+                {value: '1', title: 'по подстроке'},
+                {value: '2', title: 'на равенство'}
+            ],
+            keyPosition: 1,
+        },
+        {
+            key: 'DEF_SEARCH_CITIZEN_INDEX',
+            type: 'boolean',
+            title: 'Индекс',
+            keyPosition: 7
+        },
+        {
+            key: 'DEF_SEARCH_CITIZEN_INDEX_RADIO',
+            type: 'radio',
+            title: '',
+            options: [
+                {value: '3', title: 'по началу'},
+                {value: '1', title: 'по подстроке'},
+                {value: '2', title: 'на равенство'}
+            ],
+            keyPosition: 2
+        },
+        {
+            key: 'DEF_SEARCH_CITIZEN_ADDRESS',
+            type: 'boolean',
+            title: 'Адрес',
+            keyPosition: 8,
+        },
+        {
+            key: 'DEF_SEARCH_CITIZEN_ADDRESS_RADIO',
+            type: 'radio',
+            title: '',
+            options: [
+                {value: '3', title: 'по началу'},
+                {value: '1', title: 'по подстроке'},
+                {value: '2', title: 'на равенство'}
+            ],
+            keyPosition: 3
+        },
+        {
+            key: 'DEF_SEARCH_CITIZEN_REGION',
+            type: 'boolean',
+            title: 'Регион',
+            keyPosition: 9,
+        },
+        {
+            key: 'DEF_SEARCH_CITIZEN_REGION_RADIO',
+            type: 'radio',
+            title: '',
+            options: [
+                {value: '1', title: 'на вхождение'},
+                {value: '2', title: 'на равенство'}
+            ],
+            keyPosition: 4
+        },
+        {
+            key: 'DEF_SEARCH_CITIZEN_OTHER',
+            type: 'boolean',
+            title: 'Прочие',
+            keyPosition: 11
+        },
+        {
+            key: 'DEF_SEARCH_CITIZEN_OTHER_RADIO',
+            type: 'radio',
+            title: '',
+            options: [
+                {value: '3', title: 'по началу'},
+                {value: '1', title: 'по подстроке'},
+                {value: '2', title: 'на равенство'}
+            ],
+            keyPosition: 10,
+        },
+    ]
+};

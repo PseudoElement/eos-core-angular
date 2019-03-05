@@ -1,0 +1,138 @@
+<div class="" *ngIf="inputs">
+    <div class="user-input-group">
+        <span class="l-font">Поиск граждан в справочнике по полям</span>
+        <hr>
+        <ul class="search-citizens-in-the-directory-by-fields-radio">
+        <li>
+        <eos-dynamic-input
+                [ngStyle]="{'width': '160px'}"
+                [input]="inputs['rec.DEF_SEARCH_CITIZEN_SURNAME']"
+                [form]="form"
+                [readonly]="false"
+        ></eos-dynamic-input>
+        <eos-dynamic-input
+                [ngStyle]="{'margin-left': '60x'}"
+                [input]="inputs['rec.DEF_SEARCH_CITIZEN_SURNAME_RADIO']"
+                [form]="form"
+                [readonly]="false"
+        ></eos-dynamic-input>
+        </li>
+        <li>
+            <eos-dynamic-input
+                    [ngStyle]="{'width': '160px'}"
+                    [input]="inputs['rec.DEF_SEARCH_CITIZEN_CITY']"
+                    [form]="form"
+                    [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                    [ngStyle]="{'margin-left': '60x'}"
+                    [input]="inputs['rec.DEF_SEARCH_CITIZEN_CITY_RADIO']"
+                    [form]="form"
+                    [readonly]="false"
+            ></eos-dynamic-input>
+        </li>
+        <li>
+            <eos-dynamic-input
+                    [ngStyle]="{'width': '160px'}"
+                    [input]="inputs['rec.DEF_SEARCH_CITIZEN_INDEX']"
+                    [form]="form"
+                    [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                    [ngStyle]="{'margin-left': '60x'}"
+                    [input]="inputs['rec.DEF_SEARCH_CITIZEN_INDEX_RADIO']"
+                    [form]="form"
+                    [readonly]="false"
+            ></eos-dynamic-input>
+        </li>
+        <li>
+            <eos-dynamic-input
+                    [ngStyle]="{'width': '160px'}"
+                    [input]="inputs['rec.DEF_SEARCH_CITIZEN_ADDRESS']"
+                    [form]="form"
+                    [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                    [ngStyle]="{'margin-left': '60x'}"
+                    [input]="inputs['rec.DEF_SEARCH_CITIZEN_ADDRESS_RADIO']"
+                    [form]="form"
+                    [readonly]="false"
+            ></eos-dynamic-input>
+        </li>
+        <li>
+            <eos-dynamic-input
+                    [ngStyle]="{'width': '160px'}"
+                    [input]="inputs['rec.DEF_SEARCH_CITIZEN_REGION']"
+                    [form]="form"
+                    [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                    [ngStyle]="{'margin-left': '60x'}"
+                    [input]="inputs['rec.DEF_SEARCH_CITIZEN_REGION_RADIO']"
+                    [form]="form"
+                    [readonly]="false"
+            ></eos-dynamic-input>
+        </li>
+        <li>
+            <eos-dynamic-input
+                    [ngStyle]="{'width': '160px'}"
+                    [input]="inputs['rec.DEF_SEARCH_CITIZEN_OTHER']"
+                    [form]="form"
+                    [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                    [ngStyle]="{'margin-left': '60x'}"
+                    [input]="inputs['rec.DEF_SEARCH_CITIZEN_OTHER_RADIO']"
+                    [form]="form"
+                    [readonly]="false"
+            ></eos-dynamic-input>
+        </li>
+        </ul>
+    </div>
+    <hr>
+    <div class="user-input-group">
+        <span class="l-font">Поиск связанных РК/РКПД</span>
+        <hr>
+        <span>Искать по:</span>
+        <eos-dynamic-input
+             [ngStyle]="{'width': '50%'}"
+             [input]="inputs['rec.LINKED_SEARCHPARAM']"
+             [form]="form"
+             [readonly]="false"
+        ></eos-dynamic-input>
+    <span></span>
+    <br>
+        <span>Значение:</span>
+        <eos-dynamic-input
+             [ngStyle]="{'width': '25%'}"
+             [input]="inputs['rec.LINKED_SEARCHVALUE']"
+             [form]="form"
+             [readonly]="false"
+        ></eos-dynamic-input>
+    <span></span>
+    <br>
+        <span>Год (по умолчанию):</span>
+        <eos-dynamic-input
+             [ngStyle]="{'width': '25%'}"
+             [input]="inputs['rec.LINKED_SEARCHYEAR']"
+             [form]="form"
+             [readonly]="false"
+        ></eos-dynamic-input>
+    <span></span>
+    <br>
+        <span>Связывать по:</span>
+        <eos-dynamic-input
+             [ngStyle]="{'width': '25%'}"
+             [input]="inputs['rec.LINKED_LINKTYPE']"
+             [form]="form"
+             [readonly]="false"
+        ></eos-dynamic-input>
+    <span></span>
+    <br>
+        <eos-dynamic-input
+            [input]="inputs['rec.LINKED_WIN_SHOW']"
+            [form]="form"
+            [readonly]="false"
+        ></eos-dynamic-input>
+    </div>
+</div>

@@ -8,6 +8,7 @@ export class FormHelperService {
     public _fieldsType = {};
     public _fieldsTypeParce = {};
     public newFormData = {};
+    public mapKeyPosition: Map<string, any> = new Map();
     constructor(private _userSrv: UserParamsService ) {
 
     }
@@ -178,6 +179,47 @@ export class FormHelperService {
                 }
             } else {
                 obj[field.key] = userData[field.key];
+            }
+        });
+        return obj;
+    }
+
+    parse_Create_Auto_Search(fields, userData) {
+        const obj = {};
+        fields.forEach((field: IFieldDescriptor) => {
+            if (field.key.indexOf('DEF_') !== -1) {
+                this._fieldsTypeParce[field.key] = 'DEV_SEARCH';
+                this.mapKeyPosition.set(field.key, field.keyPosition);
+               if (field.type === 'radio') {
+                    obj[field.key] = userData['DEF_SEARCH_CITIZEN'].charAt(field.keyPosition);
+                } else {
+                    if (String(userData['DEF_SEARCH_CITIZEN'].charAt(field.keyPosition)) === '0') {
+                        obj[field.key] = false;
+                    }else {
+                        obj[field.key] = true;
+                    }
+                }
+            }   else {
+                if (field.type === 'boolean') {
+                    if (!isNaN(userData[field.key])) {
+                        this._fieldsTypeParce[field.key] = 'number';
+                        if (+userData[field.key] === 0) {
+                        obj[field.key] = false;
+                        }   else {
+                        obj[field.key] = true;
+                        }
+                    }  else {
+                        this._fieldsTypeParce[field.key] = 'string';
+                        if (userData[field.key] === 'YES') {
+                            obj[field.key] = true;
+                        }   else {
+                            obj[field.key] = false;
+                        }
+                    }
+                } else {
+                    const value = userData[field.key];
+                    obj[field.key] = (value === '' || value === null || value === undefined ) ? '' : value;
+                }
             }
         });
         return obj;
