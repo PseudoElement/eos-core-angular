@@ -39,11 +39,36 @@ export class EosDataConvertService {
             Object.keys(fieldsDescription).forEach((_dict) => {
                 let descr = fieldsDescription[_dict];
                 switch (_dict) {
+                    case 'fict':
                     case 'PARE_LINK_Ref':
+                    case 'DG_FILE_CONSTRAINT_List':
+                    case 'DOC_DEFAULT_VALUE_List':
                     case 'rec':
-                        descr = fieldsDescription['rec'];
+                        descr = fieldsDescription[_dict];
                         Object.keys(descr).forEach((_key) => {
                             switch (descr[_key].type) {
+
+                                case E_FIELD_TYPE.dictLink:
+                                    inputs[_dict + '.' + _key] = new DropdownInput({
+                                        key: _dict + '.' + descr[_key].foreignKey,
+                                        label: descr[_key].title,
+                                        required: descr[_key].required,
+                                        pattern: descr[_key].pattern,
+                                        isUnique: descr[_key].isUnique,
+                                        uniqueInDict: descr[_key].uniqueInDict,
+                                        forNode: descr[_key].forNode,
+                                        value: data[_dict][descr[_key].foreignKey]
+                                            || descr[_key].default,
+                                        // length: descr[_key].length,
+                                        readonly: descr[_key].readonly,
+                                        disabled: descr[_key].readonly || !editMode,
+                                        // password: descr[_key].password,
+                                        options: descr[_key].options,
+                                        groupLabel: descr[_key].groupLabel
+                                    });
+                                    inputs[_dict + '.' + _key].controlType = E_FIELD_TYPE.dictLink;
+                                break;
+
                                 case E_FIELD_TYPE.numberIncrement:
                                     inputs[_dict + '.' + _key] = new NumberIncrementInput({
                                         key: _dict + '.' + descr[_key].foreignKey,
@@ -198,7 +223,7 @@ export class EosDataConvertService {
                                         key: _dict + '.' + descr[_key].foreignKey,
                                         label: descr[_key].title,
                                         forNode: descr[_key].forNode,
-                                        value: data[_dict][descr[_key].foreignKey],
+                                        value: data[_dict] ? data[_dict][descr[_key].foreignKey] : null,
                                         readonly: descr[_key].readonly,
                                         disabled: descr[_key].readonly || !editMode,
                                         options: descr[_key].options,
@@ -212,8 +237,9 @@ export class EosDataConvertService {
                                         hideLabel: !(descr[_key].title),
                                         required: descr[_key].required,
                                         forNode: descr[_key].forNode,
-                                        value: data[_dict][descr[_key].foreignKey] === 0 ? 0 :
-                                            data[_dict][descr[_key].foreignKey] || descr[_key].default,
+                                        value: !data[_dict] || data[_dict][descr[_key].foreignKey] === undefined ? null :
+                                                data[_dict][descr[_key].foreignKey] === 0 ? 0 :
+                                                data[_dict][descr[_key].foreignKey] || descr[_key].default,
                                         readonly: descr[_key].readonly,
                                         disabled: descr[_key].readonly || !editMode,
                                     });

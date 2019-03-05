@@ -8,6 +8,8 @@ import { EosDataConvertService } from '../services/eos-data-convert.service';
 import { DictionaryDescriptorService } from '../core/dictionary-descriptor.service';
 import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
 import {EosSevRulesService} from '../services/eos-sev-rules.service';
+import { RUBRICATOR_DICT } from 'eos-dictionaries/consts/dictionaries/rubricator.consts';
+import { PipRX } from 'eos-rest';
 
 @Component({
     selector: 'eos-card-edit',
@@ -39,6 +41,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         private _dictSrv: DictionaryDescriptorService,
         private _channelSrv: EosBroadcastChannelService,
         private _rulesSrv: EosSevRulesService,
+        private _apiSrv: PipRX,
     ) {
         this.subscriptions = [];
      }
@@ -69,10 +72,10 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         if ((changes.fieldsDescription || changes.data) && this.fieldsDescription && this.data) {
             this.unsubscribe();
             const inputs = this._dataSrv.getInputs(this.fieldsDescription, this.data, this.editMode, this._dictSrv, this._channelSrv);
-            this.afterGetInputs(inputs);
             const isNode = this.data.rec && this.data.rec.IS_NODE;
             this.form = this._inputCtrlSrv.toFormGroup(inputs, isNode);
             this.inputs = inputs;
+            this.afterGetForm(this.form, inputs);
 
             this.subscriptions.push(this.form.valueChanges
                 .subscribe((newVal) => {
@@ -94,14 +97,25 @@ export class CardEditComponent implements OnChanges, OnDestroy {
                 }));
         }
     }
-    afterGetInputs(inputs: any) {
-        // if (this.dictionaryId === RUBRICATOR_DICT.id) {
-        //     const d: boolean = this._storageSrv.getItem(SI_RUBRICUNOQDISABLE);
-        //     if (d) {
-        //         inputs['rec.CLASSIF_NAME'].isUnique = false;
-        //     }
 
-        // }
+    afterGetForm(form: FormGroup, inputs: any): any {
+        if (this.dictionaryId === RUBRICATOR_DICT.id) {
+            return this._apiSrv.read({USER_PARMS: {criteries: {
+                ISN_USER_OWNER: '-99',
+                PARM_NAME: 'UNIQ_RUBRIC_CL'
+            }}}).then (r => {
+                if (r && r[0] && r[0]['PARM_VALUE'] === 'YES') {
+                    const input = inputs['rec.CLASSIF_NAME'];
+                    const v = [this._inputCtrlSrv.unicValueValidator(input.key, input.uniqueInDict)];
+
+                    if (this.form.controls['rec.CLASSIF_NAME'].validator) {
+                        v.push(this.form.controls['rec.CLASSIF_NAME'].validator);
+                    }
+                    this.form.controls['rec.CLASSIF_NAME'].setValidators(v);
+                }
+            });
+        }
+        return Promise.resolve(null);
     }
 
     /**

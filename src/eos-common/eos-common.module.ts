@@ -40,6 +40,7 @@ import { UnicValidatorDirective } from './directives/unic-validator.directive';
 
 /* pipes */
 import { EosDatePipe } from './pipes/eos-date.pipe';
+import { DynamicInputLinkButtonComponent } from './dynamic-form-input/dynamic-input-linkbutton.component';
 
 @NgModule({
     declarations: [
@@ -60,6 +61,7 @@ import { EosDatePipe } from './pipes/eos-date.pipe';
         DynamicInputToggleComponent,
         DynamicInputNumberIncrementComponent,
         DynamicInputRadioComponent,
+        DynamicInputLinkButtonComponent,
         EosDateMaskDirective,
         EosDatePipe,
     ],

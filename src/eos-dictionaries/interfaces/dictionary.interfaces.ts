@@ -46,6 +46,7 @@ export enum E_FIELD_TYPE {
     toggle,
     numberIncrement,
     radio,
+    dictLink,
 }
 
 export interface IDictionaryLink {

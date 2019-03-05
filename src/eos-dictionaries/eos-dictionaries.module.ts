@@ -1,3 +1,6 @@
+import { RKFilesConInputComponent } from './adv-card/rk-default-values/rk-input-files-con.component';
+import { RKWritesCardComponent } from './adv-card/rk-default-values/rk-default-writes.component';
+import { RKMandatoryCardComponent } from './adv-card/rk-default-values/rk-default-mandatory.component';
 import { EosAccessPermissionsService } from './services/eos-access-permissions.service';
 import { SevParticipantCardEditComponent } from './card-views/sev-participant-card-edit.component';
 import { BrowserModule } from '@angular/platform-browser';
@@ -75,6 +78,9 @@ import {NomenklCardComponent} from './card-views/nomenkl-card.component';
 import {CounterNpEditComponent} from './counter-np-edit/counter-np-edit.component';
 import {CustomTreeComponent} from './tree2/custom-tree.component';
 import { RulesSelectComponent } from './sev-rules-select/sev-rules-select.component';
+import { AdvCardRKEditComponent } from './adv-card/adv-card-rk.component';
+import { RKDefaultValuesCardComponent } from './adv-card/rk-default-values/rk-default-values.component';
+import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-files.component';
 
 @NgModule({
     declarations: [
@@ -82,6 +88,12 @@ import { RulesSelectComponent } from './sev-rules-select/sev-rules-select.compon
         CardEditComponent,
         ColumnSettingsComponent,
         CounterNpEditComponent,
+        AdvCardRKEditComponent,
+        RKDefaultValuesCardComponent,
+        RKMandatoryCardComponent,
+        RKWritesCardComponent,
+        RKFilesConInputComponent,
+        RKFilesCardComponent,
         RulesSelectComponent,
         DepartmentsCardEditDepartmentComponent,
         DepartmentsCardEditPersonComponent,
@@ -126,6 +138,8 @@ import { RulesSelectComponent } from './sev-rules-select/sev-rules-select.compon
     entryComponents: [
         ColumnSettingsComponent,
         CounterNpEditComponent,
+        AdvCardRKEditComponent,
+        RKDefaultValuesCardComponent,
         RulesSelectComponent,
         CreateNodeComponent,
         CreateNodeBroadcastChannelComponent,
@@ -156,6 +170,8 @@ import { RulesSelectComponent } from './sev-rules-select/sev-rules-select.compon
         SandwichComponent,
         ColumnSettingsComponent,
         CounterNpEditComponent,
+        AdvCardRKEditComponent,
+        RKDefaultValuesCardComponent,
         RulesSelectComponent,
     ],
     providers: [

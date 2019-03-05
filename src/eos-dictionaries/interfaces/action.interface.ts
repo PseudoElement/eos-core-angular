@@ -23,9 +23,12 @@ export enum E_RECORD_ACTIONS {
     counterDepartmentMain,
     counterDepartment,
     counterDepartmentRK,
+    counterDepartmentRKPD,
     counterDocgroup,
+    counterDocgroupRKPD,
     CloseSelected,
     OpenSelected,
+    AdvancedCardRK,
     // createRepresentative,
     // slantForForms,
     /* to be extended */

@@ -68,5 +68,12 @@
             [readonly]="readonly"
             [hideLabel]="hideLabel"
             [inputTooltip]="tooltip"></eos-dynamic-input-radio>
+        <eos-dynamic-input-linkbutton *ngSwitchCase="types.dictLink"
+            [form]="form"
+            [buttonClick]="event1"
+            [input]="input"
+            [readonly]="readonly"
+            [hideLabel]="hideLabel"
+            [inputTooltip]="tooltip"></eos-dynamic-input-linkbutton>
     </ng-container>
 </div>

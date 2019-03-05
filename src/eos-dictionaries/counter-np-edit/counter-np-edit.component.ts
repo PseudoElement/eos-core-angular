@@ -21,7 +21,9 @@ export enum E_COUNTER_TYPE {
     counterDepartmentMain,
     counterDepartment,
     counterDepartmentRK,
-    counterDocgroup
+    counterDepartmentRKPD,
+    counterDocgroup,
+    counterDocgroupRKPD,
 }
 
 class CounterDeclarator {
@@ -50,7 +52,21 @@ const numDeclarators: CounterDeclarator [] = [
         dbNumIdName : 'ISN_DOCGROUP',
         dbNodeName : 'DOCNUMBER_FLAG',
         rootLabel : 'Корневой элемент',
-        mainLabel : 'Счетчик номерообразования',
+        mainLabel : 'Счетчик номерообразования РК',
+        criteries: {
+            'ISN_NUM_BASE': '-1',
+        },
+        appendObject : {
+            'ISN_NUM_BASE': '-1',
+        }
+    }, {
+        type: E_COUNTER_TYPE.counterDocgroupRKPD,
+        dictId : 'docgroup',
+        dbTableName : 'PRJ_NUMCREATION',
+        dbNumIdName : 'ISN_DOCGROUP',
+        dbNodeName : 'DOCNUMBER_FLAG',
+        rootLabel : 'Корневой элемент',
+        mainLabel : 'Счетчик номерообразования РКПД',
         criteries: {
             'ISN_NUM_BASE': '-1',
         },
@@ -60,12 +76,22 @@ const numDeclarators: CounterDeclarator [] = [
     }, {
         type: E_COUNTER_TYPE.counterDepartmentRK,
         dictId : 'departments',
-        dbTableName : 'NUMCREATION',
+        dbTableName : 'PRJ_NUMCREATION',
         dbNumIdName : 'ISN_NUM_BASE',
         dbBaseIdName: 'ISN_DOCGROUP',
         dbNodeName : 'NUMCREATION_FLAG',
         rootLabel : 'Корневой элемент',
-        mainLabel : 'Счетчик номерообразования',
+        mainLabel : 'Счетчик номерообразования РК',
+        isCounterRK : true,
+    }, {
+        type: E_COUNTER_TYPE.counterDepartmentRKPD,
+        dictId : 'departments',
+        dbTableName : 'PRJ_NUMCREATION',
+        dbNumIdName : 'ISN_NUM_BASE',
+        dbBaseIdName: 'ISN_DOCGROUP',
+        dbNodeName : 'NUMCREATION_FLAG',
+        rootLabel : 'Корневой элемент',
+        mainLabel : 'Счетчик номерообразования РКПД',
         isCounterRK : true,
     }, {
         type: E_COUNTER_TYPE.counterDepartmentMain,
@@ -170,6 +196,7 @@ export class CounterNpEditComponent {
         if (!this.editValueYear) {
             this.editValueYear = (new Date).getFullYear();
         }
+
         this._readRecords().then (() => {
             if (this._decl.defaultRecord) {
                 const def_value = this._getNodeValue(this._decl.defaultRecord.year);
@@ -350,18 +377,24 @@ export class CounterNpEditComponent {
     private _fillDocGroup(): Promise<any> {
         this.docGroupOptions = [];
         if (this._decl.isCounterRK) {
-            return this.apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries({
-                    DOCNUMBER_FLAG: String(1),
-                    SHABLON: '%{E}%',
-                })})
-            .then((records) => {
-                records.forEach((rec) => {
-                    this.docGroupOptions.push({title: rec.CLASSIF_NAME, value: String(rec.ISN_NODE)});
-                    if (this.currentDocgroup === undefined) {
-                        this.currentDocgroup = String(rec.ISN_NODE);
-                    }
+            const criteries = {
+                DOCNUMBER_FLAG: String(1),
+                SHABLON: '%{E}%',
+            };
+
+            if (this._decl.type === E_COUNTER_TYPE.counterDepartmentRKPD) {
+                Object.assign(criteries, {PRJ_NUM_FLAG: String(1)});
+            }
+
+            return this.apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries(criteries)})
+                .then((records) => {
+                    records.forEach((rec) => {
+                        this.docGroupOptions.push({title: rec.CLASSIF_NAME, value: String(rec.ISN_NODE)});
+                        if (this.currentDocgroup === undefined) {
+                            this.currentDocgroup = String(rec.ISN_NODE);
+                        }
+                    });
                 });
-            });
         }
         return Promise.resolve(null);
     }
