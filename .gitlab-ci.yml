@@ -52,11 +52,6 @@ build_job:
     paths:
       - dist/
 
-  artifacts:
-    expire_in: 5 days
-    paths:
-      - README.md
-
 ## cleanup stage
 
 cleanup_job:
