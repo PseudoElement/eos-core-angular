@@ -21,10 +21,12 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
     public EmailChangeFlag: boolean = false;
     public DopOperationChangeFlag: boolean = false;
     public AddressesChengeFlag: boolean = false;
+    public ScanChengeFlag: boolean = false;
     public editFlag: boolean = false;
     private newValuesMap = new Map();
     private newValuesDopOperation: Map<string, any> = new Map();
     private newValuesAddresses: Map<string, any> = new Map();
+    private newValuesScan: Map<string, any> = new Map();
 
 
     constructor(
@@ -52,7 +54,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
         this.defaultValues = hashDefault;
     }
     get btnDisabled(): boolean {
-        if (this.EmailChangeFlag || this.DopOperationChangeFlag || this.AddressesChengeFlag) {
+        if (this.EmailChangeFlag || this.DopOperationChangeFlag || this.AddressesChengeFlag || this.ScanChengeFlag) {
             return true;
         }
         return false;
@@ -104,6 +106,15 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             this.newValuesAddresses.clear();
         }
     }
+    emitChangesScan($event) {
+        if ($event) {
+            this.ScanChengeFlag = $event.btn;
+            this.newValuesScan = $event.data;
+        } else {
+            this.ScanChengeFlag = false;
+            this.newValuesScan.clear();
+        }
+    }
 
     edit(event) {
         this.editFlag = event;
@@ -124,6 +135,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
         this.getChanges(false);
         this.emitChanges(false);
         this.emitChangesAddresses(false);
+        this.emitChangesScan(false);
     }
 
     createObjRequest(): any[] {
@@ -137,6 +149,9 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
         }
         if (this.newValuesAddresses.size) {
             req.concat(this.pushIntoArrayRequest(req, this.newValuesAddresses, userId ));
+        }
+        if (this.newValuesScan.size) {
+            req.concat(this.pushIntoArrayRequest(req, this.newValuesScan, userId));
         }
         return req;
     }
@@ -166,6 +181,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             this.getChanges(false);
             this.emitChanges(false);
             this.emitChangesAddresses(false);
+            this.emitChangesScan(false);
         }
         this.editFlag = event;
         this._RemasterService.cancelEmit.next();

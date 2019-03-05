@@ -32,4 +32,8 @@
         <eos-remaster-email (pushChenge) = 'getChanges($event)' [userData] = 'hash' [defaultValues] = 'defaultValues'
         ></eos-remaster-email>
     </div>
+    <div [hidden]="currTab !== 3" class="clearfix">
+        <eos-remaster-scan (pushChenge) = 'emitChangesScan($event)' [userData] = 'hash' [defaultValues] = 'defaultValues'
+        ></eos-remaster-scan>
+    </div>
 </div>

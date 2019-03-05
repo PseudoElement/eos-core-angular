@@ -1367,3 +1367,38 @@ export const REGISTRATION_ADDRESSES: IBaseUsers = {
         },
     ]
 };
+export const REGISTRATION_SCAN: IBaseUsers = {
+    id: 'registration',
+    title: 'Регистрация',
+    apiInstance: 'USER_PARMS',
+    fields: [
+        {
+            key: 'SHABLONBARCODE',
+            type: 'select',
+            title: '',
+            options: [
+            ]
+        },
+        {
+            key: 'SHABLONBARCODEL',
+            type: 'select',
+            title: '',
+            options: [
+            ]
+        },
+        {
+            key: 'SAVEFORMAT',
+            type: 'select',
+            title: '',
+            options: [
+                {value: '0', title: ''},
+                {value: '1', title: 'формат сохранения по умолчанию, rtf'}
+            ]
+        },
+        {
+            key: 'LOCKFILE_SSCAN',
+            type: 'boolean',
+            title: 'Запретить редактирование прикрепленного файла'
+        }
+    ]
+};

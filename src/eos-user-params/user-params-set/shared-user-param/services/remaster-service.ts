@@ -22,6 +22,56 @@ export class RemasterService {
                 }
             }
         };
-        return this._apiSrv.read(query);
+        return this._apiSrv.read(query).then(res => {
+            return res;
+        }).catch(error => {
+            console.log(error);
+        });
+    }
+    getScanShablonBarCode(): Promise<any> {
+        const query = {
+            DOC_TEMPLATES: {
+                criteries: {
+                    CATEGORY: `%книжная%`
+                }
+            },
+            order: 'DESCRIPTION'
+        };
+      return  this._apiSrv.read(query).then(res => {
+        return res;
+      }).catch(error => {
+          console.log(error);
+      });
+    }
+
+    getScanShablonBarCodeL() {
+        const query = {
+            DOC_TEMPLATES: {
+                criteries: {
+                    CATEGORY: `%альбомная%`
+                },
+                order: 'DESCRIPTION'
+            }
+        };
+      return  this._apiSrv.read(query).then(res => {
+        return res;
+      }).catch(error => {
+          console.log(error);
+      });
+    }
+
+    getScanFormatCl() {
+        const query = {
+            FORMAT_CL: {
+                criteries: {
+                    DEL_COL: String(0)
+                },
+            }
+        };
+      return  this._apiSrv.read(query).then(res => {
+        return res;
+      }).catch(error => {
+          console.log(error);
+      });
     }
 }
