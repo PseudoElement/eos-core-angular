@@ -55,6 +55,7 @@ import {RemasterAddressesComponent} from '../eos-user-params/user-params-set/use
 import {RemasterScanComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-scan/remaster-scan.conponent';
 import {RemasterAutoSearchComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-auto-search/remaster-auto-search.conponent';
 import {RemasterSebComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-seb/remaster-seb.component';
+import {RemasterRcComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-rc/remaster-rc.component';
 
 @NgModule({
     declarations: [
@@ -100,6 +101,7 @@ import {RemasterSebComponent} from '../eos-user-params/user-params-set/user-para
         RemasterScanComponent,
         RemasterAutoSearchComponent,
         RemasterSebComponent,
+        RemasterRcComponent,
     ],
     imports: [
         BrowserModule,

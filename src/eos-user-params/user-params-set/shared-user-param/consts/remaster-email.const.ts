@@ -1594,3 +1594,20 @@ export const REGISTRATION_SEB: IBaseUsers =  {
     },
     ]
 };
+
+export const REGISTRATION_RC: IBaseUsers =  {
+    id: 'registration',
+    title: 'Регистрация',
+    apiInstance: 'USER_PARMS',
+    fields: [  {
+        key: 'FIRST_PRJEXEC_FROM_PREV',
+        type: 'boolean',
+        title: 'Первый исполнитель от предыдущей РКПД'
+    },
+    {
+        key: 'DONT_SHOW_PRJ_HIDDEN_FILES',
+        type: 'boolean',
+        title: 'Не показывать скрытые файлы'
+    },
+    ]
+};

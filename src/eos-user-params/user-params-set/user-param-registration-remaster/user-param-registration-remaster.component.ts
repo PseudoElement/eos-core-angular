@@ -70,6 +70,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             || this.ScanChengeFlag
             || this.AutoSearchChangeFlag
             || this.SabChangeFlag
+            || this.RcChangeflag
             ) {
             return true;
         }
