@@ -29,6 +29,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
     stringForQuery = [];
     curentNode: NodeDocsTree;
     userCard: Map<string, USERCARD>;
+    startUserCard: Map<string, USERCARD>;
     isShell: Boolean = false;
     bacgHeader: boolean;
     listCards: IInputParamControl[] = DOCUMENT_GROUPS;
@@ -63,6 +64,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
         private _limitservise: LimitedAccesseService
     ) {
         const due: string[] = [];
+        this.startUserCard = new Map<string, USERCARD>();
         this.userCard = new Map<string, USERCARD>();
         this.curentUser = this._userParamsSetSrv.curentUser;
         this.curentUser['USERCARD_List'].forEach((card: USERCARD) => {
@@ -144,6 +146,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
 
             this.arrayDataDocumentsForMerge.push(rightDocGroup);
             sessionStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
+            this.Changed.emit();
         } else {
            setTimeout(() => {
             if (sessionStorage.getItem('FuncFileCards') !== null) {
@@ -309,6 +312,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                 }
             }
             }
+            this.Changed.emit();
         });
             }
     }
@@ -360,6 +364,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                     }
                     }
                 }
+                this.Changed.emit();
             }).then(() => {
                 item[3].openDocumentTree = !item[3].openDocumentTree;
                 setTimeout(() => {
@@ -427,6 +432,7 @@ export class RightSideDocGroupAndRestrictionInFileCardComponent implements OnIni
                                     this.arrayDataDocumentsForDelete.push(tmp);
                                 }
                                     sessionStorage.setItem('arrayDataDocumentsForDelete', JSON.stringify(this.arrayDataDocumentsForDelete));
+                                    this.Changed.emit();
                             setTimeout(() => {
                                 this.listAllData[i][3].openDocumentTree = !this.listAllData[i][3].openDocumentTree;
                             }, 1);

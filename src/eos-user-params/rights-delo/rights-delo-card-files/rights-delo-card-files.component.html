@@ -3,7 +3,7 @@
         [title]="titleHeader"
         (submitForm)="submit()"
         (cancelForm)="cancel()"
-        [statusBtnSub]="btnDisabled"
+        [statusBtnSub]="buttonDisabled"
     ></eos-rights-delo-header>
 <div class="user-input-group">
 <div class="left-block-list-card-files">
@@ -38,7 +38,7 @@
                   placement="bottom"
                   container="body"
                   containerClass="tooltip-info"
-                  (click)="[choosingMainCheckbox(), hideToolTip()]">
+                  (click)="[choosingMainCheckbox('Second'), hideToolTip()]">
                   <span>
                     <img class="icon_key" src="assets/icons/Keyfile-Blue.svg" />
                   </span>

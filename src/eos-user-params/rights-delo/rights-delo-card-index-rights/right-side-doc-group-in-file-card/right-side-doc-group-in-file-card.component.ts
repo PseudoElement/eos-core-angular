@@ -142,8 +142,10 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
             }
 
             this.arrayDataDocumentsForMerge.push(rightDocGroup);
+            console.log(this.arrayDataDocumentsForMerge);
             sessionStorage.setItem('arrayDataDocumentsForMerge', JSON.stringify(this.arrayDataDocumentsForMerge));
             sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+            this.Changed.emit();
         } else {
         setTimeout(() => {
             if (sessionStorage.getItem('FuncFileCards') !== null) {
@@ -268,6 +270,7 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                     }
                 }
             }
+            this.Changed.emit();
     });
 }
     }
@@ -320,6 +323,7 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                     }
                 }
                 sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                this.Changed.emit();
             }).then(() => {
                 item[2].openDocumentTree = !item[2].openDocumentTree;
                 setTimeout(() => {
@@ -388,6 +392,7 @@ export class RightSideDocGroupInFileCardComponent implements OnInit {
                                 }
                                     sessionStorage.setItem('arrayDataDocumentsForDelete', JSON.stringify(this.arrayDataDocumentsForDelete));
                                     sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                                    this.Changed.emit();
                             setTimeout(() => {
                                 this.listAllData[i][2].openDocumentTree = !this.listAllData[i][2].openDocumentTree;
                             }, 1);
