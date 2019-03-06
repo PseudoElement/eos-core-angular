@@ -1,18 +1,18 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { Router} from '@angular/router';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../../../eos-user-params/user-params-set/shared-user-param/consts/eos-user-params.const';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import {RemasterService} from '../shared-user-param/services/remaster-service';
-
+import {Subject} from 'rxjs/Subject';
 @Component({
     selector: 'eos-registration-remaster',
     styleUrls: ['user-param-registration-remaster.component.scss'],
     templateUrl: 'user-param-registration-remaster.component.html'
 })
 
-export class UserParamRegistrationRemasterComponent implements OnInit {
+export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy {
     readonly fieldGroupsForRegistration: string[] = ['Доп. операции', 'Корр./адресаты', 'Эл. почта', 'Сканирование', 'Автопоиск', 'СЭВ', 'РКПД'];
     public currTab = 0;
     public hash: Map<any, string>;
@@ -33,7 +33,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
     private newValuesAutoSearch: Map<string, any> = new Map();
     private newValuesSab: Map<string, any> = new Map();
     private newValuesRc: Map<string, any> = new Map();
-
+    private _ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
         private _userSrv: UserParamsService,
@@ -43,6 +43,9 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
         private _RemasterService: RemasterService,
         ) {
             this.hash = this._userSrv.hashUserContext;
+            this._userSrv.saveData$.takeUntil(this._ngUnsubscribe).subscribe(() => {
+                this.submit(null);
+            });
     }
     ngOnInit() {
         this._apiSrv.read(this.getObjQueryInputsField()).then(data => {
@@ -55,6 +58,10 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
                 msg: error.message || 'Не установленно соединение с базой'
             });
         });
+    }
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
     }
     create_hash_default(data) {
         const hashDefault = {};
@@ -103,6 +110,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             this.newValuesMap.delete('MAILRECIVE');
             this.newValuesMap.delete('RECEIP_EMAIL');
         }
+        this._pushState();
     }
 
     emitChanges($event) {
@@ -113,6 +121,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             this.DopOperationChangeFlag = false;
             this.newValuesDopOperation.clear();
         }
+        this._pushState();
     }
     emitChangesAddresses($event) {
         if ($event) {
@@ -122,6 +131,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             this.AddressesChengeFlag = false;
             this.newValuesAddresses.clear();
         }
+        this._pushState();
     }
     emitChangesScan($event) {
         if ($event) {
@@ -131,6 +141,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             this.ScanChengeFlag = false;
             this.newValuesScan.clear();
         }
+        this._pushState();
     }
     emitChangesAutoSearch($event) {
         if ($event) {
@@ -140,6 +151,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             this.AutoSearchChangeFlag = false;
             this.newValuesAutoSearch.clear();
         }
+        this._pushState();
     }
     emitChangesSab($event) {
         if ($event) {
@@ -149,6 +161,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             this.SabChangeFlag = false;
             this.newValuesSab.clear();
         }
+        this._pushState();
     }
     emitChangesRc($event) {
         if ($event) {
@@ -158,6 +171,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
             this.RcChangeflag = false;
             this.newValuesRc.clear();
         }
+        this._pushState();
     }
 
     edit(event) {
@@ -251,4 +265,8 @@ export class UserParamRegistrationRemasterComponent implements OnInit {
     default(event) {
         this._RemasterService.defaultEmit.next();
     }
+    private _pushState () {
+        this._userSrv.setChangeState({isChange: this.btnDisabled});
+    }
+
 }
