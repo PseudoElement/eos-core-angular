@@ -6,13 +6,15 @@ import {FormHelperService} from '../../../shared/services/form-helper.services';
 import {FormGroup} from '@angular/forms';
 import {Subject} from 'rxjs/Subject';
 import {RemasterService} from '../../shared-user-param/services/remaster-service';
-
+import {FORMAT_CL, DOC_TEMPLATES} from 'eos-rest/interfaces/structures';
+import {IFieldDescriptor} from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-remaster-scan',
     templateUrl: 'remaster-scan.conponent.html',
     styleUrls: ['remaster-scan.conponent.scss'],
     providers: [FormHelperService]
 })
+
 
 export class RemasterScanComponent implements OnInit, OnDestroy {
     @Input() userData;
@@ -51,16 +53,18 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
         Promise.all([
             this._RemasterService.getScanShablonBarCode(),
             this._RemasterService.getScanShablonBarCodeL(),
-        ]).then(data => {
+            this._RemasterService.getScanFormatCl(),
+        ]).then((data) => {
             this.fillOptionsForConst(data);
+            this.fillFormatCl(data[2]);
             this.pretInputs();
             this.form = this.inpSrv.toFormGroup(this.inputs);
             this.form.disable({emitEvent: false});
             this.subscribeChange();
         });
     }
-    fillOptionsForConst(data) {
-        REGISTRATION_SCAN.fields.map(field => {
+    fillOptionsForConst(data): void {
+        REGISTRATION_SCAN.fields.map((field: IFieldDescriptor) => {
             if (field.key === 'SHABLONBARCODE') {
              return  this.setOptions(data[0], field);
             }
@@ -70,9 +74,9 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
             return field;
         });
     }
-    setOptions(data, field) {
+    setOptions(data: DOC_TEMPLATES[], field: IFieldDescriptor) {
         if (data.length && (field.options.length < data.length)) {
-            data.forEach(el => {
+            data.forEach((el: DOC_TEMPLATES) => {
                 field.options.push({
                     value: el['NAME_TEMPLATE'],
                     title: el['DESCRIPTION']
@@ -81,18 +85,29 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
         }
         return field;
     }
-    setNewValInputs() {
+    fillFormatCl(data): void {
+        const options: Array<any> = REGISTRATION_SCAN.fields[2].options;
+        if (data.length && (options.length <= data.length + 1)) {
+            data.forEach((el: FORMAT_CL) => {
+                options.push({
+                    value: el.ISN_LCLASSIF,
+                    title: `${el.NOTE}, ${el.FORMAT_NAME}`
+                });
+            });
+        }
+    }
+    setNewValInputs(): void {
         Object.keys(this.form.controls).forEach(inp => {
             this.inputs[inp].value = this.form.controls[inp].value;
         });
     }
-    pretInputs() {
+    pretInputs(): void {
         this.prapareData =  this.formHelp.parse_Create(REGISTRATION_SCAN.fields, this.userData);
         this.prepareInputs = this.formHelp.getObjectInputFields(REGISTRATION_SCAN.fields);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, {rec: this.prapareData});
     }
 
-    subscribeChange() {
+    subscribeChange(): void {
         this.form.valueChanges.takeUntil(this.ngUnsub).subscribe(data => {
           Object.keys(data).forEach(item => {
             if (!this.checkChanges(data, item)) {
@@ -108,7 +123,7 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
         });
     }
 
-    checkChanges(data, item: string) {
+    checkChanges(data, item: string): boolean {
         const key = item.substring(4);
         const oldValue = this.inputs[item].value;
         if (data[item] !== oldValue) {
@@ -125,7 +140,7 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
         }
         return true;
     }
-    checkChangesNext(data, item) {
+    checkChangesNext(data, item): void {
         if (this.formHelp._fieldsTypeParce[item] === 'number') {
             if (data['rec.' + item] === false) {
                 this.newDataMap.set(item, 0);
@@ -141,7 +156,7 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
             }
         }
     }
-    cancel() {
+    cancel(): void {
         if (this.btnDisabled) {
             this.pretInputs();
             Object.keys(this.inputs).forEach(input => {
@@ -150,7 +165,7 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
         }
         this.form.disable({emitEvent: false});
     }
-    default() {
+    default(): void {
         this.prepareDefaultForm = this.formHelp.parse_Create(REGISTRATION_SCAN.fields, this.defaultValues);
         Object.keys(this.prepareDefaultForm).forEach((item: string) => {
             this.form.controls['rec.' + item].patchValue(this.prepareDefaultForm[item]);

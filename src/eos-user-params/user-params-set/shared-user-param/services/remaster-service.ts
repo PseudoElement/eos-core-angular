@@ -78,7 +78,7 @@ export class RemasterService {
         const query = {
             FORMAT_CL: {
                 criteries: {
-                    DEL_COL: String(0)
+                    DEL_COL: '0'
                 },
             }
         };
@@ -95,7 +95,7 @@ export class RemasterService {
 
     getLink_Type() {
         const query = {
-            FORMAT_CL: { ar: true }
+            LINK_CL: { ar: true }
         };
     return  this._apiSrv.read(query).then(res => {
         return res;

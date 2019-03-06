@@ -6,6 +6,8 @@ import {FormHelperService} from '../../../shared/services/form-helper.services';
 import {FormGroup} from '@angular/forms';
 import {RemasterService} from '../../shared-user-param/services/remaster-service';
 import {Subject} from 'rxjs/Subject';
+import {LINK_CL} from 'eos-rest/interfaces/structures';
+
  @Component({
     selector: 'eos-auto-search',
     templateUrl: 'remaster-auto-search.conponent.html',
@@ -54,12 +56,26 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
     }
     ngOnInit() {
         this.searchString = this.userData['DEF_SEARCH_CITIZEN'];
-        this._RemasterService.getLink_Type().then(data => {
+        this._RemasterService.getLink_Type().then((data: LINK_CL[]) => {
+           this.fillConstLinkType(data);
             this.pretInputs();
             this.form = this.inpSrv.toFormGroup(this.inputs);
             this.form.disable({emitEvent: false});
             this.subscribeChange();
         });
+    }
+    fillConstLinkType(data: LINK_CL[]) {
+        const options: Array<any> = REGISTRATION_AUTO_SEARCH.fields[3].options;
+       if (options.length <= 1) {
+            if (data.length) {
+                data.forEach((value: LINK_CL) => {
+                    options.push({
+                        value: value.ISN_LCLASSIF,
+                        title: value.CLASSIF_NAME
+                    });
+                });
+            }
+       }
     }
     pretInputs() {
         this.prapareData =   this.formHelp.parse_Create_Auto_Search(REGISTRATION_AUTO_SEARCH.fields, this.userData);

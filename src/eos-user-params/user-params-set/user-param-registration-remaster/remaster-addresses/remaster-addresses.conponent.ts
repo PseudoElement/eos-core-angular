@@ -81,22 +81,22 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
         });
         this.subscribeChange();
     }
-    clearField() {
+    clearField(): void {
         this.orgName = '';
         this.form.controls['rec.ORGGROUP'].patchValue('');
     }
-    setNewValInputs() {
+    setNewValInputs(): void {
         Object.keys(this.form.controls).forEach(inp => {
             this.inputs[inp].value = this.form.controls[inp].value;
         });
     }
-    pretInputs() {
+    pretInputs(): void {
         this.prapareData =  this.formHelp.parse_Create(REGISTRATION_ADDRESSES.fields, this.userData);
         this.prepareInputs = this.formHelp.getObjectInputFields(REGISTRATION_ADDRESSES.fields);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, {rec: this.prapareData});
     }
 
-    subscribeChange() {
+    subscribeChange(): void {
         this.form.valueChanges.takeUntil(this.ngUnsub).subscribe(data => {
           Object.keys(data).forEach(item => {
             if (!this.checkChanges(data, item)) {
@@ -112,7 +112,7 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
         });
     }
 
-    checkChanges(data, item: string) {
+    checkChanges(data, item: string): boolean {
         const key = item.substring(4);
         const oldValue = this.inputs[item].value;
         if (data[item] !== oldValue) {

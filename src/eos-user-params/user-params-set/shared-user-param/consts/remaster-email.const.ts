@@ -1392,7 +1392,6 @@ export const REGISTRATION_SCAN: IBaseUsers = {
             title: '',
             options: [
                 {value: '0', title: ''},
-                {value: '1', title: 'формат сохранения по умолчанию, rtf'}
             ]
         },
         {
@@ -1450,23 +1449,23 @@ export const REGISTRATION_AUTO_SEARCH: IBaseUsers = {
             title: '',
             options: [
                 {value: '0', title: ''},
-                {value: '1', title: 'Исполнено'},
-                {value: '2', title: 'Во исполнение'},
-                {value: '3', title: 'Первичный'},
-                {value: '4', title: 'Повторный'},
-                {value: '5', title: 'Зарегистрирован'},
-                {value: '6', title: 'Проект'},
-                {value: '3786', title: 'В дополнение'},
-                {value: '3787', title: 'Дополнен'},
-                {value: '4057035', title: 'В отмену'},
-                {value: '4057036', title: 'Отменен'},
-                {value: '3788', title: 'Общий автор'},
-                {value: '3790', title: 'Ответ на'},
-                {value: '3791', title: 'Обращение'},
-                {value: '4410', title: 'Запрос'},
-                {value: '4411', title: 'Ответ на запрос'},
-                {value: '4057038', title: 'Факс'},
-                {value: '4057039', title: 'Оригинал'}
+                // {value: '1', title: 'Исполнено'},
+                // {value: '2', title: 'Во исполнение'},
+                // {value: '3', title: 'Первичный'},
+                // {value: '4', title: 'Повторный'},
+                // {value: '5', title: 'Зарегистрирован'},
+                // {value: '6', title: 'Проект'},
+                // {value: '3786', title: 'В дополнение'},
+                // {value: '3787', title: 'Дополнен'},
+                // {value: '4057035', title: 'В отмену'},
+                // {value: '4057036', title: 'Отменен'},
+                // {value: '3788', title: 'Общий автор'},
+                // {value: '3790', title: 'Ответ на'},
+                // {value: '3791', title: 'Обращение'},
+                // {value: '4410', title: 'Запрос'},
+                // {value: '4411', title: 'Ответ на запрос'},
+                // {value: '4057038', title: 'Факс'},
+                // {value: '4057039', title: 'Оригинал'}
             ]
         },
         {
