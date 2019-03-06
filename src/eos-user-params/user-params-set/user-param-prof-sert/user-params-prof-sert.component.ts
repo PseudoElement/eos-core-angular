@@ -48,6 +48,7 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
     public link;
     public flagHideBtn: boolean = false;
     private DBserts: Array<any> = [];
+    private isCarma: boolean = true;
     private modalRef: BsModalRef;
     private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -74,27 +75,37 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
         this._ngUnsubscribe.complete();
     }
     ngOnInit() {
-        const arrPromise = [];
         const store: Istore[] =  [{Location: 'sscu', Address: '', Name: 'My'}];
-        this.certStoresService.init(null, store).subscribe(data => {
-            this.certStoresService.EnumCertificates('', '', '').subscribe(datas => {
-                datas.forEach(sert => {
-                    arrPromise.push(this.certStoresService.GetCertInfo2(sert));
+             this.certStoresService.init(null, store).subscribe((data) => {
+                this.isCarma = true;
+                this.certStoresService.EnumCertificates('', '', '').subscribe(infoSert => {
+                this.getSerts();
+                this.waitSerts(infoSert);
                 });
-                Promise.all(arrPromise).then(arrayInfo => {
-                    arrayInfo.forEach((infoSert, index) => {
-                        this.alllistSertInfo.push({
-                            whom: infoSert['certInfo']['Issuer'],
-                            sn: infoSert['certInfo']['Serial'],
-                            who: this.parseSertWhom(infoSert['certInfo']['X500Description']),
-                            data: infoSert,
-                            selected: false,
-                            id: datas[index],
-                            create: false,
-                            delete: false,
-                            valid: this.parceValid(infoSert['certInfo']['Validity']) ,
-                        });
-                    });
+          }, (error) => {
+            this.isCarma = false;
+            this.getSertNotCarma();
+                // this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
+            });
+    }
+
+    waitSerts(data) {
+        const arrPromise = [];
+        data.forEach(sert => {
+            arrPromise.push(this.certStoresService.GetCertInfo2(sert));
+        });
+        Promise.all(arrPromise).then(arrayInfo => {
+            arrayInfo.forEach((infoSert, index) => {
+                this.alllistSertInfo.push({
+                    whom: infoSert['certInfo']['Issuer'],
+                    sn: infoSert['certInfo']['Serial'],
+                    who: this.parseSertWhom(infoSert['certInfo']['X500Description']),
+                    data: infoSert,
+                    selected: false,
+                    id: data[index],
+                    create: false,
+                    delete: false,
+                    valid: this.parceValid(infoSert['certInfo']['Validity']) ,
                 });
             });
         });
@@ -126,6 +137,36 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
             });
         }).catch(error => {
             console.log(error);
+        });
+    }
+
+    getSertNotCarma() {
+        const query = {
+            USER_CERT_PROFILE: {
+                criteries: {
+                    ISN_USER: String(this._userSrv.userContextId)
+                }
+            }
+        };
+        return this.apiSrv.read(query).then(result => {
+            this.DBserts = result;
+            this.DBserts.forEach(sert => {
+                this.listsSertInfo.push({
+                    whom: 'нет данных',
+                    sn: sert['ID_CERTIFICATE'],
+                    who: 'нет данных',
+                    data: sert,
+                    selected: false,
+                    id:  sert['ID_CERTIFICATE'],
+                    key: sert['ISN_CERT_PROFILE'],
+                    create: false,
+                    delete: false,
+                    valid: false ,
+                });
+            });
+            if (this.listsSertInfo.length > 0) {
+                this.selectCurent(this.listsSertInfo[0]);
+            }
         });
     }
 
@@ -272,7 +313,11 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
        const requestDelete = this.apiSrv.batch(queryDelete, '');
        Promise.all([requestCreate, requestDelete]).then(data => {
         this.listsSertInfo.splice(0, this.listsSertInfo.length);
-        this.getSerts();
+        if (this.isCarma) {
+            this.getSerts();
+        }   else {
+            this.getSertNotCarma();
+        }
         this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
        this.checkchanges();
        }).catch(error => {
