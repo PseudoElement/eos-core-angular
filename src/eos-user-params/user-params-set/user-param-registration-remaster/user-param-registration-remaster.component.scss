@@ -1,7 +1,13 @@
 .input-user-registration-rk-forwarding-wrapper {
+    eos-dynamic-input{
+        font-size: 14px;
+    }
     .scrollWrapper{
         overflow: auto;
         max-height: calc(100vh - 330px);
+    }
+    .user-param-registration-content-wrapper{
+        padding:  0 20px;
     }
 
     .tabs-wrapper {
@@ -34,8 +40,8 @@
     }
 
     .small {
-        height: 18px;
-        width: 18px;
+        height: 21px;
+        width: 21px;
     }
 
     /*.registration-boolean-automatically-call-function-forwarded-RC {
@@ -136,5 +142,7 @@
     background-color: grey;
     opacity: 0.5;
 }
-
+eos-dynamic-input{
+    font-size: 14px;
+}
 

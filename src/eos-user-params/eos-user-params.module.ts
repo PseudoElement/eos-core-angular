@@ -10,7 +10,6 @@ import { UserParamsComponent } from './eos-user-params.component';
 import { UserParamApiSrv } from './shared/services/user-params-api.service';
 import { UserParamsDescriptorSrv } from './shared/services/user-params-descriptor.service';
 import { UserParamHeaderComponent } from './shared/user-param-header/user-header.component';
-import { UserParamRegistrationComponent } from './user-params-set/user-param-registration/user-param-registration.component';
 import { UserParamRegistrationRemasterComponent } from './user-params-set/user-param-registration-remaster/user-param-registration-remaster.component';
 import { UserParamCabinetsComponent } from './user-params-set/user-param-cabinets/user-param-cabinets.component';
 import { UserParamRCComponent } from './user-params-set/user-param-rc/user-param-rc.component';
@@ -61,7 +60,6 @@ import {RemasterRcComponent} from '../eos-user-params/user-params-set/user-param
     declarations: [
         UserParamsComponent,
         UserParamHeaderComponent,
-        UserParamRegistrationComponent,
         UserParamRegistrationRemasterComponent,
         UserParamCabinetsComponent,
         UserParamRCComponent,
