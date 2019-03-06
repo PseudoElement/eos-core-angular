@@ -5,10 +5,11 @@ import { Router} from '@angular/router';
 // import { FormGroup, AbstractControl, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../shared-user-param/consts/eos-user-params.const';
+import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, PARM_ERROR_DB, PARM_ERROR_CARMA } from '../shared-user-param/consts/eos-user-params.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import {Observable} from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+
 export interface Istore {
     Location: string;
     Address?: string;
@@ -63,7 +64,6 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
         this.selfLink = this._router.url.split('?')[0];
         this.selectedSertificatePopup  = null;
         this.link = this._userSrv.userContextId;
-        this.getSerts();
         this._userSrv.saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
@@ -117,10 +117,7 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
             return false;
         }
     }
-    initForm() {
-
-    }
-    getSerts() {
+    getSerts(): Promise<any> {
         const query = {
             USER_CERT_PROFILE: {
                 criteries: {
@@ -128,7 +125,7 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
                 }
             }
         };
-        this.apiSrv.read(query).then(result => {
+     return this.apiSrv.read(query).then(result => {
             this.DBserts = result;
             this.getInfoForDBSerts().then(() => {
                 if (this.listsSertInfo.length > 0) {
@@ -136,7 +133,7 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
                 }
             });
         }).catch(error => {
-            console.log(error);
+            this._msgSrv.addNewMessage(PARM_ERROR_DB);
         });
     }
 
@@ -190,6 +187,8 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
                     valid: this.parceValid(infoSert['certInfo']['Validity']) ,
                 });
             });
+        }).catch(error => {
+            this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
         });
     }
     selectCurent(list: SertInfo): void {
@@ -216,12 +215,10 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
 
     openCarmWindow(idSert) {
         this.certStoresService.ShowCert(String(idSert)).catch(e => {
-            this._msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+            this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
             return Observable.of(null);
         })
-        .subscribe((data) => {
-            console.log(data);
-        });
+        .subscribe(() => {});
     }
 
 
@@ -322,7 +319,6 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
        this.checkchanges();
        }).catch(error => {
         this._msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
-            console.log(error);
        });
     }
     cancellation(event) {
