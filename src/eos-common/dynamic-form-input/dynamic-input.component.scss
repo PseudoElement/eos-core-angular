@@ -166,6 +166,21 @@ eos-dynamic-input {
             }
         }
     }
+    .input-button-container {
+        // width: 300px;
+        vertical-align: middle;
+        white-space: nowrap;
+        position: relative;
+        a {
+           float: right;
+           position: absolute;
+           right: 2px;
+           top: 5px;
+        }
+        input {
+            background-color: lightgrey;
+        }
+    }
 }
 
 .eos-datepicker {

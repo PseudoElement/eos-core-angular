@@ -1,0 +1,44 @@
+<div class="eos-rk-files card-content-wrapper">
+
+    <p class="xl-font paragraph-title">Ограничения на прикрепляемые файлы</p>
+
+    <eos-rk-input-files
+        [inputSize]="inputs['DG_FILE_CONSTRAINT_List.DOC_RC.MAX_SIZE']"
+        [inputCb]="inputs['DG_FILE_CONSTRAINT_List.DOC_RC.ONE_FILE']"
+        [inputExt]="inputs['DG_FILE_CONSTRAINT_List.DOC_RC.EXTENSIONS']"
+        [form]="form"
+        [editMode]="editMode"
+        title="Файлы РК">
+    </eos-rk-input-files>
+    <eos-rk-input-files
+        [inputSize]="inputs['DG_FILE_CONSTRAINT_List.RESOLUTION.MAX_SIZE']"
+        [inputCb]="inputs['DG_FILE_CONSTRAINT_List.RESOLUTION.ONE_FILE']"
+        [inputExt]="inputs['DG_FILE_CONSTRAINT_List.RESOLUTION.EXTENSIONS']"
+        [form]="form"
+        [editMode]="editMode"
+        title="Файлы поручений">
+    </eos-rk-input-files>
+    <eos-rk-input-files
+        [inputSize]="inputs['DG_FILE_CONSTRAINT_List.REPLY.MAX_SIZE']"
+        [inputCb]="inputs['DG_FILE_CONSTRAINT_List.REPLY.ONE_FILE']"
+        [inputExt]="inputs['DG_FILE_CONSTRAINT_List.REPLY.EXTENSIONS']"
+        [form]="form"
+        [editMode]="editMode"
+        title="Файлы отчетов исполнителей">
+    </eos-rk-input-files>
+
+    <p class="xl-font paragraph-title"></p>
+    <div class="items-group clearfix">
+        <div class="col-1">
+        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE']"
+                                        [form]="form"
+                                        [readonly]="!editMode" ></eos-dynamic-input>
+        </div>
+        <div class="col-2">
+        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST']"
+                                        [form]="form"
+                                        [hideLabel]="true"
+                                        [readonly]="!editMode" ></eos-dynamic-input>
+        </div>
+    </div>
+</div>

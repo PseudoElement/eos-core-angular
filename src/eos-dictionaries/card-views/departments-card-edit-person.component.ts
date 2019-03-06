@@ -83,7 +83,9 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
 
                 // const rn = new RussianName('Петрова Зоя Сергеевна');
                 const rn = new RussianName(res['SURNAME'], res['NAME'], res['PATRON'],
-                    res['gender'] ? RussianNameProcessor.sexM : RussianNameProcessor.sexF
+                    res['GENDER'] === 0 ? RussianNameProcessor.sexM :
+                    res['GENDER'] === 1 ? RussianNameProcessor.sexF :
+                    null
                     );
                 res.NAME_DP = rn.firstName(rn.gcaseDat);
                 res.NAME_PP = rn.firstName(rn.gcasePred);

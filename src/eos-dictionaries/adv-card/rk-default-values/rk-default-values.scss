@@ -1,0 +1,144 @@
+.no-margin {
+
+    .form-group
+    {
+        margin: 0px;
+    }
+}
+
+.margin10 {
+    .form-group
+    {
+        margin-bottom: 10px;
+    }
+}
+
+
+
+.eos-rk-mandatory {
+
+    &.card-content-wrapper {
+        padding: 20px 20px 0 0;
+    }
+
+    .form-group {
+        margin: 0px;
+        margin-left: 40px;
+    }
+
+    .form-group
+    {
+        margin: 0px;
+        margin-left: 40px;
+    }
+
+}
+.eos-rk-writes {
+    .items-group {
+        //     // border: solid 1px;
+            padding-left: 20px;
+        }
+    .clearfix {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .col-with-label {
+        display: inline-block;
+    }
+    .radio-position-1 {
+        position: relative;
+        top: -97px;
+        left: 40px;
+        display: inline-block;
+    }
+    .radio-position-2 {
+        position: relative;
+        top: -59px;
+        left: 40px;
+        display: inline-block;
+    }
+    .shrinked {
+        // margin-bottom: -50px;
+        height: 115px;
+    }
+    .shrinked2 {
+        // margin-bottom: -50px;
+        height: 115px;
+        padding-left: 20px;
+    }
+    .adv-col1 {
+        display: inline-block;
+        width: 20%;
+    }
+    .adv-col2 {
+        display: inline-block;
+        width: 35%;
+    }
+    .adv-col3 {
+        display: inline-block;
+        width: 5%;
+    }
+    .adv-col4 {
+        display: inline-block;
+        width: 30%;
+    }
+
+}
+
+
+.eos-rk-files {
+    .clearfix {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .col-1 {
+        width: 30%;
+        display: inline-block;
+        vertical-align: bottom;
+        padding-right: 20px;
+    }
+    .col-2 {
+        width: 65%;
+        display: inline-block;
+        vertical-align: bottom;
+    }
+
+}
+.eos-rk-default-values {
+    &.card-content-wrapper {
+        padding: 20px 20px 0 0;
+    }
+    .items-group {
+    //     // border: solid 1px;
+        padding-left: 20px;
+    }
+    .clearfix {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    .col-1 {
+        // width: 178px;
+        display: inline-block;
+        vertical-align: bottom;
+        padding-right: 20px;
+    }
+    .col-2 {
+        width: 83%;
+        display: inline-block;
+        vertical-align: bottom;
+    }
+    .col-with-label {
+        display: inline-block;
+    }
+    .col50 {
+        display: inline-block;
+        width: 49%;
+    }
+    .padl10 {
+        padding-left: 10px;
+    }
+    .padr10 {
+        padding-right: 10px;
+    }
+
+}

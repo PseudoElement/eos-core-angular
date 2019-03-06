@@ -272,7 +272,8 @@ export class RightsDeloCardIndexRightsComponent implements OnInit, OnDestroy {
                                                         for (let k = 0; k < Array.from(this.userCard).length; k++) {
                                                             if (Array.from(this.userCard)[k][0] === newArrayDataDocumentsForMerge[i]['DUE_CARD']) {
                                                                 for (let h = 0; h < Array.from(this.userCard)[k][1]['USER_CARD_DOCGROUP_List'].length; h++) {
-                                                                    if (Array.from(this.userCard)[k][1]['USER_CARD_DOCGROUP_List'][h]['DUE'] === newArrayDataDocumentsForMerge[i]['DUE']) {
+                                                                    if (Array.from(this.userCard)[k][1]['USER_CARD_DOCGROUP_List'][h]['DUE'] === newArrayDataDocumentsForMerge[i]['DUE'] &&
+                                                                        Array.from(this.userCard)[k][1]['USER_CARD_DOCGROUP_List'][h]['FUNC_NUM'] === newArrayDataDocumentsForMerge[i]['FUNC_NUM']) {
                                                                         Array.from(this.userCard)[k][1]['USER_CARD_DOCGROUP_List'].splice(h, 1, newArrayDataDocumentsForMerge[i]);
                                                                     }
                                                                 }
@@ -307,7 +308,8 @@ export class RightsDeloCardIndexRightsComponent implements OnInit, OnDestroy {
                                                 for (let k = 0; k < Array.from(this.userCard).length; k++) {
                                                     if (Array.from(this.userCard)[k][0] === newArrayDataDocumentsForMerge[i]['DUE_CARD']) {
                                                         for (let h = 0; h < Array.from(this.userCard)[k][1]['USER_CARD_DOCGROUP_List'].length; h++) {
-                                                            if (Array.from(this.userCard)[k][1]['USER_CARD_DOCGROUP_List'][h]['DUE'] === newArrayDataDocumentsForMerge[i]['DUE']) {
+                                                            if (Array.from(this.userCard)[k][1]['USER_CARD_DOCGROUP_List'][h]['DUE'] === newArrayDataDocumentsForMerge[i]['DUE'] &&
+                                                                Array.from(this.userCard)[k][1]['USER_CARD_DOCGROUP_List'][h]['FUNC_NUM'] === newArrayDataDocumentsForMerge[i]['FUNC_NUM']) {
                                                                 Array.from(this.userCard)[k][1]['USER_CARD_DOCGROUP_List'].splice(h, 1, newArrayDataDocumentsForMerge[i]);
                                                             }
                                                         }

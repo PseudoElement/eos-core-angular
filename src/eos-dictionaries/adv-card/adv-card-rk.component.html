@@ -1,0 +1,100 @@
+<div class="modal-header">
+    <h4 class="xl-font primary-text pull-left">{{getTitleLabel()}}</h4>
+</div>
+<div class="spinner-container text-center" *ngIf="isUpdating" >
+    <eos-spinner size="lg"></eos-spinner>
+</div>
+<div class="modal-body" *ngIf="!isUpdating">
+    <div class="l-font pull-left">
+        <!-- <span>{{getNodeTitle()}}</span> -->
+    </div>
+    <div class="modal-body-container">
+
+
+
+        <div class="tab-buttons eos-switch btn-group">
+                <a *ngFor="let item of tabs"
+                    class="tab-button btn btn-primary switch-item text-uppercase"
+                    [ngClass]="{'btn-primary-full':item.tag === activeTab.tag}"
+                    (click)="clickTab(item)">{{item.title}}</a>
+        </div>
+        <p class="xl-font paragraph-title no-marigin-bottom"></p>
+        <ng-container [ngSwitch]="activeTab.tag">
+            <ng-container *ngSwitchCase="0">
+                <ng-container *ngTemplateOutlet="defaultEdit1"></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="1">
+                <ng-container *ngTemplateOutlet="defaultEdit2"></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="2">
+                <ng-container *ngTemplateOutlet="defaultEdit3"></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="3">
+                <ng-container *ngTemplateOutlet="defaultEdit4"></ng-container>
+            </ng-container>
+        </ng-container>
+
+    </div>
+</div>
+<div class="bottom-buttons">
+        <button class="btn btn-primary-full upper"
+            [disabled]="true">Ведение списков</button>
+        <div class="bottom-buttons-clearfix"></div>
+        <button class="btn btn-primary-full upper"
+            [disabled]="!isChanged"
+            (click)="save()">Записать</button>
+        <button class="btn btn-primary upper"
+            (click)="cancel()">Отменить</button>
+</div>
+
+<ng-template #defaultEdit1>
+    <eos-rk-default-values #currentPage
+        style="width: 100%;"
+        [dataController]="dataController"
+        [fieldsDescription]="fieldsDescrDefault"
+        [form]="form"
+        [editMode]="true"
+        [data]="editValues"
+        [dgStoredValues]="storedValuesDG"
+        [inputs]="inputs">
+    </eos-rk-default-values>
+</ng-template>
+
+<ng-template #defaultEdit2>
+    <eos-rk-mandatory #currentPage
+        style="width: 100%;"
+        [dataController]="dataController"
+        [fieldsDescription]="fieldsDescrDefault"
+        [form]="form"
+        [editMode]="true"
+        [data]="editValues"
+        [dgStoredValues]="storedValuesDG"
+        [inputs]="inputs">
+    </eos-rk-mandatory>
+</ng-template>
+
+<ng-template #defaultEdit3>
+    <eos-rk-writes #currentPage
+        style="width: 100%;"
+        [dataController]="dataController"
+        [fieldsDescription]="fieldsDescrDefault"
+        [form]="form"
+        [editMode]="true"
+        [data]="editValues"
+        [dgStoredValues]="storedValuesDG"
+        [inputs]="inputs">
+    </eos-rk-writes>
+</ng-template>
+
+<ng-template #defaultEdit4>
+    <eos-rk-files #currentPage
+        style="width: 100%;"
+        [dataController]="dataController"
+        [fieldsDescription]="fieldsDescrDefault"
+        [form]="form"
+        [editMode]="true"
+        [data]="editValues"
+        [dgStoredValues]="storedValuesDG"
+        [inputs]="inputs">
+    </eos-rk-files>
+</ng-template>
