@@ -14,6 +14,7 @@ import { USERDEP, USER_TECH } from 'eos-rest';
 import { RestError } from 'eos-rest/core/rest-error';
 import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
 import { Subject } from 'rxjs/Subject';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
@@ -37,6 +38,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     listRight: NodeAbsoluteRight[] = [];
     titleHeader: string;
     techRingtOrig: string;
+    public selfLink: string;
+    public editMode: boolean = false;
     private _ngUnsubscribe: Subject<any> = new Subject();
 
 
@@ -45,7 +48,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private _userParamsSetSrv: UserParamsService,
         private apiSrv: UserParamApiSrv,
         private _inputCtrlSrv: InputParamControlService,
+        private _router: Router,
         ) {
+            this.selfLink = this._router.url.split('?')[0];
             this.init();
         }
 
@@ -78,7 +83,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             });
     }
     ngOnInit() {
-        this.selectNode(this.listRight[0]);
+        if (this.editMode) {
+            this.selectNode(this.listRight[0]);
+        }
         this.inputAll = {all: new RadioInput(CONTROL_ALL_NOTALL)};
     }
     ngOnDestroy() {
@@ -135,6 +142,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
     }
     cancel() {
+        this.selectedNode = null;
+        this.editMode = false;
         this.btnDisabled = true;
         this._pushState();
         this.ngOnDestroy();
@@ -144,9 +153,23 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this.ngOnInit();
         });
     }
+    edit() {
+        this.editMode = true;
+        this.ngOnDestroy();
+        this.init();
+        this.ngOnInit();
+        // this.setDisableOrEneble();
+
+    }
+    close() {
+        this._router.navigate(['user_param']);
+    }
     clickLable(event, item: NodeAbsoluteRight) {
         event.preventDefault();
         event.stopPropagation();
+        if (!this.editMode) {
+            return;
+        }
         if (event.target.tagName === 'LABEL') { // click to label
             this.selectNode(item);
         }
@@ -203,12 +226,19 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     private _writeValue(constanta: IInputParamControl[]): IInputParamControl[] {
         const fields = [];
         constanta.forEach((node: IInputParamControl) => {
-            fields.push(Object.assign({value: !!+this.arrDeloRight[+node['key']]}, node));
+            const n = Object.assign({value: !!+this.arrDeloRight[+node['key']]}, node);
+            if (!this.editMode) {
+                n.disabled = true;
+            }
+            fields.push(n);
         });
         return fields;
     }
     private _viewContent() {
         this.rightContent = false;
+        if (!this.selectedNode) {
+            return;
+        }
         switch (this.selectedNode.contentProp) {
             case E_RIGHT_DELO_ACCESS_CONTENT.all:
                 if (this.formGroupAll) {

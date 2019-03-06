@@ -1,90 +1,105 @@
 .input-user-absolute-rights-wrapper {
-    .absolute-flex{
-        display: flex;
-    }
-    .list-group-item {
-        background: $light-grey-1;
-        cursor: pointer;
-        &:focus {
-            background: #176ab7;
-            outline: none;
+    // .absolute-flex{
+    //     display: flex;
+    // }
+    // .list-group-item {
+    //     background: $light-grey-1;
+    //     cursor: pointer;
+    //     &:focus {
+    //         background: #176ab7;
+    //         outline: none;
+    //     }
+    //     &.active-element-param {
+    //         background: #176ab7;
+    //     }
+    // }
+    // label {
+    //     font-size: 12px;
+    // }
+    // .forMainLabel label {
+    //     font-weight: bold;
+    // }
+
+    // .left-block-list-absolute-rights {
+    //     max-height: calc(100vh - 280px);
+    //     border: 1px solid $border-color-main-theme;
+    //     overflow-y: auto;
+    //     flex-basis: 50%;
+    //     padding-left: 10px;
+    // }
+
+    // .right-block-list-absolute-rights {
+    //     display: inline-flex;
+    //     padding-left: 10px;
+    //     flex-basis: 50%;
+    //     // max-height: 70vh;
+    //   // margin-bottom: 20px;
+    // }
+
+    // .list-card-files {
+    //     list-style: none;
+    // }
+
+    // .hover-boolean-card-files:indeterminate {
+    //     background: #542ac7;
+    // }
+
+    // .inline-block {
+    //     display: inline-block;
+    // }
+
+    // .select-wrap {
+    //     margin-left: 10px;
+    //     margin-right: 40px;
+    // }
+
+    // .number-increment-wrap {
+    //     display: inline-block;
+
+    // }
+
+    // .label-input-increment {
+    //     display: block;
+    //     margin-bottom: -4px;
+    // }
+
+    // .select-wrap, .number-increment-wrap {
+
+    //     .form-group {
+    //         margin: 0;
+    //     }
+    // }
+
+    // .form-group {
+    //     margin-bottom: 15px;
+    // }
+
+    // .elem-input-radio {
+    //     font-size: 14px;
+    //     display: inline-block;
+    //     margin-right: 30px;
+    // }
+
+    // .param-input-group-section {
+    //     padding-left: 30px;
+
+    //     .elem-input-radio {
+    //         margin-right: 90px;
+    //     }
+    // }
+
+        .input-user-absolute-rights {
+
+            .left-block-list-absolute-rights {
+                display: inline-block;
+                width: 390px;
+                height: calc(100vh - 260px);
+                overflow-y: scroll;
+            }
+            .right-block-list-absolute-rights {
+                display: inline-block;
+                width: 404px;
+                transform: translateX(1px);
+            }
         }
-        &.active-element-param {
-            background: #176ab7;
-        }
-    }
-    label {
-        font-size: 12px;
-    }
-    .forMainLabel label {
-        font-weight: bold;
-    }
-
-    .left-block-list-absolute-rights {
-        max-height: calc(100vh - 280px);
-        border: 1px solid $border-color-main-theme;
-        overflow-y: auto;
-        flex-basis: 50%;
-        padding-left: 10px;
-    }
-
-    .right-block-list-absolute-rights {
-        display: inline-flex;
-        padding-left: 10px;
-        flex-basis: 50%;
-        // max-height: 70vh;
-      // margin-bottom: 20px;
-    }
-
-    .list-card-files {
-        list-style: none;
-    }
-
-    .hover-boolean-card-files:indeterminate {
-        background: #542ac7;
-    }
-
-    .inline-block {
-        display: inline-block;
-    }
-
-    .select-wrap {
-        margin-left: 10px;
-        margin-right: 40px;
-    }
-
-    .number-increment-wrap {
-        display: inline-block;
-
-    }
-
-    .label-input-increment {
-        display: block;
-        margin-bottom: -4px;
-    }
-
-    .select-wrap, .number-increment-wrap {
-
-        .form-group {
-            margin: 0;
-        }
-    }
-
-    .form-group {
-        margin-bottom: 15px;
-    }
-
-    .elem-input-radio {
-        font-size: 14px;
-        display: inline-block;
-        margin-right: 30px;
-    }
-
-    .param-input-group-section {
-        padding-left: 30px;
-
-        .elem-input-radio {
-            margin-right: 90px;
-        }
-    }
 }

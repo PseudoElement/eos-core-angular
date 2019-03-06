@@ -9,7 +9,7 @@ import {Component, Input, Output, EventEmitter} from '@angular/core';
 export class UserHeaderComponent {
     editMode: boolean = false;
     @Input() title: string;
-    @Input() link: string;
+    @Input() link: string; // ISN USER_CL
     @Input() disableBtn: boolean;
     @Input() selfLink: string;
     @Input() defaultBtn?: boolean;
