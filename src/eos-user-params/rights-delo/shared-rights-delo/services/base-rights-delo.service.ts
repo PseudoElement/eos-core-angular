@@ -1,4 +1,4 @@
-import { OnDestroy, OnInit, Injectable, Injector, Output, Input, EventEmitter } from '@angular/core';
+import { OnDestroy, OnInit, Injectable, Injector, Output, EventEmitter } from '@angular/core';
 import { E_FIELD_TYPE, IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
 import { UserParamApiSrv } from '../../../shared/services/user-params-api.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
@@ -14,11 +14,11 @@ import { USER_PARMS } from 'eos-rest';
 
 @Injectable()
 export class BaseRightsDeloSrv implements OnDestroy, OnInit {
-    @Input() btnDisabled;
     @Output() formChanged = new EventEmitter();
     @Output() formInvalid = new EventEmitter();
     descriptorSrv: UserParamsDescriptorSrv;
     prepInputs: any;
+    buttonDisabled: boolean = true;
     queryObj;
     queryObjForDefault;
     titleHeader;
