@@ -1,16 +1,15 @@
 variables:
   #CI_DEBUG_TRACE: "true"
   TMP_WORKSPACE: ${CI_PROJECT_PATH_SLUG}_${CI_BUILD_REF_SLUG}_${CI_PIPELINE_ID}
-  SERVER_FOLDER: $TFS_TARGET_PATH
+  SERVER_FOLDER: $TFS_BUILD_DROPS_PATH
   LOCAL_FOLDER: tmp_for_map
-  BIN_FOLDER: dist
+  BUILD_DROP_NAME: ${CI_PROJECT_PATH_SLUG}_${CI_BUILD_REF_SLUG}
+  ARTIFACTS_URL: ${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/download
   COMMENT_TEXT: "${GITLAB_USER_NAME}: ${CI_COMMIT_MESSAGE}\n${CI_PROJECT_URL}/commit/${CI_COMMIT_SHA}"
 
 
 stages:
   - build
-  - test
-  - deploy
   - cleanup
 
 
@@ -24,39 +23,34 @@ build_job:
   #cache:
   #  paths:
   #    - node_modules/
+  before_script:
+    - export BUILD_DROP_LOCAL_PATH=$LOCAL_FOLDER/$BUILD_DROP_NAME
+    - export BUILD_URI_PATH=$BUILD_DROP_LOCAL_PATH/buildUri
   script:
     - 'npm install'
     - 'npm run build-prod'
-  only:
-    - master
-  artifacts:
-    expire_in: 1 week
-    paths:
-      - dist/
 
-## deploy stage
-
-publish_job:
-  stage: deploy
-  tags:
-    - ruby
-    - compass
-  script:
-    - 'echo target path: $TFS_TARGET_PATH'
+    - 'echo build drops path: $TFS_BUILD_DROPS_PATH'
     - 'echo workspace: $TMP_WORKSPACE'
     - 'echo server folder: $SERVER_FOLDER'
     - 'echo local folder: ${PWD}/$LOCAL_FOLDER'
     
-    #- '$TF eula -accept'
+    - 'rm -r -f  $LOCAL_FOLDER/*'
     - '$TF workspace -new $TMP_WORKSPACE'
     - '$TF workfold -map $SERVER_FOLDER $LOCAL_FOLDER -workspace:$TMP_WORKSPACE'
-    - '$TF get $LOCAL_FOLDER -force -recursive'
+    - '$TF get $BUILD_URI_PATH'
     
-    - 'rm -r -f  $LOCAL_FOLDER/*'
-    - 'cp -r $BIN_FOLDER/* $LOCAL_FOLDER'
-    - '$TF delete -detect -recursive $LOCAL_FOLDER'
-    - '$TF add -noignore -recursive $LOCAL_FOLDER |echo skip errors || true'
-    - '$TF checkin $LOCAL_FOLDER -comment:"${COMMENT_TEXT}" -override:"Automated Build Process" -recursive'
+    - 'if [ -f "${BUILD_URI_PATH}" ]; then $TF checkout "${BUILD_URI_PATH}"; fi'
+    - 'mkdir -p $BUILD_DROP_LOCAL_PATH'
+    - 'echo $ARTIFACTS_URL> "${BUILD_URI_PATH}"'
+    - '$TF add "${BUILD_URI_PATH}" || true'
+    - '$TF checkin "${BUILD_URI_PATH}" -comment:"${COMMENT_TEXT}" -override:"Automated Build Process" -recursive'
+  only:
+    - dev
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - dist/
 
 ## cleanup stage
 
@@ -68,4 +62,6 @@ cleanup_job:
   script:
     - 'echo rm -r -f  $LOCAL_FOLDER'
     - '$TF workspace -delete $TMP_WORKSPACE'
+  only:
+    - dev
   when: always
