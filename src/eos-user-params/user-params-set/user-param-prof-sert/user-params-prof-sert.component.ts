@@ -2,13 +2,13 @@ import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { CarmaHttpService } from 'app/services/carmaHttp.service';
 import { Router} from '@angular/router';
-// import { FormGroup, AbstractControl, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../shared-user-param/consts/eos-user-params.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import {Observable} from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import {USER_CERT_PROFILE} from 'eos-rest/interfaces/structures';
 export interface Istore {
     Location: string;
     Address?: string;
@@ -47,7 +47,7 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
     public titleHeader: string;
     public link;
     public flagHideBtn: boolean = false;
-    private DBserts: Array<any> = [];
+    private DBserts: USER_CERT_PROFILE[]  = [];
     private modalRef: BsModalRef;
     private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -74,27 +74,38 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
         this._ngUnsubscribe.complete();
     }
     ngOnInit() {
-        const arrPromise = [];
         const store: Istore[] =  [{Location: 'sscu', Address: '', Name: 'My'}];
         this.certStoresService.init(null, store).subscribe(data => {
             this.certStoresService.EnumCertificates('', '', '').subscribe(datas => {
-                datas.forEach(sert => {
-                    arrPromise.push(this.certStoresService.GetCertInfo2(sert));
-                });
-                Promise.all(arrPromise).then(arrayInfo => {
-                    arrayInfo.forEach((infoSert, index) => {
+                const strQuery = datas.join(';');
+                this.certStoresService.GetCertInfo2(strQuery).then(arrayInfo => {
+                    if (Array.isArray(arrayInfo['certInfos'])) {
+                        arrayInfo['certInfos'].forEach((infoSert, index) => {
+                            this.alllistSertInfo.push({
+                                whom: infoSert['Issuer'],
+                                sn: infoSert['Serial'],
+                                who: this.parseSertWhom(infoSert['X500Description']),
+                                data: infoSert,
+                                selected: false,
+                                id: datas[index],
+                                create: false,
+                                delete: false,
+                                valid: this.parceValid(infoSert['Validity']) ,
+                            });
+                        });
+                    }   else {
                         this.alllistSertInfo.push({
-                            whom: infoSert['certInfo']['Issuer'],
-                            sn: infoSert['certInfo']['Serial'],
-                            who: this.parseSertWhom(infoSert['certInfo']['X500Description']),
-                            data: infoSert,
+                            whom: arrayInfo['certInfo']['Issuer'],
+                            sn: arrayInfo['certInfo']['Serial'],
+                            who: this.parseSertWhom(arrayInfo['certInfo']['X500Description']),
+                            data: arrayInfo['certInfo'],
                             selected: false,
-                            id: datas[index],
+                            id: datas[0],
                             create: false,
                             delete: false,
-                            valid: this.parceValid(infoSert['certInfo']['Validity']) ,
+                            valid: this.parceValid(arrayInfo['certInfo']['Validity']) ,
                         });
-                    });
+                    }
                 });
             });
         });
@@ -117,7 +128,7 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
                 }
             }
         };
-        this.apiSrv.read(query).then(result => {
+        this.apiSrv.read(query).then((result: USER_CERT_PROFILE[]) => {
             this.DBserts = result;
             this.getInfoForDBSerts().then(() => {
                 if (this.listsSertInfo.length > 0) {
@@ -131,24 +142,40 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
 
     getInfoForDBSerts(): Promise<any> {
         const arrRequestSerts = [];
-        this.DBserts.forEach(sert => {
-            arrRequestSerts.push(this.certStoresService.GetCertInfo2(sert['ID_CERTIFICATE']));
+        this.DBserts.forEach((sert: USER_CERT_PROFILE) => {
+            arrRequestSerts.push(sert['ID_CERTIFICATE']);
         });
-      return  Promise.all(arrRequestSerts).then(data => {
-            data.forEach((infoSert, index) => {
+        return  this.certStoresService.GetCertInfo2(arrRequestSerts.join(';')).then(serts => {
+            if (Array.isArray(serts['certInfos'])) {
+                serts['certInfos'].forEach((infoSert, index) => {
+                    this.listsSertInfo.push({
+                        whom: infoSert['Issuer'],
+                        sn: infoSert['Serial'],
+                        who: this.parseSertWhom(infoSert['X500Description']),
+                        data: infoSert,
+                        selected: false,
+                        id:  this.DBserts[index]['ID_CERTIFICATE'],
+                        key: this.DBserts[index]['ISN_CERT_PROFILE'],
+                        create: false,
+                        delete: false,
+                        valid: this.parceValid(infoSert['Validity']) ,
+                    });
+                });
+            }   else {
                 this.listsSertInfo.push({
-                    whom: infoSert['certInfo']['Issuer'],
-                    sn: infoSert['certInfo']['Serial'],
-                    who: this.parseSertWhom(infoSert['certInfo']['X500Description']),
-                    data: infoSert,
+                    whom: serts['certInfo']['Issuer'],
+                    sn: serts['certInfo']['Serial'],
+                    who: this.parseSertWhom(serts['certInfo']['X500Description']),
+                    data: serts['certInfo'],
                     selected: false,
-                    id:  this.DBserts[index]['ID_CERTIFICATE'],
-                    key: this.DBserts[index]['ISN_CERT_PROFILE'],
+                    id:  this.DBserts[0]['ID_CERTIFICATE'],
+                    key: this.DBserts[0]['ISN_CERT_PROFILE'],
                     create: false,
                     delete: false,
-                    valid: this.parceValid(infoSert['certInfo']['Validity']) ,
+                    valid: this.parceValid(serts['certInfo']['Validity']) ,
                 });
-            });
+            }
+
         });
     }
     selectCurent(list: SertInfo): void {
