@@ -59,7 +59,7 @@
                 tooltip='Показать сертификат'
                 containerClass="tooltip-info">
                     <button class="btn btn-primary-light"
-                    [disabled]="!listsSertInfo || listsSertInfo.length === 0 || flagHideBtn"
+                    [disabled]="!listsSertInfo.length || flagHideBtn || !alllistSertInfo.length"
                     (click) = 'showSert()'
                     ><span class="eos-icon eos-icon-info-blue small"></span></button>
                </div>
@@ -69,7 +69,7 @@
                 containerClass="tooltip-info">
                     <button
                     class="btn btn-primary-light"
-                    [disabled]="!listsSertInfo || listsSertInfo.length === 0 || flagHideBtn"
+                    [disabled]="!listsSertInfo.length || flagHideBtn"
                     (click) = 'deleteSertificate()'
                     ><span class="eos-icon eos-icon-bin-forever-blue small"></span></button></div>
 
