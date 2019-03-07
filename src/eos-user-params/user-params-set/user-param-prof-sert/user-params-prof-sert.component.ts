@@ -4,7 +4,7 @@ import { CarmaHttpService } from 'app/services/carmaHttp.service';
 import { Router} from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../shared-user-param/consts/eos-user-params.const';
+import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, PARM_ERROR_DB, PARM_ERROR_CARMA } from '../shared-user-param/consts/eos-user-params.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import {Observable} from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -18,7 +18,7 @@ interface SertInfo {
     whom: string;
     sn: string;
     who: string;
-    data: Array<any>;
+    data: any;
     selected: boolean;
     id: string;
     key?: number;
@@ -48,6 +48,7 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
     public link;
     public flagHideBtn: boolean = false;
     private DBserts: USER_CERT_PROFILE[]  = [];
+    private isCarma: boolean = true;
     private modalRef: BsModalRef;
     private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -62,7 +63,6 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
         this.selfLink = this._router.url.split('?')[0];
         this.selectedSertificatePopup  = null;
         this.link = this._userSrv.userContextId;
-        this.getSerts();
         this._userSrv.saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
@@ -75,39 +75,49 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
     }
     ngOnInit() {
         const store: Istore[] =  [{Location: 'sscu', Address: '', Name: 'My'}];
-        this.certStoresService.init(null, store).subscribe(data => {
-            this.certStoresService.EnumCertificates('', '', '').subscribe(datas => {
-                const strQuery = datas.join(';');
-                this.certStoresService.GetCertInfo2(strQuery).then(arrayInfo => {
-                    if (Array.isArray(arrayInfo['certInfos'])) {
-                        arrayInfo['certInfos'].forEach((infoSert, index) => {
-                            this.alllistSertInfo.push({
-                                whom: infoSert['Issuer'],
-                                sn: infoSert['Serial'],
-                                who: this.parseSertWhom(infoSert['X500Description']),
-                                data: infoSert,
-                                selected: false,
-                                id: datas[index],
-                                create: false,
-                                delete: false,
-                                valid: this.parceValid(infoSert['Validity']) ,
-                            });
-                        });
-                    }   else {
-                        this.alllistSertInfo.push({
-                            whom: arrayInfo['certInfo']['Issuer'],
-                            sn: arrayInfo['certInfo']['Serial'],
-                            who: this.parseSertWhom(arrayInfo['certInfo']['X500Description']),
-                            data: arrayInfo['certInfo'],
-                            selected: false,
-                            id: datas[0],
-                            create: false,
-                            delete: false,
-                            valid: this.parceValid(arrayInfo['certInfo']['Validity']) ,
-                        });
-                    }
+             this.certStoresService.init(null, store).subscribe((data) => {
+                this.isCarma = true;
+                this.certStoresService.EnumCertificates('', '', '').subscribe(infoSert => {
+                this.getSerts();
+                this.waitSerts(infoSert);
                 });
+          }, (error) => {
+            this.isCarma = false;
+            this.getSertNotCarma();
+                // this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
             });
+    }
+
+    waitSerts(data) {
+        const strQuery = data.join(';');
+        this.certStoresService.GetCertInfo2(strQuery).then(arrayInfo => {
+            if (Array.isArray(arrayInfo['certInfos'])) {
+                arrayInfo['certInfos'].forEach((infoSert, index) => {
+                    this.alllistSertInfo.push({
+                        whom: infoSert['Issuer'],
+                        sn: infoSert['Serial'],
+                        who: this.parseSertWhom(infoSert['X500Description']),
+                        data: infoSert,
+                        selected: false,
+                        id: data[index],
+                        create: false,
+                        delete: false,
+                        valid: this.parceValid(infoSert['Validity']) ,
+                    });
+                });
+            }   else {
+                this.alllistSertInfo.push({
+                    whom: arrayInfo['certInfo']['Issuer'],
+                    sn: arrayInfo['certInfo']['Serial'],
+                    who: this.parseSertWhom(arrayInfo['certInfo']['X500Description']),
+                    data: arrayInfo['certInfo'],
+                    selected: false,
+                    id: data[0],
+                    create: false,
+                    delete: false,
+                    valid: this.parceValid(arrayInfo['certInfo']['Validity']) ,
+                });
+            }
         });
     }
     parceValid(value: string): boolean {
@@ -117,10 +127,7 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
             return false;
         }
     }
-    initForm() {
-
-    }
-    getSerts() {
+    getSerts(): Promise<any> {
         const query = {
             USER_CERT_PROFILE: {
                 criteries: {
@@ -128,7 +135,7 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
                 }
             }
         };
-        this.apiSrv.read(query).then((result: USER_CERT_PROFILE[]) => {
+      return  this.apiSrv.read(query).then((result: USER_CERT_PROFILE[]) => {
             this.DBserts = result;
             this.getInfoForDBSerts().then(() => {
                 if (this.listsSertInfo.length > 0) {
@@ -136,7 +143,37 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
                 }
             });
         }).catch(error => {
-            console.log(error);
+            this._msgSrv.addNewMessage(PARM_ERROR_DB);
+        });
+    }
+
+    getSertNotCarma() {
+        const query = {
+            USER_CERT_PROFILE: {
+                criteries: {
+                    ISN_USER: String(this._userSrv.userContextId)
+                }
+            }
+        };
+        return this.apiSrv.read(query).then((result: USER_CERT_PROFILE[]) => {
+            this.DBserts = result;
+            this.DBserts.forEach(sert => {
+                this.listsSertInfo.push({
+                    whom: 'нет данных',
+                    sn: sert['ID_CERTIFICATE'],
+                    who: 'нет данных',
+                    data: sert,
+                    selected: false,
+                    id:  sert['ID_CERTIFICATE'],
+                    key: sert['ISN_CERT_PROFILE'],
+                    create: false,
+                    delete: false,
+                    valid: false ,
+                });
+            });
+            if (this.listsSertInfo.length > 0) {
+                this.selectCurent(this.listsSertInfo[0]);
+            }
         });
     }
 
@@ -175,7 +212,8 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
                     valid: this.parceValid(serts['certInfo']['Validity']) ,
                 });
             }
-
+        }).catch(error => {
+            this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
         });
     }
     selectCurent(list: SertInfo): void {
@@ -202,12 +240,10 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
 
     openCarmWindow(idSert) {
         this.certStoresService.ShowCert(String(idSert)).catch(e => {
-            this._msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+            this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
             return Observable.of(null);
         })
-        .subscribe((data) => {
-            console.log(data);
-        });
+        .subscribe(() => {});
     }
 
 
@@ -299,12 +335,15 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
        const requestDelete = this.apiSrv.batch(queryDelete, '');
        Promise.all([requestCreate, requestDelete]).then(data => {
         this.listsSertInfo.splice(0, this.listsSertInfo.length);
-        this.getSerts();
+        if (this.isCarma) {
+            this.getSerts();
+        }   else {
+            this.getSertNotCarma();
+        }
         this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
        this.checkchanges();
        }).catch(error => {
         this._msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
-            console.log(error);
        });
     }
     cancellation(event) {

@@ -91,6 +91,7 @@
         style="width: 100%;"
         [selectedNode2]="selectedNode2"
         [curentUser]="curentUser"
+        (Changed)="checkChange()"
     ></eos-right-side-doc-group-in-file-card>
 </ng-template>
 <!-- Правая часть(картотеки с документами и огрничением) -->
@@ -99,6 +100,7 @@
         style="width: 100%;"
         [selectedNode2]="selectedNode2"
         [curentUser]="curentUser"
+        (Changed)="checkChange()"
     ></eos-right-side-doc-group-and-restriction-in-file-card>
 </ng-template>
 <!-- Правая часть(картотеки) -->
@@ -107,6 +109,7 @@
         style="width: 100%;"
         [selectedNode2]="selectedNode2"
         [curentUser]="curentUser"
+        (Changed)="checkChange()"
     ></eos-right-side-list-card>
 </ng-template>
 </div>

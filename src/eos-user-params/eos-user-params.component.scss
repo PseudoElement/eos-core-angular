@@ -15,6 +15,7 @@
     left: -$dictionary-block-width;
     border-right: 1px solid $border-color-main-theme;
     transition: .3s;
+    z-index: 5;
 
     &.show-accordion {
         left: 0;

@@ -1,4 +1,4 @@
-import { Component, TemplateRef, OnDestroy } from '@angular/core';
+import { Component, TemplateRef, OnDestroy, OnInit } from '@angular/core';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { Router} from '@angular/router';
 import {ELECTRONIC_SIGNATURE} from '../shared-user-param/consts/electronic-signature';
@@ -7,7 +7,7 @@ import { InputParamControlService } from 'eos-user-params/shared/services/input-
 import {FormHelperService} from '../../shared/services/form-helper.services';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../shared-user-param/consts/eos-user-params.const';
+import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE, PARM_ERROR_DB } from '../shared-user-param/consts/eos-user-params.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { Subject } from 'rxjs/Subject';
 @Component({
@@ -17,7 +17,7 @@ import { Subject } from 'rxjs/Subject';
     providers: [FormHelperService],
 })
 
-export class UserParamElSignatureComponent implements OnDestroy {
+export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     public titleHeader: string;
     public selfLink: string;
     public link: number;
@@ -58,11 +58,13 @@ export class UserParamElSignatureComponent implements OnDestroy {
         this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Электронная подпись';
         this.link = this._userSrv.curentUser['ISN_LCLASSIF'];
         this.selfLink = this._router.url.split('?')[0];
-        this.init();
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
+    }
+    ngOnInit() {
+        this.init();
     }
 
     init() {
@@ -215,7 +217,7 @@ export class UserParamElSignatureComponent implements OnDestroy {
         this.apiSrv.read(defaultListName).then(result => {
             this.fillFormDefault(result.splice(1));
         }).catch(error => {
-            console.log(error);
+           this._msgSrv.addNewMessage(PARM_ERROR_DB);
         });
     }
     getQueryDefaultList(list) {
