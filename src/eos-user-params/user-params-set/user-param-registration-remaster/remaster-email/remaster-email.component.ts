@@ -25,7 +25,7 @@ export interface Accordion {
 
 @Component({
     selector: 'eos-remaster-email',
-    styleUrls: ['remaster-email.component.scss'],
+
     templateUrl: 'remaster-email.component.html',
     providers: [FormHelperService],
 })

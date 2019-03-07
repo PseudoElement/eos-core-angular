@@ -146,3 +146,17 @@ eos-dynamic-input{
     font-size: 14px;
 }
 
+.accordion-toggle{
+    position: relative;
+    .panel-icon {
+        position: absolute;
+        right: 0;
+        top: 0px;
+    }
+}
+
+ .panel-open{
+        .panel-icon{
+            transform: rotate(-90deg)
+        }
+    }

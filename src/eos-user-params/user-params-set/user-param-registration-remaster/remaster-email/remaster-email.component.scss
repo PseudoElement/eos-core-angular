@@ -1,5 +1,17 @@
-:host{
-
+.accordion-position{
+    position: absolute;
+    overflow: auto;
+    max-height: calc(100vh - 330px);
+    width: 800px;
+    margin-left: -21px;
+    border: 1px solid $border-color-main-theme;
+    border-top: none;
+    background-color: $primary-color-main-theme;
+    .accordion-position-main{
+        width: 783px;
+        padding-left: 20px;
+        padding-right: 5px;
+    }
     eos-dynamic-input{
         font-size: 13px;
     }
@@ -19,5 +31,5 @@
     .receipe-email{
         width: 387px;
     }
-
 }
+
