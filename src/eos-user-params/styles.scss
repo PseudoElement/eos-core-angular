@@ -1,5 +1,4 @@
 @import "./eos-user-params.component";
-@import "./user-params-set/user-param-registration/user-param-registration.component";
 @import "./user-params-set/user-param-cabinets/user-param-cabinets.component";
 @import "./user-params-set/user-param-rc/user-param-rc.component";
 @import "./user-params-set/user-param-directories/user-param-directories.component";
@@ -21,3 +20,5 @@
 @import "./base-param/base-param.component";
 @import "./shared/list-docs-tree/list-docs-tree.component";
 @import "./user-params-set/user-param-el-signature/user-param-el-signature.component.scss";
+@import "./user-params-set/user-param-registration-remaster/user-param-registration-remaster.component.scss";
+@import "./user-params-set/user-param-registration-remaster/remaster-email/remaster-email.component";

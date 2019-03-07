@@ -1,0 +1,40 @@
+<div class="user-input-group">
+    <eos-dynamic-input
+        [input]="inputs['rec.CORR_SIGN']"
+        [form]="form"
+        [readonly]="false"
+    ></eos-dynamic-input>
+    <eos-dynamic-input
+        [input]="inputs['rec.ADDR_WHOUM']"
+        [form]="form"
+        [readonly]="false"
+    ></eos-dynamic-input>
+</div>
+<div class="user-input-group readonlyInput">
+    <span>Помещать новые организации в группу: </span>
+    <span class="get-new-org">
+        <input readonly type="text" [(ngModel)]="orgName">
+    </span>
+    <div
+        tooltip="Выбор из справочника"
+        triggers="hover"
+        containerClass="tooltip-info">
+        <button
+            [disabled] = "!flagEdit"
+            class="btn btn-primary-light add-storage"
+            (click)="openClassif()">
+            <span class="eos-icon eos-icon-folder-blue small"></span>
+        </button>
+    </div>
+    <div
+        tooltip="Очистить поле"
+        containerClass="tooltip-info"
+        triggers="hover">
+        <button
+            [disabled] = "!flagEdit"
+            class="btn btn-primary-light add-storage"
+            (click)="clearField()">
+            <span class="eos-icon eos-icon-close-blue small"></span>
+        </button>
+    </div>
+</div>

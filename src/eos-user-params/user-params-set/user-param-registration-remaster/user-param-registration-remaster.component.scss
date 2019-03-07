@@ -5,8 +5,9 @@
     .scrollWrapper{
         overflow: auto;
         max-height: calc(100vh - 330px);
-        padding-left: 30px;
-        padding-right: 30px;
+    }
+    .user-param-registration-content-wrapper{
+        padding:  0 20px;
     }
 
     .tabs-wrapper {
@@ -39,8 +40,8 @@
     }
 
     .small {
-        height: 18px;
-        width: 18px;
+        height: 21px;
+        width: 21px;
     }
 
     /*.registration-boolean-automatically-call-function-forwarded-RC {
@@ -93,14 +94,14 @@
     /* color: */
     .item {
         display: inline-block;
-        margin-right: $grid-gutter-width / 2;
+        margin-right: 40px / 2;
         margin-top: 11px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         vertical-align: middle;
         &+.item {
-            margin-left: $grid-gutter-width / 2;
+            margin-left:40px / 2;
         }
         .text {
             cursor: pointer;
@@ -141,5 +142,21 @@
     background-color: grey;
     opacity: 0.5;
 }
+eos-dynamic-input{
+    font-size: 14px;
+}
 
+.accordion-toggle{
+    position: relative;
+    .panel-icon {
+        position: absolute;
+        right: 0;
+        top: 0px;
+    }
+}
 
+ .panel-open{
+        .panel-icon{
+            transform: rotate(-90deg)
+        }
+    }
