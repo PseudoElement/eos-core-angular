@@ -78,68 +78,45 @@ export class RightSideListCardComponent implements OnInit {
     checkedNode(event, item) {
         this.form.valueChanges.subscribe(() => {
         let str;
-        let newDataFromLocalStorageFuncFileCards = null;
-   if (event.target.tagName === 'LABEL') {} else {
-    if (sessionStorage.getItem('FuncFileCards') !== null) {
-        newDataFromLocalStorageFuncFileCards = JSON.parse(sessionStorage.getItem('FuncFileCards'));
-    }
-    if (this.form.controls[item.key].value === true) {
-        for (let i = 0; i < this.listAllData.length; i++) {
-            if (this.listAllData[i][0]['key'] === item.key) {
-                for (let j = 0; j < Array.from(this.userCard).length; j++) {
-                    if (this.listAllData[i][0]['key'] === Array.from(this.userCard)[j][0]) {
-                        if (newDataFromLocalStorageFuncFileCards !== null) {
-                            str = newDataFromLocalStorageFuncFileCards[j][1]['FUNCLIST'];
-                            if (+this.selectedNode2.key > 18 && str.length === 18) {
-                                str += '000';
+        if (event.target.tagName === 'LABEL') {} else {
+            if (this.form.controls[item.key].value === true) {
+                for (let i = 0; i < this.listAllData.length; i++) {
+                    if (this.listAllData[i][0]['key'] === item.key) {
+                        for (let j = 0; j < Array.from(this.userCard).length; j++) {
+                            if (this.listAllData[i][0]['key'] === Array.from(this.userCard)[j][0]) {
+                                str = Array.from(this.userCard)[j][1]['FUNCLIST'];
+                                if (+this.selectedNode2.key > 18 && str.length === 18) {
+                                    str += '000';
+                                }
+                                str = this.setCharAt(str, +this.selectedNode2.key, '1');
+                                Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
+                                Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
+                                sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
                             }
-                            str = this.setCharAt(str, +this.selectedNode2.key, '1');
-                            Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
-                            Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                           sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
-                          } else {
-                            str = Array.from(this.userCard)[j][1]['FUNCLIST'];
-                            if (+this.selectedNode2.key > 18 && str.length === 18) {
-                                str += '000';
-                            }
-                            str = this.setCharAt(str, +this.selectedNode2.key, '1');
-                            Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
-                            Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                            sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
-                          }
-                    }
+                        }
+                        break;
                 }
-                break;
-        }
-    }
-    } else if (this.form.controls[item.key].value === false) {
-        for (let i = 0; i < this.listAllData.length; i++) {
-            if (this.listAllData[i][0]['key'] === item.key) {
-                for (let j = 0; j < Array.from(this.userCard).length; j++) {
-                    if (this.listAllData[i][0]['key'] === Array.from(this.userCard)[j][0]) {
-                        if (newDataFromLocalStorageFuncFileCards !== null) {
-                            str = newDataFromLocalStorageFuncFileCards[j][1]['FUNCLIST'];
-                            str = this.setCharAt(str, +this.selectedNode2.key, '0');
-                            Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
-                            Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                          //  sessionStorage.removeItem('FuncFileCards');
-                          sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
-                          } else {
-                            str = Array.from(this.userCard)[j][1]['FUNCLIST'];
-                            str = this.setCharAt(str, +this.selectedNode2.key, '0');
-                            Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
-                            Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
-                            sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
-                          }
-                    }
-                }
-              this.listAllData[i].splice(1, 2);
             }
-        }
+            } else if (this.form.controls[item.key].value === false) {
+                for (let i = 0; i < this.listAllData.length; i++) {
+                    if (this.listAllData[i][0]['key'] === item.key) {
+                        for (let j = 0; j < Array.from(this.userCard).length; j++) {
+                            if (this.listAllData[i][0]['key'] === Array.from(this.userCard)[j][0]) {
+                                str = Array.from(this.userCard)[j][1]['FUNCLIST'];
+                                str = this.setCharAt(str, +this.selectedNode2.key, '0');
+                                Array.from(this.userCard)[j][1]['FUNCLIST'] = str;
+                                Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = true;
+                                sessionStorage.setItem('FuncFileCards', JSON.stringify(Array.from(this.userCard)));
+                            }
+                        }
+                    this.listAllData[i].splice(1, 2);
+                    }
+                }
+            }
+            }
+            this.Changed.emit();
+        });
     }
-}
-    });
-}
 
 createObjRequestForAttach() {
     const req = [];

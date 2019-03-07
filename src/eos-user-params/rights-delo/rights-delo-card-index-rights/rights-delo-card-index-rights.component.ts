@@ -1,4 +1,4 @@
-import { Component, OnInit, Injector, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Injector, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { CARD_INDEXS_RIGHTS, DOCUMENT_GROUPS, RESTRICT_REGISTRATION_FILING, ALL_DOCUMENTS } from '../shared-rights-delo/consts/card-index-rights.consts';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
@@ -14,13 +14,14 @@ import { RightSideListCardComponent } from './right-side-list-card/right-side-li
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { EMPTY_ALLOWED_CREATE_REGISTRATION_OF_DOCUMENTS } from 'app/consts/messages.consts';
 import { RightSideDocGroupAndRestrictionInFileCardComponent } from './right-side-doc-group-and-restriction-in-file-card/right-side-doc-group-and-restriction-in-file-card.component';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'eos-rights-delo-card-index-rights',
     templateUrl: 'rights-delo-card-index-rights.component.html'
 })
 
-export class RightsDeloCardIndexRightsComponent implements OnInit {
+export class RightsDeloCardIndexRightsComponent implements OnInit, OnDestroy {
     @Output() formChanged = new EventEmitter();
     rightSideListCardComponent: RightSideListCardComponent;
     list: NodeDocsTree[] = [];
@@ -35,7 +36,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     subForm: Subscription;
     indexForRightFileCard = -1;
     selectedNode: IInputParamControlForIndexRight;
-    btnDisabled: boolean = false;
+    btnDisabled: boolean = true;
     isChangeForm = false;
     flagCardFileAvailability = true;
     lastKeyForSelect;
@@ -55,6 +56,8 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
     isLoading = false;
     bacgHeader: boolean;
     titleHeader: string;
+    flagCleanValues = false;
+    firstValuesUserCard;
     private quaryDepartment = {
         DEPARTMENT: {
             criteries: {
@@ -62,11 +65,12 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
             }
         }
     };
+    private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         injector: Injector,
         private _userParamsSetSrv: UserParamsService,
         private servApi: UserParamApiSrv,
-        private _inputCtrlSrv: InputParamControlService
+        private _inputCtrlSrv: InputParamControlService,
     ) {
         this.init();
         const due: string[] = [];
@@ -77,6 +81,8 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         });
         this.quaryDepartment.DEPARTMENT.criteries['DUE'] = due.join('||');
         this.msgSrv = injector.get(EosMessageService);
+        sessionStorage.setItem('FirstUserCard', JSON.stringify(Array.from(this.userCard)));
+        this.firstValuesUserCard = JSON.parse(sessionStorage.getItem('FirstUserCard'));
     }
     init() {
         sessionStorage.clear();
@@ -88,12 +94,73 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         this.curentUser['FUNCLIST'] = this.curentUser['FUNCLIST'] || '0'.repeat(21);
         this.arrayNadzorRight = this.curentUser['FUNCLIST'].split('');
         this.arrayNEWNadzorRight = this.curentUser['FUNCLIST'].split('');
-        this.fields = this._writeValue(CARD_INDEXS_RIGHTS);
+        this.fields = this._writeValue(DOCUMENT_GROUPS);
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
         this.listRight = this._createListRight(CARD_INDEXS_RIGHTS);
-       /* this.subForm = this.form.valueChanges
-            .subscribe(data => console.log(data));*/
+        this._userParamsSetSrv.saveData$
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this.submit();
+            });
+    }
+
+    ngOnDestroy() {
+       if (this.flagCleanValues) {
+        const firstValues = JSON.parse(sessionStorage.getItem('FirstUserCard'));
+        const arrayIndexForDelete = [];
+        const arrayIndexForPush = [];
+        loop1:
+        for (let i = 0; i < Array.from(this.userCard).length; i++) {
+            for (let j = 0; j < firstValues.length; j++) {
+                if (Array.from(this.userCard)[i][0] === firstValues[j][0]) {
+                    Array.from(this.userCard)[i][1]['FUNCLIST'] = firstValues[j][1]['FUNCLIST'];
+                    if (Array.from(this.userCard)[i][1]['USER_CARD_DOCGROUP_List'].length > 0) {
+                    loop2:
+                    for (let z = (Array.from(this.userCard)[i][1]['USER_CARD_DOCGROUP_List'].length - 1); z >= 0; z--) {
+                        if (firstValues[j][1]['USER_CARD_DOCGROUP_List'].length > 0) {
+                        for (let x = firstValues[j][1]['USER_CARD_DOCGROUP_List'].length - 1; x >= 0; x--) {
+                            if (Array.from(this.userCard)[i][1]['USER_CARD_DOCGROUP_List'][z]['DUE'] === firstValues[j][1]['USER_CARD_DOCGROUP_List'][x]['DUE'] &&
+                                Array.from(this.userCard)[i][1]['USER_CARD_DOCGROUP_List'][z]['FUNC_NUM'] === firstValues[j][1]['USER_CARD_DOCGROUP_List'][x]['FUNC_NUM']) {
+                                Array.from(this.userCard)[i][1]['USER_CARD_DOCGROUP_List'][z]['ALLOWED'] = firstValues[j][1]['USER_CARD_DOCGROUP_List'][x]['ALLOWED'];
+                                continue loop2;
+                            } else if (0 === x) {
+                                arrayIndexForDelete.push([i, z]);
+                            }
+                        }
+                        } else {
+                            for (let q = 0; q < Array.from(this.userCard)[i][1]['USER_CARD_DOCGROUP_List'].length; q++) {
+                                Array.from(this.userCard)[i][1]['USER_CARD_DOCGROUP_List'].pop();
+                            }
+                        }
+                    }
+                    loop3:
+                    for (let x = firstValues[j][1]['USER_CARD_DOCGROUP_List'].length - 1; x >= 0; x--) {
+                        for (let z = (Array.from(this.userCard)[i][1]['USER_CARD_DOCGROUP_List'].length - 1); z >= 0; z--) {
+                                if (Array.from(this.userCard)[i][1]['USER_CARD_DOCGROUP_List'][z]['DUE'] === firstValues[j][1]['USER_CARD_DOCGROUP_List'][x]['DUE'] &&
+                                Array.from(this.userCard)[i][1]['USER_CARD_DOCGROUP_List'][z]['FUNC_NUM'] === firstValues[j][1]['USER_CARD_DOCGROUP_List'][x]['FUNC_NUM']) {
+                                    Array.from(this.userCard)[i][1]['USER_CARD_DOCGROUP_List'][z]['ALLOWED'] = firstValues[j][1]['USER_CARD_DOCGROUP_List'][x]['ALLOWED'];
+                                    continue loop3;
+                                } else if (0 === z) {
+                                    arrayIndexForPush.push([firstValues[j][1]['USER_CARD_DOCGROUP_List'][x], j]);
+                                }
+                        }
+                    }
+                    continue loop1;
+                }
+                }
+            }
+        }
+
+        for (let w = 0; w < arrayIndexForDelete.length; w++) {
+            Array.from(this.userCard)[arrayIndexForDelete[w][0]][1]['USER_CARD_DOCGROUP_List'].splice(arrayIndexForDelete[w][1], 1);
+        }
+        for (let e = 0; e < arrayIndexForPush.length; e++) {
+            Array.from(this.userCard)[arrayIndexForPush[e][1]][1]['USER_CARD_DOCGROUP_List'].push(arrayIndexForPush[e][0]);
+        }
+    }
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
     }
 
     hideToolTip() {
@@ -106,6 +173,7 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
         this.selectNode(this.listRight[0]);
     }
     submit() {
+        this.flagCleanValues = false;
             this.servApi
                 .setData(this.createObjRequestForAttach())
                 .then(data => {
@@ -117,6 +185,8 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                        for (let j = 0; j < Array.from(this.userCard).length; j++) {
                             Array.from(this.userCard)[j][1]['FLAG_NEW_FUNCLIST'] = false;
                        }
+                       this.btnDisabled = true;
+                       this._pushState();
                        this.msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                     })
                     .catch(data2 => console.log(data2));
@@ -124,6 +194,11 @@ export class RightsDeloCardIndexRightsComponent implements OnInit {
                 })
                 // tslint:disable-next-line:no-console
                 .catch(data3 => console.log(data3));
+    }
+    checkChange() {
+        this.flagCleanValues = true;
+        this.btnDisabled = false;
+        this._pushState();
     }
     createObjRequestForAttach() {
         const req = [];
@@ -428,5 +503,9 @@ requestUri: `USER_CL(${newArrayDataDocumentsForMerge[t]['ISN_LCLASSIF']})/USERCA
             fields.push(new NodeRightInFileCard(node, +this.arrayNadzorRight[+node['key']], this.form.get(node['key']), this.curentUser));
         });
         return fields;
+    }
+
+   private _pushState () {
+        this._userParamsSetSrv.setChangeState({isChange: !this.btnDisabled});
     }
 }

@@ -13,12 +13,6 @@
     label {
         font-size: 12px;
     }
-   /* .user-input-main-cabinet .form-group .form-control.ng-valid {
-        font-weight: bold;
-    } */
-  /*  option:nth-child(1) {
-        font-weight: bold;
-    }*/
     .forMainLabel label {
         font-weight: bold;
     }
@@ -40,6 +34,7 @@
         max-height: 70vh;
         border: 1px solid $border-color-main-theme;
         margin-bottom: 20px;
+        margin-left: 25px;
     }
 
     .right-block-list-absolute-rights {
@@ -52,6 +47,10 @@
         overflow-y: auto;
         margin-left: 20px;
         margin-bottom: 20px;
+    }
+
+    .input-user-card-files-wrapper label {
+        font-size: 14px;
     }
 
     .the-inscription-of-absence-cabinets {

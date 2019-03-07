@@ -10,6 +10,7 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_CARDINDEX } from 'app/consts/query-classif.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'eos-rights-delo-card-files',
@@ -111,10 +112,12 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             }
         }
     };
+    private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(injector: Injector,
         private servApi: UserParamApiSrv,
         private _msgSrv: EosMessageService,
-        private _waitClassifSrv: WaitClassifService ) {
+        private _waitClassifSrv: WaitClassifService,
+        private _userServices: UserParamsService, ) {
         super(injector, CARD_FILES_USER);
         for (let i = 0; i < this.arrayKeysCheckboxforCabinets.length; i++) {
             this.fieldKeysforCardFilesCabinets.push(
@@ -126,6 +129,11 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             );
         }
         this.prepInputsAttach = this.getObjectInputFields(this.fieldKeysforCardFilesCabinets);
+        this._userServices.saveData$
+        .takeUntil(this._ngUnsubscribe)
+        .subscribe(() => {
+            this.submit();
+        });
     }
 
     hideToolTip() {
@@ -169,7 +177,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                 }
                 }).catch(error => console.log(error));
                 this.init();
-                this.choosingMainCheckbox();
+                this.choosingMainCheckbox('First');
         }).then(() => {
             for (let i = 0; i < CARD_FILES_USER.fields.length; i++) {
                 if (CARD_FILES_USER.fields[i]['readonly'] === true) {
@@ -191,6 +199,8 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         for (let j = arrayIndexForRemoveFromAllData.length - 1; j >= 0; j--) {
             this.allData.splice(arrayIndexForRemoveFromAllData[j], 1);
         }
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
     }
     updatePageCard() {
         this.fieldKeysforCardFilesCabinets = [];
@@ -290,6 +300,8 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         if (oldValue !== _value) {
             // console.log('changed', path, oldValue, 'to', _value, this.prepDataAttach.rec);
         }
+        this.buttonDisabled = false;
+        this._pushState();
         return _value !== oldValue;
     }
     submit() {
@@ -310,6 +322,8 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
                       this.selectOnClick(this.startEventCabinet, null);
                    }
                     this.allData = this._userParamsSetSrv.userCard;
+                    this.buttonDisabled = true;
+                    this._pushState();
                     this.msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                     this._userParamsSetSrv.getUserIsn(userId);
                 })
@@ -580,11 +594,15 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
         }
         return newReq;
     }
-    choosingMainCheckbox() {
+    choosingMainCheckbox(str) {
         let flag = true;
         let flagIfNotMainCard = true;
         const arr = [];
         this.flagNoMainCard = false;
+        if (str === 'Second') {
+            this.buttonDisabled = false;
+            this._pushState();
+        }
         if (this.indexForOldIndex !== -1) {
             this.indexOldMainCheckbox = this.indexForOldIndex;
         }
@@ -625,7 +643,7 @@ export class RightsDeloCardFilesComponent extends BaseRightsDeloSrv implements O
             this.oldMainCheckbox[this.fieldKeysforCardFiles[this.indexOldMainCheckbox][0]] = 0;
             this.selectedNode(this.fieldKeysforCardFiles[this.indexOldMainCheckbox][1], null);
         }
-        this.btnDisabled = false;
+       // this.buttonDisabled = false;
     }
     updateOldMainCheckbox(index) {
         this.oldMainCheckbox = {};
@@ -858,6 +876,8 @@ this.startEventCabinet = event;
               USER_CABINET_List: cabinetDataset
             };
      this.allData.push(newElementForAllData);
+     this.buttonDisabled = false;
+     this._pushState();
  }).catch(dataError => console.log(dataError));
         }
            this.updateAllData();
@@ -865,7 +885,7 @@ this.startEventCabinet = event;
         .then(() => {
         if (this.flagIfFirstMainCard) {
            setTimeout(() => {
-               this.choosingMainCheckbox();
+               this.choosingMainCheckbox('Second');
            }, 1000);
             this.flagIfFirstMainCard = false;
         }
@@ -913,7 +933,8 @@ this.startEventCabinet = event;
                 this.inputs = this.getInputs();
                 this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.subscribeChangeForm();
-                this.btnDisabled = false;
+                this.buttonDisabled = false;
+                this._pushState();
                 break;
             }
         }
@@ -936,5 +957,9 @@ this.startEventCabinet = event;
             return false;
         }
         return true;
+    }
+
+    private _pushState () {
+        this._userParamsSetSrv.setChangeState({isChange: !this.buttonDisabled});
     }
 }
