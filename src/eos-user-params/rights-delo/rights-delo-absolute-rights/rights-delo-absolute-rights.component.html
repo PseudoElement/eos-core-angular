@@ -16,7 +16,9 @@
                 *ngFor="let item of listRight"
                 [ngClass]="{'highlighted': item.isSelected}">
                 <div [formGroup]="form">
-                    <label class="checkbox" (click)="clickLable($event, item)">
+                    <label class="checkbox"
+                        [ngClass]="{'disabled': !editMode}"
+                        (click)="clickLable($event, item)">
                         <input type="checkbox"
                             hide
                             [formControlName]="item.key"
