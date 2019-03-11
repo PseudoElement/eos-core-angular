@@ -14,7 +14,7 @@
         class="clearfix">
         <div class="col-1 pull-left">
             <div class="current-image" [ngStyle]="{'background-image': photo}">
-                <span class="current-image-no-user" [ngClass] ="!photo ? 'eos-icon eos-icon-Man-Blue small' : ''"></span>
+                <span *ngIf="!photo" class="current-image-no-user" [ngClass] ="!photo ? 'eos-icon eos-icon-Man-Blue small' : ''"></span>
                 <div class="photo-uploader" *ngIf="editMode">
                     <eos-photo-uploader [disableEdit]="!editMode"
                         (endUploading)="newImage($event)"></eos-photo-uploader>
