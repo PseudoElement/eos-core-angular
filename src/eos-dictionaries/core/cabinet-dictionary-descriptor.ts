@@ -9,6 +9,7 @@ import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 import {DictionaryComponent} from '../dictionary/dictionary.component';
 import {DANGER_EDIT_ON_ROOT} from '../consts/messages.consts';
 import {IMessage} from '../../eos-common/core/message.interface';
+// import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 export class CabinetRecordDescriptor extends RecordDescriptor {
     constructor(dictionary: CabinetDictionaryDescriptor, data: IDictionaryDescriptor) {
@@ -18,6 +19,16 @@ export class CabinetRecordDescriptor extends RecordDescriptor {
 }
 
 export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
+
+    constructor(
+        descriptor: IDictionaryDescriptor,
+        apiSrv: PipRX,
+        // private _confirmSrv: ConfirmWindowService,
+    ) {
+        super(descriptor, apiSrv);
+    }
+
+
 
     addRecord(data: any, _parent: any, isProtected = false, isDeleted = false): Promise<any> {
         this.apiSrv.entityHelper.prepareAdded<CABINET>(data.rec, this.apiInstance);
@@ -36,6 +47,11 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
                 }
             });
     }
+
+    // deleteRecords(records: IEnt[]): Promise<IRecordOperationResult[]> {
+    //     const pDelete = records.map((rec) => this.deleteRecord(rec));
+    //     return Promise.all(pDelete);
+    // }
 
     preCreateCheck(dict: DictionaryComponent): IMessage {
         if (dict.treeNode.id === '0.') {
@@ -192,45 +208,90 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
             });
     }
 
+    _checkDeletion(isn): Promise<any> {
+        // OData.svc/CanChangeClassif?type=%27REESTRTYPE_CL%27&oper=%27DELETE_CABINET%27&id=%273780%27
+        const query = { args: { type: 'CABINET', oper: 'DELETE_CABINET', id: String(isn) } };
+        const req = { CanChangeClassif: query};
+        return this.apiSrv.read(req);
+    }
+
     protected deleteRecord(record: CABINET): Promise<IRecordOperationResult> {
-        return this.getOwners(record.DUE)
-            .then((owners) => this.updateOwnersCabinet(owners, record.ISN_CABINET, null))
-            .then(() => {
-                return this._canDelete(record)
-                    .then((canDelete) => {
-                        if (canDelete) {
-                            record._State = _ES.Deleted;
-                            const changes = this.apiSrv.changeList([record]);
-                            return this.apiSrv.batch(changes, '')
-                                .then(() => {
-                                    return <IRecordOperationResult>{
-                                        record: record,
-                                        success: true
-                                    };
-                                });
-                        } else {
-                            return <IRecordOperationResult>{
-                                record: Object.assign(record, {CLASSIF_NAME: record['CABINET_NAME']}),
-                                success: false,
-                                error: {code: 0,
-                                    message: 'Папки кабинета не пусты'}
-                            };
-                        }
-                    });
-            }).catch((err) => {
-                return <IRecordOperationResult>{
-                    record: record,
+
+        return this._checkDeletion(record.ISN_CABINET).then(check => {
+            // DOC_FOLDER_NOT_EMPTY
+            if (check === 'DOC_FOLDER_NOT_EMPTY') {
+                // return this._confirmSrv.confirm(CONFIRM_CABINET_NON_EMPTY)
+                //         .then((confirmed: boolean) => {
+                //             return Promise.resolve(confirmed);
+                //         });
+
+                return <IRecordOperationResult> {
+                    record: Object.assign(record, {CLASSIF_NAME: record['CABINET_NAME']}),
                     success: false,
-                    error: err
+                    error: {code: 0,
+                        message: 'Папки кабинета не пусты'}
                 };
-            });
+
+                // Для владельца кабинета существуют записи в папках. Удалить их?
+                // return Promise.reject('nicht');
+            } else {
+                record._State = _ES.Deleted;
+                const changes = this.apiSrv.changeList([record]);
+                return this.apiSrv.batch(changes, '')
+                    .then(() => {
+                        return <IRecordOperationResult>{
+                            record: record,
+                            success: true
+                        };
+                    });
+            }
+
+        });
+        // .then (deleteneed => {
+
+        //     return Promise.resolve(null);
+        // });
+
+
+
+        // return this.getOwners(record.DUE)
+        //     .then((owners) => this.updateOwnersCabinet(owners, record.ISN_CABINET, null))
+        //     .then(() => {
+        //         return this._canDelete(record)
+        //             .then((canDelete) => {
+        //                 if (canDelete) {
+        //                     record._State = _ES.Deleted;
+        //                     const changes = this.apiSrv.changeList([record]);
+        //                     return this.apiSrv.batch(changes, '')
+        //                         .then(() => {
+        //                             return <IRecordOperationResult>{
+        //                                 record: record,
+        //                                 success: true
+        //                             };
+        //                         });
+        //                 } else {
+        //                     return <IRecordOperationResult>{
+        //                         record: Object.assign(record, {CLASSIF_NAME: record['CABINET_NAME']}),
+        //                         success: false,
+        //                         error: {code: 0,
+        //                             message: 'Папки кабинета не пусты'}
+        //                     };
+        //                 }
+        //             });
+        //     }).catch((err) => {
+        //         return <IRecordOperationResult>{
+        //             record: record,
+        //             success: false,
+        //             error: err
+        //         };
+        //     });
     }
 
     protected _initRecord(data: IDictionaryDescriptor) {
         this.record = new CabinetRecordDescriptor(this, data);
     }
 
-    private _canDelete(record): Promise<boolean> {
+    protected _canDelete(record): Promise<boolean> {
         const foldISN = [];
         record.FOLDER_List.forEach((folder) => {
             foldISN.push(folder.ISN_FOLDER);

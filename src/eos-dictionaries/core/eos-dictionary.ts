@@ -346,15 +346,16 @@ export class EosDictionary {
      */
     deleteMarked(): Promise<IRecordOperationResult[]> {
         const records = this._getMarkedRecords();
-        this._nodes.forEach((node) => {
-            if (node.marked) {
-                node.delete();
-                this._nodes.delete(node.id);
-            }
+        return this.descriptor.deleteRecords(records).then (r => {
+            this._nodes.forEach((node) => {
+                if (node.marked) {
+                    node.delete();
+                    this._nodes.delete(node.id);
+                }
+            });
+            this._resetMarked();
+            return Promise.resolve(records);
         });
-        this._resetMarked();
-        // this.descriptor.record.keyField.foreignKey
-        return this.descriptor.deleteRecords(records);
     }
 
     getDictionaryIdByMode(mode: number): EosDictionary {
