@@ -73,7 +73,7 @@ const TEST_INPUTS = <IBaseInput[]>[{
 })
 export class TestPageComponent implements OnInit, OnChanges {
 
-    defaultImage = 'url(../assets/images/no-user.png)';
+    defaultImage = null;
 
     date: Date = new Date();
 

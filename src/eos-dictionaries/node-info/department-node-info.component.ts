@@ -1,5 +1,4 @@
 import {Component, OnChanges} from '@angular/core';
-import {DEFAULT_PHOTO} from 'eos-dictionaries/consts/common';
 import {BaseNodeInfoComponent} from './base-node-info';
 import {ROLES_IN_WORKFLOW} from '../consts/dictionaries/department.consts';
 import {CreateUserComponent} from '../../eos-user-select/list-user-select/createUser/createUser.component';
@@ -15,7 +14,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
     templateUrl: 'department-node-info.component.html',
 })
 export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implements OnChanges {
-    public photo = DEFAULT_PHOTO;
+    public photo;
     public update: boolean;
     public roles = ROLES_IN_WORKFLOW;
     createUserModal: BsModalRef;
@@ -52,7 +51,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
                     if (this.node.data.photo && this.node.data.photo.url) {
                         this.photo = this.node.data.photo.url;
                     } else {
-                        this.photo = DEFAULT_PHOTO;
+                        this.photo = null;
                     }
                 }
             }

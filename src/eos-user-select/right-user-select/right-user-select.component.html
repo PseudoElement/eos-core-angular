@@ -3,11 +3,13 @@
             <div class="rt-user">
                 <div class="rt-avatar" *ngIf="DueInfo else unset">
                     <div class="avatar-wr">
-                       <a [routerLink]="['/spravochniki','departments', CurrentUser['data']['DUE_DEP'], 'view' ]">
-                         <img
+                       <a class="av-link" [routerLink]="['/spravochniki','departments', CurrentUser['data']['DUE_DEP'], 'view' ]">
+                         <!-- <img *ngIf="isPhoto"
                             class="avatar-img"
-                            [src]="urlPhoto"
-                            alt="Фотография должностного лица">
+                            [ngStyle]="{'background-image': urlPhoto}"
+                            alt="Фотография должностного лица"> -->
+                            <span  class="avatar-img" *ngIf="isPhoto" [ngStyle]="{'background-image': urlPhoto}"></span>
+                            <span  class="avatar-img" *ngIf="!isPhoto" class="avatar-img eos-icon eos-icon-Man-Blue small"></span>
                         </a>
                     </div>
                     <div class="avatar-title">

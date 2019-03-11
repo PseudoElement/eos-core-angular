@@ -198,6 +198,11 @@ export class RtUserSelectService {
             return false;
         });
     }
+
+    getSVGImage(photo: any): Promise<any> {
+        const query = {DELO_BLOB: photo};
+        return this.apiSrv.read(query);
+    }
     private _errorHandler(err): void {
         const errMessage = err.message ? err.message : err;
         this._msgSrv.addNewMessage({

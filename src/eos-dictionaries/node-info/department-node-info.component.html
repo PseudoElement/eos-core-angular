@@ -3,8 +3,9 @@
         <div *ngIf="nodeDataFull && nodeDataFull.rec && nodeDataFull.rec['IS_NODE']"
             class="content-block">
             <div class="head-wrapper">
-                <div class="current-image usual-border"
-                    [ngStyle]="{'background-image': photo}"></div>
+                    <div class="current-image usual-border" [ngStyle]="{'background-image': photo}">
+                            <span class="current-image-no-user" [ngClass] ="!photo ? 'eos-icon eos-icon-Man-Blue small' : ''"></span>
+                    </div>
                 <div class="info l-font">
                     <ng-container *ngIf="nodeDataFull['printInfo'] && nodeDataFull['printInfo']['NAME'] && nodeDataFull['printInfo']['SURNAME'] && nodeDataFull['printInfo']['PATRON'];then fullName else shortName"></ng-container>
                 </div>

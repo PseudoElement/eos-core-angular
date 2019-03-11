@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy} from '@angular/core';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { USER_CL, DEPARTMENT, USER_PARMS } from 'eos-rest';
 import { Subject } from 'rxjs/Subject';
+import {DELO_BLOB} from 'eos-rest/interfaces/structures';
 
 @Component({
     selector: 'eos-right-user-select',
@@ -95,14 +96,13 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
                }    else {
                 this.DueInfo = `${result[1][1]['SURNAME']} ${result[1][1]['NAME']} ${result[1][1]['PATRON']}`;
                }
-          //   this.DueInfo = `${result[1][1]['SURNAME']} ${result[1][1]['NAME']} ${result[1][1]['PATRON']}`;
             this.isPhoto =  result[1][0]['ISN_PHOTO'];
             isn_cabinet =  result[1][0]['ISN_CABINET'];
             this.showDep = true;
             if (this.isPhoto) {
-                this.urlPhoto = `../image.ashx/${this.isPhoto}/110`;
-            }   else {
-                this.urlPhoto = 'assets/images/no-user.png';
+                this._selectedUser.getSVGImage(this.isPhoto).then((res: DELO_BLOB[]) => {
+                this.urlPhoto =  this.createUrlRoot(res[0]);
+                });
             }
            }else {
             this.DueInfo = null;
@@ -117,6 +117,11 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             }, 100);
         });
         });
+    }
+
+    createUrlRoot(blob: DELO_BLOB) {
+        const url = `url(data:image/${blob.EXTENSION};base64,${blob.CONTENTS})`;
+        return url;
     }
 
     getRoleForUser(array: USER_PARMS[]): string {
