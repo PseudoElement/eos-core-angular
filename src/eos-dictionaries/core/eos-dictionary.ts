@@ -354,7 +354,7 @@ export class EosDictionary {
                 }
             });
             this._resetMarked();
-            return Promise.resolve(records);
+            return Promise.resolve(r);
         });
     }
 

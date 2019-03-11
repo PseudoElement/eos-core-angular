@@ -9,7 +9,6 @@ import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 import {DictionaryComponent} from '../dictionary/dictionary.component';
 import {DANGER_EDIT_ON_ROOT} from '../consts/messages.consts';
 import {IMessage} from '../../eos-common/core/message.interface';
-// import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 export class CabinetRecordDescriptor extends RecordDescriptor {
     constructor(dictionary: CabinetDictionaryDescriptor, data: IDictionaryDescriptor) {
@@ -23,7 +22,6 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
     constructor(
         descriptor: IDictionaryDescriptor,
         apiSrv: PipRX,
-        // private _confirmSrv: ConfirmWindowService,
     ) {
         super(descriptor, apiSrv);
     }
@@ -48,11 +46,6 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
             });
     }
 
-    // deleteRecords(records: IEnt[]): Promise<IRecordOperationResult[]> {
-    //     const pDelete = records.map((rec) => this.deleteRecord(rec));
-    //     return Promise.all(pDelete);
-    // }
-
     preCreateCheck(dict: DictionaryComponent): IMessage {
         if (dict.treeNode.id === '0.') {
             return DANGER_EDIT_ON_ROOT;
@@ -64,8 +57,6 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
         if (!query) {
             query = ALL_ROWS;
         }
-
-        // console.warn('getData', query, order, limit);
 
         const req = { [this.apiInstance]: query };
 
@@ -209,31 +200,21 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
     }
 
     _checkDeletion(isn): Promise<any> {
-        // OData.svc/CanChangeClassif?type=%27REESTRTYPE_CL%27&oper=%27DELETE_CABINET%27&id=%273780%27
+        // OData.svc/CanChangeClassif?type=%27CABINET%27&oper=%27DELETE_CABINET%27&id=%273780%27
         const query = { args: { type: 'CABINET', oper: 'DELETE_CABINET', id: String(isn) } };
         const req = { CanChangeClassif: query};
         return this.apiSrv.read(req);
     }
 
     protected deleteRecord(record: CABINET): Promise<IRecordOperationResult> {
-
         return this._checkDeletion(record.ISN_CABINET).then(check => {
-            // DOC_FOLDER_NOT_EMPTY
-            if (check === 'DOC_FOLDER_NOT_EMPTY') {
-                // return this._confirmSrv.confirm(CONFIRM_CABINET_NON_EMPTY)
-                //         .then((confirmed: boolean) => {
-                //             return Promise.resolve(confirmed);
-                //         });
-
-                return <IRecordOperationResult> {
+            if (check === 'DOC_FOLDER_NOT_EMPTY' || check === 'PRJ_FOLDER_NOT_EMPTY') {
+                return Promise.resolve(<IRecordOperationResult> {
                     record: Object.assign(record, {CLASSIF_NAME: record['CABINET_NAME']}),
                     success: false,
                     error: {code: 0,
                         message: 'Папки кабинета не пусты'}
-                };
-
-                // Для владельца кабинета существуют записи в папках. Удалить их?
-                // return Promise.reject('nicht');
+                });
             } else {
                 record._State = _ES.Deleted;
                 const changes = this.apiSrv.changeList([record]);
@@ -246,13 +227,13 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
                     });
             }
 
+        }).catch((err) => {
+            return <IRecordOperationResult>{
+                record: record,
+                success: false,
+                error: err
+            };
         });
-        // .then (deleteneed => {
-
-        //     return Promise.resolve(null);
-        // });
-
-
 
         // return this.getOwners(record.DUE)
         //     .then((owners) => this.updateOwnersCabinet(owners, record.ISN_CABINET, null))
@@ -291,32 +272,32 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
         this.record = new CabinetRecordDescriptor(this, data);
     }
 
-    protected _canDelete(record): Promise<boolean> {
-        const foldISN = [];
-        record.FOLDER_List.forEach((folder) => {
-            foldISN.push(folder.ISN_FOLDER);
-        });
+    // protected _canDelete(record): Promise<boolean> {
+    //     const foldISN = [];
+    //     record.FOLDER_List.forEach((folder) => {
+    //         foldISN.push(folder.ISN_FOLDER);
+    //     });
 
-        if (foldISN.length) {
-            return this.apiSrv.read({ 'DOC_FOLDER_ITEM': PipRX.criteries({ 'ISN_FOLDER': foldISN.join('|') })})
-                .then((docs) => {
-                    if (docs.length) {
-                        return false;
-                    } else {
-                        return this.apiSrv.read({ 'PRJ_FOLDER_ITEM': PipRX.criteries({ 'ISN_FOLDER': foldISN.join('|') })})
-                            .then((prjs) => {
-                                if (prjs.length) {
-                                    return false;
-                                } else {
-                                    return true;
-                                }
-                            });
-                    }
-                });
-        } else {
-            return Promise.resolve(true);
-        }
-    }
+    //     if (foldISN.length) {
+    //         return this.apiSrv.read({ 'DOC_FOLDER_ITEM': PipRX.criteries({ 'ISN_FOLDER': foldISN.join('|') })})
+    //             .then((docs) => {
+    //                 if (docs.length) {
+    //                     return false;
+    //                 } else {
+    //                     return this.apiSrv.read({ 'PRJ_FOLDER_ITEM': PipRX.criteries({ 'ISN_FOLDER': foldISN.join('|') })})
+    //                         .then((prjs) => {
+    //                             if (prjs.length) {
+    //                                 return false;
+    //                             } else {
+    //                                 return true;
+    //                             }
+    //                         });
+    //                 }
+    //             });
+    //     } else {
+    //         return Promise.resolve(true);
+    //     }
+    // }
 
     private updateOwnersCabinet(owners: DEPARTMENT[], oldCabinetIsn: number, newCabinetIsn: number): Promise<any> {
         let pUpdate = Promise.resolve(null);
