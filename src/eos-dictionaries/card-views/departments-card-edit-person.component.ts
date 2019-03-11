@@ -3,7 +3,6 @@ import { Component, Injector, OnChanges } from '@angular/core';
 import { BaseCardEditComponent } from 'eos-dictionaries/card-views/base-card-edit.component';
 import { FieldsDecline } from 'eos-dictionaries/interfaces/fields-decline.inerface';
 import { IImage } from '../interfaces/image.interface';
-import { DEFAULT_PHOTO } from 'eos-dictionaries/consts/common';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { UPLOAD_IMG_FALLED, INFO_PERSONE_DONT_HAVE_CABINET } from '../consts/messages.consts';
 
@@ -14,7 +13,7 @@ import { UPLOAD_IMG_FALLED, INFO_PERSONE_DONT_HAVE_CABINET } from '../consts/mes
 export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent implements OnChanges {
     readonly fieldGroups: string[] = ['Основные данные', 'Контактная информация', 'Дополнительные сведения'];
 
-    photo = DEFAULT_PHOTO;
+    photo;
 
     private currentNodeId: string;
     private bossWarning: boolean;
@@ -33,8 +32,6 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         }
         if (this.data.photo && this.data.photo.url) {
             this.photo = this.data.photo.url;
-        } else {
-            this.photo = DEFAULT_PHOTO;
         }
         if (this.form) {
             this.unsubscribe();
@@ -49,7 +46,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                 if (photoId) {
                     this.setValue('rec.ISN_PHOTO', photoId['ID']);
                 } else {
-                    this.photo = DEFAULT_PHOTO;
+                    this.photo = null;
                     this._msgSrv.addNewMessage(UPLOAD_IMG_FALLED);
                 }
             });
@@ -57,7 +54,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
 
     removePhoto() {
         this.setValue('rec.ISN_PHOTO', null);
-        this.photo = DEFAULT_PHOTO;
+        this.photo = null;
     }
 
     public fillDeclineFields(): void {

@@ -27,7 +27,8 @@
     .current-image {
         height: 120px;
         width: 120px;
-        display: block;
+        display: flex;
+        align-items: center;
         border: 1px solid $border-color-main-theme;
         border-radius: 100%;
         background-size: cover;
@@ -35,6 +36,11 @@
         background-position: center center;
         position: relative;
         margin: 0 30px 20px;
+        .current-image-no-user{
+            height: 120px;
+            width: 120px;
+            border-radius: 100%;
+        }
         .photo-uploader {
             position: absolute;
             bottom: -8px;

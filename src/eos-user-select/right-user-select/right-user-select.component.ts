@@ -101,8 +101,6 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             this.showDep = true;
             if (this.isPhoto) {
                 this.urlPhoto = `../image.ashx/${this.isPhoto}/110`;
-            }   else {
-                this.urlPhoto = 'assets/images/no-user.png';
             }
            }else {
             this.DueInfo = null;
