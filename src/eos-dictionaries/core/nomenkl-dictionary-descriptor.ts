@@ -99,7 +99,7 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
     setRootNode(_nodeId: string) {
         this._filterDUE = _nodeId;
         if (this._treeData) {
-            this.parseTree(this._treeData, (item: CustomTreeNode) => {
+            this._parseTree(this._treeData, (item: CustomTreeNode) => {
                 if (item.id === this._filterDUE) {
                     item.isActive = true;
                     this._activeTreeNode = item;
@@ -167,13 +167,13 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
         this.record = new NomenklRecordDescriptor(this, <ITreeDictionaryDescriptor>data);
     }
 
-    private parseTree(treeData: CustomTreeNode[], callback) {
+    private _parseTree(treeData: CustomTreeNode[], callback) {
         let i: number;
 
         for (i = 0; i < treeData.length; i++) {
             callback(treeData[i]);
             if (treeData[i].children && treeData[i].children.length) {
-                this.parseTree(treeData[i].children, callback);
+                this._parseTree(treeData[i].children, callback);
             }
         }
     }
@@ -197,7 +197,7 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
                 isDeleted: dd.DELETED === 0 ? false : true,
                 isActive: dd.DUE === this._filterDUE,
                 expandable: false,
-                isExpanded: true,
+                isExpanded: false,
                 updating: false,
                 children: [],
                 data: {DEPARTMENT_INDEX : dd.DEPARTMENT_INDEX },
@@ -212,28 +212,48 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
         i = 0;
         while (i < res.length) {
             d = res[i];
-            r = this.findTreeParent(res, d.parent);
+            r = this._findTreeParent(res, d.parent);
             if (r) {
                 r.expandable = true;
-                r.isExpanded = false;
                 r.children.push(d);
                 res.splice(i, 1);
                 i--;
             }
             i++;
         }
-        res.find((f) => f.id === NP_NOM_ROOT_DUE).isExpanded = true;
+
+
+        r = this._expandToSelected(this._activeTreeNode, res);
+
         this._treeData = res;
     }
 
-    private findTreeParent(treeData: CustomTreeNode[], id: any) {
+    private _expandToSelected(node2expand: CustomTreeNode, nodes: CustomTreeNode[]) {
+        let r = node2expand;
+        if (r) {
+            while (r) {
+                if (r.expandable) {
+                    r.isExpanded = true;
+                }
+                r = this._findTreeParent(nodes, r.parent);
+                if (r) {
+                    r.isExpanded = true;
+                }
+            }
+        } else {
+            nodes.find((f) => f.id === NP_NOM_ROOT_DUE).isExpanded = true;
+        }
+        return r;
+    }
+
+    private _findTreeParent(treeData: CustomTreeNode[], id: any) {
         let i: number;
         let res: CustomTreeNode;
         for (i = 0; i < treeData.length; i++) {
             if (treeData[i].id === id) {
                 return treeData[i];
             } else if (treeData[i].children && treeData[i].children.length) {
-                res = this.findTreeParent(treeData[i].children, id);
+                res = this._findTreeParent(treeData[i].children, id);
                 if (res) {
                     return res;
                 }
