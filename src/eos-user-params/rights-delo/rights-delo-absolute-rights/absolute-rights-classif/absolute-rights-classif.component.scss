@@ -1,7 +1,6 @@
 .user-tech-classif {
-    border: 1px solid $border-color-main-theme;
     overflow: auto;
-    max-height: calc(100vh - 280px);
+    height: calc(100vh - 260px);
 
     .right-classif-node {
         padding-left: 2px;

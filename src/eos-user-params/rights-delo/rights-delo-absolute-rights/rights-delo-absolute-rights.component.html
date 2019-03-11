@@ -1,18 +1,24 @@
-<div class="input-user-wrapper input-user-absolute-rights-wrapper">
-    <eos-rights-delo-header
-        [title]="titleHeader"
-        (submitForm)="submit()"
-        (cancelForm)="cancel()"
-        [statusBtnSub]="btnDisabled"
-    ></eos-rights-delo-header>
+<div class="input-user-absolute-rights-wrapper">
+    <eos-user-params-header
+        [title] = "titleHeader"
+        [link] = "curentUser.ISN_LCLASSIF"
+        [selfLink] = "selfLink"
+        [disableBtn] = "btnDisabled"
+        (submitEmit) = "submit()"
+        (cancelEmit) = "cancel()"
+        (editEmit) = "edit()"
+        (closeEmit) = "close()"
+    ></eos-user-params-header>
 
-    <div class="user-input-group absolute-flex">
+    <div class="input-user-absolute-rights">
         <div class="left-block-list-absolute-rights">
             <div class="list-card-files"
                 *ngFor="let item of listRight"
                 [ngClass]="{'highlighted': item.isSelected}">
                 <div [formGroup]="form">
-                    <label class="checkbox" (click)="clickLable($event, item)">
+                    <label class="checkbox"
+                        [ngClass]="{'disabled': !editMode}"
+                        (click)="clickLable($event, item)">
                         <input type="checkbox"
                             hide
                             [formControlName]="item.key"
@@ -25,7 +31,7 @@
                 </div>
             </div>
         </div>
-        <div class="right-block-list-absolute-rights" *ngIf="rightContent">
+        <div class="right-block-list-absolute-rights" *ngIf="rightContent && selectedNode">
             <ng-container [ngSwitch]="selectedNode.contentProp">
                 <!-- docGroup -->
                 <ng-container *ngSwitchCase="0">
