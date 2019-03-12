@@ -10,6 +10,10 @@ import {Component} from '@angular/core';
 })
 
 export class RightsCardFilesComponent {
+    public isLoading = false;
+    public titleHeader;
+    public link;
+    public selfLink;
     public arrayKeysCheckboxforCabinets = [
         ['USER_ACCOUNTS_RECEIVED', 'Поступившие'],
         ['USER_ACCOUNTS_ON_PERFORMANCE', 'На исполнении'],
@@ -24,6 +28,18 @@ export class RightsCardFilesComponent {
         ['HIDE_INACCESSIBLE', 'Учитывать ограничения доступа к РК по грифам и группам документов'],
         ['HIDE_INACCESSIBLE_PRJ', 'Учитывать права для работы с РКПД'],
     ];
+
+    public arrayKey = new Map()
+    .set('USER_ACCOUNTS_RECEIVED', 1)
+    .set('USER_ACCOUNTS_ON_PERFORMANCE', 2)
+    .set('USER_ACCOUNTS_UNDER_CONTROL', 3)
+    .set('USER_ACCOUNTS_HAVE_LEADERSHIP', 4)
+    .set('USER_ACCOUNTS_UNDER_CONSIDERATION', 5)
+    .set('USER_ACCOUNTS_IN_DELO', 6)
+    .set('USER_ACCOUNTS_SUPERVISORY_PROCEEDINGS', 7)
+    .set('USER_ACCOUNTS_PROJECT_MANAGEMENT', 8)
+    .set('USER_ACCOUNTS_ON_SIGHT', 9)
+    .set('USER_ACCOUNTS_ON_THE_SIGNATURE', 'A');
     // private queryDepartment = {
     //     DEPARTMENT: {
     //         criteries: {
@@ -45,6 +61,9 @@ export class RightsCardFilesComponent {
     //     }
     // };
     constructor() {
-
+        this.isLoading = false;
+        // this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Электронная подпись';
+        // this.link = this._userSrv.curentUser['ISN_LCLASSIF'];
+        // this.selfLink = this._router.url.split('?')[0];
     }
 }

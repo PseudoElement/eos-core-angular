@@ -1,1 +1,19 @@
-<h1>new Card</h1>
+<div class="input-user-wrapper input-user-card-files-wrapper" *ngIf="!isLoading">
+    <eos-user-params-header
+        [title] = 'titleHeader'
+        [link] = 'link'
+        [selfLink] = 'selfLink'
+        [disableBtn] = "!btnDisabled"
+        [defaultBtn] = 'false'
+        (submitEmit) = 'submit($event)'
+        (cancelEmit) = 'cancellation($event)'
+        (editEmit) = 'edit($event)'
+        (closeEmit) = 'close($event)'
+        (defaultEmit) = 'default($event)'
+    ></eos-user-params-header>
+    <div class="user-input-group">
+        <div class="card-left"></div>
+        <div class="card-rigth"></div>
+    </div>
+</div>
+
