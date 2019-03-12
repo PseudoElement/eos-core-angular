@@ -480,7 +480,6 @@ export class EosDictService {
                     })
                     .then((results) => {
                         const keyFld = dictionary.descriptor.record.keyField.foreignKey;
-
                         results.forEach((res) => {
                             res.record = dictionary.getNode(res.record[keyFld] + '');
                             if (!res.success) {

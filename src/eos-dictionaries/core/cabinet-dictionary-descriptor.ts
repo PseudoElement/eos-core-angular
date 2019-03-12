@@ -179,7 +179,10 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
                 default: // do nothing
             }
         });
-        const changes = this.apiSrv.changeList(changeData);
+        let changes = this.apiSrv.changeList(changeData);
+        if (updates['updateTrules']) {
+            changes = changes.concat(updates['updateTrules']);
+        }
         if (changes && changes.length) {
             return this.apiSrv.batch(changes, '')
                 .then(() => {
@@ -235,6 +238,7 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
             };
         });
 
+        // TODO: bug-93710 refactor, может понадобится.
         // return this.getOwners(record.DUE)
         //     .then((owners) => this.updateOwnersCabinet(owners, record.ISN_CABINET, null))
         //     .then(() => {
@@ -272,6 +276,7 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
         this.record = new CabinetRecordDescriptor(this, data);
     }
 
+    // TODO: bug-93710 refactor, может понадобится.
     // protected _canDelete(record): Promise<boolean> {
     //     const foldISN = [];
     //     record.FOLDER_List.forEach((folder) => {
