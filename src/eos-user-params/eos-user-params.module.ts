@@ -27,7 +27,7 @@ import { RightSideDocGroupInFileCardComponent } from './rights-delo/rights-delo-
 import { RightSideDocGroupAndRestrictionInFileCardComponent } from './rights-delo/rights-delo-card-index-rights/right-side-doc-group-and-restriction-in-file-card/right-side-doc-group-and-restriction-in-file-card.component';
 import { RightSideListCardComponent } from './rights-delo/rights-delo-card-index-rights/right-side-list-card/right-side-list-card.component';
 import { RightPanelForDocumentGroupsComponent } from './rights-delo/right-panel-for-document-groups/right-panel-for-document-groups.component';
-import { RightsCardFilesComponent } from './rights-delo/rights-card-files/rights-card-files.component';
+import { RightsCardFilesComponent } from './rights-delo/rights-cabinets/rights-card-files.component';
 import { ParamsBaseParamComponent } from './base-param/base-param.component';
 import { InputParamControlService } from './shared/services/input-param-control.service';
 import {EmailAddressService} from './shared/services/email-address.service';
