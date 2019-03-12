@@ -1,4 +1,4 @@
-import { E_TECH_USER_CLASSIF_CONTENT, ITechUserClassifConst } from '../interfaces/tech-user-classif.interface';
+import { E_TECH_USER_CLASSIF_CONTENT, ITechUserClassifConst } from './tech-user-classif.interface';
 
 export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
     {

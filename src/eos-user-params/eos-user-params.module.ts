@@ -20,14 +20,10 @@ import { UserParamEAComponent } from './user-params-set/user-param-external-appl
 import { UserParamOtherForwardingComponent } from './user-params-set/user-param-other/user-param-other.component';
 import { UserParamsService } from './shared/services/user-params.service';
 import { ParamEmailAddressComponent } from './email-address/email-address.component';
-import { RightsDeloHeaderComponent } from './rights-delo/shared-rights-delo/rights-delo-header/rights-delo-header.component';
-import { RightsDeloAbsoluteRightsComponent } from './rights-delo/rights-delo-absolute-rights/rights-delo-absolute-rights.component';
-import { RightsDeloCardIndexRightsComponent } from './rights-delo/rights-delo-card-index-rights/rights-delo-card-index-rights.component';
-import { RightSideDocGroupInFileCardComponent } from './rights-delo/rights-delo-card-index-rights/right-side-doc-group-in-file-card/right-side-doc-group-in-file-card.component';
-import { RightSideDocGroupAndRestrictionInFileCardComponent } from './rights-delo/rights-delo-card-index-rights/right-side-doc-group-and-restriction-in-file-card/right-side-doc-group-and-restriction-in-file-card.component';
-import { RightSideListCardComponent } from './rights-delo/rights-delo-card-index-rights/right-side-list-card/right-side-list-card.component';
-import { RightPanelForDocumentGroupsComponent } from './rights-delo/right-panel-for-document-groups/right-panel-for-document-groups.component';
 import { RightsCardFilesComponent } from './rights-delo/rights-cabinets/rights-card-files.component';
+import { RightsDeloCardFilesComponent } from './rights-delo/rights-delo-card-files/rights-delo-card-files.component';
+import { RightsDeloAbsoluteRightsComponent } from './rights-delo/rights-delo-absolute-rights/rights-delo-absolute-rights.component';
+import { RightsDeloCardsComponent } from './rights-delo/rights-delo-cards/rights-delo-cards.component';
 import { ParamsBaseParamComponent } from './base-param/base-param.component';
 import { InputParamControlService } from './shared/services/input-param-control.service';
 import {EmailAddressService} from './shared/services/email-address.service';
@@ -69,16 +65,12 @@ import {RemasterRcComponent} from '../eos-user-params/user-params-set/user-param
         UserParamEAComponent,
         UserParamOtherForwardingComponent,
         ParamEmailAddressComponent,
-        RightsDeloHeaderComponent,
-        RightsDeloAbsoluteRightsComponent,
-        RightsDeloCardIndexRightsComponent,
-        RightSideDocGroupInFileCardComponent,
-        RightSideDocGroupAndRestrictionInFileCardComponent,
-        RightSideListCardComponent,
         RightsCardFilesComponent,
+        RightsDeloCardFilesComponent,
+        RightsDeloAbsoluteRightsComponent,
+        RightsDeloCardsComponent,
         ParamsBaseParamComponent,
         EmailFormComponent,
-        RightPanelForDocumentGroupsComponent,
         RightLimitedAccessComponent,
         ParamsBaseParamComponent,
         RightDepertmentComponent,
