@@ -21,7 +21,6 @@ import { UserParamOtherForwardingComponent } from './user-params-set/user-param-
 import { UserParamsService } from './shared/services/user-params.service';
 import { ParamEmailAddressComponent } from './email-address/email-address.component';
 import { RightsCardFilesComponent } from './rights-delo/rights-cabinets/rights-card-files.component';
-import { RightsDeloCardFilesComponent } from './rights-delo/rights-delo-card-files/rights-delo-card-files.component';
 import { RightsDeloAbsoluteRightsComponent } from './rights-delo/rights-delo-absolute-rights/rights-delo-absolute-rights.component';
 import { RightsDeloCardsComponent } from './rights-delo/rights-delo-cards/rights-delo-cards.component';
 import { ParamsBaseParamComponent } from './base-param/base-param.component';
@@ -66,7 +65,6 @@ import {RemasterRcComponent} from '../eos-user-params/user-params-set/user-param
         UserParamOtherForwardingComponent,
         ParamEmailAddressComponent,
         RightsCardFilesComponent,
-        RightsDeloCardFilesComponent,
         RightsDeloAbsoluteRightsComponent,
         RightsDeloCardsComponent,
         ParamsBaseParamComponent,

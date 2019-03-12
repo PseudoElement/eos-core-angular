@@ -6,7 +6,7 @@ import {Component} from '@angular/core';
 @Component({
     selector: 'eos-card-files',
     styleUrls: ['rights-card-files.component.scss'],
-    templateUrl: 'rights-card-files.component.html'
+    templateUrl: 'rights-card-files.component.html',
 })
 
 export class RightsCardFilesComponent {
@@ -29,17 +29,17 @@ export class RightsCardFilesComponent {
         ['HIDE_INACCESSIBLE_PRJ', 'Учитывать права для работы с РКПД'],
     ];
 
-    public arrayKey = new Map()
-    .set('USER_ACCOUNTS_RECEIVED', 1)
-    .set('USER_ACCOUNTS_ON_PERFORMANCE', 2)
-    .set('USER_ACCOUNTS_UNDER_CONTROL', 3)
-    .set('USER_ACCOUNTS_HAVE_LEADERSHIP', 4)
-    .set('USER_ACCOUNTS_UNDER_CONSIDERATION', 5)
-    .set('USER_ACCOUNTS_IN_DELO', 6)
-    .set('USER_ACCOUNTS_SUPERVISORY_PROCEEDINGS', 7)
-    .set('USER_ACCOUNTS_PROJECT_MANAGEMENT', 8)
-    .set('USER_ACCOUNTS_ON_SIGHT', 9)
-    .set('USER_ACCOUNTS_ON_THE_SIGNATURE', 'A');
+    // public arrayKey = new Map()
+    // .set('USER_ACCOUNTS_RECEIVED', 1)
+    // .set('USER_ACCOUNTS_ON_PERFORMANCE', 2)
+    // .set('USER_ACCOUNTS_UNDER_CONTROL', 3)
+    // .set('USER_ACCOUNTS_HAVE_LEADERSHIP', 4)
+    // .set('USER_ACCOUNTS_UNDER_CONSIDERATION', 5)
+    // .set('USER_ACCOUNTS_IN_DELO', 6)
+    // .set('USER_ACCOUNTS_SUPERVISORY_PROCEEDINGS', 7)
+    // .set('USER_ACCOUNTS_PROJECT_MANAGEMENT', 8)
+    // .set('USER_ACCOUNTS_ON_SIGHT', 9)
+    // .set('USER_ACCOUNTS_ON_THE_SIGNATURE', 'A');
     // private queryDepartment = {
     //     DEPARTMENT: {
     //         criteries: {
