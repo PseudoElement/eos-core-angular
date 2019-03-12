@@ -91,6 +91,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
             this.formMailResuve.enable({emitEvent: false});
             this.disableFormMailResive();
             this.disableForm();
+            this.alwaysDisabledMethod();
         });
     }
     ngOnInit() {
@@ -119,7 +120,6 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         this.prepareData = this.formHelp.convData(this.preparedItemForInputs);
         this.inputs = this.dataSrv.getInputs(this.prepareInputs, {rec: this.preparedItemForInputs});
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-        this.alwaysDisabledMethod();
         this.form.disable({emitEvent: false});
         this.templRender = this.createTree(this.fieldsConst.fields);
         this.sliceArrayForTemplate();
@@ -482,13 +482,14 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
                     value: this.form.controls['rec.RECEIP_EMAIL'].value,
                 },
             ]);
-        }  else {
+        } else {
             this.pushChenge.emit(false);
         }
     }
     cancel() {
         this.initEmail();
         this.initMailResive();
+        this.alwaysDisabledMethod();
         this.ErrorRcSend = false;
         this.ErrorMailRecive = false;
         this.flagEdit = false;
