@@ -15,6 +15,9 @@ import {Subject} from 'rxjs/Subject';
 export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy {
     readonly fieldGroupsForRegistration: string[] = ['Доп. операции', 'Корр./адресаты', 'Эл. почта', 'Сканирование', 'Автопоиск', 'СЭВ', 'РКПД'];
     public currTab = 0;
+    public titleHeader;
+    public selfLink;
+    public link;
     public hash: Map<any, string>;
     public defaultValues: any;
     public isLoading: boolean = false;
@@ -46,6 +49,9 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             this._userSrv.saveData$.takeUntil(this._ngUnsubscribe).subscribe(() => {
                 this.submit(null);
             });
+            this.titleHeader =  `${this._userSrv.curentUser.SURNAME_PATRON} - Регистрация`;
+            this.selfLink = this._route.url.split('?')[0];
+            this.link = this._userSrv.userContextId;
     }
     ngOnInit() {
         this._apiSrv.read(this.getObjQueryInputsField()).then(data => {
