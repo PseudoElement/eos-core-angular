@@ -1,10 +1,10 @@
-import { ITechUserClassifConst, E_TECH_USER_CLASSIF_CONTENT, IConfigUserTechClassif } from 'eos-user-params/rights-delo/shared-rights-delo/interfaces/tech-user-classif.interface';
+import { ITechUserClassifConst, E_TECH_USER_CLASSIF_CONTENT, IConfigUserTechClassif } from './tech-user-classif.interface';
 import { NodeAbsoluteRight } from '../node-absolute';
 import { IParamUserCl, INodeDocsTreeCfg } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { E_CLASSIF_ID } from 'eos-user-params/rights-delo/shared-rights-delo/consts/tech-user-classif.consts';
+import { E_CLASSIF_ID } from './tech-user-classif.consts';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { AbsoluteRightsClassifComponent } from './absolute-rights-classif.component';
-import { IChengeItemAbsolute } from 'eos-user-params/rights-delo/shared-rights-delo/interfaces/right-delo.intefaces';
+import { IChengeItemAbsolute } from '../right-delo.intefaces';
 import { USER_TECH } from 'eos-rest';
 
 export class RightClassifNode {

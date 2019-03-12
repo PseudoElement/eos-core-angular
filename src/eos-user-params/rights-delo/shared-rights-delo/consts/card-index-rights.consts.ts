@@ -1,6 +1,6 @@
-import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
-import { E_RIGHT_DELO_ACCESS_CONTENT } from '../interfaces/right-delo.intefaces';
 import { IInputParamControl, IInputParamControlForIndexRight } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { E_FIELD_TYPE } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
+import { E_RIGHT_DELO_ACCESS_CONTENT } from 'eos-user-params/rights-delo/rights-delo-absolute-rights/right-delo.intefaces';
 
 export const CARD_INDEXS_RIGHTS: IInputParamControlForIndexRight[] = [
         {

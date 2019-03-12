@@ -1,6 +1,6 @@
 import { IInputParamControlForIndexRight, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { AbstractControl } from '@angular/forms';
-import { E_RIGHT_SIDE_DOC_GROUP_IN_FILE_CARD_ACCESS_CONTENT, IChengeItemInFileCard } from '../shared-rights-delo/interfaces/right-delo.intefaces';
+import { E_RIGHT_SIDE_DOC_GROUP_IN_FILE_CARD_ACCESS_CONTENT, IChengeItemInFileCard } from '../rights-delo-absolute-rights/right-delo.intefaces';
 
 export class NodeRightInFileCard {
     isSelected: boolean;
