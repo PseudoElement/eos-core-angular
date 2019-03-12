@@ -2,9 +2,11 @@ import { Component, Injector, ViewChild, OnChanges, HostListener } from '@angula
 
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { CABINET_FOLDERS } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
-import { DEPARTMENT } from 'eos-rest';
+import { DEPARTMENT, PipRX } from 'eos-rest';
 import { IOrderBy } from '../interfaces';
 import { AbstractControl, FormControl } from '@angular/forms';
+import { CONFIRM_CABINET_NON_EMPTY } from 'app/consts/confirms.const';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 interface ICabinetOwner {
     index: number;
@@ -18,7 +20,6 @@ interface ICabinetOwner {
 })
 export class CabinetCardEditComponent extends BaseCardEditComponent implements OnChanges {
     readonly tabs = ['Основные данные', 'Доступ пользователей к кабинету'];
-
     status: any = {
         showOwners: true,
         showAccess: true,
@@ -41,8 +42,12 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
         fieldKey: 'SURNAME'
     };
 
+
+
+
     @ViewChild('tableEl') tableEl;
 
+    private _apiSrv: PipRX;
     // private folderList: any[];
 
     /* tslint:disable:no-bitwise */
@@ -82,12 +87,15 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     private scrollInterval = 50;
     private _interval: any;
 
-    constructor(injector: Injector) {
+    constructor(injector: Injector,
+        private _confirmSrv: ConfirmWindowService,
+        ) {
         super(injector);
         this.foldersMap = new Map<number, any>();
         CABINET_FOLDERS.forEach((folder) => {
             this.foldersMap.set(folder.key, folder);
         });
+        this._apiSrv = injector.get(PipRX);
         // this.folderList = [];
     }
 
@@ -136,9 +144,30 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
         this.reorderCabinetOwners();
     }
 
+
+    _checkDeletion(due): Promise<any> {
+        const query = { args: { type: 'DEPARTMENT', oper: 'DELETE_FROM_CABINET', id: String(due) } };
+        const req = { CanChangeClassif: query};
+        return this._apiSrv.read(req);
+    }
+
     remove() {
         this.cabinetOwners.filter((owner) => owner.marked)
             .forEach((owner) => {
+                this._checkDeletion(owner.data['DUE']).then(result => {
+                    if (result === 'DOC_FOLDER_NOT_EMPTY_BY_RESOLUTION' ||
+                        result === 'DOC_FOLDER_NOT_EMPTY_BY_REPLY') {
+                        this._confirmSrv.confirm(CONFIRM_CABINET_NON_EMPTY).then(confirmation => {
+                            if (confirmation) {
+                                if (!this.data['updateTrules']) {
+                                    this.data['updateTrules'] = [];
+                                }
+                                PipRX.invokeSop(this.data['updateTrules'], 'DepartmentCabinet_TRule', {'due' : owner.data['DUE'], 'ClearCabinet': 1,  'MoveCabinet': 0});
+                            }
+                        });
+                    }
+                });
+
                 this.setValue(this.getOwnerPath(owner.index), null);
                 owner.data['ISN_CABINET'] = null;
                 owner.marked = false;

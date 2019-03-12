@@ -20,6 +20,7 @@ import {SevRulesDictionaryDescriptor} from './sev-rules-dictionary-descriptor';
 import {LinkDictionaryDescriptor} from './link-dictionary-descriptor';
 import {NomenklDictionaryDescriptor} from './nomenkl-dictionary-descriptor';
 import { ReestrtypeDictionaryDescriptor } from './reestrtype-dictionary-descriptor';
+// import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 @Injectable()
 export class DictionaryDescriptorService {
@@ -29,7 +30,10 @@ export class DictionaryDescriptorService {
     constructor(
         private apiSrv: PipRX,
         private _channelSrv: EosBroadcastChannelService,
-        private _rulesSrv: EosSevRulesService
+        private _rulesSrv: EosSevRulesService,
+        // private _confirmSrv: ConfirmWindowService,
+
+
     ) {
         this._mDicts = new Map<string, IDictionaryDescriptor>();
         this._mDictClasses = new Map<string, AbstractDictionaryDescriptor>();
@@ -88,7 +92,7 @@ export class DictionaryDescriptorService {
                         res = new SevRulesDictionaryDescriptor(descr, this.apiSrv, this._rulesSrv);
                         break;
                     case 'cabinet':
-                        res = new CabinetDictionaryDescriptor(descr, this.apiSrv);
+                        res = new CabinetDictionaryDescriptor(descr, this.apiSrv, /*this._confirmSrv*/);
                         break;
                     case 'docgroup':
                         res = new DocgroupDictionaryDescriptor(descr, this.apiSrv);

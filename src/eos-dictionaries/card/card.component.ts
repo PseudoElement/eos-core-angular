@@ -443,6 +443,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
     private _afterUpdating(node: EosDictionaryNode): EosDictionaryNode {
         if (node) {
+            node.data['updateTrules'] = [];
             this.recordChanged(node.data);
             this.isChanged = false;
             this._msgSrv.addNewMessage(SUCCESS_SAVE);
