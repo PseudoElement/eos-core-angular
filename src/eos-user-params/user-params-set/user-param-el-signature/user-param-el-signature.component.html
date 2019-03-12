@@ -71,17 +71,14 @@
             containerClass="tooltip-info"
             container="body"
             trigger="hover">Хранилища сертификатов пользователя</button>
-            <div
+            <button
             tooltip="Открыть"
             #itemTooltip="bs-tooltip"
             containerClass="tooltip-info"
             trigger="hover"
             container="body"
-            >
-            <button
             (click)="openPopup(template, 'CERT_OTHER_STORES')"
             [disabled] = "!editFlag || disablebtnCarma">Хранилища прочих сертификатов</button>
-            </div>
         </div>
     </div>
     <div class="user-input-group">
