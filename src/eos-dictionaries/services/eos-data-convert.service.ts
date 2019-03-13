@@ -237,9 +237,9 @@ export class EosDataConvertService {
                                         hideLabel: !(descr[_key].title),
                                         required: descr[_key].required,
                                         forNode: descr[_key].forNode,
-                                        value: !data[_dict] || data[_dict][descr[_key].foreignKey] === undefined ? null :
-                                                data[_dict][descr[_key].foreignKey] === 0 ? 0 :
-                                                data[_dict][descr[_key].foreignKey] || descr[_key].default,
+                                        value: data[_dict] && data[_dict][descr[_key].foreignKey] !== undefined ?
+                                            data[_dict][descr[_key].foreignKey] :
+                                            (descr[_key].default === undefined ? null : descr[_key].default),
                                         readonly: descr[_key].readonly,
                                         disabled: descr[_key].readonly || !editMode,
                                     });
