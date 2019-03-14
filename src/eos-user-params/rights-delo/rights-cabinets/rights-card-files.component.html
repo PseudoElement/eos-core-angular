@@ -37,7 +37,9 @@
                 <span *ngIf='!card.deleted' class="cards-item" [ngClass]="card.homeCard ? 'homeCard' : ''" (click) ='selectCurentCard(card)'>{{card.cardName}}</span>
             </div>
         </div>
-        <div class="card-rigth"></div>
+        <div class="card-rigth">
+            <eos-cabinets-folders [card]="currentCard"></eos-cabinets-folders>
+        </div>
     </div>
 </div>
 

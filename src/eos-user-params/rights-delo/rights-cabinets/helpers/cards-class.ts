@@ -18,8 +18,8 @@ export class Cabinets {
     .set('Управление проектами', 8)
     .set('На визировании', 9)
     .set('На подписи', 'A')
-    .set('Учитывать ограничения доступа к РК по грифам и группам документов', false)
-    .set('Учитывать права для работы с РКПД', false);
+    .set('Учитывать ограничения доступа к РК по грифам и группам документов', 'H')
+    .set('Учитывать права для работы с РКПД', 'HR');
     constructor(classif: number, cabinetName: CABINET, cuserCard?: USER_CABINET[]) {
         this.isnCabinet = cabinetName.ISN_CABINET;
         this.isnClassif = classif;
@@ -43,10 +43,13 @@ export class Cabinets {
             const obj = {
                 name: key,
                 value: value};
-            if (key === ('HIDE_INACCESSIBLE' || 'HIDE_INACCESSIBLE_PRJ' )) {
-                obj['selected'] =   parceString.length ?  findDate[key] ? true : false : false;
+            if (value === 'H') {
+                obj['selected'] =  !parceString.length ? false :  findDate['HIDE_INACCESSIBLE'] ? true : false;
                 this.folders.push(obj);
-            }   else {
+            } else if (value === 'HR') {
+                obj['selected'] =  !parceString.length ? false :  findDate['HIDE_INACCESSIBLE_PRJ'] ? true : false;
+                this.folders.push(obj);
+            }  else {
                 obj['selected'] = this.searchValueForParceString(value, stringAvalable);
                 this.folders.push(obj);
             }
