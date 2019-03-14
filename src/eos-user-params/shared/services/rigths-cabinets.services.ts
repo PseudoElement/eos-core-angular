@@ -2,28 +2,33 @@ import {Injectable} from '@angular/core';
 import { PipRX } from 'eos-rest';
 import {USERCARD, DEPARTMENT} from '../../../eos-rest/interfaces/structures';
 import {CardsClass} from '../../rights-delo/rights-cabinets/helpers/cards-class';
+import {CardInit} from 'eos-user-params/shared/intrfaces/cabinets.interfaces';
 @Injectable()
 
 export class RigthsCabinetsServices {
     public cardsArray: CardsClass[] = [];
+    public cardsOrigin: CardsClass[];
+    public user_id;
     constructor(
         private _pipRx: PipRX
         ) {}
-    getUserCard(userCard: USERCARD[]): Promise<any> {
+    getUserCard(userCard: USERCARD[], id_user?): Promise<any> {
+        this.user_id = id_user;
             const queryFordep = this.createStringQuery(userCard);
             return this.getDepartmentName(queryFordep).then((date: DEPARTMENT[]) => {
                 const queryString = this.createStringQuery(date);
                 return this.getCabinetsName(queryString).then(data => {
                     const queryStringCards = this.createStringQueryCabinet(data);
                     return this.getUserCabinet(queryStringCards).then(res => {
-                        const q = {
-                            department: date,
-                            cabinetsName: data,
-                            userCabinet: res,
+                        const q: CardInit = {
+                            DEPARTMENT_info: date,
+                            CABINET_info: data,
+                            USER_CABINET_info: res,
                             create: false
                         };
                         this.fillArrayCards(userCard, q);
                         this.fillArrayCardsName(date);
+                        this.cardsOrigin = this.cardsArray.slice();
                     });
                 });
         }).catch(error => {
@@ -41,21 +46,31 @@ export class RigthsCabinetsServices {
         });
     }
 
-    fillArrayCards(inmfo: USERCARD[], supportInfo: any): void {
+    fillArrayCards(inmfo: USERCARD[], supportInfo: CardInit): void {
         inmfo.forEach((card: USERCARD) => {
             this.cardsArray.push(new CardsClass(card, supportInfo));
         });
     }
 
-    createStringQuery(inmfo): string {
+    createStringQuery(inmfo, flagNewCard?): string {
         let stringQuery = '';
-        inmfo.forEach((card, index) => {
-            if (index === inmfo.length - 1) {
-                stringQuery += `${card.DUE}`;
-            }  else {
-                stringQuery += `${card.DUE}|`;
-            }
-        });
+        if (!flagNewCard) {
+                inmfo.forEach((card, index) => {
+                if (index === inmfo.length - 1) {
+                    stringQuery += `${card.DUE}`;
+                }  else {
+                    stringQuery += `${card.DUE}|`;
+                }
+            });
+        }   else {
+            inmfo.forEach((due, index) => {
+                if (index === inmfo.length - 1) {
+                    stringQuery += `${due}`;
+                }  else {
+                    stringQuery += `${due}|`;
+                }
+            });
+        }
         return stringQuery;
     }
 
@@ -101,5 +116,17 @@ export class RigthsCabinetsServices {
             },
         };
        return this._pipRx.read(query);
+    }
+    createUSERCARDArray(typeArrayUserCard): USERCARD[] {
+        return  typeArrayUserCard.map(el => {
+            return {
+                ISN_LCLASSIF: this.user_id,
+                DUE: el,
+                HOME_CARD: 0,
+                FUNCLIST: '010000000000010010000',
+                USER_CARD_DOCGROUP_List: null,
+                USER_CABINET_List: null
+            }as USERCARD ;
+        });
     }
 }

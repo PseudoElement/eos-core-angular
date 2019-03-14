@@ -6,15 +6,35 @@
         [disableBtn] = "!btnDisabled"
         [defaultBtn] = 'false'
         (submitEmit) = 'submit($event)'
-        (cancelEmit) = 'cancellation($event)'
+        (cancelEmit) = 'cancel($event)'
         (editEmit) = 'edit($event)'
         (closeEmit) = 'close($event)'
         (defaultEmit) = 'default($event)'
     ></eos-user-params-header>
-    <div class="user-input-group">
+    <div class="user-input-group scrollWrapper">
         <div class="card-left">
-            <div class="rr" *ngFor='let card of mainArrayCards'>
-                <span (click) ='showContent(card)'>{{card.cardName}}</span>
+            <div class="card-btn">
+                <button class="btn btn-primary"
+                    (click) = "addCards()"
+                    tooltip="Добавить картотеку"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                    triggers="hover:click"
+                    ><span class="eos-icon eos-icon-plus-blue small"></span>
+                </button>
+                <button
+                    [disabled] = "!currentCard"
+                    class="btn btn-primary"
+                    (click) = "removeCards()"
+                    tooltip="Удалить картотеку"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                    triggers="hover:click"
+                    ><span class="eos-icon eos-icon-bin-blue small"></span>
+                </button>
+            </div>
+            <div class="cards-wr" [ngClass]="card.current ? 'ativeCard' : ''" *ngFor='let card of mainArrayCards'>
+                <span *ngIf='!card.deleted' class="cards-item" [ngClass]="card.homeCard ? 'homeCard' : ''" (click) ='selectCurentCard(card)'>{{card.cardName}}</span>
             </div>
         </div>
         <div class="card-rigth"></div>

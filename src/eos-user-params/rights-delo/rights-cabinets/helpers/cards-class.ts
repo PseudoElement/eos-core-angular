@@ -1,4 +1,5 @@
 import {USERCARD, USER_CABINET, CABINET} from 'eos-rest/interfaces/structures';
+import {CardInit} from 'eos-user-params/shared/intrfaces/cabinets.interfaces';
 export class Cabinets {
     name: string;
     change: boolean;
@@ -77,26 +78,28 @@ export class CardsClass {
     public changed: boolean = false;
     public deleted: boolean = false;
     public newCard: boolean;
+    current: boolean = false;
     cabinets: Array<Cabinets> = [];
     data: USERCARD;
-    constructor(cardInfo: USERCARD, info?: any) {
+    constructor(cardInfo: USERCARD, cardsInfo?: CardInit) {
         this.data = cardInfo;
-        this.initProperties(info);
-        this.createCabinets(info);
+        this.initProperties(cardsInfo);
+        this.createCabinets(cardsInfo);
     }
-    initProperties(info) {
+    initProperties(cardsInfo: CardInit) {
         this.data.HOME_CARD !== 1 ? this.homeCard = false : this.homeCard = true;
         this.cardDue = this.data.DUE;
         this.isnClassif = this.data.ISN_LCLASSIF;
-        this.newCard = info['create'];
+        this.newCard = cardsInfo.create;
     }
-    createCabinets(info) {
-        if (info['cabinetsName'].length) {
-            info['cabinetsName'].forEach((cab: CABINET) => {
+    createCabinets(cardsInfo: CardInit) {
+        if (cardsInfo.CABINET_info.length) {
+            cardsInfo.CABINET_info.forEach((cab: CABINET) => {
                 if (cab.DUE === this.cardDue) {
-                    this.cabinets.push(new Cabinets(this.isnClassif, cab, info['userCabinet']));
+                    this.cabinets.push(new Cabinets(this.isnClassif, cab, cardsInfo.USER_CABINET_info));
                 }
             });
         }
     }
+
 }

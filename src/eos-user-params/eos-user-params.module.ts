@@ -50,7 +50,6 @@ import {RemasterScanComponent} from '../eos-user-params/user-params-set/user-par
 import {RemasterAutoSearchComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-auto-search/remaster-auto-search.conponent';
 import {RemasterSebComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-seb/remaster-seb.component';
 import {RemasterRcComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-rc/remaster-rc.component';
-import {RigthsCabinetsServices} from '../eos-user-params/shared/services/rigths-cabinets.services';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -110,7 +109,6 @@ import {RigthsCabinetsServices} from '../eos-user-params/shared/services/rigths-
         LimitedAccesseService,
         UserPaginationService,
         RemasterService,
-        RigthsCabinetsServices,
     ]
 })
 export class EosUserParamsModule {}
