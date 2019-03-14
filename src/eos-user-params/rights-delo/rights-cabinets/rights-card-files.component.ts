@@ -42,7 +42,7 @@ export class RightsCardFilesComponent implements OnInit {
     }
 
     init() {
-        this._rightsCabinetsSrv.getUserCard(this._userSrv.userCard).then((user_cards: USERCARD[]) => {
+        this._rightsCabinetsSrv.getUserCard(this._userSrv.curentUser.USERCARD_List).then((user_cards: USERCARD[]) => {
             this.mainArrayCards = this._rightsCabinetsSrv.cardsArray;
         });
     }
