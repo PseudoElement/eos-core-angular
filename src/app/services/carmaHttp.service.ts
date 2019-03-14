@@ -1,11 +1,25 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptionsArgs, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/mergeMap';
 
 export interface Istore {
     Location: string;
     Address?: string;
     Name?: string;
+}
+export interface IServiceInfo {
+    carmaVersion: string; // '56.0.145'
+    defaultModule: string; // 'capi'
+    appName?: string; // 'eoscryptosvc'
+    carmaProtocolVersion?: string;
+}
+
+export class CarmaError {
+    public name: string = 'Ошибка сгенерирована сервисом Кармы';
+    constructor (public message: string, public status: number = 0) {
+
+    }
 }
 
 export class CarmaConnectionInterface {
@@ -172,7 +186,7 @@ export class CarmaHttpService extends CarmaConnectionInterface {
     mode_SignHashRaw = 58;
     mode_streamshowsign = 59;
 
-    ServiceInfo = { carmaVersion: '0', carmaProtocolVersion: '0', defaultModule: '' };
+    ServiceInfo: IServiceInfo;
     url = '';
     serverAddress = '';
     initStr = '';
@@ -187,7 +201,7 @@ export class CarmaHttpService extends CarmaConnectionInterface {
     ) {
         super();
     }
-    init(initStr, stores: Istore[]) {
+    init(initStr: string, stores: Istore[]): Observable<boolean> {
         initStr = initStr || 'SERVER="http://localhost:8080"';
         this.stores = stores;
         this.initStr = initStr;
@@ -221,21 +235,97 @@ export class CarmaHttpService extends CarmaConnectionInterface {
                 this.useHttp = false;
             }
         }
-        this.storesConfig = this.__make_stores(this.stores);
-        return this.TestConnection()
-        .map((data) => {
-            if (data.errorCode === 0 && data.errorMessage === 'DONE') {
-                this.getServiceInfo();
+        this.storesConfig = this._make_stores(this.stores);
+        return this.checkService();
+    }
+
+    checkService(): Observable<boolean> {
+        return this._testConnection()
+        .mergeMap(() => {
+            return this._getServiceInfo()
+            .map((info: IServiceInfo) => { // "carmaVersion": "56.0.145"
+                const version = info.carmaVersion.split('.');
+                if (+version[0] < 56 || +version[1] < 0 || +version[2] < 145) { // Проверка подходящей версии, не ниже 56.0.145
+                    throw new CarmaError(`Установленная версия "КАРМА" ${info.carmaVersion} не соответствует!\nТребуется "56.0.145" версия и выше.`, 1);
+                }
+                this.ServiceInfo = info;
                 return true;
+            });
+        });
+    }
+    SetCurrentStores(stores: Istore[]) {
+        this.stores = stores;
+        this.storesConfig = this._make_stores(stores);
+    }
+
+    EnumCertificates(location, address, name): Observable<string[]> {
+        if (location === '') {
+            location = 'sscu';
+        }
+        if (name === '') {
+            name = 'MY';
+        }
+
+        return this._request({
+            mode: this.mode_enumcert,
+            storeAddress:
+            {
+                location: location,
+                address: address,
+                name: name
+            }
+        }).map(data => {
+            if (data.errorMessage === 'DONE') {
+                return data.certificates;
             } else {
-                return false;
+                throw new CarmaError(`Ошибка ${data.errorMessage}`);
             }
         });
     }
 
+    EnumStores(location, address): Observable<string[]> {
+        return this._request({
+            mode: this.mode_enumstore,
+            storeAddress:
+            {
+                location: location,
+                address: address
+            }
+        }).map(data => {
+            if (data.errorMessage === 'DONE') {
+                return data.stores;
+            } else {
+                throw new CarmaError(`Ошибка ${data.errorMessage}`);
+            }
+        });
+    }
+    ShowCert(certId: string) {
+        return this._request({
+            mode: this.mode_showcert,
+            senderCertId: certId
+        });
+    }
 
+    GetCertInfo2(certId: string): Promise<any> {
+        return this._request({
+            mode: this.mode_getcertinfo2,
+            senderCertId: certId,
+            needExtraction: true,
+        }).toPromise();
+    }
+    private _request(rec: any): Observable<any> {
+        rec.extInitParams = this.initStr;
+        if (!rec.currentStores) {
+            if (!this.storesConfig || this.ctorStores !== this.stores) {
+                this.storesConfig = this._make_stores(this.stores);
+                this.ctorStores = this.stores;
+            }
+            rec.currentStores = this.storesConfig;
+        }
+        return this.http.post(this.serverAddress, rec, this.carmaOptions).map(res => res.json());
+    }
 
-    __make_stores(stores: Istore[]) {
+    private _make_stores(stores: Istore[]) {
         const res = [];
         if (stores.length) {
             for (let i = 0; i < stores.length; i++) {
@@ -255,96 +345,22 @@ export class CarmaHttpService extends CarmaConnectionInterface {
         }
         return res;
     }
-    getServiceInfo() {
-        this.http.get(this.serverAddress, this.carmaOptions)
-        .map(res => res.json())
-        .subscribe(
-            (res) => {
-                this.ServiceInfo = res;
-            },
-            (err) => {
-                throw new Error(`Не удалось получить сведения о сервисе КАРМА (${err}).`);
-            }
-        );
-    }
 
-    request(rec: any): Observable<any> {
-        rec.extInitParams = this.initStr;
-        if (!rec.currentStores) {
-            if (!this.storesConfig || this.ctorStores !== this.stores) {
-                this.storesConfig = this.__make_stores(this.stores);
-                this.ctorStores = this.stores;
-            }
-            rec.currentStores = this.storesConfig;
-        }
-        return this.http.post(this.serverAddress, rec, this.carmaOptions).map(res => res.json());
-    }
-
-    TestConnection() {
-        return this.request({
+    private _testConnection(): Observable<any> {
+        return this._request({
             mode: this.mode_testconn
-        });
-    }
-
-    SetCurrentStores(stores: Istore[]) {
-        this.stores = stores;
-        this.storesConfig = this.__make_stores(stores);
-    }
-
-    EnumCertificates(location, address, name): Observable<string[]> {
-        // console.log('CarmaHttp.EnumCertificates');
-        if (location === '') {
-            location = 'sscu';
-        }
-        if (name === '') {
-            name = 'MY';
-        }
-
-        return this.request({
-            mode: this.mode_enumcert,
-            storeAddress:
-            {
-                location: location,
-                address: address,
-                name: name
-            }
-        }).map(data => {
-            if (data.errorMessage === 'DONE') {
-                return data.certificates;
-            } else {
-                throw new Error(`Ошибка ${data.errorMessage}`);
+        })
+        .catch(() => {
+            throw new CarmaError('Сервис "КАРМА" не доступен, убедитесь что "КАРМА" установлена и используется верный порт');
+        })
+        .map((data) => {
+            if (data.errorCode !== 0 || data.errorMessage !== 'DONE') {
+                throw  new CarmaError('В установленном Сервере "КАРМА" произошла ошибка!', 1);
             }
         });
     }
-
-    EnumStores(location, address): Observable<string[]> {
-        return this.request({
-            mode: this.mode_enumstore,
-            storeAddress:
-            {
-                location: location,
-                address: address
-            }
-        }).map(data => {
-            if (data.errorMessage === 'DONE') {
-                return data.stores;
-            } else {
-                throw new Error(`Ошибка ${data.errorMessage}`);
-            }
-        });
-    }
-    ShowCert(certId: string) {
-        return this.request({
-            mode: this.mode_showcert,
-            senderCertId: certId
-        });
-    }
-
-    GetCertInfo2(certId: string): Promise<any> {
-        return this.request({
-            mode: this.mode_getcertinfo2,
-            senderCertId: certId,
-            needExtraction: true,
-        }).toPromise();
-    }
+    private _getServiceInfo(): Observable<IServiceInfo> {
+        return this.http.get(this.serverAddress, this.carmaOptions)
+       .map(res => res.json());
+   }
 }
