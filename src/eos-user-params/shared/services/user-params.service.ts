@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserParamApiSrv } from './user-params-api.service';
-import { USER_CL, DEPARTMENT, USERCARD, PipRX, IEnt } from 'eos-rest';
+import { USER_CL, DEPARTMENT, PipRX, IEnt } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IParamUserCl, IUserSetChanges } from '../intrfaces/user-parm.intterfaces';
 import { Subject } from 'rxjs/Subject';
@@ -18,15 +18,7 @@ export class UserParamsService {
     private _isTechUser: boolean;
     private _userContext: IParamUserCl;
     private _userContextDeparnment: DEPARTMENT;
-    private _userContextCard: USERCARD;
     private _sysParams;
-
-    get userContextDeparnment() {
-        if (this._userContextDeparnment) {
-            return this._userContextDeparnment;
-        }
-        return null;
-    }
 
     get sysParams() {
         if (this._sysParams) {
@@ -40,7 +32,6 @@ export class UserParamsService {
     }
     get userContextId () {
         if (this._userContext) {
-           // console.log(this._userContext);
             return this._userContext['ISN_LCLASSIF'];
         }
         return null;
@@ -48,84 +39,12 @@ export class UserParamsService {
     get curentUser (): IParamUserCl {
         return this._userContext;
     }
-    get userContextParams () {
-        if (this._userContext) {
-            return this._userContext['USER_PARMS_List'];
-        }
-        return null;
-    }
-    get userCard () {
-        if (this._userContext) {
-            return this._userContext['USERCARD_List'];
-        }
-    }
-
-    get userCabinet () {
-        if (this._userContextCard) {
-            return this._userContextCard['USER_CABINET_List'];
-        }
-        return null;
-    }
     get hashUserContext () {
         if (this._userContext) {
-            // const hash: any = {};
-            // this.userContextParams.forEach(item => {
-            //     hash[item.PARM_NAME] = item.PARM_VALUE;
-            // });
-            // return hash;
-
             return this._userContext['USER_PARMS_HASH'];
         }
         return null;
     }
-
-    get hashUserContextCard () {
-        if (this._userContext) {
-            const hash: any = {};
-            this.userCard.forEach(item => {
-                hash[item.DUE] = item.FUNCLIST;
-            });
-            return hash;
-        }
-        return null;
-    }
-
-    get hashUserContexHomeCard () {
-        if (this._userContext) {
-            const hash: any = {};
-            this.userCard.forEach(item => {
-                hash[item.DUE] = item.HOME_CARD;
-            });
-            return hash;
-        }
-        return null;
-    }
-
-    get hashUserContexHomeCard2 () {
-      //  console.log(this._userContext);
-        if (this._userContext) {
-            const hash: any = {};
-            this.userCard.forEach(item => {
-                hash[item.DUE] = item.ISN_LCLASSIF;
-            });
-            return hash;
-        }
-        return null;
-    }
-
-    get hashUserContexCabinet () {
-        //  console.log(this._userContext);
-          if (this._userContextCard) {
-              const hash: any = {};
-              this.userCabinet.forEach(item => {
-                  hash[item.ISN_LCLASSIF] = item.FOLDERS_AVAILABLE;
-                  hash[item.ISN_LCLASSIF] = item.HIDE_INACCESSIBLE;
-                  hash[item.ISN_LCLASSIF] = item.HIDE_INACCESSIBLE_PRJ;
-              });
-              return hash;
-          }
-          return null;
-      }
     get isUserContexst () {
         return !!this._userContext;
     }
@@ -211,17 +130,6 @@ export class UserParamsService {
     getDepartmentFromUser (dueDep: string[]): Promise<DEPARTMENT[]> {
         return this._pipSrv.getData<DEPARTMENT>({DEPARTMENT: dueDep});
     }
-
-    // getUserByIsn (isn) {
-    //     const queryUser = {
-    //         USER_CL: {
-    //             criteries: {
-    //                 ISN_LCLASSIF: isn
-    //             }
-    //         }
-    //     };
-    //     return this._pipSrv.getData<USER_CL>(queryUser);
-    // }
     ceckOccupationDueDep(dueDep: string, dep: DEPARTMENT, isn?: boolean) {/* проверяем прикреплино ли должностное лицо к пользователю */
         const mess: IMessage = {
             title: 'Предупреждение:',
@@ -241,11 +149,6 @@ export class UserParamsService {
             throw new Error();
         });
     }
-    deleteItemUserTechList(v) {
-        // реализовать удаление элемента.
-    }
-
-    fetchExpandUser() {}
     createEntyti<T extends IEnt>(ent: any, typeName: string): T {
         ent.__metadata = { __type: typeName };
         return ent;
@@ -269,7 +172,7 @@ export class UserParamsService {
     }
     private _createHash() {
         this._userContext['USER_PARMS_HASH'] = {};
-        this.userContextParams.forEach(item => {
+        this._userContext['USER_PARMS_List'].forEach(item => {
             this._userContext['USER_PARMS_HASH'][item['PARM_NAME']] = item.PARM_VALUE;
         });
     }
