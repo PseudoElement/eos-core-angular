@@ -12,7 +12,11 @@
         (defaultEmit) = 'default($event)'
     ></eos-user-params-header>
     <div class="user-input-group">
-        <div class="card-left"></div>
+        <div class="card-left">
+            <div class="rr" *ngFor='let card of mainArrayCards'>
+                <span (click) ='showContent(card)'>{{card.cardName}}</span>
+            </div>
+        </div>
         <div class="card-rigth"></div>
     </div>
 </div>
