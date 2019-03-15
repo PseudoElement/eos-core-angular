@@ -32,6 +32,9 @@
             top: 0;
             right: 0;
             width: 460px;
+            max-height: calc(100vh - 308px);
+            overflow: auto;
+            padding: 10px;
         }
     }
 }
