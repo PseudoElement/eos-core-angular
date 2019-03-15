@@ -1,5 +1,6 @@
+import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { AdvCardRKEditComponent } from './../adv-card/adv-card-rk.component';
-import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild, SimpleChanges, OnChanges} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subject} from 'rxjs/Subject';
 import 'rxjs/add/operator/takeUntil';
@@ -45,11 +46,12 @@ import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-chan
 import {CounterNpEditComponent, E_COUNTER_TYPE} from '../counter-np-edit/counter-np-edit.component';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
 import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { DID_NOMENKL_CL } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 
 @Component({
     templateUrl: 'dictionary.component.html',
 })
-export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
+export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, OnChanges {
     @ViewChild('nodeList') nodeList: NodeListComponent;
     @ViewChild('tree') treeEl;
     @ViewChild('custom-tree') customTreeEl;
@@ -67,6 +69,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
     SLICE_LEN = 110;
     customTreeData: CustomTreeNode[];
+    _node_actions_id: HTMLElement;
 
     get sliced_title(): string {
         if (this.isTitleSliced) {
@@ -238,15 +241,32 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             .subscribe((action: IActionEvent) => this.doAction(action));
     }
 
+    ngOnChanges(changes: SimpleChanges) {
+        this._node_actions_id = document.getElementById('node-actions');
+        console.log('ngOnChanges', this._node_actions_id);
+        // for (let propName in changes) {
+        //     /*let chng = changes[propName];
+        //     let cur  = JSON.stringify(chng.currentValue);
+        //     let prev = JSON.stringify(chng.previousValue);
+        //     this.changeLog.push(`propName: currentValue = cur, previousValue = prev`);*/
+        // }
+    }
+
     ngOnDestroy() {
         this._sandwichSrv.treeScrollTop = this._treeScrollTop;
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
 
+
     ngAfterViewInit() {
         this._treeScrollTop = this._sandwichSrv.treeScrollTop;
         this.treeEl.nativeElement.scrollTop = this._treeScrollTop;
+        this._node_actions_id = document.getElementById('node-actions');
+        if (this._node_actions_id) {
+            console.log('h=', this._node_actions_id.clientHeight);
+        }
+
     }
 
     ngDoCheck() {
@@ -254,10 +274,17 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     }
 
     transitionEnd() {
+        if (this._node_actions_id) {
+            console.log('h=', this._node_actions_id.clientHeight);
+        }
         // this._countColumnWidth();
     }
 
     doAction(evt: IActionEvent) {
+        if (this._node_actions_id) {
+            console.log('h=', this._node_actions_id.clientHeight);
+        }
+
         switch (evt.action) {
             case E_RECORD_ACTIONS.navigateDown:
                 this.nodeList.openNodeNavigate(false);
@@ -396,12 +423,32 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     }
 
     setDictMode(mode: number) {
+
         if (mode === 0 && this.treeNode.isDeleted) {
             this._msgSrv.addNewMessage(DANGER_DEPART_IS_LDELETED);
         } else {
             this._dictSrv.setDictMode(mode);
             this.nodeList.updateViewFields([]);
         }
+    }
+
+    nlHeightType() {
+        let res = 1;
+        if (this.hasFilter()) {
+            res++;
+        }
+        if (this.fastSearch) {
+            res++;
+        }
+        return res;
+    }
+
+    hasFilter() {
+        if (this.dictionaryId === DID_NOMENKL_CL ||
+            (this.dictionaryId === DEPARTMENTS_DICT.id && this.dictMode === 0) ) {
+                return true;
+            }
+        return false;
     }
 
     /**
