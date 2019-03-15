@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 import { UserParamsService } from '../../shared/services/user-params.service';
-import { CarmaHttpService } from 'app/services/carmaHttp.service';
+import { CarmaHttpService, CarmaError } from 'app/services/carmaHttp.service';
 import { Router} from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { PipRX } from 'eos-rest/services/pipRX.service';
@@ -75,17 +75,25 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
     }
     ngOnInit() {
         const store: Istore[] =  [{Location: 'sscu', Address: '', Name: 'My'}];
-             this.certStoresService.init(null, store).subscribe((data) => {
-                this.isCarma = true;
-                this.certStoresService.EnumCertificates('', '', '').subscribe(infoSert => {
-                this.getSerts();
-                this.waitSerts(infoSert);
-                });
-          }, (error) => {
-            this.isCarma = false;
-            this.getSertNotCarma();
-                // this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
-            });
+             this.certStoresService.init(null, store)
+             .subscribe(
+                (data) => {
+                    this.isCarma = true;
+                    this.certStoresService.EnumCertificates('', '', '').subscribe(infoSert => {
+                        this.getSerts();
+                        this.waitSerts(infoSert);
+                    });
+                },
+                (error) => {
+                    if (error instanceof CarmaError) {
+                        // TODO send message
+                        console.log(error.message);
+                    }
+                    this.isCarma = false;
+                    this.getSertNotCarma();
+                    // this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
+                }
+            );
     }
 
     waitSerts(data) {
