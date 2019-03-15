@@ -140,25 +140,6 @@ export class UserParamApiSrv {
         }
     }
 
-    // getMainUsersList(): Array<USER_CL> {
-    //     if (this.flagDepartment) {
-    //         return this.official;
-    //     } else {
-    //         return this.customer.concat(this.official);
-    //     }
-    // }
-
-    grtDepartment(due?: string): Promise<DEPARTMENT[]> {
-        let q;
-        if (!due) {
-            q = ALL_ROWS;
-        } else {
-            q = PipRX.criteries({DUE: due});
-        }
-        const query = {DEPARTMENT: q};
-        return this.getData<DEPARTMENT>(query);
-    }
-
     getDepartment(due?: Array<string>): Promise<DEPARTMENT[]> {
         const query = {DEPARTMENT: due};
         return this.getData<DEPARTMENT>(query);
