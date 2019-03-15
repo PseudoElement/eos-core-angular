@@ -92,7 +92,6 @@ export class AdvCardRKDataCtrl {
                     updateLink(el, opts, data);
                 }
                 el.options = opts;
-                // el.dict._cache = data;
                 this.loadedDicts[el.dict.dictId] = opts;
                 return data;
             });
@@ -184,6 +183,9 @@ export class AdvCardRKDataCtrl {
         if (obj) {
             if (obj.dictId) {
                 res += obj.dictId + ';';
+            }
+            if (obj.version) {
+                res += obj.version + ';';
             }
             if (obj.criteries) {
                 for (const key in obj.criteries) {
