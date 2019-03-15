@@ -244,10 +244,6 @@ export class CarmaHttpService extends CarmaConnectionInterface {
         .mergeMap(() => {
             return this._getServiceInfo()
             .map((info: IServiceInfo) => { // "carmaVersion": "56.0.145"
-                const version = info.carmaVersion.split('.');
-                if (+version[0] < 56 || +version[1] < 0 || +version[2] < 145) { // Проверка подходящей версии, не ниже 56.0.145
-                    throw new CarmaError(`Установленная версия "КАРМА" ${info.carmaVersion} не соответствует!\nТребуется "56.0.145" версия и выше.`, 1);
-                }
                 this.ServiceInfo = info;
                 return true;
             });

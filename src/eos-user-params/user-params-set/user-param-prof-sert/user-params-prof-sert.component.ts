@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 import { UserParamsService } from '../../shared/services/user-params.service';
-import { CarmaHttpService, CarmaError } from 'app/services/carmaHttp.service';
+import { CarmaHttpService} from 'app/services/carmaHttp.service';
 import { Router} from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { PipRX } from 'eos-rest/services/pipRX.service';
@@ -81,19 +81,69 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
                     this.isCarma = true;
                     this.certStoresService.EnumCertificates('', '', '').subscribe(infoSert => {
                         this.getSerts();
-                        this.waitSerts(infoSert);
+                        if (this.checkVersion()) {
+                            this.waitSerts(infoSert);
+                        }else {
+                            this.oldWaitSerts(infoSert);
+                        }
                     });
                 },
                 (error) => {
-                    if (error instanceof CarmaError) {
-                        // TODO send message
-                        console.log(error.message);
-                    }
                     this.isCarma = false;
                     this.getSertNotCarma();
                     // this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
                 }
             );
+    }
+    checkVersion(): boolean {
+        const arrVersion = this.certStoresService.ServiceInfo.carmaVersion.split('.');
+        if (arrVersion[2] === '135') {
+            return false;
+        }
+        if (arrVersion[2] === '145') {
+            return true;
+        }
+        return false;
+    }
+    oldWaitSerts(data: Array<any>) {
+        const arrPromise = [];
+        data.forEach(sert => {
+            arrPromise.push(this.certStoresService.GetCertInfo2(sert));
+        });
+        Promise.all(arrPromise).then(arrayInfo => {
+            arrayInfo.forEach((infoSert, index) => {
+                const ob =  this.objectForSertInfo(infoSert, data[index], false, false, false);
+                this.alllistSertInfo.push(ob);
+            });
+        });
+    }
+
+    objectForSertInfo(infoSert, id, selected, create, del): SertInfo {
+        if (infoSert.hasOwnProperty('certInfo')) {
+            return {
+                whom: infoSert['certInfo']['Issuer'],
+                sn: infoSert['certInfo']['Serial'],
+                who: this.parseSertWhom(infoSert['certInfo']['X500Description']),
+                data: infoSert,
+                selected: selected,
+                id: id,
+                create: create,
+                delete: del,
+                valid: this.parceValid(infoSert['certInfo']['Validity']) ,
+            };
+        }   else {
+            return {
+                    whom: infoSert['Issuer'],
+                    sn: infoSert['Serial'],
+                    who: this.parseSertWhom(infoSert['X500Description']),
+                    data: infoSert,
+                    selected: selected,
+                    id: id,
+                    create: create,
+                    delete: del,
+                    valid: this.parceValid(infoSert['Validity']) ,
+            };
+        }
     }
 
     waitSerts(data) {
@@ -101,30 +151,12 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
         this.certStoresService.GetCertInfo2(strQuery).then(arrayInfo => {
             if (Array.isArray(arrayInfo['certInfos'])) {
                 arrayInfo['certInfos'].forEach((infoSert, index) => {
-                    this.alllistSertInfo.push({
-                        whom: infoSert['Issuer'],
-                        sn: infoSert['Serial'],
-                        who: this.parseSertWhom(infoSert['X500Description']),
-                        data: infoSert,
-                        selected: false,
-                        id: data[index],
-                        create: false,
-                        delete: false,
-                        valid: this.parceValid(infoSert['Validity']) ,
-                    });
+                    const ob =  this.objectForSertInfo(infoSert, data[index], false, false, false);
+                    this.alllistSertInfo.push(ob);
                 });
             }   else {
-                this.alllistSertInfo.push({
-                    whom: arrayInfo['certInfo']['Issuer'],
-                    sn: arrayInfo['certInfo']['Serial'],
-                    who: this.parseSertWhom(arrayInfo['certInfo']['X500Description']),
-                    data: arrayInfo['certInfo'],
-                    selected: false,
-                    id: data[0],
-                    create: false,
-                    delete: false,
-                    valid: this.parceValid(arrayInfo['certInfo']['Validity']) ,
-                });
+                const ob =  this.objectForSertInfo(arrayInfo, data[0], false, false, false);
+                this.alllistSertInfo.push(ob);
             }
         });
     }
@@ -186,6 +218,37 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
     }
 
     getInfoForDBSerts(): Promise<any> {
+        if (this.checkVersion()) {
+            return this.bettaGetInfo();
+        }   else {
+         return   this.stableGetInfo();
+        }
+    }
+    stableGetInfo() {
+            const arrRequestSerts = [];
+            this.DBserts.forEach(sert => {
+                arrRequestSerts.push(this.certStoresService.GetCertInfo2(sert['ID_CERTIFICATE']));
+            });
+          return  Promise.all(arrRequestSerts).then(data => {
+                data.forEach((infoSert, index) => {
+                    this.listsSertInfo.push({
+                        whom: infoSert['certInfo']['Issuer'],
+                        sn: infoSert['certInfo']['Serial'],
+                        who: this.parseSertWhom(infoSert['certInfo']['X500Description']),
+                        data: infoSert,
+                        selected: false,
+                        id:  this.DBserts[index]['ID_CERTIFICATE'],
+                        key: this.DBserts[index]['ISN_CERT_PROFILE'],
+                        create: false,
+                        delete: false,
+                        valid: this.parceValid(infoSert['certInfo']['Validity']) ,
+                    });
+                });
+            }).catch(error => {
+                this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
+            });
+    }
+    bettaGetInfo() {
         const arrRequestSerts = [];
         this.DBserts.forEach((sert: USER_CERT_PROFILE) => {
             arrRequestSerts.push(sert['ID_CERTIFICATE']);
