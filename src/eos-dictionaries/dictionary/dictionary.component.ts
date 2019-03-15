@@ -1,3 +1,4 @@
+import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { AdvCardRKEditComponent } from './../adv-card/adv-card-rk.component';
 import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -45,6 +46,7 @@ import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-chan
 import {CounterNpEditComponent, E_COUNTER_TYPE} from '../counter-np-edit/counter-np-edit.component';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
 import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { DID_NOMENKL_CL } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -244,6 +246,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         this.ngUnsubscribe.complete();
     }
 
+
     ngAfterViewInit() {
         this._treeScrollTop = this._sandwichSrv.treeScrollTop;
         this.treeEl.nativeElement.scrollTop = this._treeScrollTop;
@@ -396,12 +399,32 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     }
 
     setDictMode(mode: number) {
+
         if (mode === 0 && this.treeNode.isDeleted) {
             this._msgSrv.addNewMessage(DANGER_DEPART_IS_LDELETED);
         } else {
             this._dictSrv.setDictMode(mode);
             this.nodeList.updateViewFields([]);
         }
+    }
+
+    nlHeightType() {
+        let res = 1;
+        if (this.hasFilter()) {
+            res++;
+        }
+        if (this.fastSearch) {
+            res++;
+        }
+        return res;
+    }
+
+    hasFilter() {
+        if (this.dictionaryId === DID_NOMENKL_CL ||
+            (this.dictionaryId === DEPARTMENTS_DICT.id && this.dictMode === 0) ) {
+                return true;
+            }
+        return false;
     }
 
     /**

@@ -1,0 +1,28 @@
+<div class="eos-dictionary-filter">
+    <div [ngClass]="{'hidden': !hasDate}"
+        class="date-filter-wrapper">
+        <span class="date">Состояние на: </span>
+        <span><eos-dynamic-input [input]="inputs[0]"
+            [readonly]=inputs[0].readonly
+            [form]="searchForm"></eos-dynamic-input>
+        </span>
+    </div>
+    <div [ngClass]="{'hidden': !hasYear}"
+         class="year-filter-wrapper">
+        <span class="text" *ngIf="!shortFilter">Состояние на:</span>
+        <span><eos-dynamic-input
+                                 [input]="inputs[1]"
+                                 [readonly]=inputs[1].readonly
+                                 [form]="searchForm"></eos-dynamic-input>
+        </span>
+        <span class="text" *ngIf="!shortFilter">с переходящими</span>
+        <span><eos-dynamic-input
+            class="cb1"
+            [input]="inputs[2]"
+            [readonly]=inputs[2].readonly
+            [form]="searchForm"></eos-dynamic-input>
+            </span>
+
+    </div>
+
+</div>
