@@ -1,15 +1,15 @@
 <div class="input-user-wrapper scrollWrapper input-user-card-files-wrapper" *ngIf="card">
         <div class="cabinets-wrapper ">
             <form>
-                 <select name="folders" [(ngModel)]="folders">
+                 <select name="Cabinet" [(ngModel)]="Cabinet">
                  <option [attr.selected]="i === 0" *ngFor="let cabinet of card.cabinets; let i = index" [ngValue] ="cabinet">{{cabinet.name}}</option>
             </select>
             </form>
         </div>
-        <div class="cabinets-folders" *ngIf="folders">
-            <div class="folders-item" *ngFor="let folder of folders['folders']">
+        <div class="cabinets-folders" *ngIf="Cabinet">
+            <div class="folders-item" *ngFor="let folder of Cabinet['folders']">
                 <label class="checkbox">
-                    <input type="checkbox" [checked]= "folder.selected">
+                    <input type="checkbox" [checked]= "folder.selected" (change)="changeFolders(Cabinet, folder)">
                     <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
                 </label>
                 <span class="folders-title">{{folder.name}}</span>

@@ -3,12 +3,14 @@ import { PipRX } from 'eos-rest';
 import {USERCARD, DEPARTMENT} from '../../../eos-rest/interfaces/structures';
 import {CardsClass} from '../../rights-delo/rights-cabinets/helpers/cards-class';
 import {CardInit} from 'eos-user-params/shared/intrfaces/cabinets.interfaces';
+import { Subject } from 'rxjs/Subject';
 @Injectable()
 
 export class RigthsCabinetsServices {
     public cardsArray: CardsClass[] = [];
     public cardsOrigin: CardsClass[];
     public user_id;
+    public changeCabinets = new Subject();
     constructor(
         private _pipRx: PipRX
         ) {}

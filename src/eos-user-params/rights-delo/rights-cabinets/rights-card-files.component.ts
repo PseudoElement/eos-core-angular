@@ -10,7 +10,6 @@ import { OPEN_CLASSIF_CARDINDEX } from 'app/consts/query-classif.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IMessage } from 'eos-common/interfaces';
 import {CardInit} from 'eos-user-params/shared/intrfaces/cabinets.interfaces';
-// import { Subject } from 'rxjs/Subject';
 @Component({
     selector: 'eos-card-files',
     templateUrl: 'rights-card-files.component.html',
@@ -18,13 +17,18 @@ import {CardInit} from 'eos-user-params/shared/intrfaces/cabinets.interfaces';
 })
 
 export class RightsCardFilesComponent implements OnInit {
-    public isLoading = false;
+    public isLoading = true;
     public titleHeader;
     public link;
     public selfLink;
+    public btnDisabled: boolean = true;
     public mainArrayCards = [];
     public currentCard: CardsClass;
+    public flagEdit: boolean = false;
     private userId: number;
+    // private deletedCardsUrl = [];
+    // private deleteFoldersUrl = [];
+
     constructor(
         // private _pipRx: PipRX,
         private _rightsCabinetsSrv: RigthsCabinetsServices,
@@ -33,7 +37,6 @@ export class RightsCardFilesComponent implements OnInit {
         private _whaitSrv: WaitClassifService,
         private _msgSrv: EosMessageService,
     ) {
-        this.isLoading = false;
         this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Картотеки и Кабинеты';
         this.link = this._userSrv.curentUser['ISN_LCLASSIF'];
         this.selfLink = this._router.url.split('?')[0];
@@ -51,6 +54,7 @@ export class RightsCardFilesComponent implements OnInit {
             if (this.mainArrayCards.length) {
                 this.selectCurentCard(this.mainArrayCards[0]);
             }
+            this.isLoading = false;
         });
     }
     showContent(card: CardsClass) {
@@ -141,6 +145,7 @@ export class RightsCardFilesComponent implements OnInit {
         }
         this.currentCard = card;
         this.currentCard.current = true;
+        this._rightsCabinetsSrv.changeCabinets.next(this.currentCard);
     }
     removeCards() {
         this.currentCard.deleted = true;
@@ -152,14 +157,60 @@ export class RightsCardFilesComponent implements OnInit {
         });
         if (upCurrCard.length) {
             this.selectCurentCard(upCurrCard[0]);
+        }   else {
+            this.currentCard = null;
         }
-    }
-    cancel(event?) {
-        this.mainArrayCards = this._rightsCabinetsSrv.cardsOrigin.slice();
     }
     removeNewCard() {
         const indexDel = this.mainArrayCards.indexOf(this.currentCard);
         this.mainArrayCards.splice(indexDel, 0);
         this._rightsCabinetsSrv.cardsArray.splice(indexDel, 0);
+    }
+    submit(event) {
+        this.searchDeletedCards();
+        console.log(this.mainArrayCards);
+
+    }
+    searchDeletedCards() {
+        const deletedUrlCards = [];
+        const deleteUrl = [];
+        const indexDeleted = [];
+        this.mainArrayCards.forEach((el: CardsClass, index) => {
+            if (el.deleted) {
+                deletedUrlCards.push(this.createUrlDeleteCards(el));
+                indexDeleted.push(index);
+            }
+        });
+        console.log(deleteUrl, deletedUrlCards);
+        this.deleteCard(indexDeleted);
+    }
+    createUrlDeleteCards(card: CardsClass) {
+        return  {
+            method: 'DELETE',
+            requestUri: `USER_CL(${this.userId})/USERCARD_List(\'${this.userId} ${card.isnClassif}\')`
+        };
+    }
+    deleteCard(index: Array<number>) {
+        if (index.length) {
+            index.reverse().forEach(el => {
+                this.mainArrayCards.splice(el, 1);
+            });
+        }
+    }
+
+    edit(event) {
+        this.flagEdit = event;
+    }
+    close() {
+
+    }
+    default() {
+        return;
+    }
+    cancel(event?) {
+        this._rightsCabinetsSrv.cardsOrigin.splice(0);
+        this._rightsCabinetsSrv.cardsArray.splice(0);
+        this.mainArrayCards.splice(0);
+        this.init();
     }
 }

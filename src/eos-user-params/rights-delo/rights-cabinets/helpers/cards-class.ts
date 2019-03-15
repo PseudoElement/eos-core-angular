@@ -6,7 +6,9 @@ export class Cabinets {
     isnCabinet: number;
     isnClassif: number;
     folders = [];
+    originFolders = [];
     isEmpty: boolean;
+    isChanged = false;
     private arrayKey = new Map()
     .set('Поступившие', 1)
     .set('На исполнении', 2)
@@ -14,10 +16,10 @@ export class Cabinets {
     .set('У руководства', 4)
     .set('На рассмотрении', 5)
     .set('В дело', 6)
-    .set('Надзорные производства', 7)
-    .set('Управление проектами', 8)
-    .set('На визировании', 9)
-    .set('На подписи', 'A')
+    .set('Надзорные производства', 'A')
+    .set('Управление проектами', 7)
+    .set('На визировании', 8)
+    .set('На подписи', 9)
     .set('Учитывать ограничения доступа к РК по грифам и группам документов', 'H')
     .set('Учитывать права для работы с РКПД', 'HR');
     constructor(classif: number, cabinetName: CABINET, cuserCard?: USER_CABINET[]) {
@@ -54,6 +56,7 @@ export class Cabinets {
                 this.folders.push(obj);
             }
         });
+        this.originFolders = JSON.parse(JSON.stringify(this.folders));
     }
     searchValueForParceString(value, arrayValues: Array<any>): boolean {
         if (arrayValues.length) {
@@ -84,6 +87,7 @@ export class CardsClass {
     current: boolean = false;
     cabinets: Array<Cabinets> = [];
     data: USERCARD;
+    public SetChangedCabinets = new Set();
     constructor(cardInfo: USERCARD, cardsInfo?: CardInit) {
         this.data = cardInfo;
         this.initProperties(cardsInfo);
