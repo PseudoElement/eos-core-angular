@@ -51,6 +51,8 @@ import {RemasterAutoSearchComponent} from '../eos-user-params/user-params-set/us
 import {RemasterSebComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-seb/remaster-seb.component';
 import {RemasterRcComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-rc/remaster-rc.component';
 import {RigthsCabinetsServices} from '../eos-user-params/shared/services/rigths-cabinets.services';
+import { ListCardRightComponent } from './rights-delo/rights-delo-cards/list-card/list-card.component';
+import { CardRightSrv } from './rights-delo/rights-delo-cards/card-right.service';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -90,6 +92,7 @@ import {RigthsCabinetsServices} from '../eos-user-params/shared/services/rigths-
         RemasterAutoSearchComponent,
         RemasterSebComponent,
         RemasterRcComponent,
+        ListCardRightComponent,
     ],
     imports: [
         BrowserModule,
@@ -111,6 +114,7 @@ import {RigthsCabinetsServices} from '../eos-user-params/shared/services/rigths-
         UserPaginationService,
         RemasterService,
         RigthsCabinetsServices,
+        CardRightSrv,
     ]
 })
 export class EosUserParamsModule {}

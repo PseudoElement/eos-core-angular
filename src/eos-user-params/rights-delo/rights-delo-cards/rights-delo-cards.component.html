@@ -171,8 +171,14 @@
                 {{item.label}}
             </div>
         </article>
-        <article class="right-block">
-
+        <article
+            class="right-block"
+            *ngIf="editMode"
+        >
+            <eos-list-card-right></eos-list-card-right>
+            <div *ngFor="let i of temp">
+                component {{i}}
+            </div>
         </article>
     </section>
 </ng-template>

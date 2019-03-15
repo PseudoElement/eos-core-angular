@@ -12,6 +12,9 @@ import { FuncNum } from './funcnum.model';
 })
 
 export class RightsDeloCardsComponent implements OnInit, OnDestroy {
+    temp;
+
+
     public selfLink: string;
     public titleHeader: string;
     public isLoading: boolean;
@@ -29,6 +32,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         private _router: Router,
     ) {
         this.selfLink = this._router.url.split('?')[0];
+        this.temp = Array.from({ length: 40 }, (_, idx) => ` Элемент ${++idx}`);
     }
     async ngOnInit() {
         // получение пользователя

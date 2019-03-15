@@ -1,0 +1,10 @@
+<div *ngIf="!isLoading; else loader">
+
+</div>
+
+
+<ng-template #loader>
+    <div class="loader">
+        <eos-spinner size="lg"></eos-spinner>
+    </div>
+</ng-template>
