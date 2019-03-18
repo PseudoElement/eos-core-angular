@@ -150,6 +150,8 @@ eos-dynamic-input {
             line-height: 30px;
             vertical-align: middle;
             padding: 0 5px;
+            display: inline-table;
+            min-width: 120px;
         }
         .btn-readonly {
             pointer-events: none;
