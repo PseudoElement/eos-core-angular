@@ -136,7 +136,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         if (role[0].PARM_VALUE) {
              return role[0].PARM_VALUE;
         }else {
-            return 'Не указанна';
+            return 'Не указана';
         }
     }
 
