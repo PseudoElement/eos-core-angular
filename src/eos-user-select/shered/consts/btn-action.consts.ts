@@ -16,7 +16,7 @@ export const RedactUser: BtnActionFields = {
     title: 'Редактировать пользователя',
     disabledClass: 'eos-icon eos-icon-edit-grey small',
     enableClass: 'eos-icon eos-icon-edit-blue small',
-    tooltip: 'Редактировать сушествующего пользователя',
+    tooltip: 'Редактировать существующего пользователя',
     disabled: false,
     activeClass: 'eos-icon eos-icon-edit-blue small',
     activeBtnClass: '',

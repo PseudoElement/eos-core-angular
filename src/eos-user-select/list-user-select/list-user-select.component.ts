@@ -10,7 +10,7 @@ import {UserSelectNode } from './user-node-select';
 import {BsModalService, BsModalRef } from 'ngx-bootstrap';
 import {CreateUserComponent } from './createUser/createUser.component';
 import {RtUserSelectService} from '../shered/services/rt-user-select.service';
-import { EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.service';
+import {EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.service';
 import {IUserSort, SortsList} from '../shered/interfaces/user-select.interface';
 import {HelpersSortFunctions} from '../shered/helpers/sort.helper';
 import {Allbuttons} from '../shered/consts/btn-action.consts';
@@ -23,6 +23,10 @@ import {CONFIRM_DELETE} from '../shered/consts/confirm-users.const';
 import {PipRX} from 'eos-rest';
 import {ALL_ROWS } from 'eos-rest/core/consts';
 import {EosStorageService} from '../../app/services/eos-storage.service';
+import {EosBreadcrumbsService} from '../../app/services/eos-breadcrumbs.service';
+interface TypeBread {
+    action: number;
+}
 @Component({
     selector: 'eos-list-user-select',
     templateUrl: 'list-user-select.component.html'
@@ -59,6 +63,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private _pipeSrv: PipRX,
         private _msgSrv: EosMessageService,
         private _storage: EosStorageService,
+        private _breadSrv: EosBreadcrumbsService,
     ) {
         this.helpersClass = new HelpersSortFunctions();
         this.initSort();
@@ -97,6 +102,45 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.buttons.buttons[5].disabled = this.flagScan;
                 this.buttons.moreButtons[7].disabled = this.flagScan;
         });
+        this._breadSrv._eventFromBc$.takeUntil(this.ngUnsubscribe).subscribe((type: TypeBread) => {
+            if (type.action !== 1) {
+                this.changeCurentSelectedUser(type);
+            }   else {
+                this.RedactUser(this.selectedUser);
+            }
+        });
+    }
+
+    changeCurentSelectedUser(type: TypeBread) {
+        const usersNotDeleted = this.listUsers.filter((user: UserSelectNode) => {
+            return !user.deleted;
+        });
+        if (usersNotDeleted.length) {
+            const index = usersNotDeleted.indexOf(this.selectedUser);
+            if (type.action === 13) {
+                this.setNewCurrUserByBreadMinus(index, usersNotDeleted);
+            }
+            if (type.action === 14) {
+                this.setNewCurrUserByBreadPlus(index, usersNotDeleted);
+            }
+        }
+    }
+
+    setNewCurrUserByBreadMinus(index, usersNotDeleted) {
+        if (index === 0) {
+            this.selectedNode(usersNotDeleted[usersNotDeleted.length - 1]);
+        }  else {
+            index --;
+            this.selectedNode(usersNotDeleted[index]);
+        }
+    }
+    setNewCurrUserByBreadPlus(index, usersNotDeleted) {
+        if (index === usersNotDeleted.length - 1) {
+            this.selectedNode(usersNotDeleted[0]);
+        }  else {
+            index ++;
+            this.selectedNode(usersNotDeleted[index]);
+        }
     }
 
     initView(param?) {
@@ -149,7 +193,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
 
     selectedNode(user: UserSelectNode) {
-        let flagUserSelected: boolean = true;
+    let flagUserSelected: boolean = true;
        if (!user) {
            this.rtUserService.changeSelectedUser(null);
            flagUserSelected = false;
@@ -170,11 +214,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                     this.selectedUser.isSelected = false;
                 }
                 this.rtUserService.changeSelectedUser(null);
-                this.disabledBtnAction(flagUserSelected);
-                return;
             }
             }
        }
+        this.rtUserService.subjectFlagBtnHeader.next(flagUserSelected);
         this.updateFlafListen();
         this.disabledBtnAction(flagUserSelected);
     }

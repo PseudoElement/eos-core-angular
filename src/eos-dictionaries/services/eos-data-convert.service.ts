@@ -237,9 +237,9 @@ export class EosDataConvertService {
                                         hideLabel: !(descr[_key].title),
                                         required: descr[_key].required,
                                         forNode: descr[_key].forNode,
-                                        value: !data[_dict] || data[_dict][descr[_key].foreignKey] === undefined ? null :
-                                                data[_dict][descr[_key].foreignKey] === 0 ? 0 :
-                                                data[_dict][descr[_key].foreignKey] || descr[_key].default,
+                                        value: data[_dict] && data[_dict][descr[_key].foreignKey] !== undefined ?
+                                            data[_dict][descr[_key].foreignKey] :
+                                            (descr[_key].default === undefined ? null : descr[_key].default),
                                         readonly: descr[_key].readonly,
                                         disabled: descr[_key].readonly || !editMode,
                                     });
@@ -383,6 +383,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['DUTY_RP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 255,
                                 disabled: !editMode,
                             });
                             inputs['printInfo.DUTY_DP'] = new StringInput({
@@ -391,6 +392,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['DUTY_DP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 255,
                                 disabled: !editMode,
                             });
                             inputs['printInfo.DUTY_VP'] = new StringInput({
@@ -399,6 +401,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['DUTY_VP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 255,
                                 disabled: !editMode,
                             });
                             inputs['printInfo.PRINT_SURNAME_DP'] = new StringInput({
@@ -407,6 +410,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['PRINT_SURNAME_DP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 disabled: !editMode,
                             });
                             inputs['printInfo.PRINT_SURNAME'] = new StringInput({
@@ -415,6 +419,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['PRINT_SURNAME'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 disabled: !editMode,
                             });
                             inputs['printInfo.SURNAME_RP'] = new StringInput({
@@ -424,6 +429,7 @@ export class EosDataConvertService {
                                 value: data['printInfo']['SURNAME_RP'],
                                 pattern: NOT_EMPTY_STRING,
                                 hideLabel: true,
+                                length: 64,
                                 disabled: !editMode,
                             });
                             inputs['printInfo.NAME_RP'] = new StringInput({
@@ -432,6 +438,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['NAME_RP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
                             });
@@ -441,6 +448,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['PATRON_RP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
                             });
@@ -450,6 +458,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['SURNAME_DP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
                             });
@@ -459,6 +468,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['NAME_DP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
                             });
@@ -468,6 +478,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['PATRON_DP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
                             });
@@ -477,6 +488,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['SURNAME_VP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
                             });
@@ -486,6 +498,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['NAME_VP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
                             });
@@ -495,6 +508,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['PATRON_VP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
                             });
@@ -504,6 +518,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['SURNAME_TP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
                             });
@@ -513,6 +528,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['NAME_TP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
                             });
@@ -522,6 +538,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['PATRON_TP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
                             });
@@ -531,6 +548,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['SURNAME_PP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
                             });
@@ -540,6 +558,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['NAME_PP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
                             });
@@ -549,6 +568,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['PATRON_PP'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 64,
                                 hideLabel: true,
                                 disabled: !editMode,
                             });
@@ -567,6 +587,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['PRINT_DEPARTMENT'],
                                 pattern: NOT_EMPTY_STRING,
+                                length: 255,
                                 disabled: !editMode,
                             });
                         } else { // department
@@ -584,7 +605,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['PRINT_DEPARTMENT'],
                                 pattern: NOT_EMPTY_STRING,
-                                length: 2000,
+                                length: 255,
                                 disabled: !editMode,
                             });
                             inputs['printInfo.DEPARTMENT_RP'] = new StringInput({
@@ -593,7 +614,7 @@ export class EosDataConvertService {
                                 dict: 'printInfo',
                                 value: data['printInfo']['DEPARTMENT_RP'],
                                 pattern: NOT_EMPTY_STRING,
-                                length: 2000,
+                                length: 255,
                                 disabled: !editMode,
                             });
                         }

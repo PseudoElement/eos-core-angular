@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Observable';
 export class RtUserSelectService {
     subject: Subject<any> = new Subject();
     subjectScan: Subject<any> = new Subject();
+    subjectFlagBtnHeader: Subject<any> = new Subject();
      ArraySystemHelper = {
         delo: {
             label: 'Дело',
@@ -82,6 +83,10 @@ export class RtUserSelectService {
 
     get changerUser(): Observable<any> {
         return this.subject.asObservable();
+    }
+
+    get setFlagBtnHeader() {
+        return this.subjectFlagBtnHeader.asObservable();
     }
     changeSelectedUser(user: UserSelectNode) {
         this._ChangeSelectUser = user;

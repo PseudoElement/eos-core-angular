@@ -10,7 +10,7 @@ import { RECORD_ACTIONS_EDIT,
     RECORD_ACTIONS_NAVIGATION_DOWN } from '../../eos-dictionaries/consts/record-actions.consts';
 import 'rxjs/add/operator/takeUntil';
 import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
-
+import {RtUserSelectService} from '../../eos-user-select/shered/services/rt-user-select.service';
 @Component({
     selector: 'eos-breadcrumb',
     templateUrl: 'breadcrumb.component.html',
@@ -39,7 +39,8 @@ export class BreadcrumbsComponent implements OnDestroy {
         private _router: Router,
         private _sandwichSrv: EosSandwichService,
         private _route: ActivatedRoute,
-        private _dictSrv: EosDictService
+        private _dictSrv: EosDictService,
+        private _rtSrv: RtUserSelectService,
     ) {
         _breadcrumbsSrv.breadcrumbs$.takeUntil(this.ngUnsubscribe).
             subscribe((bc: IBreadcrumb[]) => this.breadcrumbs = bc);
@@ -60,6 +61,12 @@ export class BreadcrumbsComponent implements OnDestroy {
                 this.hasInfoData = !!n;
                 this._isEditEnabled = this._calcisEditable(n);
             });
+        this._rtSrv.setFlagBtnHeader
+        .takeUntil(this.ngUnsubscribe)
+        .subscribe(flag => {
+            this.hasInfoData = flag;
+            this._isEditEnabled = flag;
+        });
     }
 
     ngOnDestroy() {

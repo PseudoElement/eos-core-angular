@@ -29,7 +29,8 @@
 }
 .scrollWrapper{
     overflow: auto;
-    max-height: calc(100vh - 324px);
+    max-height: calc(100vh - 308px);
+    min-height: calc(100vh - 490px);
 }
 .new-sert-name{
     border: 1px solid #ccc;

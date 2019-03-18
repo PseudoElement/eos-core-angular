@@ -17,6 +17,7 @@ export class BaseCardEditComponent implements OnDestroy {
 
     nodeId: string;
     currTab = 0;
+    prevValues: any[];
 
     protected dictSrv: EosDictService;
     protected formChanges$: Subscription;
@@ -25,6 +26,7 @@ export class BaseCardEditComponent implements OnDestroy {
     constructor(injector: Injector) {
         this.dictSrv = injector.get(EosDictService);
         this.currTab = this.dictSrv.currentTab ? this.dictSrv.currentTab : 0;
+        this.prevValues = [];
     }
 
     /**
