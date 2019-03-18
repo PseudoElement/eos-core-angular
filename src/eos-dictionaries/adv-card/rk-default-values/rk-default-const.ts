@@ -546,7 +546,7 @@ export const RKDefaultFields: TDefaultField[] = [
                 title: 'первому оригинал, остальным копии',
             }, {
                 value: '3',
-                title: 'ел. экз.',
+                title: 'эл. экз.',
             },
         ]
         // classif_id: NULL
