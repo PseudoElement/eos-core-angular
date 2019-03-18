@@ -13,8 +13,9 @@
                     [formControlName]="input.key"
                     (focus)="onFocus()"
                     (blur)="onBlur()">
-                    <!-- [selected]="!hasValue()" -->
-            <option  value="">...</option>
+
+            <option  value=""
+                [selected]="!hasValue()">...</option>
             <option *ngFor="let opt of input.options" [value]="opt.value">{{opt.title}}</option>
             </select>
         </div>
