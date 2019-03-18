@@ -2,13 +2,19 @@ import {USERCARD, USER_CABINET, CABINET} from 'eos-rest/interfaces/structures';
 import {CardInit} from 'eos-user-params/shared/intrfaces/cabinets.interfaces';
 export class Cabinets {
     name: string;
-    change: boolean;
     isnCabinet: number;
     isnClassif: number;
+    orderWork: any = '';
     folders = [];
     originFolders = [];
     isEmpty: boolean;
+    isEmptyOrigin: boolean;
+    homeCabinet: boolean = false;
+    originHomeCabinet: boolean = false;
+    foldersString: string = '';
+    deleted: boolean = false;
     isChanged = false;
+    parent: CardsClass;
     private arrayKey = new Map()
     .set('Поступившие', 1)
     .set('На исполнении', 2)
@@ -22,41 +28,68 @@ export class Cabinets {
     .set('На подписи', 9)
     .set('Учитывать ограничения доступа к РК по грифам и группам документов', 'H')
     .set('Учитывать права для работы с РКПД', 'HR');
-    constructor(classif: number, cabinetName: CABINET, cuserCard?: USER_CABINET[]) {
+    constructor(classif: number, cabinetName: CABINET, parent: CardsClass, cuserCard?: USER_CABINET[], ) {
+        this.parent = parent;
         this.isnCabinet = cabinetName.ISN_CABINET;
         this.isnClassif = classif;
         this.name = cabinetName.CABINET_NAME;
         this.createFolders(cuserCard);
     }
-    createFolders(data: USER_CABINET[]) {
+    createFolders(data: USER_CABINET[]): void {
+        let findDate: USER_CABINET[] = null;
+        let arrgAvalable = [];
+        findDate =  this.initProperties(data);
+        if (findDate.length) {
+            arrgAvalable = this.foldersString.split('');
+        }
+        this.setvaluesVoldeers(arrgAvalable, findDate);
+    }
+    initProperties(data): USER_CABINET[] {
         const parceString = data.filter((user_cab: USER_CABINET) => {
             return user_cab.ISN_CABINET === this.isnCabinet && this.isnClassif  === user_cab.ISN_LCLASSIF;
         });
-        let findDate: USER_CABINET = null;
-        let stringAvalable = [];
         if (parceString.length) {
             this.isEmpty = false;
-            findDate = parceString[0];
-            stringAvalable = findDate.FOLDERS_AVAILABLE.split('');
+            this.foldersString = parceString[0].FOLDERS_AVAILABLE;
+            this.homeCabinet = parceString[0]['HOME_CABINET'] ? true : false;
+            if (this.homeCabinet) {
+                this.parent.homeCardCabinet = true;
+            }
         }   else {
             this.isEmpty = true;
+            this.homeCabinet = false;
         }
+        this.isEmptyOrigin = this.isEmpty;
+        this.originHomeCabinet = this.homeCabinet;
+        return parceString;
+    }
+    setvaluesVoldeers(arrgAvalable, arrayUser_Cabinet): void {
         this.arrayKey.forEach((value, key, map) => {
             const obj = {
                 name: key,
-                value: value};
+                value: value,
+            };
             if (value === 'H') {
-                obj['selected'] =  !parceString.length ? false :  findDate['HIDE_INACCESSIBLE'] ? true : false;
+                obj['selected'] =  !arrayUser_Cabinet.length ? false :  arrayUser_Cabinet[0]['HIDE_INACCESSIBLE'] ? true : false;
+                obj['disabled'] = !this.checkDisabled(arrayUser_Cabinet[0] ? this.foldersString : '', true);
                 this.folders.push(obj);
             } else if (value === 'HR') {
-                obj['selected'] =  !parceString.length ? false :  findDate['HIDE_INACCESSIBLE_PRJ'] ? true : false;
+                obj['selected'] =  !arrayUser_Cabinet.length ? false :  arrayUser_Cabinet[0]['HIDE_INACCESSIBLE_PRJ'] ? true : false;
+                obj['disabled'] = !this.checkDisabled(arrayUser_Cabinet[0] ? this.foldersString : '', false);
                 this.folders.push(obj);
             }  else {
-                obj['selected'] = this.searchValueForParceString(value, stringAvalable);
+                obj['selected'] = this.searchValueForParceString(value, arrgAvalable);
                 this.folders.push(obj);
             }
         });
         this.originFolders = JSON.parse(JSON.stringify(this.folders));
+    }
+    checkDisabled(folderAvalable: string, flag: boolean) {
+        if (flag) {
+            return /[123456]/g.test(folderAvalable);
+        }   else {
+            return /[789]/g.test(folderAvalable);
+        }
     }
     searchValueForParceString(value, arrayValues: Array<any>): boolean {
         if (arrayValues.length) {
@@ -84,6 +117,7 @@ export class CardsClass {
     public changed: boolean = false;
     public deleted: boolean = false;
     public newCard: boolean;
+    public homeCardCabinet: boolean = false;
     current: boolean = false;
     cabinets: Array<Cabinets> = [];
     data: USERCARD;
@@ -103,10 +137,9 @@ export class CardsClass {
         if (cardsInfo.CABINET_info.length) {
             cardsInfo.CABINET_info.forEach((cab: CABINET) => {
                 if (cab.DUE === this.cardDue) {
-                    this.cabinets.push(new Cabinets(this.isnClassif, cab, cardsInfo.USER_CABINET_info));
+                    this.cabinets.push(new Cabinets(this.isnClassif, cab, this, cardsInfo.USER_CABINET_info, ));
                 }
             });
         }
     }
-
 }

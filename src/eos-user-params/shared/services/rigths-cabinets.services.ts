@@ -11,6 +11,7 @@ export class RigthsCabinetsServices {
     public cardsOrigin: CardsClass[];
     public user_id;
     public changeCabinets = new Subject();
+    public submitRequest = new Subject();
     constructor(
         private _pipRx: PipRX
         ) {}

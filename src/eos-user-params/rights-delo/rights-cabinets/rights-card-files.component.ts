@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-// import { PipRX } from 'eos-rest';
+import { PipRX } from 'eos-rest';
 import {RigthsCabinetsServices} from 'eos-user-params/shared/services/rigths-cabinets.services';
 import {UserParamsService } from '../../shared/services/user-params.service';
 import {USERCARD, DEPARTMENT} from '../../../eos-rest/interfaces/structures';
 import {Router} from '@angular/router';
-import {CardsClass} from '../rights-cabinets/helpers/cards-class';
+import {CardsClass, Cabinets} from '../rights-cabinets/helpers/cards-class';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_CARDINDEX } from 'app/consts/query-classif.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -24,22 +24,24 @@ export class RightsCardFilesComponent implements OnInit {
     public btnDisabled: boolean = true;
     public mainArrayCards = [];
     public currentCard: CardsClass;
+    public newValueMap: Map<any, any>;
     public flagEdit: boolean = false;
     private userId: number;
     // private deletedCardsUrl = [];
     // private deleteFoldersUrl = [];
 
     constructor(
-        // private _pipRx: PipRX,
         private _rightsCabinetsSrv: RigthsCabinetsServices,
         private _userSrv: UserParamsService,
         private _router: Router,
         private _whaitSrv: WaitClassifService,
         private _msgSrv: EosMessageService,
+    //    private _pipSrv: PipRX,
     ) {
         this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Картотеки и Кабинеты';
         this.link = this._userSrv.curentUser['ISN_LCLASSIF'];
         this.selfLink = this._router.url.split('?')[0];
+        console.log(PipRX);
     }
     ngOnInit() {
         this.userId = this._userSrv.userContextId;
@@ -167,28 +169,65 @@ export class RightsCardFilesComponent implements OnInit {
         this._rightsCabinetsSrv.cardsArray.splice(indexDel, 0);
     }
     submit(event) {
-        this.searchDeletedCards();
-        console.log(this.mainArrayCards);
+     // this._rightsCabinetsSrv.submitRequest.next();
+
+     const q = this.searchDeletedCards();
+     console.log(q);
+    // this._pipSrv.batch(q, '').then(res => {
+    //     console.log(res);
+    // }).catch(error => {
+    //     console.log(error);
+    // });
+    this.createUrlForNewOrMerge();
 
     }
     searchDeletedCards() {
         const deletedUrlCards = [];
-        const deleteUrl = [];
+        const deleteUrlFolders = [];
         const indexDeleted = [];
         this.mainArrayCards.forEach((el: CardsClass, index) => {
             if (el.deleted) {
                 deletedUrlCards.push(this.createUrlDeleteCards(el));
                 indexDeleted.push(index);
+                deleteUrlFolders.push(...this.createUrlDeleteFoldersCards(el.cabinets, true));
+            }   else {
+                deleteUrlFolders.push(...this.createUrlDeleteFoldersCards(el.cabinets, false));
             }
+
         });
-        console.log(deleteUrl, deletedUrlCards);
         this.deleteCard(indexDeleted);
+        return [...deletedUrlCards, ...deleteUrlFolders];
     }
     createUrlDeleteCards(card: CardsClass) {
         return  {
             method: 'DELETE',
-            requestUri: `USER_CL(${this.userId})/USERCARD_List(\'${this.userId} ${card.isnClassif}\')`
+            requestUri: `USER_CL(${this.userId})/USERCARD_List(\'${this.userId} ${card.cardDue}\')`
         };
+    }
+    createUrlDeleteFoldersCards(cabinets: Cabinets[], flag: boolean): Array<any> {
+        const arrayDeleted = [];
+        if (flag) {
+              cabinets.forEach((cabinet: Cabinets) => {
+            if (!cabinet.isEmptyOrigin || cabinet.deleted) {
+                arrayDeleted.push ({
+                    method: 'DELETE',
+                    requestUri: `USER_CL(${this.userId})/USERCARD_List(\'${this.userId} ${cabinet.parent.cardDue}\')/USER_CABINET_List(\'${cabinet.isnCabinet} ${this.userId}\')`,
+                });
+                this.clearDeleteMap(cabinet);
+            }
+        });
+        } else {
+            cabinets.forEach((cabinet: Cabinets) => {
+                if (cabinet.deleted) {
+                    arrayDeleted.push ({
+                        method: 'DELETE',
+                        requestUri: `USER_CL(${this.userId})/USERCARD_List(\'${this.userId} ${cabinet.parent.cardDue}\')/USER_CABINET_List(\'${cabinet.isnCabinet} ${this.userId}\')`,
+                    });
+                    this.clearDeleteMap(cabinet);
+                }
+            });
+        }
+        return arrayDeleted;
     }
     deleteCard(index: Array<number>) {
         if (index.length) {
@@ -196,6 +235,33 @@ export class RightsCardFilesComponent implements OnInit {
                 this.mainArrayCards.splice(el, 1);
             });
         }
+    }
+    clearDeleteMap(cabinet: Cabinets) {
+        const isnCab = cabinet.isnCabinet;
+        const isnClass = cabinet.isnClassif;
+        if (this.newValueMap.size) {
+            if (this.newValueMap.has(`${isnCab}|${isnClass}`)) {
+                this.newValueMap.delete(`${isnCab}|${isnClass}`);
+            }
+            if (cabinet.parent.SetChangedCabinets.has(`${isnCab}|${isnClass}`)) {
+                cabinet.parent.SetChangedCabinets.delete(`${isnCab}|${isnClass}`);
+            }
+        }
+    }
+    getChangesFromCabinets($event) {
+        if (event) {
+            this.newValueMap = $event;
+        }   else {
+            console.log('clear');
+            this.newValueMap.clear();
+        }
+    }
+    createUrlForNewOrMerge() {
+      //  const query = [];
+        this.newValueMap.forEach((value, key, array) => {
+            console.log(value, key);
+        });
+        console.log(this.newValueMap);
     }
 
     edit(event) {

@@ -1,18 +1,31 @@
 <div class="input-user-wrapper scrollWrapper input-user-card-files-wrapper" *ngIf="card">
-        <div class="cabinets-wrapper ">
+    <div *ngIf="card.cabinets.length">
+        <div class="cabinets-wrapper">
             <form>
-                 <select name="Cabinet" [(ngModel)]="Cabinet">
-                 <option [attr.selected]="i === 0" *ngFor="let cabinet of card.cabinets; let i = index" [ngValue] ="cabinet">{{cabinet.name}}</option>
-            </select>
+                 <select [style.color]="Cabinet.homeCabinet ? 'red' : 'black'" name="Cabinet" [(ngModel)]="Cabinet">
+                    <option [style.color]="cabinet.homeCabinet ? 'red' : 'black'"  *ngFor="let cabinet of card.cabinets; let i = index" [ngValue] ="cabinet">{{cabinet.name}}</option>
+                </select>
             </form>
         </div>
+        <div class="cabinet-main">
+                <label class="checkbox">
+                    главный
+                    <input [disabled]="Cabinet.isEmpty" (change)="changeMainCabinet()" type="checkbox" [checked]='Cabinet.homeCabinet'>
+                    <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                </label>
+                <hr>
+            </div>
         <div class="cabinets-folders" *ngIf="Cabinet">
             <div class="folders-item" *ngFor="let folder of Cabinet['folders']">
                 <label class="checkbox">
-                    <input type="checkbox" [checked]= "folder.selected" (change)="changeFolders(Cabinet, folder)">
+                    <input type="checkbox" [disabled]="folder.disabled" [checked]= "folder.selected" (change)="changeFolders(Cabinet, folder)">
                     <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
                 </label>
                 <span class="folders-title">{{folder.name}}</span>
             </div>
         </div>
+    </div>
+    <div class="cabinets-empty" *ngIf="!card.cabinets.length">
+        <p>Список кабинетов пуст!!!</p>
+    </div>
 </div>
