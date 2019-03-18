@@ -100,6 +100,7 @@ export class UserParamsService {
                 this._userContext['DUE_DEP_NAME'] = this._userContextDeparnment['CLASSIF_NAME'];
             }
             this._userContext = this._pipRx.entityHelper.prepareForEdit(this._userContext);
+            console.log(this._userContext.USERCARD_List);
             return true;
         })
         .catch(err => {

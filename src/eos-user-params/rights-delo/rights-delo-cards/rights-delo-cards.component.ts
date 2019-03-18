@@ -4,6 +4,7 @@ import { IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterf
 import { Router } from '@angular/router';
 import { CARD_FUNC_LIST } from './card-func-list.consts';
 import { FuncNum } from './funcnum.model';
+import { CardRightSrv } from './card-right.service';
 // import { Subject } from 'rxjs/Subject';
 
 @Component({
@@ -30,6 +31,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         // private servApi: UserParamApiSrv,
         // private _inputCtrlSrv: InputParamControlService,
         private _router: Router,
+        private _cardSrv: CardRightSrv,
     ) {
         this.selfLink = this._router.url.split('?')[0];
         this.temp = Array.from({ length: 40 }, (_, idx) => ` Элемент ${++idx}`);
@@ -58,10 +60,11 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this.editMode = false;
         this._selectedFuncNum.isSelected = false;
         this._selectedFuncNum = null;
+        this._cardSrv.funcNum = null;
     }
     edit() {
-        this.editMode = true;
         this.selectFuncNum(this.funcList[0]);
+        this.editMode = true;
     }
     close() {
         this._router.navigate(['user_param']);
@@ -78,5 +81,6 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         }
         this._selectedFuncNum = node;
         this._selectedFuncNum.isSelected = true;
+        this._cardSrv.funcNum = node;
     }
 }
