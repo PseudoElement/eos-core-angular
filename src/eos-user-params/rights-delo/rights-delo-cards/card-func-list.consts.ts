@@ -16,7 +16,7 @@ export const CARD_FUNC_LIST: ICardFuncList[] = [
     {
         funcNum: E_CARD_RIGHT.REGDOC, /// 1 - регистрация документов
         label: 'Регистрация документов',
-        type: E_CARD_TYPE.docGroup,
+        type: E_CARD_TYPE.docGroupWithoutLimit,
     },
     {
         funcNum: E_CARD_RIGHT.SEARCH, /// 2 - поиск документов
