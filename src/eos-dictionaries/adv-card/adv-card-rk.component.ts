@@ -264,6 +264,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     private _changeByPath(path: string, value: any): boolean {
         const type: E_FIELD_TYPE = this.inputs[path].controlType;
+        value = this.form.controls[path].value; // ignore for support change-in-change
         value = this.dataController.fixDBValueByType(value, type);
         const prevValue = this.dataController.fixDBValueByType(this._getPrevValue(path), type);
 

@@ -23,7 +23,7 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
     ngOnDestroy() {
     }
 
-    onDataChanged(path: string, prevValue: any, newValue: any): any {
+    onDataChanged(path: string, prevValue: any, newValue: any, initial = false): any {
     }
 
     onTabInit (dgStoredValues: any, values: any[]) {
@@ -83,5 +83,13 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
         }
     }
 
+    setAvailableFor (key: string) {
+
+    }
+
+    getfixedDBValue(path): any {
+        return this.dataController.fixDBValueByType(this.data[path],
+        this.inputs[path].controlType);
+    }
 
 }
