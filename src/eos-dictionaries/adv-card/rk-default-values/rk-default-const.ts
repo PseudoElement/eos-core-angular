@@ -21,6 +21,8 @@ export class TDefaultField {
     options?: TDFSelectOption[];
     pattern?: RegExp;
     value?: any;
+    minValue?: number;
+    maxValue?: number;
     default?: any;
 
 }
@@ -311,6 +313,8 @@ export const RKDefaultFields: TDefaultField[] = [
         // title: 'Значение при записи для срока исполнения РК',
         title: 'Срок исп. (План. дата)',
         pattern: DIGIT3_PATTERN,
+        minValue: 1,
+        maxValue: 999,
         // classif_id: NULL
     }, {
         key: 'EXE_ISN_LIST',
@@ -880,6 +884,8 @@ export const RKDefaultFields: TDefaultField[] = [
         // kind_doc '1,2,3',
         title: 'Срок исполнения',
         pattern: DIGIT3_PATTERN,
+        minValue: 1,
+        maxValue: 999,
         // classif_id: NULL
     }, {
         key: 'ISN_CARD_REG_CURR_W',
