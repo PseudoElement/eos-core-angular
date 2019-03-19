@@ -41,7 +41,7 @@
             [disabled]="true">Ведение списков</button>
         <div class="bottom-buttons-clearfix"></div>
         <button class="btn btn-primary-full upper"
-            [disabled]="!isChanged"
+            [disabled]="!isChanged || formInvalid"
             (click)="save()">Записать</button>
         <button class="btn btn-primary upper"
             (click)="cancel()">Отменить</button>
