@@ -1,1 +1,45 @@
 
+.card-node-righr {
+    padding-left: 2px;
+    position: relative;
+
+    .list-triangle {
+        position: absolute;
+        left: 0;
+        top: 5px;
+    }
+
+    .card-node-checked {
+        margin-left: 20px;
+        display: inline-block;
+    }
+
+    .content-card-node {
+
+        .buttons-card-node {
+            padding-left: 10px;
+            background: $light-grey-1;
+            border: 1px solid $border-color-main-theme;
+            margin: 0 5px;
+
+            .btn {
+                background: $light-grey-1;
+            }
+        }
+
+        .card-limit {
+            margin: 0 5px;
+            border: 1px solid $border-color-main-theme;
+            border-top: none;
+            padding-left: 15px;
+        }
+
+        .list-card-tree {
+            border: 1px solid $border-color-main-theme;
+            border-top: none;
+            margin: 0 5px;
+            padding-left: 11px;
+        }
+    }
+
+}

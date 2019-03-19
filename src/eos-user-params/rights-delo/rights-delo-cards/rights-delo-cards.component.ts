@@ -13,9 +13,6 @@ import { CardRightSrv } from './card-right.service';
 })
 
 export class RightsDeloCardsComponent implements OnInit, OnDestroy {
-    temp;
-
-
     public selfLink: string;
     public titleHeader: string;
     public isLoading: boolean;
@@ -28,13 +25,10 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
     // private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         private _userParamsSetSrv: UserParamsService,
-        // private servApi: UserParamApiSrv,
-        // private _inputCtrlSrv: InputParamControlService,
         private _router: Router,
         private _cardSrv: CardRightSrv,
     ) {
         this.selfLink = this._router.url.split('?')[0];
-        this.temp = Array.from({ length: 40 }, (_, idx) => ` Элемент ${++idx}`);
     }
     async ngOnInit() {
         // получение пользователя
@@ -48,7 +42,8 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this.funcList = CARD_FUNC_LIST.map(node => new FuncNum(node));
         this.pageState = 'VIEW';
 
-        console.log('ngOnInit() end');
+
+        this.edit(); // delete me delete me delete me delete me delete me delete me delete me delete me delete me delete me
     }
     ngOnDestroy() {
         console.log('ngOnDestroy()');
@@ -60,11 +55,11 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this.editMode = false;
         this._selectedFuncNum.isSelected = false;
         this._selectedFuncNum = null;
-        this._cardSrv.funcNum = null;
+        this._cardSrv.selectedFuncNum = null;
     }
     edit() {
-        this.selectFuncNum(this.funcList[0]);
         this.editMode = true;
+        this.selectFuncNum(this.funcList[0]);
     }
     close() {
         this._router.navigate(['user_param']);
@@ -81,6 +76,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         }
         this._selectedFuncNum = node;
         this._selectedFuncNum.isSelected = true;
-        this._cardSrv.funcNum = node;
+        this._cardSrv.selectedFuncNum = node;
+        this._cardSrv.selectFuncnum();
     }
 }
