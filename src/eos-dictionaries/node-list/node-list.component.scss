@@ -96,11 +96,31 @@
     }
 }
 
+// max-height: calc(100vh - 372px);
+.node-list-container {
+    &.list-heigth-1 {
+        .eos-node-list {
+            max-height: calc(100vh - 373px);
+        }
+    }
+    &.list-heigth-2 {
+        .eos-node-list {
+            max-height: calc(100vh - 423px);
+        }
+    }
+    &.list-heigth-3 {
+        .eos-node-list {
+            max-height: calc(100vh - 471px);
+        }
+    }
+}
+
 .eos-node-list {
     position: relative;
     overflow-y: auto;
     overflow-x: auto;
-    max-height: calc(100vh - 370px);
+
+
     bs-sortable {
         width: 100%;
     }

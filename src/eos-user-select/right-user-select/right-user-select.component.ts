@@ -90,11 +90,13 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         .then((result: [USER_CL, DEPARTMENT]) => {
             this.getObjectForSystems(result);
            if (result[1].toString() !== '5') {
-               this.departmentInfo = result[1][0];
+               this.departmentInfo = result[1];
                if (result[1][1] === undefined) {
                 this.DueInfo = `${result[1][0]['SURNAME']}`;
-               }    else {
-                this.DueInfo = `${result[1][1]['SURNAME']} ${result[1][1]['NAME']} ${result[1][1]['PATRON']}`;
+               }   else {
+                const name =  `${result[1][1]['NAME']}`;
+                const lastName = `${result[1][1]['PATRON']}`;
+                this.DueInfo = `${result[1][1]['SURNAME']} ${String(name) !== 'null' ? name : ''}  ${String(lastName) !== 'null' ? lastName : ''}`;
                }
             this.isPhoto =  result[1][0]['ISN_PHOTO'];
             isn_cabinet =  result[1][0]['ISN_CABINET'];
@@ -134,7 +136,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         if (role[0].PARM_VALUE) {
              return role[0].PARM_VALUE;
         }else {
-            return 'Не указанна';
+            return 'Не указана';
         }
     }
 

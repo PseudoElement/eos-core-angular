@@ -4,8 +4,8 @@ export class TDFSelect {
     dictId: string;
     dictKey: string;
     dictKeyTitle: string;
+    version?: any;
     criteries?: any;
-    _cache?: any;
 }
 export class TDFSelectOption {
     value: any;
@@ -222,6 +222,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictId: 'SECURITY_CL',
             dictKey: 'SECURLEVEL',
             dictKeyTitle: 'GRIF_NAME',
+            version: 1,
         }
 
         // classif_id:  111

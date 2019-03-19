@@ -4,6 +4,7 @@ import { IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterf
 import { Router } from '@angular/router';
 import { CARD_FUNC_LIST } from './card-func-list.consts';
 import { FuncNum } from './funcnum.model';
+import { CardRightSrv } from './card-right.service';
 // import { Subject } from 'rxjs/Subject';
 
 @Component({
@@ -12,9 +13,6 @@ import { FuncNum } from './funcnum.model';
 })
 
 export class RightsDeloCardsComponent implements OnInit, OnDestroy {
-    temp;
-
-
     public selfLink: string;
     public titleHeader: string;
     public isLoading: boolean;
@@ -27,12 +25,10 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
     // private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         private _userParamsSetSrv: UserParamsService,
-        // private servApi: UserParamApiSrv,
-        // private _inputCtrlSrv: InputParamControlService,
         private _router: Router,
+        private _cardSrv: CardRightSrv,
     ) {
         this.selfLink = this._router.url.split('?')[0];
-        this.temp = Array.from({ length: 40 }, (_, idx) => ` Элемент ${++idx}`);
     }
     async ngOnInit() {
         // получение пользователя
@@ -46,7 +42,8 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this.funcList = CARD_FUNC_LIST.map(node => new FuncNum(node));
         this.pageState = 'VIEW';
 
-        console.log('ngOnInit() end');
+
+        this.edit(); // delete me delete me delete me delete me delete me delete me delete me delete me delete me delete me
     }
     ngOnDestroy() {
         console.log('ngOnDestroy()');
@@ -58,6 +55,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this.editMode = false;
         this._selectedFuncNum.isSelected = false;
         this._selectedFuncNum = null;
+        this._cardSrv.selectedFuncNum = null;
     }
     edit() {
         this.editMode = true;
@@ -78,5 +76,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         }
         this._selectedFuncNum = node;
         this._selectedFuncNum.isSelected = true;
+        this._cardSrv.selectedFuncNum = node;
+        this._cardSrv.selectFuncnum();
     }
 }

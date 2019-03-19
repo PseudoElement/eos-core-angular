@@ -1,5 +1,69 @@
 <div *ngIf="!isLoading; else loader">
+    <div *ngFor="let node of listNodes"
+        class="card-node-righr">
 
+        <span *ngIf="node.expandable"
+            class="eos-icon icon list-triangle small"
+            (click)="expendList(node)"
+            [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded, 'eos-icon-close-folder-blue': !node.isExpanded}"
+        ></span>
+
+        <label class="checkbox card-node-checked">
+            <input type="checkbox"
+                hide
+                [(ngModel)]="node.value"
+            >
+            <span class="eos-icon eos-icon-checkbox-square-blue x-small">
+            </span>
+            {{node.name}}
+        </label>
+
+        <div *ngIf="node.expandable && node.isExpanded">
+            <div *ngIf="!node.isLoading; else loader" class="content-card-node">
+                <div class="buttons-card-node">
+                    <button
+                        class="btn"
+                        triggers="hover"
+                        tooltip="Добавить"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        (click)="[node.addInstance(),  hideToolTip()]"
+                    >
+                        <span class="eos-icon eos-icon-plus-blue small"></span>
+                    </button>
+                    <button
+                        class="btn"
+                        tooltip="Удалить"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        [disabled]="!node.curentSelectedNode"
+                        (click)="[node.DeleteInstance(), hideToolTip()]"
+                    >
+                        <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+                    </button>
+                </div>
+
+                <label *ngIf="node.isLimit" class="checkbox card-limit">
+                    <input type="checkbox"
+                        hide
+                        [(ngModel)]="node.limit"
+                    >
+                    <span class="eos-icon eos-icon-checkbox-square-blue x-small">
+                    </span>
+                    Ограничить картотекой регистрации
+                </label>
+
+                <!-- <eos-list-doc-tree
+                    class="tree-classif-node"
+                    [listNode]="node.listContent"
+                    (select)="node.select($event)"
+                    (checkedNode)="node.checkedNode($event)"
+                ></eos-list-doc-tree> -->
+
+            </div>
+        </div>
+    </div>
+    <div *ngIf="isShell" class="shell"></div>
 </div>
 
 

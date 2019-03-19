@@ -144,12 +144,12 @@ export class UserParamApiSrv {
         const query = {DEPARTMENT: due};
         return this.getData<DEPARTMENT>(query);
     }
-    getDocGroup(due?: string): Promise<DOCGROUP_CL[]> {
+    getDocGroup(due?: string[]): Promise<DOCGROUP_CL[]> {
         let q;
         if (!due) {
             q = ALL_ROWS;
         } else {
-            q = PipRX.criteries({DUE: due});
+            q = due;
         }
         const query = {DOCGROUP_CL: q};
         return this.getData<DOCGROUP_CL>(query);

@@ -81,6 +81,7 @@ import { RulesSelectComponent } from './sev-rules-select/sev-rules-select.compon
 import { AdvCardRKEditComponent } from './adv-card/adv-card-rk.component';
 import { RKDefaultValuesCardComponent } from './adv-card/rk-default-values/rk-default-values.component';
 import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-files.component';
+import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter.component';
 
 @NgModule({
     declarations: [
@@ -101,6 +102,7 @@ import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-fi
         DictionariesComponent,
         DictionariesQuickSearchComponent,
         DictionarySearchComponent,
+        DictionaryFilterComponent,
         DocgroupCardComponent,
         CitizenCardComponent,
         NomenklCardComponent,
