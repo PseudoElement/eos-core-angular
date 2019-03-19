@@ -107,6 +107,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                     Object.keys(res).forEach((key) => {
                         if (key !== 'PRINT_DEPARTMENT') {
                             this.setValue('printInfo.' + key, res[key]);
+                            this.setDirty('printInfo.' + key);
                         }
                     });
                 }
@@ -117,6 +118,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         } else {
             this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.treeNodeTitle);
         }
+
     }
     private _genFamilyIO(rn: RussianName, gcase): string {
         let res = rn.lastName(gcase);

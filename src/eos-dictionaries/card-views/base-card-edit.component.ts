@@ -69,6 +69,12 @@ export class BaseCardEditComponent implements OnDestroy {
             control.setValue(value);
         }
     }
+    protected setDirty(path: string) {
+        const control = this.form.controls[path];
+        if (control) {
+            control.markAsDirty();
+        }
+    }
 
     protected toggleInput(enable: boolean, path: string, formChanges: any, updates: any) {
         const control = this.form.controls[path];
