@@ -76,7 +76,7 @@ const numDeclarators: CounterDeclarator [] = [
     }, {
         type: E_COUNTER_TYPE.counterDepartmentRK,
         dictId : 'departments',
-        dbTableName : 'PRJ_NUMCREATION',
+        dbTableName : 'NUMCREATION',
         dbNumIdName : 'ISN_NUM_BASE',
         dbBaseIdName: 'ISN_DOCGROUP',
         dbNodeName : 'NUMCREATION_FLAG',
