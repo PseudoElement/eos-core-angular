@@ -26,6 +26,7 @@ export class RightsCardFilesComponent implements OnInit {
     public currentCard: CardsClass;
     public newValueMap: Map<any, any>;
     public flagEdit: boolean = false;
+    public flagBacground: boolean = false;
     private userId: number;
     // private deletedCardsUrl = [];
     // private deleteFoldersUrl = [];
@@ -65,10 +66,12 @@ export class RightsCardFilesComponent implements OnInit {
     }
 
     addCards(): void {
+        this.flagBacground = true;
         this._whaitSrv.openClassif(OPEN_CLASSIF_CARDINDEX).then((dueCards: string) => {
+            this.flagBacground = false;
             this.prepareWarnindMessage(dueCards);
         }).catch(error => {
-
+            this.flagBacground = false;
         });
     }
 
@@ -185,15 +188,14 @@ export class RightsCardFilesComponent implements OnInit {
         const deletedUrlCards = [];
         const deleteUrlFolders = [];
         const indexDeleted = [];
-        this.mainArrayCards.forEach((el: CardsClass, index) => {
-            if (el.deleted) {
-                deletedUrlCards.push(this.createUrlDeleteCards(el));
+        this.mainArrayCards.forEach((card: CardsClass, index) => {
+            if (card.deleted) {
+                deletedUrlCards.push(this.createUrlDeleteCards(card));
                 indexDeleted.push(index);
-                deleteUrlFolders.push(...this.createUrlDeleteFoldersCards(el.cabinets, true));
+                deleteUrlFolders.push(...this.createUrlDeleteFoldersCards(card.cabinets, true));
             }   else {
-                deleteUrlFolders.push(...this.createUrlDeleteFoldersCards(el.cabinets, false));
+                deleteUrlFolders.push(...this.createUrlDeleteFoldersCards(card.cabinets, false));
             }
-
         });
         this.deleteCard(indexDeleted);
         return [...deletedUrlCards, ...deleteUrlFolders];
@@ -207,7 +209,7 @@ export class RightsCardFilesComponent implements OnInit {
     createUrlDeleteFoldersCards(cabinets: Cabinets[], flag: boolean): Array<any> {
         const arrayDeleted = [];
         if (flag) {
-              cabinets.forEach((cabinet: Cabinets) => {
+            cabinets.forEach((cabinet: Cabinets) => {
             if (!cabinet.isEmptyOrigin || cabinet.deleted) {
                 arrayDeleted.push ({
                     method: 'DELETE',
