@@ -1,12 +1,13 @@
 .header {
     padding: 15px;
     position: relative;
-    border-bottom: solid 1px $border-color-main-theme;
-    background: $light-grey-1;
+    border-bottom: solid 1px #e6e6e6;
+    background: #fafafa;
     .header__text-wrap {
         text-align: left;
+        max-width: calc(100% - 300px);
         .header__text {
-            color: $primary-font-color-main-theme;
+            color: #646464;
             font-size: 18px;
         }
     }
