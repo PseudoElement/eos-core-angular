@@ -6,7 +6,7 @@ export const DATE_INPUT_PATERN = /.*(0[1-9]|[12][0-9]|3[01])\.(0[1-9]|1[0-2])\.(
 export const DATE_JSON_PATTERN = /(\d{4})-(\d{2})-(\d{2})(T(\d{2}:){2}\d{2}.*)/;
 export const YEAR_PATTERN = /(^\d{4}$)/;
 export const DIGIT3_PATTERN = /(^\d{1,3}$)/;
-export const DIGIT4_WITH_PERIOD_PATTERN = /(^((\d{1,4})|(\d{1,4}-\d{1,4}))$)/;
+export const DIGIT4_WITH_PERIOD_PATTERN = /(^(([1-9](\d{1,3})?)|(([1-9](\d{1,3})?)-([1-9](\d{1,3})?)))$)/;
 export const NUMERIC_PATTERN = /(^\d{1,8}$)/;
 export const INPUT_ERROR_MESSAGES = {
     required: 'Обязательное поле.',
