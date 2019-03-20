@@ -1,4 +1,4 @@
-<div class="input-user-wrapper input-user-registration-rk-forwarding-wrapper" *ngIf="true">
+<div class="input-user-wrapper input-user-registration-rk-forwarding-wrapper">
     <eos-user-params-header
         [title] = 'titleHeader'
         [link] = 'link'
@@ -48,5 +48,8 @@
         <eos-remaster-rc (pushChange) = 'emitChangesRc($event)' [userData] = 'hash' [defaultValues] = 'defaultValues'
         ></eos-remaster-rc>
     </div>
+</div>
+<div class="sp" *ngIf="!isLoading">
+    <eos-spinner size="lg"></eos-spinner>
 </div>
 </div>
