@@ -1,4 +1,5 @@
 import { E_FIELD_TYPE } from './../../interfaces/dictionary.interfaces';
+import { DIGIT3_PATTERN, DIGIT4_WITH_PERIOD_PATTERN } from 'eos-common/consts/common.consts';
 
 export class TDFSelect {
     dictId: string;
@@ -18,7 +19,10 @@ export class TDefaultField {
     title: string;
     dict?: TDFSelect;
     options?: TDFSelectOption[];
+    pattern?: RegExp;
     value?: any;
+    minValue?: number;
+    maxValue?: number;
     default?: any;
 
 }
@@ -308,6 +312,9 @@ export const RKDefaultFields: TDefaultField[] = [
         // kind_doc '1,2,3',
         // title: 'Значение при записи для срока исполнения РК',
         title: 'Срок исп. (План. дата)',
+        pattern: DIGIT3_PATTERN,
+        minValue: 1,
+        maxValue: 999,
         // classif_id: NULL
     }, {
         key: 'EXE_ISN_LIST',
@@ -876,6 +883,9 @@ export const RKDefaultFields: TDefaultField[] = [
         type: E_FIELD_TYPE.numberIncrement,
         // kind_doc '1,2,3',
         title: 'Срок исполнения',
+        pattern: DIGIT3_PATTERN,
+        minValue: 1,
+        maxValue: 999,
         // classif_id: NULL
     }, {
         key: 'ISN_CARD_REG_CURR_W',
@@ -952,9 +962,10 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'SPECIMEN',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.string,
         // kind_doc '1,2,3',
         title: 'Экз №',
+        pattern: DIGIT4_WITH_PERIOD_PATTERN,
         // classif_id: NULL
     },
 
