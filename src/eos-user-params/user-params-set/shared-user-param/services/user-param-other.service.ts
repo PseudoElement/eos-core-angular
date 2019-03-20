@@ -36,7 +36,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
 
     constructor( injector: Injector) {
         super(injector, OTHER_USER);
-        this.isLoading = true;
+        this.isLoading = false;
         this.selfLink = this._router.url.split('?')[0];
         const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/g, '||');
         const ADDR_EXP = String(this._userParamsSetSrv.hashUserContext['ADDR_EXPEDITION']);
@@ -62,8 +62,9 @@ export class UserParamOtherSrv extends BaseUserSrv {
             this.init();
             this.initShablony = result[2];
             this.saveDefaultValue = ( result[2] as Array<any>).slice();
+            this.isLoading = true;
         }).catch(error => {
-            this.isLoading = false;
+            console.log(error);
         });
 
         this._userParamsSetSrv.saveData$
@@ -90,7 +91,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
               this.changeInpetsValue(this.inputs);
               this.checngeFormValue();
               this.subscribeChangeForm();
-              this.isLoading = false;
       }
       getInputs() {
         const dataInput = {rec: {}};
@@ -238,7 +238,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
         });
     }
     submit(event?) {
-        this.isLoading = true;
+        this.isLoading = false;
         this.formChanged.emit(false);
         this.isChangeForm = false;
         this.userParamApiSrv
@@ -248,7 +248,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
                     const userId = this._userParamsSetSrv.userContextId;
                     this._userParamsSetSrv.getUserIsn(String(userId));
                     this.saveValueSendForm = this.sendFrom;
-                    this.isLoading = false;
+                    this.isLoading = true;
                 })
                 .catch(data => console.log(data));
     }

@@ -2,7 +2,7 @@ import {Component, Output, EventEmitter} from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
 import {DOCGROUP_CL, PipRX} from '../../eos-rest';
 import {EosDictService} from '../services/eos-dict.service';
-import { YEAR_PATTERN, NUMERIC_PATTERN } from 'eos-common/consts/common.consts';
+import {YEAR_PATTERN, NUMERIC_PATTERN, NOT_EMPTY_STRING} from 'eos-common/consts/common.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { DANGER_NUMCREATION_NP_CHANGE } from 'eos-dictionaries/consts/messages.consts';
 import { CONFIRM_NUMCREATION_CHANGE } from 'app/consts/confirms.const';
@@ -76,7 +76,7 @@ const numDeclarators: CounterDeclarator [] = [
     }, {
         type: E_COUNTER_TYPE.counterDepartmentRK,
         dictId : 'departments',
-        dbTableName : 'PRJ_NUMCREATION',
+        dbTableName : 'NUMCREATION',
         dbNumIdName : 'ISN_NUM_BASE',
         dbBaseIdName: 'ISN_DOCGROUP',
         dbNodeName : 'NUMCREATION_FLAG',
@@ -138,6 +138,7 @@ export class CounterNpEditComponent {
 
     valuePattern = NUMERIC_PATTERN;
     yearPattern = YEAR_PATTERN;
+    docGroupPattern = NOT_EMPTY_STRING;
 
     protected apiSrv: PipRX;
     private _node = {};
@@ -291,23 +292,25 @@ export class CounterNpEditComponent {
 
         const query = { criteries: criteries };
         const req = { [this._decl.dbTableName]: query, orderby: NUM_YEAR_NAME };
-        return this.apiSrv.read(req)
-            .then((cnts) => {
-                this.nodes = cnts.filter(d => {
-                    let res = String(d[this._decl.dbNumIdName]) === this._baseId;
-                    if (res && this._decl.isCounterRK) {
-                        const dbBaseId = String(d[this._decl.dbBaseIdName]);
-                        if (this.currentDocgroup === undefined && dbBaseId !== String(-1)) {
-                            this.currentDocgroup = dbBaseId;
-                        }
-                        res = this.currentDocgroup !== null && dbBaseId === this.currentDocgroup;
-                    }
-                    return res;
-                });
-                return this._fillDocGroup()
-                    .then(() => {
-                        this.isUpdating = false;
-                        return Promise.resolve(cnts);
+        return this._fillDocGroup()
+            .then(() => {
+                this.isUpdating = false;
+                this.apiSrv.read(req)
+                    .then((cnts) => {
+                        this.nodes = cnts.filter(d => {
+                            let res = String(d[this._decl.dbNumIdName]) === this._baseId;
+                            if (res && this._decl.isCounterRK) {
+                                const dbBaseId = String(d[this._decl.dbBaseIdName]);
+                                const isDgOptions = this.docGroupOptions.find((dgo) => dgo.value === dbBaseId);
+                                if (this.currentDocgroup === undefined && dbBaseId !== String(-1) &&
+                                        isDgOptions !== undefined) {
+                                    this.currentDocgroup = dbBaseId;
+                                }
+                                res = this.currentDocgroup !== null && dbBaseId === this.currentDocgroup;
+                            }
+                            return res;
+                        });
+                        return cnts;
                     });
             })
             .catch(err => this._errHandler(err));
@@ -367,9 +370,11 @@ export class CounterNpEditComponent {
 
     private _getNodeValue(year_value: number): number {
         let res = 0;
-        const node = this.nodes.find(n => n[NUM_YEAR_NAME] === year_value);
-        if (node) {
-            res = node[NUM_VALUE_NAME];
+        if (this.nodes) {
+            const node = this.nodes.find(n => n[NUM_YEAR_NAME] === year_value);
+            if (node) {
+                res = node[NUM_VALUE_NAME];
+            }
         }
         return res;
     }

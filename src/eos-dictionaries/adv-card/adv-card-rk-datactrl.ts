@@ -129,7 +129,7 @@ export class AdvCardRKDataCtrl {
 
                         reqs.push(this._apiSrv.read(req).then((data) => {
                             const opts: TDFSelectOption[] = this.loadedDicts[hash];
-                            opts.push ({value: '', title: '...'});
+                            // opts.push ({value: '', title: '...'});
                             for (let index = 0; index < data.length; index++) {
                                 const element = data[index];
                                 opts.push ({value: element[el.dict.dictKey], title: element[el.dict.dictKeyTitle]});

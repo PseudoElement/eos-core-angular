@@ -54,6 +54,8 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     storedValuesDG: any;
     editValues: any;
     isChanged: boolean;
+    _currentFormStatus: any;
+    formInvalid: boolean;
     // protected formChanges$: Subscription;
     private subscriptions: Subscription[];
 
@@ -148,6 +150,15 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 this._updateOptions(this.inputs);
                 const isNode = false;
                 this.form = this._inputCtrlSrv.toFormGroup(this.inputs, isNode);
+
+                this.subscriptions.push(this.form.statusChanges
+                    .subscribe((status) => {
+                        if (this._currentFormStatus !== status) {
+                            this.formInvalid = (status === 'INVALID');
+                        }
+                        this._currentFormStatus = status;
+                    }));
+
                 this._subscribeToChanges();
                 this.isUpdating = false;
             });
@@ -264,6 +275,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     private _changeByPath(path: string, value: any): boolean {
         const type: E_FIELD_TYPE = this.inputs[path].controlType;
+        value = this.form.controls[path].value; // ignore for support change-in-change
         value = this.dataController.fixDBValueByType(value, type);
         const prevValue = this.dataController.fixDBValueByType(this._getPrevValue(path), type);
 

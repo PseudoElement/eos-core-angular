@@ -2,7 +2,7 @@
     <div class="items-group">
     <div class="clearfix">
         <div class="col-1" *ngIf="!isEDoc">
-            <label>{{inputs['DOC_DEFAULT_VALUE_List.SPECIMEN'].label}}</label>
+            <!-- <label>{{inputs['DOC_DEFAULT_VALUE_List.SPECIMEN'].label}}</label> -->
             <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SPECIMEN']"
                             [form]="form"
                             [readonly]="!editMode || isEDoc" ></eos-dynamic-input>
