@@ -2,6 +2,7 @@ import {Component, OnInit, Input, OnChanges, OnDestroy, Output, EventEmitter} fr
 import { CardsClass, Cabinets} from '../helpers/cards-class';
 import {RigthsCabinetsServices} from '../../../shared/services/rigths-cabinets.services';
 import { Subject } from 'rxjs/Subject';
+
 @Component({
     selector: 'eos-cabinets-folders',
     templateUrl: 'rt-cabinets-folders.component.html',
@@ -62,10 +63,10 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         const isnClass = this.Cabinet.isnClassif;
         if (this.Cabinet.isChanged) {
               this.changedValuesMap.set(`${isnCab}|${isnClass}`, {
+                cabinet: this.Cabinet,
                 due: this.card.cardDue,
                 isncl: this.Cabinet.isnClassif,
                 isncab: this.Cabinet.isnCabinet,
-                create: this.card.newCard,
                 delete: this.Cabinet.deleted,
                 values: this.Cabinet.folders
             });
@@ -126,6 +127,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         }
         this.CheckChanges();
         this.checkMapNewValues();
+        console.log(this.changedValuesMap);
     }
     findHomeCabinet() {
      const findCabinet =   this.Cabinet.parent.cabinets.filter((cabinet: Cabinets) => {

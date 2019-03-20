@@ -15,6 +15,35 @@ export class Cabinets {
     deleted: boolean = false;
     isChanged = false;
     parent: CardsClass;
+    get stringFolders() {
+        let str = '';
+        let t = '';
+        this.folders.forEach(el => {
+            if (el['value'] === 'A' && el['selected']) {
+                t = el['value'];
+            } else if (el['value'] !== 'H' && el['value'] !== 'HR') {
+                if (el['selected'] === true) {
+                    str += el['value'];
+                }
+            }
+        });
+        return str + t;
+    }
+    get hideAccess() {
+        if (this.folders[10].selected) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    get hideAccessPR() {
+        if (this.folders[11].selected) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
     private arrayKey = new Map()
     .set('Поступившие', 1)
     .set('На исполнении', 2)
@@ -112,8 +141,11 @@ export class CardsClass {
     }
     public cabinetsName;
     public homeCard: boolean;
+
+    public homeCardOrigin: boolean;
     public cardDue: string;
     public isnClassif: number;
+    // меняется только при смене флага главного кабинета
     public changed: boolean = false;
     public deleted: boolean = false;
     public newCard: boolean;
@@ -129,6 +161,7 @@ export class CardsClass {
     }
     initProperties(cardsInfo: CardInit) {
         this.data.HOME_CARD !== 1 ? this.homeCard = false : this.homeCard = true;
+        this.homeCardOrigin = this.homeCard;
         this.cardDue = this.data.DUE;
         this.isnClassif = this.data.ISN_LCLASSIF;
         this.newCard = cardsInfo.create;

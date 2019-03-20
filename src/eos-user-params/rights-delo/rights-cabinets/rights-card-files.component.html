@@ -26,18 +26,35 @@
                     [disabled] = "!currentCard"
                     class="btn btn-primary"
                     (click) = "removeCards()"
+
+                    ><span
                     tooltip="Удалить картотеку"
                     placement="bottom"
                     containerClass="tooltip-info"
                     triggers="hover:click"
-                    ><span class="eos-icon eos-icon-bin-blue small"></span>
+                    class="eos-icon eos-icon-bin-blue small"></span>
+                </button>
+                <button
+                    [disabled] = "!currentCard"
+                    class="btn btn-primary"
+                    (click) = "homeCardMoov()"
+                    ><span
+                    tooltip="Главная"
+                    placement="bottom"
+                    containerClass="tooltip-info"
+                    triggers="hover:click"
+                    class="eos-icon eos-icon-keyfile-blue small"></span>
                 </button>
             </div>
+
             <div class="cards-wr" [ngClass]="card.current ? 'ativeCard' : ''" *ngFor='let card of mainArrayCards'>
                 <span *ngIf='!card.deleted' class="cards-item" [ngClass]="card.homeCard ? 'homeCard' : ''" (click) ='selectCurentCard(card)'>{{card.cardName}}</span>
             </div>
+            <div class="cards-wr" *ngIf="!currentCard">
+                <p>Картотеки отсутствуют</p>
+            </div>
         </div>
-        <div class="card-rigth">
+        <div class="card-rigth" *ngIf="currentCard">
             <eos-cabinets-folders (sendNewValues)="getChangesFromCabinets($event)" [card]="currentCard"></eos-cabinets-folders>
         </div>
     </div>

@@ -24,7 +24,7 @@ export class RightsCardFilesComponent implements OnInit {
     public btnDisabled: boolean = true;
     public mainArrayCards = [];
     public currentCard: CardsClass;
-    public newValueMap: Map<any, any>;
+    public newValueMap: Map<any, any> = new Map();
     public flagEdit: boolean = false;
     public flagBacground: boolean = false;
     private userId: number;
@@ -37,18 +37,16 @@ export class RightsCardFilesComponent implements OnInit {
         private _router: Router,
         private _whaitSrv: WaitClassifService,
         private _msgSrv: EosMessageService,
-    //    private _pipSrv: PipRX,
+         private _pipSrv: PipRX,
     ) {
         this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Картотеки и Кабинеты';
         this.link = this._userSrv.curentUser['ISN_LCLASSIF'];
         this.selfLink = this._router.url.split('?')[0];
-        console.log(PipRX);
+        console.log(this._pipSrv);
     }
     ngOnInit() {
         this.userId = this._userSrv.userContextId;
-        this._userSrv.getUserIsn().then(() => {
-            this.init();
-        });
+       this.init();
     }
 
     init(): void {
@@ -57,6 +55,7 @@ export class RightsCardFilesComponent implements OnInit {
             if (this.mainArrayCards.length) {
                 this.selectCurentCard(this.mainArrayCards[0]);
             }
+            console.log(this.mainArrayCards);
             this.isLoading = false;
         });
     }
@@ -69,21 +68,40 @@ export class RightsCardFilesComponent implements OnInit {
         this.flagBacground = true;
         this._whaitSrv.openClassif(OPEN_CLASSIF_CARDINDEX).then((dueCards: string) => {
             this.flagBacground = false;
-            this.prepareWarnindMessage(dueCards);
+            this.prepareWarnindMessage(dueCards).then(() => {
+                this.selectFromAddedCards();
+                console.log(this.mainArrayCards);
+            });
         }).catch(error => {
+            console.log(error);
             this.flagBacground = false;
         });
     }
 
-    prepareWarnindMessage(dueCards: string) {
+    prepareWarnindMessage(dueCards: string): Promise<any> {
         if (!this.mainArrayCards.length) {
-            this.getInfoForNewCards(dueCards.split('|')).then(() => {});
+         return   this.getInfoForNewCards(dueCards.split('|'));
         }  else {
             const transformString = dueCards.split('|');
-            this.searchMathes(transformString);
+        return this.searchMathes(transformString);
         }
     }
-    searchMathes(dueArray: Array<string>) {
+
+    selectFromAddedCards() {
+        let length = this.mainArrayCards.length - 1;
+        if (!this.currentCard) {
+            if (this.mainArrayCards.length) {
+                while (length >= 0) {
+                    if (!this.mainArrayCards[length].deleted) {
+                        this.selectCurentCard(this.mainArrayCards[length]);
+                        break;
+                    }
+                    --length;
+                }
+            }
+        }
+    }
+    searchMathes(dueArray: Array<string>): Promise<any> {
         let stringMatches = '';
         if (dueArray.length) {
          const newCardDue = dueArray.filter(newCard => {
@@ -102,10 +120,11 @@ export class RightsCardFilesComponent implements OnInit {
                 this.showWarnMessage(stringMatches);
             }
             if (newCardDue.length) {
-                this.getInfoForNewCards(newCardDue).then(() => {});
+            return   this.getInfoForNewCards(newCardDue);
             }
+            return Promise.resolve();
         } else {
-            return;
+            return Promise.resolve();
         }
     }
     showWarnMessage(stringMatches: string) {
@@ -154,6 +173,7 @@ export class RightsCardFilesComponent implements OnInit {
     }
     removeCards() {
         this.currentCard.deleted = true;
+        this.currentCard.current = false;
         if (this.currentCard.newCard) {
             this.removeNewCard();
         }
@@ -174,19 +194,19 @@ export class RightsCardFilesComponent implements OnInit {
     submit(event) {
      // this._rightsCabinetsSrv.submitRequest.next();
 
-     const q = this.searchDeletedCards();
+     const q = this.prepUrls();
      console.log(q);
-    // this._pipSrv.batch(q, '').then(res => {
-    //     console.log(res);
-    // }).catch(error => {
-    //     console.log(error);
-    // });
-    this.createUrlForNewOrMerge();
-
+    this._pipSrv.batch(q, '').then(res => {
+        this.cancel();
+    }).catch(error => {
+        console.log(error);
+    });
     }
-    searchDeletedCards() {
+    prepUrls() {
         const deletedUrlCards = [];
         const deleteUrlFolders = [];
+        const createUrlsCards = [];
+        const createUrlFolders = [];
         const indexDeleted = [];
         this.mainArrayCards.forEach((card: CardsClass, index) => {
             if (card.deleted) {
@@ -195,10 +215,88 @@ export class RightsCardFilesComponent implements OnInit {
                 deleteUrlFolders.push(...this.createUrlDeleteFoldersCards(card.cabinets, true));
             }   else {
                 deleteUrlFolders.push(...this.createUrlDeleteFoldersCards(card.cabinets, false));
+                if (card.changed || card.newCard) {
+                    createUrlsCards.push(this.createUrlNewData(card));
+                }
             }
         });
+        if (this.newValueMap.size) {
+            createUrlFolders.push(...this.createUrlsNewFolders());
+        }
         this.deleteCard(indexDeleted);
-        return [...deletedUrlCards, ...deleteUrlFolders];
+        return [...deletedUrlCards, ...deleteUrlFolders, ...createUrlsCards, ...createUrlFolders];
+    }
+    createUrlsNewFolders() {
+        const query = [];
+        this.newValueMap.forEach((value, key, arr) => {
+            if (!value.delete && !value.cabinet.isEmptyOrigin) {
+                query.push(this.prepareQueryforFolders(value, true));
+            }
+            if (value.cabinet.isEmptyOrigin && !value.delete) {
+                query.push(this.prepareQueryforFolders(value, false));
+            }
+        });
+        return query;
+    }
+
+    prepareQueryforFolders(value: any, flagPostOrMerge: boolean) {
+        if (flagPostOrMerge) {
+              return{
+                method: 'MERGE',
+                requestUri: `USER_CL(${this.userId})/USERCARD_List(\'${this.userId} ${value.due}\')/USER_CABINET_List(\'${value.isncab} ${this.userId}\')`,
+                data: {
+                          FOLDERS_AVAILABLE: value.cabinet.stringFolders,
+                          HOME_CABINET: value.cabinet.homeCabinet ? 1 : 0,
+                          HIDE_INACCESSIBLE: value.cabinet.hideAccess,
+                          HIDE_INACCESSIBLE_PRJ: value.cabinet.hideAccessPR,
+                }
+            };
+        }   else {
+            return {
+                method: 'POST',
+                requestUri: `USER_CL(${this.userId})/USERCARD_List(\'${this.userId} ${value.due}\')/USER_CABINET_List`,
+                data: {
+                        ISN_CABINET: value.isncab,
+                        ISN_LCLASSIF: value.isncl,
+                        FOLDERS_AVAILABLE:  value.cabinet.stringFolders ,
+                        ORDER_WORK: null,
+                        HOME_CABINET: value.cabinet.homeCabinet ? 1 : 0,
+                        HIDE_INACCESSIBLE: value.cabinet.hideAccess,
+                        HIDE_INACCESSIBLE_PRJ: value.cabinet.hideAccessPR,
+                }
+        };
+    }
+}
+    createUrlNewData(card: CardsClass) {
+        if (card.newCard) {
+            return this.prepObjectforDB(card, true);
+        }
+        if (!card.newCard) {
+            return this.prepObjectforDB(card, false);
+        }
+    }
+
+    prepObjectforDB(card: CardsClass, flagCreateOrMerge: boolean) {
+        if (flagCreateOrMerge) {
+            return {
+                        method: 'POST',
+                        requestUri: `USER_CL(${this.userId})/USERCARD_List`,
+                        data: {
+                            ISN_LCLASSIF: `${this.userId}`,
+                            DUE: `${card.cardDue}`,
+                            HOME_CARD: `${card.homeCard ?  1 : 0}`,
+                            FUNCLIST: '010000000000010010000'
+                        }
+                    };
+        }   else {
+            return {
+                method: 'MERGE',
+                requestUri: `USER_CL(${this.userId})/USERCARD_List(\'${this.userId} ${card.cardDue}\')`,
+                data: {
+                    HOME_CARD: `${card.homeCard ?  1 : 0}`
+                }
+            };
+        }
     }
     createUrlDeleteCards(card: CardsClass) {
         return  {
@@ -254,17 +352,38 @@ export class RightsCardFilesComponent implements OnInit {
         if (event) {
             this.newValueMap = $event;
         }   else {
-            console.log('clear');
             this.newValueMap.clear();
         }
     }
-    createUrlForNewOrMerge() {
-      //  const query = [];
-        this.newValueMap.forEach((value, key, array) => {
-            console.log(value, key);
-        });
-        console.log(this.newValueMap);
+    homeCardMoov() {
+        if (this.currentCard) {
+            this.findHomeCard();
+            this.currentCard.homeCard = true;
+            this.checkOfiginFlagHoumCard(this.currentCard);
+        }
     }
+
+    checkOfiginFlagHoumCard(cards: CardsClass) {
+        if (cards.homeCard !== cards.homeCardOrigin) {
+            cards.changed = true;
+        }   else {
+            cards.changed = false;
+        }
+    }
+    findHomeCard() {
+        if (this.mainArrayCards.length) {
+            const length = this.mainArrayCards.length;
+            for (let i = 0; i < length; i += 1) {
+                const card: CardsClass = this.mainArrayCards[i];
+                if (card.homeCard) {
+                    card.homeCard = false;
+                    this.checkOfiginFlagHoumCard(card);
+                    break;
+                }
+            }
+        }
+    }
+
 
     edit(event) {
         this.flagEdit = event;

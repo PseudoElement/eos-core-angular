@@ -8,7 +8,7 @@ import { Subject } from 'rxjs/Subject';
 
 export class RigthsCabinetsServices {
     public cardsArray: CardsClass[] = [];
-    public cardsOrigin: CardsClass[];
+    public cardsOrigin: CardsClass[] = [];
     public user_id;
     public changeCabinets = new Subject();
     public submitRequest = new Subject();
@@ -18,25 +18,29 @@ export class RigthsCabinetsServices {
     getUserCard(userCard: USERCARD[], id_user?): Promise<any> {
         this.user_id = id_user;
             const queryFordep = this.createStringQuery(userCard);
-            return this.getDepartmentName(queryFordep).then((date: DEPARTMENT[]) => {
-                const queryString = this.createStringQuery(date);
-                return this.getCabinetsName(queryString).then(data => {
-                    const queryStringCards = this.createStringQueryCabinet(data);
-                    return this.getUserCabinet(queryStringCards).then(res => {
-                        const q: CardInit = {
-                            DEPARTMENT_info: date,
-                            CABINET_info: data,
-                            USER_CABINET_info: res,
-                            create: false
-                        };
-                        this.fillArrayCards(userCard, q);
-                        this.fillArrayCardsName(date);
-                        this.cardsOrigin = this.cardsArray.slice();
+            if (queryFordep && queryFordep.length) {
+                return this.getDepartmentName(queryFordep).then((date: DEPARTMENT[]) => {
+                    const queryString = this.createStringQuery(date);
+                    return this.getCabinetsName(queryString).then(data => {
+                        const queryStringCards = this.createStringQueryCabinet(data);
+                        return this.getUserCabinet(queryStringCards).then(res => {
+                            const q: CardInit = {
+                                DEPARTMENT_info: date,
+                                CABINET_info: data,
+                                USER_CABINET_info: res,
+                                create: false
+                            };
+                            this.fillArrayCards(userCard, q);
+                            this.fillArrayCardsName(date);
+                            this.cardsOrigin = this.cardsArray.slice();
+                        });
                     });
+                }).catch(error => {
+                    console.log(error);
                 });
-        }).catch(error => {
-            console.log(error);
-        });
+            }   else {
+                return Promise.resolve();
+            }
     }
     fillArrayCardsName(department: DEPARTMENT[]): void {
         department.forEach((depart: DEPARTMENT) => {
