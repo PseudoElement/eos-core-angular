@@ -21,6 +21,7 @@ export class TDefaultField {
     options?: TDFSelectOption[];
     pattern?: RegExp;
     value?: any;
+    length?: number;
     minValue?: number;
     maxValue?: number;
     default?: any;
@@ -633,6 +634,7 @@ export const RKDefaultFields: TDefaultField[] = [
         type: E_FIELD_TYPE.text,
         // kind_doc '1,2,3',
         title: 'Примечание',
+        length: 2000,
         // classif_id: NULL
     }, {
         key: 'FREE_NUM_M',
