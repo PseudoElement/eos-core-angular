@@ -33,6 +33,14 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
             this.isEDoc = false;
         }
 
+        for (const key in this.form.controls) {
+            if (this.form.controls.hasOwnProperty(key)) {
+                const value = values[key];
+                this.onDataChanged(key, value, value, true);
+                this.setAvailableFor(key);
+            }
+        }
+
     }
 
     ngOnInit() {

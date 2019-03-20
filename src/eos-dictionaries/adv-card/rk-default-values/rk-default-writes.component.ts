@@ -15,7 +15,7 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
     enKart1Select: any;
     enKart2Select: any;
     en_journal_param_w: boolean;
-    _initFict: boolean;
+    // _initFict: boolean;
 
     ngOnChanges(changes: SimpleChanges) {
     }
@@ -24,9 +24,9 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
         switch (path) {
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST_W': { // Передача документов
                 if (newValue === null) {
-                    this.form.controls['DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W'].setValue(null);
+                    this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', null);
                 } else if (prevValue === null) {
-                    this.form.controls['DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W'].setValue(2);
+                    this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', 2);
                 }
                 break;
             }
@@ -41,18 +41,35 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
             }
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_FROM_WHO_W': {
                 this.journal_who_w = newValue === '1';
-                if (!this.forward_who_w) {
+                if (!this.journal_who_w) {
                     this.form.controls['DOC_DEFAULT_VALUE_List.JOURNAL_WHO_EMPTY_W'].setValue(null);
                     this.form.controls['DOC_DEFAULT_VALUE_List.JOURNAL_WHO_REDIRECTION_W'].setValue(null);
                     this.form.controls['DOC_DEFAULT_VALUE_List.JOURNAL_WHERE_REDIRECTION_W'].setValue(null);
                 }
                 break;
             }
+
+            case 'DOC_DEFAULT_VALUE_List.JOURNAL_FROM_FORWARD_W': {
+                if (newValue === '1' && newValue !== prevValue) {
+                    this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', '2');
+                }
+                this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W');
+                break;
+            }
+
+            case 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W': { // Списать в дело
+                if (newValue && newValue !== prevValue) {
+                    this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W', '0');
+                }
+                this.setAvailableFor ('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W');
+                break;
+            }
+
             case 'fict.KR_CURRENT': {
-                if (this._initFict) {
+                this.enKart1Select = newValue;
+                if (prevValue === newValue) {
                     break;
                 }
-                this.enKart1Select = newValue;
                 if (newValue === '0') {
                     this.setValue('fict.ISN_CARD_REG_W_1', null);
                     this.setValue('fict.ISN_CARD_REG_W_2', null);
@@ -84,9 +101,10 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
             }
             case 'fict.KR_CURRENT_IF': {
                 this.enKart2Select = newValue;
-                if (this._initFict) {
+                if (prevValue === newValue) {
                     break;
                 }
+
                 if (this.getValue('fict.KR_CURRENT', null) !== '2') {
                     break;
                 }
@@ -107,12 +125,18 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
             }
 
             case 'fict.ISN_CARD_REG_W_1': {
+                if (prevValue === newValue) {
+                    break;
+                }
                 if (this.enKart1Select === '1') {
                     this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W', newValue);
                 }
                 break;
             }
             case 'fict.ISN_CARD_REG_W_2': {
+                if (prevValue === newValue) {
+                    break;
+                }
                 if (this.enKart1Select === '2' && this.enKart2Select === '1') {
                     this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W', newValue);
                 }
@@ -145,40 +169,39 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
 
         if (this.isEDoc) {
             this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM'].options, null, false);
-            this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W'].options, [1]);
         } else {
-            this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W'].options, [0, 1]);
         }
-
-        this._initFict = true;
-        const cur = this.getValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_CURR_W', null);
-        const forw = this.getValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', null);
-        const id = this.getValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W', null);
-        if (forw) {
-            this.enKart1Select = '2';
-            this.setValue('fict.KR_CURRENT', '2');
-            if (cur) {
-                this.enKart2Select = '0';
-                this.setValue('fict.KR_CURRENT_IF', '0');
-            } else if (id) {
-                this.enKart2Select = '1';
-                this.setValue('fict.KR_CURRENT_IF', '1');
-                this.setValue('fict.ISN_CARD_REG_W_2', id);
-            }
-        } else {
-            if (id) {
-                this.enKart1Select = '1';
-                this.setValue('fict.KR_CURRENT', '1');
-                this.setValue('fict.ISN_CARD_REG_W_1', id);
-            } else if (cur) {
-                this.enKart1Select = '0';
-                this.setValue('fict.KR_CURRENT', '0');
-            }
-        }
-        this._initFict = false;
     }
 
     journalNomencClick_W () {
 
     }
+
+    setAvailableFor (key: string) {
+        switch (key) {
+            case 'DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W': {
+                const cb = this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_FROM_FORWARD_W');
+                if (cb) {
+                    this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W'].options, null, true);
+                } else {
+                    this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W'].options, null, false);
+                }
+                break;
+            }
+            case 'DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W': {
+                const v = this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W');
+                if (v) {
+                    if (this.isEDoc) {
+                        this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W'].options, [1]);
+                    } else {
+                        this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W'].options, [0, 1]);
+                    }
+                } else {
+                    this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W'].options, null, false);
+                }
+                break;
+            }
+        }
+    }
+
 }
