@@ -2,7 +2,7 @@
     <div *ngFor="let node of listNodes"
         class="card-node-righr">
 
-        <span *ngIf="node.expandable"
+        <span *ngIf="node.expandable && node.value"
             class="eos-icon icon list-triangle small"
             (click)="expendList(node)"
             [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded, 'eos-icon-close-folder-blue': !node.isExpanded}"
@@ -19,7 +19,7 @@
         </label>
 
         <div *ngIf="node.expandable && node.isExpanded">
-            <div *ngIf="!node.isLoading; else loader" class="content-card-node">
+            <div class="content-card-node">
                 <div class="buttons-card-node">
                     <button
                         class="btn"
@@ -43,22 +43,25 @@
                     </button>
                 </div>
 
-                <label *ngIf="node.isLimit" class="checkbox card-limit">
-                    <input type="checkbox"
-                        hide
-                        [(ngModel)]="node.limit"
-                    >
-                    <span class="eos-icon eos-icon-checkbox-square-blue x-small">
-                    </span>
-                    Ограничить картотекой регистрации
-                </label>
-
-                <!-- <eos-list-doc-tree
-                    class="tree-classif-node"
-                    [listNode]="node.listContent"
-                    (select)="node.select($event)"
-                    (checkedNode)="node.checkedNode($event)"
-                ></eos-list-doc-tree> -->
+                <div *ngIf="node.isLimit" class="card-limit">
+                    <label class="checkbox">
+                        <input type="checkbox"
+                            hide
+                            [(ngModel)]="node.limit"
+                        >
+                        <span class="eos-icon eos-icon-checkbox-square-blue x-small">
+                        </span>
+                        Ограничить картотекой регистрации
+                    </label>
+                </div>
+                <div class="tree-card-node">
+                    <eos-list-doc-tree
+                        *ngIf="!node.isLoading; else loaderSm"
+                        [listNode]="node.listNodes"
+                        (select)="node.select($event)"
+                        (checkedNode)="node.checkedNode($event)"
+                    ></eos-list-doc-tree>
+                </div>
 
             </div>
         </div>
@@ -70,5 +73,11 @@
 <ng-template #loader>
     <div class="loader">
         <eos-spinner size="lg"></eos-spinner>
+    </div>
+</ng-template>
+
+<ng-template #loaderSm>
+    <div class="loader">
+        <eos-spinner size="sm"></eos-spinner>
     </div>
 </ng-template>
