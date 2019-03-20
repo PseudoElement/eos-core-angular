@@ -4,7 +4,6 @@ export class Cabinets {
     name: string;
     isnCabinet: number;
     isnClassif: number;
-    orderWork: any = '';
     folders = [];
     originFolders = [];
     isEmpty: boolean;

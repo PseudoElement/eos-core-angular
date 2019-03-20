@@ -2,7 +2,7 @@ import {Component, OnInit, Input, OnChanges, OnDestroy, Output, EventEmitter} fr
 import { CardsClass, Cabinets} from '../helpers/cards-class';
 import {RigthsCabinetsServices} from '../../../shared/services/rigths-cabinets.services';
 import { Subject } from 'rxjs/Subject';
-
+import { EosMessageService } from 'eos-common/services/eos-message.service';
 @Component({
     selector: 'eos-cabinets-folders',
     templateUrl: 'rt-cabinets-folders.component.html',
@@ -16,6 +16,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
     private changedValuesMap = new Map();
     constructor(
         private _rtCabintsSrv: RigthsCabinetsServices,
+        private _msgSrv: EosMessageService,
     ) {
         this._rtCabintsSrv.changeCabinets.takeUntil(this.unSubscribe).subscribe((newCabinets: CardsClass) => {
             this.card = newCabinets;
@@ -30,45 +31,42 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
     }
     ngOnChanges() {}
 
-    changeFolders(chagedCabinet: Cabinets, folder): void {
+    changeFolders(changedCabinets: Cabinets, folder): void {
         folder.selected = !folder.selected;
-        this.CheckChanges();
-        this.checkMapNewValues();
+        this.CheckChanges(changedCabinets);
+        this.checkMapNewValues(changedCabinets);
         if (this.changedValuesMap.size) {
             this.sendNewValues.emit(this.changedValuesMap);
         }   else {
             this.sendNewValues.emit(false);
         }
     }
-    CheckChanges(): void {
+    CheckChanges(changedCabinets: Cabinets): void {
         let countChanges: number = 0;
         const arrValues: Array<string|number> = [];
-        this.Cabinet.folders.forEach(((folder, index) => {
+        changedCabinets.folders.forEach(((folder, index) => {
             if (folder.selected) {
                   arrValues.push(folder.value);
             }
-            if (folder.selected !== this.Cabinet.originFolders[index].selected) {
+            if (folder.selected !== changedCabinets.originFolders[index].selected) {
                 countChanges++;
             }
        }));
-       if ((countChanges > 0) || (this.Cabinet.originHomeCabinet !== this.Cabinet.homeCabinet)) {
-           this.Cabinet.isChanged = true;
+       if ((countChanges > 0) || (changedCabinets.originHomeCabinet !== changedCabinets.homeCabinet)) {
+        changedCabinets.isChanged = true;
        }    else {
-           this.Cabinet.isChanged = false;
+        changedCabinets.isChanged = false;
        }
-       this.checkDisabled(arrValues.join(''));
+       this.checkDisabled(changedCabinets, arrValues.join(''));
     }
-    checkMapNewValues(): void {
-        const isnCab = this.Cabinet.isnCabinet;
-        const isnClass = this.Cabinet.isnClassif;
-        if (this.Cabinet.isChanged) {
+    checkMapNewValues(changedCabinets: Cabinets): void {
+        const isnCab = changedCabinets.isnCabinet;
+        const isnClass = changedCabinets.isnClassif;
+        if (changedCabinets.isChanged) {
               this.changedValuesMap.set(`${isnCab}|${isnClass}`, {
-                cabinet: this.Cabinet,
+                cabinet: changedCabinets,
                 due: this.card.cardDue,
-                isncl: this.Cabinet.isnClassif,
-                isncab: this.Cabinet.isnCabinet,
-                delete: this.Cabinet.deleted,
-                values: this.Cabinet.folders
+                delete: changedCabinets.deleted,
             });
             this.card.SetChangedCabinets.add(`${isnCab}|${isnClass}`);
         }   else {
@@ -80,41 +78,41 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
             }
         }
     }
-    checkDisabled(newStringAvalable: string): void {
-        this.Cabinet.deleted = false;
-        this.Cabinet.isEmpty = false;
-        const str1 = this.Cabinet.checkDisabled(newStringAvalable, true);
-        const str2 = this.Cabinet.checkDisabled(newStringAvalable, false);
+    checkDisabled(changedCabinets: Cabinets, newStringAvalable: string): void {
+        changedCabinets.deleted = false;
+        changedCabinets.isEmpty = false;
+        const str1 = changedCabinets.checkDisabled(newStringAvalable, true);
+        const str2 = changedCabinets.checkDisabled(newStringAvalable, false);
         if (!str1) {
-            this.Cabinet.folders[10].selected = false;
-            this.Cabinet.folders[10].disabled = true;
+            changedCabinets.folders[10].selected = false;
+            changedCabinets.folders[10].disabled = true;
         }   else {
-            this.Cabinet.folders[10].disabled = false;
+            changedCabinets.folders[10].disabled = false;
         }
 
         if (!str2) {
-            this.Cabinet.folders[11].selected = false;
-            this.Cabinet.folders[11].disabled = true;
+            changedCabinets.folders[11].selected = false;
+            changedCabinets.folders[11].disabled = true;
         }   else {
-            this.Cabinet.folders[11].disabled = false;
+            changedCabinets.folders[11].disabled = false;
         }
         if (!str1 && !str2) {
-            this.checkDeletedCabinet();
+            this.checkDeletedCabinet(changedCabinets);
         }
     }
-    checkDeletedCabinet(): void {
-        if (this.Cabinet.homeCabinet) {
-            alert('Назначте главный кабинет');
-            this.Cabinet.homeCabinet = false;
+    checkDeletedCabinet(changedCabinets: Cabinets): void {
+        if (changedCabinets.homeCabinet) {
+            this.alertWarning();
+            changedCabinets.homeCabinet = false;
         }
-        if (this.Cabinet.isChanged) {
-            this.Cabinet.deleted = true;
+        if (changedCabinets.isChanged) {
+            changedCabinets.deleted = true;
         }
-        this.Cabinet.isEmpty = true;
+        changedCabinets.isEmpty = true;
      }
     changeMainCabinet() {
         if (this.Cabinet.homeCabinet) {
-            alert('Назначте главный кабинет');
+            this.alertWarning();
             this.Cabinet.homeCabinet = false;
         }   else {
             if (!this.Cabinet.parent.homeCardCabinet) {
@@ -125,9 +123,13 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
                 this.Cabinet.homeCabinet = true;
             }
         }
-        this.CheckChanges();
-        this.checkMapNewValues();
-        console.log(this.changedValuesMap);
+        this.CheckChanges(this.Cabinet);
+        this.checkMapNewValues(this.Cabinet);
+        if (this.changedValuesMap.size) {
+            this.sendNewValues.emit(this.changedValuesMap);
+        }   else {
+            this.sendNewValues.emit(false);
+        }
     }
     findHomeCabinet() {
      const findCabinet =   this.Cabinet.parent.cabinets.filter((cabinet: Cabinets) => {
@@ -135,10 +137,20 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         });
         if (findCabinet.length) {
             findCabinet[0].homeCabinet = false;
+            this.CheckChanges(findCabinet[0]);
+            this.checkMapNewValues(findCabinet[0]);
         }
     }
     setFolders(folders): void {
         this.Cabinet = folders;
+    }
+    alertWarning() {
+        this._msgSrv.addNewMessage({
+            type: 'warning',
+            title: 'Предупреждение',
+            msg: 'Назначте главный кабинет',
+            dismissOnTimeout: 60000
+        });
     }
     ngOnDestroy() {
         this.unSubscribe.next();

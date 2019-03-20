@@ -3,25 +3,48 @@
 
     > .user-input-group {
         display: flex;
-        .card-left{
+        .card-left, .card-rigth{
+            margin: 20px;
+            border: 1px solid;
+            border-color: #e6e6e6;
+            border-top: none;
+            margin-top: 20px;
             flex-basis: 50%;
+            .title-cards{
+                border: 1px solid;
+                border-color: #e6e6e6;
+                border-width: 1px;
+                text-align: center;
+                span{
+                    line-height: 26px;
+                    font-size: 18px;
+                }
+            }
         }
         .card-rigth {
+            margin-top: 20px;
             flex-basis: 50%;
         }
     }
+    .card-btn{
+        border: 1px solid #e6e6e6e6;
+        border-top: none;
+    }
     .cards-wr{
         width: 100%;
+        padding: 5px;
         cursor: pointer;
         &:hover{
             background-color: #e3f2fd;
         }
         .cards-item {
-            height: 42px;
+            height: 30px;
             max-height: 62px;
             display: flex;
             width: 100%;
-            padding: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 12px;
         }
     }
     .homeCard{
@@ -29,10 +52,15 @@
     }
     .scrollWrapper{
         overflow: auto;
-        height: 100vh;
-        max-height: calc(100vh - 230px);
+        min-height: calc(100vh - 360px);
     }
     .ativeCard{
         background-color: #e3f2fd;
+    }
+    .sp{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 320px);
     }
 }

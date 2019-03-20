@@ -1,20 +1,22 @@
 <div class="input-user-wrapper scrollWrapper input-user-card-files-wrapper" *ngIf="card">
     <div *ngIf="card.cabinets.length">
         <div class="cabinets-wrapper">
-            <form>
-                 <select [style.color]="Cabinet.homeCabinet ? 'red' : 'black'" name="Cabinet" [(ngModel)]="Cabinet">
-                    <option [style.color]="cabinet.homeCabinet ? 'red' : 'black'"  *ngFor="let cabinet of card.cabinets; let i = index" [ngValue] ="cabinet">{{cabinet.name}}</option>
-                </select>
-            </form>
+            <div class="eos-select">
+                 <form>
+                    <select class="select-cabinet" [style.color]="Cabinet.homeCabinet ? 'red' : 'black'" name="Cabinet" [(ngModel)]="Cabinet">
+                        <option [style.color]="cabinet.homeCabinet ? 'red' : 'black'"  *ngFor="let cabinet of card.cabinets; let i = index" [ngValue] ="cabinet">{{cabinet.name}}</option>
+                    </select>
+                </form>
+            </div>
         </div>
         <div class="cabinet-main">
                 <label class="checkbox">
-                    главный
                     <input [disabled]="Cabinet.isEmpty" (change)="changeMainCabinet()" type="checkbox" [checked]='Cabinet.homeCabinet'>
                     <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                    главный
                 </label>
-                <hr>
             </div>
+            <hr>
         <div class="cabinets-folders" *ngIf="Cabinet">
             <div class="folders-item" *ngFor="let folder of Cabinet['folders']">
                 <label class="checkbox">

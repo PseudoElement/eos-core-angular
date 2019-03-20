@@ -3,10 +3,28 @@
         display: flex;
         align-items: center;
         justify-content: flex-start;
+        padding-left: 8px;
     }
     .cabinets-empty{
         text-align: center;
         padding-top: 10px;
         font-size: 14px;
+    }
+    .select-cabinet{
+        border-color: #e6e6e6;
+        width: 100%;
+        color: #000;
+        border-radius: 0;
+        padding: 6px 8px;
+        background-color: #fafafa;
+        border-width: 1px;
+        border-top: none;
+        box-shadow: none;
+        min-height: 32px;
+    }
+    .cabinet-main{
+        padding-left: 8px;
+        display: flex;
+        align-items: center;
     }
 }

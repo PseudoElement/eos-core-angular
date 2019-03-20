@@ -13,8 +13,11 @@
     ></eos-user-params-header>
     <div class="user-input-group scrollWrapper"  *ngIf="!isLoading">
         <div class="card-left">
+            <div class="title-cards">
+                <span>Картотеки</span>
+            </div>
             <div class="card-btn">
-                <button class="btn btn-primary"
+                <button class="btn btn-primary-light"
                     (click) = "addCards()"
                     tooltip="Добавить картотеку"
                     placement="bottom"
@@ -24,19 +27,18 @@
                 </button>
                 <button
                     [disabled] = "!currentCard"
-                    class="btn btn-primary"
+                    class="btn btn-primary-light"
                     (click) = "removeCards()"
-
                     ><span
                     tooltip="Удалить картотеку"
                     placement="bottom"
                     containerClass="tooltip-info"
                     triggers="hover:click"
-                    class="eos-icon eos-icon-bin-blue small"></span>
+                    class="eos-icon eos-icon-bin-forever-blue small"></span>
                 </button>
                 <button
                     [disabled] = "!currentCard"
-                    class="btn btn-primary"
+                    class="btn btn-primary-light"
                     (click) = "homeCardMoov()"
                     ><span
                     tooltip="Главная"
@@ -46,7 +48,6 @@
                     class="eos-icon eos-icon-keyfile-blue small"></span>
                 </button>
             </div>
-
             <div class="cards-wr" [ngClass]="card.current ? 'ativeCard' : ''" *ngFor='let card of mainArrayCards'>
                 <span *ngIf='!card.deleted' class="cards-item" [ngClass]="card.homeCard ? 'homeCard' : ''" (click) ='selectCurentCard(card)'>{{card.cardName}}</span>
             </div>
@@ -55,11 +56,14 @@
             </div>
         </div>
         <div class="card-rigth" *ngIf="currentCard">
+            <div class="title-cards">
+                    <span>Кабинеты</span>
+                </div>
             <eos-cabinets-folders (sendNewValues)="getChangesFromCabinets($event)" [card]="currentCard"></eos-cabinets-folders>
         </div>
     </div>
-    <div class="user-input-group"  *ngIf="isLoading">
-        <eos-spinner size="md"></eos-spinner>
+    <div class="user-input-group sp"  *ngIf="isLoading">
+        <eos-spinner size="lg"></eos-spinner>
     </div>
 </div>
 

@@ -32,7 +32,6 @@ export class RigthsCabinetsServices {
                             };
                             this.fillArrayCards(userCard, q);
                             this.fillArrayCardsName(date);
-                            this.cardsOrigin = this.cardsArray.slice();
                         });
                     });
                 }).catch(error => {
