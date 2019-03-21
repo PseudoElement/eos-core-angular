@@ -397,10 +397,10 @@ export class RightsCardFilesComponent implements OnInit {
     edit(event) {
         this.flagEdit = event;
     }
-    close() {
+    close(event) {
 
     }
-    default() {
+    default(event) {
         return;
     }
     cancel(event?): Promise<any> {
