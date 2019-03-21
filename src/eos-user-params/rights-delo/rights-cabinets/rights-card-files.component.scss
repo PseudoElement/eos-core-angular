@@ -52,6 +52,7 @@
         font-weight: bolder;
     }
     .scrollWrapper{
+        position: relative;
         overflow: auto;
         min-height: calc(100vh - 360px);
     }
@@ -63,5 +64,15 @@
         align-items: center;
         justify-content: center;
         min-height: calc(100vh - 320px);
+    }
+    .bacgr-edit {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        z-index: 100;
+        background-color: rgb(235, 235, 228);
+        opacity: 0.3;
     }
 }

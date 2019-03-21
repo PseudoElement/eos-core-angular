@@ -12,12 +12,14 @@
         (defaultEmit) = 'default($event)'
     ></eos-user-params-header>
     <div class="user-input-group scrollWrapper"  *ngIf="!isLoading">
+        <div *ngIf="!flagEdit" class="bacgr-edit"></div>
         <div class="card-left">
             <div class="title-cards">
                 <span>Картотеки</span>
             </div>
             <div class="card-btn">
                 <button class="btn btn-primary-light"
+                    [disabled] = "!flagEdit"
                     (click) = "addCards()"
                     tooltip="Добавить картотеку"
                     placement="bottom"
@@ -26,7 +28,7 @@
                     ><span class="eos-icon eos-icon-plus-blue small"></span>
                 </button>
                 <button
-                    [disabled] = "!currentCard"
+                    [disabled] = "!currentCard || !flagEdit"
                     class="btn btn-primary-light"
                     (click) = "removeCards()"
                     ><span
@@ -37,7 +39,7 @@
                     class="eos-icon eos-icon-bin-forever-blue small"></span>
                 </button>
                 <button
-                    [disabled] = "!currentCard"
+                    [disabled] = "!currentCard || !flagEdit"
                     class="btn btn-primary-light"
                     (click) = "homeCardMoov()"
                     ><span
@@ -59,7 +61,7 @@
             <div class="title-cards">
                     <span>Кабинеты</span>
                 </div>
-            <eos-cabinets-folders (sendNewValues)="getChangesFromCabinets($event)" [card]="currentCard"></eos-cabinets-folders>
+            <eos-cabinets-folders (sendNewValues)="getChangesFromCabinets($event)" [card]="currentCard" [flagEdit]="flagEdit"></eos-cabinets-folders>
         </div>
     </div>
     <div class="user-input-group sp"  *ngIf="isLoading">

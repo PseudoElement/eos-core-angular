@@ -30,7 +30,8 @@ export class UserHeaderComponent {
         this.cancelEmit.emit(false);
     }
     submit() {
-        this.submitEmit.emit('');
+        this.editMode = false;
+        this.submitEmit.emit(false);
     }
     edit() {
         this.editMode = !this.editMode;

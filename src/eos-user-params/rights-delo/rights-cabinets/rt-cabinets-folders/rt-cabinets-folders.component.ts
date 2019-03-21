@@ -10,6 +10,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 })
 export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy {
     @Input() card: CardsClass;
+    @Input() flagEdit: boolean;
     @Output() sendNewValues: EventEmitter<any> = new EventEmitter<any>();
     public Cabinet: Cabinets;
     private unSubscribe: Subject<any> = new Subject();

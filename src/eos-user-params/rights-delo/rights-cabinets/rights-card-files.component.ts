@@ -197,23 +197,26 @@ export class RightsCardFilesComponent implements OnInit {
         this._rightsCabinetsSrv.cardsArray.splice(indexDel, 1);
     }
     submit(event) {
-    const q = this.prepUrls();
-    this._pipSrv.batch(q, '').then(res => {
-        this._userSrv.getUserIsn(String(this.userId)).then(() => {
-         return   this.cancel();
-        }).then(() => {
-            this._msgSrv.addNewMessage({
-                type: 'success',
-                title: '',
-                msg: 'Изменения сохранены',
-                dismissOnTimeout: 6000
+        this.isLoading = true;
+        const q = this.prepUrls();
+        this._pipSrv.batch(q, '').then(res => {
+            this._userSrv.getUserIsn(String(this.userId)).then(() => {
+                this.clearInfo();
+                return  this.init();
+            }).then(() => {
+                this.flagEdit = event;
+                this._msgSrv.addNewMessage({
+                    type: 'success',
+                    title: '',
+                    msg: 'Изменения сохранены',
+                    dismissOnTimeout: 6000
+                });
+            })
+            .catch(error => {
+                this.sendMessage('Предупреждение', 'Ошибка соединения');
             });
-        });
-        }).catch(error => {
-            console.log(error);
-        });
-    }
-
+    });
+}
     prepUrls() {
         const deletedUrlCards = [];
         const deleteUrlFolders = [];
@@ -393,22 +396,28 @@ export class RightsCardFilesComponent implements OnInit {
         }
     }
 
-
     edit(event) {
         this.flagEdit = event;
     }
     close(event) {
-
+        this.flagEdit = event;
+        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
     default(event) {
         return;
     }
-    cancel(event?): Promise<any> {
+    cancel(event?) {
+        this.flagEdit = false;
+        this.clearInfo();
+        this.init().catch(error => {
+            this.sendMessage('Предупреждение', 'Ошибка соединения');
+        });
+    }
+    clearInfo() {
         this._rightsCabinetsSrv.cardsOrigin.splice(0);
         this._rightsCabinetsSrv.cardsArray.splice(0);
         this.mainArrayCards.splice(0);
         this.newValueMap.clear();
-      return  this.init();
     }
     sendMessage(tittle: string, msg: string) {
         this._msgSrv.addNewMessage({
