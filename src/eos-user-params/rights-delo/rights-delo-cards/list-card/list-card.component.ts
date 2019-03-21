@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CardRightSrv } from '../card-right.service';
 import { CardRight } from './card.model';
-import { USERCARD/* , DOCGROUP_CL */ } from 'eos-rest';
-import { Subscription } from 'rxjs/Subscription';
+import { USERCARD } from 'eos-rest';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'eos-list-card-right',
@@ -12,13 +12,14 @@ export class ListCardRightComponent implements OnInit, OnDestroy {
     public isLoading: boolean = true;
     public isShell: boolean = false;
     public listNodes: CardRight[];
-    // private _docGroup = new Map<string, DOCGROUP_CL>(); // Map<DUE, DOCGROUP_CL>
     private _cardList: USERCARD[];
-    private s_selected: Subscription;
+    private _ngUnsubscribe: Subject<void>;
     constructor (
         private _cardSrv: CardRightSrv,
     ) {
-        this.s_selected = this._cardSrv.selectingNode$
+        this._ngUnsubscribe = new Subject<void>();
+        this._cardSrv.selectingNode$
+        .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
             this._createList();
         });
@@ -30,15 +31,11 @@ export class ListCardRightComponent implements OnInit, OnDestroy {
         this.isLoading = false;
     }
     ngOnDestroy() {
-        this.s_selected.unsubscribe();
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
     }
     expendList(node: CardRight) {
-        console.log(node);
-        node.isExpanded = !node.isExpanded;
-        // node.isLoading = true;
-        // setTimeout(() => {
-        //     node.isLoading = false;
-        // }, 500);
+        node.expanded();
     }
     private _createList() {
         this.listNodes = [];

@@ -2,7 +2,8 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
     selector: 'eos-user-header',
-    templateUrl: 'user-header.component.html'
+    templateUrl: 'user-header.component.html',
+    styleUrls: ['user-header.component.scss']
 })
 export class UserParamHeaderComponent {
     @Input() title: string;

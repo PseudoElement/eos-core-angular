@@ -9,13 +9,15 @@
         <span>{{getNodeTitle()}}</span>
     </div>
     <div class="modal-body-container">
+        <form #editForm="ngForm">
         <div *ngIf="isCounterRK" class="edit-content docgroup">
             <label>Группа документов</label>
             <div class="eos-select">
-                 <select class="form-control m-font" #docGroup
+                 <select name="docGroup" #docGroup class="form-control m-font"
                          [ngClass]="{'placeholder': !currentDocgroup}"
-                         [value]="currentDocgroup"
-                         (change)="onChangeDocgroup(docGroup.value)">
+                         [ngModel]="currentDocgroup"
+                         (change)="onChangeDocgroup(docGroup.value)"
+                         required>
                     <option *ngFor="let opt of docGroupOptions" [value]="opt.value">{{opt.title}}</option>
                 </select>
             </div>
@@ -35,7 +37,6 @@
                 </div>
             </div>
         </div>
-        <form #editForm="ngForm">
         <div class="edit-block">
                 <input class="form-control m-font edit-control"
                        [(ngModel)]="editValueYear"

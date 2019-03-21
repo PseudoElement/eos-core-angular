@@ -4,12 +4,6 @@
             background: transparent;
         }
     }
-
-    .table-header {
-            span{
-        }
-
-    }
     .table-title{
         display: flex;
         align-items: center;
@@ -29,6 +23,7 @@
     }
     .eos-node-list {
         background: $white;
+        max-height: calc(100vh - 371px);
 
         .user-select-node {
             line-height: 30px;

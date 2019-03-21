@@ -156,5 +156,11 @@
  .panel-open{
         .panel-icon{
             transform: rotate(-90deg)
-        }
     }
+}
+.sp{
+    min-height: calc(100vh - 330px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
