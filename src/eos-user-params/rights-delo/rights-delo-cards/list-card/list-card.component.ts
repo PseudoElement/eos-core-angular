@@ -34,8 +34,11 @@ export class ListCardRightComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
-    expendList(node: CardRight) {
-        node.expanded();
+    // expendList(node: CardRight) {
+    //     node.expanded();
+    // }
+    hideToolTip() {
+        // console.log('hideToolTip()');
     }
     private _createList() {
         this.listNodes = [];

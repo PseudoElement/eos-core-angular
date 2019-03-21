@@ -30,7 +30,7 @@ export class UserParamsService {
     get isTechUser() {
         return this._isTechUser;
     }
-    get userContextId () {
+    get userContextId (): number {
         if (this._userContext) {
             return this._userContext['ISN_LCLASSIF'];
         }
