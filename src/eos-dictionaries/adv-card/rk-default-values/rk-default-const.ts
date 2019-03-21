@@ -327,7 +327,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'ISN_PERSON_EXE_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
         title: 'Исполнитель',
         // classif_id: NULL
@@ -607,7 +607,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'DOCSIGN_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
         title: 'Подписал',
         // classif_id: NULL

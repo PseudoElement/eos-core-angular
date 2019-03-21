@@ -1,7 +1,7 @@
 <div class="eos-rk-writes card-content-wrapper">
         <!-- Срок исп. (План. дата)
         дня (дней) от исх. даты корреспондента -->
-    <div class="items-group" *ngIf="!isEDoc" >
+    <div class="items-group" *ngIf="rkType==1 || rkType==2" >
             <span>
             <div class="col-with-label">
                     <label>{{inputs['DOC_DEFAULT_VALUE_List.TERM_EXEC_W'].label}}</label>
@@ -19,7 +19,7 @@
         [form]="form"
         [hideLabel]="true"
         [readonly]="!editMode"> </eos-dynamic-input>
-    <div class="items-group" *ngIf="!isEDoc">
+    <div class="items-group" *ngIf="rkType==1 || rkType==2">
         <!-- По значению реквизита "Кому" (адресован) -->
             <eos-dynamic-input class="no-margin inline-with-label"
                 [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_WHO_W']"
@@ -53,12 +53,12 @@
     </div>
 
     <!-- По значению реквизита "Подписал" -->
-    <eos-dynamic-input *ngIf="isEDoc"
+    <eos-dynamic-input *ngIf="rkType==3"
         class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_SIGN_W']"
         [form]="form"
         [readonly]="!editMode"> </eos-dynamic-input>
     <!-- По значению реквизита "Исполнитель" -->
-    <eos-dynamic-input *ngIf="isEDoc"
+    <eos-dynamic-input *ngIf="rkType==3"
         class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_EXEC_W']"
         [form]="form"
         [readonly]="!editMode"> </eos-dynamic-input>
@@ -74,10 +74,11 @@
             [readonly]="!editMode || isEDoc"> </eos-dynamic-input>
 
             <!-- По значению реквизита "Кому" (адресован) -->
-            <eos-dynamic-input class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_FROM_WHO_W']"
+            <eos-dynamic-input *ngIf="rkType==1 || rkType==2"
+                class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_FROM_WHO_W']"
                 [form]="form"
                 [readonly]="!editMode || isEDoc"> </eos-dynamic-input>
-            <div class="items-group" *ngIf="journal_who_w" >
+            <div class="items-group" *ngIf="journal_who_w && (rkType==1 || rkType==2)" >
                     <p class="xl-font no-margin">Дополнительные правила</p>
                         <span>
                             <label class="adv-col1">Если "Кому"</label>
@@ -182,22 +183,22 @@
         [readonly]="!editMode"> </eos-dynamic-input>
 
     <!-- по значению реквизита "Кому (адресован) -->
-    <eos-dynamic-input *ngIf="!isEDoc"
+    <eos-dynamic-input *ngIf="rkType==1 || rkType==2"
         class="no-margin"
         [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_WHO_W']"
         [form]="form"
         [readonly]="!editMode"> </eos-dynamic-input>
-    <eos-dynamic-input *ngIf="isEDoc"
+    <eos-dynamic-input *ngIf="rkType==3"
         class="no-margin"
         [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_SIGN_W']"
         [form]="form"
         [readonly]="!editMode"> </eos-dynamic-input>
-    <eos-dynamic-input *ngIf="isEDoc"
+    <eos-dynamic-input *ngIf="rkType==3"
         class="no-margin"
         [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_EXEC_W']"
         [form]="form"
         [readonly]="!editMode"> </eos-dynamic-input>
-    <eos-dynamic-input *ngIf="isEDoc"
+    <eos-dynamic-input *ngIf="rkType==3"
         class="no-margin"
         [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_VISA_W']"
         [form]="form"

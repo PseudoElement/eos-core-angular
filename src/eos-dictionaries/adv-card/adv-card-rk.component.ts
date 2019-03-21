@@ -57,6 +57,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     _currentFormStatus: any;
     formInvalid: boolean;
     isEDoc: boolean;
+    rkType: number;
     // protected formChanges$: Subscription;
     private subscriptions: Subscription[];
 
@@ -158,6 +159,9 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             } else {
                 this.isEDoc = false;
             }
+
+            this.rkType = this.storedValuesDG['RC_TYPE'];
+
 
             this.values = {
                 [DEFAULTS_LIST_NAME]: this._makeDefaults(this.descriptions[DEFAULTS_LIST_NAME]),

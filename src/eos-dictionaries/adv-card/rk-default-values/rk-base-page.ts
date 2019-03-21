@@ -15,6 +15,11 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
 
 
     isEDoc: boolean;
+    rkType: number;
+    // { value: 0, title: 'Не определена' },
+    // { value: 1, title: 'Входящие' },
+    // { value: 3, title: 'Исходящие' },
+    // { value: 2, title: 'Письма граждан' }
 
     ngOnChanges(changes: SimpleChanges) {
     }
@@ -32,6 +37,8 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
         } else {
             this.isEDoc = false;
         }
+
+        this.rkType = this.dgStoredValues['RC_TYPE'];
 
         for (const key in this.form.controls) {
             if (this.form.controls.hasOwnProperty(key)) {
