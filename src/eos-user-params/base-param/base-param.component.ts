@@ -25,6 +25,8 @@ import {NavParamService} from 'app/services/nav-param.service';
 export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     editMode = false;
     title: string;
+    type: string = 'password';
+    type1: string = 'password';
     curentUser: IParamUserCl;
     stateHeaderSubmit: boolean = true;
 
@@ -239,6 +241,23 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         });
     }
 
+    setVision(flag?) {
+        if (flag) {
+            this.type = 'text';
+        }   else {
+            this.type1 = 'text';
+        }
+    }
+    resetVision(flag?) {
+        if (flag) {
+            this.type = 'password';
+        }   else {
+            this.type1 = 'password';
+        }
+    }
+    resetControll() {
+        this.formControls['passRepeated'].patchValue();
+    }
     selectDepartment(status) {
         if (status) {
             this.showDepartment();

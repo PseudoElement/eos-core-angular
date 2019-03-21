@@ -105,15 +105,16 @@
                     class="dynamic-input-wrapper base-text-input">
                     <label [hidden]="controls['pass'].hideLabel"
                         [attr.for]="controls['pass'].key">{{controls['pass'].label}}</label>
-                    <div [ngClass]="{'disabled': controls['pass'].disabled}">
+                    <div class="vision" [ngClass]="{'disabled': controls['pass'].disabled}">
                     <input class="form-control m-font"
                         [formControlName]="controls['pass'].key"
                         [id]="controls['pass'].key"
-                        type="text"
+                        [type]="type"
                         [readonly]="controls['pass'].readonly"
                         [ngClass]="{'readonly': readonly}"
                         [placeholder]="controls['pass'].label"
                         autocomplete="off">
+                        <span (mousedown) = 'setVision(true)' (mouseup) = 'resetVision(true)' class="eos-icon small eos-icon-show-blue"></span>
                     </div>
                 </div>
 
@@ -121,11 +122,11 @@
                     class="dynamic-input-wrapper base-text-input">
                     <label [hidden]="controls['passRepeated'].hideLabel"
                         [attr.for]="controls['passRepeated'].key">{{controls['passRepeated'].label}}</label>
-                    <div [ngClass]="{'disabled': controls['pass'].disabled}">
+                    <div class="vision" [ngClass]="{'disabled': controls['pass'].disabled}">
                     <input class="form-control m-font"
                         [formControlName]="controls['passRepeated'].key"
                         [id]="controls['passRepeated'].key"
-                        type="text"
+                        [type]="type1"
                         [readonly]="controls['passRepeated'].readonly"
                         [ngClass]="{'readonly': readonly}"
                         [placeholder]="controls['passRepeated'].label"
@@ -133,6 +134,8 @@
                         placement="bottom"
                         [containerClass]="errorPass ? 'tooltip-error' : 'tooltip-info'"
                         autocomplete="off">
+                        <!-- <span *ngIf="controls['passRepeated'].invalid" (click) = 'resetControll()' class="vision-close eos-icon small eos-icon-close-blue"></span> -->
+                        <span (mousedown) = 'setVision()' (mouseup) = 'resetVision()' class="eos-icon small eos-icon-show-blue"></span>
                     </div>
                 </div>
             </div>
