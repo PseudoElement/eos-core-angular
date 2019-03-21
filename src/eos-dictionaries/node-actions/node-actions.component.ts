@@ -124,6 +124,7 @@ export class NodeActionsComponent implements OnDestroy {
                     _show = this._viewParams.userOrdered && !this._viewParams.searchResults;
                     _enabled = _enabled && this._visibleCount > 1 && this._viewParams.hasMarked;
                     break;
+                case E_RECORD_ACTIONS.AdvancedCardRK:
                 case E_RECORD_ACTIONS.additionalFields:
                 case E_RECORD_ACTIONS.CloseSelected:
                 case E_RECORD_ACTIONS.OpenSelected:
@@ -153,8 +154,6 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.createRepresentative:
                     _enabled = _enabled && !this._viewParams.searchResults;
-                    break;
-                case E_RECORD_ACTIONS.AdvancedCardRK:
                     break;
                 case E_RECORD_ACTIONS.tableCustomization:
                     break;

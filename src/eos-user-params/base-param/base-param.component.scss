@@ -179,4 +179,16 @@
 .wrapper-password{
     display: flex;
     justify-content: space-between;
+    .vision{
+        position: relative;
+        > span{
+            position: absolute;
+            top: 5px;
+            right: 9px;
+            cursor: pointer;
+        }
+        .vision-close{
+            right: 32px;
+        }
+    }
 }

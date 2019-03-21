@@ -904,6 +904,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // title: 'Текущий  кабинет в качестве кабинета регистрации',
         // classif_id: NULL
         title: '',
+        default: '1',
         options: [
             {
                 value: '1',

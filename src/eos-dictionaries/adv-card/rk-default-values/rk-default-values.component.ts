@@ -65,7 +65,7 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
                 this.setAvailableFor('DOC_DEFAULT_VALUE_List.SEND_DEP_PARM');
                 if (!initial) {
                     if (newValue) {
-                        this.setValue('DOC_DEFAULT_VALUE_List.SEND_DEP_PARM', !this.isEDoc ? '1' : '2');
+                        this.setValue('DOC_DEFAULT_VALUE_List.SEND_DEP_PARM', this.isEDoc ? '1' : '2');
                     } else {
                         this.setValue('DOC_DEFAULT_VALUE_List.SEND_DEP_PARM', null);
                     }
@@ -94,7 +94,7 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
                 const v = this.getfixedDBValue('DOC_DEFAULT_VALUE_List.SEND_ISN_LIST_DEP');
                 if (v && cb) {
                     this.setEnabledOptions(this.inputs[key].options,
-                        !this.isEDoc ? [1, 3] : [0, 1, 2]);
+                        this.isEDoc ? [1, 3] : [0, 1, 2]);
                 } else {
                     this.setEnabledOptions(this.inputs[key].options, null, false);
                 }
@@ -127,16 +127,7 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
     }
 
     onTabInit (dgStoredValues: any, values: any[]) {
-
         super.onTabInit(dgStoredValues, values);
-
-        for (const key in this.form.controls) {
-            if (this.form.controls.hasOwnProperty(key)) {
-                const value = values[key];
-                this.onDataChanged(key, value, value, true);
-                this.setAvailableFor(key);
-            }
-        }
     }
 
 }
