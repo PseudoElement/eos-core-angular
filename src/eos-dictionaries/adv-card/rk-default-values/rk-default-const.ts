@@ -1,5 +1,5 @@
 import { E_FIELD_TYPE } from './../../interfaces/dictionary.interfaces';
-import { DIGIT3_PATTERN, DIGIT4_WITH_PERIOD_PATTERN } from 'eos-common/consts/common.consts';
+import { DIGIT3_PATTERN, DIGIT4_WITH_PERIOD_LIST_SEPARATED } from 'eos-common/consts/common.consts';
 
 export class TDFSelect {
     dictId: string;
@@ -968,7 +968,8 @@ export const RKDefaultFields: TDefaultField[] = [
         type: E_FIELD_TYPE.string,
         // kind_doc '1,2,3',
         title: 'Экз №',
-        pattern: DIGIT4_WITH_PERIOD_PATTERN,
+        pattern: DIGIT4_WITH_PERIOD_LIST_SEPARATED,
+        length: 2000,
         // classif_id: NULL
     },
 
