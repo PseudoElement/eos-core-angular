@@ -44,11 +44,11 @@ export class RightsCardFilesComponent implements OnInit {
     }
     ngOnInit() {
         this.userId = this._userSrv.userContextId;
-       this.init();
+        this.init();
     }
 
-    init(): void {
-        this._rightsCabinetsSrv.getUserCard(this._userSrv.curentUser.USERCARD_List, this.userId).then((user_cards: USERCARD[]) => {
+    init(): Promise<any> {
+      return  this._rightsCabinetsSrv.getUserCard(this._userSrv.curentUser.USERCARD_List, this.userId).then((user_cards: USERCARD[]) => {
             this.mainArrayCards = this._rightsCabinetsSrv.cardsArray;
             if (this.mainArrayCards.length) {
                 this.selectCurentCard(this.mainArrayCards[0]);
@@ -200,7 +200,14 @@ export class RightsCardFilesComponent implements OnInit {
     const q = this.prepUrls();
     this._pipSrv.batch(q, '').then(res => {
         this._userSrv.getUserIsn(String(this.userId)).then(() => {
-            this.cancel();
+         return   this.cancel();
+        }).then(() => {
+            this._msgSrv.addNewMessage({
+                type: 'success',
+                title: '',
+                msg: 'Изменения сохранены',
+                dismissOnTimeout: 6000
+            });
         });
         }).catch(error => {
             console.log(error);
@@ -396,12 +403,12 @@ export class RightsCardFilesComponent implements OnInit {
     default() {
         return;
     }
-    cancel(event?) {
+    cancel(event?): Promise<any> {
         this._rightsCabinetsSrv.cardsOrigin.splice(0);
         this._rightsCabinetsSrv.cardsArray.splice(0);
         this.mainArrayCards.splice(0);
         this.newValueMap.clear();
-        this.init();
+      return  this.init();
     }
     sendMessage(tittle: string, msg: string) {
         this._msgSrv.addNewMessage({
