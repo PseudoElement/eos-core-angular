@@ -2,6 +2,7 @@ import { E_CARD_TYPE } from '../card-func-list.consts';
 import { CardRightSrv } from '../card-right.service';
 import { USERCARD, USER_CARD_DOCGROUP } from 'eos-rest';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
+import { _ES } from 'eos-rest/core/consts';
 // import { FuncNum } from '../funcnum.model';
 
 export class CardRight {
@@ -22,8 +23,15 @@ export class CardRight {
         return !!this._value;
     }
     set value (v: boolean) {
-        console.log('set value (v: boolean)', v);
         this._value = +v;
+        if (!this.expandable) {
+            return;
+        }
+        if (v) {
+            this._srv.createRootEntity(this._card);
+            return;
+        }
+        this._srv.deleteAllDoc(this._card);
     }
     get limit(): boolean { // 0 1 2
         return this._value === 2;
@@ -48,7 +56,7 @@ export class CardRight {
         if (!this.isExpanded) {
             return;
         }
-        const list = this._card.USER_CARD_DOCGROUP_List.filter((doc: USER_CARD_DOCGROUP) => doc.FUNC_NUM === this._funcNum);
+        const list = this._card.USER_CARD_DOCGROUP_List.filter((doc: USER_CARD_DOCGROUP) => doc.FUNC_NUM === this._funcNum && doc._State !== _ES.Deleted);
         this.isLoading = true;
         this._srv.getlistTreeNode(list)
         .then((nodes: NodeDocsTree[]) => {
@@ -69,5 +77,8 @@ export class CardRight {
     }
     addInstance() {
         console.log('addInstance()');
+    }
+    deleteInstance() {
+        console.log('deleteInstance()', !!this.curentSelectedNode);
     }
 }

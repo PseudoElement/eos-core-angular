@@ -4,7 +4,7 @@
 
         <span *ngIf="node.expandable && node.value"
             class="eos-icon icon list-triangle small"
-            (click)="expendList(node)"
+            (click)="node.expanded()"
             [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded, 'eos-icon-close-folder-blue': !node.isExpanded}"
         ></span>
 
@@ -37,7 +37,7 @@
                         placement="bottom"
                         containerClass="tooltip-info"
                         [disabled]="!node.curentSelectedNode"
-                        (click)="[node.DeleteInstance(), hideToolTip()]"
+                        (click)="[node.deleteInstance(), hideToolTip()]"
                     >
                         <span class="eos-icon eos-icon-bin-forever-blue small"></span>
                     </button>

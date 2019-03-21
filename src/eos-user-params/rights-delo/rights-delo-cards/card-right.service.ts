@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
-import { USERCARD, DEPARTMENT, USER_CARD_DOCGROUP, DOCGROUP_CL } from 'eos-rest';
+import { USERCARD, DEPARTMENT, USER_CARD_DOCGROUP, DOCGROUP_CL, PipRX } from 'eos-rest';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { FuncNum } from './funcnum.model';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
+import { _ES } from 'eos-rest/core/consts';
 
 @Injectable()
 export class CardRightSrv {
@@ -20,6 +21,7 @@ export class CardRightSrv {
     constructor (
         private _userParamsSetSrv: UserParamsService,
         private _apiSrv: UserParamApiSrv,
+        private _pipSrv: PipRX,
     ) {
         this._selectingNode$ = new Subject<void>();
     }
@@ -60,11 +62,42 @@ export class CardRightSrv {
                 this._createListNode(nodeList, {docGroup, userCardDG});
             });
             return nodeList;
+        })
+        .catch((err) => {
+            return null;
         });
 
     }
     checkedNode(node: NodeDocsTree) {
-        console.log(node);
+        const userCardDG: USER_CARD_DOCGROUP = node.data.userCardDG;
+        userCardDG.ALLOWED = +node.isAllowed;
+        if (userCardDG._State && userCardDG._State === _ES.Modified) {
+            delete userCardDG._State;
+            return;
+        }
+        if (userCardDG._State && userCardDG._State === _ES.Added) {
+            return;
+        }
+        userCardDG._State = _ES.Modified;
+        this._test();
+    }
+    createRootEntity(card: USERCARD) {
+        console.log('createRootEntity()');
+        const newUserCardDG: USER_CARD_DOCGROUP = this._pipSrv.entityHelper.prepareAdded<USER_CARD_DOCGROUP>({
+            ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
+            DUE_CARD: card.DUE,
+            DUE: '0.',
+            FUNC_NUM: this.selectedFuncNum.funcNum,
+            ALLOWED: 1,
+        }, 'USER_CARD_DOCGROUP');
+        card.USER_CARD_DOCGROUP_List.push(newUserCardDG);
+    }
+    deleteAllDoc(card: USERCARD) {
+        card.USER_CARD_DOCGROUP_List.forEach((dg: USER_CARD_DOCGROUP) => {
+            if (dg.FUNC_NUM === this.selectedFuncNum.funcNum) {
+                dg._State = _ES.Deleted;
+            }
+        });
     }
     private _createListNode (list: NodeDocsTree[], data): void { // {docGroup, userCardDG}
         list.push(new NodeDocsTree({
@@ -73,5 +106,14 @@ export class CardRightSrv {
             allowed: !!data.userCardDG.ALLOWED,
             data
         }));
+    }
+    private _test() {
+        this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
+            card.USER_CARD_DOCGROUP_List.forEach((dg: USER_CARD_DOCGROUP) => {
+                if (dg._State) {
+                    console.log(dg);
+                }
+            });
+        });
     }
 }
