@@ -137,7 +137,7 @@ export class RightsCardFilesComponent implements OnInit {
     }
 
     getInfoForNewCards(newCard: Array<string>): Promise<any> {
-        const queryDeepstreing = this._rightsCabinetsSrv.createStringQuery(newCard, true);
+        const queryDeepstreing = this._rightsCabinetsSrv.createArrayQueryFor(newCard);
         return this._rightsCabinetsSrv.getDepartmentName(queryDeepstreing)
             .then((deepInfo: DEPARTMENT[]) => {
                 const queryString = this._rightsCabinetsSrv.createStringQuery(deepInfo);
@@ -215,6 +215,8 @@ export class RightsCardFilesComponent implements OnInit {
             .catch(error => {
                 this.sendMessage('Предупреждение', 'Ошибка соединения');
             });
+    }).catch(error => {
+        console.log(error);
     });
 }
     prepUrls() {

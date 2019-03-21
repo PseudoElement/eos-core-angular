@@ -12,14 +12,15 @@ export class RigthsCabinetsServices {
     public user_id;
     public changeCabinets = new Subject();
     public submitRequest = new Subject();
+    arrResult = [];
     constructor(
         private _pipRx: PipRX
         ) {}
     getUserCard(userCard: USERCARD[], id_user?): Promise<any> {
         this.user_id = id_user;
-            const queryFordep = this.createStringQuery(userCard);
-            if (queryFordep && queryFordep.length) {
-                return this.getDepartmentName(queryFordep).then((date: DEPARTMENT[]) => {
+            const queryFordep1 = this.createArrayQueryFor(userCard, true);
+            if (queryFordep1 && queryFordep1.length) {
+                return this.getDepartmentName(queryFordep1).then((date: DEPARTMENT[]) => {
                     const queryString = this.createStringQuery(date);
                     return this.getCabinetsName(queryString).then(data => {
                         const queryStringCards = this.createStringQueryCabinet(data);
@@ -79,6 +80,20 @@ export class RigthsCabinetsServices {
         }
         return stringQuery;
     }
+    createArrayQueryFor(info, flag?): Array<any> {
+        const arr = [];
+        if (flag) {
+            info.forEach((card) => {
+                arr.push(card.DUE);
+            });
+        }  else {
+            info.forEach((card) => {
+                arr.push(card);
+            });
+        }
+
+        return  arr;
+    }
 
     createStringQueryCabinet(inmfo): string {
         let stringQuery = '';
@@ -91,13 +106,9 @@ export class RigthsCabinetsServices {
         });
         return stringQuery;
     }
-    getDepartmentName(querystring: string): Promise<DEPARTMENT[]> {
+    getDepartmentName(querystring: Array<any>): Promise<DEPARTMENT[]> {
         const queryDepartment = {
-                DEPARTMENT: {
-                    criteries: {
-                        DUE: querystring
-                },
-            }
+                DEPARTMENT: querystring
         };
         return this._pipRx.read(queryDepartment);
     }
@@ -111,7 +122,52 @@ export class RigthsCabinetsServices {
                 }
             },
         };
-       return this._pipRx.read(query);
+        if (queryString.length && queryString.length < 500) {
+            return   this._pipRx.read(query);
+        }   else if (queryString.length > 500) {
+            this.arrResult = [];
+            const newQuery = this.splitStrQuery(queryString);
+            const arrPromise = [];
+            newQuery.forEach(el => {
+                arrPromise.push(
+                    this._pipRx.read(
+                                {
+                                    CABINET: {
+                                        criteries: {
+                                            DUE: el.join('|')
+                                        }
+                                    },
+                                }
+                    ),
+                );
+            });
+            return Promise.all([...arrPromise]).then(result => {
+                const res = [];
+                if (result.length) {
+                    result.forEach(el => {
+                        res.push(...el);
+                    });
+                }
+                return res;
+            });
+        }   else {
+            return Promise.resolve([]);
+        }
+    }
+
+    splitStrQuery(queryString: string): Array<any> {
+        const arrResult = [];
+        const arr = queryString.split('|');
+        const path = 100;
+        let firstPath;
+        while (arr.length >= 100) {
+            firstPath = arr.splice(0, path);
+            arrResult.push(firstPath);
+        }
+        if (arr.length && arr.length < 100) {
+            arrResult.push(arr);
+        }
+        return arrResult;
     }
     getUserCabinet(queryString): Promise<any> {
         const query = {
@@ -121,7 +177,37 @@ export class RigthsCabinetsServices {
                 }
             },
         };
-       return this._pipRx.read(query);
+        if (queryString.length && queryString.length < 500) {
+            return   this._pipRx.read(query);
+        }   else if (queryString.length > 500) {
+            this.arrResult = [];
+            const newQuery = this.splitStrQuery(queryString);
+            const arrPromise = [];
+            newQuery.forEach(el => {
+                arrPromise.push(
+                    this._pipRx.read(
+                                {
+                                    USER_CABINET: {
+                                        criteries: {
+                                            ISN_CABINET: el.join('|')
+                                        }
+                                    },
+                                }
+                    ),
+                );
+            });
+            return Promise.all([...arrPromise]).then(result => {
+                const res = [];
+                if (result.length) {
+                    result.forEach(el => {
+                        res.push(...el);
+                    });
+                }
+                return res;
+            });
+        }   else {
+            return Promise.resolve([]);
+        }
     }
     createUSERCARDArray(typeArrayUserCard): USERCARD[] {
         return  typeArrayUserCard.map(el => {

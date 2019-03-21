@@ -50,12 +50,15 @@
                     class="eos-icon eos-icon-keyfile-blue small"></span>
                 </button>
             </div>
-            <div class="cards-wr" [ngClass]="card.current ? 'ativeCard' : ''" *ngFor='let card of mainArrayCards'>
-                <span *ngIf='!card.deleted' class="cards-item" [ngClass]="card.homeCard ? 'homeCard' : ''" (click) ='selectCurentCard(card)'>{{card.cardName}}</span>
+            <div class="card-wrr">
+                    <div class="cards-wr" [ngClass]="card.current ? 'ativeCard' : ''" *ngFor='let card of mainArrayCards'>
+                            <span *ngIf='!card.deleted' class="cards-item" [ngClass]="card.homeCard ? 'homeCard' : ''" (click) ='selectCurentCard(card)'>{{card.cardName}}</span>
+                        </div>
+                        <div class="cards-wr" *ngIf="!currentCard">
+                            <p>Картотеки отсутствуют</p>
+                        </div>
             </div>
-            <div class="cards-wr" *ngIf="!currentCard">
-                <p>Картотеки отсутствуют</p>
-            </div>
+
         </div>
         <div class="card-rigth" *ngIf="currentCard">
             <div class="title-cards">

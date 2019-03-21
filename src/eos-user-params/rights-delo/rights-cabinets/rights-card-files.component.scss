@@ -3,6 +3,14 @@
 
     > .user-input-group {
         display: flex;
+        .card-left{
+            position: relative;
+            .card-wrr{
+                padding-top: 40px;
+                overflow: auto;
+                max-height: calc(100% - 27px);
+            }
+        }
         .card-left, .card-rigth{
             margin: 20px;
             border: 1px solid;
@@ -29,22 +37,26 @@
     .card-btn{
         border: 1px solid #e6e6e6e6;
         border-top: none;
+        position: absolute;
+        width: 100%;
+        background: white;
     }
     .cards-wr{
         width: 100%;
-        padding: 5px;
         cursor: pointer;
         &:hover{
             background-color: #e3f2fd;
         }
         .cards-item {
-            height: 30px;
+            min-height: 39px;
             max-height: 62px;
             display: flex;
             width: 100%;
             display: flex;
             align-items: center;
             font-size: 12px;
+            padding-left: 10px;
+            overflow: hidden;
         }
     }
     .homeCard{
