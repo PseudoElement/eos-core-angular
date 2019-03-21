@@ -2,13 +2,12 @@ import {Component, OnInit} from '@angular/core';
 import { PipRX } from 'eos-rest';
 import {RigthsCabinetsServices} from 'eos-user-params/shared/services/rigths-cabinets.services';
 import {UserParamsService } from '../../shared/services/user-params.service';
-import {USERCARD, DEPARTMENT} from '../../../eos-rest/interfaces/structures';
+import {USERCARD} from '../../../eos-rest/interfaces/structures';
 import {Router} from '@angular/router';
 import {CardsClass, Cabinets} from '../rights-cabinets/helpers/cards-class';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_CARDINDEX } from 'app/consts/query-classif.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import {CardInit} from 'eos-user-params/shared/intrfaces/cabinets.interfaces';
 @Component({
     selector: 'eos-card-files',
     templateUrl: 'rights-card-files.component.html',
@@ -20,7 +19,14 @@ export class RightsCardFilesComponent implements OnInit {
     public titleHeader;
     public link;
     public selfLink;
-    public btnDisabled: boolean = true;
+    public flagChangeCards: boolean = false;
+    get btnDisabled () {
+         if (this.flagChangeCards || (this.newValueMap.size === 0)) {
+return true;
+        }   else  {
+            return false;
+        }
+    }
     public mainArrayCards = [];
     public currentCard: CardsClass;
     public newValueMap: Map<any, any> = new Map();
@@ -70,6 +76,10 @@ export class RightsCardFilesComponent implements OnInit {
             this.flagBacground = false;
             this.prepareWarnindMessage(dueCards).then(() => {
                 this.selectFromAddedCards();
+            });
+
+            this.mainArrayCards.forEach((cards: CardsClass) => {
+                this.checkChangeCards(cards);
             });
         }).catch(error => {
             console.log(error);
@@ -137,28 +147,10 @@ export class RightsCardFilesComponent implements OnInit {
     }
 
     getInfoForNewCards(newCard: Array<string>): Promise<any> {
-        const queryDeepstreing = this._rightsCabinetsSrv.createArrayQueryFor(newCard);
-        return this._rightsCabinetsSrv.getDepartmentName(queryDeepstreing)
-            .then((deepInfo: DEPARTMENT[]) => {
-                const queryString = this._rightsCabinetsSrv.createStringQuery(deepInfo);
-                return this._rightsCabinetsSrv.getCabinetsName(queryString)
-                    .then(data => {
-                        const queryStringCards = this._rightsCabinetsSrv.createStringQueryCabinet(data);
-                        return this._rightsCabinetsSrv.getUserCabinet(queryStringCards)
-                            .then(res => {
-                                const q: CardInit = {
-                                    DEPARTMENT_info: deepInfo,
-                                    CABINET_info: data,
-                                    USER_CABINET_info: res,
-                                    create: true
-                                };
-                            const userCard = this._rightsCabinetsSrv.createUSERCARDArray(newCard);
-                                this._rightsCabinetsSrv.fillArrayCards(userCard, q);
-                                this._rightsCabinetsSrv.fillArrayCardsName(deepInfo);
-                                this.mainArrayCards = this._rightsCabinetsSrv.cardsArray;
-                            });
-                    });
-            });
+        const userCard = this._rightsCabinetsSrv.createUSERCARDArray(newCard);
+        return this._rightsCabinetsSrv.getUserCard(userCard, this.userId, true).then(res => {
+            this.mainArrayCards = this._rightsCabinetsSrv.cardsArray;
+        });
     }
 
     selectCurentCard(card: CardsClass) {
@@ -170,6 +162,7 @@ export class RightsCardFilesComponent implements OnInit {
         this._rightsCabinetsSrv.changeCabinets.next(this.currentCard);
     }
     removeCards() {
+        this.flagChangeCards = true;
         if (!this.currentCard.homeCard) {
             this.currentCard.deleted = true;
             this.currentCard.current = false;
@@ -187,6 +180,9 @@ export class RightsCardFilesComponent implements OnInit {
         }   else {
             this.sendMessage('Предупреждение', 'Не определена главная картотека');
         }
+        this.mainArrayCards.forEach((cards: CardsClass) => {
+            this.checkChangeCards(cards);
+        });
     }
     removeNewCard() {
         const indexDel = this.mainArrayCards.indexOf(this.currentCard);
@@ -200,25 +196,27 @@ export class RightsCardFilesComponent implements OnInit {
         this.isLoading = true;
         const q = this.prepUrls();
         this._pipSrv.batch(q, '').then(res => {
-            this._userSrv.getUserIsn(String(this.userId)).then(() => {
-                this.clearInfo();
-                return  this.init();
-            }).then(() => {
-                this.flagEdit = event;
+            this.UpdateMainArrayAfterSubmit();
+            this.newValueMap.clear();
+            this._rightsCabinetsSrv.submitRequest.next();
+            this.isLoading = false;
+            this.flagChangeCards = false;
                 this._msgSrv.addNewMessage({
                     type: 'success',
                     title: '',
                     msg: 'Изменения сохранены',
                     dismissOnTimeout: 6000
                 });
-            })
-            .catch(error => {
-                this.sendMessage('Предупреждение', 'Ошибка соединения');
-            });
+                this.flagEdit = false;
     }).catch(error => {
-        console.log(error);
-    });
-}
+        this.sendMessage('Предупреждение', 'Ошибка соединения');
+            });
+    }
+    UpdateMainArrayAfterSubmit() {
+        this.mainArrayCards.forEach((cards: CardsClass) => {
+                this.upCardsClass(cards);
+        });
+    }
     prepUrls() {
         const deletedUrlCards = [];
         const deleteUrlFolders = [];
@@ -237,12 +235,32 @@ export class RightsCardFilesComponent implements OnInit {
                 }
             }
         });
-        if (this.newValueMap.size) {
-            createUrlFolders.push(...this.createUrlsNewFolders());
-        }
+          if (this.newValueMap.size) {
+                createUrlFolders.push(...this.createUrlsNewFolders());
+            }
         this.deleteCard(indexDeleted);
         return [...deletedUrlCards, ...deleteUrlFolders, ...createUrlsCards, ...createUrlFolders];
     }
+
+    upCardsClass(card: CardsClass) {
+        card.newCard = false;
+        card.homeCardOrigin = card.homeCard;
+        card.deleted = false;
+        card.changed = false;
+        this.upCabinets(card.cabinets);
+    }
+
+    upCabinets(cabinets: Cabinets[]) {
+        cabinets.forEach((cabinet: Cabinets) => {
+            cabinet.deleted = false;
+            cabinet.originFolders = JSON.parse(JSON.stringify(cabinet.folders));
+            cabinet.originHomeCabinet = cabinet.homeCabinet;
+            cabinet.isChanged = false;
+            cabinet.isEmptyOrigin = cabinet.isEmpty;
+        });
+    }
+
+
     createUrlsNewFolders() {
         const query = [];
         this.newValueMap.forEach((value, key, arr) => {
@@ -369,6 +387,13 @@ export class RightsCardFilesComponent implements OnInit {
             this.newValueMap.clear();
         }
     }
+    checkChangeCards(card: CardsClass) {
+        if ((card.homeCard !== card.homeCardOrigin) || card.newCard || card.deleted) {
+            this.flagChangeCards = true;
+        }   else {
+            this.flagChangeCards = false;
+        }
+    }
     homeCardMoov() {
         if (this.currentCard) {
             this.findHomeCard();
@@ -392,8 +417,8 @@ export class RightsCardFilesComponent implements OnInit {
                 if (card.homeCard) {
                     card.homeCard = false;
                     this.checkOfiginFlagHoumCard(card);
-                    break;
                 }
+                this.checkChangeCards(card);
             }
         }
     }
@@ -410,16 +435,34 @@ export class RightsCardFilesComponent implements OnInit {
     }
     cancel(event?) {
         this.flagEdit = false;
-        this.clearInfo();
-        this.init().catch(error => {
-            this.sendMessage('Предупреждение', 'Ошибка соединения');
-        });
-    }
-    clearInfo() {
-        this._rightsCabinetsSrv.cardsOrigin.splice(0);
-        this._rightsCabinetsSrv.cardsArray.splice(0);
-        this.mainArrayCards.splice(0);
+        this.flagChangeCards = false;
         this.newValueMap.clear();
+        this.clearMainArray();
+    }
+    clearMainArray() {
+        const indexNew = [];
+        this.mainArrayCards.forEach((card: CardsClass, index) => {
+            if (card.newCard) {
+                indexNew.push(index);
+            }   else {
+                card.homeCard = card.homeCardOrigin;
+                card.deleted = false;
+                card.current = false;
+                this.clearCabinets(card.cabinets);
+            }
+        });
+        this.deleteCard(indexNew);
+    }
+    clearCabinets(cabinets: Cabinets[]) {
+        if (cabinets.length) {
+            cabinets.forEach((cabinet: Cabinets) => {
+                cabinet.deleted = false;
+                cabinet.folders = JSON.parse(JSON.stringify(cabinet.originFolders));
+                cabinet.isEmpty = cabinet.isEmptyOrigin;
+                cabinet.isChanged = false;
+                cabinet.homeCabinet = cabinet.originHomeCabinet;
+            });
+        }
     }
     sendMessage(tittle: string, msg: string) {
         this._msgSrv.addNewMessage({

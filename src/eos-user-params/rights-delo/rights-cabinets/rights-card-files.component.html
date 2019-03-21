@@ -3,7 +3,7 @@
         [title] = 'titleHeader'
         [link] = 'link'
         [selfLink] = 'selfLink'
-        [disableBtn] = "!btnDisabled"
+        [disableBtn] = "btnDisabled"
         [defaultBtn] = 'false'
         (submitEmit) = 'submit($event)'
         (cancelEmit) = 'cancel($event)'
@@ -23,6 +23,7 @@
                     (click) = "addCards()"
                     tooltip="Добавить картотеку"
                     placement="bottom"
+                    container = "body"
                     containerClass="tooltip-info"
                     triggers="hover:click"
                     ><span class="eos-icon eos-icon-plus-blue small"></span>
@@ -58,7 +59,6 @@
                             <p>Картотеки отсутствуют</p>
                         </div>
             </div>
-
         </div>
         <div class="card-rigth" *ngIf="currentCard">
             <div class="title-cards">
