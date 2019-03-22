@@ -151,7 +151,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
             type: 'warning',
             title: 'Предупреждение',
             msg: 'Назначте главный кабинет',
-            dismissOnTimeout: 60000
+            dismissOnTimeout: 6000
         });
     }
     ngOnDestroy() {
