@@ -9,6 +9,10 @@
                 padding-top: 40px;
                 overflow: auto;
                 max-height: calc(100% - 27px);
+                .cards-wrd{
+                    text-align: center;
+                    font-size: 20px;
+                }
             }
         }
         .card-left, .card-rigth{
@@ -83,7 +87,7 @@
         right: 0;
         bottom: 0;
         top: 0;
-        z-index: 100;
+        z-index: 5;
         background-color: rgb(235, 235, 228);
         opacity: 0.3;
     }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import { PipRX } from 'eos-rest';
 import {RigthsCabinetsServices} from 'eos-user-params/shared/services/rigths-cabinets.services';
 import {UserParamsService } from '../../shared/services/user-params.service';
@@ -8,49 +8,55 @@ import {CardsClass, Cabinets} from '../rights-cabinets/helpers/cards-class';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_CARDINDEX } from 'app/consts/query-classif.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { Subject } from 'rxjs/Subject';
 @Component({
     selector: 'eos-card-files',
     templateUrl: 'rights-card-files.component.html',
     providers: [RigthsCabinetsServices]
 })
 
-export class RightsCardFilesComponent implements OnInit {
+export class RightsCardFilesComponent implements OnInit, OnDestroy {
     public isLoading = true;
     public titleHeader;
     public link;
     public selfLink;
-    public flagChangeCards: boolean = false;
-    get btnDisabled () {
-         if (this.flagChangeCards || (this.newValueMap.size === 0)) {
-return true;
-        }   else  {
-            return false;
-        }
-    }
+    public flagChangeCards;
     public mainArrayCards = [];
     public currentCard: CardsClass;
     public newValueMap: Map<any, any> = new Map();
     public flagEdit: boolean = false;
     public flagBacground: boolean = false;
+    get btnDisabled() {
+        return ((this.newValueMap.size === 0) && this.flagChangeCards);
+    }
+    private _ngUnsubscribe: Subject<any> = new Subject();
     private userId: number;
-    // private deletedCardsUrl = [];
-    // private deleteFoldersUrl = [];
-
     constructor(
         private _rightsCabinetsSrv: RigthsCabinetsServices,
         private _userSrv: UserParamsService,
         private _router: Router,
         private _whaitSrv: WaitClassifService,
         private _msgSrv: EosMessageService,
-         private _pipSrv: PipRX,
+        private _pipSrv: PipRX,
+        private _userServices: UserParamsService,
     ) {
         this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Картотеки и Кабинеты';
         this.link = this._userSrv.curentUser['ISN_LCLASSIF'];
         this.selfLink = this._router.url.split('?')[0];
+        this.flagChangeCards = true;
+        this._userServices.saveData$
+        .takeUntil(this._ngUnsubscribe)
+        .subscribe(() => {
+            this.submit(event);
+        });
     }
     ngOnInit() {
         this.userId = this._userSrv.userContextId;
         this.init();
+    }
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
     }
 
     init(): Promise<any> {
@@ -76,13 +82,11 @@ return true;
             this.flagBacground = false;
             this.prepareWarnindMessage(dueCards).then(() => {
                 this.selectFromAddedCards();
-            });
-
-            this.mainArrayCards.forEach((cards: CardsClass) => {
-                this.checkChangeCards(cards);
+                this.checkChangeCards();
+            }).catch(error => {
+                this.sendMessage('Предупреждение', 'Потеряно соединение с сервером ');
             });
         }).catch(error => {
-            console.log(error);
             this.flagBacground = false;
         });
     }
@@ -154,6 +158,9 @@ return true;
     }
 
     selectCurentCard(card: CardsClass) {
+        if (this.currentCard && !this.flagEdit) {
+            return;
+        }
         if (this.currentCard) {
             this.currentCard.current = false;
         }
@@ -162,7 +169,6 @@ return true;
         this._rightsCabinetsSrv.changeCabinets.next(this.currentCard);
     }
     removeCards() {
-        this.flagChangeCards = true;
         if (!this.currentCard.homeCard) {
             this.currentCard.deleted = true;
             this.currentCard.current = false;
@@ -177,12 +183,11 @@ return true;
             }   else {
                 this.currentCard = null;
             }
+            this.checkChangeCards();
         }   else {
             this.sendMessage('Предупреждение', 'Не определена главная картотека');
         }
-        this.mainArrayCards.forEach((cards: CardsClass) => {
-            this.checkChangeCards(cards);
-        });
+
     }
     removeNewCard() {
         const indexDel = this.mainArrayCards.indexOf(this.currentCard);
@@ -195,12 +200,13 @@ return true;
     submit(event) {
         this.isLoading = true;
         const q = this.prepUrls();
+        this.flagChangeCards = true;
+        this.newValueMap.clear();
+        this._pushState();
         this._pipSrv.batch(q, '').then(res => {
             this.UpdateMainArrayAfterSubmit();
-            this.newValueMap.clear();
             this._rightsCabinetsSrv.submitRequest.next();
             this.isLoading = false;
-            this.flagChangeCards = false;
                 this._msgSrv.addNewMessage({
                     type: 'success',
                     title: '',
@@ -210,7 +216,7 @@ return true;
                 this.flagEdit = false;
     }).catch(error => {
         this.sendMessage('Предупреждение', 'Ошибка соединения');
-            });
+        });
     }
     UpdateMainArrayAfterSubmit() {
         this.mainArrayCards.forEach((cards: CardsClass) => {
@@ -386,13 +392,18 @@ return true;
         }   else {
             this.newValueMap.clear();
         }
+        this._pushState();
     }
-    checkChangeCards(card: CardsClass) {
-        if ((card.homeCard !== card.homeCardOrigin) || card.newCard || card.deleted) {
-            this.flagChangeCards = true;
-        }   else {
+    checkChangeCards() {
+     const flag =   this.mainArrayCards.some((cards: CardsClass) => {
+            return ((cards.homeCard !== cards.homeCardOrigin) || cards.newCard || cards.deleted);
+        });
+        if (flag) {
             this.flagChangeCards = false;
+        }   else {
+            this.flagChangeCards = true;
         }
+        this._pushState();
     }
     homeCardMoov() {
         if (this.currentCard) {
@@ -400,6 +411,7 @@ return true;
             this.currentCard.homeCard = true;
             this.checkOfiginFlagHoumCard(this.currentCard);
         }
+        this.checkChangeCards();
     }
 
     checkOfiginFlagHoumCard(cards: CardsClass) {
@@ -418,7 +430,6 @@ return true;
                     card.homeCard = false;
                     this.checkOfiginFlagHoumCard(card);
                 }
-                this.checkChangeCards(card);
             }
         }
     }
@@ -435,9 +446,14 @@ return true;
     }
     cancel(event?) {
         this.flagEdit = false;
-        this.flagChangeCards = false;
+        this.flagChangeCards = true;
         this.newValueMap.clear();
         this.clearMainArray();
+        if (this.mainArrayCards.length) {
+            this.selectCurentCard(this.mainArrayCards[0]);
+        }   else {
+            this.currentCard = null;
+        }
     }
     clearMainArray() {
         const indexNew = [];
@@ -471,5 +487,8 @@ return true;
             msg: msg,
             dismissOnTimeout: 6000
         });
+    }
+    private _pushState () {
+        this._userServices.setChangeState({isChange: !this.btnDisabled});
     }
 }
