@@ -435,7 +435,17 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     }
 
     edit(event) {
-        this.flagEdit = event;
+        this._userServices.checkGrifs(this.userId).then(res => {
+            if (res) {
+                 this.flagEdit = event;
+            }   else {
+                this._router.navigate(['user-params-set/', 'access-limitation'],
+                {
+                    queryParams: {isn_cl: this.userId}
+              });
+                this.sendMessage('Предупреждение', 'Не заданы грифы доступа');
+            }
+        });
     }
     close(event) {
         this.flagEdit = event;

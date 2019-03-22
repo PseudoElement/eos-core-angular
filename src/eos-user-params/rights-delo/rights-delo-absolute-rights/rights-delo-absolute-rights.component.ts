@@ -154,10 +154,25 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
     }
     edit() {
-        this.editMode = true;
-        this.ngOnDestroy();
-        this.init();
-        this.ngOnInit();
+      const  id = this.curentUser.ISN_LCLASSIF;
+      this._userParamsSetSrv.checkGrifs(id).then(result => {
+        if (result) {
+            this.editMode = true;
+            this.ngOnDestroy();
+            this.init();
+            this.ngOnInit();
+        }   else {
+            this._router.navigate(['user-params-set/', 'access-limitation'],
+            {
+                queryParams: {isn_cl: id}
+          });
+          this._msgSrv.addNewMessage({
+              type: 'warning',
+              title: 'Предупреждение',
+              msg: 'Не заданы грифы доступа'
+          });
+        }
+      });
         // this.setDisableOrEneble();
 
     }
