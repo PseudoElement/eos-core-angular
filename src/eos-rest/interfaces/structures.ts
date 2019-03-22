@@ -110,7 +110,7 @@ export interface LINK_CL extends ILinearCL {
 
 export interface FORMAT_CL extends ILinearCL {
     ISN_LCLASSIF: number;
-    FORMAT_NAME: string;
+    FORMAT_TNAME: string;
     KIND_ADJ: number;
     FILE_ADJ: any;
     FORMAT_GNAME: string;

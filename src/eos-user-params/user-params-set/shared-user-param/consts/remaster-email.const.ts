@@ -1391,7 +1391,7 @@ export const REGISTRATION_SCAN: IBaseUsers = {
             type: 'select',
             title: '',
             options: [
-                {value: '0', title: ''},
+
             ]
         },
         {

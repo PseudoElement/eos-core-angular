@@ -87,11 +87,11 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
     }
     fillFormatCl(data): void {
         const options: Array<any> = REGISTRATION_SCAN.fields[2].options;
-        if (data.length && (options.length <= data.length + 1)) {
+        if (data.length && (options.length <= data.length - 1)) {
             data.forEach((el: FORMAT_CL) => {
                 options.push({
                     value: el.ISN_LCLASSIF,
-                    title: `${el.NOTE}, ${el.FORMAT_NAME}`
+                    title: `${el.NOTE}, ${el.FORMAT_TNAME}`
                 });
             });
         }
