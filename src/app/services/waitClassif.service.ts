@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { IOpenClassifParams } from 'eos-common/interfaces';
 
+declare function openPopUp(url: string, callback?: Function): boolean;
+
 const LIST_OLD_PAGES: string[] = [
     'CARDINDEX',
     'USER_CL',
@@ -18,24 +20,41 @@ export class WaitClassifService {
     }
     openClassif(params: IOpenClassifParams): Promise<String> {
         const url = this._prepareUrl(params);
-        const w = window.open(url, 'name', 'left=10,top=200,width=1000,height=500');
+        // const w = window.open(url, 'name', 'left=10,top=200,width=1000,height=500');
+
         return new Promise((resolve, reject) => {
-            window['endPopup'] = (data, flag) => {
-                if (flag !== 'refresh') {
-                    window['endPopup'] = undefined;
-                    resolve(data);
+            // openPopUp('../Eos.Delo.JsControls/Classif/ChooseClassif.aspx?Classif=DEPARTMENT&return_due=true', function() {
+            openPopUp(url, function(event, str) {
+                console.log('event ', arguments);
+                if (str !== '') {
+                    return resolve(str);
                 }
+                return reject();
+            }); // pageUnlock
+
+            window['pageUnlock'] = function() {
+                console.log('pageUnlock');
+                setTimeout(() => {
+                    return reject();
+                });
             };
-            const checkDialClosed = setInterval(function () {
-                try {
-                    if (!w || w.closed) {
-                        clearInterval(checkDialClosed);
-                        reject();
-                    }
-                } catch (e) {
-                    reject();
-                }
-            }, 500);
+
+            // window['endPopup'] = (data, flag) => {
+            //     if (flag !== 'refresh') {
+            //         window['endPopup'] = undefined;
+            //         resolve(data);
+            //     }
+            // };
+            // const checkDialClosed = setInterval(function () {
+            //     try {
+            //         if (!w || w.closed) {
+            //             clearInterval(checkDialClosed);
+            //             reject();
+            //         }
+            //     } catch (e) {
+            //         reject();
+            //     }
+            // }, 500);
         });
     }
     private _prepareUrl(params: IOpenClassifParams): string {
@@ -62,6 +81,8 @@ export class WaitClassifService {
         }
 
         url += params.classif === 'CONTACT' || params.classif === 'ORGANIZ_CL' ? '&app=nadzor' : '';
+
+        url += '&callbackClose=true';
 
         return url;
     }
