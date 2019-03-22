@@ -1,6 +1,3 @@
-
-
-
 import {Component, OnDestroy, OnInit } from '@angular/core';
 import {ActivatedRoute, Router } from '@angular/router';
 import {Subject } from 'rxjs/Subject';
@@ -20,10 +17,11 @@ import {RestError } from 'eos-rest/core/rest-error';
 import {EosMessageService } from 'eos-common/services/eos-message.service';
 import {ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import {CONFIRM_DELETE} from '../shered/consts/confirm-users.const';
-import {PipRX} from 'eos-rest';
+import {PipRX, USER_TECH} from 'eos-rest';
 import {ALL_ROWS } from 'eos-rest/core/consts';
 import {EosStorageService} from '../../app/services/eos-storage.service';
 import {EosBreadcrumbsService} from '../../app/services/eos-breadcrumbs.service';
+import {AppContext} from '../../eos-rest/services/appContext.service';
 interface TypeBread {
     action: number;
 }
@@ -45,6 +43,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     buttons: BtnAction;
     flagChecked: boolean;
     flagScan: boolean = null;
+    flagTachRigth: boolean = null;
     countMaxSize: number;
 
     // количество выбранных пользователей
@@ -64,7 +63,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private _msgSrv: EosMessageService,
         private _storage: EosStorageService,
         private _breadSrv: EosBreadcrumbsService,
+        private _appContext: AppContext,
     ) {
+        this.checkFlagTech();
         this.helpersClass = new HelpersSortFunctions();
         this.initSort();
         this._route.params
@@ -98,7 +99,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         });
 
         this.rtUserService.subjectScan.takeUntil(this.ngUnsubscribe).subscribe(flagBtnScan => {
-            this.flagScan = !flagBtnScan;
+                this.flagScan = !flagBtnScan;
                 this.buttons.buttons[5].disabled = this.flagScan;
                 this.buttons.moreButtons[7].disabled = this.flagScan;
         });
@@ -109,6 +110,18 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.RedactUser(this.selectedUser);
             }
         });
+    }
+
+    checkFlagTech() {
+        const arrThech = this._appContext.CurrentUser.USER_TECH_List;
+        const flag =  arrThech.some((el: USER_TECH) => {
+            return String(el.FUNC_NUM) === '1';
+            });
+            if (flag) {
+                this.flagTachRigth = true;
+            }   else {
+                this.flagTachRigth = false;
+            }
     }
 
     changeCurentSelectedUser(type: TypeBread) {
@@ -541,6 +554,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         if (this.flagScan !== null) {
             this.buttons.buttons[5].disabled = this.flagScan;
             this.buttons.moreButtons[7].disabled = this.flagScan;
+        }
+        if (this.flagTachRigth !== null) {
+            this.buttons.buttons[0].disabled = this.flagTachRigth;
+            this.buttons.moreButtons[0].disabled = this.flagTachRigth;
         }
     }
 
