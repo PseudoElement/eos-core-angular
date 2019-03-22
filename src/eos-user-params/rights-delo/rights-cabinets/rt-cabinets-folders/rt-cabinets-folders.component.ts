@@ -115,6 +115,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         if (this.Cabinet.homeCabinet) {
             this.alertWarning();
             this.Cabinet.homeCabinet = false;
+            this.Cabinet.parent.homeCardCabinet = false;
         }   else {
             if (!this.Cabinet.parent.homeCardCabinet) {
                 this.Cabinet.homeCabinet = true;

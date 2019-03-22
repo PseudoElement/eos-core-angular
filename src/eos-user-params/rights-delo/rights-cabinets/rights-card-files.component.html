@@ -3,7 +3,7 @@
         [title] = 'titleHeader'
         [link] = 'link'
         [selfLink] = 'selfLink'
-        [disableBtn] = "!btnDisabled"
+        [disableBtn] = "btnDisabled"
         [defaultBtn] = 'false'
         (submitEmit) = 'submit($event)'
         (cancelEmit) = 'cancel($event)'
@@ -12,7 +12,7 @@
         (defaultEmit) = 'default($event)'
     ></eos-user-params-header>
     <div class="user-input-group scrollWrapper"  *ngIf="!isLoading">
-        <div *ngIf="!flagEdit" class="bacgr-edit"></div>
+        <!-- <div *ngIf="!flagEdit" class="bacgr-edit"></div> -->
         <div class="card-left">
             <div class="title-cards">
                 <span>Картотеки</span>
@@ -23,38 +23,47 @@
                     (click) = "addCards()"
                     tooltip="Добавить картотеку"
                     placement="bottom"
+                    container = "body"
                     containerClass="tooltip-info"
                     triggers="hover:click"
-                    ><span class="eos-icon eos-icon-plus-blue small"></span>
+                    ><span
+                        class="eos-icon  small"
+                        [ngClass]="flagEdit ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"
+                    ></span>
                 </button>
                 <button
                     [disabled] = "!currentCard || !flagEdit"
                     class="btn btn-primary-light"
                     (click) = "removeCards()"
                     ><span
-                    tooltip="Удалить картотеку"
-                    placement="bottom"
-                    containerClass="tooltip-info"
-                    triggers="hover:click"
-                    class="eos-icon eos-icon-bin-forever-blue small"></span>
+                        tooltip="Удалить картотеку"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        triggers="hover:click"
+                        class="eos-icon  small"
+                        [ngClass]="flagEdit ? 'eos-icon-bin-forever-blue' : 'eos-icon-bin-forever-grey'"></span>
                 </button>
                 <button
                     [disabled] = "!currentCard || !flagEdit"
                     class="btn btn-primary-light"
                     (click) = "homeCardMoov()"
                     ><span
-                    tooltip="Главная"
-                    placement="bottom"
-                    containerClass="tooltip-info"
-                    triggers="hover:click"
-                    class="eos-icon eos-icon-keyfile-blue small"></span>
+                        tooltip="Главная"
+                        placement="bottom"
+                        containerClass="tooltip-info"
+                        triggers="hover:click"
+                        class="eos-icon  small"
+                        [ngClass]="flagEdit ? 'eos-icon-keyfile-blue' : 'eos-icon-keyfile-grey'"
+                    ></span>
                 </button>
             </div>
-            <div class="cards-wr" [ngClass]="card.current ? 'ativeCard' : ''" *ngFor='let card of mainArrayCards'>
-                <span *ngIf='!card.deleted' class="cards-item" [ngClass]="card.homeCard ? 'homeCard' : ''" (click) ='selectCurentCard(card)'>{{card.cardName}}</span>
-            </div>
-            <div class="cards-wr" *ngIf="!currentCard">
-                <p>Картотеки отсутствуют</p>
+            <div class="card-wrr">
+                <div class="cards-wr" [ngClass]="card.current && flagEdit ? 'ativeCard' : ''" *ngFor='let card of mainArrayCards'>
+                        <span *ngIf='!card.deleted' class="cards-item" [ngClass]="card.homeCard && flagEdit ? 'homeCard' : ''" (click) ='selectCurentCard(card)'>{{card.cardName}}</span>
+                </div>
+                <div *ngIf="!currentCard">
+                    <p class="cards-wrd">Картотеки отсутствуют</p>
+                </div>
             </div>
         </div>
         <div class="card-rigth" *ngIf="currentCard">

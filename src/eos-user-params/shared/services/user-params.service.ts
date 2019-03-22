@@ -160,6 +160,21 @@ export class UserParamsService {
     setChangeState(state: IUserSetChanges) {
         this._hasChanges$.next(state);
     }
+    checkGrifs(isn_user: number): Promise<boolean> {
+        return  this._pipRx.read({
+            USERSECUR: {
+                criteries: {
+                    ISN_LCLASSIF: String(isn_user)
+                }
+            }
+            }).then(result => {
+               if (result.length) {
+                   return true;
+               }    else {
+                   return false;
+               }
+        });
+    }
     private _errorHandler (err) {
         if (err.code === 434) {
             return;

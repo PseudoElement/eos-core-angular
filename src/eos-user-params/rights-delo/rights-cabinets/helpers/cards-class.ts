@@ -153,10 +153,10 @@ export class CardsClass {
     cabinets: Array<Cabinets> = [];
     data: USERCARD;
     public SetChangedCabinets = new Set();
-    constructor(cardInfo: USERCARD, cardsInfo?: CardInit) {
-        this.data = cardInfo;
+    constructor(card: USERCARD, cardsInfo?: CardInit) {
+        this.data = card;
         this.initProperties(cardsInfo);
-        this.createCabinets(cardsInfo);
+        this.createCabinets(card, cardsInfo);
     }
     initProperties(cardsInfo: CardInit) {
         this.data.HOME_CARD !== 1 ? this.homeCard = false : this.homeCard = true;
@@ -165,12 +165,10 @@ export class CardsClass {
         this.isnClassif = this.data.ISN_LCLASSIF;
         this.newCard = cardsInfo.create;
     }
-    createCabinets(cardsInfo: CardInit) {
-        if (cardsInfo.CABINET_info.length) {
-            cardsInfo.CABINET_info.forEach((cab: CABINET) => {
-                if (cab.DUE === this.cardDue) {
+    createCabinets(card: USERCARD, cardsInfo) {
+        if (card['_d'].length) {
+            card['_d'].forEach((cab: CABINET) => {
                     this.cabinets.push(new Cabinets(this.isnClassif, cab, this, cardsInfo.USER_CABINET_info, ));
-                }
             });
         }
     }
