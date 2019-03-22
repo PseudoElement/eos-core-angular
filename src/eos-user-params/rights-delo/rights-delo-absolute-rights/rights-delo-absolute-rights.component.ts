@@ -41,7 +41,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     public selfLink: string;
     public editMode: boolean = false;
     private _ngUnsubscribe: Subject<any> = new Subject();
-
+    private flagGrifs: boolean = false;
 
     constructor (
         private _msgSrv: EosMessageService,
@@ -50,12 +50,17 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private _inputCtrlSrv: InputParamControlService,
         private _router: Router,
         ) {
+            const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
+            this.curentUser = this._userParamsSetSrv.curentUser;
             this.selfLink = this._router.url.split('?')[0];
-            this.init();
+            this._userParamsSetSrv.checkGrifs(id).then(res => {
+                this.flagGrifs = res;
+                this.init();
+            });
         }
 
     init() {
-        this.curentUser = this._userParamsSetSrv.curentUser;
+
         this.techRingtOrig = this.curentUser.TECH_RIGHTS;
         this.titleHeader =  `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Абсолютные права`;
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
@@ -154,9 +159,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
     }
     edit() {
-      const  id = this.curentUser.ISN_LCLASSIF;
-      this._userParamsSetSrv.checkGrifs(id).then(result => {
-        if (result) {
+        const id = this._userParamsSetSrv.curentUser.ISN_LCLASSIF;
+        if (this.flagGrifs) {
             this.editMode = true;
             this.ngOnDestroy();
             this.init();
@@ -172,7 +176,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
               msg: 'Не заданы грифы доступа'
           });
         }
-      });
         // this.setDisableOrEneble();
 
     }
