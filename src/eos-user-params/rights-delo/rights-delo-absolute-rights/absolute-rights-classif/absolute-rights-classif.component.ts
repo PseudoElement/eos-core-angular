@@ -1,10 +1,10 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { NodeAbsoluteRight } from '../node-absolute';
 import { IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { IChengeItemAbsolute } from 'eos-user-params/rights-delo/shared-rights-delo/interfaces/right-delo.intefaces';
+import { IChengeItemAbsolute } from '../right-delo.intefaces';
 import { RightClassifNode } from './absolute-rights-classif-node';
-import { TECH_USER_CLASSIF } from 'eos-user-params/rights-delo/shared-rights-delo/consts/tech-user-classif.consts';
-import { ITechUserClassifConst, E_TECH_USER_CLASSIF_CONTENT, IConfigUserTechClassif } from 'eos-user-params/rights-delo/shared-rights-delo/interfaces/tech-user-classif.interface';
+import { TECH_USER_CLASSIF } from './tech-user-classif.consts';
+import { ITechUserClassifConst, E_TECH_USER_CLASSIF_CONTENT, IConfigUserTechClassif } from './tech-user-classif.interface';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { OPEN_CLASSIF_DEPARTMENT_ONLI_NODE, OPEN_CLASSIF_DOCGROUP_CL_ONLI_NODE, OPEN_CLASSIF_RUBRIC_CL_ONLI_NODE, OPEN_CLASSIF_CARDINDEX } from 'app/consts/query-classif.consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';

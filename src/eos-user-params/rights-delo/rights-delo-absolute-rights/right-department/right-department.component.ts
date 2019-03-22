@@ -45,7 +45,7 @@ export class RightDepertmentComponent implements OnInit {
         }
         this.userDepFuncNumber = this.userDep.filter(i => i['FUNC_NUM'] === this.funcNum);
         const str: string[] = this.userDepFuncNumber.map(i => i.DUE);
-        this.apiSrv.grtDepartment(str.join('||'))
+        this.apiSrv.getDepartment(str)
             .then((data: DEPARTMENT[]) => {
                 data.forEach((dep: DEPARTMENT) => {
                     const userDep: USERDEP = this.userDepFuncNumber.find((ud: USERDEP) => dep.DUE === ud.DUE);

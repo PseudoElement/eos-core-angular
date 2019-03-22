@@ -20,14 +20,9 @@ import { UserParamEAComponent } from './user-params-set/user-param-external-appl
 import { UserParamOtherForwardingComponent } from './user-params-set/user-param-other/user-param-other.component';
 import { UserParamsService } from './shared/services/user-params.service';
 import { ParamEmailAddressComponent } from './email-address/email-address.component';
-import { RightsDeloHeaderComponent } from './rights-delo/shared-rights-delo/rights-delo-header/rights-delo-header.component';
-import { RightsDeloCardFilesComponent } from './rights-delo/rights-delo-card-files/rights-delo-card-files.component';
+import { RightsCardFilesComponent } from './rights-delo/rights-cabinets/rights-card-files.component';
 import { RightsDeloAbsoluteRightsComponent } from './rights-delo/rights-delo-absolute-rights/rights-delo-absolute-rights.component';
-import { RightsDeloCardIndexRightsComponent } from './rights-delo/rights-delo-card-index-rights/rights-delo-card-index-rights.component';
-import { RightSideDocGroupInFileCardComponent } from './rights-delo/rights-delo-card-index-rights/right-side-doc-group-in-file-card/right-side-doc-group-in-file-card.component';
-import { RightSideDocGroupAndRestrictionInFileCardComponent } from './rights-delo/rights-delo-card-index-rights/right-side-doc-group-and-restriction-in-file-card/right-side-doc-group-and-restriction-in-file-card.component';
-import { RightSideListCardComponent } from './rights-delo/rights-delo-card-index-rights/right-side-list-card/right-side-list-card.component';
-import { RightPanelForDocumentGroupsComponent } from './rights-delo/right-panel-for-document-groups/right-panel-for-document-groups.component';
+import { RightsDeloCardsComponent } from './rights-delo/rights-delo-cards/rights-delo-cards.component';
 import { ParamsBaseParamComponent } from './base-param/base-param.component';
 import { InputParamControlService } from './shared/services/input-param-control.service';
 import {EmailAddressService} from './shared/services/email-address.service';
@@ -55,7 +50,10 @@ import {RemasterScanComponent} from '../eos-user-params/user-params-set/user-par
 import {RemasterAutoSearchComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-auto-search/remaster-auto-search.conponent';
 import {RemasterSebComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-seb/remaster-seb.component';
 import {RemasterRcComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-rc/remaster-rc.component';
-
+import {RtCabinetsFoldersComponent} from './rights-delo/rights-cabinets/rt-cabinets-folders/rt-cabinets-folders.component';
+import {RigthsCabinetsServices} from '../eos-user-params/shared/services/rigths-cabinets.services';
+import { ListCardRightComponent } from './rights-delo/rights-delo-cards/list-card/list-card.component';
+import { CardRightSrv } from './rights-delo/rights-delo-cards/card-right.service';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -69,16 +67,11 @@ import {RemasterRcComponent} from '../eos-user-params/user-params-set/user-param
         UserParamEAComponent,
         UserParamOtherForwardingComponent,
         ParamEmailAddressComponent,
-        RightsDeloHeaderComponent,
-        RightsDeloCardFilesComponent,
+        RightsCardFilesComponent,
         RightsDeloAbsoluteRightsComponent,
-        RightsDeloCardIndexRightsComponent,
-        RightSideDocGroupInFileCardComponent,
-        RightSideDocGroupAndRestrictionInFileCardComponent,
-        RightSideListCardComponent,
+        RightsDeloCardsComponent,
         ParamsBaseParamComponent,
         EmailFormComponent,
-        RightPanelForDocumentGroupsComponent,
         RightLimitedAccessComponent,
         ParamsBaseParamComponent,
         RightDepertmentComponent,
@@ -100,6 +93,8 @@ import {RemasterRcComponent} from '../eos-user-params/user-params-set/user-param
         RemasterAutoSearchComponent,
         RemasterSebComponent,
         RemasterRcComponent,
+        RtCabinetsFoldersComponent,
+        ListCardRightComponent,
     ],
     imports: [
         BrowserModule,
@@ -120,6 +115,8 @@ import {RemasterRcComponent} from '../eos-user-params/user-params-set/user-param
         LimitedAccesseService,
         UserPaginationService,
         RemasterService,
+        RigthsCabinetsServices,
+        CardRightSrv,
     ]
 })
 export class EosUserParamsModule {}

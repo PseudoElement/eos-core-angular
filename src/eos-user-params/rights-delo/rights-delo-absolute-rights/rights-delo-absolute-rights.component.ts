@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
-import { ABSOLUTE_RIGHTS, CONTROL_ALL_NOTALL } from '../shared-rights-delo/consts/absolute-rights.consts';
+import { ABSOLUTE_RIGHTS, CONTROL_ALL_NOTALL } from './absolute-rights.consts';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { FormGroup, FormControl } from '@angular/forms';
-import { E_RIGHT_DELO_ACCESS_CONTENT, IChengeItemAbsolute } from '../shared-rights-delo/interfaces/right-delo.intefaces';
+import { E_RIGHT_DELO_ACCESS_CONTENT, IChengeItemAbsolute } from './right-delo.intefaces';
 import { RadioInput } from 'eos-common/core/inputs/radio-input';
 import { NodeAbsoluteRight } from './node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -41,7 +41,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     public selfLink: string;
     public editMode: boolean = false;
     private _ngUnsubscribe: Subject<any> = new Subject();
-
+    private flagGrifs: boolean = false;
 
     constructor (
         private _msgSrv: EosMessageService,
@@ -50,12 +50,17 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private _inputCtrlSrv: InputParamControlService,
         private _router: Router,
         ) {
+            const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
+            this.curentUser = this._userParamsSetSrv.curentUser;
             this.selfLink = this._router.url.split('?')[0];
-            this.init();
+            this._userParamsSetSrv.checkGrifs(id).then(res => {
+                this.flagGrifs = res;
+                this.init();
+            });
         }
 
     init() {
-        this.curentUser = this._userParamsSetSrv.curentUser;
+
         this.techRingtOrig = this.curentUser.TECH_RIGHTS;
         this.titleHeader =  `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Абсолютные права`;
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
@@ -154,10 +159,23 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
     }
     edit() {
-        this.editMode = true;
-        this.ngOnDestroy();
-        this.init();
-        this.ngOnInit();
+        const id = this._userParamsSetSrv.curentUser.ISN_LCLASSIF;
+        if (this.flagGrifs) {
+            this.editMode = true;
+            this.ngOnDestroy();
+            this.init();
+            this.ngOnInit();
+        }   else {
+            this._router.navigate(['user-params-set/', 'access-limitation'],
+            {
+                queryParams: {isn_cl: id}
+          });
+          this._msgSrv.addNewMessage({
+              type: 'warning',
+              title: 'Предупреждение',
+              msg: 'Не заданы грифы доступа'
+          });
+        }
         // this.setDisableOrEneble();
 
     }

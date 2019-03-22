@@ -1,0 +1,55 @@
+<div class="right-delo-card-wrapper">
+    <ng-container [ngSwitch]="pageState">
+        <ng-container *ngSwitchCase="'LOADING'">
+            <ng-container *ngTemplateOutlet="loader"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="'EMPTY'">
+            <ng-container *ngTemplateOutlet="empty"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="'VIEW'">
+            <ng-container *ngTemplateOutlet="component"></ng-container>
+        </ng-container>
+    </ng-container>
+</div>
+
+<ng-template #loader>
+    <div class="loader">
+        <eos-spinner size="lg"></eos-spinner>
+    </div>
+</ng-template>
+
+<ng-template #empty>
+    <h1 class="empty">
+        Отсутствуют картотеки!
+    </h1>
+</ng-template>
+
+<ng-template #component>
+    <eos-user-params-header
+        [title] = "titleHeader"
+        [link] = "editableUser.ISN_LCLASSIF"
+        [selfLink] = "selfLink"
+        [disableBtn] = "btnDisabled"
+        (submitEmit) = "submit()"
+        (cancelEmit) = "cancel()"
+        (editEmit) = "edit()"
+        (closeEmit) = "close()"
+    ></eos-user-params-header>
+    <section class="content">
+        <article class="left-block">
+            <div *ngFor="let item of funcList"
+                class="item-func-list"
+                (click)="selectFuncNum(item)"
+                [ngClass]="{'highlighted': item.isSelected}"
+            >
+                {{item.label}}
+            </div>
+        </article>
+        <article
+            class="right-block"
+            *ngIf="editMode"
+        >
+            <eos-list-card-right></eos-list-card-right>
+        </article>
+    </section>
+</ng-template>
