@@ -25,13 +25,17 @@ export class CardRight {
     set value (v: boolean) {
         this._value = +v;
         if (!this.expandable) {
+            this._setValueEntity();
             return;
         }
         if (v) {
             this._srv.createRootEntity(this._card);
+            this._setValueEntity();
             return;
         }
         this._srv.deleteAllDoc(this._card);
+        this.isExpanded = false;
+        this._setValueEntity();
     }
     get limit(): boolean { // 0 1 2
         return this._value === 2;
@@ -39,7 +43,7 @@ export class CardRight {
     set limit (v: boolean) {
         console.log('set limit (v: boolean)', v);
         this._value = v ? 2 : 1;
-
+        this._setValueEntity();
     }
     constructor(
         private _srv: CardRightSrv,
@@ -90,5 +94,11 @@ export class CardRight {
         this._srv.deleteNode(this.curentSelectedNode, this._card);
         this.listNodes = this.listNodes.filter((node: NodeDocsTree) => node !== this.curentSelectedNode);
         this.curentSelectedNode = null;
+    }
+    private _setValueEntity() {
+        const value = this._card.FUNCLIST.split('');
+        value[this._funcIndex] = this._value.toString();
+        this._card.FUNCLIST = value.join('');
+        this._srv.checkChenge();
     }
 }

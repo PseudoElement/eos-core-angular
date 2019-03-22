@@ -17,6 +17,7 @@ export class CardRightSrv {
     public selectedFuncNum: FuncNum;
     public departments = new Map<string, DEPARTMENT>(); // Map<DUE, DEPARTMENT>
     private _docGroup = new Map<string, DOCGROUP_CL>(); // Map<DUE, DOCGROUP_CL>
+    private _orginCard = new Map<string, USERCARD>(); // Map<DUE, USERCARD>
 
     get selectingNode$(): Observable<void> {
         return this._selectingNode$.asObservable();
@@ -35,6 +36,7 @@ export class CardRightSrv {
     ) {
         this._selectingNode$ = new Subject<void>();
         this._chengeState$ = new Subject<boolean>();
+        this._findOriginCard();
     }
     getCardList(): Promise<USERCARD[]> {
         const userCardList: USERCARD[] = this._userParamsSetSrv.curentUser.USERCARD_List;
@@ -70,14 +72,16 @@ export class CardRightSrv {
         userCardDG.ALLOWED = +node.isAllowed;
         if (userCardDG._State && userCardDG._State === _ES.Modified) {
             delete userCardDG._State;
+            this._checkChenge();
             return;
         }
         if (userCardDG._State && userCardDG._State === _ES.Added) {
             return;
         }
-        userCardDG._State = _ES.Modified; // TODO emit check states chenge
+        userCardDG._State = _ES.Modified;
+        this._checkChenge();
     }
-    createRootEntity(card: USERCARD) { // TODO emit check states chenge
+    createRootEntity(card: USERCARD) {
         let exist: boolean = false;
         card.USER_CARD_DOCGROUP_List.forEach((dg: USER_CARD_DOCGROUP) => {
             if (dg.FUNC_NUM === this.selectedFuncNum.funcNum && dg.DUE === '0.') {
@@ -103,15 +107,17 @@ export class CardRightSrv {
                 dg._State = _ES.Deleted;
             }
         }
-    } // TODO emit check states chenge
+        // this._checkChenge();
+    }
     deleteNode(node: NodeDocsTree, card: USERCARD) {
         const userCardDG: USER_CARD_DOCGROUP = node.data.userCardDG;
         if (userCardDG._State === _ES.Added) {
             const i = card.USER_CARD_DOCGROUP_List.findIndex((c) => c === userCardDG);
             card.USER_CARD_DOCGROUP_List.splice(i, 1);
         } else {
-            userCardDG._State = _ES.Deleted; // TODO emit check states chenge
+            userCardDG._State = _ES.Deleted;
         }
+        this._checkChenge();
     }
     addingDocGroup$ (card: USERCARD): Promise<NodeDocsTree[]> {
         let dues: string[];
@@ -122,10 +128,12 @@ export class CardRightSrv {
                 throw null;
             }
             dues = str.split('|');
+
             // получить инстансы по дуе в мап
             return this._getDocGroupEntity$(dues);
         })
         .then(() => {
+            // const userDocGroup: USER_CARD_DOCGROUP[] = [];
             // Проверяем, существуют ли они в списке
             card.USER_CARD_DOCGROUP_List.forEach((doc: USER_CARD_DOCGROUP) => {
                 const index = dues.findIndex((due: string) => doc.DUE === due && doc.FUNC_NUM === this.selectedFuncNum.funcNum);
@@ -145,6 +153,7 @@ export class CardRightSrv {
                 this._msgSrv.addNewMessage(EMPTY_ADD_ELEMENT_WARN);
                 return null;
             }
+
             // Создаем ентити USER_CARD_DOCGROUP и добовляем в модель
             const userDG: USER_CARD_DOCGROUP[] = this._createDGEntity(card, dues);
             card.USER_CARD_DOCGROUP_List.splice(-1, 0, ...userDG);
@@ -155,10 +164,11 @@ export class CardRightSrv {
                 const docGroup = this._docGroup.get(userCardDG.DUE);
                 this._createListNode(nodeList, {docGroup, userCardDG});
             });
+            this._checkChenge();
             return nodeList;
         });
     }
-    test() {
+    checkChenge() {
         this._checkChenge();
     }
     private _createListNode (list: NodeDocsTree[], data): void { // {docGroup, userCardDG}
@@ -171,16 +181,22 @@ export class CardRightSrv {
     }
     private _checkChenge() {
         const arr = [];
+        let state: boolean = false;
         this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
+            console.log(card.FUNCLIST !== this._orginCard.get(card.DUE).FUNCLIST);
+            if (card.FUNCLIST !== this._orginCard.get(card.DUE).FUNCLIST) {
+                state = true;
+                return;
+            }
             card.USER_CARD_DOCGROUP_List.forEach((dg: USER_CARD_DOCGROUP) => {
                 if (dg._State) {
                     arr.push(dg);
-                    this._chengeState$.next(true);
+                    state = true;
                     return;
                 }
             });
         });
-        this._chengeState$.next(false);
+        this._chengeState$.next(state);
         console.log(arr.length, arr);
     }
     private _createDGEntity(card: USERCARD, dues: string[]): USER_CARD_DOCGROUP[] {
@@ -213,5 +229,11 @@ export class CardRightSrv {
                 });
             }
             return Promise.resolve();
+    }
+    private _findOriginCard() {
+        this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
+            const userCard: USERCARD = Object.assign({}, this._userParamsSetSrv.curentUser._orig.USERCARD_List.find((c: USERCARD) => c.DUE === card.DUE));
+            this._orginCard.set(userCard.DUE, userCard);
+        });
     }
 }
