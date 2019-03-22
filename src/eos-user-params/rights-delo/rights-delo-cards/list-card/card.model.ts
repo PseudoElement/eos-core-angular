@@ -58,7 +58,7 @@ export class CardRight {
         }
         const list = this._card.USER_CARD_DOCGROUP_List.filter((doc: USER_CARD_DOCGROUP) => doc.FUNC_NUM === this._funcNum && doc._State !== _ES.Deleted);
         this.isLoading = true;
-        this._srv.getlistTreeNode(list)
+        this._srv.getlistTreeNode$(list)
         .then((nodes: NodeDocsTree[]) => {
             this.listNodes = nodes;
             this.isLoading = false;
@@ -76,9 +76,19 @@ export class CardRight {
 
     }
     addInstance() {
-        console.log('addInstance()');
+        this._srv.addingDocGroup$(this._card) // TODO spiner for adding
+        .then((nodes: NodeDocsTree[]) => {
+            if (nodes) {
+                this.listNodes = this.listNodes.concat(nodes);
+            }
+        })
+        .catch(() => {
+            // снять шторку
+        });
     }
     deleteInstance() {
-        console.log('deleteInstance()', !!this.curentSelectedNode);
+        this._srv.deleteNode(this.curentSelectedNode, this._card);
+        this.listNodes = this.listNodes.filter((node: NodeDocsTree) => node !== this.curentSelectedNode);
+        this.curentSelectedNode = null;
     }
 }
