@@ -69,13 +69,9 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
                 due: this.card.cardDue,
                 delete: changedCabinets.deleted,
             });
-            this.card.SetChangedCabinets.add(`${isnCab}|${isnClass}`);
         }   else {
             if (this.changedValuesMap.has(`${isnCab}|${isnClass}`)) {
                 this.changedValuesMap.delete(`${isnCab}|${isnClass}`);
-            }
-            if (this.card.SetChangedCabinets.has(`${isnCab}|${isnClass}`)) {
-                this.card.SetChangedCabinets.delete(`${isnCab}|${isnClass}`);
             }
         }
     }
@@ -97,7 +93,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         }   else {
             changedCabinets.folders[11].disabled = false;
         }
-        if (!str1 && !str2) {
+        if (!str1 && !str2 && !changedCabinets.folders[6].selected) {
             this.checkDeletedCabinet(changedCabinets);
         }
     }
@@ -110,7 +106,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
             changedCabinets.deleted = true;
         }
         changedCabinets.isEmpty = true;
-     }
+    }
     changeMainCabinet() {
         if (this.Cabinet.homeCabinet) {
             this.alertWarning();

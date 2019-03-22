@@ -30,6 +30,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         return ((this.newValueMap.size === 0) && this.flagChangeCards);
     }
     private _ngUnsubscribe: Subject<any> = new Subject();
+    private flagGrifs: boolean;
     private userId: number;
     constructor(
         private _rightsCabinetsSrv: RigthsCabinetsServices,
@@ -52,7 +53,10 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     }
     ngOnInit() {
         this.userId = this._userSrv.userContextId;
-        this.init();
+        this._userServices.checkGrifs(this.userId).then(res => {
+            this.flagGrifs = res;
+            this.init();
+        });
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
@@ -435,17 +439,15 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     }
 
     edit(event) {
-        this._userServices.checkGrifs(this.userId).then(res => {
-            if (res) {
-                 this.flagEdit = event;
-            }   else {
-                this._router.navigate(['user-params-set/', 'access-limitation'],
-                {
-                    queryParams: {isn_cl: this.userId}
-              });
-                this.sendMessage('Предупреждение', 'Не заданы грифы доступа');
-            }
-        });
+        if (this.flagGrifs) {
+            this.flagEdit = event;
+        }   else {
+            this._router.navigate(['user-params-set/', 'access-limitation'],
+            {
+                queryParams: {isn_cl: this.userId}
+            });
+            this.sendMessage('Предупреждение', 'Не заданы грифы доступа');
+        }
     }
     close(event) {
         this.flagEdit = event;
@@ -455,7 +457,6 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         return;
     }
     cancel(event?) {
-        this.flagEdit = false;
         this.flagChangeCards = true;
         this.newValueMap.clear();
         this.clearMainArray();
@@ -464,6 +465,8 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         }   else {
             this.currentCard = null;
         }
+        this.flagEdit = false;
+        console.log(this.mainArrayCards);
     }
     clearMainArray() {
         const indexNew = [];
@@ -474,6 +477,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 card.homeCard = card.homeCardOrigin;
                 card.deleted = false;
                 card.current = false;
+                card.changed = false;
                 this.clearCabinets(card.cabinets);
             }
         });
