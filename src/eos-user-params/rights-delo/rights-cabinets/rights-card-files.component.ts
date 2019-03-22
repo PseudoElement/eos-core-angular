@@ -455,7 +455,6 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         return;
     }
     cancel(event?) {
-        this.flagEdit = false;
         this.flagChangeCards = true;
         this.newValueMap.clear();
         this.clearMainArray();
@@ -464,6 +463,8 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         }   else {
             this.currentCard = null;
         }
+        this.flagEdit = false;
+        console.log(this.mainArrayCards);
     }
     clearMainArray() {
         const indexNew = [];
@@ -474,6 +475,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 card.homeCard = card.homeCardOrigin;
                 card.deleted = false;
                 card.current = false;
+                card.changed = false;
                 this.clearCabinets(card.cabinets);
             }
         });
