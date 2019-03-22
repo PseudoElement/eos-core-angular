@@ -34,9 +34,6 @@ export class ListCardRightComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
-    // expendList(node: CardRight) {
-    //     node.expanded();
-    // }
     hideToolTip() {
         // console.log('hideToolTip()');
     }
@@ -47,20 +44,3 @@ export class ListCardRightComponent implements OnInit, OnDestroy {
         });
     }
 }
-
-
-
-
-
-
-// ngOnInit() {
-//     this._cardSrv.getCardList()
-//     .then((cardList: USERCARD[]) => {
-//         cardList.forEach((card: USERCARD) => {
-//             this.listNodes.push(new CardRight(this._cardSrv, card));
-//         });
-//         this.isLoading = false;
-//     })
-//     .catch(() => {});
-
-// }

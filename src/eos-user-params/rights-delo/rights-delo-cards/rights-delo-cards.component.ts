@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { CARD_FUNC_LIST } from './card-func-list.consts';
 import { FuncNum } from './funcnum.model';
 import { CardRightSrv } from './card-right.service';
+import { Subject } from 'rxjs/Subject';
 // import { Subject } from 'rxjs/Subject';
 
 @Component({
@@ -22,13 +23,19 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
     public funcList: FuncNum[];
     public editMode: boolean = false;
     private _selectedFuncNum: FuncNum;
-    // private _ngUnsubscribe: Subject<any> = new Subject();
+    private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         private _userParamsSetSrv: UserParamsService,
         private _router: Router,
         private _cardSrv: CardRightSrv,
     ) {
         this.selfLink = this._router.url.split('?')[0];
+        this._cardSrv.chengeState$
+        .takeUntil(this._ngUnsubscribe)
+        .subscribe((state: boolean) => {
+            console.log('chengeState$', state);
+            this.btnDisabled = !state;
+        });
     }
     async ngOnInit() {
         // получение пользователя
@@ -43,10 +50,11 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this.pageState = 'VIEW';
 
 
-        this.edit(); // delete me delete me delete me delete me delete me delete me delete me delete me delete me delete me
+        // this.edit(); // delete me delete me delete me delete me delete me delete me delete me delete me delete me delete me
     }
     ngOnDestroy() {
-        console.log('ngOnDestroy()');
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
     }
     submit() {
         console.log('submit()');
