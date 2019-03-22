@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
-import { USERCARD, DEPARTMENT, USER_CARD_DOCGROUP, DOCGROUP_CL, PipRX } from 'eos-rest';
+import { USERCARD, DEPARTMENT, USER_CARD_DOCGROUP, DOCGROUP_CL, PipRX, IEnt } from 'eos-rest';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { FuncNum } from './funcnum.model';
 import { Subject } from 'rxjs/Subject';
@@ -17,7 +17,6 @@ export class CardRightSrv {
     public selectedFuncNum: FuncNum;
     public departments = new Map<string, DEPARTMENT>(); // Map<DUE, DEPARTMENT>
     private _docGroup = new Map<string, DOCGROUP_CL>(); // Map<DUE, DOCGROUP_CL>
-    private _orginCard = new Map<string, USERCARD>(); // Map<DUE, USERCARD>
 
     get selectingNode$(): Observable<void> {
         return this._selectingNode$.asObservable();
@@ -36,7 +35,9 @@ export class CardRightSrv {
     ) {
         this._selectingNode$ = new Subject<void>();
         this._chengeState$ = new Subject<boolean>();
-        this._findOriginCard();
+    }
+    prepareforEdit() {
+        this._userParamsSetSrv.curentUser.USERCARD_List = this._prepareforEdit(this._userParamsSetSrv.curentUser.USERCARD_List);
     }
     getCardList(): Promise<USERCARD[]> {
         const userCardList: USERCARD[] = this._userParamsSetSrv.curentUser.USERCARD_List;
@@ -67,6 +68,60 @@ export class CardRightSrv {
             return nodeList;
         });
     }
+    saveChenge$() {
+        const chl = [];
+        this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
+            if (card._State) {
+                // console.log(`card ${card.DUE}`);
+                this._createChangeList(chl, card);
+            }
+            // card.USER_CARD_DOCGROUP_List.forEach((dg: USER_CARD_DOCGROUP) => {
+                // if (dg._State) {
+                //     // console.log(`dg ${dg.DUE}`);
+                //     this._createChangeList(chl, dg, card);
+                // }
+            // });
+
+            for (let i = 0; card.USER_CARD_DOCGROUP_List.length > i; i++) {
+                const dg: USER_CARD_DOCGROUP = card.USER_CARD_DOCGROUP_List[i];
+                if (dg._State) {
+                    this._createChangeList(chl, dg, card);
+                }
+                if (dg._State === _ES.Deleted) {
+                    card.USER_CARD_DOCGROUP_List.splice(i, 1);
+                    i--;
+                }
+            }
+
+
+        });
+        console.log(chl);
+        return this._pipSrv.batch(chl, '')
+        .then((d) => {
+            console.log(d);
+            return this._userParamsSetSrv.getUserIsn();
+        })
+        .then(() => {
+            this.prepareforEdit();
+        })
+        .catch((e) => {
+            console.log(e);
+        });
+    }
+    // test() {
+    //     const arr = [];
+    //     this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
+    //         if (card._State) {
+    //             arr.push(card);
+    //         }
+    //         card.USER_CARD_DOCGROUP_List.forEach((dg: USER_CARD_DOCGROUP) => {
+    //             if (dg._State) {
+    //                 arr.push(dg);
+    //             }
+    //         });
+    //     });
+    //     console.log(arr.length, arr);
+    // }
     checkedNode(node: NodeDocsTree) {
         const userCardDG: USER_CARD_DOCGROUP = node.data.userCardDG;
         userCardDG.ALLOWED = +node.isAllowed;
@@ -133,12 +188,18 @@ export class CardRightSrv {
             return this._getDocGroupEntity$(dues);
         })
         .then(() => {
-            // const userDocGroup: USER_CARD_DOCGROUP[] = [];
+            const userDocGroup: USER_CARD_DOCGROUP[] = [];
             // Проверяем, существуют ли они в списке
             card.USER_CARD_DOCGROUP_List.forEach((doc: USER_CARD_DOCGROUP) => {
                 const index = dues.findIndex((due: string) => doc.DUE === due && doc.FUNC_NUM === this.selectedFuncNum.funcNum);
                 if (index !== -1) {
-                    msg += `'${this._docGroup.get(doc.DUE).CLASSIF_NAME}',\n`;
+                    if (doc._State === _ES.Deleted) {
+                        delete doc._State;
+                        doc.ALLOWED = doc._orig.ALLOWED;
+                        userDocGroup.push(doc);
+                    } else {
+                        msg += `'${this._docGroup.get(doc.DUE).CLASSIF_NAME}',\n`;
+                    }
                     dues.splice(index, 1);
                 }
             });
@@ -149,17 +210,18 @@ export class CardRightSrv {
                     msg: `Элемент ${msg} не будет добавлен\nтак как он уже существует`
                 });
             }
-            if (!dues.length) {
+            if (!dues.length && !userDocGroup.length) {
                 this._msgSrv.addNewMessage(EMPTY_ADD_ELEMENT_WARN);
                 return null;
             }
 
             // Создаем ентити USER_CARD_DOCGROUP и добовляем в модель
-            const userDG: USER_CARD_DOCGROUP[] = this._createDGEntity(card, dues);
+            let userDG: USER_CARD_DOCGROUP[] = this._createDGEntity(card, dues);
             card.USER_CARD_DOCGROUP_List.splice(-1, 0, ...userDG);
 
             // Создаем и возвращаем массив класса NodeDocsTree
             const nodeList: NodeDocsTree[] = [];
+            userDG = userDG.concat(userDocGroup);
             userDG.forEach((userCardDG: USER_CARD_DOCGROUP) => {
                 const docGroup = this._docGroup.get(userCardDG.DUE);
                 this._createListNode(nodeList, {docGroup, userCardDG});
@@ -180,24 +242,23 @@ export class CardRightSrv {
         }));
     }
     private _checkChenge() {
-        const arr = [];
         let state: boolean = false;
         this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
-            console.log(card.FUNCLIST !== this._orginCard.get(card.DUE).FUNCLIST);
-            if (card.FUNCLIST !== this._orginCard.get(card.DUE).FUNCLIST) {
+            if (card.FUNCLIST !== card._orig.FUNCLIST) {
+                card._State = _ES.Modified;
                 state = true;
                 return;
+            } else {
+                delete card._State;
             }
             card.USER_CARD_DOCGROUP_List.forEach((dg: USER_CARD_DOCGROUP) => {
                 if (dg._State) {
-                    arr.push(dg);
                     state = true;
                     return;
                 }
             });
         });
         this._chengeState$.next(state);
-        console.log(arr.length, arr);
     }
     private _createDGEntity(card: USERCARD, dues: string[]): USER_CARD_DOCGROUP[] {
         const newUserCardDG: USER_CARD_DOCGROUP[] = [];
@@ -230,10 +291,65 @@ export class CardRightSrv {
             }
             return Promise.resolve();
     }
-    private _findOriginCard() {
-        this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
-            const userCard: USERCARD = Object.assign({}, this._userParamsSetSrv.curentUser._orig.USERCARD_List.find((c: USERCARD) => c.DUE === card.DUE));
-            this._orginCard.set(userCard.DUE, userCard);
+    private _prepareforEdit(arr) {
+        arr.forEach((item) => {
+            item = this._pipSrv.entityHelper.prepareForEdit(item);
+            for (const key in item) {
+                if (item[key] instanceof Array) {
+                    item[key] = this._prepareforEdit(item[key]);
+                }
+            }
         });
+        return arr;
     }
+
+    private _createChangeList(chl: any[], ent: IEnt, parent?: IEnt) {
+        const userId = this._userParamsSetSrv.userContextId;
+        const user: string = `USER_CL(${userId})/`;
+        if (ent.__metadata.__type === 'USERCARD') {
+            chl.push({
+                method: ent._State,
+                requestUri: `${user}USERCARD_List('${userId} ${ent['DUE']}')`,
+                data: {
+                    FUNCLIST: ent['FUNCLIST']
+                }
+            });
+            delete ent._State;
+            // this._saveOrigin(ent);
+        }
+        if (ent.__metadata.__type === 'USER_CARD_DOCGROUP') {
+            const ch = {
+                method: ent._State,
+            };
+            const uri = `${user}USERCARD_List('${userId} ${parent['DUE']}')/USER_CARD_DOCGROUP_List('${userId} ${parent['DUE']} ${ent['DUE']} ${this.selectedFuncNum.funcNum}')`;
+            if (ent._State === _ES.Added) {
+                ch['requestUri'] = `${user}USERCARD_List('${userId} ${parent['DUE']}')/USER_CARD_DOCGROUP_List`;
+                ch['data'] = {
+                    ISN_LCLASSIF: userId,
+                    DUE_CARD: parent['DUE'],
+                    DUE: ent['DUE'],
+                    FUNC_NUM: this.selectedFuncNum.funcNum,
+                    ALLOWED: ent['ALLOWED'],
+                };
+            }
+            if (ent._State === _ES.Deleted) {
+                ch['requestUri'] = uri;
+            }
+            if (ent._State === _ES.Modified) {
+                ch['requestUri'] = uri;
+                ch['data'] = {ALLOWED: ent['ALLOWED']};
+            }
+            chl.push(ch);
+            delete ent._State;
+            // this._saveOrigin(ent);
+        }
+    }
+
+    // private _saveOrigin(ent: IEnt) {
+    //     for (const key in ent) {
+    //         if (key !== '_orig' && key !== '__metadata' && key !== '_State') {
+    //             ent._orig[key] = ent[key];
+    //         }
+    //     }
+    // }
 }

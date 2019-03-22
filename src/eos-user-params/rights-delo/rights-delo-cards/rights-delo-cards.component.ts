@@ -33,13 +33,14 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this._cardSrv.chengeState$
         .takeUntil(this._ngUnsubscribe)
         .subscribe((state: boolean) => {
-            console.log('chengeState$', state);
             this.btnDisabled = !state;
         });
     }
     async ngOnInit() {
         // получение пользователя
-        await Promise.resolve(); // this._userParamsSetSrv.getUserIsn();
+        // await Promise.resolve();
+        await this._userParamsSetSrv.getUserIsn();
+        this._cardSrv.prepareforEdit();
         this.editableUser = this._userParamsSetSrv.curentUser;
         this.titleHeader = `${this.editableUser.SURNAME_PATRON} - Права в картотеках`;
         if (!this.editableUser.USERCARD_List || !this.editableUser.USERCARD_List.length) {
@@ -49,15 +50,16 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this.funcList = CARD_FUNC_LIST.map(node => new FuncNum(node));
         this.pageState = 'VIEW';
 
-
-        // this.edit(); // delete me delete me delete me delete me delete me delete me delete me delete me delete me delete me
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
     submit() {
-        console.log('submit()');
+        this._cardSrv.saveChenge$()
+        .then(() => {
+            this.cancel();
+        });
     }
     cancel() {
         this.editMode = false;

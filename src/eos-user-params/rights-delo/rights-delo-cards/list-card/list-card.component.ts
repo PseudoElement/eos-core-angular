@@ -37,6 +37,9 @@ export class ListCardRightComponent implements OnInit, OnDestroy {
     hideToolTip() {
         // console.log('hideToolTip()');
     }
+    // test() {
+    //     this._cardSrv.test();
+    // }
     private _createList() {
         this.listNodes = [];
         this._cardList.forEach((card: USERCARD) => {
