@@ -1,10 +1,15 @@
 .label-text-s {
     font-size: 11px;
 }
-
+.input-increment-inline-block {
+    width: 100%;
+    min-width: 90px;
+    display: inline-block;
+}
 .input-increment {
     position: relative;
-    width: 90px;
+    min-width: 90px;
+    width: 100%;
     border: 1px solid $border-color-main-theme;
     background-color: $light-grey-1;
     padding: 3px 0;
