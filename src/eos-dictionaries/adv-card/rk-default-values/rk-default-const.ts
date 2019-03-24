@@ -109,6 +109,8 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'DOC_RC.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
         title: '',
+        minValue: 1,
+        maxValue: 99999999,
     }, {
         key: 'DOC_RC.ONE_FILE',
         type: E_FIELD_TYPE.boolean,

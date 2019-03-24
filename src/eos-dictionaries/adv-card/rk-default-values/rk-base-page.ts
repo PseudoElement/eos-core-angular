@@ -18,8 +18,8 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
     rkType: number;
     // { value: 0, title: 'Не определена' },
     // { value: 1, title: 'Входящие' },
-    // { value: 3, title: 'Исходящие' },
     // { value: 2, title: 'Письма граждан' }
+    // { value: 3, title: 'Исходящие' },
 
     ngOnChanges(changes: SimpleChanges) {
     }

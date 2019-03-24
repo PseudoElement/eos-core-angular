@@ -3,7 +3,7 @@ import {BsModalRef} from 'ngx-bootstrap';
 import {PipRX} from '../../eos-rest';
 import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME, FICT_CONTROLS_LIST_NAME } from './adv-card-rk-datactrl';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, AbstractControl } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { TDefaultField, TDFSelectOption } from './rk-default-values/rk-default-const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -11,6 +11,7 @@ import { EosUtils } from 'eos-common/core/utils';
 import { Subscription } from 'rxjs/Subscription';
 import { RKBasePage } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -131,9 +132,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         return 'Реквизиты РК "' + this._node[NODE_LABEL_NAME] + '"';
     }
 
-    public saveWithConfirmation() {
-    }
-
     public clickTab (item: Ttab) {
         this.activeTab = item;
     }
@@ -204,6 +202,26 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
     private _updateValidators(controls: any): any {
+        ValidatorsControl.appendValidator(controls['DG_FILE_CONSTRAINT_List.REPLY.EXTENSIONS'],
+            ValidatorsControl.existValidator(VALIDATOR_TYPE.EXTENSION_DOT));
+        ValidatorsControl.appendValidator(controls['DG_FILE_CONSTRAINT_List.RESOLUTION.EXTENSIONS'],
+            ValidatorsControl.existValidator(VALIDATOR_TYPE.EXTENSION_DOT));
+        ValidatorsControl.appendValidator(controls['DG_FILE_CONSTRAINT_List.DOC_RC.EXTENSIONS'],
+            ValidatorsControl.existValidator(VALIDATOR_TYPE.EXTENSION_DOT));
+
+        ValidatorsControl.appendValidator(controls['DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST'],
+            (control: AbstractControl): { [key: string]: any } => {
+            const c = this.form.controls['DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE'];
+            if (c) {
+                const v = c.value;
+                if (v) {
+                    if ((!control.value || control.value === '') && (v === '-1' || v === '-2')) {
+                        return { valueError: 'Итоговый список не должен быть пустым. Заполните его или измените значение "Доступ"'};
+                    }
+                }
+            }
+            return null;
+        });
     }
 
     private _checkCorrectValuesLogic(values: any, descriptions: any): any {

@@ -35,7 +35,8 @@
                                         [readonly]="!editMode" ></eos-dynamic-input>
         </div>
         <div class="col-2">
-        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST']"
+        <eos-dynamic-input *ngIf="isFileAccessEnabled"
+        [input]="inputs['DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST']"
                                         [form]="form"
                                         [hideLabel]="true"
                                         [readonly]="!editMode" ></eos-dynamic-input>
