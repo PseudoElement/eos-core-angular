@@ -11,6 +11,7 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_DOCGROUP_CL } from 'app/consts/query-classif.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EMPTY_ADD_ELEMENT_WARN } from 'app/consts/messages.consts';
+import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 
 @Injectable()
 export class CardRightSrv {
@@ -103,6 +104,7 @@ export class CardRightSrv {
         })
         .then(() => {
             this.prepareforEdit();
+            this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
         })
         .catch((e) => {
             console.log(e);
@@ -259,6 +261,7 @@ export class CardRightSrv {
             });
         });
         this._chengeState$.next(state);
+        this._userParamsSetSrv.setChangeState({isChange: state});
     }
     private _createDGEntity(card: USERCARD, dues: string[]): USER_CARD_DOCGROUP[] {
         const newUserCardDG: USER_CARD_DOCGROUP[] = [];
