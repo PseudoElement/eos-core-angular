@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, OnDestroy } from '@angular/core';
 import {LimitedAccesseService} from '../../../shared/services/limited-access.service';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { Subject } from 'rxjs/Subject';
@@ -14,6 +14,7 @@ export class GrifsComponent implements OnInit, OnDestroy {
     saveOrigin: any;
     flagChande: boolean;
     Unsub = new Subject();
+    @Input () editFlag;
     @Output() changeGrifs = new EventEmitter();
     constructor(
         private _limitservise: LimitedAccesseService,
@@ -29,6 +30,10 @@ export class GrifsComponent implements OnInit, OnDestroy {
                 this.updateInfo();
                }
         });
+        this._limitservise.editEmit.takeUntil(this.Unsub).subscribe(() => {
+            this.editFlag = true;
+            this.editModeForm();
+        });
     }
     reset() {
         const prom = this.saveOrigin.slice();
@@ -38,6 +43,8 @@ export class GrifsComponent implements OnInit, OnDestroy {
         sessionStorage.removeItem(String(this._userServices.userContextId));
         this.saveOrigin = prom;
         this.myForm.setControl('grifs', this.createGroup(prom));
+        this.editFlag = false;
+        this.editModeForm();
         // this.saveOrigin = prom;
     }
 
@@ -52,6 +59,8 @@ export class GrifsComponent implements OnInit, OnDestroy {
             this.saveOrigin = newt.slice();
             this.myForm.setControl('grifs', this.createGroup(newt));
             this.saveOrigin = newt.slice();
+            this.editFlag = false;
+            this.editModeForm();
         });
     }
     ngOnInit() {
@@ -60,11 +69,19 @@ export class GrifsComponent implements OnInit, OnDestroy {
             this.saveOrigin = this.relaseDate(res).slice();
             this.createGroup(this.saveOrigin);
             this.creatFrorm();
+            this.editModeForm();
             this.myForm.valueChanges
             .subscribe( data => {
                 this.checkChanges(data);
             });
         });
+    }
+    editModeForm() {
+        if (this.editFlag) {
+            this.myForm.enable({emitEvent: false});
+        }   else {
+            this.myForm.disable({emitEvent: false});
+        }
     }
 
     relaseDate(res: Array<any>) {
