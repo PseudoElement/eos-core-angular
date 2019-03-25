@@ -29,5 +29,8 @@ export class UserParamRCComponent extends UserParamRCSrv implements OnDestroy {
         this.editMode();
         this.checRcShowRes();
     }
+    close(event?) {
+        this._router.navigate(['user_param']);
+     }
 
 }

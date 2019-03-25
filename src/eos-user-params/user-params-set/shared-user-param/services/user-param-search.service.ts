@@ -3,6 +3,7 @@ import { BaseUserSrv } from './base-user.service';
 import { SEARCH_USER } from '../consts/search.consts';
 import { Subject } from 'rxjs/Subject';
 import { EosUtils } from 'eos-common/core/utils';
+import {PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
 @Injectable()
 export class UserParamSearchSrv extends BaseUserSrv {
     dataAttachDb;
@@ -10,9 +11,11 @@ export class UserParamSearchSrv extends BaseUserSrv {
     prepInputsAttach;
     prepDataAttach = {rec: {}};
      _ngUnsubscribe: Subject<any> = new Subject();
+     flagEdit: boolean = false;
     constructor( injector: Injector ) {
         super(injector, SEARCH_USER);
         this.init();
+        this.editMode();
         this._userParamsSetSrv.saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
@@ -46,6 +49,19 @@ export class UserParamSearchSrv extends BaseUserSrv {
                 throw err;
             });
     }
+    cancel() {
+        if (this.isChangeForm) {
+           this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+           this.init();
+           this.isChangeForm = false;
+           this.formChanged.emit(false);
+        }
+        this.flagEdit = false;
+        setTimeout(() => {
+            this.editMode();
+        });
+        this._pushState();
+    }
     checkLimitSRCH(data) {
         if (String(data[1]['PARM_VALUE']) === 'null' ) {
             this.prepareData.rec['SRCH_LIMIT_RESULT'] = '';
@@ -53,9 +69,7 @@ export class UserParamSearchSrv extends BaseUserSrv {
     }
     subscribeChangeForm() {
         this.subscriptions.push(
-            this.form.valueChanges
-                .debounceTime(200)
-                .subscribe(newVal => {
+            this.form.valueChanges.subscribe(newVal => {
                     let changed = false;
                     Object.keys(newVal).forEach(path => {
                         this.oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
@@ -63,8 +77,8 @@ export class UserParamSearchSrv extends BaseUserSrv {
                             changed = true;
                          }
                     });
-                this.formChanged.emit(changed);
-                this.isChangeForm = changed;
+                this.formChanged.emit(false);
+                this.isChangeForm = false;
                 this._pushState();
             })
         );
@@ -76,6 +90,18 @@ export class UserParamSearchSrv extends BaseUserSrv {
                 this._currentFormStatus = status;
             })
         );
+    }
+    submit() {
+        super.submit();
+        this.flagEdit = false;
+        this.editMode();
+    }
+    editMode() {
+        if (this.flagEdit) {
+            this.form.enable({emitEvent: false});
+        }   else {
+            this.form.disable({emitEvent: false});
+        }
     }
     private _pushState () {
         this._userParamsSetSrv.setChangeState({isChange: this.isChangeForm});

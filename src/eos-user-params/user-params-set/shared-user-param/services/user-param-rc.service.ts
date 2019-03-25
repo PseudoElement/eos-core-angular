@@ -129,9 +129,11 @@ export class UserParamRCSrv extends BaseUserSrv {
            this.init();
            setTimeout(() => {
             this.checRcShowRes();
+            this.editMode();
         });
-    }
-    this.editMode();
+    } else {
+        this.editMode();
+        }
     }
 
     disabDefault(flag: boolean): void {
