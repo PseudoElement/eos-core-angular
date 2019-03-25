@@ -25,5 +25,6 @@ export const INPUT_ERROR_MESSAGES = {
 export const SUCCESS_SAVE_MESSAGE_SUCCESS: IMessage = {
     type: 'success',
     title: 'Информация о сохранении: ',
-    msg: 'текущие изменения успешно сохранены'
+    msg: 'текущие изменения успешно сохранены',
+    dismissOnTimeout: 6000,
 };
