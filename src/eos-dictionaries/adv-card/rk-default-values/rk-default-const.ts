@@ -881,6 +881,13 @@ export const RKDefaultFields: TDefaultField[] = [
         // title: 'Список рубрик',
         title: 'Рубрики',
         // classif_id:  545
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '107', ISN_LCLASSIF: '-99', },
+
+        }
     }, {
         key: 'TERM_EXEC',
         // Default type:  'D',

@@ -22,8 +22,8 @@ export class ValidatorsControl {
        switch (type) {
            case VALIDATOR_TYPE.EXTENSION_DOT:
                 return (control: AbstractControl): { [key: string]: any } => {
-                    const v = String(control.value);
-                    if (v.indexOf('.') === -1) {
+                    const v = control.value;
+                    if (v && v !== '' && v.indexOf('.') === -1) {
                         return { valueError: 'Поле должно иметь сивол "."'};
                     }
                 };
