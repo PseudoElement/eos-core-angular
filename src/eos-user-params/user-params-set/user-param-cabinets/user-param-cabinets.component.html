@@ -1,12 +1,17 @@
 <div class="input-user-wrapper input-user-cabinets-rk-forwarding-wrapper"
 *ngIf="inputs">
-<eos-user-header
-        [title]="titleHeader"
-        (submitForm)="submit()"
-        (cancelForm)="cancel()"
-        (defaultForm)="default()"
-        [statusBtnSub]="btnDisabled"
-    ></eos-user-header>
+    <eos-user-params-header
+        [title] = 'titleHeader'
+        [link] = 'link'
+        [selfLink] = 'selfLink'
+        [disableBtn] = "disableSave"
+        [defaultBtn] = 'true'
+        (submitEmit) = 'submit($event)'
+        (cancelEmit) = 'cancel($event)'
+        (editEmit) = 'edit($event)'
+        (closeEmit) = 'close($event)'
+        (defaultEmit) = 'default($event)'
+    ></eos-user-params-header>
     <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs">
             <li class="tab-item"
@@ -23,54 +28,54 @@
         <span class="l-font">Подсвечивать новые записи в папке</span>
         <hr>
         <div class="cabinets-highlight-new-enntries-in-the-folder">
-                <eos-dynamic-input
+            <eos-dynamic-input
                 [input]="inputAttach['rec.FOLDERCOLORSTATUS_RECEIVED']"
                 [form]="formAttach"
                 [readonly]="false"
-                ></eos-dynamic-input>
-                <eos-dynamic-input
-        [input]="inputAttach['rec.FOLDERCOLORSTATUS_HAVE_LEADERSHIP']"
-        [form]="formAttach"
-        [readonly]="false"
+            ></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputAttach['rec.FOLDERCOLORSTATUS_HAVE_LEADERSHIP']"
+            [form]="formAttach"
+            [readonly]="false"
         ></eos-dynamic-input>
         <eos-dynamic-input
-        [input]="inputAttach['rec.FOLDERCOLORSTATUS_PROJECT_MANAGEMENT']"
-        [form]="formAttach"
-        [readonly]="false"
+            [input]="inputAttach['rec.FOLDERCOLORSTATUS_PROJECT_MANAGEMENT']"
+            [form]="formAttach"
+            [readonly]="false"
         ></eos-dynamic-input>
             </div>
             <div class="cabinets-highlight-new-enntries-in-the-folder">
-                    <eos-dynamic-input
-                    [input]="inputAttach['rec.FOLDERCOLORSTATUS_FOR_EXECUTION']"
-                    [form]="formAttach"
-                    [readonly]="false"
-                    ></eos-dynamic-input>
-                    <eos-dynamic-input
-            [input]="inputAttach['rec.FOLDERCOLORSTATUS_FOR_CONSIDERATION']"
-            [form]="formAttach"
-            [readonly]="false"
+            <eos-dynamic-input
+                [input]="inputAttach['rec.FOLDERCOLORSTATUS_FOR_EXECUTION']"
+                [form]="formAttach"
+                [readonly]="false"
             ></eos-dynamic-input>
             <eos-dynamic-input
-            [input]="inputAttach['rec.FOLDERCOLORSTATUS_ON_SIGHT']"
-            [form]="formAttach"
-            [readonly]="false"
+                [input]="inputAttach['rec.FOLDERCOLORSTATUS_FOR_CONSIDERATION']"
+                [form]="formAttach"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputAttach['rec.FOLDERCOLORSTATUS_ON_SIGHT']"
+                [form]="formAttach"
+                [readonly]="false"
             ></eos-dynamic-input>
             </div>
             <div class="cabinets-highlight-new-enntries-in-the-folder">
-                    <eos-dynamic-input
-                    [input]="inputAttach['rec.FOLDERCOLORSTATUS_UNDER_CONTROL']"
-                    [form]="formAttach"
-                    [readonly]="false"
-                    ></eos-dynamic-input>
-                    <eos-dynamic-input
-            [input]="inputAttach['rec.FOLDERCOLORSTATUS_INTO_THE_BUSINESS']"
-            [form]="formAttach"
-            [readonly]="false"
+            <eos-dynamic-input
+                [input]="inputAttach['rec.FOLDERCOLORSTATUS_UNDER_CONTROL']"
+                [form]="formAttach"
+                [readonly]="false"
             ></eos-dynamic-input>
             <eos-dynamic-input
-            [input]="inputAttach['rec.FOLDERCOLORSTATUS_ON_THE_SIGNATURE']"
-            [form]="formAttach"
-            [readonly]="false"
+                [input]="inputAttach['rec.FOLDERCOLORSTATUS_INTO_THE_BUSINESS']"
+                [form]="formAttach"
+                [readonly]="false"
+            ></eos-dynamic-input>
+            <eos-dynamic-input
+                [input]="inputAttach['rec.FOLDERCOLORSTATUS_ON_THE_SIGNATURE']"
+                [form]="formAttach"
+                [readonly]="false"
             ></eos-dynamic-input>
                 </div>
         </div>
@@ -106,11 +111,11 @@
         <span class="user-input-span-for-increment-cabinets" style="padding-bottom: 10px;">дней и ранее</span>
         <span>Список сортировки в кабинетах: </span>
         <eos-dynamic-input
-                    style="min-width: 116px;"
-                    class="inline-block"
-                    [input]="inputs['rec.CABSORT_ISN_DOCGROUP_LIST']"
-                    [form]="form"
-                    [readonly]="false"
+            style="min-width: 116px;"
+            class="inline-block"
+            [input]="inputs['rec.CABSORT_ISN_DOCGROUP_LIST']"
+            [form]="form"
+            [readonly]="false"
         ></eos-dynamic-input>
         <eos-dynamic-input
             [input]="inputs['rec.SCRATCH_RC']"
@@ -180,7 +185,8 @@
                 ></eos-dynamic-input>
             </div>
              <span
-                class ="eos-icon eos-icon-folder-blue small"
+                class="eos-icon small"
+                [ngClass] ="flagEdit ? 'eos-icon-folder-blue' : 'eos-icon-folder-grey'"
                 (click)="openClassifDepartment()"
                 tooltip='Добавить/Изменить'
                 placement="bottom"
@@ -189,7 +195,7 @@
               ></span>
              <span
                 [ngClass] ="getClass"
-                (click)="controller ? showInfoUser() : 'false'"
+                (click)="controller && flagEdit ? showInfoUser() : 'false'"
                 tooltip='Подробная информация'
                 placement="bottom"
                 containerClass="tooltip-info"
