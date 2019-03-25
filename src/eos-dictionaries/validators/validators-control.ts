@@ -31,4 +31,14 @@ export class ValidatorsControl {
                break;
        }
    }
+   static onlyOneOfControl(control1: any, control2: any, err: string): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: any } => {
+            if (control1 && control2) {
+                if (control1.value && control2.value) {
+                    return { valueError: err};
+                }
+            }
+            return null;
+        };
+   }
 }

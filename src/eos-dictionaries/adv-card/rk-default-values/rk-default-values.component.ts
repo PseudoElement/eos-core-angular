@@ -24,6 +24,11 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
 
     onDataChanged(path: string, prevValue: any, newValue: any, initial = false): any {
         switch (path) {
+
+            case 'DOC_DEFAULT_VALUE_List.TERM_EXEC': { // Срок исполнения
+                this.form.controls['DOC_DEFAULT_VALUE_List.TERM_EXEC_W'].updateValueAndValidity();
+                break;
+            }
             // Передача документов
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST': {
                 if (newValue) {
