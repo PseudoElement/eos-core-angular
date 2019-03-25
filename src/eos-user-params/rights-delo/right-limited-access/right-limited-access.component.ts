@@ -75,7 +75,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.myForm.removeControl('groupForm');
         this.myForm.setControl('groupForm', this.createGroup(false, false, true));
     }
-    saveAllForm(): void {
+    saveAllForm($event?): void {
         const promise_all = [];
         sessionStorage.removeItem(String(this._userServices.userContextId));
         sessionStorage.removeItem(String('links'));
@@ -118,7 +118,10 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             this._msgSrv.addNewMessage(m);
         });
     }
-    backForm($event): void {
+    default($event?) {
+         return;
+    }
+    backForm($event?): void {
         this.delitedSetStore.clear();
         this.clearForm();
         this.editFlag = $event;

@@ -420,6 +420,9 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     close(event?) {
         this._router.navigate(['user_param']);
      }
+     default(event?) {
+         return;
+     }
      private cathError(e) {
         if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
             return undefined;
