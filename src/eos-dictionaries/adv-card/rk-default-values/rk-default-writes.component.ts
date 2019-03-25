@@ -22,6 +22,10 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
 
     onDataChanged(path: string, prevValue: any, newValue: any): any {
         switch (path) {
+            case 'DOC_DEFAULT_VALUE_List.TERM_EXEC_W': { // Срок исполнения
+                this.form.controls['DOC_DEFAULT_VALUE_List.TERM_EXEC'].updateValueAndValidity();
+                break;
+            }
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST_W': { // Передача документов
                 if (newValue === null) {
                     this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', null);
@@ -142,7 +146,6 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
                 }
                 break;
             }
-
         }
 
         const t = this.form.controls['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST_W'].value ||
