@@ -1,19 +1,26 @@
 <div class="email-window">
-    <eos-user-header
-    [title] = "titleHeader"
-    [statusBtnSub]='statusBtnSub'
-    [isDefault]='isDefault'
-    (submitForm)='saveAllForm($event)'
-    (cancelForm)='backForm($event)'></eos-user-header>
+<eos-user-params-header
+    [title] = 'titleHeader'
+    [link] = 'link'
+    [selfLink] = 'selfLink'
+    [disableBtn] = "statusBtnSub"
+    [defaultBtn] = 'false'
+    (submitEmit) = 'saveAllForm($event)'
+    (cancelEmit) = 'backForm($event)'
+    (editEmit) = 'edit($event)'
+    (closeEmit) = 'close($event)'
+    (defaultEmit) = 'default($event)'
+></eos-user-params-header>
     <div class="email-control">
         <button
+            [disabled] = "!flagEdit"
             type="button"
             class=" email-create btn btn-primary"
             (click)="openModal(template)"
             tooltip="Добавить E-MAIL"
             placement="top"
             containerClass="tooltip-info">
-            <span class="eos-icon eos-icon-plus-blue small"></span>
+            <span class="eos-icon small" [ngClass] = "flagEdit ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
         </button>
         <div class="btn-group">
             <div
@@ -22,11 +29,11 @@
                 #itemTooltip="bs-tooltip"
                 containerClass="tooltip-info">
                 <button
-                    [disabled]="getaccess"
+                    [disabled]="getaccess || !flagEdit"
                     type="button"
                     class=" email-edit btn btn-primary"
                     (click)="itemTooltip.hide(); openModal(template, true)">
-                    <span [ngClass]="getaccess ? 'eos-icon eos-icon-edit-grey small' : 'eos-icon eos-icon-edit-blue small'"></span>
+                    <span [ngClass]="getaccess || !flagEdit ? 'eos-icon eos-icon-edit-grey small' : 'eos-icon eos-icon-edit-blue small'"></span>
                 </button>
             </div>
         </div>
@@ -36,10 +43,10 @@
                     placement="top"
                     containerClass="tooltip-info">
                     <button
-                        [disabled]="getaccess"
+                        [disabled]="getaccess || !flagEdit"
                         class="email-delite  btn btn-primary"
                         (click)="itemTooltip.hide(); deliteEmailFild()">
-                        <span [ngClass]="getaccess ? 'eos-icon eos-icon-bin-grey small' : 'eos-icon eos-icon-bin-blue small'"></span>
+                        <span [ngClass]="getaccess || !flagEdit ? 'eos-icon eos-icon-bin-grey small' : 'eos-icon eos-icon-bin-blue small'"></span>
                     </button>
                 </div>
         </div>
@@ -49,10 +56,10 @@
                 placement="top"
                 containerClass="tooltip-info">
                 <button
-                    [disabled]="currentIndex == 0 || getaccess"
+                    [disabled]="currentIndex == 0 || getaccess || !flagEdit"
                     class="stepTop btn btn-primary-light"
                     (click)="itemTooltip.hide(); upWeight()">
-                    <span [ngClass]="(currentIndex == 0 || getaccess) ? 'eos-icon eos-icon-arrow-v-grey-top small' : 'eos-icon eos-icon-arrow-v-blue-top small'"></span>
+                    <span [ngClass]="(currentIndex == 0 || getaccess || !flagEdit) ? 'eos-icon eos-icon-arrow-v-grey-top small' : 'eos-icon eos-icon-arrow-v-blue-top small'"></span>
                 </button>
             </div>
         </div>
@@ -62,10 +69,10 @@
                 placement="top"
                 containerClass="tooltip-info">
                 <button
-                    [disabled]="currentIndex == umailsInfo.length - 1 || getaccess"
+                    [disabled]="currentIndex == umailsInfo.length - 1 || getaccess || !flagEdit"
                     class="stepBottom btn btn-primary-light"
                     (click)="itemTooltip.hide(); downWeight()">
-                    <span [ngClass]="(currentIndex == umailsInfo.length - 1 || getaccess) ? 'eos-icon eos-icon-arrow-v-grey-bottom small' : 'eos-icon eos-icon-arrow-v-blue-bottom small'"></span>
+                    <span [ngClass]="(currentIndex == umailsInfo.length - 1 || getaccess || !flagEdit) ? 'eos-icon eos-icon-arrow-v-grey-bottom small' : 'eos-icon eos-icon-arrow-v-blue-bottom small'"></span>
                 </button>
             </div>
         </div>
