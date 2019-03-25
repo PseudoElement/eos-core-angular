@@ -102,6 +102,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
             return;
         }
+        // this.selectedNode = null;
+        this.editMode = false;
         this.btnDisabled = true;
         this._pushState();
         let qUserCl;
@@ -134,6 +136,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         .then(() => {
             this.queryForSave = [];
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+            this.cancel();
         })
         .catch((e) => {
             if (e instanceof RestError) {

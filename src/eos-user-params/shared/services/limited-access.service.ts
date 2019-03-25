@@ -10,6 +10,7 @@ import {NpUserLinks} from '../intrfaces/user-parm.intterfaces';
 export class LimitedAccesseService {
     CurrentUser: any;
     public subscribe: Subject<any> = new Subject();
+    public editEmit: Subject<any> = new Subject();
     GrifForm: FormGroup;
     LinksFrom: FormGroup;
     user_id: number;

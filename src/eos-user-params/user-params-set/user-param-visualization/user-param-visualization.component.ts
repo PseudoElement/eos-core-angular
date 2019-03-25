@@ -8,6 +8,8 @@ import { UserParamVisualizationSrv } from '../shared-user-param/services/user-pa
 
 export class UserParamVisualizationComponent extends UserParamVisualizationSrv implements OnDestroy {
     prepInputsAttach;
+    link;
+    selfLink;
     constructor( injector: Injector ) {
         super(injector);
     }
@@ -15,5 +17,15 @@ export class UserParamVisualizationComponent extends UserParamVisualizationSrv i
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
+    edit($event) {
+        this.flagEdit = $event;
+        this.editMode();
+    }
+    cancel($event?) {
+        super.cancel();
+    }
+    close(event?) {
+        this._router.navigate(['user_param']);
+     }
 
 }

@@ -1,32 +1,38 @@
 <div class="input-user-wrapper input-user-rc-wrapper "
 *ngIf="inputs">
-        <eos-user-header
-        [title]="titleHeader"
-        (submitForm)="submit()"
-        (cancelForm)="cancel()"
-        (defaultForm)="default()"
-        [statusBtnSub]="btnDisabled"
-    ></eos-user-header>
+<eos-user-params-header
+    [title] = 'titleHeader'
+    [link] = 'link'
+    [selfLink] = 'selfLink'
+    [disableBtn] = "btnDisabled"
+    [defaultBtn] = 'true'
+    (submitEmit) = 'submit($event)'
+    (cancelEmit) = 'cancel($event)'
+    (editEmit) = 'edit($event)'
+    (closeEmit) = 'close($event)'
+    (defaultEmit) = 'default($event)'
+></eos-user-params-header>
     <div class="user-input-group scrollWrapper">
             <span class="l-font l-font-t">Открывать закладку доп. реквизиты при открытии РК для групп документов.</span>
             <hr>
             <div class="btn-controll">
                 <button class="btn btn-primary-light"
+                    [disabled] = "!flagEdit"
                     tooltip="Добавить"
                     containerClass="tooltip-info"
-                   placement="bottom"
-                   triggers="hover"
-                   (click)="addRcDoc()">
-                    <span class="eos-icon eos-icon-plus-blue small"></span>
+                    placement="bottom"
+                    triggers="hover"
+                    (click)="addRcDoc()">
+                    <span class="eos-icon small" [ngClass] = "flagEdit ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
                 </button>
                 <button
-                    [disabled]="disabledFlagDelite"
+                    [disabled]="disabledFlagDelite || !flagEdit"
                     class="btn btn-primary-light"
                     tooltip="Удалить"
                     containerClass="tooltip-info"
                     placement="bottom"
                     (click)="deleteRcDoc()">
-                    <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+                    <span class="eos-icon small" [ngClass] = "flagEdit && !disabledFlagDelite ? 'eos-icon-bin-forever-blue' : 'eos-icon-bin-forever-grey'"></span>
                 </button>
             </div>
             <div class="user-input-group user-input-group-flex rc-doc-margin">

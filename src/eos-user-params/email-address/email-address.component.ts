@@ -10,6 +10,7 @@ import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { Subject } from 'rxjs/Subject';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'eos-params-email-address',
@@ -39,6 +40,9 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     public childParams: Set<string> = new Set();
     public myForm: FormGroup;
     titleHeader: string;
+    selfLink;
+    link;
+    flagEdit: boolean = false;
     private ArrayForm: FormArray;
     private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -46,15 +50,17 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
        private modalService: BsModalService,
        private _userServices: UserParamsService,
        private _msgSrv: EosMessageService,
+       private _router: Router,
     )   {
         this.titleHeader =  `${this._userServices.curentUser.SURNAME_PATRON} - Ведение адресов электронной почты`;
+        this.selfLink = this._router.url.split('?')[0];
+        this.link = this._userServices.userContextId;
         this.currentParams = '';
         this.CODE = null;
         this.editFalg = false;
         this.username = this._userServices.curentUser['SURNAME_PATRON'];
         // для работы с формой создание, удаление, редакт.
         this.umailsInfo = this._userServices.curentUser['NTFY_USER_EMAIL_List'].slice();
-
         // для хранения первоночального состояния формы.
         this.saveParams = this.umailsInfo.slice();
         this.sortArray(this.umailsInfo);
@@ -89,6 +95,8 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
             this.currentIndex = 0;
         }
         this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+        this.flagEdit = false;
+        this.editMode();
     }
     resetForm() {
         this.myForm.removeControl('groupForm');
@@ -112,6 +120,8 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                     this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
                     this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                 }
+                this.flagEdit = false;
+                this.editMode();
             });
         }).catch(error => {
             error.message =  'Ошибка сервера';
@@ -263,7 +273,8 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
             this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
             this.myForm.valueChanges.subscribe(data => {
                 this.checkChanges(data);
-                });
+            });
+            this.editMode();
         }).catch(error => {
             error.message =  'Ошибка сервера';
             this.cathError(error);
@@ -402,6 +413,13 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
             return a.WEIGHT - b.WEIGHT;
         });
       }
+      edit($event) {
+        this.flagEdit = $event;
+        this.editMode();
+    }
+    close(event?) {
+        this._router.navigate(['user_param']);
+     }
      private cathError(e) {
         if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
             return undefined;
@@ -413,6 +431,13 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                 msg: errMessage
             });
             return null;
+        }
+    }
+   private  editMode() {
+        if (this.flagEdit) {
+            this.myForm.enable({emitEvent: false});
+        }   else {
+            this.myForm.disable({emitEvent: false});
         }
     }
 private _pushState () {

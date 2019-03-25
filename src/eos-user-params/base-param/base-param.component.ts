@@ -170,6 +170,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 .then(() => {
                     this.curentUser = this._userParamSrv.curentUser;
                     this._checkForChenge();
+                    this.ngOnDestroy();
+                    this.editMode = false;
+                    setTimeout(() => {
+                        this.ngOnInit();
+                    }, 0);
                 });
             })
             .catch(e => {

@@ -466,7 +466,6 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             this.currentCard = null;
         }
         this.flagEdit = false;
-        console.log(this.mainArrayCards);
     }
     clearMainArray() {
         const indexNew = [];

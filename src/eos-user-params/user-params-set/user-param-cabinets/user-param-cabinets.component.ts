@@ -11,11 +11,28 @@ export class UserParamCabinetsComponent extends UserParamCabinetsSrv implements 
     disableSave: boolean;
     isChanged: boolean;
     prepInputsAttach;
+    selfLink;
+    link;
+
     constructor( injector: Injector ) {
         super(injector);
+        this.link = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
+        this.selfLink = this._router.url.split('?')[0];
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
+    }
+    cancel($event?) {
+        this.flagEdit = false;
+        super.cancel();
+    }
+    edit($event) {
+        this.flagEdit = $event;
+        this.editMode();
+    }
+    close(event) {
+        this.flagEdit = event;
+        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 }

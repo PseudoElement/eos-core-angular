@@ -10,14 +10,29 @@ import { USER_PARMS } from 'eos-rest';
 export class UserParamDirectoriesComponent extends UserParamDirectoriesSrv implements OnDestroy {
     prepInputsAttach;
     userParams: USER_PARMS[];
+    selfLink;
+    link;
     constructor(
         injector: Injector ) {
         super(injector);
+        this.selfLink = this._router.url.split('?')[0];
+        this.link = this._userParamsSetSrv.userContextId;
     }
 
 ngOnDestroy() {
     this._ngUnsubscribe.next();
     this._ngUnsubscribe.complete();
    }
+   cancel($event?) {
+    this.flagEdit = false;
+    super.cancel();
+}
+edit($event) {
+    this.flagEdit = $event;
+    this.editMode();
+}
+close(event?) {
+    this._router.navigate(['user_param']);
+ }
 
 }
