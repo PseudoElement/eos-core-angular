@@ -12,6 +12,10 @@
 
     .tree-checkbox {
         margin-left: 30px;
+
+        input[type="checkbox"] {
+            display: none;
+        }
     }
 
     .tree-text {
