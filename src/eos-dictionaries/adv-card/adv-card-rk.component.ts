@@ -222,7 +222,18 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             }
             return null;
         });
+
+        const controlSrok1 = controls['DOC_DEFAULT_VALUE_List.TERM_EXEC'];
+        const controlSrok2 = controls['DOC_DEFAULT_VALUE_List.TERM_EXEC_W'];
+        const err = 'Реквизит "Срок исполнения" может быть заполнен только в одном месте';
+
+        ValidatorsControl.appendValidator(controlSrok1,
+            ValidatorsControl.onlyOneOfControl(controlSrok1, controlSrok2, err));
+        ValidatorsControl.appendValidator(controlSrok2,
+            ValidatorsControl.onlyOneOfControl(controlSrok1, controlSrok2, err));
+
     }
+
 
     private _checkCorrectValuesLogic(values: any, descriptions: any): any {
         // Внутренние адресаты

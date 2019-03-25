@@ -89,7 +89,7 @@ export const NAVIGATE_TO_ELEMENT_WARN: IMessage = {
 export const EMPTY_ADD_ELEMENT_WARN: IMessage = {
     type: 'warning',
     title: 'Предупреждение:',
-    msg: 'Нет елементов для добавления.'
+    msg: 'Нет элементов для добавления.'
 };
 export const DUE_DEP_OCCUPATION: IMessage = {
     title: 'Предупреждение:',

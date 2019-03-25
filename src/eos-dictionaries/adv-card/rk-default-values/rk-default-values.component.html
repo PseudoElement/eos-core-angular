@@ -2,7 +2,6 @@
     <div class="items-group">
     <div class="clearfix">
         <div class="col-1" *ngIf="!isEDoc">
-            <!-- <label>{{inputs['DOC_DEFAULT_VALUE_List.SPECIMEN'].label}}</label> -->
             <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SPECIMEN']"
                             [form]="form"
                             [readonly]="!editMode || isEDoc" ></eos-dynamic-input>
@@ -17,6 +16,7 @@
     <div class="clearfix">
         <span>
         <div class="col-with-label">
+                <!-- Срок исполнения -->
                 <label>{{inputs['DOC_DEFAULT_VALUE_List.TERM_EXEC'].label}}</label>
                 <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.TERM_EXEC']"
                                     [form]="form"
@@ -27,13 +27,16 @@
     </div>
     <div class="clearfix">
         <div class="col50 padr10">
+            <!-- Доступ -->
             <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL']"
                                         [form]="form"
                                         [readonly]="!editMode" ></eos-dynamic-input>
         </div>
 
         <div class="col50 padl10">
-            <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.ISN_DELIVERY']"
+            <!-- Доставка -->
+            <eos-dynamic-input *ngIf="rkType==1 || rkType==2"
+                            [input]="inputs['DOC_DEFAULT_VALUE_List.ISN_DELIVERY']"
                             [form]="form"
                             [readonly]="!editMode" ></eos-dynamic-input>
         </div>
@@ -42,7 +45,19 @@
                         [form]="form"
                         [readonly]="!editMode" ></eos-dynamic-input>
 
-    <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.WHO_ISN_LIST']"
+    <!-- Кому адресован -->
+    <eos-dynamic-input  *ngIf="rkType==1 || rkType==2"
+                        [input]="inputs['DOC_DEFAULT_VALUE_List.WHO_ISN_LIST']"
+                        [form]="form"
+                        [readonly]="!editMode" ></eos-dynamic-input>
+    <!-- Подписал -->
+    <eos-dynamic-input  *ngIf="rkType==3"
+                        [input]="inputs['DOC_DEFAULT_VALUE_List.SIGN_ISN_LIST']"
+                        [form]="form"
+                        [readonly]="!editMode" ></eos-dynamic-input>
+    <!-- Исполнитель -->
+    <eos-dynamic-input  *ngIf="rkType==3"
+                        [input]="inputs['DOC_DEFAULT_VALUE_List.EXE_ISN_LIST']"
                         [form]="form"
                         [readonly]="!editMode" ></eos-dynamic-input>
 
