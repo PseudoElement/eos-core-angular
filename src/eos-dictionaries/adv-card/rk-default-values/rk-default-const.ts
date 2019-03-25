@@ -322,9 +322,16 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'EXE_ISN_LIST',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
         // kind_doc '3',
-        title: 'Исполнители РК',
+        title: 'Исполнитель',
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
+        // title: 'Исполнители РК',
         // classif_id:  545
     }, {
         key: 'ISN_PERSON_EXE_M',
@@ -851,9 +858,16 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'SIGN_ISN_LIST',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
+        title: 'Подписал',
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
         // kind_doc '3',
-        title: 'Список подписывающих РК',
+        // title: 'Список подписывающих РК',
         // classif_id:  545
     }, {
         /* кому адресован */
