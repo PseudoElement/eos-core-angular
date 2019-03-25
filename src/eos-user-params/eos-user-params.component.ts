@@ -73,7 +73,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
-        this.openAccordion();
+        this._openAccordion(this.accordionList);
     }
     ngOnDestroy(): void {
         this.ngUnsubscribe.next();
@@ -114,10 +114,19 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     private setTabsSCan(flag: boolean): void {
         this.accordionList[4].disabled = flag;
     }
-    private openAccordion() {
-        this.accordionList.forEach((item: IParamAccordionList) => {
+    private _openAccordion(list: IParamAccordionList[]) {
+        list.forEach((item: IParamAccordionList) => {
+            if (item.subList) {
+                item.subList.forEach((i) => {
+                    if (i.url === this.pageId) {
+                        item.isOpen = true;
+                        return;
+                    }
+                });
+            }
             if (item.url === this.pageId) {
                 item.isOpen = true;
+                return;
             }
         });
     }
