@@ -60,7 +60,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
 
     init() {
-
+        this.curentUser = this._userParamsSetSrv.curentUser;
         this.techRingtOrig = this.curentUser.TECH_RIGHTS;
         this.titleHeader =  `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Абсолютные права`;
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
@@ -135,8 +135,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.apiSrv.setData(this.queryForSave)
         .then(() => {
             this.queryForSave = [];
+            this.listRight = [];
+            this.selectedNode = null;
+            this.editMode = false;
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-            this.cancel();
+            this._userParamsSetSrv.getUserIsn().then(() => {
+                this.init();
+            });
         })
         .catch((e) => {
             if (e instanceof RestError) {
