@@ -129,10 +129,21 @@ export class AdvCardRKDataCtrl {
 
                         reqs.push(this._apiSrv.read(req).then((data) => {
                             const opts: TDFSelectOption[] = this.loadedDicts[hash];
+                            const curval = values[key][el.key];
                             // opts.push ({value: '', title: '...'});
                             for (let index = 0; index < data.length; index++) {
                                 const element = data[index];
-                                opts.push ({value: element[el.dict.dictKey], title: element[el.dict.dictKeyTitle]});
+                                const value = element[el.dict.dictKey];
+                                const title = element[el.dict.dictKeyTitle];
+                                const deleted = element['DELETED'];
+                                if (deleted) {
+                                    if (String(curval) === String(value)) {
+                                        opts.push ({value: value, title: title, disabled: true});
+                                    }
+                                } else {
+                                    opts.push ({value: value, title: title });
+                                }
+
                             }
 
                             el.options = opts;

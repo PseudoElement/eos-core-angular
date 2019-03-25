@@ -11,6 +11,7 @@ export class TDFSelect {
 export class TDFSelectOption {
     value: any;
     title: string;
+    disabled?: boolean;
 }
 
 export class TDefaultField {
