@@ -14,11 +14,15 @@
                     (focus)="onFocus()"
                     (blur)="onBlur()">
 
-            <option value=""
-                [selected]="!hasValue()">...</option>
+            <option *ngIf="viewOpts.defaultValue"
+                [disabled]="viewOpts.defaultValue.disabled"
+                [value]="viewOpts.defaultValue.value"
+                [selected]="!hasValue()"
+                >{{viewOpts.defaultValue.title}}</option>
+
             <option *ngFor="let opt of input.options"
                 [value]="opt.value"
-                [disabled]="opt.disabled"
+                [disabled]="!!opt.disabled"
                 >{{opt.title}}</option>
             </select>
         </div>

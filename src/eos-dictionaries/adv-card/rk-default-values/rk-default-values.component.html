@@ -30,6 +30,7 @@
             <!-- Доступ -->
             <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL']"
                                         [form]="form"
+                                        [viewOpts]="selOpts"
                                         [readonly]="!editMode" ></eos-dynamic-input>
         </div>
 
@@ -38,6 +39,7 @@
             <eos-dynamic-input *ngIf="rkType==1 || rkType==2"
                             [input]="inputs['DOC_DEFAULT_VALUE_List.ISN_DELIVERY']"
                             [form]="form"
+                            [viewOpts]="selOpts"
                             [readonly]="!editMode" ></eos-dynamic-input>
         </div>
     </div>
@@ -49,20 +51,24 @@
     <eos-dynamic-input  *ngIf="rkType==1 || rkType==2"
                         [input]="inputs['DOC_DEFAULT_VALUE_List.WHO_ISN_LIST']"
                         [form]="form"
+                        [viewOpts]="selOpts"
                         [readonly]="!editMode" ></eos-dynamic-input>
     <!-- Подписал -->
     <eos-dynamic-input  *ngIf="rkType==3"
                         [input]="inputs['DOC_DEFAULT_VALUE_List.SIGN_ISN_LIST']"
                         [form]="form"
+                        [viewOpts]="selOpts"
                         [readonly]="!editMode" ></eos-dynamic-input>
     <!-- Исполнитель -->
     <eos-dynamic-input  *ngIf="rkType==3"
                         [input]="inputs['DOC_DEFAULT_VALUE_List.EXE_ISN_LIST']"
                         [form]="form"
+                        [viewOpts]="selOpts"
                         [readonly]="!editMode" ></eos-dynamic-input>
 
     <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.FILE']"
                                     [form]="form"
+                                    [viewOpts]="selOpts"
                                     [readonly]="!editMode" ></eos-dynamic-input>
 
     </div>
@@ -71,6 +77,7 @@
         <div class="items-group">
             <eos-dynamic-input class="margin10" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST']"
                                 [form]="form"
+                                [viewOpts]="selOpts"
                                 [disabled]="isEDoc"
                                 [readonly]="!editMode || isEDoc" ></eos-dynamic-input>
             <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM']"
@@ -101,6 +108,7 @@
 
         <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_ISN_LIST_DEP']"
                             [form]="form"
+                            [viewOpts]="selOpts"
                             [readonly]="!editMode"></eos-dynamic-input>
 
         <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_MARKSEND']"
@@ -120,6 +128,7 @@
 
         <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_ISN_LIST_ORGANIZ']"
                             [form]="form"
+                            [viewOpts]="selOpts"
                             [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_ISN_DELIVERY']"
                             [form]="form"
@@ -139,6 +148,7 @@
 
     <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.RUBRIC_LIST']"
         [form]="form"
+        [viewOpts]="selOpts"
         [readonly]="!editMode">
     </eos-dynamic-input>
 
