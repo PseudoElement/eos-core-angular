@@ -38,9 +38,6 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                     f['value'] = this._userParamSrv.curentUser[f['key']];
             }
         });
-        if (isDisabled) {
-            this._disableForm(arrInput);
-        }
         return arrInput;
     }
     fillValueControlField(fields: IInputParamControl[], isDisabled: boolean = false) {
@@ -81,9 +78,6 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                     break;
             }
         });
-        if (isDisabled) {
-            this._disableForm(arrControls);
-        }
         return arrControls;
     }
 
@@ -129,9 +123,6 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                     f['value'] = !!+arr[f['key']];
             }
         });
-        if (isDisabled) {
-            this._disableForm(accessArray);
-        }
         return accessArray;
      }
     dateToString(date: Date) {
