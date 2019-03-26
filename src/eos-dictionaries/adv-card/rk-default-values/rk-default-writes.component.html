@@ -17,6 +17,7 @@
     <p class="xl-font paragraph-title">Переслать РК (Журнал пересылок РК)</p>
     <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_ISN_LIST_DEP_W']"
         [form]="form"
+        [viewOpts]="selOpts"
         [hideLabel]="true"
         [readonly]="!editMode"> </eos-dynamic-input>
     <div class="items-group" *ngIf="rkType==1 || rkType==2">
@@ -34,6 +35,7 @@
                 <label class="adv-col3">то</label>
                 <eos-dynamic-input class="no-margin adv-col4" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_WHO_EMPTY_W']"
                     [form]="form"
+                    [viewOpts]="selOpts"
                     [hideLabel]="true"
                     [readonly]="!editMode"> </eos-dynamic-input>
             </span>
@@ -42,11 +44,13 @@
             <eos-dynamic-input class="no-margin adv-col2" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_WHO_REDIRECTION_W']"
                 [form]="form"
                 [hideLabel]="true"
+                [viewOpts]="selOpts"
                 [readonly]="!editMode"> </eos-dynamic-input>
             <label class="adv-col3">то</label>
             <eos-dynamic-input class="no-margin adv-col4" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_WHERE_REDIRECTION_W']"
                 [form]="form"
                 [hideLabel]="true"
+                [viewOpts]="selOpts"
                 [readonly]="!editMode"> </eos-dynamic-input>
             </span>
         </div>
@@ -56,11 +60,13 @@
     <eos-dynamic-input *ngIf="rkType==3"
         class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_SIGN_W']"
         [form]="form"
+        [viewOpts]="selOpts"
         [readonly]="!editMode"> </eos-dynamic-input>
     <!-- По значению реквизита "Исполнитель" -->
     <eos-dynamic-input *ngIf="rkType==3"
         class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.FORWARD_EXEC_W']"
         [form]="form"
+        [viewOpts]="selOpts"
         [readonly]="!editMode"> </eos-dynamic-input>
 
 
@@ -77,6 +83,7 @@
             <eos-dynamic-input *ngIf="rkType==1 || rkType==2"
                 class="no-margin inline-with-label" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_FROM_WHO_W']"
                 [form]="form"
+                [viewOpts]="selOpts"
                 [readonly]="!editMode || isEDoc"> </eos-dynamic-input>
             <div class="items-group" *ngIf="journal_who_w && (rkType==1 || rkType==2)" >
                     <p class="xl-font no-margin">Дополнительные правила</p>
@@ -86,6 +93,7 @@
                             <label class="adv-col3">то</label>
                             <eos-dynamic-input class="no-margin adv-col4" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_WHO_EMPTY_W']"
                                 [form]="form"
+                                [viewOpts]="selOpts"
                                 [hideLabel]="true"
                                 [readonly]="!editMode"> </eos-dynamic-input>
                         </span>
@@ -94,11 +102,13 @@
                         <eos-dynamic-input class="no-margin adv-col2" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_WHO_REDIRECTION_W']"
                             [form]="form"
                             [hideLabel]="true"
+                            [viewOpts]="selOpts"
                             [readonly]="!editMode"> </eos-dynamic-input>
                         <label class="adv-col3">то</label>
                         <eos-dynamic-input class="no-margin adv-col4" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_WHERE_REDIRECTION_W']"
                             [form]="form"
                             [hideLabel]="true"
+                            [viewOpts]="selOpts"
                             [readonly]="!editMode"> </eos-dynamic-input>
                         </span>
             </div>
@@ -144,6 +154,7 @@
                 class="radio-position-1"
                 [form]="form"
                 [disabled]="enKart1Select!=='1'"
+                [viewOpts]="selOpts"
                 [hideLabel]="true"
                 [readonly]="!editMode"> </eos-dynamic-input>
         </div>
@@ -158,6 +169,7 @@
                 class="radio-position-2"
                 [form]="form"
                 [disabled]="enKart1Select!=='2' || enKart2Select!=='1'"
+                [viewOpts]="selOpts"
                 [hideLabel]="true"
                 [readonly]="!editMode"> </eos-dynamic-input>
         </div>
@@ -169,6 +181,7 @@
     <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.ISN_CABINET_REG_CURR_W']"
         [form]="form"
         [hideLabel]="true"
+        [viewOpts]="selOpts"
         [readonly]="!editMode"> </eos-dynamic-input>
     <!-- Текущий кабинет регистратора
     Кабинет ДЛ первой пересылки РК-->
@@ -177,9 +190,11 @@
     <p class="xl-font paragraph-title">Доп. картотеки РК</p>
     <div class="items-group">
 
+    <!-- Доп. картотеки РК -->
     <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_ISN_W']"
         [form]="form"
         [hideLabel]="true"
+        [viewOpts]="selOpts"
         [readonly]="!editMode"> </eos-dynamic-input>
 
     <!-- по значению реквизита "Кому (адресован) -->

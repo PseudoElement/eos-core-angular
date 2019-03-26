@@ -1,3 +1,4 @@
+import { IDynamicInputOptions } from './../../../eos-common/dynamic-form-input/dynamic-input.component';
 import { AdvCardRKDataCtrl } from './../adv-card-rk-datactrl';
 import { Input, OnChanges, SimpleChanges, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -13,6 +14,12 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
     @Input() form: FormGroup;
     @Input() editMode: boolean;
 
+    selOpts: IDynamicInputOptions = {
+        defaultValue: {
+            value: '',
+            title: '...',
+        }
+    };
 
     isEDoc: boolean;
     rkType: number;
