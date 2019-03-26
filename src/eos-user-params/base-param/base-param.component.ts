@@ -68,8 +68,17 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private _nanParSrv: NavParamService
     ) {
         this.selfLink = this._router.url.split('?')[0];
+        this.init();
+        this.editModeF();
+        this._subscribeControls();
+        this._userParamSrv
+        .saveData$
+        .takeUntil(this._ngUnsubscribe)
+        .subscribe(() => {
+            this.submit();
+        });
     }
-    ngOnInit () {
+    init() {
         this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
         this.curentUser = this._userParamSrv.curentUser;
         this.title = `${this.curentUser['SURNAME_PATRON']} (${this.curentUser['CLASSIF_NAME']})`;
@@ -81,33 +90,23 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
         this.accessInputs = this._inputCtrlSrv.generateInputs(this.accessField);
 
-
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
         this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
         this._dataDb['form'] = this.form.value;
         this._dataDb['formControls'] = this.formControls.value;
         this._dataDb['formAccess'] = this.formAccess.value;
-
-        this._subscribeControls();
-
         this.isLoading = false;
-
-        this._userParamSrv
-        .saveData$
-        .takeUntil(this._ngUnsubscribe)
-        .subscribe(() => {
-            this.submit();
-        });
+    }
+    ngOnInit () {
     }
     ngOnDestroy() {
-        this.isLoading = true;
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
     submit() {
         if (!this.stateHeaderSubmit) {
-            this.stateHeaderSubmit = true;
+            this.stateHeaderSubmit = false;
             const id = this._userParamSrv.userContextId;
             let accessSysString = '';
             let qPass: Promise<any>;
@@ -168,13 +167,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                 this._userParamSrv.getUserIsn()
                 .then(() => {
-                    this.curentUser = this._userParamSrv.curentUser;
-                    this._checkForChenge();
-                    this.ngOnDestroy();
                     this.editMode = false;
+                    this.init();
                     setTimeout(() => {
-                        this.ngOnInit();
-                    }, 0);
+                        this.editModeF();
+                        this.checRadioB();
+                        this._subscribeControls();
+                            this.stateHeaderSubmit = true;
+                            this._pushState();
+                    });
                 });
             })
             .catch(e => {
@@ -201,21 +202,34 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
     }
     cancel() {
-        // this.form.patchValue(this._dataDb['form']);
-        // this.formControls.patchValue(this._dataDb['formControls']);
-        // this.formAccess.patchValue(this._dataDb['formAccess']);
-        this.ngOnDestroy();
         this.editMode = !this.editMode;
+        this.init();
         setTimeout(() => {
-            this.ngOnInit();
-        }, 0);
+            this.editModeF();
+            this._subscribeControls();
+            this.stateHeaderSubmit = true;
+            this._pushState();
+        });
     }
     edit() {
-        this.ngOnDestroy();
         this.editMode = !this.editMode;
+        this.editModeF();
         setTimeout(() => {
-            this.ngOnInit();
-        }, 0);
+            this.checRadioB();
+            this.stateHeaderSubmit = true;
+            this._pushState();
+        });
+    }
+    editModeF() {
+        if (this.editMode) {
+            this.form.enable({onlySelf: true, emitEvent: false});
+            this.formControls.enable({onlySelf: true, emitEvent: false});
+            this.formAccess.enable({onlySelf: true, emitEvent: false});
+        }   else {
+            this.form.disable({onlySelf: true, emitEvent: false});
+            this.formControls.disable({onlySelf: true, emitEvent: false});
+            this.formAccess.disable({onlySelf: true, emitEvent: false});
+        }
     }
     close() {
         this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
@@ -268,10 +282,28 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this.showDepartment();
         }
     }
+    checRadioB() {
+        const delo = this.formAccess.get('0').value;
+        const delo_web_delo = this.formAccess.get('0-1').value;
+        const delo_web = this.formAccess.get('delo_web').value;
+        if (!delo_web) {
+            this.formAccess.controls['1-27'].disable({emitEvent: false});
+        }   else {
+            this.formAccess.controls['0'].disable({emitEvent: false});
+            this.formAccess.controls['0-1'].disable({emitEvent: false});
+        }
+        if (delo) {
+            this.formAccess.controls['0-1'].disable({emitEvent: false});
+            this.formAccess.controls['delo_web'].disable({emitEvent: false});
+        }
+        if (delo_web_delo) {
+            this.formAccess.controls['0'].disable({emitEvent: false});
+            this.formAccess.controls['delo_web'].disable({emitEvent: false});
+        }
+    }
     private _subscribeControls() {                                        /* подписки */
         /* основная форма */
         this.form.valueChanges
-            .takeUntil(this._ngUnsubscribe)
             .subscribe((data) => {
                 if (data['PASSWORD_DATE']) {
                     data['PASSWORD_DATE'] = this._descSrv.dateToString(data['PASSWORD_DATE']);
@@ -282,7 +314,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
         /* форма контролов */
         this.formControls.valueChanges
-            .takeUntil(this._ngUnsubscribe)
             .subscribe((data) => {
                 this._newData['formControls'] = data;
                 this._checkForChenge(this.formControls.invalid);
@@ -290,7 +321,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
         /* форма доступа к системам */
         this.formAccess.valueChanges
-            .takeUntil(this._ngUnsubscribe)
             .subscribe((data) => {
                 this._newData['accessSystems'] = this._createAccessSystemsString(data);
                 this._checkForChenge();
@@ -298,20 +328,17 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
             /* -----===== отключение элементов доступа к системам =====----- */
         this.formAccess.get('0').valueChanges
-            .takeUntil(this._ngUnsubscribe)
             .subscribe(data => {
                 this._toggleFormControl(this.formAccess.controls['0-1'], data);
                 this._toggleFormControl(this.formAccess.controls['delo_web'], data);
             });
         this.formAccess.get('0-1').valueChanges
-            .takeUntil(this._ngUnsubscribe)
             .subscribe(data => {
                 this._toggleFormControl(this.formAccess.controls['0'], data);
                 this._toggleFormControl(this.formAccess.controls['delo_web'], data);
                 this._checkRoleControl(data);
             });
         this.formAccess.get('delo_web').valueChanges
-            .takeUntil(this._ngUnsubscribe)
             .subscribe(data => {
                 this._toggleFormControl(this.formAccess.controls['0'], data);
                 this._toggleFormControl(this.formAccess.controls['0-1'], data);
