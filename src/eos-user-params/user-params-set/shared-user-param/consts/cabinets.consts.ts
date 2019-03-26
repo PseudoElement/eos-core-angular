@@ -313,7 +313,7 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'HILITE_PRJ_RC_BOOLEAN',
             type: 'boolean',
-            title: 'Подсвечивать записив папке "Управление проектами" РК, срок которых истекает через'
+            title: 'Подсвечивать записи в папке "Управление проектами", срок которых истекает через'
         },
         {
             key: 'HILITE_PRJ_RC_INCREMENT',
