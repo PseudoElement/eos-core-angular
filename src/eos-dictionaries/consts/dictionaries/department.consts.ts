@@ -312,7 +312,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         'user', 'photo', 'ID_GAS_PS', 'NUMCREATION_FLAG',
         'title', 'DUE_LINK_ORGANIZ', 'indexDep', 'fullTitle', 'ISN_PHOTO', 'EXPEDITION_FLAG'],
     // ['fio', 'position', 'description', 'title', 'phone', 'email', 'rooms', 'associatedUsers']
-    allVisibleFields: ['SURNAME', 'DUTY', 'fullTitle', 'fullPosition', 'SKYPE', /* 'DEPARTMENT_DUE', */ 'ORDER_NUM', 'indexDep', 'POST_H',
+    allVisibleFields: ['SURNAME', 'DUTY', 'fullTitle', 'fullPosition', 'SKYPE', /* 'DEPARTMENT_DUE', */ 'indexDep', 'POST_H',
         'CARD_FLAG',
         'CARD_NAME', 'NOTE', 'START_DATE', 'END_DATE', 'PHONE_LOCAL', 'PHONE', 'FAX', 'E_MAIL', 'NUM_CAB', 'ID_GAS_PS',
         'NUMCREATION_FLAG' , 'organization', /*, 'printInfo', 'sev',
