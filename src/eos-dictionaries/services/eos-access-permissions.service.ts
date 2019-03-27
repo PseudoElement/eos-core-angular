@@ -1,8 +1,10 @@
+import { CABINET_DICT } from './../consts/dictionaries/cabinet.consts';
 import { RUBRICATOR_DICT } from './../consts/dictionaries/rubricator.consts';
 import { Injectable } from '@angular/core';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { NADZORDICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
 import { E_TECH_RIGHT } from 'eos-rest/interfaces/rightName';
+import { DEPARTMENTS_DICT } from 'eos-dictionaries/consts/dictionaries/department.consts';
 
 @Injectable()
 export class EosAccessPermissionsService {
@@ -18,6 +20,12 @@ export class EosAccessPermissionsService {
         switch (dictId) {
             case RUBRICATOR_DICT.id: {
                 return (r[E_TECH_RIGHT.Rubrics - 1] === '1');
+            }
+            case DEPARTMENTS_DICT.id: {
+                return (r[E_TECH_RIGHT.Departments - 1] === '1');
+            }
+            case CABINET_DICT.id: {
+                return (r[E_TECH_RIGHT.Cabinets - 1] === '1');
             }
         }
 
