@@ -58,14 +58,17 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
     }
 
     public fillDeclineFields(): void {
+        const gender = this.getValue('printInfo.GENDER');
         const field: FieldsDecline = {
             DUTY: this.getValue('rec.DUTY') || '',
-            GENDER: this.getValue('printInfo.GENDER') * 1,
             NAME: this.getValue('printInfo.NAME') || '',
             PATRON: this.getValue('printInfo.PATRON') || '',
             SURNAME: this.getValue('printInfo.SURNAME') || '',
             // PRINT_SURNAME_DP: 'test PRINT SURNAME_DP'
         };
+        if (gender !== null) {
+            field['GENDER'] = gender;
+        }
 
         this.dictSrv.inclineFields(field)
             .then(([res]: any) => {
@@ -84,6 +87,9 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                     res['GENDER'] === 1 ? RussianNameProcessor.sexF :
                     null
                     );
+                res['GENDER'] = rn.sex === RussianNameProcessor.sexF ? 1 :
+                                rn.sex === RussianNameProcessor.sexM ? 0 : null;
+
                 res.NAME_DP = rn.firstName(rn.gcaseDat);
                 res.NAME_PP = rn.firstName(rn.gcasePred);
                 res.NAME_RP = rn.firstName(rn.gcaseRod);
