@@ -100,20 +100,25 @@ export class CardEditComponent implements OnChanges, OnDestroy {
 
     afterGetForm(form: FormGroup, inputs: any): any {
         if (this.dictionaryId === RUBRICATOR_DICT.id) {
-            return this._apiSrv.read({USER_PARMS: {criteries: {
-                ISN_USER_OWNER: '-99',
-                PARM_NAME: 'UNIQ_RUBRIC_CL'
-            }}}).then (r => {
-                if (r && r[0] && r[0]['PARM_VALUE'] === 'YES') {
-                    const input = inputs['rec.CLASSIF_NAME'];
-                    const v = [this._inputCtrlSrv.unicValueValidator(input.key, input.uniqueInDict)];
-
-                    if (this.form.controls['rec.CLASSIF_NAME'].validator) {
-                        v.push(this.form.controls['rec.CLASSIF_NAME'].validator);
-                    }
-                    this.form.controls['rec.CLASSIF_NAME'].setValidators(v);
-                }
-            });
+            const input = inputs['rec.CLASSIF_NAME'];
+            if (input) {
+                const req = {
+                    USER_PARMS: {
+                        criteries: {
+                            ISN_USER_OWNER: '-99',
+                            PARM_NAME: 'UNIQ_RUBRIC_CL'
+                        }}};
+                return this._apiSrv.read(req)
+                    .then(r => {
+                        if (r && r[0] && r[0]['PARM_VALUE'] === 'YES') {
+                            const v = [this._inputCtrlSrv.unicValueValidator(input.key, input.uniqueInDict)];
+                            if (this.form.controls['rec.CLASSIF_NAME'].validator) {
+                                v.push(this.form.controls['rec.CLASSIF_NAME'].validator);
+                            }
+                            this.form.controls['rec.CLASSIF_NAME'].setValidators(v);
+                        }
+                });
+            }
         }
         return Promise.resolve(null);
     }

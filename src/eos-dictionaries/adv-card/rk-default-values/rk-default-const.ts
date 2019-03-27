@@ -11,6 +11,7 @@ export class TDFSelect {
 export class TDFSelectOption {
     value: any;
     title: string;
+    disabled?: boolean;
 }
 
 export class TDefaultField {
@@ -109,6 +110,8 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'DOC_RC.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
         title: '',
+        minValue: 1,
+        maxValue: 99999999,
     }, {
         key: 'DOC_RC.ONE_FILE',
         type: E_FIELD_TYPE.boolean,
@@ -320,9 +323,16 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'EXE_ISN_LIST',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
         // kind_doc '3',
-        title: 'Исполнители РК',
+        title: 'Исполнитель',
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
+        // title: 'Исполнители РК',
         // classif_id:  545
     }, {
         key: 'ISN_PERSON_EXE_M',
@@ -849,9 +859,16 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'SIGN_ISN_LIST',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
+        title: 'Подписал',
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
         // kind_doc '3',
-        title: 'Список подписывающих РК',
+        // title: 'Список подписывающих РК',
         // classif_id:  545
     }, {
         /* кому адресован */
@@ -879,6 +896,13 @@ export const RKDefaultFields: TDefaultField[] = [
         // title: 'Список рубрик',
         title: 'Рубрики',
         // classif_id:  545
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '107', ISN_LCLASSIF: '-99', },
+
+        }
     }, {
         key: 'TERM_EXEC',
         // Default type:  'D',

@@ -1,15 +1,20 @@
 
 <div class="access-window">
-    <eos-user-header
-        [title]="titleHeader"
-        [statusBtnSub]="getBtn"
-        [isDefault]='isDefault'
-        (submitForm)='saveAllForm()'
-        (cancelForm)='backForm($event)'
-       ></eos-user-header>
+    <eos-user-params-header
+        [title] = 'titleHeader'
+        [link] = 'link'
+        [selfLink] = 'selfLink'
+        [disableBtn] = "getBtn"
+        [defaultBtn] = 'isDefault'
+        (submitEmit) = 'saveAllForm($event)'
+        (cancelEmit) = 'backForm($event)'
+        (editEmit) = 'edit($event)'
+        (closeEmit) = 'close($event)'
+        (defaultEmit) = 'default($event)'
+    ></eos-user-params-header>
     <div class="doc-navigate">
         <ul class="tabs">
-                <li class="tab-item"
+            <li class="tab-item"
                 *ngFor="let tab of tabsForAccessLimited; let i = index"
                 [ngClass]="{'active': i === currTab}"
                 (click)="changeActivelink(i)">
@@ -20,20 +25,22 @@
     <div *ngIf="currTab === 0">
         <div class="access-control">
             <button
+                [disabled] = "!editFlag"
                 type="button"
                 class="btn btn-primary"
                 (click)="OpenClassiv()"
                 tooltip="Добавить"
                 containerClass="tooltip-info">
-                <span class="eos-icon eos-icon-plus-blue small"></span>
+                <span class="eos-icon small" [ngClass]="editFlag ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
             </button>
             <button
+                [disabled] = "!editFlag"
                 type="button"
                 class="btn btn-primary"
                 (click)='deliteEmailFild()'
                 tooltip="Удалить"
                 containerClass="tooltip-info">
-                <span class="eos-icon eos-icon-bin-blue small"></span>
+                <span class="eos-icon small" [ngClass]="editFlag ? 'eos-icon-bin-blue' : 'eos-icon-bin-grey' "></span>
             </button>
         </div>
 
@@ -63,7 +70,7 @@
     </div>
 </div>
 <div *ngIf="currTab === 1">
-    <eos-grifs (changeGrifs)="SubscribtGrifs($event)"></eos-grifs>
+    <eos-grifs (changeGrifs)="SubscribtGrifs($event)" [editFlag]="editFlag"></eos-grifs>
 </div>
     <div *ngIf="currTab === 2">
         <eos-links-limited (changeLinks)="SubscribLInks($event)"></eos-links-limited>

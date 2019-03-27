@@ -1,12 +1,17 @@
 <div class="input-user-wrapper input-user-visualization-wrapper"
 *ngIf="inputs">
-        <eos-user-header
-        [title]="titleHeader"
-        (submitForm)="submit()"
-        (cancelForm)="cancel()"
-        (defaultForm)="default()"
-        [statusBtnSub]="btnDisabled"
-    ></eos-user-header>
+<eos-user-params-header
+    [title] = 'titleHeader'
+    [link] = 'link'
+    [selfLink] = 'selfLink'
+    [disableBtn] = "btnDisabled"
+    [defaultBtn] = 'true'
+    (submitEmit) = 'submit($event)'
+    (cancelEmit) = 'cancel($event)'
+    (editEmit) = 'edit($event)'
+    (closeEmit) = 'close($event)'
+    (defaultEmit) = 'default($event)'
+></eos-user-params-header>
     <div class="user-input-group">
             <span class="l-font">Режим отображения основного файла</span>
             <hr>

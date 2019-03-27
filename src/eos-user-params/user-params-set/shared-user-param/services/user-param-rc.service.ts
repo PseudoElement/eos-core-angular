@@ -14,6 +14,7 @@ export class UserParamRCSrv extends BaseUserSrv {
     dopRec: Array<any>;
     cutentTab: number;
     flagBacground: boolean;
+    flagEdit: boolean = false;
     defaultFlag = false;
     disabledFlagDelite = false;
     _ngUnsubscribe: Subject<any> = new Subject();
@@ -22,7 +23,10 @@ export class UserParamRCSrv extends BaseUserSrv {
         this.flagBacground = false;
         this.cutentTab = 0;
         this.init();
-        this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value);
+        this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
+            this.checRcShowRes();
+            this.editMode();
+        });
         this._userParamsSetSrv.saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
@@ -43,24 +47,24 @@ export class UserParamRCSrv extends BaseUserSrv {
         this.cutentTab = i;
     }
 
-    getInfoFroCode(code: string): void {
+    getInfoFroCode(code: string): Promise<any> {
         if (code && code !== null && code !== 'null') {
              const parsedCode = code.split(',').filter(el =>  (el !== 'null' &&  el !== null)).join('||');
         const query = {
             DOCGROUP_CL: {
                 criteries: {
-                    ISN_NODE: parsedCode
+                    DUE: parsedCode
                 }
             }
         };
-        this.userParamApiSrv.getData(query).then(result => {
+     return   this.userParamApiSrv.getData(query).then(result => {
             this.dopRec = result;
            this.dopRec.length > 0 ?  this.disabledFlagDelite = false : this.disabledFlagDelite = true;
         });
         }else {
              this.disabledFlagDelite = true;
+             return Promise.resolve();
         }
-        this.checRcShowRes();
     }
     addRcDoc(): void {
         this.flagBacground = true;
@@ -69,6 +73,7 @@ export class UserParamRCSrv extends BaseUserSrv {
             selectMulty: false,
             selectLeafs: true,
             selectNodes: false,
+            return_due: true,
         };
         this._waitClassifSrv.openClassif(query).then(data => {
             this.addRcDocToInput(data);
@@ -106,7 +111,9 @@ export class UserParamRCSrv extends BaseUserSrv {
       if (!checValue) {
         newValue.push(data);
         this.form.controls['rec.OPEN_AR'].patchValue(newValue.join(','));
-        this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value);
+        this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
+            this.checRcShowRes();
+        });
       }
     }
     checRcShowRes(): void {
@@ -122,8 +129,11 @@ export class UserParamRCSrv extends BaseUserSrv {
            this.init();
            setTimeout(() => {
             this.checRcShowRes();
+            this.editMode();
         });
-    }
+    } else {
+        this.editMode();
+        }
     }
 
     disabDefault(flag: boolean): void {
@@ -141,6 +151,7 @@ export class UserParamRCSrv extends BaseUserSrv {
     }
 
     submit() {
+        this.flagEdit = false;
         if (this.newData || this.prepareData) {
             const userId = '' + this._userParamsSetSrv.userContextId;
             this.formChanged.emit(false);
@@ -150,6 +161,7 @@ export class UserParamRCSrv extends BaseUserSrv {
                 this.userParamApiSrv
                 .setData(this.createObjRequestForDefaultValues())
                 .then(data => {
+                    this.editMode();
                     this.defaultFlag = false;
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
@@ -159,6 +171,7 @@ export class UserParamRCSrv extends BaseUserSrv {
             this.userParamApiSrv
                 .setData(this.createObjRequest())
                 .then(data => {
+                    this.editMode();
                    // this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                     this._userParamsSetSrv.getUserIsn(userId);
@@ -169,12 +182,15 @@ export class UserParamRCSrv extends BaseUserSrv {
                 this.userParamApiSrv
                 .setData(this.createObjRequestForDefaultValues())
                 .then(data => {
+                    this.editMode();
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                     this._userParamsSetSrv.getUserIsn(userId);
                 })
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             }
+        } else {
+            this.editMode();
         }
     }
     default() {
@@ -221,6 +237,13 @@ export class UserParamRCSrv extends BaseUserSrv {
                 this._currentFormStatus = status;
             })
         );
+    }
+    editMode() {
+        if (this.flagEdit) {
+            this.form.enable({emitEvent: false});
+        }   else {
+            this.form.disable({emitEvent: false});
+        }
     }
     private _pushState () {
         this._userParamsSetSrv.setChangeState({isChange: this.isChangeForm});

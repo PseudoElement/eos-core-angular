@@ -83,10 +83,18 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
 
         let isRcTypeChanged = this._isChanged('rec.RC_TYPE', formChanges);
 
-        if (this._isChanged('rec.RC_TYPE_NODE', formChanges)) {
-            this.setValue('rec.RC_TYPE', this.getValue('rec.RC_TYPE_NODE'));
-            isRcTypeChanged = true;
+        if (this.isNode) {
+            if (this._isChanged('rec.RC_TYPE_NODE', formChanges)) {
+                this.setValue('rec.RC_TYPE', this.getValue('rec.RC_TYPE_NODE'));
+                isRcTypeChanged = true;
+            }
+        } else {
+            if (this._isChanged('rec.RC_TYPE', formChanges)) {
+                this.setValue('rec.RC_TYPE_NODE', this.getValue('rec.RC_TYPE'));
+                isRcTypeChanged = true;
+            }
         }
+
 
         if (isRcTypeChanged) {
             if (this.rcType * 1 === 3) {

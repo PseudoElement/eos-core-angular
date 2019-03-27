@@ -115,6 +115,7 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
                 this.flagShow = true;
                 this.disableBtn = true;
                 this.preparethisInputFields();
+                this._pushState();
         }).catch(e => {
             this.flagShow = true;
             this.cathError(e);

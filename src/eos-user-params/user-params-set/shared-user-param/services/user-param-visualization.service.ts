@@ -3,12 +3,15 @@ import { BaseUserSrv } from './base-user.service';
 import { VISUALIZATION_USER } from '../consts/visualization.consts';
 import { Subject } from 'rxjs/Subject';
 import { EosUtils } from 'eos-common/core/utils';
+import {PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
 @Injectable()
 export class UserParamVisualizationSrv extends BaseUserSrv {
      _ngUnsubscribe: Subject<any> = new Subject();
+     flagEdit: boolean = false;
     constructor( injector: Injector ) {
         super(injector, VISUALIZATION_USER);
         this.init();
+        this.editMode();
         this._userParamsSetSrv.saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
@@ -18,7 +21,6 @@ export class UserParamVisualizationSrv extends BaseUserSrv {
     subscribeChangeForm() {
         this.subscriptions.push(
             this.form.valueChanges
-                .debounceTime(200)
                 .subscribe(newVal => {
                     let changed = false;
                     Object.keys(newVal).forEach(path => {
@@ -32,14 +34,31 @@ export class UserParamVisualizationSrv extends BaseUserSrv {
                 this._pushState();
             })
         );
-        this.subscriptions.push(
-            this.form.statusChanges.subscribe(status => {
-                if (this._currentFormStatus !== status) {
-                    this.formInvalid.emit(status === 'INVALID');
-                }
-                this._currentFormStatus = status;
-            })
-        );
+    }
+    submit() {
+        super.submit();
+        this.flagEdit = false;
+        this.editMode();
+    }
+    cancel() {
+        this.flagEdit = false;
+        if (this.isChangeForm) {
+           this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+           this.isChangeForm = false;
+           this.formChanged.emit(false);
+           this.init();
+        }
+
+       setTimeout(() => {
+        this.editMode();
+       });
+    }
+    editMode() {
+        if (this.flagEdit) {
+            this.form.enable({emitEvent: false});
+        }   else {
+            this.form.disable({emitEvent: false});
+        }
     }
     private _pushState () {
         this._userParamsSetSrv.setChangeState({isChange: this.isChangeForm});

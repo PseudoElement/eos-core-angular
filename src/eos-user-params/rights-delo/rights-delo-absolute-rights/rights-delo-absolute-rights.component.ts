@@ -57,10 +57,15 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this.flagGrifs = res;
                 this.init();
             });
+            this._userParamsSetSrv.saveData$
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this.submit();
+            });
         }
 
     init() {
-
+        this.curentUser = this._userParamsSetSrv.curentUser;
         this.techRingtOrig = this.curentUser.TECH_RIGHTS;
         this.titleHeader =  `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Абсолютные права`;
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
@@ -81,17 +86,14 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     this._viewContent();
                 }, 0);
             });
-        this._userParamsSetSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
-            .subscribe(() => {
-                this.submit();
-            });
+
+            if (this.editMode) {
+                this.selectNode(this.listRight[0]);
+            }
+            this.inputAll = {all: new RadioInput(CONTROL_ALL_NOTALL)};
     }
     ngOnInit() {
-        if (this.editMode) {
-            this.selectNode(this.listRight[0]);
-        }
-        this.inputAll = {all: new RadioInput(CONTROL_ALL_NOTALL)};
+
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
@@ -102,6 +104,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
             return;
         }
+        // this.selectedNode = null;
+        this.editMode = false;
         this.btnDisabled = true;
         this._pushState();
         let qUserCl;
@@ -133,7 +137,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.apiSrv.setData(this.queryForSave)
         .then(() => {
             this.queryForSave = [];
+            this.listRight = [];
+            this.selectedNode = null;
+            this.editMode = false;
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+            this._userParamsSetSrv.getUserIsn().then(() => {
+                this.init();
+            });
         })
         .catch((e) => {
             if (e instanceof RestError) {
@@ -151,20 +161,16 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.editMode = false;
         this.btnDisabled = true;
         this._pushState();
-        this.ngOnDestroy();
         this._userParamsSetSrv.getUserIsn()
         .then(() => {
             this.init();
-            this.ngOnInit();
         });
     }
     edit() {
         const id = this._userParamsSetSrv.curentUser.ISN_LCLASSIF;
         if (this.flagGrifs) {
             this.editMode = true;
-            this.ngOnDestroy();
             this.init();
-            this.ngOnInit();
         }   else {
             this._router.navigate(['user-params-set/', 'access-limitation'],
             {

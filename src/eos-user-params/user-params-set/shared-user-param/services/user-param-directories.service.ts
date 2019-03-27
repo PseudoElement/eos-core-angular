@@ -18,12 +18,14 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
     formAttach: FormGroup;
     prepInputsAttach;
     _currentFormAttachStatus;
+    flagEdit: boolean = false;
    _ngUnsubscribe: Subject<any> = new Subject();
     constructor( injector: Injector ) {
         super(injector, DIRECTORIES_USER);
-        this.init();
+            this.init();
             this.prepInputsAttach = this.getObjectInputFields(DIRECTORIES_USER.fieldsChild);
             this.afterInit();
+            this.editMode();
             this._userParamsSetSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {
@@ -96,7 +98,13 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
             this.ngOnDestroy();
             this.init();
             this.afterInit();
+            this.isChangeForm = false;
+            this.isChangeFormAttach = false;
+            this._pushState();
         }
+        setTimeout(() => {
+            this.editMode();
+        });
     }
     submit() {
         if (this.newData || this.newDataAttach || this.prepareData) {
@@ -141,6 +149,11 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
                 .catch(data => console.log(data));
                 }
             }
+            this.isChangeForm = false;
+            this.isChangeFormAttach = false;
+            this._pushState();
+            this.flagEdit = false;
+            this.editMode();
         }
         createObjRequestForAll() {
             const req = this.createObjRequest();
@@ -221,6 +234,15 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
             .catch(err => {
                 throw err;
             });
+    }
+    editMode() {
+        if (this.flagEdit) {
+            this.form.enable({emitEvent: false});
+            this.formAttach.enable({emitEvent: false});
+        } else {
+            this.form.disable({emitEvent: false});
+            this.formAttach.disable({emitEvent: false});
+        }
     }
     private _pushState () {
         this._userParamsSetSrv.setChangeState({isChange: this.isChangeForm || this.isChangeFormAttach});

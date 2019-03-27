@@ -8,6 +8,10 @@ import { UserParamSearchSrv } from '../shared-user-param/services/user-param-sea
 
 export class UserParamSearchComponent extends UserParamSearchSrv implements OnDestroy {
     prepInputsAttach;
+    link;
+    selfLink;
+
+
     constructor( injector: Injector ) {
         super(injector);
     }
@@ -16,4 +20,14 @@ export class UserParamSearchComponent extends UserParamSearchSrv implements OnDe
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
+    edit($event) {
+        this.flagEdit = $event;
+        this.editMode();
+    }
+    cancel($event?) {
+        super.cancel();
+    }
+    close(event?) {
+        this._router.navigate(['user_param']);
+     }
 }

@@ -8,6 +8,7 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { IMessage } from 'eos-common/interfaces';
 import { Subject } from 'rxjs/Subject';
+import { Router } from '@angular/router';
 @Component({
     selector: 'eos-right-limited-access',
     styleUrls: ['right-limited-access.component.scss'],
@@ -32,6 +33,9 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     public tabsForAccessLimited = ['Группы документов', 'Грифы', /* 'Связки' */];
     public currTab = 0;
     titleHeader: string;
+    public link;
+    public selfLink;
+    public editFlag: boolean = false;
     private ArrayForm: FormArray;
     private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -39,7 +43,10 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
        private _msgSrv: EosMessageService,
       private _waitClassifSrv: WaitClassifService,
       private _userServices: UserParamsService,
+      private _router: Router,
     )   {
+        this.link = this._userServices.curentUser['ISN_LCLASSIF'];
+        this.selfLink = this._router.url.split('?')[0];
         this.activeLink = true;
         this.flagGrifs = true;
         this.flagLinks = true;
@@ -68,7 +75,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.myForm.removeControl('groupForm');
         this.myForm.setControl('groupForm', this.createGroup(false, false, true));
     }
-    saveAllForm(): void {
+    saveAllForm($event?): void {
         const promise_all = [];
         sessionStorage.removeItem(String(this._userServices.userContextId));
         sessionStorage.removeItem(String('links'));
@@ -85,7 +92,6 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         .then(result => {
             this._limitservise.getAccessCode()
             .then((params) => {
-
                 if (params) {
                     this.umailsInfo.splice(0, this.umailsInfo.length);
                     this.saveParams = params.slice();
@@ -99,7 +105,8 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                     this._limitservise.subscribe.next(false);
                     this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                     promise_all.splice(0, promise_all.length);
-
+                    this.editFlag = false;
+                    this.editModeForm();
                 }
             });
         }).catch(res => {
@@ -111,9 +118,14 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             this._msgSrv.addNewMessage(m);
         });
     }
-    backForm(event): void {
+    default($event?) {
+         return;
+    }
+    backForm($event?): void {
         this.delitedSetStore.clear();
         this.clearForm();
+        this.editFlag = $event;
+        this.editModeForm();
         this._limitservise.subscribe.next(true);
     }
 
@@ -158,6 +170,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             const newClassif = result_classif !== '' || null || undefined ? result_classif : '0.';
             this._limitservise.getCodeNameDOCGROUP(String(newClassif))
             .then(result => {
+                console.log(result);
                const arrData = this.checkfield(result);
                arrData.forEach(el => {
                      const newField = {
@@ -167,10 +180,10 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                     };
                     this.umailsInfo.push(newField);
                     this.addFormControls(newField, false, true);
-                    this.currentIndex = this.umailsInfo.length - 1;
-                    this.statusBtnSub = false;
-                    this.bacgHeader = false;
                 });
+                this.currentIndex = this.umailsInfo.length - 1;
+                this.statusBtnSub = false;
+                this.bacgHeader = false;
             });
         }).catch( error => {
             this.bacgHeader = false;
@@ -199,7 +212,16 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             this.myForm.valueChanges.subscribe(data => {
                 this.checkChanges(data);
             });
+            this.editModeForm();
         });
+    }
+
+    editModeForm() {
+        if (this.editFlag) {
+            this.myForm.enable({emitEvent: false});
+        }   else {
+            this.myForm.disable({emitEvent: false});
+        }
     }
 
       createForm(changedField: boolean, newField: boolean, flagBackForm?: boolean) {
@@ -290,6 +312,15 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             return false;
         }
         return true;
+    }
+    edit($event) {
+        this.editFlag = $event;
+        this.editModeForm();
+        this._limitservise.editEmit.next();
+    }
+    close($event) {
+        this.editFlag = $event;
+        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 
     private _pushState () {

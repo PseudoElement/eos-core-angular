@@ -129,10 +129,21 @@ export class AdvCardRKDataCtrl {
 
                         reqs.push(this._apiSrv.read(req).then((data) => {
                             const opts: TDFSelectOption[] = this.loadedDicts[hash];
+                            const curval = values[key][el.key];
                             // opts.push ({value: '', title: '...'});
                             for (let index = 0; index < data.length; index++) {
                                 const element = data[index];
-                                opts.push ({value: element[el.dict.dictKey], title: element[el.dict.dictKeyTitle]});
+                                const value = element[el.dict.dictKey];
+                                const title = element[el.dict.dictKeyTitle];
+                                const deleted = element['DELETED'];
+                                if (deleted) {
+                                    if (String(curval) === String(value)) {
+                                        opts.push ({value: value, title: title, disabled: true});
+                                    }
+                                } else {
+                                    opts.push ({value: value, title: title });
+                                }
+
                             }
 
                             el.options = opts;
@@ -228,7 +239,28 @@ export class AdvCardRKDataCtrl {
         }
         this.keys(newData[FILE_CONSTRAINT_LIST_NAME]).forEach((key) => {
             const savedData = docGroup[FILE_CONSTRAINT_LIST_NAME].find (f => f.CATEGORY === key);
+            let hasChanges = false;
             for (const sk in RKFilesConstraintsFields) {
+                if (RKFilesConstraintsFields.hasOwnProperty(sk)) {
+
+                    const f = RKFilesConstraintsFields[sk];
+                    const spath = key + '.' + f;
+                    const field = fields[FILE_CONSTRAINT_LIST_NAME].find(i => i.key === spath);
+                    const type: E_FIELD_TYPE = field.type;
+                    const t1 = newData[FILE_CONSTRAINT_LIST_NAME];
+                    const t2 = t1[key];
+                    const savedValue = this.fixDBValueByType(savedData[f], type);
+                    const formValue = this.fixDBValueByType(t2[f], type);
+                    if (savedValue !== formValue) {
+                        hasChanges = true;
+                        break;
+                    }
+                }
+            }
+
+            const updatevalues = {};
+            for (const sk in RKFilesConstraintsFields) {
+
                 if (RKFilesConstraintsFields.hasOwnProperty(sk)) {
                     const f = RKFilesConstraintsFields[sk];
                     const spath = key + '.' + f;
@@ -236,19 +268,36 @@ export class AdvCardRKDataCtrl {
                     const type: E_FIELD_TYPE = field.type;
                     const t1 = newData[FILE_CONSTRAINT_LIST_NAME];
                     const t2 = t1[key];
-                    const t3 = t2[f];
-                    const newValue = this.fixDBValueByType(t3, type);
-                    if (savedData) {
-                        const savedValue = this.fixDBValueByType(savedData[f], type);
-                        if (savedValue !== newValue) {
-                        }
-                    } else {
-
-                    }
-
-
+                    updatevalues[f] = this.fixDBValueByType(t2[f], type);
                 }
             }
+            if (updatevalues['ONE_FILE'] === null) {
+                updatevalues['ONE_FILE'] = '0';
+            }
+
+            if (hasChanges) {
+                if (savedData) {
+
+                    changes.push (
+                        {
+                            method: 'MERGE',
+                            data: updatevalues,
+                            requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DG_FILE_CONSTRAINT_List(\''
+                                + docGroup['DUE'] + ' ' + key + '\')'
+                        }
+                    );
+                } else {
+                    updatevalues['CATEGORY'] = key;
+                    changes.push (
+                        {
+                            method: 'POST',
+                            data: updatevalues,
+                            requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DG_FILE_CONSTRAINT_List'
+                        }
+                    );
+                }
+            }
+
 
         });
 

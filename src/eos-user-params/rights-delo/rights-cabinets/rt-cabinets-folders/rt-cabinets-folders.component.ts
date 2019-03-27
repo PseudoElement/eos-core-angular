@@ -146,7 +146,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         this._msgSrv.addNewMessage({
             type: 'warning',
             title: 'Предупреждение',
-            msg: 'Назначте главный кабинет',
+            msg: 'Назначьте главный кабинет',
             dismissOnTimeout: 6000
         });
     }

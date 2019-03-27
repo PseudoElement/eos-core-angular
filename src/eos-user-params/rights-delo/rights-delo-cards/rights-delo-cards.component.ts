@@ -6,6 +6,7 @@ import { CARD_FUNC_LIST } from './card-func-list.consts';
 import { FuncNum } from './funcnum.model';
 import { CardRightSrv } from './card-right.service';
 import { Subject } from 'rxjs/Subject';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
 // import { Subject } from 'rxjs/Subject';
 
 @Component({
@@ -24,10 +25,12 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
     public editMode: boolean = false;
     private _selectedFuncNum: FuncNum;
     private _ngUnsubscribe: Subject<any> = new Subject();
+    private _flagGrifs: boolean;
     constructor(
         private _userParamsSetSrv: UserParamsService,
         private _router: Router,
         private _cardSrv: CardRightSrv,
+        private _msgSrv: EosMessageService,
     ) {
         this.selfLink = this._router.url.split('?')[0];
         this._cardSrv.chengeState$
@@ -35,11 +38,17 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         .subscribe((state: boolean) => {
             this.btnDisabled = !state;
         });
+        this._userParamsSetSrv.saveData$
+        .takeUntil(this._ngUnsubscribe)
+        .subscribe(() => {
+            this.submit();
+        });
     }
     async ngOnInit() {
         // получение пользователя
         // await Promise.resolve();
         await this._userParamsSetSrv.getUserIsn();
+        this._flagGrifs = await this._userParamsSetSrv.checkGrifs(this._userParamsSetSrv.userContextId);
         this._cardSrv.prepareforEdit();
         this.editableUser = this._userParamsSetSrv.curentUser;
         this.titleHeader = `${this.editableUser.SURNAME_PATRON} - Права в картотеках`;
@@ -68,6 +77,18 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this._cardSrv.selectedFuncNum = null;
     }
     edit() {
+        if (!this._flagGrifs) {
+            this._router.navigate(['user-params-set/', 'access-limitation'],
+                {
+                    queryParams: {isn_cl: this._userParamsSetSrv.userContextId}
+                });
+            this._msgSrv.addNewMessage({ // TODO Перенести обьект сообщения в константы.
+                type: 'warning',
+                title: 'Предупреждение',
+                msg: 'Не заданы грифы доступа'
+            });
+            return;
+        }
         this.editMode = true;
         this.selectFuncNum(this.funcList[0]);
     }

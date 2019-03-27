@@ -1,3 +1,4 @@
+import { IDynamicInputOptions } from './../../../eos-common/dynamic-form-input/dynamic-input.component';
 import { AdvCardRKDataCtrl } from './../adv-card-rk-datactrl';
 import { Input, OnChanges, SimpleChanges, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -13,13 +14,19 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
     @Input() form: FormGroup;
     @Input() editMode: boolean;
 
+    selOpts: IDynamicInputOptions = {
+        defaultValue: {
+            value: '',
+            title: '...',
+        }
+    };
 
     isEDoc: boolean;
     rkType: number;
     // { value: 0, title: 'Не определена' },
     // { value: 1, title: 'Входящие' },
-    // { value: 3, title: 'Исходящие' },
     // { value: 2, title: 'Письма граждан' }
+    // { value: 3, title: 'Исходящие' },
 
     ngOnChanges(changes: SimpleChanges) {
     }

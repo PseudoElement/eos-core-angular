@@ -26,6 +26,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     dueForLink = '';
     controller = false;
     bacgHeader = false;
+    flagEdit: boolean = false;
     formAttach: FormGroup;
     prepDataAttach = {rec: {}};
      _ngUnsubscribe: Subject<any> = new Subject();
@@ -53,6 +54,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                             if (data) {
                                 this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(data[0]['CLASSIF_NAME']), {emitEvent: false});
                         }
+                        this.editMode();
                     });
                 });
         }).catch(err => {
@@ -131,6 +133,9 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
       return  this.userParamApiSrv.getData(query);
     }
     openClassifDepartment() {
+        if (!this.flagEdit)  {
+             return;
+        }
         this.bacgHeader = true;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
         .then((data: string) => {
@@ -151,7 +156,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
 
     clearControlAuthor() {
         const val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
-        if (String(val) === 'null' || val === '') {
+        if (String(val) === 'null' || val === '' || !this.flagEdit) {
             return;
         }   else {
             this.form.controls['rec.RESOLUTION_CONTROLLER'].patchValue('');
@@ -305,14 +310,18 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             }   else {
                 this.controller = false;
             }
+            this.editMode();
         });
         }).catch(err => {
             this.cathError(err);
         });
+    }   else {
+        this.editMode();
     }
     }
 
     submit() {
+        this.flagEdit = false;
         if (this.newData || this.newDataAttach || this.prepareData) {
             this.formChanged.emit(false);
             this.isChangeForm = false;
@@ -322,6 +331,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 this.userParamApiSrv
                 .setData(this.createObjRequestForDefaultValues())
                 .then(data => {
+                    this.editMode();
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
                 // tslint:disable-next-line:no-console
@@ -330,6 +340,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 this.userParamApiSrv
                 .setData(this.createObjRequestForAll())
                 .then(data => {
+                    this.editMode();
                   //  this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
@@ -339,6 +350,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             this.userParamApiSrv
                 .setData(this.createObjRequest())
                 .then(data => {
+                    this.editMode();
                   //  this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
@@ -348,12 +360,15 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 this.userParamApiSrv
                 .setData(this.createObjRequestForAttach())
                 .then(data => {
+                    this.editMode();
                    // this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
                 }
+            }   else {
+                this.editMode();
             }
         }
         createObjRequestForAll() {
@@ -436,13 +451,22 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                     return null;
                 }
         }
-        get getClass() {
-            return this.controller ? 'eos-icon eos-icon-info-blue small' : 'eos-icon eos-icon-info-grey small';
+    get getClass() {
+        return this.controller && this.flagEdit ? 'eos-icon eos-icon-info-blue small' : 'eos-icon eos-icon-info-grey small';
+    }
+    get getClassClearBtn() {
+        const val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
+        return    val !== '' && String(val) !== 'null' && this.flagEdit ? 'eos-icon eos-icon-close-blue small' : 'eos-icon eos-icon-close-grey small';
+    }
+    editMode() {
+        if (this.flagEdit) {
+            this.form.enable({emitEvent: false});
+            this.formAttach.enable({emitEvent: false});
+        }   else {
+            this.form.disable({emitEvent: false});
+            this.formAttach.disable({emitEvent: false});
         }
-        get getClassClearBtn() {
-            const val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
-            return    val !== '' && String(val) !== 'null' ? 'eos-icon eos-icon-close-blue small' : 'eos-icon eos-icon-close-grey small';
-        }
+    }
 
     private _pushState () {
         this._userParamsSetSrv.setChangeState({isChange: this.isChangeForm || this.isChangeFormAttach});

@@ -83,6 +83,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
 
         this.subscriptions.push(dragulaService.drag.subscribe(() => {
             this.selected = [null, null];
+            this.separator = '';
         }));
     }
 
@@ -174,7 +175,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     addToTemplate() {
         if (this.selected[0] && this.isEnabled(this.selected[0])) {
             const obj = Object.assign(this.selected[0]);
-            this.selected[1] = obj;
+            this.select(obj, 1);
             this.templateItems.push(obj);
             this.updateTemplate();
         }
@@ -197,6 +198,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
             if (idx > -1) {
                 this.templateItems.splice(idx, 1);
                 this.selected[1] = null;
+                this.separator = '';
                 this.updateTemplate();
             }
         }
@@ -217,9 +219,11 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     }
 
     update(event: any) {
-        event.target.value = event.target.value.replace(/([*{}])/g, '');
-        this.selected[1].key = event.target.value;
-        this.generateTemplate();
+        if (this.selected[1]) {
+            event.target.value = event.target.value.replace(/([*{}])/g, '');
+            this.selected[1].key = event.target.value;
+            this.generateTemplate();
+        }
     }
 
     private generateTemplate(): string {
@@ -253,5 +257,6 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     private updateTemplate() {
         this.updateAvailableItems();
         this.generateTemplate();
+        this.separator = '';
     }
 }
