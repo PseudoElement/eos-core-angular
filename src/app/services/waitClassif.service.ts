@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { IOpenClassifParams } from 'eos-common/interfaces';
 
+declare function openPopup(url: string, callback?: Function): boolean;
+
 const LIST_OLD_PAGES: string[] = [
     'CARDINDEX',
     'USER_CL',
@@ -18,17 +20,20 @@ export class WaitClassifService {
     }
     openClassif(params: IOpenClassifParams): Promise<String> {
         const url = this._prepareUrl(params);
-        const w = window.open(url, 'name', 'left=10,top=200,width=1000,height=500');
+        // const w = window.open(url, 'name', 'left=10,top=200,width=1000,height=500');
+
         return new Promise((resolve, reject) => {
-            window['endPopup'] = (data, flag) => {
-                if (flag !== 'refresh') {
-                    window['endPopup'] = undefined;
-                    resolve(data);
+            // openPopup('../Eos.Delo.JsControls/Classif/ChooseClassif.aspx?Classif=DEPARTMENT&return_due=true', function() {
+        const w =  openPopup(url, function(event, str) {
+                if (str !== '') {
+                    return resolve(str);
                 }
-            };
+                return reject();
+            });
+
             const checkDialClosed = setInterval(function () {
                 try {
-                    if (!w || w.closed) {
+                    if (!w || w['closed']) {
                         clearInterval(checkDialClosed);
                         reject();
                     }
@@ -62,7 +67,6 @@ export class WaitClassifService {
         }
 
         url += params.classif === 'CONTACT' || params.classif === 'ORGANIZ_CL' ? '&app=nadzor' : '';
-
         return url;
     }
 }
