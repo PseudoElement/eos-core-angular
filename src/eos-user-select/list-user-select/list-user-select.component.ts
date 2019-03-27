@@ -38,7 +38,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     isMarkNode: Boolean;
     titleCurrentDue: string = '';
     srtConfig: IUserSort = {};
-    currentSort: string = SortsList[0];
+    currentSort: string = SortsList[3];
     helpersClass: any;
     buttons: BtnAction;
     flagChecked: boolean;
@@ -313,11 +313,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     initSort() {
         this.srtConfig.department = {
             upDoun: false,
-            checked: true,
+            checked: false,
         };
         this.srtConfig.login = {
             upDoun: false,
-            checked: false,
+            checked: true,
         };
         this.srtConfig.fullDueName =  {
             upDoun: false,
@@ -351,7 +351,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
     preSortForAction() {
         this._apiSrv.devideUsers();
-        this.currentSort = 'department';
+        this.currentSort = 'login';
         this.srtConfig[this.currentSort].upDoun = false;
         this.srtConfig[this.currentSort].checked = true;
         if (this.srtConfig[this.currentSort].checked) {

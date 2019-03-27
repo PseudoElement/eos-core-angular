@@ -30,21 +30,23 @@
                     </div>
                 </label>
              </div>
-                <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')">Подразделение
-                    <span *ngIf ="srtConfig.department.checked" [ngClass]="getClassOrder(srtConfig.department.upDoun)"></span>
-                </span>
-                <span class="user-list-first-colomn likeLink"(click)="sortPageList('fullDueName')">Должностное лицо
-                    <span *ngIf ="srtConfig.fullDueName.checked" [ngClass]="getClassOrder(srtConfig.fullDueName.upDoun)"></span>
-                </span>
+             <span class="user-list-fourth-colomn likeLink"(click)="sortPageList('login')">Логин
+                <span *ngIf ="srtConfig.login.checked" [ngClass]="getClassOrder(srtConfig.login.upDoun)"></span>
+            </span>
+            <span class="user-list-third-colomn likeLink">Тип
+                <span *ngIf ="srtConfig.tip.checked"></span>
+            </span>
+            <span class="user-list-first-colomn likeLink"(click)="sortPageList('fullDueName')">Должностное лицо
+                <span *ngIf ="srtConfig.fullDueName.checked" [ngClass]="getClassOrder(srtConfig.fullDueName.upDoun)"></span>
+            </span>
+            <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')">Подразделение
+                <span *ngIf ="srtConfig.department.checked" [ngClass]="getClassOrder(srtConfig.department.upDoun)"></span>
+            </span>
                 <!-- <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
                     <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>
                 </span> -->
-                <span class="user-list-third-colomn likeLink">Тип
-                    <span *ngIf ="srtConfig.tip.checked"></span>
-                </span>
-                <span class="user-list-fourth-colomn likeLink"(click)="sortPageList('login')">Логин
-                    <span *ngIf ="srtConfig.login.checked" [ngClass]="getClassOrder(srtConfig.login.upDoun)"></span>
-                </span>
+
+
             </div>
         </div>
         <div *ngIf="!isLoading; else spiner" class="eos-node-list">
@@ -64,11 +66,12 @@
                             <span class="eos-icon eos-icon-checkbox-black"></span>
                         </label>
                         <div class="user-select-node-t"   (click)="!user.deleted ? selectedNode(user) : false">
-                            <span
-                            class="user-list-first-colomn"
-                            tooltip="{{user.department}}"
-                            placement="bottom" containerClass="tooltip-info" container="body"
-                            >{{user.department}}</span>
+                            <span class="user-list-fourth-colomn">{{user.login}}</span>
+                            <span class="user-list-third-colomn">
+                                    <span *ngIf="user.deleted" class="eos-icon eos-icon-bin-forever-grey small"></span>
+                                    <span *ngIf="user.blockedUser && !user.deleted" class="eos-icon eos-icon-Blockeduser-Yellow  small"></span>
+                                    <span *ngIf="user.blockedSystem" class="eos-icon eos-icon-Blockeduser-Red  small"></span>
+                            </span>
                             <span
                                 class="user-list-first-colomn"
                                 tooltip="{{user.fullDueName}}"
@@ -77,12 +80,12 @@
                                 container="body"
                                 >{{user.fullDueName}}
                             </span>
-                            <span class="user-list-third-colomn">
-                                <span *ngIf="user.deleted" class="eos-icon eos-icon-bin-forever-grey small"></span>
-                                <span *ngIf="user.blockedUser && !user.deleted" class="eos-icon eos-icon-Blockeduser-Yellow  small"></span>
-                                <span *ngIf="user.blockedSystem" class="eos-icon eos-icon-Blockeduser-Red  small"></span>
+                            <span
+                                class="user-list-first-colomn"
+                                tooltip="{{user.department}}"
+                                placement="bottom" containerClass="tooltip-info" container="body"
+                                >{{user.department}}
                             </span>
-                            <span class="user-list-fourth-colomn">{{user.login}}</span>
                         </div>
                     </div>
                 </div>
