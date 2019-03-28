@@ -128,8 +128,14 @@ export class TestPageComponent implements OnInit, OnChanges {
 
         const chl = this.pip.changeList([delo_blob]);
 
-        const content = { isn_target_blob: delo_blob.ISN_BLOB, data: s };
-        PipRX.invokeSop(chl, 'DELO_BLOB_SetDataContent', content);
+        let dddd: string = evt.data;
+        // dddd = dddd.replace(/\+/g, '%2B');
+        // dddd = dddd.replace(/\//g, '_');
+//         string converted = base64String.Replace('-', '+');
+// converted = converted.Replace('_', '/');
+        dddd = encodeURIComponent(dddd);
+        const content = { isn_target_blob: delo_blob.ISN_BLOB, data: dddd };
+        PipRX.invokeSop(chl, 'DELO_BLOB_SetDataContent', content, 'POST', false);
 
 
         this.pip.batch(chl, '').then(() => {
