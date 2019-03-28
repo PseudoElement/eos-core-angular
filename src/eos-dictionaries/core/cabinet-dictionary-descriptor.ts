@@ -224,7 +224,7 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
                 return this.apiSrv.batch(changes, '')
                     .then(() => {
                         return <IRecordOperationResult>{
-                            record: record,
+                            record: Object.assign(record, {CLASSIF_NAME: record['CABINET_NAME']}),
                             success: true
                         };
                     });
@@ -232,7 +232,7 @@ export class CabinetDictionaryDescriptor extends DictionaryDescriptor {
 
         }).catch((err) => {
             return <IRecordOperationResult>{
-                record: record,
+                record: Object.assign(record, {CLASSIF_NAME: record['CABINET_NAME']}),
                 success: false,
                 error: err
             };
