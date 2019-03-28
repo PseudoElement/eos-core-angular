@@ -167,11 +167,13 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                 this._userParamSrv.getUserIsn()
                 .then(() => {
+                    this.curentUser = this._userParamSrv.curentUser;
                     this.editMode = false;
                     this.init();
                     setTimeout(() => {
                         this.editModeF();
                         this.checRadioB();
+                        this.checkSelectUser();
                         this._subscribeControls();
                             this.stateHeaderSubmit = true;
                             this._pushState();
@@ -216,9 +218,31 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.editModeF();
         setTimeout(() => {
             this.checRadioB();
+            this.checkSelectUser();
+            if (this.curentUser.isTechUser) {
+                this.formControls.controls['teсhUser'].disable({emitEvent: false});
+            }
             this.stateHeaderSubmit = true;
             this._pushState();
         });
+    }
+    checkSelectUser() {
+        if (this.curentUser.isAccessDelo) {
+            this.formControls.controls['SELECT_ROLE'].enable({emitEvent: false});
+        }   else {
+            this.formControls.controls['SELECT_ROLE'].disable({emitEvent: false});
+        }
+    }
+    tf() {
+        const val1 = this.formAccess.controls['0-1'].value;
+        const val2 = this.formAccess.controls['delo_web'].value;
+        if (val1 || val2) {
+            this.formControls.controls['SELECT_ROLE'].enable({emitEvent: false});
+        }
+        if (!val1 && !val2) {
+            this.formControls.controls['SELECT_ROLE'].patchValue('');
+            this.formControls.controls['SELECT_ROLE'].disable({emitEvent: false});
+        }
     }
     editModeF() {
         if (this.editMode) {
@@ -277,8 +301,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     resetControll() {
         this.formControls['passRepeated'].patchValue();
     }
-    selectDepartment(status) {
-        if (status) {
+    selectDepartment() {
+        if (!this.curentUser.isTechUser) {
             this.showDepartment();
         }
     }
@@ -301,7 +325,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this.formAccess.controls['delo_web'].disable({emitEvent: false});
         }
     }
-    private _subscribeControls() {                                        /* подписки */
+    private _subscribeControls() {                                     /* подписки */
         /* основная форма */
         this.form.valueChanges
             .subscribe((data) => {
@@ -316,7 +340,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.formControls.valueChanges
             .subscribe((data) => {
                 this._newData['formControls'] = data;
-                this._checkForChenge(this.formControls.invalid);
+                this._checkForChenge(false);
             });
 
         /* форма доступа к системам */
@@ -336,20 +360,20 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             .subscribe(data => {
                 this._toggleFormControl(this.formAccess.controls['0'], data);
                 this._toggleFormControl(this.formAccess.controls['delo_web'], data);
-                this._checkRoleControl(data);
+             //   this._checkRoleControl(data);
             });
         this.formAccess.get('delo_web').valueChanges
             .subscribe(data => {
                 this._toggleFormControl(this.formAccess.controls['0'], data);
                 this._toggleFormControl(this.formAccess.controls['0-1'], data);
                 this._toggleFormControl(this.formAccess.controls['1-27'], !data);
-                this._checkRoleControl(data);
+            //    this._checkRoleControl(data);
                 if (data) {
                     this.formAccess.controls['1-27'].patchValue('1', {emitEvent: false});
                 } else {
                     this.formAccess.controls['1-27'].patchValue('', {emitEvent: false});
                 }
-            });
+        });
     }
 
     private _toggleFormControl(control, disable: boolean) {
@@ -363,16 +387,16 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
         }
     }
-    private _checkRoleControl (state: boolean) {
-        if (state) {
-            if (this.curentUser.isAccessDelo) {
-                this._toggleFormControl(this.formControls.controls['SELECT_ROLE'], false);
-            }
-        } else {
-            this.formControls.get('SELECT_ROLE').patchValue('');
-            this._toggleFormControl(this.formControls.controls['SELECT_ROLE'], true);
-        }
-    }
+    // private _checkRoleControl (state: boolean) {
+    //     if (state) {
+    //         if (this.curentUser.isAccessDelo) {
+    //             this._toggleFormControl(this.formControls.controls['SELECT_ROLE'], false);
+    //         }
+    //     } else {
+    //         this.formControls.get('SELECT_ROLE').patchValue('');
+    //         this._toggleFormControl(this.formControls.controls['SELECT_ROLE'], true);
+    //     }
+    // }
     private _createAccessSystemsString (data) {
         const arr = this.curentUser['ACCESS_SYSTEMS'].concat();
         arr[0] = '0';

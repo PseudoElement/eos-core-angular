@@ -153,7 +153,6 @@
         </div>
         <!-- должностное лицо и роль -->
         <div class="row-department-role">
-
             <div [formGroup]="form"
                 class="dynamic-input-wrapper inline-block base-department-input">
                 <label
@@ -168,12 +167,11 @@
                     [placeholder]="inputs['DUE_DEP_NAME'].label"
                     autocomplete="off">
                     <span class="icon eos-icon small icon-add-department span-avatar-icon"
-                        [ngClass]="{'eos-icon-avatar-blue': form.get('DUE_DEP_NAME').enabled, 'eos-icon-avatar-grey': form.get('DUE_DEP_NAME').disabled}"
+                        [ngClass]="{'eos-icon-avatar-blue': !curentUser.isTechUser, 'eos-icon-avatar-grey': curentUser.isTechUser}"
                         (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"
                     ></span>
                 </div>
             </div>
-
             <eos-dynamic-input
                 class="base-text-input base-input-role"
                 [input]="controls['SELECT_ROLE']"
@@ -205,11 +203,13 @@
                 [form]="formAccess"
                 [readonly]="formAccess.get('0-1').disabled"
                 class="base-checkbox-input"
+                (change) = "tf()"
             ></eos-dynamic-input>
             <eos-dynamic-input
                 [input]="accessInputs['delo_web']"
                 [form]="formAccess"
                 [readonly]="formAccess.get('delo_web').disabled"
+                (change) = "tf()"
             ></eos-dynamic-input>
             <eos-dynamic-input
                 [input]="accessInputs['1-27']"
