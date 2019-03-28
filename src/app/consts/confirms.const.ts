@@ -40,7 +40,8 @@ export const CONFIRM_NUMCREATION_CHANGE: IConfirmWindow = {
     body: 'Вы хотите изменить значение счетчика с "{{old_value}}" на "{{new_value}}" для {{year}} года?'
         + '\nВнимание: Обратное изменение будет невозможно!',
     okTitle: 'Да',
-    cancelTitle: 'Нет'
+    cancelTitle: 'Нет',
+    manualCR: true,
 };
 
 export const CONFIRM_REESTRTYPE_DELIVERY_CHANGE: IConfirmWindow = {

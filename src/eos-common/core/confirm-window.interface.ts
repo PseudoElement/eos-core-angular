@@ -5,6 +5,7 @@ export interface IConfirmWindow {
     body: string;
     okTitle: string;
     cancelTitle: string;
+    manualCR?: boolean;
 }
 
 export interface IConfirmWindowContent extends IConfirmWindow {
