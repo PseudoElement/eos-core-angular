@@ -97,7 +97,7 @@ export abstract class AbstractDictionaryDescriptor {
             data: blobData
         };
 
-        PipRX.invokeSop(chl, 'DELO_BLOB_SetDataContent', content);
+        PipRX.invokeSop(chl, 'DELO_BLOB_SetDataContent', content, 'POST', false);
 
         return this.apiSrv.batch(chl, '')
             .then((ids) => (ids[0] ? ids[0] : null));
