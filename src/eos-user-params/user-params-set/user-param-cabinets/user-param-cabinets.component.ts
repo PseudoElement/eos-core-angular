@@ -8,7 +8,7 @@ import { UserParamCabinetsSrv } from '../shared-user-param/services/user-param-c
 
 export class UserParamCabinetsComponent extends UserParamCabinetsSrv implements OnDestroy {
     userId: string;
-    disableSave: boolean;
+
     isChanged: boolean;
     prepInputsAttach;
     selfLink;
