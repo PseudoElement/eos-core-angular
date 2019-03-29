@@ -113,6 +113,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.sortArray(this.saveParams);
         this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
         this.flagGrifs = true;
+        this.statusBtnSub = true;
     }
     resetForm() {
         // this.myForm.removeControl('groupForm');
