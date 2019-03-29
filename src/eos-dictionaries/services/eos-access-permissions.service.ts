@@ -6,7 +6,7 @@ import { CABINET_DICT } from './../consts/dictionaries/cabinet.consts';
 import { RUBRICATOR_DICT } from './../consts/dictionaries/rubricator.consts';
 import { Injectable } from '@angular/core';
 import { AppContext } from 'eos-rest/services/appContext.service';
-import { NADZORDICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
+import { NADZORDICTIONARIES, NADZOR } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
 import { E_TECH_RIGHT } from 'eos-rest/interfaces/rightName';
 import { DEPARTMENTS_DICT } from 'eos-dictionaries/consts/dictionaries/department.consts';
 import { SIGN_KIND_DICT } from 'eos-dictionaries/consts/dictionaries/sign-kind.consts';
@@ -46,6 +46,7 @@ const dictsTechs: { id: string,     tech: E_TECH_RIGHT; } [] = [
     { id: ORG_TYPE_DICT.id,         tech: E_TECH_RIGHT.OrganizTypes},       // Типы организаций
     { id: REESTRTYPE_DICT.id,       tech: E_TECH_RIGHT.ReestrTypes},        // Типы реестров
     { id: LINK_DICT.id,             tech: E_TECH_RIGHT.LinkTypes},          // Типы связок
+    { id: NADZOR.id,                tech: E_TECH_RIGHT.NadzorCL},           // Группа справочников Надзора
 ];
 @Injectable()
 export class EosAccessPermissionsService {
