@@ -8,6 +8,8 @@ import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { InputBase } from 'eos-common/core/inputs/input-base';
 import { FA_ICONS } from './fa-icons.const';
+import { WaitClassifService } from 'app/services/waitClassif.service';
+import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 
 const TEST_INPUTS = <IBaseInput[]>[{
     controlType: 'string',
@@ -88,7 +90,8 @@ export class TestPageComponent implements OnInit, OnChanges {
     constructor(
         private _messageService: EosMessageService,
         private pip: PipRX,
-        private inputCtrlSrv: InputControlService
+        private inputCtrlSrv: InputControlService,
+        private _waitClassifSrv: WaitClassifService,
     ) {
         this.inputs = this.inputCtrlSrv.generateInputs(TEST_INPUTS);
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs, false);
@@ -148,6 +151,9 @@ export class TestPageComponent implements OnInit, OnChanges {
     }
 
     chooseCL(_evt) {
+
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT);
+
         const siteUrl = '../';
         const pageUrl = siteUrl + 'Pages/Classif/ChooseClassif.aspx?';
         const params = 'Classif=DEPARTMENT&value_id=__ClassifIds&skip_deleted=True&select_nodes=True&select_leaf=True&return_due=True';

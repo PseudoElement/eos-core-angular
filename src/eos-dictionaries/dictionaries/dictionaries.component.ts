@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import { EosDictService } from '../services/eos-dict.service';
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import {Router} from '@angular/router';
+import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
 
 @Component({
     selector: 'eos-dictionaries',
@@ -9,10 +10,12 @@ import {Router} from '@angular/router';
 })
 export class DictionariesComponent {
     dictionariesList: IDictionaryDescriptor[] = [];
+    r: number = 0;
 
     constructor(
         private _dictSrv: EosDictService,
-        private _router: Router
+        private _router: Router,
+        private _eaps: EosAccessPermissionsService,
     ) {
         this._dictSrv.closeDictionary();
 
@@ -26,5 +29,9 @@ export class DictionariesComponent {
         dictList.then((list) => {
                 this.dictionariesList = list;
         });
+    }
+
+    isAccessEnabled(dict: any) {
+        return this._eaps.isAccessGrantedForDictionary(dict.id);
     }
 }

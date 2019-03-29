@@ -398,8 +398,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         this._sandwichSrv.resize();
     }
 
+    isDictModeEnabled (mode: number): boolean {
+        const dict = this._dictSrv.dictionaryByMode(mode).id;
+        const access = this._eaps.isAccessGrantedForDictionary(dict);
+        return access;
+    }
     setDictMode(mode: number) {
-
         if (mode === 0 && this.treeNode.isDeleted) {
             this._msgSrv.addNewMessage(DANGER_DEPART_IS_LDELETED);
         } else {

@@ -1,8 +1,10 @@
 <div class="eos-dictionaries">
-    <button *ngFor="let dictionary of dictionariesList" class="dictionary btn block xl-font"
+    <button *ngFor="let dictionary of dictionariesList"
+            class="dictionary btn block xl-font"
+            [disabled]="!isAccessEnabled(dictionary)"
             [routerLink]="['/spravochniki', dictionary.id]">
         <span class="icon-wrapper">
-            <span class="icon eos-icon {{dictionary.iconName}}"></span>
+            <span class="icon disabled eos-icon {{dictionary.iconName}}"></span>
         </span>
         <span class="text">{{dictionary.title}}</span>
     </button>

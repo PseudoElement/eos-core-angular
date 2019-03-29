@@ -21,7 +21,7 @@ import { STATUS_REPLY_DICT } from './dictionaries/status-reply.consts';
 import { VISA_TYPE_DICT } from './dictionaries/visa-type.consts';
 import { NADZOR } from './dictionaries/nadzor.consts';
 import { REESTRTYPE_DICT } from './dictionaries/reestrtype.consts';
-import {NOMENKL_CL} from './dictionaries/nomenkl.const';
+import {NOMENKL_DICT} from './dictionaries/nomenkl.const';
 import {EDS_CATEGORY_CL} from './dictionaries/category-eds.consts';
 
 export const DICTIONARIES = [
@@ -47,7 +47,7 @@ export const DICTIONARIES = [
     STATUS_REPLY_DICT,
     VISA_TYPE_DICT,
     // CITIZENS_DICT,
-    NOMENKL_CL,
+    NOMENKL_DICT,
     EDS_CATEGORY_CL,
     LINK_DICT,
      // SEV
