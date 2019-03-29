@@ -9,6 +9,7 @@ import { UserParamsService } from '../../shared/services/user-params.service';
 import { IMessage } from 'eos-common/interfaces';
 import { Subject } from 'rxjs/Subject';
 import { Router } from '@angular/router';
+import { DOCGROUP_CL } from 'eos-rest';
 @Component({
     selector: 'eos-right-limited-access',
     styleUrls: ['right-limited-access.component.scss'],
@@ -16,6 +17,7 @@ import { Router } from '@angular/router';
 })
 
 export class RightLimitedAccessComponent implements OnInit, OnDestroy {
+    public isLoading = false;
     public isDefault = false;
     public statusBtnSub: boolean = true;
     public umailsInfo: Array<any>;
@@ -36,6 +38,29 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     public link;
     public selfLink;
     public editFlag: boolean = false;
+
+    get checkGriffs() {
+        if (this.grifsForm) {
+            const checkG = this.grifsForm.value.some(el => {
+                return ( el.action === 'unset' && el.checkbox === true) || ( el.action === 'create' && el.checkbox === true);
+            });
+            if (checkG) {
+                return true;
+            }   else {
+                return false;
+            }
+        }   else {
+            if (this.checkGrifs.length) {
+                return true;
+            }   else {
+                return false;
+            }
+        }
+    }
+
+
+    private checkUserCard;
+    private checkGrifs;
     private ArrayForm: FormArray;
     private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -52,10 +77,31 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.flagLinks = true;
         this.bacgHeader = false;
         this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ограничение доступа`;
+        this.checkUserCard = this._userServices['_userContext']['USERCARD_List'];
         this._userServices.saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
             this.saveAllForm();
+        });
+    }
+    ngOnInit() {
+        this.isLoading = false;
+        this._limitservise.getInfoGrifs().then(result => {
+            this.checkGrifs = result[0][0]['USERSECUR_List'];
+        });
+        this._limitservise.getAccessCode()
+        .then((result) => {
+            this.umailsInfo = result.slice();
+            this.sortArray(this.umailsInfo);
+            this.saveParams =  this.umailsInfo.slice();
+            this.umailsInfo.length > 0 ? this.currentIndex = 0 : this.currentIndex = null;
+            this.createForm(false, false);
+            this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+            this.myForm.valueChanges.subscribe(data => {
+                this.checkChanges(data);
+            });
+            this.editModeForm();
+            this.isLoading = true;
         });
     }
     clearForm(): void {
@@ -65,17 +111,25 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.umailsInfo = this.saveParams.slice();
         this.sortArray(this.umailsInfo);
         this.sortArray(this.saveParams);
-        if (this.saveParams.length) {
-           // this.currentIndex = this.saveParams.length - 1;
-        }
         this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
         this.flagGrifs = true;
     }
     resetForm() {
-        this.myForm.removeControl('groupForm');
-        this.myForm.setControl('groupForm', this.createGroup(false, false, true));
+        // this.myForm.removeControl('groupForm');
+        // this.myForm.setControl('groupForm', this.createGroup(false, false, true));
+        this.createForm(false, false, true);
+        this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+        this.myForm.valueChanges.subscribe(data => {
+            this.checkChanges(data);
+        });
     }
     saveAllForm($event?): void {
+        if (!this.checkGriffs) {
+            this.warning('warning', 'Предупреждение', 'Не заданы грифы доступа');
+            this.backForm();
+            return;
+        }
+        this.isLoading = false;
         const promise_all = [];
         sessionStorage.removeItem(String(this._userServices.userContextId));
         sessionStorage.removeItem(String('links'));
@@ -103,19 +157,23 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                     this.flagGrifs = true;
                     this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
                     this._limitservise.subscribe.next(false);
-                    this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                     promise_all.splice(0, promise_all.length);
                     this.editFlag = false;
                     this.editModeForm();
+                    this._pushState();
+                    this.isLoading = true;
+                    if (!this.checkUserCard.length) {
+                        this._router.navigate(['user-params-set/', 'card-files'],
+                        {
+                            queryParams: {isn_cl: this._userServices.userContextId}
+                        });
+                        this.warning('warning', 'Предупреждение', 'Не определена главная картотека', 6000);
+                    }
+                    this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                 }
             });
         }).catch(res => {
-            const m: IMessage = {
-                type: 'warning',
-                title: 'Ошибка сервера',
-                msg: 'Возможно изменения не сохранились',
-            };
-            this._msgSrv.addNewMessage(m);
+            this.warning('warning', 'Ошибка сервера', 'Возможно изменения не сохранились');
         });
     }
     default($event?) {
@@ -170,24 +228,45 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             const newClassif = result_classif !== '' || null || undefined ? result_classif : '0.';
             this._limitservise.getCodeNameDOCGROUP(String(newClassif))
             .then(result => {
-                console.log(result);
-               const arrData = this.checkfield(result);
+               let arrData = this.checkfield(result);
+               arrData = this.checkDeletedStore(arrData);
                arrData.forEach(el => {
                      const newField = {
                         NAME: el.CLASSIF_NAME,
                         DUE: el.DUE,
-                        ALLOWED: el.ALLOWED
+                        ALLOWED: false
                     };
                     this.umailsInfo.push(newField);
-                    this.addFormControls(newField, false, true);
+                    this.statusBtnSub = false;
+                    this.addFormControls(newField, false, el['_grif'] === 'old' ? false : true);
                 });
                 this.currentIndex = this.umailsInfo.length - 1;
-                this.statusBtnSub = false;
                 this.bacgHeader = false;
             });
         }).catch( error => {
             this.bacgHeader = false;
         });
+    }
+
+    checkDeletedStore(arrData: DOCGROUP_CL[]): DOCGROUP_CL[] {
+        if (this.delitedSetStore.size) {
+            arrData.forEach((doc: DOCGROUP_CL) => {
+                this.checkNewOrOld(doc);
+            });
+        }
+        return arrData;
+    }
+    checkNewOrOld(doc: DOCGROUP_CL) {
+        const arraySet = Array.from(this.delitedSetStore);
+        const find = arraySet.filter((value) => {
+            return doc.DUE === value.due;
+        });
+        if (find.length) {
+            doc['_grif'] = 'old';
+            this.delitedSetStore.delete(find[0]);
+        }   else {
+            doc['_grif'] = 'new';
+        }
     }
 
     checkfield(param) {
@@ -199,23 +278,6 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         });
         return filter;
     }
-
-    ngOnInit() {
-        this._limitservise.getAccessCode()
-        .then((result) => {
-            this.umailsInfo = result.slice();
-            this.sortArray(this.umailsInfo);
-            this.saveParams =  this.umailsInfo.slice();
-            this.umailsInfo.length > 0 ? this.currentIndex = 0 : this.currentIndex = null;
-            this.createForm(false, false);
-            this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
-            this.myForm.valueChanges.subscribe(data => {
-                this.checkChanges(data);
-            });
-            this.editModeForm();
-        });
-    }
-
     editModeForm() {
         if (this.editFlag) {
             this.myForm.enable({emitEvent: false});
@@ -307,12 +369,6 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
-    get getBtn() {
-        if ( !this.statusBtnSub || !this.flagGrifs || !this.flagLinks) {
-            return false;
-        }
-        return true;
-    }
     edit($event) {
         this.editFlag = $event;
         this.editModeForm();
@@ -322,9 +378,25 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.editFlag = $event;
         this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
-
+    get getBtn() {
+        if ( !this.statusBtnSub || !this.flagGrifs) {
+            return false;
+        }
+        return true;
+    }
     private _pushState () {
         this._userServices.setChangeState({isChange: !this.getBtn});
+    }
+    private warning(type: any, title: string, msg: string, dismissOnTimeout?: any) {
+        const m: IMessage = {
+            type: type,
+            title: title,
+            msg: msg,
+        };
+        if (dismissOnTimeout) {
+            m['dismissOnTimeout'] = dismissOnTimeout;
+        }
+        this._msgSrv.addNewMessage(m);
     }
 
 }

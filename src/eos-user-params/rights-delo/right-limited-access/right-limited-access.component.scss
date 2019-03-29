@@ -81,6 +81,12 @@
 
     }
 }
+.wrapper-spinner{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100% - 300px);
+}
 .bacgrFixed{
     position: fixed;
     left: 0;

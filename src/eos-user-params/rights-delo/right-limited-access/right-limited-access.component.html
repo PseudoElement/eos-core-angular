@@ -22,6 +22,7 @@
             </li>
         </ul>
     </div>
+<div *ngIf="isLoading">
     <div *ngIf="currTab === 0">
         <div class="access-control">
             <button
@@ -30,6 +31,7 @@
                 class="btn btn-primary"
                 (click)="OpenClassiv()"
                 tooltip="Добавить"
+                triggers ="hover:click"
                 containerClass="tooltip-info">
                 <span class="eos-icon small" [ngClass]="editFlag ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
             </button>
@@ -68,12 +70,16 @@
             </form>
         </div>
     </div>
-</div>
-<div *ngIf="currTab === 1">
-    <eos-grifs (changeGrifs)="SubscribtGrifs($event)" [editFlag]="editFlag"></eos-grifs>
-</div>
+    </div>
+    <div *ngIf="currTab === 1">
+        <eos-grifs (changeGrifs)="SubscribtGrifs($event)" [editFlag]="editFlag"></eos-grifs>
+    </div>
     <div *ngIf="currTab === 2">
         <eos-links-limited (changeLinks)="SubscribLInks($event)"></eos-links-limited>
     </div>
+    </div>
+</div>
+<div class="wrapper-spinner"  *ngIf="!isLoading">
+    <eos-spinner size="lg"></eos-spinner>
 </div>
 <div *ngIf="bacgHeader" class="bacgrFixed"></div>
