@@ -76,6 +76,9 @@
                 .tabs {
                     .tab-item {
                         margin: 0 20px;
+                        &.disabled {
+                            cursor: not-allowed;
+                        }
                     }
                     .tab-title {
                         font-size: 16px;

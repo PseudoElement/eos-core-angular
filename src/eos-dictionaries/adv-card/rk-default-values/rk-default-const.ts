@@ -124,6 +124,8 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'PRJ_RC.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
         title: '',
+        minValue: 1,
+        maxValue: 99999999,
     }, {
         key: 'PRJ_RC.ONE_FILE',
         type: E_FIELD_TYPE.boolean,
@@ -136,6 +138,8 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'PRJ_VISA_SIGN.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
         title: '',
+        minValue: 1,
+        maxValue: 99999999,
     }, {
         key: 'PRJ_VISA_SIGN.ONE_FILE',
         type: E_FIELD_TYPE.boolean,
@@ -148,6 +152,8 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'REPLY.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
         title: '',
+        minValue: 1,
+        maxValue: 99999999,
     }, {
         key: 'REPLY.ONE_FILE',
         type: E_FIELD_TYPE.boolean,
@@ -160,6 +166,8 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'RESOLUTION.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
         title: '',
+        minValue: 1,
+        maxValue: 99999999,
     }, {
         key: 'RESOLUTION.ONE_FILE',
         type: E_FIELD_TYPE.boolean,

@@ -32,6 +32,7 @@ import { CONFIRM_CHANGE_BOSS } from '../consts/confirm.consts';
 import {ConfirmWindowService} from 'eos-common/confirm-window/confirm-window.service';
 import { ReestrtypeDictionaryDescriptor } from '../core/reestrtype-dictionary-descriptor';
 import { _ES } from '../../eos-rest/core/consts';
+import { EosAccessPermissionsService } from './eos-access-permissions.service';
 
 @Injectable()
 export class EosDictService {
@@ -177,6 +178,7 @@ export class EosDictService {
         return this._dictionaries[this._dictMode];
     }
 
+
     constructor(
         // private _router: Router,
         private _msgSrv: EosMessageService,
@@ -184,6 +186,8 @@ export class EosDictService {
         private _descrSrv: DictionaryDescriptorService,
         private departmentsSrv: EosDepartmentsService,
         private confirmSrv: ConfirmWindowService,
+        private _eaps: EosAccessPermissionsService,
+
     ) {
         this._initViewParameters();
         this._dictionaries = [];
@@ -343,6 +347,10 @@ export class EosDictService {
         this._listDictionary$.next(null);
         this.currentNode = null;
         this.filters = {};
+    }
+
+    dictionaryByMode(mode: number): EosDictionary {
+        return this._dictionaries[0].getDictionaryIdByMode(mode);
     }
 
     openDictionary(dictionaryId: string): Promise<EosDictionary> {
@@ -704,15 +712,20 @@ export class EosDictService {
         this._reorderList(dictionary);
     }
 
-    setDictMode(mode: number) {
-        this._dictMode = mode;
-        this._srchCriteries = null;
-        if (!this._dictionaries[mode]) {
-            this._dictionaries[mode] = this._dictionaries[0].getDictionaryIdByMode(mode);
+    setDictMode(mode: number): boolean {
+        const dict = this._dictionaries[0].getDictionaryIdByMode(mode).id;
+        const access = this._eaps.isAccessGrantedForDictionary(dict);
+        if (access) {
+            this._dictMode = mode;
+            this._srchCriteries = null;
+            if (!this._dictionaries[mode]) {
+                this._dictionaries[mode] = this._dictionaries[0].getDictionaryIdByMode(mode);
+            }
+            this._dictMode$.next(this._dictMode);
+            this.updateViewParameters({firstUnfixedIndex: 0});
+            this._reloadList();
         }
-        this._dictMode$.next(this._dictMode);
-        this.updateViewParameters({firstUnfixedIndex: 0});
-        this._reloadList();
+        return access;
     }
 
     setUserOrder(ordered: EosDictionaryNode[]) {

@@ -5,7 +5,7 @@ import {YEAR_PATTERN} from 'eos-common/consts/common.consts';
 
 
 export const DID_NOMENKL_CL = 'nomenkl';
-export const NOMENKL_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
+export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: DID_NOMENKL_CL,
     apiInstance: 'NOMENKL_CL',
     title: 'Номенклатура дел',
