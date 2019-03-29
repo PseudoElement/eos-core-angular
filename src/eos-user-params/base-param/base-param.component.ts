@@ -70,6 +70,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.selfLink = this._router.url.split('?')[0];
         this.init();
         this.editModeF();
+        this.checkSelectUser();
         this._subscribeControls();
         this._userParamSrv
         .saveData$
@@ -227,7 +228,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         });
     }
     checkSelectUser() {
-        if (this.curentUser.isAccessDelo) {
+        if (this.curentUser.isAccessDelo && this.editMode) {
             this.formControls.controls['SELECT_ROLE'].enable({emitEvent: false});
         }   else {
             this.formControls.controls['SELECT_ROLE'].disable({emitEvent: false});
@@ -302,7 +303,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.formControls['passRepeated'].patchValue();
     }
     selectDepartment() {
-        if (!this.curentUser.isTechUser) {
+        if (!this.curentUser.isTechUser && this.editMode) {
             this.showDepartment();
         }
     }

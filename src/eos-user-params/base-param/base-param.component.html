@@ -167,7 +167,7 @@
                     [placeholder]="inputs['DUE_DEP_NAME'].label"
                     autocomplete="off">
                     <span class="icon eos-icon small icon-add-department span-avatar-icon"
-                        [ngClass]="{'eos-icon-avatar-blue': !curentUser.isTechUser, 'eos-icon-avatar-grey': curentUser.isTechUser}"
+                        [ngClass]="{'eos-icon-avatar-blue': !curentUser.isTechUser && editMode, 'eos-icon-avatar-grey': curentUser.isTechUser || !editMode}"
                         (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"
                     ></span>
                 </div>
