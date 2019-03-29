@@ -15,6 +15,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
 'FOLDERCOLORSTATUS_FOR_CONSIDERATION', 'FOLDERCOLORSTATUS_INTO_THE_BUSINESS', 'FOLDERCOLORSTATUS_PROJECT_MANAGEMENT',
 'FOLDERCOLORSTATUS_ON_SIGHT', 'FOLDERCOLORSTATUS_ON_THE_SIGNATURE', 'FOLDER_ITEM_LIMIT_RESULT'];
     currTab = 0;
+    disableSave: boolean;
     dataAttachDb;
     inputAttach;
     newDataAttach;
@@ -29,6 +30,8 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     flagEdit: boolean = false;
     formAttach: FormGroup;
     prepDataAttach = {rec: {}};
+    incrementForm: boolean = true;
+    incrementAttach: boolean = true;
      _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         injector: Injector,
@@ -64,7 +67,6 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             this.submit();
         });
     }
-
     init() {
         this.prepareDataParam();
               const allData = this._userParamsSetSrv.hashUserContext;
@@ -78,8 +80,8 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
       subscribeChangeForm() {
         this.subscriptions.push(
             this.form.valueChanges
-                .debounceTime(200)
                 .subscribe(newVal => {
+                   this.changeIncrementForm(newVal);
                     let changed = false;
                     Object.keys(newVal).forEach(path => {
                         this.oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
@@ -104,6 +106,24 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 this._currentFormStatus = status;
             })
         );
+    }
+    changeIncrementForm(data) {
+        const val = data['rec.FOLDER_ITEM_LIMIT_RESULT'];
+        if (/^[1-9]?[0-9]{0,4}$/.test(val)) {
+            this.incrementForm = true;
+        }   else {
+            this.incrementForm = false;
+        }
+    }
+
+    changeIncrementAttach(data) {
+        const val = data['rec.HILITE_RESOLUTION_INCREMENT'];
+        const val1 = data['rec.HILITE_PRJ_RC_INCREMENT'];
+        if (/^(-\d{1,2}|[1-9](\d{1,2})?|0|\W*)$/.test(val) && /^(-\d{1,2}|[1-9](\d{1,2})?|0|\W*)$/.test(val1)) {
+            this.incrementAttach = true;
+        }   else {
+            this.incrementAttach = false;
+        }
     }
     setTab(i: number) {
         this.currTab = i;
@@ -190,8 +210,8 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
         }
         this.subscriptions.push(
             this.formAttach.valueChanges
-                .debounceTime(200)
                 .subscribe(newVal => {
+                   this.changeIncrementAttach(newVal);
                     let changed = false;
                     Object.keys(newVal).forEach(path => {
                         if (this.changeByPathAttach(path, newVal[path])) {
@@ -322,9 +342,10 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
 
     submit() {
         this.flagEdit = false;
+        this.isChangeForm = false;
+        this.isChangeFormAttach = false;
         if (this.newData || this.newDataAttach || this.prepareData) {
             this.formChanged.emit(false);
-            this.isChangeForm = false;
             // this._userParamsSetSrv.getUserIsn();
             if (this.defaultFlag) {
                 this.defaultFlag = false;
@@ -332,6 +353,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 .setData(this.createObjRequestForDefaultValues())
                 .then(data => {
                     this.editMode();
+                    this._pushState();
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
                 // tslint:disable-next-line:no-console
@@ -341,6 +363,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 .setData(this.createObjRequestForAll())
                 .then(data => {
                     this.editMode();
+                    this._pushState();
                   //  this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
@@ -351,6 +374,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 .setData(this.createObjRequest())
                 .then(data => {
                     this.editMode();
+                    this._pushState();
                   //  this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
@@ -361,6 +385,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 .setData(this.createObjRequestForAttach())
                 .then(data => {
                     this.editMode();
+                    this._pushState();
                    // this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                 })
@@ -369,6 +394,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 }
             }   else {
                 this.editMode();
+                this._pushState();
             }
         }
         createObjRequestForAll() {
