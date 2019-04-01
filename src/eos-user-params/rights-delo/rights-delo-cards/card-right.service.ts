@@ -99,6 +99,7 @@ export class CardRightSrv {
         console.log(chl);
         return this._pipSrv.batch(chl, '')
         .then((d) => {
+            this._userParamsSetSrv.setChangeState({isChange: false});
             console.log(d);
             return this._userParamsSetSrv.getUserIsn();
         })
