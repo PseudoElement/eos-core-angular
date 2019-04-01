@@ -34,9 +34,12 @@ export class ListCardRightComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
-    hideToolTip() {
-        // console.log('hideToolTip()');
-    }
+    // hideToolTip() {
+    //     const element = document.querySelector('.tooltip');
+    //     if (element) {
+    //         element.setAttribute('style', 'display: none');
+    //     }
+    // }
     // test() {
     //     this._cardSrv.test();
     // }
