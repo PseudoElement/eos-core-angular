@@ -48,7 +48,7 @@ export class UserSelectNode {
         if (!this.deleted && !this.deletedOffFace) {
             name =  this.dueName + '-' +  this.dueDytu;
             if (name === '-') {
-                name = 'Технический пользователь';
+                name = '...';
             }
         }
         return name;

@@ -342,7 +342,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     ActionMode() {
         this._apiSrv.flagDelitedPermanantly = !this._apiSrv.flagDelitedPermanantly;
         this.preSortForAction();
-
     }
 
     ActionTehnicalUser() {
@@ -351,7 +350,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
     preSortForAction() {
         this._apiSrv.devideUsers();
-        this.currentSort = 'login';
+        this.currentSort = 'department';
         this.srtConfig[this.currentSort].upDoun = false;
         this.srtConfig[this.currentSort].checked = true;
         if (this.srtConfig[this.currentSort].checked) {
