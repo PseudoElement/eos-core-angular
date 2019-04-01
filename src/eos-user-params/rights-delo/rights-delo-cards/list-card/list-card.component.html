@@ -28,20 +28,22 @@
                         tooltip="Добавить"
                         placement="bottom"
                         containerClass="tooltip-info"
-                        (click)="[node.addInstance(),  hideToolTip()]"
+                        (click)="[node.addInstance()]"
                     >
                         <span class="eos-icon eos-icon-plus-blue small"></span>
                     </button>
-                    <button
-                        class="btn"
-                        tooltip="Удалить"
+                    <div style="display: inline-block"
+                        [tooltip]="node.curentSelectedNode ? 'Удалить' : ''"
                         placement="bottom"
-                        containerClass="tooltip-info"
-                        [disabled]="!node.curentSelectedNode"
-                        (click)="[node.deleteInstance(), hideToolTip()]"
-                    >
-                        <span class="eos-icon eos-icon-bin-forever-blue small"></span>
-                    </button>
+                        containerClass="tooltip-info">
+                        <button
+                            class="btn"
+                            [disabled]="!node.curentSelectedNode"
+                            (click)="[node.deleteInstance()]">
+                            <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+                        </button>
+                    </div>
+
                 </div>
 
                 <div *ngIf="node.isLimit" class="card-limit">
