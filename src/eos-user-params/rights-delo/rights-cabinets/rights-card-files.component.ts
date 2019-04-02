@@ -172,6 +172,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         }
         this.currentCard = card;
         this.currentCard.current = true;
+        console.log(this.mainArrayCards);
         this._rightsCabinetsSrv.changeCabinets.next(this.currentCard);
     }
     removeCards() {
@@ -201,7 +202,6 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             this.clearDeleteMap(cab);
         });
         this.mainArrayCards.splice(indexDel, 1);
-        this._rightsCabinetsSrv.cardsArray.splice(indexDel, 1);
     }
     submit(event): Promise<any> {
         this.isLoading = true;
