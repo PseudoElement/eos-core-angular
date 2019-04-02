@@ -84,7 +84,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                     } else {
                         this.selectedNode(null);
                     }
-                    this.updateFlafListen();
+                this.updateFlafListen();
         });
 
         this._treeSrv.changeListUsers$
@@ -157,6 +157,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
 
     initView(param?) {
+        this.checkSortSessionStore();
         this.countcheckedField = 0;
         if (!param || param === '0.') {
             this._apiSrv.configList.shooseTab === 0 ? this.titleCurrentDue = 'Все подразделения' : this.titleCurrentDue = 'Все картотеки';
@@ -186,6 +187,15 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
            error.message = 'Серверная ошибка,  обратитесь к системному администратору';
            this.cathError(error);
         });
+    }
+    checkSortSessionStore() {
+        const  sort = JSON.parse(sessionStorage.getItem('currentSort'));
+        if (sort) {
+            this.srtConfig['login'].checked = false;
+            this.currentSort = sort['sort'];
+            this.srtConfig[this.currentSort].checked = true;
+            this.srtConfig[this.currentSort].upDoun = sort['upDoun'];
+        }
     }
     findSelectedSaveUsers(): UserSelectNode[]| boolean {
         const save_selectedUser: UserSelectNode = this._storage.getItem('selected_user_save');
@@ -285,6 +295,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     sortPageList(nameSort: string) {
      this.currentSort = nameSort;
      this.srtConfig[this.currentSort].upDoun = !this.srtConfig[this.currentSort].upDoun;
+     sessionStorage.setItem('currentSort', JSON.stringify({'sort': nameSort, 'upDoun' : this.srtConfig[this.currentSort].upDoun}));
         if (!this.srtConfig[this.currentSort].checked) {
             for (const key in  this.srtConfig) {
                 if (this.srtConfig.hasOwnProperty(key)) {
