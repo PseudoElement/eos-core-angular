@@ -26,6 +26,7 @@ export const VISA_TYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
         {
             key: 'IS_FINAL',
             type: 'boolean',
+            length: 64,
             title: 'Является финальной',
         }, {
             key: 'STATUS',

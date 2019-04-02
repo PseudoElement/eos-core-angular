@@ -11,6 +11,7 @@ export const RESPRJ_STATUS_DICT: IDictionaryDescriptor = Object.assign({}, LINEA
     fields: [...LINEAR_TEMPLATE.fields,
     Object.assign({}, COMMON_FIELD_NAME, {
         isUnique: true,
+        length: 64,
         uniqueInDict: true,
     })]
 });

@@ -11,6 +11,7 @@ export const STATUS_EXEC_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_
     fields: [...LINEAR_TEMPLATE.fields,
     Object.assign({}, COMMON_FIELD_NAME, {
         isUnique: true,
+        length: 64,
         uniqueInDict: true,
     })],
 });

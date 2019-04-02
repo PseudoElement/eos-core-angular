@@ -11,6 +11,7 @@ export const ADDR_CATEGORY_DICT: IDictionaryDescriptor = Object.assign({}, LINEA
     fields: [...LINEAR_TEMPLATE.fields,
         Object.assign({}, COMMON_FIELD_NAME, {
             isUnique: true,
+            length: 64,
             uniqueInDict: true,
         })],
     listFields: ['CLASSIF_NAME'],

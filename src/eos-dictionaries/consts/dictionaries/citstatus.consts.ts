@@ -44,7 +44,7 @@ export const CITSTATUS_DICT: ITreeDictionaryDescriptor = {
         title: 'Наименование статуса',
         isUnique: true,
         uniqueInDict: true,
-        length: 150,
+        length: 64,
     }), {
         key: 'IS_NODE',
         title: 'IS_NODE',
