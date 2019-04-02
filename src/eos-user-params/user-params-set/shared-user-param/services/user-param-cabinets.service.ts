@@ -81,7 +81,8 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
         this.subscriptions.push(
             this.form.valueChanges
                 .subscribe(newVal => {
-                   this.changeIncrementForm(newVal);
+                const val = newVal['rec.FOLDER_ITEM_LIMIT_RESULT'];
+                   this.changeIncrementForm(val);
                     let changed = false;
                     Object.keys(newVal).forEach(path => {
                         this.oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
@@ -108,18 +109,16 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
         );
     }
     changeIncrementForm(data) {
-        const val = data['rec.FOLDER_ITEM_LIMIT_RESULT'];
-        if (/^[1-9]?[0-9]{0,4}$/.test(val)) {
+        const param = String(data) === ('null' || undefined) ? '' : data;
+        if (/^([1-9]?[0-9]{0,4}|\W*)$/.test(param)) {
             this.incrementForm = true;
         }   else {
             this.incrementForm = false;
         }
     }
 
-    changeIncrementAttach(data) {
-        const val = data['rec.HILITE_RESOLUTION_INCREMENT'];
-        const val1 = data['rec.HILITE_PRJ_RC_INCREMENT'];
-        if (/^(-\d{1,2}|[1-9](\d{1,2})?|0|\W*)$/.test(val) && /^(-\d{1,2}|[1-9](\d{1,2})?|0|\W*)$/.test(val1)) {
+    changeIncrementAttach(data, data1) {
+        if (/^(-\d{1,2}|[1-9](\d{1,2})?|0|\W*)$/.test(String(data)) && /^(-\d{1,2}|[1-9](\d{1,2})?|0|\W*)$/.test(String(data1))) {
             this.incrementAttach = true;
         }   else {
             this.incrementAttach = false;
@@ -211,7 +210,9 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
         this.subscriptions.push(
             this.formAttach.valueChanges
                 .subscribe(newVal => {
-                   this.changeIncrementAttach(newVal);
+                    const val = newVal['rec.HILITE_RESOLUTION_INCREMENT'];
+                    const val1 = newVal['rec.HILITE_PRJ_RC_INCREMENT'];
+                   this.changeIncrementAttach(val, val1);
                     let changed = false;
                     Object.keys(newVal).forEach(path => {
                         if (this.changeByPathAttach(path, newVal[path])) {
@@ -320,6 +321,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             this.ngOnDestroy();
             this.init();
             this.afterInit();
+            this._pushState();
             this.getControlAuthor().then(data => {
                 if (data) {
                     this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(data[0]['CLASSIF_NAME']), {emitEvent: false});
@@ -490,6 +492,10 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
         if (this.flagEdit) {
             this.form.enable({emitEvent: false});
             this.formAttach.enable({emitEvent: false});
+            this.changeIncrementForm(this.form.controls['rec.FOLDER_ITEM_LIMIT_RESULT'].value);
+            const val = this.formAttach.controls['rec.HILITE_RESOLUTION_INCREMENT'].value;
+            const val1 = this.formAttach.controls['rec.HILITE_PRJ_RC_INCREMENT'].value;
+            this.changeIncrementAttach(val, val1);
         }   else {
             this.form.disable({emitEvent: false});
             this.formAttach.disable({emitEvent: false});
