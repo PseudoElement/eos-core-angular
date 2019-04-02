@@ -404,7 +404,8 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
        const queryDelete = this.getQueryDelete();
        const requestCreate = this.apiSrv.batch(queryCreate, '');
        const requestDelete = this.apiSrv.batch(queryDelete, '');
-    return   Promise.all([requestCreate, requestDelete]).then(data => {
+    return  Promise.all([requestCreate, requestDelete]).then(data => {
+        this.editFlag = false;
         this.listsSertInfo.splice(0, this.listsSertInfo.length);
         if (this.isCarma) {
             this.getSerts();

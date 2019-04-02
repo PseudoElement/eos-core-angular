@@ -14,7 +14,7 @@
 </div>
 
 <div class="input-user-wrapper input-user-other-rk-forwarding-wrapper signature scrollWrapper">
-    <div class="edit-bacground" *ngIf='!editFlag'></div>
+    <!-- <div class="edit-bacground" *ngIf='!editFlag'></div> -->
     <div class=" ">
         <span class="sert-title">Добавить сертификат для подписания прикрепленных файлов</span>
         <hr>
@@ -22,7 +22,7 @@
             <span class="new-sert-name">{{selectedFromAllList ? selectedFromAllList.whom : null  || 'сертификат не выбран'}}</span>
             <div class="">
                 <button
-                    [disabled] = "!alllistSertInfo.length"
+                    [disabled] = "!alllistSertInfo.length || !editFlag"
                     class="btn btn-primary-light"
                     tooltip= 'Выбрать сертификат'
                     containerClass="tooltip-info"
@@ -30,22 +30,22 @@
                     <span class="eos-icon eos-icon-download small"></span>
                 </button>
                 <button
-                [disabled]= '!selectedFromAllList'
-                class="btn btn-primary-light"
-                triggers="hover:click"
-                tooltip='Показать сертификат'
-                containerClass="tooltip-info"
-                (click)='showSert(selectedFromAllList.id)'
+                    [disabled]= '!selectedFromAllList || !editFlag'
+                    class="btn btn-primary-light"
+                    triggers="hover:click"
+                    tooltip='Показать сертификат'
+                    containerClass="tooltip-info"
+                    (click)='showSert(selectedFromAllList.id)'
                 ><span class="eos-icon eos-icon-info-blue small"></span></button>
 
                 <button
-                triggers="hover:click"
-                class="btn btn-primary-light"
-                tooltip='Добавить сертификат'
-                containerClass="tooltip-info"
-                    [disabled]= '!selectedFromAllList'
+                    triggers="hover:click"
+                    class="btn btn-primary-light"
+                    tooltip='Добавить сертификат'
+                    containerClass="tooltip-info"
+                    [disabled]= '!selectedFromAllList || !editFlag'
                     (click)= 'addSertificate(selectedFromAllList)'>
-                        <span class="eos-icon eos-icon-plus-blue small"></span>
+                    <span class="eos-icon eos-icon-plus-blue small"></span>
                 </button>
             </div>
         </div>
@@ -55,24 +55,23 @@
        <div class="sert-table">
            <div class="sert-table-nav">
                <div
-                triggers="hover:click"
-                tooltip='Показать сертификат'
-                containerClass="tooltip-info">
+                    triggers="hover:click"
+                    [tooltip]="!editFlag ? '' : 'Показать сертификат'"
+                    containerClass="tooltip-info">
                     <button class="btn btn-primary-light"
-                    [disabled]="!listsSertInfo.length || flagHideBtn || !alllistSertInfo.length"
-                    (click) = 'showSert()'
+                        [disabled]="!listsSertInfo.length || flagHideBtn || !alllistSertInfo.length || !editFlag"
+                        (click) = 'showSert()'
                     ><span class="eos-icon eos-icon-info-blue small"></span></button>
                </div>
                <div
                 triggers="hover:click"
-                tooltip='Удалить сертификат'
+                [tooltip]="!editFlag ? '' : 'Удалить сертификат'"
                 containerClass="tooltip-info">
                     <button
-                    class="btn btn-primary-light"
-                    [disabled]="!listsSertInfo.length || flagHideBtn"
-                    (click) = 'deleteSertificate()'
+                        class="btn btn-primary-light"
+                        [disabled]="!listsSertInfo.length || flagHideBtn || !editFlag"
+                        (click) = 'deleteSertificate()'
                     ><span class="eos-icon eos-icon-bin-forever-blue small"></span></button></div>
-
            </div>
            <div class="sert-table-head">
                <span class="sert-table-whom">Кому выдан</span>
@@ -81,7 +80,7 @@
            </div>
            <div class="sert-table-body">
                <div class="sert-table-content" *ngFor='let listSert of listsSertInfo' >
-                <div [ngStyle]="{'color': !listSert.valid ? '#fdc309' : 'black'}" (click)="selectCurent(listSert)" [ngClass]="{selected: listSert.selected}" class="sert-info-wr" *ngIf='!listSert.delete'>
+                <div (click)="selectCurent(listSert)" [ngClass]="{selected: listSert.selected, grayItem: !editFlag, colorValid:  !listSert.valid}" class="sert-info-wr" *ngIf='!listSert.delete'>
                     <span
                         tooltip="{{listSert.whom}}"
                         placement="bottom"
