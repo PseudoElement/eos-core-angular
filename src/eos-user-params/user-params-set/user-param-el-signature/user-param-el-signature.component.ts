@@ -58,6 +58,11 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Электронная подпись';
         this.link = this._userSrv.curentUser['ISN_LCLASSIF'];
         this.selfLink = this._router.url.split('?')[0];
+        this._userSrv.saveData$
+        .takeUntil(this._ngUnsubscribe)
+        .subscribe(() => {
+            this._userSrv.submitSave =  this.submit();
+        });
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
@@ -137,9 +142,9 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         });
     }
 
-    submit(event?) {
+    submit(event?): Promise<any> {
 
-        this.apiSrv
+    return   this.apiSrv
                 .batch(this.createObjRequest(), '')
                 .then(data => {
                     this.btnDisabled = false;
@@ -170,7 +175,6 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
                 }
             });
           });
-          console.log(req);
             return req;
         }
     upStateInputs(val) {

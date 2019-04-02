@@ -48,7 +48,7 @@ export class UserParamEAComponent implements OnDestroy {
             this._userParamsSetSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {
-                this.submit();
+                this._userParamsSetSrv.submitSave =    this.submit();
             });
     }
     ngOnDestroy() {
@@ -158,12 +158,12 @@ export class UserParamEAComponent implements OnDestroy {
            }
         }
     }
-    submit(event?) {
-        this.apiSrv.batch(this.createObjRequest(), '').then(response => {
+    submit(event?): Promise<any> {
+     return   this.apiSrv.batch(this.createObjRequest(), '').then(response => {
             this.btnDisabled = true;
             this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
             const userId = this._userParamsSetSrv.userContextId;
-            this._userParamsSetSrv.getUserIsn(String(userId));
+         return   this._userParamsSetSrv.getUserIsn(String(userId));
         }).catch(error => {
             console.log(error);
         });

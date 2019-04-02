@@ -71,7 +71,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         this._userServices.saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
-            this.saveAllForm(null);
+            this._userServices.submitSave =  this.saveAllForm(null);
         });
     }
     ngOnDestroy() {
@@ -102,10 +102,10 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         this.myForm.removeControl('groupForm');
         this.myForm.setControl('groupForm', this.createGroup(false, false, true));
     }
-    saveAllForm(event): void {
-        Promise.all([ this._emailService.preAddEmail(this.ArrayForm), this._emailService.preDeliteEmail(this.delitedSetStore), this._emailService.preEditEmail(this.ArrayForm)])
+    saveAllForm(event): Promise<any> {
+     return   Promise.all([ this._emailService.preAddEmail(this.ArrayForm), this._emailService.preDeliteEmail(this.delitedSetStore), this._emailService.preEditEmail(this.ArrayForm)])
         .then(result => {
-            this._userServices.getUserIsn(String(this._userServices.curentUser['ISN_LCLASSIF']))
+        return    this._userServices.getUserIsn(String(this._userServices.curentUser['ISN_LCLASSIF']))
             .then((flag: boolean) => {
                 if (flag) {
                     this.umailsInfo.splice(0, this.umailsInfo.length);

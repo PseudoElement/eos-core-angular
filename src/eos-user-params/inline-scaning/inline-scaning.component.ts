@@ -84,7 +84,7 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         this._userParamSrv.saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
-            this.submit(null);
+            this._userParamSrv.submitSave =  this.submit(null);
         });
     }
 
@@ -102,7 +102,7 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         });
     }
 
-    submit(event) {
+    submit(event): Promise<any> {
         this.flagShow = false;
         const query = [];
         query.push({
@@ -110,7 +110,7 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
             requestUri: `USER_CL(${this.curentUser['ISN_LCLASSIF']})`,
             data: this.newData
         });
-         this.apiSrv.batch(query, '').then((data: any) => {
+    return  this.apiSrv.batch(query, '').then((data: any) => {
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                 this.flagShow = true;
                 this.disableBtn = true;

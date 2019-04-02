@@ -22,14 +22,16 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
    _ngUnsubscribe: Subject<any> = new Subject();
     constructor( injector: Injector ) {
         super(injector, DIRECTORIES_USER);
+        this._userParamsSetSrv.getUserIsn().then(() => {
             this.init();
             this.prepInputsAttach = this.getObjectInputFields(DIRECTORIES_USER.fieldsChild);
             this.afterInit();
             this.editMode();
+        });
             this._userParamsSetSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {
-                this.submit();
+                this._userParamsSetSrv.submitSave =  this.submit();
             });
     }
     subscribeChangeForm() {
@@ -106,14 +108,14 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
             this.editMode();
         });
     }
-    submit() {
+    submit(): Promise<any> {
         if (this.newData || this.newDataAttach || this.prepareData) {
             this.formChanged.emit(false);
             this.isChangeForm = false;
             // this._userParamsSetSrv.getUserIsn();
             if (this.defaultFlag) {
                 this.defaultFlag = false;
-                this.userParamApiSrv
+            return    this.userParamApiSrv
                 .setData(this.createObjRequestForDefaultValues())
                 .then(data => {
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
@@ -121,7 +123,7 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             } else if (this.newData && this.newDataAttach) {
-                this.userParamApiSrv
+             return   this.userParamApiSrv
                 .setData(this.createObjRequestForAll())
                 .then(data => {
                   //  this.prepareData.rec = Object.assign({}, this.newData.rec);
@@ -130,7 +132,7 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             } else if (this.newData) {
-            this.userParamApiSrv
+            return    this.userParamApiSrv
                 .setData(this.createObjRequest())
                 .then(data => {
                   //  this.prepareData.rec = Object.assign({}, this.newData.rec);
@@ -139,7 +141,7 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             } else if (this.newDataAttach) {
-                this.userParamApiSrv
+            return    this.userParamApiSrv
                 .setData(this.createObjRequestForAttach())
                 .then(data => {
                    // this.prepareData.rec = Object.assign({}, this.newData.rec);
@@ -154,6 +156,7 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
             this._pushState();
             this.flagEdit = false;
             this.editMode();
+            return Promise.resolve();
         }
         createObjRequestForAll() {
             const req = this.createObjRequest();
@@ -194,11 +197,18 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
     prepDataAttachField(data) {
         for (const key of Object.keys(data)) {
             if (key === 'SRCH_CONTACT_FIELDS') {
-            this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_SURNAME'] = data[key].indexOf('SURNAME')
+                if (data[key] !== null) {
+                     this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_SURNAME'] = data[key].indexOf('SURNAME')
             >= 0 ? 'SRCH_CONTACT_FIELDS_SURNAME' : '';
             this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_DUTY'] = data[key].indexOf('DUTY') >= 0 ? 'SRCH_CONTACT_FIELDS_DUTY' : '';
             this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_DEPARTMENT'] = data[key].indexOf('DEPARTMENT')
             >= 0 ? 'SRCH_CONTACT_FIELDS_DEPARTMENT' : '';
+                }   else {
+                    this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_SURNAME'] = '';
+                    this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_DUTY'] = '';
+                    this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_DEPARTMENT'] = '';
+                }
+
             }
         }
     }

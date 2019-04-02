@@ -48,14 +48,16 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         this._userServices.saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
-            this.submit(event);
+         this._userServices.submitSave =  this.submit(event);
         });
     }
     ngOnInit() {
         this.userId = this._userSrv.userContextId;
-        this._userServices.checkGrifs(this.userId).then(res => {
-            this.flagGrifs = res;
-            this.init();
+        this._userSrv.getUserIsn().then(() => {
+            this._userServices.checkGrifs(this.userId).then(res => {
+                this.flagGrifs = res;
+                this.init();
+            });
         });
     }
     ngOnDestroy() {
@@ -201,13 +203,13 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         this.mainArrayCards.splice(indexDel, 1);
         this._rightsCabinetsSrv.cardsArray.splice(indexDel, 1);
     }
-    submit(event) {
+    submit(event): Promise<any> {
         this.isLoading = true;
         const q = this.prepUrls();
         this.flagChangeCards = true;
         this.newValueMap.clear();
         this._pushState();
-        this._pipSrv.batch(q, '').then(res => {
+     return   this._pipSrv.batch(q, '').then(res => {
             this.UpdateMainArrayAfterSubmit();
             this._rightsCabinetsSrv.submitRequest.next();
             this.isLoading = false;

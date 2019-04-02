@@ -66,7 +66,7 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
         this._userSrv.saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
-            this.submit(null);
+            this._userSrv.submitSave = this.submit(null);
         });
     }
     ngOnDestroy() {
@@ -399,12 +399,12 @@ export class UserParamsProfSertComponent  implements OnInit, OnDestroy {
         this.checkchanges();
     }
 
-    submit(event) {
+    submit(event): Promise<any> {
        const queryCreate = this.getQueryCreate();
        const queryDelete = this.getQueryDelete();
        const requestCreate = this.apiSrv.batch(queryCreate, '');
        const requestDelete = this.apiSrv.batch(queryDelete, '');
-       Promise.all([requestCreate, requestDelete]).then(data => {
+    return   Promise.all([requestCreate, requestDelete]).then(data => {
         this.listsSertInfo.splice(0, this.listsSertInfo.length);
         if (this.isCarma) {
             this.getSerts();

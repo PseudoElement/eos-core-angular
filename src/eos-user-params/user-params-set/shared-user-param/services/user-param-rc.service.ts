@@ -30,7 +30,7 @@ export class UserParamRCSrv extends BaseUserSrv {
         this._userParamsSetSrv.saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
-            this.submit();
+            this._userParamsSetSrv.submitSave = this.submit();
         });
     }
     afterInitUserSearch() {
@@ -158,7 +158,7 @@ export class UserParamRCSrv extends BaseUserSrv {
             this.isChangeForm = false;
             // this._userParamsSetSrv.getUserIsn();
             if (this.defaultFlag) {
-                this.userParamApiSrv
+         return this.userParamApiSrv
                 .setData(this.createObjRequestForDefaultValues())
                 .then(data => {
                     this.editMode();
@@ -168,7 +168,7 @@ export class UserParamRCSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             } else  if (this.newData) {
-            this.userParamApiSrv
+         return  this.userParamApiSrv
                 .setData(this.createObjRequest())
                 .then(data => {
                     this.editMode();
@@ -179,7 +179,7 @@ export class UserParamRCSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             } else if (this.prepareData) {
-                this.userParamApiSrv
+         return this.userParamApiSrv
                 .setData(this.createObjRequestForDefaultValues())
                 .then(data => {
                     this.editMode();
@@ -191,6 +191,7 @@ export class UserParamRCSrv extends BaseUserSrv {
             }
         } else {
             this.editMode();
+            return Promise.resolve();
         }
     }
     default() {

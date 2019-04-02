@@ -41,14 +41,16 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this._userParamsSetSrv.saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
-            this.submit();
+            this._userParamsSetSrv.submitSave =  this.submit();
         });
     }
-    async ngOnInit() {
+    ngOnInit() {
         // получение пользователя
         // await Promise.resolve();
-        await this._userParamsSetSrv.getUserIsn();
-        this._flagGrifs = await this._userParamsSetSrv.checkGrifs(this._userParamsSetSrv.userContextId);
+         this._userParamsSetSrv.getUserIsn().then(() => {
+         this._userParamsSetSrv.checkGrifs(this._userParamsSetSrv.userContextId).then((flagG) => {
+            this._flagGrifs = flagG;
+        });
         this._cardSrv.prepareforEdit();
         this.editableUser = this._userParamsSetSrv.curentUser;
         this.titleHeader = `${this.editableUser.SURNAME_PATRON} - Права в картотеках`;
@@ -58,6 +60,8 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         }
         this.funcList = CARD_FUNC_LIST.map(node => new FuncNum(node));
         this.pageState = 'VIEW';
+        });
+
 
     }
     ngOnDestroy() {

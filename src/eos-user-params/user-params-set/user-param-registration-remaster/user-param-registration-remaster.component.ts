@@ -47,7 +47,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         ) {
             this.hash = this._userSrv.hashUserContext;
             this._userSrv.saveData$.takeUntil(this._ngUnsubscribe).subscribe(() => {
-                this.submit(null);
+                this._userSrv.submitSave = this.submit(null);
             });
             this.titleHeader =  `${this._userSrv.curentUser.SURNAME_PATRON} - Регистрация`;
             this.selfLink = this._route.url.split('?')[0];
@@ -184,12 +184,12 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         this.editFlag = event;
         this._RemasterService.editEmit.next(this.editFlag);
     }
-    submit(event) {
-        this._apiSrv.batch(this.createObjRequest(), '').then(response => {
+    submit(event): Promise<any> {
+    return  this._apiSrv.batch(this.createObjRequest(), '').then(response => {
             this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
             this.defaultSetFlagBtn();
             const userId = this._userSrv.userContextId;
-            this._userSrv.getUserIsn(String(userId)).then(res => {
+        return    this._userSrv.getUserIsn(String(userId)).then(res => {
                 this.hash = this._userSrv.hashUserContext;
                 this._RemasterService.submitEmit.next();
             });

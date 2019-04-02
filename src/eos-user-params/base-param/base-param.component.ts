@@ -76,7 +76,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         .saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
-            this.submit();
+            this._userParamSrv.submitSave =  this.submit();
         });
     }
     init() {
@@ -105,7 +105,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
-    submit() {
+    submit(): Promise<any> {
         if (!this.stateHeaderSubmit) {
             this.stateHeaderSubmit = false;
             const id = this._userParamSrv.userContextId;
@@ -154,7 +154,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 }
             }
             const form = this._apiSrv.setData(query);
-            Promise.all([form, qPass])
+         return   Promise.all([form, qPass])
             .then(([f, pass]) => {
                 if (accessSysString.length === 40) {
                     const number = accessSysString.charAt(3);
@@ -166,7 +166,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 }
                 this._newData = {};
                 this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-                this._userParamSrv.getUserIsn()
+             return   this._userParamSrv.getUserIsn()
                 .then(() => {
                     this.curentUser = this._userParamSrv.curentUser;
                     this.editMode = false;
@@ -202,6 +202,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 }
                 this._msgSrv.addNewMessage(m);
             });
+        }   else {
+            return Promise.resolve();
         }
     }
     cancel() {

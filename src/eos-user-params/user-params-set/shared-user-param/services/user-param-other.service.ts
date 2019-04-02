@@ -70,7 +70,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
         this._userParamsSetSrv.saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
-            this.submit();
+            this._userParamsSetSrv.submitSave =  this.submit();
         });
     }
     hideToolTip() {
@@ -237,20 +237,20 @@ export class UserParamOtherSrv extends BaseUserSrv {
             }
         });
     }
-    submit(event?) {
+    submit(event?): Promise<any> {
         this.isLoading = false;
         this.formChanged.emit(false);
         this.isChangeForm = false;
-        this.userParamApiSrv
+     return   this.userParamApiSrv
                 .setData(this.createObjRequest())
                 .then(data => {
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                     const userId = this._userParamsSetSrv.userContextId;
-                    this._userParamsSetSrv.getUserIsn(String(userId));
-                    this.saveValueSendForm = this.sendFrom;
-                    this.isLoading = true;
-                })
-                .catch(data => console.log(data));
+                 return this._userParamsSetSrv.getUserIsn(String(userId)).then(() => {
+                        this.saveValueSendForm = this.sendFrom;
+                        this.isLoading = true;
+                 });
+            }).catch(data => console.log(data));
     }
     upStateInputs(val) {
         this.inputs[val[0]].value = val[1];

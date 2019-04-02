@@ -3,7 +3,7 @@ import { BaseUserSrv } from './base-user.service';
 import { SEARCH_USER } from '../consts/search.consts';
 import { Subject } from 'rxjs/Subject';
 import { EosUtils } from 'eos-common/core/utils';
-import {PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
+import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
 @Injectable()
 export class UserParamSearchSrv extends BaseUserSrv {
     dataAttachDb;
@@ -19,7 +19,7 @@ export class UserParamSearchSrv extends BaseUserSrv {
         this._userParamsSetSrv.saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
-            this.submit();
+            this._userParamsSetSrv.submitSave = this.submit();
         });
     }
     afterInitUserSearch() {
@@ -44,6 +44,7 @@ export class UserParamSearchSrv extends BaseUserSrv {
                 this.formChanged.emit(changed);
                 this.isChangeForm = changed;
                 this.subscribeChangeForm();
+                this._pushState();
             })
             .catch(err => {
                 throw err;
@@ -77,8 +78,8 @@ export class UserParamSearchSrv extends BaseUserSrv {
                             changed = true;
                          }
                     });
-                this.formChanged.emit(false);
-                this.isChangeForm = false;
+                this.formChanged.emit(changed);
+                this.isChangeForm = changed;
                 this._pushState();
             })
         );
@@ -91,10 +92,38 @@ export class UserParamSearchSrv extends BaseUserSrv {
             })
         );
     }
-    submit() {
-        super.submit();
-        this.flagEdit = false;
-        this.editMode();
+    submit(): Promise<any> {
+        if (this.newData || this.prepareData) {
+            const userId = '' + this._userParamsSetSrv.userContextId;
+            this.formChanged.emit(false);
+            this.isChangeForm = false;
+
+            // this._userParamsSetSrv.getUserIsn();
+            if (this.newData) {
+        return    this.userParamApiSrv
+                .setData(this.createObjRequest())
+                .then(data => {
+                   // this.prepareData.rec = Object.assign({}, this.newData.rec);
+                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                 return   this._userParamsSetSrv.getUserIsn(userId);
+                })
+                // tslint:disable-next-line:no-console
+                .catch(data => console.log(data));
+            } else if (this.prepareData) {
+            return    this.userParamApiSrv
+                .setData(this.createObjRequestForDefaultValues())
+                .then(data => {
+                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                 return   this._userParamsSetSrv.getUserIsn(userId);
+                })
+                // tslint:disable-next-line:no-console
+                .catch(data => console.log(data));
+            }
+        }   else {
+            this.flagEdit = false;
+            this.editMode();
+            return Promise.resolve();
+        }
     }
     editMode() {
         if (this.flagEdit) {

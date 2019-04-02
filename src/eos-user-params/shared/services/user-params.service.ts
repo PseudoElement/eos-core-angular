@@ -13,12 +13,14 @@ export class UserParamsService {
     userTechList: any[] = [];
     userRightDocgroupList: any[] = [];
     public SubEmail: Subject<any> = new Subject();
+    public submitSave;
     private _saveFromAsk$: Subject<void> = new Subject<void>();
     private _hasChanges$: Subject<IUserSetChanges> = new Subject<IUserSetChanges>();
     private _isTechUser: boolean;
     private _userContext: IParamUserCl;
     private _userContextDeparnment: DEPARTMENT;
     private _sysParams;
+
 
     get sysParams() {
         if (this._sysParams) {

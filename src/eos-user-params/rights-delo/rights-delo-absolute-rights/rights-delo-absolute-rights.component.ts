@@ -60,7 +60,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this._userParamsSetSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {
-                this.submit();
+                this._userParamsSetSrv.submitSave =  this.submit();
             });
         }
 
@@ -99,10 +99,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
-    submit() {
+    submit(): Promise<any> {
         if (this._checkCreatePRJNotEmptyAllowed()) {
             this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
-            return;
+            return Promise.resolve();
         }
         // this.selectedNode = null;
         this.editMode = false;
@@ -134,7 +134,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 node.deleteChange();
             }
         });
-        this.apiSrv.setData(this.queryForSave)
+     return   this.apiSrv.setData(this.queryForSave)
         .then(() => {
             this.queryForSave = [];
             this.listRight = [];

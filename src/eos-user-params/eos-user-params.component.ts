@@ -8,7 +8,6 @@ import { IParamAccordionList } from './shared/intrfaces/user-params.interfaces';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 import { IUserSetChanges } from './shared/intrfaces/user-parm.intterfaces';
-
 @Component({
     selector: 'eos-user-params',
     templateUrl: 'eos-user-params.component.html'
@@ -29,6 +28,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
         private _route: ActivatedRoute,
         private _userParamService: UserParamsService,
         private _confirmSrv: ConfirmWindowService,
+
     ) {
         this._route.params
             .takeUntil(this.ngUnsubscribe)
@@ -88,8 +88,13 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 .then(doSave => {
                     if (doSave) {
                         this._userParamService.saveChenges();
-                        this._isChanged = false;
-                        return true;
+                     return   this._userParamService.submitSave.then(() => {
+                            this._isChanged = false;
+                            return true;
+                        }).catch((error) => {
+                            console.log(error);
+                            return false;
+                        });
                     } else {
                         this._isChanged = false;
                         return true;

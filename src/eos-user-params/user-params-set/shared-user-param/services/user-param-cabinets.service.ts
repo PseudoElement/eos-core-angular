@@ -64,7 +64,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             this.cathError(err);
         });
         this._userParamsSetSrv.saveData$.takeUntil(this._ngUnsubscribe).subscribe(() => {
-            this.submit();
+            this._userParamsSetSrv.submitSave =  this.submit();
         });
     }
     init() {
@@ -340,7 +340,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
     }
     }
 
-    submit() {
+    submit(): Promise<any> {
         this.flagEdit = false;
         this.isChangeForm = false;
         this.isChangeFormAttach = false;
@@ -349,7 +349,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             // this._userParamsSetSrv.getUserIsn();
             if (this.defaultFlag) {
                 this.defaultFlag = false;
-                this.userParamApiSrv
+             return   this.userParamApiSrv
                 .setData(this.createObjRequestForDefaultValues())
                 .then(data => {
                     this.editMode();
@@ -359,7 +359,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             } else if (this.newData && this.newDataAttach) {
-                this.userParamApiSrv
+                return    this.userParamApiSrv
                 .setData(this.createObjRequestForAll())
                 .then(data => {
                     this.editMode();
@@ -370,7 +370,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             } else if (this.newData) {
-            this.userParamApiSrv
+                return  this.userParamApiSrv
                 .setData(this.createObjRequest())
                 .then(data => {
                     this.editMode();
@@ -381,7 +381,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             } else if (this.newDataAttach) {
-                this.userParamApiSrv
+                return  this.userParamApiSrv
                 .setData(this.createObjRequestForAttach())
                 .then(data => {
                     this.editMode();
@@ -395,6 +395,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
             }   else {
                 this.editMode();
                 this._pushState();
+                return Promise.resolve();
             }
         }
         createObjRequestForAll() {
@@ -458,6 +459,7 @@ export class UserParamCabinetsSrv extends BaseUserSrv {
                     this.formChanged.emit(changed);
                     this.controller = false;
                     this.isChangeForm = changed;
+                    this._pushState();
                     this.subscribeChangeForm();
                 })
                 .catch(err => {
