@@ -9,12 +9,14 @@ export class UserParamSearchSrv extends BaseUserSrv {
     dataAttachDb;
     inputAttach;
     prepInputsAttach;
+    incrementValid: boolean;
     prepDataAttach = {rec: {}};
      _ngUnsubscribe: Subject<any> = new Subject();
      flagEdit: boolean = false;
     constructor( injector: Injector ) {
         super(injector, SEARCH_USER);
         this.init();
+        this.checkIncrement();
         this.editMode();
         this._userParamsSetSrv.saveData$
         .takeUntil(this._ngUnsubscribe)
@@ -31,6 +33,10 @@ export class UserParamSearchSrv extends BaseUserSrv {
     }
     getInputAttach() {
         return this.dataSrv.getInputs(this.prepInputsAttach, this.prepDataAttach);
+    }
+    checkIncrement() {
+        const val = this.form.controls['rec.SRCH_LIMIT_RESULT'].valid;
+        this.incrementValid = val;
     }
 
     default() {
@@ -71,6 +77,7 @@ export class UserParamSearchSrv extends BaseUserSrv {
     subscribeChangeForm() {
         this.subscriptions.push(
             this.form.valueChanges.subscribe(newVal => {
+                this.checkIncrement();
                     let changed = false;
                     Object.keys(newVal).forEach(path => {
                         this.oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
@@ -103,6 +110,7 @@ export class UserParamSearchSrv extends BaseUserSrv {
         return    this.userParamApiSrv
                 .setData(this.createObjRequest())
                 .then(data => {
+                    this._pushState();
                    // this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                  return   this._userParamsSetSrv.getUserIsn(userId);
@@ -113,6 +121,7 @@ export class UserParamSearchSrv extends BaseUserSrv {
             return    this.userParamApiSrv
                 .setData(this.createObjRequestForDefaultValues())
                 .then(data => {
+                    this._pushState();
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                  return   this._userParamsSetSrv.getUserIsn(userId);
                 })
@@ -122,6 +131,7 @@ export class UserParamSearchSrv extends BaseUserSrv {
         }   else {
             this.flagEdit = false;
             this.editMode();
+            this._pushState();
             return Promise.resolve();
         }
     }
@@ -133,6 +143,6 @@ export class UserParamSearchSrv extends BaseUserSrv {
         }
     }
     private _pushState () {
-        this._userParamsSetSrv.setChangeState({isChange: this.isChangeForm});
+        this._userParamsSetSrv.setChangeState({isChange: this.isChangeForm, disableSave: !this.incrementValid});
       }
 }
