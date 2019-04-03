@@ -33,7 +33,7 @@ export const NADZOR_TEMPLATE: IDictionaryDescriptor = {
         title: 'ID',
     },
     Object.assign({}, COMMON_FIELD_NAME, {
-        length: 250,
+        length: 64,
     }),
     Object.assign({}, COMMON_FIELD_NOTE, {
             length: 500,
