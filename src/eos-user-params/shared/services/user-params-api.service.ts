@@ -8,18 +8,24 @@ import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 import { IConfig } from 'eos-user-select/shered/interfaces/user-select.interface';
 import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-select';
+import {HelpersSortFunctions} from '../../../eos-user-select/shered/helpers/sort.helper';
+import {IUserSort} from '../../../eos-user-select/shered/interfaces/user-select.interface';
+import {SortsList} from '../../../eos-user-select/shered/interfaces/user-select.interface';
 @Injectable()
 export class UserParamApiSrv {
     flagTehnicalUsers: boolean;
     flagDelitedPermanantly: boolean;
     sysParam: any;
     dueDep: any;
+    srtConfig: IUserSort = {};
     configList: IConfig = {
         shooseTab: +sessionStorage.getItem('key') ? +sessionStorage.getItem('key') : 0,
         titleDue: '',
     };
     confiList$: Subject<IConfig>;
+    currentSort: any = SortsList[3];
     private Allcustomer: UserSelectNode[] = [];
+    private helpersClass;
     get _confiList$(): Observable<IConfig> {
         return this.confiList$.asObservable();
     }
@@ -28,6 +34,7 @@ export class UserParamApiSrv {
         private _router: Router,
         private users_pagination: UserPaginationService,
     ) {
+        this.helpersClass = new HelpersSortFunctions();
         this.initConfigTitle();
         this.flagTehnicalUsers = false;
         this.flagDelitedPermanantly = false;
@@ -111,33 +118,61 @@ export class UserParamApiSrv {
 
     devideUsers() {
         this.users_pagination.UsersList = this.Allcustomer.slice();
+        const techUser = this.damnTesterTechUser();
+        const deletedUser = this.damnTesterDeletedUser();
+        const happyUser = this.damnTesterHappyUsers();
         if (this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
-            this.users_pagination.UsersList = this.Allcustomer.filter((user: UserSelectNode) => {
-                if ((user.data.DUE_DEP && !user.deleted) || (user.data.DUE_DEP === null && !user.deleted)) {
-                    return user;
-                }
-            });
+            this.updateListUsersTech(techUser, happyUser);
         }
+
         if (!this.flagTehnicalUsers && this.flagDelitedPermanantly) {
-            this.users_pagination.UsersList = this.Allcustomer.filter(user => {
-                if (user.data.DUE_DEP || user.deleted) {
-                    return user;
-                }
-            });
+            this.updateListUserDeleted(deletedUser, happyUser);
         }
 
         if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
-            this.users_pagination.UsersList = this.Allcustomer.slice();
+            this.updateListUserAnyFlags(techUser, deletedUser, happyUser);
         }
 
         if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
-            this.users_pagination.UsersList = this.Allcustomer.slice();
-            this.users_pagination.UsersList =  this.Allcustomer.filter(user => {
-                if (user.data.DUE_DEP !== null && !user.deleted) {
-                    return user;
-                }
-            });
+            this.updateListUserEmptyFlags(happyUser);
         }
+    }
+
+    updateListUsersTech(userT: UserSelectNode[], userH: UserSelectNode[]) {
+        const sortedT = this.helpersClass.sort(userT, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
+        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
+        this.users_pagination.UsersList = [].concat(sortedT, sortedH);
+    }
+    updateListUserDeleted(userD: UserSelectNode[], userH: UserSelectNode[]) {
+        const sortedD = this.helpersClass.sort(userD, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
+        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
+        this.users_pagination.UsersList = [].concat(sortedD, sortedH);
+    }
+    updateListUserAnyFlags(userT, userD, userH) {
+        const sortedT = this.helpersClass.sort(userT, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
+        const sortedD = this.helpersClass.sort(userD, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
+        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
+        this.users_pagination.UsersList = [].concat(sortedD, sortedT, sortedH);
+    }
+    updateListUserEmptyFlags(userH) {
+        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
+        this.users_pagination.UsersList = sortedH;
+    }
+
+    damnTesterTechUser(): UserSelectNode[] {
+        return this.users_pagination.UsersList.filter((userInfo: UserSelectNode) => {
+            return userInfo.data.DUE_DEP === null && !userInfo.deleted;
+        });
+    }
+    damnTesterDeletedUser(): UserSelectNode[] {
+        return this.users_pagination.UsersList.filter((userInfo: UserSelectNode) => {
+            return userInfo.deleted;
+        });
+    }
+    damnTesterHappyUsers(): UserSelectNode[] {
+        return this.users_pagination.UsersList.filter((userInfo: UserSelectNode) => {
+            return userInfo.data.DUE_DEP !== null && !userInfo.deleted;
+        });
     }
 
     getDepartment(due?: Array<string>): Promise<DEPARTMENT[]> {
@@ -279,6 +314,25 @@ export class UserParamApiSrv {
         if (!this.configList.shooseTab) {
             this.configList.shooseTab = 0;
         }
+    }
+
+    initSort() {
+        this.srtConfig.department = {
+            upDoun: false,
+            checked: false,
+        };
+        this.srtConfig.login = {
+            upDoun: false,
+            checked: true,
+        };
+        this.srtConfig.fullDueName =  {
+            upDoun: false,
+            checked: false,
+        };
+        this.srtConfig.tip = {
+            upDoun: false,
+            checked: false,
+        };
     }
 
     private _getListUsers (data): UserSelectNode[] {

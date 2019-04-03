@@ -8,7 +8,6 @@ import {BsModalService, BsModalRef } from 'ngx-bootstrap';
 import {CreateUserComponent } from './createUser/createUser.component';
 import {RtUserSelectService} from '../shered/services/rt-user-select.service';
 import {EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.service';
-import {IUserSort, SortsList} from '../shered/interfaces/user-select.interface';
 import {HelpersSortFunctions} from '../shered/helpers/sort.helper';
 import {Allbuttons} from '../shered/consts/btn-action.consts';
 import {BtnAction, BtnActionFields} from '../shered/interfaces/btn-action.interfase';
@@ -37,8 +36,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     isLoading: boolean;
     isMarkNode: Boolean;
     titleCurrentDue: string = '';
-    srtConfig: IUserSort = {};
-    currentSort: string = SortsList[3];
     helpersClass: any;
     buttons: BtnAction;
     flagChecked: boolean;
@@ -67,7 +64,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     ) {
         this.checkFlagTech();
         this.helpersClass = new HelpersSortFunctions();
-        this.initSort();
+        this._apiSrv.initSort();
         this._route.params
             .takeUntil(this.ngUnsubscribe)
                 .subscribe(param => {
@@ -169,7 +166,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.isLoading = true;
         this._apiSrv.getUsers(param || '0.')
         .then((data: UserSelectNode[]) => {
-            this._pagSrv.UsersList =  this.helpersClass.sort(data, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+                // this._pagSrv.UsersList =  this.helpersClass.sort(data, this.srtConfig[this.currentSort].upDoun, this.currentSort);
                 this.listUsers = this._pagSrv.UsersList.slice((this._pagSrv.paginationConfig.start - 1)
                 * this._pagSrv.paginationConfig.length,
                  this._pagSrv.paginationConfig.current
@@ -191,10 +188,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     checkSortSessionStore() {
         const  sort = JSON.parse(sessionStorage.getItem('currentSort'));
         if (sort) {
-            this.srtConfig['login'].checked = false;
-            this.currentSort = sort['sort'];
-            this.srtConfig[this.currentSort].checked = true;
-            this.srtConfig[this.currentSort].upDoun = sort['upDoun'];
+            this._apiSrv.srtConfig['login'].checked = false;
+            this._apiSrv.currentSort = sort['sort'];
+            this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = true;
+            this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun = sort['upDoun'];
         }
     }
     findSelectedSaveUsers(): UserSelectNode[]| boolean {
@@ -293,16 +290,16 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
 
     sortPageList(nameSort: string) {
-     this.currentSort = nameSort;
-     this.srtConfig[this.currentSort].upDoun = !this.srtConfig[this.currentSort].upDoun;
-     sessionStorage.setItem('currentSort', JSON.stringify({'sort': nameSort, 'upDoun' : this.srtConfig[this.currentSort].upDoun}));
-        if (!this.srtConfig[this.currentSort].checked) {
-            for (const key in  this.srtConfig) {
-                if (this.srtConfig.hasOwnProperty(key)) {
-                    if (key === this.currentSort) {
-                        this.srtConfig[key].checked = true;
+        this._apiSrv.currentSort = nameSort;
+     this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun = ! this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun;
+     sessionStorage.setItem('currentSort', JSON.stringify({'sort': nameSort, 'upDoun' :  this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun}));
+        if (! this._apiSrv.srtConfig[this._apiSrv.currentSort].checked) {
+            for (const key in   this._apiSrv.srtConfig) {
+                if ( this._apiSrv.srtConfig.hasOwnProperty(key)) {
+                    if (key === this._apiSrv.currentSort) {
+                        this._apiSrv.srtConfig[key].checked = true;
                     }  else {
-                        this.srtConfig[key].checked = false;
+                        this._apiSrv.srtConfig[key].checked = false;
                     }
                 }
             }
@@ -310,7 +307,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.goSortList();
     }
     goSortList(pageList?) {
-        this._pagSrv.UsersList =  this.helpersClass.sort(this._pagSrv.UsersList, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+        this._pagSrv.UsersList =  this.helpersClass.sort(this._pagSrv.UsersList,  this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun, this._apiSrv.currentSort);
         this._pagSrv._initPaginationConfig(true);
         this._pagSrv.changePagination(this._pagSrv.paginationConfig);
     }
@@ -321,24 +318,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         return 'icon eos-icon small eos-icon-arrow-blue-top';
     }
 
-    initSort() {
-        this.srtConfig.department = {
-            upDoun: false,
-            checked: false,
-        };
-        this.srtConfig.login = {
-            upDoun: false,
-            checked: true,
-        };
-        this.srtConfig.fullDueName =  {
-            upDoun: false,
-            checked: false,
-        };
-        this.srtConfig.tip = {
-            upDoun: false,
-            checked: false,
-        };
-    }
     showAction(nameMethods: any) {
         this.callPassedFunction(nameMethods);
     }
@@ -361,19 +340,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
     preSortForAction() {
         this._apiSrv.devideUsers();
-        this.currentSort = 'department';
-        this.srtConfig[this.currentSort].upDoun = false;
-        this.srtConfig[this.currentSort].checked = true;
-        if (this.srtConfig[this.currentSort].checked) {
-            for (const key in  this.srtConfig) {
-                if (this.srtConfig.hasOwnProperty(key)) {
-                    if (key !== this.currentSort) {
-                        this.srtConfig[key].checked = false;
-                    }
-                }
-            }
-        }
-        this.goSortList();
+        this._pagSrv._initPaginationConfig(true);
+        this._pagSrv.changePagination(this._pagSrv.paginationConfig);
         this.countMaxSize = this._pagSrv.countMaxSize;
     }
 

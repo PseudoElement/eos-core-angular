@@ -31,16 +31,16 @@
                 </label>
              </div>
              <span class="user-list-fourth-colomn likeLink"(click)="sortPageList('login')">Логин
-                <span *ngIf ="srtConfig.login.checked" [ngClass]="getClassOrder(srtConfig.login.upDoun)"></span>
+                <span *ngIf ="_apiSrv.srtConfig.login.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.login.upDoun)"></span>
             </span>
             <span class="user-list-third-colomn likeLink">Тип
-                <span *ngIf ="srtConfig.tip.checked"></span>
+                <span *ngIf ="_apiSrv.srtConfig.tip.checked"></span>
             </span>
             <span class="user-list-first-colomn likeLink"(click)="sortPageList('fullDueName')">Должностное лицо
-                <span *ngIf ="srtConfig.fullDueName.checked" [ngClass]="getClassOrder(srtConfig.fullDueName.upDoun)"></span>
+                <span *ngIf ="_apiSrv.srtConfig.fullDueName.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
             </span>
             <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')">Подразделение
-                <span *ngIf ="srtConfig.department.checked" [ngClass]="getClassOrder(srtConfig.department.upDoun)"></span>
+                <span *ngIf ="_apiSrv.srtConfig.department.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)"></span>
             </span>
                 <!-- <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
                     <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>
