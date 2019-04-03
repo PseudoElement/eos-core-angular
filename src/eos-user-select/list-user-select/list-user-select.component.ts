@@ -47,8 +47,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     countcheckedField: number;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor (
+        public _apiSrv: UserParamApiSrv,
         private _modalSrv: BsModalService,
-        private _apiSrv: UserParamApiSrv,
         private _pagSrv: UserPaginationService,
         private _route: ActivatedRoute,
         private _router: Router,
