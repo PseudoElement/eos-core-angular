@@ -50,12 +50,20 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
                     this.form.controls['DOC_DEFAULT_VALUE_List.JOURNAL_WHO_REDIRECTION_W'].setValue(null);
                     this.form.controls['DOC_DEFAULT_VALUE_List.JOURNAL_WHERE_REDIRECTION_W'].setValue(null);
                 }
+                if (newValue === '1' && newValue !== prevValue) {
+                    if (!this.getValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', null)) {
+                        this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', '2');
+                    }
+                }
+                this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W');
                 break;
             }
 
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_FROM_FORWARD_W': {
                 if (newValue === '1' && newValue !== prevValue) {
-                    this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', '2');
+                    if (!this.getValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', null)) {
+                        this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', '2');
+                    }
                 }
                 this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W');
                 break;
@@ -183,7 +191,8 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
     setAvailableFor (key: string) {
         switch (key) {
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W': {
-                const cb = this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_FROM_FORWARD_W');
+                const cb = this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_FROM_FORWARD_W') ||
+                        this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_FROM_WHO_W');
                 if (cb) {
                     this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W'].options, null, true);
                 } else {
