@@ -34,7 +34,7 @@
                             <button class="btn btn-primary upper"
                                 (click)="cancel()">Отменить</button>
                             <button class="btn btn-primary-full upper"
-                                [disabled]="stateHeaderSubmit || errorPass"
+                                [disabled]="stateHeaderSubmit || errorPass || !getValidDate"
                                 (click)="submit()">Сохранить</button>
                         </div>
                     </div>
@@ -77,12 +77,20 @@
     <div class="base-param-main">
         <!-- Логин и Аутентификация с помощью ОС -->
         <div class="wrapper-password">
-            <eos-dynamic-input
+            <div class="base-text-input base-login-input" [formGroup]="form">
+                <label [hidden]="inputs['CLASSIF_NAME'].hideLabel"
+                    [attr.for]="inputs['CLASSIF_NAME'].key">{{inputs['CLASSIF_NAME'].label}}</label>
+                <input class="form-control m-font" maxlength="12"
+                    [formControlName]="inputs['CLASSIF_NAME'].key"
+                    [readonly]="inputs['CLASSIF_NAME'].readonly"
+                    autocomplete="off">
+            </div>
+            <!-- <eos-dynamic-input
                 class="base-text-input base-login-input"
                 [input]="inputs['CLASSIF_NAME']"
                 [form]="form"
                 [readonly]="inputs['CLASSIF_NAME'].disabled"
-            ></eos-dynamic-input>
+            ></eos-dynamic-input> -->
             <eos-dynamic-input
                 [input]="inputs['USERTYPE']"
                 [form]="form"
@@ -96,9 +104,9 @@
                 <eos-dynamic-input
                     style="width: 180px"
                     class="inline-block"
-                    [input]="inputs['PASSWORD_DATE']"
                     [form]="form"
-                    [readonly]="inputs['PASSWORD_DATE'].readonly"
+                    [input]="inputs['PASSWORD_DATE']"
+                    [readonly]="inputs['PASSWORD_DATE'].readonly || !editMode"
                 ></eos-dynamic-input>
 
                 <div [formGroup]="formControls"
@@ -106,7 +114,7 @@
                     <label [hidden]="controls['pass'].hideLabel"
                         [attr.for]="controls['pass'].key">{{controls['pass'].label}}</label>
                     <div class="vision" [ngClass]="{'disabled': controls['pass'].disabled}">
-                    <input class="form-control m-font"
+                    <input class="form-control m-font" maxlength="30"
                         [formControlName]="controls['pass'].key"
                         [id]="controls['pass'].key"
                         [type]="type"
@@ -123,7 +131,7 @@
                     <label [hidden]="controls['passRepeated'].hideLabel"
                         [attr.for]="controls['passRepeated'].key">{{controls['passRepeated'].label}}</label>
                     <div class="vision" [ngClass]="{'disabled': controls['pass'].disabled}">
-                    <input class="form-control m-font"
+                    <input class="form-control m-font"  maxlength="30"
                         [formControlName]="controls['passRepeated'].key"
                         [id]="controls['passRepeated'].key"
                         [type]="type1"

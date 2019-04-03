@@ -107,6 +107,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     submit(): Promise<any> {
         if (!this.stateHeaderSubmit) {
+            this.isLoading = true;
             this.stateHeaderSubmit = false;
             const id = this._userParamSrv.userContextId;
             let accessSysString = '';
@@ -207,14 +208,17 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
     }
     cancel() {
+        this.isLoading = true;
         this.editMode = !this.editMode;
-        this.init();
+        setTimeout(() => {
+            this.init();
+        }, 1000);
         setTimeout(() => {
             this.editModeF();
             this._subscribeControls();
             this.stateHeaderSubmit = true;
             this._pushState();
-        });
+        }, 1200);
     }
     edit() {
         this.editMode = !this.editMode;
@@ -328,6 +332,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this.formAccess.controls['delo_web'].disable({emitEvent: false});
         }
     }
+   get getValidDate() {
+    return this.form.controls['PASSWORD_DATE'].valid;
+    }
     private _subscribeControls() {                                     /* подписки */
         /* основная форма */
         this.form.valueChanges
@@ -336,14 +343,14 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     data['PASSWORD_DATE'] = this._descSrv.dateToString(data['PASSWORD_DATE']);
                 }
                 this._newData['form'] = data;
-                this._checkForChenge();
+                this._checkForChenge(false);
             });
 
         /* форма контролов */
         this.formControls.valueChanges
             .subscribe((data) => {
                 this._newData['formControls'] = data;
-                this._checkForChenge(false);
+                this._checkForChenge();
             });
 
         /* форма доступа к системам */
@@ -390,16 +397,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
         }
     }
-    // private _checkRoleControl (state: boolean) {
-    //     if (state) {
-    //         if (this.curentUser.isAccessDelo) {
-    //             this._toggleFormControl(this.formControls.controls['SELECT_ROLE'], false);
-    //         }
-    //     } else {
-    //         this.formControls.get('SELECT_ROLE').patchValue('');
-    //         this._toggleFormControl(this.formControls.controls['SELECT_ROLE'], true);
-    //     }
-    // }
     private _createAccessSystemsString (data) {
         const arr = this.curentUser['ACCESS_SYSTEMS'].concat();
         arr[0] = '0';
@@ -454,7 +451,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this._newData['accessSystems'] = c ? this._newData['accessSystems'] : null;
             change = change ? change : c;
         }
-        this.stateHeaderSubmit = !change || state;
+        // ибо и так не работало - !!!!
+        // this.stateHeaderSubmit = !change || state;
+        this.stateHeaderSubmit = false;
         this._pushState();
     }
 
@@ -473,7 +472,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
     }
     private _pushState () {
-        this._userParamSrv.setChangeState({isChange: !this.stateHeaderSubmit});
+        this._userParamSrv.setChangeState({isChange: !this.stateHeaderSubmit, disableSave: !this.getValidDate || this.errorPass});
       }
 
 }
