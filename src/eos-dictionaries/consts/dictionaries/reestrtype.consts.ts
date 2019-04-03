@@ -48,12 +48,12 @@ export const REESTRTYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_T
             key: 'EMERGENCY',
             type: 'string',
             title: 'Срочность',
-            length: 100,
+            length: 64,
     }, {
             key: 'IMPOTANCE',
             type: 'string',
             title: 'Важность',
-            length: 100,
+            length: 64,
     }, {
             key: 'IS_UNIQUE',
             type: 'select',
