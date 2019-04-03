@@ -22,11 +22,15 @@ export const VISA_TYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
     visible: true,
     iconName: 'eos-icon-visa-blue',
     fields: LINEAR_TEMPLATE.fields.concat([
-        Object.assign({}, COMMON_FIELD_NAME, { isUnique: true, uniqueInDict: true }),
+        Object.assign({}, COMMON_FIELD_NAME,
+        {
+            isUnique: true,
+            uniqueInDict: true,
+            length: 64,
+        }),
         {
             key: 'IS_FINAL',
             type: 'boolean',
-            length: 64,
             title: 'Является финальной',
         }, {
             key: 'STATUS',
