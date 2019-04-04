@@ -87,6 +87,16 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
         }
     }
 
+    validity(path: string, markDirty: boolean = false): any {
+        const control = this.form.controls[path];
+        if (control) {
+            control.updateValueAndValidity();
+            if (markDirty) {
+                control.markAsDirty();
+            }
+        }
+    }
+
     /**
      * Set item.disabled = !val
      * @param options array of options

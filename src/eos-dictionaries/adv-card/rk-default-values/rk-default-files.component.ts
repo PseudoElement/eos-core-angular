@@ -16,14 +16,16 @@ export class RKFilesCardComponent extends RKBasePage implements OnChanges {
     onDataChanged(path: string, prevValue: any, newValue: any): any {
         switch (path) {
             case 'DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE': {
+
                 if (newValue && (newValue === '-1' || newValue === '-2')) {
                     this.isFileAccessEnabled = true;
-                    this.form.controls['DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST'].updateValueAndValidity();
+                    this.validity('DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST', true);
                 } else {
                     this.isFileAccessEnabled = false;
                     this.setValue ('DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST', null);
+                    this.validity('DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST', true);
                 }
-
+                break;
             }
 
         }

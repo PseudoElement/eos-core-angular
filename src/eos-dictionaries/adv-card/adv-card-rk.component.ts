@@ -215,7 +215,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             if (c) {
                 const v = c.value;
                 if (v) {
-                    if ((!control.value || control.value === '') && (v === '-1' || v === '-2')) {
+                    if ((!control.value || control.value === '') && (v === '-1')) {
                         return { valueError: 'Итоговый список не должен быть пустым. Заполните его или измените значение "Доступ"'};
                     }
                 }
