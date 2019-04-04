@@ -2049,7 +2049,7 @@ const commonMeta = {
         },
         readonly: [],
         relations: [
-            {name: 'NP_CODEX_TYPE_CL_Ref', __type: 'NP_CODEX_TYPE_CL', sf: 'ISN_LCLASSIF', tf: 'ISN_LCLASSIF'}
+            {name: 'NP_CODEX_TYPE_CL_Ref', __type: 'NP_CODEX_TYPE_CL', sf: 'ISN_CODEX_TYPE', tf: 'ISN_LCLASSIF'}
         ]
     },
     NP_OSN_OSVOB_CL: {
