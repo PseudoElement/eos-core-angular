@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 
 import { E_DICT_TYPE } from 'eos-dictionaries/interfaces';
 import { EosDictService } from './eos-dict.service';
-
+import { NavParamService } from 'app/services/nav-param.service';
 @Injectable()
 export class EosSandwichService {
     private _currentDictState: boolean[];
@@ -14,7 +14,10 @@ export class EosSandwichService {
 
     private _treeScrollTop = 0;
 
-    constructor(private _dictSrv: EosDictService) {
+    constructor(
+        private _dictSrv: EosDictService,
+        private _navSrv: NavParamService,
+        ) {
         this._dictSrv.dictionary$.subscribe((dict) => {
             if (dict) {
                 if (dict.descriptor.type === E_DICT_TYPE.linear) {
@@ -26,6 +29,10 @@ export class EosSandwichService {
             if (!this._currentDictState) {
                 this.resize();
             }
+        });
+        // баг 100937
+        this._navSrv._subscriBtnTree$.subscribe((bol: boolean) => {
+            this._treeIsBlocked = bol;
         });
     }
 
