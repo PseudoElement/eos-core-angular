@@ -87,6 +87,7 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
                     this.setValue('fict.ISN_CARD_REG_W_2', null);
                     this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_CURR_W', '1');
                     this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', null);
+                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W', null);
                 }
                 if (newValue === '1') {
                     this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', null);
@@ -126,6 +127,7 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
                 if (newValue === '0') {
                     this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_CURR_W', '1');
                     this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_FORWARD_W', '1');
+                    this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_W', null);
                     this.setValue('fict.ISN_CARD_REG_W_2', null);
                 } else if (newValue === '1') {
                     this.setValue('DOC_DEFAULT_VALUE_List.ISN_CARD_REG_CURR_W', null);
