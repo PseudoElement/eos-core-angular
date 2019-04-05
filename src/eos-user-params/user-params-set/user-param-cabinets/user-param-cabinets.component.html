@@ -1,5 +1,6 @@
 <div class="input-user-wrapper input-user-cabinets-rk-forwarding-wrapper" *ngIf="inputs">
-    <eos-user-params-header [title]='titleHeader' [link]='link' [selfLink]='selfLink' [disableBtn]="btnDisable" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (closeEmit)='close($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <eos-user-params-header [title]='titleHeader' [link]='link' [selfLink]='selfLink' [disableBtn]="btnDisable || MaxIncrement" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (closeEmit)='close($event)'
+        (defaultEmit)='default($event)'></eos-user-params-header>
     <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs">
             <li class="tab-item" *ngFor="let tab of fieldGroupsForCabinets; let i = index" [ngClass]="{'active': i === currTab}" (click)="setTab(i)">
