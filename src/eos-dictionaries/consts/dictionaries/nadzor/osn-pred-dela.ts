@@ -43,7 +43,6 @@ export const NP_OSN_PRED_DELA_CL: ITreeDictionaryDescriptor = /*Object.assign({}
             title: 'Наименование',
             isUnique: true,
             uniqueInDict: true,
-            length: 64,
         }),
 
         {

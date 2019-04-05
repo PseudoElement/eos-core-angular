@@ -10,6 +10,7 @@ import { InputBase } from 'eos-common/core/inputs/input-base';
 import { FA_ICONS } from './fa-icons.const';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
+import { NADZORDICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
 
 const TEST_INPUTS = <IBaseInput[]>[{
     controlType: 'string',
@@ -157,6 +158,11 @@ export class TestPageComponent implements OnInit, OnChanges {
     }
 
     chooseCL(_evt) {
+
+        const fff = NADZORDICTIONARIES;
+        fff.forEach(n => {
+            console.log(n.apiInstance + ' ' + n.title);
+        });
 
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT);
 
