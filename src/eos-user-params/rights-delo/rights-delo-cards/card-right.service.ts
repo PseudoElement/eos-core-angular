@@ -93,14 +93,10 @@ export class CardRightSrv {
                     i--;
                 }
             }
-
-
         });
-        console.log(chl);
         return this._pipSrv.batch(chl, '')
         .then((d) => {
             this._userParamsSetSrv.setChangeState({isChange: false});
-            console.log(d);
             return this._userParamsSetSrv.getUserIsn();
         })
         .then(() => {
@@ -348,7 +344,6 @@ export class CardRightSrv {
             delete ent._State;
             // this._saveOrigin(ent);
         }
-        console.log(chl);
     }
 
     // private _saveOrigin(ent: IEnt) {
