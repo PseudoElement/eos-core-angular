@@ -60,6 +60,11 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.link = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
         this.selfLink = this._router.url.split('?')[0];
         this.allData = this._userParamsSetSrv.hashUserContext;
+        this._userParamsSetSrv.saveData$
+        .takeUntil(this._ngUnsubscribe)
+        .subscribe(() => {
+            this._userParamsSetSrv.submitSave =  this.submit();
+        });
     }
     ngOnInit() {
         this.init();
@@ -185,7 +190,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
 
     changeIncrementForm(data): boolean {
         let val: boolean = false;
-        if (/^([1-9]?[0-9]{0,4}|\W*)$/.test(String(data))) {
+        if (/^([1-9]?[0-9]{0,4}|\s*)$/.test(String(data))) {
             val = true;
         } else {
             val = false;
@@ -195,7 +200,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
 
     changeIncrementAttach(data, data1): boolean {
         let val: boolean = false;
-        if (/^(-\d{1,2}|[1-9](\d{1,2})?|0|\W*)$/.test(String(data)) && /^(-\d{1,2}|[1-9](\d{1,2})?|0|\W*)$/.test(String(data1))) {
+        if (/^(-\d{1,2}|[1-9](\d{1,2})?|0|\s*)$/.test(String(data)) && /^(-\d{1,2}|[1-9](\d{1,2})?|0|\s*)$/.test(String(data1))) {
             val = true;
         } else {
             val = false;
@@ -482,6 +487,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         };
     }
     private _pushState () {
-        this._userParamsSetSrv.setChangeState({isChange: this.btnDisable || this.MaxIncrement, disableSave: this.MaxIncrement});
+        this._userParamsSetSrv.setChangeState({isChange: !this.btnDisable || this.MaxIncrement, disableSave: this.MaxIncrement});
       }
 }
