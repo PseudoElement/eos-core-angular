@@ -345,6 +345,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.OpenSelected:
                 this._openItems();
                 break;
+            case E_RECORD_ACTIONS.prjDefaultValues:
+                this._openPrjDefaultValues();
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -683,6 +686,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             const subscription = this.modalWindow.content.onChoose.subscribe(() => {
                 subscription.unsubscribe();
             });
+        }
+    }
+
+    private _openPrjDefaultValues() {
+        const node = this._dictSrv.listNode;
+        if (node) {
+            this.nodeList.openPrjDefaultValues(node);
+        } else {
+            this._msgSrv.addNewMessage(WARN_SELECT_NODE);
         }
     }
 }

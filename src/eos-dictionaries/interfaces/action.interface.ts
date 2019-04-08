@@ -29,6 +29,7 @@ export enum E_RECORD_ACTIONS {
     CloseSelected,
     OpenSelected,
     AdvancedCardRK,
+    prjDefaultValues,
     // createRepresentative,
     // slantForForms,
     /* to be extended */

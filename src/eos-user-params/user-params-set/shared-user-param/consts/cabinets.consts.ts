@@ -1,19 +1,17 @@
 import { IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
 // const REG_MAX_SIZE: RegExp = /^\d{0,3}$|^1000$/; // 0-1000
-const REG_MAX_SIZE1: RegExp = /^(-\d{1,2}|[1-9](\d{1,2})?|0)$/; // 0-1000
+const REG_MAX_SIZE1: RegExp = /^(-\d{1,2}|[1-9](\d{1,2})?|0|\s*)$/; // 0-1000
  const REG_MIN_VAL: RegExp = /^[1-9]?[0-9]{0,4}$/;
 export const CABINETS_USER: IBaseUsers = {
     id: 'cabinets',
     title: 'Кабинеты',
     apiInstance: 'USER_PARMS',
     disabledFields: [
-        'HILITE_RESOLUTION_INCREMENT',
-        'HILITE_PRJ_RC_INCREMENT'
     ],
     fields: [
         {
             key: 'FOLDERCOLORSTATUS',
-            type: 'boolean',
+            type: 'text',
             title: 'Поступившие'
         },
         {
@@ -65,40 +63,42 @@ export const CABINETS_USER: IBaseUsers = {
             key: 'HILITE_RESOLUTION',
             type: 'numberIncrement',
             title: '',
-            readonly: true,
+            pattern: REG_MAX_SIZE1
         },
         {
             key: 'HILITE_RESOLUTION_BOOLEAN',
             type: 'boolean',
             title: 'Подсвечивать записи с поручениями РК, срок исполнения которых истекает через'
         },
+        // {
+        //     key: 'HILITE_RESOLUTION_INCREMENT',
+        //     type: 'numberIncrement',
+        //     title: '',
+        //     pattern: REG_MAX_SIZE1
+        // },
         {
-            key: 'HILITE_RESOLUTION_INCREMENT',
+            key: 'HILITE_PRJ_RC',
             type: 'numberIncrement',
             title: '',
             pattern: REG_MAX_SIZE1
-        },
-        {
-            key: 'HILITE_PRJ_RC',
-            type: 'boolean',
-            title: ''
         },
         {
             key: 'HILITE_PRJ_RC_BOOLEAN',
             type: 'boolean',
             title: 'Подсвечивать записи в папке "Управление проектами", срок которых истекает через'
         },
-        {
-            key: 'HILITE_PRJ_RC_INCREMENT',
-            type: 'numberIncrement',
-            title: '',
-            pattern: REG_MAX_SIZE1
-        },
+        // {
+        //     key: 'HILITE_PRJ_RC_INCREMENT',
+        //     type: 'numberIncrement',
+        //     title: '',
+        //     pattern: REG_MAX_SIZE1
+        // },
         {
             key: 'CABSORT_ISN_DOCGROUP_LIST',
             type: 'select',
             title: '',
             options: [
+                {value: '', title: ''}
             ]
         },
         {
@@ -253,73 +253,146 @@ export const CABINETS_USER: IBaseUsers = {
             ]
         },
     ],
-    fieldsChild: [
+    fieldsDefaultValue: [
         {
-            key: 'FOLDERCOLORSTATUS_RECEIVED',
-            type: 'boolean',
-            title: 'Поступившие'
-        },
-        {
-            key: 'FOLDERCOLORSTATUS_FOR_EXECUTION',
-            type: 'boolean',
-            title: 'На исполнение'
-        },
-        {
-            key: 'FOLDERCOLORSTATUS_UNDER_CONTROL',
-            type: 'boolean',
-            title: 'На контроле'
-        },
-        {
-            key: 'FOLDERCOLORSTATUS_HAVE_LEADERSHIP',
-            type: 'boolean',
-            title: 'У руководства'
-        },
-        {
-            key: 'FOLDERCOLORSTATUS_FOR_CONSIDERATION',
-            type: 'boolean',
-            title: 'На рассмотрение'
-        },
-        {
-            key: 'FOLDERCOLORSTATUS_INTO_THE_BUSINESS',
-            type: 'boolean',
-            title: 'В дело'
-        },
-        {
-            key: 'FOLDERCOLORSTATUS_PROJECT_MANAGEMENT',
-            type: 'boolean',
-            title: 'Управление проектами'
-        },
-        {
-            key: 'FOLDERCOLORSTATUS_ON_SIGHT',
-            type: 'boolean',
-            title: 'На визировании'
-        },
-        {
-            key: 'FOLDERCOLORSTATUS_ON_THE_SIGNATURE',
-            type: 'boolean',
-            title: 'На подписи'
-        },
-        {
-            key: 'HILITE_RESOLUTION_BOOLEAN',
-            type: 'boolean',
-            title: 'Подсвечивать записи с поручениями РК, срок исполнения которых истекает через'
-        },
-        {
-            key: 'HILITE_RESOLUTION_INCREMENT',
-            type: 'numberIncrement',
+            key: 'FOLDERCOLORSTATUS',
+            type: '',
             title: '',
-            pattern: REG_MAX_SIZE1
         },
         {
-            key: 'HILITE_PRJ_RC_BOOLEAN',
-            type: 'boolean',
-            title: 'Подсвечивать записи в папке "Управление проектами", срок которых истекает через'
-        },
-        {
-            key: 'HILITE_PRJ_RC_INCREMENT',
-            type: 'numberIncrement',
+            key: 'HILITE_RESOLUTION',
+            type: '',
             title: '',
-            pattern: REG_MAX_SIZE1,
+        },
+        {
+            key: 'HILITE_PRJ_RC',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'CABSORT_ISN_DOCGROUP_LIST',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'INPUT_REP_RC_WITHOUT_RES_DELETE_FROM_CAB',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'SCRATCH_RC',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'SCRATCH_RESOL',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'FOLDER_ITEM_LIMIT_RESULT',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'RESOLUTION_DATE',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'RESOLUTION_AUTHOR',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'RESOLUTION_SELECT_AUTHOR',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'PARENT_RESOLUTION_TEXT',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'RESOLUTION_CONTROLLER',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'RESOLUTION_CONTROL_STATE',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'CORRECT_CTRL_DATE',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'PLAN_DATE_PARENT',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'CHECK_RESOL_REPORT',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'SHOW_REPLY_NOTE',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'SHOW_REPLY_READED',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'ADD_JOURNAL_4DOC',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'ADD_JOURNAL_RESOL_AUTHOR',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'ADD_JOURNAL_CONTROLLER',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'ADD_JOURNAL_RESOL_REPLY',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'ADD_ADRESS_REPORGANIZ',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'SEND_ORDER_TO',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'RESOLUTION_CICLE',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'RESPRJ_PRIORITY_DEFAULT',
+            type: '',
+            title: '',
+        },
+        {
+            key: 'RESOLUTION_PRINT',
+            type: '',
+            title: '',
         },
     ]
 };

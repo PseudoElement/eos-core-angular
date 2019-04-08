@@ -152,7 +152,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         }
     }
     showWarnMessage(stringMatches: string) {
-        const msg = `Выбранные картотеки:\n ${stringMatches} уже существуют и не могут быть добавленны снова!!!`;
+        const msg = `Выбранные картотеки:\n ${stringMatches} уже существуют и не могут быть добавленны снова!`;
         this.sendMessage('Предупреждение', msg);
     }
 

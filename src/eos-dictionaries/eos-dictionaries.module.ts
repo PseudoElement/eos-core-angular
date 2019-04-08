@@ -64,7 +64,7 @@ import { DictionariesQuickSearchComponent } from './dictionary-quick-search/dict
 import { CreateNodeBroadcastChannelComponent } from './create-node-broadcast-channel/create-node-broadcast-channel.component';
 import { LinkCardComponent } from './card-views/link-card.component';
 import { NadzorCardEditComponent } from './card-views/nadzor-card-edit.component';
-import { AdditionalFieldsComponent } from './additional-fields/additional-fields.component';
+import { PrjDefaultValuesComponent } from './prj-default-values/prj-default-values.component';
 /* services */
 import { DictionaryDescriptorService } from './core/dictionary-descriptor.service';
 import { EosDataConvertService } from './services/eos-data-convert.service';
@@ -133,7 +133,7 @@ import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter
         SevParticipantCardEditComponent,
         OrganizationsCardEditGroupComponent,
         OrganizationsCardEditNodeComponent,
-        AdditionalFieldsComponent,
+        PrjDefaultValuesComponent,
         LinkCardComponent,
         NadzorCardEditComponent,
     ],
@@ -146,7 +146,7 @@ import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter
         CreateNodeComponent,
         CreateNodeBroadcastChannelComponent,
         DocgroupTemplateConfigComponent,
-        AdditionalFieldsComponent,
+        PrjDefaultValuesComponent,
     ],
     imports: [
         BrowserModule,

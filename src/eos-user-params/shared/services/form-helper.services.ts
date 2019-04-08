@@ -178,7 +178,7 @@ export class FormHelperService {
                     }
                 }
             } else {
-                obj[field.key] = userData[field.key];
+                obj[field.key] = userData[field.key] ? userData[field.key] : '';
             }
         });
         return obj;

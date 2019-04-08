@@ -1,0 +1,63 @@
+.prj-default-values-modal {
+    width: 800px;
+
+    .tabs-wrapper {
+        margin: 0;
+    }
+
+    .term-exec {
+        display: inline-block;
+    }
+
+    .clearfix {
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .clear-both {
+        clear: both;
+    }
+
+    .margin-r {
+        margin-right: 10px;
+    }
+
+    .margin-b {
+        margin-bottom: 10px;
+    }
+
+    .no-margin-bottom {
+        margin-bottom: 0px;
+    }
+
+    .bottom-buttons {
+        padding: 10px;
+        display: inline-block;
+    }
+
+    .bottom-buttons-clearfix {
+        min-width: 450px;
+        display: inline-block;
+    }
+
+    .defaultTab {
+        padding: 20px 20px 0 0;
+        max-height: calc(100vh - 220px);
+        overflow: auto;
+    }
+
+    .tab-button{
+        display: inline-block;
+        width: 33%;
+    }
+
+    .tab-buttons {
+        padding: 0 20px;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .no-marigin-bottom {
+        margin-bottom: 0px;
+    }
+}
