@@ -1,64 +1,32 @@
-<eos-param-header
-    [title]="titleHeader"
-    (submitForm)="submit()"
-    (cancelForm)="cancel()"
-    [statusBtnSub]="btnDisabled"
-></eos-param-header>
+<eos-param-header [title]="titleHeader" (submitForm)="submit()" (cancelForm)="cancel()" [statusBtnSub]="btnDisabled"></eos-param-header>
 <main *ngIf="!isLoading; else spiner">
     <div>
-        <eos-dynamic-input
-            class="create-user-login-input"
-            [input]="inputs['classifName']"
-            [form]="form"
-            [readonly]="false"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            [input]="inputs['teсhUser']"
-            [form]="form"
-            [readonly]="false"
-        ></eos-dynamic-input>
-    </div>
-    <div class="flex-wr">
-        <div [formGroup]="form"
-            class="dynamic-input-wrapper inline-block base-department-input">
-            <label
-                [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
-            <div class="create-user-wr" style="width: 461px">
-            <input class="form-control m-font inline-block"
-                readonly
-                [formControlName]="inputs['DUE_DEP_NAME'].key"
-                [id]="inputs['DUE_DEP_NAME'].key"
-                type="text"
-                [placeholder]="inputs['DUE_DEP_NAME'].label"
-                autocomplete="off">
-                <span class="icon eos-icon small icon-add-department"
-                    [ngClass]="{'eos-icon-avatar-blue': form.get('DUE_DEP_NAME').enabled, 'eos-icon-avatar-grey': form.get('DUE_DEP_NAME').disabled}"
-                    (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"
-                ></span>
+        <div class="form-group create-user-login-input log">
+            <label>ЛОГИН</label>
+            <div class="required">
+                <form [formGroup]="form">
+                    <input class=" form-control" maxlength="12" type="text" [formControlName]="inputs['classifName'].key" [readonly]="false" />
+                </form>
             </div>
         </div>
-        <eos-dynamic-input
-            class="base-text-input base-input-role"
-            [input]="inputs['SELECT_ROLE']"
-            [form]="form"
-            [readonly]="form.get('SELECT_ROLE').disabled"
-        ></eos-dynamic-input>
+        <!-- <eos-dynamic-input class="create-user-login-input" [input]="inputs['classifName']" [form]="form" [readonly]="false"></eos-dynamic-input> -->
+        <eos-dynamic-input [input]="inputs['teсhUser']" [form]="form" [readonly]="false"></eos-dynamic-input>
     </div>
-    <div [formGroup]="form"
-        class="dynamic-input-wrapper inline-block base-department-input">
-        <label
-            [attr.for]="inputs['USER_COPY'].key">{{inputs['USER_COPY'].label}}</label>
+    <div class="flex-wr">
+        <div [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
+            <label [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
+            <div class="create-user-wr" style="width: 461px">
+                <input class="form-control m-font inline-block" readonly maxlength="12" [formControlName]="inputs['DUE_DEP_NAME'].key" [id]="inputs['DUE_DEP_NAME'].key" type="text" [placeholder]="inputs['DUE_DEP_NAME'].label" autocomplete="off">
+                <span class="icon eos-icon small icon-add-department" [ngClass]="{'eos-icon-avatar-blue': form.get('DUE_DEP_NAME').enabled, 'eos-icon-avatar-grey': form.get('DUE_DEP_NAME').disabled}" (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"></span>
+            </div>
+        </div>
+        <eos-dynamic-input class="base-text-input base-input-role" [input]="inputs['SELECT_ROLE']" [form]="form" [readonly]="form.get('SELECT_ROLE').disabled"></eos-dynamic-input>
+    </div>
+    <div [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
+        <label [attr.for]="inputs['USER_COPY'].key">{{inputs['USER_COPY'].label}}</label>
         <div class="create-user-wr" style="width: 461px">
-        <input class="form-control m-font inline-block"
-            readonly
-            [formControlName]="inputs['USER_COPY'].key"
-            [id]="inputs['USER_COPY'].key"
-            type="text"
-            [placeholder]="inputs['USER_COPY'].label"
-            autocomplete="off">
-            <span class="icon eos-icon eos-icon-avatar-blue small icon-add-department"
-                (click)="selectUser()"
-            ></span>
+            <input class="form-control m-font inline-block" readonly [formControlName]="inputs['USER_COPY'].key" [id]="inputs['USER_COPY'].key" type="text" [placeholder]="inputs['USER_COPY'].label" autocomplete="off">
+            <span class="icon eos-icon eos-icon-avatar-blue small icon-add-department" (click)="selectUser()"></span>
         </div>
     </div>
 </main>
@@ -66,5 +34,5 @@
 <div *ngIf="isShell" class="shell"></div>
 
 <ng-template #spiner>
-        <eos-spinner size="lg"></eos-spinner>
+    <eos-spinner size="lg"></eos-spinner>
 </ng-template>
