@@ -297,12 +297,12 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         if (this.mapChanges.size) {
             const query = this.parseMapForCreate();
             return this._pipRx.batch(query, '').then(() => {
-                this._pushState();
                 this.prepFormForSave();
                 this.FOLDERCOLORSTATUS = this.newFolderString;
                 this.btnDisable = true;
                 this.flagEdit = false;
                 this.editMode();
+                this._pushState();
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
             }).catch((error) => {
                 console.log(error);
