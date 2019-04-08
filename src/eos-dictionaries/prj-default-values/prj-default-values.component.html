@@ -1,0 +1,110 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Реквизиты РКПД "{{nodeDescription}}"</h4>
+</div>
+<div class="spinner-container text-center" *ngIf="isUpdating" >
+    <eos-spinner size="lg"></eos-spinner>
+</div>
+<div class="modal-body" *ngIf="!isUpdating">
+    <div class="tab-buttons eos-switch btn-group">
+        <a class="tab-button btn btn-primary switch-item text-uppercase"
+           [ngClass]="{'btn-primary-full': isDefaultTab}"
+           (click)="setTab(0)">По умолчанию</a>
+        <a class="tab-button btn btn-primary switch-item text-uppercase"
+           [ngClass]="{'btn-primary-full': isReqiredTab}"
+           (click)="setTab(1)">Обязательные</a>
+        <a class="tab-button btn btn-primary switch-item text-uppercase"
+           [ngClass]="{'btn-primary-full': isFilesTab}"
+           (click)="setTab(2)">Файлы</a>
+    </div>
+    <p class="xl-font paragraph-title no-marigin-bottom"></p>
+    <div class="edit-content">
+        <div class="defaultTab" [hidden]="!isDefaultTab">
+            <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.CONSISTS']"
+                               [form]="form"></eos-dynamic-input>
+            <!-- Срок исполнения -->
+            <div class="clearfix">
+                <span>
+                    <div class="term-exec">
+                        <label>Срок исп. (План. дата)</label>
+                        <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.TERM_EXEC']"
+                                           [form]="form"></eos-dynamic-input>
+                    </div>
+                    <label>дня (дней) от даты регистрации</label>
+                </span>
+            </div>
+
+            <div class="clear-both">
+                <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.SECURLEVEL']"
+                                   [form]="form"></eos-dynamic-input>
+            </div>
+            <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.PRJ_EXEC_LIST']"
+                               [form]="form"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.ANNOTAT']"
+                               [form]="form"></eos-dynamic-input>
+            <div class="visa margin-b">
+                <p class="xl-font paragraph-title">Визы</p>
+                    <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.VISA_ISN_LIST']"
+                                       [form]="form"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.VISA_OUTER_ISN_LIST']"
+                                       [form]="form"></eos-dynamic-input>
+            </div>
+            <div class="sign margin-b">
+                <p class="xl-font paragraph-title">Подписи</p>
+                    <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.SIGN_ISN_LIST']"
+                                       [form]="form"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.SIGN_OUTER_ISN_LIST']"
+                                       [form]="form"></eos-dynamic-input>
+            </div>
+            <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.FILE']"
+                               [form]="form"></eos-dynamic-input>
+            <div class="send margin-b">
+                    <p class="xl-font paragraph-title">Адресаты</p>
+                    <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.SEND_ISN_LIST_DEP']"
+                                       [form]="form"></eos-dynamic-input>
+                    <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.SEND_ISN_LIST_ORGANIZ']"
+                                       [form]="form"></eos-dynamic-input>
+            </div>
+            <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.NOTE']"
+                               [form]="form"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.RUBRIC_LIST']"
+                               [form]="form"></eos-dynamic-input>
+        </div>
+        <div class="requiredTab" [hidden]="!isReqiredTab">
+            <eos-dynamic-input *ngFor="let key of prjDefaults.requiredItems"
+                               [input]="inputs[key]"
+                               [readonly]="inputs[key].readonly"
+                               [form]="form"></eos-dynamic-input>
+        </div>
+        <div class="filesTab" [hidden]="!isFilesTab">
+            <eos-rk-input-files
+                [inputSize]="inputs['DG_FILE_CONSTRAINT_List.PRJ_RC.MAX_SIZE']"
+                [inputCb]="inputs['DG_FILE_CONSTRAINT_List.PRJ_RC.ONE_FILE']"
+                [inputExt]="inputs['DG_FILE_CONSTRAINT_List.PRJ_RC.EXTENSIONS']"
+                [form]="form"
+                [editMode]="true"
+                title="Файлы РКПД">
+            </eos-rk-input-files>
+            <eos-rk-input-files
+                [inputSize]="inputs['DG_FILE_CONSTRAINT_List.PRJ_VISA_SIGN.MAX_SIZE']"
+                [inputCb]="inputs['DG_FILE_CONSTRAINT_List.PRJ_VISA_SIGN.ONE_FILE']"
+                [inputExt]="inputs['DG_FILE_CONSTRAINT_List.PRJ_VISA_SIGN.EXTENSIONS']"
+                [form]="form"
+                [editMode]="true"
+                title="Файлы визы и подписи">
+            </eos-rk-input-files>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="pull-left">
+        <button class="btn btn-primary-full upper"
+                [disabled]="true">Ведение списков</button>
+    </div>
+    <div class="pull-right">
+        <button class="btn btn-primary-full upper"
+                [disabled]="formInvalid"
+                (click)="save()">Записать</button>
+        <button class="btn btn-primary upper"
+                (click)="cancel()">Отменить</button>
+    </div>
+</div>

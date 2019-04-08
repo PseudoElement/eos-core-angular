@@ -283,6 +283,18 @@ const RECORD_ACTIONS_ADDITIONAL_FIELDS: IAction = {
     buttonClass: null
 };
 
+const RECORD_DETAILS_RKPD: IAction = {
+    type: E_RECORD_ACTIONS.prjDefaultValues,
+    group: E_ACTION_GROUPS.item,
+    title: 'Заполнение реквизитов РКПД',
+    hint: 'Заполнение реквизитов РКПД',
+    iconClass: 'eos-icon eos-icon-clip-blue small',
+    disabledIconClass: 'eos-icon eos-icon-clip-grey small',
+    activeIconClass: '',
+    hoverIconClass: 'eos-icon eos-icon-repair-clip-blue small',
+    buttonClass: null
+};
+
 export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_CREATE,
     RECORD_ACTIONS_EDIT,
@@ -321,6 +333,7 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     // RECORD_ACTION_CREATE_ORGANISATION_AGENT,
     RECORD_ACTIONS_ADDITIONAL_FIELDS,
     RECORD_ACTION_ADVCARDRK,
+    RECORD_DETAILS_RKPD,
     RECORD_ACTION_SHOW_SETTINGS,
 ];
 

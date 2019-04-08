@@ -172,6 +172,13 @@ export class NodeActionsComponent implements OnDestroy {
                         _enabled = false;
                     }
                     break;
+                case E_RECORD_ACTIONS.prjDefaultValues:
+                    if (this._dictSrv && this._dictSrv.listNode) {
+                        _enabled = this._dictSrv.listNode.isPrjDocGroup;
+                    } else {
+                        _enabled = false;
+                    }
+                    break;
             }
         }
         button.show = _show;
