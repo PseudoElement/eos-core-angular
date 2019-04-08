@@ -325,14 +325,15 @@ export class CardRightSrv {
             const ch = {
                 method: ent._State,
             };
-            const uri = `${user}USERCARD_List('${userId} ${parent['DUE']}')/USER_CARD_DOCGROUP_List('${userId} ${parent['DUE']} ${ent['DUE']} ${this.selectedFuncNum.funcNum}')`;
+            const uri = `${user}USERCARD_List('${userId} ${parent['DUE']}')/USER_CARD_DOCGROUP_List('${userId} ${parent['DUE']} ${ent['DUE']} ${ent['FUNC_NUM']}')`;
             if (ent._State === _ES.Added) {
                 ch['requestUri'] = `${user}USERCARD_List('${userId} ${parent['DUE']}')/USER_CARD_DOCGROUP_List`;
                 ch['data'] = {
                     ISN_LCLASSIF: userId,
                     DUE_CARD: parent['DUE'],
                     DUE: ent['DUE'],
-                    FUNC_NUM: this.selectedFuncNum.funcNum,
+                    FUNC_NUM: ent['FUNC_NUM'],
+                    // FUNC_NUM: this.selectedFuncNum.funcNum,
                     ALLOWED: ent['ALLOWED'],
                 };
             }
@@ -347,6 +348,7 @@ export class CardRightSrv {
             delete ent._State;
             // this._saveOrigin(ent);
         }
+        console.log(chl);
     }
 
     // private _saveOrigin(ent: IEnt) {
