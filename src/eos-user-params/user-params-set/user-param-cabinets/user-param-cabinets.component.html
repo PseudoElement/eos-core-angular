@@ -73,7 +73,7 @@
             <div class="wr-input">
                 <eos-dynamic-input [input]="inputs['rec.CONTROLL_AUTHOR']" [form]="form" [readonly]="true"></eos-dynamic-input>
             </div>
-            <span class="eos-icon small" [ngClass]="flagEdit ? 'eos-icon-folder-blue' : 'eos-icon-folder-grey'" (click)="openClassifDepartment()" tooltip='Добавить/Изменить' placement="bottom" containerClass="tooltip-info" container="body"></span>
+            <span class="eos-icon small" [ngClass]="flagEdit ? 'eos-icon-folder-blue' : 'eos-icon-folder-grey'" (click)="openClassifDepartment()" tooltip='Добавить/Изменить' triggers="hover:click" placement="bottom" containerClass="tooltip-info" container="body"></span>
             <span [ngClass]="getClass" (click)="controller && flagEdit ? showInfoUser() : 'false'" tooltip='Подробная информация' placement="bottom" containerClass="tooltip-info" container="body"></span>
             <span [ngClass]='getClassClearBtn' (click)="clearControlAuthor()" tooltip='Удалить' placement="bottom" containerClass="tooltip-info" container="body"></span>
         </div>

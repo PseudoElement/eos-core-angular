@@ -27,7 +27,8 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     public dueForLink: string;
     public controller: boolean;
     public flagEdit: boolean = false;
-    public prapareData;
+    public titleHeader;
+    public prepareData;
     public prepareInputs;
     public defoltInputs;
     public inputs;
@@ -55,6 +56,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         private _pipRx: PipRX,
         private _msg: EosMessageService,
     ) {
+        this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
+        this.link = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
+        this.selfLink = this._router.url.split('?')[0];
         this.allData = this._userParamsSetSrv.hashUserContext;
     }
     ngOnInit() {
@@ -89,9 +93,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     pretInputs(): void {
         this.FOLDERCOLORSTATUS = this.allData['FOLDERCOLORSTATUS'];
         this.newFolderString = this.FOLDERCOLORSTATUS;
-        this.prapareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.allData);
+        this.prepareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.allData);
         this.prepareInputs = this.formHelp.getObjectInputFields(CABINETS_USER.fields);
-        this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prapareData });
+        this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
         this.inputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.inputs['rec.ADD_ADRESS_REPORGANIZ'].value;
     }
 
@@ -150,6 +154,8 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         } else {
             this.btnDisable = true;
         }
+        this._pushState();
+
     }
     folderColorStatusUp(data, key: string) {
         if (key !== 'rec.FOLDERCOLORSTATUS') {
@@ -209,7 +215,8 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         }
     }
     get getClass() {
-        return this.controller && this.flagEdit ? 'eos-icon eos-icon-info-blue small' : 'eos-icon eos-icon-info-grey small';
+        const val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
+        return val !== '' && String(val) !== 'null' && this.flagEdit ? 'eos-icon eos-icon-info-blue small' : 'eos-icon eos-icon-info-grey small';
     }
     get getClassClearBtn() {
         const val = this.form.controls['rec.CONTROLL_AUTHOR'].value;
@@ -285,6 +292,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         if (this.mapChanges.size) {
             const query = this.parseMapForCreate();
             return this._pipRx.batch(query, '').then(() => {
+                this._pushState();
                 this.prepFormForSave();
                 this.FOLDERCOLORSTATUS = this.newFolderString;
                 this.btnDisable = true;
@@ -425,14 +433,15 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         }
     }
     default(event?) {
-        this.prapareData = {};
+        this.prepareData = {};
         this.prepareInputs = {};
         const prep = this.getObjQueryInputsFieldForDefault(this.queryparams());
         return this._pipRx.read(prep)
             .then((data: USER_PARMS[]) => {
-                this.prapareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.createhash(data));
+                this.controller = false;
+                this.prepareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.createhash(data));
                 this.prepareInputs = this.formHelp.getObjectInputFields(CABINETS_USER.fields);
-                this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prapareData });
+                this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
                 this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value;
                 this.prepFormCancel(this.defoltInputs, true);
             })
@@ -472,4 +481,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             dismissOnTimeout: 6000,
         };
     }
+    private _pushState () {
+        this._userParamsSetSrv.setChangeState({isChange: this.btnDisable || this.MaxIncrement, disableSave: this.MaxIncrement});
+      }
 }
