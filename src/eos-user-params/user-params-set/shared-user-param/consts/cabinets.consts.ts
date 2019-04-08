@@ -1,7 +1,7 @@
 import { IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
 // const REG_MAX_SIZE: RegExp = /^\d{0,3}$|^1000$/; // 0-1000
 const REG_MAX_SIZE1: RegExp = /^(-\d{1,2}|[1-9](\d{1,2})?|0|\s*)$/; // 0-1000
- const REG_MIN_VAL: RegExp = /^[1-9]?[0-9]{0,4}$/;
+ const REG_MIN_VAL: RegExp = /^[1-9][0-9]{0,4}$/;
 export const CABINETS_USER: IBaseUsers = {
     id: 'cabinets',
     title: 'Кабинеты',
@@ -198,7 +198,7 @@ export const CABINETS_USER: IBaseUsers = {
             title: 'для',
             options: [
                 {value: '0', title: 'Всех документов'},
-                {value: '1', title: 'Только с бумажным оригиналом'},
+                {value: '1', title: 'Только с "бумажным" оригиналом'},
             ]
         },
         {
@@ -219,7 +219,7 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'ADD_ADRESS_REPORGANIZ',
             type: 'boolean',
-            title: 'Не добавлять внешних исполнителей поручения в Адресаты',
+            title: 'Не добавлять внешних исполнителей поручений в Адресаты',
         },
         {
             key: 'RESOLUTION_CICLE',
@@ -237,7 +237,7 @@ export const CABINETS_USER: IBaseUsers = {
             title: '',
             options: [
                 {value: '2', title: 'Всем фигурантам'},
-                {value: '1', title: 'Контролерам и исполнителям'},
+                {value: '1', title: 'Контролеру и исполнителям'},
                 {value: '0', title: 'Не рассылать'},
             ]
         },

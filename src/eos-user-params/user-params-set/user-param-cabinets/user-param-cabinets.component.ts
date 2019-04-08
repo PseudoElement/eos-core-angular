@@ -39,6 +39,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     public mapChanges = new Map();
     public FOLDERCOLORSTATUS = '';
     public newFolderString = '';
+    public creatchesheDefault;
     readonly fieldsKeys: Map<string, number> = new Map([['FOLDERCOLORSTATUS_RECEIVED', 0],
     ['FOLDERCOLORSTATUS_FOR_EXECUTION', 1], ['FOLDERCOLORSTATUS_UNDER_CONTROL', 2], ['FOLDERCOLORSTATUS_HAVE_LEADERSHIP', 3],
     ['FOLDERCOLORSTATUS_FOR_CONSIDERATION', 4], ['FOLDERCOLORSTATUS_INTO_THE_BUSINESS', 5], ['FOLDERCOLORSTATUS_PROJECT_MANAGEMENT', 6],
@@ -88,7 +89,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     init() {
         this.pretInputs();
-        this.parseInputsFromString();
+        this.parseInputsFromString(this.inputs,  this.allData['FOLDERCOLORSTATUS']);
         this.patchInputFuking();
         this.form = this.inpSrv.toFormGroup(this.inputs);
         this.editMode();
@@ -104,14 +105,13 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.inputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.inputs['rec.ADD_ADRESS_REPORGANIZ'].value;
     }
 
-    parseInputsFromString() {
+    parseInputsFromString(inputs, folderString) {
         this.fieldsKeys.forEach((val, key, arr) => {
-            this.inputs['rec.' + key].value = this.getValueForString(val, key);
+            inputs['rec.' + key].value = this.getValueForString(val, folderString);
         });
     }
-    getValueForString(val, key): boolean {
-        const str = this.allData['FOLDERCOLORSTATUS'];
-        return str.charAt(val) === '1' ? true : false;
+    getValueForString(val, folderString): boolean {
+        return folderString.charAt(val) === '1' ? true : false;
     }
     patchInputFuking() {
         if (String(this.inputs['rec.HILITE_PRJ_RC'].value).trim() !== '') {
@@ -190,7 +190,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
 
     changeIncrementForm(data): boolean {
         let val: boolean = false;
-        if (/^([1-9]?[0-9]{0,4}|\s*)$/.test(String(data))) {
+        if (/^([1-9][0-9]{0,4}|\s*)$/.test(String(data))) {
             val = true;
         } else {
             val = false;
@@ -444,9 +444,11 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         return this._pipRx.read(prep)
             .then((data: USER_PARMS[]) => {
                 this.controller = false;
-                this.prepareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.createhash(data));
+                this.creatchesheDefault = this.createhash(data);
+                this.prepareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.creatchesheDefault);
                 this.prepareInputs = this.formHelp.getObjectInputFields(CABINETS_USER.fields);
                 this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
+                this.parseInputsFromString(this.defoltInputs, this.creatchesheDefault['FOLDERCOLORSTATUS']);
                 this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value;
                 this.prepFormCancel(this.defoltInputs, true);
             })

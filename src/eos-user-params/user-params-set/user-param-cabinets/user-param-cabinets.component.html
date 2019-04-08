@@ -86,6 +86,7 @@
         <div class="check-resol">
             <span class="check-resol-title">Исполнители:</span>
             <eos-dynamic-input [input]="inputs['rec.CHECK_RESOL_REPORT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <span class="check-resol-title">Показывать:</span>
             <eos-dynamic-input [input]="inputs['rec.SHOW_REPLY_NOTE']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <eos-dynamic-input [input]="inputs['rec.SHOW_REPLY_READED']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
@@ -107,9 +108,9 @@
             <eos-dynamic-input [input]="inputs['rec.SEND_ORDER_TO']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <eos-dynamic-input [input]="inputs['rec.RESOLUTION_CICLE']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <hr>
-            <span>Проект резолюции:</span>
+            <span>Проект резолюции</span>
             <div class="resolution">
-                <span>"Приоритет" по умолчанию</span>
+                <span>"Приоритет" по умолчанию:</span>
                 <div>
                     <eos-dynamic-input [input]="inputs['rec.RESPRJ_PRIORITY_DEFAULT']" [form]="form" [readonly]="false"></eos-dynamic-input>
                 </div>
