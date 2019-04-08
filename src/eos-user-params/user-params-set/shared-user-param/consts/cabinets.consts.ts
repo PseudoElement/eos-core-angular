@@ -104,7 +104,7 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'INPUT_REP_RC_WITHOUT_RES_DELETE_FROM_CAB',
             type: 'boolean',
-            title: 'Удалять РК (без поручений) из кабинета исполнителя при вводе резолюции'
+            title: 'Удалять РК (без поручений) из кабинета исполнителя при вводе отчета'
         },
         {
             key: 'SCRATCH_RC',

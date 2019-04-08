@@ -75,6 +75,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         });
     }
     cancel() {
+        this._userParamsSetSrv.setChangeState({isChange: false});
         this.editMode = false;
         this._selectedFuncNum.isSelected = false;
         this._selectedFuncNum = null;
