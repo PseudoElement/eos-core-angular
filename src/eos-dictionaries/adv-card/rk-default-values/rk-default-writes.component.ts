@@ -27,10 +27,11 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
                 break;
             }
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST_W': { // Передача документов
-                if (newValue === null) {
-                    this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', null);
-                } else if (prevValue === null) {
-                    this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', 2);
+                this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W');
+                if (newValue) {
+                    if (!this.getValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', null)) {
+                        this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', '2');
+                    }
                 }
                 break;
             }
@@ -50,22 +51,22 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
                     this.form.controls['DOC_DEFAULT_VALUE_List.JOURNAL_WHO_REDIRECTION_W'].setValue(null);
                     this.form.controls['DOC_DEFAULT_VALUE_List.JOURNAL_WHERE_REDIRECTION_W'].setValue(null);
                 }
+                this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W');
                 if (newValue === '1' && newValue !== prevValue) {
                     if (!this.getValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', null)) {
                         this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', '2');
                     }
                 }
-                this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W');
                 break;
             }
 
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_FROM_FORWARD_W': {
+                this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W');
                 if (newValue === '1' && newValue !== prevValue) {
                     if (!this.getValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', null)) {
                         this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W', '2');
                     }
                 }
-                this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W');
                 break;
             }
 
@@ -194,7 +195,9 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
         switch (key) {
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W': {
                 const cb = this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_FROM_FORWARD_W') ||
-                        this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_FROM_WHO_W');
+                        this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_FROM_WHO_W') ||
+                        this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST_W')
+
                 if (cb) {
                     this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W'].options, null, true);
                 } else {
