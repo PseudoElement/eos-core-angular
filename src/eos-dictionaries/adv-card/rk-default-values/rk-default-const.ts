@@ -101,6 +101,8 @@ export const RKFilesConstraintsFields: string[] = [
     'ONE_FILE',
 ];
 
+const FILE_SIZE_PATTERN = /^\d{0,8}$/;
+
 export const RKFilesConstraints: TDefaultField[] = [
     {
         key: 'DOC_RC.EXTENSIONS',
@@ -112,6 +114,7 @@ export const RKFilesConstraints: TDefaultField[] = [
         title: '',
         minValue: 1,
         maxValue: 99999999,
+        pattern: FILE_SIZE_PATTERN,
     }, {
         key: 'DOC_RC.ONE_FILE',
         type: E_FIELD_TYPE.boolean,
@@ -126,6 +129,7 @@ export const RKFilesConstraints: TDefaultField[] = [
         title: '',
         minValue: 1,
         maxValue: 99999999,
+        pattern: FILE_SIZE_PATTERN,
     }, {
         key: 'PRJ_RC.ONE_FILE',
         type: E_FIELD_TYPE.boolean,
@@ -140,6 +144,7 @@ export const RKFilesConstraints: TDefaultField[] = [
         title: '',
         minValue: 1,
         maxValue: 99999999,
+        pattern: FILE_SIZE_PATTERN,
     }, {
         key: 'PRJ_VISA_SIGN.ONE_FILE',
         type: E_FIELD_TYPE.boolean,
@@ -154,6 +159,7 @@ export const RKFilesConstraints: TDefaultField[] = [
         title: '',
         minValue: 1,
         maxValue: 99999999,
+        pattern: FILE_SIZE_PATTERN,
     }, {
         key: 'REPLY.ONE_FILE',
         type: E_FIELD_TYPE.boolean,
@@ -168,6 +174,7 @@ export const RKFilesConstraints: TDefaultField[] = [
         title: '',
         minValue: 1,
         maxValue: 99999999,
+        pattern: FILE_SIZE_PATTERN,
     }, {
         key: 'RESOLUTION.ONE_FILE',
         type: E_FIELD_TYPE.boolean,
