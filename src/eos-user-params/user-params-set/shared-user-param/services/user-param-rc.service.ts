@@ -156,6 +156,7 @@ export class UserParamRCSrv extends BaseUserSrv {
             const userId = '' + this._userParamsSetSrv.userContextId;
             this.formChanged.emit(false);
             this.isChangeForm = false;
+            this._pushState();
             // this._userParamsSetSrv.getUserIsn();
             if (this.defaultFlag) {
          return this.userParamApiSrv
@@ -191,6 +192,8 @@ export class UserParamRCSrv extends BaseUserSrv {
             }
         } else {
             this.editMode();
+            this.isChangeForm = false;
+            this._pushState();
             return Promise.resolve();
         }
     }

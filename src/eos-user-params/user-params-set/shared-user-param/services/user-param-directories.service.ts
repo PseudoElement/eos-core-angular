@@ -112,6 +112,10 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
         if (this.newData || this.newDataAttach || this.prepareData) {
             this.formChanged.emit(false);
             this.isChangeForm = false;
+            this.isChangeFormAttach = false;
+            this._pushState();
+            this.flagEdit = false;
+            this.editMode();
             // this._userParamsSetSrv.getUserIsn();
             if (this.defaultFlag) {
                 this.defaultFlag = false;

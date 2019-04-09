@@ -64,6 +64,13 @@ export class UserParamVisualizationSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             }
+        }   else {
+            this.formChanged.emit(false);
+            this.isChangeForm = false;
+            this.flagEdit = false;
+            this._pushState();
+            this.editMode();
+            return Promise.resolve();
         }
     }
     cancel() {

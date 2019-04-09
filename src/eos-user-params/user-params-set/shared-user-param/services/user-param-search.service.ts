@@ -10,26 +10,26 @@ export class UserParamSearchSrv extends BaseUserSrv {
     inputAttach;
     prepInputsAttach;
     incrementValid: boolean;
-    prepDataAttach = {rec: {}};
-     _ngUnsubscribe: Subject<any> = new Subject();
-     flagEdit: boolean = false;
-    constructor( injector: Injector ) {
+    prepDataAttach = { rec: {} };
+    _ngUnsubscribe: Subject<any> = new Subject();
+    flagEdit: boolean = false;
+    constructor(injector: Injector) {
         super(injector, SEARCH_USER);
         this.init();
         this.checkIncrement();
         this.editMode();
         this._userParamsSetSrv.saveData$
-        .takeUntil(this._ngUnsubscribe)
-        .subscribe(() => {
-            this._userParamsSetSrv.submitSave = this.submit();
-        });
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this._userParamsSetSrv.submitSave = this.submit();
+            });
     }
     afterInitUserSearch() {
-        this.userParamApiSrv.getData(Object.assign({}, {a: 1}))
-        .then(data => {
-            this.dataAttachDb = data;
-            this.inputAttach = this.getInputAttach();
-        });
+        this.userParamApiSrv.getData(Object.assign({}, { a: 1 }))
+            .then(data => {
+                this.dataAttachDb = data;
+                this.inputAttach = this.getInputAttach();
+            });
     }
     getInputAttach() {
         return this.dataSrv.getInputs(this.prepInputsAttach, this.prepDataAttach);
@@ -43,25 +43,25 @@ export class UserParamSearchSrv extends BaseUserSrv {
         const changed = true;
         this.queryObjForDefault = this.getObjQueryInputsFieldForDefault(this.prepInputs._list);
         return this.getData(this.queryObjForDefault).then(data => {
-                this.prepareData = this.convDataForDefault(data);
-                this.checkLimitSRCH(data);
-                this.inputs = this.getInputs();
-                this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-                this.formChanged.emit(changed);
-                this.isChangeForm = changed;
-                this.subscribeChangeForm();
-                this._pushState();
-            })
+            this.prepareData = this.convDataForDefault(data);
+            this.checkLimitSRCH(data);
+            this.inputs = this.getInputs();
+            this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+            this.formChanged.emit(changed);
+            this.isChangeForm = changed;
+            this.subscribeChangeForm();
+            this._pushState();
+        })
             .catch(err => {
                 throw err;
             });
     }
     cancel() {
         if (this.isChangeForm) {
-           this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
-           this.init();
-           this.isChangeForm = false;
-           this.formChanged.emit(false);
+            this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+            this.init();
+            this.isChangeForm = false;
+            this.formChanged.emit(false);
         }
         this.flagEdit = false;
         setTimeout(() => {
@@ -70,7 +70,7 @@ export class UserParamSearchSrv extends BaseUserSrv {
         this._pushState();
     }
     checkLimitSRCH(data) {
-        if (String(data[1]['PARM_VALUE']) === 'null' ) {
+        if (String(data[1]['PARM_VALUE']) === 'null') {
             this.prepareData.rec['SRCH_LIMIT_RESULT'] = '';
         }
     }
@@ -78,13 +78,13 @@ export class UserParamSearchSrv extends BaseUserSrv {
         this.subscriptions.push(
             this.form.valueChanges.subscribe(newVal => {
                 this.checkIncrement();
-                    let changed = false;
-                    Object.keys(newVal).forEach(path => {
-                        this.oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
-                         if (this.changeByPath(path, newVal[path])) {
-                            changed = true;
-                         }
-                    });
+                let changed = false;
+                Object.keys(newVal).forEach(path => {
+                    this.oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
+                    if (this.changeByPath(path, newVal[path])) {
+                        changed = true;
+                    }
+                });
                 this.formChanged.emit(changed);
                 this.isChangeForm = changed;
                 this._pushState();
@@ -101,34 +101,35 @@ export class UserParamSearchSrv extends BaseUserSrv {
     }
     submit(): Promise<any> {
         if (this.newData || this.prepareData) {
+            this.flagEdit = false;
+            this.editMode();
             const userId = '' + this._userParamsSetSrv.userContextId;
             this.formChanged.emit(false);
             this.isChangeForm = false;
-
             // this._userParamsSetSrv.getUserIsn();
             if (this.newData) {
-        return    this.userParamApiSrv
-                .setData(this.createObjRequest())
-                .then(data => {
-                    this._pushState();
-                   // this.prepareData.rec = Object.assign({}, this.newData.rec);
-                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                 return   this._userParamsSetSrv.getUserIsn(userId);
-                })
-                // tslint:disable-next-line:no-console
-                .catch(data => console.log(data));
+                return this.userParamApiSrv
+                    .setData(this.createObjRequest())
+                    .then(data => {
+                        this._pushState();
+                        // this.prepareData.rec = Object.assign({}, this.newData.rec);
+                        this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                        return this._userParamsSetSrv.getUserIsn(userId);
+                    })
+                    // tslint:disable-next-line:no-console
+                    .catch(data => console.log(data));
             } else if (this.prepareData) {
-            return    this.userParamApiSrv
-                .setData(this.createObjRequestForDefaultValues())
-                .then(data => {
-                    this._pushState();
-                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                 return   this._userParamsSetSrv.getUserIsn(userId);
-                })
-                // tslint:disable-next-line:no-console
-                .catch(data => console.log(data));
+                return this.userParamApiSrv
+                    .setData(this.createObjRequestForDefaultValues())
+                    .then(data => {
+                        this._pushState();
+                        this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                        return this._userParamsSetSrv.getUserIsn(userId);
+                    })
+                    // tslint:disable-next-line:no-console
+                    .catch(data => console.log(data));
             }
-        }   else {
+        } else {
             this.flagEdit = false;
             this.editMode();
             this._pushState();
@@ -137,12 +138,12 @@ export class UserParamSearchSrv extends BaseUserSrv {
     }
     editMode() {
         if (this.flagEdit) {
-            this.form.enable({emitEvent: false});
-        }   else {
-            this.form.disable({emitEvent: false});
+            this.form.enable({ emitEvent: false });
+        } else {
+            this.form.disable({ emitEvent: false });
         }
     }
-    private _pushState () {
-        this._userParamsSetSrv.setChangeState({isChange: this.isChangeForm, disableSave: !this.incrementValid});
-      }
+    private _pushState() {
+        this._userParamsSetSrv.setChangeState({ isChange: this.isChangeForm, disableSave: !this.incrementValid });
+    }
 }

@@ -8,7 +8,7 @@ import { FormGroup } from '@angular/forms';
 import { E_FIELD_TYPE, IBaseUsers } from '../../shared/intrfaces/user-params.interfaces';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
 
 import { Subject } from 'rxjs/Subject';
 
@@ -21,7 +21,7 @@ export class UserParamEAComponent implements OnDestroy {
     public btnDisabled: boolean = true;
     public _fieldsType = {};
     public prepInputs;
-    public constUserParam: IBaseUsers  = EXTERNAL_APPLICATION_USER;
+    public constUserParam: IBaseUsers = EXTERNAL_APPLICATION_USER;
     public inputs;
     public form: FormGroup;
     public sortedData;
@@ -33,28 +33,28 @@ export class UserParamEAComponent implements OnDestroy {
     private prepDate;
     private listForQuery: Array<string> = [];
     private _ngUnsubscribe: Subject<any> = new Subject();
-    constructor (
+    constructor(
         private dataSrv: EosDataConvertService,
         private _userParamsSetSrv: UserParamsService,
         private _inputCntlSrv: InputControlService,
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
         private _route: Router,
-        ) {
-            this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
-            this.link = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
-            this.selfLink = this._route.url.split('?')[0];
-            this.init();
-            this._userParamsSetSrv.saveData$
+    ) {
+        this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
+        this.link = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
+        this.selfLink = this._route.url.split('?')[0];
+        this.init();
+        this._userParamsSetSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {
-                this._userParamsSetSrv.submitSave =    this.submit();
+                this._userParamsSetSrv.submitSave = this.submit();
             });
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
-       }
+    }
     init() {
         this.prepInputs = this.getObjectInputFields(this.constUserParam.fields);
         const allData = this._userParamsSetSrv.hashUserContext;
@@ -101,7 +101,7 @@ export class UserParamEAComponent implements OnDestroy {
         return { rec: d };
     }
     getInputs() {
-        const dataInput = {rec: {}};
+        const dataInput = { rec: {} };
         Object.keys(this.prepInputs.rec).forEach(key => {
             if ((this._fieldsType[key] === 'boolean' || this._fieldsType[key] === 'toggle')) {
                 if (this.prepDate.rec[key] === 'YES' || this.prepDate.rec[key] === '1') {
@@ -132,38 +132,40 @@ export class UserParamEAComponent implements OnDestroy {
                     this.setNewData(data, val, true);
                     count_error += 1;
                 } else {
-                   this.setNewData(data, val, false);
+                    this.setNewData(data, val, false);
                 }
-               });
-               if (count_error > 0) {
+            });
+            if (count_error > 0) {
                 this.btnDisabled = false;
-            }else {
-               this.btnDisabled = true;
+            } else {
+                this.btnDisabled = true;
             }
             this._pushState();
             count_error = 0;
         });
     }
     getFactValueFuck(newValue: any, val: string): boolean {
-        const  oldValue = this.inputs[val].value;
+        const oldValue = this.inputs[val].value;
         return oldValue !== newValue ? false : true;
     }
 
     setNewData(newValObj, newValue, flag) {
         if (flag) {
             this.newData.set(newValue, newValObj[newValue]);
-        }   else {
-           if (this.newData.has(newValue)) {
+        } else {
+            if (this.newData.has(newValue)) {
                 this.newData.delete(newValue);
-           }
+            }
         }
     }
     submit(event?): Promise<any> {
-     return   this.apiSrv.batch(this.createObjRequest(), '').then(response => {
+        return this.apiSrv.batch(this.createObjRequest(), '').then(response => {
             this.btnDisabled = true;
+            this._pushState();
             this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-            const userId = this._userParamsSetSrv.userContextId;
-         return   this._userParamsSetSrv.getUserIsn(String(userId));
+            this.editFlag = false;
+            this.disableForEditAllForm(false);
+            return this._userParamsSetSrv.getUserIsn();
         }).catch(error => {
             console.log(error);
         });
@@ -183,15 +185,15 @@ export class UserParamEAComponent implements OnDestroy {
                 String(val[1]) === 'null' ? parn_Val = '' : parn_Val = val[1];
             }
             req.push({
-                    method: 'MERGE',
-                    requestUri: `USER_CL(${userId})/USER_PARMS_List(\'${userId} ${val[0].substr(4)}\')`,
-                    data: {
-                        PARM_VALUE: `${parn_Val}`
+                method: 'MERGE',
+                requestUri: `USER_CL(${userId})/USER_PARMS_List(\'${userId} ${val[0].substr(4)}\')`,
+                data: {
+                    PARM_VALUE: `${parn_Val}`
                 }
             });
-          });
-            return req;
-        }
+        });
+        return req;
+    }
     cancellation(event?) {
         if (!this.btnDisabled) {
             this._msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
@@ -214,9 +216,9 @@ export class UserParamEAComponent implements OnDestroy {
 
         Object.keys(this.inputs).forEach(key => {
             if (!event) {
-                this.form.controls[key].disable({onlySelf: true, emitEvent: false});
-            }   else {
-                this.form.controls[key].enable({onlySelf: true, emitEvent: false});
+                this.form.controls[key].disable({ onlySelf: true, emitEvent: false });
+            } else {
+                this.form.controls[key].enable({ onlySelf: true, emitEvent: false });
             }
         });
     }
@@ -237,7 +239,7 @@ export class UserParamEAComponent implements OnDestroy {
             let value = String(list['PARM_VALUE']);
             if (value === 'null' || value === 'undefined') {
                 value = '';
-            }   else {
+            } else {
                 value = value;
             }
             this.form.controls['rec.' + list['PARM_NAME']].patchValue(value);
@@ -245,15 +247,15 @@ export class UserParamEAComponent implements OnDestroy {
     }
     getQueryDefaultList(list) {
         return {
-           'USER_PARMS': {
-                    criteries: {
-                        PARM_NAME: list.join('||'),
-                        ISN_USER_OWNER: '-99'
+            'USER_PARMS': {
+                criteries: {
+                    PARM_NAME: list.join('||'),
+                    ISN_USER_OWNER: '-99'
                 }
             }
         };
     }
-    private _pushState () {
-        this._userParamsSetSrv.setChangeState({isChange: !this.btnDisabled});
-      }
+    private _pushState() {
+        this._userParamsSetSrv.setChangeState({ isChange: !this.btnDisabled });
+    }
 }

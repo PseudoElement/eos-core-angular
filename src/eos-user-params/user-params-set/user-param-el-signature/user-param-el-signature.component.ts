@@ -151,6 +151,9 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
                     this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
                     const userId = this._userSrv.userContextId;
                     this._userSrv.getUserIsn(String(userId));
+                    this.editFlag = false;
+                    this.disableForEditAllForm(event);
+                    this._pushState();
                     this.isLoading = false;
                 })
                 .catch(data => console.log(data));
