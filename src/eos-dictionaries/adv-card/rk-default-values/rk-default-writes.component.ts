@@ -2,6 +2,7 @@ import { Component, OnChanges, SimpleChanges } from '@angular/core';
 import { RKBasePage } from './rk-base-page';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
+declare function openPopup(url: string, callback?: Function): boolean;
 
 @Component({
     selector: 'eos-rk-writes',
@@ -188,7 +189,16 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
     }
 
     journalNomencClick_W () {
-
+        const path = 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W';
+        const config = this.dataController.getApiConfig();
+        const url = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?Classif=NOMENKL_CL';
+        openPopup(url, ((event, str) => {
+            this.dataController.zone.run(() => {
+                this.setDictLinkValue(path, str, this.nomenklTitleFunc());
+            });
+            return Promise.resolve(str);
+        }).bind(this));
+        // this.setDictLinkValue(path, '4057107', this.nomenklTitleFunc());
     }
 
     setAvailableFor (key: string) {
@@ -196,7 +206,7 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W': {
                 const cb = this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_FROM_FORWARD_W') ||
                         this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_FROM_WHO_W') ||
-                        this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST_W')
+                        this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST_W');
 
                 if (cb) {
                     this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W'].options, null, true);

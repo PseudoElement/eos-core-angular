@@ -94,7 +94,7 @@
         <eos-dynamic-input class="margin10" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC']"
                             [form]="form"
                             [hideLabel]="true"
-                            [event1]="journalNomencClick"
+                            [event1]="journalNomencClick.bind(this)"
                             [readonly]="!editMode"></eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM']"
                             [form]="form"

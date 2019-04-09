@@ -2,6 +2,7 @@ import { Component, OnChanges, SimpleChanges, } from '@angular/core';
 import { RKBasePage } from './rk-base-page';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
+declare function openPopup(url: string, callback?: Function): boolean;
 
 @Component({
     selector: 'eos-rk-default-values',
@@ -19,7 +20,15 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
     }
 
     journalNomencClick() {
-
+        const config = this.dataController.getApiConfig();
+        const url = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?Classif=NOMENKL_CL';
+        openPopup(url, ((event, str) => {
+            this.dataController.zone.run(() => {
+                const path = 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC';
+                this.setDictLinkValue(path, str, this.nomenklTitleFunc());
+            });
+            return Promise.resolve(str);
+        }).bind(this));
     }
 
     onDataChanged(path: string, prevValue: any, newValue: any, initial = false): any {
@@ -48,7 +57,24 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC': {
                 this.flagEn_spinnum = newValue;
                 this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM');
+                if (newValue && !prevValue) {
+                    this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM', '0');
+                }
                 break;
+
+                // this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC');
+                // if (newValue !== prevValue) {
+                //     const d = this.dataController.getDescriptions()[DEFAULTS_LIST_NAME];
+                //     const d1 = d.find( i => i.key === 'JOURNAL_ISN_NOMENC');
+
+                //     this.dataController.readDictLinkValue(d1, String(newValue.value), this.dataController.updateLinks).then (opts => {
+                //         newValue['title'] = opts[0].title;
+                //         this.flagEn_spinnum = newValue;
+                //     });
+                // } else {
+                //     this.flagEn_spinnum = newValue;
+                // }
+                // break;
             }
 
             // Внутренние адресаты

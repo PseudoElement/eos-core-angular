@@ -1,6 +1,7 @@
+import { DynamicInputLinkButtonComponent } from './../../../eos-common/dynamic-form-input/dynamic-input-linkbutton.component';
 import { IDynamicInputOptions } from './../../../eos-common/dynamic-form-input/dynamic-input.component';
 import { AdvCardRKDataCtrl } from './../adv-card-rk-datactrl';
-import { Input, OnChanges, SimpleChanges, OnInit, OnDestroy } from '@angular/core';
+import { Input, OnChanges, SimpleChanges, OnInit, OnDestroy, NgZone } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
@@ -23,6 +24,7 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
 
     isEDoc: boolean;
     rkType: number;
+    protected _zone: NgZone;
     // { value: 0, title: 'Не определена' },
     // { value: 1, title: 'Входящие' },
     // { value: 2, title: 'Письма граждан' }
@@ -123,5 +125,36 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
         return this.dataController.fixDBValueByType(this.data[path],
         this.inputs[path].controlType);
     }
+
+
+    setDictLinkValue(key: string, value: any, gettitle: Function) {
+        console.log('setDictLinkValue', key);
+        this.setValue(key, value);
+        const p = key.split('.');
+        const descr = this.dataController.getDescriptions()[p[0]].find( i => i.key === p[1]);
+        const input = this.inputs[key];
+        const dib = <DynamicInputLinkButtonComponent>input.dib;
+
+        dib.setExtValue(value, (d => {
+            return this.dataController.readDictLinkValue(descr, value).then (data => {
+                return gettitle(data);
+            });
+        }));
+
+
+    }
+
+    // nomenklTitleFunc
+
+    nomenklTitleFunc() {
+        return function (data: any) {
+                const rec = data[0];
+                if (rec) {
+                    return rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
+                }
+                return 'update error';
+        };
+    }
+
 
 }
