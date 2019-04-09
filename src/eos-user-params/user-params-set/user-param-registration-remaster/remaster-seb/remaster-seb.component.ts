@@ -41,6 +41,8 @@ export class RemasterSebComponent implements OnInit, OnDestroy {
         });
         this._RemasterService.submitEmit.takeUntil(this.ngUnsub).subscribe(() => {
             this.setNewValInputs();
+            this.flagEdit = false;
+            this.form.disable({emitEvent: false});
         });
         this._RemasterService.editEmit.takeUntil(this.ngUnsub).subscribe(data => {
             this.flagEdit = true;

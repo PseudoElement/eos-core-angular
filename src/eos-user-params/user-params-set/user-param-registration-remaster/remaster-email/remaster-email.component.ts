@@ -84,6 +84,9 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         });
         this._RemasterService.submitEmit.takeUntil(this.ngUnsubscribe).subscribe(() => {
             this.setNewValInputs();
+            this.flagEdit = false;
+            this.form.disable({emitEvent: false});
+            this.formMailResuve.disable({emitEvent: false});
         });
         this._RemasterService.editEmit.takeUntil(this.ngUnsubscribe).subscribe(data => {
             this.flagEdit = true;

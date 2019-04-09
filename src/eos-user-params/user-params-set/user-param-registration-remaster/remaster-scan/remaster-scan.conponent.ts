@@ -43,6 +43,7 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
         });
         this._RemasterService.submitEmit.takeUntil(this.ngUnsub).subscribe(() => {
             this.setNewValInputs();
+            this.form.disable({emitEvent: false});
         });
         this._RemasterService.editEmit.takeUntil(this.ngUnsub).subscribe(data => {
             this.form.enable({emitEvent: false});
