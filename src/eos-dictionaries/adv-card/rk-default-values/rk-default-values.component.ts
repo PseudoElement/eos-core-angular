@@ -1,5 +1,6 @@
 import { Component, OnChanges, SimpleChanges, } from '@angular/core';
 import { RKBasePage } from './rk-base-page';
+import { RecordViewComponent } from '../record-view.component/record-view.component';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
 declare function openPopup(url: string, callback?: Function): boolean;
@@ -20,15 +21,28 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
     }
 
     journalNomencClick() {
-        const config = this.dataController.getApiConfig();
-        const url = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?Classif=NOMENKL_CL';
-        openPopup(url, ((event, str) => {
-            this.dataController.zone.run(() => {
-                const path = 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC';
-                this.setDictLinkValue(path, str, this.nomenklTitleFunc());
-            });
-            return Promise.resolve(str);
-        }).bind(this));
+        const path = 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC';
+        const currentValue = this.getValue(path, null);
+        if (currentValue) {
+            const modalWindow = this._modalSrv.show(RecordViewComponent, {class: 'eos-record-view modal-lg'});
+            modalWindow.content.initByNodeData(null);
+
+            if (modalWindow) {
+                const subscription = modalWindow.content.onChoose.subscribe(() => {
+                    subscription.unsubscribe();
+                });
+            }
+
+        } else {
+            const config = this.dataController.getApiConfig();
+            const url = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?Classif=NOMENKL_CL';
+            openPopup(url, ((event, str) => {
+                this.dataController.zone.run(() => {
+                    this.setDictLinkValue(path, str, this.nomenklTitleFunc());
+                });
+                return Promise.resolve(str);
+            }).bind(this));
+        }
     }
 
     onDataChanged(path: string, prevValue: any, newValue: any, initial = false): any {

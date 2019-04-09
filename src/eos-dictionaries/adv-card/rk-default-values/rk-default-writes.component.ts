@@ -16,7 +16,6 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
     enKart1Select: any;
     enKart2Select: any;
     en_journal_param_w: boolean;
-    // _initFict: boolean;
 
     ngOnChanges(changes: SimpleChanges) {
     }
@@ -198,7 +197,6 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
             });
             return Promise.resolve(str);
         }).bind(this));
-        // this.setDictLinkValue(path, '4057107', this.nomenklTitleFunc());
     }
 
     setAvailableFor (key: string) {

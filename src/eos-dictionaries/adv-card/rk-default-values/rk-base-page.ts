@@ -1,11 +1,11 @@
 import { DynamicInputLinkButtonComponent } from './../../../eos-common/dynamic-form-input/dynamic-input-linkbutton.component';
 import { IDynamicInputOptions } from './../../../eos-common/dynamic-form-input/dynamic-input.component';
 import { AdvCardRKDataCtrl } from './../adv-card-rk-datactrl';
-import { Input, OnChanges, SimpleChanges, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { Input, OnChanges, SimpleChanges, OnInit, OnDestroy, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-// import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
+import { BsModalService } from 'ngx-bootstrap';
 
-
+@Injectable()
 export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
     @Input() dataController: AdvCardRKDataCtrl;
     @Input() fieldsDescription: any;
@@ -24,15 +24,14 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
 
     isEDoc: boolean;
     rkType: number;
-    protected _zone: NgZone;
-    // { value: 0, title: 'Не определена' },
-    // { value: 1, title: 'Входящие' },
-    // { value: 2, title: 'Письма граждан' }
-    // { value: 3, title: 'Исходящие' },
 
+    constructor (
+        protected _modalSrv: BsModalService,
+    ) {
+
+    }
     ngOnChanges(changes: SimpleChanges) {
     }
-
 
     ngOnDestroy() {
     }
@@ -56,7 +55,6 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
                 this.setAvailableFor(key);
             }
         }
-
     }
 
     ngOnInit() {
@@ -126,7 +124,6 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
         this.inputs[path].controlType);
     }
 
-
     setDictLinkValue(key: string, value: any, gettitle: Function) {
         console.log('setDictLinkValue', key);
         this.setValue(key, value);
@@ -140,11 +137,7 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
                 return gettitle(data);
             });
         }));
-
-
     }
-
-    // nomenklTitleFunc
 
     nomenklTitleFunc() {
         return function (data: any) {
@@ -155,6 +148,5 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
                 return 'update error';
         };
     }
-
 
 }

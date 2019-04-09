@@ -1,3 +1,4 @@
+import { RecordViewComponent } from './adv-card/record-view.component/record-view.component';
 import { RKFilesConInputComponent } from './adv-card/rk-default-values/rk-input-files-con.component';
 import { RKWritesCardComponent } from './adv-card/rk-default-values/rk-default-writes.component';
 import { RKMandatoryCardComponent } from './adv-card/rk-default-values/rk-default-mandatory.component';
@@ -90,6 +91,7 @@ import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter
         ColumnSettingsComponent,
         CounterNpEditComponent,
         AdvCardRKEditComponent,
+        RecordViewComponent,
         RKDefaultValuesCardComponent,
         RKMandatoryCardComponent,
         RKWritesCardComponent,
@@ -141,6 +143,7 @@ import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter
         ColumnSettingsComponent,
         CounterNpEditComponent,
         AdvCardRKEditComponent,
+        RecordViewComponent,
         RKDefaultValuesCardComponent,
         RulesSelectComponent,
         CreateNodeComponent,
@@ -173,6 +176,7 @@ import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter
         ColumnSettingsComponent,
         CounterNpEditComponent,
         AdvCardRKEditComponent,
+        RecordViewComponent,
         RKDefaultValuesCardComponent,
         RulesSelectComponent,
     ],

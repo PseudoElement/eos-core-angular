@@ -644,4 +644,15 @@ export class EosDataConvertService {
         // console.warn('generated inputs', inputs);
         return inputs;
     }
+
+    convData(data: any) {
+        const result = {};
+        for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+                const element = data[key];
+                result[key] = element;
+            }
+        }
+        return { rec: result };
+    }
 }
