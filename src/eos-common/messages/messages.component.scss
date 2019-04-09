@@ -47,5 +47,9 @@
         span {
             white-space: pre-wrap;
         }
+        .cabinet-warning {
+            display: flex;
+            flex-direction: column;
+        }
     }
 }

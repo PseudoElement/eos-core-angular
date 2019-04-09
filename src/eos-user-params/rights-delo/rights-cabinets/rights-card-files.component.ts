@@ -152,7 +152,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         }
     }
     showWarnMessage(stringMatches: string) {
-        const msg = `Выбранные картотеки:\n ${stringMatches} уже существуют и не могут быть добавленны снова!`;
+        const msg = '<p>Выбранные картотеки:</p><div class="cabinet-warning">' + stringMatches.replace(/(\d.*,)/g, '<p>$1</p>') + '<p><b>уже существуют и не могут быть добавленны снова!</b></p></div>';
         this.sendMessage('Предупреждение', msg);
     }
 
@@ -500,7 +500,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             type: 'warning',
             title: tittle,
             msg: msg,
-            dismissOnTimeout: 6000
+            dismissOnTimeout: 1000000
         });
     }
     private _pushState () {
