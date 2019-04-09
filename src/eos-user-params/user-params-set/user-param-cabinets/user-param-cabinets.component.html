@@ -43,9 +43,12 @@
             <span class="user-input-span-for-increment-cabinets" style="padding-bottom: 10px;">дней и ранее</span>
             <span>Список сортировки в кабинетах: </span>
             <eos-dynamic-input style="min-width: 116px;" class="inline-block" [input]="inputs['rec.CABSORT_ISN_DOCGROUP_LIST']" [form]="form" [readonly]="false"></eos-dynamic-input>
-            <eos-dynamic-input [input]="inputs['rec.SCRATCH_RC']" [form]="form" [readonly]="false"></eos-dynamic-input>
-            <eos-dynamic-input [input]="inputs['rec.INPUT_REP_RC_WITHOUT_RES_DELETE_FROM_CAB']" [form]="form" [readonly]="false"></eos-dynamic-input>
-            <eos-dynamic-input [input]="inputs['rec.SCRATCH_RESOL']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <div style="display: inline-block">
+                <eos-dynamic-input [input]="inputs['rec.SCRATCH_RC']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.INPUT_REP_RC_WITHOUT_RES_DELETE_FROM_CAB']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.SCRATCH_RESOL']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+
         </div>
         <hr>
         <div class="user-input-group">
@@ -65,8 +68,9 @@
             <eos-dynamic-input [input]="inputs['rec.RESOLUTION_AUTHOR']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <eos-dynamic-input [input]="inputs['rec.RESOLUTION_SELECT_AUTHOR']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
-
-        <eos-dynamic-input [input]="inputs['rec.PARENT_RESOLUTION_TEXT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        <div style="display: inline-block">
+            <eos-dynamic-input [input]="inputs['rec.PARENT_RESOLUTION_TEXT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
         <hr>
         <span class="control-author">Контроль поручения:</span>
         <div class="classifDep">
@@ -80,8 +84,12 @@
         <div class="control-state">
             <eos-dynamic-input [input]="inputs['rec.RESOLUTION_CONTROL_STATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
-        <eos-dynamic-input [input]="inputs['rec.CORRECT_CTRL_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
-        <eos-dynamic-input [input]="inputs['rec.PLAN_DATE_PARENT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        <div style="display: inline-block">
+            <eos-dynamic-input [input]="inputs['rec.CORRECT_CTRL_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
+        <div style="display: inline-block">
+            <eos-dynamic-input [input]="inputs['rec.PLAN_DATE_PARENT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
         <hr>
         <div class="check-resol">
             <span class="check-resol-title">Исполнители:</span>
@@ -101,12 +109,16 @@
             <eos-dynamic-input [input]="inputs['rec.ADD_JOURNAL_RESOL_REPLY']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
         <hr>
-        <eos-dynamic-input [input]="inputs['rec.ADD_ADRESS_REPORGANIZ']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        <div style="display: inline-block">
+            <eos-dynamic-input [input]="inputs['rec.ADD_ADRESS_REPORGANIZ']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
         <hr>
         <div class="send-res">
             <span>Рассылка поручения:</span>
             <eos-dynamic-input [input]="inputs['rec.SEND_ORDER_TO']" [form]="form" [readonly]="false"></eos-dynamic-input>
-            <eos-dynamic-input [input]="inputs['rec.RESOLUTION_CICLE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <div style="display: inline-block">
+                <eos-dynamic-input [input]="inputs['rec.RESOLUTION_CICLE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
             <hr>
             <span>Проект резолюции</span>
             <div class="resolution">
@@ -116,6 +128,9 @@
                 </div>
             </div>
             <hr>
+            <div style="display: inline-block">
+                <eos-dynamic-input [input]="inputs['rec.RESOLUTION_PRINT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
         </div>
     </div>
     <div class="informer" [hidden]="currTab !== 2">

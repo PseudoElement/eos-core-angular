@@ -232,6 +232,11 @@ export const CABINETS_USER: IBaseUsers = {
             title: '',
         },
         {
+            key: 'RESOLUTION_PRINT',
+            type: 'boolean',
+            title: 'Доступна печать поручения',
+        },
+        {
             key: 'SEND_ORDER_TO',
             type: 'radio',
             title: '',
