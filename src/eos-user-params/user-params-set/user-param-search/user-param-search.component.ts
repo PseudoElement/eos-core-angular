@@ -201,6 +201,7 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
         this.mapChanges.clear();
         this.btnDisable = true;
         this.flagEdit = false;
+        this._pushState();
         this.editMode();
     }
     close(event) {
