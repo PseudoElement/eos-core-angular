@@ -230,7 +230,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     getControlAuthor(): Promise<any> {
         const ControlAuthor = this.form.controls['rec.RESOLUTION_CONTROLLER'].value;
         this.dueForLink = ControlAuthor;
-        if (String(ControlAuthor) === 'null') {
+        if (String(ControlAuthor) === 'null' || String(ControlAuthor) === '') {
             this.controller = false;
             return Promise.resolve(false);
         } else {
@@ -413,7 +413,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.btnDisable = true;
         this.flagEdit = false;
         this.getControlAuthor().then(res => {
-            this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(res[0]['CLASSIF_NAME']), { emitEvent: false });
+            if (res) {
+                this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(res[0]['CLASSIF_NAME']), { emitEvent: false });
+            }
         });
         this._pushState();
         this.editMode();
