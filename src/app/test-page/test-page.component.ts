@@ -11,8 +11,6 @@ import { FA_ICONS } from './fa-icons.const';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 import { NADZORDICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
-import { BsModalService } from 'ngx-bootstrap';
-import { RecordViewComponent } from 'eos-dictionaries/adv-card/record-view.component/record-view.component';
 
 const TEST_INPUTS = <IBaseInput[]>[{
     controlType: 'string',
@@ -95,7 +93,6 @@ export class TestPageComponent implements OnInit, OnChanges {
         private pip: PipRX,
         private inputCtrlSrv: InputControlService,
         private _waitClassifSrv: WaitClassifService,
-        private _modalSrv: BsModalService,
     ) {
         this.inputs = this.inputCtrlSrv.generateInputs(TEST_INPUTS);
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs, false);
@@ -179,14 +176,14 @@ export class TestPageComponent implements OnInit, OnChanges {
     }
 
     testClick1() {
-        const modalWindow = this._modalSrv.show(RecordViewComponent, {class: 'eos-record-view modal-lg'});
-        modalWindow.content.initByNodeData(null);
+        // const modalWindow = this._modalSrv.show(RecordViewComponent, {class: 'eos-record-view modal-lg'});
+        // modalWindow.content.initByNodeData(null);
 
-        if (modalWindow) {
-            const subscription = modalWindow.content.onChoose.subscribe(() => {
-                subscription.unsubscribe();
-            });
-        }
+        // if (modalWindow) {
+        //     const subscription = modalWindow.content.onChoose.subscribe(() => {
+        //         subscription.unsubscribe();
+        //     });
+        // }
 
     }
 

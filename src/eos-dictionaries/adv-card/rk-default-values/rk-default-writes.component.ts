@@ -1,6 +1,5 @@
 import { Component, OnChanges, SimpleChanges } from '@angular/core';
 import { RKNomenkBasePage } from './rk-nomenk-base-page';
-import { RKBasePage } from './rk-base-page';
 
 @Component({
     selector: 'eos-rk-writes',
