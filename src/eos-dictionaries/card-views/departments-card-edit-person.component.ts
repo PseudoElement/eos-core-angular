@@ -13,7 +13,7 @@ import { UPLOAD_IMG_FALLED, INFO_PERSONE_DONT_HAVE_CABINET } from '../consts/mes
 export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent implements OnChanges {
     readonly fieldGroups: string[] = ['Основные данные', 'Контактная информация', 'Дополнительные сведения'];
 
-    photo;
+    photo: any;
 
     private currentNodeId: string;
     private bossWarning: boolean;
@@ -32,6 +32,8 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         }
         if (this.data.photo && this.data.photo.url) {
             this.photo = this.data.photo.url;
+        } else {
+            this.photo = null;
         }
         if (this.form) {
             this.unsubscribe();
