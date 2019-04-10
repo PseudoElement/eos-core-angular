@@ -228,7 +228,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         return val !== '' && String(val) !== 'null' && this.flagEdit ? 'eos-icon eos-icon-close-blue small' : 'eos-icon eos-icon-close-grey small';
     }
     getControlAuthor(): Promise<any> {
-        const ControlAuthor = this._userParamsSetSrv.hashUserContext['RESOLUTION_CONTROLLER'];
+        const ControlAuthor = this.form.controls['rec.RESOLUTION_CONTROLLER'].value;
         this.dueForLink = ControlAuthor;
         if (String(ControlAuthor) === 'null') {
             this.controller = false;
@@ -412,6 +412,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.mapChanges.clear();
         this.btnDisable = true;
         this.flagEdit = false;
+        this.getControlAuthor().then(res => {
+            this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(res[0]['CLASSIF_NAME']), { emitEvent: false });
+        });
         this._pushState();
         this.editMode();
     }
