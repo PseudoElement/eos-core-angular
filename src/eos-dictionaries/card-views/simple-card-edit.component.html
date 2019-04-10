@@ -2,6 +2,7 @@
     <eos-dynamic-input *ngFor="let key of keys(inputs)"
         [input]="inputs[key]"
         [form]="form"
+        [viewOpts]="selOpts"
         [readonly]="!editMode">
     </eos-dynamic-input>
 </div>
