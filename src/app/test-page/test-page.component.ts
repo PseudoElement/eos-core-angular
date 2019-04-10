@@ -174,4 +174,17 @@ export class TestPageComponent implements OnInit, OnChanges {
             console.warn(result);
         };
     }
+
+    testClick1() {
+        // const modalWindow = this._modalSrv.show(RecordViewComponent, {class: 'eos-record-view modal-lg'});
+        // modalWindow.content.initByNodeData(null);
+
+        // if (modalWindow) {
+        //     const subscription = modalWindow.content.onChoose.subscribe(() => {
+        //         subscription.unsubscribe();
+        //     });
+        // }
+
+    }
+
 }

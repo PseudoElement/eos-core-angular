@@ -1,0 +1,21 @@
+<div class="eos-card">
+    <div class="eos-card-wrapper">
+        <div class="edit-card-body">
+            <article class="edit-content">
+            <eos-nomenkl-card *ngIf="!isUpdating && dictid==='nomenkl'"
+                class="nomenkl-card simple-card-edit"
+                [form]="form"
+                [inputs]="inputs"
+                [data]="data"
+                [isNewRecord]="false"
+                [editMode]="false">
+            </eos-nomenkl-card>
+            </article>
+            <div class="bottom-buttons">
+                    <button class="btn btn-primary upper pull-right"
+                        (click)="cancel()">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+

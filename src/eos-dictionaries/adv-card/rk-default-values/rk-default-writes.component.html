@@ -134,7 +134,7 @@
     <eos-dynamic-input class="margin10" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W']"
         [form]="form"
         [hideLabel]="true"
-        [event1]="journalNomencClick_W"
+        [event1]="journalNomencClick_W.bind(this)"
         [readonly]="!editMode"></eos-dynamic-input>
 
     <!-- Радиобуттоны -->

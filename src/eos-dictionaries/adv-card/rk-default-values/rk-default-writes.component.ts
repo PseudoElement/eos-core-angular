@@ -1,21 +1,18 @@
 import { Component, OnChanges, SimpleChanges } from '@angular/core';
-import { RKBasePage } from './rk-base-page';
-// import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-
+import { RKNomenkBasePage } from './rk-nomenk-base-page';
 
 @Component({
     selector: 'eos-rk-writes',
     templateUrl: 'rk-default-writes.component.html',
 })
 
-export class RKWritesCardComponent extends RKBasePage implements OnChanges {
+export class RKWritesCardComponent extends RKNomenkBasePage implements OnChanges {
 
     forward_who_w: boolean;
     journal_who_w: boolean;
     enKart1Select: any;
     enKart2Select: any;
     en_journal_param_w: boolean;
-    // _initFict: boolean;
 
     ngOnChanges(changes: SimpleChanges) {
     }
@@ -188,7 +185,7 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
     }
 
     journalNomencClick_W () {
-
+        this.doNomenklSelectView('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W');
     }
 
     setAvailableFor (key: string) {
@@ -196,7 +193,7 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W': {
                 const cb = this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_FROM_FORWARD_W') ||
                         this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_FROM_WHO_W') ||
-                        this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST_W')
+                        this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST_W');
 
                 if (cb) {
                     this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM_W'].options, null, true);

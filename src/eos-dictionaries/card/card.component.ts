@@ -433,9 +433,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
     private _afterSaving(node: EosDictionaryNode) {
         if (node) {
-            // console.log('save', node);
             this._initNodeData(node);
-            // this._setOriginalData();
             this.cancel();
         }
         this.disableSave = false;

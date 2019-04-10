@@ -22,15 +22,27 @@ export class DynamicInputLinkButtonComponent extends DynamicInputBase {
 
     onButtonClick () {
         if (this.buttonClick) {
-            this.buttonClick();
+            this.buttonClick(this);
         }
         // console.log('1');
     }
 
     getDisplayValue () {
+        if (this.hasValue()) {
+            if (this.currentValue['title']) {
+                return this.currentValue['title'];
+            }
+        }
         if (this.input.options) {
             return this.input.options[0]['title'];
         }
         return '...';
+    }
+
+    setExtValue(value: any, gettitle: (d: any) => Promise<any>) {
+        this.control.setValue(value);
+        gettitle(this).then(title => {
+            this.input.options[0]['title'] = title;
+        });
     }
 }

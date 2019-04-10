@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnDestroy, OnInit, OnChanges, ViewChild } from '@angular/core';
+import { Component, Output, EventEmitter, OnDestroy, OnInit, OnChanges, ViewChild, NgZone } from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
 import {PipRX} from '../../eos-rest';
 import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME, FICT_CONTROLS_LIST_NAME } from './adv-card-rk-datactrl';
@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { RKBasePage } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
+import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -71,11 +72,13 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     constructor(
         public bsModalRef: BsModalRef,
+        public zone: NgZone,
         private _apiSrv: PipRX,
         private _dataSrv: EosDataConvertService,
         private _inputCtrlSrv: InputControlService,
         private _msgSrv: EosMessageService,
-
+        private _dictSrv: EosDictService,
+        private _zone: NgZone,
     ) {
         this.isUpdating = true;
         this.tabs = tabs;
@@ -147,7 +150,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
         this.activeTab = tabs[0];
 
-        this.dataController = new AdvCardRKDataCtrl(this._apiSrv, this._msgSrv);
+        this.dataController = new AdvCardRKDataCtrl(this._zone, this._apiSrv, this._msgSrv, this._dictSrv);
         this.descriptions = this.dataController.getDescriptions();
 
         this.dataController.readValues(this.isn_node).then (values => {

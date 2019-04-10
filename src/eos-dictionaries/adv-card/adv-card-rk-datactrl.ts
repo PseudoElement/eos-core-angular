@@ -4,6 +4,8 @@ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { PipRX, DOCGROUP_CL } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE } from 'eos-dictionaries/consts/messages.consts';
+import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
+import { NgZone } from '@angular/core';
 
 const DOCGROUP_TABLE = 'DOCGROUP_CL';
 const DOCGROUP_UID_NAME = 'ISN_NODE';
@@ -12,23 +14,31 @@ export const FILE_CONSTRAINT_LIST_NAME = 'DG_FILE_CONSTRAINT_List';
 export const FICT_CONTROLS_LIST_NAME = 'fict';
 
 export class AdvCardRKDataCtrl {
+
+
     name: string;
     loadedDicts: any;
+    private _descr = {
+        [DEFAULTS_LIST_NAME]:  RKDefaultFields,
+        [FILE_CONSTRAINT_LIST_NAME]: RKFilesConstraints,
+        [FICT_CONTROLS_LIST_NAME]: RKFictControls,
+    };
 
     constructor (
+        public zone: NgZone,
         private _apiSrv: PipRX,
         private _msgSrv: EosMessageService,
+        private _dictSrv: EosDictService,
     ) {
         this.loadedDicts = {};
     }
 
+    getApiConfig() {
+        return this._dictSrv.getApiConfig();
+    }
 
     getDescriptions(): any {
-        return {
-            [DEFAULTS_LIST_NAME]:  RKDefaultFields,
-            [FILE_CONSTRAINT_LIST_NAME]: RKFilesConstraints,
-            [FICT_CONTROLS_LIST_NAME]: RKFictControls,
-        };
+        return this._descr;
     }
 
 
@@ -230,6 +240,11 @@ export class AdvCardRKDataCtrl {
             return [];
         }
     }
+
+    // public updateDictLinkTitle(path: string, input: any) {
+    //     input.options[0].title = 'sadgsad';
+
+    // }
 
     private _calcChangesFor(docGroup: any, newData: any ): any {
         const fields = this.getDescriptions();
