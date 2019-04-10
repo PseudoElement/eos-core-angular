@@ -1,61 +1,26 @@
-<div class="input-user-wrapper input-user-directories-wrapper"
-*ngIf="inputs">
-<eos-user-params-header
-    [title] = 'titleHeader'
-    [link] = 'link'
-    [selfLink] = 'selfLink'
-    [disableBtn] = "btnDisabled"
-    [defaultBtn] = 'true'
-    (submitEmit) = 'submit($event)'
-    (cancelEmit) = 'cancel($event)'
-    (editEmit) = 'edit($event)'
-    (closeEmit) = 'close($event)'
-    (defaultEmit) = 'default($event)'
-></eos-user-params-header>
+<div class="input-user-wrapper input-user-directories-wrapper" *ngIf="inputs">
+    <eos-user-params-header [title]='titleHeader' [link]='link' [selfLink]='selfLink' [disableBtn]="btnDisable" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (closeEmit)='close($event)' (defaultEmit)='default($event)'></eos-user-params-header>
     <div class="user-input-group ">
         <span class="l-font">Окно справочников</span>
         <hr>
-            <eos-dynamic-input
-                [input]="inputs['rec.WINPOS']"
-                [form]="form"
-                [readonly]="false"
-            ></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.WINPOS']" [form]="form" [readonly]="false"></eos-dynamic-input>
     </div>
+    <hr>
+    <div class="user-input-group">
+        <span class="l-font">Сортировка результатов поиска</span>
         <hr>
-            <div class="user-input-group">
-            <span class="l-font">Сортировка результатов поиска</span>
+        <eos-dynamic-input [input]="inputs['rec.SORT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="user-input-group">
+        <span class="l-font">Поиск представителей организаций по полю</span>
         <hr>
-        <eos-dynamic-input
-                [input]="inputs['rec.SORT']"
-                [form]="form"
-                [readonly]="false"
-            ></eos-dynamic-input>
-            </div>
-            <hr>
-            <div class="user-input-group">
-            <span class="l-font">Поиск представителей организаций по полю</span>
-            <hr>
-            <div class="user-input-group-section">
-                <eos-dynamic-input
-                class="inline-block"
-                [input]="inputAttach['rec.SRCH_CONTACT_FIELDS_SURNAME']"
-                [form]="formAttach"
-                [readonly]="false"
-            ></eos-dynamic-input>
+        <div class="user-input-group-section">
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.SRCH_CONTACT_FIELDS_SURNAME']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <span class="span-or">или</span>
-            <eos-dynamic-input
-                class="inline-block"
-                [input]="inputAttach['rec.SRCH_CONTACT_FIELDS_DUTY']"
-                [form]="formAttach"
-                [readonly]="false"
-            ></eos-dynamic-input>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.SRCH_CONTACT_FIELDS_DUTY']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <span class="span-or"> или </span>
-            <eos-dynamic-input
-                class="inline-block"
-                [input]="inputAttach['rec.SRCH_CONTACT_FIELDS_DEPARTMENT']"
-                [form]="formAttach"
-                [readonly]="false"
-            ></eos-dynamic-input>
-            </div>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.SRCH_CONTACT_FIELDS_DEPARTMENT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
     </div>
 </div>

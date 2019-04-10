@@ -29,13 +29,6 @@ export const DIRECTORIES_USER: IBaseUsers = {
             key: 'SRCH_CONTACT_FIELDS',
             type: 'boolean',
             title: ''
-        }
-    ],
-    fieldsChild: [
-        {
-            key: 'SRCH_CONTACT_FIELDS',
-            type: 'boolean',
-            title: ''
         },
         {
             key: 'SRCH_CONTACT_FIELDS_SURNAME',
@@ -52,5 +45,22 @@ export const DIRECTORIES_USER: IBaseUsers = {
             type: 'boolean',
             title: 'Подразделение'
         }
+    ],
+    fieldsDefaultValue: [
+        {
+            key: 'WINPOS',
+            type: 'radio',
+            title: '',
+        },
+        {
+            key: 'SORT',
+            type: 'radio',
+            title: '',
+        },
+        {
+            key: 'SRCH_CONTACT_FIELDS',
+            type: 'boolean',
+            title: ''
+        },
     ]
 };
