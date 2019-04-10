@@ -1,17 +1,13 @@
-import { NOMENKL_DICT } from './../../consts/dictionaries/nomenkl.const';
 import { Component, OnChanges, SimpleChanges, } from '@angular/core';
-import { RKBasePage } from './rk-base-page';
-import { RecordViewComponent } from '../record-view.component/record-view.component';
+import { RKNomenkBasePage } from './rk-nomenk-base-page';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-
-declare function openPopup(url: string, callback?: Function): boolean;
 
 @Component({
     selector: 'eos-rk-default-values',
     templateUrl: 'rk-default-values.component.html',
 })
 
-export class RKDefaultValuesCardComponent extends RKBasePage implements OnChanges {
+export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements OnChanges {
 
     flagEn_extAddr: boolean;
     flagEn_intAddr: boolean;
@@ -22,29 +18,7 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
     }
 
     journalNomencClick() {
-        const path = 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC';
-        const currentValue = this.getValue(path, null);
-        if (currentValue) {
-            const modalWindow = this._modalSrv.show(RecordViewComponent, {class: 'eos-record-view modal-lg'});
-            const query = { criteries: {'ISN_LCLASSIF': String(currentValue)} };
-            modalWindow.content.initByNodeData(query, NOMENKL_DICT);
-
-            if (modalWindow) {
-                const subscription = modalWindow.content.onChoose.subscribe(() => {
-                    subscription.unsubscribe();
-                });
-            }
-
-        } else {
-            const config = this.dataController.getApiConfig();
-            const url = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?Classif=NOMENKL_CL';
-            openPopup(url, ((event, str) => {
-                this.dataController.zone.run(() => {
-                    this.setDictLinkValue(path, str, this.nomenklTitleFunc());
-                });
-                return Promise.resolve(str);
-            }).bind(this));
-        }
+        this.doNomenklSelectView('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC');
     }
 
     onDataChanged(path: string, prevValue: any, newValue: any, initial = false): any {
