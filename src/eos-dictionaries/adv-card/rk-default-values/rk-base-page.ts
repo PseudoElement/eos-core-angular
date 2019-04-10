@@ -62,7 +62,6 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
     }
 
     setValue (path: string, value: any) {
-        // console.log(path, value);
         const control = this.form.controls[path];
         if (control) {
             control.setValue(value /*, {emitEvent: emit} */);
@@ -125,7 +124,6 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
     }
 
     setDictLinkValue(key: string, value: any, gettitle: Function) {
-        console.log('setDictLinkValue', key);
         this.setValue(key, value);
         const p = key.split('.');
         const descr = this.dataController.getDescriptions()[p[0]].find( i => i.key === p[1]);

@@ -1,3 +1,4 @@
+import { NOMENKL_DICT } from './../../consts/dictionaries/nomenkl.const';
 import { Component, OnChanges, SimpleChanges, } from '@angular/core';
 import { RKBasePage } from './rk-base-page';
 import { RecordViewComponent } from '../record-view.component/record-view.component';
@@ -25,7 +26,8 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
         const currentValue = this.getValue(path, null);
         if (currentValue) {
             const modalWindow = this._modalSrv.show(RecordViewComponent, {class: 'eos-record-view modal-lg'});
-            modalWindow.content.initByNodeData(null);
+            const query = { criteries: {'ISN_LCLASSIF': String(currentValue)} };
+            modalWindow.content.initByNodeData(query, NOMENKL_DICT);
 
             if (modalWindow) {
                 const subscription = modalWindow.content.onChoose.subscribe(() => {

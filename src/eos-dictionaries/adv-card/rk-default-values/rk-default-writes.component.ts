@@ -1,5 +1,7 @@
 import { Component, OnChanges, SimpleChanges } from '@angular/core';
 import { RKBasePage } from './rk-base-page';
+import { RecordViewComponent } from '../record-view.component/record-view.component';
+import { NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
 declare function openPopup(url: string, callback?: Function): boolean;
@@ -189,14 +191,27 @@ export class RKWritesCardComponent extends RKBasePage implements OnChanges {
 
     journalNomencClick_W () {
         const path = 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W';
-        const config = this.dataController.getApiConfig();
-        const url = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?Classif=NOMENKL_CL';
-        openPopup(url, ((event, str) => {
-            this.dataController.zone.run(() => {
-                this.setDictLinkValue(path, str, this.nomenklTitleFunc());
-            });
-            return Promise.resolve(str);
-        }).bind(this));
+        const currentValue = this.getValue(path, null);
+        if (currentValue) {
+            const modalWindow = this._modalSrv.show(RecordViewComponent, {class: 'eos-record-view modal-lg'});
+            const query = { criteries: {'ISN_LCLASSIF': String(currentValue)} };
+            modalWindow.content.initByNodeData(query, NOMENKL_DICT);
+
+            if (modalWindow) {
+                const subscription = modalWindow.content.onChoose.subscribe(() => {
+                    subscription.unsubscribe();
+                });
+            }
+        } else {
+            const config = this.dataController.getApiConfig();
+            const url = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?Classif=NOMENKL_CL';
+            openPopup(url, ((event, str) => {
+                this.dataController.zone.run(() => {
+                    this.setDictLinkValue(path, str, this.nomenklTitleFunc());
+                });
+                return Promise.resolve(str);
+            }).bind(this));
+        }
     }
 
     setAvailableFor (key: string) {
