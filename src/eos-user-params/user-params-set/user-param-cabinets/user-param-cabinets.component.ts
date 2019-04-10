@@ -412,6 +412,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.mapChanges.clear();
         this.btnDisable = true;
         this.flagEdit = false;
+        this._pushState();
         this.editMode();
     }
 

@@ -81,7 +81,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this._userServices.saveData$
         .takeUntil(this._ngUnsubscribe)
         .subscribe(() => {
-            this.saveAllForm();
+            this._userServices.submitSave =  this.saveAllForm();
         });
     }
     ngOnInit() {
@@ -124,7 +124,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             this.checkChanges(data);
         });
     }
-    saveAllForm($event?): void {
+    saveAllForm($event?): Promise<any> {
         if (!this.checkGriffs) {
             this.warning('warning', 'Предупреждение', 'Не заданы грифы доступа');
             this.backForm();
@@ -143,7 +143,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         // this._limitservise.createLinksNpUserLInk(valueEdit),
        promise_all.push(this._limitservise.deliteLinksFromNpUserLink(valueEdit), this._limitservise.createLinksNpUserLInk(valueEdit));
         }
-        Promise.all([...promise_all])
+     return   Promise.all([...promise_all])
         .then(result => {
             this._limitservise.getAccessCode()
             .then((params) => {
@@ -185,6 +185,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.clearForm();
         this.editFlag = $event;
         this.editModeForm();
+        this._pushState();
         this._limitservise.subscribe.next(true);
     }
 

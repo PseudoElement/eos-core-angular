@@ -71,14 +71,14 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     parseInputs(data, inputs) {
         const value = data ? data.split(',') : [];
         const surname = value.filter(val => {
-            return val === 'SURNAME'
-        })
+            return val === 'SURNAME';
+        });
         const duty = value.filter(val => {
-            return val === 'DUTY'
-        })
+            return val === 'DUTY';
+        });
         const department = value.filter(val => {
-            return val === 'DEPARTMENT'
-        })
+            return val === 'DEPARTMENT';
+        });
         if (surname.length) {
             inputs['rec.SRCH_CONTACT_FIELDS_SURNAME'].value = true;
         } else {
@@ -184,7 +184,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
                 this.prepareData = this.formHelp.parse_Create(DIRECTORIES_USER.fields, this.hashDefolt);
                 this.prepareInputs = this.formHelp.getObjectInputFields(DIRECTORIES_USER.fields);
                 this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
-                this.parseInputs(this.hashDefolt['SRCH_CONTACT_FIELDS'], this.defoltInputs)
+                this.parseInputs(this.hashDefolt['SRCH_CONTACT_FIELDS'], this.defoltInputs);
                 this.prepFormCancel(this.defoltInputs, true);
             })
             .catch(err => {

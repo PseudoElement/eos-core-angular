@@ -75,15 +75,16 @@ export class UserParamVisualizationSrv extends BaseUserSrv {
     }
     cancel() {
         this.flagEdit = false;
+        this.isChangeForm = false;
         if (this.isChangeForm) {
            this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
-           this.isChangeForm = false;
            this.formChanged.emit(false);
            this.init();
            this._pushState();
         }
 
        setTimeout(() => {
+        this._pushState();
         this.editMode();
        });
     }

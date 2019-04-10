@@ -3,7 +3,7 @@ import { BaseUserSrv } from './base-user.service';
 import { RC_USER } from '../consts/rc.consts';
 import {IOpenClassifParams} from '../../../../eos-common/interfaces/interfaces';
 import { EosUtils } from 'eos-common/core/utils';
-import {PARM_CANCEL_CHANGE,  PARM_SUCCESS_SAVE } from '../consts/eos-user-params.const';
+import {PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../consts/eos-user-params.const';
 import { Subject } from 'rxjs/Subject';
 @Injectable()
 export class UserParamRCSrv extends BaseUserSrv {
@@ -122,16 +122,18 @@ export class UserParamRCSrv extends BaseUserSrv {
     }
     cancel() {
         if (this.isChangeForm) {
-           this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+        this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
            this.isChangeForm = false;
            this.formChanged.emit(false);
            this.ngOnDestroy();
            this.init();
            setTimeout(() => {
             this.checRcShowRes();
+            this._pushState();
             this.editMode();
         });
     } else {
+        this._pushState();
         this.editMode();
         }
     }
