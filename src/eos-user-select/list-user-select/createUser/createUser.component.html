@@ -5,7 +5,7 @@
             <label>ЛОГИН</label>
             <div class="required">
                 <form [formGroup]="form">
-                    <input class=" form-control" maxlength="12" type="text" [formControlName]="inputs['classifName'].key" [readonly]="false" />
+                    <input placement="bottom" containerClass="tooltip-info" tooltip="Максимальная длина поля 12 символов " class=" form-control" maxlength="12" type="text" [formControlName]="inputs['classifName'].key" [readonly]="false" />
                 </form>
             </div>
         </div>
