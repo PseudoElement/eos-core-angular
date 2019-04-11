@@ -27,6 +27,7 @@ const tabs: Ttab [] = [
     {tag: 3, title: 'Файлы'},
 ];
 
+declare function openPopup(url: string, callback?: Function): boolean;
 
 // Реквизит "Срок исполнения" может быть заполнен только в одном месте
 
@@ -116,9 +117,9 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
     save(): void {
-        this.dataController.save(this.isn_node, this.inputs, this.newData).then (r => {
+        this.dataController.save(this.isn_node, this.inputs, this.newData).then (() => {
             this.bsModalRef.hide();
-        }).catch (err => {
+        }).catch (() => {
 
         });
     }
@@ -126,6 +127,80 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     cancel(): void {
         this.bsModalRef.hide();
     }
+
+    public userListsEdit() {
+
+        const config = this.dataController.getApiConfig();
+        const url = config.webBaseUrl + '/Pages/User/USER_LISTS.aspx?user_id=-99';
+        console.log('open');
+        openPopup(url, ((event, str) => {
+            console.log('close');
+            this.rereadUserLists();
+            this.dataController.zone.run(() => {
+                console.log('zone');
+            });
+            return Promise.resolve(str);
+        }).bind(this));
+        this.rereadUserLists();
+
+    }
+    rereadUserLists() {
+        this.dataController.updateDictsOptions('USER_LISTS', (event) => {
+            console.log(event);
+        });
+        // const fields = this.getDescriptions();
+
+        // Object.keys(fields).forEach ((key) => {
+        //     for (let i = 0; i < fields[key].length; i++) {
+        //         const el: TDefaultField = fields[key][i];
+        //         if (!el.dict) {
+        //             continue;
+        //         }
+        //         if (el.type === E_FIELD_TYPE.dictLink) {
+        //             reqs.push(this.readDictLinkValue(el, values[key][el.key], updateLink));
+        //         } else if (el.type === E_FIELD_TYPE.select) {
+        //             const hash = this.calcHash(el.dict);
+        //             if (this.loadedDicts[hash]) {
+        //                 el.options = this.loadedDicts[hash];
+        //             } else {
+        //                 let query: any;
+        //                 if (el.dict.criteries) {
+        //                     query = { criteries: el.dict.criteries};
+        //                 } else {
+        //                     query = ALL_ROWS;
+        //                 }
+        //                 this.loadedDicts[hash] = [];
+
+        //                 const req = {[el.dict.dictId]: query};
+
+        //                 reqs.push(this._apiSrv.read(req).then((data) => {
+        //                     const opts: TDFSelectOption[] = this.loadedDicts[hash];
+        //                     const curval = values[key][el.key];
+        //                     // opts.push ({value: '', title: '...'});
+        //                     for (let index = 0; index < data.length; index++) {
+        //                         const element = data[index];
+        //                         const value = element[el.dict.dictKey];
+        //                         const title = element[el.dict.dictKeyTitle];
+        //                         const deleted = element['DELETED'];
+        //                         if (deleted) {
+        //                             if (String(curval) === String(value)) {
+        //                                 opts.push ({value: value, title: title, disabled: true});
+        //                             }
+        //                         } else {
+        //                             opts.push ({value: value, title: title });
+        //                         }
+
+        //                     }
+
+        //                     el.options = opts;
+        //                     return data;
+        //                 }));
+        //             }
+        //         }
+        //     }
+        // });
+    }
+
 
     public hideModal(): void {
         this.bsModalRef.hide();
@@ -173,10 +248,10 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             this._appendDBDefValues(this.values[DEFAULTS_LIST_NAME], this.storedValuesDG[DEFAULTS_LIST_NAME]);
             this._appendDBFilesValues(this.values[FILE_CONSTRAINT_LIST_NAME], this.storedValuesDG[FILE_CONSTRAINT_LIST_NAME]);
             this.isChanged = true;
-            this._checkCorrectValuesLogic(this.values, this.descriptions);
+            this._checkCorrectValuesLogic(this.values);
             this.editValues = this._makePrevValues(this.values);
 
-            this.dataController.loadDictsOptions(this.values, this.updateLinks).then (d => {
+            this.dataController.loadDictsOptions(this.values, this.updateLinks).then (() => {
                 this.inputs = this._getInputs();
                 this._updateInputs(this.inputs);
                 this._updateOptions(this.inputs);
@@ -196,7 +271,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 this.isUpdating = false;
             });
         });
-
     }
     private _updateInputs(inputs: any): any {
         if (!this.isEDoc) {
@@ -238,7 +312,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
 
-    private _checkCorrectValuesLogic(values: any, descriptions: any): any {
+    private _checkCorrectValuesLogic(values: any): any {
         // Внутренние адресаты
         if (values[DEFAULTS_LIST_NAME]['SEND_ISN_LIST_DEP']) {
             if (!values[DEFAULTS_LIST_NAME]['SEND_MARKSEND']) {

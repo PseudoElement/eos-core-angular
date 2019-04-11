@@ -59,6 +59,7 @@ export class AdvCardRKDataCtrl {
         });
     }
 
+
     public save(isn_node: number, inputs: any[], data: any): Promise<any> {
         return this.readValues(isn_node)
             .then(([docGroup]) => {
@@ -108,6 +109,67 @@ export class AdvCardRKDataCtrl {
 
         }
         return Promise.resolve(null);
+    }
+
+    public updateDictsOptions(name: string, callback: (event: any) => void): Promise<any> {
+        const reqs = [];
+        const fields = this.getDescriptions();
+
+        Object.keys(fields).forEach ((key) => {
+            for (let i = 0; i < fields[key].length; i++) {
+
+                const el: TDefaultField = fields[key][i];
+
+                if (!el.dict) { continue; }
+                if (el.dict.dictId !== name) { continue; }
+                if (el.type !== E_FIELD_TYPE.select)  { continue; }
+
+                const hash = this.calcHash(el.dict);
+
+                let query: any;
+                if (el.dict.criteries) {
+                    query = { criteries: el.dict.criteries};
+                } else {
+                    query = ALL_ROWS;
+                }
+                const req = {[el.dict.dictId]: query};
+
+                reqs.push(this._apiSrv.read(req).then((data) => {
+                    if (!this.loadedDicts[hash]) {
+                        this.loadedDicts[hash] = [];
+                    } else {
+                        this.loadedDicts[hash].length = 0;
+                    }
+
+                    const opts_ptr: TDFSelectOption[] = this.loadedDicts[hash];
+                    for (let index = 0; index < data.length; index++) {
+                        const element = data[index];
+                        const value = element[el.dict.dictKey];
+                        const title = element[el.dict.dictKeyTitle];
+                        const deleted = element['DELETED'];
+                        if (deleted) {
+                            opts_ptr.push ({value: value, title: title, disabled: true});
+                        } else {
+                            opts_ptr.push ({value: value, title: title });
+                        }
+
+                    }
+                    callback ({
+                        path: key + '.' + el.key,
+                        options: opts_ptr,
+                        el: el
+                    });
+                    el.options = opts_ptr;
+
+                    return data;
+                }));
+
+            }
+        });
+
+        return Promise.all(reqs).then((responses) => {
+            return responses;
+        });
     }
 
     public loadDictsOptions (values: any, updateLink: Function = null): Promise<any> {
@@ -164,8 +226,7 @@ export class AdvCardRKDataCtrl {
             }
         });
 
-        return Promise.all(reqs)
-            .then((responses) => {
+        return Promise.all(reqs).then((responses) => {
             return responses;
         });
     }
