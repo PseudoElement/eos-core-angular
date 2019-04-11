@@ -13,6 +13,7 @@ import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../consts/eos-user-params
 import { UserParamsService } from '../../../shared/services/user-params.service';
 import { USER_PARMS } from 'eos-rest';
 import { WaitClassifService } from 'app/services/waitClassif.service';
+import {ErrorHelperServices} from '../../../shared/services/helper-error.services';
 @Injectable()
 export class BaseUserSrv implements OnDestroy, OnInit {
     @Input() btnDisabled;
@@ -48,6 +49,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     _userParamsSetSrv: UserParamsService;
     _waitClassifSrv: WaitClassifService;
     _router: Router;
+    _errorSrv: ErrorHelperServices;
     public _fieldsType = {};
     constructor(
         injector: Injector,
@@ -63,6 +65,8 @@ export class BaseUserSrv implements OnDestroy, OnInit {
         this.inputCtrlSrv = injector.get(InputControlService);
         this.descriptorSrv = injector.get(UserParamsDescriptorSrv);
         this.msgSrv = injector.get(EosMessageService);
+        this._errorSrv = injector.get(ErrorHelperServices);
+
     }
     ngOnDestroy() {
         this.unsubscribe();

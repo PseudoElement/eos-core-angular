@@ -144,8 +144,11 @@
     </div>
 </div>
 
-<div class="spinner-wrapper" *ngIf="isLoading">
-    <eos-spinner [size]="'lg'"></eos-spinner>
+<div class="base-param-wrapper">
+    <div class="spinner-wrapper" *ngIf="isLoading">
+        <eos-spinner [size]="'lg'"></eos-spinner>
+    </div>
 </div>
+
 
 <div *ngIf="isShell" class="shell"></div>

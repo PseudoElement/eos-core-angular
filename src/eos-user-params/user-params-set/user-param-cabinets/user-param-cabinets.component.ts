@@ -11,6 +11,7 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 import { PipRX, USER_PARMS } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 @Component({
     selector: 'eos-user-param-cabinets',
     templateUrl: 'user-param-cabinets.component.html',
@@ -56,16 +57,17 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         private _waitClassifSrv: WaitClassifService,
         private _pipRx: PipRX,
         private _msg: EosMessageService,
+        private _errorSrv: ErrorHelperServices,
     ) {
         this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
         this.link = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
         this.selfLink = this._router.url.split('?')[0];
         this.allData = this._userParamsSetSrv.hashUserContext;
         this._userParamsSetSrv.saveData$
-        .takeUntil(this._ngUnsubscribe)
-        .subscribe(() => {
-            this._userParamsSetSrv.submitSave =  this.submit();
-        });
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this._userParamsSetSrv.submitSave = this.submit();
+            });
     }
     ngOnInit() {
         this.init();
@@ -89,7 +91,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     init() {
         this.pretInputs();
-        this.parseInputsFromString(this.inputs,  this.allData['FOLDERCOLORSTATUS']);
+        this.parseInputsFromString(this.inputs, this.allData['FOLDERCOLORSTATUS']);
         this.patchInputFuking();
         this.form = this.inpSrv.toFormGroup(this.inputs);
         this.editMode();
@@ -305,7 +307,8 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this._pushState();
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
             }).catch((error) => {
-                console.log(error);
+                this._errorSrv.errorHandler(error);
+                this.cancel();
             });
         } else {
             return Promise.resolve(false);
@@ -494,7 +497,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             dismissOnTimeout: 6000,
         };
     }
-    private _pushState () {
-        this._userParamsSetSrv.setChangeState({isChange: !this.btnDisable || this.MaxIncrement, disableSave: this.MaxIncrement});
-      }
+    private _pushState() {
+        this._userParamsSetSrv.setChangeState({ isChange: !this.btnDisable || this.MaxIncrement, disableSave: this.MaxIncrement });
+    }
 }

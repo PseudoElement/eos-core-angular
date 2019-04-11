@@ -9,6 +9,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { USER_CERT_PROFILE } from 'eos-rest/interfaces/structures';
+import {ErrorHelperServices} from '../../shared/services/helper-error.services';
 export interface Istore {
     Location: string;
     Address?: string;
@@ -58,6 +59,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         private _modalService: BsModalService,
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
+        private _errorSrv: ErrorHelperServices
     ) {
         this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Профиль сертификатов`;
         this.selfLink = this._router.url.split('?')[0];
@@ -419,6 +421,8 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
             this.checkchanges();
         }).catch(error => {
+            this._errorSrv.errorHandler(error);
+            this.cancellation(false);
             this._msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
         });
     }

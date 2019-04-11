@@ -7,6 +7,7 @@ import { FuncNum } from './funcnum.model';
 import { CardRightSrv } from './card-right.service';
 import { Subject } from 'rxjs/Subject';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import {ErrorHelperServices} from '../../shared/services/helper-error.services';
 // import { Subject } from 'rxjs/Subject';
 
 @Component({
@@ -31,6 +32,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _cardSrv: CardRightSrv,
         private _msgSrv: EosMessageService,
+        private _errorSrv: ErrorHelperServices,
     ) {
         this.selfLink = this._router.url.split('?')[0];
         this._cardSrv.chengeState$
@@ -69,9 +71,21 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.complete();
     }
     submit() {
+        this.pageState = 'LOADING';
         this._cardSrv.saveChenge$()
         .then(() => {
+            this.pageState = 'VIEW';
             this.cancel();
+        }).catch(error => {
+            this._errorSrv.errorHandler(error);
+            this._userParamsSetSrv.getUserIsn().then(() => {
+                this.cancel();
+                this.ngOnInit();
+            this.pageState = 'VIEW';
+            }).catch(err => {
+                this._errorSrv.errorHandler(err);
+                this.pageState = 'VIEW';
+            });
         });
     }
     cancel() {

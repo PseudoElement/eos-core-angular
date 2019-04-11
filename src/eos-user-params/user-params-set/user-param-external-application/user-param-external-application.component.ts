@@ -9,7 +9,7 @@ import { E_FIELD_TYPE, IBaseUsers } from '../../shared/intrfaces/user-params.int
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { Router } from '@angular/router';
-
+import {ErrorHelperServices} from '../../shared/services/helper-error.services';
 import { Subject } from 'rxjs/Subject';
 
 @Component({
@@ -40,6 +40,7 @@ export class UserParamEAComponent implements OnDestroy {
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
         private _route: Router,
+        private _errorSrv: ErrorHelperServices,
     ) {
         this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
         this.link = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
@@ -161,24 +162,28 @@ export class UserParamEAComponent implements OnDestroy {
     submit(event?): Promise<any> {
         return this.apiSrv.batch(this.createObjRequest(), '').then(response => {
             this.btnDisabled = true;
+            this.upStateInputs();
             this._pushState();
             this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
             this.editFlag = false;
             this.disableForEditAllForm(false);
             return this._userParamsSetSrv.getUserIsn();
         }).catch(error => {
-            console.log(error);
+            this._errorSrv.errorHandler(error);
+            this.cancellation();
         });
     }
-    upStateInputs(val) {
-        this.inputs[val[0]].value = val[1];
+    upStateInputs() {
+        Object.keys(this.inputs).forEach(inp => {
+                const val = this.form.controls[inp].value;
+                this.inputs[inp] = val;
+        });
     }
     createObjRequest(): any[] {
         const req = [];
         const userId = this._userParamsSetSrv.userContextId;
         Array.from(this.newData).forEach(val => {
             let parn_Val;
-            this.upStateInputs(val);
             if (typeof val[1] === 'boolean') {
                 val[1] === false ? parn_Val = 'NO' : parn_Val = 'YES';
             } else {

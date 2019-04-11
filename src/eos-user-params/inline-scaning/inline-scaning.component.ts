@@ -7,11 +7,12 @@ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import {FormHelperService} from '../shared/services/form-helper.services';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { IMessage } from 'eos-common/interfaces';
-import { RestError } from 'eos-rest/core/rest-error';
+// import { IMessage } from 'eos-common/interfaces';
+// import { RestError } from 'eos-rest/core/rest-error';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
+import {ErrorHelperServices} from '../shared/services/helper-error.services';
 const BASE_PARAM_INPUTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
@@ -64,6 +65,7 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         private apiSrv: PipRX,
         private _router: Router,
         private _msgSrv: EosMessageService,
+        private _errorSrv: ErrorHelperServices,
         ) {
             this.countChecnged = 0;
             this.selfLink = this._router.url.split('?')[0];
@@ -80,6 +82,8 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         this._userParamSrv.getUserIsn(String(this.curentUser.ISN_LCLASSIF)).then(data => {
             this.init();
             this.flagShow = true;
+        }).catch(error => {
+            this._errorSrv.errorHandler(error);
         });
         this._userParamSrv.saveData$
         .takeUntil(this._ngUnsubscribe)
@@ -120,7 +124,9 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
                 this.setDisableOrEneble();
         }).catch(e => {
             this.flagShow = true;
-            this.cathError(e);
+            this._errorSrv.errorHandler(e);
+            this.cancel(false);
+        //    this.cathError(e);
         });
     }
     cancel(event) {
@@ -168,27 +174,27 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         });
     }
 
-    private cathError(e) {
-        const m: IMessage = {
-            type: 'warning',
-            title: 'Ошибка сервера',
-            msg: '',
-        };
-        if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
-            this._router.navigate(['login'], {
-                queryParams: {
-                    returnUrl: this._router.url
-                }
-            });
-            return undefined;
-        }
-        if (e instanceof RestError) {
-            m.msg = 'ошибка сервера';
-        } else {
-            m.msg = e.message ? e.message : e;
-        }
-        this._msgSrv.addNewMessage(m);
-    }
+    // private cathError(e) {
+    //     const m: IMessage = {
+    //         type: 'warning',
+    //         title: 'Ошибка сервера',
+    //         msg: '',
+    //     };
+    //     if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
+    //         this._router.navigate(['login'], {
+    //             queryParams: {
+    //                 returnUrl: this._router.url
+    //             }
+    //         });
+    //         return undefined;
+    //     }
+    //     if (e instanceof RestError) {
+    //         m.msg = 'ошибка сервера';
+    //     } else {
+    //         m.msg = e.message ? e.message : e;
+    //     }
+    //     this._msgSrv.addNewMessage(m);
+    // }
 
     private _pushState () {
         this._userParamSrv.setChangeState({isChange: !this.disableBtn});

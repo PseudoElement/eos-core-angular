@@ -12,11 +12,12 @@ import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-us
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { IMessage } from 'eos-common/interfaces';
-import { RestError } from 'eos-rest/core/rest-error';
+// import { IMessage } from 'eos-common/interfaces';
+// import { RestError } from 'eos-rest/core/rest-error';
+import { ErrorHelperServices } from '../shared/services/helper-error.services';
 import { Router } from '@angular/router';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
-import {NavParamService} from 'app/services/nav-param.service';
+import { NavParamService } from 'app/services/nav-param.service';
 @Component({
     selector: 'eos-params-base-param',
     templateUrl: './base-param.component.html'
@@ -65,7 +66,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private _inputCtrlSrv: InputParamControlService,
         private _waitClassifSrv: WaitClassifService,
         private _userParamSrv: UserParamsService,
-        private _nanParSrv: NavParamService
+        private _nanParSrv: NavParamService,
+        private _errorSrv: ErrorHelperServices,
     ) {
         this.selfLink = this._router.url.split('?')[0];
         this.init();
@@ -73,11 +75,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.checkSelectUser();
         this._subscribeControls();
         this._userParamSrv
-        .saveData$
-        .takeUntil(this._ngUnsubscribe)
-        .subscribe(() => {
-            this._userParamSrv.submitSave =  this.submit();
-        });
+            .saveData$
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this._userParamSrv.submitSave = this.submit();
+            });
     }
     init() {
         this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
@@ -99,7 +101,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._dataDb['formAccess'] = this.formAccess.value;
         this.isLoading = false;
     }
-    ngOnInit () {
+    ngOnInit() {
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
@@ -123,7 +125,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 }
                 if (this._newData['accessSystems']) {
                     accessSysString = this._newData['accessSystems'];
-                    d = Object.assign(d, { AV_SYSTEMS: this._newData['accessSystems']});
+                    d = Object.assign(d, { AV_SYSTEMS: this._newData['accessSystems'] });
                 }
 
                 this._nanParSrv.scanObserver(false);
@@ -145,65 +147,67 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 if (data && data['pass']) {
                     if (this.curentUser['IS_PASSWORD'] === 0) {
                         const url = `CreateLogin?pass='${encodeURI(data['pass'])}'&isn_user=${id}`;
-                        qPass = this._apiSrv.getData({[url]: ALL_ROWS});
+                        qPass = this._apiSrv.getData({ [url]: ALL_ROWS });
                     } else {
                         const url = `ChangePassword?isn_user=${id}&pass='${encodeURI(data['pass'])}'`;
-                        qPass = this._apiSrv.getData({[url]: ALL_ROWS});
+                        qPass = this._apiSrv.getData({ [url]: ALL_ROWS });
                     }
                 } else {
                     qPass = Promise.resolve();
                 }
             }
             const form = this._apiSrv.setData(query);
-         return   Promise.all([form, qPass])
-            .then(([f, pass]) => {
-                if (accessSysString.length === 40) {
-                    const number = accessSysString.charAt(3);
-                    this._nanParSrv.scanObserver(number === '1' ? false : true);
-                }
-                if (this._newData['formControls'] && this._newData['formControls']['pass']) {
-                    this.formControls.get('pass').reset();
-                    this.formControls.get('passRepeated').reset();
-                }
-                this._newData = {};
-                this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-             return   this._userParamSrv.getUserIsn()
-                .then(() => {
-                    this.curentUser = this._userParamSrv.curentUser;
-                    this.editMode = false;
-                    this.init();
-                    setTimeout(() => {
-                        this.editModeF();
-                        this.checRadioB();
-                        this.checkSelectUser();
-                        this._subscribeControls();
-                            this.stateHeaderSubmit = true;
-                            this._pushState();
-                    });
+            return Promise.all([form, qPass])
+                .then(([f, pass]) => {
+                    if (accessSysString.length === 40) {
+                        const number = accessSysString.charAt(3);
+                        this._nanParSrv.scanObserver(number === '1' ? false : true);
+                    }
+                    if (this._newData['formControls'] && this._newData['formControls']['pass']) {
+                        this.formControls.get('pass').reset();
+                        this.formControls.get('passRepeated').reset();
+                    }
+                    this._newData = {};
+                    this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+                    return this._userParamSrv.getUserIsn()
+                        .then(() => {
+                            this.curentUser = this._userParamSrv.curentUser;
+                            this.editMode = false;
+                            this.init();
+                            setTimeout(() => {
+                                this.editModeF();
+                                this.checRadioB();
+                                this.checkSelectUser();
+                                this._subscribeControls();
+                                this.stateHeaderSubmit = true;
+                                this._pushState();
+                            });
+                        });
+                })
+                .catch(e => {
+                    this.cancel();
+                    this._errorSrv.errorHandler(e);
+                    // const m: IMessage = {
+                    //     type: 'warning',
+                    //     title: 'Ошибка сервера',
+                    //     msg: '',
+                    // };
+                    // if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
+                    //     this._router.navigate(['login'], {
+                    //         queryParams: {
+                    //             returnUrl: this._router.url
+                    //         }
+                    //     });
+                    //     return undefined;
+                    // }
+                    // if (e instanceof RestError && e.code === 500) {
+                    //     m.msg = 'ошибка сохранения пароля';
+                    // } else {
+                    //     m.msg = e.message ? e.message : e;
+                    // }
+                    // this._msgSrv.addNewMessage(m);
                 });
-            })
-            .catch(e => {
-                const m: IMessage = {
-                    type: 'warning',
-                    title: 'Ошибка сервера',
-                    msg: '',
-                };
-                if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
-                    this._router.navigate(['login'], {
-                        queryParams: {
-                            returnUrl: this._router.url
-                        }
-                    });
-                    return undefined;
-                }
-                if (e instanceof RestError && e.code === 500) {
-                    m.msg = 'ошибка сохранения пароля';
-                } else {
-                    m.msg = e.message ? e.message : e;
-                }
-                this._msgSrv.addNewMessage(m);
-            });
-        }   else {
+        } else {
             return Promise.resolve();
         }
     }
@@ -227,7 +231,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this.checRadioB();
             this.checkSelectUser();
             if (this.curentUser.isTechUser) {
-                this.formControls.controls['teсhUser'].disable({emitEvent: false});
+                this.formControls.controls['teсhUser'].disable({ emitEvent: false });
             }
             this.stateHeaderSubmit = true;
             this._pushState();
@@ -235,31 +239,31 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     checkSelectUser() {
         if (this.curentUser.isAccessDelo && this.editMode) {
-            this.formControls.controls['SELECT_ROLE'].enable({emitEvent: false});
-        }   else {
-            this.formControls.controls['SELECT_ROLE'].disable({emitEvent: false});
+            this.formControls.controls['SELECT_ROLE'].enable({ emitEvent: false });
+        } else {
+            this.formControls.controls['SELECT_ROLE'].disable({ emitEvent: false });
         }
     }
     tf() {
         const val1 = this.formAccess.controls['0-1'].value;
         const val2 = this.formAccess.controls['delo_web'].value;
         if (val1 || val2) {
-            this.formControls.controls['SELECT_ROLE'].enable({emitEvent: false});
+            this.formControls.controls['SELECT_ROLE'].enable({ emitEvent: false });
         }
         if (!val1 && !val2) {
             this.formControls.controls['SELECT_ROLE'].patchValue('');
-            this.formControls.controls['SELECT_ROLE'].disable({emitEvent: false});
+            this.formControls.controls['SELECT_ROLE'].disable({ emitEvent: false });
         }
     }
     editModeF() {
         if (this.editMode) {
-            this.form.enable({onlySelf: true, emitEvent: false});
-            this.formControls.enable({onlySelf: true, emitEvent: false});
-            this.formAccess.enable({onlySelf: true, emitEvent: false});
-        }   else {
-            this.form.disable({onlySelf: true, emitEvent: false});
-            this.formControls.disable({onlySelf: true, emitEvent: false});
-            this.formAccess.disable({onlySelf: true, emitEvent: false});
+            this.form.enable({ onlySelf: true, emitEvent: false });
+            this.formControls.enable({ onlySelf: true, emitEvent: false });
+            this.formAccess.enable({ onlySelf: true, emitEvent: false });
+        } else {
+            this.form.disable({ onlySelf: true, emitEvent: false });
+            this.formControls.disable({ onlySelf: true, emitEvent: false });
+            this.formAccess.disable({ onlySelf: true, emitEvent: false });
         }
     }
     close() {
@@ -271,37 +275,37 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.isShell = true;
         let dueDep = '';
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
-        .then((data: string) => {
-            if (data === '') {
-                throw new Error();
-            }
-            dueDep = data;
-            return this._userParamSrv.getDepartmentFromUser([dueDep]);
-        })
-        .then((data: DEPARTMENT[]) => {
-            return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true);
-        })
-        .then((dep: DEPARTMENT) => {
-            this.isShell = false;
-            this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
-            this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
-        })
-        .catch(() => {
-            this.isShell = false;
-        });
+            .then((data: string) => {
+                if (data === '') {
+                    throw new Error();
+                }
+                dueDep = data;
+                return this._userParamSrv.getDepartmentFromUser([dueDep]);
+            })
+            .then((data: DEPARTMENT[]) => {
+                return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true);
+            })
+            .then((dep: DEPARTMENT) => {
+                this.isShell = false;
+                this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
+                this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
+            })
+            .catch(() => {
+                this.isShell = false;
+            });
     }
 
     setVision(flag?) {
         if (flag) {
             this.type = 'text';
-        }   else {
+        } else {
             this.type1 = 'text';
         }
     }
     resetVision(flag?) {
         if (flag) {
             this.type = 'password';
-        }   else {
+        } else {
             this.type1 = 'password';
         }
     }
@@ -318,22 +322,22 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         const delo_web_delo = this.formAccess.get('0-1').value;
         const delo_web = this.formAccess.get('delo_web').value;
         if (!delo_web) {
-            this.formAccess.controls['1-27'].disable({emitEvent: false});
-        }   else {
-            this.formAccess.controls['0'].disable({emitEvent: false});
-            this.formAccess.controls['0-1'].disable({emitEvent: false});
+            this.formAccess.controls['1-27'].disable({ emitEvent: false });
+        } else {
+            this.formAccess.controls['0'].disable({ emitEvent: false });
+            this.formAccess.controls['0-1'].disable({ emitEvent: false });
         }
         if (delo) {
-            this.formAccess.controls['0-1'].disable({emitEvent: false});
-            this.formAccess.controls['delo_web'].disable({emitEvent: false});
+            this.formAccess.controls['0-1'].disable({ emitEvent: false });
+            this.formAccess.controls['delo_web'].disable({ emitEvent: false });
         }
         if (delo_web_delo) {
-            this.formAccess.controls['0'].disable({emitEvent: false});
-            this.formAccess.controls['delo_web'].disable({emitEvent: false});
+            this.formAccess.controls['0'].disable({ emitEvent: false });
+            this.formAccess.controls['delo_web'].disable({ emitEvent: false });
         }
     }
-   get getValidDate() {
-    return this.form.controls['PASSWORD_DATE'].valid;
+    get getValidDate() {
+        return this.form.controls['PASSWORD_DATE'].valid;
     }
     private _subscribeControls() {                                     /* подписки */
         /* основная форма */
@@ -360,7 +364,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this._checkForChenge();
             });
 
-            /* -----===== отключение элементов доступа к системам =====----- */
+        /* -----===== отключение элементов доступа к системам =====----- */
         this.formAccess.get('0').valueChanges
             .subscribe(data => {
                 this._toggleFormControl(this.formAccess.controls['0-1'], data);
@@ -370,34 +374,34 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             .subscribe(data => {
                 this._toggleFormControl(this.formAccess.controls['0'], data);
                 this._toggleFormControl(this.formAccess.controls['delo_web'], data);
-             //   this._checkRoleControl(data);
+                //   this._checkRoleControl(data);
             });
         this.formAccess.get('delo_web').valueChanges
             .subscribe(data => {
                 this._toggleFormControl(this.formAccess.controls['0'], data);
                 this._toggleFormControl(this.formAccess.controls['0-1'], data);
                 this._toggleFormControl(this.formAccess.controls['1-27'], !data);
-            //    this._checkRoleControl(data);
+                //    this._checkRoleControl(data);
                 if (data) {
-                    this.formAccess.controls['1-27'].patchValue('1', {emitEvent: false});
+                    this.formAccess.controls['1-27'].patchValue('1', { emitEvent: false });
                 } else {
-                    this.formAccess.controls['1-27'].patchValue('', {emitEvent: false});
+                    this.formAccess.controls['1-27'].patchValue('', { emitEvent: false });
                 }
-        });
+            });
     }
 
     private _toggleFormControl(control, disable: boolean) {
         if (disable) {
             if (control.enabled) {
-                control.disable({emitEvent: false});
+                control.disable({ emitEvent: false });
             }
         } else {
             if (control.disabled) {
-                control.enable({emitEvent: false});
+                control.enable({ emitEvent: false });
             }
         }
     }
-    private _createAccessSystemsString (data) {
+    private _createAccessSystemsString(data) {
         const arr = this.curentUser['ACCESS_SYSTEMS'].concat();
         arr[0] = '0';
         arr[1] = '0';
@@ -461,18 +465,18 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         if (data1 !== '' && data2 !== '') {
             this.errorPass = data1 !== data2;
             if (this.errorPass) {
-                this.formControls.get('passRepeated').setErrors({repeat: true});
-            }   else {
+                this.formControls.get('passRepeated').setErrors({ repeat: true });
+            } else {
                 this.errorPass = false;
             }
-        }  else if (data1 !== '' || data2 !== '') {
+        } else if (data1 !== '' || data2 !== '') {
             this.errorPass = true;
         } else {
             this.errorPass = false;
         }
     }
-    private _pushState () {
-        this._userParamSrv.setChangeState({isChange: !this.stateHeaderSubmit, disableSave: !this.getValidDate || this.errorPass});
-      }
+    private _pushState() {
+        this._userParamSrv.setChangeState({ isChange: !this.stateHeaderSubmit, disableSave: !this.getValidDate || this.errorPass });
+    }
 
 }

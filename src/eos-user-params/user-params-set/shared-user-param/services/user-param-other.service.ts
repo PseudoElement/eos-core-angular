@@ -249,11 +249,16 @@ export class UserParamOtherSrv extends BaseUserSrv {
                 const userId = this._userParamsSetSrv.userContextId;
                 return this._userParamsSetSrv.getUserIsn(String(userId)).then(() => {
                     this.saveValueSendForm = this.sendFrom;
+
                     this.editFlag = false;
                     this.disableForEditAllForm(false);
                     this.isLoading = true;
                 });
-            }).catch(data => console.log(data));
+            }).catch(error => {
+                this._errorSrv.errorHandler(error);
+                this.cancellation();
+                this.isLoading = true;
+            });
     }
     upStateInputs(val) {
         this.inputs[val[0]].value = val[1];
@@ -281,7 +286,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
         return req;
     }
     cancellation(event?) {
-        if (this.isChangeForm) {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
             this.sendFrom = this.saveValueSendForm;
             const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/, '||');
@@ -292,7 +296,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
                     this.getListDoc(result);
                 }
             });
-        }
         this.fillFormDefaultValues(this.inputs);
         this.editFlag = event;
         this.disableForEditAllForm(event);

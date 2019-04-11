@@ -102,10 +102,10 @@ export class CardRightSrv {
         .then(() => {
             this.prepareforEdit();
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-        })
-        .catch((e) => {
-            console.log(e);
         });
+        // .catch((e) => {
+        //     console.log(e);
+        // });
     }
     // test() {
     //     const arr = [];

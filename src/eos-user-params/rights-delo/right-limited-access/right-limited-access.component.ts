@@ -10,6 +10,7 @@ import { IMessage } from 'eos-common/interfaces';
 import { Subject } from 'rxjs/Subject';
 import { Router } from '@angular/router';
 import { DOCGROUP_CL } from 'eos-rest';
+import {ErrorHelperServices} from '../../shared/services/helper-error.services';
 @Component({
     selector: 'eos-right-limited-access',
     styleUrls: ['right-limited-access.component.scss'],
@@ -69,6 +70,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
       private _waitClassifSrv: WaitClassifService,
       private _userServices: UserParamsService,
       private _router: Router,
+      private _errorSrv: ErrorHelperServices,
     )   {
         this.link = this._userServices.curentUser['ISN_LCLASSIF'];
         this.selfLink = this._router.url.split('?')[0];
@@ -173,8 +175,10 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                     this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                 }
             });
-        }).catch(res => {
-            this.warning('warning', 'Ошибка сервера', 'Возможно изменения не сохранились');
+        }).catch(error => {
+            this._errorSrv.errorHandler(error);
+            this.backForm();
+            this.isLoading = true;
         });
     }
     default($event?) {

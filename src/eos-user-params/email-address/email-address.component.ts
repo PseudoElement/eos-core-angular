@@ -11,6 +11,7 @@ import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { Subject } from 'rxjs/Subject';
 import { Router } from '@angular/router';
+import {ErrorHelperServices} from '../shared/services/helper-error.services';
 
 @Component({
     selector: 'eos-params-email-address',
@@ -51,6 +52,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
        private _userServices: UserParamsService,
        private _msgSrv: EosMessageService,
        private _router: Router,
+       private _errorSrv: ErrorHelperServices,
     )   {
         this.titleHeader =  `${this._userServices.curentUser.SURNAME_PATRON} - Ведение адресов электронной почты`;
         this.selfLink = this._router.url.split('?')[0];
@@ -124,8 +126,8 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                 this.editMode();
             });
         }).catch(error => {
-            error.message =  'Ошибка сервера';
-            this.cathError(error);
+                this._errorSrv.errorHandler(error);
+                this.backForm(false);
         });
     }
     backForm(event): void {
