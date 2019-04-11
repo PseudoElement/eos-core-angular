@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
-import { IMessage /*, DEFAULT_DISMISS_TIMEOUT, DANGER_DISMISS_TIMEOUT, WARN_DISMISS_TIMEOUT */ } from '../core/message.interface';
+import { IMessage , DEFAULT_DISMISS_TIMEOUT, DANGER_DISMISS_TIMEOUT, WARN_DISMISS_TIMEOUT } from '../core/message.interface';
 
 @Injectable()
 export class EosMessageService {
@@ -24,15 +24,15 @@ export class EosMessageService {
         if (message.dismissOnTimeout === undefined) {
             switch (message.type) {
                 case 'danger':
-                    // message.dismissOnTimeout = DANGER_DISMISS_TIMEOUT;
+                    message.dismissOnTimeout = DANGER_DISMISS_TIMEOUT;
                     console.error(message);
                     break;
                 case 'warning':
-                    // message.dismissOnTimeout = WARN_DISMISS_TIMEOUT;
+                    message.dismissOnTimeout = WARN_DISMISS_TIMEOUT;
                     console.warn(message);
                     break;
                 default:
-                // message.dismissOnTimeout = DEFAULT_DISMISS_TIMEOUT;
+                message.dismissOnTimeout = DEFAULT_DISMISS_TIMEOUT;
             }
         }
         /*tslint:enable:no-console*/

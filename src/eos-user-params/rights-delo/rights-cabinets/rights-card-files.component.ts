@@ -500,7 +500,6 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             type: 'warning',
             title: tittle,
             msg: msg,
-            dismissOnTimeout: 1000000
         });
     }
     private _pushState () {

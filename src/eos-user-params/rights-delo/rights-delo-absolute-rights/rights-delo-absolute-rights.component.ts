@@ -149,7 +149,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (e instanceof RestError) {
                 this._msgSrv.addNewMessage({
                     type: 'danger',
-                    title: e.code.toString(),
+                    title: e.code.toString() === '2000' ? 'Ошибка' : e.code.toString(),
                     msg: e.message
                 });
             }
