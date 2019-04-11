@@ -710,6 +710,8 @@ export const REGISTRATION_REMASTER_USER: IBaseUsers = {
             type: 'boolean',
             title: 'Адрес',
             keyPosition: 92,
+            parent: 'RCSEND_ADDRESSES_CITIZEN'
+
         },
         {
             key: 'RCSEND_ADDRESSES_CITIZEN_ADDRESS_CITY',
