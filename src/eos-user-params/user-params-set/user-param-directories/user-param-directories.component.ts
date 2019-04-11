@@ -41,7 +41,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
         private _pipRx: PipRX,
         private _msg: EosMessageService,
     ) {
-        this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
+        this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Справочники';
         this.link = this._userParamsSetSr.curentUser['ISN_LCLASSIF'];
         this.selfLink = this._router.url.split('?')[0];
         this.flagEdit = false;
