@@ -157,11 +157,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                         .then(() => {
                             if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
                                 this.dictionary.root.children = null;
+                                const n: CustomTreeNode = this._dictSrv.currentDictionary.descriptor.setRootNode(this._nodeId);
+                                if (n) {
+                                    this.title = n.title;
+                                }
                                 this._dictSrv.selectCustomTreeNode().then ((data) => {
-                                    const n: CustomTreeNode = this._dictSrv.currentDictionary.descriptor.setRootNode(this._nodeId);
-                                    if (n) {
-                                        this.title = n.title;
-                                    }
                                 });
                             } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
                                 if (this._nodeId === '0.' ) {
