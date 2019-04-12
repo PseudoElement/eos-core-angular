@@ -75,6 +75,10 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
         return true;
     }
 
+    getActive(): CustomTreeNode {
+        return this._activeTreeNode;
+    }
+
     getCustomTreeData(): Promise<CustomTreeNode[]> {
 
         return this.apiSrv.read<DEPARTMENT>({'DEPARTMENT': PipRX.criteries({'IS_NODE': '0'}),  orderby: 'WEIGHT' })
@@ -96,18 +100,21 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
         }
     }
 
-    setRootNode(_nodeId: string) {
+    setRootNode(_nodeId: string): CustomTreeNode {
+        let res = this._activeTreeNode;
         this._filterDUE = _nodeId;
         if (this._treeData) {
             this._parseTree(this._treeData, (item: CustomTreeNode) => {
                 if (item.id === this._filterDUE) {
                     item.isActive = true;
                     this._activeTreeNode = item;
+                    res = item;
                 } else {
                     item.isActive = false;
                 }
             });
         }
+        return res;
     }
 
     getChildren(): Promise<any[]> {

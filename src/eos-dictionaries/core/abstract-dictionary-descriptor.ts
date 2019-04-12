@@ -420,9 +420,12 @@ export abstract class AbstractDictionaryDescriptor {
     getCustomTreeData(): Promise<CustomTreeNode[]> {
         return Promise.resolve(null);
     }
+    getActive(): CustomTreeNode {
+        return null;
+    }
 
     // method for custom tree
-    setRootNode(_nodeId: string) {
+    setRootNode(_nodeId: string): any {
     }
 
     extendCritery(critery: any, params: ISearchSettings, selectedNode: EosDictionaryNode) {
