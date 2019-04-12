@@ -1,11 +1,11 @@
 import { Component, Output, EventEmitter, OnDestroy, OnInit, OnChanges, ViewChild, NgZone } from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
 import {PipRX} from '../../eos-rest';
-import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME, FICT_CONTROLS_LIST_NAME } from './adv-card-rk-datactrl';
+import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME, FICT_CONTROLS_LIST_NAME, IUpdateDictEvent } from './adv-card-rk-datactrl';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { TDefaultField, TDFSelectOption } from './rk-default-values/rk-default-const';
+import { TDefaultField } from './rk-default-values/rk-default-const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EosUtils } from 'eos-common/core/utils';
 import { Subscription } from 'rxjs/Subscription';
@@ -44,7 +44,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     nodes: any[];
     tabs: Ttab [];
     dataController: AdvCardRKDataCtrl;
-    // changeEvent: Subject<any> = new Subject();
     activeTab: Ttab;
     form: FormGroup;
 
@@ -66,7 +65,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     @ViewChild('currentPage')
     private currentPage: RKBasePage;
-    // protected apiSrv: PipRX;
     private _node = {};
     private isn_node: number;
 
@@ -103,21 +101,22 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         this.subscriptions = [];
     }
 
-    updateLinks (el: TDefaultField, options: TDFSelectOption[], data: any) {
+    updateLinks2 (event: IUpdateDictEvent) {
+        const el = event.el;
         if (el.key === 'JOURNAL_ISN_NOMENC' ||
             el.key === 'JOURNAL_ISN_NOMENC_W'
             ) {
-            const rec = data[0];
+            const rec = event.data[0];
             if (rec['DUE'] === '0.') {
-                options[0].title = '...';
+                event.options[0].title = '...';
             } else {
-                options[0].title = rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
+                event.options[0].title = rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
             }
         }
     }
 
     save(): void {
-        this.dataController.save(this.isn_node, this.inputs, this.newData).then (() => {
+        this.dataController.save(this.isn_node, this.newData).then (() => {
             this.bsModalRef.hide();
         }).catch (() => {
 
@@ -145,60 +144,11 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     }
     rereadUserLists() {
-        this.dataController.updateDictsOptions('USER_LISTS', (event) => {
+        this.dataController.markCacheForDirty('USER_LISTS');
+        this.dataController.updateDictsOptions('USER_LISTS', null, (event) => {
             console.log(event);
         });
-        // const fields = this.getDescriptions();
 
-        // Object.keys(fields).forEach ((key) => {
-        //     for (let i = 0; i < fields[key].length; i++) {
-        //         const el: TDefaultField = fields[key][i];
-        //         if (!el.dict) {
-        //             continue;
-        //         }
-        //         if (el.type === E_FIELD_TYPE.dictLink) {
-        //             reqs.push(this.readDictLinkValue(el, values[key][el.key], updateLink));
-        //         } else if (el.type === E_FIELD_TYPE.select) {
-        //             const hash = this.calcHash(el.dict);
-        //             if (this.loadedDicts[hash]) {
-        //                 el.options = this.loadedDicts[hash];
-        //             } else {
-        //                 let query: any;
-        //                 if (el.dict.criteries) {
-        //                     query = { criteries: el.dict.criteries};
-        //                 } else {
-        //                     query = ALL_ROWS;
-        //                 }
-        //                 this.loadedDicts[hash] = [];
-
-        //                 const req = {[el.dict.dictId]: query};
-
-        //                 reqs.push(this._apiSrv.read(req).then((data) => {
-        //                     const opts: TDFSelectOption[] = this.loadedDicts[hash];
-        //                     const curval = values[key][el.key];
-        //                     // opts.push ({value: '', title: '...'});
-        //                     for (let index = 0; index < data.length; index++) {
-        //                         const element = data[index];
-        //                         const value = element[el.dict.dictKey];
-        //                         const title = element[el.dict.dictKeyTitle];
-        //                         const deleted = element['DELETED'];
-        //                         if (deleted) {
-        //                             if (String(curval) === String(value)) {
-        //                                 opts.push ({value: value, title: title, disabled: true});
-        //                             }
-        //                         } else {
-        //                             opts.push ({value: value, title: title });
-        //                         }
-
-        //                     }
-
-        //                     el.options = opts;
-        //                     return data;
-        //                 }));
-        //             }
-        //         }
-        //     }
-        // });
     }
 
 
@@ -250,8 +200,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             this.isChanged = true;
             this._checkCorrectValuesLogic(this.values);
             this.editValues = this._makePrevValues(this.values);
-
-            this.dataController.loadDictsOptions(this.values, this.updateLinks).then (() => {
+            this.dataController.updateDictsOptions(null, this.values, this.updateLinks2).then (() => {
                 this.inputs = this._getInputs();
                 this._updateInputs(this.inputs);
                 this._updateOptions(this.inputs);
@@ -310,7 +259,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             ValidatorsControl.onlyOneOfControl(controlSrok1, controlSrok2, err));
 
     }
-
 
     private _checkCorrectValuesLogic(values: any): any {
         // Внутренние адресаты
