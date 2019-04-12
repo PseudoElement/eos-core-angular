@@ -39,13 +39,9 @@ export const NP_SUD_RESHEN_TYPE_CL: ITreeDictionaryDescriptor = /*Object.assign(
         title: 'LAYER',
         type: 'number'
     },
-        COMMON_FIELD_NAME,
-    // Object.assign({}, COMMON_FIELD_NAME, {
-    //     title: 'Наименование',
-    //     isUnique: true,
-    //     uniqueInDict: true,
-    //     length: 150,
-    // }),
+    Object.assign({}, COMMON_FIELD_NAME, {
+        length: 248,
+    }),
 
     {
         key: 'IS_NODE',

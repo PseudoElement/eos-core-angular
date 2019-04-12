@@ -49,6 +49,7 @@ export const NP_RESHEN_CL: ITreeDictionaryDescriptor = {
             title: 'Наименование',
             isUnique: true,
             uniqueInDict: true,
+            length: 248,
         }), {
             key: 'IS_NODE',
             title: 'IS_NODE',
