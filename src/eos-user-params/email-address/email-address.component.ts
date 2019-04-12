@@ -188,8 +188,8 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         } else {
             const m: IMessage = {
                 type: 'warning',
-                title: 'Не верное значение',
-                msg: '',
+                title: 'Предупреждение',
+                msg: 'Неверный формат адреса электронной почты. Введите другой адрес.',
             };
             this._msgSrv.addNewMessage(m);
         }
