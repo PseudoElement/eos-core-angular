@@ -54,6 +54,46 @@
             <label class="checkbox-inline"><input type="checkbox" name="seeDelete" [(ngModel)]="settings.deleted"><span></span><span class="m-font">Учитывать логически удаленные</span></label>
         </div>
     </div>
+
+    <!--FOR reshen-->
+    <div [hidden]="dictId !== 'reshen' && dictId !== 'user_param'"
+        class="full-search-form">
+        <form id="reshen">
+            <div class="form-group unimportant-text">
+                <label class="s-font"
+                    for="title">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
+                <div class="search-fld">
+                    <input id="title"
+                        name="title"
+                        type="text"
+                        class="form-control light"
+                        [(ngModel)]="searchModel['CLASSIF_NAME']"
+                        placeholder="{{fieldsDescription.rec['CLASSIF_NAME']?.title}}"
+                        maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
+                    <a class="clear-btn"
+                        [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
+                        (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                </div>
+            </div>
+            <div class="form-group unimportant-text">
+                <label class="s-font"
+                    for="note">{{fieldsDescription.rec['NOTE']?.title}}</label>
+                <div class="search-fld">
+                    <input id="note"
+                        name="note"
+                        type="text"
+                        class="form-control light"
+                        [(ngModel)]="searchModel['NOTE']"
+                        placeholder="{{fieldsDescription.rec['NOTE']?.title}}"
+                        maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
+                    <a class="clear-btn"
+                        [ngClass]="{'hide': !searchModel['NOTE']}"
+                        (click)="searchModel['NOTE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <!--FOR Departments-->
     <div [hidden]="dictId !== 'departments' && dictId !== 'user_param'"
         class="full-search-form">
