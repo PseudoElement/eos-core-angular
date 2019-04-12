@@ -41,8 +41,6 @@ export class EmailAddressService {
         if (data.length) {
             return this._pipSrv.setData(queryUserCl).then(res => {
         return res;
-        }).catch(error => {
-            console.log(error);
         });
     }
      return Promise.resolve(1);
@@ -74,8 +72,6 @@ export class EmailAddressService {
         const queryUserCl = data;
        return this._pipSrv.setData(queryUserCl).then(res => {
            return res;
-       }).catch(error => {
-           console.log(error);
        });
     }
 
@@ -123,8 +119,6 @@ export class EmailAddressService {
             const queryUserCl = data;
             return this._pipSrv.setData(queryUserCl).then(res => {
                return res;
-            }).catch(error => {
-                console.log(error);
             });
         }
         return Promise.resolve(1);
