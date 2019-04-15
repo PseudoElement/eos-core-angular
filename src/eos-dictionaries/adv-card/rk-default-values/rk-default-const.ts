@@ -12,6 +12,7 @@ export class TDFSelectOption {
     value: any;
     title: string;
     disabled?: boolean;
+    rec?: any;
 }
 
 export class TDefaultField {
@@ -493,7 +494,7 @@ export const RKDefaultFields: TDefaultField[] = [
                 value: '1',
                 title: 'копию',
             }, {
-                value: '2',
+                value: '4',
                 title: 'эл. экз',
             },
         ]
@@ -512,7 +513,7 @@ export const RKDefaultFields: TDefaultField[] = [
                 value: '1',
                 title: 'копию',
             }, {
-                value: '2',
+                value: '4',
                 title: 'эл. экз',
             },
         ]

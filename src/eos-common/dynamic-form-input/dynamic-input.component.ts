@@ -15,6 +15,7 @@ export class ErrorTooltip {
 export class IDynamicInputEvents {
     select?: Function;
     remove?: Function;
+    getTitle?: Function;
 }
 export class IDynamicInputOptions {
     hideLabel?: boolean; // default: false;

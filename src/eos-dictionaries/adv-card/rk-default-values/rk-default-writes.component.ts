@@ -19,6 +19,7 @@ export class RKWritesCardComponent extends RKNomenkBasePage implements OnChanges
         this.selOpts.events = {
             select: this.journalNomencClick_W.bind(this),
             remove: this.journalNomencClickRemove_W.bind(this),
+            getTitle: this.journalNomencGetTitle.bind(this),
         }
     }
 
@@ -75,13 +76,13 @@ export class RKWritesCardComponent extends RKNomenkBasePage implements OnChanges
             // Списать в дело
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W': {
                 this.flagEn_spinnum = newValue;
+                this.setAvailableFor ('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W');
                 if (newValue && newValue !== prevValue) {
-                    this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W', '0');
+                    this.setFirstAvailableValue('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W');
                 }
                 if (!newValue) {
                     this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W', null);
                 }
-                this.setAvailableFor ('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W');
                 break;
             }
 
@@ -199,7 +200,7 @@ export class RKWritesCardComponent extends RKNomenkBasePage implements OnChanges
     }
 
     journalNomencClickRemove_W() {
-        this.setDictLinkValue('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W', null, this.nomenklTitleFunc());
+        this.setDictLinkValue('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W', null);
     }
 
     setAvailableFor (key: string) {
@@ -217,19 +218,14 @@ export class RKWritesCardComponent extends RKNomenkBasePage implements OnChanges
                 break;
             }
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W': {
-                const v = this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W');
-                if (v) {
-                    if (this.isEDoc) {
-                        this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W'].options, [1]);
-                    } else {
-                        this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W'].options, [0, 1]);
-                    }
-                } else {
-                    this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W'].options, null, false);
-                }
+                this.nomencChildControlAvial('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W',
+                                        'DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W');
                 break;
             }
         }
     }
 
 }
+
+
+

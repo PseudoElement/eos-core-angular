@@ -36,21 +36,16 @@ export class DynamicInputLinkButtonComponent extends DynamicInputBase {
 
     getDisplayValue () {
         if (this.hasValue()) {
-            if (this.currentValue['title']) {
-                return this.currentValue['title'];
+            if (this.viewOpts.events.getTitle) {
+                return this.viewOpts.events.getTitle(this);
             }
-        }
-        if (this.input.options) {
-            return this.input.options[0]['title'];
         }
         return '...';
     }
 
-    setExtValue(value: any, gettitle: (d: any) => Promise<any>) {
+    setExtValue(value: any, data: any) {
+        this.input.options[0].rec = data;
         this.control.setValue(value);
-        gettitle(this).then(title => {
-            this.input.options[0]['title'] = title;
-        });
     }
 
     enRemoveButton (): boolean {
