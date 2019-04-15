@@ -19,8 +19,6 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 export class RightsCardFilesComponent implements OnInit, OnDestroy {
     public isLoading = true;
     public titleHeader;
-    public link;
-    public selfLink;
     public flagChangeCards;
     public mainArrayCards = [];
     public currentCard: CardsClass;
@@ -44,8 +42,6 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
     ) {
         this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Картотеки и Кабинеты';
-        this.link = this._userSrv.curentUser['ISN_LCLASSIF'];
-        this.selfLink = this._router.url.split('?')[0];
         this.flagChangeCards = true;
         this._userServices.saveData$
             .takeUntil(this._ngUnsubscribe)

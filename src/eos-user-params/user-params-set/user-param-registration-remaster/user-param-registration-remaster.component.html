@@ -1,55 +1,36 @@
 <div class="input-user-wrapper input-user-registration-rk-forwarding-wrapper">
-    <eos-user-params-header
-        [title] = 'titleHeader'
-        [link] = 'link'
-        [selfLink] = 'selfLink'
-        [disableBtn] = "!btnDisabled"
-        [defaultBtn] = 'true'
-        (submitEmit) = 'submit($event)'
-        (cancelEmit) = 'cancel($event)'
-        (editEmit) = 'edit($event)'
-        (closeEmit) = 'close($event)'
-        (defaultEmit) = 'default($event)'
-    ></eos-user-params-header>
+    <eos-user-params-header [editMode]="editFlag" [title]='titleHeader' [disableBtn]="!btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (closeEmit)='close($event)' (defaultEmit)='default($event)'></eos-user-params-header>
     <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs">
-            <li class="tab-item"
-                *ngFor="let tab of fieldGroupsForRegistration; let i = index"
-                [ngClass]="{'active': i === currTab}"
-                (click)="setTab(i)">
+            <li class="tab-item" *ngFor="let tab of fieldGroupsForRegistration; let i = index" [ngClass]="{'active': i === currTab}" (click)="setTab(i)">
                 <span class="tab-title">{{tab}}</span>
             </li>
         </ul>
     </div>
-<div class="user-param-registration-content-wrapper scrollWrapper" *ngIf="isLoading">
-    <div [hidden]="currTab !== 0" class="clearfix">
-        <eos-dop-operation [userData] = 'hash'  [defaultValues] = 'defaultValues' (pushChange)="emitChanges($event)"></eos-dop-operation>
+    <div class="user-param-registration-content-wrapper scrollWrapper" *ngIf="isLoading">
+        <div [hidden]="currTab !== 0" class="clearfix">
+            <eos-dop-operation [userData]='hash' [defaultValues]='defaultValues' (pushChange)="emitChanges($event)"></eos-dop-operation>
+        </div>
+        <div [hidden]="currTab !== 1" class="clearfix">
+            <eos-remaster-addresses [userData]='hash' [defaultValues]='defaultValues' (pushChange)="emitChangesAddresses($event)"></eos-remaster-addresses>
+        </div>
+        <div [hidden]="currTab !== 2" class="clearfix">
+            <eos-remaster-email (pushChenge)='getChanges($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-email>
+        </div>
+        <div [hidden]="currTab !== 3" class="clearfix">
+            <eos-remaster-scan (pushChenge)='emitChangesScan($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-scan>
+        </div>
+        <div [hidden]="currTab !== 4" class="clearfix">
+            <eos-auto-search (pushChange)='emitChangesAutoSearch($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-auto-search>
+        </div>
+        <div [hidden]="currTab !== 5" class="clearfix">
+            <eos-remaster-seb (pushChange)='emitChangesSab($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-seb>
+        </div>
+        <div [hidden]="currTab !== 6" class="clearfix">
+            <eos-remaster-rc (pushChange)='emitChangesRc($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-rc>
+        </div>
     </div>
-    <div [hidden]="currTab !== 1" class="clearfix">
-        <eos-remaster-addresses [userData] = 'hash'  [defaultValues] = 'defaultValues' (pushChange)="emitChangesAddresses($event)"></eos-remaster-addresses>
+    <div class="sp" *ngIf="!isLoading">
+        <eos-spinner size="lg"></eos-spinner>
     </div>
-    <div [hidden]="currTab !== 2" class="clearfix">
-        <eos-remaster-email (pushChenge) = 'getChanges($event)' [userData] = 'hash' [defaultValues] = 'defaultValues'
-        ></eos-remaster-email>
-    </div>
-    <div [hidden]="currTab !== 3" class="clearfix">
-        <eos-remaster-scan (pushChenge) = 'emitChangesScan($event)' [userData] = 'hash' [defaultValues] = 'defaultValues'
-        ></eos-remaster-scan>
-    </div>
-    <div [hidden]="currTab !== 4" class="clearfix">
-        <eos-auto-search (pushChange) = 'emitChangesAutoSearch($event)' [userData] = 'hash' [defaultValues] = 'defaultValues'
-        ></eos-auto-search>
-    </div>
-    <div [hidden]="currTab !== 5" class="clearfix">
-        <eos-remaster-seb (pushChange) = 'emitChangesSab($event)' [userData] = 'hash' [defaultValues] = 'defaultValues'
-        ></eos-remaster-seb>
-    </div>
-    <div [hidden]="currTab !== 6" class="clearfix">
-        <eos-remaster-rc (pushChange) = 'emitChangesRc($event)' [userData] = 'hash' [defaultValues] = 'defaultValues'
-        ></eos-remaster-rc>
-    </div>
-</div>
-<div class="sp" *ngIf="!isLoading">
-    <eos-spinner size="lg"></eos-spinner>
-</div>
 </div>

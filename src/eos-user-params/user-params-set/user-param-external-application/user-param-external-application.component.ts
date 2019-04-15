@@ -27,8 +27,6 @@ export class UserParamEAComponent implements OnDestroy {
     public sortedData;
     public editFlag: boolean = false;
     public titleHeader: string;
-    public link: number;
-    public selfLink: string;
     private newData = new Map();
     private prepDate;
     private listForQuery: Array<string> = [];
@@ -43,8 +41,6 @@ export class UserParamEAComponent implements OnDestroy {
         private _errorSrv: ErrorHelperServices,
     ) {
         this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
-        this.link = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
-        this.selfLink = this._route.url.split('?')[0];
         this.init();
         this._userParamsSetSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
@@ -162,11 +158,11 @@ export class UserParamEAComponent implements OnDestroy {
     submit(event?): Promise<any> {
         return this.apiSrv.batch(this.createObjRequest(), '').then(response => {
             this.btnDisabled = true;
-            this.upStateInputs();
-            this._pushState();
-            this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-            this.editFlag = false;
-            this.disableForEditAllForm(false);
+          this.upStateInputs();
+          this.editFlag = false;
+          this.disableForEditAllForm(false);
+          this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+          this._pushState();
             return this._userParamsSetSrv.getUserIsn();
         }).catch(error => {
             this._errorSrv.errorHandler(error);
@@ -176,7 +172,7 @@ export class UserParamEAComponent implements OnDestroy {
     upStateInputs() {
         Object.keys(this.inputs).forEach(inp => {
                 const val = this.form.controls[inp].value;
-                this.inputs[inp] = val;
+                this.inputs[inp].value = val;
         });
     }
     createObjRequest(): any[] {
@@ -221,9 +217,9 @@ export class UserParamEAComponent implements OnDestroy {
 
         Object.keys(this.inputs).forEach(key => {
             if (!event) {
-                this.form.controls[key].disable({ onlySelf: true, emitEvent: false });
+                this.form.controls[key].disable({emitEvent: false });
             } else {
-                this.form.controls[key].enable({ onlySelf: true, emitEvent: false });
+                this.form.controls[key].enable({ emitEvent: false });
             }
         });
     }

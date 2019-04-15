@@ -8,8 +8,7 @@ import { UserParamVisualizationSrv } from '../shared-user-param/services/user-pa
 
 export class UserParamVisualizationComponent extends UserParamVisualizationSrv implements OnDestroy {
     prepInputsAttach;
-    link;
-    selfLink;
+
     constructor( injector: Injector ) {
         super(injector);
     }
