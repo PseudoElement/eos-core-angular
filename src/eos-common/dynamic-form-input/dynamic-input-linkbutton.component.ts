@@ -7,6 +7,7 @@ import { DynamicInputBase } from './dynamic-input-base';
 })
 export class DynamicInputLinkButtonComponent extends DynamicInputBase {
     @Input() buttonClick: Function;
+    @Input() buttonClickRemove: Function;
 
     get textType(): string {
         if (this.input.password) {
@@ -20,11 +21,17 @@ export class DynamicInputLinkButtonComponent extends DynamicInputBase {
         return this.input.groupLabel && this.isGroup ? this.input.groupLabel : this.input.label;
     }
 
-    onButtonClick () {
-        if (this.buttonClick) {
-            this.buttonClick(this);
+    onButtonClick1 () {
+        if (this.viewOpts && this.viewOpts.events && this.viewOpts.events.select) {
+            this.viewOpts.events.select(this);
         }
-        // console.log('1');
+    }
+    onButtonClick2 () {
+        this.control.setValue(null);
+        if (this.viewOpts && this.viewOpts.events && this.viewOpts.events.remove) {
+            this.viewOpts.events.remove(this);
+        }
+
     }
 
     getDisplayValue () {
@@ -45,4 +52,9 @@ export class DynamicInputLinkButtonComponent extends DynamicInputBase {
             this.input.options[0]['title'] = title;
         });
     }
+
+    enRemoveButton (): boolean {
+        return this.viewOpts && this.viewOpts.enRemoveButton;
+    }
+
 }

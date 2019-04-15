@@ -13,8 +13,13 @@ export class RKWritesCardComponent extends RKNomenkBasePage implements OnChanges
     enKart1Select: any;
     enKart2Select: any;
     en_journal_param_w: boolean;
+    flagEn_spinnum: boolean;
 
     ngOnChanges(changes: SimpleChanges) {
+        this.selOpts.events = {
+            select: this.journalNomencClick_W.bind(this),
+            remove: this.journalNomencClickRemove_W.bind(this),
+        }
     }
 
     onDataChanged(path: string, prevValue: any, newValue: any): any {
@@ -67,9 +72,14 @@ export class RKWritesCardComponent extends RKNomenkBasePage implements OnChanges
                 break;
             }
 
-            case 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W': { // Списать в дело
+            // Списать в дело
+            case 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W': {
+                this.flagEn_spinnum = newValue;
                 if (newValue && newValue !== prevValue) {
                     this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W', '0');
+                }
+                if (!newValue) {
+                    this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W', null);
                 }
                 this.setAvailableFor ('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W');
                 break;
@@ -186,6 +196,10 @@ export class RKWritesCardComponent extends RKNomenkBasePage implements OnChanges
 
     journalNomencClick_W () {
         this.doNomenklSelectView('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W');
+    }
+
+    journalNomencClickRemove_W() {
+        this.setDictLinkValue('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W', null, this.nomenklTitleFunc());
     }
 
     setAvailableFor (key: string) {
