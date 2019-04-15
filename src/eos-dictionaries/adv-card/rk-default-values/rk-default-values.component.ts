@@ -15,10 +15,17 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
     flagEn_spinnum: boolean;
 
     ngOnChanges(changes: SimpleChanges) {
+        this.selOpts.events = {
+            select: this.journalNomencClickSel.bind(this),
+            remove: this.journalNomencClickRemove.bind(this),
+        }
     }
 
-    journalNomencClick() {
+    journalNomencClickSel() {
         this.doNomenklSelectView('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC');
+    }
+    journalNomencClickRemove() {
+        this.setDictLinkValue('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC', null, this.nomenklTitleFunc());
     }
 
     onDataChanged(path: string, prevValue: any, newValue: any, initial = false): any {
@@ -46,10 +53,13 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
             // Списать в Дело
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC': {
                 this.flagEn_spinnum = newValue;
-                this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM');
                 if (newValue && !prevValue) {
                     this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM', '0');
                 }
+                if (!newValue) {
+                    this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM', null);
+                }
+                this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM');
                 break;
 
                 // this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC');
@@ -140,7 +150,7 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
                         this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM'].options, [0, 1], true);
                     }
                 } else {
-                    this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM'].options, null, true);
+                    this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM'].options, null, false);
                 }
                 break;
             }

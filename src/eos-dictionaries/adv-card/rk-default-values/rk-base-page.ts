@@ -19,7 +19,8 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
         defaultValue: {
             value: '',
             title: '...',
-        }
+        },
+        enRemoveButton: true,
     };
 
     isEDoc: boolean;
@@ -125,10 +126,16 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
 
     setDictLinkValue(key: string, value: any, gettitle: Function) {
         this.setValue(key, value);
-        const p = key.split('.');
-        const descr = this.dataController.getDescriptions()[p[0]].find( i => i.key === p[1]);
         const input = this.inputs[key];
         const dib = <DynamicInputLinkButtonComponent>input.dib;
+
+        if (!value) {
+            dib.setExtValue(null, (() => Promise.resolve('...')));
+            return;
+        }
+
+        const p = key.split('.');
+        const descr = this.dataController.getDescriptions()[p[0]].find( i => i.key === p[1]);
 
         dib.setExtValue(value, (d => {
             return this.dataController.readDictLinkValue(descr, value).then (data => {
@@ -139,6 +146,7 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
 
     nomenklTitleFunc() {
         return function (data: any) {
+                if (!data) { return '...'; }
                 const rec = data[0];
                 if (rec) {
                     return rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
