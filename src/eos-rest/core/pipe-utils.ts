@@ -75,6 +75,9 @@ export class PipeUtils {
         if (tn !== 'Collection(Edm.Int32)' && tn !== 'Edm.String') { // костыль для ответа от сопа по созданию пользователя
             this.parseEntity(items, tn);
         }
+        if (data['odata.nextLink']) { // TODO распарсить строку со значением вида: USER_CL?$orderby=ISN_LCLASSIF&$skiptoken=4,2,54
+            items.TotalRecords = data['odata.nextLink'];
+        }
         return items;
     }
 
