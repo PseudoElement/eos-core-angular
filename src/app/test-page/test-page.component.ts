@@ -9,7 +9,6 @@ import { InputControlService } from 'eos-common/services/input-control.service';
 import { InputBase } from 'eos-common/core/inputs/input-base';
 import { FA_ICONS } from './fa-icons.const';
 import { WaitClassifService } from 'app/services/waitClassif.service';
-import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 import { NADZORDICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
 
 const TEST_INPUTS = <IBaseInput[]>[{
@@ -164,7 +163,6 @@ export class TestPageComponent implements OnInit, OnChanges {
             console.log(n.apiInstance + ' ' + n.title);
         });
 
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT);
 
         const siteUrl = '../';
         const pageUrl = siteUrl + 'Pages/Classif/ChooseClassif.aspx?';
@@ -173,6 +171,15 @@ export class TestPageComponent implements OnInit, OnChanges {
         window['endPopup'] = function (result) {
             console.warn(result);
         };
+    }
+    chooseUserLists() {
+        this._waitClassifSrv.openClassif({classif: 'USER_LISTS'})
+        .then(result => {
+            console.log('result: ', result);
+        })
+        .catch(err => {
+            console.log('window closed');
+        });
     }
 
     testClick1() {
