@@ -55,6 +55,7 @@ import { RigthsCabinetsServices } from '../eos-user-params/shared/services/rigth
 import { ListCardRightComponent } from './rights-delo/rights-delo-cards/list-card/list-card.component';
 import { CardRightSrv } from './rights-delo/rights-delo-cards/card-right.service';
 import { ErrorHelperServices } from '../eos-user-params/shared/services/helper-error.services';
+import {UserParamTransferComponent} from './user-params-set/user-param-other/user-param-transfer/user-param-transfer.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -96,6 +97,7 @@ import { ErrorHelperServices } from '../eos-user-params/shared/services/helper-e
         RemasterRcComponent,
         RtCabinetsFoldersComponent,
         ListCardRightComponent,
+        UserParamTransferComponent,
     ],
     imports: [
         BrowserModule,

@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserParamsService } from '../../shared/services/user-params.service';
-import { Router } from '@angular/router';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../../../eos-user-params/user-params-set/shared-user-param/consts/eos-user-params.const';
 import { PipRX } from 'eos-rest/services/pipRX.service';
@@ -40,7 +39,6 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     constructor(
         private _userSrv: UserParamsService,
         private _apiSrv: PipRX,
-        private _route: Router,
         private _msgSrv: EosMessageService,
         private _RemasterService: RemasterService,
         private _errorSrv: ErrorHelperServices,
@@ -264,9 +262,6 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         }
         this.editFlag = event;
         this._RemasterService.cancelEmit.next();
-    }
-    close(event?) {
-        this._route.navigate(['user_param']);
     }
     default(event) {
         this._RemasterService.defaultEmit.next();

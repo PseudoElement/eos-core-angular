@@ -234,9 +234,9 @@ export class FormHelperService {
             }
         };
     }
-    queryparams(data) {
+    queryparams(data, key) {
         const arraQlist = [];
-        data.fieldsDefaultValue.forEach(el => {
+        data[key].forEach(el => {
             arraQlist.push(el.key);
         });
         return arraQlist;

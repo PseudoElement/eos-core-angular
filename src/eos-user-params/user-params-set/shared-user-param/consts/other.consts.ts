@@ -1,5 +1,55 @@
 import { IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
 const REG_MIN_VAL: RegExp = /^[1-9]{0,2}$/;
+export const OTHER_USER_TRANSFER: IBaseUsers = {
+    id: 'other',
+    title: 'Прочие',
+    apiInstance: 'USER_PARMS',
+    fields: [
+        {
+            key: 'SEND_DIALOG',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: 'NO', title: 'Без диалога'},
+                {value: 'YES', title: 'С диалогом'}
+            ]
+        },
+        {
+            key: 'DELFROMCAB',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: '1', title: 'Нет'},
+                {value: '0', title: 'Да'}
+            ]
+        },
+        {
+            key: 'MARKDOC',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: '1', title: 'Не добавлять'},
+                {value: '0', title: 'Для всех документов'},
+                {value: '2', title: 'Только для документов с "бумажным" оригиналом'}
+            ]
+        },
+        {
+            key: 'MARKDOCKND',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: '0', title: 'Оригинал(ы)'},
+                {value: '1', title: 'Копию(и)'},
+                {value: '2', title: 'Первому оригинал(ы), остальным копии'},
+                {value: '3', title: 'Вручную'}
+            ]
+        },
+    ],
+};
 export const OTHER_USER: IBaseUsers = {
     id: 'other',
     title: 'Прочие',

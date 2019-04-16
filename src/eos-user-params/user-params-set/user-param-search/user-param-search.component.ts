@@ -24,7 +24,6 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
     public btnDisable;
     public flagEdit;
     _ngUnsubscribe: Subject<any> = new Subject();
-
     private allData;
     private prepareData;
     private prepareInputs;
@@ -133,7 +132,7 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
     default(event?) {
         this.prepareData = {};
         this.prepareInputs = {};
-        const prep = this.formHelp.getObjQueryInputsFieldForDefault(this.formHelp.queryparams(SEARCH_USER));
+        const prep = this.formHelp.getObjQueryInputsFieldForDefault(this.formHelp.queryparams(SEARCH_USER, 'fieldsDefaultValue'));
         return this._pipRx.read(prep)
             .then((data: USER_PARMS[]) => {
                 this.prepareData = this.formHelp.parse_Create(SEARCH_USER.fields, this.formHelp.createhash(data));

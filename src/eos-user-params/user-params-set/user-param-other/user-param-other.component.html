@@ -1,7 +1,7 @@
 <div class="input-user-wrapper">
-    <eos-user-params-header [editMode]="editFlag" [title]='titleHeader' [disableBtn]="btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancellation($event)' (editEmit)='edit($event)' (closeEmit)='close($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <eos-user-params-header [editMode]="editFlag" [title]='titleHeader' [disableBtn]="btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (closeEmit)='close($event)' (defaultEmit)='default($event)'></eos-user-params-header>
 </div>
-<div class="input-user-wrapper   input-user-other-rk-forwarding-wrapper" *ngIf="inputs && isLoading">
+<div class="input-user-wrapper   input-user-other-rk-forwarding-wrapper">
     <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs">
             <li class="tab-item" *ngFor="let tab of fieldGroups; let i = index" [ngClass]="{'active': i === currTab}" (click)="setTab(i)">
@@ -12,169 +12,145 @@
     <div class="user-param-other-content-wrapper scrollWrapper">
         <div [hidden]="currTab !== 0" class="clearfix">
             <!--------------------------0--------------------------------------------->
-            <div class="input-user-wrapper  input-user-other-rk-forwarding-wrapper">
-                <div class="user-input-group">
-                    <span class="l-font">Пересылка</span>
-                    <hr>
-                    <eos-dynamic-input class="inline-block" [input]="inputs['rec.SEND_DIALOG']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                </div>
-                <hr>
-                <div class="user-input-group">
-                    <span class="l-font">Удалять РК из текущего кабинета после пересылки</span>
-                    <hr>
-                    <eos-dynamic-input class="inline-block" [input]="inputs['rec.DELFROMCAB']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                </div>
-                <hr>
-                <div class="user-input-group">
-                    <span class="l-font">Добавлять адресатов пересылки РК в ЖПД</span>
-                    <hr>
-                    <eos-dynamic-input [input]="inputs['rec.MARKDOC']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                </div>
-                <hr>
-                <div class="user-input-group">
-                    <span class="l-font">Передавать</span>
-                    <hr>
-                    <eos-dynamic-input [input]="inputs['rec.MARKDOCKND']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                </div>
-            </div>
+            <eos-user-param-transfer (pushChange)="emitChangesTransfer($event)" [defaultValues]=" defaultValues "></eos-user-param-transfer>
         </div>
         <!--------------------------0--------------------------------------------->
         <!--------------------------1--------------------------------------------->
-        <div [hidden]="currTab !== 1" class="clearfix">
-            <div class="user-input-group">
-                <p class="the-main-recipients-of-the-document-titles">Внешние адресаты</p>
-                <span class="l-font">При добавлении указывать</span>
+        <!-- <div [hidden]="currTab !==1 " class="clearfix ">
+            <div class="user-input-group ">
+                <p class="the-main-recipients-of-the-document-titles ">Внешние адресаты</p>
+                <span class="l-font ">При добавлении указывать</span>
                 <hr>
                 <div>
                     <span>Вид отправки:</span>
-                    <eos-dynamic-input class="inline-block" [input]="inputs['rec.RS_OUTER_DEFAULT_DELIVERY']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.RS_OUTER_DEFAULT_DELIVERY'] " [form]="form " [readonly]="false "></eos-dynamic-input>
                     <span></span>
                 </div>
             </div>
-            <div class="user-input-group">
-                <div class="send-from">
-                    <span class="send-fron-title">Отправить из:</span>
-                    <span class="send-from-input">
-                    <input [disabled]='!editFlag' readonly type="text" name="sendFrom" [ngModel]="sendFrom" >
+            <div class="user-input-group ">
+                <div class="send-from ">
+                    <span class="send-fron-title ">Отправить из:</span>
+                    <span class="send-from-input ">
+                    <input [disabled]='!editFlag' readonly type="text " name="sendFrom " [ngModel]="sendFrom " >
                 </span>
-                    <span class="send-from-btn-choose">
+                    <span class="send-from-btn-choose ">
                     <button
-                        [disabled] = "!editFlag"
-                        class="btn btn-primary-light"
-                        tooltip="Выбор из справочника"
-                        triggers="hover"
-                        containerClass="tooltip-info"
-                        (click)="[sendFromChoose(), hideToolTip()]">
-                        <span class="eos-icon eos-icon-folder-blue small"></span>
+                        [disabled] = "!editFlag "
+                        class="btn btn-primary-light "
+                        tooltip="Выбор из справочника "
+                        triggers="hover "
+                        containerClass="tooltip-info "
+                        (click)="[sendFromChoose(), hideToolTip()] ">
+                        <span class="eos-icon eos-icon-folder-blue small "></span>
                     </button>
                     </span>
-                    <span class="">
+                    <span class=" ">
                     <button
-                        [disabled] = "!editFlag"
-                        tooltip="Очистить"
+                        [disabled] = "!editFlag "
+                        tooltip="Очистить "
                         #tooltipTemp = 'bs-tooltip'
-                        containerClass="tooltip-info"
-                        class="btn btn-primary-light"
-                        (click)="clearSendFrom()">
-                        <span class="eos-icon eos-icon-close-blue small"></span>
+                        containerClass="tooltip-info "
+                        class="btn btn-primary-light "
+                        (click)="clearSendFrom() ">
+                        <span class="eos-icon eos-icon-close-blue small "></span>
                     </button>
                     </span>
                 </div>
             </div>
             <hr>
-            <div class="user-input-group">
-                <p class="the-main-recipients-of-the-document-titles">Внутренние адресаты</p>
-                <span class="l-font">При добавлении указывать экземпляр документа:</span>
+            <div class="user-input-group ">
+                <p class="the-main-recipients-of-the-document-titles ">Внутренние адресаты</p>
+                <span class="l-font ">При добавлении указывать экземпляр документа:</span>
                 <hr>
-                <eos-dynamic-input [input]="inputs['rec.MARKDOCKND1']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs[ 'rec.MARKDOCKND1'] " [form]="form " [readonly]="false "></eos-dynamic-input>
             </div>
             <hr>
-            <div class="user-input-group">
-                <eos-dynamic-input [input]="inputs['rec.GPD_FLAG']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                <eos-dynamic-input [input]="inputs['rec.VOL_FLAG']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <div class="user-input-group ">
+                <eos-dynamic-input [input]="inputs[ 'rec.GPD_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs[ 'rec.VOL_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
             </div>
-        </div>
+        </div> -->
         <!--------------------------1--------------------------------------------->
         <!--------------------------2--------------------------------------------->
-        <div [hidden]="currTab !== 2" class="clearfix">
-            <div class="user-input-group">
-                <span class="l-font">Получать реестр:</span>
+        <!-- <div [hidden]="currTab !==2 " class="clearfix ">
+            <div class="user-input-group ">
+                <span class="l-font ">Получать реестр:</span>
                 <hr>
-                <eos-dynamic-input [input]="inputs['rec.CUR_CABINET']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs[ 'rec.CUR_CABINET'] " [form]="form " [readonly]="false "></eos-dynamic-input>
             </div>
             <hr>
-            <div class="user-input-group">
-                <eos-dynamic-input [input]="inputs['rec.PARAM_WINDOW']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                <eos-dynamic-input [input]="inputs['rec.SELECT_ITEMS']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                <eos-dynamic-input [input]="inputs['rec.REESTR_ONE_TO_ONE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <div class="user-input-group ">
+                <eos-dynamic-input [input]="inputs[ 'rec.PARAM_WINDOW'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs[ 'rec.SELECT_ITEMS'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs[ 'rec.REESTR_ONE_TO_ONE'] " [form]="form " [readonly]="false "></eos-dynamic-input>
             </div>
             <hr>
-            <div class="user-input-group">
-                <span class="l-font">Получать по:</span>
+            <div class="user-input-group ">
+                <span class="l-font ">Получать по:</span>
                 <hr>
-                <eos-dynamic-input [input]="inputs['rec.ORIG_FLAG']" [form]="form" [readonly]="false"></eos-dynamic-input>
-                <eos-dynamic-input [input]="inputs['rec.REESTR_NOT_INCLUDED']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs[ 'rec.ORIG_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs[ 'rec.REESTR_NOT_INCLUDED'] " [form]="form " [readonly]="false "></eos-dynamic-input>
             </div>
             <hr>
-            <div class="user-input-group">
-                <div class="number-increment-wrap">
+            <div class="user-input-group ">
+                <div class="number-increment-wrap ">
                     <span>Дата передачи документов не позднее ( дней ):</span>
-                    <eos-dynamic-input class="inline-block" [input]="inputs['rec.REESTR_DATE_INTERVAL']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.REESTR_DATE_INTERVAL'] " [form]="form " [readonly]="false "></eos-dynamic-input>
                 </div>
-                <div class="number-increment-wrap">
+                <div class="number-increment-wrap ">
                     <span>Количество копий:</span>
-                    <eos-dynamic-input class="inline-block" [input]="inputs['rec.REESTR_COPY_COUNT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                    <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.REESTR_COPY_COUNT'] " [form]="form " [readonly]="false "></eos-dynamic-input>
                 </div>
             </div>
             <hr>
-            <div class="user-content-wr">
-                <span class="title-user-content">Ограничить группами документов:</span>
-                <div class="user-input-group fl">
-                    <div class="user-input-group-wr">
-                        <div class="user-input-group-hi" *ngIf='list.length > 0'>
-                            <span *ngFor="let node of list">{{node.label}}</span>
+            <div class="user-content-wr ">
+                <span class="title-user-content ">Ограничить группами документов:</span>
+                <div class="user-input-group fl ">
+                    <div class="user-input-group-wr ">
+                        <div class="user-input-group-hi " *ngIf='list.length > 0'>
+                            <span *ngFor="let node of list ">{{node.label}}</span>
                         </div>
                     </div>
 
-                    <div style="display: inline" class="btn-action">
-                        <button [disabled]="!editFlag" class="btn btn-primary-light btn-padd" tooltip="Выбор из справочника" triggers="hover" containerClass="tooltip-info" (click)="[selectfromTheDirectory(), hideToolTip()]">
-                                    <span class="eos-icon eos-icon-folder-blue small"></span>
+                    <div style="display: inline " class="btn-action ">
+                        <button [disabled]="!editFlag " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover " containerClass="tooltip-info " (click)="[selectfromTheDirectory(), hideToolTip()] ">
+                                    <span class="eos-icon eos-icon-folder-blue small "></span>
                                 </button>
                     </div>
-                    <div style="display: inline" class="">
-                        <button [disabled]="list.length === 0 || !editFlag" tooltip="Очистить" trigers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info" class="btn btn-primary-light add-storage" (click)="deleteDirectory()">
-                                    <span class="eos-icon eos-icon-close-blue small"></span>
+                    <div style="display: inline " class=" ">
+                        <button [disabled]="list.length===0 || !editFlag " tooltip="Очистить " trigers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteDirectory() ">
+                                    <span class="eos-icon eos-icon-close-blue small "></span>
                                 </button>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!--------------------------2--------------------------------------------->
         <!--------------------------3--------------------------------------------->
-        <div [hidden]="currTab !== 3" class="clearfix last">
-            <div class="table-wrapper usual-border">
-                <div class="table-header">
-                    <div class="table-header-content">
-                        <div class="template-title">
-                            <div *ngFor="let field of fieldTemplates" class="item l-font">
-                                <span class="text" [ngClass]="{'selected-text': '#2196f3'}" tooltip="{{field}}" placement="bottom" container="body" containerClass="tooltip-info">{{field}}</span>
+        <!-- <div [hidden]="currTab !==3 " class="clearfix last ">
+            <div class="table-wrapper usual-border ">
+                <div class="table-header ">
+                    <div class="table-header-content ">
+                        <div class="template-title ">
+                            <div *ngFor="let field of fieldTemplates " class="item l-font ">
+                                <span class="text " [ngClass]="{ 'selected-text': '#2196f3'} " tooltip="{{field}} " placement="bottom " container="body " containerClass="tooltip-info ">{{field}}</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="eos-template-list">
-                    <div class="template-list-wrapper" *ngFor="let template of initShablony">
-                        <span class="temlate_list_item tmp-title">{{template.PARM_NAME}}</span>
-                        <span class="temlate_list_item tmp-default">{{template.PARM_VALUE}}</span>
-                        <eos-dynamic-input class="temlate_list_item inline-block table-templates" [input]="inputs[template.keyForm]" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <div class="eos-template-list ">
+                    <div class="template-list-wrapper " *ngFor="let template of initShablony ">
+                        <span class="temlate_list_item tmp-title ">{{template.PARM_NAME}}</span>
+                        <span class="temlate_list_item tmp-default ">{{template.PARM_VALUE}}</span>
+                        <eos-dynamic-input class="temlate_list_item inline-block table-templates " [input]="inputs[template.keyForm] " [form]="form " [readonly]="false "></eos-dynamic-input>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!--------------------------3--------------------------------------------->
     </div>
 </div>
-<div class="sp" *ngIf="!isLoading">
-    <eos-spinner size="lg"></eos-spinner>
-</div>
-<div *ngIf="flagBacground" class="bacgrFixed"></div>
+<!-- <div class="sp " *ngIf="!isLoading ">
+    <eos-spinner size="lg "></eos-spinner>
+</div> -->
+<div *ngIf="flagBacground " class="bacgrFixed "></div>
