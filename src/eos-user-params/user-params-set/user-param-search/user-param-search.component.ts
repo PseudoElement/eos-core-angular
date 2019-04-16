@@ -9,7 +9,7 @@ import { InputControlService } from 'eos-common/services/input-control.service';
 import { Router } from '@angular/router';
 import { PipRX, USER_PARMS } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import {ErrorHelperServices} from '../../shared/services/helper-error.services';
+import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 @Component({
     selector: 'eos-user-param-search',
     templateUrl: 'user-param-search.component.html',
@@ -49,10 +49,10 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
         this.flagEdit = false;
         this.btnDisable = true;
         this._userParamsSetSr.saveData$
-        .takeUntil(this._ngUnsubscribe)
-        .subscribe(() => {
-            this._userParamsSetSr.submitSave =  this.submit();
-        });
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this._userParamsSetSr.submitSave = this.submit();
+            });
 
     }
     ngOnInit() {
@@ -137,10 +137,10 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
     default(event?) {
         this.prepareData = {};
         this.prepareInputs = {};
-        const prep = this.getObjQueryInputsFieldForDefault(this.queryparams());
+        const prep = this.formHelp.getObjQueryInputsFieldForDefault(this.formHelp.queryparams(SEARCH_USER));
         return this._pipRx.read(prep)
             .then((data: USER_PARMS[]) => {
-                this.prepareData = this.formHelp.parse_Create(SEARCH_USER.fields, this.createhash(data));
+                this.prepareData = this.formHelp.parse_Create(SEARCH_USER.fields, this.formHelp.createhash(data));
                 this.prepareInputs = this.formHelp.getObjectInputFields(SEARCH_USER.fields);
                 this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
                 this.prepFormCancel(this.defoltInputs, true);
@@ -154,30 +154,6 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
             const val = input[key].value;
             this.form.controls[key].patchValue(val, { emitEvent: flag });
         });
-    }
-    getObjQueryInputsFieldForDefault(inputs: Array<any>) {
-        return {
-            USER_PARMS: {
-                criteries: {
-                    PARM_NAME: inputs.join('||'),
-                    ISN_USER_OWNER: '-99'
-                }
-            }
-        };
-    }
-    createhash(data: USER_PARMS[]) {
-        const a = {};
-        data.forEach((el: USER_PARMS) => {
-            a[el.PARM_NAME] = el.PARM_VALUE;
-        });
-        return a;
-    }
-    queryparams() {
-        const arraQlist = [];
-        SEARCH_USER.fields.forEach(el => {
-            arraQlist.push(el.key);
-        });
-        return arraQlist;
     }
     editMode() {
         if (this.flagEdit) {

@@ -1,114 +1,50 @@
-<div class="input-user-wrapper input-user-rc-wrapper "
-*ngIf="inputs">
-<eos-user-params-header
-    [title] = 'titleHeader'
-    [link] = 'link'
-    [selfLink] = 'selfLink'
-    [disableBtn] = "btnDisabled"
-    [defaultBtn] = 'true'
-    (submitEmit) = 'submit($event)'
-    (cancelEmit) = 'cancel($event)'
-    (editEmit) = 'edit($event)'
-    (closeEmit) = 'close($event)'
-    (defaultEmit) = 'default($event)'
-></eos-user-params-header>
+<div class="input-user-wrapper input-user-rc-wrapper " *ngIf="inputs">
+    <eos-user-params-header [title]='titleHeader' [link]='link' [selfLink]='selfLink' [disableBtn]="btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (closeEmit)='close($event)' (defaultEmit)='default($event)'></eos-user-params-header>
     <div class="user-input-group scrollWrapper">
-            <span class="l-font l-font-t">Открывать закладку доп. реквизиты при открытии РК для групп документов.</span>
-            <hr>
-            <div class="btn-controll">
-                <button class="btn btn-primary-light"
-                    [disabled] = "!flagEdit"
-                    tooltip="Добавить"
-                    containerClass="tooltip-info"
-                    placement="bottom"
-                    triggers="hover"
-                    (click)="addRcDoc()">
+        <span class="l-font l-font-t">Открывать закладку доп. реквизиты при открытии РК для групп документов.</span>
+        <hr>
+        <div class="btn-controll">
+            <button class="btn btn-primary-light" [disabled]="!flagEdit" tooltip="Добавить" containerClass="tooltip-info" placement="bottom" triggers="hover" (click)="addRcDoc()">
                     <span class="eos-icon small" [ngClass] = "flagEdit ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
                 </button>
-                <button
-                    [disabled]="disabledFlagDelite || !flagEdit"
-                    class="btn btn-primary-light"
-                    tooltip="Удалить"
-                    containerClass="tooltip-info"
-                    placement="bottom"
-                    (click)="deleteRcDoc()">
+            <button [disabled]="disabledFlagDelite || !flagEdit" class="btn btn-primary-light" tooltip="Удалить" containerClass="tooltip-info" placement="bottom" (click)="deleteRcDoc()">
                     <span class="eos-icon small" [ngClass] = "flagEdit && !disabledFlagDelite ? 'eos-icon-bin-forever-blue' : 'eos-icon-bin-forever-grey'"></span>
                 </button>
-            </div>
-            <div class="user-input-group user-input-group-flex rc-doc-margin">
-                <span class="rc-doc"
-                    *ngFor='let title of dopRec; let i = index'
-                    [ngClass]="{'current' : cutentTab === i}"
-                    (click)='setTab(i)'>{{title.CLASSIF_NAME}}
+        </div>
+        <div class="user-input-group user-input-group-flex rc-doc-margin">
+            <span class="rc-doc" *ngFor='let title of dopRec; let i = index' [ngClass]="{'current' : cutentTab === i}" (click)='setTab(i)'>{{title.CLASSIF_NAME}}
                 </span>
-                    <!-- <eos-dynamic-input class="multiple-document-groups-select-rc"
-                    [input]="inputs['rec.OPEN_AR']"
-                    [form]="form"
-                    [readonly]="false"></eos-dynamic-input> -->
-            <!--<eos-dynamic-input
-                    class="multiple-select-rc"
-                    [input]="inputs['rec.OPEN_AR']"
-                    [form]="form"
-                    [readonly]="false"
-                    multiple
-                ></eos-dynamic-input>-->
-            <!--<select class="multiple-select-rc" size="8" multiple></select>-->
-    </div>
-    <hr>
-    <div class="rc-box">
-        <div class="user-input-group">
-            <span class="l-font">Поручения в подвале РК</span>
-            <hr>
-            <span>Показывать иерархию:</span>
-            <!--<span>Показывать иерархию:</span>-->
-            <eos-dynamic-input
-                [input]="inputs['rec.SHOW_RES_HIERARCHY']"
-                [form]="form"
-                [readonly]="false"
-                (change)='checRcShowRes()'
-            ></eos-dynamic-input>
         </div>
-    <div class="user-input-group">
-        <span>Показывать поручения:</span>
-        <eos-dynamic-input
-            [input]="inputs['rec.SHOW_ALL_RES']"
-            [form]="form"
-            [readonly]="false"
-        ></eos-dynamic-input>
-    </div>
-    </div>
-
-    <div class="rc-box">
-        <span  class="l-font">В перечне поручений РК</span>
         <hr>
-        <div class="user-input-group">
-            <span>Показывать поручения:</span>
-            <eos-dynamic-input
-            [input]="inputs['rec.SHOW_ALL_RESLIST']"
-            [form]="form"
-            [readonly]="false"
-            ></eos-dynamic-input>
-            <eos-dynamic-input
-            [input]="inputs['rec.RES_LIST_ALL']"
-            [form]="form"
-            [readonly]="false"
-            ></eos-dynamic-input>
+        <div class="rc-box">
+            <div class="user-input-group">
+                <span class="l-font">Поручения в подвале РК</span>
+                <hr>
+                <span>Показывать иерархию:</span>
+                <!--<span>Показывать иерархию:</span>-->
+                <eos-dynamic-input [input]="inputs['rec.SHOW_RES_HIERARCHY']" [form]="form" [readonly]="false" (change)='checRcShowRes()'></eos-dynamic-input>
+            </div>
+            <div class="user-input-group">
+                <span>Показывать поручения:</span>
+                <eos-dynamic-input [input]="inputs['rec.SHOW_ALL_RES']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
         </div>
-    </div>
-    <div class="rc-box">
-        <div class="">
+
+        <div class="rc-box">
+            <span class="l-font">В перечне поручений РК</span>
             <hr>
-            <eos-dynamic-input
-            [input]="inputs['rec.SHOW_RAC_DATE']"
-            [form]="form"
-            [readonly]="false"
-            ></eos-dynamic-input>
-            <eos-dynamic-input
-            [input]="inputs['rec.DONT_SHOW_DOC_HIDDEN_FILES']"
-            [form]="form"
-            [readonly]="false"
-            ></eos-dynamic-input>
+            <div class="user-input-group">
+                <span>Показывать поручения:</span>
+                <eos-dynamic-input [input]="inputs['rec.SHOW_ALL_RESLIST']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.RES_LIST_ALL']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+        </div>
+        <div class="rc-box">
+            <div class="">
+                <hr>
+                <eos-dynamic-input [input]="inputs['rec.SHOW_RAC_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.DONT_SHOW_DOC_HIDDEN_FILES']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
         </div>
     </div>
-</div>
-<div class="bcgFixed" *ngIf ='flagBacground'></div>
+    <div class="bcgFixed" *ngIf='flagBacground'></div>

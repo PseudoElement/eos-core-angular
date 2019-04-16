@@ -224,5 +224,30 @@ export class FormHelperService {
         });
         return obj;
     }
+    getObjQueryInputsFieldForDefault(inputs: Array<any>) {
+        return {
+            USER_PARMS: {
+                criteries: {
+                    PARM_NAME: inputs.join('||'),
+                    ISN_USER_OWNER: '-99'
+                }
+            }
+        };
+    }
+    queryparams(data) {
+        const arraQlist = [];
+        data.fieldsDefaultValue.forEach(el => {
+            arraQlist.push(el.key);
+        });
+        return arraQlist;
+    }
+
+    createhash(data: any) {
+        const a = {};
+        data.forEach((el: any) => {
+            a[el.PARM_NAME] = el.PARM_VALUE;
+        });
+        return a;
+    }
 
 }
