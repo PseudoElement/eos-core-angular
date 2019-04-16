@@ -1,4 +1,4 @@
- import { E_FIELD_TYPE } from 'eos-parameters/parametersSystem/shared/interfaces/parameters.interfaces';
+ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { USER_CL } from 'eos-rest';
 import { NodeDocsTree } from '../list-docs-tree/node-docs-tree';
 
