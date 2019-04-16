@@ -55,7 +55,7 @@ export abstract class RKNomenkBasePage extends RKBasePage {
             if (vDeloE) { // в электронное дело
                 this.setEnabledOptions(this.inputs[childControlKey].options, [2], true);
             } else { // в бумажное дело
-                if (this.isEDoc) { //Для электронного документа:
+                if (this.isEDoc) { // Для электронного документа:
                     this.setEnabledOptions(this.inputs[childControlKey].options, [1], true);
                 } else { // Для бумажного документа
                     this.setEnabledOptions(this.inputs[childControlKey].options, [0, 1], true);

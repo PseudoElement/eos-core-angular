@@ -20,7 +20,7 @@ export class RKWritesCardComponent extends RKNomenkBasePage implements OnChanges
             select: this.journalNomencClick_W.bind(this),
             remove: this.journalNomencClickRemove_W.bind(this),
             getTitle: this.journalNomencGetTitle.bind(this),
-        }
+        };
     }
 
     onDataChanged(path: string, prevValue: any, newValue: any): any {

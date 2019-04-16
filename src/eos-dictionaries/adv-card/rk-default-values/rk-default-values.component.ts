@@ -19,7 +19,7 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
             select: this.journalNomencClickSel.bind(this),
             remove: this.journalNomencClickRemove.bind(this),
             getTitle: this.journalNomencGetTitle.bind(this),
-        }
+        };
     }
 
     journalNomencClickSel() {
