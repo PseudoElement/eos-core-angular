@@ -1,5 +1,12 @@
-<div class="access-window">
-    <eos-user-params-header [title]='titleHeader' [link]='link' [selfLink]='selfLink' [disableBtn]="getBtn" [defaultBtn]='isDefault' (submitEmit)='saveAllForm($event)' (cancelEmit)='backForm($event)' (editEmit)='edit($event)' (closeEmit)='close($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+<div class="access-window" *ngIf="isLoading">
+    <eos-user-params-header
+        [editMode]='editFlag'
+        [title]='titleHeader'
+        [disableBtn]="getBtn"
+        (submitEmit)='saveAllForm($event)'
+        (cancelEmit)='backForm($event)'
+        (editEmit)='edit($event)'
+    ></eos-user-params-header>
     <div class="doc-navigate">
         <ul class="tabs">
             <li class="tab-item" *ngFor="let tab of tabsForAccessLimited; let i = index" [ngClass]="{'active': i === currTab}" (click)="changeActivelink(i)">
@@ -7,7 +14,7 @@
             </li>
         </ul>
     </div>
-    <div *ngIf="isLoading">
+    <div>
         <div *ngIf="currTab === 0">
             <div class="access-control">
                 <button [disabled]="!editFlag" type="button" class="btn btn-primary" (click)="OpenClassiv()" tooltip="Добавить" triggers="hover:click" containerClass="tooltip-info">

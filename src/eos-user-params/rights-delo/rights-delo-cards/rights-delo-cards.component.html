@@ -26,29 +26,20 @@
 
 <ng-template #component>
     <eos-user-params-header
-        [title] = "titleHeader"
-        [link] = "editableUser.ISN_LCLASSIF"
-        [selfLink] = "selfLink"
-        [disableBtn] = "btnDisabled"
-        (submitEmit) = "submit()"
-        (cancelEmit) = "cancel()"
-        (editEmit) = "edit()"
-        (closeEmit) = "close()"
+        [title]="titleHeader"
+        [disableBtn]="btnDisabled"
+        [editMode]="editMode"
+        (submitEmit)="submit()"
+        (cancelEmit)="cancel()"
+        (editEmit)="edit()"
     ></eos-user-params-header>
     <section class="content">
         <article class="left-block">
-            <div *ngFor="let item of funcList"
-                class="item-func-list"
-                (click)="selectFuncNum(item)"
-                [ngClass]="{'highlighted': item.isSelected}"
-            >
+            <div *ngFor="let item of funcList" class="item-func-list" (click)="selectFuncNum(item)" [ngClass]="{'highlighted': item.isSelected}">
                 {{item.label}}
             </div>
         </article>
-        <article
-            class="right-block"
-            *ngIf="editMode"
-        >
+        <article class="right-block" *ngIf="editMode">
             <eos-list-card-right></eos-list-card-right>
         </article>
     </section>

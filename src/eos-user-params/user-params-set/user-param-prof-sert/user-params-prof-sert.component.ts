@@ -44,9 +44,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     public selectedFromAllList: SertInfo;
     public editFlag = false;
     public btnDisabled: boolean = false;
-    public selfLink: string;
     public titleHeader: string;
-    public link;
     public flagHideBtn: boolean = false;
     private DBserts: USER_CERT_PROFILE[] = [];
     private isCarma: boolean = true;
@@ -62,9 +60,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices
     ) {
         this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Профиль сертификатов`;
-        this.selfLink = this._router.url.split('?')[0];
         this.selectedSertificatePopup = null;
-        this.link = this._userSrv.userContextId;
         this._userSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {

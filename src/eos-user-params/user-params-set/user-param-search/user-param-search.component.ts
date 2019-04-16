@@ -18,8 +18,6 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 
 export class UserParamSearchComponent implements OnDestroy, OnInit {
     prepInputsAttach;
-    link;
-    selfLink;
     public titleHeader;
     public form: FormGroup;
     public inputs;
@@ -44,8 +42,6 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
         private _errorSrv: ErrorHelperServices,
     ) {
         this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Поиск';
-        this.link = this._userParamsSetSr.curentUser['ISN_LCLASSIF'];
-        this.selfLink = this._router.url.split('?')[0];
         this.flagEdit = false;
         this.btnDisable = true;
         this._userParamsSetSr.saveData$

@@ -22,8 +22,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     userId: string;
     isChanged: boolean;
     prepInputsAttach;
-    selfLink;
-    link;
     public bacgHeader: boolean;
     public dueForLink: string;
     public controller: boolean;
@@ -60,8 +58,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         private _errorSrv: ErrorHelperServices,
     ) {
         this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
-        this.link = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
-        this.selfLink = this._router.url.split('?')[0];
         this.allData = this._userParamsSetSrv.hashUserContext;
         this._userParamsSetSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
@@ -306,6 +302,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this.editMode();
                 this._pushState();
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
+                this._userParamsSetSrv.getUserIsn();
             }).catch((error) => {
                 this._errorSrv.errorHandler(error);
                 this.cancel();
