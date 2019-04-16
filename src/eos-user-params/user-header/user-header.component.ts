@@ -1,25 +1,28 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
-
-
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { UserParamsService } from '../shared/services/user-params.service';
+import { Router } from '@angular/router';
 @Component({
     selector: 'eos-user-params-header',
     styleUrls: ['user-header.component.scss'],
     templateUrl: 'user-header.component.html'
 })
 export class UserHeaderComponent {
-    editMode: boolean = false;
+    selfLink: any;
+    link: any;
+    @Input() editMode: boolean = false;
     @Input() title: string;
-    @Input() link: string; // ISN USER_CL
     @Input() disableBtn: boolean;
-    @Input() selfLink: string;
-    @Input() defaultBtn?: boolean;
+    @Input() defaultBtn?: boolean = false;
     @Output() defaultEmit = new EventEmitter<any>();
     @Output() submitEmit = new EventEmitter<any>();
     @Output() cancelEmit = new EventEmitter<boolean>();
     @Output() editEmit = new EventEmitter<boolean>();
-    @Output() closeEmit = new EventEmitter<boolean>();
-    constructor () {
-
+    constructor(
+        private _userServices: UserParamsService,
+        private _router: Router,
+    ) {
+        this.selfLink = this._router.url.split('?')[0];
+        this.link = this._userServices.userContextId;
     }
     default() {
         this.defaultEmit.emit('');
@@ -30,20 +33,13 @@ export class UserHeaderComponent {
         this.cancelEmit.emit(false);
     }
     submit() {
-        this.editMode = false;
         this.submitEmit.emit(false);
     }
     edit() {
         this.editMode = !this.editMode;
-        this.editEmit.emit( this.editMode);
+        this.editEmit.emit(this.editMode);
     }
     close() {
-        this.editMode = false;
-        this.closeEmit.emit(false);
-
+        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
-
-
-
-
 }

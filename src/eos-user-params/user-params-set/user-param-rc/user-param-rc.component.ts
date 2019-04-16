@@ -8,12 +8,9 @@ import { UserParamRCSrv } from '../shared-user-param/services/user-param-rc.serv
 
 export class UserParamRCComponent extends UserParamRCSrv implements OnDestroy {
     prepInputsAttach;
-    selfLink;
-    link;
+
     constructor( injector: Injector ) {
         super(injector);
-        this.selfLink = this._router.url.split('?')[0];
-        this.link = this._userParamsSetSrv.userContextId;
     }
 
     ngOnDestroy() {

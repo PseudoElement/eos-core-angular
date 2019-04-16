@@ -20,8 +20,6 @@ import {ErrorHelperServices} from '../../shared/services/helper-error.services';
 
 export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     public titleHeader: string;
-    public selfLink: string;
-    public link: number;
     public control: AbstractControl;
     public form: FormGroup;
     public inputs: any;
@@ -30,7 +28,6 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     public btnDisabled: boolean = false;
     public isLoading: boolean = true;
     public editFlag: boolean = false;
-
     public disablebtnCarma: boolean = false;
     // sendFrom: string = '';
     // saveValueSendForm: string = '';
@@ -58,8 +55,6 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
     ) {
         this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Электронная подпись';
-        this.link = this._userSrv.curentUser['ISN_LCLASSIF'];
-        this.selfLink = this._router.url.split('?')[0];
         this._userSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {

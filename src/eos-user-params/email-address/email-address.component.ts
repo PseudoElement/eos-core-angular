@@ -12,7 +12,6 @@ import { RestError } from 'eos-rest/core/rest-error';
 import { Subject } from 'rxjs/Subject';
 import { Router } from '@angular/router';
 import { ErrorHelperServices } from '../shared/services/helper-error.services';
-
 @Component({
     selector: 'eos-params-email-address',
     styleUrls: ['email-address.component.scss'],
@@ -55,8 +54,6 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
     ) {
         this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ведение адресов электронной почты`;
-        this.selfLink = this._router.url.split('?')[0];
-        this.link = this._userServices.userContextId;
         this.currentParams = '';
         this.CODE = null;
         this.editFalg = false;
@@ -107,7 +104,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     saveAllForm(event): Promise<any> {
         return Promise.all([this._emailService.preAddEmail(this.ArrayForm), this._emailService.preDeliteEmail(this.delitedSetStore), this._emailService.preEditEmail(this.ArrayForm)])
             .then(result => {
-                return this._userServices.getUserIsn(String(this._userServices.curentUser['ISN_LCLASSIF']))
+                return this._userServices.getUserIsn()
                     .then((flag: boolean) => {
                         if (flag) {
                             this.umailsInfo.splice(0, this.umailsInfo.length);

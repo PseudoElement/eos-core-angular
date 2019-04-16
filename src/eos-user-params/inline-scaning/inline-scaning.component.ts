@@ -46,13 +46,11 @@ const BASE_PARAM_INPUTS: IInputParamControl[] = [
 export class InlineScaningComponent implements OnInit, OnDestroy {
     public editMode = false;
     public curentUser: IParamUserCl;
-    public link: number;
     public title: string = 'Miko Tamako';
     public inputs;
     public disableBtn: boolean = true;
     public countChecnged: number = 0;
     public flagShow: boolean = false;
-    public selfLink: string;
     private inputFields: any;
     private form: FormGroup;
     private newData = {};
@@ -68,8 +66,6 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         ) {
             this.countChecnged = 0;
-            this.selfLink = this._router.url.split('?')[0];
-
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
@@ -78,7 +74,6 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.curentUser = this._userParamSrv.curentUser;
         this.title = `${this.curentUser['SURNAME_PATRON']} (${this.curentUser['CLASSIF_NAME']})`;
-        this.link = this.curentUser['ISN_LCLASSIF'];
         this._userParamSrv.getUserIsn(String(this.curentUser.ISN_LCLASSIF)).then(data => {
             this.init();
             this.flagShow = true;
@@ -126,7 +121,6 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
             this.flagShow = true;
             this._errorSrv.errorHandler(e);
             this.cancel(false);
-        //    this.cathError(e);
         });
     }
     cancel(event) {

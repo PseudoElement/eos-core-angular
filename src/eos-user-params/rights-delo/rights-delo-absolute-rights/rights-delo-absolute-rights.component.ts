@@ -39,7 +39,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     listRight: NodeAbsoluteRight[] = [];
     titleHeader: string;
     techRingtOrig: string;
-    public selfLink: string;
     public editMode: boolean = false;
     private _ngUnsubscribe: Subject<any> = new Subject();
     private flagGrifs: boolean = false;
@@ -54,7 +53,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     ) {
         const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
         this.curentUser = this._userParamsSetSrv.curentUser;
-        this.selfLink = this._router.url.split('?')[0];
         this._userParamsSetSrv.checkGrifs(id).then(res => {
             this.flagGrifs = res;
             this.init();
@@ -187,9 +185,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         // this.setDisableOrEneble();
 
-    }
-    close() {
-        this._router.navigate(['user_param']);
     }
     clickLable(event, item: NodeAbsoluteRight) {
         event.preventDefault();

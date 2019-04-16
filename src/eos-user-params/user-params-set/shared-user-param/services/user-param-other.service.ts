@@ -24,8 +24,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
     flagBacground: boolean = false;
     listDocGroup: NodeDocsTree[] = [];
     list: NodeDocsTree[] = [];
-    link = this._userParamsSetSrv.userContextId;
-    selfLink: string;
     editFlag: boolean = false;
     countError = 0;
     newDataForSave = new Map();
@@ -37,7 +35,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
     constructor(injector: Injector) {
         super(injector, OTHER_USER);
         this.isLoading = false;
-        this.selfLink = this._router.url.split('?')[0];
         const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/g, '||');
         const ADDR_EXP = String(this._userParamsSetSrv.hashUserContext['ADDR_EXPEDITION']);
         Promise.all([this.getDocGroupName(paramsDoc, true), this.getList(), this.getDefaultsValues(), this.getDepartMentName(ADDR_EXP, true)]).then(result => {
