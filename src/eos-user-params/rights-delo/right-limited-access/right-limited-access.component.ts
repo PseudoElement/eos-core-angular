@@ -174,9 +174,6 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                 this.isLoading = true;
             });
     }
-    default($event?) {
-        return;
-    }
     backForm($event?): void {
         this._limitservise.getInfoGrifs().then(result => {
             this.checkGrifs = result[0][0]['USERSECUR_List'];

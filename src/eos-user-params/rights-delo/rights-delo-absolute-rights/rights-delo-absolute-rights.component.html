@@ -1,5 +1,12 @@
 <div class="input-user-absolute-rights-wrapper">
-    <eos-user-params-header [title]="titleHeader" [disableBtn]="btnDisabled" (submitEmit)="submit()" (cancelEmit)="cancel()" (editEmit)="edit()" (closeEmit)="close()"></eos-user-params-header>
+    <eos-user-params-header
+        [title]="titleHeader"
+        [disableBtn]="btnDisabled"
+        [editMode]="editMode"
+        (submitEmit)="submit()"
+        (cancelEmit)="cancel()"
+        (editEmit)="edit()"
+    ></eos-user-params-header>
     <div class="input-user-absolute-rights">
         <div class="left-block-list-absolute-rights">
             <div class="list-card-files" *ngFor="let item of listRight" [ngClass]="{'highlighted': item.isSelected}">

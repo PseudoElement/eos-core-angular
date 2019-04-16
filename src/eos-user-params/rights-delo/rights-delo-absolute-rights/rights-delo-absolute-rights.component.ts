@@ -186,9 +186,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         // this.setDisableOrEneble();
 
     }
-    close() {
-        this._router.navigate(['user_param']);
-    }
     clickLable(event, item: NodeAbsoluteRight) {
         event.preventDefault();
         event.stopPropagation();

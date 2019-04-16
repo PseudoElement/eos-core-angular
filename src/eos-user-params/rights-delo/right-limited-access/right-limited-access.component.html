@@ -1,6 +1,12 @@
 <div class="access-window" *ngIf="isLoading">
-    <eos-user-params-header [editMode]='editFlag' [successSave]="checkGriffs" [title]='titleHeader' [disableBtn]="getBtn" [defaultBtn]="false" (submitEmit)='saveAllForm($event)' (cancelEmit)='backForm($event)' (editEmit)='edit($event)' (closeEmit)='close($event)'
-        (defaultEmit)='default($event)'></eos-user-params-header>
+    <eos-user-params-header
+        [editMode]='editFlag'
+        [title]='titleHeader'
+        [disableBtn]="getBtn"
+        (submitEmit)='saveAllForm($event)'
+        (cancelEmit)='backForm($event)'
+        (editEmit)='edit($event)'
+    ></eos-user-params-header>
     <div class="doc-navigate">
         <ul class="tabs">
             <li class="tab-item" *ngFor="let tab of tabsForAccessLimited; let i = index" [ngClass]="{'active': i === currTab}" (click)="changeActivelink(i)">

@@ -10,15 +10,13 @@ export class UserHeaderComponent {
     selfLink: any;
     link: any;
     @Input() editMode: boolean = false;
-    @Input() successSave?: boolean = true;
     @Input() title: string;
     @Input() disableBtn: boolean;
-    @Input() defaultBtn?: boolean;
+    @Input() defaultBtn?: boolean = false;
     @Output() defaultEmit = new EventEmitter<any>();
     @Output() submitEmit = new EventEmitter<any>();
     @Output() cancelEmit = new EventEmitter<boolean>();
     @Output() editEmit = new EventEmitter<boolean>();
-    @Output() closeEmit = new EventEmitter<boolean>();
     constructor(
         private _userServices: UserParamsService,
         private _router: Router,
@@ -42,7 +40,6 @@ export class UserHeaderComponent {
         this.editEmit.emit(this.editMode);
     }
     close() {
-        this.editMode = false;
-        this.closeEmit.emit(false);
+        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 }

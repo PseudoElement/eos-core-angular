@@ -109,9 +109,6 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this.editMode = true;
         this.selectFuncNum(this.funcList[0]);
     }
-    close() {
-        this._router.navigate(['user_param']);
-    }
     selectFuncNum(node: FuncNum) {
         if (!this.editMode) {
             return;
