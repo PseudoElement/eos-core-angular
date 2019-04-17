@@ -53,6 +53,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         this._selectedUser.changerUser
             .takeUntil(this.destroySubsriber)
             .subscribe(currentUser => {
+                this._storageSrv.setItem('selected_user_save', currentUser, false);
                 this.CurrentUserForShowTemplate  = currentUser;
                 if (currentUser && this.flagFirstGetInfo) {
                     this.chooseTemplate = 'spinner';
