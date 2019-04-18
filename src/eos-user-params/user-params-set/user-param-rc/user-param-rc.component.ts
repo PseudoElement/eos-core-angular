@@ -27,6 +27,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     public flagBacground;
     public cutentTab: number;
     public btnDisabled: boolean = true;
+    public titleHeader;
     private originDocRc;
     private prepareData;
     private prepareInputs;
@@ -47,6 +48,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         private _errorSrv: ErrorHelperServices,
     ) {
         this.allData = this._userParamsSetSrv.hashUserContext;
+        this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - РК`;
         this.cutentTab = 0;
         this._userParamsSetSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
