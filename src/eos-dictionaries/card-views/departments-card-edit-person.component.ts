@@ -35,10 +35,32 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         } else {
             this.photo = null;
         }
+
+        this.prevValues = this.makePrevValues(this.data);
+
         if (this.form) {
             this.unsubscribe();
             this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this.updateForm(formChanges));
         }
+    }
+
+    makePrevValues (data: any) {
+        const res = [];
+        for (const key1 in data) {
+            if (data.hasOwnProperty(key1)) {
+                const element1 = data[key1];
+
+                for (const key2 in element1) {
+                    if (element1.hasOwnProperty(key2)) {
+                        const element2 = element1[key2];
+                        res[key1 + '.' + key2] = element2;
+                    }
+                }
+
+
+            }
+        }
+        return res;
     }
 
     newImage(img: IImage) {
@@ -57,6 +79,19 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
     removePhoto() {
         this.setValue('rec.ISN_PHOTO', null);
         this.photo = null;
+    }
+
+    formatSurname(fam: string, name: string, patron: string): string {
+        let res = '';
+        fam = fam ? fam.trim() : '';
+        if (fam) { fam = fam.replace(/./g, (c, i) => i === 0 ? c.toUpperCase() : c); }
+        name = name ? name.trim() : '';
+        patron = patron ? patron.trim() : '';
+
+        res = (fam ? fam : '') + (fam && (name || patron) ? ' ' : '') +
+            (name ? name[0].toUpperCase() + '.' : '') +
+            (patron ? patron[0].toUpperCase() + '.' : '');
+        return res;
     }
 
     public fillDeclineFields(): void {
@@ -175,5 +210,22 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                 this.bossWarning = false;
             }
         }
+        let setSurname = null;
+        if (this.prevValues['printInfo.NAME'] !== formChanges['printInfo.NAME'] ||
+            this.prevValues['printInfo.SURNAME'] !== formChanges['printInfo.SURNAME'] ||
+            this.prevValues['printInfo.PATRON'] !== formChanges['printInfo.PATRON']
+        ) {
+            setSurname = this.formatSurname(formChanges['printInfo.SURNAME'],
+                                        formChanges['printInfo.NAME'],
+                                        formChanges['printInfo.PATRON']);
+
+        }
+
+        this.prevValues = formChanges;
+
+        if (setSurname) {
+            this.setValue('rec.SURNAME', setSurname);
+        }
+
     }
 }
