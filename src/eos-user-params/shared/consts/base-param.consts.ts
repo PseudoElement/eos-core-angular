@@ -22,7 +22,7 @@ export const BASE_PARAM_INPUTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.text,
         key: 'NOTE2',
-        label: 'ПРИМЕЧАНИЯ',
+        label: 'ПРИМЕЧАНИЕ',
     },
     {
         controlType: E_FIELD_TYPE.string,

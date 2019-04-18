@@ -76,7 +76,7 @@ export class PipeUtils {
             this.parseEntity(items, tn);
         }
         if (data['odata.nextLink']) { // TODO распарсить строку со значением вида: USER_CL?$orderby=ISN_LCLASSIF&$skiptoken=4,2,54
-            items.TotalRecords = data['odata.nextLink'];
+            items.TotalRecords = data['odata.nextLink']; // возможно лучше положить эти данные к _metadata
         }
         return items;
     }
