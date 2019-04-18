@@ -42,7 +42,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     flagScan: boolean = null;
     flagTachRigth: boolean = null;
     countMaxSize: number;
-
+    shooseP: number;
     // количество выбранных пользователей
     countcheckedField: number;
     private ngUnsubscribe: Subject<any> = new Subject();
@@ -156,8 +156,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     initView(param?) {
         this.checkSortSessionStore();
         this.countcheckedField = 0;
+        this.shooseP = this._apiSrv.configList.shooseTab;
         if (!param || param === '0.') {
-            this._apiSrv.configList.shooseTab === 0 ? this.titleCurrentDue = 'Все подразделения' : this.titleCurrentDue = 'Все картотеки';
+            this._apiSrv.configList.shooseTab === 0 ? this.titleCurrentDue = 'Все подразделения' : this.titleCurrentDue = 'Центральная картотека';
         } else {
             this.titleCurrentDue = this._apiSrv.configList.titleDue;
         }
