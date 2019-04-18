@@ -13,6 +13,7 @@ import { RKBasePage } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
 import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
+import { WaitClassifService } from 'app/services/waitClassif.service';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -27,7 +28,7 @@ const tabs: Ttab [] = [
     {tag: 3, title: 'Файлы'},
 ];
 
-declare function openPopup(url: string, callback?: Function): boolean;
+// declare function openPopup(url: string, callback?: Function): boolean;
 
 // Реквизит "Срок исполнения" может быть заполнен только в одном месте
 
@@ -78,6 +79,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         private _msgSrv: EosMessageService,
         private _dictSrv: EosDictService,
         private _zone: NgZone,
+        private _waitClassifSrv: WaitClassifService,
     ) {
         this.isUpdating = true;
         this.tabs = tabs;
@@ -129,18 +131,31 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     public userListsEdit() {
 
-        const config = this.dataController.getApiConfig();
-        const url = config.webBaseUrl + '/Pages/User/USER_LISTS.aspx?user_id=-99';
-        console.log('open');
-        openPopup(url, ((event, str) => {
-            console.log('close');
-            this.rereadUserLists();
+        this._waitClassifSrv.openClassif({classif: 'USER_LISTS'})
+        .then(result => {
+            console.log('result: ', result);
             this.dataController.zone.run(() => {
                 console.log('zone');
+                this.rereadUserLists();
             });
-            return Promise.resolve(str);
-        }).bind(this));
-        this.rereadUserLists();
+        })
+        .catch(err => {
+            console.log('window closed');
+            this.dataController.zone.run(() => {
+                console.log('zone');
+                this.rereadUserLists();
+            });
+        });
+
+
+        // const config = this.dataController.getApiConfig();
+        // const url = config.webBaseUrl + '/Pages/User/USER_LISTS.aspx?user_id=-99';
+        // console.log('open');
+        // openPopup(url, ((event, str) => {
+        //     console.log('close');
+        //     return Promise.resolve(str);
+        // }).bind(this));
+        // this.rereadUserLists();
 
     }
     rereadUserLists() {
