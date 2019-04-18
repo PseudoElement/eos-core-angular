@@ -446,7 +446,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     default(event?) {
         this.prepareData = {};
         this.prepareInputs = {};
-        const prep = this.formHelp.getObjQueryInputsFieldForDefault(this.formHelp.queryparams(CABINETS_USER));
+        const prep = this.formHelp.getObjQueryInputsFieldForDefault(this.formHelp.queryparams(CABINETS_USER, 'fieldsDefaultValue'));
         return this._pipRx.read(prep)
             .then((data: USER_PARMS[]) => {
                 this.controller = false;

@@ -1,0 +1,18 @@
+<div class="table-wrapper usual-border " *ngIf="initShablony">
+    <div class="table-header ">
+        <div class="table-header-content ">
+            <div class="template-title ">
+                <div *ngFor="let field of fieldTemplates " class="item l-font ">
+                    <span class="text " [ngClass]="{ 'selected-text': '#2196f3'} " tooltip="{{field}} " placement="bottom " containerClass="tooltip-info ">{{field}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="eos-template-list ">
+        <div class="template-list-wrapper " *ngFor="let template of initShablony ">
+            <span class="temlate_list_item tmp-title ">{{template.PARM_NAME}}</span>
+            <span class="temlate_list_item tmp-default ">{{template.PARM_VALUE}}</span>
+            <eos-dynamic-input class="temlate_list_item inline-block table-templates " [input]="inputs[template.keyForm] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        </div>
+    </div>
+</div>

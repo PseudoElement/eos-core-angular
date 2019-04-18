@@ -293,7 +293,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     default() {
         this.prepareData = {};
         this.prepareInputs = {};
-        const prep = this.formHelp.getObjQueryInputsFieldForDefault(this.formHelp.queryparams(RC_USER));
+        const prep = this.formHelp.getObjQueryInputsFieldForDefault(this.formHelp.queryparams(RC_USER, 'fieldsDefaultValue'));
         this._pipRx.read(prep).then(data => {
             this.disabledFlagDelite = true;
             this.mapChanges.clear();
