@@ -309,11 +309,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
             this.sendFrom = '';
             this.list = [];
             this.listDocGroup = [];
-            // this.inputs = this.getInputs();
-            // this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-            // this.formChanged.emit(changed);
-            // this.isChangeForm = changed;
-            // this.subscribeChangeForm();
         })
             .catch(err => {
                 throw err;
@@ -331,17 +326,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
     setTab(i: number) {
         this.currTab = i;
     }
-    getObjQueryInputsField2(inputs: Array<any>) {
-        return {
-            [this.constUserParam.apiInstance]: {
-                criteries: {
-                    PARM_NAME: inputs.join('||'),
-                    ISN_USER_OWNER: '3611'
-                }
-            }
-        };
-    }
-
     convData(data: Object) {
         const d = {};
         for (const key of Object.keys(data)) {
@@ -366,7 +350,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
                     type: 'warning',
                     title: 'Предупреждение',
                     msg: 'Выберите значение',
-                    dismissOnTimeout: 5000,
                 });
                 throw new Error();
             } else {
