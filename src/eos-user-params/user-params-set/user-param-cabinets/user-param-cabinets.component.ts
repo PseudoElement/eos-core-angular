@@ -432,10 +432,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.editMode();
         this.checkDataToDisabled();
     }
-    close(event) {
-        this.flagEdit = event;
-        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
-    }
     editMode() {
         if (this.flagEdit) {
             this.form.enable({ emitEvent: false });

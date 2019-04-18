@@ -21,6 +21,8 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     public currTab = 0;
     public defaultValues: any;
     public editFlag: boolean = false;
+    public flagIncrementError: boolean = true;
+    public titleHeader;
     readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов', 'Шаблоны'];
     readonly fieldTemplates: string[] = ['Имя шаблона', 'Значение по умолчанию', 'Текущее значение'];
     private _ngUnsubscribe: Subject<any> = new Subject();
@@ -32,7 +34,6 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     private flagReestr: boolean = false;
     private newValuesShablony: Map<string, any> = new Map();
     private flagShablony: boolean = false;
-    private flagIncrementError: boolean = true;
     constructor(
         private _userSrv: UserParamsService,
         private _pipRx: PipRX,
@@ -42,8 +43,9 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         private _errorSrv: ErrorHelperServices,
 
     ) {
+        this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Прочее`;
         this._userSrv.saveData$.takeUntil(this._ngUnsubscribe).subscribe(() => {
-            this._userSrv.submitSave = this.submit();
+            this._userSrv.submitSave = this.submit(null);
         });
     }
     get btnDisabled() {
@@ -117,7 +119,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         this.remaster.editEmit.next();
 
     }
-    submit() {
+    submit($event) {
         return this._pipRx.batch(this.createObjRequest(), '').then(response => {
             this._userSrv.getUserIsn().then(() => {
                 this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);

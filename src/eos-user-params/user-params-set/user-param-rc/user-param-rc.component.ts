@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { RC_USER } from '../shared-user-param/consts/rc.consts';
 import { FormGroup } from '@angular/forms';
@@ -42,7 +41,6 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         private formHelp: FormHelperService,
         private dataConv: EosDataConvertService,
         private inpSrv: InputControlService,
-        private _router: Router,
         private _waitClassifSrv: WaitClassifService,
         private _pipRx: PipRX,
         private _msg: EosMessageService,
@@ -285,9 +283,6 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         this.flagEdit = $event;
         this.editMode();
         this.checRcShowRes();
-    }
-    close(event) {
-        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 
     default() {

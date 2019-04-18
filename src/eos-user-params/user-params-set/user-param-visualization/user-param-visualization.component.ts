@@ -23,8 +23,4 @@ export class UserParamVisualizationComponent extends UserParamVisualizationSrv i
     cancel($event?) {
         super.cancel();
     }
-    close(event?) {
-        this._router.navigate(['user_param']);
-     }
-
 }

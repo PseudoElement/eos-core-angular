@@ -1,7 +1,6 @@
 import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { CarmaHttpService } from 'app/services/carmaHttp.service';
-import { Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, PARM_ERROR_DB, PARM_ERROR_CARMA } from '../shared-user-param/consts/eos-user-params.const';
@@ -53,7 +52,6 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     constructor(
         public certStoresService: CarmaHttpService,
         private _userSrv: UserParamsService,
-        private _router: Router,
         private _modalService: BsModalService,
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
@@ -438,10 +436,6 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     }
     edit(event) {
         this.editFlag = event;
-    }
-    close(event) {
-        this.editFlag = event;
-        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 
     getQueryCreate(): Array<any> {

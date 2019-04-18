@@ -10,7 +10,6 @@ import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { Subject } from 'rxjs/Subject';
-import { Router } from '@angular/router';
 import { ErrorHelperServices } from '../shared/services/helper-error.services';
 @Component({
     selector: 'eos-params-email-address',
@@ -50,7 +49,6 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         private modalService: BsModalService,
         private _userServices: UserParamsService,
         private _msgSrv: EosMessageService,
-        private _router: Router,
         private _errorSrv: ErrorHelperServices,
     ) {
         this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ведение адресов электронной почты`;
@@ -415,9 +413,6 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     edit($event) {
         this.flagEdit = $event;
         this.editMode();
-    }
-    close(event?) {
-        this._router.navigate(['user_param']);
     }
     default(event?) {
         return;

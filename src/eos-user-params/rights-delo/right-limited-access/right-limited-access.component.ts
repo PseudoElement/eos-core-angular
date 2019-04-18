@@ -374,10 +374,6 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.editModeForm();
         this._limitservise.editEmit.next();
     }
-    close($event) {
-        this.editFlag = $event;
-        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
-    }
     get getBtn() {
         if (!this.statusBtnSub || !this.flagGrifs) {
             return false;
