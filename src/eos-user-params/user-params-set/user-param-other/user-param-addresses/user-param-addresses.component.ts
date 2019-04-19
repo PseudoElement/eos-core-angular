@@ -156,7 +156,6 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
     }
     default(event?) {
         this.sendFrom = '';
-        this.sendFromOrigin = '';
         this.prepareData = {};
         this.prepareInputs = {};
         this.prepareData = this.formHelp.parse_Create(OTHER_USER_ADDRESSES.fields, this.defaultValues);

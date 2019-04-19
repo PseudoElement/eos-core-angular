@@ -119,7 +119,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         this.flagBacground = true;
         const query: IOpenClassifParams = {
             classif: 'DOCGROUP_CL',
-            selectMulty: false,
+            selectMulty: true,
             selectLeafs: true,
             selectNodes: false,
             return_due: false,
@@ -132,18 +132,23 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         });
     }
     addRcDocToInput(data): void {
-        let dateVal: string, newValue = [], checValue: boolean;
+        let dateVal: string, newValue = [], oldValue = [];
         dateVal = this.form.controls['rec.OPEN_AR'].value;
         if (dateVal) {
-            newValue = dateVal.split(',');
+            oldValue = dateVal.split(',');
         }
-        checValue = newValue.some(value => {
-            return value === data;
-        });
-        if (!checValue) {
-            newValue.push(data);
-            this.form.controls['rec.OPEN_AR'].patchValue(newValue.join(','));
-            this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
+        if (data) {
+            newValue = data.split('|');
+            newValue = newValue.filter(isn => {
+                const patt = new RegExp('^' + isn + ',?|,' + isn + '$|.*,' + isn + ',.*');
+                return !patt.test(dateVal);
+            });
+        }
+        if (newValue.length) {
+            oldValue.push(...newValue);
+            const addedValue = oldValue.join(',');
+            this.form.controls['rec.OPEN_AR'].patchValue(addedValue);
+            this.getInfoFroCode(addedValue).then(() => {
                 this.checRcShowRes();
             }).catch(error => {
                 this._msg.addNewMessage({
