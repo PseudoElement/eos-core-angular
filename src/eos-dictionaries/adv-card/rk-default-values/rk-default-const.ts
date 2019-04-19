@@ -109,6 +109,7 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'DOC_RC.EXTENSIONS',
         type: E_FIELD_TYPE.string,
         title: 'С расширением',
+        length: 255,
     }, {
         key: 'DOC_RC.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
@@ -124,6 +125,7 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'PRJ_RC.EXTENSIONS',
         type: E_FIELD_TYPE.string,
         title: 'С расширением',
+        length: 255,
     }, {
         key: 'PRJ_RC.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
@@ -139,6 +141,7 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'PRJ_VISA_SIGN.EXTENSIONS',
         type: E_FIELD_TYPE.string,
         title: 'С расширением',
+        length: 255,
     }, {
         key: 'PRJ_VISA_SIGN.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
@@ -154,6 +157,7 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'REPLY.EXTENSIONS',
         type: E_FIELD_TYPE.string,
         title: 'С расширением',
+        length: 255,
     }, {
         key: 'REPLY.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
@@ -169,6 +173,7 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'RESOLUTION.EXTENSIONS',
         type: E_FIELD_TYPE.string,
         title: 'С расширением',
+        length: 255,
     }, {
         key: 'RESOLUTION.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
