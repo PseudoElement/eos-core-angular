@@ -134,11 +134,11 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         if (this.grifsForm) {
             promise_all.push(this._limitservise.postGrifs(this.grifsForm), this._limitservise.deliteGrifs(this.grifsForm));
         }
-        if (this.LinksForm) {
-            const valueEdit = this.LinksForm.get('links').value;
-            // this._limitservise.createLinksNpUserLInk(valueEdit),
-            promise_all.push(this._limitservise.deliteLinksFromNpUserLink(valueEdit), this._limitservise.createLinksNpUserLInk(valueEdit));
-        }
+        // if (this.LinksForm) {
+        //     const valueEdit = this.LinksForm.get('links').value;
+        //     // this._limitservise.createLinksNpUserLInk(valueEdit),
+        //     promise_all.push(this._limitservise.deliteLinksFromNpUserLink(valueEdit), this._limitservise.createLinksNpUserLInk(valueEdit));
+        // }
         return Promise.all([...promise_all])
             .then(result => {
                 this._limitservise.getAccessCode()
@@ -152,13 +152,13 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                             this.umailsInfo = this.saveParams.slice();
                             this.statusBtnSub = true;
                             this.flagGrifs = true;
-                            this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
-                            this._limitservise.subscribe.next(false);
-                            promise_all.splice(0, promise_all.length);
                             this.editFlag = false;
+                            this.isLoading = true;
+                            this.grifsForm = null;
+                            this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
                             this.editModeForm();
                             this._pushState();
-                            this.isLoading = true;
+                            this._limitservise.subscribe.next(false);
                             if (!this.checkUserCard.length) {
                                 this._router.navigate(['user-params-set/', 'card-files'],
                                     {
@@ -341,7 +341,6 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.ArrayForm.push(new FormGroup(this.createFormControls(newFieldEmail, change, newField)));
     }
 
-
     sortArray(array) {
         array.sort(function (a, b) {
             return a.DUE - b.DUE;
@@ -357,13 +356,12 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.grifsForm = event.form;
         this._pushState();
     }
-    SubscribLInks(event) {
-        this.flagLinks = event.flag;
-        this.LinksForm = event.form;
-        this._pushState();
-    }
+    // SubscribLInks(event) {
+    //     this.flagLinks = event.flag;
+    //     this.LinksForm = event.form;
+    //     this._pushState();
+    // }
     ngOnDestroy() {
-        this._limitservise.GrifForm = undefined;
         //   this._limitservise.LinksFrom = undefined;
         sessionStorage.removeItem(`${this._userServices.userContextId}`);
         sessionStorage.removeItem('links');
