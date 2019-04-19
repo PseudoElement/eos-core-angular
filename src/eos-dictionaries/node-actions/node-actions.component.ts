@@ -169,6 +169,13 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.counterDepartmentRK:
                 case E_RECORD_ACTIONS.counterDepartmentRKPD:
+                    if (this._dictSrv && this._dictSrv.listNode) {
+                        _enabled = this._dictSrv.listNode.isNode &&
+                            this._dictSrv.listNode.data['rec'].DUE_LINK_ORGANIZ;
+                    } else {
+                        _enabled = false;
+                    }
+                    break;
                 case E_RECORD_ACTIONS.counterDepartment:
                     if (this._dictSrv && this._dictSrv.listNode) {
                         _enabled = this._dictSrv.listNode.isNode;
