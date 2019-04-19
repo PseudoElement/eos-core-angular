@@ -12,8 +12,12 @@ export class PrintInfoHelper {
     static PrepareForSave(rec: CB_PRINT_INFO, owner: IEnt): boolean {
 
         const fDelete = PrintInfoHelper.chkFields
-            .findIndex((key) => rec[key] && rec[key] !== null &&
-                (Number.isInteger(rec[key]) || rec[key].trim() !== '')) < 0;
+            .findIndex((key) => {
+                if (Number.isInteger(rec[key])) { return true; }
+
+                return rec[key] && rec[key] !== null &&
+                (rec[key].trim() !== '');
+            }) < 0;
 
         // console.log('cbi owner', rec, owner['ISN_NODE']);
         if (fDelete) {
