@@ -2,13 +2,24 @@ import {Component, Injector, OnChanges, OnInit, SimpleChanges} from '@angular/co
 import { BaseCardEditComponent } from './base-card-edit.component';
 import {PipRX} from '../../eos-rest';
 import {AbstractControl, ValidatorFn} from '@angular/forms';
+import { IDynamicInputOptions } from 'eos-common/dynamic-form-input/dynamic-input.component';
+
+
 
 @Component({
     selector: 'eos-nomenkl-card',
     templateUrl: 'nomenkl-card.component.html',
     styleUrls: ['./nomenkl-card.component.scss']
 })
+
 export class NomenklCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
+    selOpts: IDynamicInputOptions = {
+        defaultValue: {
+            value: '',
+            title: '...',
+        }
+    };
+
     private previousValues: SimpleChanges;
 
     constructor(

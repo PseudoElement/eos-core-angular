@@ -4,6 +4,9 @@ import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-sel
 import { USER_CL, DEPARTMENT, USER_PARMS } from 'eos-rest';
 import { Subject } from 'rxjs/Subject';
 import {DELO_BLOB} from 'eos-rest/interfaces/structures';
+import { RECENT_URL } from 'app/consts/common.consts';
+import { EosStorageService } from 'app/services/eos-storage.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'eos-right-user-select',
@@ -29,6 +32,8 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     constructor(
       //  private _sandwichSrv: EosSandwichService,
         private _selectedUser: RtUserSelectService,
+        private _storageSrv: EosStorageService,
+        private _router: Router,
     ) {
         this.isPhoto = false;
         this.chooseTemplate = 'preview';
@@ -48,6 +53,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         this._selectedUser.changerUser
             .takeUntil(this.destroySubsriber)
             .subscribe(currentUser => {
+                this._storageSrv.setItem('selected_user_save', currentUser, false);
                 this.CurrentUserForShowTemplate  = currentUser;
                 if (currentUser && this.flagFirstGetInfo) {
                     this.chooseTemplate = 'spinner';
@@ -79,6 +85,10 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
 
     parseSustemParam(parseParam) {
         return parseParam.split('');
+    }
+
+    writeRecentUrl() {
+        this._storageSrv.setItem(RECENT_URL, this._router.url);
     }
 
     getInfo(isn, due?): void {

@@ -13,7 +13,7 @@
                         </a>
                     </div>
                     <div class="avatar-title">
-                        <a [routerLink]="['/spravochniki','departments', CurrentUser['data']['DUE_DEP'], 'view' ]">{{DueInfo}}</a>
+                        <a (click)="writeRecentUrl()" [routerLink]="['/spravochniki','departments', CurrentUser['data']['DUE_DEP'], 'view' ]">{{DueInfo}}</a>
                     </div>
                 </div>
                 <ng-template #unset>

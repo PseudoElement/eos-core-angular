@@ -20,5 +20,5 @@ export class UserParamOtherForwardingComponent extends UserParamOtherSrv impleme
     ngOnDestroy() {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
-       }
+    }
 }

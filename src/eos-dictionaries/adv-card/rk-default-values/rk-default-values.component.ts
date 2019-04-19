@@ -15,10 +15,18 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
     flagEn_spinnum: boolean;
 
     ngOnChanges(changes: SimpleChanges) {
+        this.selOpts.events = {
+            select: this.journalNomencClickSel.bind(this),
+            remove: this.journalNomencClickRemove.bind(this),
+            getTitle: this.journalNomencGetTitle.bind(this),
+        };
     }
 
-    journalNomencClick() {
+    journalNomencClickSel() {
         this.doNomenklSelectView('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC');
+    }
+    journalNomencClickRemove() {
+        this.setDictLinkValue('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC', null);
     }
 
     onDataChanged(path: string, prevValue: any, newValue: any, initial = false): any {
@@ -48,23 +56,15 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
                 this.flagEn_spinnum = newValue;
                 this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM');
                 if (newValue && !prevValue) {
-                    this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM', '0');
+                    this.setFirstAvailableValue('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM');
                 }
+                if (!newValue) {
+                    this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM', null);
+                }
+
+                // console.log(this);
                 break;
 
-                // this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC');
-                // if (newValue !== prevValue) {
-                //     const d = this.dataController.getDescriptions()[DEFAULTS_LIST_NAME];
-                //     const d1 = d.find( i => i.key === 'JOURNAL_ISN_NOMENC');
-
-                //     this.dataController.readDictLinkValue(d1, String(newValue.value), this.dataController.updateLinks).then (opts => {
-                //         newValue['title'] = opts[0].title;
-                //         this.flagEn_spinnum = newValue;
-                //     });
-                // } else {
-                //     this.flagEn_spinnum = newValue;
-                // }
-                // break;
             }
 
             // Внутренние адресаты
@@ -130,18 +130,10 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
                 }
                 break;
             }
-            // Списать в Дело
+            // Списать в Дело - радиобуттоны
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM': {
-                const v = this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC');
-                if (v) {
-                    if (this.isEDoc) {
-                        this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM'].options, [1], true);
-                    } else {
-                        this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM'].options, [0, 1], true);
-                    }
-                } else {
-                    this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM'].options, null, true);
-                }
+                this.nomencChildControlAvial('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC',
+                        'DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM');
                 break;
             }
         }
@@ -150,5 +142,4 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
     onTabInit (dgStoredValues: any, values: any[]) {
         super.onTabInit(dgStoredValues, values);
     }
-
 }

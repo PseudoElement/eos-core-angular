@@ -7,6 +7,7 @@ import { FuncNum } from './funcnum.model';
 import { CardRightSrv } from './card-right.service';
 import { Subject } from 'rxjs/Subject';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import {ErrorHelperServices} from '../../shared/services/helper-error.services';
 // import { Subject } from 'rxjs/Subject';
 
 @Component({
@@ -15,7 +16,6 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 })
 
 export class RightsDeloCardsComponent implements OnInit, OnDestroy {
-    public selfLink: string;
     public titleHeader: string;
     public isLoading: boolean;
     public btnDisabled: boolean = true;
@@ -31,8 +31,8 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _cardSrv: CardRightSrv,
         private _msgSrv: EosMessageService,
+        private _errorSrv: ErrorHelperServices,
     ) {
-        this.selfLink = this._router.url.split('?')[0];
         this._cardSrv.chengeState$
         .takeUntil(this._ngUnsubscribe)
         .subscribe((state: boolean) => {
@@ -69,9 +69,21 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.complete();
     }
     submit() {
+        this.pageState = 'LOADING';
         this._cardSrv.saveChenge$()
         .then(() => {
+            this.pageState = 'VIEW';
             this.cancel();
+        }).catch(error => {
+            this._errorSrv.errorHandler(error);
+            this._userParamsSetSrv.getUserIsn().then(() => {
+                this.cancel();
+                this.ngOnInit();
+            this.pageState = 'VIEW';
+            }).catch(err => {
+                this._errorSrv.errorHandler(err);
+                this.pageState = 'VIEW';
+            });
         });
     }
     cancel() {
@@ -96,9 +108,6 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         }
         this.editMode = true;
         this.selectFuncNum(this.funcList[0]);
-    }
-    close() {
-        this._router.navigate(['user_param']);
     }
     selectFuncNum(node: FuncNum) {
         if (!this.editMode) {

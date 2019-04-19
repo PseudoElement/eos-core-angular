@@ -24,8 +24,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
     flagBacground: boolean = false;
     listDocGroup: NodeDocsTree[] = [];
     list: NodeDocsTree[] = [];
-    link = this._userParamsSetSrv.userContextId;
-    selfLink: string;
     editFlag: boolean = false;
     countError = 0;
     newDataForSave = new Map();
@@ -37,7 +35,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
     constructor(injector: Injector) {
         super(injector, OTHER_USER);
         this.isLoading = false;
-        this.selfLink = this._router.url.split('?')[0];
         const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/g, '||');
         const ADDR_EXP = String(this._userParamsSetSrv.hashUserContext['ADDR_EXPEDITION']);
         Promise.all([this.getDocGroupName(paramsDoc, true), this.getList(), this.getDefaultsValues(), this.getDepartMentName(ADDR_EXP, true)]).then(result => {
@@ -249,11 +246,16 @@ export class UserParamOtherSrv extends BaseUserSrv {
                 const userId = this._userParamsSetSrv.userContextId;
                 return this._userParamsSetSrv.getUserIsn(String(userId)).then(() => {
                     this.saveValueSendForm = this.sendFrom;
+
                     this.editFlag = false;
                     this.disableForEditAllForm(false);
                     this.isLoading = true;
                 });
-            }).catch(data => console.log(data));
+            }).catch(error => {
+                this._errorSrv.errorHandler(error);
+                this.cancellation();
+                this.isLoading = true;
+            });
     }
     upStateInputs(val) {
         this.inputs[val[0]].value = val[1];
@@ -281,7 +283,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
         return req;
     }
     cancellation(event?) {
-        if (this.isChangeForm) {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
             this.sendFrom = this.saveValueSendForm;
             const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/, '||');
@@ -292,7 +293,6 @@ export class UserParamOtherSrv extends BaseUserSrv {
                     this.getListDoc(result);
                 }
             });
-        }
         this.fillFormDefaultValues(this.inputs);
         this.editFlag = event;
         this.disableForEditAllForm(event);

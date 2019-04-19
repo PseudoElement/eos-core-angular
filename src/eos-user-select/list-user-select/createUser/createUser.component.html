@@ -5,7 +5,7 @@
             <label>ЛОГИН</label>
             <div class="required">
                 <form [formGroup]="form">
-                    <input class=" form-control" maxlength="12" type="text" [formControlName]="inputs['classifName'].key" [readonly]="false" />
+                    <input placement="bottom" containerClass="tooltip-info" tooltip="Максимальная длина поля 12 символов " class=" form-control" maxlength="12" type="text" [formControlName]="inputs['classifName'].key" [readonly]="false" />
                 </form>
             </div>
         </div>
@@ -16,7 +16,7 @@
         <div [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
             <label [attr.for]="inputs['DUE_DEP_NAME'].key">{{inputs['DUE_DEP_NAME'].label}}</label>
             <div class="create-user-wr" style="width: 461px">
-                <input class="form-control m-font inline-block" readonly maxlength="12" [formControlName]="inputs['DUE_DEP_NAME'].key" [id]="inputs['DUE_DEP_NAME'].key" type="text" [placeholder]="inputs['DUE_DEP_NAME'].label" autocomplete="off">
+                <input class="form-control m-font inline-block" readonly [formControlName]="inputs['DUE_DEP_NAME'].key" [id]="inputs['DUE_DEP_NAME'].key" type="text" [placeholder]="inputs['DUE_DEP_NAME'].label">
                 <span class="icon eos-icon small icon-add-department" [ngClass]="{'eos-icon-avatar-blue': form.get('DUE_DEP_NAME').enabled, 'eos-icon-avatar-grey': form.get('DUE_DEP_NAME').disabled}" (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"></span>
             </div>
         </div>

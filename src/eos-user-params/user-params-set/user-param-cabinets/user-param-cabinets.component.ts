@@ -11,6 +11,7 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 import { PipRX, USER_PARMS } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 @Component({
     selector: 'eos-user-param-cabinets',
     templateUrl: 'user-param-cabinets.component.html',
@@ -21,8 +22,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     userId: string;
     isChanged: boolean;
     prepInputsAttach;
-    selfLink;
-    link;
     public bacgHeader: boolean;
     public dueForLink: string;
     public controller: boolean;
@@ -56,16 +55,15 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         private _waitClassifSrv: WaitClassifService,
         private _pipRx: PipRX,
         private _msg: EosMessageService,
+        private _errorSrv: ErrorHelperServices,
     ) {
         this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
-        this.link = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
-        this.selfLink = this._router.url.split('?')[0];
         this.allData = this._userParamsSetSrv.hashUserContext;
         this._userParamsSetSrv.saveData$
-        .takeUntil(this._ngUnsubscribe)
-        .subscribe(() => {
-            this._userParamsSetSrv.submitSave =  this.submit();
-        });
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this._userParamsSetSrv.submitSave = this.submit();
+            });
     }
     ngOnInit() {
         this.init();
@@ -89,7 +87,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     init() {
         this.pretInputs();
-        this.parseInputsFromString(this.inputs,  this.allData['FOLDERCOLORSTATUS']);
+        this.parseInputsFromString(this.inputs, this.allData['FOLDERCOLORSTATUS']);
         this.patchInputFuking();
         this.form = this.inpSrv.toFormGroup(this.inputs);
         this.editMode();
@@ -228,9 +226,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         return val !== '' && String(val) !== 'null' && this.flagEdit ? 'eos-icon eos-icon-close-blue small' : 'eos-icon eos-icon-close-grey small';
     }
     getControlAuthor(): Promise<any> {
-        const ControlAuthor = this._userParamsSetSrv.hashUserContext['RESOLUTION_CONTROLLER'];
+        const ControlAuthor = this.form.controls['rec.RESOLUTION_CONTROLLER'].value;
         this.dueForLink = ControlAuthor;
-        if (String(ControlAuthor) === 'null') {
+        if (String(ControlAuthor) === 'null' || String(ControlAuthor) === '') {
             this.controller = false;
             return Promise.resolve(false);
         } else {
@@ -304,8 +302,10 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this.editMode();
                 this._pushState();
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
+                this._userParamsSetSrv.getUserIsn();
             }).catch((error) => {
-                console.log(error);
+                this._errorSrv.errorHandler(error);
+                this.cancel();
             });
         } else {
             return Promise.resolve(false);
@@ -412,6 +412,11 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.mapChanges.clear();
         this.btnDisable = true;
         this.flagEdit = false;
+        this.getControlAuthor().then(res => {
+            if (res) {
+                this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(res[0]['CLASSIF_NAME']), { emitEvent: false });
+            }
+        });
         this._pushState();
         this.editMode();
     }
@@ -489,7 +494,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             dismissOnTimeout: 6000,
         };
     }
-    private _pushState () {
-        this._userParamsSetSrv.setChangeState({isChange: !this.btnDisable || this.MaxIncrement, disableSave: this.MaxIncrement});
-      }
+    private _pushState() {
+        this._userParamsSetSrv.setChangeState({ isChange: !this.btnDisable || this.MaxIncrement, disableSave: this.MaxIncrement });
+    }
 }

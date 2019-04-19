@@ -1,9 +1,9 @@
-import { Component, OnInit, TemplateRef, OnDestroy} from '@angular/core';
-import { EmailAddressService} from '../shared/services/email-address.service';
+import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
+import { EmailAddressService } from '../shared/services/email-address.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { UserParamsService } from '../shared/services/user-params.service';
-import { FormGroup, FormControl, FormArray} from '@angular/forms';
+import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { NTFY_USER_EMAIL } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
@@ -11,7 +11,7 @@ import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
 import { Subject } from 'rxjs/Subject';
 import { Router } from '@angular/router';
-
+import { ErrorHelperServices } from '../shared/services/helper-error.services';
 @Component({
     selector: 'eos-params-email-address',
     styleUrls: ['email-address.component.scss'],
@@ -26,7 +26,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     public currentIndex: number;
     public prevIndex: number;
     public dismissible: boolean = true;
-    public defaultAlerts: Map <string, any> = new Map();
+    public defaultAlerts: Map<string, any> = new Map();
     public alerts = Array.from(this.defaultAlerts);
     public modalRef: BsModalRef;
     public delitedSetStore = new Set();
@@ -46,15 +46,14 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     private ArrayForm: FormArray;
     private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
-       private _emailService: EmailAddressService,
-       private modalService: BsModalService,
-       private _userServices: UserParamsService,
-       private _msgSrv: EosMessageService,
-       private _router: Router,
-    )   {
-        this.titleHeader =  `${this._userServices.curentUser.SURNAME_PATRON} - Ведение адресов электронной почты`;
-        this.selfLink = this._router.url.split('?')[0];
-        this.link = this._userServices.userContextId;
+        private _emailService: EmailAddressService,
+        private modalService: BsModalService,
+        private _userServices: UserParamsService,
+        private _msgSrv: EosMessageService,
+        private _router: Router,
+        private _errorSrv: ErrorHelperServices,
+    ) {
+        this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ведение адресов электронной почты`;
         this.currentParams = '';
         this.CODE = null;
         this.editFalg = false;
@@ -69,15 +68,15 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         this.prevIndex = 0;
         this.umailsInfo.length > 0 ? this.newEmail = this.umailsInfo[0].EMAIL : this.newEmail = '';
         this._userServices.saveData$
-        .takeUntil(this._ngUnsubscribe)
-        .subscribe(() => {
-            this._userServices.submitSave =  this.saveAllForm(null);
-        });
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this._userServices.submitSave = this.saveAllForm(null);
+            });
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
-       }
+    }
 
     hideToolTip() {
         const element = document.querySelector('.tooltip');
@@ -103,30 +102,30 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         this.myForm.setControl('groupForm', this.createGroup(false, false, true));
     }
     saveAllForm(event): Promise<any> {
-     return   Promise.all([ this._emailService.preAddEmail(this.ArrayForm), this._emailService.preDeliteEmail(this.delitedSetStore), this._emailService.preEditEmail(this.ArrayForm)])
-        .then(result => {
-        return    this._userServices.getUserIsn(String(this._userServices.curentUser['ISN_LCLASSIF']))
-            .then((flag: boolean) => {
-                if (flag) {
-                    this.umailsInfo.splice(0, this.umailsInfo.length);
-                    this.saveParams =  this._userServices.curentUser['NTFY_USER_EMAIL_List'].slice();
-                    this.saveParams =  this._emailService.Decode(this.saveParams, this.CODE).slice();
-                    this.delitedSetStore.clear();
-                    this.sortArray(this.umailsInfo);
-                    this.sortArray(this.saveParams);
-                    this.resetForm();
-                    this.umailsInfo =  this.saveParams.slice();
-                    this.statusBtnSub = true;
-                    this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
-                    this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-                }
-                this.flagEdit = false;
-                this.editMode();
+        return Promise.all([this._emailService.preAddEmail(this.ArrayForm), this._emailService.preDeliteEmail(this.delitedSetStore), this._emailService.preEditEmail(this.ArrayForm)])
+            .then(result => {
+                return this._userServices.getUserIsn()
+                    .then((flag: boolean) => {
+                        if (flag) {
+                            this.umailsInfo.splice(0, this.umailsInfo.length);
+                            this.saveParams = this._userServices.curentUser['NTFY_USER_EMAIL_List'].slice();
+                            this.saveParams = this._emailService.Decode(this.saveParams, this.CODE).slice();
+                            this.delitedSetStore.clear();
+                            this.sortArray(this.umailsInfo);
+                            this.sortArray(this.saveParams);
+                            this.resetForm();
+                            this.umailsInfo = this.saveParams.slice();
+                            this.statusBtnSub = true;
+                            this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+                            this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+                        }
+                        this.flagEdit = false;
+                        this.editMode();
+                    });
+            }).catch(error => {
+                this._errorSrv.errorHandler(error);
+                this.backForm(false);
             });
-        }).catch(error => {
-            error.message =  'Ошибка сервера';
-            this.cathError(error);
-        });
     }
     backForm(event): void {
         this.delitedSetStore.clear();
@@ -158,20 +157,20 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     }
 
     preDelite() {
-        const delitedField  = this.ArrayForm.get(String(this.currentIndex));
+        const delitedField = this.ArrayForm.get(String(this.currentIndex));
         if (delitedField) {
-              if (delitedField.value.newField !== true) {
-            // в map добавлены только поля для удаления без флага true в форме, в свойсттве newField
-            this.delitedSetStore.add(delitedField.value);
+            if (delitedField.value.newField !== true) {
+                // в map добавлены только поля для удаления без флага true в форме, в свойсттве newField
+                this.delitedSetStore.add(delitedField.value);
+            }
         }
-    }
 
         this.ArrayForm.removeAt(this.currentIndex);
         this.umailsInfo.splice(this.currentIndex, 1);
     }
 
     searchNeddedField() {
-        this.umailsInfo =  this.umailsInfo.filter((el, index) => {
+        this.umailsInfo = this.umailsInfo.filter((el, index) => {
             if (el[index] !== this.currentIndex) {
                 return el;
             }
@@ -181,15 +180,15 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         }
     }
     createNewField(email: string): void {
-         if (this.validEmail(email)) {
-           this.createOrEdit(this.editFalg, email);
-            }else {
-                const m: IMessage = {
-                    type: 'warning',
-                    title: 'Не верное значение',
-                    msg: '',
-                };
-             this._msgSrv.addNewMessage(m);
+        if (this.validEmail(email)) {
+            this.createOrEdit(this.editFalg, email);
+        } else {
+            const m: IMessage = {
+                type: 'warning',
+                title: 'Предупреждение',
+                msg: 'Неверный формат адреса электронной почты. Введите другой адрес.',
+            };
+            this._msgSrv.addNewMessage(m);
         }
     }
 
@@ -215,41 +214,41 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         // });
     }
     setEditEmail() {
-        this.myForm.get('groupForm').get(String(this.currentIndex)).patchValue({params: this.parseChildParams() === '' ? null : this.parseChildParams()});
+        this.myForm.get('groupForm').get(String(this.currentIndex)).patchValue({ params: this.parseChildParams() === '' ? null : this.parseChildParams() });
         this.modalRef.hide();
     }
     parseChildParams() {
-      return  Array.from(this.childParams).join(';');
+        return Array.from(this.childParams).join(';');
     }
 
     checkMail_PreSave(email: string): void {
         this._emailService.getAllEmails(email)
-        .then(result => {
-            if (!result && !this.checkEmailCurrentfields(email)) {
-                const newFieldEmail = {
-                    ISN_USER: this._userServices.curentUser['ISN_LCLASSIF'],
-                    EMAIL: email,
-                    IS_ACTIVE: 0,
-                    WEIGHT: this._emailService.getMaxWeigth(this.umailsInfo) + 1,
-                    EXCLUDE_OPERATION: ''
-                };
-                this.statusBtnSub = true;
-                this.umailsInfo.push(newFieldEmail);
-                this.addFormControls(newFieldEmail, false, true);
-                this.currentIndex = this.umailsInfo.length - 1;
-                this.modalRef.hide();
-            } else {
-                const m: IMessage = {
-                    type: 'warning',
-                    title: 'Такая почта уже существует',
-                    msg: '',
-                };
-                this._msgSrv.addNewMessage(m);
-            }
-        }).catch(error => {
-            error.message =  'Ошибка сервера';
-            this.cathError(error);
-        });
+            .then(result => {
+                if (!result && !this.checkEmailCurrentfields(email)) {
+                    const newFieldEmail = {
+                        ISN_USER: this._userServices.curentUser['ISN_LCLASSIF'],
+                        EMAIL: email,
+                        IS_ACTIVE: 0,
+                        WEIGHT: this._emailService.getMaxWeigth(this.umailsInfo) + 1,
+                        EXCLUDE_OPERATION: ''
+                    };
+                    this.statusBtnSub = true;
+                    this.umailsInfo.push(newFieldEmail);
+                    this.addFormControls(newFieldEmail, false, true);
+                    this.currentIndex = this.umailsInfo.length - 1;
+                    this.modalRef.hide();
+                } else {
+                    const m: IMessage = {
+                        type: 'warning',
+                        title: 'Такая почта уже существует',
+                        msg: '',
+                    };
+                    this._msgSrv.addNewMessage(m);
+                }
+            }).catch(error => {
+                error.message = 'Ошибка сервера';
+                this.cathError(error);
+            });
     }
     validEmail(email: string): boolean {
         const regul = '^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$';
@@ -260,41 +259,41 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     onClosed(type): void {
         this.defaultAlerts.delete(type);
         this.alerts = Array.from(this.defaultAlerts);
-      }
+    }
 
     ngOnInit() {
         this._emailService.getCode2()
-        .then((map: Map<string, string>) => {
-            this.sortArray(this.umailsInfo);
-            this.sortArray(this.saveParams);
-            this._emailService.Decode(this.umailsInfo, map);
-            this.CODE = map;
-            this.createForm(false, false);
-            this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
-            this.myForm.valueChanges.subscribe(data => {
-                this.checkChanges(data);
+            .then((map: Map<string, string>) => {
+                this.sortArray(this.umailsInfo);
+                this.sortArray(this.saveParams);
+                this._emailService.Decode(this.umailsInfo, map);
+                this.CODE = map;
+                this.createForm(false, false);
+                this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+                this.myForm.valueChanges.subscribe(data => {
+                    this.checkChanges(data);
+                });
+                this.editMode();
+            }).catch(error => {
+                error.message = 'Ошибка сервера';
+                this.cathError(error);
             });
-            this.editMode();
-        }).catch(error => {
-            error.message =  'Ошибка сервера';
-            this.cathError(error);
-        });
-      }
+    }
 
-      createForm(changedField: boolean, newField: boolean, flagBackForm?: boolean) {
-        this.myForm = new FormGroup({'groupForm': this.createGroup(changedField, newField, flagBackForm)});
-      }
+    createForm(changedField: boolean, newField: boolean, flagBackForm?: boolean) {
+        this.myForm = new FormGroup({ 'groupForm': this.createGroup(changedField, newField, flagBackForm) });
+    }
 
-      createGroup(changedField: boolean, newField: boolean, flagBackForm?: boolean): FormArray {
-          let arrayField;
-          const group = new FormArray([]);
-          flagBackForm ? arrayField =  this.saveParams : arrayField =  this.umailsInfo;
-          arrayField.forEach(element => {
+    createGroup(changedField: boolean, newField: boolean, flagBackForm?: boolean): FormArray {
+        let arrayField;
+        const group = new FormArray([]);
+        flagBackForm ? arrayField = this.saveParams : arrayField = this.umailsInfo;
+        arrayField.forEach(element => {
             group.push(new FormGroup(this.createFormControls(element, changedField, newField)));
-          });
-          return group;
-      }
-      createFormControls(element: NTFY_USER_EMAIL, bool1, bool2): {[key: string]: FormControl} {
+        });
+        return group;
+    }
+    createFormControls(element: NTFY_USER_EMAIL, bool1, bool2): { [key: string]: FormControl } {
         const controls = {};
         controls['email'] = new FormControl(element.EMAIL);
         controls['checkbox'] = new FormControl(Number(element.IS_ACTIVE));
@@ -303,127 +302,127 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         controls['change'] = new FormControl(bool1);
         controls['newField'] = new FormControl(bool2);
         return controls;
-      }
-      checkChanges(data?: {[key: string]: Array<any>}) {
-            let count_error = 0;
-              this.umailsInfo.forEach((element, index) => {
-                const checkedField = data.groupForm[index];
-                const checkedData = element;
-                if (checkedField) {
-                    if (checkedField['email'] !== checkedData['EMAIL'] || Number(checkedField['checkbox']) !== Number(checkedData['IS_ACTIVE'])
-                    || checkedField['params'] !== checkedData['EXCLUDE_OPERATION'] || checkedField['newField'] === true ) {
-                        this.statusBtnSub = false;
-                        this.myForm.get('groupForm')
+    }
+    checkChanges(data?: { [key: string]: Array<any> }) {
+        let count_error = 0;
+        this.umailsInfo.forEach((element, index) => {
+            const checkedField = data.groupForm[index];
+            const checkedData = element;
+            if (checkedField) {
+                if (checkedField['email'] !== checkedData['EMAIL'] || Number(checkedField['checkbox']) !== Number(checkedData['IS_ACTIVE'])
+                    || checkedField['params'] !== checkedData['EXCLUDE_OPERATION'] || checkedField['newField'] === true) {
+                    this.statusBtnSub = false;
+                    this.myForm.get('groupForm')
                         .get(String(index))
-                        .patchValue({change: true}, {emitEvent: false});
-                        count_error++;
-                    }else {
-                        this.statusBtnSub = true;
-                        this.myForm.get('groupForm')
+                        .patchValue({ change: true }, { emitEvent: false });
+                    count_error++;
+                } else {
+                    this.statusBtnSub = true;
+                    this.myForm.get('groupForm')
                         .get(String(index))
-                        .patchValue({change: false}, {emitEvent: false});
-                    }
+                        .patchValue({ change: false }, { emitEvent: false });
                 }
-              });
-              if (this.delitedSetStore.size) {
-                count_error++;
-              }
-              count_error > 0 ? this.statusBtnSub = false : this.statusBtnSub = true;
-              this._pushState();
-              count_error = 0;
-      }
+            }
+        });
+        if (this.delitedSetStore.size) {
+            count_error++;
+        }
+        count_error > 0 ? this.statusBtnSub = false : this.statusBtnSub = true;
+        this._pushState();
+        count_error = 0;
+    }
 
-      addFormControls(newFieldEmail: NTFY_USER_EMAIL, change: boolean, newField: boolean ) {
+    addFormControls(newFieldEmail: NTFY_USER_EMAIL, change: boolean, newField: boolean) {
         this.ArrayForm.push(new FormGroup(this.createFormControls(newFieldEmail, change, newField)));
     }
 
-      upWeight() {
+    upWeight() {
         this.currentIndex = this.currentIndex - 1;
         this.prevIndex = this.currentIndex + 1;
         this.getSetValues();
-      }
+    }
 
-      downWeight() {
+    downWeight() {
         this.currentIndex = this.currentIndex + 1;
         this.prevIndex = this.currentIndex - 1;
         this.getSetValues();
-      }
-      getSetValues() {
+    }
+    getSetValues() {
         const current = this.ArrayForm.controls[this.currentIndex].value;
         const prev = this.ArrayForm.controls[this.prevIndex].value;
-        const controlInfo =  this.arrChangesValues(current, prev);
+        const controlInfo = this.arrChangesValues(current, prev);
         this.changeCurrentWeight(controlInfo);
-      }
-     arrChangesValues(current, prev): Array<Array<any>> {
-          const T = [[], []];
-          let CurrentParams = {};
-          let PrevParams = {};
-          const params = this.constParams();
-          const length = this.constParams().length;
-          for (let i = 0; i < length; i += 1) {
-                CurrentParams[params[i]] = current[params[i]];
-                PrevParams[params[i]] = prev[params[i]];
+    }
+    arrChangesValues(current, prev): Array<Array<any>> {
+        const T = [[], []];
+        let CurrentParams = {};
+        let PrevParams = {};
+        const params = this.constParams();
+        const length = this.constParams().length;
+        for (let i = 0; i < length; i += 1) {
+            CurrentParams[params[i]] = current[params[i]];
+            PrevParams[params[i]] = prev[params[i]];
             T[0].push(CurrentParams);
             T[1].push(PrevParams);
             PrevParams = {};
             CurrentParams = {};
-          }
-          return T;
-      }
-      changeCurrentWeight(controlsInfo) {
-          const countArray = controlsInfo[0].length - 1;
-            for (let i = 0; i <= countArray; i += 1) {
-                if ( i !== countArray) {
-                    this.myForm.get('groupForm')
+        }
+        return T;
+    }
+    changeCurrentWeight(controlsInfo) {
+        const countArray = controlsInfo[0].length - 1;
+        for (let i = 0; i <= countArray; i += 1) {
+            if (i !== countArray) {
+                this.myForm.get('groupForm')
                     .get(String(this.currentIndex))
-                    .patchValue(controlsInfo[1][i], {emitEvent: false});
-                    this.myForm.get('groupForm')
+                    .patchValue(controlsInfo[1][i], { emitEvent: false });
+                this.myForm.get('groupForm')
                     .get(String(this.prevIndex))
-                    .patchValue(controlsInfo[0][i], {emitEvent: false});
-                } else {
-                    this.myForm.get('groupForm')
+                    .patchValue(controlsInfo[0][i], { emitEvent: false });
+            } else {
+                this.myForm.get('groupForm')
                     .get(String(this.prevIndex))
-                    .patchValue(controlsInfo[0][i], {emitEvent: false});
-                    this.myForm.get('groupForm')
+                    .patchValue(controlsInfo[0][i], { emitEvent: false });
+                this.myForm.get('groupForm')
                     .get(String(this.currentIndex))
                     .patchValue(controlsInfo[1][i]);
-                }
             }
-      }
+        }
+    }
 
-      constParams (): Array<string> {
-          return ['email', 'checkbox', 'params', 'change', 'newField'];
-      }
+    constParams(): Array<string> {
+        return ['email', 'checkbox', 'params', 'change', 'newField'];
+    }
 
-      checkEmailCurrentfields(email: string): boolean {
-          if ( this.umailsInfo.length > 0 ) {
-            return  this.umailsInfo.some(element => {
-                    return  element.EMAIL === email;
-              });
-          }
-          return false;
-      }
+    checkEmailCurrentfields(email: string): boolean {
+        if (this.umailsInfo.length > 0) {
+            return this.umailsInfo.some(element => {
+                return element.EMAIL === email;
+            });
+        }
+        return false;
+    }
 
     get getaccess() {
-          return  this.umailsInfo.length <= 0 ? true : false;
-      }
+        return this.umailsInfo.length <= 0 ? true : false;
+    }
 
-      sortArray (array: NTFY_USER_EMAIL[]) {
-        array.sort(function(a, b){
+    sortArray(array: NTFY_USER_EMAIL[]) {
+        array.sort(function (a, b) {
             return a.WEIGHT - b.WEIGHT;
         });
-      }
-      edit($event) {
+    }
+    edit($event) {
         this.flagEdit = $event;
         this.editMode();
     }
     close(event?) {
         this._router.navigate(['user_param']);
-     }
-     default(event?) {
-         return;
-     }
-     private cathError(e) {
+    }
+    default(event?) {
+        return;
+    }
+    private cathError(e) {
         if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
             return undefined;
         } else {
@@ -436,15 +435,15 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
             return null;
         }
     }
-   private  editMode() {
+    private editMode() {
         if (this.flagEdit) {
-            this.myForm.enable({emitEvent: false});
-        }   else {
-            this.myForm.disable({emitEvent: false});
+            this.myForm.enable({ emitEvent: false });
+        } else {
+            this.myForm.disable({ emitEvent: false });
         }
     }
-private _pushState () {
-    this._userServices.setChangeState({isChange: !this.statusBtnSub});
-  }
+    private _pushState() {
+        this._userServices.setChangeState({ isChange: !this.statusBtnSub });
+    }
 
 }

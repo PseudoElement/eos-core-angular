@@ -425,7 +425,7 @@ export class EosDictService {
 
     // temporary fix
     selectCustomTreeNode(): Promise<EosDictionaryNode> {
-        let p = Promise.resolve(this._treeNode);
+        let p; // = Promise.resolve(this._treeNode);
         const dictionary = this._dictionaries[0];
         if (dictionary && dictionary.root) {
             this.updateViewParameters({updatingList: true});

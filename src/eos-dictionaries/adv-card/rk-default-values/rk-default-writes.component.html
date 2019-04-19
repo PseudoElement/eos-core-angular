@@ -1,7 +1,7 @@
 <div class="eos-rk-writes card-content-wrapper">
         <!-- Срок исп. (План. дата)
         дня (дней) от исх. даты корреспондента -->
-    <div class="items-group" *ngIf="rkType==1 || rkType==2" >
+    <div class="items-group" *ngIf="rkType==1" >
             <span>
             <div class="col-with-label">
                     <label>{{inputs['DOC_DEFAULT_VALUE_List.TERM_EXEC_W'].label}}</label>
@@ -134,12 +134,13 @@
     <eos-dynamic-input class="margin10" [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC_W']"
         [form]="form"
         [hideLabel]="true"
-        [event1]="journalNomencClick_W.bind(this)"
+        [viewOpts]="selOpts"
         [readonly]="!editMode"></eos-dynamic-input>
 
     <!-- Радиобуттоны -->
     <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM_W']"
         [form]="form"
+        [hidden]="!flagEn_spinnum"
         [hideLabel]="true"
         [readonly]="!editMode"> </eos-dynamic-input>
     </div>

@@ -5,7 +5,7 @@ import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME, FICT_
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { TDefaultField } from './rk-default-values/rk-default-const';
+import { TDefaultField, TDFSelectOption } from './rk-default-values/rk-default-const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EosUtils } from 'eos-common/core/utils';
 import { Subscription } from 'rxjs/Subscription';
@@ -117,10 +117,23 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         }
     }
 
+    updateLinks (el: TDefaultField, options: TDFSelectOption[], data: any) {
+        if (el.key === 'JOURNAL_ISN_NOMENC' ||
+            el.key === 'JOURNAL_ISN_NOMENC_W'
+            ) {
+            const rec = data[0];
+            if (rec['DUE'] === '0.') {
+                options[0].title = '...';
+            } else {
+                options[0].title = rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
+            }
+        }
+    }
+
     save(): void {
-        this.dataController.save(this.isn_node, this.newData).then (() => {
+        this.dataController.save(this.isn_node, this.newData).then (r => {
             this.bsModalRef.hide();
-        }).catch (() => {
+        }).catch (err => {
 
         });
     }
@@ -213,7 +226,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             this._appendDBDefValues(this.values[DEFAULTS_LIST_NAME], this.storedValuesDG[DEFAULTS_LIST_NAME]);
             this._appendDBFilesValues(this.values[FILE_CONSTRAINT_LIST_NAME], this.storedValuesDG[FILE_CONSTRAINT_LIST_NAME]);
             this.isChanged = true;
-            this._checkCorrectValuesLogic(this.values);
+            this._checkCorrectValuesLogic(this.values, this.descriptions);
             this.editValues = this._makePrevValues(this.values);
             this.dataController.updateDictsOptions(null, this.values, this.updateLinks2).then (() => {
                 this.inputs = this._getInputs();
@@ -235,6 +248,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 this.isUpdating = false;
             });
         });
+
     }
     private _updateInputs(inputs: any): any {
         if (!this.isEDoc) {
@@ -275,7 +289,8 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     }
 
-    private _checkCorrectValuesLogic(values: any): any {
+
+    private _checkCorrectValuesLogic(values: any, descriptions: any): any {
         // Внутренние адресаты
         if (values[DEFAULTS_LIST_NAME]['SEND_ISN_LIST_DEP']) {
             if (!values[DEFAULTS_LIST_NAME]['SEND_MARKSEND']) {

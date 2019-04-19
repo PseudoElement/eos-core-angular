@@ -9,6 +9,7 @@ import { InputControlService } from 'eos-common/services/input-control.service';
 import { Router } from '@angular/router';
 import { PipRX, USER_PARMS } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import {ErrorHelperServices} from '../../shared/services/helper-error.services';
 @Component({
     selector: 'eos-user-param-directories',
     templateUrl: 'user-param-directories.component.html',
@@ -17,8 +18,6 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 
 export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     prepInputsAttach;
-    link;
-    selfLink;
     public titleHeader;
     public form: FormGroup;
     public inputs;
@@ -40,10 +39,9 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
         private _router: Router,
         private _pipRx: PipRX,
         private _msg: EosMessageService,
+        private _errorSrv: ErrorHelperServices,
     ) {
-        this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
-        this.link = this._userParamsSetSr.curentUser['ISN_LCLASSIF'];
-        this.selfLink = this._router.url.split('?')[0];
+        this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Справочники';
         this.flagEdit = false;
         this.btnDisable = true;
         this._userParamsSetSr.saveData$
@@ -125,7 +123,8 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
                 this.editMode();
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
             }).catch((error) => {
-                console.log(error);
+                this._errorSrv.errorHandler(error);
+                this.cancel();
             });
         } else {
             return Promise.resolve(false);

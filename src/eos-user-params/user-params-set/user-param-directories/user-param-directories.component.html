@@ -1,7 +1,7 @@
 <div class="input-user-wrapper input-user-directories-wrapper" *ngIf="inputs">
-    <eos-user-params-header [title]='titleHeader' [link]='link' [selfLink]='selfLink' [disableBtn]="btnDisable" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (closeEmit)='close($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="btnDisable" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (closeEmit)='close($event)' (defaultEmit)='default($event)'></eos-user-params-header>
     <div class="user-input-group ">
-        <span class="l-font">Окно справочников</span>
+        <span class="l-font">Окна справочников</span>
         <hr>
         <eos-dynamic-input [input]="inputs['rec.WINPOS']" [form]="form" [readonly]="false"></eos-dynamic-input>
     </div>

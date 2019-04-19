@@ -10,6 +10,7 @@ const LIST_OLD_PAGES: string[] = [
 ];
 const OLD_VIEW_URL: string = 'Pages/Classif/ChooseClassif.aspx?';
 const NEW_VIEW_URL: string = 'Eos.Delo.JsControls/Classif/ChooseClassif.aspx?';
+const USER_LISTS: string = '../Pages/User/USER_LISTS.aspx';
 
 @Injectable()
 export class WaitClassifService {
@@ -19,11 +20,14 @@ export class WaitClassifService {
         };
     }
     openClassif(params: IOpenClassifParams): Promise<String> {
-        const url = this._prepareUrl(params);
-        // const w = window.open(url, 'name', 'left=10,top=200,width=1000,height=500');
+        let url: string = '';
+        if (params.classif === 'USER_LISTS') {
+            url = USER_LISTS;
+        } else {
+            url = this._prepareUrl(params);
+        }
 
         return new Promise((resolve, reject) => {
-            // openPopup('../Eos.Delo.JsControls/Classif/ChooseClassif.aspx?Classif=DEPARTMENT&return_due=true', function() {
         const w =  openPopup(url, function(event, str) {
                 if (str !== '') {
                     return resolve(str);

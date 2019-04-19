@@ -25,35 +25,36 @@ import { RightsDeloAbsoluteRightsComponent } from './rights-delo/rights-delo-abs
 import { RightsDeloCardsComponent } from './rights-delo/rights-delo-cards/rights-delo-cards.component';
 import { ParamsBaseParamComponent } from './base-param/base-param.component';
 import { InputParamControlService } from './shared/services/input-param-control.service';
-import {EmailAddressService} from './shared/services/email-address.service';
-import {EmailFormComponent} from './email-address/email-form/email-form.component';
-import {RightLimitedAccessComponent} from './rights-delo/right-limited-access/right-limited-access.component';
-import {LinksLimitedComponent} from './rights-delo/right-limited-access/links/links-limited.component';
-import {LimitedAccesseService} from './shared/services/limited-access.service';
+import { EmailAddressService } from './shared/services/email-address.service';
+import { EmailFormComponent } from './email-address/email-form/email-form.component';
+import { RightLimitedAccessComponent } from './rights-delo/right-limited-access/right-limited-access.component';
+import { LinksLimitedComponent } from './rights-delo/right-limited-access/links/links-limited.component';
+import { LimitedAccesseService } from './shared/services/limited-access.service';
 import { RightDepertmentComponent } from './rights-delo/rights-delo-absolute-rights/right-department/right-department.component';
-import {GrifsComponent} from './rights-delo/right-limited-access/grifs/grifs-component';
+import { GrifsComponent } from './rights-delo/right-limited-access/grifs/grifs-component';
 import { RightAbsoluteDocGroupComponent } from './rights-delo/rights-delo-absolute-rights/right-doc-group/right-doc-group.component';
 import { ListDocsTreeComponent } from './shared/list-docs-tree/list-docs-tree.component';
 import { AbsoluteRightsClassifComponent } from './rights-delo/rights-delo-absolute-rights/absolute-rights-classif/absolute-rights-classif.component';
-import {UserPaginationService} from './shared/services/users-pagination.service';
-import {UserHeaderComponent} from '../eos-user-params/user-header/user-header.component';
-import {InlineScaningComponent} from '../eos-user-params/inline-scaning/inline-scaning.component';
-import {UserParamElSignatureComponent} from '../eos-user-params/user-params-set/user-param-el-signature/user-param-el-signature.component';
-import {SignaturePopupComponent} from '../eos-user-params/user-params-set/user-param-el-signature/signature-popup/signature-popup.component';
-import {SignatureAddComponent} from '../eos-user-params/user-params-set/user-param-el-signature/signature-popup/signature-add/signature-add.component';
-import {UserParamsProfSertComponent} from '../eos-user-params/user-params-set/user-param-prof-sert/user-params-prof-sert.component';
-import {RemasterEmailComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-email/remaster-email.component';
-import {RemasterService} from '../eos-user-params/user-params-set/shared-user-param/services/remaster-service';
-import {RemasterDopOperationComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-dop/remaster-dop-operation.component';
-import {RemasterAddressesComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-addresses/remaster-addresses.conponent';
-import {RemasterScanComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-scan/remaster-scan.conponent';
-import {RemasterAutoSearchComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-auto-search/remaster-auto-search.conponent';
-import {RemasterSebComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-seb/remaster-seb.component';
-import {RemasterRcComponent} from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-rc/remaster-rc.component';
-import {RtCabinetsFoldersComponent} from './rights-delo/rights-cabinets/rt-cabinets-folders/rt-cabinets-folders.component';
-import {RigthsCabinetsServices} from '../eos-user-params/shared/services/rigths-cabinets.services';
+import { UserPaginationService } from './shared/services/users-pagination.service';
+import { UserHeaderComponent } from '../eos-user-params/user-header/user-header.component';
+import { InlineScaningComponent } from '../eos-user-params/inline-scaning/inline-scaning.component';
+import { UserParamElSignatureComponent } from '../eos-user-params/user-params-set/user-param-el-signature/user-param-el-signature.component';
+import { SignaturePopupComponent } from '../eos-user-params/user-params-set/user-param-el-signature/signature-popup/signature-popup.component';
+import { SignatureAddComponent } from '../eos-user-params/user-params-set/user-param-el-signature/signature-popup/signature-add/signature-add.component';
+import { UserParamsProfSertComponent } from '../eos-user-params/user-params-set/user-param-prof-sert/user-params-prof-sert.component';
+import { RemasterEmailComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-email/remaster-email.component';
+import { RemasterService } from '../eos-user-params/user-params-set/shared-user-param/services/remaster-service';
+import { RemasterDopOperationComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-dop/remaster-dop-operation.component';
+import { RemasterAddressesComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-addresses/remaster-addresses.conponent';
+import { RemasterScanComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-scan/remaster-scan.conponent';
+import { RemasterAutoSearchComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-auto-search/remaster-auto-search.conponent';
+import { RemasterSebComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-seb/remaster-seb.component';
+import { RemasterRcComponent } from '../eos-user-params/user-params-set/user-param-registration-remaster/remaster-rc/remaster-rc.component';
+import { RtCabinetsFoldersComponent } from './rights-delo/rights-cabinets/rt-cabinets-folders/rt-cabinets-folders.component';
+import { RigthsCabinetsServices } from '../eos-user-params/shared/services/rigths-cabinets.services';
 import { ListCardRightComponent } from './rights-delo/rights-delo-cards/list-card/list-card.component';
 import { CardRightSrv } from './rights-delo/rights-delo-cards/card-right.service';
+import { ErrorHelperServices } from '../eos-user-params/shared/services/helper-error.services';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -117,6 +118,7 @@ import { CardRightSrv } from './rights-delo/rights-delo-cards/card-right.service
         RemasterService,
         RigthsCabinetsServices,
         CardRightSrv,
+        ErrorHelperServices,
     ]
 })
-export class EosUserParamsModule {}
+export class EosUserParamsModule { }

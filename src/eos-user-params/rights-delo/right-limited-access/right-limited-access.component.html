@@ -1,85 +1,64 @@
-
-<div class="access-window">
+<div class="access-window" *ngIf="isLoading">
     <eos-user-params-header
-        [title] = 'titleHeader'
-        [link] = 'link'
-        [selfLink] = 'selfLink'
-        [disableBtn] = "getBtn"
-        [defaultBtn] = 'isDefault'
-        (submitEmit) = 'saveAllForm($event)'
-        (cancelEmit) = 'backForm($event)'
-        (editEmit) = 'edit($event)'
-        (closeEmit) = 'close($event)'
-        (defaultEmit) = 'default($event)'
+        [editMode]='editFlag'
+        [title]='titleHeader'
+        [disableBtn]="getBtn"
+        (submitEmit)='saveAllForm($event)'
+        (cancelEmit)='backForm($event)'
+        (editEmit)='edit($event)'
     ></eos-user-params-header>
     <div class="doc-navigate">
         <ul class="tabs">
-            <li class="tab-item"
-                *ngFor="let tab of tabsForAccessLimited; let i = index"
-                [ngClass]="{'active': i === currTab}"
-                (click)="changeActivelink(i)">
+            <li class="tab-item" *ngFor="let tab of tabsForAccessLimited; let i = index" [ngClass]="{'active': i === currTab}" (click)="changeActivelink(i)">
                 <span class="tab-title">{{tab}}</span>
             </li>
         </ul>
     </div>
-<div *ngIf="isLoading">
-    <div *ngIf="currTab === 0">
-        <div class="access-control">
-            <button
-                [disabled] = "!editFlag"
-                type="button"
-                class="btn btn-primary"
-                (click)="OpenClassiv()"
-                tooltip="Добавить"
-                triggers ="hover:click"
-                containerClass="tooltip-info">
+    <div>
+        <div *ngIf="currTab === 0">
+            <div class="access-control">
+                <button [disabled]="!editFlag" type="button" class="btn btn-primary" (click)="OpenClassiv()" tooltip="Добавить" triggers="hover:click" containerClass="tooltip-info">
                 <span class="eos-icon small" [ngClass]="editFlag ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
             </button>
-            <button
-                [disabled] = "!editFlag"
-                type="button"
-                class="btn btn-primary"
-                (click)='deliteEmailFild()'
-                tooltip="Удалить"
-                containerClass="tooltip-info">
-                <span class="eos-icon small" [ngClass]="editFlag ? 'eos-icon-bin-blue' : 'eos-icon-bin-grey' "></span>
+                <button [disabled]="!editFlag || currentIndex === 0" type="button" class="btn btn-primary" (click)='deliteEmailFild()' tooltip="Удалить" containerClass="tooltip-info">
+                <span class="eos-icon small" [ngClass]="editFlag ? 'eos-icon-bin-forever-blue' : 'eos-icon-bin-forever-grey' "></span>
             </button>
-        </div>
+            </div>
 
-    <div class="access-wrapper">
-        <div class="email-header">
-        </div>
-        <div class="email-content" *ngIf="umailsInfo && myForm">
-                <form [formGroup]="myForm">
-                    <div formArrayName="groupForm">
-                            <div  class="acess-content" *ngFor="let group of myForm.controls['groupForm'].controls; let i = index"  (click)=chooseCurrentField(i) [ngClass]="{current: currentIndex === i}">
-                                <div class="access-list"  formGroupName="{{i}}">
-                                <span [ngClass]="{current: currentIndex === i}" class="access-list-second">
+            <div class="access-wrapper">
+                <div class="email-header">
+                </div>
+                <div class="email-content" *ngIf="umailsInfo && myForm">
+                    <form [formGroup]="myForm">
+                        <div formArrayName="groupForm">
+                            <div class="acess-content" *ngFor="let group of myForm.controls['groupForm'].controls; let i = index" (click)=chooseCurrentField(i) [ngClass]="{current: currentIndex === i}">
+                                <div class="access-list" formGroupName="{{i}}">
+                                    <span [ngClass]="{current: currentIndex === i}" class="access-list-second">
                                         <label class="checkbox disabled minus-checkbox">
-                                            <input *ngIf="i !== 0 "  formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" >
-                                            <input *ngIf="i == 0 " [attr.disabled]="true"  formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" >
+                                            <input formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" >
+                                            <!-- <input *ngIf="i == 0 " [attr.disabled]="true"  formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" > -->
                                             <span class="eos-icon-checkbox-square-v-grey "></span>
-                                        </label>
-                                </span>
-                                <span [ngClass]="{current: currentIndex === i}" class="access-list-last">
+                                    </label>
+                                    </span>
+                                    <span [ngClass]="{current: currentIndex === i}" class="access-list-last">
                                         <input formControlName="name"  type="text" readonly="readonly" class="readonly" >
                                 </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
-            </form>
+            </div>
+        </div>
+        <div *ngIf="currTab === 1">
+            <eos-grifs (changeGrifs)="SubscribtGrifs($event)" [editFlag]="editFlag"></eos-grifs>
+        </div>
+        <div *ngIf="currTab === 2">
+            <eos-links-limited (changeLinks)="SubscribLInks($event)"></eos-links-limited>
         </div>
     </div>
-    </div>
-    <div *ngIf="currTab === 1">
-        <eos-grifs (changeGrifs)="SubscribtGrifs($event)" [editFlag]="editFlag"></eos-grifs>
-    </div>
-    <div *ngIf="currTab === 2">
-        <eos-links-limited (changeLinks)="SubscribLInks($event)"></eos-links-limited>
-    </div>
-    </div>
 </div>
-<div class="wrapper-spinner"  *ngIf="!isLoading">
+<div class="wrapper-spinner" *ngIf="!isLoading">
     <eos-spinner size="lg"></eos-spinner>
 </div>
 <div *ngIf="bacgHeader" class="bacgrFixed"></div>

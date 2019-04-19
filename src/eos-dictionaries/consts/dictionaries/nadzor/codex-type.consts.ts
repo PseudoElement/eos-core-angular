@@ -40,6 +40,7 @@ export const NP_CODEX_TYPE_CL: IDictionaryDescriptor = Object.assign({}, NADZOR_
     },
         Object.assign({}, COMMON_FIELD_NAME, {
             key: 'CLASSIF_NAME_SHORT',
+            length: 200,
         }),
         Object.assign({}, COMMON_FIELD_NOTE, {
             length: 500,

@@ -71,12 +71,21 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         Object.assign({}, COMMON_FIELD_NOTE, {length: 255}),
         Object.assign({}, COMMON_FIELD_CODE, {length: 20}),
         Object.assign({}, COMMON_FIELD_NAME, {
-            key: 'title',
+            key: 'nametitle',
+            title: 'Наименование',
+            foreignKey: 'CLASSIF_NAME',
+            length: 255,
+            required: true,
+            forNode: false,
+        }),
+        Object.assign({}, COMMON_FIELD_NAME, {
+            key: 'shorttitle',
             title: 'Краткое наименование подразделения',
             foreignKey: 'CLASSIF_NAME',
             length: 255,
             required: true,
             forNode: false,
+            vistype: E_VISIBLE_TIPE.onlyChild,
         }),
         {
             key: 'SURNAME',
@@ -295,24 +304,24 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             type: 'dictionary',
             title: 'Фото'
         }]),
-    treeFields: ['title'],
-    searchFields: [/* 'RUBRIC_CODE', */'title'/*, 'NOTE'*/],
-    listFields: ['CODE', 'title'],
+    treeFields: ['nametitle'],
+    searchFields: [/* 'RUBRIC_CODE', */'nametitle'/*, 'NOTE'*/],
+    listFields: ['CODE', 'nametitle'],
     fullSearchFields: {
         person: ['CODE', 'PHONE', 'PHONE_LOCAL', 'E_MAIL', 'DUTY', 'fullPosition', 'SURNAME', 'NOTE', 'printInfo'],
-        department: ['CODE', 'title', 'indexDep', 'NOTE', 'fullTitle'],
+        department: ['CODE', 'nametitle', 'indexDep', 'NOTE', 'fullTitle'],
         cabinet: ['titleRoom', 'fullCabinet']
     },
     quickViewFields: ['photo', 'fullTitle', 'fullPosition', 'DUTY', 'PHONE', 'PHONE_LOCAL', 'E_MAIL', 'IS_NODE', 'POST_H', 'SURNAME',
         'CARD_NAME', 'CARD_FLAG', 'CODE', 'NOTE', 'IS_NODE', 'printInfo', 'user', 'cabinet',
-        'sev', 'title', 'organization'], // title is in shortQuickViewFields
-    shortQuickViewFields: ['firstName', 'fathersName', 'lastName', 'title'],
+        'sev', 'nametitle', 'organization'], // title is in shortQuickViewFields
+    shortQuickViewFields: ['firstName', 'fathersName', 'lastName', 'nametitle'],
     editFields: ['CARD_FLAG', 'CARD_NAME', 'CODE', 'DUTY', 'IS_NODE', 'NOTE', 'SURNAME', 'indexPerson', 'POST_H', 'PHONE_LOCAL', 'PHONE',
         'FAX', 'E_MAIL', 'NUM_CAB', 'START_DATE', 'END_DATE', 'fullPosition', 'SKYPE', 'printInfo', 'sev', 'organization', 'cabinet',
         'user', 'photo', 'ID_GAS_PS', 'NUMCREATION_FLAG',
-        'title', 'DUE_LINK_ORGANIZ', 'indexDep', 'fullTitle', 'ISN_PHOTO', 'EXPEDITION_FLAG'],
+        'nametitle', 'shorttitle', 'DUE_LINK_ORGANIZ', 'indexDep', 'fullTitle', 'ISN_PHOTO', 'EXPEDITION_FLAG'],
     // ['fio', 'position', 'description', 'title', 'phone', 'email', 'rooms', 'associatedUsers']
-    allVisibleFields: ['SURNAME', 'DUTY', 'fullTitle', 'fullPosition', 'SKYPE', /* 'DEPARTMENT_DUE', */ 'indexDep', 'POST_H',
+    allVisibleFields: ['SURNAME', 'DUTY', 'fullTitle', 'shorttitle', 'fullPosition', 'SKYPE', /* 'DEPARTMENT_DUE', */ 'indexDep', 'POST_H',
         'CARD_FLAG',
         'CARD_NAME', 'NOTE', 'START_DATE', 'END_DATE', 'PHONE_LOCAL', 'PHONE', 'FAX', 'E_MAIL', 'NUM_CAB', 'ID_GAS_PS',
         'NUMCREATION_FLAG' , 'organization', /*, 'printInfo', 'sev',

@@ -19,7 +19,8 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
         defaultValue: {
             value: '',
             title: '...',
-        }
+        },
+        enRemoveButton: true,
     };
 
     isEDoc: boolean;
@@ -114,6 +115,17 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
         }
     }
 
+    setFirstAvailableValue (key: string) {
+        const input = this.inputs[key];
+        for (let i = 0; i < input.options.length; i++) {
+            const element = input.options[i];
+            if (element['disabled'] === false) {
+                this.setValue(key, element['value']);
+                break;
+            }
+        }
+    }
+
     setAvailableFor (key: string) {
 
     }
@@ -123,28 +135,20 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
         this.inputs[path].controlType);
     }
 
-    setDictLinkValue(key: string, value: any, gettitle: Function) {
-        this.setValue(key, value);
-        const p = key.split('.');
-        const descr = this.dataController.getDescriptions()[p[0]].find( i => i.key === p[1]);
+    setDictLinkValue(key: string, value: any) {
         const input = this.inputs[key];
         const dib = <DynamicInputLinkButtonComponent>input.dib;
 
-        dib.setExtValue(value, (d => {
-            return this.dataController.readDictLinkValue(descr, value).then (data => {
-                return gettitle(data);
-            });
-        }));
-    }
+        if (!value) {
+            dib.setExtValue(null, null);
+            return;
+        }
 
-    nomenklTitleFunc() {
-        return function (data: any) {
-                const rec = data[0];
-                if (rec) {
-                    return rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
-                }
-                return 'update error';
-        };
-    }
+        const p = key.split('.');
+        const descr = this.dataController.getDescriptions()[p[0]].find( i => i.key === p[1]);
 
+        this.dataController.readDictLinkValue(descr, value).then(data => {
+            dib.setExtValue(value, data[0]);
+        });
+    }
 }
