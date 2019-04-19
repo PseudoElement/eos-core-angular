@@ -22,6 +22,7 @@ import { CITSTATUS_DICT } from 'eos-dictionaries/consts/dictionaries/citstatus.c
 import { VISA_TYPE_DICT } from 'eos-dictionaries/consts/dictionaries/visa-type.consts';
 import { REESTRTYPE_DICT } from 'eos-dictionaries/consts/dictionaries/reestrtype.consts';
 import { ORG_TYPE_DICT } from 'eos-dictionaries/consts/dictionaries/org-type.consts';
+import { RESOLUTION_CATEGORY_DICT } from 'eos-dictionaries/consts/dictionaries/resolution-category.consts';
 
 
 
