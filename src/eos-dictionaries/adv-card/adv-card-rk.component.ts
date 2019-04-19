@@ -200,10 +200,16 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         });
 
     }
+
     private _updateInputs(inputs: any): any {
         if (!this.isEDoc) {
             inputs['DOC_DEFAULT_VALUE_List.SPECIMEN'].required = true;
         }
+        inputs['DOC_DEFAULT_VALUE_List.FREE_NUM_M'].value = 1;
+        inputs['DOC_DEFAULT_VALUE_List.DOC_DATE_M'].value = 1;
+        inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL_M'].value = 1;
+        inputs['DOC_DEFAULT_VALUE_List.ISN_CARD_REG_M'].value = 1;
+        inputs['DOC_DEFAULT_VALUE_List.ISN_CABINET_REG_M'].value = 1;
     }
 
     private _updateValidators(controls: any): any {
@@ -434,7 +440,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         if (value !== prevValue) {
             this.isChanged = true;
             this._setPrevValue(path, value);
-            this.currentPage.onDataChanged(path, prevValue, value);
+            if (this.currentPage) { this.currentPage.onDataChanged(path, prevValue, value); }
             return true;
         }
         return false;

@@ -69,7 +69,7 @@
             <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.RUBRIC_LIST']"
                                [form]="form"></eos-dynamic-input>
         </div>
-        <div class="requiredTab" [hidden]="!isReqiredTab">
+        <div class="requiredTab eos-rk-mandatory" [hidden]="!isReqiredTab">
             <eos-dynamic-input *ngFor="let key of prjDefaults.requiredItems"
                                [input]="inputs[key]"
                                [readonly]="inputs[key].readonly"
