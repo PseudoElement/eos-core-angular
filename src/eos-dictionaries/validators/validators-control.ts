@@ -24,7 +24,7 @@ export class ValidatorsControl {
                 return (control: AbstractControl): { [key: string]: any } => {
                     const v = control.value;
                     if (v && v !== '' && v.indexOf('.') === -1) {
-                        return { valueError: 'Поле должно иметь сивол "."'};
+                        return { valueError: 'Поле должно иметь символ "."'};
                     }
                 };
             default:
