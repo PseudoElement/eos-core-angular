@@ -38,25 +38,26 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         private _whaitSrv: WaitClassifService,
         private _msgSrv: EosMessageService,
         private _pipSrv: PipRX,
-        private _userServices: UserParamsService,
         private _errorSrv: ErrorHelperServices,
-    ) {
+    ) {}
+    async ngOnInit() {
+        await this._userSrv.getUserIsn();
         this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Картотеки и Кабинеты';
         this.flagChangeCards = true;
-        this._userServices.saveData$
-            .takeUntil(this._ngUnsubscribe)
-            .subscribe(() => {
-                this._userServices.submitSave = this.submit(event);
-            });
-    }
-    ngOnInit() {
+
+
+
         this.userId = this._userSrv.userContextId;
-        this._userSrv.getUserIsn().then(() => {
-            this._userServices.checkGrifs(this.userId).then(res => {
-                this.flagGrifs = res;
-                this.init();
-            });
+
+        this._userSrv.saveData$
+        .takeUntil(this._ngUnsubscribe)
+        .subscribe(() => {
+            this._userSrv.submitSave = this.submit(event);
         });
+
+
+        this.flagGrifs = await this._userSrv.checkGrifs(this.userId);
+        this.init();
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
@@ -496,6 +497,6 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         });
     }
     private _pushState() {
-        this._userServices.setChangeState({ isChange: !this.btnDisabled });
+        this._userSrv.setChangeState({ isChange: !this.btnDisabled });
     }
 }

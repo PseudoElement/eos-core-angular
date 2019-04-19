@@ -70,9 +70,10 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.complete();
     }
     ngOnInit() {
-        this.curentUser = this._userParamSrv.curentUser;
-        this.title = `${this.curentUser['SURNAME_PATRON']} (${this.curentUser['CLASSIF_NAME']})`;
-        this._userParamSrv.getUserIsn(String(this.curentUser.ISN_LCLASSIF)).then(data => {
+        this._userParamSrv.getUserIsn()
+        .then(() => {
+            this.curentUser = this._userParamSrv.curentUser;
+            this.title = `${this.curentUser['SURNAME_PATRON']} (${this.curentUser['CLASSIF_NAME']}) Поточное сканирование`;
             this.init();
             this.flagShow = true;
         }).catch(error => {

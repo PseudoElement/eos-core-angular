@@ -39,6 +39,11 @@
             padding-right: 40px;
         }
     }
+    .cabsort {
+        select {
+            cursor: pointer;
+        }
+    }
     .incr-cabinet {
         input {
             width: 50px;

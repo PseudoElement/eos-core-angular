@@ -186,9 +186,6 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
             dismissOnTimeout: 6000,
         };
     }
-    get getMaxIncrement() {
-        return this.form.controls['rec.SRCH_LIMIT_RESULT'].valid;
-    }
     private _pushState() {
         this._userParamsSetSr.setChangeState({ isChange: !this.btnDisable });
     }
