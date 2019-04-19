@@ -21,7 +21,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     apiInstance: 'DEPARTMENT',
     dictType: E_DICT_TYPE.department,
     title: 'Подразделения',
-    defaultOrder: 'title',
+    defaultOrder: 'shorttitle',
     visible: true,
     iconName: 'eos-icon-department-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'import', 'export', 'importPhotos',
@@ -304,9 +304,9 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             type: 'dictionary',
             title: 'Фото'
         }]),
-    treeFields: ['nametitle'],
-    searchFields: [/* 'RUBRIC_CODE', */'nametitle'/*, 'NOTE'*/],
-    listFields: ['CODE', 'nametitle'],
+    treeFields: ['shorttitle'],
+    searchFields: [/* 'RUBRIC_CODE', */'shorttitle'/*, 'NOTE'*/],
+    listFields: ['CODE', 'shorttitle', 'DUTY', 'SURNAME'],
     fullSearchFields: {
         person: ['CODE', 'PHONE', 'PHONE_LOCAL', 'E_MAIL', 'DUTY', 'fullPosition', 'SURNAME', 'NOTE', 'printInfo'],
         department: ['CODE', 'nametitle', 'indexDep', 'NOTE', 'fullTitle'],
