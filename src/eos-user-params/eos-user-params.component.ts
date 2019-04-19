@@ -54,7 +54,6 @@ export class UserParamsComponent implements OnDestroy, OnInit {
         this._userParamService.updateUser$
             .takeUntil(this.ngUnsubscribe)
             .subscribe(() => {
-                console.log('user loded');
                 this.checkTabScan();
             });
         this._userParamService.hasChanges$
