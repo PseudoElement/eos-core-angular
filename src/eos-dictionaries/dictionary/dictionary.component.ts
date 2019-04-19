@@ -45,7 +45,7 @@ import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.in
 import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
 import {CounterNpEditComponent, E_COUNTER_TYPE} from '../counter-np-edit/counter-np-edit.component';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
-import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { DID_NOMENKL_CL } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 
 @Component({
@@ -145,7 +145,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             if (params) {
 
                 this.dictionaryId = params.dictionaryId;
-                if (!this._eaps.isAccessGrantedForDictionary(this.dictionaryId)) {
+                if (this._eaps.isAccessGrantedForDictionary(this.dictionaryId) === APS_DICT_GRANT.denied) {
                     this.accessDenied = true;
                     this._msgSrv.addNewMessage(DANGER_ACCESS_DENIED_DICT);
                     return;
@@ -409,8 +409,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
     isDictModeEnabled (mode: number): boolean {
         const dict = this._dictSrv.dictionaryByMode(mode).id;
-        const access = this._eaps.isAccessGrantedForDictionary(dict);
-        return access;
+        return this._eaps.isAccessGrantedForDictionary(dict) !== APS_DICT_GRANT.denied;
     }
     setDictMode(mode: number) {
         if (mode === 0 && this.treeNode.isDeleted) {

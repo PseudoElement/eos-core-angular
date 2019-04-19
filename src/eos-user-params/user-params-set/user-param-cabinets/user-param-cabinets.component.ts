@@ -434,10 +434,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.editMode();
         this.checkDataToDisabled();
     }
-    close(event) {
-        this.flagEdit = event;
-        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
-    }
     editMode() {
         if (this.flagEdit) {
             this.form.enable({ emitEvent: false });
@@ -448,11 +444,11 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     default(event?) {
         this.prepareData = {};
         this.prepareInputs = {};
-        const prep = this.getObjQueryInputsFieldForDefault(this.queryparams());
+        const prep = this.formHelp.getObjQueryInputsFieldForDefault(this.formHelp.queryparams(CABINETS_USER, 'fieldsDefaultValue'));
         return this._pipRx.read(prep)
             .then((data: USER_PARMS[]) => {
                 this.controller = false;
-                this.creatchesheDefault = this.createhash(data);
+                this.creatchesheDefault = this.formHelp.createhash(data);
                 this.prepareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.creatchesheDefault);
                 this.prepareInputs = this.formHelp.getObjectInputFields(CABINETS_USER.fields);
                 this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
@@ -463,30 +459,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             .catch(err => {
                 console.log(err);
             });
-    }
-    getObjQueryInputsFieldForDefault(inputs: Array<any>) {
-        return {
-            USER_PARMS: {
-                criteries: {
-                    PARM_NAME: inputs.join('||'),
-                    ISN_USER_OWNER: '-99'
-                }
-            }
-        };
-    }
-    createhash(data: USER_PARMS[]) {
-        const a = {};
-        data.forEach((el: USER_PARMS) => {
-            a[el.PARM_NAME] = el.PARM_VALUE;
-        });
-        return a;
-    }
-    queryparams() {
-        const arraQlist = [];
-        CABINETS_USER.fieldsDefaultValue.forEach(el => {
-            arraQlist.push(el.key);
-        });
-        return arraQlist;
     }
     createMessage(type, title, msg) {
         return {

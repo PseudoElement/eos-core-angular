@@ -1,4 +1,4 @@
-import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { DICTIONARIES_PARAM } from './../shared/consts/dictionaries-consts';
 import { Component, Injector } from '@angular/core';
 import { BaseParamComponent } from '../shared/base-param.component';
@@ -23,6 +23,6 @@ export class ParamDictionariesComponent extends BaseParamComponent {
     }
 
     getRightsRubric() {
-        return this._eaps.isAccessGrantedForDictionary(RUBRICATOR_DICT.id);
+        return this._eaps.isAccessGrantedForDictionary(RUBRICATOR_DICT.id) !== APS_DICT_GRANT.denied;
     }
 }

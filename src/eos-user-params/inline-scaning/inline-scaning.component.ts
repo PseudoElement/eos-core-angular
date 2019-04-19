@@ -10,7 +10,6 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 // import { IMessage } from 'eos-common/interfaces';
 // import { RestError } from 'eos-rest/core/rest-error';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
-import { Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import {ErrorHelperServices} from '../shared/services/helper-error.services';
 const BASE_PARAM_INPUTS: IInputParamControl[] = [
@@ -61,7 +60,6 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         private _userParamSrv: UserParamsService,
         private _formHelper: FormHelperService,
         private apiSrv: PipRX,
-        private _router: Router,
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
         ) {
@@ -137,11 +135,6 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         this.setDisableOrEneble();
 
     }
-    close(event) {
-        this.editMode = event;
-        this._router.navigate(['user_param']);
-    }
-
     setDisableOrEneble() {
         for (const key in this.form.controls) {
             if (this.form.controls.hasOwnProperty(key)) {

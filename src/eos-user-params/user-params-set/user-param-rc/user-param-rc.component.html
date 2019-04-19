@@ -1,7 +1,9 @@
 <div class="input-user-wrapper input-user-rc-wrapper " *ngIf="inputs">
-    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (closeEmit)='close($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
     <div class="user-input-group scrollWrapper">
-        <span class="l-font l-font-t">Открывать закладку доп. реквизиты при открытии РК для групп документов.</span>
+        <div class="rc-div">
+            <span class="l-font l-font-t">Открывать закладку доп. реквизиты при открытии РК для групп документов.</span>
+        </div>
         <hr>
         <div class="btn-controll">
             <button class="btn btn-primary-light" [disabled]="!flagEdit" tooltip="Добавить" containerClass="tooltip-info" placement="bottom" triggers="hover" (click)="addRcDoc()">
@@ -14,18 +16,6 @@
         <div class="user-input-group user-input-group-flex rc-doc-margin">
             <span class="rc-doc" *ngFor='let title of dopRec; let i = index' [ngClass]="{'current' : cutentTab === i}" (click)='setTab(i)'>{{title.CLASSIF_NAME}}
                 </span>
-            <!-- <eos-dynamic-input class="multiple-document-groups-select-rc"
-                    [input]="inputs['rec.OPEN_AR']"
-                    [form]="form"
-                    [readonly]="false"></eos-dynamic-input> -->
-            <!--<eos-dynamic-input
-                    class="multiple-select-rc"
-                    [input]="inputs['rec.OPEN_AR']"
-                    [form]="form"
-                    [readonly]="false"
-                    multiple
-                ></eos-dynamic-input>-->
-            <!--<select class="multiple-select-rc" size="8" multiple></select>-->
         </div>
         <hr>
         <div class="rc-box">
@@ -59,4 +49,5 @@
             </div>
         </div>
     </div>
-    <div class="bcgFixed" *ngIf='flagBacground'></div>
+    <div class="bcgFixed" *ngIf='flagBacground'>
+    </div>

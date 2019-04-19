@@ -224,5 +224,60 @@ export class FormHelperService {
         });
         return obj;
     }
+    getObjQueryInputsFieldForDefault(inputs: Array<any>) {
+        return {
+            USER_PARMS: {
+                criteries: {
+                    PARM_NAME: inputs.join('||'),
+                    ISN_USER_OWNER: '-99'
+                }
+            }
+        };
+    }
+
+    getObjQueryInputsField() {
+        return {
+            USER_PARMS: {
+                criteries: {
+                    ISN_USER_OWNER: '-99'
+                }
+            }
+        };
+    }
+
+    pushIntoArrayRequest(storeReq: Array<any>, data: Map<string, any>, id, encodeurl: boolean = false): Array<any> {
+        Array.from(data).forEach(val => {
+            let parn_Val;
+            if (typeof val[1] === 'boolean') {
+                val[1] === false ? parn_Val = 'NO' : parn_Val = 'YES';
+            } else {
+                String(val[1]) === 'null' ? parn_Val = '' : parn_Val = val[1];
+            }
+            storeReq.push({
+                method: 'MERGE',
+                requestUri: `USER_CL(${id})/USER_PARMS_List(\'${id} ${val[0]}\')`,
+                encodeurl: encodeurl,
+                data: {
+                    PARM_VALUE: `${parn_Val}`
+                }
+            });
+        });
+        return storeReq;
+    }
+    queryparams(data, key) {
+        const arraQlist = [];
+        data[key].forEach(el => {
+            arraQlist.push(el.key);
+        });
+        return arraQlist;
+    }
+
+    createhash(data: any) {
+        const a = {};
+        data.forEach((el: any) => {
+            a[el.PARM_NAME] = el.PARM_VALUE;
+        });
+        return a;
+    }
 
 }

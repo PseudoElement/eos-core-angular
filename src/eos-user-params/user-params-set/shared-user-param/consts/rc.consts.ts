@@ -5,13 +5,6 @@ export const RC_USER: IBaseUsers = {
     title: 'РК',
     apiInstance: 'USER_PARMS',
     fields: [
-       /* {
-            key: 'OPEN_AR',
-            type: 'select',
-            title: '',
-            options: [
-            ]
-        },*/
         {
             key: 'OPEN_AR',
             title: '',
@@ -66,6 +59,44 @@ export const RC_USER: IBaseUsers = {
             type: 'boolean',
             title: 'Не показывать скрытые файлы',
             readonly: false,
+        }
+    ],
+    fieldsDefaultValue: [
+        {
+            key: 'OPEN_AR',
+            title: '',
+            type: 'text',
+        },
+        {
+            key: 'SHOW_RES_HIERARCHY',
+            type: 'radio',
+            title: 'Показывать иерархию:',
+        },
+
+        {
+            key: 'SHOW_ALL_RES',
+            type: 'radio',
+            title: 'Показывать поручения',
+        },
+        {
+            key: 'SHOW_ALL_RESLIST',
+            type: 'radio',
+            title: 'Показывать поручения',
+        },
+        {
+            key: 'RES_LIST_ALL',
+            type: 'boolean',
+            title: 'Развернутую инф. единым списком',
+        },
+        {
+            key: 'SHOW_RAC_DATE',
+            type: 'boolean',
+            title: 'Показывать дату поступления в картотеку',
+        },
+        {
+            key: 'DONT_SHOW_DOC_HIDDEN_FILES',
+            type: 'boolean',
+            title: 'Не показывать скрытые файлы',
         }
     ]
 };

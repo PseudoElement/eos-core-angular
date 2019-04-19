@@ -32,7 +32,7 @@ import { CONFIRM_CHANGE_BOSS } from '../consts/confirm.consts';
 import {ConfirmWindowService} from 'eos-common/confirm-window/confirm-window.service';
 import { ReestrtypeDictionaryDescriptor } from '../core/reestrtype-dictionary-descriptor';
 import { _ES } from '../../eos-rest/core/consts';
-import { EosAccessPermissionsService } from './eos-access-permissions.service';
+import { EosAccessPermissionsService, APS_DICT_GRANT } from './eos-access-permissions.service';
 
 @Injectable()
 export class EosDictService {
@@ -714,7 +714,7 @@ export class EosDictService {
 
     setDictMode(mode: number): boolean {
         const dict = this._dictionaries[0].getDictionaryIdByMode(mode).id;
-        const access = this._eaps.isAccessGrantedForDictionary(dict);
+        const access = this._eaps.isAccessGrantedForDictionary(dict) !== APS_DICT_GRANT.denied;
         if (access) {
             this._dictMode = mode;
             this._srchCriteries = null;

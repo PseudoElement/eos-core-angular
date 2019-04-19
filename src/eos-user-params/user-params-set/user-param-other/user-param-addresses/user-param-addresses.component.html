@@ -1,0 +1,55 @@
+<div *ngIf="inputs">
+    <div class="user-input-group ">
+        <p class="the-main-recipients-of-the-document-titles ">Внешние адресаты</p>
+        <span class="l-font ">При добавлении указывать</span>
+        <hr>
+        <div>
+            <span>Вид отправки:</span>
+            <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.RS_OUTER_DEFAULT_DELIVERY'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+            <span></span>
+        </div>
+    </div>
+    <div class="user-input-group ">
+        <div class="send-from ">
+            <span class="send-fron-title ">Отправить из:</span>
+            <span class="send-from-input ">
+            <input [disabled]='!editFlag' readonly type="text " name="sendFrom " [ngModel]="sendFrom " >
+        </span>
+            <span class="send-from-btn-choose ">
+            <button
+                [disabled] = "!flagEdit "
+                class="btn btn-primary-light "
+                tooltip="Выбор из справочника "
+                triggers="hover "
+                containerClass="tooltip-info "
+                (click)="sendFromChoose() ">
+                <span class="eos-icon eos-icon-folder-blue small "></span>
+            </button>
+            </span>
+            <span class=" ">
+            <button
+                [disabled] = "!flagEdit "
+                tooltip="Очистить "
+                #tooltipTemp = 'bs-tooltip'
+                containerClass="tooltip-info "
+                class="btn btn-primary-light "
+                (click)="clearSendFrom() ">
+                <span class="eos-icon eos-icon-close-blue small "></span>
+            </button>
+            </span>
+        </div>
+    </div>
+    <hr>
+    <div class="user-input-group ">
+        <p class="the-main-recipients-of-the-document-titles ">Внутренние адресаты</p>
+        <span class="l-font ">При добавлении указывать экземпляр документа:</span>
+        <hr>
+        <eos-dynamic-input [input]="inputs[ 'rec.MARKDOCKND1'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="user-input-group ">
+        <eos-dynamic-input [input]="inputs[ 'rec.GPD_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs[ 'rec.VOL_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+    </div>
+</div>
+<!-- <div *ngIf="flagBacground " class="bacgrFixed "></div> -->

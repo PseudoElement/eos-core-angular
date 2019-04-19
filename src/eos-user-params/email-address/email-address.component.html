@@ -1,5 +1,5 @@
 <div class="email-window">
-    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="statusBtnSub" [defaultBtn]='false' (submitEmit)='saveAllForm($event)' (cancelEmit)='backForm($event)' (editEmit)='edit($event)' (closeEmit)='close($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="statusBtnSub" [defaultBtn]='false' (submitEmit)='saveAllForm($event)' (cancelEmit)='backForm($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
     <div class="email-control">
         <button [disabled]="!flagEdit" type="button" class=" email-create btn btn-primary" (click)="openModal(template)" tooltip="Добавить E-MAIL" placement="top" containerClass="tooltip-info">
             <span class="eos-icon small" [ngClass] = "flagEdit ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>

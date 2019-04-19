@@ -8,7 +8,6 @@ import { FormGroup } from '@angular/forms';
 import { E_FIELD_TYPE, IBaseUsers } from '../../shared/intrfaces/user-params.interfaces';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { Router } from '@angular/router';
 import {ErrorHelperServices} from '../../shared/services/helper-error.services';
 import { Subject } from 'rxjs/Subject';
 
@@ -37,7 +36,6 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
         private _inputCntlSrv: InputControlService,
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
-        private _route: Router,
         private _errorSrv: ErrorHelperServices,
     ) {}
     async ngOnInit() {
@@ -224,9 +222,6 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
                 this.form.controls[key].enable({ emitEvent: false });
             }
         });
-    }
-    close(event?) {
-        this._route.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
     defaults(event?) {
         const defaultListName = this.getQueryDefaultList(this.listForQuery);

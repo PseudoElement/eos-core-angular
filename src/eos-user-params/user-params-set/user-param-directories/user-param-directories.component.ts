@@ -6,7 +6,6 @@ import { FormHelperService } from '../../shared/services/form-helper.services';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { Router } from '@angular/router';
 import { PipRX, USER_PARMS } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import {ErrorHelperServices} from '../../shared/services/helper-error.services';
@@ -36,7 +35,6 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
         private formHelp: FormHelperService,
         private dataConv: EosDataConvertService,
         private inpSrv: InputControlService,
-        private _router: Router,
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
@@ -248,10 +246,6 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
         this.flagEdit = false;
         this._pushState();
         this.editMode();
-    }
-    close(event) {
-        this.flagEdit = event;
-        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
     createMessage(type, title, msg) {
         return {

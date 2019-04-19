@@ -1,0 +1,53 @@
+<div *ngIf="inputs">
+    <div class="user-input-group">
+        <span class="l-font ">Получать реестр:</span>
+        <hr>
+        <eos-dynamic-input [input]="inputs[ 'rec.CUR_CABINET'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="user-input-group ">
+        <eos-dynamic-input [input]="inputs[ 'rec.PARAM_WINDOW'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs[ 'rec.SELECT_ITEMS'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs[ 'rec.REESTR_ONE_TO_ONE'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="user-input-group ">
+        <span class="l-font ">Получать по:</span>
+        <hr>
+        <eos-dynamic-input [input]="inputs[ 'rec.ORIG_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs[ 'rec.REESTR_NOT_INCLUDED'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="user-input-group ">
+        <div class="number-increment-wrap ">
+            <span>Дата передачи документов не позднее ( дней ):</span>
+            <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.REESTR_DATE_INTERVAL'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        </div>
+        <div class="number-increment-wrap ">
+            <span>Количество копий:</span>
+            <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.REESTR_COPY_COUNT'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        </div>
+    </div>
+    <hr>
+    <div class="user-content-wr ">
+        <span class="title-user-content ">Ограничить группами документов:</span>
+        <div class="user-input-group fl ">
+            <div class="user-input-group-wr ">
+                <div class="user-input-group-hi " *ngIf='list && list.length > 0'>
+                    <span *ngFor="let node of list ">{{node.label}}</span>
+                </div>
+            </div>
+            <div style="display: inline " class="btn-action ">
+                <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover " containerClass="tooltip-info " (click)="selectfromTheDirectory() ">
+                    <span class="eos-icon eos-icon-folder-blue small "></span>
+                </button>
+            </div>
+            <div style="display: inline " class=" " *ngIf="list">
+                <button [disabled]="list.length===0 || !flagEdit " tooltip="Очистить " trigers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteDirectory() ">
+                    <span class="eos-icon eos-icon-close-blue small "></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div *ngIf="flagBacground " class="bacgrFixed "></div> -->

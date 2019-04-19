@@ -35,7 +35,7 @@ export class TreeUserSelectService {
         if (mode === E_MODES_USER_SELECT.card) {
             this.cardFlag = 1;
             query.DEPARTMENT.criteries['CARD_FLAG'] = '1';
-            this.root.title = 'Все картотеки';
+            this.root.title = 'Центральная картотека';
         } else {
             delete query.DEPARTMENT.criteries['CARD_FLAG'];
             this.cardFlag = 0;
