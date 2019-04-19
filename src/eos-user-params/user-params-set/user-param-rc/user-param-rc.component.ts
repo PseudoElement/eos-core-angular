@@ -46,17 +46,18 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
-    ) {
-        this.allData = this._userParamsSetSrv.hashUserContext;
-        this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - РК`;
-        this.cutentTab = 0;
+    ) {}
+    async ngOnInit() {
         this._userParamsSetSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
-    }
-    ngOnInit() {
+        await this._userParamsSetSrv.getUserIsn();
+        this.allData = this._userParamsSetSrv.hashUserContext;
+        this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - РК`;
+        this.cutentTab = 0;
+
         this.init();
         this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
             this.originDocRc = this.dopRec ? this.dopRec.slice() : null;

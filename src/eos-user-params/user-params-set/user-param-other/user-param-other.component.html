@@ -1,7 +1,7 @@
 <div class="input-user-wrapper">
     <eos-user-params-header [editMode]="editFlag" [title]='titleHeader' [disableBtn]="btnDisabled || !flagIncrementError" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event) '></eos-user-params-header>
 </div>
-<div class="input-user-wrapper   input-user-other-rk-forwarding-wrapper">
+<div class="input-user-wrapper   input-user-other-rk-forwarding-wrapper" *ngIf="titleHeader">
     <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs">
             <li class="tab-item" *ngFor="let tab of fieldGroups; let i = index" [ngClass]="{'active ': i === currTab}" (click)="setTab(i)">
