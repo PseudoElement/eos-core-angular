@@ -68,7 +68,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private _userParamSrv: UserParamsService,
         private _nanParSrv: NavParamService,
         private _errorSrv: ErrorHelperServices,
-    ) {
+    ) {}
+    async ngOnInit() {
+        await this._userParamSrv.getUserIsn();
         this.selfLink = this._router.url.split('?')[0];
         this.init();
         this.editModeF();
@@ -81,6 +83,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this._userParamSrv.submitSave = this.submit();
             });
     }
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+    }
+
     init() {
         this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
         this.curentUser = this._userParamSrv.curentUser;
@@ -100,12 +107,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._dataDb['formControls'] = this.formControls.value;
         this._dataDb['formAccess'] = this.formAccess.value;
         this.isLoading = false;
-    }
-    ngOnInit() {
-    }
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
     }
     submit(): Promise<any> {
         if (!this.stateHeaderSubmit) {

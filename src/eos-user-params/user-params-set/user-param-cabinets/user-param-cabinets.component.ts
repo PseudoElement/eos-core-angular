@@ -56,16 +56,18 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
-    ) {
-        this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
-        this.allData = this._userParamsSetSrv.hashUserContext;
+    ) {}
+    async ngOnInit() {
         this._userParamsSetSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
-    }
-    ngOnInit() {
+
+        await this._userParamsSetSrv.getUserIsn();
+        this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
+        this.allData = this._userParamsSetSrv.hashUserContext;
+
         this.init();
         Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {
             CABINETS_USER.fields.map(fields => {

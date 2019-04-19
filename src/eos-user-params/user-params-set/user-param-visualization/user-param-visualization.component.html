@@ -1,7 +1,7 @@
 <div class="input-user-wrapper input-user-visualization-wrapper" *ngIf="inputs">
     <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
     <div class="user-input-group">
-        <span class="l-font">Режим отображения основного файла</span>
+        <span class="l-font">Режим отображения основного файла документа</span>
         <hr>
         <div>
             <eos-dynamic-input class="inline-block" [input]="inputs['rec.COLLAGE_SHOW_MODE']" [form]="form" [readonly]="false"></eos-dynamic-input>

@@ -50,18 +50,24 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private _inputCtrlSrv: InputParamControlService,
         private _router: Router,
         private _errorSrv: ErrorHelperServices,
-    ) {
-        const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
-        this.curentUser = this._userParamsSetSrv.curentUser;
-        this._userParamsSetSrv.checkGrifs(id).then(res => {
-            this.flagGrifs = res;
-            this.init();
-        });
+    ) {}
+    async ngOnInit() {
         this._userParamsSetSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
+
+        await this._userParamsSetSrv.getUserIsn();
+        const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
+        this.curentUser = this._userParamsSetSrv.curentUser;
+
+        this.flagGrifs = await this._userParamsSetSrv.checkGrifs(id);
+        this.init();
+    }
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
     }
 
     init() {
@@ -91,13 +97,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this.selectNode(this.listRight[0]);
         }
         this.inputAll = { all: new RadioInput(CONTROL_ALL_NOTALL) };
-    }
-    ngOnInit() {
-
-    }
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
     }
     submit(): Promise<any> {
         if (this._checkCreatePRJNotEmptyAllowed()) {

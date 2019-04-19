@@ -7,6 +7,7 @@ import { Subject } from 'rxjs/Subject';
 import { IMessage } from 'eos-common/interfaces';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { Observable } from 'rxjs/Observable';
+import { EosStorageService } from 'app/services/eos-storage.service';
 
 @Injectable()
 export class UserParamsService {
@@ -15,6 +16,7 @@ export class UserParamsService {
     public SubEmail: Subject<any> = new Subject();
     public submitSave;
     private _saveFromAsk$: Subject<void> = new Subject<void>();
+    private _updateUser$: Subject<void> = new Subject<void>();
     private _hasChanges$: Subject<IUserSetChanges> = new Subject<IUserSetChanges>();
     private _isTechUser: boolean;
     private _userContext: IParamUserCl;
@@ -53,6 +55,9 @@ export class UserParamsService {
     get saveData$ (): Observable<void> {
         return this._saveFromAsk$.asObservable();
     }
+    get updateUser$ (): Observable<void> {
+        return this._updateUser$.asObservable();
+    }
     get hasChanges$ (): Observable<IUserSetChanges> {
         return this._hasChanges$.asObservable();
     }
@@ -60,8 +65,14 @@ export class UserParamsService {
         private _pipSrv: UserParamApiSrv,
         private _msgSrv: EosMessageService,
         private _pipRx: PipRX,
+        private _storageSrv: EosStorageService,
     ) {}
-    getUserIsn(isn_cl: string = this.userContextId.toString()): Promise<boolean> {
+    getUserIsn(isn_cl?: string): Promise<boolean> {
+
+        if (!isn_cl) {
+            isn_cl = this._storageSrv.getItem('userEditableId');
+        }
+
         const queryUser = {
             [`USER_CL(${+isn_cl})`]: ALL_ROWS,
             expand: 'USER_PARMS_List,USERCARD_List/USER_CABINET_List,USER_RIGHT_DOCGROUP_List,USERDEP_List,USERCARD_List/USER_CARD_DOCGROUP_List,NTFY_USER_EMAIL_List,USER_TECH_List'
@@ -103,6 +114,7 @@ export class UserParamsService {
             }
             this._userContext = this._pipRx.entityHelper.prepareForEdit(this._userContext);
             // console.log(this._userContext.USERCARD_List);
+            this._updateUser$.next();
             return true;
         })
         .catch(err => {

@@ -42,10 +42,19 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         private _formHelper: FormHelperService,
         private _errorSrv: ErrorHelperServices,
 
-    ) {
-        this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Прочее`;
+    ) {}
+    async ngOnInit() {
         this._userSrv.saveData$.takeUntil(this._ngUnsubscribe).subscribe(() => {
             this._userSrv.submitSave = this.submit(null);
+        });
+
+        await this._userSrv.getUserIsn();
+        this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Прочее`;
+
+        const prep = this._formHelper.getObjQueryInputsField();
+        this._pipRx.read(prep).then((data) => {
+            this.defaultValues = this._formHelper.createhash(data);
+            this.remaster.emitDefaultFalues.next(this.defaultValues);
         });
     }
     get btnDisabled() {
@@ -54,13 +63,6 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         } else {
             return true;
         }
-    }
-    ngOnInit() {
-        const prep = this._formHelper.getObjQueryInputsField();
-        this._pipRx.read(prep).then((data) => {
-            this.defaultValues = this._formHelper.createhash(data);
-            this.remaster.emitDefaultFalues.next(this.defaultValues);
-        });
     }
 
     setTab(i: number) {
@@ -121,13 +123,13 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     }
     submit($event) {
         return this._pipRx.batch(this.createObjRequest(), '').then(response => {
-            this._userSrv.getUserIsn().then(() => {
-                this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                this.resetFlagsBtn();
-                this.editFlag = false;
-                this.remaster.submitEmit.next();
-                this._pushState();
-            });
+            this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+            this.resetFlagsBtn();
+            this.editFlag = false;
+            this.remaster.submitEmit.next();
+            this._pushState();
+            // this._userSrv.getUserIsn().then(() => {
+            // });
         }).catch(error => {
             this._errorSrv.errorHandler(error);
             this.cancel(false);
