@@ -22,7 +22,7 @@ import { CITSTATUS_DICT } from 'eos-dictionaries/consts/dictionaries/citstatus.c
 import { VISA_TYPE_DICT } from 'eos-dictionaries/consts/dictionaries/visa-type.consts';
 import { REESTRTYPE_DICT } from 'eos-dictionaries/consts/dictionaries/reestrtype.consts';
 import { ORG_TYPE_DICT } from 'eos-dictionaries/consts/dictionaries/org-type.consts';
-import { RESOLUTION_CATEGORY_DICT } from 'eos-dictionaries/consts/dictionaries/resolution-category.consts';
+import { RESOL_CATEGORY_DICT as RESOL_CATEGORY_DICT } from 'eos-dictionaries/consts/dictionaries/resolution-category.consts';
 
 
 
@@ -48,7 +48,7 @@ const dictsTechs: { id: string,     tech: E_TECH_RIGHT; } [] = [
     { id: REESTRTYPE_DICT.id,       tech: E_TECH_RIGHT.ReestrTypes},        // Типы реестров
     { id: LINK_DICT.id,             tech: E_TECH_RIGHT.LinkTypes},          // Типы связок
     { id: NADZOR.id,                tech: E_TECH_RIGHT.NadzorCL},           // Группа справочников Надзора
-    { id: RESOLUTION_CATEGORY_DICT.id, tech: E_TECH_RIGHT.ResCategories},   // Категории поручений
+    { id: RESOL_CATEGORY_DICT.id,   tech: E_TECH_RIGHT.ResCategories},      // Категории поручений
 ];
 
 
