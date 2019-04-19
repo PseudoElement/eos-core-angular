@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import { EosDictService } from '../services/eos-dict.service';
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import {Router} from '@angular/router';
-import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 
 @Component({
     selector: 'eos-dictionaries',
@@ -32,6 +32,6 @@ export class DictionariesComponent {
     }
 
     isAccessEnabled(dict: any) {
-        return this._eaps.isAccessGrantedForDictionary(dict.id);
+        return this._eaps.isAccessGrantedForDictionary(dict.id) !== APS_DICT_GRANT.denied;
     }
 }

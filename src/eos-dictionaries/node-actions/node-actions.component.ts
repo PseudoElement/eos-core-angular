@@ -7,6 +7,7 @@ import {EosDictService} from '../services/eos-dict.service';
 import {EosDictionary} from '../core/eos-dictionary';
 import {COMMON_ADD_MENU, DEPARTMENT_ADD_MENU, MORE_RECORD_ACTIONS, ORGANIZ_ADD_MENU, RECORD_ACTIONS, RUBRIC_UNIQ_ADD_MENU} from '../consts/record-actions.consts';
 import {E_DICT_TYPE, E_RECORD_ACTIONS, IAction, IActionButton, IActionEvent, IDictionaryViewParameters} from 'eos-dictionaries/interfaces';
+import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 
 @Component({
     selector: 'eos-node-actions',
@@ -40,7 +41,10 @@ export class NodeActionsComponent implements OnDestroy {
 
     private ngUnsubscribe: Subject<any> = new Subject();
 
-    constructor(_dictSrv: EosDictService) {
+    constructor(
+        _dictSrv: EosDictService,
+        private _eaps: EosAccessPermissionsService,
+        ) {
         this._initButtons();
 
         _dictSrv.listDictionary$
@@ -181,8 +185,13 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
             }
         }
+
+        const grant = this.dictionary ? this._eaps.isAccessGrantedForDictionary(this.dictionary.id) :
+                        APS_DICT_GRANT.denied;
+        const is_granted = (button.accessNeed <= grant);
+
         button.show = _show;
-        button.enabled = _enabled;
+        button.enabled = _enabled && is_granted;
         button.isActive = _active;
     }
 

@@ -50,22 +50,41 @@ const dictsTechs: { id: string,     tech: E_TECH_RIGHT; } [] = [
     { id: NADZOR.id,                tech: E_TECH_RIGHT.NadzorCL},           // Группа справочников Надзора
     { id: RESOLUTION_CATEGORY_DICT.id, tech: E_TECH_RIGHT.ResCategories},   // Категории резолюций
 ];
+
+
+export enum APS_DICT_GRANT {
+    denied = 0,
+    read = 1,
+    readwrite = 2,
+}
+
 @Injectable()
 export class EosAccessPermissionsService {
     constructor (
         private appCtx: AppContext,
     ) {}
 
-    isAccessGrantedForDictionary (dictId: string): boolean {
+    isAccessGrantedForDictionary (dictId: string): APS_DICT_GRANT {
         const dt = dictsTechs.find(d => dictId === d.id);
         if (dt) {
-            return this._checkAccessTech(dt.tech);
+            const grant = this._checkAccessTech(dt.tech) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
+
+            // Если к кабинетам есть доступ, а подразделениям - нет, то подразделения отдаем в readonly
+            if (dt.id === DEPARTMENTS_DICT.id && grant === APS_DICT_GRANT.denied) {
+                const cab_grant = this.isAccessGrantedForDictionary(CABINET_DICT.id);
+                if (cab_grant !== APS_DICT_GRANT.denied) {
+                    return APS_DICT_GRANT.read;
+                }
+            }
+            return grant;
         }
+
         const dNadzor =  NADZORDICTIONARIES.find (n => n.id === dictId);
         if (dNadzor) {
-            return this._checkAccessTech(E_TECH_RIGHT.NadzorCL);
+            return this._checkAccessTech(E_TECH_RIGHT.NadzorCL) ? APS_DICT_GRANT.readwrite : APS_DICT_GRANT.denied;
         }
-        return true;
+
+        return APS_DICT_GRANT.denied;
     }
 
     isAccessGrantedForUsers(): boolean {
