@@ -38,7 +38,6 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
     ) {
-        this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Поиск';
         this.flagEdit = false;
         this.btnDisable = true;
         this._userParamsSetSr.saveData$
@@ -51,6 +50,7 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this._userParamsSetSr.getUserIsn().then(() => {
             this.allData = this._userParamsSetSr.hashUserContext;
+            this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Поиск';
             this.inint();
         });
     }

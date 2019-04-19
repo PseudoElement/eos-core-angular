@@ -45,14 +45,15 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         private _RemasterService: RemasterService,
         private _errorSrv: ErrorHelperServices,
         private _formHelper: FormHelperService,
-    ) {
-        this.hash = this._userSrv.hashUserContext;
+    ) {}
+    async ngOnInit() {
         this._userSrv.saveData$.takeUntil(this._ngUnsubscribe).subscribe(() => {
             this._userSrv.submitSave = this.submit(null);
         });
+        await this._userSrv.getUserIsn();
+        this.hash = this._userSrv.hashUserContext;
         this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Регистрация`;
-    }
-    ngOnInit() {
+
         this._apiSrv.read(this._formHelper.getObjQueryInputsField()).then(data => {
             this.defaultValues = this._formHelper.createhash(data);
             this.isLoading = true;
@@ -166,12 +167,11 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         return this._apiSrv.batch(this.createObjRequest(), '').then(response => {
             this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
             this.defaultSetFlagBtn();
-            const userId = this._userSrv.userContextId;
-            return this._userSrv.getUserIsn(String(userId)).then(res => {
-                this.hash = this._userSrv.hashUserContext;
-                this.editFlag = false;
-                this._RemasterService.submitEmit.next();
-            });
+            this.hash = this._userSrv.hashUserContext;
+            this.editFlag = false;
+            this._RemasterService.submitEmit.next();
+            // return this._userSrv.getUserIsn(String(userId)).then(res => {
+            // });
         }).catch(error => {
             this._errorSrv.errorHandler(error);
             this.cancel(false);

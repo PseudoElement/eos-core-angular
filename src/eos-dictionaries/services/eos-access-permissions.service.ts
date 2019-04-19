@@ -48,7 +48,7 @@ const dictsTechs: { id: string,     tech: E_TECH_RIGHT; } [] = [
     { id: REESTRTYPE_DICT.id,       tech: E_TECH_RIGHT.ReestrTypes},        // Типы реестров
     { id: LINK_DICT.id,             tech: E_TECH_RIGHT.LinkTypes},          // Типы связок
     { id: NADZOR.id,                tech: E_TECH_RIGHT.NadzorCL},           // Группа справочников Надзора
-    { id: RESOLUTION_CATEGORY_DICT.id, tech: E_TECH_RIGHT.ResCategories},   // Категории резолюций
+    { id: RESOLUTION_CATEGORY_DICT.id, tech: E_TECH_RIGHT.ResCategories},   // Категории поручений
 ];
 
 

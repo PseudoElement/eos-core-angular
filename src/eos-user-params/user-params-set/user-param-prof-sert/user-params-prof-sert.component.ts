@@ -56,20 +56,22 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices
-    ) {
-        this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Профиль сертификатов`;
-        this.selectedSertificatePopup = null;
+    ) {}
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+    }
+    async ngOnInit() {
         this._userSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {
                 this._userSrv.submitSave = this.submit(null);
             });
-    }
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
-    ngOnInit() {
+
+        await this._userSrv.getUserIsn();
+        this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Профиль сертификатов`;
+        this.selectedSertificatePopup = null;
+
         const store: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
         this.certStoresService.init(null, store)
             .subscribe(

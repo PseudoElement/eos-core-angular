@@ -1,7 +1,8 @@
-import {Component, Injector, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, Injector, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DocgroupTemplateConfigComponent } from '../docgroup-template-config/docgroup-template-config.component';
+import {Validators} from '@angular/forms';
 
 const AUTO_REG_EXPR = /\{(9|A|B|C|@|1#|2#|3#)\}/;
 const UNIQ_CHECK_EXPR = /\{2|E\}/;
@@ -10,9 +11,10 @@ const UNIQ_CHECK_EXPR = /\{2|E\}/;
     selector: 'eos-docgroup-card',
     templateUrl: 'docgroup-card.component.html',
 })
-export class DocgroupCardComponent extends BaseCardEditComponent implements OnChanges {
+export class DocgroupCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
 
     private _prev = {};
+
 
     get isPrjFlag(): boolean {
         return this.getValue('rec.PRJ_NUM_FLAG');
@@ -51,6 +53,11 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         }
     }
 
+    ngOnInit(): void {
+        super.ngOnInit();
+        this._clearControlValidators('rec.SHABLON', !this.isNode);
+    }
+
     editTemplate(forProject = false) {
         this.templateModal = this.modalSrv.show(DocgroupTemplateConfigComponent, { class: 'docgroup-template-modal modal-lg' });
         const path = forProject ? 'rec.PRJ_SHABLON' : 'rec.SHABLON';
@@ -75,6 +82,18 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         }
     }
 
+    private _clearControlValidators(path: string, condition: boolean, reset: boolean = false) {
+        const tempControl = this.form.controls[path];
+        if (tempControl) {
+            if (reset) {
+                tempControl.setValidators(Validators.required);
+            }
+            if (condition) {
+                tempControl.setValidators(null);
+            }
+        }
+    }
+
     private updateForm(formChanges: any) {
         this.unsubscribe();
         const updates = {};
@@ -94,7 +113,6 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
                 isRcTypeChanged = true;
             }
         }
-
 
         if (isRcTypeChanged) {
             if (this.rcType * 1 === 3) {
@@ -116,8 +134,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
             }
         }
 
-        this.inputs['rec.PRJ_SHABLON'].required = this.isPrjFlag;
-        this.toggleInput(this.isPrjFlag, 'rec.PRJ_SHABLON', formChanges, updates);
+        this._clearControlValidators('rec.PRJ_SHABLON', !this.isNode || !this.isPrjFlag, true);
 
         // toggle auto register flag
         this.toggleInput(this.isPrjFlag && !AUTO_REG_EXPR.test(tpl), 'rec.PRJ_AUTO_REG', formChanges, updates);

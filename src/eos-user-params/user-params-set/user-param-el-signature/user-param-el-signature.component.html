@@ -1,7 +1,7 @@
 <div class="input-user-wrapper input-user-directories-wrapper" *ngIf="inputs">
     <eos-user-params-header [editMode]="editFlag" [title]='titleHeader' [disableBtn]="!btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancellation($event)' (closeEmit)='close($event)' (defaultEmit)='default($event)'></eos-user-params-header>
 </div>
-<div class="input-user-wrapper input-user-other-rk-forwarding-wrapper scrollWrapper signature">
+<div class="input-user-wrapper input-user-other-rk-forwarding-wrapper scrollWrapper signature" *ngIf="inputs">
     <div class="user-input-group">
         <div class="signature-wr">
             <span class="l-font">Объект поддержки ЭП и шифрования</span>

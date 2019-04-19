@@ -46,17 +46,18 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
-    ) {
-        this.allData = this._userParamsSetSrv.hashUserContext;
-        this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - РК`;
-        this.cutentTab = 0;
+    ) {}
+    async ngOnInit() {
         this._userParamsSetSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
-    }
-    ngOnInit() {
+        await this._userParamsSetSrv.getUserIsn();
+        this.allData = this._userParamsSetSrv.hashUserContext;
+        this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - РК`;
+        this.cutentTab = 0;
+
         this.init();
         this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
             this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
@@ -229,16 +230,17 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     submit(): Promise<any> {
         const query = this.createUrl();
         return this._pipRx.batch(query, '').then(res => {
-            return this._userParamsSetSrv.getUserIsn().then(() => {
-                this.mapChanges.clear();
-                this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
-                this.botInputs();
-                this.flagEdit = false;
-                this.btnDisabled = true;
-                this._pushState();
-                this.editMode();
-                this._msg.addNewMessage(PARM_SUCCESS_SAVE);
-            });
+            this.mapChanges.clear();
+            this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
+            this.botInputs();
+            this.flagEdit = false;
+            this.btnDisabled = true;
+            this._pushState();
+            this.editMode();
+            this._msg.addNewMessage(PARM_SUCCESS_SAVE);
+            // return this._userParamsSetSrv.getUserIsn().then(() => {
+
+            // });
         }).catch(error => {
             this._errorSrv.errorHandler(error);
         });

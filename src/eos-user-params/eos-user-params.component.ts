@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import { UserParamsService } from './shared/services/user-params.service';
 import { NavParamService } from 'app/services/nav-param.service';
@@ -8,6 +8,7 @@ import { IParamAccordionList } from './shared/intrfaces/user-params.interfaces';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 import { IUserSetChanges } from './shared/intrfaces/user-parm.intterfaces';
+import { EosStorageService } from 'app/services/eos-storage.service';
 @Component({
     selector: 'eos-user-params',
     templateUrl: 'eos-user-params.component.html'
@@ -16,7 +17,7 @@ import { IUserSetChanges } from './shared/intrfaces/user-parm.intterfaces';
 export class UserParamsComponent implements OnDestroy, OnInit {
     accordionList: IParamAccordionList[] = USER_PARAMS_LIST_NAV;
     isShowAccordion: boolean;
-    isLoading: boolean = true;
+    isLoading: boolean;
     isNewUser: boolean = false;
     pageId: string;
     private ngUnsubscribe: Subject<any> = new Subject();
@@ -24,10 +25,11 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     private _disableSave: boolean;
     constructor (
         private _navSrv: NavParamService,
-        private _router: Router,
+        // private _router: Router,
         private _route: ActivatedRoute,
         private _userParamService: UserParamsService,
         private _confirmSrv: ConfirmWindowService,
+        private _storageSrv: EosStorageService,
 
     ) {
         this._route.params
@@ -38,21 +40,21 @@ export class UserParamsComponent implements OnDestroy, OnInit {
         this._route.queryParams
             .takeUntil(this.ngUnsubscribe)
             .subscribe(qParam => {
-                this.isLoading = true;
-                if (!qParam['isn_cl'] && !this._userParamService.isUserContexst) {
-                    this._router.navigate(['user_param']);
-                    return;
+                // this.isLoading = true;
+                if (qParam['isn_cl']) {
+                    this._storageSrv.setItem('userEditableId', qParam['isn_cl'], true);
                 }
-                this._userParamService.getUserIsn(qParam['isn_cl'])
-                    .then((data: boolean) => {
-                        this.checkTabScan();
-                        this.isLoading = false;
 
-                    })
-                    .catch(() => {
-                        this._router.navigate(['user_param']);
-                    });
-                    this.isShowAccordion = true;
+                // if (!qParam['isn_cl'] && !this._userParamService.isUserContexst) {
+                //     this._router.navigate(['user_param']);
+                //     return;
+                // }
+                this.isShowAccordion = true;
+            });
+        this._userParamService.updateUser$
+            .takeUntil(this.ngUnsubscribe)
+            .subscribe(() => {
+                this.checkTabScan();
             });
         this._userParamService.hasChanges$
             .takeUntil(this.ngUnsubscribe)

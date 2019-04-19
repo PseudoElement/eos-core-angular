@@ -53,19 +53,21 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
-    ) {
-        this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Электронная подпись';
-        this._userSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
-            .subscribe(() => {
-                this._userSrv.submitSave = this.submit();
-        });
-    }
+    ) {}
     ngOnDestroy() {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
-    ngOnInit() {
+    async ngOnInit() {
+        this._userSrv.saveData$
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this._userSrv.submitSave = this.submit();
+            });
+
+        await this._userSrv.getUserIsn();
+        this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Электронная подпись';
+
         this.init();
     }
 
@@ -146,8 +148,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
                 this.upStateInputs();
                 this.btnDisabled = false;
                 this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                const userId = this._userSrv.userContextId;
-                this._userSrv.getUserIsn(String(userId));
+                // this._userSrv.getUserIsn(String(userId));
                 this.editFlag = false;
                 this.disableForEditAllForm(event);
                 this._pushState();

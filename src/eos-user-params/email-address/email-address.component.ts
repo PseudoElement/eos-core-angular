@@ -21,7 +21,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     public isDefault = false;
     public statusBtnSub: boolean = true;
     public username: string;
-    public umailsInfo: Array<any>;
+    public umailsInfo: Array<any> = [];
     public currentIndex: number;
     public prevIndex: number;
     public dismissible: boolean = true;
@@ -50,7 +50,17 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         private _userServices: UserParamsService,
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
-    ) {
+    ) {}
+
+    async ngOnInit() {
+        this._userServices.saveData$
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this._userServices.submitSave = this.saveAllForm(null);
+            });
+
+        await this._userServices.getUserIsn();
+
         this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ведение адресов электронной почты`;
         this.currentParams = '';
         this.CODE = null;
@@ -65,10 +75,24 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         this.umailsInfo.length > 0 ? this.currentIndex = 0 : this.currentIndex = null;
         this.prevIndex = 0;
         this.umailsInfo.length > 0 ? this.newEmail = this.umailsInfo[0].EMAIL : this.newEmail = '';
-        this._userServices.saveData$
-            .takeUntil(this._ngUnsubscribe)
-            .subscribe(() => {
-                this._userServices.submitSave = this.saveAllForm(null);
+        this.init();
+    }
+    init () { // возможно лучше переименовать по другому
+        this._emailService.getCode2()
+            .then((map: Map<string, string>) => {
+                this.sortArray(this.umailsInfo);
+                this.sortArray(this.saveParams);
+                this._emailService.Decode(this.umailsInfo, map);
+                this.CODE = map;
+                this.createForm(false, false);
+                this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+                this.myForm.valueChanges.subscribe(data => {
+                    this.checkChanges(data);
+                });
+                this.editMode();
+            }).catch(error => {
+                error.message = 'Ошибка сервера';
+                this.cathError(error);
             });
     }
     ngOnDestroy() {
@@ -257,25 +281,6 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     onClosed(type): void {
         this.defaultAlerts.delete(type);
         this.alerts = Array.from(this.defaultAlerts);
-    }
-
-    ngOnInit() {
-        this._emailService.getCode2()
-            .then((map: Map<string, string>) => {
-                this.sortArray(this.umailsInfo);
-                this.sortArray(this.saveParams);
-                this._emailService.Decode(this.umailsInfo, map);
-                this.CODE = map;
-                this.createForm(false, false);
-                this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
-                this.myForm.valueChanges.subscribe(data => {
-                    this.checkChanges(data);
-                });
-                this.editMode();
-            }).catch(error => {
-                error.message = 'Ошибка сервера';
-                this.cathError(error);
-            });
     }
 
     createForm(changedField: boolean, newField: boolean, flagBackForm?: boolean) {
