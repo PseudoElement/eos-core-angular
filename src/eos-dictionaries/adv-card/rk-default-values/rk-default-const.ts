@@ -690,6 +690,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // kind_doc '1,2,3',
         // title: 'Содержание РК',
         title: 'Содержание',
+        length: 2000,
         // classif_id: NULL
     }, {
         key: 'CONSISTS_M',
@@ -704,6 +705,7 @@ export const RKDefaultFields: TDefaultField[] = [
         type: E_FIELD_TYPE.string,
         // kind_doc '1,2,3',
         title: 'Состав',
+        length: 255,
         value: '',
 
         // classif_id: NULL

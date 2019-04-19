@@ -142,6 +142,7 @@ class PrjDefaultFactory {
             DEFAULT_ID: 'CONSISTS_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Состав',
+            length: 10,
         }, {
             DEFAULT_ID: 'DOC_DATE_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
