@@ -10,7 +10,7 @@ import { DELIVERY_DICT } from './dictionaries/delivery.consts';
 import { DOCGROUP_DICT } from './dictionaries/docgroup.consts';
 import { ORG_TYPE_DICT } from './dictionaries/org-type.consts';
 import { ORGANIZ_DICT } from './dictionaries/organiz.consts';
-import { RESOLUTION_CATEGORY_DICT } from './dictionaries/resolution-category.consts';
+import { RESOL_CATEGORY_DICT } from './dictionaries/resolution-category.consts';
 import { RESPRJ_PRIORITY_DICT } from './dictionaries/resprj-priority.consts';
 import { RESPRJ_STATUS_DICT } from './dictionaries/resprj-status.consts';
 import { SECURITY_DICT } from './dictionaries/security.consts';
@@ -38,7 +38,7 @@ export const DICTIONARIES = [
     DOCGROUP_DICT,
     ORG_TYPE_DICT,
     ORGANIZ_DICT,
-    RESOLUTION_CATEGORY_DICT,
+    RESOL_CATEGORY_DICT,
     RESPRJ_PRIORITY_DICT,
     RESPRJ_STATUS_DICT,
     SECURITY_DICT,
