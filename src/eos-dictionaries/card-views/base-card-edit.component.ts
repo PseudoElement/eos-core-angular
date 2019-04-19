@@ -4,6 +4,7 @@ import { FormGroup } from '@angular/forms';
 import { EosDictService } from '../services/eos-dict.service';
 import { Subscription } from 'rxjs/Subscription';
 import { NOT_EMPTY_STRING } from '../consts/input-validation';
+import { IDynamicInputOptions } from 'eos-common/dynamic-form-input/dynamic-input.component';
 
 export class BaseCardEditComponent implements OnDestroy, OnInit {
     @Input() form: FormGroup;
@@ -18,6 +19,13 @@ export class BaseCardEditComponent implements OnDestroy, OnInit {
     nodeId: string;
     currTab = 0;
     prevValues: any[];
+
+    selOpts: IDynamicInputOptions = {
+        defaultValue: {
+            value: '',
+            title: '...',
+        }
+    };
 
     protected dictSrv: EosDictService;
     protected formChanges$: Subscription;
