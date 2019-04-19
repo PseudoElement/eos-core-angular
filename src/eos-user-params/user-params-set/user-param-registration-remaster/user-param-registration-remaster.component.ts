@@ -44,14 +44,15 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         private _msgSrv: EosMessageService,
         private _RemasterService: RemasterService,
         private _errorSrv: ErrorHelperServices,
-    ) {
-        this.hash = this._userSrv.hashUserContext;
+    ) {}
+    async ngOnInit() {
         this._userSrv.saveData$.takeUntil(this._ngUnsubscribe).subscribe(() => {
             this._userSrv.submitSave = this.submit(null);
         });
+        await this._userSrv.getUserIsn();
+        this.hash = this._userSrv.hashUserContext;
         this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Регистрация`;
-    }
-    ngOnInit() {
+
         this._apiSrv.read(this.getObjQueryInputsField()).then(data => {
             this.create_hash_default(data);
             this.isLoading = true;

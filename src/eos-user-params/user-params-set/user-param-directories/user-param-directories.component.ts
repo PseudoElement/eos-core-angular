@@ -41,7 +41,6 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
     ) {
-        this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Справочники';
         this.flagEdit = false;
         this.btnDisable = true;
         this._userParamsSetSr.saveData$
@@ -54,6 +53,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     ngOnInit() {
         this._userParamsSetSr.getUserIsn().then(() => {
             this.allData = this._userParamsSetSr.hashUserContext;
+            this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Справочники';
             this.inint();
         });
     }

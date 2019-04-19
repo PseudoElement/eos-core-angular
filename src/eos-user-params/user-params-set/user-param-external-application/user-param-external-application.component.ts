@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { EXTERNAL_APPLICATION_USER } from '../../user-params-set/shared-user-param/consts/external-application.consts';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
@@ -17,7 +17,7 @@ import { Subject } from 'rxjs/Subject';
     templateUrl: 'user-param-external-application.component.html'
 })
 
-export class UserParamEAComponent implements OnDestroy {
+export class UserParamEAComponent implements OnInit, OnDestroy {
     public btnDisabled: boolean = true;
     public _fieldsType = {};
     public prepInputs;
@@ -39,14 +39,16 @@ export class UserParamEAComponent implements OnDestroy {
         private _msgSrv: EosMessageService,
         private _route: Router,
         private _errorSrv: ErrorHelperServices,
-    ) {
-        this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
-        this.init();
+    ) {}
+    async ngOnInit() {
         this._userParamsSetSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
+        await this._userParamsSetSrv.getUserIsn();
+        this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
+        this.init();
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();

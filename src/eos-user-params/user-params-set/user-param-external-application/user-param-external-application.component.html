@@ -1,4 +1,4 @@
-<div class="input-user-wrapper input-user-external-application-wrapper">
+<div class="input-user-wrapper input-user-external-application-wrapper" *ngIf="inputs">
     <eos-user-params-header [editMode]="editFlag" [title]='titleHeader' [disableBtn]="btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancellation($event)' (editEmit)='edit($event)' (closeEmit)='close($event)' (defaultEmit)='defaults($event)'></eos-user-params-header>
     <div class="titles-external-application ">
         <span class="l-font inscription-application-call-string">Строка вызова приложения:</span>

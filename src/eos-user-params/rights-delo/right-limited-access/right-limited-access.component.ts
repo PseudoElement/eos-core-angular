@@ -71,15 +71,16 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.flagGrifs = true;
         this.flagLinks = true;
         this.bacgHeader = false;
-        this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ограничение доступа`;
-        this.checkUserCard = this._userServices['_userContext']['USERCARD_List'];
         this._userServices.saveData$
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {
                 this._userServices.submitSave = this.saveAllForm();
             });
     }
-    ngOnInit() {
+    async ngOnInit() {
+        await this._userServices.getUserIsn();
+        this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ограничение доступа`;
+        this.checkUserCard = this._userServices['_userContext']['USERCARD_List'];
         this.isLoading = false;
         this._limitservise.getInfoGrifs().then(result => {
             this.checkGrifs = result[0][0]['USERSECUR_List'];
