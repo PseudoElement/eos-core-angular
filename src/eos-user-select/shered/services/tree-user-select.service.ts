@@ -6,6 +6,7 @@ import {Subject} from 'rxjs/Subject';
 const DEPARTMENT_QUERY = {DEPARTMENT: PipRX.criteries({
     LAYER: '1:2',
     IS_NODE: '0',
+    orderby: 'INS_DATE'
 })};
 
 @Injectable()
@@ -161,13 +162,15 @@ export class TreeUserSelectService {
                 DUE: d.DUE + '%',
                 IS_NODE: '0',
                 LAYER: (layer + 1) + '',
-                CARD_FLAG: this.cardFlag.toString()
+                CARD_FLAG: this.cardFlag.toString(),
+                orderby: 'INS_DATE',
             };
         }   else {
              criteries = {
                 DUE: d.DUE + '%',
                 IS_NODE: '0',
                 LAYER: (layer + 1) + '',
+                orderby: 'INS_DATE',
             };
         }
         return this.apiSrv.read<DEPARTMENT>({DEPARTMENT: PipRX.criteries(criteries)});
