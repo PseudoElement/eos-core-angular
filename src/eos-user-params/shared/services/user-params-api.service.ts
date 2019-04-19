@@ -11,6 +11,7 @@ import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-selec
 import { HelpersSortFunctions } from '../../../eos-user-select/shered/helpers/sort.helper';
 import { IUserSort } from '../../../eos-user-select/shered/interfaces/user-select.interface';
 import { SortsList } from '../../../eos-user-select/shered/interfaces/user-select.interface';
+// import {EosStorageService} from '../../../../src/app/services/eos-storage.service';
 @Injectable()
 export class UserParamApiSrv {
     flagTehnicalUsers: boolean;
@@ -33,6 +34,7 @@ export class UserParamApiSrv {
         private apiSrv: PipRX,
         private _router: Router,
         private users_pagination: UserPaginationService,
+        // private _storageSrv: EosStorageService,
     ) {
         this.helpersClass = new HelpersSortFunctions();
         this.initConfigTitle();
@@ -98,10 +100,9 @@ export class UserParamApiSrv {
                 const prepData = data.filter(user => user['ISN_LCLASSIF'] !== 0);
                 return this.updatePageList(prepData, this.configList.shooseTab).then(res => {
                     this.Allcustomer = this._getListUsers(res).slice();
-                    this.users_pagination.UsersList = this.Allcustomer.slice();
                     this.devideUsers();
                     this.initConfigTitle(dueDep);
-                    this.users_pagination._initPaginationConfig();
+                    this.users_pagination._initPaginationConfig(true);
                     return this.users_pagination.UsersList;
                 });
             });
