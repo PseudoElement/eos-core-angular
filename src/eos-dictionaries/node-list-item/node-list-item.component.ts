@@ -107,6 +107,12 @@ export class NodeListItemComponent implements OnInit, OnChanges {
                 _field.value = this.node.getValue(_field);
             } else if (_field.vistype === E_VISIBLE_TIPE.onlyChild && !is_node) {
                 _field.value = this.node.getValue(_field);
+            } else if (_field.vistype === E_VISIBLE_TIPE.fromParentIfNode) {
+                if (is_node) {
+                    _field.value = this.node.parent ? this.node.parent.data.rec[_field.foreignKey] : '';
+                } else {
+                    _field.value = this.node.getValue(_field);
+                }
             } else {
                 _field.value = '';
             }

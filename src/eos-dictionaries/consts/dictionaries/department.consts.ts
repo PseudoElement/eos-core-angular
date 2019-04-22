@@ -85,7 +85,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             length: 255,
             required: true,
             forNode: false,
-            vistype: E_VISIBLE_TIPE.onlyChild,
+            vistype: E_VISIBLE_TIPE.fromParentIfNode,
         }),
         {
             key: 'SURNAME',
