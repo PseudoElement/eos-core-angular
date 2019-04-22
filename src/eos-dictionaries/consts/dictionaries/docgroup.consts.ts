@@ -67,6 +67,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         key: 'DOCGROUP_INDEX',
         title: 'Индекс',
         type: 'string',
+        length: 24,
     }, {
         key: 'DOCNUMBER_FLAG',
         title: 'Номерообразование',
