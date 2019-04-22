@@ -1,3 +1,4 @@
+import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { AdvCardRKEditComponent } from './../adv-card/adv-card-rk.component';
 import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -44,7 +45,8 @@ import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.in
 import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
 import {CounterNpEditComponent, E_COUNTER_TYPE} from '../counter-np-edit/counter-np-edit.component';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
-import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { DID_NOMENKL_CL } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -143,7 +145,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             if (params) {
 
                 this.dictionaryId = params.dictionaryId;
-                if (!this._eaps.isAccessGrantedForDictionary(this.dictionaryId)) {
+                if (this._eaps.isAccessGrantedForDictionary(this.dictionaryId) === APS_DICT_GRANT.denied) {
                     this.accessDenied = true;
                     this._msgSrv.addNewMessage(DANGER_ACCESS_DENIED_DICT);
                     return;
@@ -155,8 +157,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                         .then(() => {
                             if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
                                 this.dictionary.root.children = null;
-                                this._dictSrv.currentDictionary.descriptor.setRootNode(this._nodeId);
-                                this._dictSrv.selectCustomTreeNode();
+                                const n: CustomTreeNode = this._dictSrv.currentDictionary.descriptor.setRootNode(this._nodeId);
+                                if (n) {
+                                    this.title = n.title;
+                                }
+                                this._dictSrv.selectCustomTreeNode().then ((data) => {
+                                });
                             } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
                                 if (this._nodeId === '0.' ) {
                                     this._nodeId = '';
@@ -188,6 +194,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                     }
                     if (this.hasCustomTree) {
                         dictionary.descriptor.getCustomTreeData().then((d) => {
+                            const n = this.dictionary.descriptor.getActive();
+                            if (n) { this.title = n.title; }
                             this.customTreeData = d;
                         });
                     }
@@ -243,6 +251,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
+
 
     ngAfterViewInit() {
         this._treeScrollTop = this._sandwichSrv.treeScrollTop;
@@ -342,6 +351,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.OpenSelected:
                 this._openItems();
                 break;
+            case E_RECORD_ACTIONS.prjDefaultValues:
+                this._openPrjDefaultValues();
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -395,6 +407,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         this._sandwichSrv.resize();
     }
 
+    isDictModeEnabled (mode: number): boolean {
+        const dict = this._dictSrv.dictionaryByMode(mode).id;
+        return this._eaps.isAccessGrantedForDictionary(dict) !== APS_DICT_GRANT.denied;
+    }
     setDictMode(mode: number) {
         if (mode === 0 && this.treeNode.isDeleted) {
             this._msgSrv.addNewMessage(DANGER_DEPART_IS_LDELETED);
@@ -402,6 +418,25 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             this._dictSrv.setDictMode(mode);
             this.nodeList.updateViewFields([]);
         }
+    }
+
+    nlHeightType() {
+        let res = 1;
+        if (this.hasFilter()) {
+            res++;
+        }
+        if (this.fastSearch) {
+            res++;
+        }
+        return res;
+    }
+
+    hasFilter() {
+        if (this.dictionaryId === DID_NOMENKL_CL ||
+            (this.dictionaryId === DEPARTMENTS_DICT.id && this.dictMode === 0) ) {
+                return true;
+            }
+        return false;
     }
 
     /**
@@ -656,6 +691,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             const subscription = this.modalWindow.content.onChoose.subscribe(() => {
                 subscription.unsubscribe();
             });
+        }
+    }
+
+    private _openPrjDefaultValues() {
+        const node = this._dictSrv.listNode;
+        if (node) {
+            this.nodeList.openPrjDefaultValues(node);
+        } else {
+            this._msgSrv.addNewMessage(WARN_SELECT_NODE);
         }
     }
 }

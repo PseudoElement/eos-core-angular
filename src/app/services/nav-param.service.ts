@@ -6,9 +6,12 @@ import {Subject} from 'rxjs/Subject';
 @Injectable()
 
 export class NavParamService {
+    public _subscriBtnTree =  new Subject();
     private _changeStateSandwich$ = new BehaviorSubject(true);
     private _subscribeScan =  new Subject();
-
+    get _subscriBtnTree$() {
+        return this._subscriBtnTree.asObservable();
+    }
     get StateSandwich$() {
         return this._changeStateSandwich$.asObservable();
     }

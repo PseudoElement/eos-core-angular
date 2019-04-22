@@ -1,0 +1,27 @@
+.modal-content {
+
+    eos-record-view {
+        width: 800px;
+        margin: 0 auto;
+
+        .modal-lg {
+            width: 800px;
+        }
+
+        .bottom-buttons {
+            padding: 10px;
+            display: inline-block;
+            float: right;
+
+            .bottom-buttons-clearfix {
+                // min-width: 500px;
+                width: 100%;
+                display: inline-block;
+            }
+            .btn-primary {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+        }
+    }
+}

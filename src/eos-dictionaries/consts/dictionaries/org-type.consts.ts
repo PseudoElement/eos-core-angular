@@ -11,6 +11,7 @@ export const ORG_TYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEM
     fields: [...LINEAR_TEMPLATE.fields,
     Object.assign({}, COMMON_FIELD_NAME, {
         isUnique: true,
+        length: 64,
         uniqueInDict: true,
     })],
 });

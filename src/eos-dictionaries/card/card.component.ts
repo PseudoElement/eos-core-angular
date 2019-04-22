@@ -433,9 +433,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
     private _afterSaving(node: EosDictionaryNode) {
         if (node) {
-            // console.log('save', node);
             this._initNodeData(node);
-            // this._setOriginalData();
             this.cancel();
         }
         this.disableSave = false;
@@ -443,6 +441,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
     private _afterUpdating(node: EosDictionaryNode): EosDictionaryNode {
         if (node) {
+            node.data['updateTrules'] = [];
             this.recordChanged(node.data);
             this.isChanged = false;
             this._msgSrv.addNewMessage(SUCCESS_SAVE);

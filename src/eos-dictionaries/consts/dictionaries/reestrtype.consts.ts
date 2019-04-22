@@ -12,8 +12,8 @@ export const REESTRTYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_T
     iconName: 'eos-icon-new-doc-blue',
     fields: [...LINEAR_TEMPLATE.fields,
     Object.assign({}, COMMON_FIELD_NAME, {
+        length: 64,
         isUnique: true,
-        length: 100,
         uniqueInDict: true,
     }), {
             key: 'ISN_ADDR_CATEGORY',
@@ -48,12 +48,12 @@ export const REESTRTYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_T
             key: 'EMERGENCY',
             type: 'string',
             title: 'Срочность',
-            length: 100,
+            length: 64,
     }, {
             key: 'IMPOTANCE',
             type: 'string',
             title: 'Важность',
-            length: 100,
+            length: 64,
     }, {
             key: 'IS_UNIQUE',
             type: 'select',

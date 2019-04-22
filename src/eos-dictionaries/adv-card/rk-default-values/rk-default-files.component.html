@@ -32,12 +32,15 @@
         <div class="col-1">
         <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE']"
                                         [form]="form"
+                                        [viewOpts]="selOpts"
                                         [readonly]="!editMode" ></eos-dynamic-input>
         </div>
         <div class="col-2">
-        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST']"
+        <eos-dynamic-input *ngIf="isFileAccessEnabled"
+        [input]="inputs['DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST']"
                                         [form]="form"
                                         [hideLabel]="true"
+                                        [viewOpts]="selOpts"
                                         [readonly]="!editMode" ></eos-dynamic-input>
         </div>
     </div>

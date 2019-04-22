@@ -56,8 +56,7 @@
                [ngStyle]="{'margin-left.px': 10}"
                [id]="'separator'"
                [type]="'text'"
-               (keyup.enter)="update($event)"
-               (change)="update($event)"
+               (keyup)="update($event)"
                value="{{separator}}">
     </div>
 </div>

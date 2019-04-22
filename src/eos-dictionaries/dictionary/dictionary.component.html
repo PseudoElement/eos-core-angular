@@ -25,7 +25,7 @@
     <div class="selected-wrapper"
         #selectedWrapper
         [ngClass]="{'open-tree': currentState[0] && !hideTree }">
-        <div class="node-actions">
+        <div class="node-actions" id="node-actions">
             <div *ngIf="treeNode"
                 class="selected-node xl-font"
                 [ngClass]="{'has-custom': hasCustomTable}">
@@ -58,13 +58,14 @@
                         *ngIf="dictionary?.id === 'departments'">
                         <li class="tab-item"
                             role="presentation"
-                            [ngClass]="{'active': dictMode === 0}"
+                            [ngClass]="{'active': dictMode === 0, 'disabled': !isDictModeEnabled(0)}"
                             (click)="setDictMode(0)">
-                            <span class="tab-title">Подразделения</span>
+                            <span class="tab-title"
+                            >Подразделения</span>
                         </li>
                         <li class="tab-item"
                             role="presentation"
-                            [ngClass]="{'active': dictMode === 1}"
+                            [ngClass]="{'active': dictMode === 1, 'disabled': !isDictModeEnabled(1)}"
                             (click)="setDictMode(1)">
                             <span class="tab-title">Кабинеты</span>
                         </li>
@@ -100,8 +101,17 @@
                 </div>
             </div>
             <eos-dictionary-quick-search *ngIf="fastSearch"></eos-dictionary-quick-search>
+            <div class="first-line" *ngIf="hasFilter()" [hidden]="params.hideTopMenu || accessDenied">
+                <div class="">
+                    <eos-dictionary-filter (switchFastSrch)="switchFastSearch($event)"></eos-dictionary-filter>
+                </div>
+            </div>
+
         </div>
-        <eos-node-list #nodeList></eos-node-list>
+        <eos-node-list #nodeList
+            class="node-list-container"
+            [ngClass]="{'list-heigth-1': nlHeightType() === 1, 'list-heigth-2': nlHeightType() === 2, 'list-heigth-3': nlHeightType() === 3}"
+        ></eos-node-list>
         <eos-node-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-node-list-pagination>
     </div>
     <div class="opened-wrapper block"

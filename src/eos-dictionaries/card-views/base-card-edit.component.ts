@@ -1,11 +1,12 @@
-import { Input, Injector, OnDestroy } from '@angular/core';
+import { Input, Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { EosDictService } from '../services/eos-dict.service';
 import { Subscription } from 'rxjs/Subscription';
 import { NOT_EMPTY_STRING } from '../consts/input-validation';
+import { IDynamicInputOptions } from 'eos-common/dynamic-form-input/dynamic-input.component';
 
-export class BaseCardEditComponent implements OnDestroy {
+export class BaseCardEditComponent implements OnDestroy, OnInit {
     @Input() form: FormGroup;
     @Input() inputs: any;
     @Input() data: any;
@@ -17,6 +18,14 @@ export class BaseCardEditComponent implements OnDestroy {
 
     nodeId: string;
     currTab = 0;
+    prevValues: any[];
+
+    selOpts: IDynamicInputOptions = {
+        defaultValue: {
+            value: '',
+            title: '...',
+        }
+    };
 
     protected dictSrv: EosDictService;
     protected formChanges$: Subscription;
@@ -25,6 +34,29 @@ export class BaseCardEditComponent implements OnDestroy {
     constructor(injector: Injector) {
         this.dictSrv = injector.get(EosDictService);
         this.currTab = this.dictSrv.currentTab ? this.dictSrv.currentTab : 0;
+        this.prevValues = [];
+    }
+
+    ngOnInit(): void {
+        const descriptor = this.dictSrv.currentDictionary.descriptor;
+        const list = descriptor.record.getEditView({});
+
+        descriptor.getRelatedFields(list.filter(i => i.dictionaryId)
+                                .map(i => i.dictionaryId ? i.dictionaryId : null))
+            .then((related) => {
+                list.forEach((field) => {
+                    if ((field.dictionaryId !== undefined)) {
+                        field.options.length = 0;
+                        // field.options.splice(0, field.options.length);
+                        related[field.dictionaryId].forEach((rel) => {
+                            const fn = (field.dictionaryLink ? field.dictionaryLink.pk : 'ISN_LCLASSIF');
+                            const ln = (field.dictionaryLink ? field.dictionaryLink.label : 'CLASSIF_NAME');
+                            field.options.push({value: rel[fn], title: rel[ln]});
+                        });
+                    }
+                });
+            });
+
     }
 
     /**
@@ -65,6 +97,12 @@ export class BaseCardEditComponent implements OnDestroy {
         const control = this.form.controls[path];
         if (control) {
             control.setValue(value);
+        }
+    }
+    protected setDirty(path: string) {
+        const control = this.form.controls[path];
+        if (control) {
+            control.markAsDirty();
         }
     }
 

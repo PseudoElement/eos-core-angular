@@ -8,7 +8,9 @@ import {AbstractControl, ValidatorFn} from '@angular/forms';
     templateUrl: 'nomenkl-card.component.html',
     styleUrls: ['./nomenkl-card.component.scss']
 })
+
 export class NomenklCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
+
     private previousValues: SimpleChanges;
 
     constructor(

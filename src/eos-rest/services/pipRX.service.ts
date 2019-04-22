@@ -51,17 +51,20 @@ export class PipRX extends PipeUtils {
     }
 
 
-    static invokeSop(chr, name, args, method = 'POST') {
+    static invokeSop(chr, name, args, method = 'POST', encodeurl: boolean = true) {
         const ar = [];
         // tslint:disable-next-line:forin
         for (const k in args) {
             const quot = typeof (args[k]) === 'string' ? '\'' : '';
-            ar.push(k + '=' + quot + encodeURIComponent(args[k]) + quot);
+            ar.push(k + '=' + quot +
+            encodeURIComponent(args[k])
+             + quot);
         }
 
         chr.push({
             requestUri: name + '?' + ar.join('&'),
-            method: method
+            method: method,
+            encodeurl: encodeurl,
         });
     }
 
@@ -260,7 +263,8 @@ export class PipRX extends PipeUtils {
                 'Content-Type: application/http',
                 'Content-Transfer-Encoding: binary',
                 '',
-                it.method + ' ' + encodeURI(it.requestUri) + ' HTTP/1.1',
+                it.method + ' '
+                + (it.encodeurl ? encodeURI(it.requestUri) : it.requestUri) + ' HTTP/1.1',
                 'Accept: application/json;odata=light;q=1,application/json;odata=nometadata;',
                 'MaxDataServiceVersion: 3.0',
                 'Content-Type: application/json',

@@ -199,3 +199,10 @@
     background-color: #646464;
     opacity: 0.6;
 }
+
+.sp{
+    min-height: calc(100vh - 330px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

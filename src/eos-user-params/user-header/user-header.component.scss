@@ -1,23 +1,29 @@
 header {
     position: relative;
-    .header-wr{
+    .header-wr {
         background-color: #fff;
         color: black;
-        border: 1px solid #e6e6e6;
+        border-bottom: 1px solid #e6e6e6;
         min-height: 48px;
-        height: 48px;
         text-align: left;
         margin: 0 auto;
-        width: 800px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 0 20px;
-        .title-wrapper{
+        .title-wrapper {
             font-size: 18px;
-            max-height: 52px;
         }
-
+        .action-wrapper {
+            min-width: 130px;
+        }
+        .buttons-wrapper {
+            text-align: right;
+            // min-width: 353px;
+            >div {
+                display: flex;
+            }
+        }
     }
     .title-wrapper {
         overflow: hidden;
@@ -27,7 +33,7 @@ header {
         white-space: normal;
         text-overflow: ellipsis;
     }
-    .buttons-wrapper{
+    .buttons-wrapper {
         button {
             margin-left: 20px;
             min-width: 88px;

@@ -1,22 +1,5 @@
 
 
-export interface IUserBese {
-    id: string;
-    apiInstance: string;
-    title: string;
-    fields: IUserInput[];
-    fieldsTemplates: IUserInput[];
-    fieldsDefaultValue: IUserInput[];
-    fieldsCurrentValue: IUserInput[];
-}
-
-export interface IUserInput {
-    key?: string;
-    type: string;
-    title: string;
-    length?: number;
-}
-
 export interface IBaseUsers {
     id: string;
     apiInstance: string;
@@ -50,6 +33,8 @@ export interface IFieldDescriptor {
     default?: any;
     maxValue?: number;
     minValue?: number;
+    keyPosition?: number| string;
+    parent?: any;
 }
 
 export interface ISelectOption {

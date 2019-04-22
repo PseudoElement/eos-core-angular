@@ -1,15 +1,18 @@
 import { E_FIELD_TYPE } from './../../interfaces/dictionary.interfaces';
+import { DIGIT3_PATTERN, DIGIT4_WITH_PERIOD_LIST_SEPARATED } from 'eos-common/consts/common.consts';
 
 export class TDFSelect {
     dictId: string;
     dictKey: string;
     dictKeyTitle: string;
+    version?: any;
     criteries?: any;
-    _cache?: any;
 }
 export class TDFSelectOption {
     value: any;
     title: string;
+    disabled?: boolean;
+    rec?: any;
 }
 
 export class TDefaultField {
@@ -18,7 +21,11 @@ export class TDefaultField {
     title: string;
     dict?: TDFSelect;
     options?: TDFSelectOption[];
+    pattern?: RegExp;
     value?: any;
+    length?: number;
+    minValue?: number;
+    maxValue?: number;
     default?: any;
 
 }
@@ -95,15 +102,21 @@ export const RKFilesConstraintsFields: string[] = [
     'ONE_FILE',
 ];
 
+const FILE_SIZE_PATTERN = /^\d{0,8}$/;
+
 export const RKFilesConstraints: TDefaultField[] = [
     {
         key: 'DOC_RC.EXTENSIONS',
         type: E_FIELD_TYPE.string,
         title: 'С расширением',
+        length: 255,
     }, {
         key: 'DOC_RC.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
         title: '',
+        minValue: 1,
+        maxValue: 99999999,
+        pattern: FILE_SIZE_PATTERN,
     }, {
         key: 'DOC_RC.ONE_FILE',
         type: E_FIELD_TYPE.boolean,
@@ -112,10 +125,14 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'PRJ_RC.EXTENSIONS',
         type: E_FIELD_TYPE.string,
         title: 'С расширением',
+        length: 255,
     }, {
         key: 'PRJ_RC.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
         title: '',
+        minValue: 1,
+        maxValue: 99999999,
+        pattern: FILE_SIZE_PATTERN,
     }, {
         key: 'PRJ_RC.ONE_FILE',
         type: E_FIELD_TYPE.boolean,
@@ -124,10 +141,14 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'PRJ_VISA_SIGN.EXTENSIONS',
         type: E_FIELD_TYPE.string,
         title: 'С расширением',
+        length: 255,
     }, {
         key: 'PRJ_VISA_SIGN.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
         title: '',
+        minValue: 1,
+        maxValue: 99999999,
+        pattern: FILE_SIZE_PATTERN,
     }, {
         key: 'PRJ_VISA_SIGN.ONE_FILE',
         type: E_FIELD_TYPE.boolean,
@@ -136,10 +157,14 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'REPLY.EXTENSIONS',
         type: E_FIELD_TYPE.string,
         title: 'С расширением',
+        length: 255,
     }, {
         key: 'REPLY.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
         title: '',
+        minValue: 1,
+        maxValue: 99999999,
+        pattern: FILE_SIZE_PATTERN,
     }, {
         key: 'REPLY.ONE_FILE',
         type: E_FIELD_TYPE.boolean,
@@ -148,10 +173,14 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'RESOLUTION.EXTENSIONS',
         type: E_FIELD_TYPE.string,
         title: 'С расширением',
+        length: 255,
     }, {
         key: 'RESOLUTION.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
         title: '',
+        minValue: 1,
+        maxValue: 99999999,
+        pattern: FILE_SIZE_PATTERN,
     }, {
         key: 'RESOLUTION.ONE_FILE',
         type: E_FIELD_TYPE.boolean,
@@ -222,6 +251,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictId: 'SECURITY_CL',
             dictKey: 'SECURLEVEL',
             dictKeyTitle: 'GRIF_NAME',
+            version: 1,
         }
 
         // classif_id:  111
@@ -307,18 +337,28 @@ export const RKDefaultFields: TDefaultField[] = [
         // kind_doc '1,2,3',
         // title: 'Значение при записи для срока исполнения РК',
         title: 'Срок исп. (План. дата)',
+        pattern: DIGIT3_PATTERN,
+        minValue: 1,
+        maxValue: 999,
         // classif_id: NULL
     }, {
         key: 'EXE_ISN_LIST',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
         // kind_doc '3',
-        title: 'Исполнители РК',
+        title: 'Исполнитель',
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
+        // title: 'Исполнители РК',
         // classif_id:  545
     }, {
         key: 'ISN_PERSON_EXE_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
         title: 'Исполнитель',
         // classif_id: NULL
@@ -459,7 +499,7 @@ export const RKDefaultFields: TDefaultField[] = [
                 value: '1',
                 title: 'копию',
             }, {
-                value: '2',
+                value: '4',
                 title: 'эл. экз',
             },
         ]
@@ -478,7 +518,7 @@ export const RKDefaultFields: TDefaultField[] = [
                 value: '1',
                 title: 'копию',
             }, {
-                value: '2',
+                value: '4',
                 title: 'эл. экз',
             },
         ]
@@ -545,7 +585,7 @@ export const RKDefaultFields: TDefaultField[] = [
                 title: 'первому оригинал, остальным копии',
             }, {
                 value: '3',
-                title: 'ел. экз.',
+                title: 'эл. экз.',
             },
         ]
         // classif_id: NULL
@@ -598,7 +638,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'DOCSIGN_M',
         // Default type:  'M',
-        type: E_FIELD_TYPE.string,
+        type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
         title: 'Подписал',
         // classif_id: NULL
@@ -625,6 +665,7 @@ export const RKDefaultFields: TDefaultField[] = [
         type: E_FIELD_TYPE.text,
         // kind_doc '1,2,3',
         title: 'Примечание',
+        length: 2000,
         // classif_id: NULL
     }, {
         key: 'FREE_NUM_M',
@@ -654,6 +695,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // kind_doc '1,2,3',
         // title: 'Содержание РК',
         title: 'Содержание',
+        length: 2000,
         // classif_id: NULL
     }, {
         key: 'CONSISTS_M',
@@ -668,6 +710,7 @@ export const RKDefaultFields: TDefaultField[] = [
         type: E_FIELD_TYPE.string,
         // kind_doc '1,2,3',
         title: 'Состав',
+        length: 255,
         value: '',
 
         // classif_id: NULL
@@ -839,9 +882,16 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'SIGN_ISN_LIST',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.select,
+        title: 'Подписал',
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+        }
         // kind_doc '3',
-        title: 'Список подписывающих РК',
+        // title: 'Список подписывающих РК',
         // classif_id:  545
     }, {
         /* кому адресован */
@@ -869,12 +919,22 @@ export const RKDefaultFields: TDefaultField[] = [
         // title: 'Список рубрик',
         title: 'Рубрики',
         // classif_id:  545
+        dict: {
+            dictId: 'USER_LISTS',
+            dictKey: 'ISN_LIST',
+            dictKeyTitle: 'NAME',
+            criteries: { CLASSIF_ID: '107', ISN_LCLASSIF: '-99', },
+
+        }
     }, {
         key: 'TERM_EXEC',
         // Default type:  'D',
         type: E_FIELD_TYPE.numberIncrement,
         // kind_doc '1,2,3',
         title: 'Срок исполнения',
+        pattern: DIGIT3_PATTERN,
+        minValue: 1,
+        maxValue: 999,
         // classif_id: NULL
     }, {
         key: 'ISN_CARD_REG_CURR_W',
@@ -891,6 +951,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // title: 'Текущий  кабинет в качестве кабинета регистрации',
         // classif_id: NULL
         title: '',
+        default: '1',
         options: [
             {
                 value: '1',
@@ -951,9 +1012,11 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'SPECIMEN',
         // Default type:  'D',
-        type: E_FIELD_TYPE.numberIncrement,
+        type: E_FIELD_TYPE.string,
         // kind_doc '1,2,3',
         title: 'Экз №',
+        pattern: DIGIT4_WITH_PERIOD_LIST_SEPARATED,
+        length: 2000,
         // classif_id: NULL
     },
 

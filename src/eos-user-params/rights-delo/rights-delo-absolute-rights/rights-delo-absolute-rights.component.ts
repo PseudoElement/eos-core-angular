@@ -1,19 +1,21 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
-import { ABSOLUTE_RIGHTS, CONTROL_ALL_NOTALL } from '../shared-rights-delo/consts/absolute-rights.consts';
+import { ABSOLUTE_RIGHTS, CONTROL_ALL_NOTALL } from './absolute-rights.consts';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { FormGroup, FormControl } from '@angular/forms';
-import { E_RIGHT_DELO_ACCESS_CONTENT, IChengeItemAbsolute } from '../shared-rights-delo/interfaces/right-delo.intefaces';
+import { E_RIGHT_DELO_ACCESS_CONTENT, IChengeItemAbsolute } from './right-delo.intefaces';
 import { RadioInput } from 'eos-common/core/inputs/radio-input';
 import { NodeAbsoluteRight } from './node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { USERDEP, USER_TECH } from 'eos-rest';
-import { RestError } from 'eos-rest/core/rest-error';
+// import { RestError } from 'eos-rest/core/rest-error';
+import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
 import { Subject } from 'rxjs/Subject';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
@@ -37,22 +39,41 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     listRight: NodeAbsoluteRight[] = [];
     titleHeader: string;
     techRingtOrig: string;
+    public editMode: boolean = false;
     private _ngUnsubscribe: Subject<any> = new Subject();
+    private flagGrifs: boolean = false;
 
-
-    constructor (
+    constructor(
         private _msgSrv: EosMessageService,
         private _userParamsSetSrv: UserParamsService,
         private apiSrv: UserParamApiSrv,
         private _inputCtrlSrv: InputParamControlService,
-        ) {
-            this.init();
-        }
+        private _router: Router,
+        private _errorSrv: ErrorHelperServices,
+    ) {}
+    async ngOnInit() {
+        this._userParamsSetSrv.saveData$
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this._userParamsSetSrv.submitSave = this.submit();
+            });
+
+        await this._userParamsSetSrv.getUserIsn();
+        const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
+        this.curentUser = this._userParamsSetSrv.curentUser;
+
+        this.flagGrifs = await this._userParamsSetSrv.checkGrifs(id);
+        this.init();
+    }
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+    }
 
     init() {
         this.curentUser = this._userParamsSetSrv.curentUser;
         this.techRingtOrig = this.curentUser.TECH_RIGHTS;
-        this.titleHeader =  `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Абсолютные права`;
+        this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Абсолютные права`;
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
         this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split('');
         this.arrNEWDeloRight = this.curentUser['DELO_RIGHTS'].split('');
@@ -63,7 +84,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.form.valueChanges
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {
-               this.listRight.forEach(node => {
+                this.listRight.forEach(node => {
                     this.arrNEWDeloRight[+node.key] = node.value.toString();
                 });
                 this.checkChange();
@@ -71,25 +92,19 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     this._viewContent();
                 }, 0);
             });
-        this._userParamsSetSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
-            .subscribe(() => {
-                this.submit();
-            });
+
+        if (this.editMode) {
+            this.selectNode(this.listRight[0]);
+        }
+        this.inputAll = { all: new RadioInput(CONTROL_ALL_NOTALL) };
     }
-    ngOnInit() {
-        this.selectNode(this.listRight[0]);
-        this.inputAll = {all: new RadioInput(CONTROL_ALL_NOTALL)};
-    }
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
-    submit() {
+    submit(): Promise<any> {
         if (this._checkCreatePRJNotEmptyAllowed()) {
             this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
-            return;
+            return Promise.resolve();
         }
+        // this.selectedNode = null;
+        this.editMode = false;
         this.btnDisabled = true;
         this._pushState();
         let qUserCl;
@@ -118,35 +133,64 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 node.deleteChange();
             }
         });
-        this.apiSrv.setData(this.queryForSave)
-        .then(() => {
-            this.queryForSave = [];
-            this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-        })
-        .catch((e) => {
-            if (e instanceof RestError) {
-                this._msgSrv.addNewMessage({
-                    type: 'danger',
-                    title: e.code.toString(),
-                    msg: e.message
+        return this.apiSrv.setData(this.queryForSave)
+            .then(() => {
+                this.queryForSave = [];
+                this.listRight = [];
+                this.selectedNode = null;
+                this.editMode = false;
+                this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+                this._userParamsSetSrv.getUserIsn().then(() => {
+                    this.init();
                 });
-            }
-            this.cancel();
-        });
+            })
+            .catch((e) => {
+                this._errorSrv.errorHandler(e);
+                // if (e instanceof RestError) {
+                //     this._msgSrv.addNewMessage({
+                //         type: 'danger',
+                //         title: e.code.toString() === '2000' ? 'Ошибка' : e.code.toString(),
+                //         msg: e.message
+                //     });
+                // }
+                this.cancel();
+            });
     }
     cancel() {
+        this.selectedNode = null;
+        this.editMode = false;
         this.btnDisabled = true;
         this._pushState();
-        this.ngOnDestroy();
         this._userParamsSetSrv.getUserIsn()
-        .then(() => {
+            .then(() => {
+                this.init();
+            });
+    }
+    edit() {
+        const id = this._userParamsSetSrv.curentUser.ISN_LCLASSIF;
+        if (this.flagGrifs) {
+            this.editMode = true;
             this.init();
-            this.ngOnInit();
-        });
+        } else {
+            this._router.navigate(['user-params-set/', 'access-limitation'],
+                {
+                    queryParams: { isn_cl: id }
+                });
+            this._msgSrv.addNewMessage({
+                type: 'warning',
+                title: 'Предупреждение',
+                msg: 'Не заданы грифы доступа'
+            });
+        }
+        // this.setDisableOrEneble();
+
     }
     clickLable(event, item: NodeAbsoluteRight) {
         event.preventDefault();
         event.stopPropagation();
+        if (!this.editMode) {
+            return;
+        }
         if (event.target.tagName === 'LABEL') { // click to label
             this.selectNode(item);
         }
@@ -156,11 +200,11 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             item.value = +value;
 
             if (
-                    !value &&
-                    (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department ||
+                !value &&
+                (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department ||
                     item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor ||
                     item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject)
-                ) {
+            ) {
                 this._deleteAllDep(item);
             }
             if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup)) {
@@ -203,12 +247,19 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     private _writeValue(constanta: IInputParamControl[]): IInputParamControl[] {
         const fields = [];
         constanta.forEach((node: IInputParamControl) => {
-            fields.push(Object.assign({value: !!+this.arrDeloRight[+node['key']]}, node));
+            const n = Object.assign({ value: !!+this.arrDeloRight[+node['key']] }, node);
+            if (!this.editMode) {
+                n.disabled = true;
+            }
+            fields.push(n);
         });
         return fields;
     }
     private _viewContent() {
         this.rightContent = false;
+        if (!this.selectedNode) {
+            return;
+        }
         switch (this.selectedNode.contentProp) {
             case E_RIGHT_DELO_ACCESS_CONTENT.all:
                 if (this.formGroupAll) {
@@ -216,10 +267,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     this.formGroupAll = null;
                 }
                 this.formGroupAll = new FormGroup({
-                        all: new FormControl(this.selectedNode.value ? this.arrNEWDeloRight[+this.selectedNode.key] : '0')
+                    all: new FormControl(this.selectedNode.value ? this.arrNEWDeloRight[+this.selectedNode.key] : '0')
                 });
                 setTimeout(() => {
-                    this.selectedNode.value ? this.formGroupAll.enable({emitEvent: false}) : this.formGroupAll.disable({emitEvent: false});
+                    this.selectedNode.value ? this.formGroupAll.enable({ emitEvent: false }) : this.formGroupAll.disable({ emitEvent: false });
                 }, 0);
                 this.subs['all'] = this.formGroupAll.valueChanges
                     .subscribe(data => {
@@ -356,7 +407,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
         return allowed;
     }
-    private _pushState () {
-        this._userParamsSetSrv.setChangeState({isChange: !this.btnDisabled});
+    private _pushState() {
+        this._userParamsSetSrv.setChangeState({ isChange: !this.btnDisabled });
     }
 }

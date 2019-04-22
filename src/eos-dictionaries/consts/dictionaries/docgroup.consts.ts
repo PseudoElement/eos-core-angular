@@ -28,7 +28,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'counterDocgroup',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization', 'counterDocgroupRKPD',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes' , 'additionalFields',
-        'AdvancedCardRK'],
+        'AdvancedCardRK', 'prjDefaultValues'],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
     searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
@@ -67,6 +67,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         key: 'DOCGROUP_INDEX',
         title: 'Индекс',
         type: 'string',
+        length: 24,
     }, {
         key: 'DOCNUMBER_FLAG',
         title: 'Номерообразование',
@@ -75,6 +76,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         key: 'SHABLON',
         title: 'Шаблон',
         type: 'string',
+        required: true,
     }, {
         key: 'EDS_FLAG',
         title: 'ЭП',
@@ -95,6 +97,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         key: 'PRJ_SHABLON',
         title: 'Шаблон проекта',
         type: 'string',
+        required: true,
     }, {
         key: 'PRJ_WEIGHT',
         title: 'Вес в списке для проектов',

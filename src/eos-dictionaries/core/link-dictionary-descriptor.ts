@@ -1,17 +1,26 @@
-import { EosUtils } from '../../eos-common/core/utils';
-import { ALL_ROWS } from '../../eos-rest/core/consts';
-import { PipRX } from '../../eos-rest/services/pipRX.service';
-import { IDictionaryDescriptor, IRecordOperationResult } from '../interfaces';
-import { DictionaryDescriptor } from './dictionary-descriptor';
+import {EosUtils} from '../../eos-common/core/utils';
+import {ALL_ROWS} from '../../eos-rest/core/consts';
+import {PipRX} from '../../eos-rest/services/pipRX.service';
+import {IDictionaryDescriptor, IRecordOperationResult} from '../interfaces';
+import {DictionaryDescriptor} from './dictionary-descriptor';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 import {CONFIRM_LINK_CHECK_CATEGORY} from '../consts/confirm.consts';
-import { LINK_CL } from 'eos-rest';
+import {LINK_CL} from 'eos-rest';
+import {RecordDescriptor} from './record-descriptor';
 
 const LINK_TYPE = 'LINK_TYPE';
 const ISN_LCLASSIF = 'ISN_LCLASSIF';
 
-export class LinkDictionaryDescriptor extends DictionaryDescriptor {
+export class LinkRecordDescrtiptor extends RecordDescriptor {
+    getEditFieldDescription(): any {
+        const fieldDescription = super.getEditFieldDescription();
+        fieldDescription['PARE_LINK_Ref'] = fieldDescription['rec'];
+        return fieldDescription;
+    }
+}
 
+export class LinkDictionaryDescriptor extends DictionaryDescriptor {
+    record: LinkRecordDescrtiptor;
     private _findedNodes: any;
 
     constructor(
@@ -97,9 +106,12 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
         const results: IRecordOperationResult[] = [];
         Object.keys(updates).forEach((key) => {
             if (updates[key]) {
-                if (key.indexOf('_') !== 0) {
-                    const data = EosUtils.deepUpdate(originalData[key], updates[key]);
-                    changeData.push(data);
+                switch (key) {
+                    case 'rec':
+                    case 'PARE_LINK_Ref':
+                        const data = EosUtils.deepUpdate(originalData[key], updates[key]);
+                        changeData.push(data);
+                        break;
                 }
             }
         });
@@ -148,6 +160,10 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
         return Promise.resolve(true);
     }
 
+    protected _initRecord(descriptorData: IDictionaryDescriptor) {
+        this.record = new LinkRecordDescrtiptor(this, descriptorData);
+    }
+
     private _appendCategoryOldChange(changes) {
         const changeData = [];
         if (this._findedNodes) {
@@ -172,5 +188,4 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
             });
     }
 }
-
 

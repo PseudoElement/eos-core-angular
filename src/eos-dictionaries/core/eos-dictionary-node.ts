@@ -98,6 +98,10 @@ export class EosDictionaryNode {
         return (this.data.rec['IS_NODE'] !== undefined && this.data.rec['IS_NODE'] === 0);
     }
 
+    get isPrjDocGroup(): boolean {
+        return (!!this.data.rec['PRJ_NUM_FLAG']);
+    }
+
     get isProtected(): boolean {
         return Boolean(this.data.rec['PROTECTED']);
     }

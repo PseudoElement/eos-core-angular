@@ -1,14 +1,13 @@
 import { Component, OnChanges, SimpleChanges, } from '@angular/core';
-import { RKBasePage } from './rk-base-page';
+import { RKNomenkBasePage } from './rk-nomenk-base-page';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-
 
 @Component({
     selector: 'eos-rk-default-values',
     templateUrl: 'rk-default-values.component.html',
 })
 
-export class RKDefaultValuesCardComponent extends RKBasePage implements OnChanges {
+export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements OnChanges {
 
     flagEn_extAddr: boolean;
     flagEn_intAddr: boolean;
@@ -16,37 +15,56 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
     flagEn_spinnum: boolean;
 
     ngOnChanges(changes: SimpleChanges) {
+        this.selOpts.events = {
+            select: this.journalNomencClickSel.bind(this),
+            remove: this.journalNomencClickRemove.bind(this),
+            getTitle: this.journalNomencGetTitle.bind(this),
+        };
     }
 
-    journalNomencClick() {
-
+    journalNomencClickSel() {
+        this.doNomenklSelectView('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC');
+    }
+    journalNomencClickRemove() {
+        this.setDictLinkValue('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC', null);
     }
 
-    onDataChanged(path: string, prevValue: any, newValue: any): any {
+    onDataChanged(path: string, prevValue: any, newValue: any, initial = false): any {
         switch (path) {
+
+            case 'DOC_DEFAULT_VALUE_List.TERM_EXEC': { // Срок исполнения
+                this.form.controls['DOC_DEFAULT_VALUE_List.TERM_EXEC_W'].updateValueAndValidity();
+                break;
+            }
             // Передача документов
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST': {
                 if (newValue) {
                     this.flagEn_doc = true;
-                    this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM'].options, null, true);
                     if (!prevValue) {
                         this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM', '2');
                     }
                 } else {
                     this.flagEn_doc = false;
-                    this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM'].options, null, false);
                     this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_PARM', null);
                 }
+                this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_PARM');
                 break;
             }
 
             // Списать в Дело
             case 'DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC': {
                 this.flagEn_spinnum = newValue;
-                if (!newValue) {
-                    this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM'].options, null, false);
+                this.setAvailableFor('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM');
+                if (newValue && !prevValue) {
+                    this.setFirstAvailableValue('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM');
                 }
+                if (!newValue) {
+                    this.setValue('DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM', null);
+                }
+
+                // console.log(this);
                 break;
+
             }
 
             // Внутренние адресаты
@@ -55,17 +73,24 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
                     this.flagEn_intAddr = true;
                     if (!prevValue) {
                         this.setValue('DOC_DEFAULT_VALUE_List.SEND_MARKSEND', true);
-                        this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.SEND_DEP_PARM'].options,
-                        this.isEDoc ? [1, 3] : [0, 1, 2]);
-                        this.setValue('DOC_DEFAULT_VALUE_List.SEND_DEP_PARM', this.isEDoc ? '1' : '2');
                     }
                 } else {
                     this.flagEn_intAddr = false;
                     this.setValue('DOC_DEFAULT_VALUE_List.SEND_MARKSEND', null);
-                    this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.SEND_DEP_PARM'].options, null, false);
-                    this.setValue('DOC_DEFAULT_VALUE_List.SEND_DEP_PARM', null);
                 }
-
+                this.setAvailableFor('DOC_DEFAULT_VALUE_List.SEND_DEP_PARM');
+                break;
+            }
+            // Внутренние адресаты - с отметкой об отправке
+            case 'DOC_DEFAULT_VALUE_List.SEND_MARKSEND': {
+                this.setAvailableFor('DOC_DEFAULT_VALUE_List.SEND_DEP_PARM');
+                if (!initial) {
+                    if (newValue) {
+                        this.setValue('DOC_DEFAULT_VALUE_List.SEND_DEP_PARM', this.isEDoc ? '1' : '2');
+                    } else {
+                        this.setValue('DOC_DEFAULT_VALUE_List.SEND_DEP_PARM', null);
+                    }
+                }
                 break;
             }
             // Внешние адресаты
@@ -82,20 +107,39 @@ export class RKDefaultValuesCardComponent extends RKBasePage implements OnChange
         }
     }
 
-    onTabInit (dgStoredValues: any, values: any[]) {
-
-        super.onTabInit(dgStoredValues, values);
-
-        for (const key in this.form.controls) {
-            if (this.form.controls.hasOwnProperty(key)) {
-                const value = values[key];
-                this.onDataChanged(key, value, value);
+    setAvailableFor (key: string) {
+        switch (key) {
+            // Внутренние адресаты - с отметкой об отправке
+            case 'DOC_DEFAULT_VALUE_List.SEND_DEP_PARM': {
+                const cb = this.getfixedDBValue('DOC_DEFAULT_VALUE_List.SEND_MARKSEND');
+                const v = this.getfixedDBValue('DOC_DEFAULT_VALUE_List.SEND_ISN_LIST_DEP');
+                if (v && cb) {
+                    this.setEnabledOptions(this.inputs[key].options,
+                        this.isEDoc ? [1, 3] : [0, 1, 2]);
+                } else {
+                    this.setEnabledOptions(this.inputs[key].options, null, false);
+                }
+                break;
             }
-        }
-
-        if (this.isEDoc) {
-            this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM'].options, null, false);
+            case 'DOC_DEFAULT_VALUE_List.JOURNAL_PARM': {
+                const v = this.getfixedDBValue('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_LIST');
+                if (v && !this.isEDoc) {
+                    this.setEnabledOptions(this.inputs[key].options, null, true);
+                } else {
+                    this.setEnabledOptions(this.inputs[key].options, null, false);
+                }
+                break;
+            }
+            // Списать в Дело - радиобуттоны
+            case 'DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM': {
+                this.nomencChildControlAvial('DOC_DEFAULT_VALUE_List.JOURNAL_ISN_NOMENC',
+                        'DOC_DEFAULT_VALUE_List.JOURNAL_NOMENC_PARM');
+                break;
+            }
         }
     }
 
+    onTabInit (dgStoredValues: any, values: any[]) {
+        super.onTabInit(dgStoredValues, values);
+    }
 }

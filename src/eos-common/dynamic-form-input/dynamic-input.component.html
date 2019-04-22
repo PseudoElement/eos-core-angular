@@ -28,6 +28,7 @@
                                   [readonly]="readonly"
                                   [disabled]="disabled"
                                   [hideLabel]="hideLabel"
+                                  [viewOpts]="viewOpts"
                                   [inputTooltip]="tooltip"></eos-dynamic-input-select>
         <eos-dynamic-input-checkbox *ngSwitchCase="types.boolean"
                                     [form]="form"
@@ -70,8 +71,8 @@
             [inputTooltip]="tooltip"></eos-dynamic-input-radio>
         <eos-dynamic-input-linkbutton *ngSwitchCase="types.dictLink"
             [form]="form"
-            [buttonClick]="event1"
             [input]="input"
+            [viewOpts]="viewOpts"
             [readonly]="readonly"
             [hideLabel]="hideLabel"
             [inputTooltip]="tooltip"></eos-dynamic-input-linkbutton>

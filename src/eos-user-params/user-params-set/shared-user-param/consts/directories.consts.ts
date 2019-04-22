@@ -11,8 +11,8 @@ export const DIRECTORIES_USER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '1', title: 'Вертикальное'},
-                {value: '0', title: 'Горизонтальное'}
+                {value: '1', title: 'Вертикальные'},
+                {value: '0', title: 'Горизонтальные'}
             ]
         },
         {
@@ -25,13 +25,6 @@ export const DIRECTORIES_USER: IBaseUsers = {
                 {value: '1', title: 'В порядке ввода значений'},
             ]
         },
-        {
-            key: 'SRCH_CONTACT_FIELDS',
-            type: 'boolean',
-            title: ''
-        }
-    ],
-    fieldsChild: [
         {
             key: 'SRCH_CONTACT_FIELDS',
             type: 'boolean',
@@ -52,5 +45,22 @@ export const DIRECTORIES_USER: IBaseUsers = {
             type: 'boolean',
             title: 'Подразделение'
         }
+    ],
+    fieldsDefaultValue: [
+        {
+            key: 'WINPOS',
+            type: 'radio',
+            title: '',
+        },
+        {
+            key: 'SORT',
+            type: 'radio',
+            title: '',
+        },
+        {
+            key: 'SRCH_CONTACT_FIELDS',
+            type: 'boolean',
+            title: ''
+        },
     ]
 };

@@ -97,7 +97,7 @@ export abstract class AbstractDictionaryDescriptor {
             data: blobData
         };
 
-        PipRX.invokeSop(chl, 'DELO_BLOB_SetDataContent', content);
+        PipRX.invokeSop(chl, 'DELO_BLOB_SetDataContent', content, 'POST', false);
 
         return this.apiSrv.batch(chl, '')
             .then((ids) => (ids[0] ? ids[0] : null));
@@ -420,9 +420,12 @@ export abstract class AbstractDictionaryDescriptor {
     getCustomTreeData(): Promise<CustomTreeNode[]> {
         return Promise.resolve(null);
     }
+    getActive(): CustomTreeNode {
+        return null;
+    }
 
     // method for custom tree
-    setRootNode(_nodeId: string) {
+    setRootNode(_nodeId: string): any {
     }
 
     extendCritery(critery: any, params: ISearchSettings, selectedNode: EosDictionaryNode) {

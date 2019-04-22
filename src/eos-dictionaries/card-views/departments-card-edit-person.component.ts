@@ -3,7 +3,6 @@ import { Component, Injector, OnChanges } from '@angular/core';
 import { BaseCardEditComponent } from 'eos-dictionaries/card-views/base-card-edit.component';
 import { FieldsDecline } from 'eos-dictionaries/interfaces/fields-decline.inerface';
 import { IImage } from '../interfaces/image.interface';
-import { DEFAULT_PHOTO } from 'eos-dictionaries/consts/common';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { UPLOAD_IMG_FALLED, INFO_PERSONE_DONT_HAVE_CABINET } from '../consts/messages.consts';
 
@@ -14,7 +13,7 @@ import { UPLOAD_IMG_FALLED, INFO_PERSONE_DONT_HAVE_CABINET } from '../consts/mes
 export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent implements OnChanges {
     readonly fieldGroups: string[] = ['Основные данные', 'Контактная информация', 'Дополнительные сведения'];
 
-    photo = DEFAULT_PHOTO;
+    photo: any;
 
     private currentNodeId: string;
     private bossWarning: boolean;
@@ -34,12 +33,34 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         if (this.data.photo && this.data.photo.url) {
             this.photo = this.data.photo.url;
         } else {
-            this.photo = DEFAULT_PHOTO;
+            this.photo = null;
         }
+
+        this.prevValues = this.makePrevValues(this.data);
+
         if (this.form) {
             this.unsubscribe();
             this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this.updateForm(formChanges));
         }
+    }
+
+    makePrevValues (data: any) {
+        const res = [];
+        for (const key1 in data) {
+            if (data.hasOwnProperty(key1)) {
+                const element1 = data[key1];
+
+                for (const key2 in element1) {
+                    if (element1.hasOwnProperty(key2)) {
+                        const element2 = element1[key2];
+                        res[key1 + '.' + key2] = element2;
+                    }
+                }
+
+
+            }
+        }
+        return res;
     }
 
     newImage(img: IImage) {
@@ -49,7 +70,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                 if (photoId) {
                     this.setValue('rec.ISN_PHOTO', photoId['ID']);
                 } else {
-                    this.photo = DEFAULT_PHOTO;
+                    this.photo = null;
                     this._msgSrv.addNewMessage(UPLOAD_IMG_FALLED);
                 }
             });
@@ -57,18 +78,34 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
 
     removePhoto() {
         this.setValue('rec.ISN_PHOTO', null);
-        this.photo = DEFAULT_PHOTO;
+        this.photo = null;
+    }
+
+    formatSurname(fam: string, name: string, patron: string): string {
+        let res = '';
+        fam = fam ? fam.trim() : '';
+        if (fam) { fam = fam.replace(/./g, (c, i) => i === 0 ? c.toUpperCase() : c); }
+        name = name ? name.trim() : '';
+        patron = patron ? patron.trim() : '';
+
+        res = (fam ? fam : '') + (fam && (name || patron) ? ' ' : '') +
+            (name ? name[0].toUpperCase() + '.' : '') +
+            (patron ? patron[0].toUpperCase() + '.' : '');
+        return res;
     }
 
     public fillDeclineFields(): void {
+        const gender = this.getValue('printInfo.GENDER');
         const field: FieldsDecline = {
             DUTY: this.getValue('rec.DUTY') || '',
-            GENDER: this.getValue('printInfo.GENDER') * 1,
             NAME: this.getValue('printInfo.NAME') || '',
             PATRON: this.getValue('printInfo.PATRON') || '',
             SURNAME: this.getValue('printInfo.SURNAME') || '',
             // PRINT_SURNAME_DP: 'test PRINT SURNAME_DP'
         };
+        if (gender !== null) {
+            field['GENDER'] = gender;
+        }
 
         this.dictSrv.inclineFields(field)
             .then(([res]: any) => {
@@ -87,6 +124,9 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                     res['GENDER'] === 1 ? RussianNameProcessor.sexF :
                     null
                     );
+                res['GENDER'] = rn.sex === RussianNameProcessor.sexF ? 1 :
+                                rn.sex === RussianNameProcessor.sexM ? 0 : null;
+
                 res.NAME_DP = rn.firstName(rn.gcaseDat);
                 res.NAME_PP = rn.firstName(rn.gcasePred);
                 res.NAME_RP = rn.firstName(rn.gcaseRod);
@@ -110,6 +150,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                     Object.keys(res).forEach((key) => {
                         if (key !== 'PRINT_DEPARTMENT') {
                             this.setValue('printInfo.' + key, res[key]);
+                            this.setDirty('printInfo.' + key);
                         }
                     });
                 }
@@ -120,6 +161,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         } else {
             this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.treeNodeTitle);
         }
+
     }
     private _genFamilyIO(rn: RussianName, gcase): string {
         let res = rn.lastName(gcase);
@@ -168,5 +210,22 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                 this.bossWarning = false;
             }
         }
+        let setSurname = null;
+        if (this.prevValues['printInfo.NAME'] !== formChanges['printInfo.NAME'] ||
+            this.prevValues['printInfo.SURNAME'] !== formChanges['printInfo.SURNAME'] ||
+            this.prevValues['printInfo.PATRON'] !== formChanges['printInfo.PATRON']
+        ) {
+            setSurname = this.formatSurname(formChanges['printInfo.SURNAME'],
+                                        formChanges['printInfo.NAME'],
+                                        formChanges['printInfo.PATRON']);
+
+        }
+
+        this.prevValues = formChanges;
+
+        if (setSurname) {
+            this.setValue('rec.SURNAME', setSurname);
+        }
+
     }
 }

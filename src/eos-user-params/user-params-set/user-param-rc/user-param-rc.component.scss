@@ -1,79 +1,72 @@
 .input-user-rc-wrapper {
-    .l-font{
+    .l-font {
         font-size: 15px;
     }
-    .l-font-t{
+    .l-font-t {
         padding-left: 30px;
     }
     .multiple-document-groups-select-rc {
         width: 73%;
     }
-    .scrollWrapper{
+    .scrollWrapper {
         overflow: auto;
-        max-height: calc(100vh - 330px);
+        max-height: calc(100vh - 220px);
         padding: 0 30px;
     }
-    eos-dynamic-input{
+    .rc-div {
+        margin-top: 20px;
+    }
+    eos-dynamic-input {
         font-size: 14px;
     }
-
     label {
         font-size: 14px;
     }
-
     .inline-block {
         display: inline-block;
     }
-
     .select-wrap {
         margin-left: 10px;
         margin-right: 40px;
     }
-
     .number-increment-wrap {
         display: inline-block;
-
     }
-
     .label-input-increment {
         display: block;
         margin-bottom: -4px;
     }
-
-    .select-wrap, .number-increment-wrap {
+    .select-wrap,
+    .number-increment-wrap {
         .form-group {
             margin: 0;
         }
     }
-
     .form-group {
         margin-bottom: 15px;
     }
-
     .elem-input-radio {
         font-size: 14px;
         display: inline-block;
         margin-right: 30px;
     }
-
     .param-input-group-section {
         padding-left: 30px;
-
         .elem-input-radio {
             margin-right: 90px;
         }
     }
-    .btn-controll{
+    .btn-controll {
         display: flex;
         justify-content: flex-start;
         align-items: center;
         padding-left: 20px;
         margin-bottom: 10px;
-        .btn{
+        .btn {
             margin-right: 10px;
         }
     }
-    .user-input-group-flex{
+    .user-input-group-flex {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
@@ -83,32 +76,30 @@
         box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.5) inset;
         margin-bottom: 10px;
         padding-top: 10px;
-        .rc-doc{
+        .rc-doc {
             display: inline-block;
             width: 100%;
             padding: 10px 20px;
             overflow: hidden;
             cursor: pointer;
-
         }
-        .current{
+        .current {
             background: #e3f2fd;
         }
     }
-    .user-input-group{
+    .user-input-group {
         padding: 0px!important;
     }
-    .rc-box{
+    .rc-box {
         padding-left: 20px;
         padding-right: 20px;
     }
-    .rc-doc-margin{
+    .rc-doc-margin {
         margin: 0 23px;
     }
-
-
 }
-.bcgFixed{
+
+.bcgFixed {
     position: fixed;
     width: 100%;
     top: 0;

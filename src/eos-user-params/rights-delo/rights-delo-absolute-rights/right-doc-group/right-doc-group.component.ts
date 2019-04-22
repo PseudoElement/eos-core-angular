@@ -55,7 +55,7 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
         this.isShell = true;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DOCGROUP_CL)
         .then((data: string) => {
-            return this.apiSrv.getDocGroup(data.split('|').join('||'));
+            return this.apiSrv.getDocGroup(data.split('|'));
         })
         .then((data: DOCGROUP_CL[]) => {
             if (this._checkRepeat(data)) {
@@ -116,7 +116,7 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
         if (this.selectedNode.isCreate) {
             str.push('0.');
         }
-        this.apiSrv.getDocGroup(str.join('||'))
+        this.apiSrv.getDocGroup(str)
         .then((data: DOCGROUP_CL[]) => {
             this.rDocgroup.forEach((item) => {
                 data.forEach((doc: DOCGROUP_CL) => {

@@ -18,16 +18,20 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
     formAttach: FormGroup;
     prepInputsAttach;
     _currentFormAttachStatus;
+    flagEdit: boolean = false;
    _ngUnsubscribe: Subject<any> = new Subject();
     constructor( injector: Injector ) {
         super(injector, DIRECTORIES_USER);
-        this.init();
+        this._userParamsSetSrv.getUserIsn().then(() => {
+            this.init();
             this.prepInputsAttach = this.getObjectInputFields(DIRECTORIES_USER.fieldsChild);
             this.afterInit();
+            this.editMode();
+        });
             this._userParamsSetSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
             .subscribe(() => {
-                this.submit();
+                this._userParamsSetSrv.submitSave =  this.submit();
             });
     }
     subscribeChangeForm() {
@@ -96,16 +100,26 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
             this.ngOnDestroy();
             this.init();
             this.afterInit();
+            this.isChangeForm = false;
+            this.isChangeFormAttach = false;
+            this._pushState();
         }
+        setTimeout(() => {
+            this.editMode();
+        });
     }
-    submit() {
+    submit(): Promise<any> {
         if (this.newData || this.newDataAttach || this.prepareData) {
             this.formChanged.emit(false);
             this.isChangeForm = false;
+            this.isChangeFormAttach = false;
+            this._pushState();
+            this.flagEdit = false;
+            this.editMode();
             // this._userParamsSetSrv.getUserIsn();
             if (this.defaultFlag) {
                 this.defaultFlag = false;
-                this.userParamApiSrv
+            return    this.userParamApiSrv
                 .setData(this.createObjRequestForDefaultValues())
                 .then(data => {
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
@@ -113,7 +127,7 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             } else if (this.newData && this.newDataAttach) {
-                this.userParamApiSrv
+             return   this.userParamApiSrv
                 .setData(this.createObjRequestForAll())
                 .then(data => {
                   //  this.prepareData.rec = Object.assign({}, this.newData.rec);
@@ -122,7 +136,7 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             } else if (this.newData) {
-            this.userParamApiSrv
+            return    this.userParamApiSrv
                 .setData(this.createObjRequest())
                 .then(data => {
                   //  this.prepareData.rec = Object.assign({}, this.newData.rec);
@@ -131,7 +145,7 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
             } else if (this.newDataAttach) {
-                this.userParamApiSrv
+            return    this.userParamApiSrv
                 .setData(this.createObjRequestForAttach())
                 .then(data => {
                    // this.prepareData.rec = Object.assign({}, this.newData.rec);
@@ -141,6 +155,12 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
                 .catch(data => console.log(data));
                 }
             }
+            this.isChangeForm = false;
+            this.isChangeFormAttach = false;
+            this._pushState();
+            this.flagEdit = false;
+            this.editMode();
+            return Promise.resolve();
         }
         createObjRequestForAll() {
             const req = this.createObjRequest();
@@ -181,11 +201,18 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
     prepDataAttachField(data) {
         for (const key of Object.keys(data)) {
             if (key === 'SRCH_CONTACT_FIELDS') {
-            this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_SURNAME'] = data[key].indexOf('SURNAME')
+                if (data[key] !== null) {
+                     this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_SURNAME'] = data[key].indexOf('SURNAME')
             >= 0 ? 'SRCH_CONTACT_FIELDS_SURNAME' : '';
             this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_DUTY'] = data[key].indexOf('DUTY') >= 0 ? 'SRCH_CONTACT_FIELDS_DUTY' : '';
             this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_DEPARTMENT'] = data[key].indexOf('DEPARTMENT')
             >= 0 ? 'SRCH_CONTACT_FIELDS_DEPARTMENT' : '';
+                }   else {
+                    this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_SURNAME'] = '';
+                    this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_DUTY'] = '';
+                    this.prepDataAttach.rec['SRCH_CONTACT_FIELDS_DEPARTMENT'] = '';
+                }
+
             }
         }
     }
@@ -221,6 +248,15 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
             .catch(err => {
                 throw err;
             });
+    }
+    editMode() {
+        if (this.flagEdit) {
+            this.form.enable({emitEvent: false});
+            this.formAttach.enable({emitEvent: false});
+        } else {
+            this.form.disable({emitEvent: false});
+            this.formAttach.disable({emitEvent: false});
+        }
     }
     private _pushState () {
         this._userParamsSetSrv.setChangeState({isChange: this.isChangeForm || this.isChangeFormAttach});

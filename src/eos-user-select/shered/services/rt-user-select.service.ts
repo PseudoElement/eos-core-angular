@@ -10,6 +10,7 @@ import { Observable } from 'rxjs/Observable';
 export class RtUserSelectService {
     subject: Subject<any> = new Subject();
     subjectScan: Subject<any> = new Subject();
+    subjectFlagBtnHeader: Subject<any> = new Subject();
      ArraySystemHelper = {
         delo: {
             label: 'Дело',
@@ -82,6 +83,10 @@ export class RtUserSelectService {
 
     get changerUser(): Observable<any> {
         return this.subject.asObservable();
+    }
+
+    get setFlagBtnHeader() {
+        return this.subjectFlagBtnHeader.asObservable();
     }
     changeSelectedUser(user: UserSelectNode) {
         this._ChangeSelectUser = user;
@@ -197,6 +202,11 @@ export class RtUserSelectService {
             this._errorHandler(error);
             return false;
         });
+    }
+
+    getSVGImage(photo: any): Promise<any> {
+        const query = {DELO_BLOB: photo};
+        return this.apiSrv.read(query);
     }
     private _errorHandler(err): void {
         const errMessage = err.message ? err.message : err;

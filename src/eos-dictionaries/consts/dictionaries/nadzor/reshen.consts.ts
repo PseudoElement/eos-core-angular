@@ -43,12 +43,13 @@ export const NP_RESHEN_CL: ITreeDictionaryDescriptor = {
         type: 'string',
         title: 'ID ГАС ПС',
         length: 10,
+        forNode: true,
     },
         Object.assign({}, COMMON_FIELD_NAME, {
             title: 'Наименование',
             isUnique: true,
             uniqueInDict: true,
-            length: 150,
+            length: 248,
         }), {
             key: 'IS_NODE',
             title: 'IS_NODE',

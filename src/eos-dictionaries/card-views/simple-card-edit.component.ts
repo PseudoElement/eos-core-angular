@@ -6,7 +6,9 @@ import { BaseCardEditComponent } from './base-card-edit.component';
     selector: 'eos-simple-card-edit',
     templateUrl: 'simple-card-edit.component.html',
 })
+
 export class SimpleCardEditComponent extends BaseCardEditComponent {
+
     constructor(injector: Injector) {
         super(injector);
     }

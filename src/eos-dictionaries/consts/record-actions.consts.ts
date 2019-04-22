@@ -1,6 +1,7 @@
 import { IAction, E_RECORD_ACTIONS, E_ACTION_GROUPS } from 'eos-dictionaries/interfaces';
+import { APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 
-export const RECORD_ACTIONS_EDIT = {
+export const RECORD_ACTIONS_EDIT: IAction = {
     type: E_RECORD_ACTIONS.edit,
     group: E_ACTION_GROUPS.item,
     title: 'Редактировать',
@@ -9,7 +10,8 @@ export const RECORD_ACTIONS_EDIT = {
     disabledIconClass: 'eos-icon eos-icon-edit-grey small',
     hoverIconClass: 'eos-icon eos-icon-edit-dark-blue small',
     activeIconClass: null,
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
 };
 
 const RECORD_ACTION_CREATE: IAction = {
@@ -21,7 +23,8 @@ const RECORD_ACTION_CREATE: IAction = {
     disabledIconClass: 'eos-icon eos-icon-plus-grey small',
     activeIconClass: null,
     hoverIconClass: 'eos-icon eos-icon-plus-dark-blue small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
 };
 
 const RECORD_ACTION_ADVCARDRK: IAction = {
@@ -33,7 +36,8 @@ const RECORD_ACTION_ADVCARDRK: IAction = {
     disabledIconClass: 'eos-icon eos-icon-clip-grey small',
     activeIconClass: '',
     hoverIconClass: 'eos-icon eos-icon-repair-clip-blue small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
 };
 
 const RECORD_ACTION_LOGIC_DELETE: IAction = {
@@ -45,7 +49,8 @@ const RECORD_ACTION_LOGIC_DELETE: IAction = {
     disabledIconClass: 'eos-icon eos-icon-bin-grey small',
     activeIconClass: null,
     hoverIconClass: 'eos-icon eos-icon-bin-dark-blue small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
 };
 
 const RECORD_ACTION_SHOW_DELETE: IAction = {
@@ -57,7 +62,8 @@ const RECORD_ACTION_SHOW_DELETE: IAction = {
     disabledIconClass: 'eos-icon eos-icon-show-grey small',
     activeIconClass: 'eos-icon eos-icon-show-white small',
     hoverIconClass: '',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.read,
 };
 
 const RECORD_ACTION_USER_SORT: IAction = {
@@ -69,7 +75,8 @@ const RECORD_ACTION_USER_SORT: IAction = {
     disabledIconClass: 'eos-icon eos-icon-custom-list-grey small',
     activeIconClass: 'eos-icon eos-icon-custom-list-white small',
     hoverIconClass: 'eos-icon eos-icon-custom-list-white small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.read,
 };
 const RECORD_ACTION_TO_UP: IAction = {
     type: E_RECORD_ACTIONS.moveUp,
@@ -80,7 +87,8 @@ const RECORD_ACTION_TO_UP: IAction = {
     disabledIconClass: 'eos-icon eos-icon-arrow-v-grey-top small',
     activeIconClass: null,
     hoverIconClass: 'eos-icon eos-icon-arrow-v-dark-blue-top small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.read,
 };
 
 const RECORD_ACTION_TO_DOWN: IAction = {
@@ -92,7 +100,8 @@ const RECORD_ACTION_TO_DOWN: IAction = {
     disabledIconClass: 'eos-icon eos-icon-arrow-v-grey-bottom small',
     activeIconClass: null,
     hoverIconClass: 'eos-icon eos-icon-arrow-v-dark-blue-bottom small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.read,
 };
 
 const RECORD_ACTION_SHOW_ALL_RECORDS: IAction = {
@@ -104,7 +113,8 @@ const RECORD_ACTION_SHOW_ALL_RECORDS: IAction = {
     disabledIconClass: 'eos-icon eos-icon-tree-grey small',
     activeIconClass: 'eos-icon eos-icon-tree-white small',
     hoverIconClass: '',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.read,
 };
 
 const RECORD_ACTION_SHOW_SETTINGS: IAction = {
@@ -116,7 +126,8 @@ const RECORD_ACTION_SHOW_SETTINGS: IAction = {
     disabledIconClass: '',
     activeIconClass: null,
     hoverIconClass: '',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.read,
 };
 
 const RECORD_ACTION_RESTORE: IAction = {
@@ -128,7 +139,8 @@ const RECORD_ACTION_RESTORE: IAction = {
     disabledIconClass: 'eos-icon eos-icon-repair-grey small',
     activeIconClass: '',
     hoverIconClass: 'eos-icon eos-icon-repair-dark-blue small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
 };
 
 const RECORD_ACTION_DELETE_HARD: IAction = {
@@ -140,7 +152,8 @@ const RECORD_ACTION_DELETE_HARD: IAction = {
     disabledIconClass: 'eos-icon eos-icon-bin-forever-grey small',
     activeIconClass: null,
     hoverIconClass: 'eos-icon eos-icon-bin-forever-dark-blue small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
 };
 
 const RECORD_ACTION_COUNTER_DEPARTMENT_MAIN: IAction = {
@@ -152,7 +165,8 @@ const RECORD_ACTION_COUNTER_DEPARTMENT_MAIN: IAction = {
     disabledIconClass: 'eos-icon eos-icon-info-grey small',
     activeIconClass: null,
     hoverIconClass: 'eos-icon eos-icon-info-blue small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
 };
 
 const RECORD_ACTION_COUNTER_DEPARTMENT: IAction = {
@@ -164,7 +178,8 @@ const RECORD_ACTION_COUNTER_DEPARTMENT: IAction = {
     disabledIconClass: 'eos-icon eos-icon-info-grey small',
     activeIconClass: null,
     hoverIconClass: 'eos-icon eos-icon-info-blue small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
 };
 
 const RECORD_ACTION_COUNTER_DOCGROUP: IAction = {
@@ -176,7 +191,8 @@ const RECORD_ACTION_COUNTER_DOCGROUP: IAction = {
     disabledIconClass: 'eos-icon eos-icon-info-grey small',
     activeIconClass: null,
     hoverIconClass: 'eos-icon eos-icon-info-blue small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
 };
 
 const RECORD_ACTION_COUNTER_DOCGROUP_RKPD: IAction = {
@@ -188,7 +204,8 @@ const RECORD_ACTION_COUNTER_DOCGROUP_RKPD: IAction = {
     disabledIconClass: 'eos-icon eos-icon-info-grey small',
     activeIconClass: null,
     hoverIconClass: 'eos-icon eos-icon-info-blue small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
 };
 
 const RECORD_ACTION_COUNTER_DEPARTMENT_RK: IAction = {
@@ -200,7 +217,8 @@ const RECORD_ACTION_COUNTER_DEPARTMENT_RK: IAction = {
     disabledIconClass: 'eos-icon eos-icon-info-grey small',
     activeIconClass: null,
     hoverIconClass: 'eos-icon eos-icon-info-blue small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
 };
 
 const RECORD_ACTION_COUNTER_DEPARTMENT_RKPD: IAction = {
@@ -212,7 +230,8 @@ const RECORD_ACTION_COUNTER_DEPARTMENT_RKPD: IAction = {
     disabledIconClass: 'eos-icon eos-icon-info-grey small',
     activeIconClass: null,
     hoverIconClass: 'eos-icon eos-icon-info-blue small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
 };
 
 const RECORD_ACTION_NOMENKL_CLS: IAction = {
@@ -224,7 +243,8 @@ const RECORD_ACTION_NOMENKL_CLS: IAction = {
     disabledIconClass: 'eos-icon eos-icon-info-grey small',
     activeIconClass: null,
     hoverIconClass: 'eos-icon eos-icon-info-blue small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
 };
 
 const RECORD_ACTION_NOMENKL_OPS: IAction = {
@@ -236,7 +256,8 @@ const RECORD_ACTION_NOMENKL_OPS: IAction = {
     disabledIconClass: 'eos-icon eos-icon-info-grey small',
     activeIconClass: null,
     hoverIconClass: 'eos-icon eos-icon-info-blue small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
 };
 
 // const RECORD_ACTION_CREATE_ORGANISATION_AGENT: IAction = {
@@ -258,7 +279,8 @@ export const RECORD_ACTIONS_NAVIGATION_UP = {
     hint: 'Предыдущая',
     iconClass: 'eos-icon eos-icon-arrow-v-blue-top small',
     disabledIconClass: 'eos-icon eos-icon-arrow-v-grey-top small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.read,
 };
 
 export const RECORD_ACTIONS_NAVIGATION_DOWN = {
@@ -268,7 +290,8 @@ export const RECORD_ACTIONS_NAVIGATION_DOWN = {
     hint: 'Следующая',
     iconClass: 'eos-icon eos-icon-arrow-v-blue-bottom small',
     disabledIconClass: 'eos-icon eos-icon-arrow-v-grey-bottom small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.read,
 };
 
 const RECORD_ACTIONS_ADDITIONAL_FIELDS: IAction = {
@@ -280,7 +303,21 @@ const RECORD_ACTIONS_ADDITIONAL_FIELDS: IAction = {
     disabledIconClass: 'eos-icon eos-icon-clip-grey small',
     activeIconClass: '',
     hoverIconClass: 'eos-icon eos-icon-repair-clip-blue small',
-    buttonClass: null
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
+
+const RECORD_DETAILS_RKPD: IAction = {
+    type: E_RECORD_ACTIONS.prjDefaultValues,
+    group: E_ACTION_GROUPS.item,
+    title: 'Заполнение реквизитов РКПД',
+    hint: 'Заполнение реквизитов РКПД',
+    iconClass: 'eos-icon eos-icon-clip-blue small',
+    disabledIconClass: 'eos-icon eos-icon-clip-grey small',
+    activeIconClass: '',
+    hoverIconClass: 'eos-icon eos-icon-repair-clip-blue small',
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
 };
 
 export const RECORD_ACTIONS: IAction[] = [
@@ -321,6 +358,7 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     // RECORD_ACTION_CREATE_ORGANISATION_AGENT,
     RECORD_ACTIONS_ADDITIONAL_FIELDS,
     RECORD_ACTION_ADVCARDRK,
+    RECORD_DETAILS_RKPD,
     RECORD_ACTION_SHOW_SETTINGS,
 ];
 

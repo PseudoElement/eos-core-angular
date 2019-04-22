@@ -92,7 +92,7 @@ export class EosDeskService {
         if (this._router.url.split('/')[1] === 'parameters') {
             const lable = EOS_PARAMETERS_TAB.find((i) => i.url === dictionaryURL);
             item = {
-                title: `Настройки системы (${lable.title})`,
+                title: `Параметры системы (${lable.title})`,
                 url: '/parameters/' + lable.url
             };
         } else {

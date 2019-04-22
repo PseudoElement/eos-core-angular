@@ -1,209 +1,206 @@
 .input-user-cabinets-rk-forwarding-wrapper {
-    .scrollWrapper{
+    .scrollWrapper {
         overflow: auto;
         max-height: calc(100vh - 330px);
         padding: 0 30px;
     }
-    eos-dynamic-input{
+    eos-dynamic-input {
         font-size: 14px;
     }
-
     .tabs-wrapper {
         margin: 0;
         margin-bottom: 20px;
     }
-
     .inline-block {
         display: inline-block;
         padding-top: 10px;
     }
-
-   /* .block {
+    /* .block {
         display: block;
     }*/
-
     .user-input-increment-cabinets {
         display: inline-block;
     }
-
     .cabinets-highlight-new-enntries-in-the-folder {
         display: inline-block;
         padding-left: 40px;
     }
-
     .user-input-span-for-increment-cabinets {
         display: block;
     }
-
     .elem-input-radio {
         font-size: 14px;
-       // display: inline-block;
+        // display: inline-block;
         margin-right: 40px;
     }
-
     .user-input-group-section {
-
         .span-or {
             padding-left: 40px;
             padding-right: 40px;
         }
     }
-
+    .cabsort {
+        select {
+            cursor: pointer;
+        }
+    }
+    .incr-cabinet {
+        input {
+            width: 50px;
+        }
+    }
     .the-main-recipients-of-the-document-titles {
         font-weight: bold;
         clear: both;
     }
-
     .restrict-by-document-groups {
         width: 65%;
         display: inline-block;
     }
-
     .add-storage {
         margin-bottom: 50px;
-        }
-
+    }
     .template-title {
         display: flex;
         justify-content: space-around;
         width: 100%;
         vertical-align: middle;
         font-size: 0;
-    /* color: */
-    .item {
-        display: inline-block;
-        margin-right: $grid-gutter-width / 2;
-        margin-top: 11px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        vertical-align: middle;
-        &+.item {
-            margin-left: $grid-gutter-width / 2;
-        }
-        .text {
-            cursor: pointer;
-        }
-        .order-icon {
-            padding: 0 3px;
-        }
-        .eos-icon {
-            margin: -5px 0 0;
+        /* color: */
+        .item {
+            display: inline-block;
+            margin-right: $grid-gutter-width / 2;
+            margin-top: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             vertical-align: middle;
+            &+.item {
+                margin-left: $grid-gutter-width / 2;
+            }
+            .text {
+                cursor: pointer;
+            }
+            .order-icon {
+                padding: 0 3px;
+            }
+            .eos-icon {
+                margin: -5px 0 0;
+                vertical-align: middle;
+            }
         }
-    }
     }
     .table-templates {
         padding-left: 7%;
     }
 }
 
-.instructions{
+.instructions {
     padding: 0px 20px;
-    label{
+    label {
         font-size: 14px;
     }
-    .add-j-title{
+    .add-j-title {
         padding-bottom: 13px;
         margin-right: 20px;
     }
-    .add-to-juornal-radio{
+    .add-to-juornal-radio {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        .elem-input-radio{
+        .elem-input-radio {
             display: inline-block;
         }
-
     }
-    .add-to-juornal{
+    .add-to-juornal {
         display: flex;
         justify-content: flex-start;
-        .form-group{
+        .form-group {
             margin-right: 20px;
         }
     }
-    .classifDep{
+    .classifDep {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        .wr-input{
+        .wr-input {
             width: 60%;
-            .form-group{
+            .form-group {
                 margin-bottom: 0px;
                 margin-top: -5px;
-                input{
+                input {
                     padding-left: 5px;
                     border-color: #e6e6e6;
                 }
             }
         }
-        > span {
+        >span {
+            cursor: pointer;
             margin-left: 10px;
         }
     }
-    .resolution{
+    .resolution {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        > div {
+        >div {
             margin-left: 20px;
             width: 40%;
             height: 34px;
         }
     }
-    .date-resolution{
-        .elem-input-radio{
+    .date-resolution {
+        .elem-input-radio {
             display: inline;
         }
     }
-    .author-resolution{
+    .author-resolution {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        .author-res-title{
+        .author-res-title {
             margin-bottom: 20px;
             margin-right: 20px;
         }
-        label{
+        label {
             margin-right: 20px;
         }
-
     }
-    .control-author{
+    .control-author {
         display: inline-block;
         padding-bottom: 20px;
     }
-    .control-state{
-        .elem-input-radio{
+    .control-state {
+        .elem-input-radio {
             display: inline-block;
             margin-right: 20px;
         }
     }
-    .check-resol{
+    .check-resol {
         display: flex;
         justify-content: flex-start;
-        .check-resol-title{
+        .check-resol-title {
             padding-top: 7px;
-            padding-right: 20px;
+            padding-right: 10px;
         }
-        .form-group{
+        .form-group {
             margin-right: 20px;
         }
     }
-    .send-res{
-        .elem-input-radio{
+    .send-res {
+        .elem-input-radio {
             display: inline-block;
             margin-right: 20px;
         }
     }
 }
+
 .rc-doc-left-column {
     position: relative;
     display: block;
 }
 
-.bacgrFixed{
+.bacgrFixed {
     position: fixed;
     left: 0;
     top: 0;

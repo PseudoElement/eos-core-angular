@@ -1,9 +1,9 @@
-import { Component, Output, EventEmitter, OnDestroy, OnInit, OnChanges, ViewChild } from '@angular/core';
+import { Component, Output, EventEmitter, OnDestroy, OnInit, OnChanges, ViewChild, NgZone } from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
 import {PipRX} from '../../eos-rest';
-import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME } from './adv-card-rk-datactrl';
+import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME, FICT_CONTROLS_LIST_NAME } from './adv-card-rk-datactrl';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, AbstractControl } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { TDefaultField, TDFSelectOption } from './rk-default-values/rk-default-const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -11,6 +11,8 @@ import { EosUtils } from 'eos-common/core/utils';
 import { Subscription } from 'rxjs/Subscription';
 import { RKBasePage } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
+import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -54,6 +56,10 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     storedValuesDG: any;
     editValues: any;
     isChanged: boolean;
+    _currentFormStatus: any;
+    formInvalid: boolean;
+    isEDoc: boolean;
+    rkType: number;
     // protected formChanges$: Subscription;
     private subscriptions: Subscription[];
 
@@ -63,13 +69,16 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     private _node = {};
     private isn_node: number;
 
+
     constructor(
         public bsModalRef: BsModalRef,
+        public zone: NgZone,
         private _apiSrv: PipRX,
         private _dataSrv: EosDataConvertService,
         private _inputCtrlSrv: InputControlService,
         private _msgSrv: EosMessageService,
-
+        private _dictSrv: EosDictService,
+        private _zone: NgZone,
     ) {
         this.isUpdating = true;
         this.tabs = tabs;
@@ -100,7 +109,9 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             const rec = data[0];
             if (rec['DUE'] === '0.') {
                 options[0].title = '...';
+                options[0].rec = null;
             } else {
+                options[0].rec = rec;
                 options[0].title = rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
             }
         }
@@ -118,6 +129,14 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         this.bsModalRef.hide();
     }
 
+    public hideModal(): void {
+        this.bsModalRef.hide();
+    }
+
+    public getTitleLabel() {
+        return 'Реквизиты РК "' + this._node[NODE_LABEL_NAME] + '"';
+    }
+
     public clickTab (item: Ttab) {
         this.activeTab = item;
     }
@@ -130,24 +149,51 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         } else {
             this._node = dndata;
         }
+
         this.activeTab = tabs[0];
 
-        this.dataController = new AdvCardRKDataCtrl(this._apiSrv, this._msgSrv);
+        this.dataController = new AdvCardRKDataCtrl(this._zone, this._apiSrv, this._msgSrv, this._dictSrv);
         this.descriptions = this.dataController.getDescriptions();
 
         this.dataController.readValues(this.isn_node).then (values => {
             this.storedValuesDG = values[0];
+            if (this.storedValuesDG['E_DOCUMENT'] === 1) {
+                this.isEDoc = true;
+            } else {
+                this.isEDoc = false;
+            }
+
+            this.rkType = this.storedValuesDG['RC_TYPE'];
+
+
             this.values = {
-                [DEFAULTS_LIST_NAME]:  this._makeDataObjDef(this.storedValuesDG[DEFAULTS_LIST_NAME]),
-                [FILE_CONSTRAINT_LIST_NAME]: this._makeDataObjFileCon(this.storedValuesDG[FILE_CONSTRAINT_LIST_NAME]),
-                };
+                [DEFAULTS_LIST_NAME]: this._makeDefaults(this.descriptions[DEFAULTS_LIST_NAME]),
+                [FILE_CONSTRAINT_LIST_NAME]: this._makeDefaults(this.descriptions[FILE_CONSTRAINT_LIST_NAME]),
+                [FICT_CONTROLS_LIST_NAME]: this._makeDefaults(this.descriptions[FICT_CONTROLS_LIST_NAME]),
+            };
+
+            this._appendDBDefValues(this.values[DEFAULTS_LIST_NAME], this.storedValuesDG[DEFAULTS_LIST_NAME]);
+            this._appendDBFilesValues(this.values[FILE_CONSTRAINT_LIST_NAME], this.storedValuesDG[FILE_CONSTRAINT_LIST_NAME]);
+            this.isChanged = true;
+            this._checkCorrectValuesLogic(this.values, this.descriptions);
             this.editValues = this._makePrevValues(this.values);
 
             this.dataController.loadDictsOptions(this.values, this.updateLinks).then (d => {
                 this.inputs = this._getInputs();
+                this._updateInputs(this.inputs);
                 this._updateOptions(this.inputs);
                 const isNode = false;
                 this.form = this._inputCtrlSrv.toFormGroup(this.inputs, isNode);
+                this._updateValidators(this.form.controls);
+
+                this.subscriptions.push(this.form.statusChanges
+                    .subscribe((status) => {
+                        if (this._currentFormStatus !== status) {
+                            this.formInvalid = (status === 'INVALID');
+                        }
+                        this._currentFormStatus = status;
+                    }));
+
                 this._subscribeToChanges();
                 this.isUpdating = false;
             });
@@ -155,15 +201,140 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     }
 
-    public hideModal(): void {
-        this.bsModalRef.hide();
+    private _updateInputs(inputs: any): any {
+        if (!this.isEDoc) {
+            inputs['DOC_DEFAULT_VALUE_List.SPECIMEN'].required = true;
+        }
+        inputs['DOC_DEFAULT_VALUE_List.FREE_NUM_M'].value = 1;
+        inputs['DOC_DEFAULT_VALUE_List.DOC_DATE_M'].value = 1;
+        inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL_M'].value = 1;
+        inputs['DOC_DEFAULT_VALUE_List.ISN_CARD_REG_M'].value = 1;
+        inputs['DOC_DEFAULT_VALUE_List.ISN_CABINET_REG_M'].value = 1;
     }
 
-    public getTitleLabel() {
-        return 'Реквизиты РК "' + this._node[NODE_LABEL_NAME] + '"';
+    private _updateValidators(controls: any): any {
+        ValidatorsControl.appendValidator(controls['DG_FILE_CONSTRAINT_List.REPLY.EXTENSIONS'],
+            ValidatorsControl.existValidator(VALIDATOR_TYPE.EXTENSION_DOT));
+        ValidatorsControl.appendValidator(controls['DG_FILE_CONSTRAINT_List.RESOLUTION.EXTENSIONS'],
+            ValidatorsControl.existValidator(VALIDATOR_TYPE.EXTENSION_DOT));
+        ValidatorsControl.appendValidator(controls['DG_FILE_CONSTRAINT_List.DOC_RC.EXTENSIONS'],
+            ValidatorsControl.existValidator(VALIDATOR_TYPE.EXTENSION_DOT));
+
+        ValidatorsControl.appendValidator(controls['DOC_DEFAULT_VALUE_List.REF_FILE_ACCESS_LIST'],
+            (control: AbstractControl): { [key: string]: any } => {
+            const c = this.form.controls['DOC_DEFAULT_VALUE_List.SECURLEVEL_FILE'];
+            if (c) {
+                const v = c.value;
+                if (v) {
+                    if ((!control.value || control.value === '') && (v === '-1')) {
+                        return { valueError: 'Итоговый список не должен быть пустым. Заполните его или измените значение "Доступ"'};
+                    }
+                }
+            }
+            return null;
+        });
+
+        const controlSrok1 = controls['DOC_DEFAULT_VALUE_List.TERM_EXEC'];
+        const controlSrok2 = controls['DOC_DEFAULT_VALUE_List.TERM_EXEC_W'];
+        const err = 'Реквизит "Срок исполнения" может быть заполнен только в одном месте';
+
+        ValidatorsControl.appendValidator(controlSrok1,
+            ValidatorsControl.onlyOneOfControl(controlSrok1, controlSrok2, err));
+        ValidatorsControl.appendValidator(controlSrok2,
+            ValidatorsControl.onlyOneOfControl(controlSrok1, controlSrok2, err));
+
     }
 
-    public saveWithConfirmation() {
+
+    private _checkCorrectValuesLogic(values: any, descriptions: any): any {
+        // Внутренние адресаты
+        if (values[DEFAULTS_LIST_NAME]['SEND_ISN_LIST_DEP']) {
+            if (!values[DEFAULTS_LIST_NAME]['SEND_MARKSEND']) {
+                values[DEFAULTS_LIST_NAME]['SEND_DEP_PARM'] = null;
+            } else if (!values[DEFAULTS_LIST_NAME]['SEND_DEP_PARM']) {
+                values[DEFAULTS_LIST_NAME]['SEND_DEP_PARM'] = '1';
+            }
+        } else {
+            values[DEFAULTS_LIST_NAME]['SEND_MARKSEND'] = null;
+            values[DEFAULTS_LIST_NAME]['SEND_DEP_PARM'] = null;
+        }
+        // Картотека регистрации
+        const v1 = values[DEFAULTS_LIST_NAME]['ISN_CARD_REG_CURR_W'];
+        const v2 = values[DEFAULTS_LIST_NAME]['ISN_CARD_REG_FORWARD_W'];
+        const v3 = values[DEFAULTS_LIST_NAME]['ISN_CARD_REG_W'];
+
+        values[FICT_CONTROLS_LIST_NAME]['KR_CURRENT'] = null;
+        values[FICT_CONTROLS_LIST_NAME]['KR_CURRENT_IF'] = null;
+        values[FICT_CONTROLS_LIST_NAME]['ISN_CARD_REG_W_1'] = null;
+        values[FICT_CONTROLS_LIST_NAME]['ISN_CARD_REG_W_2'] = null;
+
+        if (v1 && !v2 && !v3) { // Текущая картотека регистратора
+            values[FICT_CONTROLS_LIST_NAME]['KR_CURRENT'] = '0';
+        } else if (!v1 && !v2 && v3) { // выбор
+            values[FICT_CONTROLS_LIST_NAME]['KR_CURRENT'] = '1';
+            values[FICT_CONTROLS_LIST_NAME]['ISN_CARD_REG_W_1'] = v3;
+        } else if (v1 && v2 && !v3) { // Картотека первой пересылки РК Текущая картотека
+            values[FICT_CONTROLS_LIST_NAME]['KR_CURRENT'] = '2';
+            values[FICT_CONTROLS_LIST_NAME]['KR_CURRENT_IF'] = '0';
+        } else if (!v1 && v2 && v3) { // Картотека первой пересылки РК выбор
+            values[FICT_CONTROLS_LIST_NAME]['KR_CURRENT'] = '2';
+            values[FICT_CONTROLS_LIST_NAME]['KR_CURRENT_IF'] = '1';
+            values[FICT_CONTROLS_LIST_NAME]['ISN_CARD_REG_W_2'] = v3;
+        } else if (!v1 && !v2 && ! v3) { // Отсутствуют данные
+            values[FICT_CONTROLS_LIST_NAME]['KR_CURRENT'] = '0';
+            values[DEFAULTS_LIST_NAME]['ISN_CARD_REG_CURR_W'] = '1';
+        }
+
+        if (this.isEDoc) {
+            // Номер экземпляра Должен быть НЕ задан (поле не может быть заполненным)
+            values[DEFAULTS_LIST_NAME]['SPECIMEN'] = null;
+            // Передача документов Не может быть задан. Контролы параметра недоступны и очищены от значений.
+            values[DEFAULTS_LIST_NAME]['JOURNAL_ISN_LIST'] = null;
+            values[DEFAULTS_LIST_NAME]['JOURNAL_PARM'] = null;
+
+            // при записи
+            values[DEFAULTS_LIST_NAME]['JOURNAL_PARM_W'] = null;
+            values[DEFAULTS_LIST_NAME]['JOURNAL_ISN_LIST_W'] = null;
+            values[DEFAULTS_LIST_NAME]['JOURNAL_FROM_WHO_W'] = null;
+            values[DEFAULTS_LIST_NAME]['JOURNAL_WHO_EMPTY_W'] = null;
+            values[DEFAULTS_LIST_NAME]['JOURNAL_WHO_REDIRECTION_W'] = null;
+            values[DEFAULTS_LIST_NAME]['JOURNAL_WHERE_REDIRECTION_W'] = null;
+            values[DEFAULTS_LIST_NAME]['JOURNAL_FROM_FORWARD_W'] = null;
+            values[DEFAULTS_LIST_NAME]['JOURNAL_PARM_W'] = null;
+
+            // Внутренние адресаты [1, 3]
+            if (values[DEFAULTS_LIST_NAME]['SEND_DEP_PARM']) {
+                if (values[DEFAULTS_LIST_NAME]['SEND_DEP_PARM'] !== '1' && values[DEFAULTS_LIST_NAME]['SEND_DEP_PARM'] !== '3') {
+                    values[DEFAULTS_LIST_NAME]['SEND_DEP_PARM'] = '1';
+                }
+            }
+        } else {
+            // Номер экземпляра Должен быть задан (поле не может быть пустым)
+            const v = this.values[DEFAULTS_LIST_NAME]['SPECIMEN'];
+            if (!v) {
+                this.values[DEFAULTS_LIST_NAME]['SPECIMEN'] = '1';
+            }
+            // Внутренние адресаты [0, 1, 2]
+            if (values[DEFAULTS_LIST_NAME]['SEND_DEP_PARM']) {
+                if (values[DEFAULTS_LIST_NAME]['SEND_DEP_PARM'] !== '0' &&
+                    values[DEFAULTS_LIST_NAME]['SEND_DEP_PARM'] !== '1' &&
+                    values[DEFAULTS_LIST_NAME]['SEND_DEP_PARM'] !== '2') {
+                    values[DEFAULTS_LIST_NAME]['SEND_DEP_PARM'] = '1';
+                }
+            }
+        }
+    }
+
+
+    private _makeDefaults(descr: TDefaultField[]): any {
+        const res = { };
+        for (let i = 0; i < descr.length; i++) {
+            const el = descr[i];
+            if (el.default !== undefined) {
+                res[el.key] = el.default;
+            }
+        }
+        return res;
     }
 
     private _updateOptions(values: any[]) {
@@ -178,24 +349,20 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     }
 
-    private _makeDataObjFileCon (data: any): any {
-        const res = { };
+    private _appendDBFilesValues (values: any[], data: any): void {
         for (let i = 0; i < data.length; i++) {
             const el = data[i];
-            res[el['CATEGORY'] + '.' + 'EXTENSIONS'] = el['EXTENSIONS'];
-            res[el['CATEGORY'] + '.' + 'MAX_SIZE'] = el['MAX_SIZE'];
-            res[el['CATEGORY'] + '.' + 'ONE_FILE'] = el['ONE_FILE'];
+            values[el['CATEGORY'] + '.' + 'EXTENSIONS'] = el['EXTENSIONS'];
+            values[el['CATEGORY'] + '.' + 'MAX_SIZE'] = el['MAX_SIZE'];
+            values[el['CATEGORY'] + '.' + 'ONE_FILE'] = el['ONE_FILE'];
         }
-        return res;
     }
 
-    private _makeDataObjDef (data: any) {
-        const res = { };
+    private _appendDBDefValues (values: any[], data: any): void {
         for (let i = 0; i < data.length; i++) {
             const el = data[i];
-            res[el['DEFAULT_ID']] = el['VALUE'];
+            values[el['DEFAULT_ID']] = el['VALUE'];
         }
-        return res;
     }
 
     private _getInputs(): any {
@@ -264,6 +431,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     private _changeByPath(path: string, value: any): boolean {
         const type: E_FIELD_TYPE = this.inputs[path].controlType;
+        value = this.form.controls[path].value; // ignore for support change-in-change
         value = this.dataController.fixDBValueByType(value, type);
         const prevValue = this.dataController.fixDBValueByType(this._getPrevValue(path), type);
 
@@ -272,7 +440,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         if (value !== prevValue) {
             this.isChanged = true;
             this._setPrevValue(path, value);
-            this.currentPage.onDataChanged(path, prevValue, value);
+            if (this.currentPage) { this.currentPage.onDataChanged(path, prevValue, value); }
             return true;
         }
         return false;

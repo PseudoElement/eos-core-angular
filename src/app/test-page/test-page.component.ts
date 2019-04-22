@@ -8,6 +8,8 @@ import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { InputBase } from 'eos-common/core/inputs/input-base';
 import { FA_ICONS } from './fa-icons.const';
+import { WaitClassifService } from 'app/services/waitClassif.service';
+import { NADZORDICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
 
 const TEST_INPUTS = <IBaseInput[]>[{
     controlType: 'string',
@@ -73,7 +75,7 @@ const TEST_INPUTS = <IBaseInput[]>[{
 })
 export class TestPageComponent implements OnInit, OnChanges {
 
-    defaultImage = 'url(../assets/images/no-user.png)';
+    defaultImage = null;
 
     date: Date = new Date();
 
@@ -88,7 +90,8 @@ export class TestPageComponent implements OnInit, OnChanges {
     constructor(
         private _messageService: EosMessageService,
         private pip: PipRX,
-        private inputCtrlSrv: InputControlService
+        private inputCtrlSrv: InputControlService,
+        private _waitClassifSrv: WaitClassifService,
     ) {
         this.inputs = this.inputCtrlSrv.generateInputs(TEST_INPUTS);
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs, false);
@@ -128,8 +131,14 @@ export class TestPageComponent implements OnInit, OnChanges {
 
         const chl = this.pip.changeList([delo_blob]);
 
-        const content = { isn_target_blob: delo_blob.ISN_BLOB, data: s };
-        PipRX.invokeSop(chl, 'DELO_BLOB_SetDataContent', content);
+        let dddd: string = evt.data;
+        // dddd = dddd.replace(/\+/g, '%2B');
+        // dddd = dddd.replace(/\//g, '_');
+//         string converted = base64String.Replace('-', '+');
+// converted = converted.Replace('_', '/');
+        dddd = encodeURIComponent(dddd);
+        const content = { isn_target_blob: delo_blob.ISN_BLOB, data: dddd };
+        PipRX.invokeSop(chl, 'DELO_BLOB_SetDataContent', content, 'POST', false);
 
 
         this.pip.batch(chl, '').then(() => {
@@ -148,6 +157,13 @@ export class TestPageComponent implements OnInit, OnChanges {
     }
 
     chooseCL(_evt) {
+
+        const fff = NADZORDICTIONARIES;
+        fff.forEach(n => {
+            console.log(n.apiInstance + ' ' + n.title);
+        });
+
+
         const siteUrl = '../';
         const pageUrl = siteUrl + 'Pages/Classif/ChooseClassif.aspx?';
         const params = 'Classif=DEPARTMENT&value_id=__ClassifIds&skip_deleted=True&select_nodes=True&select_leaf=True&return_due=True';
@@ -156,4 +172,26 @@ export class TestPageComponent implements OnInit, OnChanges {
             console.warn(result);
         };
     }
+    chooseUserLists() {
+        this._waitClassifSrv.openClassif({classif: 'USER_LISTS'})
+        .then(result => {
+            console.log('result: ', result);
+        })
+        .catch(err => {
+            console.log('window closed');
+        });
+    }
+
+    testClick1() {
+        // const modalWindow = this._modalSrv.show(RecordViewComponent, {class: 'eos-record-view modal-lg'});
+        // modalWindow.content.initByNodeData(null);
+
+        // if (modalWindow) {
+        //     const subscription = modalWindow.content.onChoose.subscribe(() => {
+        //         subscription.unsubscribe();
+        //     });
+        // }
+
+    }
+
 }

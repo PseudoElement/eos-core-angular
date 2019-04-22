@@ -21,6 +21,7 @@ import {HintConfiguration} from '../long-title-hint/hint-configuration.interface
 import {ColumnSettingsComponent} from '../column-settings/column-settings.component';
 import {EosUtils} from 'eos-common/core/utils';
 import {DOCUMENT} from '@angular/common';
+import {PrjDefaultValuesComponent} from '../prj-default-values/prj-default-values.component';
 
 const ITEM_WIDTH_FOR_NAN = 100;
 const MAX_PERCENT_WIDTH = 98;
@@ -179,8 +180,18 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         let url = '../WebRC/AR_EDITOR/AR_EDITOR.aspx#docgrp={{DUE}}';
         url = url.replace('{{DUE}}', node.data.rec['DUE']);
         this._zone.runOutsideAngular(() => {
-            window.open(url, 'addFields', 'resizable=1,status=1,top=20,left=20');
+            window.open(url, 'addFields', 'resizable=1,status=1,top=20,left=20,width=1220,height=900');
         });
+    }
+
+    openPrjDefaultValues(node: EosDictionaryNode) {
+        this.modalWindow = this.modalSrv.show(PrjDefaultValuesComponent, {
+            class: 'prj-default-values-modal moodal-lg'});
+        const content = {
+            nodeDescription: node.title,
+            isnNode: node.data.rec['ISN_NODE'],
+        };
+        this.modalWindow.content.init(content);
     }
 
     getMarkedTitles(): string[] {

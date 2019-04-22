@@ -60,7 +60,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                     });
                 }
                 if (this.initLogin) {
-                    this.form.controls['classifName'].patchValue(this.initLogin);
+                    this.form.controls['classifName'].patchValue(this.initLogin.substr(0, 12));
                 }
             this.isLoading = false;
             this._subscribe();
@@ -72,7 +72,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
 
     submit() {
-        this.btnDisabled = true;
+
         const url = this._createUrlForSop();
 
         this._pipeSrv.read({

@@ -1,3 +1,4 @@
+import { RecordViewComponent } from './adv-card/record-view.component/record-view.component';
 import { RKFilesConInputComponent } from './adv-card/rk-default-values/rk-input-files-con.component';
 import { RKWritesCardComponent } from './adv-card/rk-default-values/rk-default-writes.component';
 import { RKMandatoryCardComponent } from './adv-card/rk-default-values/rk-default-mandatory.component';
@@ -64,7 +65,7 @@ import { DictionariesQuickSearchComponent } from './dictionary-quick-search/dict
 import { CreateNodeBroadcastChannelComponent } from './create-node-broadcast-channel/create-node-broadcast-channel.component';
 import { LinkCardComponent } from './card-views/link-card.component';
 import { NadzorCardEditComponent } from './card-views/nadzor-card-edit.component';
-import { AdditionalFieldsComponent } from './additional-fields/additional-fields.component';
+import { PrjDefaultValuesComponent } from './prj-default-values/prj-default-values.component';
 /* services */
 import { DictionaryDescriptorService } from './core/dictionary-descriptor.service';
 import { EosDataConvertService } from './services/eos-data-convert.service';
@@ -81,6 +82,7 @@ import { RulesSelectComponent } from './sev-rules-select/sev-rules-select.compon
 import { AdvCardRKEditComponent } from './adv-card/adv-card-rk.component';
 import { RKDefaultValuesCardComponent } from './adv-card/rk-default-values/rk-default-values.component';
 import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-files.component';
+import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter.component';
 
 @NgModule({
     declarations: [
@@ -89,6 +91,7 @@ import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-fi
         ColumnSettingsComponent,
         CounterNpEditComponent,
         AdvCardRKEditComponent,
+        RecordViewComponent,
         RKDefaultValuesCardComponent,
         RKMandatoryCardComponent,
         RKWritesCardComponent,
@@ -101,6 +104,7 @@ import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-fi
         DictionariesComponent,
         DictionariesQuickSearchComponent,
         DictionarySearchComponent,
+        DictionaryFilterComponent,
         DocgroupCardComponent,
         CitizenCardComponent,
         NomenklCardComponent,
@@ -131,7 +135,7 @@ import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-fi
         SevParticipantCardEditComponent,
         OrganizationsCardEditGroupComponent,
         OrganizationsCardEditNodeComponent,
-        AdditionalFieldsComponent,
+        PrjDefaultValuesComponent,
         LinkCardComponent,
         NadzorCardEditComponent,
     ],
@@ -139,12 +143,13 @@ import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-fi
         ColumnSettingsComponent,
         CounterNpEditComponent,
         AdvCardRKEditComponent,
+        RecordViewComponent,
         RKDefaultValuesCardComponent,
         RulesSelectComponent,
         CreateNodeComponent,
         CreateNodeBroadcastChannelComponent,
         DocgroupTemplateConfigComponent,
-        AdditionalFieldsComponent,
+        PrjDefaultValuesComponent,
     ],
     imports: [
         BrowserModule,
@@ -171,6 +176,7 @@ import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-fi
         ColumnSettingsComponent,
         CounterNpEditComponent,
         AdvCardRKEditComponent,
+        RecordViewComponent,
         RKDefaultValuesCardComponent,
         RulesSelectComponent,
     ],

@@ -25,12 +25,20 @@
             width: 80px;
             height: 80px;
             min-width: 80px;
+            .av-link{
+                width: 80px;
+                height: 80px;
+                display: flex;
+                align-items: center;
+            }
 
             .avatar-img{
                 width: 100%;
                 height: 100%;
                 display: inline-block;
                 border-radius: 50%;
+                background-size: cover;
+                background-position: center;
             }
         }
         .avatar-title{

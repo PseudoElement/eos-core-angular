@@ -12,7 +12,19 @@ export class ErrorTooltip {
     container = '';
     force = false;
 }
-
+export class IDynamicInputEvents {
+    select?: Function;
+    remove?: Function;
+    getTitle?: Function;
+}
+export class IDynamicInputOptions {
+    hideLabel?: boolean; // default: false;
+    selEmptyEn?: boolean; // default: false;
+    defaultValue?: { value: string, title: string };
+    enRemoveButton?: boolean; // for dictlink second button
+    events?: IDynamicInputEvents;
+    // selEmptyValDis?: boolean; // default: false;
+}
 @Component({
     selector: 'eos-dynamic-input',
     templateUrl: 'dynamic-input.component.html'
@@ -25,8 +37,13 @@ export class DynamicInputComponent {
     @Input() disabled: boolean;
     @Input() isGroup: boolean;
     @Input() hideLabel: boolean;
-    @Input() event1: Function;
+    @Input() viewOpts: IDynamicInputOptions;
 
     types = E_FIELD_TYPE;
     tooltip: ErrorTooltip = new ErrorTooltip;
+    constructor () {
+        if (!this.viewOpts) {
+            this.viewOpts = <IDynamicInputOptions> {};
+        }
+    }
 }

@@ -1,5 +1,4 @@
 @import "./eos-user-params.component";
-@import "./user-params-set/user-param-registration/user-param-registration.component";
 @import "./user-params-set/user-param-cabinets/user-param-cabinets.component";
 @import "./user-params-set/user-param-rc/user-param-rc.component";
 @import "./user-params-set/user-param-directories/user-param-directories.component";
@@ -8,16 +7,15 @@
 @import "./user-params-set/user-param-external-application/user-param-external-application.component";
 @import "./user-params-set/user-param-other/user-param-other.component";
 @import "./email-address/email-address.component";
-@import "./rights-delo/shared-rights-delo/rights-delo-header/rights-delo-header.component";
-@import "./rights-delo/rights-delo-card-files/rights-delo-card-files.component";
+@import "./rights-delo/rights-cabinets/rights-card-files.component";
 @import "./rights-delo/rights-delo-absolute-rights/rights-delo-absolute-rights.component";
 @import "./rights-delo/rights-delo-absolute-rights/right-department/right-department.component";
 @import "./rights-delo/rights-delo-absolute-rights/right-doc-group/right-doc-group.component";
 @import "./rights-delo/rights-delo-absolute-rights/absolute-rights-classif/absolute-rights-classif.component";
-@import "./rights-delo/rights-delo-card-index-rights/rights-delo-card-index-rights.component";
-@import "./rights-delo/rights-delo-card-index-rights/right-side-doc-group-in-file-card/right-side-doc-group-in-file-card.component";
-@import "./rights-delo/rights-delo-card-index-rights/right-side-doc-group-and-restriction-in-file-card/right-side-doc-group-and-restriction-in-file-card.component";
-@import "./rights-delo/right-panel-for-document-groups/right-panel-for-document-groups.component";
+@import "./rights-delo/rights-delo-cards/rights-delo-cards.component";
+@import "./rights-delo/rights-delo-cards/list-card/list-card.component";
 @import "./base-param/base-param.component";
 @import "./shared/list-docs-tree/list-docs-tree.component";
 @import "./user-params-set/user-param-el-signature/user-param-el-signature.component.scss";
+@import "./user-params-set/user-param-registration-remaster/user-param-registration-remaster.component.scss";
+@import "./user-params-set/user-param-registration-remaster/remaster-email/remaster-email.component";

@@ -1,31 +1,17 @@
-<div class="input-user-wrapper input-user-search-wrapper"
-*ngIf="inputs">
-<eos-user-header
-        (submitForm)="submit()"
-        (cancelForm)="cancel()"
-        (defaultForm)="default()"
-        [statusBtnSub]="btnDisabled"
-        [title]="titleHeader"></eos-user-header>
-        <div class="user-input-group">
-            <span class="l-font">Результат поиска</span>
-            <hr>
-            <div class="number-increment-wrap">
-                <span class="inc-wr">Максимальное кол-во записей</span>
-                <eos-dynamic-input
-                    class="inline-block"
-                    [input]="inputs['rec.SRCH_LIMIT_RESULT']"
-                    [form]="form"
-                    [readonly]="false"
-                ></eos-dynamic-input>
-            </div>
+<div class="input-user-wrapper input-user-search-wrapper" *ngIf="inputs">
+    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="btnDisable || !this.getMaxIncrement" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <div class="user-input-group">
+        <span class="l-font">Результат поиска</span>
+        <hr>
+        <div class="number-increment-wrap">
+            <span class="inc-wr">Максимальное кол-во записей</span>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.SRCH_LIMIT_RESULT']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
-            <hr>
-            <div class="user-input-group">
-                <span class="l-font">Картотека РК</span>
-                <hr>
-                    <eos-dynamic-input
-                        [input]="inputs['rec.SEARCH_CONTEXT_CARD_EMPTY']"
-                        [form]="form"
-                    ></eos-dynamic-input>
-            </div>
+    </div>
+    <hr>
+    <div class="user-input-group">
+        <span class="l-font">Картотека РК</span>
+        <hr>
+        <eos-dynamic-input [input]="inputs['rec.SEARCH_CONTEXT_CARD_EMPTY']" [form]="form"></eos-dynamic-input>
+    </div>
 </div>

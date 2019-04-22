@@ -608,9 +608,9 @@ const commonMeta = {
         relations: [
             { name: 'AR_DOCGROUP_List', __type: 'AR_DOCGROUP', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP' },
             { name: 'DOC_RC_List', __type: 'DOC_RC', sf: 'DUE', tf: 'DUE_DOCGROUP' },
-            // { name: 'DG_FILE_CONSTRAINT_List', __type: 'DG_FILE_CONSTRAINT', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP' },
+            { name: 'DG_FILE_CONSTRAINT_List', __type: 'DG_FILE_CONSTRAINT', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP', noDirectRead: true},
             { name: 'DOC_DEFAULT_VALUE_List', __type: 'DOC_DEFAULT_VALUE', sf: 'ISN_NODE', tf: 'ISN_NODE', noDirectRead: true},
-            // { name: 'PRJ_DEFAULT_VALUE_List', __type: 'PRJ_DEFAULT_VALUE', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP' },
+            { name: 'PRJ_DEFAULT_VALUE_List', __type: 'PRJ_DEFAULT_VALUE', sf: 'ISN_NODE', tf: 'ISN_DOCGROUP', noDirectRead: true},
             // { name: 'SHABLON_DETAIL_List', __type: 'SHABLON_DETAIL', sf: 'DUE', tf: 'DUE' }
         ]
     },
@@ -2049,7 +2049,7 @@ const commonMeta = {
         },
         readonly: [],
         relations: [
-            {name: 'NP_CODEX_TYPE_CL_Ref', __type: 'NP_CODEX_TYPE_CL', sf: 'ISN_LCLASSIF', tf: 'ISN_LCLASSIF'}
+            {name: 'NP_CODEX_TYPE_CL_Ref', __type: 'NP_CODEX_TYPE_CL', sf: 'ISN_CODEX_TYPE', tf: 'ISN_LCLASSIF'}
         ]
     },
     NP_OSN_OSVOB_CL: {

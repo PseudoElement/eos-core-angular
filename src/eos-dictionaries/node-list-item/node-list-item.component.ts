@@ -41,21 +41,16 @@ export class NodeListItemComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges() {
+        if (this.viewFields) {
+            this.viewFields.forEach((_field) => {
+                this._updateFieldValue(_field);
+            });
+
+        }
         if (this.customFields) {
             this.custom = EosUtils.deepUpdate({}, this.customFields);
             this.custom.forEach((_field) => {
-                const is_node = this.node.data.rec['IS_NODE'];
-                if ((_field.vistype !== undefined) && (is_node !== undefined)) {
-                    if (_field.vistype === E_VISIBLE_TIPE.onlyNode && is_node) {
-                        _field.value = this.node.getValue(_field);
-                    } else if (_field.vistype === E_VISIBLE_TIPE.onlyChild && !is_node) {
-                        _field.value = this.node.getValue(_field);
-                    } else {
-                        _field.value = '';
-                    }
-                } else {
-                    _field.value = this.node.getValue(_field);
-                }
+                this._updateFieldValue(_field);
             });
         }
     }
@@ -66,14 +61,14 @@ export class NodeListItemComponent implements OnInit, OnChanges {
 
     selectNode(evt: Event): void {
         evt.stopPropagation();
-        this.openNode();
+        this._openNode();
     }
 
     markNode(marked: boolean) {
         this.node.marked = marked;
         this.mark.emit(this.node.marked);
         if (!this._dictSrv.listNode) {
-            this.openNode();
+            this._openNode();
         }
     }
 
@@ -97,11 +92,26 @@ export class NodeListItemComponent implements OnInit, OnChanges {
         return this.params.firstUnfixedIndex !== 0;
     }
 
-    private openNode() {
+    private _openNode() {
         if (/*!this.node.isDeleted && */ this.node.id !== '') {
             this._dictSrv.openNode(this.node.id).then( () => {
                 this.mark.emit(true);
             });
+        }
+    }
+
+    private _updateFieldValue(_field: IFieldView) {
+        const is_node = this.node.data.rec['IS_NODE'];
+        if ((_field.vistype !== undefined) && (is_node !== undefined)) {
+            if (_field.vistype === E_VISIBLE_TIPE.onlyNode && is_node) {
+                _field.value = this.node.getValue(_field);
+            } else if (_field.vistype === E_VISIBLE_TIPE.onlyChild && !is_node) {
+                _field.value = this.node.getValue(_field);
+            } else {
+                _field.value = '';
+            }
+        } else {
+            _field.value = this.node.getValue(_field);
         }
     }
 

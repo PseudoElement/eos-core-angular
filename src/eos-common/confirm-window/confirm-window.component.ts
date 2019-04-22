@@ -22,6 +22,7 @@ export class ConfirmWindowComponent implements IConfirmWindowContent {
     body: string;
     okTitle: string;
     cancelTitle: string;
+    manualCR?: boolean;
     confirmDisabled: boolean;
 
     readonly confirmEvt: EventEmitter<boolean> = new EventEmitter<boolean>();

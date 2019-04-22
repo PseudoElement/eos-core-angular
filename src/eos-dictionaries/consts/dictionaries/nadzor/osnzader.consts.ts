@@ -12,7 +12,15 @@ export const NP_OSNZADER_CL: IDictionaryDescriptor = Object.assign({}, NADZOR_TE
         type: 'select',
         title: 'Тип кодекса',
         dictionaryId: NP_CODEX_TYPE_CL.apiInstance,
+        dictionaryLink: {
+            pk: 'ISN_LCLASSIF',
+            fk: 'ISN_CODEX_TYPE',
+            label: 'CLASSIF_NAME_SHORT',
+        },
+
         options: [],
     }],
-    editFields: [...NADZOR_TEMPLATE.editFields, 'ISN_CODEX_TYPE']
+    editFields: [...NADZOR_TEMPLATE.editFields, 'ISN_CODEX_TYPE'],
+    allVisibleFields: ['ISN_CODEX_TYPE'],
+
 });

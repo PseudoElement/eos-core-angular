@@ -34,14 +34,14 @@ export class DynamicInputNumberIncrementComponent extends DynamicInputBase  impl
     }
 
     checkMinValue() {
-        if ((this.input.minValue && (+this.control.value - 1) !== 0) || !this.input.minValue) {
+        if ((this.input.minValue && (+this.control.value - 1) >= this.input.minValue) || !this.input.minValue) {
             return +this.control.value - 1;
         } else {
             return +this.input.minValue;
         }
     }
     checkMaxValue() {
-        if ((this.input.maxValue && (+this.control.value + 1) !== this.input.maxValue) || !this.input.minValue) {
+        if ((this.input.maxValue && (+this.control.value + 1) <= this.input.maxValue) || !this.input.maxValue) {
             return +this.control.value + 1;
         } else {
             return +this.input.maxValue;

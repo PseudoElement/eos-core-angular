@@ -1,9 +1,11 @@
+import { DynamicInputLinkButtonComponent } from './../../../eos-common/dynamic-form-input/dynamic-input-linkbutton.component';
+import { IDynamicInputOptions } from './../../../eos-common/dynamic-form-input/dynamic-input.component';
 import { AdvCardRKDataCtrl } from './../adv-card-rk-datactrl';
-import { Input, OnChanges, SimpleChanges, OnInit, OnDestroy } from '@angular/core';
+import { Input, OnChanges, SimpleChanges, OnInit, OnDestroy, Injectable } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-// import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
+import { BsModalService } from 'ngx-bootstrap';
 
-
+@Injectable()
 export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
     @Input() dataController: AdvCardRKDataCtrl;
     @Input() fieldsDescription: any;
@@ -13,17 +15,29 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
     @Input() form: FormGroup;
     @Input() editMode: boolean;
 
+    selOpts: IDynamicInputOptions = {
+        defaultValue: {
+            value: '',
+            title: '...',
+        },
+        enRemoveButton: true,
+    };
 
     isEDoc: boolean;
+    rkType: number;
 
+    constructor (
+        protected _modalSrv: BsModalService,
+    ) {
+
+    }
     ngOnChanges(changes: SimpleChanges) {
     }
-
 
     ngOnDestroy() {
     }
 
-    onDataChanged(path: string, prevValue: any, newValue: any): any {
+    onDataChanged(path: string, prevValue: any, newValue: any, initial = false): any {
     }
 
     onTabInit (dgStoredValues: any, values: any[]) {
@@ -33,6 +47,15 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
             this.isEDoc = false;
         }
 
+        this.rkType = this.dgStoredValues['RC_TYPE'];
+
+        for (const key in this.form.controls) {
+            if (this.form.controls.hasOwnProperty(key)) {
+                const value = values[key];
+                this.onDataChanged(key, value, value, true);
+                this.setAvailableFor(key);
+            }
+        }
     }
 
     ngOnInit() {
@@ -40,7 +63,6 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
     }
 
     setValue (path: string, value: any) {
-        // console.log(path, value);
         const control = this.form.controls[path];
         if (control) {
             control.setValue(value /*, {emitEvent: emit} */);
@@ -65,6 +87,16 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
         }
     }
 
+    validity(path: string, markDirty: boolean = false): any {
+        const control = this.form.controls[path];
+        if (control) {
+            control.updateValueAndValidity();
+            if (markDirty) {
+                control.markAsDirty();
+            }
+        }
+    }
+
     /**
      * Set item.disabled = !val
      * @param options array of options
@@ -83,5 +115,40 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
         }
     }
 
+    setFirstAvailableValue (key: string) {
+        const input = this.inputs[key];
+        for (let i = 0; i < input.options.length; i++) {
+            const element = input.options[i];
+            if (element['disabled'] === false) {
+                this.setValue(key, element['value']);
+                break;
+            }
+        }
+    }
 
+    setAvailableFor (key: string) {
+
+    }
+
+    getfixedDBValue(path): any {
+        return this.dataController.fixDBValueByType(this.data[path],
+        this.inputs[path].controlType);
+    }
+
+    setDictLinkValue(key: string, value: any) {
+        const input = this.inputs[key];
+        const dib = <DynamicInputLinkButtonComponent>input.dib;
+
+        if (!value) {
+            dib.setExtValue(null, null);
+            return;
+        }
+
+        const p = key.split('.');
+        const descr = this.dataController.getDescriptions()[p[0]].find( i => i.key === p[1]);
+
+        this.dataController.readDictLinkValue(descr, value).then(data => {
+            dib.setExtValue(value, data[0]);
+        });
+    }
 }

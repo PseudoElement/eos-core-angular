@@ -1,0 +1,35 @@
+<div class="user-input-group" *ngIf="inputs">
+        <span>Штрих-код для книжной ориентации:</span>
+            <eos-dynamic-input
+                 [ngStyle]="{'width': '50%'}"
+                 [input]="inputs['rec.SHABLONBARCODE']"
+                 [form]="form"
+                 [readonly]="false"
+            ></eos-dynamic-input>
+<span></span>
+<br>
+        <span>Штрих-код для альбомной ориентации:</span>
+            <eos-dynamic-input
+                 [ngStyle]="{'width': '50%'}"
+                 [input]="inputs['rec.SHABLONBARCODEL']"
+                 [form]="form"
+                 [readonly]="false"
+            ></eos-dynamic-input>
+<span></span>
+<br>
+        <span>Формат сохранения электронного образа документа:</span>
+            <eos-dynamic-input
+                 [ngStyle]="{'width': '50%'}"
+                 [input]="inputs['rec.SAVEFORMAT']"
+                 [form]="form"
+                 [readonly]="false"
+            ></eos-dynamic-input>
+<span></span>
+<br>
+            <eos-dynamic-input
+                [input]="inputs['rec.LOCKFILE_SSCAN']"
+                [form]="form"
+                [readonly]="false"
+            ></eos-dynamic-input>
+    </div>
+

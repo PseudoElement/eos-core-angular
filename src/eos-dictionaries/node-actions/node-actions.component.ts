@@ -7,6 +7,7 @@ import {EosDictService} from '../services/eos-dict.service';
 import {EosDictionary} from '../core/eos-dictionary';
 import {COMMON_ADD_MENU, DEPARTMENT_ADD_MENU, MORE_RECORD_ACTIONS, ORGANIZ_ADD_MENU, RECORD_ACTIONS, RUBRIC_UNIQ_ADD_MENU} from '../consts/record-actions.consts';
 import {E_DICT_TYPE, E_RECORD_ACTIONS, IAction, IActionButton, IActionEvent, IDictionaryViewParameters} from 'eos-dictionaries/interfaces';
+import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 
 @Component({
     selector: 'eos-node-actions',
@@ -40,7 +41,10 @@ export class NodeActionsComponent implements OnDestroy {
 
     private ngUnsubscribe: Subject<any> = new Subject();
 
-    constructor(_dictSrv: EosDictService) {
+    constructor(
+        _dictSrv: EosDictService,
+        private _eaps: EosAccessPermissionsService,
+        ) {
         this._initButtons();
 
         _dictSrv.listDictionary$
@@ -124,6 +128,7 @@ export class NodeActionsComponent implements OnDestroy {
                     _show = this._viewParams.userOrdered && !this._viewParams.searchResults;
                     _enabled = _enabled && this._visibleCount > 1 && this._viewParams.hasMarked;
                     break;
+                case E_RECORD_ACTIONS.AdvancedCardRK:
                 case E_RECORD_ACTIONS.additionalFields:
                 case E_RECORD_ACTIONS.CloseSelected:
                 case E_RECORD_ACTIONS.OpenSelected:
@@ -154,8 +159,6 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.createRepresentative:
                     _enabled = _enabled && !this._viewParams.searchResults;
                     break;
-                case E_RECORD_ACTIONS.AdvancedCardRK:
-                    break;
                 case E_RECORD_ACTIONS.tableCustomization:
                     break;
                 case E_RECORD_ACTIONS.counterDocgroup:
@@ -166,6 +169,13 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.counterDepartmentRK:
                 case E_RECORD_ACTIONS.counterDepartmentRKPD:
+                    if (this._dictSrv && this._dictSrv.listNode) {
+                        _enabled = this._dictSrv.listNode.isNode &&
+                            this._dictSrv.listNode.data['rec'].DUE_LINK_ORGANIZ;
+                    } else {
+                        _enabled = false;
+                    }
+                    break;
                 case E_RECORD_ACTIONS.counterDepartment:
                     if (this._dictSrv && this._dictSrv.listNode) {
                         _enabled = this._dictSrv.listNode.isNode;
@@ -173,10 +183,22 @@ export class NodeActionsComponent implements OnDestroy {
                         _enabled = false;
                     }
                     break;
+                case E_RECORD_ACTIONS.prjDefaultValues:
+                    if (this._dictSrv && this._dictSrv.listNode) {
+                        _enabled = this._dictSrv.listNode.isPrjDocGroup;
+                    } else {
+                        _enabled = false;
+                    }
+                    break;
             }
         }
+
+        const grant = this.dictionary ? this._eaps.isAccessGrantedForDictionary(this.dictionary.id) :
+                        APS_DICT_GRANT.denied;
+        const is_granted = (button.accessNeed <= grant);
+
         button.show = _show;
-        button.enabled = _enabled;
+        button.enabled = _enabled && is_granted;
         button.isActive = _active;
     }
 

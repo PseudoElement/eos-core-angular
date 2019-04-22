@@ -1,0 +1,40 @@
+.right-delo-card-wrapper {
+    height: calc(100vh - 260px);
+
+    .loader, .empty {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .empty {
+        color: red;
+    }
+
+    .content {
+        max-height: 100%;
+        position: relative;
+
+        .left-block {
+            width: 340px;
+            height: calc(100vh - 308px);
+            overflow-y: auto;
+
+            .item-func-list {
+                line-height: 32px;
+                cursor: pointer;
+                padding-left: 15px;
+            }
+        }
+        .right-block {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 460px;
+            max-height: calc(100vh - 308px);
+            overflow: auto;
+            padding: 10px;
+        }
+    }
+}

@@ -3,6 +3,10 @@ import { Component, OnInit, OnDestroy} from '@angular/core';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { USER_CL, DEPARTMENT, USER_PARMS } from 'eos-rest';
 import { Subject } from 'rxjs/Subject';
+import {DELO_BLOB} from 'eos-rest/interfaces/structures';
+import { RECENT_URL } from 'app/consts/common.consts';
+import { EosStorageService } from 'app/services/eos-storage.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'eos-right-user-select',
@@ -28,6 +32,8 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     constructor(
       //  private _sandwichSrv: EosSandwichService,
         private _selectedUser: RtUserSelectService,
+        private _storageSrv: EosStorageService,
+        private _router: Router,
     ) {
         this.isPhoto = false;
         this.chooseTemplate = 'preview';
@@ -47,6 +53,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         this._selectedUser.changerUser
             .takeUntil(this.destroySubsriber)
             .subscribe(currentUser => {
+                this._storageSrv.setItem('selected_user_save', currentUser, false);
                 this.CurrentUserForShowTemplate  = currentUser;
                 if (currentUser && this.flagFirstGetInfo) {
                     this.chooseTemplate = 'spinner';
@@ -80,6 +87,10 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         return parseParam.split('');
     }
 
+    writeRecentUrl() {
+        this._storageSrv.setItem(RECENT_URL, this._router.url);
+    }
+
     getInfo(isn, due?): void {
         let isn_cabinet = null;
         if (!due) {
@@ -90,19 +101,24 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             this.getObjectForSystems(result);
            if (result[1].toString() !== '5') {
                this.departmentInfo = result[1][0];
-               if (result[1][1] === undefined) {
-                this.DueInfo = `${result[1][0]['SURNAME']}`;
-               }    else {
-                this.DueInfo = `${result[1][1]['SURNAME']} ${result[1][1]['NAME']} ${result[1][1]['PATRON']}`;
-               }
-          //   this.DueInfo = `${result[1][1]['SURNAME']} ${result[1][1]['NAME']} ${result[1][1]['PATRON']}`;
+                if (result[1][1] !== undefined) {
+                    const surname = `${result[1][1]['SURNAME']}`;
+                    const name =  `${result[1][1]['NAME']}`;
+                    const lastName = `${result[1][1]['PATRON']}`;
+                    this.DueInfo = `${String(surname) !== 'null' ? surname : ''} ${String(name) !== 'null' ? name : ''}  ${String(lastName) !== 'null' ? lastName : ''}`;
+                    if (this.DueInfo.trim().length === 0) {
+                        this.DueInfo = `${result[1][0]['SURNAME']}`;
+                    }
+                }   else {
+                    this.DueInfo = `${result[1][0]['SURNAME']}`;
+                }
             this.isPhoto =  result[1][0]['ISN_PHOTO'];
             isn_cabinet =  result[1][0]['ISN_CABINET'];
             this.showDep = true;
             if (this.isPhoto) {
-                this.urlPhoto = `../image.ashx/${this.isPhoto}/110`;
-            }   else {
-                this.urlPhoto = 'assets/images/no-user.png';
+                this._selectedUser.getSVGImage(this.isPhoto).then((res: DELO_BLOB[]) => {
+                this.urlPhoto =  this.createUrlRoot(res[0]);
+                });
             }
            }else {
             this.DueInfo = null;
@@ -119,6 +135,11 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         });
     }
 
+    createUrlRoot(blob: DELO_BLOB) {
+        const url = `url(data:image/${blob.EXTENSION};base64,${blob.CONTENTS})`;
+        return url;
+    }
+
     getRoleForUser(array: USER_PARMS[]): string {
 
         const role = array.filter(el => {
@@ -129,7 +150,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         if (role[0].PARM_VALUE) {
              return role[0].PARM_VALUE;
         }else {
-            return 'Не указанна';
+            return 'Не указана';
         }
     }
 

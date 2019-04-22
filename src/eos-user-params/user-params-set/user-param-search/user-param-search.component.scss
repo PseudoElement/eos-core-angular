@@ -1,4 +1,7 @@
 .input-user-search-wrapper {
+    overflow: auto;
+    height: calc(100vh - 220px);
+    padding: 0 30px;
     .user-input-group{
         padding-left: 20px;
     }

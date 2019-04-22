@@ -3,15 +3,17 @@
             <div class="rt-user">
                 <div class="rt-avatar" *ngIf="DueInfo else unset">
                     <div class="avatar-wr">
-                       <a [routerLink]="['/spravochniki','departments', CurrentUser['data']['DUE_DEP'], 'view' ]">
-                         <img
+                       <a class="av-link" [routerLink]="['/spravochniki','departments', CurrentUser['data']['DUE_DEP'], 'view' ]">
+                         <!-- <img *ngIf="isPhoto"
                             class="avatar-img"
-                            [src]="urlPhoto"
-                            alt="Фотография должностного лица">
+                            [ngStyle]="{'background-image': urlPhoto}"
+                            alt="Фотография должностного лица"> -->
+                            <span  class="avatar-img" *ngIf="isPhoto" [ngStyle]="{'background-image': urlPhoto}"></span>
+                            <span  class="avatar-img" *ngIf="!isPhoto" class="avatar-img eos-icon eos-icon-Man-Blue small"></span>
                         </a>
                     </div>
                     <div class="avatar-title">
-                        <a [routerLink]="['/spravochniki','departments', CurrentUser['data']['DUE_DEP'], 'view' ]">{{DueInfo}}</a>
+                        <a (click)="writeRecentUrl()" [routerLink]="['/spravochniki','departments', CurrentUser['data']['DUE_DEP'], 'view' ]">{{DueInfo}}</a>
                     </div>
                 </div>
                 <ng-template #unset>
@@ -49,7 +51,6 @@
                         <a  [routerLink]="['/user-params-set','base-param']"  [queryParams]="{'isn_cl': CurrentUser.id}">{{CurrentUser.login}}</a>
                     </div>
                 </div>
-
                     <eos-depart-user-select [showComponent]="showDep" [department]="departmentInfo"></eos-depart-user-select>
                 <div class="rt-sustem">
                     <div class="sustem-tab-rw" (click)='openedSustem()'>

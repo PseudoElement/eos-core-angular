@@ -4,6 +4,8 @@ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { PipRX, DOCGROUP_CL } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE } from 'eos-dictionaries/consts/messages.consts';
+import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
+import { NgZone } from '@angular/core';
 
 const DOCGROUP_TABLE = 'DOCGROUP_CL';
 const DOCGROUP_UID_NAME = 'ISN_NODE';
@@ -12,23 +14,31 @@ export const FILE_CONSTRAINT_LIST_NAME = 'DG_FILE_CONSTRAINT_List';
 export const FICT_CONTROLS_LIST_NAME = 'fict';
 
 export class AdvCardRKDataCtrl {
+
+
     name: string;
     loadedDicts: any;
+    private _descr = {
+        [DEFAULTS_LIST_NAME]:  RKDefaultFields,
+        [FILE_CONSTRAINT_LIST_NAME]: RKFilesConstraints,
+        [FICT_CONTROLS_LIST_NAME]: RKFictControls,
+    };
 
     constructor (
+        public zone: NgZone,
         private _apiSrv: PipRX,
         private _msgSrv: EosMessageService,
+        private _dictSrv: EosDictService,
     ) {
         this.loadedDicts = {};
     }
 
+    getApiConfig() {
+        return this._dictSrv.getApiConfig();
+    }
 
     getDescriptions(): any {
-        return {
-            [DEFAULTS_LIST_NAME]:  RKDefaultFields,
-            [FILE_CONSTRAINT_LIST_NAME]: RKFilesConstraints,
-            [FICT_CONTROLS_LIST_NAME]: RKFictControls,
-        };
+        return this._descr;
     }
 
 
@@ -92,7 +102,6 @@ export class AdvCardRKDataCtrl {
                     updateLink(el, opts, data);
                 }
                 el.options = opts;
-                // el.dict._cache = data;
                 this.loadedDicts[el.dict.dictId] = opts;
                 return data;
             });
@@ -130,10 +139,21 @@ export class AdvCardRKDataCtrl {
 
                         reqs.push(this._apiSrv.read(req).then((data) => {
                             const opts: TDFSelectOption[] = this.loadedDicts[hash];
-                            opts.push ({value: '', title: '...'});
+                            const curval = values[key][el.key];
+                            // opts.push ({value: '', title: '...'});
                             for (let index = 0; index < data.length; index++) {
                                 const element = data[index];
-                                opts.push ({value: element[el.dict.dictKey], title: element[el.dict.dictKeyTitle]});
+                                const value = element[el.dict.dictKey];
+                                const title = element[el.dict.dictKeyTitle];
+                                const deleted = element['DELETED'];
+                                if (deleted) {
+                                    if (String(curval) === String(value)) {
+                                        opts.push ({value: value, title: title, disabled: true});
+                                    }
+                                } else {
+                                    opts.push ({value: value, title: title });
+                                }
+
                             }
 
                             el.options = opts;
@@ -185,6 +205,9 @@ export class AdvCardRKDataCtrl {
             if (obj.dictId) {
                 res += obj.dictId + ';';
             }
+            if (obj.version) {
+                res += obj.version + ';';
+            }
             if (obj.criteries) {
                 for (const key in obj.criteries) {
                     if (obj.criteries.hasOwnProperty(key)) {
@@ -218,6 +241,11 @@ export class AdvCardRKDataCtrl {
         }
     }
 
+    // public updateDictLinkTitle(path: string, input: any) {
+    //     input.options[0].title = 'sadgsad';
+
+    // }
+
     private _calcChangesFor(docGroup: any, newData: any ): any {
         const fields = this.getDescriptions();
         const changes = [];
@@ -226,7 +254,28 @@ export class AdvCardRKDataCtrl {
         }
         this.keys(newData[FILE_CONSTRAINT_LIST_NAME]).forEach((key) => {
             const savedData = docGroup[FILE_CONSTRAINT_LIST_NAME].find (f => f.CATEGORY === key);
+            let hasChanges = false;
             for (const sk in RKFilesConstraintsFields) {
+                if (RKFilesConstraintsFields.hasOwnProperty(sk)) {
+
+                    const f = RKFilesConstraintsFields[sk];
+                    const spath = key + '.' + f;
+                    const field = fields[FILE_CONSTRAINT_LIST_NAME].find(i => i.key === spath);
+                    const type: E_FIELD_TYPE = field.type;
+                    const t1 = newData[FILE_CONSTRAINT_LIST_NAME];
+                    const t2 = t1[key];
+                    const savedValue = this.fixDBValueByType(savedData[f], type);
+                    const formValue = this.fixDBValueByType(t2[f], type);
+                    if (savedValue !== formValue) {
+                        hasChanges = true;
+                        break;
+                    }
+                }
+            }
+
+            const updatevalues = {};
+            for (const sk in RKFilesConstraintsFields) {
+
                 if (RKFilesConstraintsFields.hasOwnProperty(sk)) {
                     const f = RKFilesConstraintsFields[sk];
                     const spath = key + '.' + f;
@@ -234,19 +283,36 @@ export class AdvCardRKDataCtrl {
                     const type: E_FIELD_TYPE = field.type;
                     const t1 = newData[FILE_CONSTRAINT_LIST_NAME];
                     const t2 = t1[key];
-                    const t3 = t2[f];
-                    const newValue = this.fixDBValueByType(t3, type);
-                    if (savedData) {
-                        const savedValue = this.fixDBValueByType(savedData[f], type);
-                        if (savedValue !== newValue) {
-                        }
-                    } else {
-
-                    }
-
-
+                    updatevalues[f] = this.fixDBValueByType(t2[f], type);
                 }
             }
+            if (updatevalues['ONE_FILE'] === null) {
+                updatevalues['ONE_FILE'] = '0';
+            }
+
+            if (hasChanges) {
+                if (savedData) {
+
+                    changes.push (
+                        {
+                            method: 'MERGE',
+                            data: updatevalues,
+                            requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DG_FILE_CONSTRAINT_List(\''
+                                + docGroup['DUE'] + ' ' + key + '\')'
+                        }
+                    );
+                } else {
+                    updatevalues['CATEGORY'] = key;
+                    changes.push (
+                        {
+                            method: 'POST',
+                            data: updatevalues,
+                            requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DG_FILE_CONSTRAINT_List'
+                        }
+                    );
+                }
+            }
+
 
         });
 

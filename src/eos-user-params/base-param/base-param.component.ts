@@ -12,11 +12,12 @@ import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-us
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { IMessage } from 'eos-common/interfaces';
-import { RestError } from 'eos-rest/core/rest-error';
+// import { IMessage } from 'eos-common/interfaces';
+// import { RestError } from 'eos-rest/core/rest-error';
+import { ErrorHelperServices } from '../shared/services/helper-error.services';
 import { Router } from '@angular/router';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
-import {NavParamService} from 'app/services/nav-param.service';
+import { NavParamService } from 'app/services/nav-param.service';
 @Component({
     selector: 'eos-params-base-param',
     templateUrl: './base-param.component.html'
@@ -25,6 +26,8 @@ import {NavParamService} from 'app/services/nav-param.service';
 export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     editMode = false;
     title: string;
+    type: string = 'password';
+    type1: string = 'password';
     curentUser: IParamUserCl;
     stateHeaderSubmit: boolean = true;
 
@@ -63,11 +66,29 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private _inputCtrlSrv: InputParamControlService,
         private _waitClassifSrv: WaitClassifService,
         private _userParamSrv: UserParamsService,
-        private _nanParSrv: NavParamService
-    ) {
+        private _nanParSrv: NavParamService,
+        private _errorSrv: ErrorHelperServices,
+    ) {}
+    async ngOnInit() {
+        await this._userParamSrv.getUserIsn();
         this.selfLink = this._router.url.split('?')[0];
+        this.init();
+        this.editModeF();
+        this.checkSelectUser();
+        this._subscribeControls();
+        this._userParamSrv
+            .saveData$
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this._userParamSrv.submitSave = this.submit();
+            });
     }
-    ngOnInit () {
+    ngOnDestroy() {
+        this._ngUnsubscribe.next();
+        this._ngUnsubscribe.complete();
+    }
+
+    init() {
         this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
         this.curentUser = this._userParamSrv.curentUser;
         this.title = `${this.curentUser['SURNAME_PATRON']} (${this.curentUser['CLASSIF_NAME']})`;
@@ -79,33 +100,18 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.controls = this._inputCtrlSrv.generateInputs(this.controlField);
         this.accessInputs = this._inputCtrlSrv.generateInputs(this.accessField);
 
-
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
         this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
         this._dataDb['form'] = this.form.value;
         this._dataDb['formControls'] = this.formControls.value;
         this._dataDb['formAccess'] = this.formAccess.value;
-
-        this._subscribeControls();
-
         this.isLoading = false;
-
-        this._userParamSrv
-        .saveData$
-        .takeUntil(this._ngUnsubscribe)
-        .subscribe(() => {
-            this.submit();
-        });
     }
-    ngOnDestroy() {
-        this.isLoading = true;
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
-    submit() {
+    submit(): Promise<any> {
         if (!this.stateHeaderSubmit) {
-            this.stateHeaderSubmit = true;
+            this.isLoading = true;
+            this.stateHeaderSubmit = false;
             const id = this._userParamSrv.userContextId;
             let accessSysString = '';
             let qPass: Promise<any>;
@@ -120,7 +126,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 }
                 if (this._newData['accessSystems']) {
                     accessSysString = this._newData['accessSystems'];
-                    d = Object.assign(d, { AV_SYSTEMS: this._newData['accessSystems']});
+                    d = Object.assign(d, { AV_SYSTEMS: this._newData['accessSystems'] });
                 }
 
                 this._nanParSrv.scanObserver(false);
@@ -142,73 +148,124 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 if (data && data['pass']) {
                     if (this.curentUser['IS_PASSWORD'] === 0) {
                         const url = `CreateLogin?pass='${encodeURI(data['pass'])}'&isn_user=${id}`;
-                        qPass = this._apiSrv.getData({[url]: ALL_ROWS});
+                        qPass = this._apiSrv.getData({ [url]: ALL_ROWS });
                     } else {
                         const url = `ChangePassword?isn_user=${id}&pass='${encodeURI(data['pass'])}'`;
-                        qPass = this._apiSrv.getData({[url]: ALL_ROWS});
+                        qPass = this._apiSrv.getData({ [url]: ALL_ROWS });
                     }
                 } else {
                     qPass = Promise.resolve();
                 }
             }
             const form = this._apiSrv.setData(query);
-            Promise.all([form, qPass])
-            .then(([f, pass]) => {
-                if (accessSysString.length === 40) {
-                    const number = accessSysString.charAt(3);
-                    this._nanParSrv.scanObserver(number === '1' ? false : true);
-                }
-                if (this._newData['formControls'] && this._newData['formControls']['pass']) {
-                    this.formControls.get('pass').reset();
-                    this.formControls.get('passRepeated').reset();
-                }
-                this._newData = {};
-                this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-                this._userParamSrv.getUserIsn()
-                .then(() => {
-                    this.curentUser = this._userParamSrv.curentUser;
-                    this._checkForChenge();
+            return Promise.all([form, qPass])
+                .then(([f, pass]) => {
+                    if (accessSysString.length === 40) {
+                        const number = accessSysString.charAt(3);
+                        this._nanParSrv.scanObserver(number === '1' ? false : true);
+                    }
+                    if (this._newData['formControls'] && this._newData['formControls']['pass']) {
+                        this.formControls.get('pass').reset();
+                        this.formControls.get('passRepeated').reset();
+                    }
+                    this._newData = {};
+                    this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+                    return this._userParamSrv.getUserIsn()
+                        .then(() => {
+                            this.curentUser = this._userParamSrv.curentUser;
+                            this.editMode = false;
+                            this.init();
+                            setTimeout(() => {
+                                this.editModeF();
+                                this.checRadioB();
+                                this.checkSelectUser();
+                                this._subscribeControls();
+                                this.stateHeaderSubmit = true;
+                                this._pushState();
+                            });
+                        });
+                })
+                .catch(e => {
+                    this.cancel();
+                    this._errorSrv.errorHandler(e);
+                    // const m: IMessage = {
+                    //     type: 'warning',
+                    //     title: 'Ошибка сервера',
+                    //     msg: '',
+                    // };
+                    // if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
+                    //     this._router.navigate(['login'], {
+                    //         queryParams: {
+                    //             returnUrl: this._router.url
+                    //         }
+                    //     });
+                    //     return undefined;
+                    // }
+                    // if (e instanceof RestError && e.code === 500) {
+                    //     m.msg = 'ошибка сохранения пароля';
+                    // } else {
+                    //     m.msg = e.message ? e.message : e;
+                    // }
+                    // this._msgSrv.addNewMessage(m);
                 });
-            })
-            .catch(e => {
-                const m: IMessage = {
-                    type: 'warning',
-                    title: 'Ошибка сервера',
-                    msg: '',
-                };
-                if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
-                    this._router.navigate(['login'], {
-                        queryParams: {
-                            returnUrl: this._router.url
-                        }
-                    });
-                    return undefined;
-                }
-                if (e instanceof RestError && e.code === 500) {
-                    m.msg = 'ошибка сохранения пароля';
-                } else {
-                    m.msg = e.message ? e.message : e;
-                }
-                this._msgSrv.addNewMessage(m);
-            });
+        } else {
+            return Promise.resolve();
         }
     }
     cancel() {
-        // this.form.patchValue(this._dataDb['form']);
-        // this.formControls.patchValue(this._dataDb['formControls']);
-        // this.formAccess.patchValue(this._dataDb['formAccess']);
-        this.ngOnDestroy();
+        this.isLoading = true;
         this.editMode = !this.editMode;
         setTimeout(() => {
-            this.ngOnInit();
-        }, 0);
+            this.init();
+        }, 1000);
+        setTimeout(() => {
+            this.editModeF();
+            this._subscribeControls();
+            this.stateHeaderSubmit = true;
+            this._pushState();
+        }, 1200);
     }
     edit() {
-        this.ngOnDestroy();
         this.editMode = !this.editMode;
+        this.editModeF();
         setTimeout(() => {
-            this.ngOnInit();
-        }, 0);
+            this.checRadioB();
+            this.checkSelectUser();
+            if (this.curentUser.isTechUser) {
+                this.formControls.controls['teсhUser'].disable({ emitEvent: false });
+            }
+            this.stateHeaderSubmit = true;
+            this._pushState();
+        });
+    }
+    checkSelectUser() {
+        if (this.curentUser.isAccessDelo && this.editMode) {
+            this.formControls.controls['SELECT_ROLE'].enable({ emitEvent: false });
+        } else {
+            this.formControls.controls['SELECT_ROLE'].disable({ emitEvent: false });
+        }
+    }
+    tf() {
+        const val1 = this.formAccess.controls['0-1'].value;
+        const val2 = this.formAccess.controls['delo_web'].value;
+        if (val1 || val2) {
+            this.formControls.controls['SELECT_ROLE'].enable({ emitEvent: false });
+        }
+        if (!val1 && !val2) {
+            this.formControls.controls['SELECT_ROLE'].patchValue('');
+            this.formControls.controls['SELECT_ROLE'].disable({ emitEvent: false });
+        }
+    }
+    editModeF() {
+        if (this.editMode) {
+            this.form.enable({ onlySelf: true, emitEvent: false });
+            this.formControls.enable({ onlySelf: true, emitEvent: false });
+            this.formAccess.enable({ onlySelf: true, emitEvent: false });
+        } else {
+            this.form.disable({ onlySelf: true, emitEvent: false });
+            this.formControls.disable({ onlySelf: true, emitEvent: false });
+            this.formAccess.disable({ onlySelf: true, emitEvent: false });
+        }
     }
     close() {
         this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
@@ -219,84 +276,117 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.isShell = true;
         let dueDep = '';
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
-        .then((data: string) => {
-            if (data === '') {
-                throw new Error();
-            }
-            dueDep = data;
-            return this._userParamSrv.getDepartmentFromUser([dueDep]);
-        })
-        .then((data: DEPARTMENT[]) => {
-            return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true);
-        })
-        .then((dep: DEPARTMENT) => {
-            this.isShell = false;
-            this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
-            this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
-        })
-        .catch(() => {
-            this.isShell = false;
-        });
+            .then((data: string) => {
+                if (data === '') {
+                    throw new Error();
+                }
+                dueDep = data;
+                return this._userParamSrv.getDepartmentFromUser([dueDep]);
+            })
+            .then((data: DEPARTMENT[]) => {
+                return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true);
+            })
+            .then((dep: DEPARTMENT) => {
+                this.isShell = false;
+                this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
+                this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
+            })
+            .catch(() => {
+                this.isShell = false;
+            });
     }
 
-    selectDepartment(status) {
-        if (status) {
+    setVision(flag?) {
+        if (flag) {
+            this.type = 'text';
+        } else {
+            this.type1 = 'text';
+        }
+    }
+    resetVision(flag?) {
+        if (flag) {
+            this.type = 'password';
+        } else {
+            this.type1 = 'password';
+        }
+    }
+    resetControll() {
+        this.formControls['passRepeated'].patchValue();
+    }
+    selectDepartment() {
+        if (!this.curentUser.isTechUser && this.editMode) {
             this.showDepartment();
         }
     }
-    private _subscribeControls() {                                        /* подписки */
+    checRadioB() {
+        const delo = this.formAccess.get('0').value;
+        const delo_web_delo = this.formAccess.get('0-1').value;
+        const delo_web = this.formAccess.get('delo_web').value;
+        if (!delo_web) {
+            this.formAccess.controls['1-27'].disable({ emitEvent: false });
+        } else {
+            this.formAccess.controls['0'].disable({ emitEvent: false });
+            this.formAccess.controls['0-1'].disable({ emitEvent: false });
+        }
+        if (delo) {
+            this.formAccess.controls['0-1'].disable({ emitEvent: false });
+            this.formAccess.controls['delo_web'].disable({ emitEvent: false });
+        }
+        if (delo_web_delo) {
+            this.formAccess.controls['0'].disable({ emitEvent: false });
+            this.formAccess.controls['delo_web'].disable({ emitEvent: false });
+        }
+    }
+    get getValidDate() {
+        return this.form.controls['PASSWORD_DATE'].valid;
+    }
+    private _subscribeControls() {                                     /* подписки */
         /* основная форма */
         this.form.valueChanges
-            .takeUntil(this._ngUnsubscribe)
             .subscribe((data) => {
                 if (data['PASSWORD_DATE']) {
                     data['PASSWORD_DATE'] = this._descSrv.dateToString(data['PASSWORD_DATE']);
                 }
                 this._newData['form'] = data;
-                this._checkForChenge();
+                this._checkForChenge(false);
             });
 
         /* форма контролов */
         this.formControls.valueChanges
-            .takeUntil(this._ngUnsubscribe)
             .subscribe((data) => {
                 this._newData['formControls'] = data;
-                this._checkForChenge(this.formControls.invalid);
+                this._checkForChenge();
             });
 
         /* форма доступа к системам */
         this.formAccess.valueChanges
-            .takeUntil(this._ngUnsubscribe)
             .subscribe((data) => {
                 this._newData['accessSystems'] = this._createAccessSystemsString(data);
                 this._checkForChenge();
             });
 
-            /* -----===== отключение элементов доступа к системам =====----- */
+        /* -----===== отключение элементов доступа к системам =====----- */
         this.formAccess.get('0').valueChanges
-            .takeUntil(this._ngUnsubscribe)
             .subscribe(data => {
                 this._toggleFormControl(this.formAccess.controls['0-1'], data);
                 this._toggleFormControl(this.formAccess.controls['delo_web'], data);
             });
         this.formAccess.get('0-1').valueChanges
-            .takeUntil(this._ngUnsubscribe)
             .subscribe(data => {
                 this._toggleFormControl(this.formAccess.controls['0'], data);
                 this._toggleFormControl(this.formAccess.controls['delo_web'], data);
-                this._checkRoleControl(data);
+                //   this._checkRoleControl(data);
             });
         this.formAccess.get('delo_web').valueChanges
-            .takeUntil(this._ngUnsubscribe)
             .subscribe(data => {
                 this._toggleFormControl(this.formAccess.controls['0'], data);
                 this._toggleFormControl(this.formAccess.controls['0-1'], data);
                 this._toggleFormControl(this.formAccess.controls['1-27'], !data);
-                this._checkRoleControl(data);
+                //    this._checkRoleControl(data);
                 if (data) {
-                    this.formAccess.controls['1-27'].patchValue('1', {emitEvent: false});
+                    this.formAccess.controls['1-27'].patchValue('1', { emitEvent: false });
                 } else {
-                    this.formAccess.controls['1-27'].patchValue('', {emitEvent: false});
+                    this.formAccess.controls['1-27'].patchValue('', { emitEvent: false });
                 }
             });
     }
@@ -304,25 +394,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     private _toggleFormControl(control, disable: boolean) {
         if (disable) {
             if (control.enabled) {
-                control.disable({emitEvent: false});
+                control.disable({ emitEvent: false });
             }
         } else {
             if (control.disabled) {
-                control.enable({emitEvent: false});
+                control.enable({ emitEvent: false });
             }
         }
     }
-    private _checkRoleControl (state: boolean) {
-        if (state) {
-            if (this.curentUser.isAccessDelo) {
-                this._toggleFormControl(this.formControls.controls['SELECT_ROLE'], false);
-            }
-        } else {
-            this.formControls.get('SELECT_ROLE').patchValue('');
-            this._toggleFormControl(this.formControls.controls['SELECT_ROLE'], true);
-        }
-    }
-    private _createAccessSystemsString (data) {
+    private _createAccessSystemsString(data) {
         const arr = this.curentUser['ACCESS_SYSTEMS'].concat();
         arr[0] = '0';
         arr[1] = '0';
@@ -376,7 +456,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this._newData['accessSystems'] = c ? this._newData['accessSystems'] : null;
             change = change ? change : c;
         }
-        this.stateHeaderSubmit = !change || state;
+        // ибо и так не работало - !!!!
+        // this.stateHeaderSubmit = !change || state;
+        this.stateHeaderSubmit = false;
         this._pushState();
     }
 
@@ -384,18 +466,18 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         if (data1 !== '' && data2 !== '') {
             this.errorPass = data1 !== data2;
             if (this.errorPass) {
-                this.formControls.get('passRepeated').setErrors({repeat: true});
-            }   else {
+                this.formControls.get('passRepeated').setErrors({ repeat: true });
+            } else {
                 this.errorPass = false;
             }
-        }  else if (data1 !== '' || data2 !== '') {
+        } else if (data1 !== '' || data2 !== '') {
             this.errorPass = true;
         } else {
             this.errorPass = false;
         }
     }
-    private _pushState () {
-        this._userParamSrv.setChangeState({isChange: !this.stateHeaderSubmit});
-      }
+    private _pushState() {
+        this._userParamSrv.setChangeState({ isChange: !this.stateHeaderSubmit, disableSave: !this.getValidDate || this.errorPass });
+    }
 
 }

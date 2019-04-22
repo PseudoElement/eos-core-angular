@@ -1,4 +1,4 @@
-import { ErrorTooltip } from './dynamic-input.component';
+import { ErrorTooltip, IDynamicInputOptions } from './dynamic-input.component';
 import { Input, OnChanges, OnDestroy } from '@angular/core';
 import { InputBase } from '../core/inputs/input-base';
 import { FormGroup, AbstractControl } from '@angular/forms';
@@ -13,6 +13,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     @Input() inputTooltip: ErrorTooltip;
     @Input() isGroup: boolean;
     @Input() hideLabel: boolean;
+    @Input() viewOpts: IDynamicInputOptions;
 
     protected subscriptions: Subscription[] = [];
 
@@ -75,7 +76,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
         this.subscriptions = [];
     }
 
-     get control(): AbstractControl {
+    get control(): AbstractControl {
         return this.form.controls[this.input.key];
     }
 

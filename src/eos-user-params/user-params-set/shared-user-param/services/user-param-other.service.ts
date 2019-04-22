@@ -5,7 +5,7 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
 import { IOpenClassifParams } from 'eos-common/interfaces';
 import { DOCGROUP_CL, DEPARTMENT } from 'eos-rest';
 import { NodeDocsTree } from '../../../../eos-user-params/shared/list-docs-tree/node-docs-tree';
-import {PARM_SUCCESS_SAVE, PARM_ERROR_SEND_FROM, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
+import { PARM_SUCCESS_SAVE, PARM_ERROR_SEND_FROM, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
 import { INodeDocsTreeCfg } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { Subject } from 'rxjs/Subject';
 
@@ -20,24 +20,21 @@ export class UserParamOtherSrv extends BaseUserSrv {
     prepInputsAttach;
     initShablony: Array<any>;
     saveDefaultValue: Array<any>;
-    prepDataAttach = {rec: {}};
+    prepDataAttach = { rec: {} };
     flagBacground: boolean = false;
     listDocGroup: NodeDocsTree[] = [];
     list: NodeDocsTree[] = [];
-    link = this._userParamsSetSrv.userContextId;
-    selfLink: string;
     editFlag: boolean = false;
     countError = 0;
     newDataForSave = new Map();
     sendFrom: string = '';
     saveValueSendForm: string = '';
     isLoading: boolean;
-     _ngUnsubscribe: Subject<any> = new Subject();
+    _ngUnsubscribe: Subject<any> = new Subject();
 
-    constructor( injector: Injector) {
+    constructor(injector: Injector) {
         super(injector, OTHER_USER);
-        this.isLoading = true;
-        this.selfLink = this._router.url.split('?')[0];
+        this.isLoading = false;
         const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/g, '||');
         const ADDR_EXP = String(this._userParamsSetSrv.hashUserContext['ADDR_EXPEDITION']);
         Promise.all([this.getDocGroupName(paramsDoc, true), this.getList(), this.getDefaultsValues(), this.getDepartMentName(ADDR_EXP, true)]).then(result => {
@@ -45,7 +42,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
                 if (field.key === 'RS_OUTER_DEFAULT_DELIVERY' && field.options.length === 1) {
                     result[1].forEach(item => {
                         field.options.push(
-                            {value: item.ISN_LCLASSIF, title: item.CLASSIF_NAME},
+                            { value: item.ISN_LCLASSIF, title: item.CLASSIF_NAME },
                         );
                     });
                 }
@@ -61,16 +58,17 @@ export class UserParamOtherSrv extends BaseUserSrv {
             }
             this.init();
             this.initShablony = result[2];
-            this.saveDefaultValue = ( result[2] as Array<any>).slice();
+            this.saveDefaultValue = (result[2] as Array<any>).slice();
+            this.isLoading = true;
         }).catch(error => {
-            this.isLoading = false;
+            console.log(error);
         });
 
         this._userParamsSetSrv.saveData$
-        .takeUntil(this._ngUnsubscribe)
-        .subscribe(() => {
-            this.submit();
-        });
+            .takeUntil(this._ngUnsubscribe)
+            .subscribe(() => {
+                this._userParamsSetSrv.submitSave = this.submit();
+            });
     }
     hideToolTip() {
         const element = document.querySelector('.tooltip');
@@ -79,21 +77,20 @@ export class UserParamOtherSrv extends BaseUserSrv {
         }
     }
     init() {
-             this.prepareDataParam();
-              const allData = this._userParamsSetSrv.hashUserContext;
-              this.sortedData = this.linearSearchKeyForData(this.constUserParam.fields, allData);
-              this.prepareData = this.convData(this.sortedData);
-              this.inputs = this.getInputs();
-              this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-              this.disableForEditAllForm(this.editFlag);
-              // меняем значения на одинаковые для слижения за изменениями формы
-              this.changeInpetsValue(this.inputs);
-              this.checngeFormValue();
-              this.subscribeChangeForm();
-              this.isLoading = false;
-      }
-      getInputs() {
-        const dataInput = {rec: {}};
+        this.prepareDataParam();
+        const allData = this._userParamsSetSrv.hashUserContext;
+        this.sortedData = this.linearSearchKeyForData(this.constUserParam.fields, allData);
+        this.prepareData = this.convData(this.sortedData);
+        this.inputs = this.getInputs();
+        this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+        this.disableForEditAllForm(this.editFlag);
+        // меняем значения на одинаковые для слижения за изменениями формы
+        this.changeInpetsValue(this.inputs);
+        this.checngeFormValue();
+        this.subscribeChangeForm();
+    }
+    getInputs() {
+        const dataInput = { rec: {} };
         Object.keys(this.prepareData.rec).forEach(key => {
             if ((this._fieldsType[key] === 'boolean' || this._fieldsType[key] === 'toggle') && !this.prepInputs.rec[key].formatDbBinary) {
                 if (this.prepareData.rec[key] === 'YES' || this.prepareData.rec[key] === '1') {
@@ -107,43 +104,43 @@ export class UserParamOtherSrv extends BaseUserSrv {
         });
         return this.dataSrv.getInputs(this.prepInputs, dataInput);
     }
-      changeInpetsValue(iputs) {
+    changeInpetsValue(iputs) {
         this.constPrepareForm.forEach(key => {
             const value = String(iputs['rec.' + key].value);
             if (value === 'null' || value === 'undefined') {
                 iputs['rec.' + key].value = '';
-              }
+            }
         });
-        }
+    }
 
-        checngeFormValue() {
-            this.constPrepareForm.forEach(key => {
-                const value = String(this.form.controls['rec.' + key].value);
-                if (value === 'null' || value === 'undefined') {
-                    this.form.controls['rec.' + key].patchValue('', {eventEmit: false});
-                  }
-            });
-      }
+    checngeFormValue() {
+        this.constPrepareForm.forEach(key => {
+            const value = String(this.form.controls['rec.' + key].value);
+            if (value === 'null' || value === 'undefined') {
+                this.form.controls['rec.' + key].patchValue('', { eventEmit: false });
+            }
+        });
+    }
 
 
-      subscribeChangeForm() {
+    subscribeChangeForm() {
         let count_error = 0;
         this.subscriptions.push(
             this.form.valueChanges
                 .debounceTime(200)
                 .subscribe(newVal => {
                     Object.keys(newVal).forEach(val => {
-                     if (!this.getFactValueFuck(newVal[val], val)) {
-                         this.setNewData(newVal, val, true);
-                         count_error += 1;
-                     } else {
-                        this.setNewData(newVal, val, false);
-                     }
+                        if (!this.getFactValueFuck(newVal[val], val)) {
+                            this.setNewData(newVal, val, true);
+                            count_error += 1;
+                        } else {
+                            this.setNewData(newVal, val, false);
+                        }
                     });
-                   if (count_error > 0) {
+                    if (count_error > 0) {
                         this.formChanged.emit(true);
                         this.isChangeForm = true;
-                    }else {
+                    } else {
                         this.formChanged.emit(false);
                         this.isChangeForm = false;
                     }
@@ -153,21 +150,21 @@ export class UserParamOtherSrv extends BaseUserSrv {
                     }
                     this._pushState();
                     count_error = 0;
-            })
+                })
         );
     }
 
     setNewData(newValObj, newValue, flag) {
         if (flag) {
             this.newDataForSave.set(newValue, newValObj[newValue]);
-        }   else {
-           if (this.newDataForSave.has(newValue)) {
+        } else {
+            if (this.newDataForSave.has(newValue)) {
                 this.newDataForSave.delete(newValue);
-           }
+            }
         }
     }
     getFactValueFuck(newValue: any, val: string): boolean {
-        const  oldValue = this.inputs[val].value;
+        const oldValue = this.inputs[val].value;
         return oldValue !== newValue ? false : true;
     }
     getListDoc(list: DOCGROUP_CL[]) {
@@ -188,40 +185,40 @@ export class UserParamOtherSrv extends BaseUserSrv {
         this.form.controls['rec.REESTR_RESTRACTION_DOCGROUP'].patchValue('');
     }
     getList(): Promise<any> {
-         const query = {
+        const query = {
             DELIVERY_CL: ALL_ROWS
-         };
-       return  this.userParamApiSrv.getData(query);
+        };
+        return this.userParamApiSrv.getData(query);
     }
 
     getObjQueryInputsFieldForDefaultAll() {
         return {
             [this.constUserParam.apiInstance]: {
-                    criteries: {
-                        ISN_USER_OWNER: '-99'
+                criteries: {
+                    ISN_USER_OWNER: '-99'
                 }
             }
         };
     }
     getDefaultsValues(): Promise<any> {
-    const query = this.getObjQueryInputsFieldForDefaultAll();
-      return  this.getData(query)
-        .then(defaultValue => {
-         return defaultValue.splice(-33);
-        }).then(result => {
-            const arrayDateMain = [];
-            let prepareObj = {};
-            result.forEach(el => {
-                let keyForm = 'rec.';
-                prepareObj['PARM_NAME'] = el['PARM_NAME'];
-                prepareObj['PARM_VALUE'] = el['PARM_VALUE'];
-                prepareObj['keyForm'] = keyForm + el['PARM_NAME'];
-                arrayDateMain.push(prepareObj);
-                keyForm = 'rec.';
-                prepareObj = {};
+        const query = this.getObjQueryInputsFieldForDefaultAll();
+        return this.getData(query)
+            .then(defaultValue => {
+                return defaultValue.splice(-33);
+            }).then(result => {
+                const arrayDateMain = [];
+                let prepareObj = {};
+                result.forEach(el => {
+                    let keyForm = 'rec.';
+                    prepareObj['PARM_NAME'] = el['PARM_NAME'];
+                    prepareObj['PARM_VALUE'] = el['PARM_VALUE'];
+                    prepareObj['keyForm'] = keyForm + el['PARM_NAME'];
+                    arrayDateMain.push(prepareObj);
+                    keyForm = 'rec.';
+                    prepareObj = {};
+                });
+                return arrayDateMain;
             });
-            return arrayDateMain;
-        });
     }
     edit(event) {
         this.editFlag = event;
@@ -231,65 +228,71 @@ export class UserParamOtherSrv extends BaseUserSrv {
     disableForEditAllForm(event) {
         Object.keys(this.inputs).forEach(key => {
             if (!event) {
-                this.form.controls[key].disable({onlySelf: true, emitEvent: false});
-            }   else {
-                this.form.controls[key].enable({onlySelf: true, emitEvent: false});
+                this.form.controls[key].disable({ onlySelf: true, emitEvent: false });
+            } else {
+                this.form.controls[key].enable({ onlySelf: true, emitEvent: false });
             }
         });
     }
-    submit(event?) {
-        this.isLoading = true;
+    submit(event?): Promise<any> {
+        this.isLoading = false;
         this.formChanged.emit(false);
         this.isChangeForm = false;
-        this.userParamApiSrv
-                .setData(this.createObjRequest())
-                .then(data => {
-                    this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                    const userId = this._userParamsSetSrv.userContextId;
-                    this._userParamsSetSrv.getUserIsn(String(userId));
+        this._pushState();
+        return this.userParamApiSrv
+            .setData(this.createObjRequest())
+            .then(data => {
+                this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+                const userId = this._userParamsSetSrv.userContextId;
+                return this._userParamsSetSrv.getUserIsn(String(userId)).then(() => {
                     this.saveValueSendForm = this.sendFrom;
-                    this.isLoading = false;
-                })
-                .catch(data => console.log(data));
+
+                    this.editFlag = false;
+                    this.disableForEditAllForm(false);
+                    this.isLoading = true;
+                });
+            }).catch(error => {
+                this._errorSrv.errorHandler(error);
+                this.cancellation();
+                this.isLoading = true;
+            });
     }
     upStateInputs(val) {
         this.inputs[val[0]].value = val[1];
     }
 
     createObjRequest(): any[] {
-    const req = [];
-    const userId = this._userParamsSetSrv.userContextId;
-    Array.from(this.newDataForSave).forEach(val => {
-        let parn_Val;
-        this.upStateInputs(val);
-        if (typeof val[1] === 'boolean') {
-            val[1] === false ? parn_Val = 'NO' : parn_Val = 'YES';
-        } else {
-            String(val[1]) === 'null' ? parn_Val = '' : parn_Val = val[1];
-        }
-        req.push({
+        const req = [];
+        const userId = this._userParamsSetSrv.userContextId;
+        Array.from(this.newDataForSave).forEach(val => {
+            let parn_Val;
+            this.upStateInputs(val);
+            if (typeof val[1] === 'boolean') {
+                val[1] === false ? parn_Val = 'NO' : parn_Val = 'YES';
+            } else {
+                String(val[1]) === 'null' ? parn_Val = '' : parn_Val = val[1];
+            }
+            req.push({
                 method: 'MERGE',
                 requestUri: `USER_CL(${userId})/USER_PARMS_List(\'${userId} ${val[0].substr(4)}\')`,
                 data: {
                     PARM_VALUE: `${parn_Val}`
-            }
+                }
+            });
         });
-      });
         return req;
     }
     cancellation(event?) {
-        if (this.isChangeForm) {
-           this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
-           this.sendFrom = this.saveValueSendForm;
-           const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/, '||');
-           this.list = [];
-           this.listDocGroup = [];
-           this.getDocGroupName(paramsDoc, true).then(result => {
+            this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
+            this.sendFrom = this.saveValueSendForm;
+            const paramsDoc = String(this._userParamsSetSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/, '||');
+            this.list = [];
+            this.listDocGroup = [];
+            this.getDocGroupName(paramsDoc, true).then(result => {
                 if (result.length > 0) {
                     this.getListDoc(result);
                 }
-           });
-        }
+            });
         this.fillFormDefaultValues(this.inputs);
         this.editFlag = event;
         this.disableForEditAllForm(event);
@@ -299,19 +302,14 @@ export class UserParamOtherSrv extends BaseUserSrv {
         const D = this.prepInputs._list.slice();
         this.queryObjForDefault = this.getObjQueryInputsFieldForDefault(D.splice(0, 17));
         return this.getData(this.queryObjForDefault).then(data => {
-                this.prepareData = this.convDataForDefault(data.concat(this.saveDefaultValue));
-                const newInputsForDefaultsValues = this.getInputs();
-                this.changeInpetsValue(newInputsForDefaultsValues);
-                this.fillFormDefaultValues(newInputsForDefaultsValues);
-                this.sendFrom = '';
-                this.list = [];
-                this.listDocGroup = [];
-                // this.inputs = this.getInputs();
-                // this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-                // this.formChanged.emit(changed);
-                // this.isChangeForm = changed;
-                // this.subscribeChangeForm();
-            })
+            this.prepareData = this.convDataForDefault(data.concat(this.saveDefaultValue));
+            const newInputsForDefaultsValues = this.getInputs();
+            this.changeInpetsValue(newInputsForDefaultsValues);
+            this.fillFormDefaultValues(newInputsForDefaultsValues);
+            this.sendFrom = '';
+            this.list = [];
+            this.listDocGroup = [];
+        })
             .catch(err => {
                 throw err;
             });
@@ -328,22 +326,11 @@ export class UserParamOtherSrv extends BaseUserSrv {
     setTab(i: number) {
         this.currTab = i;
     }
-    getObjQueryInputsField2(inputs: Array<any>) {
-        return {
-        [this.constUserParam.apiInstance]: {
-            criteries: {
-                PARM_NAME: inputs.join('||'),
-                ISN_USER_OWNER: '3611'
-            }
-          }
-       };
-    }
-
     convData(data: Object) {
         const d = {};
-     for (const key of Object.keys(data)) {
-        d[key] = data[key];
-     }
+        for (const key of Object.keys(data)) {
+            d[key] = data[key];
+        }
         return { rec: d };
     }
     selectfromTheDirectory() {
@@ -363,10 +350,9 @@ export class UserParamOtherSrv extends BaseUserSrv {
                     type: 'warning',
                     title: 'Предупреждение',
                     msg: 'Выберите значение',
-                    dismissOnTimeout: 5000,
                 });
                 throw new Error();
-            }   else {
+            } else {
                 this.getDocGroupName(String(isn)).then((res: DOCGROUP_CL[]) => {
                     res.forEach((doc: DOCGROUP_CL) => {
                         if (!this.checkAddedTree(doc.DUE)) {
@@ -389,7 +375,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
     }
 
     PatchValForm() {
-        const new_ISN =   this.list.reduce((accumulator, current: NodeDocsTree) => {
+        const new_ISN = this.list.reduce((accumulator, current: NodeDocsTree) => {
             return accumulator += current.data['ISN_NODE'] + ',';
         }, '');
         const substrIsn = new_ISN.substr(0, new_ISN.length - 1);
@@ -420,14 +406,14 @@ export class UserParamOtherSrv extends BaseUserSrv {
             const depart = res[0];
             if (depart.EXPEDITION_FLAG <= 0) {
                 this.msgSrv.addNewMessage(PARM_ERROR_SEND_FROM);
-            }   else {
+            } else {
                 this.sendFrom = depart.CLASSIF_NAME;
                 this.form.controls['rec.ADDR_EXPEDITION'].patchValue(depart.DUE);
             }
         }
     }
     clearSendFrom() {
-        const val =   this.form.controls['rec.ADDR_EXPEDITION'].value;
+        const val = this.form.controls['rec.ADDR_EXPEDITION'].value;
         if (val !== '' && String(val) !== 'null') {
             this.sendFrom = '';
             this.form.controls['rec.ADDR_EXPEDITION'].patchValue('');
@@ -440,7 +426,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
     }
 
     private checkAddedTree(due: string): boolean {
-      return  this.listDocGroup.some((list: NodeDocsTree) => {
+        return this.listDocGroup.some((list: NodeDocsTree) => {
             return list.DUE === due;
         });
     }
@@ -473,11 +459,11 @@ export class UserParamOtherSrv extends BaseUserSrv {
         if (parent) {
             parent.addChildren(node);
             node.parent = parent;
-        }   else {
+        } else {
             this.list.push(node);
         }
     }
-    private _findMinLength (liNodes: NodeDocsTree[]): number {
+    private _findMinLength(liNodes: NodeDocsTree[]): number {
         let min = liNodes[0].link.length;
         liNodes.forEach(node => {
             const count = node.link.length;
@@ -487,33 +473,33 @@ export class UserParamOtherSrv extends BaseUserSrv {
         });
         return min;
     }
-  private  getDocGroupName(param: string, flag?: boolean): Promise<any> {
-      let crit = '';
-      if (param !== 'null' && param !== '') {
-      flag ? crit = 'ISN_NODE' : crit = 'DUE';
-          const query = {
-              DOCGROUP_CL: {
-                  criteries: {
-                      [crit]:  param
-                  }
-              }
-          };
-          return  this.userParamApiSrv.getData(query);
-      }
-      return Promise.resolve([]);
+    private getDocGroupName(param: string, flag?: boolean): Promise<any> {
+        let crit = '';
+        if (param !== 'null' && param !== '') {
+            flag ? crit = 'ISN_NODE' : crit = 'DUE';
+            const query = {
+                DOCGROUP_CL: {
+                    criteries: {
+                        [crit]: param
+                    }
+                }
+            };
+            return this.userParamApiSrv.getData(query);
+        }
+        return Promise.resolve([]);
     }
 
-    private  getDepartMentName(param: string, flagWhatToChoose?: boolean): Promise<any> {
+    private getDepartMentName(param: string, flagWhatToChoose?: boolean): Promise<any> {
         if (param !== 'null' && param !== '') {
             const query = {
                 DEPARTMENT: [param]
             };
-            return  this.userParamApiSrv.getData(query);
+            return this.userParamApiSrv.getData(query);
         }
         return Promise.resolve([4]);
-      }
-      private _pushState () {
-        this._userParamsSetSrv.setChangeState({isChange: this.isChangeForm});
-      }
+    }
+    private _pushState() {
+        this._userParamsSetSrv.setChangeState({ isChange: this.isChangeForm });
+    }
 
 }

@@ -1,306 +1,138 @@
-<div class="input-user-wrapper input-user-cabinets-rk-forwarding-wrapper"
-*ngIf="inputs">
-<eos-user-header
-        [title]="titleHeader"
-        (submitForm)="submit()"
-        (cancelForm)="cancel()"
-        (defaultForm)="default()"
-        [statusBtnSub]="btnDisabled"
-    ></eos-user-header>
+<div class="input-user-wrapper input-user-cabinets-rk-forwarding-wrapper" *ngIf="inputs">
+    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="btnDisable || MaxIncrement" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (closeEmit)='close($event)' (defaultEmit)='default($event)'></eos-user-params-header>
     <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs">
-            <li class="tab-item"
-                *ngFor="let tab of fieldGroupsForCabinets; let i = index"
-                [ngClass]="{'active': i === currTab}"
-                (click)="setTab(i)">
+            <li class="tab-item" *ngFor="let tab of fieldGroupsForCabinets; let i = index" [ngClass]="{'active': i === currTab}" (click)="setTab(i)">
                 <span class="tab-title">{{tab}}</span>
             </li>
         </ul>
-</div>
-
-<div [hidden]="currTab !== 0" class="clearfix scrollWrapper">
-  <div class="user-input-group">
-        <span class="l-font">Подсвечивать новые записи в папке</span>
-        <hr>
-        <div class="cabinets-highlight-new-enntries-in-the-folder">
-                <eos-dynamic-input
-                [input]="inputAttach['rec.FOLDERCOLORSTATUS_RECEIVED']"
-                [form]="formAttach"
-                [readonly]="false"
-                ></eos-dynamic-input>
-                <eos-dynamic-input
-        [input]="inputAttach['rec.FOLDERCOLORSTATUS_HAVE_LEADERSHIP']"
-        [form]="formAttach"
-        [readonly]="false"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-        [input]="inputAttach['rec.FOLDERCOLORSTATUS_PROJECT_MANAGEMENT']"
-        [form]="formAttach"
-        [readonly]="false"
-        ></eos-dynamic-input>
-            </div>
-            <div class="cabinets-highlight-new-enntries-in-the-folder">
-                    <eos-dynamic-input
-                    [input]="inputAttach['rec.FOLDERCOLORSTATUS_FOR_EXECUTION']"
-                    [form]="formAttach"
-                    [readonly]="false"
-                    ></eos-dynamic-input>
-                    <eos-dynamic-input
-            [input]="inputAttach['rec.FOLDERCOLORSTATUS_FOR_CONSIDERATION']"
-            [form]="formAttach"
-            [readonly]="false"
-            ></eos-dynamic-input>
-            <eos-dynamic-input
-            [input]="inputAttach['rec.FOLDERCOLORSTATUS_ON_SIGHT']"
-            [form]="formAttach"
-            [readonly]="false"
-            ></eos-dynamic-input>
-            </div>
-            <div class="cabinets-highlight-new-enntries-in-the-folder">
-                    <eos-dynamic-input
-                    [input]="inputAttach['rec.FOLDERCOLORSTATUS_UNDER_CONTROL']"
-                    [form]="formAttach"
-                    [readonly]="false"
-                    ></eos-dynamic-input>
-                    <eos-dynamic-input
-            [input]="inputAttach['rec.FOLDERCOLORSTATUS_INTO_THE_BUSINESS']"
-            [form]="formAttach"
-            [readonly]="false"
-            ></eos-dynamic-input>
-            <eos-dynamic-input
-            [input]="inputAttach['rec.FOLDERCOLORSTATUS_ON_THE_SIGNATURE']"
-            [form]="formAttach"
-            [readonly]="false"
-            ></eos-dynamic-input>
-                </div>
-        </div>
-    <hr>
-    <div class="user-input-group">
-            <eos-dynamic-input
-            class="inline-block"
-            [input]="inputAttach['rec.HILITE_RESOLUTION_BOOLEAN']"
-            [form]="formAttach"
-            [readonly]="false"
-            (change)="checkDataToDisabled('HILITE_RESOLUTION_BOOLEAN', false)"
-       ></eos-dynamic-input>
-       <div class="user-input-increment-cabinets">
-            <eos-dynamic-input
-                [input]="inputAttach['rec.HILITE_RESOLUTION_INCREMENT']"
-                [form]="formAttach"
-            ></eos-dynamic-input>
-        </div>
-        <span class="user-input-span-for-increment-cabinets">дней и ранее</span>
-       <eos-dynamic-input
-            class="inline-block"
-            [input]="inputAttach['rec.HILITE_PRJ_RC_BOOLEAN']"
-            [form]="formAttach"
-            [readonly]="false"
-            (change)="checkDataToDisabled('HILITE_PRJ_RC_BOOLEAN', false)"
-       ></eos-dynamic-input>
-       <div class="user-input-increment-cabinets">
-            <eos-dynamic-input
-                [input]="inputAttach['rec.HILITE_PRJ_RC_INCREMENT']"
-                [form]="formAttach"
-            ></eos-dynamic-input>
-        </div>
-        <span class="user-input-span-for-increment-cabinets" style="padding-bottom: 10px;">дней и ранее</span>
-        <span>Список сортировки в кабинетах: </span>
-        <eos-dynamic-input
-                    style="min-width: 116px;"
-                    class="inline-block"
-                    [input]="inputs['rec.CABSORT_ISN_DOCGROUP_LIST']"
-                    [form]="form"
-                    [readonly]="false"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            [input]="inputs['rec.SCRATCH_RC']"
-            [form]="form"
-            [readonly]="false"
-       ></eos-dynamic-input>
-       <eos-dynamic-input
-            [input]="inputs['rec.INPUT_REP_RC_WITHOUT_RES_DELETE_FROM_CAB']"
-            [form]="form"
-            [readonly]="false"
-       ></eos-dynamic-input>
-       <eos-dynamic-input
-            [input]="inputs['rec.SCRATCH_RESOL']"
-            [form]="form"
-            [readonly]="false"
-       ></eos-dynamic-input>
     </div>
-    <hr>
-    <div class="user-input-group">
+
+    <div [hidden]="currTab !== 0" class="clearfix scrollWrapper">
+        <div class="user-input-group">
+            <span class="l-font">Подсвечивать новые записи в папке</span>
+            <hr>
+            <div class="cabinets-highlight-new-enntries-in-the-folder">
+                <eos-dynamic-input [input]="inputs['rec.FOLDERCOLORSTATUS_RECEIVED']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.FOLDERCOLORSTATUS_HAVE_LEADERSHIP']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.FOLDERCOLORSTATUS_PROJECT_MANAGEMENT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+            <div class="cabinets-highlight-new-enntries-in-the-folder">
+                <eos-dynamic-input [input]="inputs['rec.FOLDERCOLORSTATUS_FOR_EXECUTION']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.FOLDERCOLORSTATUS_FOR_CONSIDERATION']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.FOLDERCOLORSTATUS_ON_SIGHT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+            <div class="cabinets-highlight-new-enntries-in-the-folder">
+                <eos-dynamic-input [input]="inputs['rec.FOLDERCOLORSTATUS_UNDER_CONTROL']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.FOLDERCOLORSTATUS_INTO_THE_BUSINESS']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.FOLDERCOLORSTATUS_ON_THE_SIGNATURE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+        </div>
+        <hr>
+        <div class="user-input-group incr-cabinet">
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.HILITE_RESOLUTION_BOOLEAN']" [form]="form" [readonly]="false" (change)="checkDataToDisabled()"></eos-dynamic-input>
+            <div class="user-input-increment-cabinets">
+                <eos-dynamic-input [input]="inputs['rec.HILITE_RESOLUTION']" [form]="form"></eos-dynamic-input>
+            </div>
+            <span class="user-input-span-for-increment-cabinets">дней и ранее</span>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.HILITE_PRJ_RC_BOOLEAN']" [form]="form" [readonly]="false" (change)="checkDataToDisabled()"></eos-dynamic-input>
+            <div class="user-input-increment-cabinets">
+                <eos-dynamic-input [input]="inputs['rec.HILITE_PRJ_RC']" [form]="form"></eos-dynamic-input>
+            </div>
+            <span class="user-input-span-for-increment-cabinets" style="padding-bottom: 10px;">дней и ранее</span>
+            <span>Список сортировки в кабинетах: </span>
+            <eos-dynamic-input style="min-width: 116px;" class="inline-block cabsort" [input]="inputs['rec.CABSORT_ISN_DOCGROUP_LIST']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <div style="display: inline-block">
+                <eos-dynamic-input [input]="inputs['rec.SCRATCH_RC']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.INPUT_REP_RC_WITHOUT_RES_DELETE_FROM_CAB']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.SCRATCH_RESOL']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+
+        </div>
+        <hr>
+        <div class="user-input-group">
             <div>
                 <span>Максимальное количество записей:</span>
-                    <eos-dynamic-input
-                        class="inline-block"
-                        [input]="inputs['rec.FOLDER_ITEM_LIMIT_RESULT']"
-                        [form]="form"
-                        [readonly]="false"
-                    ></eos-dynamic-input>
-                </div>
+                <eos-dynamic-input class="inline-block" [input]="inputs['rec.FOLDER_ITEM_LIMIT_RESULT']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
+        </div>
     </div>
-<div class="instructions  scrollWrapper" [hidden]="currTab !== 1">
-    <span>Дата резолюции:</span>
-         <div class="date-resolution">
-            <eos-dynamic-input
-                [input]="inputs['rec.RESOLUTION_DATE']"
-                [form]="form"
-                [readonly]="false"
-            ></eos-dynamic-input>
-         </div>
-         <div class="author-resolution">
+    <div class="instructions  scrollWrapper" [hidden]="currTab !== 1">
+        <span>Дата резолюции:</span>
+        <div class="date-resolution">
+            <eos-dynamic-input [input]="inputs['rec.RESOLUTION_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
+        <div class="author-resolution">
             <span class="author-res-title">Автор резолюции:</span>
-            <eos-dynamic-input
-                [input]="inputs['rec.RESOLUTION_AUTHOR']"
-                [form]="form"
-                [readonly]="false"
-            ></eos-dynamic-input>
-            <eos-dynamic-input
-                [input]="inputs['rec.RESOLUTION_SELECT_AUTHOR']"
-                [form]="form"
-                [readonly]="false"
-            ></eos-dynamic-input>
-         </div>
-
-            <eos-dynamic-input
-                [input]="inputs['rec.PARENT_RESOLUTION_TEXT']"
-                [form]="form"
-                [readonly]="false"
-        ></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.RESOLUTION_AUTHOR']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.RESOLUTION_SELECT_AUTHOR']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
+        <div style="display: inline-block">
+            <eos-dynamic-input [input]="inputs['rec.PARENT_RESOLUTION_TEXT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
         <hr>
         <span class="control-author">Контроль поручения:</span>
         <div class="classifDep">
             <div class="wr-input">
-                <eos-dynamic-input
-                    [input]="inputs['rec.CONTROLL_AUTHOR']"
-                    [form]="form"
-                    [readonly]="true"
-                ></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.CONTROLL_AUTHOR']" [form]="form" [readonly]="true"></eos-dynamic-input>
             </div>
-             <span
-                class ="eos-icon eos-icon-folder-blue small"
-                (click)="openClassifDepartment()"
-                tooltip='Добавить/Изменить'
-                placement="bottom"
-                containerClass="tooltip-info"
-                container="body"
-              ></span>
-             <span
-                [ngClass] ="getClass"
-                (click)="controller ? showInfoUser() : 'false'"
-                tooltip='Подробная информация'
-                placement="bottom"
-                containerClass="tooltip-info"
-                container="body"
-              ></span>
-             <span
-                [ngClass] = 'getClassClearBtn'
-                (click)="clearControlAuthor()"
-                tooltip='Удалить'
-                placement="bottom"
-                containerClass="tooltip-info"
-                container="body"
-              ></span>
+            <span class="eos-icon small" [ngClass]="flagEdit ? 'eos-icon-folder-blue' : 'eos-icon-folder-grey'" (click)="openClassifDepartment()" tooltip='Добавить/Изменить' triggers="hover:click" placement="bottom" containerClass="tooltip-info" container="body"></span>
+            <span [ngClass]="getClass" (click)="controller && flagEdit ? showInfoUser() : 'false'" tooltip='Подробная информация' placement="bottom" containerClass="tooltip-info" container="body"></span>
+            <span [ngClass]='getClassClearBtn' (click)="clearControlAuthor()" tooltip='Удалить' placement="bottom" containerClass="tooltip-info" container="body"></span>
         </div>
-        <div class="control-state" >
-            <eos-dynamic-input
-                [input]="inputs['rec.RESOLUTION_CONTROL_STATE']"
-                [form]="form"
-                [readonly]="false"
-            ></eos-dynamic-input>
+        <div class="control-state">
+            <eos-dynamic-input [input]="inputs['rec.RESOLUTION_CONTROL_STATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
-            <eos-dynamic-input
-                [input]="inputs['rec.CORRECT_CTRL_DATE']"
-                [form]="form"
-                [readonly]="false"
-        ></eos-dynamic-input>
-            <eos-dynamic-input
-                [input]="inputs['rec.PLAN_DATE_PARENT']"
-                [form]="form"
-                [readonly]="false"
-        ></eos-dynamic-input>
+        <div style="display: inline-block">
+            <eos-dynamic-input [input]="inputs['rec.CORRECT_CTRL_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
+        <div style="display: inline-block">
+            <eos-dynamic-input [input]="inputs['rec.PLAN_DATE_PARENT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
         <hr>
-        <div class = "check-resol">
-        <span class="check-resol-title">Исполнители:</span>
-        <eos-dynamic-input
-            [input]="inputs['rec.CHECK_RESOL_REPORT']"
-            [form]="form"
-            [readonly]="false"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            [input]="inputs['rec.SHOW_REPLY_NOTE']"
-            [form]="form"
-            [readonly]="false"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            [input]="inputs['rec.SHOW_REPLY_READED']"
-            [form]="form"
-            [readonly]="false"
-        ></eos-dynamic-input>
-    </div>
+        <div class="check-resol">
+            <span class="check-resol-title">Исполнители:</span>
+            <eos-dynamic-input [input]="inputs['rec.CHECK_RESOL_REPORT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <span class="check-resol-title">Показывать:</span>
+            <eos-dynamic-input [input]="inputs['rec.SHOW_REPLY_NOTE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.SHOW_REPLY_READED']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
         <span>Добавлять в журнал передачи документа:</span>
         <div class="add-to-juornal-radio">
             <span class="add-j-title">для:</span>
-            <eos-dynamic-input
-                [input]="inputs['rec.ADD_JOURNAL_4DOC']"
-                [form]="form"
-                [readonly]="false"
-            ></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.ADD_JOURNAL_4DOC']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
-        <div class="add-to-juornal" >
-        <eos-dynamic-input
-            [input]="inputs['rec.ADD_JOURNAL_RESOL_AUTHOR']"
-            [form]="form"
-            [readonly]="false"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            [input]="inputs['rec.ADD_JOURNAL_CONTROLLER']"
-            [form]="form"
-            [readonly]="false"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            [input]="inputs['rec.ADD_JOURNAL_RESOL_REPLY']"
-            [form]="form"
-            [readonly]="false"
-        ></eos-dynamic-input>
+        <div class="add-to-juornal">
+            <eos-dynamic-input [input]="inputs['rec.ADD_JOURNAL_RESOL_AUTHOR']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.ADD_JOURNAL_CONTROLLER']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.ADD_JOURNAL_RESOL_REPLY']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
         <hr>
-        <eos-dynamic-input
-            [input]="inputs['rec.ADD_ADRESS_REPORGANIZ']"
-            [form]="form"
-            [readonly]="false"
-         ></eos-dynamic-input>
-         <hr>
-    <div class="send-res">
-        <span>Рассылка поручения:</span>
-        <eos-dynamic-input
-            [input]="inputs['rec.SEND_ORDER_TO']"
-            [form]="form"
-            [readonly]="false"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            [input]="inputs['rec.RESOLUTION_CICLE']"
-            [form]="form"
-            [readonly]="false"
-        ></eos-dynamic-input>
-        <hr>
-        <span>Проект резолюции:</span>
-        <div class="resolution">
-            <span>"Приоритет" по умолчанию</span>
-           <div>
-                <eos-dynamic-input
-                    [input]="inputs['rec.RESPRJ_PRIORITY_DEFAULT']"
-                    [form]="form"
-                    [readonly]="false"
-                ></eos-dynamic-input>
-           </div>
+        <div style="display: inline-block">
+            <eos-dynamic-input [input]="inputs['rec.ADD_ADRESS_REPORGANIZ']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
         <hr>
+        <div class="send-res">
+            <span>Рассылка поручения:</span>
+            <eos-dynamic-input [input]="inputs['rec.SEND_ORDER_TO']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <div style="display: inline-block">
+                <eos-dynamic-input [input]="inputs['rec.RESOLUTION_CICLE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+            <hr>
+            <span>Проект резолюции</span>
+            <div class="resolution">
+                <span>"Приоритет" по умолчанию:</span>
+                <div>
+                    <eos-dynamic-input [input]="inputs['rec.RESPRJ_PRIORITY_DEFAULT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+                </div>
+            </div>
+            <hr>
+            <div style="display: inline-block">
+                <eos-dynamic-input [input]="inputs['rec.RESOLUTION_PRINT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+        </div>
     </div>
-</div>
-<div class="informer" [hidden]="currTab !== 2">
-</div>
+    <div class="informer" [hidden]="currTab !== 2">
+    </div>
 </div>
 <div *ngIf="bacgHeader" class="bacgrFixed"></div>

@@ -4,12 +4,6 @@
             background: transparent;
         }
     }
-
-    .table-header {
-            span{
-        }
-
-    }
     .table-title{
         display: flex;
         align-items: center;
@@ -29,6 +23,7 @@
     }
     .eos-node-list {
         background: $white;
+        max-height: calc(100vh - 371px);
 
         .user-select-node {
             line-height: 30px;
@@ -97,7 +92,7 @@
     }
 
     .user-list-first-colomn {
-        width: 398px;
+        width: 39%;
         display: inline-block;
         margin-left: 20px;
         white-space: nowrap;
@@ -109,14 +104,17 @@
         padding-right: 2px;
     }
     .user-list-third-colomn{
-        width: 150px;
+        width: 3%;
         display: inline-block;
         margin-left: 20px;
     }
     .user-list-fourth-colomn{
-        width: 200px;
+        width: 20%;
         display: inline-block;
         margin-left: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .disabled{
         cursor: not-allowed!important;

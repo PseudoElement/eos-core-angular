@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { IOpenClassifParams } from 'eos-common/interfaces';
 
+declare function openPopup(url: string, callback?: Function): boolean;
+
 const LIST_OLD_PAGES: string[] = [
     'CARDINDEX',
     'USER_CL',
@@ -8,27 +10,34 @@ const LIST_OLD_PAGES: string[] = [
 ];
 const OLD_VIEW_URL: string = 'Pages/Classif/ChooseClassif.aspx?';
 const NEW_VIEW_URL: string = 'Eos.Delo.JsControls/Classif/ChooseClassif.aspx?';
+const USER_LISTS: string = '../Pages/User/USER_LISTS.aspx';
 
 @Injectable()
 export class WaitClassifService {
     constructor() {
-        window['Rootpath'] = function() {
+        window['Rootpath'] = function () {
             return 'classif';
         };
     }
-    openClassif(params: IOpenClassifParams): Promise<String> {
-        const url = this._prepareUrl(params);
-        const w = window.open(url, 'name', 'left=10,top=200,width=1000,height=500');
+    openClassif(params: IOpenClassifParams, flag?: boolean): Promise<String> {
+        let url: string = '';
+        if (params.classif === 'USER_LISTS') {
+            url = USER_LISTS;
+        } else {
+            url = this._prepareUrl(params, flag);
+        }
+
         return new Promise((resolve, reject) => {
-            window['endPopup'] = (data, flag) => {
-                if (flag !== 'refresh') {
-                    window['endPopup'] = undefined;
-                    resolve(data);
+            const w = openPopup(url, function (event, str) {
+                if (str !== '') {
+                    return resolve(str);
                 }
-            };
+                return reject();
+            });
+
             const checkDialClosed = setInterval(function () {
                 try {
-                    if (!w || w.closed) {
+                    if (!w || w['closed']) {
                         clearInterval(checkDialClosed);
                         reject();
                     }
@@ -38,9 +47,13 @@ export class WaitClassifService {
             }, 500);
         });
     }
-    private _prepareUrl(params: IOpenClassifParams): string {
+    private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
         let url = '../';
-        url += (LIST_OLD_PAGES.indexOf(params.classif) !== -1) ? OLD_VIEW_URL : NEW_VIEW_URL;
+        if (flag) {
+            url +=  OLD_VIEW_URL;
+        } else {
+            url += (LIST_OLD_PAGES.indexOf(params.classif) !== -1) ? OLD_VIEW_URL : NEW_VIEW_URL;
+        }
         url += `Classif=${params.classif}`;
         url += params.return_due ? '&return_due=true' : '';
         url += params.id ? `&value_id=${params.id}_Ids&name_id=${params.id}` : '';
@@ -62,7 +75,6 @@ export class WaitClassifService {
         }
 
         url += params.classif === 'CONTACT' || params.classif === 'ORGANIZ_CL' ? '&app=nadzor' : '';
-
         return url;
     }
 }

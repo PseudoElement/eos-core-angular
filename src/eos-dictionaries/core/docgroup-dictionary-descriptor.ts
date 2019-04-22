@@ -9,7 +9,7 @@ const RC_TYPE = 'RC_TYPE';
 const RC_TYPE_NODE = 'RC_TYPE_NODE';
 const DOCGROUP_INDEX = 'DOCGROUP_INDEX';
 const ISN_NODE = 'ISN_NODE';
-const inheritFiields = [RC_TYPE, DOCGROUP_INDEX, 'ACCESS_MODE', 'ACCESS_MODE_FIXED'];
+const inheritFiields = [RC_TYPE, DOCGROUP_INDEX, 'ACCESS_MODE', 'ACCESS_MODE_FIXED', 'SHABLON', 'PRJ_SHABLON'];
 
 export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
     getNewRecord(preSetData: {}, parentNode: EosDictionaryNode): {} {

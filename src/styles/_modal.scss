@@ -4,6 +4,9 @@
     }
     .modal-body {
         padding: 15px;
+        &.manualCR p {
+            white-space: pre;
+        }
     }
     .modal-footer {
         padding: 10px 15px;

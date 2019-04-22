@@ -108,82 +108,20 @@ export interface LINK_CL extends ILinearCL {
     TRANSPARENT: number;
 }
 
-/**
- * Справочник Номенклатура дел
- */
-export interface NOMENKL_CL extends ILinearCL, IStamp {
-    /**
-     * ISN дела
-     */
+export interface FORMAT_CL extends ILinearCL {
     ISN_LCLASSIF: number;
-    /**
-     * Код Дьюи подразделения
-     */
-    DUE: string;
-    /**
-     * Вес элемента
-     */
+    FORMAT_TNAME: string;
+    KIND_ADJ: number;
+    FILE_ADJ: any;
+    FORMAT_GNAME: string;
+    COLOR: number;
+    COMPR: number;
     WEIGHT: number;
-    /**
-     * Наименование дела
-     */
-    CLASSIF_NAME: string;
-    /**
-     * Флаг активности дела
-     */
-    CLOSED: number;
-    /**
-     * Гриф доступа
-     */
-    SECURITY: string;
-    /**
-     * Год создания записи
-     */
-    YEAR_NUMBER: number;
-    /**
-     * Срок хранения
-     */
-    STORE_TIME: number;
-    /**
-     * Срок хранения дела
-     */
-    SHELF_LIFE: string;
-    /**
-     * Индекс дела
-     */
-    NOM_NUMBER: string;
-    /**
-     * Год завершения дела
-     */
-    END_YEAR: number;
-    /**
-     * Статья
-     */
-    ARTICLE: string;
-    /**
-     * CLOSE_WHO
-     */
-    CLOSE_WHO: number;
-    /**
-     * CLOSE_DATE
-     */
-    CLOSE_DATE: number;
-    /**
-     * Системные номера Ланита
-     */
-    DOC_UID: string;
-    /**
-     * Дата передачи в Архив
-     */
-    ARCH_DATE: number;
-    /**
-     * Подлежит сдаче в архив
-     */
-    ARCH_FLAG: number;
-    /**
-     * флаг для электронный докуметов
-     */
-    E_DOCUMENT: number;
+    PROTECTED: any;
+    DEL_COL: number;
+    NOTE: string;
+    PRIORITET: number;
+
 }
 
 /**

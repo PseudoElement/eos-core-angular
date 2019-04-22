@@ -32,6 +32,7 @@ import { CONFIRM_CHANGE_BOSS } from '../consts/confirm.consts';
 import {ConfirmWindowService} from 'eos-common/confirm-window/confirm-window.service';
 import { ReestrtypeDictionaryDescriptor } from '../core/reestrtype-dictionary-descriptor';
 import { _ES } from '../../eos-rest/core/consts';
+import { EosAccessPermissionsService, APS_DICT_GRANT } from './eos-access-permissions.service';
 
 @Injectable()
 export class EosDictService {
@@ -177,6 +178,7 @@ export class EosDictService {
         return this._dictionaries[this._dictMode];
     }
 
+
     constructor(
         // private _router: Router,
         private _msgSrv: EosMessageService,
@@ -184,6 +186,8 @@ export class EosDictService {
         private _descrSrv: DictionaryDescriptorService,
         private departmentsSrv: EosDepartmentsService,
         private confirmSrv: ConfirmWindowService,
+        private _eaps: EosAccessPermissionsService,
+
     ) {
         this._initViewParameters();
         this._dictionaries = [];
@@ -345,6 +349,10 @@ export class EosDictService {
         this.filters = {};
     }
 
+    dictionaryByMode(mode: number): EosDictionary {
+        return this._dictionaries[0].getDictionaryIdByMode(mode);
+    }
+
     openDictionary(dictionaryId: string): Promise<EosDictionary> {
         if (this._dictionaries[0] && this._dictionaries[0].id === dictionaryId) {
             return Promise.resolve(this._dictionaries[0]);
@@ -417,7 +425,7 @@ export class EosDictService {
 
     // temporary fix
     selectCustomTreeNode(): Promise<EosDictionaryNode> {
-        let p = Promise.resolve(this._treeNode);
+        let p; // = Promise.resolve(this._treeNode);
         const dictionary = this._dictionaries[0];
         if (dictionary && dictionary.root) {
             this.updateViewParameters({updatingList: true});
@@ -480,7 +488,6 @@ export class EosDictService {
                     })
                     .then((results) => {
                         const keyFld = dictionary.descriptor.record.keyField.foreignKey;
-
                         results.forEach((res) => {
                             res.record = dictionary.getNode(res.record[keyFld] + '');
                             if (!res.success) {
@@ -705,15 +712,20 @@ export class EosDictService {
         this._reorderList(dictionary);
     }
 
-    setDictMode(mode: number) {
-        this._dictMode = mode;
-        this._srchCriteries = null;
-        if (!this._dictionaries[mode]) {
-            this._dictionaries[mode] = this._dictionaries[0].getDictionaryIdByMode(mode);
+    setDictMode(mode: number): boolean {
+        const dict = this._dictionaries[0].getDictionaryIdByMode(mode).id;
+        const access = this._eaps.isAccessGrantedForDictionary(dict) !== APS_DICT_GRANT.denied;
+        if (access) {
+            this._dictMode = mode;
+            this._srchCriteries = null;
+            if (!this._dictionaries[mode]) {
+                this._dictionaries[mode] = this._dictionaries[0].getDictionaryIdByMode(mode);
+            }
+            this._dictMode$.next(this._dictMode);
+            this.updateViewParameters({firstUnfixedIndex: 0});
+            this._reloadList();
         }
-        this._dictMode$.next(this._dictMode);
-        this.updateViewParameters({firstUnfixedIndex: 0});
-        this._reloadList();
+        return access;
     }
 
     setUserOrder(ordered: EosDictionaryNode[]) {

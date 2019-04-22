@@ -28,12 +28,8 @@ export class SignaturePopupComponent implements OnInit {
         public certStoresService: CertStoresService,
         private _modalService: BsModalService,
         ) {
-        this.init();
     }
 
-    init() {
-
-    }
     ngOnInit() {
       this.getItems();
       this.certStoresService.updateFormControlStore$
@@ -58,7 +54,9 @@ export class SignaturePopupComponent implements OnInit {
         this.listCertNode = this.certStoresService.showListCertNode();
         this.listCertNode
         .subscribe(data => {
-            this.InfoSert = data;
+            if (data) {
+                this.InfoSert = data;
+            }
             this.modalRef = this._modalService.show(template, { class: 'modal-mode' });
         }, error => {
             this.InfoSert = [];

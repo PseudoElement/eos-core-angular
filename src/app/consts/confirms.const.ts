@@ -37,9 +37,11 @@ export const CONFIRM_SUBNODES_RESTORE: IConfirmWindow = {
 
 export const CONFIRM_NUMCREATION_CHANGE: IConfirmWindow = {
     title: 'Подтверждение изменения',
-    body: 'Вы хотите изменить значение счетчика с "{{old_value}}" на "{{new_value}}" для {{year}} года?',
+    body: 'Вы хотите изменить значение счетчика с "{{old_value}}" на "{{new_value}}" для {{year}} года?'
+        + '\nВнимание: Обратное изменение будет невозможно!',
     okTitle: 'Да',
-    cancelTitle: 'Нет'
+    cancelTitle: 'Нет',
+    manualCR: true,
 };
 
 export const CONFIRM_REESTRTYPE_DELIVERY_CHANGE: IConfirmWindow = {
@@ -48,3 +50,11 @@ export const CONFIRM_REESTRTYPE_DELIVERY_CHANGE: IConfirmWindow = {
     okTitle: 'Да',
     cancelTitle: 'Нет'
 };
+
+export const CONFIRM_CABINET_NON_EMPTY: IConfirmWindow = {
+    title: 'Подтверждение удаления',
+    body: 'Для владельца кабинета существуют записи в папках. Удалить их?',
+    okTitle: 'Да',
+    cancelTitle: 'Нет'
+};
+

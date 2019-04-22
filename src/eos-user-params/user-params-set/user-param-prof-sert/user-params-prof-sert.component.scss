@@ -9,8 +9,15 @@
     margin-left: 18px;
     display: flex;
 }
-.sert-table-body{
+.sert-table-body {
     padding: 7px 0px;
+    .colorValid {
+      color :  #fdc309;
+    }
+    .grayItem {
+        background-color: #e6e6e6;
+        color: #a9a3a3;
+    }
 }
 .sert-table-head{
     display: flex;
@@ -18,18 +25,19 @@
     margin-top: 6px;
     border-bottom: 1px solid #e6e6e6;
     border-top: 1px solid #e6e6e6;
-    span{
+    span {
         width: calc(100% / 3);
         padding: 10px 11px;
         background-color: #fafafa;
     }
-    .sert-table-whom{
+    .sert-table-whom {
         padding-left: 20px;
     }
 }
 .scrollWrapper{
     overflow: auto;
-    max-height: calc(100vh - 324px);
+    max-height: calc(100vh - 308px);
+    min-height: calc(100vh - 490px);
 }
 .new-sert-name{
     border: 1px solid #ccc;
@@ -85,7 +93,7 @@
     top: 0;
     right: 0;
     bottom: 0;
-    background-color: #eee;
+    background-color: #fffdfd;
     opacity: 0.5;
     z-index: 1;
 }

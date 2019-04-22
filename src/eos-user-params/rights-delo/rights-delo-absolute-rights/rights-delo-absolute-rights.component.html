@@ -1,18 +1,17 @@
-<div class="input-user-wrapper input-user-absolute-rights-wrapper">
-    <eos-rights-delo-header
+<div class="input-user-absolute-rights-wrapper">
+    <eos-user-params-header
         [title]="titleHeader"
-        (submitForm)="submit()"
-        (cancelForm)="cancel()"
-        [statusBtnSub]="btnDisabled"
-    ></eos-rights-delo-header>
-
-    <div class="user-input-group absolute-flex">
+        [disableBtn]="btnDisabled"
+        [editMode]="editMode"
+        (submitEmit)="submit()"
+        (cancelEmit)="cancel()"
+        (editEmit)="edit()"
+    ></eos-user-params-header>
+    <div class="input-user-absolute-rights">
         <div class="left-block-list-absolute-rights">
-            <div class="list-card-files"
-                *ngFor="let item of listRight"
-                [ngClass]="{'highlighted': item.isSelected}">
+            <div class="list-card-files" *ngFor="let item of listRight" [ngClass]="{'highlighted': item.isSelected}">
                 <div [formGroup]="form">
-                    <label class="checkbox" (click)="clickLable($event, item)">
+                    <label class="checkbox" [ngClass]="{'disabled': !editMode}" (click)="clickLable($event, item)">
                         <input type="checkbox"
                             hide
                             [formControlName]="item.key"
@@ -25,7 +24,7 @@
                 </div>
             </div>
         </div>
-        <div class="right-block-list-absolute-rights" *ngIf="rightContent">
+        <div class="right-block-list-absolute-rights" *ngIf="rightContent && selectedNode">
             <ng-container [ngSwitch]="selectedNode.contentProp">
                 <!-- docGroup -->
                 <ng-container *ngSwitchCase="0">
@@ -59,7 +58,7 @@
 
                 <!-- all -->
                 <ng-container *ngSwitchCase="7">
-                        <ng-container *ngTemplateOutlet="all"></ng-container>
+                    <ng-container *ngTemplateOutlet="all"></ng-container>
                 </ng-container>
 
                 <!-- departmentCardAuthorSentProject -->
@@ -74,49 +73,28 @@
 <!-- <div class="spinner-wrapper" #spiner>
     <eos-spinner [size]="'lg'"></eos-spinner>
 </div> -->
-    <!-- --------------------------Отображение правой стороны------------------------------- -->
+<!-- --------------------------Отображение правой стороны------------------------------- -->
 
-    <!-- пустой -->
+<!-- пустой -->
 <ng-template #none>
     None!!!
 </ng-template>
 
-    <!-- Подраздиления (Ограничить картотекой Автора) -->
+<!-- Подраздиления (Ограничить картотекой Автора) -->
 <ng-template #department>
-    <eos-right-absolute-department
-    style="width: 100%;"
-        [selectedNode]="selectedNode"
-        [curentUser]="curentUser"
-        (Changed)="checkChange()"
-    ></eos-right-absolute-department>
+    <eos-right-absolute-department style="width: 100%;" [selectedNode]="selectedNode" [curentUser]="curentUser" (Changed)="checkChange()"></eos-right-absolute-department>
 </ng-template>
 
-    <!-- всех/незаполненых -->
+<!-- всех/незаполненых -->
 <ng-template #all>
-        <eos-dynamic-input
-        *ngIf="formGroupAll"
-        class="inline-block"
-        [input]="inputAll['all']"
-        [form]="formGroupAll"
-        [readonly]="formGroupAll.get('all').disabled"
-    ></eos-dynamic-input>
+    <eos-dynamic-input *ngIf="formGroupAll" class="inline-block" [input]="inputAll['all']" [form]="formGroupAll" [readonly]="formGroupAll.get('all').disabled"></eos-dynamic-input>
 </ng-template>
 
-    <!-- Группы документов -->
+<!-- Группы документов -->
 <ng-template #rightDocGroup>
-    <eos-right-absolute-doc-group
-        style="width: 100%;"
-        [selectedNode]="selectedNode"
-        [curentUser]="curentUser"
-        (Changed)="checkChange()"
-    ></eos-right-absolute-doc-group>
+    <eos-right-absolute-doc-group style="width: 100%;" [selectedNode]="selectedNode" [curentUser]="curentUser" (Changed)="checkChange()"></eos-right-absolute-doc-group>
 </ng-template>
 
 <ng-template #classif>
-    <eos-absolute-rights-classif
-        style="width: 100%;"
-        [selectedNode]="selectedNode"
-        [curentUser]="curentUser"
-        (Changed)="checkChange()"
-    ></eos-absolute-rights-classif>
+    <eos-absolute-rights-classif style="width: 100%;" [selectedNode]="selectedNode" [curentUser]="curentUser" (Changed)="checkChange()"></eos-absolute-rights-classif>
 </ng-template>

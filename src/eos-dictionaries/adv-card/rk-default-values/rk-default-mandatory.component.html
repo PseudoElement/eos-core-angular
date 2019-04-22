@@ -20,20 +20,34 @@
             [form]="form"
             [readonly]="!editMode"> </eos-dynamic-input>
         <!-- Корреспондент -->
-        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.CORRESP_M']"
+        <eos-dynamic-input *ngIf="rkType==1 || rkType==2"
+            [input]="inputs['DOC_DEFAULT_VALUE_List.CORRESP_M']"
             [form]="form"
             [disabled]="true"
-            [readonly]="!editMode"> </eos-dynamic-input><!-- Состав
-        --><eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.CONSISTS_M']"
+            [readonly]="!editMode"> </eos-dynamic-input>
+        <!-- Состав -->
+        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.CONSISTS_M']"
+            [form]="form"
+            [readonly]="!editMode"> </eos-dynamic-input>
+        <!-- Исполнитель -->
+        <eos-dynamic-input *ngIf="rkType==3"
+            [input]="inputs['DOC_DEFAULT_VALUE_List.ISN_PERSON_EXE_M']"
+            [form]="form"
+            [readonly]="!editMode"> </eos-dynamic-input>
+        <!-- Подписал -->
+        <eos-dynamic-input *ngIf="rkType==3"
+            [input]="inputs['DOC_DEFAULT_VALUE_List.DOCSIGN_M']"
             [form]="form"
             [readonly]="!editMode"> </eos-dynamic-input>
         <!-- Доставка -->
-        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.ISN_DELIVERY_M']"
+        <eos-dynamic-input *ngIf="rkType==1 || rkType==2"
+            [input]="inputs['DOC_DEFAULT_VALUE_List.ISN_DELIVERY_M']"
             [form]="form"
             [disabled]="true"
             [readonly]="!editMode"> </eos-dynamic-input>
         <!-- Кому адресован -->
-        <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.DOCWHO_M']"
+        <eos-dynamic-input *ngIf="rkType==1 || rkType==2"
+            [input]="inputs['DOC_DEFAULT_VALUE_List.DOCWHO_M']"
             [form]="form"
             [readonly]="!editMode"> </eos-dynamic-input>
         <!-- Содержание -->
