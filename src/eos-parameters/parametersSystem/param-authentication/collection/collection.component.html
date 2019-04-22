@@ -143,7 +143,7 @@
             #inputWord
             type="text"
             [(ngModel)]="inputWordValue"
-            (input)="inputWord.value = inputWord.value.toUpperCase()"
+            (change)="inputWord.value = inputWord.value.toUpperCase()"
         >
     </main>
 </ng-template>
