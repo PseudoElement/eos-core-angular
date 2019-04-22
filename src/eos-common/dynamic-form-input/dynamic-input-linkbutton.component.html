@@ -8,7 +8,7 @@
                [readonly]="true"
                [ngClass]="{'readonly': readonly}"
                [value]="getDisplayValue()"
-               (keydown)="onKeyDown1($event)"
+               (keydown)="ignoreKeyDown($event)"
                placeholder="..."
                (focus)="onFocus()"
                (blur)="onBlur()"
