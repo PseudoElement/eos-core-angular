@@ -1,13 +1,13 @@
-import {Component, OnInit, OnDestroy, Input, Output, EventEmitter} from '@angular/core';
-import {REGISTRATION_SCAN} from '../../../user-params-set/shared-user-param/consts/remaster-email.const';
-import {InputControlService} from 'eos-common/services/input-control.service';
-import {EosDataConvertService} from 'eos-dictionaries/services/eos-data-convert.service';
-import {FormHelperService} from '../../../shared/services/form-helper.services';
-import {FormGroup} from '@angular/forms';
-import {Subject} from 'rxjs/Subject';
-import {RemasterService} from '../../shared-user-param/services/remaster-service';
-import {FORMAT_CL, DOC_TEMPLATES} from 'eos-rest/interfaces/structures';
-import {IFieldDescriptor} from 'eos-user-params/shared/intrfaces/user-params.interfaces';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { REGISTRATION_SCAN } from '../../../user-params-set/shared-user-param/consts/remaster-email.const';
+import { InputControlService } from 'eos-common/services/input-control.service';
+import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
+import { FormHelperService } from '../../../shared/services/form-helper.services';
+import { FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs/Subject';
+import { RemasterService } from '../../shared-user-param/services/remaster-service';
+import { FORMAT_CL, DOC_TEMPLATES } from 'eos-rest/interfaces/structures';
+import { IFieldDescriptor } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
 @Component({
     selector: 'eos-remaster-scan',
     templateUrl: 'remaster-scan.conponent.html',
@@ -19,6 +19,7 @@ import {IFieldDescriptor} from 'eos-user-params/shared/intrfaces/user-params.int
 export class RemasterScanComponent implements OnInit, OnDestroy {
     @Input() userData;
     @Input() defaultValues;
+    @Input() accessSustem;
     @Output() pushChenge = new EventEmitter<any>();
     public inputs;
     public form: FormGroup;
@@ -43,10 +44,11 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
         });
         this._RemasterService.submitEmit.takeUntil(this.ngUnsub).subscribe(() => {
             this.setNewValInputs();
-            this.form.disable({emitEvent: false});
+            this.form.disable({ emitEvent: false });
         });
         this._RemasterService.editEmit.takeUntil(this.ngUnsub).subscribe(data => {
-            this.form.enable({emitEvent: false});
+            this.form.enable({ emitEvent: false });
+            this.checkDisableInputs();
         });
     }
 
@@ -60,17 +62,33 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
             this.fillFormatCl(data[2]);
             this.pretInputs();
             this.form = this.inpSrv.toFormGroup(this.inputs);
-            this.form.disable({emitEvent: false});
+            this.form.disable({ emitEvent: false });
             this.subscribeChange();
         });
+    }
+    checkDisableInputs() {
+        if (+this.accessSustem[3] === 0 && +this.accessSustem[15] === 0) {
+            this.form.disable({ emitEvent: false });
+            return;
+        }
+        if (+this.accessSustem[3] === 0 && +this.accessSustem[15] === 1) {
+            this.form.controls['rec.LOCKFILE_SSCAN'].disable({onlySelf: true, emitEvent: false});
+            return;
+        }
+        if (+this.accessSustem[3] === 1 && +this.accessSustem[15] === 0) {
+            this.form.controls['rec.SHABLONBARCODE'].disable({onlySelf: true, emitEvent: false});
+            this.form.controls['rec.SHABLONBARCODEL'].disable({onlySelf: true, emitEvent: false});
+            this.form.controls['rec.SAVEFORMAT'].disable({onlySelf: true, emitEvent: false});
+            return;
+        }
     }
     fillOptionsForConst(data): void {
         REGISTRATION_SCAN.fields.map((field: IFieldDescriptor) => {
             if (field.key === 'SHABLONBARCODE') {
-             return  this.setOptions(data[0], field);
+                return this.setOptions(data[0], field);
             }
             if (field.key === 'SHABLONBARCODEL') {
-             return  this.setOptions(data[1], field);
+                return this.setOptions(data[1], field);
             }
             return field;
         });
@@ -103,24 +121,24 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
         });
     }
     pretInputs(): void {
-        this.prapareData =  this.formHelp.parse_Create(REGISTRATION_SCAN.fields, this.userData);
+        this.prapareData = this.formHelp.parse_Create(REGISTRATION_SCAN.fields, this.userData);
         this.prepareInputs = this.formHelp.getObjectInputFields(REGISTRATION_SCAN.fields);
-        this.inputs = this.dataConv.getInputs(this.prepareInputs, {rec: this.prapareData});
+        this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prapareData });
     }
 
     subscribeChange(): void {
         this.form.valueChanges.takeUntil(this.ngUnsub).subscribe(data => {
-          Object.keys(data).forEach(item => {
-            if (!this.checkChanges(data, item)) {
-                this.countError++;
-            }
-          });
-          this.pushChenge.emit({
-            btn: this.countError > 0,
-            data: this.newDataMap
-        });
-        this.countError > 0 ? this.btnDisabled = true : this.btnDisabled = false;
-        this.countError = 0;
+            Object.keys(data).forEach(item => {
+                if (!this.checkChanges(data, item)) {
+                    this.countError++;
+                }
+            });
+            this.pushChenge.emit({
+                btn: this.countError > 0,
+                data: this.newDataMap
+            });
+            this.countError > 0 ? this.btnDisabled = true : this.btnDisabled = false;
+            this.countError = 0;
         });
     }
 
@@ -130,8 +148,8 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
         if (data[item] !== oldValue) {
             if (this.formHelp._fieldsTypeParce[key] === 'all') {
                 this.newDataMap.set(key, data[item]);
-            }  else {
-              this.checkChangesNext(data, key);
+            } else {
+                this.checkChangesNext(data, key);
             }
             return false;
         } else {
@@ -164,7 +182,7 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
                 this.form.controls[input].patchValue(this.inputs[input].value);
             });
         }
-        this.form.disable({emitEvent: false});
+        this.form.disable({ emitEvent: false });
     }
     default(): void {
         this.prepareDefaultForm = this.formHelp.parse_Create(REGISTRATION_SCAN.fields, this.defaultValues);

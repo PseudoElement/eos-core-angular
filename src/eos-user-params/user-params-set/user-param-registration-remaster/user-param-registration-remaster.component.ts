@@ -29,6 +29,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     public SabChangeFlag: boolean = false;
     public RcChangeflag: boolean = false;
     public editFlag: boolean = false;
+    public accessSustem: Array<string>;
     private newValuesMap = new Map();
     private newValuesDopOperation: Map<string, any> = new Map();
     private newValuesAddresses: Map<string, any> = new Map();
@@ -51,6 +52,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             this._userSrv.submitSave = this.submit(null);
         });
         await this._userSrv.getUserIsn();
+        this.accessSustem = this._userSrv.curentUser['ACCESS_SYSTEMS'];
         this.hash = this._userSrv.hashUserContext;
         this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Регистрация`;
 
