@@ -8,7 +8,7 @@ export const APP_MODULES = [
         url: '/user_param',
     },
     {
-        title: 'Настройки системы',
+        title: 'Параметры системы',
         url: '/parameters',
     }
 ];

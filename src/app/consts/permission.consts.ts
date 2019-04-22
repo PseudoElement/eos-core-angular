@@ -8,7 +8,7 @@ export interface IKeyRightTech {
 export const KEY_RIGHT_TECH = {
     'parameters': {
         key: E_TECH_RIGHT.SystemParms,
-        name: 'Настройки системы'
+        name: 'Параметры системы'
     },
     'user_param': {
         key: E_TECH_RIGHT.Users,
