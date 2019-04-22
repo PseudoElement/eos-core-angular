@@ -18,7 +18,7 @@
             <eos-remaster-email (pushChenge)='getChanges($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-email>
         </div>
         <div [hidden]="currTab !== 3" class="clearfix">
-            <eos-remaster-scan (pushChenge)='emitChangesScan($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-scan>
+            <eos-remaster-scan (pushChenge)='emitChangesScan($event)' [accessSustem]="accessSustem" [userData]='hash' [defaultValues]='defaultValues'></eos-remaster-scan>
         </div>
         <div [hidden]="currTab !== 4" class="clearfix">
             <eos-auto-search (pushChange)='emitChangesAutoSearch($event)' [userData]='hash' [defaultValues]='defaultValues'></eos-auto-search>

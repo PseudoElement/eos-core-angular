@@ -240,6 +240,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         this.modalRef.hide();
     }
     parseChildParams() {
+        this.childParams.delete('');
         return Array.from(this.childParams).join(';');
     }
 
