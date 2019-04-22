@@ -23,6 +23,7 @@ import { VISA_TYPE_DICT } from 'eos-dictionaries/consts/dictionaries/visa-type.c
 import { REESTRTYPE_DICT } from 'eos-dictionaries/consts/dictionaries/reestrtype.consts';
 import { ORG_TYPE_DICT } from 'eos-dictionaries/consts/dictionaries/org-type.consts';
 import { RESOL_CATEGORY_DICT as RESOL_CATEGORY_DICT } from 'eos-dictionaries/consts/dictionaries/resolution-category.consts';
+import { RESPRJ_STATUS_DICT } from 'eos-dictionaries/consts/dictionaries/resprj-status.consts';
 
 
 
@@ -49,6 +50,7 @@ const dictsTechs: { id: string,     tech: E_TECH_RIGHT; } [] = [
     { id: LINK_DICT.id,             tech: E_TECH_RIGHT.LinkTypes},          // Типы связок
     { id: NADZOR.id,                tech: E_TECH_RIGHT.NadzorCL},           // Группа справочников Надзора
     { id: RESOL_CATEGORY_DICT.id,   tech: E_TECH_RIGHT.ResCategories},      // Категории поручений
+    { id: RESPRJ_STATUS_DICT.id,    tech: E_TECH_RIGHT.StatPrjPor},         // Статусы проекта поручения
 ];
 
 
