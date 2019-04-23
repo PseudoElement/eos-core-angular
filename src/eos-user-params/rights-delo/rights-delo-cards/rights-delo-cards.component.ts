@@ -50,6 +50,8 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
          this._userParamsSetSrv.getUserIsn().then(() => {
          this._userParamsSetSrv.checkGrifs(this._userParamsSetSrv.userContextId).then((flagG) => {
             this._flagGrifs = flagG;
+        }).catch(error => {
+            this._errorSrv.errorHandler(error);
         });
         this._cardSrv.prepareforEdit();
         this.editableUser = this._userParamsSetSrv.curentUser;
@@ -60,6 +62,8 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         }
         this.funcList = CARD_FUNC_LIST.map(node => new FuncNum(node));
         this.pageState = 'VIEW';
+        }).catch(error => {
+            this._errorSrv.errorHandler(error);
         });
 
 
@@ -76,14 +80,8 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
             this.cancel();
         }).catch(error => {
             this._errorSrv.errorHandler(error);
-            this._userParamsSetSrv.getUserIsn().then(() => {
-                this.cancel();
-                this.ngOnInit();
-            this.pageState = 'VIEW';
-            }).catch(err => {
-                this._errorSrv.errorHandler(err);
-                this.pageState = 'VIEW';
-            });
+            this.cancel();
+            this.ngOnInit();
         });
     }
     cancel() {
