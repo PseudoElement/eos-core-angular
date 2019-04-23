@@ -66,7 +66,7 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
         });
 
         dragulaService.setOptions('fixed-bag', {
-            moves: (el/*, source, handle, sibling*/) => !el.classList.contains('fixed-item')
+            moves: (el/*, source, handle, sibling*/) => el.classList.contains('fixed-item')
         });
     }
 

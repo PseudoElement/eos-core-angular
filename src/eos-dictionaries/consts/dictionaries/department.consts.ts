@@ -85,7 +85,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             length: 255,
             required: true,
             forNode: false,
-            vistype: E_VISIBLE_TIPE.onlyChild,
+            vistype: E_VISIBLE_TIPE.fromParentIfNode,
         }),
         {
             key: 'SURNAME',
@@ -321,7 +321,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         'user', 'photo', 'ID_GAS_PS', 'NUMCREATION_FLAG',
         'nametitle', 'shorttitle', 'DUE_LINK_ORGANIZ', 'indexDep', 'fullTitle', 'ISN_PHOTO', 'EXPEDITION_FLAG'],
     // ['fio', 'position', 'description', 'title', 'phone', 'email', 'rooms', 'associatedUsers']
-    allVisibleFields: ['SURNAME', 'DUTY', 'fullTitle', 'shorttitle', 'fullPosition', 'SKYPE', /* 'DEPARTMENT_DUE', */ 'indexDep', 'POST_H',
+    allVisibleFields: ['fullTitle', 'fullPosition', 'SKYPE', /* 'DEPARTMENT_DUE', */ 'indexDep', 'POST_H',
         'CARD_FLAG',
         'CARD_NAME', 'NOTE', 'START_DATE', 'END_DATE', 'PHONE_LOCAL', 'PHONE', 'FAX', 'E_MAIL', 'NUM_CAB', 'ID_GAS_PS',
         'NUMCREATION_FLAG' , 'organization', /*, 'printInfo', 'sev',

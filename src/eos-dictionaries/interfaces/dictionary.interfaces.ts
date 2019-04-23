@@ -29,6 +29,7 @@ export enum E_VISIBLE_TIPE {
     all,
     onlyNode,
     onlyChild,
+    fromParentIfNode,
 }
 export enum E_FIELD_TYPE {
     string,

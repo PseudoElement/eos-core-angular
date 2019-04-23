@@ -4,19 +4,20 @@
             background: transparent;
         }
     }
-    .table-title{
+    .table-title {
         display: flex;
         align-items: center;
         justify-content: flex-start;
         width: 100%;
         padding-left: 10px;
-        .likeLink{
+        .likeLink {
             display: flex;
             align-items: center;
             justify-content: flex-start;
             cursor: pointer;
             color: #2196f3;
-            > span{
+            margin-left: 20px;
+            >span {
                 margin-left: 8px;
             }
         }
@@ -24,38 +25,35 @@
     .eos-node-list {
         background: $white;
         max-height: calc(100vh - 371px);
-
         .user-select-node {
             line-height: 30px;
             cursor: pointer;
         }
-        .user-select-node-t{
+        .user-select-node-t {
             display: flex;
             align-items: center;
             justify-content: flex-start;
             width: calc(100% - 52px);
-            span{
+            span {
                 padding-left: 5px;
+                box-sizing: border-box;
             }
         }
-
         .user-select-empty-list {
             margin-left: 20px;
         }
-        .user-item{
-            &:hover{
+        .user-item {
+            &:hover {
                 background-color: #e3f2fd
             }
         }
     }
-
-    .table-header-wrapper
-    {
+    .table-header-wrapper {
         display: flex;
         justify-content: space-between;
         padding-left: 20px;
     }
-    .selected-node-title{
+    .selected-node-title {
         padding: 11px 0;
         align-self: center;
         -ms-grid-column: 2;
@@ -67,7 +65,6 @@
         flex-direction: column;
         justify-content: space-around;
     }
-
     .item-count {
         align-self: center;
         height: 100%;
@@ -90,8 +87,19 @@
             color: $white;
         }
     }
-
     .user-list-first-colomn {
+        width: 39%;
+        display: inline-block;
+        margin-left: 34px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: bottom;
+        line-height: 32px;
+        height: 32px;
+        padding-right: 2px;
+    }
+    .user-list-two-colomn {
         width: 39%;
         display: inline-block;
         margin-left: 20px;
@@ -103,47 +111,46 @@
         height: 32px;
         padding-right: 2px;
     }
-    .user-list-third-colomn{
+    .user-list-third-colomn {
         width: 3%;
         display: inline-block;
-        margin-left: 20px;
+        margin-left: 30px;
     }
-    .user-list-fourth-colomn{
+    .user-list-fourth-colomn {
         width: 20%;
         display: inline-block;
-        margin-left: 20px;
+        /* margin-left: 20px; */
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    .disabled{
+    .disabled {
         cursor: not-allowed!important;
         color: lightgray
     }
-    .delitedDue{
+    .delitedDue {
         color: #dac1c1;
     }
-    .deleted-user-border{
+    .deleted-user-border {
         display: inline-block;
         width: 32px;
         height: 32px;
     }
-    .spiner-wrapper{
+    .spiner-wrapper {
         width: 100%;
-        height:calc(100vh - 370px);
+        height: calc(100vh - 370px);
         display: flex;
         align-items: center;
         align-content: center;
         justify-content: center;
     }
-    .user-check-label{
+    .user-check-label {
         padding-left: 0;
     }
-    .table-wrapper{
+    .table-wrapper {
         overflow: visible;
     }
-    .dropdown-menu{
+    .dropdown-menu {
         width: 355px;
     }
-
 }

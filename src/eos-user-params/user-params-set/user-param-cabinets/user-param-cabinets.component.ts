@@ -67,7 +67,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         await this._userParamsSetSrv.getUserIsn();
         this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
         this.allData = this._userParamsSetSrv.hashUserContext;
-
         this.init();
         Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {
             CABINETS_USER.fields.map(fields => {
@@ -81,7 +80,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                     });
                 }
             });
-            this.init();
             if (author) {
                 this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
             }
@@ -171,8 +169,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             this.newFolderString = s.join('');
         }
     }
-
-
     checkDataToDisabled() {
         const val = this.form.controls[`rec.HILITE_RESOLUTION_BOOLEAN`].value;
         const val2 = this.form.controls[`rec.HILITE_PRJ_RC_BOOLEAN`].value;
@@ -455,6 +451,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this.parseInputsFromString(this.defoltInputs, this.creatchesheDefault['FOLDERCOLORSTATUS']);
                 this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value;
                 this.prepFormCancel(this.defoltInputs, true);
+                this.checkDataToDisabled();
             })
             .catch(err => {
                 console.log(err);
