@@ -8,7 +8,7 @@ export class ApiCfg implements IAppCfg {
     webBaseUrl = '../';
     apiBaseUrl = '../';
     authApi = '/Services/ApiSession.asmx/';
-    dataApi = '/OData.svc/';
+    dataApi = '/OData.ashx/';
 
     metaMergeFuncList?: any[] = [];
     authApiUrl?: string = this.apiBaseUrl + this.authApi;

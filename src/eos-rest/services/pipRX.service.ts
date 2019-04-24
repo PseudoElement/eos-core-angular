@@ -75,7 +75,7 @@ export class PipRX extends PipeUtils {
             webBaseUrl: '../',
             apiBaseUrl: '../',
             authApi: '/Services/ApiSession.asmx/',
-            dataApi: '/OData.svc/',
+            dataApi: '/OData.ashx/',
         }, config);
         this._cfg.dataApiUrl = this._cfg.apiBaseUrl + this._cfg.dataApi;
         this._cfg.authApiUrl = this._cfg.apiBaseUrl + this._cfg.authApi;

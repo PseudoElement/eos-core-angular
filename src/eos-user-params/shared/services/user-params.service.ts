@@ -182,6 +182,7 @@ export class UserParamsService {
                 }
             }
             }).then(result => {
+                console.log(result);
                if (result.length) {
                    return true;
                }    else {
