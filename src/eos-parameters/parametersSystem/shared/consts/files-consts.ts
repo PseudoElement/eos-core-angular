@@ -69,7 +69,7 @@ export const FILES_PARAM: IBaseParameters = {
             key: 'DOC_RC_EXTENSIONS',
             type: 'string',
             title: '',
-            pattern: REG_EXTENSIONS
+            /* pattern: REG_EXTENSIONS, */
         },
         {
             key: 'PRJ_RC_MAX_SIZE',
@@ -86,7 +86,7 @@ export const FILES_PARAM: IBaseParameters = {
             key: 'PRJ_RC_EXTENSIONS',
             type: 'string',
             title: '',
-            pattern: REG_EXTENSIONS
+            /* pattern: REG_EXTENSIONS */
         },
         {
             key: 'PRJ_VISA_SIGN_MAX_SIZE',
@@ -103,7 +103,7 @@ export const FILES_PARAM: IBaseParameters = {
             key: 'PRJ_VISA_SIGN_EXTENSIONS',
             type: 'string',
             title: '',
-            pattern: REG_EXTENSIONS
+           /*  pattern: REG_EXTENSIONS */
         },
         {
             key: 'REPLY_MAX_SIZE',
@@ -120,7 +120,7 @@ export const FILES_PARAM: IBaseParameters = {
             key: 'REPLY_EXTENSIONS',
             type: 'string',
             title: '',
-            pattern: REG_EXTENSIONS
+           /*  pattern: REG_EXTENSIONS */
         },
         {
             key: 'RESOLUTION_MAX_SIZE',
@@ -137,7 +137,7 @@ export const FILES_PARAM: IBaseParameters = {
             key: 'RESOLUTION_EXTENSIONS',
             type: 'string',
             title: '',
-            pattern: REG_EXTENSIONS
+            /* pattern: REG_EXTENSIONS */
         },
     ]
 };
