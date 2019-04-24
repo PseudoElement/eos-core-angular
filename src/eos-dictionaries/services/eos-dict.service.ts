@@ -1,4 +1,6 @@
-import {Injectable} from '@angular/core';
+import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
+import { DOCGROUP_DICT } from './../consts/dictionaries/docgroup.consts';
+import { Injectable, Injector } from '@angular/core';
 // import {Router} from '@angular/router';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
@@ -26,13 +28,15 @@ import {EosStorageService} from 'app/services/eos-storage.service';
 import {EosDepartmentsService} from './eos-department-service';
 import {RestError} from 'eos-rest/core/rest-error';
 import {DictionaryDescriptorService} from 'eos-dictionaries/core/dictionary-descriptor.service';
-import {IAppCfg} from 'eos-common/interfaces';
+import {IAppCfg, IConfirmWindow} from 'eos-common/interfaces';
 import {CabinetDictionaryDescriptor} from '../core/cabinet-dictionary-descriptor';
 import { CONFIRM_CHANGE_BOSS } from '../consts/confirm.consts';
 import {ConfirmWindowService} from 'eos-common/confirm-window/confirm-window.service';
 import { ReestrtypeDictionaryDescriptor } from '../core/reestrtype-dictionary-descriptor';
 import { _ES } from '../../eos-rest/core/consts';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from './eos-access-permissions.service';
+import { AdvCardRKDataCtrl } from 'eos-dictionaries/adv-card/adv-card-rk-datactrl';
+import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev-participant';
 
 @Injectable()
 export class EosDictService {
@@ -181,13 +185,13 @@ export class EosDictService {
 
     constructor(
         // private _router: Router,
+        private injector: Injector,
         private _msgSrv: EosMessageService,
         private _storageSrv: EosStorageService,
         private _descrSrv: DictionaryDescriptorService,
         private departmentsSrv: EosDepartmentsService,
         private confirmSrv: ConfirmWindowService,
         private _eaps: EosAccessPermissionsService,
-
     ) {
         this._initViewParameters();
         this._dictionaries = [];
@@ -483,7 +487,7 @@ export class EosDictService {
             .then((dictionary) => {
                 let resNode: EosDictionaryNode = null;
                 return this.preSave(dictionary, data)
-                    .then((rrr) => {
+                    .then(() => {
                         return dictionary.updateNodeData(node, data);
                     })
                     .then((results) => {
@@ -517,7 +521,7 @@ export class EosDictService {
 
         if (this._treeNode) {
             return this.preSave(dictionary, data)
-                .then((res) => {
+                .then(() => {
                     return dictionary.descriptor.addRecord(data, this._treeNode.data);
                 })
                 .then((results) => {
@@ -947,12 +951,63 @@ export class EosDictService {
         return _p;
     }
 
+    private isObjEmpty(v): boolean {
+        if (!v) { return true; }
+        for (const key in v) {
+            if (v.hasOwnProperty(key)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private preSave(dictionary: EosDictionary, data: any): Promise<any> {
         if (data && data.rec) {
-            if (dictionary.id === 'sev-participant') {
+            if (dictionary.id === PARTICIPANT_SEV_DICT.id) {
 
             }
-            if (dictionary.id === 'departments' && data.rec.IS_NODE) {
+
+            if (dictionary.id === DOCGROUP_DICT.id) {
+                const ctrl = new AdvCardRKDataCtrl(this.injector);
+                return ctrl.doCorrectsRKToDG(data).then(changes => {
+                    if (!this.isObjEmpty(changes.fixE)) {
+                        const confirmObj: IConfirmWindow = {
+                            title: 'Ведение справочников:',
+                            body: 'Новое значение флага "Оригинал в электронном виде" не соответствует заданным правилам заполнения реквизитов РК. Отредактировать эти правила?',
+                            okTitle: 'Да',
+                            cancelTitle: 'Нет'
+                        };
+
+                        this.confirmSrv.confirm(confirmObj)
+                        .then((confirm: boolean) => {
+                            const ch = {};
+
+                            ch['DOC_DEFAULT_VALUE_List'] = [];
+
+                            if (confirm) {
+                                for (const key in changes.fixE) {
+                                    if (changes.fixE.hasOwnProperty(key)) {
+                                        const element = changes.fixE[key];
+                                        ch['DOC_DEFAULT_VALUE_List'].push({
+                                            DEFAULT_ID: key,
+                                            VALUE: element,
+                                        });
+
+                                    }
+                                }
+                                ctrl.saveDDGDefaultRK(data, ch);
+                            } else {
+                                console.log('no');
+                            }
+                        });
+                    }
+                    return Promise.resolve(null);
+                }).catch(err => {
+                    this._msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка РК'});
+                })
+            }
+
+            if (dictionary.id === DEPARTMENTS_DICT.id && data.rec.IS_NODE) {
                 this.departmentsSrv.addDuty(data.rec.DUTY);
                 this.departmentsSrv.addFullname(data.rec.FULLNAME);
                 if (1 * data.rec.POST_H === 1) {
@@ -1236,3 +1291,4 @@ export class EosDictService {
     }
 
 }
+

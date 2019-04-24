@@ -1,11 +1,10 @@
-import { ALL_ROWS } from 'eos-rest/core/consts';
 import { RKDefaultFields, TDefaultField, TDFSelectOption, RKFilesConstraints, RKFictControls, RKFilesConstraintsFields } from './rk-default-values/rk-default-const';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { PipRX, DOCGROUP_CL } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE } from 'eos-dictionaries/consts/messages.consts';
-import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
-import { NgZone } from '@angular/core';
+import { ALL_ROWS } from 'eos-rest/core/consts';
+import { NgZone, Injector } from '@angular/core';
 
 const DOCGROUP_TABLE = 'DOCGROUP_CL';
 const DOCGROUP_UID_NAME = 'ISN_NODE';
@@ -15,26 +14,30 @@ export const FICT_CONTROLS_LIST_NAME = 'fict';
 
 export class AdvCardRKDataCtrl {
 
-
     name: string;
     loadedDicts: any;
+    public zone: NgZone;
+
     private _descr = {
         [DEFAULTS_LIST_NAME]:  RKDefaultFields,
         [FILE_CONSTRAINT_LIST_NAME]: RKFilesConstraints,
         [FICT_CONTROLS_LIST_NAME]: RKFictControls,
     };
 
+    private _apiSrv: PipRX;
+    private _msgSrv: EosMessageService;
+
     constructor (
-        public zone: NgZone,
-        private _apiSrv: PipRX,
-        private _msgSrv: EosMessageService,
-        private _dictSrv: EosDictService,
+        injector: Injector,
     ) {
         this.loadedDicts = {};
+        this.zone = injector.get(NgZone);
+        this._apiSrv = injector.get(PipRX);
+        this._msgSrv = injector.get(EosMessageService);
     }
 
     getApiConfig() {
-        return this._dictSrv.getApiConfig();
+        return this._apiSrv.getConfig();
     }
 
     getDescriptions(): any {
@@ -42,7 +45,7 @@ export class AdvCardRKDataCtrl {
     }
 
 
-    readValues(uid: number): Promise<any> {
+    readDGValues(uid: number): Promise<any> {
 
         const query = {
             criteries: { [DOCGROUP_UID_NAME]: String(uid) },
@@ -60,22 +63,26 @@ export class AdvCardRKDataCtrl {
     }
 
     public save(isn_node: number, inputs: any[], data: any): Promise<any> {
-        return this.readValues(isn_node)
+        return this.readDGValues(isn_node)
             .then(([docGroup]) => {
-                this._apiSrv.entityHelper.prepareForEdit(docGroup);
-                const changes = this._calcChangesFor(docGroup, data);
-                if (changes) {
-                    this._apiSrv.batch(changes, '')
-                        .then(() => {
-                            this._msgSrv.addNewMessage(SUCCESS_SAVE);
-                        })
-                        .catch((err) => {
-                            this._msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка записи'});
-                        });
-                }
+                this.saveDDGDefaultRK(docGroup, data);
             });
     }
 
+
+    public saveDDGDefaultRK(docGroup: any, data: any) {
+        this._apiSrv.entityHelper.prepareForEdit(docGroup);
+        const changes = this._calcChangesFor(docGroup, data);
+        if (changes) {
+            this._apiSrv.batch(changes, '')
+                .then(() => {
+                    this._msgSrv.addNewMessage(SUCCESS_SAVE);
+                })
+                .catch((err) => {
+                    this._msgSrv.addNewMessage({ msg: err.message, type: 'danger', title: 'Ошибка записи' });
+                });
+        }
+    }
 
     public readDictLinkValue(el: TDefaultField, value: any, updateLink: Function = null): Promise<any> {
         const dict = el.dict;
@@ -153,7 +160,6 @@ export class AdvCardRKDataCtrl {
                                 } else {
                                     opts.push ({value: value, title: title });
                                 }
-
                             }
 
                             el.options = opts;
@@ -245,6 +251,51 @@ export class AdvCardRKDataCtrl {
     //     input.options[0].title = 'sadgsad';
 
     // }
+
+    doCorrectsRKToDG(data: any): Promise<any> {
+
+        const id = data.rec ? data.rec['ISN_NODE'] : null;
+        if (!id) {
+            return Promise.reject({ message: 'Ошибка проверки умолчаний РК'});
+        }
+
+        return this.readDGValues(id).then(dgSaved => {
+            const dg = data.rec;
+            const dgsList = this.arrayToDotList(dgSaved[0][DEFAULTS_LIST_NAME], DEFAULTS_LIST_NAME, 'DEFAULT_ID', 'VALUE');
+            const changes = {
+                fixE: {}
+            };
+            const isEDoc = dg['E_DOCUMENT'];
+
+            changes[DEFAULTS_LIST_NAME] = {};
+            if (isEDoc) {
+                if (!dgsList['DOC_DEFAULT_VALUE_List.SPECIMEN']){
+                    changes.fixE['DOC_DEFAULT_VALUE_List.SPECIMEN'] = '1';
+                }
+            } else {
+                if (dgsList['DOC_DEFAULT_VALUE_List.SPECIMEN']) {
+                    changes.fixE['DOC_DEFAULT_VALUE_List.SPECIMEN'] = null;
+                }
+            }
+
+            // inputs['DOC_DEFAULT_VALUE_List.FREE_NUM_M'].value = 1;
+            // inputs['DOC_DEFAULT_VALUE_List.DOC_DATE_M'].value = 1;
+            // inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL_M'].value = 1;
+            // inputs['DOC_DEFAULT_VALUE_List.ISN_CARD_REG_M'].value = 1;
+            // inputs['DOC_DEFAULT_VALUE_List.ISN_CABINET_REG_M'].value = 1;
+            return changes;
+        });
+    }
+
+    public arrayToDotList(arr: any[], path: string, field: string, value: string) {
+        const res = {};
+        for (let i = 0; i < arr.length; i++) {
+            const element = arr[i];
+
+            res[path + '.' + element[field]] = element[value];
+        }
+        return res;
+    }
 
     private _calcChangesFor(docGroup: any, newData: any ): any {
         const fields = this.getDescriptions();
