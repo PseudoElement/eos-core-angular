@@ -6,7 +6,19 @@ import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 
 @Component({
     selector: 'eos-param-auth-collection',
-    templateUrl: 'collection.component.html'
+    templateUrl: 'collection.component.html',
+    styles: [
+        `.form-control.ng-invalid.ng-dirty(:focus) {
+            border-color: #f44336;
+            border-width: 2px;
+        }`,
+        `.warning {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            color: #f44336;
+        }`
+    ]
 })
 
 export class AuthenticationCollectionComponent implements OnInit {
@@ -71,6 +83,10 @@ export class AuthenticationCollectionComponent implements OnInit {
             }
         }
         this.inputWordValue = '';
+
+    }
+    changeWord(event) {
+        this.inputWordValue = this.inputWordValue.toUpperCase();
     }
     cancel() {
         if (this.qureyForChenge.length) {

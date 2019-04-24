@@ -1,104 +1,50 @@
 <header>
-    <eos-param-header
-        title='Словарь недопустимых паролей'
-        [statusBtnSub]="!qureyForChenge.length"
-        (submitForm)="submit()"
-        (cancelForm)="cancel()"
-    ></eos-param-header>
+    <eos-param-header title='Словарь недопустимых паролей' [statusBtnSub]="!qureyForChenge.length" (submitForm)="submit()" (cancelForm)="cancel()"></eos-param-header>
 </header>
 <div class="collection-action">
-    <button
-        class="btn"
-        tooltip="Добавить"
-        placement="bottom"
-        containerClass="tooltip-info"
-        (click)="addWord()"
-    >
+    <button class="btn" tooltip="Добавить" placement="bottom" containerClass="tooltip-info" (click)="addWord()">
             <span class="eos-icon eos-icon-plus-blue small"></span>
     </button>
-    <button
-        class="btn"
-        #dTolltip="bs-tooltip"
-        tooltip="Удалить"
-        placement="bottom"
-        containerClass="tooltip-info"
-        (click)="dTolltip.hide(); deleteWords()"
-        [disabled]="!isMarkNode"
-    >
+    <button class="btn" #dTolltip="bs-tooltip" tooltip="Удалить" placement="bottom" containerClass="tooltip-info" (click)="dTolltip.hide(); deleteWords()" [disabled]="!isMarkNode">
             <span class="eos-icon eos-icon-bin-forever-blue small"></span>
     </button>
-    <button
-        class="btn"
-        tooltip="Редактировать"
-        placement="bottom"
-        containerClass="tooltip-info"
-        (click)="editWord()"
-        [disabled]="!currentSelectedWord"
-    >
+    <button class="btn" tooltip="Редактировать" placement="bottom" containerClass="tooltip-info" (click)="editWord()" [disabled]="!currentSelectedWord">
             <span class="eos-icon eos-icon-edit-blue small"></span>
     </button>
 </div>
 <div class="collection-param">
-        <div
-            class="checkbox-inline"
-        >
-            <label [tooltip]="checkAllMarkes.checked ? 'Снять пометки' : 'Пометить все'"
-                placement="bottom"
-                containerClass="tooltip-info"
-            >
+    <div class="checkbox-inline">
+        <label [tooltip]="checkAllMarkes.checked ? 'Снять пометки' : 'Пометить все'" placement="bottom" containerClass="tooltip-info">
                 <input #checkAllMarkes type="checkbox" (change)="toggleAllMarks($event)">
                 <span></span>
             </label>
-        </div>
-        <div
-            class="item l-font"
-        >
-            <span class="text"
-                (click)="orderByField()"
-                tooltip="Упорядочить"
-                placement="bottom"
-                containerClass="tooltip-info"
-            >
+    </div>
+    <div class="item l-font">
+        <span class="text" (click)="orderByField()" tooltip="Упорядочить" placement="bottom" containerClass="tooltip-info">
                 Словарь
             </span>
-            <span class="order-icon">
+        <span class="order-icon">
                 <span
                 class="icon eos-icon small"
                 [ngClass]="{'eos-icon-arrow-blue-top': orderBy, 'eos-icon-arrow-blue-bottom': !orderBy}"
                 >
                 </span>
-            </span>
-        </div>
+        </span>
     </div>
+</div>
 <div class="collection-main">
     <div *ngIf="!isLoading; else spinner">
-        <ul
-            *ngIf="(collectionList && collectionList.length); else emptyStores"
-        >
-            <li
-                *ngFor="let list of collectionList"
-            >
-                <div
-                    class="list"
-                    [ngClass]="{'highlighted': list.isSelected}"
-                    (click)="selectedNode(list)"
-                    (dblclick)="editWord()"
-                >
-                    <label
-                        class="checkbox-inline"
-                        [tooltip]="list.marked ? markTemp : notMarkTemp"
-                        containerClass="tooltip-info"
-                        (click)="checkboxStopPropagation($event)"
-                        placement="bottom"
-                    >
+        <ul *ngIf="(collectionList && collectionList.length); else emptyStores">
+            <li *ngFor="let list of collectionList">
+                <div class="list" [ngClass]="{'highlighted': list.isSelected}" (click)="selectedNode(list)" (dblclick)="editWord()">
+                    <label class="checkbox-inline" [tooltip]="list.marked ? markTemp : notMarkTemp" containerClass="tooltip-info" (click)="checkboxStopPropagation($event)" placement="bottom">
                         <input
                             type="checkbox"
                             [(ngModel)]="list.marked || list.selectedMark"
                             (ngModelChange)="markWord($event, list)"
                         >
                         <span></span>
-                    </label>
-                    {{list.CLASSIF_NAME}}
+                    </label> {{list.CLASSIF_NAME}}
                 </div>
             </li>
         </ul>
@@ -123,27 +69,16 @@
                 <span class="header__text">{{isNewWord ? 'Добавить' : 'Редактировать'}} недопустимый пароль</span>
             </div>
             <div class="header__button-wrap">
-                <button
-                    class="btn btn-primary header__button"
-                    (click)="cancelModalWord()"
-                    >ОТМЕНИТЬ
+                <button class="btn btn-primary header__button" (click)="cancelModalWord()">ОТМЕНИТЬ
                 </button>
-                <button
-                    class="btn btn-primary-full header__button"
-                    (click)="submitModalWord()"
-                    [disabled]="inputWordValue === ''"
-                    >{{isNewWord ? 'ДОБАВИТЬ' : 'РЕДАКТИРОВАТЬ'}}
+                <button class="btn btn-primary-full header__button" (click)="submitModalWord()" [disabled]="inputWordValue === '' || inputWordValue.length > 64">{{isNewWord ? 'ДОБАВИТЬ' : 'РЕДАКТИРОВАТЬ'}}
                 </button>
             </div>
         </div>
     </header>
     <main class="modalWord-content">
         <span>Слово: </span>
-        <input class="form-control m-font inline-block"
-            #inputWord
-            type="text"
-            [(ngModel)]="inputWordValue"
-            (change)="inputWord.value = inputWord.value.toUpperCase()"
-        >
+        <input pattern="^\w{0,64}$" class="form-control m-font inline-block" #inputWord type="text" [(ngModel)]="inputWordValue" (change)="changeWord($event)">
+        <span *ngIf="inputWordValue.length > 64" class="warning">Допустимо максимальное количество символов 64</span>
     </main>
 </ng-template>
