@@ -1,5 +1,5 @@
 <header>
-    <eos-param-header title='Словарь недопустимых паролей' [statusBtnSub]="!qureyForChenge.length" (submitForm)="submit()" (cancelForm)="cancel()"></eos-param-header>
+    <eos-param-header title='Словарь недопустимых паролей' [statusBtnSub]="btnDisable()" (submitForm)="submit()" (cancelForm)="cancel()"></eos-param-header>
 </header>
 <div class="collection-action">
     <button class="btn" tooltip="Добавить" placement="bottom" containerClass="tooltip-info" (click)="addWord()">

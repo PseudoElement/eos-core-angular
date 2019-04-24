@@ -27,19 +27,32 @@ export class AuthenticationCollectionComponent implements OnInit {
     modalWordRef: BsModalRef;
     isMarkNode: boolean = false;
     isNewWord: boolean;
-    collectionList: ICollectionList[];
+    collectionList: ICollectionList[] = [];
     currentSelectedWord: ICollectionList;
     orderBy: boolean = true;
     isLoading: boolean;
     qureyForChenge: any[] = [];
     inputWordValue: string = '';
-    constructor (
+    constructor(
         private _confirmSrv: ConfirmWindowService,
         private _collectionSrv: CollectionService,
         private _modalSrv: BsModalService
-    ) {}
-    ngOnInit () {
+    ) { }
+    btnDisable() {
+        const val = this.collectionList.some(list => {
+            return list.state === 'new' || list.state === 'merge';
+        });
+          if (val || this.qureyForChenge.length) {
+              return false;
+          } else {
+              return true;
+          }
+    }
+    ngOnInit() {
         this.isLoading = true;
+        this.init();
+    }
+    init() {
         this._collectionSrv.getCollectionList()
             .then((list: ICollectionList[]) => {
                 this.isLoading = false;
@@ -51,8 +64,21 @@ export class AuthenticationCollectionComponent implements OnInit {
             });
     }
     submit() {
+        this.collectionList.forEach(list => {
+            if (list.state === 'new') {
+                this.qureyForChenge.push(this._createRequestForCreate(list.CLASSIF_NAME));
+            }
+
+            if (list.state === 'merge') {
+                this.qureyForChenge.push(this._createRequestForUpdate(list.ISN_PASS_STOP_LIST, list.CLASSIF_NAME));
+            }
+        });
         this._collectionSrv.changeWords(this.qureyForChenge)
             .then((state: Boolean) => {
+                this.collectionList.map(list => {
+                    list.state = 'old';
+                    return list;
+                });
                 if (state) {
                     this._closed();
                 }
@@ -66,24 +92,18 @@ export class AuthenticationCollectionComponent implements OnInit {
                 marked: false,
                 isSelected: false,
                 selectedMark: false,
+                state: 'new',
                 CLASSIF_NAME: this.inputWordValue,
-                ISN_PASS_STOP_LIST: null
+                ISN_PASS_STOP_LIST: null,
             });
-            this.qureyForChenge.push(this._createRequestForCreate(this.inputWordValue));
             this.isNewWord = false;
         } else {
             this.currentSelectedWord.CLASSIF_NAME = this.inputWordValue;
             if (this.currentSelectedWord.ISN_PASS_STOP_LIST) {
-                this.qureyForChenge.push(this._createRequestForUpdate(
-                    this.currentSelectedWord.ISN_PASS_STOP_LIST,
-                    this.inputWordValue
-                ));
-            } else {
-                this.qureyForChenge.push(this._createRequestForCreate(this.inputWordValue));
+                this.currentSelectedWord.state = 'merge';
             }
         }
         this.inputWordValue = '';
-
     }
     changeWord(event) {
         this.inputWordValue = this.inputWordValue.toUpperCase();
@@ -91,14 +111,16 @@ export class AuthenticationCollectionComponent implements OnInit {
     cancel() {
         if (this.qureyForChenge.length) {
             this._confirmSrv.confirm(CONFIRM_SAVE_ON_LEAVE)
-            .then(state => {
-                if (state) {
-                    this.submit();
-                } else {
-                    this._closed();
-                }
-            });
+                .then(state => {
+                    if (state) {
+                        this.submit();
+                    } else {
+                        this.init();
+                        this._closed();
+                    }
+                });
         } else {
+            this.init();
             this._closed();
         }
     }
@@ -120,9 +142,11 @@ export class AuthenticationCollectionComponent implements OnInit {
                 if (node === this.currentSelectedWord) {
                     this.currentSelectedWord = null;
                 }
-                this.qureyForChenge.push(this._createRequestForDelete(node));
+                if (node.state !== 'new') {
+                    this.qureyForChenge.push(this._createRequestForDelete(node));
+                }
                 this.collectionList.splice(i, 1);
-                i --;
+                i--;
             }
         }
         this._checkMarkNode();
@@ -227,6 +251,6 @@ export class AuthenticationCollectionComponent implements OnInit {
         };
     }
     private _openModal() {
-        this.modalWordRef = this._modalSrv.show(this.modalWord, {class: 'modalWord', ignoreBackdropClick: true});
+        this.modalWordRef = this._modalSrv.show(this.modalWord, { class: 'modalWord', ignoreBackdropClick: true });
     }
 }
