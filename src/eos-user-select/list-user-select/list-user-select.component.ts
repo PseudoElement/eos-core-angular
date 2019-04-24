@@ -45,6 +45,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     shooseP: number;
     // количество выбранных пользователей
     countcheckedField: number;
+    titleDue: string;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public _apiSrv: UserParamApiSrv,
@@ -157,6 +158,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.checkSortSessionStore();
         this.countcheckedField = 0;
         this.shooseP = this._apiSrv.configList.shooseTab;
+        this.titleDue = this.shooseP === 0 ? 'Подразделение' : 'Картотека';
         if (!param || param === '0.') {
             this._apiSrv.configList.shooseTab === 0 ? this.titleCurrentDue = 'Все подразделения' : this.titleCurrentDue = 'Центральная картотека';
         } else {
@@ -299,6 +301,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 if (this._apiSrv.srtConfig.hasOwnProperty(key)) {
                     if (key === this._apiSrv.currentSort) {
                         this._apiSrv.srtConfig[key].checked = true;
+                        console.log(this._apiSrv.srtConfig[key]);
+                        console.log(key);
                     } else {
                         this._apiSrv.srtConfig[key].checked = false;
                     }
