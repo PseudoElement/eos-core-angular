@@ -33,6 +33,7 @@ export class AuthenticationCollectionComponent implements OnInit {
     isLoading: boolean;
     qureyForChenge: any[] = [];
     inputWordValue: string = '';
+    errorUnique: boolean = false;
     constructor(
         private _confirmSrv: ConfirmWindowService,
         private _collectionSrv: CollectionService,
@@ -42,11 +43,11 @@ export class AuthenticationCollectionComponent implements OnInit {
         const val = this.collectionList.some(list => {
             return list.state === 'new' || list.state === 'merge';
         });
-          if (val || this.qureyForChenge.length) {
-              return false;
-          } else {
-              return true;
-          }
+        if (val || this.qureyForChenge.length) {
+            return false;
+        } else {
+            return true;
+        }
     }
     ngOnInit() {
         this.isLoading = true;
@@ -105,6 +106,18 @@ export class AuthenticationCollectionComponent implements OnInit {
         }
         this.inputWordValue = '';
     }
+    uniqueVal() {
+        if (this.checkUniqueValue(this.inputWordValue.toUpperCase())) {
+            this.errorUnique = true;
+        }   else {
+            this.errorUnique = false;
+        }
+    }
+    checkUniqueValue(newValue): boolean {
+        return this.collectionList.some(val => {
+            return val.CLASSIF_NAME === newValue;
+        });
+    }
     changeWord(event) {
         this.inputWordValue = this.inputWordValue.toUpperCase();
     }
@@ -128,6 +141,7 @@ export class AuthenticationCollectionComponent implements OnInit {
         this.modalWordRef.hide();
         this.isNewWord = false;
         this.inputWordValue = '';
+        this.errorUnique = false;
     }
 
 

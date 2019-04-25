@@ -2,7 +2,7 @@ import { IBaseParameters } from '../interfaces/parameters.interfaces';
 
 export const MAX_SIZE = 'Мах размер';
 export const ONE_FILE = 'Один файл';
-export const REG_EXTENSIONS: RegExp = /\..*\S$/;
+// export const REG_EXTENSIONS: RegExp = /\..*\S$/;
 export const REG_MAX_SIZE: RegExp = /^([1-9]\d{0,7}?|\s)$/; // '', 1 - 99999999
 export const FILES_PARAM: IBaseParameters = {
     id: 'files',
