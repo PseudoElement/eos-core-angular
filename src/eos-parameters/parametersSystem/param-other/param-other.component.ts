@@ -8,7 +8,10 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
 
 @Component({
     selector: 'eos-param-other',
-    templateUrl: 'param-other.component.html'
+    templateUrl: 'param-other.component.html',
+    styles: [`.param-other > .inline-block {
+        margin-left: 10px;
+    }`]
 })
 export class ParamOtherComponent extends BaseParamComponent implements OnInit {
     inputServer = {
