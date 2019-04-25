@@ -196,6 +196,11 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
         label: 'Обстоятельства дел',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     },
+    {
+        key: 40,
+        label: 'Статусы проекта поручения',
+        expandable: E_TECH_USER_CLASSIF_CONTENT.none
+    },
 ];
 
 export const E_CLASSIF_ID = {
