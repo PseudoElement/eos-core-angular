@@ -108,6 +108,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         return { rec: d };
     }
     submit() {
+        console.log('sub2');
         if (this.newData) {
             this.formChanged.emit(false);
             this.isChangeForm = false;
