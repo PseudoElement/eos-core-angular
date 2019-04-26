@@ -1,91 +1,90 @@
 <div *ngIf="CurrentUserForShowTemplate" class="fullWidth" [ngSwitch]="chooseTemplate">
-        <div  *ngSwitchCase= "'main'">
-            <div class="rt-user">
-                <div class="rt-avatar" *ngIf="DueInfo else unset">
-                    <div class="avatar-wr">
-                       <a class="av-link" [routerLink]="['/spravochniki','departments', CurrentUser['data']['DUE_DEP'], 'view' ]">
-                         <!-- <img *ngIf="isPhoto"
+    <div *ngSwitchCase="'main'">
+        <div class="rt-user">
+            <div class="rt-avatar" *ngIf="DueInfo else unset">
+                <div class="avatar-wr">
+                    <a class="av-link" [routerLink]="['/spravochniki','departments', CurrentUser['data']['DUE_DEP'], 'view' ]">
+                        <!-- <img *ngIf="isPhoto"
                             class="avatar-img"
                             [ngStyle]="{'background-image': urlPhoto}"
                             alt="Фотография должностного лица"> -->
-                            <span  class="avatar-img" *ngIf="isPhoto" [ngStyle]="{'background-image': urlPhoto}"></span>
-                            <span  class="avatar-img" *ngIf="!isPhoto" class="avatar-img eos-icon eos-icon-Man-Blue small"></span>
-                        </a>
-                    </div>
-                    <div class="avatar-title">
-                        <a (click)="writeRecentUrl()" [routerLink]="['/spravochniki','departments', CurrentUser['data']['DUE_DEP'], 'view' ]">{{DueInfo}}</a>
-                    </div>
+                        <span class="avatar-img" *ngIf="isPhoto" [ngStyle]="{'background-image': urlPhoto}"></span>
+                        <span class="avatar-img" *ngIf="!isPhoto" class="avatar-img eos-icon eos-icon-Man-Blue small"></span>
+                    </a>
                 </div>
-                <ng-template #unset>
-                   <div class="teh-user">
-                        <span class="teh-user-name">{{CurrentUser.name}}</span>
-                        <!-- <span class="eos-icon eos-icon-checkbox-black"></span> -->
-                       <div class="teh-p">
-                            <label class="checkbox disabled minus-checkbox ">
+                <div class="avatar-title">
+                    <a (click)="writeRecentUrl()" [routerLink]="['/spravochniki','departments', CurrentUser['data']['DUE_DEP'], 'view' ]">{{DueInfo}}</a>
+                </div>
+            </div>
+            <ng-template #unset>
+                <div class="teh-user">
+                    <span class="teh-user-name">{{CurrentUser.name}}</span>
+                    <!-- <span class="eos-icon eos-icon-checkbox-black"></span> -->
+                    <div class="teh-p">
+                        <label class="checkbox disabled minus-checkbox ">
                             <input [attr.checked]="'checked'" disabled  type="checkbox" readonly="readonly" class="readonly">
                             <span class="eos-icon eos-icon-checkbox-black"></span>
                             Технический пользователь</label>
                     </div>
-                   </div>
-                </ng-template>
-                    <div class="info-wr">
-                        <div class="info-role">
-                            <span class="rt-grey">Роль</span>
-                            <span class="rt-role-name"*ngIf="CurrentUser">
+                </div>
+            </ng-template>
+            <div class="info-wr">
+                <div class="info-role">
+                    <span class="rt-grey">Роль</span>
+                    <span class="rt-role-name" *ngIf="CurrentUser">
                                 {{role}}
                             </span>
-                        </div>
-                        <div class='info-note'>
-                                <span class="rt-grey">Подразделение</span>
-                                <span class="rt-role-name" *ngIf="CurrentUser">{{CurrentUser.data.NOTE || 'Не указано'}}</span>
-                        </div>
                 </div>
+                <div class='info-note'>
+                    <span class="rt-grey">Подразделение</span>
+                    <span class="rt-role-name" *ngIf="CurrentUser">{{CurrentUser.data.NOTE || 'Не указано'}}</span>
+                </div>
+            </div>
 
-                <div class="rt-cabinet">
-                    <span class="rt-grey">Кабинеты</span>
-                    <div class="" *ngIf='UserCabinetInfo'>
-                        <eos-cabinet-user  *ngFor = "let Cabinet of UserCabinetInfo" [CabinetInfo]=Cabinet></eos-cabinet-user>
-                    </div>
-                    <div class="is-user">
-                        <span class="is-user-title">Является пользователем</span>
-                        <a  [routerLink]="['/user-params-set','base-param']"  [queryParams]="{'isn_cl': CurrentUser.id}">{{CurrentUser.login}}</a>
-                    </div>
+            <div class="rt-cabinet">
+                <span class="rt-grey">Кабинеты</span>
+                <div class="" *ngIf='UserCabinetInfo'>
+                    <eos-cabinet-user *ngFor="let Cabinet of UserCabinetInfo" [CabinetInfo]=Cabinet></eos-cabinet-user>
                 </div>
-                    <eos-depart-user-select [showComponent]="showDep" [department]="departmentInfo"></eos-depart-user-select>
-                <div class="rt-sustem">
-                    <div class="sustem-tab-rw" (click)='openedSustem()'>
-                            <span class="sustem-title">ДОСТУП К СИСТЕМАМ</span>
-                            <span class="sustem-open">
+                <div class="is-user">
+                    <span class="is-user-title">Логин</span>
+                    <a [routerLink]="['/user-params-set','base-param']" [queryParams]="{'isn_cl': CurrentUser.id}">{{CurrentUser.login}}</a>
+                </div>
+            </div>
+            <eos-depart-user-select [showComponent]="showDep" [department]="departmentInfo"></eos-depart-user-select>
+            <div class="rt-sustem">
+                <div class="sustem-tab-rw" (click)='openedSustem()'>
+                    <span class="sustem-title">ДОСТУП К СИСТЕМАМ</span>
+                    <span class="sustem-open">
                                 <span class="eos-icon eos-icon-arrow-v-blue-bottom small"  *ngIf='!opened'></span>
-                                <span class="eos-icon eos-icon-arrow-v-blue-top small" *ngIf='opened'></span>
-                            </span>
-                    </div>
-                    <div class="sustem-wr" *ngIf="flagSustem" [ngClass]="{opened: opened}">
-                            <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.delo></eos-user-system>
-                            <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.delo_deloweb></eos-user-system>
-                            <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.delowebLGO></eos-user-system>
-                            <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.delowebKL></eos-user-system>
-                            <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.APM></eos-user-system>
-                            <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.EOS></eos-user-system>
-                            <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.SCAN></eos-user-system>
-                            <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Pscan></eos-user-system>
-                            <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Shif></eos-user-system>
-                            <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Scan_code></eos-user-system>
-                            <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Notifer></eos-user-system>
-                            <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Search_code></eos-user-system>
-                            <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.MobNet></eos-user-system>
-                            <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Informer></eos-user-system>
-                    </div>
+                    <span class="eos-icon eos-icon-arrow-v-blue-top small" *ngIf='opened'></span>
+                    </span>
+                </div>
+                <div class="sustem-wr" *ngIf="flagSustem" [ngClass]="{opened: opened}">
+                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.delo></eos-user-system>
+                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.delo_deloweb></eos-user-system>
+                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.delowebLGO></eos-user-system>
+                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.delowebKL></eos-user-system>
+                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.APM></eos-user-system>
+                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.EOS></eos-user-system>
+                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.SCAN></eos-user-system>
+                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Pscan></eos-user-system>
+                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Shif></eos-user-system>
+                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Scan_code></eos-user-system>
+                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Notifer></eos-user-system>
+                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Search_code></eos-user-system>
+                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.MobNet></eos-user-system>
+                    <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Informer></eos-user-system>
                 </div>
             </div>
         </div>
-        <div *ngSwitchCase="'preview'">
-            <!-- <p class="prev-user-title">
+    </div>
+    <div *ngSwitchCase="'preview'">
+        <!-- <p class="prev-user-title">
             Выберите пользователя
             </p> -->
-        </div>
+    </div>
     <div class="spinner-user-sel" *ngSwitchCase="'spinner'">
         <eos-spinner size="lg"></eos-spinner>
     </div>
-    </div>
-
+</div>

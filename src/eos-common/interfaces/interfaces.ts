@@ -25,4 +25,6 @@ export interface IOpenClassifParams {
     nomenkl_jou?: boolean;
     return_due?: boolean;
     selected? ;
+    criteriesSearch?: boolean;
+    criteriesName?: string;
 }
