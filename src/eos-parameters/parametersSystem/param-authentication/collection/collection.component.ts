@@ -35,6 +35,10 @@ export class AuthenticationCollectionComponent implements OnInit {
     inputWordValue: string = '';
     errorUnique: boolean = false;
     title = 'Словарь недопустимых паролей';
+    validPattern: boolean = true;
+    get disableCollection() {
+        return this.inputWordValue === '' || this.inputWordValue.length > 64 || this.errorUnique || !this.validPattern;
+    }
     constructor(
         // private _confirmSrv: ConfirmWindowService,
         private _collectionSrv: CollectionService,
@@ -107,10 +111,11 @@ export class AuthenticationCollectionComponent implements OnInit {
         }
         this.inputWordValue = '';
     }
-    uniqueVal() {
+    uniqueVal($event) {
+        this.validPattern = $event.target.validity.valid;
         if (this.checkUniqueValue(this.inputWordValue.toUpperCase())) {
             this.errorUnique = true;
-        }   else {
+        } else {
             this.errorUnique = false;
         }
     }
@@ -144,6 +149,7 @@ export class AuthenticationCollectionComponent implements OnInit {
         this.isNewWord = false;
         this.inputWordValue = '';
         this.errorUnique = false;
+        this.validPattern = true;
     }
 
 

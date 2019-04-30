@@ -71,14 +71,14 @@
             <div class="header__button-wrap">
                 <button class="btn btn-primary header__button" (click)="cancelModalWord()">ОТМЕНИТЬ
                 </button>
-                <button class="btn btn-primary-full header__button" (click)="submitModalWord()" [disabled]="inputWordValue === '' || inputWordValue.length > 64 || errorUnique">СОХРАНИТЬ
+                <button class="btn btn-primary-full header__button" (click)="submitModalWord()" [disabled]="disableCollection">СОХРАНИТЬ
                 </button>
             </div>
         </div>
     </header>
     <main class="modalWord-content">
         <span>Слово: </span>
-        <input pattern="^[а-яА-Яa-zA-Z0-9_]{0,64}$" class="form-control m-font inline-block" #inputWord type="text" [(ngModel)]="inputWordValue" (input)="uniqueVal()" (change)="changeWord($event)">
+        <input pattern="^[а-яА-Яa-zA-Z0-9_]{0,64}$" class="form-control m-font inline-block" #inputWord type="text" [(ngModel)]="inputWordValue" (input)="uniqueVal($event)" (change)="changeWord($event)">
         <span *ngIf="inputWordValue.length > 64" class="warning">Допустимо максимальное количество символов 64</span>
         <span *ngIf="errorUnique" class="warning">Запись с таким значением уже существует</span>
     </main>
