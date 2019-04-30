@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/combineLatest';
+import { BehaviorSubject ,  Observable ,  Subject } from 'rxjs';
+import { filter } from 'rxjs/operators';
+
 
 import { IBreadcrumb } from '../core/breadcrumb.interface';
 import { IDeskItem } from '../core/desk-item.interface';
@@ -38,7 +37,10 @@ export class EosBreadcrumbsService {
         this._breadcrumbs$ = new BehaviorSubject<IBreadcrumb[]>([]);
         this._eventFromBc$ = new Subject();
         this.makeBreadCrumbs();
-        _router.events.filter((e: NavigationEnd) => e instanceof NavigationEnd)
+        _router.events
+        .pipe(
+            filter((e: NavigationEnd) => e instanceof NavigationEnd)
+        )
             .subscribe(() => this.makeBreadCrumbs());
     }
 

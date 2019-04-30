@@ -72,13 +72,13 @@ export class NodeAbsoluteRight {
         }
         if (this._change.length && (this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.classif)) {
             if (node.user_cl) {
-                const index = this._change.findIndex((item: IChengeItemAbsolute) => item.user_cl);
-                if (index >= 0) {
+                const i = this._change.findIndex((item: IChengeItemAbsolute) => item.user_cl);
+                if (i >= 0) {
                     if (this._curentUser._orig['TECH_RIGHTS'] === node.data['TECH_RIGHTS']) {
-                        this._change.splice(index, 1);
+                        this._change.splice(i, 1);
                         this._checkTouched();
                     } else {
-                        this._change.splice(index, 1, node);
+                        this._change.splice(i, 1, node);
                     }
                     return;
                 }

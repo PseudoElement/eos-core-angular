@@ -10,8 +10,8 @@ import {
     NgZone
 } from '@angular/core';
 import {SortableComponent, BsModalRef, BsModalService} from 'ngx-bootstrap';
-import {Subject} from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import {Subject} from 'rxjs';
+
 
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
 import {EosDictService} from '../services/eos-dict.service';
@@ -22,6 +22,7 @@ import {ColumnSettingsComponent} from '../column-settings/column-settings.compon
 import {EosUtils} from 'eos-common/core/utils';
 import {DOCUMENT} from '@angular/common';
 import {PrjDefaultValuesComponent} from '../prj-default-values/prj-default-values.component';
+import { takeUntil } from 'rxjs/operators';
 
 const ITEM_WIDTH_FOR_NAN = 100;
 const MAX_PERCENT_WIDTH = 98;
@@ -63,7 +64,10 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         private _zone: NgZone,
     ) {
 
-        dictSrv.visibleList$.takeUntil(this.ngUnsubscribe)
+        dictSrv.visibleList$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((nodes: EosDictionaryNode[]) => {
                 if (dictSrv.currentDictionary) {
 
@@ -86,7 +90,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             });
 
         dictSrv.viewParameters$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((params: IDictionaryViewParameters) => {
                 this.params = params;
                 if (this.dictSrv.userOrdered) {
@@ -338,7 +344,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     openNodeNavigate(backward = false): void {
-        let _idx = this.nodes.findIndex((node) => node.isSelected);
+        let _idx = this.nodes.findIndex((n) => n.isSelected);
 
         if (backward) {
             if (_idx > -1) {
@@ -355,7 +361,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         }
     }
 
-    onListScroll(evt: Event) {
+    onListScroll(evt: any) {
         let offset = -this.headerOffset;
         if (evt.srcElement) {
             offset = evt.srcElement.scrollLeft;

@@ -1,13 +1,14 @@
 import {Component, EventEmitter, OnDestroy, Output} from '@angular/core';
-import {Subject} from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/combineLatest';
+import {Subject} from 'rxjs';
+
+
 
 import {EosDictService} from '../services/eos-dict.service';
 import {EosDictionary} from '../core/eos-dictionary';
 import {COMMON_ADD_MENU, DEPARTMENT_ADD_MENU, MORE_RECORD_ACTIONS, ORGANIZ_ADD_MENU, RECORD_ACTIONS, RUBRIC_UNIQ_ADD_MENU} from '../consts/record-actions.consts';
 import {E_DICT_TYPE, E_RECORD_ACTIONS, IAction, IActionButton, IActionEvent, IDictionaryViewParameters} from 'eos-dictionaries/interfaces';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { takeUntil, combineLatest } from 'rxjs/operators';
 
 @Component({
     selector: 'eos-node-actions',
@@ -48,8 +49,10 @@ export class NodeActionsComponent implements OnDestroy {
         this._initButtons();
 
         _dictSrv.listDictionary$
-            .takeUntil(this.ngUnsubscribe)
-            .combineLatest(_dictSrv.openedNode$, _dictSrv.viewParameters$, _dictSrv.visibleList$)
+            .pipe(
+                takeUntil(this.ngUnsubscribe),
+                combineLatest(_dictSrv.openedNode$, _dictSrv.viewParameters$, _dictSrv.visibleList$)
+            )
             .subscribe(([dict, node, params, list]) => {
                 this.dictionary = dict;
                 this._visibleCount = list.length;

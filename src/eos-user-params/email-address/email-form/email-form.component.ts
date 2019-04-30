@@ -39,7 +39,7 @@ export class EmailFormComponent  implements OnInit {
             newOb['name'] = el[1];
             if ( setr.has(el[1])) {
                 newOb['check'] = false;
-            }else {
+            } else {
                 newOb['check'] = true;
             }
             newArr.push(newOb);

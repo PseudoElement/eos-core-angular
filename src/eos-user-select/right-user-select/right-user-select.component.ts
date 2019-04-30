@@ -1,12 +1,15 @@
 import { Component, OnInit, OnDestroy} from '@angular/core';
+import { Router } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 // import {EosSandwichService} from 'eos-dictionaries/services/eos-sandwich.service';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { USER_CL, DEPARTMENT, USER_PARMS } from 'eos-rest';
-import { Subject } from 'rxjs/Subject';
 import {DELO_BLOB} from 'eos-rest/interfaces/structures';
 import { RECENT_URL } from 'app/consts/common.consts';
 import { EosStorageService } from 'app/services/eos-storage.service';
-import { Router } from '@angular/router';
 
 @Component({
     selector: 'eos-right-user-select',
@@ -51,7 +54,9 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         //     });
 
         this._selectedUser.changerUser
-            .takeUntil(this.destroySubsriber)
+            .pipe(
+                takeUntil(this.destroySubsriber)
+            )
             .subscribe(currentUser => {
                 this._storageSrv.setItem('selected_user_save', currentUser, false);
                 this.CurrentUserForShowTemplate  = currentUser;
@@ -77,7 +82,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         if ( currentUser['data']['DUE_DEP'] !== null) {
             const due =  currentUser['data']['DUE_DEP'];
                 this.getInfo(isn, due);
-            }else {
+            } else {
                 this.getInfo(isn);
                 this.showDep = false;
             }
@@ -120,7 +125,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
                 this.urlPhoto =  this.createUrlRoot(res[0]);
                 });
             }
-           }else {
+           } else {
             this.DueInfo = null;
             this.showDep = false;
            }
@@ -149,7 +154,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         });
         if (role[0].PARM_VALUE) {
              return role[0].PARM_VALUE;
-        }else {
+        } else {
             return 'Не указана';
         }
     }
@@ -164,12 +169,12 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         } else {
             if (delo) {
                 this.fillDeloField(true, false, false, false);
-            }else if (delo_deloWeb) {
+            } else if (delo_deloWeb) {
                 this.fillDeloField(false, true, false, false);
-            }else if (!delo_deloWeb && deloWeb) {
+            } else if (!delo_deloWeb && deloWeb) {
                 if (+split[1] && !+split[27] && !+split[0]) {
                     this.fillDeloField(false, false, true, false);
-                }else if (!+split[1] && +split[27] && !+split[0]) {
+                } else if (!+split[1] && +split[27] && !+split[0]) {
                     this.fillDeloField(false, false, false, true);
                 }
             }

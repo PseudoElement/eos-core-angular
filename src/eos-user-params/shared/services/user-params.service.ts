@@ -3,10 +3,9 @@ import { UserParamApiSrv } from './user-params-api.service';
 import { USER_CL, DEPARTMENT, PipRX, IEnt } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IParamUserCl, IUserSetChanges } from '../intrfaces/user-parm.intterfaces';
-import { Subject } from 'rxjs/Subject';
+import { Subject ,  Observable } from 'rxjs';
 import { IMessage } from 'eos-common/interfaces';
 import { ALL_ROWS } from 'eos-rest/core/consts';
-import { Observable } from 'rxjs/Observable';
 import { EosStorageService } from 'app/services/eos-storage.service';
 
 @Injectable()

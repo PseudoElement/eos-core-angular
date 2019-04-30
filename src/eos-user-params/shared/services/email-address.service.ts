@@ -175,7 +175,7 @@ export class EmailAddressService {
                 arrWeigth.push(el.WEIGHT);
             });
             maxWeigth = Math.max.apply(null, arrWeigth);
-        }else {
+        } else {
             maxWeigth = 1;
         }
         return maxWeigth;

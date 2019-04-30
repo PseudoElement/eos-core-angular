@@ -1,13 +1,15 @@
-﻿import { Injectable, Optional } from '@angular/core';
+
+import {throwError as observableThrowError,  Observable, of } from 'rxjs';
+import { map, catchError, mergeMap, reduce } from 'rxjs/operators';
+import { Injectable, Optional } from '@angular/core';
 import { Http, Headers, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/reduce';
+
+
+
+
+
+
+
 
 import { ApiCfg } from '../core/api-cfg';
 import { ALL_ROWS, HTTP_OPTIONS, BATCH_BOUNDARY, CHANGESET_BOUNDARY } from '../core/consts';
@@ -189,39 +191,49 @@ export class PipRX extends PipeUtils {
             })
         });
 
-        const rl = Observable.of(...urls).mergeMap(url => {
-            return this.http
-                .get(url, _options)
-                .map((r: Response) => {
-                    try {
-                        return this.nativeParser(r.json());
-                    } catch (e) {
-                        throw new RestError({ odataErrors: [e], _request: req, _response: r });
-                        // return this.errorService.errorHandler({ odataErrors: [e], _request: req, _response: r });
-                    }
-                })
-                .catch(this.httpErrorHandler);
-            /*
-            (err, caught) => {
-                if (err instanceof RestError) {
-                    return Observable.throw(err);
-                } else {
-                    return Observable.throw(new RestError({ http: err, _request: req }));
-                }
-                // return [];
-            });
-            */
-        });
+        const rl = of(...urls)
+        .pipe(
+            mergeMap(url => {
+                return this.http
+                    .get(url, _options)
+                    .pipe(
+                        map((r: Response) => {
+                            try {
+                                return this.nativeParser(r.json());
+                            } catch (e) {
+                                throw new RestError({ odataErrors: [e], _request: req, _response: r });
+                                // return this.errorService.errorHandler({ odataErrors: [e], _request: req, _response: r });
+                            }
+                        }),
+                        catchError(this.httpErrorHandler)
+                    );
 
-        return rl.reduce((acc: T[], v: T[]) => {
-            acc.push(...v);
-            return acc;
-        });
+                /*
+                (err, caught) => {
+                    if (err instanceof RestError) {
+                        return Observable.throw(err);
+                    } else {
+                        return Observable.throw(new RestError({ http: err, _request: req }));
+                    }
+                    // return [];
+                });
+                */
+            })
+
+        );
+
+        return rl
+        .pipe(
+            reduce((acc: T[], v: T[]) => {
+                acc.push(...v);
+                return acc;
+            })
+        );
     }
 
     private _batch(changeSet: any[], vc: string): Observable<any> {
         if (changeSet.length === 0) {
-            return Observable.of([]);
+            return of([]);
         }
 
         const _options = Object.assign({}, this._options, {
@@ -237,17 +249,19 @@ export class PipRX extends PipeUtils {
         // console.log(this._cfg.dataSrv + '$batch?' + vc, d, _options);
         return this.http
             .post(this._cfg.dataApiUrl + '$batch?' + vc, d, _options)
-            .map((r) => {
-                // console.log('response', r);
-                const answer: any[] = [];
-                const e = this.parseBatchResponse(r, answer);
-                if (e) {
-                    throw new RestError({ odataErrors: e });
-                    // return this.errorService.errorHandler({ odataErrors: e });
-                }
-                return answer;
-            })
-            .catch(this.httpErrorHandler);
+            .pipe(
+                map((r) => {
+                    // console.log('response', r);
+                    const answer: any[] = [];
+                    const e = this.parseBatchResponse(r, answer);
+                    if (e) {
+                        throw new RestError({ odataErrors: e });
+                        // return this.errorService.errorHandler({ odataErrors: e });
+                    }
+                    return answer;
+                }),
+                catchError(this.httpErrorHandler)
+            );
     }
 
     private buildBatch(changeSets: any[]) {
@@ -306,9 +320,9 @@ export class PipRX extends PipeUtils {
     }
     private httpErrorHandler(error) {
         if (error instanceof RestError) {
-            return Observable.throw(error);
+            return observableThrowError(error);
         } else {
-            return Observable.throw(new RestError({ http: error }));
+            return observableThrowError(new RestError({ http: error }));
         }
     }
 }

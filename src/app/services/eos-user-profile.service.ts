@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject ,  Observable } from 'rxjs';
 
 import { AuthService } from '../../eos-rest/services/auth.service';
 import { AUTH_REQUIRED, SESSION_CLOSED } from '../consts/messages.consts';
@@ -19,7 +18,7 @@ export class EosUserProfileService implements IUserProfile {
     photoUrl?: string;
     settings: ISettingsItem[];
     private _user: USER_CL;
-    private _params: SYS_PARMS;
+    // private _params: SYS_PARMS;
 
     private _isAuthorized: boolean;
 
@@ -169,7 +168,7 @@ export class EosUserProfileService implements IUserProfile {
     private _setUser(user: USER_CL, params: SYS_PARMS) {
         // console.log('_setUser', user, params);
         this._user = user;
-        this._params = params;
+        // this._params = params;
         this._storageSrv.init(this.userId);
     }
 
@@ -185,7 +184,7 @@ export class EosUserProfileService implements IUserProfile {
 
     private _logout(silent = false) {
         this._user = null;
-        this._params = null;
+        // this._params = null;
         this._setAuth(false);
         if (!silent) {
             this._msgSrv.addNewMessage(SESSION_CLOSED);

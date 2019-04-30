@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 // import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 import {PipRX} from 'eos-rest/services/pipRX.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 @Injectable()

@@ -2,7 +2,7 @@ import { Input, Injector, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { EosDictService } from '../services/eos-dict.service';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { NOT_EMPTY_STRING } from '../consts/input-validation';
 import { IDynamicInputOptions } from 'eos-common/dynamic-form-input/dynamic-input.component';
 

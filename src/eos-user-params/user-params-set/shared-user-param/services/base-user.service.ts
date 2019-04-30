@@ -1,12 +1,15 @@
 import { OnDestroy, OnInit, Injectable, Injector, Output, Input, EventEmitter } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Router} from '@angular/router';
+
+import { Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
 import { E_FIELD_TYPE, IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
 import { UserParamApiSrv } from '../../../shared/services/user-params-api.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { Subscription } from 'rxjs/Rx';
 import { UserParamsDescriptorSrv } from '../../../shared/services/user-params-descriptor.service';
 import { EosUtils } from 'eos-common/core/utils';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
@@ -101,7 +104,9 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     subscribeChangeForm() {
         this.subscriptions.push(
             this.form.valueChanges
-                .debounceTime(200)
+                .pipe(
+                    debounceTime(200)
+                )
                 .subscribe(newVal => {
                     let changed = false;
                     Object.keys(newVal).forEach(path => {

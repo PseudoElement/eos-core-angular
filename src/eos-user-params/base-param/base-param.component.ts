@@ -1,13 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { DEPARTMENT } from 'eos-rest';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { BASE_PARAM_INPUTS, BASE_PARAM_CONTROL_INPUT, BASE_PARAM_ACCESS_INPUT } from 'eos-user-params/shared/consts/base-param.consts';
-import { FormGroup } from '@angular/forms';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { BaseParamCurentDescriptor } from './shared/base-param-curent.descriptor';
-import { Subject } from 'rxjs/Subject';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { ALL_ROWS } from 'eos-rest/core/consts';
@@ -15,7 +19,6 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 // import { IMessage } from 'eos-common/interfaces';
 // import { RestError } from 'eos-rest/core/rest-error';
 import { ErrorHelperServices } from '../shared/services/helper-error.services';
-import { Router } from '@angular/router';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { NavParamService } from 'app/services/nav-param.service';
 @Component({
@@ -78,7 +81,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._subscribeControls();
         this._userParamSrv
             .saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userParamSrv.submitSave = this.submit();
             });

@@ -1,15 +1,18 @@
 import { FormGroup } from '@angular/forms';
-import { IBaseParameters } from './interfaces/parameters.interfaces';
 import { Output, EventEmitter, OnDestroy, OnInit, Input, Injector } from '@angular/core';
-import { Subscription } from 'rxjs/Rx';
-import { ParamApiSrv } from './service/parameters-api.service';
+
+import { Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
+import { ParamApiSrv } from './service/parameters-api.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { EosUtils } from 'eos-common/core/utils';
 import { ParamDescriptorSrv } from './service/param-descriptor.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from './consts/eos-parameters.const';
+import { EosUtils } from 'eos-common/core/utils';
+import { IBaseParameters } from './interfaces/parameters.interfaces';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from './consts/eos-parameters.const';
 
 export class BaseParamComponent implements OnDestroy, OnInit {
     @Input() btnDisabled;
@@ -71,7 +74,9 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     subscribeChangeForm() {
         this.subscriptions.push(
             this.form.valueChanges
-                .debounceTime(200)
+                .pipe(
+                    debounceTime(200)
+                )
                 .subscribe(newVal => {
                     let changed = false;
                     Object.keys(newVal).forEach(path => {

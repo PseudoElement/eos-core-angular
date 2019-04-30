@@ -1,12 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { FormHelperService } from '../../shared/services/form-helper.services';
-import { Subject } from 'rxjs/Subject';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { CABINETS_USER } from '../shared-user-param/consts/cabinets.consts';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { Router } from '@angular/router';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 import { PipRX, USER_PARMS } from 'eos-rest';
@@ -59,7 +62,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     ) {}
     async ngOnInit() {
         this._userParamsSetSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });

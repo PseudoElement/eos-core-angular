@@ -1,7 +1,7 @@
 import {Component, Output, Input, EventEmitter, ViewChild, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { EosUtils } from 'eos-common/core/utils';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from '../services/eos-data-convert.service';

@@ -2,7 +2,7 @@ import { PipRX } from 'eos-rest';
 import { Component, OnDestroy, OnInit, OnChanges, NgZone, EventEmitter, Output } from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
 import { FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { EosDictionary } from 'eos-dictionaries/core/eos-dictionary';

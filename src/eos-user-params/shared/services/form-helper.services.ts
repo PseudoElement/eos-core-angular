@@ -161,7 +161,7 @@ export class FormHelperService {
                 obj[field.key] = userData[field.key];
             } else if (field.type === 'string') {
                 obj[field.key] = userData[field.key] === (null || '' || undefined) ? '' : userData[field.key];
-            }else if (field.type === 'boolean') {
+            } else if (field.type === 'boolean') {
                 if (!isNaN(userData[field.key])) {
                     this._fieldsTypeParce[field.key] = 'number';
                     if (+userData[field.key] === 0) {
@@ -195,7 +195,7 @@ export class FormHelperService {
                 } else {
                     if (String(userData['DEF_SEARCH_CITIZEN'].charAt(field.keyPosition)) === '0') {
                         obj[field.key] = false;
-                    }else {
+                    } else {
                         obj[field.key] = true;
                     }
                 }

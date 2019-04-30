@@ -1,15 +1,19 @@
 import { Component, TemplateRef, OnDestroy, OnInit } from '@angular/core';
-import { UserParamsService } from '../../shared/services/user-params.service';
 import { Router } from '@angular/router';
-import { ELECTRONIC_SIGNATURE } from '../shared-user-param/consts/electronic-signature';
 import { FormGroup, AbstractControl } from '@angular/forms';
+
+import { BsModalService } from 'ngx-bootstrap/modal';
+
+import { Subject } from 'rxjs';
+import { takeUntil, debounceTime } from 'rxjs/operators';
+
+import { UserParamsService } from '../../shared/services/user-params.service';
+import { ELECTRONIC_SIGNATURE } from '../shared-user-param/consts/electronic-signature';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { FormHelperService } from '../../shared/services/form-helper.services';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE, PARM_ERROR_DB } from '../shared-user-param/consts/eos-user-params.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { Subject } from 'rxjs/Subject';
 import {ErrorHelperServices} from '../../shared/services/helper-error.services';
 @Component({
     selector: 'eos-user-param-el-signature',
@@ -32,7 +36,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     // sendFrom: string = '';
     // saveValueSendForm: string = '';
     private inputFields: any;
-    private modalRef: BsModalRef;
+    // private modalRef: BsModalRef;
     private newDataForSave = new Map();
     private mapBtnName = new Map([
         ['CERT_WEB_STORES', 'Хранилища сертификатов для сервера удаленной проверки'],
@@ -60,7 +64,9 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     }
     async ngOnInit() {
         this._userSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userSrv.submitSave = this.submit();
             });
@@ -90,7 +96,9 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     subscribeForm() {
         let count_error = 0;
         this.form.valueChanges
-            .debounceTime(200)
+            .pipe(
+                debounceTime(200)
+            )
             .subscribe(newVal => {
                 Object.keys(newVal).forEach(val => {
                     if (!this.getFactValueFuck(newVal[val], val)) {
@@ -113,7 +121,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         this.nameButton = this.mapBtnName.get(controlName);
         this.control = this.form.controls[controlName];
         this.controlName = controlName;
-        this.modalRef = this._modalService.show(template, { class: 'modal-mode' });
+        /* this.modalRef =  */this._modalService.show(template, { class: 'modal-mode' });
     }
 
     getFactValueFuck(newValue: any, val: string): boolean {

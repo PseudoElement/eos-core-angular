@@ -2,8 +2,8 @@ import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { AdvCardRKEditComponent } from './../adv-card/adv-card-rk.component';
 import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Subject} from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import {Subject} from 'rxjs';
+
 
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 
@@ -47,6 +47,7 @@ import {CounterNpEditComponent, E_COUNTER_TYPE} from '../counter-np-edit/counter
 import {CustomTreeNode} from '../tree2/custom-tree.component';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { DID_NOMENKL_CL } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -176,10 +177,16 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             }
         });
 
-        _sandwichSrv.currentDictState$.takeUntil(this.ngUnsubscribe)
+        _sandwichSrv.currentDictState$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((state: boolean[]) => this.currentState = state);
 
-        _dictSrv.dictionary$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.dictionary$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((dictionary: EosDictionary) => {
                 if (dictionary) {
                     if (this.params !== undefined) {
@@ -204,7 +211,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 }
             });
 
-        _dictSrv.listDictionary$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.listDictionary$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((dictionary: EosDictionary) => {
                 if (dictionary) {
                     this.dictMode = this._dictSrv.dictMode;
@@ -218,7 +228,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 }
             });
 
-        _dictSrv.treeNode$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.treeNode$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((node: EosDictionaryNode) => {
                 if (node) {
                     this.title = node.getTreeView().map((fld) => fld.value).join(' ');
@@ -231,18 +244,26 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 }
             });
 
-        _dictSrv.paginationConfig$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.paginationConfig$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((config: IPaginationConfig) => {
                 if (config) {
                     this.paginationConfig = config;
                 }
             });
 
-        _dictSrv.viewParameters$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.viewParameters$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((viewParameters: IDictionaryViewParameters) => this.params = viewParameters);
 
         _bcSrv._eventFromBc$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((action: IActionEvent) => this.doAction(action));
     }
 

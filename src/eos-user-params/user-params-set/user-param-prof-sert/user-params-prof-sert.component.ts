@@ -1,12 +1,15 @@
 import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
+
+import { BsModalService } from 'ngx-bootstrap/modal';
+
+import { Subject, of } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
+
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { CarmaHttpService } from 'app/services/carmaHttp.service';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, PARM_ERROR_DB, PARM_ERROR_CARMA } from '../shared-user-param/consts/eos-user-params.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 import { USER_CERT_PROFILE } from 'eos-rest/interfaces/structures';
 import {ErrorHelperServices} from '../../shared/services/helper-error.services';
 export interface Istore {
@@ -47,7 +50,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     public flagHideBtn: boolean = false;
     private DBserts: USER_CERT_PROFILE[] = [];
     private isCarma: boolean = true;
-    private modalRef: BsModalRef;
+    // private modalRef: BsModalRef;
     private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public certStoresService: CarmaHttpService,
@@ -63,7 +66,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     }
     async ngOnInit() {
         this._userSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userSrv.submitSave = this.submit(null);
             });
@@ -312,16 +317,19 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     }
 
     openCarmWindow(idSert) {
-        this.certStoresService.ShowCert(String(idSert)).catch(e => {
-            this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
-            return Observable.of(null);
-        })
-            .subscribe(() => { });
+        this.certStoresService.ShowCert(String(idSert))
+        .pipe(
+            catchError(e => {
+                this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
+                return of(null);
+            })
+        )
+        .subscribe(() => { });
     }
 
 
     chooseSertificate(template: TemplateRef<any>): void {
-        this.modalRef = this._modalService.show(template);
+        /* this.modalRef =  */this._modalService.show(template);
     }
     selectCurentListAll(item: SertInfo): void {
         if (this.selectedSertificatePopup) {

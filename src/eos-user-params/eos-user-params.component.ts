@@ -1,6 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterStateSnapshot } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { UserParamsService } from './shared/services/user-params.service';
 import { NavParamService } from 'app/services/nav-param.service';
 import { USER_PARAMS_LIST_NAV } from './shared/consts/user-param.consts';
@@ -33,12 +36,16 @@ export class UserParamsComponent implements OnDestroy, OnInit {
 
     ) {
         this._route.params
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe(param => {
                 this.pageId = param['field-id'];
             });
         this._route.queryParams
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe(qParam => {
                 // this.isLoading = true;
                 if (qParam['isn_cl']) {
@@ -52,23 +59,31 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 this.isShowAccordion = true;
             });
         this._userParamService.updateUser$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe(() => {
                 this.checkTabScan();
             });
         this._userParamService.hasChanges$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe(({isChange, disableSave}: IUserSetChanges) => {
                 this._isChanged = isChange;
                 this._disableSave = disableSave;
             });
         this._navSrv.StateSandwich$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((state: boolean) => {
                 this.isShowAccordion = state;
             });
         this._navSrv.StateScanDelo
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((state: boolean) => {
                 this.setTabsSCan(state);
             });

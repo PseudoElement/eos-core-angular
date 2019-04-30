@@ -3,8 +3,7 @@ import { UserParamsService } from 'eos-user-params/shared/services/user-params.s
 import { USERCARD, DEPARTMENT, USER_CARD_DOCGROUP, DOCGROUP_CL, PipRX, IEnt } from 'eos-rest';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { FuncNum } from './funcnum.model';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
+import { Subject ,  Observable } from 'rxjs';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { _ES } from 'eos-rest/core/consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';

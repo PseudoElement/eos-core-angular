@@ -3,7 +3,7 @@ import { UserParamsService } from '../services/user-params.service';
 import { UserParamApiSrv } from './user-params-api.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ALL_ROWS } from 'eos-rest/core/consts';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import {NpUserLinks} from '../intrfaces/user-parm.intterfaces';
 @Injectable()

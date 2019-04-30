@@ -13,7 +13,7 @@ import {NumberIncrementInput} from '../../eos-common/core/inputs/number-incremen
 import {_ES} from '../../eos-rest/core/consts';
 import {BsModalRef} from 'ngx-bootstrap';
 import {VALIDATOR_TYPE, ValidatorsControl} from '../validators/validators-control';
-import {Subscription} from 'rxjs/Subscription';
+import {Subscription} from 'rxjs';
 
 const PRJ_DEFAULT_NAME = 'PRJ_DEFAULT_VALUE_List';
 const FILE_CONSTRAINT_NAME = 'DG_FILE_CONSTRAINT_List';

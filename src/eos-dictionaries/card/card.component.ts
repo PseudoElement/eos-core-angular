@@ -1,8 +1,12 @@
 import { Component, HostListener, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+// import {toNumber} from 'ngx-bootstrap/timepicker/timepicker.utils';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 
 import { CanDeactivateGuard } from '../../app/guards/can-deactivate.guard';
 import { EosStorageService } from '../../app/services/eos-storage.service';
@@ -29,7 +33,6 @@ import { LS_EDIT_CARD } from '../consts/common';
 import { CardEditComponent } from 'eos-dictionaries/card-views/card-edit.component';
 import { EosDepartmentsService } from '../services/eos-department-service';
 import {EosUtils} from '../../eos-common/core/utils';
-import {toNumber} from 'ngx-bootstrap/timepicker/timepicker.utils';
 // import { UUID } from 'angular2-uuid';
 
 export enum EDIT_CARD_MODES {
@@ -121,12 +124,15 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             this.dictionaryId = params.dictionaryId;
             this.nodeId = params.nodeId;
             this.selfLink = this._router.url;
-            tabNum = (toNumber(params.tabNum));
+            // tabNum = (toNumber(params.tabNum));
+            tabNum = +params.tabNum;
             this._init();
         });
 
         this._dictSrv.currentList$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((nodes) => {
                 this.nodes = nodes.filter((node) => !node.isDeleted);
             });

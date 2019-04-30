@@ -1,15 +1,19 @@
 import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
-import { EmailAddressService } from '../shared/services/email-address.service';
+import { FormGroup, FormControl, FormArray } from '@angular/forms';
+
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { EmailAddressService } from '../shared/services/email-address.service';
 import { UserParamsService } from '../shared/services/user-params.service';
-import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { NTFY_USER_EMAIL } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
-import { Subject } from 'rxjs/Subject';
 import { ErrorHelperServices } from '../shared/services/helper-error.services';
 @Component({
     selector: 'eos-params-email-address',
@@ -54,7 +58,9 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
 
     async ngOnInit() {
         this._userServices.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userServices.submitSave = this.saveAllForm(null);
             });

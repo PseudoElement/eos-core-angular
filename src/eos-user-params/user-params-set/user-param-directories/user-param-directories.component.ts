@@ -1,10 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { DIRECTORIES_USER } from '../../user-params-set/shared-user-param/consts/directories.consts';
 import { UserParamsService } from '../../shared/services/user-params.service';
-import { Subject } from 'rxjs/Subject';
 import { FormHelperService } from '../../shared/services/form-helper.services';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { PipRX, USER_PARMS } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -42,7 +45,9 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
         this.flagEdit = false;
         this.btnDisable = true;
         this._userParamsSetSr.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userParamsSetSr.submitSave = this.submit();
             });

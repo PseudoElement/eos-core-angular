@@ -1,11 +1,14 @@
 import { Injectable, Injector } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+
+import { Subject } from 'rxjs';
+import { takeUntil, debounceTime } from 'rxjs/operators';
+
 import { EosUtils } from 'eos-common/core/utils';
 import { BaseUserSrv } from './base-user.service';
-import { FormGroup } from '@angular/forms';
 import {  PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../consts/eos-user-params.const';
 // import { E_FIELD_TYPE } from '../../../shared/intrfaces/user-params.interfaces';
 import { DIRECTORIES_USER } from '../consts/directories.consts';
-import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class UserParamDirectoriesSrv extends BaseUserSrv {
@@ -29,7 +32,9 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
             this.editMode();
         });
             this._userParamsSetSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave =  this.submit();
             });
@@ -37,7 +42,9 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
     subscribeChangeForm() {
         this.subscriptions.push(
             this.form.valueChanges
-                .debounceTime(200)
+                .pipe(
+                    debounceTime(200)
+                )
                 .subscribe(newVal => {
                     let changed = false;
                     Object.keys(newVal).forEach(path => {
@@ -69,7 +76,9 @@ export class UserParamDirectoriesSrv extends BaseUserSrv {
         this.formAttach = this.inputCtrlSrv.toFormGroup(this.inputAttach);
         this.subscriptions.push(
             this.formAttach.valueChanges
-                .debounceTime(200)
+                .pipe(
+                    debounceTime(200)
+                )
                 .subscribe(newVal => {
                     let changed = false;
                     Object.keys(newVal).forEach(path => {

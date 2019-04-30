@@ -4,11 +4,12 @@ import { EosBreadcrumbsService } from '../services/eos-breadcrumbs.service';
 import { EosDictService } from '../../eos-dictionaries/services/eos-dict.service';
 import { IBreadcrumb } from '../core/breadcrumb.interface';
 import { EosSandwichService } from '../../eos-dictionaries/services/eos-sandwich.service';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
+import { takeUntil, filter } from 'rxjs/operators';
 import { RECORD_ACTIONS_EDIT,
     RECORD_ACTIONS_NAVIGATION_UP,
     RECORD_ACTIONS_NAVIGATION_DOWN } from '../../eos-dictionaries/consts/record-actions.consts';
-import 'rxjs/add/operator/takeUntil';
+
 import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import {RtUserSelectService} from '../../eos-user-select/shered/services/rt-user-select.service';
 @Component({
@@ -42,27 +43,38 @@ export class BreadcrumbsComponent implements OnDestroy {
         private _dictSrv: EosDictService,
         private _rtSrv: RtUserSelectService,
     ) {
-        _breadcrumbsSrv.breadcrumbs$.takeUntil(this.ngUnsubscribe).
-            subscribe((bc: IBreadcrumb[]) => this.breadcrumbs = bc);
+        _breadcrumbsSrv.breadcrumbs$
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe((bc: IBreadcrumb[]) => this.breadcrumbs = bc);
         this._update();
 
         this._router.events
-            .filter((evt) => evt instanceof NavigationEnd)
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                filter((evt) => evt instanceof NavigationEnd),
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe(() => this._update());
 
         this._sandwichSrv.currentDictState$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((state) => this.infoOpened = state[1]);
 
         this._dictSrv.openedNode$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((n) => {
                 this.hasInfoData = !!n;
                 this._isEditEnabled = this._calcisEditable(n);
             });
         this._rtSrv.setFlagBtnHeader
-        .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
         .subscribe(flag => {
             this.hasInfoData = flag;
             this._isEditEnabled = flag;

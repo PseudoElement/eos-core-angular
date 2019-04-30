@@ -1,14 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { PipRX } from 'eos-rest';
 import { RigthsCabinetsServices } from 'eos-user-params/shared/services/rigths-cabinets.services';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { USERCARD } from '../../../eos-rest/interfaces/structures';
-import { Router } from '@angular/router';
 import { CardsClass, Cabinets } from '../rights-cabinets/helpers/cards-class';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_CARDINDEX } from 'app/consts/query-classif.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { Subject } from 'rxjs/Subject';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 @Component({
     selector: 'eos-card-files',
@@ -50,7 +53,9 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         this.userId = this._userSrv.userContextId;
 
         this._userSrv.saveData$
-        .takeUntil(this._ngUnsubscribe)
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
         .subscribe(() => {
             this._userSrv.submitSave = this.submit(event);
         });

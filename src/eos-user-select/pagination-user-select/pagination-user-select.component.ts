@@ -1,5 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { EosStorageService } from '../../app/services/eos-storage.service';
 import { PAGES_SELECT, LS_PAGE_LENGTH } from 'eos-user-select/shered/consts/pagination-user-select.consts';
 import { IPaginationUserConfig } from 'eos-user-select/shered/consts/pagination-user-select.interfaces';
@@ -26,7 +29,10 @@ export class UserSelectPaginationComponent {
         private _storageSrv: EosStorageService,
     ) {
 
-        _user_pagination.paginationConfig$.takeUntil(this.ngUnsubscribe)
+        _user_pagination.paginationConfig$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((config: IPaginationUserConfig) => {
                 if (config) {
                     this.config = config;

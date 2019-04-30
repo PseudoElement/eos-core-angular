@@ -1,7 +1,11 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
+import { FormGroup } from '@angular/forms';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
-import { FormGroup } from '@angular/forms';
 import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import {FormHelperService} from '../shared/services/form-helper.services';
@@ -10,8 +14,8 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 // import { IMessage } from 'eos-common/interfaces';
 // import { RestError } from 'eos-rest/core/rest-error';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
-import { Subject } from 'rxjs/Subject';
 import {ErrorHelperServices} from '../shared/services/helper-error.services';
+
 const BASE_PARAM_INPUTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
@@ -80,7 +84,9 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
             this._errorSrv.errorHandler(error);
         });
         this._userParamSrv.saveData$
-        .takeUntil(this._ngUnsubscribe)
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
         .subscribe(() => {
             this._userParamSrv.submitSave =  this.submit(null);
         });

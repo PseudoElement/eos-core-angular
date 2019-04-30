@@ -1,5 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { PipRX } from 'eos-rest';
 import { RemasterService } from '../shared-user-param/services/remaster-service';
@@ -44,7 +47,11 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
 
     ) {}
     async ngOnInit() {
-        this._userSrv.saveData$.takeUntil(this._ngUnsubscribe).subscribe(() => {
+        this._userSrv.saveData$
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe(() => {
             this._userSrv.submitSave = this.submit(null);
         });
 

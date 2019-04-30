@@ -1,4 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { LimitedAccesseService } from '../../shared/services/limited-access.service';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -7,8 +12,6 @@ import { OPEN_CLASSIF_DOCGR } from '../../../eos-user-select/shered/consts/creat
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { IMessage } from 'eos-common/interfaces';
-import { Subject } from 'rxjs/Subject';
-import { Router } from '@angular/router';
 import { DOCGROUP_CL } from 'eos-rest';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 @Component({
@@ -72,7 +75,9 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.flagLinks = true;
         this.bacgHeader = false;
         this._userServices.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userServices.submitSave = this.saveAllForm();
             });

@@ -1,7 +1,10 @@
 import { Injectable, Injector } from '@angular/core';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { BaseUserSrv } from './base-user.service';
 import { VISUALIZATION_USER } from '../consts/visualization.consts';
-import { Subject } from 'rxjs/Subject';
 import { EosUtils } from 'eos-common/core/utils';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../consts/eos-user-params.const';
 @Injectable()
@@ -13,7 +16,9 @@ export class UserParamVisualizationSrv extends BaseUserSrv {
         this.init();
         this.editMode();
         this._userParamsSetSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });

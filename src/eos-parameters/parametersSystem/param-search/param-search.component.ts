@@ -1,7 +1,9 @@
+import { Component, Injector } from '@angular/core';
+import { debounceTime } from 'rxjs/operators';
+
 import { PARM_CANCEL_CHANGE } from './../shared/consts/eos-parameters.const';
 import { SEARCH_PARAM } from './../shared/consts/search-consts';
 import { BaseParamComponent } from './../shared/base-param.component';
-import { Component, Injector } from '@angular/core';
 
 @Component({
     selector: 'eos-param-search',
@@ -35,7 +37,9 @@ export class ParamSearchComponent extends BaseParamComponent {
     afterInitRC() {
         this.subscriptions.push(
             this.form.controls['rec.FULLTEXT_EXTENSIONS'].valueChanges
-            .debounceTime(300)
+            .pipe(
+                debounceTime(300)
+            )
             .subscribe(value => {
                 if (this.changeByPath('rec.FULLTEXT_EXTENSIONS', value)) {
                     this.form.controls['rec.FULLTEXT_EXTENSIONS'].patchValue(value.toUpperCase());

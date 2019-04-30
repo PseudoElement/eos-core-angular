@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { OTHER_USER_TRANSFER } from '../../shared-user-param/consts/other.consts';
 import { UserParamsService } from '../../../shared/services/user-params.service';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { FormHelperService } from '../../../shared/services/form-helper.services';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup } from '@angular/forms';

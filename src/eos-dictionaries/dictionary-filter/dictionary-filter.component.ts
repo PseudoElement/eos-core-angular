@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { EosDictService } from '../services/eos-dict.service';
 import { E_DICT_TYPE, IRecordModeDescription } from 'eos-dictionaries/interfaces';

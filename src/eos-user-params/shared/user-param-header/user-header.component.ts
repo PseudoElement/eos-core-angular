@@ -8,7 +8,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 export class UserParamHeaderComponent {
     @Input() title: string;
     @Input() statusBtnSub;
-    @Input() isDefault? = true;
+    @Input() isDefault ? = true;
     @Output() submitForm = new EventEmitter();
     @Output() cancelForm = new EventEmitter();
     @Output() defaultForm = new EventEmitter();

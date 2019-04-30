@@ -1,6 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
 import { UserSelectNode } from './user-node-select';
@@ -66,12 +69,16 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.helpersClass = new HelpersSortFunctions();
         this._apiSrv.initSort();
         this._route.params
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe(param => {
                 this.initView(param['nodeId']);
             });
         this._pagSrv.NodeList$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((data) => {
                 this.flagScan = null;
                 this.flagChecked = null;
@@ -85,22 +92,34 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             });
 
         this._treeSrv.changeListUsers$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe(r => {
                 this.initView();
             });
         this._sandwichSrv.currentDictState$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((state: boolean[]) => {
                 this.currentState = state;
             });
 
-        this.rtUserService.subjectScan.takeUntil(this.ngUnsubscribe).subscribe(flagBtnScan => {
+        this.rtUserService.subjectScan
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe(flagBtnScan => {
             this.flagScan = !flagBtnScan;
             this.buttons.buttons[5].disabled = this.flagScan;
             this.buttons.moreButtons[7].disabled = this.flagScan;
         });
-        this._breadSrv._eventFromBc$.takeUntil(this.ngUnsubscribe).subscribe((type: TypeBread) => {
+        this._breadSrv._eventFromBc$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe((type: TypeBread) => {
             if (type.action !== 1) {
                 this.changeCurentSelectedUser(type);
             } else {

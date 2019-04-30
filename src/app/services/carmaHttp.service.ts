@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Http, RequestOptionsArgs, Headers } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/mergeMap';
+import { Observable } from 'rxjs';
+import { mergeMap, map, catchError } from 'rxjs/operators';
+
 
 export interface Istore {
     Location: string;
@@ -241,14 +242,28 @@ export class CarmaHttpService extends CarmaConnectionInterface {
 
     checkService(): Observable<boolean> {
         return this._testConnection()
-        .mergeMap(() => {
-            return this._getServiceInfo()
-            .map((info: IServiceInfo) => { // "carmaVersion": "56.0.145"
-                this.ServiceInfo = info;
-                return true;
-            });
-        });
+            .pipe(
+                mergeMap(() => this._getServiceInfo()),
+                map((info: IServiceInfo) => { // "carmaVersion": "56.0.145"
+                    this.ServiceInfo = info;
+                    return true;
+                })
+            );
     }
+    // checkService(): Observable<boolean> {
+    //     return this._testConnection()
+    //         .pipe(
+    //             mergeMap(() => {
+    //                 return this._getServiceInfo()
+    //                 .pipe(
+    //                     map((info: IServiceInfo) => { // "carmaVersion": "56.0.145"
+    //                         this.ServiceInfo = info;
+    //                         return true;
+    //                     })
+    //                 );
+    //             })
+    //         );
+    // }
     SetCurrentStores(stores: Istore[]) {
         this.stores = stores;
         this.storesConfig = this._make_stores(stores);
@@ -270,13 +285,16 @@ export class CarmaHttpService extends CarmaConnectionInterface {
                 address: address,
                 name: name
             }
-        }).map(data => {
-            if (data.errorMessage === 'DONE') {
-                return data.certificates;
-            } else {
-                throw new CarmaError(`Ошибка ${data.errorMessage}`);
-            }
-        });
+        })
+        .pipe(
+            map(data => {
+                if (data.errorMessage === 'DONE') {
+                    return data.certificates;
+                } else {
+                    throw new CarmaError(`Ошибка ${data.errorMessage}`);
+                }
+            })
+        );
     }
 
     EnumStores(location, address): Observable<string[]> {
@@ -287,13 +305,16 @@ export class CarmaHttpService extends CarmaConnectionInterface {
                 location: location,
                 address: address
             }
-        }).map(data => {
-            if (data.errorMessage === 'DONE') {
-                return data.stores;
-            } else {
-                throw new CarmaError(`Ошибка ${data.errorMessage}`);
-            }
-        });
+        })
+        .pipe(
+            map(data => {
+                if (data.errorMessage === 'DONE') {
+                    return data.stores;
+                } else {
+                    throw new CarmaError(`Ошибка ${data.errorMessage}`);
+                }
+            })
+        );
     }
     ShowCert(certId: string) {
         return this._request({
@@ -318,7 +339,7 @@ export class CarmaHttpService extends CarmaConnectionInterface {
             }
             rec.currentStores = this.storesConfig;
         }
-        return this.http.post(this.serverAddress, rec, this.carmaOptions).map(res => res.json());
+        return this.http.post(this.serverAddress, rec, this.carmaOptions)/* .map(res => res.json()) */;
     }
 
     private _make_stores(stores: Istore[]) {
@@ -346,17 +367,21 @@ export class CarmaHttpService extends CarmaConnectionInterface {
         return this._request({
             mode: this.mode_testconn
         })
-        .catch(() => {
-            throw new CarmaError('Сервис "КАРМА" не доступен, убедитесь что "КАРМА" установлена и используется верный порт');
-        })
-        .map((data) => {
-            if (data.errorCode !== 0 || data.errorMessage !== 'DONE') {
-                throw  new CarmaError('В установленном Сервере "КАРМА" произошла ошибка!', 1);
-            }
-        });
+        .pipe(
+            catchError(() => {
+                throw new CarmaError('Сервис "КАРМА" не доступен, убедитесь что "КАРМА" установлена и используется верный порт');
+            }),
+            map((data) => {
+                if (data.errorCode !== 0 || data.errorMessage !== 'DONE') {
+                    throw  new CarmaError('В установленном Сервере "КАРМА" произошла ошибка!', 1);
+                }
+            })
+        );
     }
     private _getServiceInfo(): Observable<IServiceInfo> {
         return this.http.get(this.serverAddress, this.carmaOptions)
-       .map(res => res.json());
+            .pipe(
+                map(res => res.json())
+            );
    }
 }

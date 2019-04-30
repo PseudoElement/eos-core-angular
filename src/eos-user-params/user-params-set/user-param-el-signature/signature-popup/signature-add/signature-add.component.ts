@@ -1,6 +1,9 @@
 import {Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Observable } from 'rxjs/Observable';
+
+import { of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+
 import { CertStoresService } from '../../../../../eos-parameters/parametersSystem/param-web/cert-stores.service';
 import { PARM_ERR_OPEN_CERT_STORES } from '../../../../../eos-parameters/parametersSystem/shared/consts/eos-parameters.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -43,48 +46,22 @@ export class SignatureAddComponent implements OnInit {
     searchStore() {
         if (this.certSystemStore === 'sslm' || this.certSystemStore === 'sscu') {
             this.listStores$ = this.certStoresService.showListStores(this.certSystemStore, this.certSystemAddress)
-                .catch(e => {
-                    this.msgSrv.addNewMessage(PARM_ERR_OPEN_CERT_STORES);
-                    return Observable.of(null);
-                })
-                .map(data => {
-                    const listStores = [];
-                    if (data && data.length) {
-                        data.forEach(item => {
-                            const arr = item.split('\\');
-                            listStores.push({
-                                title: arr[arr.length - 1],
-                                name: arr[arr.length - 1],
-                                selected: false,
-                                location: this.certSystemStore === 'sslm' ? 'ssml' : 'sscu',
-                                address: arr[arr.length - 2] || ''
-                            });
-                        });
-                    }
-                    this.listStores = listStores;
-                    if (this.listStores.length === 0) {
-                        this.currentSelectNode = null;
-                    }
-                    return data;
-                });
-            }
-            if (this.certSystemStore === 'sss') {
-                this.listStores$ = this.certStoresService.showListStores(this.certSystemStore, this.certSystemAddress)
-                    .catch(e => {
+                .pipe(
+                    catchError(e => {
                         this.msgSrv.addNewMessage(PARM_ERR_OPEN_CERT_STORES);
-                        return Observable.of(null);
-                    })
-                    .map(data => {
+                        return of(null);
+                    }),
+                    map(data => {
                         const listStores = [];
                         if (data && data.length) {
                             data.forEach(item => {
                                 const arr = item.split('\\');
                                 listStores.push({
                                     title: arr[arr.length - 1],
-                                    name: item,
+                                    name: arr[arr.length - 1],
                                     selected: false,
-                                    location: 'sss',
-                                    address: arr[arr.length - 2]
+                                    location: this.certSystemStore === 'sslm' ? 'ssml' : 'sscu',
+                                    address: arr[arr.length - 2] || ''
                                 });
                             });
                         }
@@ -93,7 +70,37 @@ export class SignatureAddComponent implements OnInit {
                             this.currentSelectNode = null;
                         }
                         return data;
-                    });
+                    })
+                );
+            }
+            if (this.certSystemStore === 'sss') {
+                this.listStores$ = this.certStoresService.showListStores(this.certSystemStore, this.certSystemAddress)
+                    .pipe(
+                        catchError(e => {
+                            this.msgSrv.addNewMessage(PARM_ERR_OPEN_CERT_STORES);
+                            return of(null);
+                        }),
+                        map(data => {
+                            const listStores = [];
+                            if (data && data.length) {
+                                data.forEach(item => {
+                                    const arr = item.split('\\');
+                                    listStores.push({
+                                        title: arr[arr.length - 1],
+                                        name: item,
+                                        selected: false,
+                                        location: 'sss',
+                                        address: arr[arr.length - 2]
+                                    });
+                                });
+                            }
+                            this.listStores = listStores;
+                            if (this.listStores.length === 0) {
+                                this.currentSelectNode = null;
+                            }
+                            return data;
+                        })
+                    );
         }
     }
     selectNode(list: IListStores) {

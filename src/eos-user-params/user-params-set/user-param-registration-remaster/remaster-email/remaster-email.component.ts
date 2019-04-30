@@ -1,12 +1,15 @@
 import {Component, OnInit, Input, Output, EventEmitter, OnDestroy} from '@angular/core';
+import {FormGroup} from '@angular/forms';
+
+import {Subject} from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import {REGISTRATION_REMASTER_USER, REGISTRATION_MAILRESIVE} from '../../../user-params-set/shared-user-param/consts/remaster-email.const';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import {IFieldDescriptor} from '../../../shared/intrfaces/user-params.interfaces';
 import {FormHelperService} from '../../../shared/services/form-helper.services';
-import {FormGroup} from '@angular/forms';
 import {RemasterService} from '../../shared-user-param/services/remaster-service';
-import {Subject} from 'rxjs/Subject';
 
 
 
@@ -76,19 +79,35 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         private inputCtrlSrv: InputControlService,
         private _RemasterService: RemasterService
         ) {
-        this._RemasterService.cancelEmit.takeUntil(this.ngUnsubscribe).subscribe(() => {
+        this._RemasterService.cancelEmit
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe(() => {
             this.cancel();
         });
-        this._RemasterService.defaultEmit.takeUntil(this.ngUnsubscribe).subscribe(() => {
+        this._RemasterService.defaultEmit
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe(() => {
             this.default();
         });
-        this._RemasterService.submitEmit.takeUntil(this.ngUnsubscribe).subscribe(() => {
+        this._RemasterService.submitEmit
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe(() => {
             this.setNewValInputs();
             this.flagEdit = false;
             this.form.disable({emitEvent: false});
             this.formMailResuve.disable({emitEvent: false});
         });
-        this._RemasterService.editEmit.takeUntil(this.ngUnsubscribe).subscribe(data => {
+        this._RemasterService.editEmit
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe(data => {
             this.flagEdit = true;
             this.form.enable({emitEvent: false});
             this.formMailResuve.enable({emitEvent: false});
@@ -206,7 +225,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
                 children: [],
                 parent: null
             });
-        }else {
+        } else {
             TreeObj.forEach((item: TreeItem) => {
                 this.checkItem(item, field);
             });

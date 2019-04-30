@@ -1,15 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+
+import { Subject } from 'rxjs';
+import { takeUntil, debounceTime } from 'rxjs/operators';
+
 import { EXTERNAL_APPLICATION_USER } from '../../user-params-set/shared-user-param/consts/external-application.consts';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../shared-user-param/consts/eos-user-params.const';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { FormGroup } from '@angular/forms';
 import { E_FIELD_TYPE, IBaseUsers } from '../../shared/intrfaces/user-params.interfaces';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
-import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'eos-user-param-external-application',
@@ -40,7 +43,9 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
     ) {}
     async ngOnInit() {
         this._userParamsSetSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
@@ -123,7 +128,11 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
     }
     suscribeChanges() {
         let count_error = 0;
-        this.form.valueChanges.debounceTime(200).subscribe(data => {
+        this.form.valueChanges
+        .pipe(
+            debounceTime(200)
+        )
+        .subscribe(data => {
             Object.keys(data).forEach(val => {
                 if (!this.getFactValueFuck(data[val], val)) {
                     this.setNewData(data, val, true);

@@ -3,7 +3,7 @@ import { Input, OnChanges, OnDestroy } from '@angular/core';
 import { InputBase } from '../core/inputs/input-base';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { INPUT_ERROR_MESSAGES } from '../consts/common.consts';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 export class DynamicInputBase implements OnChanges, OnDestroy {
     @Input() input: InputBase<any>;

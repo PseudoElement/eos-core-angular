@@ -1,11 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { Router } from '@angular/router';
 import { CARD_FUNC_LIST } from './card-func-list.consts';
 import { FuncNum } from './funcnum.model';
 import { CardRightSrv } from './card-right.service';
-import { Subject } from 'rxjs/Subject';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import {ErrorHelperServices} from '../../shared/services/helper-error.services';
 // import { Subject } from 'rxjs/Subject';
@@ -34,12 +37,16 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
     ) {
         this._cardSrv.chengeState$
-        .takeUntil(this._ngUnsubscribe)
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
         .subscribe((state: boolean) => {
             this.btnDisabled = !state;
         });
         this._userParamsSetSrv.saveData$
-        .takeUntil(this._ngUnsubscribe)
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
         .subscribe(() => {
             this._userParamsSetSrv.submitSave =  this.submit();
         });

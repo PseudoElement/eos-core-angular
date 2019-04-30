@@ -1,7 +1,10 @@
 import { Component, OnInit, Output, Input, EventEmitter, OnDestroy } from '@angular/core';
-import {LimitedAccesseService} from '../../../shared/services/limited-access.service';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs/Subject';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import {LimitedAccesseService} from '../../../shared/services/limited-access.service';
 import { UserParamsService } from '../../../shared/services/user-params.service';
 @Component({
     selector: 'eos-grifs',
@@ -22,15 +25,21 @@ export class GrifsComponent implements OnInit, OnDestroy {
     ) {
         this.flagChande = true;
         this._limitservise.subscribe
-        .takeUntil(this.Unsub)
+        .pipe(
+            takeUntil(this.Unsub)
+        )
         .subscribe(data => {
                if (data) {
                    this.reset();
-               }else {
+               } else {
                 this.updateInfo();
                }
         });
-        this._limitservise.editEmit.takeUntil(this.Unsub).subscribe(() => {
+        this._limitservise.editEmit
+        .pipe(
+            takeUntil(this.Unsub)
+        )
+        .subscribe(() => {
             this.editFlag = true;
             this.editModeForm();
         });
@@ -95,7 +104,7 @@ export class GrifsComponent implements OnInit, OnDestroy {
                });
                if (tre) {
                 arrObj['checkbox'] = true;
-               }else {
+               } else {
                      arrObj['checkbox']  = false;
                }
                 arrObj['SECURLEVEL'] = el.SECURLEVEL;
@@ -117,7 +126,7 @@ export class GrifsComponent implements OnInit, OnDestroy {
         let endDate = null;
         if (dataUpdate) {
             endDate = dataUpdate;
-        }else {
+        } else {
             endDate = data;
         }
         endDate.forEach(el => {
@@ -157,7 +166,7 @@ export class GrifsComponent implements OnInit, OnDestroy {
                 }
                 if (count_error > 0) {
                     this.flagChande = false;
-                }else {
+                } else {
                     this.flagChande = true;
                 }
             }

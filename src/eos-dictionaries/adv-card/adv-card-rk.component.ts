@@ -8,7 +8,7 @@ import { InputControlService } from 'eos-common/services/input-control.service';
 import { TDefaultField, TDFSelectOption } from './rk-default-values/rk-default-const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EosUtils } from 'eos-common/core/utils';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { RKBasePage } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';

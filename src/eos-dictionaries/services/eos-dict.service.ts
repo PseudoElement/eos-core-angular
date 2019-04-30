@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 // import {Router} from '@angular/router';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 import {EosDictionary} from '../core/eos-dictionary';
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
