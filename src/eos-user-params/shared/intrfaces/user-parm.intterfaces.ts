@@ -80,3 +80,15 @@ export interface IUserSetChanges {
     isChange: boolean;
     disableSave?: boolean;
 }
+
+
+export interface SertsBase {
+    sing_mail: string;
+    enc_mail: string;
+    sing_mail_origin: string;
+    enc_mail_origin: string;
+    id_sing: string;
+    id_enc: string;
+    id_sing_origin: string;
+    id_enc_origin: string;
+}

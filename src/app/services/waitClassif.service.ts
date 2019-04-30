@@ -73,8 +73,10 @@ export class WaitClassifService {
         if (params.nomenkl_jou !== undefined && params.nomenkl_jou !== null) {
             url += `&nomenkl_jou=${params.nomenkl_jou}`;
         }
-
         url += params.classif === 'CONTACT' || params.classif === 'ORGANIZ_CL' ? '&app=nadzor' : '';
+        // if (params.criteriesSearch) {
+        //     url += '&criteries=note:' +  encodeURIComponent('Руководство');
+        // }
         return url;
     }
 }

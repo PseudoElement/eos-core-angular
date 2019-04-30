@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Output, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { CollectionService, ICollectionList } from './collection.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
-import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
+// import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+// import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 
 @Component({
     selector: 'eos-param-auth-collection',
@@ -34,8 +34,9 @@ export class AuthenticationCollectionComponent implements OnInit {
     qureyForChenge: any[] = [];
     inputWordValue: string = '';
     errorUnique: boolean = false;
+    title = 'Словарь недопустимых паролей';
     constructor(
-        private _confirmSrv: ConfirmWindowService,
+        // private _confirmSrv: ConfirmWindowService,
         private _collectionSrv: CollectionService,
         private _modalSrv: BsModalService
     ) { }
@@ -122,22 +123,23 @@ export class AuthenticationCollectionComponent implements OnInit {
         this.inputWordValue = this.inputWordValue.toUpperCase();
     }
     cancel() {
-        if (this.qureyForChenge.length) {
-            this._confirmSrv.confirm(CONFIRM_SAVE_ON_LEAVE)
-                .then(state => {
-                    if (state) {
-                        this.submit();
-                    } else {
-                        this.init();
-                        this._closed();
-                    }
-                });
-        } else {
-            this.init();
-            this._closed();
-        }
+        // if (this.qureyForChenge.length) {
+        //     this._confirmSrv.confirm(CONFIRM_SAVE_ON_LEAVE)
+        //         .then(state => {
+        //             if (state) {
+        //                 this.submit();
+        //             } else {
+        //                 this.init();
+        //                 this._closed();
+        //             }
+        //         });
+        // } else {
+        // }
+        this.init();
+        this._closed();
     }
     cancelModalWord() {
+        console.log('cancel');
         this.modalWordRef.hide();
         this.isNewWord = false;
         this.inputWordValue = '';

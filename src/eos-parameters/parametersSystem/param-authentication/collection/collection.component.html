@@ -1,5 +1,5 @@
 <header>
-    <eos-param-header title='Словарь недопустимых паролей' [statusBtnSub]="btnDisable()" (submitForm)="submit()" (cancelForm)="cancel()"></eos-param-header>
+    <eos-param-header [title]='title' [statusBtnSub]="btnDisable()" (submitForm)="submit()" (cancelForm)="cancel()"></eos-param-header>
 </header>
 <div class="collection-action">
     <button class="btn" tooltip="Добавить" placement="bottom" containerClass="tooltip-info" (click)="addWord()">
@@ -78,7 +78,7 @@
     </header>
     <main class="modalWord-content">
         <span>Слово: </span>
-        <input pattern="^\w{0,64}$" class="form-control m-font inline-block" #inputWord type="text" [(ngModel)]="inputWordValue" (input)="uniqueVal()" (change)="changeWord($event)">
+        <input pattern="^[а-яА-Яa-zA-Z0-9_]{0,64}$" class="form-control m-font inline-block" #inputWord type="text" [(ngModel)]="inputWordValue" (input)="uniqueVal()" (change)="changeWord($event)">
         <span *ngIf="inputWordValue.length > 64" class="warning">Допустимо максимальное количество символов 64</span>
         <span *ngIf="errorUnique" class="warning">Запись с таким значением уже существует</span>
     </main>
