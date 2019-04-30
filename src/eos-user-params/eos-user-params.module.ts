@@ -59,6 +59,7 @@ import {UserParamTransferComponent} from './user-params-set/user-param-other/use
 import {UserParamAddressesComponent} from './user-params-set/user-param-other/user-param-addresses/user-param-addresses.component';
 import {UserParamReestrComponent} from './user-params-set/user-param-other/user-param-reestr/user-param-reestr.component';
 import {UserParamShablonyComponent} from './user-params-set/user-param-other/user-param-shablony/user-param-shablony.component';
+import {BaseSertsComponent} from './base-param/base-serts/base-serts.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -104,6 +105,7 @@ import {UserParamShablonyComponent} from './user-params-set/user-param-other/use
         UserParamAddressesComponent,
         UserParamReestrComponent,
         UserParamShablonyComponent,
+        BaseSertsComponent,
     ],
     imports: [
         BrowserModule,

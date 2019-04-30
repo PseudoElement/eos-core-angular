@@ -57,7 +57,7 @@ export class CarmaConnectionInterface {
     }
 
     GetCertInfo(certId) {
-        throw this.NotImplementedError('GetCertInfo');
+        // throw this.NotImplementedError('GetCertInfo');
     }
 
     ShowSign(content, signature) {
@@ -238,7 +238,13 @@ export class CarmaHttpService extends CarmaConnectionInterface {
         this.storesConfig = this._make_stores(this.stores);
         return this.checkService();
     }
-
+    GetCertInfo(certId) {
+        return this._request({
+            mode: this.mode_getcertinfo,
+            senderCertId: certId,
+            needExtraction: true,
+        }).toPromise();
+    }
     checkService(): Observable<boolean> {
         return this._testConnection()
         .mergeMap(() => {

@@ -181,6 +181,18 @@ export class UserParamsService {
                }
         });
     }
+    getSertSBaseParams(isn_cl?: string) {
+        if (!isn_cl) {
+            isn_cl = this._storageSrv.getItem('userEditableId');
+        }
+        return  this._pipRx.read({
+            USER_CERTIFICATE: {
+                criteries: {
+                    ISN_USER: isn_cl
+                }
+            }
+            });
+    }
     private _errorHandler (err) {
         if (err.code === 434) {
             return;

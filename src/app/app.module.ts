@@ -46,6 +46,7 @@ import { EosUserProfileService } from './services/eos-user-profile.service';
 import { CarmaHttpService } from './services/carmaHttp.service';
 import { NavParamService } from './services/nav-param.service';
 import { WaitClassifService } from './services/waitClassif.service';
+import {CertificateService} from './services/certificate.service';
 
 /* guards */
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
@@ -110,6 +111,7 @@ import { PermissionsGuard } from './guards/permissions.guard';
         CarmaHttpService,
         NavParamService,
         WaitClassifService,
+        CertificateService,
     ],
     bootstrap: [AppComponent],
 })

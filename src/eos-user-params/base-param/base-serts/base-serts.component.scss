@@ -1,0 +1,18 @@
+.base-serts-wr {
+    .serts-content {
+        .sert-content {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            .sert-title {
+                display: inline-block;
+                height: 40px;
+                width: 75%;
+                background-color: antiquewhite;
+                line-height: 40px;
+                padding-left: 10px;
+                overflow: hidden;
+            }
+        }
+    }
+}

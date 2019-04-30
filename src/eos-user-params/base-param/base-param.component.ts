@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
-import { DEPARTMENT } from 'eos-rest';
+import { DEPARTMENT, USER_CERTIFICATE } from 'eos-rest';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { BASE_PARAM_INPUTS, BASE_PARAM_CONTROL_INPUT, BASE_PARAM_ACCESS_INPUT } from 'eos-user-params/shared/consts/base-param.consts';
 import { FormGroup } from '@angular/forms';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
-import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { IInputParamControl, IParamUserCl} from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { BaseParamCurentDescriptor } from './shared/base-param-curent.descriptor';
 import { Subject } from 'rxjs/Subject';
 import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
@@ -18,10 +18,13 @@ import { ErrorHelperServices } from '../shared/services/helper-error.services';
 import { Router } from '@angular/router';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { NavParamService } from 'app/services/nav-param.service';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+
 @Component({
     selector: 'eos-params-base-param',
     templateUrl: './base-param.component.html'
 })
+
 
 export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     editMode = false;
@@ -50,10 +53,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     isShell: Boolean = false;
     errorPass: boolean = false;
     selfLink = null;
+    public userSertsDB: USER_CERTIFICATE;
     private _sysParams;
     private _descSrv;
     private _newData = {};
     private _dataDb = {};
+    private modalRef: BsModalRef;
 
     private _ngUnsubscribe: Subject<void> = new Subject<void>();
     get sysParams() {
@@ -68,7 +73,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private _userParamSrv: UserParamsService,
         private _nanParSrv: NavParamService,
         private _errorSrv: ErrorHelperServices,
-    ) {}
+        private modalService: BsModalService,
+    ) { }
     async ngOnInit() {
         await this._userParamSrv.getUserIsn();
         this.selfLink = this._router.url.split('?')[0];
@@ -86,6 +92,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
+    }
+    get getValidDate() {
+        return this.form.controls['PASSWORD_DATE'].valid;
     }
 
     init() {
@@ -337,8 +346,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this.formAccess.controls['delo_web'].disable({ emitEvent: false });
         }
     }
-    get getValidDate() {
-        return this.form.controls['PASSWORD_DATE'].valid;
+
+    getSerts(template: TemplateRef<any>): void {
+        this.modalRef = this.modalService.show(template, {class: 'serts'});
+    }
+    closeSerts() {
+        this.modalRef.hide();
     }
     private _subscribeControls() {                                     /* подписки */
         /* основная форма */
