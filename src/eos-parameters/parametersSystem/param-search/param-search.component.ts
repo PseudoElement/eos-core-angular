@@ -10,12 +10,12 @@ import { BaseParamComponent } from './../shared/base-param.component';
     templateUrl: 'param-search.component.html'
 })
 export class ParamSearchComponent extends BaseParamComponent {
-    constructor( injector: Injector ) {
+    constructor(injector: Injector) {
         super(injector, SEARCH_PARAM);
         this.init()
-        .then(() => {
-            this.afterInitRC();
-        });
+            .then(() => {
+                this.afterInitRC();
+            });
     }
     cancel() {
         if (this.isChangeForm) {
@@ -24,14 +24,14 @@ export class ParamSearchComponent extends BaseParamComponent {
             this.formChanged.emit(false);
             this.ngOnDestroy();
             this.init()
-            .then(() => {
-                this.afterInitRC();
-            })
-            .catch(err => {
-                if (err.code !== 434) {
-                    console.log(err);
-                }
-            });
+                .then(() => {
+                    this.afterInitRC();
+                })
+                .catch(err => {
+                    if (err.code !== 434) {
+                        console.log(err);
+                    }
+                });
         }
     }
     afterInitRC() {
