@@ -4,11 +4,15 @@
     "newProjectRoot": "projects",
     "projects": {
       "eos": {
-        "root": "src",
+        "root": "",
         "sourceRoot": "src",
         "projectType": "application",
         "prefix": "eos",
-        "schematics": {},
+        "schematics": {
+          "@schematics/angular:component": {
+            "style": "scss"
+          }
+        },
         "architect": {
           "build": {
             "builder": "@angular-devkit/build-angular:browser",
@@ -47,8 +51,8 @@
                 "budgets": [
                   {
                     "type": "initial",
-                    "maximumWarning": "2mb",
-                    "maximumError": "5mb"
+                    "maximumWarning": "5mb",
+                    "maximumError": "8mb"
                   }
                 ]
               }
