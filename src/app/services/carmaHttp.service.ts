@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, RequestOptionsArgs, Headers } from '@angular/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { mergeMap, map, catchError } from 'rxjs/operators';
 
@@ -194,11 +194,11 @@ export class CarmaHttpService extends CarmaConnectionInterface {
     useHttp = false;
     storesConfig: Istore[];
     ctorStores;
-    carmaOptions: RequestOptionsArgs;
+    carmaOptions: any;
     stores: Istore[] = [];
 
     constructor(
-        private http: Http
+        private http: HttpClient
     ) {
         super();
     }
@@ -208,7 +208,7 @@ export class CarmaHttpService extends CarmaConnectionInterface {
         this.initStr = initStr;
         this.ctorStores = stores;
         this.carmaOptions = {
-            headers: new Headers({
+            headers: new HttpHeaders({
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'Accept': 'application/json, text/javascript, */*; q=0.01',
                 'Accept-Language': 'ru-RU, ru;q=0.8,en-US;q=0.6, en;q=0.4'
@@ -256,20 +256,6 @@ export class CarmaHttpService extends CarmaConnectionInterface {
                 })
             );
     }
-    // checkService(): Observable<boolean> {
-    //     return this._testConnection()
-    //         .pipe(
-    //             mergeMap(() => {
-    //                 return this._getServiceInfo()
-    //                 .pipe(
-    //                     map((info: IServiceInfo) => { // "carmaVersion": "56.0.145"
-    //                         this.ServiceInfo = info;
-    //                         return true;
-    //                     })
-    //                 );
-    //             })
-    //         );
-    // }
     SetCurrentStores(stores: Istore[]) {
         this.stores = stores;
         this.storesConfig = this._make_stores(stores);
@@ -384,10 +370,7 @@ export class CarmaHttpService extends CarmaConnectionInterface {
             })
         );
     }
-    private _getServiceInfo(): Observable<IServiceInfo> {
-        return this.http.get(this.serverAddress, this.carmaOptions)
-            .pipe(
-                map(res => res.json())
-            );
+    private _getServiceInfo(): Observable<any> {
+        return this.http.get(this.serverAddress, this.carmaOptions);
    }
 }

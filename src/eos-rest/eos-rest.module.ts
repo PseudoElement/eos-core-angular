@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 /* end:todo */
 
 import { NgModule, Optional, ModuleWithProviders, SkipSelf } from '@angular/core';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { DeliveryComponent } from './clman/delivery.component';
 import { RubricComponent } from './clman/rubric.component';
@@ -27,7 +27,7 @@ import { ViewManager } from 'eos-rest/services/viewManager';
     imports: [
         BrowserModule,
         FormsModule,
-        HttpModule,
+        HttpClientModule,
     ],
     declarations: [
         DeliveryComponent,

@@ -1,19 +1,9 @@
 <div class="btn-action-wrapper">
     <div class="btn-action-flex" *ngIf='buttons'>
-        <div class="buttons-list" *ngFor= 'let button of buttons.buttons'>
+        <div class="buttons-list" *ngFor='let button of buttons.buttons'>
             <div class="btn-group">
-                    <div
-                        [tooltip]="button.tooltip"
-                        #itemTooltip="bs-tooltip"
-                        placement="bottom"
-                        containerClass="tooltip-info"
-                        trigger="hover">
-                    <button
-                        [disabled]='button.disabled'
-                        class="btn btn-primary-light"
-                        (click)="doAction(button.name)"
-                        [ngClass]= "button.isActive ? button.activeBtnClass : ''"
-                    >
+                <div [tooltip]="button.tooltip" #itemTooltip="bs-tooltip" placement="bottom" containerClass="tooltip-info" trigger="hover">
+                    <button [disabled]='button.disabled' class="btn btn-primary-light" (click)="doAction(button.name)" [ngClass]="button.isActive ? button.activeBtnClass : ''">
                     <span *ngIf='!button.isActive' [ngClass]="!button.disabled ? button.enableClass : button.disabledClass"></span>
                     <span *ngIf='button.isActive' [ngClass]="button.activeClass"></span>
                     </button>
@@ -22,37 +12,19 @@
         </div>
         <!-- кнопка еще -->
         <div class="btn-group" dropdown #dropdown="bs-dropdown">
-            <button
-            tooltip="Показать меню"
-            #itemTooltip="bs-tooltip"
-            placement="bottom"
-            containerClass="tooltip-info"
-            trigger="hover"
-            class="btn btn-primary-light"
-             Button dropdownToggle
-              [ngClass]=" dropdown.isOpen ? 'activemore' : ''">
+            <button tooltip="Показать меню" #itemTooltip="bs-tooltip" placement="bottom" containerClass="tooltip-info" trigger="hover" class="btn btn-primary-light" dropdownToggle [ngClass]=" dropdown.isOpen ? 'activemore' : ''">
                 <span
                     [ngClass]="dropdown.isOpen ? 'eos-icon eos-icon-fab-white small': 'eos-icon eos-icon-fab-blue small'"></span>
             </button>
-            <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
-                role="menu" aria-labelledby="button-basic">
-              <li role="menuitem" class="menu-list"  *ngFor='let moreBtn of buttons.moreButtons'>
-                  <a class="dropdown-item menu-link"
-                    [tooltip]="moreBtn.tooltip"
-                    #itemTooltip="bs-tooltip"
-                    placement="bottom"
-                    containerClass="tooltip-info"
-                    trigger="hover"
-                    (click)="doAction(moreBtn.name)"
-                    [ngClass]= "[moreBtn.isActive ? moreBtn.activeBtnClass : '', moreBtn.disabled ? 'disabled' : '']"
-                  >
-                  <span class="btn-icon" *ngIf='!moreBtn.isActive' [ngClass]="!moreBtn.disabled ? moreBtn.enableClass : moreBtn.disabledClass"></span>
-                  <span class="btn-title" *ngIf='moreBtn.isActive' [ngClass]="moreBtn.activeClass"></span>
-                  <span class="btn-title">{{moreBtn.title}}</span>
-                  </a>
+            <ul id="dropdown-basic" class="dropdown-menu">
+                <li role="menuitem" class="menu-list" *ngFor='let moreBtn of buttons.moreButtons'>
+                    <a class="dropdown-item menu-link" container="body" [tooltip]="moreBtn.tooltip" #itemTooltip="bs-tooltip" placement="bottom" containerClass="tooltip-info" trigger="hover" (click)="doAction(moreBtn.name)" [ngClass]="[moreBtn.isActive ? moreBtn.activeBtnClass : '', moreBtn.disabled ? 'disabled' : '']">
+                        <span class="btn-icon" *ngIf='!moreBtn.isActive' [ngClass]="!moreBtn.disabled ? moreBtn.enableClass : moreBtn.disabledClass"></span>
+                        <span class="btn-title" *ngIf='moreBtn.isActive' [ngClass]="moreBtn.activeClass"></span>
+                        <span class="btn-title">{{moreBtn.title}}</span>
+                    </a>
                 </li>
             </ul>
-          </div>
+        </div>
     </div>
 </div>
-
