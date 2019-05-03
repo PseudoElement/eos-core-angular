@@ -100,6 +100,7 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
     }
 
     preparethisInputFields() {
+
         const newVal = this.newData['STREAM_SCAN_RIGHTS'].slice(0, 3).split('');
         this.inputFields.forEach((inp: IInputParamControl, index) => {
             inp.value = String(newVal[index]) === '1' ? true : false;
