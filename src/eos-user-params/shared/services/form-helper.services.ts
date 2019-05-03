@@ -80,15 +80,15 @@ export class FormHelperService {
         return arrayFills;
     }
 
-    changesForm(inputs: IInputParamControl[], newVal) {
+    changesForm(inputs, newVal) {
         let countChanges = 0;
         let btnDisableFlag = null;
-        inputs.forEach((field, index) => {
-            if (field.value !== newVal[field.key]) {
-                this.newFormData[field.key] = field.value;
+        Object.keys(inputs).forEach((field, index) => {
+            if (inputs.value !== newVal[field]) {
+                this.newFormData[field] = inputs.value;
                 countChanges += 1;
             } else {
-                delete this.newFormData[field.key];
+                delete this.newFormData[field];
             }
         });
         countChanges > 0 ? btnDisableFlag = false : btnDisableFlag = true;

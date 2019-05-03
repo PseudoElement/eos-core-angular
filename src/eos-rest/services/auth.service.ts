@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 
 import { PipRX } from './pipRX.service';
 import { ApiCfg } from '../core/api-cfg';
@@ -13,15 +13,15 @@ import { RestError } from 'eos-rest/core/rest-error';
 export class AuthService {
     private _cfg: ApiCfg;
 
-    constructor(private _http: Http, _pipe: PipRX, private appCtx: AppContext) {
+    constructor(private _http: HttpClient, _pipe: PipRX, private appCtx: AppContext) {
         this._cfg = _pipe.getConfig();
     }
 
     public login(user: string, passwd: string): Promise<any> {
         const _url = this._cfg.authApiUrl + 'Login?app=api&' + 'username=' + user + '&pass=' + encodeURIComponent(passwd);
-        const r = this._http.get(_url, HTTP_OPTIONS).toPromise()
-            .then((resp) => {
-                if (resp.text() && resp.text().indexOf('error:') > -1) {
+        const r = this._http.get(_url, {observe: 'events', responseType: 'text', withCredentials: true}).toPromise()
+            .then((resp: HttpResponse<any>) => {
+                if (resp.body && resp.body.indexOf('error:') > -1) {
                     return {};
                 } else {
                     return this.getContext();
