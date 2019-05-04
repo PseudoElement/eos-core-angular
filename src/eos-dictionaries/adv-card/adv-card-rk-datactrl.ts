@@ -277,7 +277,7 @@ export class AdvCardRKDataCtrl {
                     changes.fixE['DOC_DEFAULT_VALUE_List.SPECIMEN'] = null;
                 }
             }
-
+            changes[DEFAULTS_LIST_NAME]['_orig'] = dgSaved[0][DEFAULTS_LIST_NAME];
             // inputs['DOC_DEFAULT_VALUE_List.FREE_NUM_M'].value = 1;
             // inputs['DOC_DEFAULT_VALUE_List.DOC_DATE_M'].value = 1;
             // inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL_M'].value = 1;
