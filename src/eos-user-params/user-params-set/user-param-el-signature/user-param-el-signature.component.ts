@@ -5,7 +5,7 @@ import { FormGroup, AbstractControl } from '@angular/forms';
 import { BsModalService } from 'ngx-bootstrap/modal';
 
 import { Subject } from 'rxjs';
-import { takeUntil, debounceTime } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { ELECTRONIC_SIGNATURE } from '../shared-user-param/consts/electronic-signature';
@@ -14,7 +14,7 @@ import { FormHelperService } from '../../shared/services/form-helper.services';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE, PARM_ERROR_DB } from '../shared-user-param/consts/eos-user-params.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import {ErrorHelperServices} from '../../shared/services/helper-error.services';
+import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 @Component({
     selector: 'eos-user-param-el-signature',
     // styleUrls: ['user-param-el-signature.component.scss'],
@@ -33,6 +33,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     public isLoading: boolean = true;
     public editFlag: boolean = false;
     public disablebtnCarma: boolean = false;
+    private inputFieldsDefault;
     // sendFrom: string = '';
     // saveValueSendForm: string = '';
     private inputFields: any;
@@ -57,7 +58,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
-    ) {}
+    ) { }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
@@ -78,7 +79,8 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     }
 
     init() {
-        this.inputFields = this._formHelper.fillInputFieldsSetParams(ELECTRONIC_SIGNATURE);
+        const user_param = this._userSrv.curentUser['USER_PARMS_HASH'];
+        this.inputFields = this._formHelper.fillInputFieldsSetParams(ELECTRONIC_SIGNATURE, user_param);
         this.getList(this.inputFields);
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
@@ -96,9 +98,6 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     subscribeForm() {
         let count_error = 0;
         this.form.valueChanges
-            .pipe(
-                debounceTime(200)
-            )
             .subscribe(newVal => {
                 Object.keys(newVal).forEach(val => {
                     if (!this.getFactValueFuck(newVal[val], val)) {
@@ -140,13 +139,11 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     }
 
     disableForEditAllForm(event) {
-        Object.keys(this.inputs).forEach(key => {
-            if (!event) {
-                this.form.controls[key].disable({ onlySelf: true, emitEvent: false });
-            } else {
-                this.form.controls[key].enable({ onlySelf: true, emitEvent: false });
-            }
-        });
+        if (!event) {
+            this.form.disable({ onlySelf: true, emitEvent: false });
+        } else {
+            this.form.enable({ onlySelf: true, emitEvent: false });
+        }
     }
 
     submit(event?): Promise<any> {
@@ -211,13 +208,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
 
     fillFormDefault(listForDefault: Array<any>) {
         listForDefault.forEach(list => {
-            let value = String(list['PARM_VALUE']);
-            if (value === 'null' || value === 'undefined') {
-                value = '';
-            } else {
-                value = value;
-            }
-            this.form.controls[list['PARM_NAME']].patchValue(value);
+            this.form.controls[list.key].patchValue(list.value);
         });
     }
     edit(event) {
@@ -233,11 +224,14 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     default(event) {
         const defaultListName = this.getQueryDefaultList(this.listForQuery);
         this.apiSrv.read(defaultListName).then(result => {
-            this.fillFormDefault(result.splice(1));
+            this.inputFieldsDefault = this._formHelper.fillInputFieldsSetParams(ELECTRONIC_SIGNATURE, this._formHelper.createhash(result));
+            this.fillFormDefault(this.inputFieldsDefault);
+            this.disableOrEnabel();
         }).catch(error => {
             this._msgSrv.addNewMessage(PARM_ERROR_DB);
         });
     }
+
     getQueryDefaultList(list) {
         return {
             'USER_PARMS': {

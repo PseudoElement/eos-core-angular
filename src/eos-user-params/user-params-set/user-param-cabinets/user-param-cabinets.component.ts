@@ -452,6 +452,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this.creatchesheDefault = this.formHelp.createhash(data);
                 this.prepareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.creatchesheDefault);
                 this.prepareInputs = this.formHelp.getObjectInputFields(CABINETS_USER.fields);
+                console.log(this.prepareInputs);
                 this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
                 this.parseInputsFromString(this.defoltInputs, this.creatchesheDefault['FOLDERCOLORSTATUS']);
                 this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value;
