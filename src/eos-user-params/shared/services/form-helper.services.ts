@@ -50,15 +50,14 @@ export class FormHelperService {
         }
     }
 
-    fillInputFieldsSetParams(inputFields: IInputParamControl[]) {
-        const user_param = this._userSrv.curentUser['USER_PARMS_HASH'];
+    fillInputFieldsSetParams(inputFields: IInputParamControl[], data) {
         const arrayFills: IInputParamControl[]  = [];
         inputFields.forEach((inputVal: IInputParamControl, index) => {
             const f: IInputParamControl = Object.assign({}, inputVal);
             arrayFills.push(f);
             if (f.controlType === E_FIELD_TYPE.boolean) {
-              if (String(user_param[f['key']]) !==  'null' && String(user_param[f['key']]) !==  'undefined') {
-                if (user_param[f['key']] === 'NO') {
+              if (String(data[f['key']]) !==  'null' && String(data[f['key']]) !==  'undefined') {
+                if (data[f['key']] === 'NO') {
                     f['value']  = false;
                 }   else {
                     f['value']  = true;
@@ -69,8 +68,8 @@ export class FormHelperService {
             }
 
             if (f.controlType === E_FIELD_TYPE.string) {
-                if (String(user_param[f['key']]) !== 'null' && String(user_param[f['key']]) !==  'undefined') {
-                    f['value'] = user_param[f['key']];
+                if (String(data[f['key']]) !== 'null' && String(data[f['key']]) !==  'undefined') {
+                    f['value'] = data[f['key']];
                 }   else {
                     f['value']  = '';
                 }
