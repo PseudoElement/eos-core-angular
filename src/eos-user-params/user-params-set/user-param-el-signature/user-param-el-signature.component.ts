@@ -215,32 +215,22 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         this.editFlag = event;
         this.disableForEditAllForm(event);
         this.disableOrEnabel();
-
     }
     close(event) {
         this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 
     default(event) {
-        const defaultListName = this.getQueryDefaultList(this.listForQuery);
+        const defaultListName = this._formHelper.getObjQueryInputsFieldForDefault(this.listForQuery);
         this.apiSrv.read(defaultListName).then(result => {
             this.inputFieldsDefault = this._formHelper.fillInputFieldsSetParams(ELECTRONIC_SIGNATURE, this._formHelper.createhash(result));
+            console.log(this.inputFieldsDefault);
             this.fillFormDefault(this.inputFieldsDefault);
+            console.log(this.form);
             this.disableOrEnabel();
         }).catch(error => {
             this._msgSrv.addNewMessage(PARM_ERROR_DB);
         });
-    }
-
-    getQueryDefaultList(list) {
-        return {
-            'USER_PARMS': {
-                criteries: {
-                    PARM_NAME: list.join('||'),
-                    ISN_USER_OWNER: '-99'
-                }
-            }
-        };
     }
 
     disableOrEnabel() {
