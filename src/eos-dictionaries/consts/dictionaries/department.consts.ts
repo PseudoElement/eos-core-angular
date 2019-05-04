@@ -306,7 +306,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         }]),
     treeFields: ['shorttitle'],
     searchFields: [/* 'RUBRIC_CODE', */'shorttitle'/*, 'NOTE'*/],
-    listFields: ['CODE', 'shorttitle', 'DUTY', 'SURNAME'],
+    listFields: ['CODE', 'shorttitle', 'SURNAME', 'DUTY', ],
     fullSearchFields: {
         person: ['CODE', 'PHONE', 'PHONE_LOCAL', 'E_MAIL', 'DUTY', 'fullPosition', 'SURNAME', 'NOTE', 'printInfo'],
         department: ['CODE', 'nametitle', 'indexDep', 'NOTE', 'fullTitle'],
