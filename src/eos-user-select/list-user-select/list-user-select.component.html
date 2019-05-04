@@ -41,12 +41,9 @@
                 </span>
                 <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')" [textContent]="shooseP === 0 ? 'Подразделение' : 'Картотека'"></span>
                 <span *ngIf="_apiSrv.srtConfig.department.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)"></span>
-
                 <!-- <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
                     <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>
                 </span> -->
-
-
             </div>
         </div>
         <div *ngIf="!isLoading; else spiner" class="eos-node-list">
@@ -67,7 +64,7 @@
                             </span>
                             <span class="user-list-two-colomn" tooltip="{{user.fullDueName}}" placement="bottom" containerClass="tooltip-info" container="body">{{user.fullDueName}}
                             </span>
-                            <span class="user-list-first-colomn" tooltip="{{user.department}}" placement="bottom" containerClass="tooltip-info" container="body">{{user.department}}
+                            <span class="user-list-first-colomn" tooltip="{{user.department}}" placement="auto" containerClass="tooltip-info" container="body">{{user.department}}
                             </span>
                         </div>
                     </div>

@@ -197,20 +197,20 @@
         background: $primary-color-main-theme;
     }
     &.tooltip.right .tooltip-arrow {
-        top: calc(50% - 4.5px) !important;
+        top: calc(50% - 12px) !important;
         left: -13px;
         border-right-color: $active-field-color-main-theme;
         border-width: 9px 9px 9px;
     }
     &.tooltip.left .tooltip-arrow {
-        top: calc(50% - 4.5px) !important;
+        top: calc(50% - 12px) !important;
         right: -13px;
         border-left-color: $active-field-color-main-theme;
         border-width: 9px 9px 9px;
     }
     &.tooltip.top .tooltip-arrow {
         bottom: -4px;
-        left: 50% !important;
+        left: calc(50% - 8px)!important;
         margin-left: -10px;
         border-top-color: $active-field-color-main-theme;
         border-width: 9px 9px 0;
@@ -302,6 +302,7 @@
     }
 }
 
+
 /* .main-theme { */
 
 .secondary-block {
@@ -332,6 +333,7 @@
     border-color: transparent;
 }
 
+
 /*.input-cleaner {
         color: $button-color-main-theme;
 
@@ -361,6 +363,7 @@
 .breadcrumb>li::before {
     color: $button-color-main-theme;
 }
+
 
 /* } */
 
