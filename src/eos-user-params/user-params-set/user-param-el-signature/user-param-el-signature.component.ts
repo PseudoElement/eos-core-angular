@@ -84,7 +84,6 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         this.getList(this.inputFields);
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
-        console.log(this.form);
         this.isLoading = false;
         this.subscribeForm();
         this.disableForEditAllForm(this.editFlag);
