@@ -83,19 +83,17 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this._cardSrv.saveChenge$()
             .then(() => {
                 this.pageState = 'VIEW';
-                this.cancel();
+                this.btnDisabled = true;
+                this._clearView();
             }).catch(error => {
                 this._errorSrv.errorHandler(error);
-                this.cancel();
+                this._clearView();
                 this.ngOnInit();
             });
     }
     cancel() {
-        this._userParamsSetSrv.setChangeState({ isChange: false });
-        this.editMode = false;
-        this._selectedFuncNum.isSelected = false;
-        this._selectedFuncNum = null;
-        this._cardSrv.selectedFuncNum = null;
+        this._clearView();
+        this._cardSrv.cancelChanges();
     }
     edit() {
         if (!this._flagGrifs) {
@@ -127,5 +125,12 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this._selectedFuncNum.isSelected = true;
         this._cardSrv.selectedFuncNum = node;
         this._cardSrv.selectFuncnum();
+    }
+    private _clearView (): void {
+        this._userParamsSetSrv.setChangeState({ isChange: false });
+        this.editMode = false;
+        this._selectedFuncNum.isSelected = false;
+        this._selectedFuncNum = null;
+        this._cardSrv.selectedFuncNum = null;
     }
 }
