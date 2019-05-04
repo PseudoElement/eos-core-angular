@@ -1,24 +1,21 @@
-:host{
+:host {
     display: block;
     width: 800px;
     margin: auto;
-
-    .email-window{
+    .email-window {
         .header {
             padding: 26px;
             margin-bottom: 0px;
         }
-
     }
-
-    .email-control{
+    .email-control {
         display: flex;
         align-items: center;
         justify-content: flex-start;
         padding: 9px 20px 9px 8px;
         background-color: #fafafa;
         margin: 1px 0;
-        button{
+        button {
             position: relative;
             width: 30px;
             height: 30px;
@@ -27,62 +24,61 @@
             border: none;
             background-color: #fafafa;
         }
-        .eos-icon{
+        .eos-icon {
             position: relative;
             left: 0px;
             width: 24px;
             height: 23px;
         }
     }
-    .email-wr{
+    .email-wr {
         width: 100%;
         max-height: calc(100vh - 330px);
         height: 100vh;
         overflow-x: hidden;
         overflow-y: auto;
-       .email-header{
-           width: 100%;
-           display: flex;
-           align-items: center;
-           height: 48px;
-           margin-top: 2px;
-           background-color: #fafafa;
-           .first,.last,.seconds{
-            display: inline-flex;
+        .email-header {
+            width: 100%;
+            display: flex;
             align-items: center;
-            padding-left: 20px;
-            padding-right: 20px;
-           }
-           .first{
+            height: 48px;
+            margin-top: 2px;
+            background-color: #fafafa;
+            .first,
+            .last,
+            .seconds {
+                display: inline-flex;
+                align-items: center;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .first {
                 width: 45%;
                 height: 100%;
                 text-align: left;
-           }
-           .seconds{
-            width: 30%;
-            height: 100%;
-            justify-content: center
-
-           }
-           .last{
-            width: 30%;
-            height: 100%;
-            text-align: left;
-           }
-
-       }
-
+            }
+            .seconds {
+                width: 30%;
+                height: 100%;
+                justify-content: center
+            }
+            .last {
+                width: 30%;
+                height: 100%;
+                text-align: left;
+            }
+        }
     }
-
-    .email-content{
+    .email-content {
         width: 100%;
-
-        .emali-list{
+        .emali-list {
             display: flex;
             align-items: center;
             width: 100%;
         }
-        .emali-list-first, .emali-list-secont, .emali-list-last{
+        .emali-list-first,
+        .emali-list-secont,
+        .emali-list-last {
             display: inline-block;
             height: 100%;
             text-align: left;
@@ -93,7 +89,7 @@
             cursor: pointer;
             padding-left: 20px;
             padding-right: 20px;
-            input{
+            input {
                 width: 100%;
                 height: 100%;
                 border: none;
@@ -102,11 +98,11 @@
                 outline: none;
                 cursor: pointer;
             }
-       }
-        .emali-list-first{
+        }
+        .emali-list-first {
             width: 45%;
         }
-        .emali-list-secont{
+        .emali-list-secont {
             width: 30%;
             max-height: 30px;
             overflow: hidden;
@@ -115,47 +111,48 @@
             display: inline-flex;
             justify-content: center
         }
-        .emali-list-last{
+        .emali-list-last {
             width: 30%;
         }
-        label{
+        label {
             line-height: normal;
             display: flex;
             justify-content: center;
             height: 100%;
             padding-top: 3px;
         }
-        .current{
+        .current {
             background: #e3f2fd;
         }
     }
-
-
 }
-.email-window{
+
+.email-window {
     .header {
         padding: 26px;
         margin-bottom: 0px;
     }
 }
-.modalHeader{
+
+.modalHeader {
     display: flex;
     justify-content: flex-end;
     padding-right: 20px;
     padding-left: 20px;
     border-bottom: 1px solid #e6e6e6;
-    .modal-btn{
+    .modal-btn {
         padding: 10px 0;
+        button {
+            margin-left: 10px;
+        }
     }
-    .header{
+    .header {
         padding: 26px;
         margin-bottom: 0px;
     }
-
-
 }
 
-.modal-title-cust{
+.modal-title-cust {
     display: inline-block;
     padding: 5px;
 }

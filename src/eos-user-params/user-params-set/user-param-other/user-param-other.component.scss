@@ -1,12 +1,11 @@
 .input-user-other-rk-forwarding-wrapper {
-    .scrollWrapper{
+    .scrollWrapper {
         padding-top: 10px;
         padding-left: 20px;
     }
-    eos-dynamic-input{
+    eos-dynamic-input {
         font-size: 14px;
     }
-
     .tabs-wrapper {
         margin: 0;
     }
@@ -21,25 +20,19 @@
             position: static;
         }
     }
-
     .inline-block {
         display: inline-block;
         padding-top: 10px;
     }
-
-   /* .block {
+    /* .block {
         display: block;
     }*/
-
-
     .elem-input-radio {
         font-size: 14px;
-       // display: inline-block;
+        // display: inline-block;
         margin-right: 40px;
     }
-
     .user-input-group-section {
-
         .span-or {
             padding-left: 40px;
             padding-right: 40px;
@@ -48,7 +41,6 @@
     .user-content-wr {
         display: flex;
         flex-direction: column;
-
     }
     .fl {
         display: flex;
@@ -71,104 +63,98 @@
                 }
             }
         }
-        .btn-action + div {
+        .btn-action+div {
             margin-left: 1px;
         }
     }
-    .title-user-content {
-        padding-left: 20px;
-    }
+    // .title-user-content {
+    //     padding-left: 20px;
+    // }
     .send-from {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        .send-from-input{
-            input{
+        .send-from-input {
+            input {
                 width: 360px;
                 height: 38px;
                 margin-left: 4px;
                 padding-left: 5px;
             }
-            input[disabled]{
+            input[disabled] {
                 background: #eeeeee;
                 border: none;
                 outline: none;
             }
         }
-        .send-from-btn-choose{
+        .send-from-btn-choose {
             margin: 0px 7px;
         }
     }
-
-
     .the-main-recipients-of-the-document-titles {
         font-weight: bold;
         clear: both;
     }
-
     .restrict-by-document-groups {
         width: 65%;
         display: inline-block;
     }
-
     .add-storage {
         margin-bottom: 50px;
-        }
-
+    }
     .template-title {
         display: flex;
         justify-content: space-around;
         width: 100%;
         vertical-align: middle;
         font-size: 0;
-    /* color: */
-    .item {
-        display: inline-block;
-        margin-right: $grid-gutter-width / 2;
-        margin-top: 11px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        vertical-align: middle;
-        &+.item {
-            margin-left: $grid-gutter-width / 2;
-        }
-        .text {
-            cursor: pointer;
-        }
-        .order-icon {
-            padding: 0 3px;
-        }
-        .eos-icon {
-            margin: -5px 0 0;
+        /* color: */
+        .item {
+            display: inline-block;
+            margin-right: $grid-gutter-width / 2;
+            margin-top: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             vertical-align: middle;
+            &+.item {
+                margin-left: $grid-gutter-width / 2;
+            }
+            .text {
+                cursor: pointer;
+            }
+            .order-icon {
+                padding: 0 3px;
+            }
+            .eos-icon {
+                margin: -5px 0 0;
+                vertical-align: middle;
+            }
         }
-    }
     }
     .table-templates {
         padding-left: 7%;
     }
-
-    .eos-template-list{
+    .eos-template-list {
         padding: 10px 20px;
-        .template-list-wrapper{
+        .template-list-wrapper {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-basis: 33%;
-            .temlate_list_item{
+            .temlate_list_item {
                 flex-basis: 30%;
                 overflow: hidden;
             }
-            span{
+            span {
                 padding-top: 10px;
             }
-            .form-group{
+            .form-group {
                 margin-bottom: 0;
             }
         }
     }
-    .last{
+    .last {
         margin-left: -21px;
     }
 }
@@ -178,16 +164,19 @@
     display: block;
 }
 
-.user-system{
+.user-system {
     //overflow: hidden!important;
 }
-.btn{
+
+.btn {
     outline: none!important;
 }
-.btn-padd{
+
+.btn-padd {
     margin: 0px 10px;
 }
-.bacgrFixed{
+
+.bacgrFixed {
     position: fixed;
     left: 0;
     top: 0;
@@ -200,7 +189,7 @@
     opacity: 0.6;
 }
 
-.sp{
+.sp {
     min-height: calc(100vh - 330px);
     display: flex;
     align-items: center;
