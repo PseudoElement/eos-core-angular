@@ -486,9 +486,9 @@ export class EosDictService {
         return this.getDictionaryById(node.dictionaryId)
             .then((dictionary) => {
                 let resNode: EosDictionaryNode = null;
-                return this.preSave(dictionary, data)
-                    .then(() => {
-                        return dictionary.updateNodeData(node, data);
+                return this.preSave(dictionary, data, false)
+                    .then((appendChanges) => {
+                        return dictionary.updateNodeData(node, data, appendChanges);
                     })
                     .then((results) => {
                         const keyFld = dictionary.descriptor.record.keyField.foreignKey;
@@ -520,7 +520,7 @@ export class EosDictService {
         const dictionary = this.currentDictionary;
 
         if (this._treeNode) {
-            return this.preSave(dictionary, data)
+            return this.preSave(dictionary, data, true)
                 .then(() => {
                     return dictionary.descriptor.addRecord(data, this._treeNode.data);
                 })
@@ -961,13 +961,13 @@ export class EosDictService {
         return true;
     }
 
-    private preSave(dictionary: EosDictionary, data: any): Promise<any> {
+    private preSave(dictionary: EosDictionary, data: any, isNewRecord: boolean): Promise<any> {
         if (data && data.rec) {
             if (dictionary.id === PARTICIPANT_SEV_DICT.id) {
 
             }
 
-            if (dictionary.id === DOCGROUP_DICT.id) {
+            if (!isNewRecord && dictionary.id === DOCGROUP_DICT.id) {
                 const ctrl = new AdvCardRKDataCtrl(this.injector);
                 return ctrl.doCorrectsRKToDG(data).then(changes => {
                     if (!this.isObjEmpty(changes.fixE)) {
@@ -978,33 +978,21 @@ export class EosDictService {
                             cancelTitle: 'Нет'
                         };
 
-                        this.confirmSrv.confirm(confirmObj)
+                        return this.confirmSrv.confirm(confirmObj)
                         .then((confirm: boolean) => {
-                            const ch = {};
-
-                            ch['DOC_DEFAULT_VALUE_List'] = [];
 
                             if (confirm) {
-                                for (const key in changes.fixE) {
-                                    if (changes.fixE.hasOwnProperty(key)) {
-                                        const element = changes.fixE[key];
-                                        ch['DOC_DEFAULT_VALUE_List'].push({
-                                            DEFAULT_ID: key,
-                                            VALUE: element,
-                                        });
+                                return changes.fixE;
 
-                                    }
-                                }
-                                ctrl.saveDDGDefaultRK(data, ch);
                             } else {
-                                console.log('no');
+                                return null;
                             }
                         });
                     }
                     return Promise.resolve(null);
                 }).catch(err => {
                     this._msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка РК'});
-                })
+                });
             }
 
             if (dictionary.id === DEPARTMENTS_DICT.id && data.rec.IS_NODE) {

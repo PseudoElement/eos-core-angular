@@ -247,11 +247,6 @@ export class AdvCardRKDataCtrl {
         }
     }
 
-    // public updateDictLinkTitle(path: string, input: any) {
-    //     input.options[0].title = 'sadgsad';
-
-    // }
-
     doCorrectsRKToDG(data: any): Promise<any> {
 
         const id = data.rec ? data.rec['ISN_NODE'] : null;
@@ -262,27 +257,26 @@ export class AdvCardRKDataCtrl {
         return this.readDGValues(id).then(dgSaved => {
             const dg = data.rec;
             const dgsList = this.arrayToDotList(dgSaved[0][DEFAULTS_LIST_NAME], DEFAULTS_LIST_NAME, 'DEFAULT_ID', 'VALUE');
+            const chlist = {};
             const changes = {
-                fixE: {}
+                fixE: {},
             };
             const isEDoc = dg['E_DOCUMENT'];
+            changes.fixE[DEFAULTS_LIST_NAME] = {};
+            chlist[DEFAULTS_LIST_NAME] = {};
 
-            changes[DEFAULTS_LIST_NAME] = {};
-            if (isEDoc) {
-                if (!dgsList['DOC_DEFAULT_VALUE_List.SPECIMEN']){
-                    changes.fixE['DOC_DEFAULT_VALUE_List.SPECIMEN'] = '1';
+            if (!isEDoc) {
+                if (!dgsList['DOC_DEFAULT_VALUE_List.SPECIMEN']) {
+                    chlist[DEFAULTS_LIST_NAME]['SPECIMEN'] = '1';
                 }
             } else {
                 if (dgsList['DOC_DEFAULT_VALUE_List.SPECIMEN']) {
-                    changes.fixE['DOC_DEFAULT_VALUE_List.SPECIMEN'] = null;
+                    chlist[DEFAULTS_LIST_NAME]['SPECIMEN'] = null;
                 }
             }
-            changes[DEFAULTS_LIST_NAME]['_orig'] = dgSaved[0][DEFAULTS_LIST_NAME];
-            // inputs['DOC_DEFAULT_VALUE_List.FREE_NUM_M'].value = 1;
-            // inputs['DOC_DEFAULT_VALUE_List.DOC_DATE_M'].value = 1;
-            // inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL_M'].value = 1;
-            // inputs['DOC_DEFAULT_VALUE_List.ISN_CARD_REG_M'].value = 1;
-            // inputs['DOC_DEFAULT_VALUE_List.ISN_CABINET_REG_M'].value = 1;
+
+            changes.fixE = this._calcChangesFor(dgSaved[0], chlist);
+
             return changes;
         });
     }

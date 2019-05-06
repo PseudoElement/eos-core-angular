@@ -171,9 +171,9 @@ export class EosDictionary {
         }
     }
 
-    updateNodeData(node: EosDictionaryNode, data: any): Promise<IRecordOperationResult[]> {
+    updateNodeData(node: EosDictionaryNode, data: any, appendToChanges: any = null): Promise<IRecordOperationResult[]> {
         if (data) {
-            return this.descriptor.updateRecord(node.data, data)
+            return this.descriptor.updateRecord(node.data, data, appendToChanges)
                 .then((_resp) => {
                     node.relatedLoaded = false;
                     node.updateData(data.rec);
