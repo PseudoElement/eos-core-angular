@@ -259,7 +259,8 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
     isEditEnabled(): boolean {
 
-        if (this._eaps.isAccessGrantedForDictionary(this._dictSrv.currentDictionary.id) < APS_DICT_GRANT.readwrite) {
+        if (this._eaps.isAccessGrantedForDictionary(this._dictSrv.currentDictionary.id,
+            this._dictSrv.treeNodeIdByDict(this._dictSrv.currentDictionary.id)) < APS_DICT_GRANT.readwrite) {
             return false;
         }
 

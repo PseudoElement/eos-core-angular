@@ -47,6 +47,7 @@ export class NodeActionsComponent implements OnDestroy {
         ) {
         this._initButtons();
 
+        this._dictSrv = _dictSrv;
         _dictSrv.listDictionary$
             .takeUntil(this.ngUnsubscribe)
             .combineLatest(_dictSrv.openedNode$, _dictSrv.viewParameters$, _dictSrv.visibleList$)
@@ -57,7 +58,6 @@ export class NodeActionsComponent implements OnDestroy {
                 this._viewParams = params;
                 this._update();
             });
-        this._dictSrv = _dictSrv;
     }
 
     ngOnDestroy() {
@@ -115,6 +115,7 @@ export class NodeActionsComponent implements OnDestroy {
         let _enabled = false;
         let _active = false;
         let _show = false;
+        let due = null;
 
         if (this.dictionary && this._viewParams) {
             _enabled = !this._viewParams.updatingList;
@@ -191,9 +192,12 @@ export class NodeActionsComponent implements OnDestroy {
                     }
                     break;
             }
+            due = this._dictSrv.treeNodeIdByDict(this.dictionary.id);
         }
 
-        const grant = this.dictionary ? this._eaps.isAccessGrantedForDictionary(this.dictionary.id) :
+
+
+        const grant = this.dictionary ? this._eaps.isAccessGrantedForDictionary(this.dictionary.id, due) :
                         APS_DICT_GRANT.denied;
         const is_granted = (button.accessNeed <= grant);
 

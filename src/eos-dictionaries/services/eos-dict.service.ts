@@ -37,6 +37,8 @@ import { _ES } from '../../eos-rest/core/consts';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from './eos-access-permissions.service';
 import { AdvCardRKDataCtrl } from 'eos-dictionaries/adv-card/adv-card-rk-datactrl';
 import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev-participant';
+import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
+import { NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 
 @Injectable()
 export class EosDictService {
@@ -66,6 +68,7 @@ export class EosDictService {
     private _dictionaries: EosDictionary[];
     private _listDictionary$: BehaviorSubject<EosDictionary>;
     private filters: any = {};
+    private _cDue: string;
 
     /* Observable dictionary for subscribing on updates in components */
     get dictionary$(): Observable<EosDictionary> {
@@ -207,6 +210,20 @@ export class EosDictService {
         this._dictMode = 0;
         this._dictMode$ = new BehaviorSubject<number>(this._dictMode);
         this._initPaginationConfig();
+    }
+
+    treeNodeIdByDict(id: string) {
+        if (!this._treeNode) {
+            return null;
+        }
+        if (id === CABINET_DICT.id) {
+            return this._treeNode.id;
+        } else if (id === DEPARTMENTS_DICT.id) {
+            return this._treeNode.id;
+        } else if (id === NOMENKL_DICT.id) {
+            return this.getCustomNodeId();
+        }
+        return null;
     }
 
     clearCurrentNode() {
@@ -718,7 +735,7 @@ export class EosDictService {
 
     setDictMode(mode: number): boolean {
         const dict = this._dictionaries[0].getDictionaryIdByMode(mode).id;
-        const access = this._eaps.isAccessGrantedForDictionary(dict) !== APS_DICT_GRANT.denied;
+        const access = this._eaps.isAccessGrantedForDictionary(dict, null) !== APS_DICT_GRANT.denied;
         if (access) {
             this._dictMode = mode;
             this._srchCriteries = null;
@@ -844,6 +861,16 @@ export class EosDictService {
         this.updateViewParameters({firstUnfixedIndex: this.viewParameters.firstUnfixedIndex - 1});
 
     }
+
+    setCustomNodeId(_nodeId: string) {
+        this._cDue = _nodeId;
+    }
+
+    getCustomNodeId() {
+        return this._cDue;
+    }
+
+
 
     private getDictionaryById(id: string): Promise<EosDictionary> {
         const existDict = this._dictionaries.find((dictionary) => dictionary && dictionary.id === id);

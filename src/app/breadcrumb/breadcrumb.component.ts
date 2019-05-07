@@ -85,7 +85,11 @@ export class BreadcrumbsComponent implements OnDestroy {
     }
 
     isEditEnabled() {
-        if (this._eaps.isAccessGrantedForDictionary(this._dictSrv.currentDictionary.id) < APS_DICT_GRANT.readwrite) {
+        if (!this._dictSrv.currentDictionary) {
+            return false;
+        }
+        if (this._eaps.isAccessGrantedForDictionary(this._dictSrv.currentDictionary.id,
+                this._dictSrv.treeNodeIdByDict(this._dictSrv.currentDictionary.id)) < APS_DICT_GRANT.readwrite) {
             return false;
         }
         return this._isEditEnabled;
