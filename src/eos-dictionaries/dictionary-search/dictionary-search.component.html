@@ -367,15 +367,15 @@
                 <div class="second-col">
                     <div class="form-group unimportant-text">
                         <label class="s-font"
-                            for="title">{{fieldsDescription.rec['title']?.title}}</label>
+                            for="title">{{fieldsDescription.rec['shorttitle']?.title}}</label>
                         <div class="search-fld">
                             <input id="title"
                                 name="title"
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['CLASSIF_NAME']"
-                                placeholder="{{fieldsDescription.rec['title']?.title}}"
-                                maxlength="{{fieldsDescription.rec['title']?.length}}">
+                                placeholder="{{fieldsDescription.rec['shorttitle']?.title}}"
+                                maxlength="{{fieldsDescription.rec['shorttitle']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
                                 (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>

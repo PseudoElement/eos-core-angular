@@ -309,13 +309,13 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     listFields: ['CODE', 'shorttitle', 'SURNAME', 'DUTY', ],
     fullSearchFields: {
         person: ['CODE', 'PHONE', 'PHONE_LOCAL', 'E_MAIL', 'DUTY', 'fullPosition', 'SURNAME', 'NOTE', 'printInfo'],
-        department: ['CODE', 'nametitle', 'indexDep', 'NOTE', 'fullTitle'],
+        department: ['CODE', 'shorttitle', 'indexDep', 'NOTE', 'fullTitle'],
         cabinet: ['titleRoom', 'fullCabinet']
     },
     quickViewFields: ['photo', 'fullTitle', 'fullPosition', 'DUTY', 'PHONE', 'PHONE_LOCAL', 'E_MAIL', 'IS_NODE', 'POST_H', 'SURNAME',
         'CARD_NAME', 'CARD_FLAG', 'CODE', 'NOTE', 'IS_NODE', 'printInfo', 'user', 'cabinet',
         'sev', 'nametitle', 'organization'], // title is in shortQuickViewFields
-    shortQuickViewFields: ['firstName', 'fathersName', 'lastName', 'nametitle'],
+    shortQuickViewFields: ['firstName', 'fathersName', 'lastName', 'shorttitle'],
     editFields: ['CARD_FLAG', 'CARD_NAME', 'CODE', 'DUTY', 'IS_NODE', 'NOTE', 'SURNAME', 'indexPerson', 'POST_H', 'PHONE_LOCAL', 'PHONE',
         'FAX', 'E_MAIL', 'NUM_CAB', 'START_DATE', 'END_DATE', 'fullPosition', 'SKYPE', 'printInfo', 'sev', 'organization', 'cabinet',
         'user', 'photo', 'ID_GAS_PS', 'NUMCREATION_FLAG',
