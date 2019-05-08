@@ -78,19 +78,24 @@ export class EosDictionary {
             this.descriptor = descriptor;
             this._nodes = new Map<string, EosDictionaryNode>();
             this._dictionaries = {};
-            this.defaultOrder();
+            this.orderSetDefault();
             return this;
         } else {
             throw new Error('Словарь не поддерживается');
         }
     }
 
-    public defaultOrder() {
-        this._orderBy = {
+    public orderSetDefault() {
+        this._orderBy = this.orderDefault();
+    }
+
+    public orderDefault() {
+        return {
             ascend: true,
-            fieldKey: this.descriptor.defaultOrder
+            fieldKey: this.descriptor.defaultOrder,
         };
     }
+
 
     unbindOrganization() {
         // todo: решить с data.__relfield
@@ -602,7 +607,7 @@ export class EosDictionary {
             }
             return orderedNodes;
         } else {
-            this.defaultOrder();
+            this.orderSetDefault();
             return this._orderByField(nodes);
         }
         // return nodes;

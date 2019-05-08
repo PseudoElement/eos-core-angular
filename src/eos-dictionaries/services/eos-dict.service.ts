@@ -348,7 +348,7 @@ export class EosDictService {
     }
 
     defaultOrder() {
-        this.currentDictionary.defaultOrder();
+        this.currentDictionary.orderSetDefault();
         this._reorderList(this.currentDictionary);
     }
 
@@ -724,7 +724,7 @@ export class EosDictService {
             if (this.viewParameters.userOrdered) {
                 dictionary.orderBy = null;
             } else {
-                dictionary.defaultOrder();
+                dictionary.orderSetDefault();
             }
 
             dictionary.userOrdered = this.viewParameters.userOrdered;
