@@ -1265,6 +1265,17 @@ export class EosDictService {
                     this.viewParameters.showDeleted = showDeleted;
                 }
                 this._setCurrentList(dictionary, nodes);
+
+                // if (dictionary.id === DEPARTMENTS_DICT.id) {
+                for (let i = 0; i < nodes.length; i++) {
+                    const n = nodes[i];
+                    if (!n.parent && n.parentId) {
+                        n.parent = dictionary.getNode(n.parentId);
+                    }
+
+                }
+                // }
+
                 this.updateViewParameters({
                     updatingList: false,
                     searchResults: true
