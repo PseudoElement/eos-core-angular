@@ -96,6 +96,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                         this.orderBy = dictSrv.currentDictionary.orderBy;
                     }
                 }
+                this._recalcCounter = 0;
             });
     }
 
