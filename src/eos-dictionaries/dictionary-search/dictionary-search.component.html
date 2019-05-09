@@ -141,12 +141,12 @@
                                 name="PHONE"
                                 type="text"
                                 class="form-control light"
-                                [(ngModel)]="searchModel['PHONE']"
+                                [(ngModel)]="searchModel['PHONE_LOCAL']"
                                 placeholder="{{fieldsDescription.rec['PHONE']?.title}}"
                                 maxlength="{{fieldsDescription.rec['PHONE']?.length}}">
                             <a class="clear-btn"
-                                [ngClass]="{'hide': !searchModel['PHONE']}"
-                                (click)="searchModel['PHONE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                [ngClass]="{'hide': !searchModel['PHONE_LOCAL']}"
+                                (click)="searchModel['PHONE_LOCAL'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
                         </div>
                     </div>
                     <div class="form-group unimportant-text">

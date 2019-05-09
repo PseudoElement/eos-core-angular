@@ -680,10 +680,14 @@ export class EosDictService {
         const dictionary = this.currentDictionary;
         if (data.srchMode === 'person') {
             this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
-            if (data.person['PHONE']) {
-                data.person['PHONE_LOCAL'] = data.person['PHONE'];
-                delete data.person['PHONE'];
-            }
+            // if (data.person['PHONE']) {
+            //     data.person['PHONE_LOCAL'] = data.person['PHONE'];
+            //     delete data.person['PHONE'];
+            // } else {
+            //     if (data.person['PHONE_LOCAL']) {
+            //         delete data.person['PHONE_LOCAL'];
+            //     }
+            // }
             this._srchCriteries.push(dictionary.getFullsearchCriteries(data, params, this._treeNode));
             return this._search(params.deleted);
         } else {
