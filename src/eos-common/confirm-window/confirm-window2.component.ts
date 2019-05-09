@@ -38,12 +38,17 @@ export class ConfirmWindow2Component implements IConfirmWindow2Content {
 
     constructor(public modalRef: BsModalRef, private modalService: BsModalService) {
         this.modalService.onHide.subscribe((_evt) => {
-            this.confirmEvent.emit(undefined);
+            this.confirmEvent.emit(null);
         });
     }
 
     click(button: IConfirmButton) {
         this.confirmEvent.emit(button);
+        this._hide();
+    }
+
+    close() {
+        this.confirmEvent.emit(null);
         this._hide();
     }
 

@@ -156,7 +156,7 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
             .forEach((owner) => {
                 let canceled = false;
                 this._checkDeletion(owner.data['DUE']).then(result => {
-                    if (result === 'DOC_FOLDER_NOT_EMPTY_BY_RESOLUTION' || // true ||
+                    if (result === 'DOC_FOLDER_NOT_EMPTY_BY_RESOLUTION' ||
                         result === 'DOC_FOLDER_NOT_EMPTY_BY_REPLY') {
                         return this._confirmSrv.confirm2(CONFIRM_CABINET_NON_EMPTY1).then(button => {
                             if (!button || button.result === 3) {
