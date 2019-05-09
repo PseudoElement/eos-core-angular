@@ -1,3 +1,4 @@
+import { ConfirmWindow2Component } from './confirm-window/confirm-window2.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -45,6 +46,7 @@ import { DynamicInputLinkButtonComponent } from './dynamic-form-input/dynamic-in
 @NgModule({
     declarations: [
         ConfirmWindowComponent,
+        ConfirmWindow2Component,
         InfoComponent,
         MessagesComponent,
         InputCleanerDirective,
@@ -76,6 +78,7 @@ import { DynamicInputLinkButtonComponent } from './dynamic-form-input/dynamic-in
     ],
     exports: [
         ConfirmWindowComponent,
+        ConfirmWindow2Component,
         InfoComponent,
         MessagesComponent,
         InputCleanerDirective,
@@ -87,6 +90,7 @@ import { DynamicInputLinkButtonComponent } from './dynamic-form-input/dynamic-in
     ],
     entryComponents: [
         ConfirmWindowComponent,
+        ConfirmWindow2Component,
     ],
     providers: [
         ConfirmWindowService,
