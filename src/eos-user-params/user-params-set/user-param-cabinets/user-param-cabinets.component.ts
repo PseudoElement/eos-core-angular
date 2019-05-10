@@ -8,7 +8,6 @@ import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { Router } from '@angular/router';
 import { WaitClassifService } from 'app/services/waitClassif.service';
-import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 import { PipRX, USER_PARMS } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
@@ -252,7 +251,16 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             return;
         }
         this.bacgHeader = true;
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
+        const param = {
+            classif: 'DEPARTMENT',
+            return_due: true,
+            id: '0.',
+            skipDeleted: true,
+            selectMulty: false,
+            selectLeafs: true,
+            selectNodes: false,
+        };
+        this._waitClassifSrv.openClassif(param)
             .then((data: string) => {
                 this.dueForLink = data;
                 return this._userParamsSetSrv.getDepartmentFromUser([data]);

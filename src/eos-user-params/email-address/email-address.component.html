@@ -1,34 +1,45 @@
 <div class="email-window">
-    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="statusBtnSub" [defaultBtn]='false' (submitEmit)='saveAllForm($event)' (cancelEmit)='backForm($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="statusBtnSub" [defaultBtn]='false'
+        (submitEmit)='saveAllForm($event)' (cancelEmit)='backForm($event)' (editEmit)='edit($event)'
+        (defaultEmit)='default($event)'></eos-user-params-header>
     <div class="email-control">
-        <button [disabled]="!flagEdit" type="button" class=" email-create btn btn-primary" (click)="openModal(template)" tooltip="Добавить E-MAIL" placement="top" containerClass="tooltip-info">
-            <span class="eos-icon small" [ngClass] = "flagEdit ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
+        <button [disabled]="!flagEdit" type="button" class=" email-create btn btn-primary" (click)="openModal(template)"
+            tooltip="Добавить E-MAIL" placement="top" containerClass="tooltip-info">
+            <span class="eos-icon small" [ngClass]="flagEdit ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
         </button>
         <div class="btn-group">
             <div tooltip="Ограничение рассылки" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info">
-                <button [disabled]="getaccess || !flagEdit" type="button" class=" email-edit btn btn-primary" (click)="itemTooltip.hide(); openModal(template, true)">
-                    <span [ngClass]="getaccess || !flagEdit ? 'eos-icon eos-icon-edit-grey small' : 'eos-icon eos-icon-edit-blue small'"></span>
+                <button [disabled]="getaccess || !flagEdit" type="button" class=" email-edit btn btn-primary"
+                    (click)="itemTooltip.hide(); openModal(template, true)">
+                    <span
+                        [ngClass]="getaccess || !flagEdit ? 'eos-icon eos-icon-edit-grey small' : 'eos-icon eos-icon-edit-blue small'"></span>
                 </button>
             </div>
         </div>
         <div class="btn-group">
             <div tooltip="Удалить E-MAIL" #itemTooltip="bs-tooltip" placement="top" containerClass="tooltip-info">
-                <button [disabled]="getaccess || !flagEdit" class="email-delite  btn btn-primary" (click)="itemTooltip.hide(); deliteEmailFild()">
-                        <span [ngClass]="getaccess || !flagEdit ? 'eos-icon eos-icon-bin-forever-grey small' : 'eos-icon eos-icon-bin-forever-blue small'"></span>
-                    </button>
+                <button [disabled]="getaccess || !flagEdit" class="email-delite  btn btn-primary"
+                    (click)="itemTooltip.hide(); deliteEmailFild()">
+                    <span
+                        [ngClass]="getaccess || !flagEdit ? 'eos-icon eos-icon-bin-forever-grey small' : 'eos-icon eos-icon-bin-forever-blue small'"></span>
+                </button>
             </div>
         </div>
         <div class="btn-group">
             <div tooltip="Переместить вверх" #itemTooltip="bs-tooltip" placement="top" containerClass="tooltip-info">
-                <button [disabled]="currentIndex == 0 || getaccess || !flagEdit" class="stepTop btn btn-primary-light" (click)="itemTooltip.hide(); upWeight()">
-                    <span [ngClass]="(currentIndex == 0 || getaccess || !flagEdit) ? 'eos-icon eos-icon-arrow-v-grey-top small' : 'eos-icon eos-icon-arrow-v-blue-top small'"></span>
+                <button [disabled]="currentIndex == 0 || getaccess || !flagEdit" class="stepTop btn btn-primary-light"
+                    (click)="itemTooltip.hide(); upWeight()">
+                    <span
+                        [ngClass]="(currentIndex == 0 || getaccess || !flagEdit) ? 'eos-icon eos-icon-arrow-v-grey-top small' : 'eos-icon eos-icon-arrow-v-blue-top small'"></span>
                 </button>
             </div>
         </div>
         <div class="btn-group">
             <div tooltip="Переместить вниз" #itemTooltip="bs-tooltip" placement="top" containerClass="tooltip-info">
-                <button [disabled]="currentIndex == umailsInfo.length - 1 || getaccess || !flagEdit" class="stepBottom btn btn-primary-light" (click)="itemTooltip.hide(); downWeight()">
-                    <span [ngClass]="(currentIndex == umailsInfo.length - 1 || getaccess || !flagEdit) ? 'eos-icon eos-icon-arrow-v-grey-bottom small' : 'eos-icon eos-icon-arrow-v-blue-bottom small'"></span>
+                <button [disabled]="currentIndex == umailsInfo.length - 1 || getaccess || !flagEdit"
+                    class="stepBottom btn btn-primary-light" (click)="itemTooltip.hide(); downWeight()">
+                    <span
+                        [ngClass]="(currentIndex == umailsInfo.length - 1 || getaccess || !flagEdit) ? 'eos-icon eos-icon-arrow-v-grey-bottom small' : 'eos-icon eos-icon-arrow-v-blue-bottom small'"></span>
                 </button>
             </div>
         </div>
@@ -43,20 +54,24 @@
         <div class="email-content" *ngIf="umailsInfo.length > 0 && myForm">
             <form [formGroup]="myForm">
                 <div formArrayName="groupForm">
-                    <div class="emali-list" *ngFor="let group of myForm.controls['groupForm'].controls; let i = index" (click)=chooseCurrentField(i) [ngClass]="{current: currentIndex === i}">
+                    <div class="emali-list" *ngFor="let group of myForm.controls['groupForm'].controls; let i = index"
+                        (click)=chooseCurrentField(i) [ngClass]="{current: currentIndex === i}">
                         <div class="emali-list" formGroupName="{{i}}">
                             <span [ngClass]="{current: currentIndex === i}" class="emali-list-first">
-                                                <input formControlName="email"  type="text" readonly="readonly" class="readonly" >
-                                            </span>
-                            <span [ngClass]="{current: currentIndex === i}" class="emali-list-secont">
-                                                <label class="checkbox disabled minus-checkbox ">
-                                                    <input  formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" >
-                                                    <span class="eos-icon eos-icon-checkbox-black"></span>
-                            </label>
+                                <input formControlName="email" type="text" readonly="readonly" class="readonly">
                             </span>
-                            <span [tooltip]="group.controls['params'].value" triggers="hover" placement="auto" containerClass="tooltip-info" [ngClass]="{current: currentIndex === i}" class="emali-list-last">
-                                                    <input formControlName="params"   type="text" readonly="readonly" class="readonly" >
-                                            </span>
+                            <span [ngClass]="{current: currentIndex === i}" class="emali-list-secont">
+                                <label class="checkbox disabled minus-checkbox ">
+                                    <input formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"
+                                        type="checkbox" readonly="readonly" class="readonly">
+                                    <span class="eos-icon eos-icon-checkbox-black"></span>
+                                </label>
+                            </span>
+                            <span [tooltip]="group.controls['params'].value ? 'Имеются ограничения': ''"
+                                triggers="hover" placement="auto" containerClass="tooltip-info"
+                                [ngClass]="{current: currentIndex === i}" class="emali-list-last">
+                                <input formControlName="params" type="text" readonly="readonly" class="readonly">
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -80,12 +95,14 @@
 
             <div class="modal-r" *ngIf='editFalg'>
                 <div class="modal-title-cust">Снимите отметку с событий, сообщения о которых не нужно рассылать</div>
-                <eos-email-form (sendParams)="getChildParams($event)" [checkedParams]='currentParams' [code]='CODE'></eos-email-form>
+                <eos-email-form (sendParams)="getChildParams($event)" [checkedParams]='currentParams' [code]='CODE'>
+                </eos-email-form>
             </div>
         </main>
         <div *ngFor="let alert of alerts">
             <div class="alert alert-danger">
-                <span>{{alert['1'].msg}} <button type="button" class="btn btn-primary" (click)="onClosed(alert['1'].type)">x</button></span>
+                <span>{{alert['1'].msg}} <button type="button" class="btn btn-primary"
+                        (click)="onClosed(alert['1'].type)">x</button></span>
             </div>
         </div>
     </div>
