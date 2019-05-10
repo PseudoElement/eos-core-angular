@@ -145,7 +145,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             if (params) {
 
                 this.dictionaryId = params.dictionaryId;
-                if (this._eaps.isAccessGrantedForDictionary(this.dictionaryId) === APS_DICT_GRANT.denied) {
+                if (this._eaps.isAccessGrantedForDictionary(this.dictionaryId, null) === APS_DICT_GRANT.denied) {
                     this.accessDenied = true;
                     this._msgSrv.addNewMessage(DANGER_ACCESS_DENIED_DICT);
                     return;
@@ -161,6 +161,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                                 if (n) {
                                     this.title = n.title;
                                 }
+                                this._dictSrv.setCustomNodeId(this._nodeId);
                                 this._dictSrv.selectCustomTreeNode().then ((data) => {
                                 });
                             } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
@@ -409,7 +410,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
     isDictModeEnabled (mode: number): boolean {
         const dict = this._dictSrv.dictionaryByMode(mode).id;
-        return this._eaps.isAccessGrantedForDictionary(dict) !== APS_DICT_GRANT.denied;
+        return this._eaps.isAccessGrantedForDictionary(dict, null) !== APS_DICT_GRANT.denied;
     }
     setDictMode(mode: number) {
         if (mode === 0 && this.treeNode.isDeleted) {

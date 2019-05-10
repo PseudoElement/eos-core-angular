@@ -1,0 +1,39 @@
+<div class="modal-header">
+    <div class="modal-title pull-left">
+        <div class="title-sert">
+            <span>Выбор сертификатов по умолчанию</span>
+        </div>
+    </div>
+    <div class="modal-title pull-right">
+        <div class="button-sert">
+            <button type="button" class="btn btn-primary upper" (click)='closeSerts()'>ОТМЕНИТЬ</button>
+            <button type="button" [disabled]="disabledBtn" class="btn btn-primary-full upper" (click)="save()">СОХРАНИТЬ</button>
+        </div>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="base-serts-wr">
+        <div class="serts-content">
+            <span class="sert-head">Сертификат для подписания почтовых сообщений</span>
+            <div class="sert-content">
+                <span class="sert-title">{{stateSerts.sing_mail}}</span>
+                <div>
+                    <button type="button" [disabled]="!isCarma" triggers="hover:click" tooltip="Добавить" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info" (click)="openSertService('sing_mail', 'id_sing')" class="btn btn-primary-light"><span class="eos-icon eos-icon-download small"></span></button>
+                    <button type="button" [disabled]="!stateSerts.sing_mail|| !isCarma" triggers="hover:click" tooltip="Показать" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info" (click)="show('id_sing')" class="btn btn-primary-light"><span class="eos-icon eos-icon-info-blue small"></span></button>
+                    <button type="button" [disabled]="!stateSerts.sing_mail || !isCarma" tooltip="Удалить" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info" (click)="deliteSert('sing_mail', 'id_sing')" class="btn btn-primary-light"><span class="eos-icon eos-icon-bin-forever-blue small"></span></button>
+                </div>
+            </div>
+        </div>
+        <div class="serts-content">
+            <span class="sert-head">Сертификат для шифрования почтовых сообщений</span>
+            <div class="sert-content">
+                <span class="sert-title">{{stateSerts.enc_mail}}</span>
+                <div>
+                    <button type="button" [disabled]="!isCarma" triggers="hover:click" tooltip="Добавить" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info" (click)="openSertService('enc_mail', 'id_enc')" class="btn btn-primary-light"><span class="eos-icon eos-icon-download small"></span></button>
+                    <button type="button" [disabled]="!stateSerts.enc_mail || !isCarma" triggers="hover:click" tooltip="Показать" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info" (click)="show('id_enc')" class="btn btn-primary-light"><span class="eos-icon eos-icon-info-blue small"></span></button>
+                    <button type="button" [disabled]="!stateSerts.enc_mail || !isCarma" tooltip="Удалить" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info" (click)="deliteSert('enc_mail', 'id_enc')" class="btn btn-primary-light"><span class="eos-icon eos-icon-bin-forever-blue small"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

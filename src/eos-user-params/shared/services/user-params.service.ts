@@ -87,14 +87,6 @@ export class UserParamsService {
             this.userRightDocgroupList = [];
             this._userContext.USER_TECH_List.forEach(item => this.userTechList.push(Object.assign({}, item)));
             this._userContext.USER_RIGHT_DOCGROUP_List.forEach(item => this.userRightDocgroupList.push(Object.assign({}, item)));
-            /*
-                КОСТЫЛЬ!
-                Обрезаем 40-й элемент так как запись в базу пока ограничена длинной 39
-                TODO Разобраться и убрать это удаление
-            */
-            if (this._userContext['TECH_RIGHTS'] && this._userContext['TECH_RIGHTS'].length > 39) {
-                this._userContext['TECH_RIGHTS'] = this._userContext['TECH_RIGHTS'].slice(0, -1);
-            }
             this._userContext['DUE_DEP_NAME'] = '';
             this._isTechUser = !this._userContext['DUE_DEP'];
             this._userContext['isTechUser'] = !this._userContext['DUE_DEP'];
@@ -189,6 +181,18 @@ export class UserParamsService {
                    return false;
                }
         });
+    }
+    getSertSBaseParams(isn_cl?: string) {
+        if (!isn_cl) {
+            isn_cl = this._storageSrv.getItem('userEditableId');
+        }
+        return  this._pipRx.read({
+            USER_CERTIFICATE: {
+                criteries: {
+                    ISN_USER: isn_cl
+                }
+            }
+            });
     }
     private _errorHandler (err) {
         if (err.code === 434) {

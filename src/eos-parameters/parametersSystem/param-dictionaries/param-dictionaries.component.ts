@@ -23,6 +23,6 @@ export class ParamDictionariesComponent extends BaseParamComponent {
     }
 
     getRightsRubric() {
-        return this._eaps.isAccessGrantedForDictionary(RUBRICATOR_DICT.id) !== APS_DICT_GRANT.denied;
+        return this._eaps.isAccessGrantedForDictionary(RUBRICATOR_DICT.id, null) !== APS_DICT_GRANT.denied;
     }
 }

@@ -307,7 +307,7 @@ export abstract class AbstractDictionaryDescriptor {
      * @param updates changes
      * @returns Promise<any[]>
      */
-    updateRecord(originalData: any, updates: any): Promise<IRecordOperationResult[]> {
+    updateRecord(originalData: any, updates: any, appendToChanges: any = null): Promise<IRecordOperationResult[]> {
         const changeData = [];
         let pSev: Promise<IRecordOperationResult> = Promise.resolve(null);
         const results: IRecordOperationResult[] = [];
@@ -366,7 +366,10 @@ export abstract class AbstractDictionaryDescriptor {
                 }
             })
             .then(() => {
-                const changes = this.apiSrv.changeList(changeData);
+                let changes = this.apiSrv.changeList(changeData);
+                if (appendToChanges) {
+                    changes = changes.concat(appendToChanges);
+                }
                 if (changes.length) {
                     return this.apiSrv.batch(changes, '')
                         .then(() => {

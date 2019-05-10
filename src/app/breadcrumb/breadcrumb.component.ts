@@ -11,6 +11,7 @@ import { RECORD_ACTIONS_EDIT,
 import 'rxjs/add/operator/takeUntil';
 import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import {RtUserSelectService} from '../../eos-user-select/shered/services/rt-user-select.service';
+import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 @Component({
     selector: 'eos-breadcrumb',
     templateUrl: 'breadcrumb.component.html',
@@ -41,6 +42,7 @@ export class BreadcrumbsComponent implements OnDestroy {
         private _route: ActivatedRoute,
         private _dictSrv: EosDictService,
         private _rtSrv: RtUserSelectService,
+        private _eaps: EosAccessPermissionsService,
     ) {
         _breadcrumbsSrv.breadcrumbs$.takeUntil(this.ngUnsubscribe).
             subscribe((bc: IBreadcrumb[]) => this.breadcrumbs = bc);
@@ -83,6 +85,13 @@ export class BreadcrumbsComponent implements OnDestroy {
     }
 
     isEditEnabled() {
+        if (!this._dictSrv.currentDictionary) {
+            return false;
+        }
+        if (this._eaps.isAccessGrantedForDictionary(this._dictSrv.currentDictionary.id,
+                this._dictSrv.treeNodeIdByDict(this._dictSrv.currentDictionary.id)) < APS_DICT_GRANT.readwrite) {
+            return false;
+        }
         return this._isEditEnabled;
     }
 

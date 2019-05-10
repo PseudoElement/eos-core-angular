@@ -1,18 +1,15 @@
-import { Component, Output, EventEmitter, OnDestroy, OnInit, OnChanges, ViewChild, NgZone } from '@angular/core';
+import { Component, Output, EventEmitter, OnDestroy, OnInit, OnChanges, ViewChild, NgZone, Injector } from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
-import {PipRX} from '../../eos-rest';
 import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME, FICT_CONTROLS_LIST_NAME } from './adv-card-rk-datactrl';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { TDefaultField, TDFSelectOption } from './rk-default-values/rk-default-const';
-import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EosUtils } from 'eos-common/core/utils';
 import { Subscription } from 'rxjs/Subscription';
 import { RKBasePage } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
-import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -71,14 +68,15 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
 
     constructor(
+        public injector: Injector,
         public bsModalRef: BsModalRef,
         public zone: NgZone,
-        private _apiSrv: PipRX,
+        // private _apiSrv: PipRX,
         private _dataSrv: EosDataConvertService,
         private _inputCtrlSrv: InputControlService,
-        private _msgSrv: EosMessageService,
-        private _dictSrv: EosDictService,
-        private _zone: NgZone,
+        // private _msgSrv: EosMessageService,
+        // private _dictSrv: EosDictService,
+        // private _zone: NgZone,
     ) {
         this.isUpdating = true;
         this.tabs = tabs;
@@ -118,9 +116,9 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
     save(): void {
-        this.dataController.save(this.isn_node, this.inputs, this.newData).then (r => {
+        this.dataController.save(this.isn_node, this.inputs, this.newData).then (() => {
             this.bsModalRef.hide();
-        }).catch (err => {
+        }).catch (() => {
 
         });
     }
@@ -152,10 +150,10 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
         this.activeTab = tabs[0];
 
-        this.dataController = new AdvCardRKDataCtrl(this._zone, this._apiSrv, this._msgSrv, this._dictSrv);
+        this.dataController = new AdvCardRKDataCtrl(this.injector/*, this._zone, this._apiSrv, this._msgSrv, this._dictSrv*/);
         this.descriptions = this.dataController.getDescriptions();
 
-        this.dataController.readValues(this.isn_node).then (values => {
+        this.dataController.readDGValues(this.isn_node).then (values => {
             this.storedValuesDG = values[0];
             if (this.storedValuesDG['E_DOCUMENT'] === 1) {
                 this.isEDoc = true;
@@ -164,7 +162,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             }
 
             this.rkType = this.storedValuesDG['RC_TYPE'];
-
 
             this.values = {
                 [DEFAULTS_LIST_NAME]: this._makeDefaults(this.descriptions[DEFAULTS_LIST_NAME]),
@@ -175,10 +172,10 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             this._appendDBDefValues(this.values[DEFAULTS_LIST_NAME], this.storedValuesDG[DEFAULTS_LIST_NAME]);
             this._appendDBFilesValues(this.values[FILE_CONSTRAINT_LIST_NAME], this.storedValuesDG[FILE_CONSTRAINT_LIST_NAME]);
             this.isChanged = true;
-            this._checkCorrectValuesLogic(this.values, this.descriptions);
+            this._checkCorrectValuesLogic(this.values);
             this.editValues = this._makePrevValues(this.values);
 
-            this.dataController.loadDictsOptions(this.values, this.updateLinks).then (d => {
+            this.dataController.loadDictsOptions(this.values, this.updateLinks).then (() => {
                 this.inputs = this._getInputs();
                 this._updateInputs(this.inputs);
                 this._updateOptions(this.inputs);
@@ -246,7 +243,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
 
-    private _checkCorrectValuesLogic(values: any, descriptions: any): any {
+    private _checkCorrectValuesLogic(values: any): any {
         // Внутренние адресаты
         if (values[DEFAULTS_LIST_NAME]['SEND_ISN_LIST_DEP']) {
             if (!values[DEFAULTS_LIST_NAME]['SEND_MARKSEND']) {

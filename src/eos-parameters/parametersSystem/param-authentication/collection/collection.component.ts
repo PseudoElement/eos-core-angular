@@ -1,12 +1,24 @@
 import { Component, EventEmitter, Output, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { CollectionService, ICollectionList } from './collection.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
-import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
+// import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+// import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 
 @Component({
     selector: 'eos-param-auth-collection',
-    templateUrl: 'collection.component.html'
+    templateUrl: 'collection.component.html',
+    styles: [
+        `.form-control.ng-invalid.ng-dirty(:focus) {
+            border-color: #f44336;
+            border-width: 2px;
+        }`,
+        `.warning {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            color: #f44336;
+        }`
+    ]
 })
 
 export class AuthenticationCollectionComponent implements OnInit {
@@ -15,19 +27,38 @@ export class AuthenticationCollectionComponent implements OnInit {
     modalWordRef: BsModalRef;
     isMarkNode: boolean = false;
     isNewWord: boolean;
-    collectionList: ICollectionList[];
+    collectionList: ICollectionList[] = [];
     currentSelectedWord: ICollectionList;
     orderBy: boolean = true;
     isLoading: boolean;
     qureyForChenge: any[] = [];
     inputWordValue: string = '';
-    constructor (
-        private _confirmSrv: ConfirmWindowService,
+    errorUnique: boolean = false;
+    title = 'Словарь недопустимых паролей';
+    validPattern: boolean = true;
+    get disableCollection() {
+        return this.inputWordValue === '' || this.inputWordValue.length > 64 || this.errorUnique || !this.validPattern;
+    }
+    constructor(
+        // private _confirmSrv: ConfirmWindowService,
         private _collectionSrv: CollectionService,
         private _modalSrv: BsModalService
-    ) {}
-    ngOnInit () {
+    ) { }
+    btnDisable() {
+        const val = this.collectionList.some(list => {
+            return list.state === 'new' || list.state === 'merge';
+        });
+        if (val || this.qureyForChenge.length) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    ngOnInit() {
         this.isLoading = true;
+        this.init();
+    }
+    init() {
         this._collectionSrv.getCollectionList()
             .then((list: ICollectionList[]) => {
                 this.isLoading = false;
@@ -39,8 +70,21 @@ export class AuthenticationCollectionComponent implements OnInit {
             });
     }
     submit() {
+        this.collectionList.forEach(list => {
+            if (list.state === 'new') {
+                this.qureyForChenge.push(this._createRequestForCreate(list.CLASSIF_NAME));
+            }
+
+            if (list.state === 'merge') {
+                this.qureyForChenge.push(this._createRequestForUpdate(list.ISN_PASS_STOP_LIST, list.CLASSIF_NAME));
+            }
+        });
         this._collectionSrv.changeWords(this.qureyForChenge)
             .then((state: Boolean) => {
+                this.collectionList.map(list => {
+                    list.state = 'old';
+                    return list;
+                });
                 if (state) {
                     this._closed();
                 }
@@ -54,42 +98,58 @@ export class AuthenticationCollectionComponent implements OnInit {
                 marked: false,
                 isSelected: false,
                 selectedMark: false,
+                state: 'new',
                 CLASSIF_NAME: this.inputWordValue,
-                ISN_PASS_STOP_LIST: null
+                ISN_PASS_STOP_LIST: null,
             });
-            this.qureyForChenge.push(this._createRequestForCreate(this.inputWordValue));
             this.isNewWord = false;
         } else {
             this.currentSelectedWord.CLASSIF_NAME = this.inputWordValue;
             if (this.currentSelectedWord.ISN_PASS_STOP_LIST) {
-                this.qureyForChenge.push(this._createRequestForUpdate(
-                    this.currentSelectedWord.ISN_PASS_STOP_LIST,
-                    this.inputWordValue
-                ));
-            } else {
-                this.qureyForChenge.push(this._createRequestForCreate(this.inputWordValue));
+                this.currentSelectedWord.state = 'merge';
             }
         }
         this.inputWordValue = '';
     }
-    cancel() {
-        if (this.qureyForChenge.length) {
-            this._confirmSrv.confirm(CONFIRM_SAVE_ON_LEAVE)
-            .then(state => {
-                if (state) {
-                    this.submit();
-                } else {
-                    this._closed();
-                }
-            });
+    uniqueVal($event) {
+        this.validPattern = $event.target.validity.valid;
+        if (this.checkUniqueValue(this.inputWordValue.toUpperCase())) {
+            this.errorUnique = true;
         } else {
-            this._closed();
+            this.errorUnique = false;
         }
     }
+    checkUniqueValue(newValue): boolean {
+        return this.collectionList.some(val => {
+            return val.CLASSIF_NAME === newValue;
+        });
+    }
+    changeWord(event) {
+        this.inputWordValue = this.inputWordValue.toUpperCase();
+    }
+    cancel() {
+        // if (this.qureyForChenge.length) {
+        //     this._confirmSrv.confirm(CONFIRM_SAVE_ON_LEAVE)
+        //         .then(state => {
+        //             if (state) {
+        //                 this.submit();
+        //             } else {
+        //                 this.init();
+        //                 this._closed();
+        //             }
+        //         });
+        // } else {
+        // }
+        this.init();
+        this._closed();
+    }
     cancelModalWord() {
+        console.log('cancel');
         this.modalWordRef.hide();
         this.isNewWord = false;
         this.inputWordValue = '';
+        this.errorUnique = false;
+        this.validPattern = true;
     }
 
 
@@ -104,9 +164,11 @@ export class AuthenticationCollectionComponent implements OnInit {
                 if (node === this.currentSelectedWord) {
                     this.currentSelectedWord = null;
                 }
-                this.qureyForChenge.push(this._createRequestForDelete(node));
+                if (node.state !== 'new') {
+                    this.qureyForChenge.push(this._createRequestForDelete(node));
+                }
                 this.collectionList.splice(i, 1);
-                i --;
+                i--;
             }
         }
         this._checkMarkNode();
@@ -211,6 +273,6 @@ export class AuthenticationCollectionComponent implements OnInit {
         };
     }
     private _openModal() {
-        this.modalWordRef = this._modalSrv.show(this.modalWord, {class: 'modalWord', ignoreBackdropClick: true});
+        this.modalWordRef = this._modalSrv.show(this.modalWord, { class: 'modalWord', ignoreBackdropClick: true });
     }
 }

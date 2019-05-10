@@ -32,6 +32,6 @@ export class DictionariesComponent {
     }
 
     isAccessEnabled(dict: any) {
-        return this._eaps.isAccessGrantedForDictionary(dict.id) !== APS_DICT_GRANT.denied;
+        return this._eaps.isAccessGrantedForDictionary(dict.id, null) !== APS_DICT_GRANT.denied;
     }
 }

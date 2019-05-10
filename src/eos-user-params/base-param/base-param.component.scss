@@ -157,7 +157,7 @@
          }
      }
  }
-
+ 
  .shell {
      width: 100vw;
      height: 100vh;
@@ -167,7 +167,7 @@
      left: 0;
      z-index: 2000;
  }
-
+ 
  .wrapper-password {
      display: flex;
      justify-content: space-between;
@@ -183,4 +183,8 @@
              right: 32px;
          }
      }
+ }
+ 
+ .serts {
+     top: 30%;
  }

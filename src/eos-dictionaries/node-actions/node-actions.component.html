@@ -12,11 +12,20 @@
                         #itemTooltip="bs-tooltip"
                         placement="bottom"
                         containerClass="tooltip-info">
-                        <button dropdownToggle
+                        <button *ngIf="item.enabled"
+                            dropdownToggle
                             [disabled]="!item.enabled"
                             class="btn btn-primary-light {{item.buttonClass}}"
                             [ngClass]="{'active': item.isActive}"
-                            (click)="itemTooltip.hide();"><span [ngClass]="!item.isActive ? item.iconClass : item.activeIconClass"></span></button>
+                            (click)="itemTooltip.hide();"><span [ngClass]="!item.isActive ? item.iconClass : item.activeIconClass"></span>
+                        </button>
+                        <button *ngIf="!item.enabled"
+                            disabled
+                            class="btn btn-primary-light {{item.buttonClass}}"
+                            [ngClass]="{'active': item.isActive}"
+                            >
+                            <span [ngClass]="!item.isActive ? item.iconClass : item.activeIconClass"></span>
+                        </button>
                     </div>
                     <ul *dropdownMenu
                         class="dropdown-menu create-menu"

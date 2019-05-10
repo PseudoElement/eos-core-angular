@@ -129,7 +129,8 @@
             <eos-dynamic-input [input]="accessInputs['23']" [form]="formAccess" [readonly]="formAccess.get('23').disabled" class="base-checkbox-input"></eos-dynamic-input>
             <eos-dynamic-input [input]="accessInputs['3']" [form]="formAccess" [readonly]="formAccess.get('3').disabled" class="base-checkbox-input"></eos-dynamic-input>
             <eos-dynamic-input [input]="accessInputs['5']" [form]="formAccess" [readonly]="formAccess.get('5').disabled"></eos-dynamic-input>
-            <span class="eos-icon small icon-electronic" [ngClass]="{'eos-icon-electronic-signature-blue pointer': editMode, 'eos-icon-electronic-signature-grey': !editMode}" [tooltip]="editMode ? 'Выбор сертификатов пользователя' : null" placement="bottom" containerClass="tooltip-info"></span>
+            <span (click)="getSerts(template)" class="eos-icon small icon-electronic" [ngClass]="{'eos-icon-electronic-signature-blue pointer': editMode, 'eos-icon-electronic-signature-grey': !editMode}" [tooltip]="editMode ? 'Выбор сертификатов пользователя' : null"
+                placement="bottom" containerClass="tooltip-info"></span>
         </div>
         <!-- Доступ к системам 4-й ряд -->
         <div>
@@ -150,5 +151,8 @@
     </div>
 </div>
 
-
 <div *ngIf="isShell" class="shell"></div>
+
+<ng-template #template>
+    <eos-base-serts (closeModal)="closeSerts()"></eos-base-serts>
+</ng-template>
