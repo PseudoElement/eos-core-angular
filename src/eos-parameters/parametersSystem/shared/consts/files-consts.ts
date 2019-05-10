@@ -15,6 +15,7 @@ export const FILES_PARAM: IBaseParameters = {
             title: 'Система хранения',
             readonly: true,
             options: [
+                {value: 'NADZOR', title: 'Надзор'},
                 {value: 'DELO', title: 'Дело'}
             ]
         },

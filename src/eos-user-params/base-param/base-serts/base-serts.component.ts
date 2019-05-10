@@ -8,7 +8,7 @@ import { ICertificateInit } from 'eos-common/interfaces';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { Observable } from 'rxjs/Observable';
-import { /* PARM_CANCEL_CHANGE, */ PARM_SUCCESS_SAVE,  PARM_ERROR_DB, PARM_ERROR_CARMA } from '../../user-params-set/shared-user-param/consts/eos-user-params.const';
+import { /* PARM_CANCEL_CHANGE, */ PARM_SUCCESS_SAVE, PARM_ERROR_DB, PARM_ERROR_CARMA } from '../../user-params-set/shared-user-param/consts/eos-user-params.const';
 @Component({
     selector: 'eos-base-serts',
     templateUrl: 'base-serts.component.html',
@@ -27,6 +27,7 @@ export class BaseSertsComponent implements OnInit {
         enc_mail_origin: null,
     };
     public isCarma: boolean;
+    public flagSave: string = 'POST';
     get disabledBtn(): boolean {
         if (this.stateSerts.id_enc !== this.stateSerts.id_enc_origin || this.stateSerts.id_sing !== this.stateSerts.id_sing_origin) {
             return false;
@@ -48,14 +49,23 @@ export class BaseSertsComponent implements OnInit {
     ngOnInit() {
         this._userParamSrv.getSertSBaseParams().then((user_Sert: USER_CERTIFICATE[]) => {
             this.userSerts = user_Sert[0];
-            this.setId();
+            if (user_Sert.length) {
+                this.flagSave = 'MERGE';
+                this.setId();
+            } else {
+                this.flagSave = 'POST';
+            }
             const store = [{ Location: 'sscu', Address: '', Name: 'My' }];
             this.carmaSrv.init(null, store).subscribe(data => {
                 this.isCarma = true;
-                this.getInfoSerts();
+                if (user_Sert.length) {
+                    this.getInfoSerts();
+                }
             }, error => {
                 this.isCarma = false;
-                this.setId();
+                if (user_Sert.length) {
+                    this.setId();
+                }
                 this.notCarma();
                 this._msg.addNewMessage(PARM_ERROR_CARMA);
             });
@@ -120,35 +130,56 @@ export class BaseSertsComponent implements OnInit {
             this.stateSerts.enc_mail_origin = this.stateSerts.enc_mail;
             this.stateSerts.id_sing_origin = this.stateSerts.id_sing;
             this.stateSerts.id_enc_origin = this.stateSerts.id_enc;
-            // this.closeModal.emit();
+            if (this.flagSave = 'POST') {
+                this.flagSave = 'MERGE';
+            }
+            this.closeModal.emit();
         }).catch(error => {
-            console.log(error);
+            this._msg.addNewMessage(PARM_ERROR_DB);
         });
     }
     getSave(): Array<any> {
         const id = this._userParamSrv.curentUser['ISN_LCLASSIF'];
         const query = [];
-        if (this.stateSerts.sing_mail !== this.stateSerts.sing_mail_origin) {
+        // todo - удалить после правки, при создании пользователя не добавляется запись в таб. user_certificate
+        if (this.flagSave === 'MERGE') {
             query.push({
-                method: 'MERGE',
+                method: `MERGE`,
                 requestUri: `USER_CL(${id})/USER_CERTIFICATE_List(${id})`,
                 data: {
-                    SIGN_MAIL_CERT: this.stateSerts.id_sing
+                    SIGN_MAIL_CERT: this.stateSerts.id_sing,
+                    ENC_MAIL_CERT: this.stateSerts.id_enc
                 }
             });
-        }
-
-        if (this.stateSerts.enc_mail !== this.stateSerts.enc_mail_origin) {
+        } else {
             query.push({
-                method: 'MERGE',
-                requestUri: `USER_CL(${id})/USER_CERTIFICATE_List(${id})`,
+                method: `POST`,
+                requestUri: `USER_CL(${id})/USER_CERTIFICATE_List`,
                 data: {
+                    ISN_USER: `${id}`,
+                    // SING_CERT: '',
+                    // ENC_CERT: '',
+                    SIGN_MAIL_CERT: this.stateSerts.id_sing,
                     ENC_MAIL_CERT: this.stateSerts.id_enc
                 }
             });
         }
+
+        // if (this.stateSerts.sing_mail !== this.stateSerts.sing_mail_origin) {
+        // }
+
+        // if (this.stateSerts.enc_mail !== this.stateSerts.enc_mail_origin) {
+        //     query.push({
+        //         method: `MERGE`,
+        //         requestUri: `USER_CL(${id})/USER_CERTIFICATE_List(${id})`,
+        //         data: {
+        //         }
+        //     });
+        // }
         return query;
     }
+
+
     closeSerts(): void {
         this.stateSerts.sing_mail = this.stateSerts.sing_mail_origin;
         this.stateSerts.enc_mail = this.stateSerts.enc_mail_origin;
@@ -161,7 +192,7 @@ export class BaseSertsComponent implements OnInit {
         this.stateSerts[id] = null;
     }
     show(id: string) {
-       const ids = this.stateSerts[id];
+        const ids = this.stateSerts[id];
         this.carmaSrv.ShowCert(ids).catch(e => {
             this._msg.addNewMessage(PARM_ERROR_CARMA);
             return Observable.of(null);
