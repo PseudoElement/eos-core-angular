@@ -91,13 +91,14 @@ export class BaseSertsComponent implements OnInit {
         arrayQuery.push(this.carmaSrv.GetCertInfo2(this.userSerts.ENC_MAIL_CERT));
         if (arrayQuery.length > 0) {
             Promise.all([...arrayQuery]).then(([singd, encs]) => {
+
                 if (typeof singd === 'object' && singd.hasOwnProperty('certInfo')) {
-                    this.stateSerts.sing_mail = singd['certInfo']['Issuer'];
-                    this.stateSerts.sing_mail_origin = singd['certInfo']['Issuer'];
+                    this.stateSerts.sing_mail = singd['certInfo']['Description'];
+                    this.stateSerts.sing_mail_origin = singd['certInfo']['Description'];
                 }
                 if (typeof encs === 'object' && encs.hasOwnProperty('certInfo')) {
-                    this.stateSerts.enc_mail = encs['certInfo']['Issuer'];
-                    this.stateSerts.enc_mail_origin = encs['certInfo']['Issuer'];
+                    this.stateSerts.enc_mail = encs['certInfo']['Description'];
+                    this.stateSerts.enc_mail_origin = encs['certInfo']['Description'];
                 }
             });
         }
@@ -115,7 +116,7 @@ export class BaseSertsComponent implements OnInit {
             if (data) {
                 newSert = data['certId'];
                 this.carmaSrv.GetCertInfo2(newSert).then(result => {
-                    this.stateSerts[paramSert] = result['certInfo']['Issuer'];
+                    this.stateSerts[paramSert] = result['certInfo']['Description'];
                     this.stateSerts[id_sert] = result['certInfo']['Serial'] + result['certInfo']['Issuer'];
                 });
             }
