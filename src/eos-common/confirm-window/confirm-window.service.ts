@@ -3,7 +3,7 @@ import { Injectable, } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ConfirmWindowComponent, IConfirmWindow, IConfirmWindowContent } from './confirm-window.component';
 import { IConfirmWindow2, ConfirmWindow2Component, IConfirmWindow2Content, IConfirmButton } from './confirm-window2.component';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 @Injectable()
 export class ConfirmWindowService {
