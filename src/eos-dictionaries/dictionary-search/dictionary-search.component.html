@@ -5,14 +5,14 @@
         placement="bottom"
         #full="bs-popover"
         [outsideClick]="true">
-        <button [ngClass]="{'hidden': !hasFull, 'opened': full.isOpen || !noSearchData }"
+        <button [ngClass]="{'hidden': !hasFull, 'opened': isActiveButton()}"
             class="btn btn-primary-light search-btn"
             tooltip="Расширенный поиск"
             placement="bottom"
             container="body"
             containerClass="tooltip-info">
-            <i [hidden]="full.isOpen || !noSearchData" class="eos-icon eos-icon-filter-blue small" aria-hidden="true"></i>
-            <i [hidden]="!(full.isOpen || !noSearchData)" class="eos-icon eos-icon-filter-white small" aria-hidden="true"></i>
+            <i [hidden]="isActiveButton()" class="eos-icon eos-icon-filter-blue small" aria-hidden="true"></i>
+            <i [hidden]="!isActiveButton()" class="eos-icon eos-icon-filter-white small" aria-hidden="true"></i>
         </button>
     </div>
     <div class="search-btn-wraper"
@@ -141,12 +141,12 @@
                                 name="PHONE"
                                 type="text"
                                 class="form-control light"
-                                [(ngModel)]="searchModel['PHONE']"
+                                [(ngModel)]="searchModel['PHONE_LOCAL']"
                                 placeholder="{{fieldsDescription.rec['PHONE']?.title}}"
                                 maxlength="{{fieldsDescription.rec['PHONE']?.length}}">
                             <a class="clear-btn"
-                                [ngClass]="{'hide': !searchModel['PHONE']}"
-                                (click)="searchModel['PHONE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                                [ngClass]="{'hide': !searchModel['PHONE_LOCAL']}"
+                                (click)="searchModel['PHONE_LOCAL'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
                         </div>
                     </div>
                     <div class="form-group unimportant-text">
@@ -367,15 +367,15 @@
                 <div class="second-col">
                     <div class="form-group unimportant-text">
                         <label class="s-font"
-                            for="title">{{fieldsDescription.rec['title']?.title}}</label>
+                            for="title">{{fieldsDescription.rec['shorttitle']?.title}}</label>
                         <div class="search-fld">
                             <input id="title"
                                 name="title"
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['CLASSIF_NAME']"
-                                placeholder="{{fieldsDescription.rec['title']?.title}}"
-                                maxlength="{{fieldsDescription.rec['title']?.length}}">
+                                placeholder="{{fieldsDescription.rec['shorttitle']?.title}}"
+                                maxlength="{{fieldsDescription.rec['shorttitle']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
                                 (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>

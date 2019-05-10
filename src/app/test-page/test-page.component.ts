@@ -10,6 +10,8 @@ import { InputBase } from 'eos-common/core/inputs/input-base';
 import { FA_ICONS } from './fa-icons.const';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { NADZORDICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 
 const TEST_INPUTS = <IBaseInput[]>[{
     controlType: 'string',
@@ -92,6 +94,7 @@ export class TestPageComponent implements OnInit, OnChanges {
         private pip: PipRX,
         private inputCtrlSrv: InputControlService,
         private _waitClassifSrv: WaitClassifService,
+        private _confirmSrv: ConfirmWindowService,
     ) {
         this.inputs = this.inputCtrlSrv.generateInputs(TEST_INPUTS);
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs, false);
@@ -183,6 +186,29 @@ export class TestPageComponent implements OnInit, OnChanges {
     }
 
     testClick1() {
+
+        const testc: IConfirmWindow2 = {
+            title: 'asdgdsgasgsagasdg',
+            body: 'dshsdfhdfghfdgjfdgj fdg jfdgj ',
+            buttons: [
+                {title: 'Ok', result: 1, },
+                {title: 'not', result: 2, },
+                {title: 'cancel', result: 3, },
+            ],
+        };
+        // this.updating = true;
+        this._confirmSrv
+            .confirm2(testc)
+            .then((confirmed) => {
+                console.log(confirmed);
+                if (confirmed) {
+                    // return this._deskSrv.removeDesk(desk);
+                }
+            })
+            .then(() => {
+                // this.updating = false;
+            });
+
         // const modalWindow = this._modalSrv.show(RecordViewComponent, {class: 'eos-record-view modal-lg'});
         // modalWindow.content.initByNodeData(null);
 

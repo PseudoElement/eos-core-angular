@@ -1,0 +1,24 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">{{title}}</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+</div>
+<div class="modal-body"
+    [ngClass]="{manualCR: manualCR}"
+>
+
+<!-- [style]="(true ? 'white-space: pre;': '')" -->
+<p>{{body}}</p>
+</div>
+<div class="modal-footer">
+    <span *ngFor="let button of buttons">
+        <button type="button"
+            [ngClass]="{'btn-primary-full': button.isDefault, 'btn-primary': !button.isDefault}"
+            class="btn"
+            (click)="click(button)">{{button.title}}</button>
+    </span>
+
+    <!-- <button type="button" class="btn btn-primary" (click)="click()">{{cancelTitle}}</button>
+    <button type="button" class="btn btn-primary-full" [disabled]="confirmDisabled" (click)="confirm()">{{okTitle}}</button> -->
+</div>
