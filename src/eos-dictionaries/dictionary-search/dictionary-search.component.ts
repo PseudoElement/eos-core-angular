@@ -71,6 +71,14 @@ export class DictionarySearchComponent implements OnDestroy {
             this.searchModel[prop] && this.searchModel[prop].trim()) === -1;
     }
 
+    get searchActive(): boolean {
+        return this._dictSrv.viewParameters.searchResults;
+    }
+
+    isActiveButton(): boolean {
+        return (this.fSearchPop.isOpen || (!this.noSearchData && this.searchActive) || this.searchActive);
+    }
+
     setTab(key: string) {
         this.currTab = key;
         this.searchData.srchMode = key;

@@ -4,6 +4,7 @@ import { PipRX, USER_CL } from 'eos-rest';
 import { KEY_RIGHT_TECH, IKeyRightTech } from 'app/consts/permission.consts';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { RestError } from 'eos-rest/core/rest-error';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -29,7 +30,11 @@ export class PermissionsGuard implements CanActivate {
                 }
                 return access;
             })
-            .catch(() => {
+            .catch((err) => {
+                if (err instanceof RestError && (err.code === 434 || err.code === 0)) {
+                    document.location.assign('../');
+                    return undefined;
+                }
                 return false;
             });
     }

@@ -102,6 +102,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                         this.orderBy = dictSrv.currentDictionary.orderBy;
                     }
                 }
+                this._recalcCounter = 0;
             });
     }
 
@@ -176,10 +177,26 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 const _title = _customTitles.find((_f) => _f.key === vField.key);
                 vField.customTitle = _title ? _title.customTitle : null;
             });
+
+
+            if (!this.isCorrectOrderBy()) {
+                this.orderBy = this.dictSrv.currentDictionary.orderDefault();
+            }
+
             this.dictSrv.orderBy(this.orderBy, false);
             this._recalcCounter = 0;
             subscription.unsubscribe();
         });
+    }
+
+    isCorrectOrderBy(): boolean {
+        if (this.viewFields.find(v => v.key === this.orderBy.fieldKey)) {
+            return true;
+        }
+        if (this.customFields.find(v => v.key === this.orderBy.fieldKey)) {
+            return true;
+        }
+        return false;
     }
 
     openAdditionalFields(node: EosDictionaryNode) {

@@ -24,6 +24,7 @@ export abstract class RKNomenkBasePage extends RKBasePage {
 
         } else {
             const config = this.dataController.getApiConfig();
+
             const url = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?Classif=NOMENKL_CL&select_multy=False';
             openPopup(url, ((event, str) => {
                 this.dataController.zone.run(() => {

@@ -1,4 +1,6 @@
-import {Injectable} from '@angular/core';
+import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
+import { DOCGROUP_DICT } from './../consts/dictionaries/docgroup.consts';
+import { Injectable, Injector } from '@angular/core';
 // import {Router} from '@angular/router';
 import {BehaviorSubject, Observable} from 'rxjs';
 
@@ -25,13 +27,17 @@ import {EosStorageService} from 'app/services/eos-storage.service';
 import {EosDepartmentsService} from './eos-department-service';
 import {RestError} from 'eos-rest/core/rest-error';
 import {DictionaryDescriptorService} from 'eos-dictionaries/core/dictionary-descriptor.service';
-import {IAppCfg} from 'eos-common/interfaces';
+import {IAppCfg, IConfirmWindow} from 'eos-common/interfaces';
 import {CabinetDictionaryDescriptor} from '../core/cabinet-dictionary-descriptor';
 import { CONFIRM_CHANGE_BOSS } from '../consts/confirm.consts';
 import {ConfirmWindowService} from 'eos-common/confirm-window/confirm-window.service';
 import { ReestrtypeDictionaryDescriptor } from '../core/reestrtype-dictionary-descriptor';
 import { _ES } from '../../eos-rest/core/consts';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from './eos-access-permissions.service';
+import { AdvCardRKDataCtrl } from 'eos-dictionaries/adv-card/adv-card-rk-datactrl';
+import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev-participant';
+import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
+import { NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 
 @Injectable()
 export class EosDictService {
@@ -61,6 +67,7 @@ export class EosDictService {
     private _dictionaries: EosDictionary[];
     private _listDictionary$: BehaviorSubject<EosDictionary>;
     private filters: any = {};
+    private _cDue: string;
 
     /* Observable dictionary for subscribing on updates in components */
     get dictionary$(): Observable<EosDictionary> {
@@ -180,13 +187,13 @@ export class EosDictService {
 
     constructor(
         // private _router: Router,
+        private injector: Injector,
         private _msgSrv: EosMessageService,
         private _storageSrv: EosStorageService,
         private _descrSrv: DictionaryDescriptorService,
         private departmentsSrv: EosDepartmentsService,
         private confirmSrv: ConfirmWindowService,
         private _eaps: EosAccessPermissionsService,
-
     ) {
         this._initViewParameters();
         this._dictionaries = [];
@@ -202,6 +209,20 @@ export class EosDictService {
         this._dictMode = 0;
         this._dictMode$ = new BehaviorSubject<number>(this._dictMode);
         this._initPaginationConfig();
+    }
+
+    treeNodeIdByDict(id: string) {
+        if (!this._treeNode) {
+            return null;
+        }
+        if (id === CABINET_DICT.id) {
+            return this._treeNode.id;
+        } else if (id === DEPARTMENTS_DICT.id) {
+            return this._treeNode.id;
+        } else if (id === NOMENKL_DICT.id) {
+            return this.getCustomNodeId();
+        }
+        return null;
     }
 
     clearCurrentNode() {
@@ -326,7 +347,7 @@ export class EosDictService {
     }
 
     defaultOrder() {
-        this.currentDictionary.defaultOrder();
+        this.currentDictionary.orderSetDefault();
         this._reorderList(this.currentDictionary);
     }
 
@@ -481,9 +502,9 @@ export class EosDictService {
         return this.getDictionaryById(node.dictionaryId)
             .then((dictionary) => {
                 let resNode: EosDictionaryNode = null;
-                return this.preSave(dictionary, data)
-                    .then((rrr) => {
-                        return dictionary.updateNodeData(node, data);
+                return this.preSave(dictionary, data, false)
+                    .then((appendChanges) => {
+                        return dictionary.updateNodeData(node, data, appendChanges);
                     })
                     .then((results) => {
                         const keyFld = dictionary.descriptor.record.keyField.foreignKey;
@@ -515,8 +536,8 @@ export class EosDictService {
         const dictionary = this.currentDictionary;
 
         if (this._treeNode) {
-            return this.preSave(dictionary, data)
-                .then((res) => {
+            return this.preSave(dictionary, data, true)
+                .then(() => {
                     return dictionary.descriptor.addRecord(data, this._treeNode.data);
                 })
                 .then((results) => {
@@ -658,10 +679,14 @@ export class EosDictService {
         const dictionary = this.currentDictionary;
         if (data.srchMode === 'person') {
             this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
-            if (data.person['PHONE']) {
-                data.person['PHONE_LOCAL'] = data.person['PHONE'];
-                delete data.person['PHONE'];
-            }
+            // if (data.person['PHONE']) {
+            //     data.person['PHONE_LOCAL'] = data.person['PHONE'];
+            //     delete data.person['PHONE'];
+            // } else {
+            //     if (data.person['PHONE_LOCAL']) {
+            //         delete data.person['PHONE_LOCAL'];
+            //     }
+            // }
             this._srchCriteries.push(dictionary.getFullsearchCriteries(data, params, this._treeNode));
             return this._search(params.deleted);
         } else {
@@ -702,7 +727,7 @@ export class EosDictService {
             if (this.viewParameters.userOrdered) {
                 dictionary.orderBy = null;
             } else {
-                dictionary.defaultOrder();
+                dictionary.orderSetDefault();
             }
 
             dictionary.userOrdered = this.viewParameters.userOrdered;
@@ -713,7 +738,7 @@ export class EosDictService {
 
     setDictMode(mode: number): boolean {
         const dict = this._dictionaries[0].getDictionaryIdByMode(mode).id;
-        const access = this._eaps.isAccessGrantedForDictionary(dict) !== APS_DICT_GRANT.denied;
+        const access = this._eaps.isAccessGrantedForDictionary(dict, null) !== APS_DICT_GRANT.denied;
         if (access) {
             this._dictMode = mode;
             this._srchCriteries = null;
@@ -840,6 +865,16 @@ export class EosDictService {
 
     }
 
+    setCustomNodeId(_nodeId: string) {
+        this._cDue = _nodeId;
+    }
+
+    getCustomNodeId() {
+        return this._cDue;
+    }
+
+
+
     private getDictionaryById(id: string): Promise<EosDictionary> {
         const existDict = this._dictionaries.find((dictionary) => dictionary && dictionary.id === id);
         if (existDict) {
@@ -946,12 +981,51 @@ export class EosDictService {
         return _p;
     }
 
-    private preSave(dictionary: EosDictionary, data: any): Promise<any> {
+    private isObjEmpty(v): boolean {
+        if (!v) { return true; }
+        for (const key in v) {
+            if (v.hasOwnProperty(key)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private preSave(dictionary: EosDictionary, data: any, isNewRecord: boolean): Promise<any> {
         if (data && data.rec) {
-            if (dictionary.id === 'sev-participant') {
+            if (dictionary.id === PARTICIPANT_SEV_DICT.id) {
 
             }
-            if (dictionary.id === 'departments' && data.rec.IS_NODE) {
+
+            if (!isNewRecord && dictionary.id === DOCGROUP_DICT.id) {
+                const ctrl = new AdvCardRKDataCtrl(this.injector);
+                return ctrl.doCorrectsRKToDG(data).then(changes => {
+                    if (!this.isObjEmpty(changes.fixE)) {
+                        const confirmObj: IConfirmWindow = {
+                            title: 'Ведение справочников:',
+                            body: 'Новое значение флага "Оригинал в электронном виде" не соответствует заданным правилам заполнения реквизитов РК. Отредактировать эти правила?',
+                            okTitle: 'Да',
+                            cancelTitle: 'Нет'
+                        };
+
+                        return this.confirmSrv.confirm(confirmObj)
+                        .then((confirm: boolean) => {
+
+                            if (confirm) {
+                                return changes.fixE;
+
+                            } else {
+                                return null;
+                            }
+                        });
+                    }
+                    return Promise.resolve(null);
+                }).catch(err => {
+                    this._msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка РК'});
+                });
+            }
+
+            if (dictionary.id === DEPARTMENTS_DICT.id && data.rec.IS_NODE) {
                 this.departmentsSrv.addDuty(data.rec.DUTY);
                 this.departmentsSrv.addFullname(data.rec.FULLNAME);
                 if (1 * data.rec.POST_H === 1) {
@@ -1194,6 +1268,17 @@ export class EosDictService {
                     this.viewParameters.showDeleted = showDeleted;
                 }
                 this._setCurrentList(dictionary, nodes);
+
+                // if (dictionary.id === DEPARTMENTS_DICT.id) {
+                for (let i = 0; i < nodes.length; i++) {
+                    const n = nodes[i];
+                    if (!n.parent && n.parentId) {
+                        n.parent = dictionary.getNode(n.parentId);
+                    }
+
+                }
+                // }
+
                 this.updateViewParameters({
                     updatingList: false,
                     searchResults: true
@@ -1235,3 +1320,4 @@ export class EosDictService {
     }
 
 }
+

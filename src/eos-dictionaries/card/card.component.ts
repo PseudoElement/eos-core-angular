@@ -33,6 +33,7 @@ import { LS_EDIT_CARD } from '../consts/common';
 import { CardEditComponent } from 'eos-dictionaries/card-views/card-edit.component';
 import { EosDepartmentsService } from '../services/eos-department-service';
 import {EosUtils} from '../../eos-common/core/utils';
+import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 // import { UUID } from 'angular2-uuid';
 
 export enum EDIT_CARD_MODES {
@@ -117,6 +118,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         private _route: ActivatedRoute,
         private _router: Router,
         private departmentsSrv: EosDepartmentsService,
+        private _eaps: EosAccessPermissionsService,
     ) {
         let tabNum = 0;
 
@@ -262,6 +264,11 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     }
 
     isEditEnabled(): boolean {
+
+        if (this._eaps.isAccessGrantedForDictionary(this.dictionaryId,
+            this._dictSrv.treeNodeIdByDict(this._dictSrv.currentDictionary.id)) < APS_DICT_GRANT.readwrite) {
+            return false;
+        }
 
         if (this._dictSrv.currentDictionary.descriptor.editOnlyNodes !== undefined) {
             if (this._dictSrv && this.node) {
