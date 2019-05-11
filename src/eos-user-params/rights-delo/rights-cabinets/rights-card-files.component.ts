@@ -451,7 +451,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         } else {
             this._router.navigate(['user-params-set/', 'access-limitation'],
                 {
-                    queryParams: { isn_cl: this.userId }
+                    queryParams: { isn_cl: this.userId, flag: 'grif' }
                 });
             this.sendMessage('Предупреждение', 'Не заданы грифы доступа');
         }

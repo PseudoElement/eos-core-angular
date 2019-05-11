@@ -154,7 +154,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 } else {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
-                        title: 'Предупреждалочка',
+                        title: 'Предупреждение',
                         msg: 'Должностное лицо не соответствует текущему подразделению',
                         dismissOnTimeout: 6000,
                     });

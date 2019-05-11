@@ -20,7 +20,9 @@
                 <div>
                     <button type="button" [disabled]="!isCarma" triggers="hover:click" tooltip="Добавить" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info" (click)="openSertService('sing_mail', 'id_sing')" class="btn btn-primary-light"><span class="eos-icon eos-icon-download small"></span></button>
                     <button type="button" [disabled]="!stateSerts.sing_mail|| !isCarma" triggers="hover:click" tooltip="Показать" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info" (click)="show('id_sing')" class="btn btn-primary-light"><span class="eos-icon eos-icon-info-blue small"></span></button>
-                    <button type="button" [disabled]="!stateSerts.sing_mail || !isCarma" tooltip="Удалить" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info" (click)="deliteSert('sing_mail', 'id_sing')" class="btn btn-primary-light"><span class="eos-icon eos-icon-bin-forever-blue small"></span></button>
+                    <div class="inline" [tooltip]="stateSerts.sing_mail ? 'Удалить' : ''" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info">
+                        <button type="button" [disabled]="!stateSerts.sing_mail"  (click)="deliteSert('sing_mail', 'id_sing')" class="btn btn-primary-light"><span class="eos-icon eos-icon-bin-forever-blue small"></span></button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -31,7 +33,9 @@
                 <div>
                     <button type="button" [disabled]="!isCarma" triggers="hover:click" tooltip="Добавить" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info" (click)="openSertService('enc_mail', 'id_enc')" class="btn btn-primary-light"><span class="eos-icon eos-icon-download small"></span></button>
                     <button type="button" [disabled]="!stateSerts.enc_mail || !isCarma" triggers="hover:click" tooltip="Показать" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info" (click)="show('id_enc')" class="btn btn-primary-light"><span class="eos-icon eos-icon-info-blue small"></span></button>
-                    <button type="button" [disabled]="!stateSerts.enc_mail || !isCarma" tooltip="Удалить" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info" (click)="deliteSert('enc_mail', 'id_enc')" class="btn btn-primary-light"><span class="eos-icon eos-icon-bin-forever-blue small"></span></button>
+                    <div class="inline" [tooltip]="stateSerts.enc_mail ? 'Удалить' : ''" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info">
+                        <button type="button" [disabled]="!stateSerts.enc_mail"  (click)="deliteSert('enc_mail', 'id_enc')" class="btn btn-primary-light"><span class="eos-icon eos-icon-bin-forever-blue small"></span></button>
+                    </div>
                 </div>
             </div>
         </div>

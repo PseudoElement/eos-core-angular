@@ -99,7 +99,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.complete();
     }
     get getValidDate() {
-        return this.form.controls['PASSWORD_DATE'].valid;
+        return this.form.controls['PASSWORD_DATE'].valid && this.form.controls['NOTE2'].valid;
     }
 
     init() {
@@ -353,7 +353,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
 
     getSerts(template: TemplateRef<any>): void {
-        this.modalRef = this.modalService.show(template, {class: 'serts'});
+        if (this.editMode) {
+            this.modalRef = this.modalService.show(template, {class: 'serts'});
+        }
     }
     closeSerts() {
         this.modalRef.hide();

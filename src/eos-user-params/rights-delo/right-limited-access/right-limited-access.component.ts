@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -69,6 +69,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         private _userServices: UserParamsService,
         private _router: Router,
         private _errorSrv: ErrorHelperServices,
+        private _snap: ActivatedRoute,
     ) {
         this.activeLink = true;
         this.flagGrifs = true;
@@ -81,6 +82,15 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 this._userServices.submitSave = this.saveAllForm();
             });
+        this._snap.queryParams
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe((data: Object) => {
+            if (data.hasOwnProperty('flag')) {
+                this.currTab = 1;
+            }
+        });
     }
     async ngOnInit() {
         await this._userServices.getUserIsn();

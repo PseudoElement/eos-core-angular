@@ -28,6 +28,7 @@ export class BaseSertsComponent implements OnInit {
         enc_mail_origin: null,
     };
     public isCarma: boolean;
+    public flagSave: string = 'POST';
     get disabledBtn(): boolean {
         if (this.stateSerts.id_enc !== this.stateSerts.id_enc_origin || this.stateSerts.id_sing !== this.stateSerts.id_sing_origin) {
             return false;
@@ -49,14 +50,23 @@ export class BaseSertsComponent implements OnInit {
     ngOnInit() {
         this._userParamSrv.getSertSBaseParams().then((user_Sert: USER_CERTIFICATE[]) => {
             this.userSerts = user_Sert[0];
-            this.setId();
+            if (user_Sert.length) {
+                this.flagSave = 'MERGE';
+                this.setId();
+            } else {
+                this.flagSave = 'POST';
+            }
             const store = [{ Location: 'sscu', Address: '', Name: 'My' }];
             this.carmaSrv.init(null, store).subscribe(data => {
                 this.isCarma = true;
-                this.getInfoSerts();
+                if (user_Sert.length) {
+                    this.getInfoSerts();
+                }
             }, error => {
                 this.isCarma = false;
-                this.setId();
+                if (user_Sert.length) {
+                    this.setId();
+                }
                 this.notCarma();
                 this._msg.addNewMessage(PARM_ERROR_CARMA);
             });
@@ -82,13 +92,14 @@ export class BaseSertsComponent implements OnInit {
         arrayQuery.push(this.carmaSrv.GetCertInfo2(this.userSerts.ENC_MAIL_CERT));
         if (arrayQuery.length > 0) {
             Promise.all([...arrayQuery]).then(([singd, encs]) => {
+
                 if (typeof singd === 'object' && singd.hasOwnProperty('certInfo')) {
-                    this.stateSerts.sing_mail = singd['certInfo']['Issuer'];
-                    this.stateSerts.sing_mail_origin = singd['certInfo']['Issuer'];
+                    this.stateSerts.sing_mail = singd['certInfo']['Description'];
+                    this.stateSerts.sing_mail_origin = singd['certInfo']['Description'];
                 }
                 if (typeof encs === 'object' && encs.hasOwnProperty('certInfo')) {
-                    this.stateSerts.enc_mail = encs['certInfo']['Issuer'];
-                    this.stateSerts.enc_mail_origin = encs['certInfo']['Issuer'];
+                    this.stateSerts.enc_mail = encs['certInfo']['Description'];
+                    this.stateSerts.enc_mail_origin = encs['certInfo']['Description'];
                 }
             });
         }
@@ -106,7 +117,7 @@ export class BaseSertsComponent implements OnInit {
             if (data) {
                 newSert = data['certId'];
                 this.carmaSrv.GetCertInfo2(newSert).then(result => {
-                    this.stateSerts[paramSert] = result['certInfo']['Issuer'];
+                    this.stateSerts[paramSert] = result['certInfo']['Description'];
                     this.stateSerts[id_sert] = result['certInfo']['Serial'] + result['certInfo']['Issuer'];
                 });
             }
@@ -121,35 +132,56 @@ export class BaseSertsComponent implements OnInit {
             this.stateSerts.enc_mail_origin = this.stateSerts.enc_mail;
             this.stateSerts.id_sing_origin = this.stateSerts.id_sing;
             this.stateSerts.id_enc_origin = this.stateSerts.id_enc;
-            // this.closeModal.emit();
+            if (this.flagSave = 'POST') {
+                this.flagSave = 'MERGE';
+            }
+            this.closeModal.emit();
         }).catch(error => {
-            console.log(error);
+            this._msg.addNewMessage(PARM_ERROR_DB);
         });
     }
     getSave(): Array<any> {
         const id = this._userParamSrv.curentUser['ISN_LCLASSIF'];
         const query = [];
-        if (this.stateSerts.sing_mail !== this.stateSerts.sing_mail_origin) {
+        // todo - удалить после правки, при создании пользователя не добавляется запись в таб. user_certificate
+        if (this.flagSave === 'MERGE') {
             query.push({
-                method: 'MERGE',
+                method: `MERGE`,
                 requestUri: `USER_CL(${id})/USER_CERTIFICATE_List(${id})`,
                 data: {
-                    SIGN_MAIL_CERT: this.stateSerts.id_sing
+                    SIGN_MAIL_CERT: this.stateSerts.id_sing,
+                    ENC_MAIL_CERT: this.stateSerts.id_enc
                 }
             });
-        }
-
-        if (this.stateSerts.enc_mail !== this.stateSerts.enc_mail_origin) {
+        } else {
             query.push({
-                method: 'MERGE',
-                requestUri: `USER_CL(${id})/USER_CERTIFICATE_List(${id})`,
+                method: `POST`,
+                requestUri: `USER_CL(${id})/USER_CERTIFICATE_List`,
                 data: {
+                    ISN_USER: `${id}`,
+                    // SING_CERT: '',
+                    // ENC_CERT: '',
+                    SIGN_MAIL_CERT: this.stateSerts.id_sing,
                     ENC_MAIL_CERT: this.stateSerts.id_enc
                 }
             });
         }
+
+        // if (this.stateSerts.sing_mail !== this.stateSerts.sing_mail_origin) {
+        // }
+
+        // if (this.stateSerts.enc_mail !== this.stateSerts.enc_mail_origin) {
+        //     query.push({
+        //         method: `MERGE`,
+        //         requestUri: `USER_CL(${id})/USER_CERTIFICATE_List(${id})`,
+        //         data: {
+        //         }
+        //     });
+        // }
         return query;
     }
+
+
     closeSerts(): void {
         this.stateSerts.sing_mail = this.stateSerts.sing_mail_origin;
         this.stateSerts.enc_mail = this.stateSerts.enc_mail_origin;
