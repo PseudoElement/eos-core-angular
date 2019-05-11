@@ -6,11 +6,13 @@ import { CABINETS_USER } from '../shared-user-param/consts/cabinets.consts';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { PipRX, USER_PARMS } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { RECENT_URL } from 'app/consts/common.consts';
+import { EosStorageService } from 'app/services/eos-storage.service';
 @Component({
     selector: 'eos-user-param-cabinets',
     templateUrl: 'user-param-cabinets.component.html',
@@ -51,11 +53,19 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         private dataConv: EosDataConvertService,
         private inpSrv: InputControlService,
         private _router: Router,
+        private _snap: ActivatedRoute,
         private _waitClassifSrv: WaitClassifService,
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
-    ) {}
+        private _storageSrv: EosStorageService,
+    ) {
+        this._snap.queryParams.takeUntil(this._ngUnsubscribe).subscribe((data: Object) => {
+            if (data.hasOwnProperty('BackCabinets')) {
+                this.currTab = 1;
+            }
+        });
+    }
     async ngOnInit() {
         this._userParamsSetSrv.saveData$
             .takeUntil(this._ngUnsubscribe)
@@ -234,6 +244,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         }
     }
     showInfoUser() {
+        this._storageSrv.setItem(RECENT_URL, this._router.url + '?BackCabinets=true');
         this._router.navigate(['/spravochniki/departments', this.dueForLink, 'view', '0']);
     }
     clearControlAuthor() {
