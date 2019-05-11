@@ -8,7 +8,7 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { IMessage } from 'eos-common/interfaces';
 import { Subject } from 'rxjs/Subject';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { DOCGROUP_CL } from 'eos-rest';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 @Component({
@@ -66,6 +66,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         private _userServices: UserParamsService,
         private _router: Router,
         private _errorSrv: ErrorHelperServices,
+        private _snap: ActivatedRoute,
     ) {
         this.activeLink = true;
         this.flagGrifs = true;
@@ -76,6 +77,11 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 this._userServices.submitSave = this.saveAllForm();
             });
+        this._snap.queryParams.takeUntil(this._ngUnsubscribe).subscribe((data: Object) => {
+            if (data.hasOwnProperty('flag')) {
+                this.currTab = 1;
+            }
+        });
     }
     async ngOnInit() {
         await this._userServices.getUserIsn();
