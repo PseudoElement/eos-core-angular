@@ -21,6 +21,7 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosStorageService } from '../../app/services/eos-storage.service';
 import { EosBreadcrumbsService } from '../../app/services/eos-breadcrumbs.service';
 import { AppContext } from '../../eos-rest/services/appContext.service';
+import { ErrorHelperServices } from '../../eos-user-params/shared/services/helper-error.services';
 interface TypeBread {
     action: number;
 }
@@ -61,6 +62,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private _storage: EosStorageService,
         private _breadSrv: EosBreadcrumbsService,
         private _appContext: AppContext,
+        private _errorSrv: ErrorHelperServices,
     ) {
         this.checkFlagTech();
         this.helpersClass = new HelpersSortFunctions();
@@ -182,8 +184,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.isLoading = false;
                 this.countMaxSize = this._pagSrv.countMaxSize;
             }).catch(error => {
-                error.message = 'Серверная ошибка,  обратитесь к системному администратору';
-                this.cathError(error);
+               this._errorSrv.errorHandler(error);
             });
     }
     checkSortSessionStore() {
