@@ -49,33 +49,31 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
         this.queryObj = this.getObjQueryInputsField(['CONTEXT_SECTIONS_ENABLED']);
         this.prepInputs = this.getObjectInputFields(this.constParam.fields);
         this.formContextChoice = new FormGroup({
-            contextFile: new FormControl(''),
+            contextFile: new FormControl(true),
             contextRC: new FormControl('rc'),
-            contextResolution: new FormControl('')
+            contextResolution: new FormControl(true)
         });
         this.initContext();
     }
     initContext() {
         return this.getData(Object.assign({}, this.queryObj))
-            .then(dataDb => {
-                const data = {};
-                if (dataDb[0].PARM_VALUE !== '' && dataDb[0].PARM_VALUE !== null) {
-                    dataDb[0].PARM_VALUE.slice(1, -1).split(',').forEach(key => {
-                        data[key] = true;
-                    });
-                    return data;
-                }
-                return null;
-            })
-            .then(data => {
-                this.prepareData = this.prepDataContext(data);
-                this.inputs = this.getInputs();
-                this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
+        .then(dataDb => {
+            const data = {};
+            if (dataDb[0].PARM_VALUE !== '' && dataDb[0].PARM_VALUE !== null) {
+                dataDb[0].PARM_VALUE.slice(1, -1).split(',').forEach(key => {
+                    data[key] = true;
+                });
+                return data;
+            }
+            return null;
+        })
+        .then(data => {
+            this.prepareData = this.prepDataContext(data);
+            this.inputs = this.getInputs();
+            this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
                 this.subscribeChangeForm();
                 this.subscribeChoiceForm();
-                if (data) {
-                    this.formContextChoice.controls.contextFile.patchValue(true);
-                } else {
+                if (!data) {
                     this.formContextChoice.controls.contextFile.patchValue(false);
                 }
             })
@@ -94,7 +92,6 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
                         data.hasOwnProperty('RESOLUTION_FIRST') ? 'RESOLUTION_FIRST' : false;
                     if (resol) {
                         prepareData.rec[key] = resol;
-                        this.formContextChoice.controls.contextResolution.patchValue(true);
                     } else {
                         prepareData.rec[key] = false;
                         this.formContextChoice.controls.contextResolution.patchValue(false);
