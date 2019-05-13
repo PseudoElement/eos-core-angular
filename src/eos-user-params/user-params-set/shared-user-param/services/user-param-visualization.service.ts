@@ -37,7 +37,6 @@ export class UserParamVisualizationSrv extends BaseUserSrv {
     }
     submit(): Promise<any> {
         if (this.newData || this.prepareData) {
-            const userId = '' + this._userParamsSetSrv.userContextId;
             this.formChanged.emit(false);
             this.isChangeForm = false;
             this.flagEdit = false;
@@ -50,7 +49,7 @@ export class UserParamVisualizationSrv extends BaseUserSrv {
                     .then(data => {
                         // this.prepareData.rec = Object.assign({}, this.newData.rec);
                         this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                        this._userParamsSetSrv.getUserIsn(userId);
+                        this._userParamsSetSrv.getUserIsn();
                     })
                     // tslint:disable-next-line:no-console
                     .catch(error => {
@@ -62,7 +61,7 @@ export class UserParamVisualizationSrv extends BaseUserSrv {
                     .setData(this.createObjRequestForDefaultValues())
                     .then(data => {
                         this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                        this._userParamsSetSrv.getUserIsn(userId);
+                        this._userParamsSetSrv.getUserIsn();
                     })
                     // tslint:disable-next-line:no-console
                     .catch(error => {
