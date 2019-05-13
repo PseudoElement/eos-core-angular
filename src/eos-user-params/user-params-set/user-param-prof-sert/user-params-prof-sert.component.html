@@ -9,13 +9,13 @@
         <hr>
         <div class="form-group flex-wr">
             <span class="new-sert-name">{{selectedFromAllList ? selectedFromAllList.whom : null  || 'сертификат не выбран'}}</span>
-            <div class="">
-                <button [disabled]="!alllistSertInfo.length || !editFlag" class="btn btn-primary-light" tooltip='Выбрать сертификат' containerClass="tooltip-info" (click)='chooseSertificate(template)'>
+            <div>
+                <button [disabled]="!alllistSertInfo.length || !editFlag" class="btn btn-primary-light" tooltip='Выбрать сертификат' container="body" containerClass="tooltip-info" (click)='chooseSertificate(template)'>
                     <span class="eos-icon eos-icon-download small"></span>
                 </button>
                 <button [disabled]='!selectedFromAllList || !editFlag' class="btn btn-primary-light" triggers="hover:click" tooltip='Показать сертификат' containerClass="tooltip-info" (click)='showSert(selectedFromAllList.id)'><span class="eos-icon eos-icon-info-blue small"></span></button>
 
-                <button triggers="hover:click" class="btn btn-primary-light" tooltip='Добавить сертификат' containerClass="tooltip-info" [disabled]='!selectedFromAllList || !editFlag' (click)='addSertificate(selectedFromAllList)'>
+                <button triggers="hover:click" class="btn btn-primary-light" tooltip='Добавить сертификат' container="body" containerClass="tooltip-info" [disabled]='!selectedFromAllList || !editFlag' (click)='addSertificate(selectedFromAllList)'>
                     <span class="eos-icon eos-icon-plus-blue small"></span>
                 </button>
             </div>
