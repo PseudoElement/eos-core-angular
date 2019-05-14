@@ -17,6 +17,7 @@
         .attach-checkbox {
             margin: 0 30px;
         }
+       
     }
     .info-icon-wrap {
         display: inline-block;
@@ -37,4 +38,20 @@
     .wer {
         width: 140px;
     }
+    .mar-right{
+        margin-right: 15px;  
+    }
+    .pad-left{
+       
+       
+        padding-left: 15px;
+        
+    }
+    .contain{
+        margin-top: 10px;
+        display: flex;
+        flex-direction: row;
+        align-items: baseline;
+    }
+    
 }
