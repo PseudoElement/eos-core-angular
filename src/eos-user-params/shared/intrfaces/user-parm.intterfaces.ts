@@ -92,3 +92,8 @@ export interface SertsBase {
     id_sing_origin: string;
     id_enc_origin: string;
 }
+
+export interface IGetUserCfg {
+    expand: string;
+    isn_cl: number;
+}

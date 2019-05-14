@@ -121,9 +121,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     objectForSertInfo(infoSert, id, selected, create, del): SertInfo {
         if (infoSert.hasOwnProperty('certInfo')) {
             return {
-                whom: infoSert['certInfo']['Issuer'],
+                who: infoSert['certInfo']['Issuer'],
                 sn: infoSert['certInfo']['Serial'],
-                who: this.parseSertWhom(infoSert['certInfo']['X500Description']),
+                whom: this.parseSertWhom(infoSert['certInfo']['X500Description']),
                 data: infoSert,
                 selected: selected,
                 id: id,
@@ -133,9 +133,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             };
         } else {
             return {
-                whom: infoSert['Issuer'],
+                who: infoSert['Issuer'],
                 sn: infoSert['Serial'],
-                who: this.parseSertWhom(infoSert['X500Description']),
+                whom: this.parseSertWhom(infoSert['X500Description']),
                 data: infoSert,
                 selected: selected,
                 id: id,
@@ -199,9 +199,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             this.DBserts = result;
             this.DBserts.forEach(sert => {
                 this.listsSertInfo.push({
-                    whom: 'нет данных',
-                    sn: sert['ID_CERTIFICATE'],
                     who: 'нет данных',
+                    sn: sert['ID_CERTIFICATE'],
+                    whom: 'нет данных',
                     data: sert,
                     selected: false,
                     id: sert['ID_CERTIFICATE'],
@@ -232,9 +232,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         return Promise.all(arrRequestSerts).then(data => {
             data.forEach((infoSert, index) => {
                 this.listsSertInfo.push({
-                    whom: infoSert['certInfo']['Issuer'],
+                    who: infoSert['certInfo']['Issuer'],
                     sn: infoSert['certInfo']['Serial'],
-                    who: this.parseSertWhom(infoSert['certInfo']['X500Description']),
+                    whom: this.parseSertWhom(infoSert['certInfo']['X500Description']),
                     data: infoSert,
                     selected: false,
                     id: this.DBserts[index]['ID_CERTIFICATE'],
