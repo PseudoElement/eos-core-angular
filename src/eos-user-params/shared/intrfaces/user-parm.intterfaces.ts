@@ -68,6 +68,7 @@ export interface INodeDocsTreeCfg {
     allowed?: boolean;
     data?: any;
     viewAllowed?: boolean;
+    flagCheckNode?: any;
 }
 
 export interface NpUserLinks {

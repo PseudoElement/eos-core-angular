@@ -12,11 +12,13 @@ export class NodeDocsTree implements IListDocsTree {
     isExpanded: boolean = true;
     isAllowed: boolean;
     isviewAllowed: boolean;
-    constructor({due, label, allowed, data, viewAllowed}: INodeDocsTreeCfg) {
+    flagCheckNode: any;
+    constructor({due, label, allowed, data, viewAllowed, flagCheckNode}: INodeDocsTreeCfg) {
         this.DUE = due;
         this.label = label;
         this.isAllowed = allowed;
         this.isviewAllowed = viewAllowed === undefined ? true : viewAllowed;
+        this.flagCheckNode = flagCheckNode ? flagCheckNode : undefined;
         this.data = data;
         this.link = due.split('.');
         this.link.pop();
