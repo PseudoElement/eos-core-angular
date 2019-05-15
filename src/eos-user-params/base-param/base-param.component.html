@@ -53,9 +53,9 @@
     <div class="base-param-main">
         <!-- Логин и Аутентификация с помощью ОС -->
         <div class="wrapper-password">
-            <div class="base-text-input base-login-input" [formGroup]="form">
+            <div class="base-text-input base-login-input" [formGroup]="form" [tooltip]="validClassif" container="body" placement="bottom" containerClass="tooltip-error">
                 <label [hidden]="inputs['CLASSIF_NAME'].hideLabel" [attr.for]="inputs['CLASSIF_NAME'].key">{{inputs['CLASSIF_NAME'].label}}</label>
-                <input class="form-control m-font" maxlength="12" [formControlName]="inputs['CLASSIF_NAME'].key" [readonly]="inputs['CLASSIF_NAME'].readonly" autocomplete="off">
+                <input  class="form-control m-font" maxlength="12" [formControlName]="inputs['CLASSIF_NAME'].key" [readonly]="inputs['CLASSIF_NAME'].readonly" autocomplete="off">
             </div>
             <!-- <eos-dynamic-input
                 class="base-text-input base-login-input"
@@ -69,7 +69,9 @@
         <div>
             <div class="wrapper-password">
                 <eos-dynamic-input style="width: 180px" class="inline-block" [form]="form" [input]="inputs['PASSWORD_DATE']" [readonly]="inputs['PASSWORD_DATE'].readonly || !editMode"></eos-dynamic-input>
-
+                <!-- что бы не вставлялся логин в поле даты -->
+                <input type="text" style="opacity: 0; width: 0px; height: 0px; border: none">
+                <input type="password" style="opacity: 0; width: 0px; height: 0px; border: none">
                 <div [formGroup]="formControls" class="dynamic-input-wrapper base-text-input">
                     <label [hidden]="controls['pass'].hideLabel" [attr.for]="controls['pass'].key">{{controls['pass'].label}}</label>
                     <div class="vision" [ngClass]="{'disabled': controls['pass'].disabled}">

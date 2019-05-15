@@ -250,8 +250,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
             .setData(this.createObjRequest())
             .then(data => {
                 this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                const userId = this._userParamsSetSrv.userContextId;
-                return this._userParamsSetSrv.getUserIsn(String(userId)).then(() => {
+                return this._userParamsSetSrv.getUserIsn().then(() => {
                     this.saveValueSendForm = this.sendFrom;
 
                     this.editFlag = false;

@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 import { Subject, of } from 'rxjs';
 import { takeUntil, catchError } from 'rxjs/operators';
@@ -46,11 +46,11 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     public selectedFromAllList: SertInfo;
     public editFlag = false;
     public btnDisabled: boolean = false;
+    public modalRef: BsModalRef;
     public titleHeader: string;
     public flagHideBtn: boolean = false;
     private DBserts: USER_CERT_PROFILE[] = [];
     private isCarma: boolean = true;
-    // private modalRef: BsModalRef;
     private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public certStoresService: CarmaHttpService,
@@ -126,9 +126,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     objectForSertInfo(infoSert, id, selected, create, del): SertInfo {
         if (infoSert.hasOwnProperty('certInfo')) {
             return {
-                whom: infoSert['certInfo']['Issuer'],
+                who: infoSert['certInfo']['Issuer'],
                 sn: infoSert['certInfo']['Serial'],
-                who: this.parseSertWhom(infoSert['certInfo']['X500Description']),
+                whom: this.parseSertWhom(infoSert['certInfo']['X500Description']),
                 data: infoSert,
                 selected: selected,
                 id: id,
@@ -138,9 +138,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             };
         } else {
             return {
-                whom: infoSert['Issuer'],
+                who: infoSert['Issuer'],
                 sn: infoSert['Serial'],
-                who: this.parseSertWhom(infoSert['X500Description']),
+                whom: this.parseSertWhom(infoSert['X500Description']),
                 data: infoSert,
                 selected: selected,
                 id: id,
@@ -204,9 +204,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             this.DBserts = result;
             this.DBserts.forEach(sert => {
                 this.listsSertInfo.push({
-                    whom: 'нет данных',
-                    sn: sert['ID_CERTIFICATE'],
                     who: 'нет данных',
+                    sn: sert['ID_CERTIFICATE'],
+                    whom: 'нет данных',
                     data: sert,
                     selected: false,
                     id: sert['ID_CERTIFICATE'],
@@ -237,9 +237,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         return Promise.all(arrRequestSerts).then(data => {
             data.forEach((infoSert, index) => {
                 this.listsSertInfo.push({
-                    whom: infoSert['certInfo']['Issuer'],
+                    who: infoSert['certInfo']['Issuer'],
                     sn: infoSert['certInfo']['Serial'],
-                    who: this.parseSertWhom(infoSert['certInfo']['X500Description']),
+                    whom: this.parseSertWhom(infoSert['certInfo']['X500Description']),
                     data: infoSert,
                     selected: false,
                     id: this.DBserts[index]['ID_CERTIFICATE'],
@@ -329,7 +329,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
 
 
     chooseSertificate(template: TemplateRef<any>): void {
-        /* this.modalRef =  */this._modalService.show(template);
+        this.modalRef = this._modalService.show(template);
     }
     selectCurentListAll(item: SertInfo): void {
         if (this.selectedSertificatePopup) {

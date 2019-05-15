@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, ValidationErrors } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
@@ -98,8 +98,19 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
+    get validClassif() {
+        const val: ValidationErrors = this.form.controls['CLASSIF_NAME'].errors;
+       if (val !== null) {
+            if (val.required) {
+                return 'Поле логин не может быть пустым';
+            }  else {
+                return 'не коректное значение';
+            }
+       }
+       return null;
+    }
     get getValidDate() {
-        return this.form.controls['PASSWORD_DATE'].valid && this.form.controls['NOTE2'].valid;
+        return this.form.controls['PASSWORD_DATE'].valid && this.form.controls['NOTE2'].valid && this.form.controls['CLASSIF_NAME'].valid;
     }
 
     init() {
@@ -121,6 +132,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._dataDb['formControls'] = this.formControls.value;
         this._dataDb['formAccess'] = this.formAccess.value;
         this.isLoading = false;
+        return Promise.resolve();
     }
     submit(): Promise<any> {
         if (!this.stateHeaderSubmit) {
@@ -188,15 +200,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         .then(() => {
                             this.curentUser = this._userParamSrv.curentUser;
                             this.editMode = false;
-                            this.init();
-                            setTimeout(() => {
-                                this.editModeF();
+                            this.init().then(() => {
+                                 this.editModeF();
                                 this.checRadioB();
                                 this.checkSelectUser();
                                 this._subscribeControls();
                                 this.stateHeaderSubmit = true;
                                 this._pushState();
                             });
+
                         });
                 })
                 .catch(e => {
@@ -230,14 +242,19 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.editMode = !this.editMode;
         setTimeout(() => {
-            this.init();
+            this.init().then(() => {
+                this.editModeF();
+                this._subscribeControls();
+                this.stateHeaderSubmit = true;
+                this._pushState();
+            });
         }, 1000);
-        setTimeout(() => {
-            this.editModeF();
-            this._subscribeControls();
-            this.stateHeaderSubmit = true;
-            this._pushState();
-        }, 1200);
+        // setTimeout(() => {
+        //     this.editModeF();
+        //     this._subscribeControls();
+        //     this.stateHeaderSubmit = true;
+        //     this._pushState();
+        // }, 1200);
     }
     edit() {
         this.editMode = !this.editMode;
@@ -341,14 +358,23 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         } else {
             this.formAccess.controls['0'].disable({ emitEvent: false });
             this.formAccess.controls['0-1'].disable({ emitEvent: false });
+            this.formAccess.controls['26'].disable({ emitEvent: false });
+            this.formAccess.controls['23'].enable({ emitEvent: false });
+            this.formAccess.controls['21'].enable({ emitEvent: false });
         }
         if (delo) {
             this.formAccess.controls['0-1'].disable({ emitEvent: false });
             this.formAccess.controls['delo_web'].disable({ emitEvent: false });
+            this.formAccess.controls['23'].disable({ emitEvent: false });
+            this.formAccess.controls['21'].disable({ emitEvent: false });
+            this.formAccess.controls['26'].enable({ emitEvent: false });
         }
         if (delo_web_delo) {
             this.formAccess.controls['0'].disable({ emitEvent: false });
             this.formAccess.controls['delo_web'].disable({ emitEvent: false });
+            this.formAccess.controls['23'].enable({ emitEvent: false });
+            this.formAccess.controls['21'].enable({ emitEvent: false });
+            this.formAccess.controls['26'].enable({ emitEvent: false });
         }
     }
 
@@ -360,7 +386,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     closeSerts() {
         this.modalRef.hide();
     }
-    private _subscribeControls() {                                     /* подписки */
+    private _subscribeControls() {   /* подписки */
         /* основная форма */
         this.form.valueChanges
             .subscribe((data) => {
@@ -390,6 +416,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             .subscribe(data => {
                 this._toggleFormControl(this.formAccess.controls['0-1'], data);
                 this._toggleFormControl(this.formAccess.controls['delo_web'], data);
+                if (data) {
+                    this._toggleFormControl(this.formAccess.controls['23'], true);
+                    this._toggleFormControl(this.formAccess.controls['21'], true);
+                }
             });
         this.formAccess.get('0-1').valueChanges
             .subscribe(data => {

@@ -132,6 +132,10 @@
 .modal-button {
     button {
         border: 1px solid #2196f3;
+        min-width: 88px;
+    }
+    > button {
+        margin-right: 10px;
     }
     >button {
         margin-right: 10px;

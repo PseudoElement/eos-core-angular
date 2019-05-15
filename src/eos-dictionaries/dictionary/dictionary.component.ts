@@ -496,20 +496,22 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         let data: {};
         let editDescr: {};
         let dictionary: EosDictionary;
-        const createWarning = this.dictionary.descriptor.preCreateCheck(this);
+        dictionary = this._dictSrv.currentDictionary;
+        editDescr = dictionary.getEditDescriptor();
+        data = dictionary.getNewNode({rec: recParams}, this.treeNode);
+
+        const createWarning = dictionary.descriptor.preCreateCheck(this);
         if (createWarning) {
             this._msgSrv.addNewMessage(createWarning);
             return;
         }
 
-        if (this.dictionary.descriptor.id === 'broadcast-channel') {
+        if (dictionary.descriptor.id === 'broadcast-channel') {
             this.modalWindow = this._modalSrv.show(CreateNodeBroadcastChannelComponent, {class: 'creating-modal'});
         } else {
             this.modalWindow = this._modalSrv.show(CreateNodeComponent, {class: 'creating-modal'});
         }
-        dictionary = this._dictSrv.currentDictionary;
-        editDescr = dictionary.getEditDescriptor();
-        data = dictionary.getNewNode({rec: recParams}, this.treeNode);
+
         this._dictSrv.clearCurrentNode();
 
         this.modalWindow.content.fieldsDescription = editDescr;

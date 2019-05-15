@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -14,6 +14,8 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { PipRX, USER_PARMS } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { RECENT_URL } from 'app/consts/common.consts';
+import { EosStorageService } from 'app/services/eos-storage.service';
 @Component({
     selector: 'eos-user-param-cabinets',
     templateUrl: 'user-param-cabinets.component.html',
@@ -54,11 +56,23 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         private dataConv: EosDataConvertService,
         private inpSrv: InputControlService,
         private _router: Router,
+        private _snap: ActivatedRoute,
         private _waitClassifSrv: WaitClassifService,
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
-    ) {}
+        private _storageSrv: EosStorageService,
+    ) {
+        this._snap.queryParams
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe((data: Object) => {
+            if (data.hasOwnProperty('BackCabinets')) {
+                this.currTab = 1;
+            }
+        });
+    }
     async ngOnInit() {
         this._userParamsSetSrv.saveData$
             .pipe(
@@ -239,6 +253,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         }
     }
     showInfoUser() {
+        this._storageSrv.setItem(RECENT_URL, this._router.url + '?BackCabinets=true');
         this._router.navigate(['/spravochniki/departments', this.dueForLink, 'view', '0']);
     }
     clearControlAuthor() {

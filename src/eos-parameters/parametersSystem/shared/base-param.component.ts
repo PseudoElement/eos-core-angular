@@ -113,7 +113,6 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         return { rec: d };
     }
     submit() {
-        console.log('sub2');
         if (this.newData) {
             this.formChanged.emit(false);
             this.isChangeForm = false;
@@ -204,7 +203,6 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         }
         this.newData = EosUtils.setValueByPath(this.newData, path, _value);
         const oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
-
         if (oldValue !== _value) {
             // console.log('changed', path, oldValue, 'to', _value, this.prepareData.rec, this.newData.rec);
         }
@@ -245,7 +243,15 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                     dataInput.rec[key] = false;
                 }
             } else {
-                dataInput.rec[key] = this.prepareData.rec[key];
+                if (this._fieldsType[key] === 'numberIncrement') {
+                    if (this.prepareData.rec[key] === 'null' || this.prepareData.rec[key] === null) {
+                        // для сравнения в методе changeByPath
+                        this.prepareData.rec[key] = '';
+                    }
+                    dataInput.rec[key] = this.prepareData.rec[key];
+                }   else {
+                    dataInput.rec[key] = this.prepareData.rec[key];
+                }
             }
         });
         return this.dataSrv.getInputs(this.prepInputs, dataInput);

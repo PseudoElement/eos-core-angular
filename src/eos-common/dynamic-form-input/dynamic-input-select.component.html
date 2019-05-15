@@ -2,7 +2,7 @@
     <label [hidden]="input.hideLabel || hideLabel"
            [attr.for]="input.key">{{input.label}}</label>
     <p *ngIf="readonly"
-       class="form-control-static m-font"
+       class="form-control-static m-font pad-left"
        [ngClass]="{'placeholder': !hasValue()}">{{currentValue}}</p>
         <div class="eos-select" *ngIf="!readonly"
              [ngClass]="{'required': isRequired, 'disabled': disabled}">

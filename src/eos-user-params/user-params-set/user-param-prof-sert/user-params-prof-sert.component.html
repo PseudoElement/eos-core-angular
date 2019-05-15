@@ -53,10 +53,10 @@
         <div class="modal-flex-wr">
             <h4 class="modal-title pull-left">Выбор сертификата</h4>
             <div class="modal-button">
-                <button [disabled]='!selectedSertificatePopup' class="btn btn-primary-light" (click)='_modalService.hide(1); addSert()'>
+                <button [disabled]='!selectedSertificatePopup' class="btn btn-primary-light" (click)='modalRef.hide(); addSert()'>
                        выбрать
                 </button>
-                <button class="btn btn-primary-light" (click)='_modalService.hide(1)'>
+                <button class="btn btn-primary-light" (click)='modalRef.hide()'>
                       отмена
                    </button>
             </div>

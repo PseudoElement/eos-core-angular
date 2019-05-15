@@ -76,7 +76,7 @@ export class DictionarySearchComponent implements OnDestroy {
     }
 
     isActiveButton(): boolean {
-        return (this.fSearchPop.isOpen || (!this.noSearchData && this.searchActive) || this.searchActive);
+        return (this.fSearchPop.isOpen /*|| (!this.noSearchData && this.searchActive) || this.searchActive*/);
     }
 
     setTab(key: string) {
