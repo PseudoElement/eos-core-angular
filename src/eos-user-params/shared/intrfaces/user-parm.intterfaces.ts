@@ -94,6 +94,6 @@ export interface SertsBase {
 }
 
 export interface IGetUserCfg {
-    expand: string;
-    isn_cl: number;
+    expand?: string;
+    isn_cl?: number;
 }
