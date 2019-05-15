@@ -49,7 +49,10 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
-        this._userParamsSetSr.getUserIsn().then(() => {
+        this._userParamsSetSr.getUserIsn({
+            expand: 'USER_PARMS_List'
+        })
+        .then((d) => {
             this.allData = this._userParamsSetSr.hashUserContext;
             this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Справочники';
             this.inint();

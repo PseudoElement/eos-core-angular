@@ -95,14 +95,22 @@ export class UserParamsService {
             this._userContext = user[0];
             this.userTechList = [];
             this.userRightDocgroupList = [];
-            this._userContext.USER_TECH_List.forEach(item => this.userTechList.push(Object.assign({}, item)));
-            this._userContext.USER_RIGHT_DOCGROUP_List.forEach(item => this.userRightDocgroupList.push(Object.assign({}, item)));
             this._userContext['DUE_DEP_NAME'] = '';
             this._isTechUser = !this._userContext['DUE_DEP'];
             this._userContext['isTechUser'] = !this._userContext['DUE_DEP'];
-            this._userContext['isAccessDelo'] = !!this._userContext.USERCARD_List.length;
             this._userContext['ACCESS_SYSTEMS'] = this._userContext['AV_SYSTEMS'].split('');
             this.SubEmail.next(this._userContext);
+
+            if (this._userContext.USER_TECH_List) {
+                this._userContext.USER_TECH_List.forEach(item => this.userTechList.push(Object.assign({}, item)));
+            }
+            if (this._userContext.USER_RIGHT_DOCGROUP_List) {
+                this._userContext.USER_RIGHT_DOCGROUP_List.forEach(item => this.userRightDocgroupList.push(Object.assign({}, item)));
+            }
+            if (this._userContext.USERCARD_List) {
+                this._userContext['isAccessDelo'] = !!this._userContext.USERCARD_List.length;
+            }
+
             this._createHash();
             if (!this._isTechUser) {
                 return this.getDepartmentFromUser([this._userContext['DUE_DEP']]);
@@ -120,6 +128,7 @@ export class UserParamsService {
             return true;
         })
         .catch(err => {
+            console.log(err);
             this._errorHandler(err);
             return false;
         });
