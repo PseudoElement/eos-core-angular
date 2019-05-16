@@ -7,9 +7,9 @@ import { takeUntil } from 'rxjs/operators';
 import {REGISTRATION_REMASTER_USER, REGISTRATION_MAILRESIVE} from '../../../user-params-set/shared-user-param/consts/remaster-email.const';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-import {IFieldDescriptor} from '../../../shared/intrfaces/user-params.interfaces';
 import {FormHelperService} from '../../../shared/services/form-helper.services';
 import {RemasterService} from '../../shared-user-param/services/remaster-service';
+import { IFieldDescriptor } from 'eos-dictionaries/interfaces';
 
 
 
