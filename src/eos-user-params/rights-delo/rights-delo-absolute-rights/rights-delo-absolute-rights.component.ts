@@ -66,7 +66,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         await this._userParamsSetSrv.getUserIsn();
         const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
         this.curentUser = this._userParamsSetSrv.curentUser;
-
         this.flagGrifs = await this._userParamsSetSrv.checkGrifs(id);
         this.init();
     }
@@ -153,13 +152,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             })
             .catch((e) => {
                 this._errorSrv.errorHandler(e);
-                // if (e instanceof RestError) {
-                //     this._msgSrv.addNewMessage({
-                //         type: 'danger',
-                //         title: e.code.toString() === '2000' ? 'Ошибка' : e.code.toString(),
-                //         msg: e.message
-                //     });
-                // }
                 this.cancel();
             });
     }
