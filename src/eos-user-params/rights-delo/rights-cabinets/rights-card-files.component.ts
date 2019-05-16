@@ -44,7 +44,9 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
     ) {}
     async ngOnInit() {
-        await this._userSrv.getUserIsn();
+        await this._userSrv.getUserIsn({
+            expand: 'USERCARD_List'
+        });
         this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Картотеки и Кабинеты';
         this.flagChangeCards = true;
 

@@ -51,7 +51,9 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
             });
     }
     ngOnInit() {
-        this._userParamsSetSrv.getUserIsn()
+        this._userParamsSetSrv.getUserIsn({
+            expand: 'USERCARD_List/USER_CARD_DOCGROUP_List'
+        })
         .then(() => {
             return this._userParamsSetSrv.checkGrifs(this._userParamsSetSrv.userContextId);
         })

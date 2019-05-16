@@ -109,7 +109,9 @@ export class UserParamsService {
                 this._userContext['isAccessDelo'] = !!this._userContext.USERCARD_List.length;
             }
 
-            this._createHash();
+            if (this._userContext.USER_PARMS_List) {
+                this._createHash();
+            }
             if (!this._isTechUser) {
                 return this.getDepartmentFromUser([this._userContext['DUE_DEP']]);
             }
