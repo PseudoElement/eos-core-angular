@@ -37,7 +37,7 @@
         <ul *ngIf="(collectionList && collectionList.length); else emptyStores">
             <li *ngFor="let list of collectionList">
                 <div class="list" [ngClass]="{'highlighted': list.isSelected}" (click)="selectedNode(list)" (dblclick)="editWord()">
-                    <label class="checkbox-inline" [tooltip]="list.marked ? markTemp : notMarkTemp" containerClass="tooltip-info" (click)="checkboxStopPropagation($event)" placement="bottom">
+                    <label class="checkbox-inline" [tooltip]="list.marked ? markTemp : notMarkTemp" containerClass="tooltip-info" (click)="checkboxStopPropagation($event)" placement="auto">
                         <input
                             type="checkbox"
                             [(ngModel)]="list.marked || list.selectedMark"
