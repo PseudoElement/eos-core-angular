@@ -87,10 +87,9 @@ export class UserParamsService {
             expand: expand
         };
         const _user = this._pipSrv.getData<USER_CL>(queryUser);
-        const _sys = this.fetchSysParams();
+        const _sys = cfg && cfg.shortSys ? this.fetchSysParams() : Promise.resolve([]);
         return Promise.all([_user, _sys])
         .then(([user, sys]) => {
-            this._sysParams = sys;
             this._userContext = user[0];
             this.userTechList = [];
             this.userRightDocgroupList = [];

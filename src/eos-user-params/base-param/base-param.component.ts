@@ -79,7 +79,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private modalService: BsModalService,
     ) { }
     async ngOnInit() {
-        await this._userParamSrv.getUserIsn();
+        await this._userParamSrv.getUserIsn({
+            expand: 'USER_PARMS_List',
+            shortSys: true
+        });
         this.selfLink = this._router.url.split('?')[0];
         this.init();
         this.editModeF();

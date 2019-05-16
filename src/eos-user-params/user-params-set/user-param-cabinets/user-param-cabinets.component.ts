@@ -82,7 +82,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
 
-        await this._userParamsSetSrv.getUserIsn();
+        await this._userParamsSetSrv.getUserIsn({
+            expand: 'USER_PARMS_List'
+        });
         this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
         this.allData = this._userParamsSetSrv.hashUserContext;
         this.init();
