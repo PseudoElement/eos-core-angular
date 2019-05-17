@@ -5,7 +5,7 @@ import { Router} from '@angular/router';
 import { Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import { E_FIELD_TYPE, IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
+import { IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
 import { UserParamApiSrv } from '../../../shared/services/user-params-api.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
@@ -17,6 +17,7 @@ import { UserParamsService } from '../../../shared/services/user-params.service'
 import { USER_PARMS } from 'eos-rest';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import {ErrorHelperServices} from '../../../shared/services/helper-error.services';
+import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 @Injectable()
 export class BaseUserSrv implements OnDestroy, OnInit {
     @Input() btnDisabled;

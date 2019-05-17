@@ -77,6 +77,8 @@ export interface IFieldDescriptor {
     groupLabel?: string;
     minValue?: number;
     maxValue?: number;
+    parent?: any;
+    keyPosition?: number| string;
 }
 
 export interface IFieldDescriptorBase {

@@ -5,11 +5,11 @@ import { debounceTime } from 'rxjs/operators';
 
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosUtils } from 'eos-common/core/utils';
-import { E_FIELD_TYPE } from 'eos-parameters/parametersSystem/shared/interfaces/parameters.interfaces';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from './../shared/consts/eos-parameters.const';
 import { FILES_PARAM } from '../shared/consts/files-consts';
 import { BaseParamComponent } from '../shared/base-param.component';
 import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
+import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 @Component({
     selector: 'eos-param-files',
     templateUrl: 'param-files.component.html'

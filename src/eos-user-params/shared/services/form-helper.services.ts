@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { IInputParamControl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
-import {IFieldDescriptor} from 'eos-user-params/shared/intrfaces/user-params.interfaces';
+import { E_FIELD_TYPE, IFieldDescriptor } from 'eos-dictionaries/interfaces';
 @Injectable()
 export class FormHelperService {
     public _fieldsType = {};

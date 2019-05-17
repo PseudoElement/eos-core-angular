@@ -17,14 +17,14 @@ export class NodeAbsoluteRight {
     get label() {
         return this._constData.label;
     }
-    get change (): IChengeItemAbsolute[] {
+    get change(): IChengeItemAbsolute[] {
         return this._change;
     }
     get value(): number {
         return this._value;
     }
 
-    set value (v: number) {
+    set value(v: number) {
         if (v === this._valueDb) {
             this.touched = false;
         } else {
@@ -34,9 +34,9 @@ export class NodeAbsoluteRight {
             this.isCreate = true;
         }
         if (v && this.isCreate && this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.all) {
-                v = 2; // для параметров с радио "всех и не заполненных", значение по умолчанию "не заполненных"
-                this.isCreate = false;
-            }
+            v = 2; // для параметров с радио "всех и не заполненных", значение по умолчанию "не заполненных"
+            this.isCreate = false;
+        }
         this._value = v;
         this.control.patchValue(!!v);
     }
@@ -45,7 +45,7 @@ export class NodeAbsoluteRight {
     private _valueDb: number;
     private _change: IChengeItemAbsolute[] = [];
     private _curentUser: IParamUserCl;
-    constructor (node: IInputParamControl, v: number, con: AbstractControl, user: IParamUserCl) {
+    constructor(node: IInputParamControl, v: number, con: AbstractControl, user: IParamUserCl) {
         this._constData = node;
         this._value = v;
         this._valueDb = v;
@@ -58,9 +58,14 @@ export class NodeAbsoluteRight {
             this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject)) {
             const index = this._change.findIndex((item: IChengeItemAbsolute) => item.due === node.due);
             if (index >= 0) {
-                this._change.splice(index, 1);
-                this._checkTouched();
-                return;
+                if (node.user_cl) {
+                    this._transformChenge(node, index);
+                    return;
+                } else {
+                    this._change.splice(index, 1);
+                    this._checkTouched();
+                    return;
+                }
             }
         }
         if (this._change.length && (this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup)) {

@@ -9,10 +9,11 @@ import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../shared-user-param/consts/eos-user-params.const';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { E_FIELD_TYPE, IBaseUsers } from '../../shared/intrfaces/user-params.interfaces';
+import { IBaseUsers } from '../../shared/intrfaces/user-params.interfaces';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 
 @Component({
     selector: 'eos-user-param-external-application',

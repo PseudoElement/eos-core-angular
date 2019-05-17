@@ -1,10 +1,10 @@
-import { E_FIELD_TYPE } from 'eos-parameters/parametersSystem/shared/interfaces/parameters.interfaces';
 import { OTHER_PARAM } from './../shared/consts/other-consts';
 import { BaseParamComponent } from './../shared/base-param.component';
 import { Component, Injector, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { ALL_ROWS } from 'eos-rest/core/consts';
+import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 
 @Component({
     selector: 'eos-param-other',

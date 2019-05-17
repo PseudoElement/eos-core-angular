@@ -10,7 +10,7 @@ import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-conver
 import { FormHelperService } from '../../../shared/services/form-helper.services';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
 import { FORMAT_CL, DOC_TEMPLATES } from 'eos-rest/interfaces/structures';
-import { IFieldDescriptor } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
+import { IFieldDescriptor } from 'eos-dictionaries/interfaces';
 @Component({
     selector: 'eos-remaster-scan',
     templateUrl: 'remaster-scan.conponent.html',
