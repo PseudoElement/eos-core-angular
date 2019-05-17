@@ -72,7 +72,9 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
                 this._userSrv.submitSave = this.submit();
             });
 
-        await this._userSrv.getUserIsn();
+        await this._userSrv.getUserIsn({
+            expand: 'USER_PARMS_List'
+        });
         this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Электронная подпись';
 
         this.init();

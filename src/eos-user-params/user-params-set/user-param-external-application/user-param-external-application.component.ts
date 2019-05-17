@@ -50,7 +50,9 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
-        await this._userParamsSetSrv.getUserIsn();
+        await this._userParamsSetSrv.getUserIsn({
+            expand: 'USER_PARMS_List'
+        });
         this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
         this.init();
     }

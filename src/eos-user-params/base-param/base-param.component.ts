@@ -199,7 +199,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     }
                     this._newData = {};
                     this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-                    return this._userParamSrv.getUserIsn()
+                    return this._userParamSrv.getUserIsn({
+                        expand: 'USER_PARMS_List',
+                        shortSys: true
+                    })
                         .then(() => {
                             this.curentUser = this._userParamSrv.curentUser;
                             this.editMode = false;

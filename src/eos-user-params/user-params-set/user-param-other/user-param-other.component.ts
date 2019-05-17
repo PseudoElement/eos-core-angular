@@ -55,7 +55,9 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             this._userSrv.submitSave = this.submit(null);
         });
 
-        await this._userSrv.getUserIsn();
+        await this._userSrv.getUserIsn({
+            expand: 'USER_PARMS_List'
+        });
         this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Прочее`;
 
         const prep = this._formHelper.getObjQueryInputsField();

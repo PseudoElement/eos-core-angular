@@ -96,7 +96,7 @@ export class UserParamsService {
             this._userContext['DUE_DEP_NAME'] = '';
             this._isTechUser = !this._userContext['DUE_DEP'];
             this._userContext['isTechUser'] = !this._userContext['DUE_DEP'];
-            this._userContext['ACCESS_SYSTEMS'] = this._userContext['AV_SYSTEMS'].split('');
+            this._userContext.ACCESS_SYSTEMS = this._userContext['AV_SYSTEMS'].split('');
             this.SubEmail.next(this._userContext);
 
             if (this._userContext.USER_TECH_List) {
