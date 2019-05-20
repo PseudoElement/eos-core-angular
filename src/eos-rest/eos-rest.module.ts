@@ -21,6 +21,7 @@ import { AuthService } from './services/auth.service';
 // import { ContextService } from './services/appContext.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { ViewManager } from 'eos-rest/services/viewManager';
+import { EosTemplateComponent } from './clman/eos-template/eos-template.component';
 // import { commonMergeMeta } from 'eos-rest/common/initMetaData';
 
 @NgModule({
@@ -35,6 +36,7 @@ import { ViewManager } from 'eos-rest/services/viewManager';
         DeliveryDetailComponent,
         DepartmentComponent,
         UserRestComponent,
+        EosTemplateComponent,
     ],
     exports: [
         DeliveryComponent,
