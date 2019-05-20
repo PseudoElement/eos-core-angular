@@ -109,14 +109,14 @@
          overflow-y: scroll;
          .base-text-input {
              width: 250px;
-             margin-left: 26px;
+             margin-left: 33px;
              display: inline-block;
          }
          .mt-ceck {
              margin-top: 30px;
          }
          .base-login-input {
-             margin-left: 209px;
+             margin-left: 212px;
          }
          .elem-input-radio {
              font-size: 14px;
@@ -124,7 +124,7 @@
              margin-right: 20px;
          }
          .base-checkbox-input {
-             width: 220px;
+             width: 222px;
          }
          .icon-electronic {
              margin-bottom: -8px;
@@ -202,3 +202,6 @@
  .serts {
      top: 30%;
  }
+.btn-primary-full{
+     margin: 0 20px 0 10px;   
+}
