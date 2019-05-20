@@ -20,6 +20,7 @@ import { ParametersSystemComponent } from '../eos-parameters/parametersSystem/pa
 import { UserParamsComponent } from 'eos-user-params/eos-user-params.component';
 import { UserSelectComponent } from 'eos-user-select/eos-user-select.component';
 import { PermissionsGuard } from './guards/permissions.guard';
+import { EosTemplateComponent } from 'eos-rest/clman/eos-template/eos-template.component';
 /// import { environment } from 'environments/environment';
 
 const childrenDictionariesComponent = [{
@@ -135,6 +136,11 @@ const routes: Routes = [{
     canActivate: [AuthorizedGuard],
     component: RubricComponent,
     data: { title: 'rubric page' }
+}, {
+    path: 'templates',
+    canActivate: [AuthorizedGuard],
+    component: EosTemplateComponent,
+    data: { title: 'template page' }
 }, {
     path: 'department',
     canActivate: [AuthorizedGuard],
