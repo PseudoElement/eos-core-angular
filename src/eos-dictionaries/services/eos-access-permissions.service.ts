@@ -149,6 +149,9 @@ export class EosAccessPermissionsService {
     // --------------------------------------------------------------
     private _checkAccessTech(tr: E_TECH_RIGHT): boolean {
         const r: string = this.appCtx.CurrentUser.TECH_RIGHTS;
+        if (!r) {
+            return false;
+        }
         return (r[tr - 1] === '1');
     }
 
