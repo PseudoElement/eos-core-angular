@@ -80,7 +80,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     ) { }
     async ngOnInit() {
         await this._userParamSrv.getUserIsn({
-            expand: 'USER_PARMS_List',
+            expand: 'USER_PARMS_List,USERCARD_List',
             shortSys: true
         });
         this.selfLink = this._router.url.split('?')[0];
@@ -484,36 +484,36 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         arr.forEach((val, index) => {
             switch (index) {
                 case 0:
-                if (data.hasOwnProperty('0-1')) {
-                    if (data['0-1']) {
-                        newArr['0'] = '1';
-                        newArr['1'] = '1';
-                    }   else {
-                        newArr['1'] = '0';
+                    if (data.hasOwnProperty('0-1')) {
+                        if (data['0-1']) {
+                            newArr['0'] = '1';
+                            newArr['1'] = '1';
+                        } else {
+                            newArr['1'] = '0';
+                        }
+                    } else {
+                        if (data.hasOwnProperty('0')) {
+                            newArr['0'] = data['0'] ? '1' : '0';
+                        }
                     }
-                }   else {
-                    if (data.hasOwnProperty('0')) {
-                         newArr['0'] = data['0'] ? '1' : '0';
-                    }
-                }
-                break;
+                    break;
                 case 1:
-                if (data.hasOwnProperty('delo_web')) {
-                    if (data.hasOwnProperty('1-27')) {
-                        newArr[1] = (data['1-27'] === '1') ? '1' : '0';
-                        newArr[27] = (data['1-27'] === '27') ? '1' : '0';
+                    if (data.hasOwnProperty('delo_web')) {
+                        if (data.hasOwnProperty('1-27')) {
+                            newArr[1] = (data['1-27'] === '1') ? '1' : '0';
+                            newArr[27] = (data['1-27'] === '27') ? '1' : '0';
+                        }
+                    } else {
+                        newArr[27] = '0';
                     }
-                }   else {
-                    newArr[27]  = '0';
-                }
-                break;
+                    break;
                 case 27:
-                break;
+                    break;
                 default:
-                if (data.hasOwnProperty(index)) {
-                    newArr[index] = data[index] ? '1' : '0';
-                }
-                break;
+                    if (data.hasOwnProperty(index)) {
+                        newArr[index] = data[index] ? '1' : '0';
+                    }
+                    break;
 
 
             }
@@ -540,7 +540,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         //             arr[key] = +data[key];
         //     }
         // }
-     //   return arr.join('');
+        //   return arr.join('');
     }
     private _checkForChenge(state: boolean = false) {
         let change = false;
