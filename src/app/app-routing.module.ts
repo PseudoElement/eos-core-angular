@@ -21,6 +21,7 @@ import { UserParamsComponent } from 'eos-user-params/eos-user-params.component';
 import { UserSelectComponent } from 'eos-user-select/eos-user-select.component';
 import { PermissionsGuard } from './guards/permissions.guard';
 import { EosTemplateComponent } from 'eos-rest/clman/eos-template/eos-template.component';
+import { EosReportComponent } from '../eos-report/eos-report.component';
 /// import { environment } from 'environments/environment';
 
 const childrenDictionariesComponent = [{
@@ -217,7 +218,15 @@ const routes: Routes = [{
             },
         }
     ]
-}, {
+},
+{
+    path: 'report',
+    data: { title: 'Отчёт', showInBreadcrumb: true },
+    canActivate: [AuthorizedGuard],
+    component: EosReportComponent
+
+},
+{
     path: '',
     redirectTo: '/desk/system',
     pathMatch: 'full',
@@ -231,5 +240,6 @@ const routes: Routes = [{
     imports: [RouterModule.forRoot(routes, { useHash: true })],
     exports: [RouterModule],
 })
+
 export class AppRoutingModule {
 }
