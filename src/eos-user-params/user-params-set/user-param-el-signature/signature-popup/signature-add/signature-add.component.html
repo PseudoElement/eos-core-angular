@@ -2,8 +2,8 @@
     <div class="add-cert-wr">
         <h5 class="modal-title  edit-title primary-text long-title">Выбор рабочего хранилища сертификатов</h5>
         <div>
-            <button class="btn btn-primary " (click)='cancel()'>отменить</button>
-            <button class="btn btn-primary-full" [disabled]='!currentSelectNode' (click)='submit()'>сохранить</button>
+            <button class="btn btn-primary upper" (click)='cancel()'>отменить</button>
+            <button class="btn btn-primary-full upper" [disabled]='!currentSelectNode' (click)='submit()'>сохранить</button>
         </div>
     </div>
     <!-- <button type="button" class="close pull-right" aria-label="Close" (click)=""> -->
@@ -29,7 +29,10 @@
                             <option value="sss">
                                 Учетная запись службы
                             </option>
-                            </select>
+                            <option value="remote">
+                                Удаленный сервер
+                            </option>
+                    </select>
                 </div>
             </div>
             <div class="input-wrap pull-right">
