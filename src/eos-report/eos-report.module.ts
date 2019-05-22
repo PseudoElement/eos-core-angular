@@ -6,11 +6,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 /*     ----Components----     */
 import { EosReportComponent } from './eos-report.component';
+import { EosReportUsersInfoComponent } from './users-info/users-info.component';
+import { EosReportUsersStatsComponent } from './users-stats/users-stats.component';
 /*     ----Services----     */
 
 @NgModule({
     declarations: [
-        EosReportComponent
+        EosReportComponent,
+        EosReportUsersInfoComponent,
+        EosReportUsersStatsComponent
     ],
     imports: [
         BrowserModule,
