@@ -1,4 +1,4 @@
-@import "./card/card.component";
+@import "./card/card.component.scss";
 @import "./card-views/card-edit.component";
 @import "./card-views/simple-card-edit.component";
 @import "./card-views/cabinet-card-edit.component";
@@ -30,3 +30,4 @@
 @import "./sandwich/sandwich.component";
 @import "./tree/tree.component";
 @import "./adv-card/record-view.component/record-view.component.scss";
+@import "./dict-forms/dict-form.component";

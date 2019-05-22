@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import { EosDictService } from '../services/eos-dict.service';
-import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
+import { IDictionaryDescriptor, E_DICT_TYPE } from 'eos-dictionaries/interfaces';
 import {Router} from '@angular/router';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 
@@ -34,4 +34,14 @@ export class DictionariesComponent {
     isAccessEnabled(dict: any) {
         return this._eaps.isAccessGrantedForDictionary(dict.id, null) !== APS_DICT_GRANT.denied;
     }
+    routeForDict (dictId: string) {
+
+        const d = this._dictSrv.getDescr(dictId);
+        if (d.dictType === E_DICT_TYPE.form) {
+            return ['/form', dictId];
+        } else {
+            return ['/spravochniki', dictId];
+        }
+    }
+
 }

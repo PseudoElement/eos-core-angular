@@ -23,6 +23,7 @@ import { NADZOR } from './dictionaries/nadzor.consts';
 import { REESTRTYPE_DICT } from './dictionaries/reestrtype.consts';
 import {NOMENKL_DICT} from './dictionaries/nomenkl.const';
 import {EDS_CATEGORY_CL} from './dictionaries/category-eds.consts';
+import { CALENDAR_DICT } from './dictionaries/calendar.consts';
 
 export const DICTIONARIES = [
     /* tree dictionaries */
@@ -30,6 +31,7 @@ export const DICTIONARIES = [
     DEPARTMENTS_DICT,
     REGION_DICT,
     RUBRICATOR_DICT,
+    CALENDAR_DICT,
     /* linear dictionaries */
     ADDR_CATEGORY_DICT,
     CABINET_DICT,

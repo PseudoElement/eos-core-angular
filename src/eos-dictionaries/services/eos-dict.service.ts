@@ -1,3 +1,4 @@
+import { DICTIONARIES } from 'eos-dictionaries/consts/dictionaries.consts';
 import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { DOCGROUP_DICT } from './../consts/dictionaries/docgroup.consts';
 import { Injectable, Injector } from '@angular/core';
@@ -209,6 +210,16 @@ export class EosDictService {
         this._dictMode = 0;
         this._dictMode$ = new BehaviorSubject<number>(this._dictMode);
         this._initPaginationConfig();
+    }
+
+    getDescr(dictionaryId: string): IDictionaryDescriptor {
+        for (let i = 0; i < DICTIONARIES.length; i++) {
+            const dict = DICTIONARIES[i];
+            if (dict.id === dictionaryId) {
+                return dict;
+            }
+        }
+        return null;
     }
 
     treeNodeIdByDict(id: string) {

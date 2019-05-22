@@ -20,8 +20,21 @@ import { ParametersSystemComponent } from '../eos-parameters/parametersSystem/pa
 import { UserParamsComponent } from 'eos-user-params/eos-user-params.component';
 import { UserSelectComponent } from 'eos-user-select/eos-user-select.component';
 import { PermissionsGuard } from './guards/permissions.guard';
+import { DictFormComponent } from 'eos-dictionaries/dict-forms/dict-form.component';
 /// import { environment } from 'environments/environment';
 
+const formDictionariesComponent = [
+    {
+        path: ':dictionaryId',
+        // data: {
+        //     title: 'Справочник', showBreadcrumb: true,
+        //     showInBreadcrumb: true,
+        //     showSandwichInBreadcrumb: true,
+        //     showPushpin: true
+        // },
+        component: DictFormComponent,
+    },
+];
 const childrenDictionariesComponent = [{
     path: '',
     pathMatch: 'full',
@@ -103,6 +116,11 @@ const routes: Routes = [{
     data: { title: 'Справочники', showInBreadcrumb: true },
     canActivate: [AuthorizedGuard],
     children: childrenDictionariesComponent,
+}, {
+    path: 'form',
+    data: { title: 'Справочники', showInBreadcrumb: false },
+    canActivate: [AuthorizedGuard],
+    children: formDictionariesComponent,
 }, {
     path: 'desk',
     data: { title: 'Главная', showInBreadcrumb: false },

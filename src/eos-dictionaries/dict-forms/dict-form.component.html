@@ -1,0 +1,53 @@
+<div class="eos-dict-form">
+    <div class="eos-card-wrapper">
+            <header>
+                    <div class="edit-header"
+                        [ngClass]="{'edited': editMode}">
+                        <div class="move-wrapper">
+                        </div>
+                        <div class="name-wrapper"
+                            [ngClass]="{'edited': editMode}">
+                            <span
+                                class="edit-title primary-text long-title"
+                                >{{getTitle()}}</span>
+                        </div>
+                        <div class="buttons-wrapper"
+                            *ngIf="editMode">
+                            <div>
+                                <button class="btn btn-primary upper"
+                                    (click)="cancel()">Отменить</button>
+                                <button class="btn btn-primary-full upper"
+                                    [disabled]="!isChanged || disableSave"
+                                    (click)="save()">Сохранить</button>
+                            </div>
+                        </div>
+                        <div class="action-wrapper"
+                            *ngIf="!editMode">
+                            <div class="pull-right">
+                                <button class="btn btn-primary-light"
+                                    aria-hidden="true"
+                                    (click)="close()"
+                                    tooltip="Закрыть"
+                                    placement="bottom"
+                                    containerClass="tooltip-info">
+                            <span class="eos-icon eos-icon-close-blue small"></span>
+                        </button>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+
+            <!-- <div *ngIf="!node || node.updating"
+                class="spinner-wrapper secondary-block">
+                <eos-spinner [size]="'lg'"></eos-spinner>
+            </div> -->
+            <div class="form-card-body">
+                    <eos-datepickerinline>
+                            sdagsd
+                    </eos-datepickerinline>
+            </div>
+
+
+    </div>
+</div>

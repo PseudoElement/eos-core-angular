@@ -47,6 +47,7 @@ import { CarmaHttpService } from './services/carmaHttp.service';
 import { NavParamService } from './services/nav-param.service';
 import { WaitClassifService } from './services/waitClassif.service';
 import {CertificateService} from './services/certificate.service';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 /* guards */
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
@@ -71,7 +72,7 @@ import { PermissionsGuard } from './guards/permissions.guard';
         TestPageComponent,
         TitleComponent,
         UserComponent,
-        NavParamComponent
+        NavParamComponent,
     ],
     imports: [
         AppRoutingModule,
@@ -83,6 +84,7 @@ import { PermissionsGuard } from './guards/permissions.guard';
         SortableModule.forRoot(),
         TooltipModule.forRoot(),
         EosRestModule.forRoot(APP_CONFIG_LOCAL),
+        BsDatepickerModule.forRoot(),
         EosCommonModule,
         EosDictionariesModule,
         EosParametersModule,

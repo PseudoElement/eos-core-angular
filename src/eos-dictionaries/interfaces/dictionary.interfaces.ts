@@ -12,7 +12,8 @@ export enum E_DICT_TYPE {
     linear,
     tree,
     department,
-    custom
+    custom,
+    form,
 }
 
 export enum E_FIELD_SET {
@@ -147,6 +148,11 @@ export interface ITreeDictionaryDescriptor extends IDictionaryDescriptor {
     shortQuickViewFields: string[];
     editFields: string[];
     listFields: string[];
+
+}
+
+export interface IFormDictionaryDescriptor extends IDictionaryDescriptor {
+    dictType: E_DICT_TYPE.form;
 
 }
 

@@ -1,0 +1,32 @@
+
+<div class="test-form">
+    <div class="row">
+        <div class="col-xs-12 col-12 col-md-4 form-group">
+                <bs-datepicker-inline
+                id="bsdatp"
+                [bsValue]="bsInlineValue"
+                [bsConfig]="bsDatepickerCfg"
+                (beforeShowDay)="beforeShowDay"
+                >
+            </bs-datepicker-inline>
+        </div>
+        <div class="col-sm-9">
+            <div class="row">
+                <div class="col-sm-4 test-item"
+                *ngFor="let ctrl of inputs">
+                    <div class="form-group">
+                        <eos-dynamic-input [input]="ctrl"
+                        [form]="form"
+                        [readonly]="false"></eos-dynamic-input>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <pre>{{data | json}}</pre>
+        </div>
+    </div>
+</div>
+
+
+

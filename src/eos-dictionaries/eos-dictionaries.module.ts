@@ -82,11 +82,14 @@ import { AdvCardRKEditComponent } from './adv-card/adv-card-rk.component';
 import { RKDefaultValuesCardComponent } from './adv-card/rk-default-values/rk-default-values.component';
 import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-files.component';
 import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter.component';
-
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { DictFormComponent } from './dict-forms/dict-form.component';
+import { DatepickerinlineComponent } from './dict-forms/datepickerinline/datepickerinline.component';
 @NgModule({
     declarations: [
         CardComponent,
         CardEditComponent,
+        DictFormComponent,
         ColumnSettingsComponent,
         CounterNpEditComponent,
         AdvCardRKEditComponent,
@@ -137,6 +140,7 @@ import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter
         PrjDefaultValuesComponent,
         LinkCardComponent,
         NadzorCardEditComponent,
+        DatepickerinlineComponent,
     ],
     entryComponents: [
         ColumnSettingsComponent,
@@ -149,6 +153,7 @@ import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter
         CreateNodeBroadcastChannelComponent,
         DocgroupTemplateConfigComponent,
         PrjDefaultValuesComponent,
+        DatepickerinlineComponent,
     ],
     imports: [
         BrowserModule,
@@ -167,6 +172,7 @@ import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter
         BsDropdownModule.forRoot(),
         TypeaheadModule.forRoot(),
         DragulaModule,
+        BsDatepickerModule.forRoot(),
     ],
     exports: [
         DictionaryComponent,
@@ -178,6 +184,7 @@ import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter
         RecordViewComponent,
         RKDefaultValuesCardComponent,
         RulesSelectComponent,
+        DatepickerinlineComponent,
     ],
     providers: [
         DictionaryDescriptorService,

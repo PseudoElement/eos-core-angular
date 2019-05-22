@@ -154,7 +154,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 this.accessDenied = false;
                 this._nodeId = params.nodeId;
                 if (this.dictionaryId) {
-                    this._dictSrv.openDictionary(this.dictionaryId)
+                        this._dictSrv.openDictionary(this.dictionaryId)
                         .then(() => {
                             if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
                                 this.dictionary.root.children = null;
@@ -174,6 +174,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                                 this._dictSrv.selectTreeNode(this._nodeId);
                             }
                         });
+
                 }
             }
         });
