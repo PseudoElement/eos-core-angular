@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'eos-eos-report',
@@ -8,19 +7,11 @@ import { Router } from '@angular/router';
 })
 export class EosReportComponent implements OnInit {
 
-  constructor(private router: Router) {
+  constructor() {
   }
 
   ngOnInit() {
 
-  }
-
-  switchToInfo() {
-    this.router.navigate(['/report/users-info']);
-  }
-
-  switchToStats() {
-    this.router.navigate(['/report/users-stats']);
   }
 
 }
