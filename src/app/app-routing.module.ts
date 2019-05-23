@@ -229,12 +229,12 @@ const routes: Routes = [{
 },
 {
     path: 'report/users-info',
-    canDeactivate: [CanDeactivateGuard],
+    canActivate: [AuthorizedGuard],
     component: EosReportUsersInfoComponent
 },
 {
     path: 'report/users-stats',
-    canDeactivate: [CanDeactivateGuard],
+    canActivate: [AuthorizedGuard],
     component: EosReportUsersStatsComponent
 },
 {
