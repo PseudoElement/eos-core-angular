@@ -2,13 +2,35 @@
 <div class="test-form">
     <div class="row">
         <div class="col-xs-12 col-12 col-md-4 form-group">
-                <bs-datepicker-inline
+            <!-- <bs-datepicker-container #datepicker></bs-datepicker-container> -->
+            <bs-datepicker-inline
                 id="bsdatp"
                 [bsValue]="bsInlineValue"
                 [bsConfig]="bsDatepickerCfg"
-                (beforeShowDay)="beforeShowDay"
+                (bsValueChange)="onDateChange($event)"
+                (mousemove)="onDataMouseMove($event)"
                 >
             </bs-datepicker-inline>
+
+            <eos-datepicker-inline
+                #datepicker
+                [bsValue]="bsInlineValue"
+                [getClassForDate]="getClassForDate.bind(this)"
+                (bsValueChange)="onDateChange($event)"
+            >
+                <!-- [bsConfig]="bsDatepickerCfg" -->
+                <!-- (bsBeforeShowDay)="beforeShowDay($event)" -->
+                <!-- (bsValueChange)="onDateChange($event)" -->
+                <!-- (mousemove)="onDataMouseMove($event)" -->
+            <!-- [bsValue]="bsInlineValue"
+            [bsConfig]="bsDatepickerCfg"
+            (bsBeforeShowDay)="beforeShowDay($event)"
+            (bsValueChange)="onDateChange($event)"
+            (mousemove)="onDataMouseMove($event)" -->
+
+            </eos-datepicker-inline>
+
+
         </div>
         <div class="col-sm-9">
             <div class="row">
@@ -21,9 +43,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-3">
-            <pre>{{data | json}}</pre>
         </div>
     </div>
 </div>

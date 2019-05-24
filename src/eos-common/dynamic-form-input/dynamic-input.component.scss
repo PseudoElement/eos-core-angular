@@ -171,7 +171,7 @@ eos-dynamic-input {
         }
     }
     .pad-left{
-        padding-left: 20px; 
+        padding-left: 20px;
     }
     .input-button-container {
         // width: 300px;
@@ -230,6 +230,12 @@ eos-dynamic-input {
 
 .bs-datepicker-body table td {
     color: black !important;
+    &.typeweekend {
+        color: red !important
+    }
+    &.typeworkday {
+        color: black !important
+    }
 }
 
 .toggle-wrap {

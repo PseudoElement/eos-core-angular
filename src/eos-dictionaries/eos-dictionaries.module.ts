@@ -85,6 +85,7 @@ import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DictFormComponent } from './dict-forms/dict-form.component';
 import { DatepickerinlineComponent } from './dict-forms/datepickerinline/datepickerinline.component';
+import { EosDatepickerInlineComponent } from './dict-forms/eos-datepicker-inline/eos-datepicker-inline.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -141,6 +142,7 @@ import { DatepickerinlineComponent } from './dict-forms/datepickerinline/datepic
         LinkCardComponent,
         NadzorCardEditComponent,
         DatepickerinlineComponent,
+        EosDatepickerInlineComponent,
     ],
     entryComponents: [
         ColumnSettingsComponent,
@@ -154,6 +156,7 @@ import { DatepickerinlineComponent } from './dict-forms/datepickerinline/datepic
         DocgroupTemplateConfigComponent,
         PrjDefaultValuesComponent,
         DatepickerinlineComponent,
+        EosDatepickerInlineComponent,
     ],
     imports: [
         BrowserModule,
@@ -185,6 +188,7 @@ import { DatepickerinlineComponent } from './dict-forms/datepickerinline/datepic
         RKDefaultValuesCardComponent,
         RulesSelectComponent,
         DatepickerinlineComponent,
+        EosDatepickerInlineComponent,
     ],
     providers: [
         DictionaryDescriptorService,
