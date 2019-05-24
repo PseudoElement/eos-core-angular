@@ -8,13 +8,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EosReportComponent } from './eos-report.component';
 import { EosReportUsersInfoComponent } from './users-info/users-info.component';
 import { EosReportUsersStatsComponent } from './users-stats/users-stats.component';
+import { EosReporSubsystemComponent } from './subsystem/subsystem.component';
 /*     ----Services----     */
 
 @NgModule({
     declarations: [
         EosReportComponent,
         EosReportUsersInfoComponent,
-        EosReportUsersStatsComponent
+        EosReportUsersStatsComponent,
+        EosReporSubsystemComponent
     ],
     imports: [
         BrowserModule,

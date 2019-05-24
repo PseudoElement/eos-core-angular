@@ -8,19 +8,28 @@
             </div>
         </div>
         <div class="eos-node-list">
-            <div class="mar-items">
+            <div class="mar-items1">
                 <span class="item-count-content">
                     Всего Пользователей
+                </span>
+                <span class="item-count-param1">
+                    {{usersNumber}}
                 </span>
             </div>
             <div class="mar-items">
                 <span class="item-count-content">
                     Заблокировано технологом
                 </span>
+                <span class="item-count-param2">
+                    {{blockByTech}}
+                </span>
             </div>
             <div class="mar-items">
                 <span class="item-count-content">
                     Заблокировано при входе в систему
+                </span>
+                <span class="item-count-param3">
+                    {{blockAuthUsers}}
                 </span>
             </div>
             <div class="mar-items">
@@ -33,13 +42,12 @@
                         <span class="item-count-content">
                             Протоколирование "Пользователей"
                         </span>
-                        <label class="checkbox cust-check">
-                            <input lass="checkbox" type="checkbox"/>
-                            <span></span>
-                        </label>             
+                        <span class="item-count-param4">
+                           {{logUsers}}
+                        </span>             
                 </div>    
             </div>
-            <div class="mar-items">
+            <div class="mar-items4">
                 <span class="item-count-content">
                     Данные о пользователях по подсистемам
                 </span>
@@ -61,35 +69,20 @@
                 </div>
             </div>
             <div class="eos-node-list">
-                <div class="user-item">
-                    <div class="table-title">
-                        <div class="eos-node-list">
-                            <span class="cust-str text-center">user.login rg rerthrth ewfe</span>
-                        </div>
-                        <!-- <div class="">
-                            <span class="user-list-fourth-colomn">user.login</span>
-                            <span class="user-list-two-colomn" placement="bottom" containerClass="tooltip-info" container="body">user.fullDueName
-                            </span>
-                            <span class="user-list-first-colomn" placement="auto" containerClass="tooltip-info" container="body">user.department
-                            </span>
-                        </div> -->
-                    </div>
-                </div>
+                <eos-subsystem  [subSystem]=subsystem.delo.label [subValue]=delo></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.delowebLGO.label [subValue]=delowebLGO></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.delowebKL.label [subValue]=delowebKL></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.Shif.label [subValue]=Shif></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.SCAN.label [subValue]=SCAN></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.Pscan.label [subValue]=Pscan></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.Scan_code.label [subValue]=Scan_code></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.Search_code.label [subValue]=Search_code></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.Notifer.label [subValue]=Notifer></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.Informer.label [subValue]=Informer></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.EOS.label [subValue]=EOS></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.MobNet.label [subValue]=MobNet></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.APM.label [subValue]=APM></eos-subsystem>   
             </div>
         </div>
-        <!-- <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.delo></eos-user-system>
-        <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.delo_deloweb></eos-user-system>
-        <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.delowebLGO></eos-user-system>
-        <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.delowebKL></eos-user-system>
-        <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.APM></eos-user-system>
-        <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.EOS></eos-user-system>
-        <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.SCAN></eos-user-system>
-        <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Pscan></eos-user-system>
-        <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Shif></eos-user-system>
-        <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Scan_code></eos-user-system>
-        <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Notifer></eos-user-system>
-        <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Search_code></eos-user-system>
-        <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.MobNet></eos-user-system>
-        <eos-user-system [infoSystem]=_selectedUser.ArraySystemHelper.Informer></eos-user-system> -->
-    </div>        
+    </div>     
 </div>

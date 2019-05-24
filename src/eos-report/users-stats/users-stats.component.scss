@@ -11,17 +11,6 @@
         justify-content: flex-start;
         width: 100%;
         padding-left: 10px;
-        .likeLink {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            cursor: pointer;
-            color: #2196f3;
-            margin-left: 20px;
-            >span {
-                margin-left: 8px;
-            }
-        }
     }
     .eos-node-list {
         background: $white;
@@ -29,24 +18,6 @@
         .user-select-node {
             line-height: 30px;
             cursor: pointer;
-        }
-        .user-select-node-t {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            width: calc(100% - 52px);
-            span {
-                padding-left: 5px;
-                box-sizing: border-box;
-            }
-        }
-        .user-select-empty-list {
-            margin-left: 20px;
-        }
-        .user-item {
-            &:hover {
-                background-color: #e3f2fd
-            }
         }
     }
     .table-header-wrapper {
@@ -77,7 +48,6 @@
         grid-column: 4;
     }
     .item-count-content {
-        padding: 0 $grid-gutter-width / 2;
         line-height: 24px;
         font-size: 16px;
         .counter {
@@ -88,39 +58,45 @@
             color: $white;
         }
     }
+    .item-count-param1{
+        padding-left: 172px;
+    }
+    .item-count-param2{
+        padding-left: 130px; 
+    }
+    .item-count-param3{
+        padding-left: 65px; 
+    }
+    .item-count-param4{
+        padding-left: 40px; 
+    }
     .user-first-colomn {
         width: 60%;
         display: inline-block;
-        margin-left: 34px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         vertical-align: bottom;
         line-height: 32px;
         height: 32px;
-        padding-right: 2px;
     }
     .user-two-colomn {
         width: 10%;
         display: inline-block;
-        margin-left: 20px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         vertical-align: bottom;
         line-height: 32px;
         height: 32px;
-        padding-right: 2px;
     }
     .user-third-colomn {
         width: 10%;
         display: inline-block;
-        margin-left: 30px;
     }
     .user-fourth-colomn {
         width: 20%;
         display: inline-block;
-        /* margin-left: 20px; */
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -129,46 +105,45 @@
         cursor: not-allowed!important;
         color: lightgray
     }
-    .delitedDue {
-        color: #dac1c1;
-    }
-    .deleted-user-border {
-        display: inline-block;
-        width: 32px;
-        height: 32px;
-    }
-    .spiner-wrapper {
-        width: 100%;
-        height: calc(100vh - 370px);
-        display: flex;
-        align-items: center;
-        align-content: center;
-        justify-content: center;
-    }
     .user-check-label {
         padding-left: 0;
     }
     .table-wrapper {
         overflow: visible;
     }
-    .dropdown-menu {
-        width: 355px;
-    }
     .mar-items{
-        margin: 10px;
+        padding: 10px;
+    }
+    .mar-items1{
+        padding: 20px 10px 10px 10px;
+    }
+    .mar-items4{
+        padding: 10px 10px 20px 10px;
     }
     .cont-items{
         display: flex;
         flex-direction: row;
     }
-    .ali-cent{
-        justify-content: center;
-    }
-    .cust-str{
+    .cust-str1{
         height: 32px;
-        text-align: center;
         width: 60%;
-        
-        
+        padding-top: 5px;
+        padding-left: 20px;
+    }
+    .cust-str2{
+        height: 32px;
+        width: 10%;
+        padding-top: 5px;
+    }
+    .cust-str3{
+        height: 32px;
+        width: 10%;
+        padding-top: 5px;  
+    }
+    .cust-str4{
+        height: 32px;
+        width: 20%;    
+        padding-top: 5px; 
+        padding-left: 50px; 
     }
 }
