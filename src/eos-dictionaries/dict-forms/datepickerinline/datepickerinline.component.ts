@@ -1,15 +1,21 @@
 import { DATE_INPUT_PATERN } from './../../../eos-common/consts/common.consts';
 import { FormGroup } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { Component, OnInit, OnChanges, Injector } from '@angular/core';
+import { Component, OnInit, OnChanges, Injector, ViewChild } from '@angular/core';
 import { BsLocaleService } from 'ngx-bootstrap';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { InputBase } from 'eos-common/core/inputs/input-base';
 import { IBaseInput } from 'eos-common/interfaces';
 import { EosUtils } from 'eos-common/core/utils';
 import { PipRX, CALENDAR_CL } from 'eos-rest';
+import { EosDatepickerInlineComponent } from '../eos-datepicker-inline/eos-datepicker-inline.component';
 
 
+enum dayType {
+    holiday = 1,
+    weekend = 2,
+    workday = 3,
+}
 
 const TEST_INPUTS = <IBaseInput[]>[
 {
@@ -17,13 +23,13 @@ const TEST_INPUTS = <IBaseInput[]>[
     key: 'type',
     label: 'день',
     options: [{
-        value: 1,
+        value: dayType.holiday,
         title: 'Праздник'
     }, {
-        value: 2,
+        value: dayType.weekend,
         title: 'Выходной'
     }, {
-        value: 3,
+        value: dayType.workday,
         title: 'Рабочий день'
     }]
 }, {
@@ -42,7 +48,7 @@ const TEST_INPUTS = <IBaseInput[]>[
 
 export class DatepickerinlineComponent implements OnInit, OnChanges {
 
-    // @ViewChild('item1') item1: BsDatepickerInlineDirective;
+    @ViewChild('datepicker') datepicker: EosDatepickerInlineComponent;
 
 
     bsInlineValue = new Date();
@@ -66,6 +72,7 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
 
     tbody: Element;
     private _apiSrv: PipRX;
+    private _manualUpdating: boolean;
 
     constructor(
         private localeService: BsLocaleService,
@@ -74,10 +81,14 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
         ) {
             this._apiSrv = injector.get(PipRX);
             this.inputs = this.inputCtrlSrv.generateInputs(TEST_INPUTS);
-            ;
+
             this.form = this.inputCtrlSrv.toFormGroup(this.inputs, false);
-            this.form.valueChanges.subscribe(() => {
-                // this.data = data;
+            this.form.valueChanges.subscribe((ch) => {
+                if (this._manualUpdating) {
+                    return;
+                }
+                console.log('edit:', ch);
+                this.setTypeFor(Number(ch['type']), this.datepicker.value);
             });
 
     }
@@ -86,13 +97,36 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
         this.localeService.use('ru');
         this.selectedDate = this.bsInlineValue;
 
-        setTimeout(() => {
-            // this._updateCalendar();
-        }, 100);
+
     }
 
 
     ngOnChanges() {
+    }
+
+    setTypeFor(type: number, date: Date) {
+        const d = this._toDBFormattedDate(date);
+        const t = this.dbDates.find( v => String(v.DATE_CALENDAR) === d);
+        const dayOfWeek = date.getDay();
+        const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+        if (t) {
+            if ((isWeekend && type === dayType.weekend) ||
+                (!isWeekend && type === dayType.workday)
+            ) {
+                this.dbDates.splice(this.dbDates.indexOf(t), 1);
+            } else {
+                t.DATE_TYPE = type;
+            }
+        } else {
+            if ((isWeekend && type === dayType.weekend) ||
+                (!isWeekend && type === dayType.workday)
+            ) {
+            } else {
+                this.dbDates.push({ ISN_CALENDAR: -1, DATE_CALENDAR: d, DATE_TYPE: type });
+            }
+        }
+        // this._updateControlsFor(this.selectedDate);
+        this.datepicker._repaint();
     }
 
     onDateChange(date) {
@@ -108,11 +142,32 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
        // this._updateCalendar();
     }
 
+    onSave() {
+
+    }
 
     getClassForDate (date: Date) {
-        return 'typeweekend';
+        if (!this.dbDates) {
+            return null;
+        }
+        const text_date = this._toDBFormattedDate(date);
+        const t = this.dbDates.find( v => String(v.DATE_CALENDAR) === text_date);
+        if (t) {
+            if (t.DATE_TYPE === 2 || t.DATE_TYPE === 1) {
+                return 'typeweekend';
+            }
+        } else {
+            const dw = date.getDay();
+            if (dw === 0 || dw === 6) {
+                return 'typeweekend';
+            }
+        }
+
+        return null;
     }
     private _updateControlsFor(date: Date) {
+
+        this._manualUpdating = true;
 
         this.form.controls['dateString'].setValue(EosUtils.dateToStringValue(date));
 
@@ -125,11 +180,13 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
         } else {
             const wd = date.getDay();
             if (wd === 6 || wd === 0) {
-                this.form.controls['type'].setValue(2);
+                this.form.controls['type'].setValue(dayType.weekend);
             } else {
-                this.form.controls['type'].setValue(3);
+                this.form.controls['type'].setValue(dayType.workday);
             }
         }
+
+        this._manualUpdating = false;
 
     }
 
@@ -185,6 +242,7 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
         return this._apiSrv.read<CALENDAR_CL>(req).then((data) => {
             this.dbDates = data;
             this._updateControlsFor(this.selectedDate);
+            this.datepicker._repaint();
             return data;
         });
     }

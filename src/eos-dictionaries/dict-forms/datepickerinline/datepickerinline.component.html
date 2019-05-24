@@ -34,7 +34,7 @@
         </div>
         <div class="col-sm-9">
             <div class="row">
-                <div class="col-sm-4 test-item"
+                <div class="col-sm-4"
                 *ngFor="let ctrl of inputs">
                     <div class="form-group">
                         <eos-dynamic-input [input]="ctrl"
@@ -42,8 +42,11 @@
                         [readonly]="false"></eos-dynamic-input>
                     </div>
                 </div>
+                <button (click)="onSave()">Сохранить</button>
             </div>
+
         </div>
+
     </div>
 </div>
 

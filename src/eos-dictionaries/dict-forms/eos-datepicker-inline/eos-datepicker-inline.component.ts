@@ -93,7 +93,6 @@ export class EosDatepickerInlineComponent implements OnInit {
             return;
         }
         this.bsValue = value;
-        // this.value = value;
         this.bsValueChange.emit(value);
     }
 
