@@ -9,6 +9,8 @@ import { IBaseInput } from 'eos-common/interfaces';
 import { EosUtils } from 'eos-common/core/utils';
 import { PipRX, CALENDAR_CL } from 'eos-rest';
 import { EosDatepickerInlineComponent } from '../eos-datepicker-inline/eos-datepicker-inline.component';
+import { SUCCESS_SAVE } from 'eos-dictionaries/consts/messages.consts';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
 
 
 enum dayType {
@@ -73,6 +75,7 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
     tbody: Element;
     private _apiSrv: PipRX;
     private _manualUpdating: boolean;
+    private _msgSrv: EosMessageService;
 
     constructor(
         private localeService: BsLocaleService,
@@ -81,6 +84,7 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
         ) {
             this._apiSrv = injector.get(PipRX);
             this.inputs = this.inputCtrlSrv.generateInputs(TEST_INPUTS);
+            this._msgSrv = injector.get(EosMessageService);
 
             this.form = this.inputCtrlSrv.toFormGroup(this.inputs, false);
             this.form.valueChanges.subscribe((ch) => {
@@ -131,11 +135,11 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
 
     onDateChange(date) {
         if (!this.dbDates) {
-            this._refreshSaved(date);
+            this.refreshDB();
         } else {
             this._updateControlsFor(date);
         }
-        console.log(date);
+        // console.log(date);
     }
 
     onDataMouseMove($event) {
@@ -144,6 +148,164 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
 
     onSave() {
 
+        this._readDBSaved().then((storedData) => {
+            const changes = this._calcChanges(storedData, this.dbDates);
+            if (changes) {
+                this._apiSrv.batch(changes, '')
+                    .then(() => {
+                        this._msgSrv.addNewMessage(SUCCESS_SAVE);
+                    })
+                    .catch((err) => {
+                        this._msgSrv.addNewMessage({ msg: err.message, type: 'danger', title: 'Ошибка записи' });
+                    });
+            }
+
+        });
+    }
+
+    _calcChanges(storedData: CALENDAR_CL[], dbDates: CALENDAR_CL[]): any[] {
+        const changes = [];
+        // if (!dbDates || !storedData) {
+        //     return null;
+        // }
+        // for (let i = 0; i < dbDates.length; i++) {
+        //     const e: CALENDAR_CL = dbDates[i];
+        //     if (e.ISN_CALENDAR === -1) {
+        //         changes.push (
+        //             {
+        //                 method: 'POST',
+        //                 data: e,
+        //                 requestUri: 'CALENDAR_CL',
+        //             }
+        //         );
+        //     }
+        // }
+
+        return changes;
+    }
+
+
+    // left private _calcChangesFor(docGroup: any, newData: any ): any {
+    //     const fields = this.getDescriptions();
+    //     const changes = [];
+    //     if (!newData) {
+    //         return null;
+    //     }
+    //     this.keys(newData[FILE_CONSTRAINT_LIST_NAME]).forEach((key) => {
+    //         const savedData = docGroup[FILE_CONSTRAINT_LIST_NAME].find (f => f.CATEGORY === key);
+    //         let hasChanges = false;
+    //         for (const sk in RKFilesConstraintsFields) {
+    //             if (RKFilesConstraintsFields.hasOwnProperty(sk)) {
+
+    //                 const f = RKFilesConstraintsFields[sk];
+    //                 const spath = key + '.' + f;
+    //                 const field = fields[FILE_CONSTRAINT_LIST_NAME].find(i => i.key === spath);
+    //                 const type: E_FIELD_TYPE = field.type;
+    //                 const t1 = newData[FILE_CONSTRAINT_LIST_NAME];
+    //                 const t2 = t1[key];
+    //                 const savedValue = this.fixDBValueByType(savedData[f], type);
+    //                 const formValue = this.fixDBValueByType(t2[f], type);
+    //                 if (savedValue !== formValue) {
+    //                     hasChanges = true;
+    //                     break;
+    //                 }
+    //             }
+    //         }
+
+    //         const updatevalues = {};
+    //         for (const sk in RKFilesConstraintsFields) {
+
+    //             if (RKFilesConstraintsFields.hasOwnProperty(sk)) {
+    //                 const f = RKFilesConstraintsFields[sk];
+    //                 const spath = key + '.' + f;
+    //                 const field = fields[FILE_CONSTRAINT_LIST_NAME].find(i => i.key === spath);
+    //                 const type: E_FIELD_TYPE = field.type;
+    //                 const t1 = newData[FILE_CONSTRAINT_LIST_NAME];
+    //                 const t2 = t1[key];
+    //                 updatevalues[f] = this.fixDBValueByType(t2[f], type);
+    //             }
+    //         }
+    //         if (updatevalues['ONE_FILE'] === null) {
+    //             updatevalues['ONE_FILE'] = '0';
+    //         }
+
+    //         if (hasChanges) {
+    //             if (savedData) {
+
+    //                 changes.push (
+    //                     {
+    //                         method: 'MERGE',
+    //                         data: updatevalues,
+    //                         requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DG_FILE_CONSTRAINT_List(\''
+    //                             + docGroup['DUE'] + ' ' + key + '\')'
+    //                     }
+    //                 );
+    //             } else {
+    //                 updatevalues['CATEGORY'] = key;
+    //                 changes.push (
+    //                     {
+    //                         method: 'POST',
+    //                         data: updatevalues,
+    //                         requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DG_FILE_CONSTRAINT_List'
+    //                     }
+    //                 );
+    //             }
+    //         }
+
+
+    //     });
+
+    //     this.keys(newData[DEFAULTS_LIST_NAME]).forEach((key) => {
+    //         const savedData = docGroup[DEFAULTS_LIST_NAME].find (f => f.DEFAULT_ID === key);
+    //         const field = fields[DEFAULTS_LIST_NAME].find(i => i.key === key);
+    //         const type: E_FIELD_TYPE = field.type;
+    //         const newValue = this.fixDBValueByType(newData[DEFAULTS_LIST_NAME][key], type);
+    //         if (savedData) {
+    //             const savedValue = this.fixDBValueByType(savedData.VALUE, type);
+    //             if (savedValue !== newValue) {
+    //                 if (!this._isNeedToStoreByType(newValue, type)) {
+    //                     changes.push (
+    //                         {
+    //                             method: 'DELETE',
+    //                             data: '',
+    //                             requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DOC_DEFAULT_VALUE_List(\''
+    //                                 + docGroup['DUE'] + ' ' + savedData['DEFAULT_ID'] + '\')'
+    //                         }
+    //                     );
+    //                 } else {
+    //                     changes.push (
+    //                         {
+    //                             method: 'MERGE',
+    //                             data: {VALUE: String(newValue) },
+    //                             requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DOC_DEFAULT_VALUE_List(\''
+    //                                 + docGroup['DUE'] + ' ' + savedData['DEFAULT_ID'] + '\')'
+    //                         }
+    //                     );
+    //                 }
+    //             }
+    //         } else if (newValue) {
+    //             if (this._isNeedToStoreByType(newValue, type)) {
+    //                 changes.push (
+    //                     {
+    //                         method: 'POST',
+    //                         data: { VALUE: String(newValue), DEFAULT_ID: key },
+    //                         requestUri: 'DOCGROUP_CL(\'' + docGroup['DUE'] + '\')/DOC_DEFAULT_VALUE_List'
+    //                     }
+    //                 );
+    //             }
+    //         }
+    //     });
+    //     return changes;
+    // }
+
+
+    refreshDB() {
+        this._readDBSaved().then((data) => {
+            this.dbDates = data;
+            this._updateControlsFor(this.selectedDate);
+            this.datepicker._repaint();
+            return data;
+        });
     }
 
     getClassForDate (date: Date) {
@@ -153,7 +315,7 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
         const text_date = this._toDBFormattedDate(date);
         const t = this.dbDates.find( v => String(v.DATE_CALENDAR) === text_date);
         if (t) {
-            if (t.DATE_TYPE === 2 || t.DATE_TYPE === 1) {
+            if (t.DATE_TYPE === dayType.weekend || t.DATE_TYPE === dayType.holiday) {
                 return 'typeweekend';
             }
         } else {
@@ -165,6 +327,7 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
 
         return null;
     }
+
     private _updateControlsFor(date: Date) {
 
         this._manualUpdating = true;
@@ -190,35 +353,7 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
 
     }
 
-    // private _updateCalendar() {
-    //     let v = document.getElementById('bsdatp');
-    //     if (v) {
-    //         let v1 = v.children[0].children[0].children[0].children[0].children[0].children[0].children[0];
-    //         if (v1) {
-    //             this.tbody = v1.children[1].children[0].children[1];
-    //         }
-    //     }
 
-    //     if (!this.tbody) {
-    //         return;
-    //     }
-
-    //     // console.log(tbody);
-    //     for (let irow = 0; irow < this.tbody.children.length; irow++) {
-    //         const row = this.tbody.children[irow];
-    //         for (let itd = 0; itd < row.children.length; itd++) {
-    //             const td = row.children[itd];
-    //             if (td.classList.contains('disabled')) {
-
-    //             } else {
-    //                 // console.log(td);
-    //                 // console.log (this.item);
-    //                 // const date = this._dateByCoord(irow, itd, );
-    //                 td.classList.add('typeweekend');
-    //             }
-    //         }
-    //     }
-    // }
 
     private _toDBFormattedDate (date: Date) {
         return (date.getFullYear() + '-'
@@ -227,7 +362,7 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
             + 'T00:00:00';
     }
 
-    private _refreshSaved(selectedDate: any) {
+    private _readDBSaved(): Promise<any> {
         const query = {
             // criteries: { ['CALENDAR_CL']: String(uid) },
         };
@@ -239,12 +374,7 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
             foredit: true,
         };
 
-        return this._apiSrv.read<CALENDAR_CL>(req).then((data) => {
-            this.dbDates = data;
-            this._updateControlsFor(this.selectedDate);
-            this.datepicker._repaint();
-            return data;
-        });
+        return this._apiSrv.read<CALENDAR_CL>(req);
     }
 
 
