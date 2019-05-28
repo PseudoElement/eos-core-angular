@@ -79,8 +79,9 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     /* tslint:enable:no-bitwise */
 
     get possibleOwners(): any[] {
-        return this.cabinetOwners
-            .filter((owner) => !owner.data['ISN_CABINET']);
+        const res = this.cabinetOwners
+        .filter((owner) => (!owner.data['ISN_CABINET']) && (!owner.data['ISN_ORGANIZ']));
+        return res;
     }
 
     private scrollStep = 5;
