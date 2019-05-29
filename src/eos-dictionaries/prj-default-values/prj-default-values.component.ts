@@ -301,6 +301,7 @@ class PrjDefaultFactory {
             DESCRIPTION: 'С расширением',
             CATEGORY: 'PRJ_RC',
             TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+            length: 255,
         }, {
             DEFAULT_ID: 'PRJ_VISA_SIGN.MAX_SIZE',
             DEFAULT_TYPE: E_FIELD_TYPE.number,
@@ -320,6 +321,7 @@ class PrjDefaultFactory {
             DESCRIPTION: 'С расширением',
             CATEGORY: 'PRJ_VISA_SIGN',
             TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+            length: 255,
         }];
     }
 }
