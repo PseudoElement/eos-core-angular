@@ -168,7 +168,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 return res;
             } else {
                 return this._confirmSrv.confirm2(testc).then((button) => {
-                    return (button.result === 2);
+                    return (!button || button.result === 2);
                 });
             }
         });
