@@ -218,10 +218,10 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         this.modalWindow.content.init(content);
     }
 
-    openUpdateProperties(node: EosDictionaryNode) {
+    openCopyProperties(node: EosDictionaryNode, fromParent: boolean) {
         this.modalWindow = this.modalSrv.show(CopyPropertiesComponent, {
             class: 'copy-properties-modal moodal-lg'});
-        this.modalWindow.content.init(node.data.rec);
+        this.modalWindow.content.init(node.data.rec, fromParent);
     }
 
     getMarkedTitles(): string[] {

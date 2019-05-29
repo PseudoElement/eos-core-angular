@@ -34,6 +34,8 @@ export class CopyPropertiesComponent implements OnDestroy {
     isUpdating = true;
     inputs: any = {};
     formValid: boolean;
+    fromParent: boolean;
+    title: string;
     private rec_from;
     private rec_to;
     private properties;
@@ -54,38 +56,44 @@ export class CopyPropertiesComponent implements OnDestroy {
         }
     }
 
-    public init(rec: any) {
+    public init(rec: any, fromParent: boolean) {
         this.isUpdating = true;
         this.rec_from = rec;
+        this.fromParent = fromParent;
 
-        this._initProperties();
-        this._initInputs();
-        this._chooseDocGroup();
+        if (this.fromParent) {
+            this.title = 'Обновить свойства подчиненных групп документов';
+            this._initPropertiesFromParent();
+            this._initInputs();
+            this.isUpdating = false;
+        } else {
+            this.title = 'Копирование свойств группы документов';
+            this._initProperties();
+            this._initInputs();
+            this._chooseDocGroup();
+        }
     }
 
     public hideModal() {
         this._bsModalRef.hide();
     }
 
-    public keys(struct) {
-        return Object.keys(struct);
-    }
-
     public save() {
         const changes = [];
+        const args = {};
+        const method = this.fromParent ? 'DocGroupCopyFromParent' : 'DocGroupPropCopy';
 
         let flagStr = '';
         this.properties_for_request.forEach((prop) => {
             flagStr += (this.form.controls[prop].value ? '1' : '0');
         });
 
-        const args = {
-            due_from: this.rec_from.DUE,
-            due_to: this.rec_to.DUE,
-            flags: flagStr,
-        };
+        Object.assign(args, this.fromParent ? {due: this.rec_from.DUE} : {due_from: this.rec_from.DUE,
+            due_to: this.rec_to.DUE});
 
-        PipRX.invokeSop(changes, 'DocGroupPropCopy', args, 'POST', false);
+        Object.assign(args, {flags: flagStr});
+
+        PipRX.invokeSop(changes, method, args, 'POST', false);
 
         this._apiSrv.batch(changes, '')
             .then(() => {
@@ -139,10 +147,37 @@ export class CopyPropertiesComponent implements OnDestroy {
                 label: 'Дополнительные реквизиты рубрик',
                 disabled: !this.rec_from.PRJ_NUM_FLAG,
             }];
-        this.properties_for_request = ['a_shablon', 'a_default_rek', 'a_mand_rek', 'a_write_rek',
-            'a_prj_shablon', 'a_default_rek_prj', 'a_mand_rek_prj', 'a_add_rek',
-            'a_add_rub', 'a_fc_rc', 'a_fc_prj'
-        ];
+        this.properties_for_request = ['a_shablon', 'a_default_rek', 'a_mand_rek', 'a_write_rek', 'a_prj_shablon',
+            'a_default_rek_prj', 'a_mand_rek_prj', 'a_add_rek', 'a_add_rub', 'a_fc_rc', 'a_fc_prj'];
+    }
+
+    private _initPropertiesFromParent() {
+        this.properties = [
+            {
+                key: 'a_shablon',
+                label: 'Шаблон номерообразования',
+            }, {
+                key: 'a_add_rek',
+                label: 'Дополнительные реквизиты',
+            }, {
+                key: 'a_default_rek',
+                label: 'Правила заполнения реквизитов по умолчанию',
+            }, {
+                key: 'a_mand_rek',
+                label: 'Перечень обязательно заполняемых реквизитов',
+            }, {
+                key: 'a_write_rek',
+                label: 'Правила заполнения реквизитов при записи',
+            }, {
+                key: 'a_fc',
+                label: 'Правила для файлов',
+            }, {
+                key: 'a_prj_rek',
+                label: 'Свойства проектов документов',
+                disabled: !this.rec_from.PRJ_NUM_FLAG,
+            }];
+        this.properties_for_request = ['a_shablon', 'a_add_rek', 'a_default_rek', 'a_mand_rek', 'a_write_rek',
+            'a_prj_rek', 'a_fc'];
     }
 
     private _initInputs() {
@@ -152,7 +187,6 @@ export class CopyPropertiesComponent implements OnDestroy {
             forNode: true,
             disabled: true,
         });
-
 
         this.properties.forEach((prop) => {
             this.inputs[prop.key] = new CheckboxInput({

@@ -1,16 +1,25 @@
-<div class="modal-header">
-    <h4 class="modal-title pull-left">Копирование свойств группы документов</h4>
+<div class="modal-header" *ngIf="!isUpdating">
+    <h4 class="modal-title pull-left">{{title}}</h4>
 </div>
 <div class="spinner-container text-center" *ngIf="isUpdating" >
     <eos-spinner size="lg"></eos-spinner>
 </div>
-
 <div class="modal-body" *ngIf="!isUpdating">
     <div class="modal-body-container">
+
+        <div *ngIf="fromParent">
+            <h5>Операция приведет свойства подчиненных групп
+            <BR>документов в соответствие свойствам группы</h5>
+        </div>
         <div class="edit-content">
-            <eos-dynamic-input *ngFor="let key of keys(inputs)"
-                               [input]="inputs[key]"
-                               [disabled]="inputs[key].disabled"
+            <eos-dynamic-input *ngIf="!fromParent"
+                               [input]="inputs['NODE_TO_COPY']"
+                               [disabled]="true"
+                               [form]="form">
+            </eos-dynamic-input>
+            <eos-dynamic-input *ngFor="let prop of properties"
+                               [input]="inputs[prop.key]"
+                               [disabled]="inputs[prop.key].disabled"
                                [form]="form">
             </eos-dynamic-input>
         </div>

@@ -2,13 +2,26 @@ import {Component, EventEmitter, OnDestroy, Output} from '@angular/core';
 import {Subject} from 'rxjs';
 
 
-
 import {EosDictService} from '../services/eos-dict.service';
 import {EosDictionary} from '../core/eos-dictionary';
-import {COMMON_ADD_MENU, DEPARTMENT_ADD_MENU, MORE_RECORD_ACTIONS, ORGANIZ_ADD_MENU, RECORD_ACTIONS, RUBRIC_UNIQ_ADD_MENU} from '../consts/record-actions.consts';
-import {E_DICT_TYPE, E_RECORD_ACTIONS, IAction, IActionButton, IActionEvent, IDictionaryViewParameters} from 'eos-dictionaries/interfaces';
-import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
-import { takeUntil, combineLatest } from 'rxjs/operators';
+import {
+    COMMON_ADD_MENU,
+    DEPARTMENT_ADD_MENU,
+    MORE_RECORD_ACTIONS,
+    ORGANIZ_ADD_MENU,
+    RECORD_ACTIONS,
+    RUBRIC_UNIQ_ADD_MENU
+} from '../consts/record-actions.consts';
+import {
+    E_DICT_TYPE,
+    E_RECORD_ACTIONS,
+    IAction,
+    IActionButton,
+    IActionEvent,
+    IDictionaryViewParameters
+} from 'eos-dictionaries/interfaces';
+import {APS_DICT_GRANT, EosAccessPermissionsService} from 'eos-dictionaries/services/eos-access-permissions.service';
+import {combineLatest, takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'eos-node-actions',
@@ -181,6 +194,7 @@ export class NodeActionsComponent implements OnDestroy {
                     }
                     break;
                 case E_RECORD_ACTIONS.counterDepartment:
+                case E_RECORD_ACTIONS.copyPropertiesFromParent:
                     if (this._dictSrv && this._dictSrv.listNode) {
                         _enabled = this._dictSrv.listNode.isNode;
                     } else {
@@ -194,7 +208,7 @@ export class NodeActionsComponent implements OnDestroy {
                         _enabled = false;
                     }
                     break;
-                case E_RECORD_ACTIONS.updateProperties:
+                case E_RECORD_ACTIONS.copyProperties:
                     break;
             }
             due = this._dictSrv.treeNodeIdByDict(this.dictionary.id);

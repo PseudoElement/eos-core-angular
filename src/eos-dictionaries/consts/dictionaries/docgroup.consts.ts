@@ -28,7 +28,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'counterDocgroup',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization', 'counterDocgroupRKPD',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes' , 'additionalFields',
-        'AdvancedCardRK', 'prjDefaultValues', 'updateProperties'],
+        'AdvancedCardRK', 'prjDefaultValues', 'copyPropertiesFromParent', 'copyProperties'],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
     searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
