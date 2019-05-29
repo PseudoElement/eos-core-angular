@@ -320,6 +320,19 @@ const RECORD_DETAILS_RKPD: IAction = {
     accessNeed: APS_DICT_GRANT.readwrite,
 };
 
+const RECORD_UPDATE_PROPERTIES: IAction = {
+    type: E_RECORD_ACTIONS.updateProperties,
+    group: E_ACTION_GROUPS.item,
+    title: 'Копирование свойства',
+    hint: 'Копирование свойства',
+    iconClass: 'eos-icon eos-icon-clip-blue small',
+    disabledIconClass: 'eos-icon eos-icon-clip-grey small',
+    activeIconClass: '',
+    hoverIconClass: 'eos-icon eos-icon-repair-clip-blue small',
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
+
 export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_CREATE,
     RECORD_ACTIONS_EDIT,
@@ -342,6 +355,7 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_COUNTER_DOCGROUP_RKPD,
     RECORD_ACTION_NOMENKL_CLS,
     RECORD_ACTION_NOMENKL_OPS,
+    RECORD_UPDATE_PROPERTIES,
 ];
 
 export const MORE_RECORD_ACTIONS: IAction[] = [
@@ -359,6 +373,7 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_ACTIONS_ADDITIONAL_FIELDS,
     RECORD_ACTION_ADVCARDRK,
     RECORD_DETAILS_RKPD,
+    RECORD_UPDATE_PROPERTIES,
     RECORD_ACTION_SHOW_SETTINGS,
 ];
 

@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">Копирование свойств группы документов</h4>
+</div>
+<div class="spinner-container text-center" *ngIf="isUpdating" >
+    <eos-spinner size="lg"></eos-spinner>
+</div>
+
+<div class="modal-body" *ngIf="!isUpdating">
+    <div class="modal-body-container">
+        <div class="edit-content">
+            <eos-dynamic-input *ngFor="let key of keys(inputs)"
+                               [input]="inputs[key]"
+                               [disabled]="inputs[key].disabled"
+                               [form]="form">
+            </eos-dynamic-input>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <span class="pull-right">
+    <button type="button" class="btn btn-primary-full upper fixed-width"
+            [disabled]="!formValid"
+            (click)="save()">Копировать</button>
+    <button type="button" class="btn btn-primary have-margin fixed-width"
+            (click)="hideModal()">Отмена</button>
+    </span>
+</div>

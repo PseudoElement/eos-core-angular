@@ -194,6 +194,8 @@ export class NodeActionsComponent implements OnDestroy {
                         _enabled = false;
                     }
                     break;
+                case E_RECORD_ACTIONS.updateProperties:
+                    break;
             }
             due = this._dictSrv.treeNodeIdByDict(this.dictionary.id);
         }
