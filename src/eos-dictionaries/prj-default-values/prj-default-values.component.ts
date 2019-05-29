@@ -31,6 +31,7 @@ class PrjDefaultItem {
     tableName: string;
     category: string;
     pattern: string;
+    length?: number;
 
     constructor(rec) {
         if (rec) {
@@ -43,6 +44,7 @@ class PrjDefaultItem {
             this.category = rec.CATEGORY ? rec.CATEGORY : null;
             this.pattern = rec.PATTERN ? rec.PATTERN : undefined;
             this.tableName = rec.TABLE_NAME ? rec.TABLE_NAME : 'PRJ_DEFAULT_VALUE_List';
+            this.length = rec.length;
         }
     }
 }
@@ -134,15 +136,17 @@ class PrjDefaultFactory {
             DEFAULT_ID: 'ANNOTAT',
             DEFAULT_TYPE: E_FIELD_TYPE.text,
             DESCRIPTION: 'Содержание',
+            length: 2000,
         }, {
             DEFAULT_ID: 'ANNOTAT_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Содержание',
+            length: 2000,
         }, {
             DEFAULT_ID: 'CONSISTS_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Состав',
-            length: 10,
+            length: 255,
         }, {
             DEFAULT_ID: 'DOC_DATE_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
@@ -248,6 +252,7 @@ class PrjDefaultFactory {
             DEFAULT_ID: 'CONSISTS',
             DEFAULT_TYPE: E_FIELD_TYPE.string,
             DESCRIPTION: 'Состав',
+            length: 255,
         }, {
             DEFAULT_ID: 'NOTE',
             DEFAULT_TYPE: E_FIELD_TYPE.text,
@@ -547,7 +552,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                         disabled: false,
                         dict: prjDefault.tableName,
                         pattern: prjDefault.pattern,
-                        length: undefined,
+                        length: prjDefault.length,
                     };
 
                     switch (prjDefault.type) {
