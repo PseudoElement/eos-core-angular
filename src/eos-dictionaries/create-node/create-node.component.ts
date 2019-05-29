@@ -86,6 +86,10 @@ export class CreateNodeComponent {
         this.hasChanges = hasChanges;
     }
 
+    isInsertDisabled(): boolean {
+        return !this.formIsValid || !this.hasChanges || this.upadating;
+    }
+
     protected _sendDataOnCreate(data: any, hide = true) {
 
         this._dictSrv.addNode(data)

@@ -135,6 +135,8 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         }
 
         this._clearControlValidators('rec.PRJ_SHABLON', !this.isNode || !this.isPrjFlag, true);
+        this.form.controls['rec.PRJ_SHABLON'].updateValueAndValidity();
+        // TODO: избавиться от костыля в виде RC_TYPE_NODE
 
         // toggle auto register flag
         this.toggleInput(this.isPrjFlag && !AUTO_REG_EXPR.test(tpl), 'rec.PRJ_AUTO_REG', formChanges, updates);

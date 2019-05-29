@@ -280,6 +280,10 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         return (this.node && !this.node.updating);
     }
 
+    isSaveDisabled(): boolean {
+        return !this.isChanged || this.disableSave;
+    }
+
     private _init() {
         this.nextRoute = this._router.url;
         this._urlSegments = this._router.url.split('/');
