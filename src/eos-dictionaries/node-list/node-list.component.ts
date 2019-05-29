@@ -23,6 +23,7 @@ import {EosUtils} from 'eos-common/core/utils';
 import {DOCUMENT} from '@angular/common';
 import {PrjDefaultValuesComponent} from '../prj-default-values/prj-default-values.component';
 import { takeUntil } from 'rxjs/operators';
+import {CopyPropertiesComponent} from '../copy-properties/copy-properties.component';
 
 const ITEM_WIDTH_FOR_NAN = 100;
 const MAX_PERCENT_WIDTH = 98;
@@ -215,6 +216,12 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             isnNode: node.data.rec['ISN_NODE'],
         };
         this.modalWindow.content.init(content);
+    }
+
+    openCopyProperties(node: EosDictionaryNode, fromParent: boolean) {
+        this.modalWindow = this.modalSrv.show(CopyPropertiesComponent, {
+            class: 'copy-properties-modal moodal-lg'});
+        this.modalWindow.content.init(node.data.rec, fromParent);
     }
 
     getMarkedTitles(): string[] {

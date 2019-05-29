@@ -376,6 +376,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.prjDefaultValues:
                 this._openPrjDefaultValues();
                 break;
+            case E_RECORD_ACTIONS.copyProperties:
+                this._openCopyProperties();
+                break;
+            case E_RECORD_ACTIONS.copyPropertiesFromParent:
+                this._openCopyProperties(true);
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -726,4 +732,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             this._msgSrv.addNewMessage(WARN_SELECT_NODE);
         }
     }
+
+    private _openCopyProperties(fromParent = false) {
+        const node = this._dictSrv.listNode;
+        if (node) {
+            this.nodeList.openCopyProperties(node, fromParent);
+        } else {
+            this._msgSrv.addNewMessage(WARN_SELECT_NODE);
+        }
+    }
+
 }
