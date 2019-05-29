@@ -43,10 +43,8 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     nodes: any[];
     tabs: Ttab [];
     dataController: AdvCardRKDataCtrl;
-    // changeEvent: Subject<any> = new Subject();
     activeTab: Ttab;
     form: FormGroup;
-
 
     values: any;
 
@@ -56,31 +54,24 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     storedValuesDG: any;
     editValues: any;
     isChanged: boolean;
-    _currentFormStatus: any;
     formInvalid: boolean;
     isEDoc: boolean;
     rkType: number;
-    // protected formChanges$: Subscription;
-    private subscriptions: Subscription[];
 
-    @ViewChild('currentPage')
-    private currentPage: RKBasePage;
-    // protected apiSrv: PipRX;
+
+    @ViewChild('currentPage') private currentPage: RKBasePage;
+    private subscriptions: Subscription[];
     private _node = {};
     private isn_node: number;
-
+    private _currentFormStatus: any;
 
     constructor(
         public injector: Injector,
         public bsModalRef: BsModalRef,
         public zone: NgZone,
-        // private _apiSrv: PipRX,
         private _dataSrv: EosDataConvertService,
         private _inputCtrlSrv: InputControlService,
         private _confirmSrv: ConfirmWindowService,
-        // private _msgSrv: EosMessageService,
-        // private _dictSrv: EosDictService,
-        // private _zone: NgZone,
     ) {
         this.isUpdating = true;
         this.tabs = tabs;
@@ -140,39 +131,25 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             if (!el.dict) { continue; }
             if (el.dict.dictId !== 'USER_LISTS') { continue; }
 
-            const id = el.dict.criteries['CLASSIF_ID'];
-            if (id === '104') {
-                const val = newdata[DEFAULTS_LIST_NAME][el.key];
-                if (val) {
-                    const opt = el.options.find ( o => Number(o.value) === Number(val));
-                    if (opt && opt.isEmpty) {
-                        confPromise = this._presaveConfirmAppen(confPromise, el, RK_SELECTED_LIST_IS_EMPTY);
-                    }
-
-                    if (opt && opt.hasDeleted) {
-                        confPromise = this._presaveConfirmAppen(confPromise, el, RK_SELECTED_LIST_HAS_DELETED);
-                    }
-
+            // const id = el.dict.criteries['CLASSIF_ID'];
+            const val = newdata[DEFAULTS_LIST_NAME][el.key];
+            if (val) {
+                const opt = el.options.find ( o => Number(o.value) === Number(val));
+                if (opt && opt.isEmpty) {
+                    confPromise = this._presaveConfirmAppen(confPromise, el, RK_SELECTED_LIST_IS_EMPTY);
                 }
+
+                if (opt && opt.hasDeleted) {
+                    confPromise = this._presaveConfirmAppen(confPromise, el, RK_SELECTED_LIST_HAS_DELETED);
+                }
+
             }
         }
 
         return confPromise;
     }
 
-    _presaveConfirmAppen(confPromise: Promise<boolean>, el: TDefaultField, win: IConfirmWindow2): Promise<boolean> {
-        return confPromise.then ((res) => {
-            const testc: IConfirmWindow2 = Object.assign({}, win);
-            testc.body = testc.body.replace('{{REK}}', el.title);
-            if (res) {
-                return res;
-            } else {
-                return this._confirmSrv.confirm2(testc).then((button) => {
-                    return (!button || button.result === 2);
-                });
-            }
-        });
-    }
+
 
     cancel(): void {
         this.bsModalRef.hide();
@@ -249,6 +226,19 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     }
 
+    private _presaveConfirmAppen(confPromise: Promise<boolean>, el: TDefaultField, win: IConfirmWindow2): Promise<boolean> {
+        return confPromise.then ((res) => {
+            const testc: IConfirmWindow2 = Object.assign({}, win);
+            testc.body = testc.body.replace('{{REK}}', el.title);
+            if (res) {
+                return res;
+            } else {
+                return this._confirmSrv.confirm2(testc).then((button) => {
+                    return (!button || button.result === 2);
+                });
+            }
+        });
+    }
     private _updateInputs(inputs: any): any {
         if (!this.isEDoc) {
             inputs['DOC_DEFAULT_VALUE_List.SPECIMEN'].required = true;
