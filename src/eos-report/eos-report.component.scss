@@ -6,7 +6,6 @@
     width: calc(100vw - 30px);
     overflow-y: auto;
     max-height: calc(100vh - 130px);
-
     .dictionary {
         height: 100px;
         flex-basis: calc((100% - 4*10px) / 4);
@@ -44,4 +43,13 @@
             padding: 26px;
         }
     }
+}
+.head-protocol{
+   height: 500px;
+   min-width: 600px;
+   top: 472px !important;
+   border-radius: 0;
+   .popover-content{
+       padding: 0 !important;
+   }
 }

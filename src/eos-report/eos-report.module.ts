@@ -3,12 +3,18 @@ import { BrowserModule } from '@angular/platform-browser';
 // import { TooltipModule, ModalModule, AccordionModule, BsDropdownModule } from 'ngx-bootstrap';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 /*     ----Components----     */
 import { EosReportComponent } from './eos-report.component';
 import { EosReportUsersInfoComponent } from './users-info/users-info.component';
 import { EosReportUsersStatsComponent } from './users-stats/users-stats.component';
 import { EosReporSubsystemComponent } from './subsystem/subsystem.component';
+import { EosReportSummaryProtocolComponent } from './sum-protocol/sum-protocol.component';
+import { EosReportTempSumProtocolComponent } from './temp-sum-protocol/temp-sum-protocol.component';
+import { PopoverModule } from 'ngx-bootstrap/popover';
+import { EosReportSummaryFilterProtocolComponent } from './filter-protocol/filter-protocol.component';
+import { BsDatepickerModule } from 'ngx-bootstrap';
 /*     ----Services----     */
 
 @NgModule({
@@ -16,13 +22,19 @@ import { EosReporSubsystemComponent } from './subsystem/subsystem.component';
         EosReportComponent,
         EosReportUsersInfoComponent,
         EosReportUsersStatsComponent,
-        EosReporSubsystemComponent
+        EosReporSubsystemComponent,
+        EosReportSummaryProtocolComponent,
+        EosReportTempSumProtocolComponent,
+        EosReportSummaryFilterProtocolComponent,
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
         FormsModule,
         ReactiveFormsModule,
+        TooltipModule.forRoot(),
+        PopoverModule.forRoot(),
+        BsDatepickerModule.forRoot()
     ],
 })
 

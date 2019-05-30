@@ -24,6 +24,7 @@ import { EosTemplateComponent } from 'eos-rest/clman/eos-template/eos-template.c
 import { EosReportComponent } from '../eos-report/eos-report.component';
 import { EosReportUsersStatsComponent } from '../eos-report/users-stats/users-stats.component';
 import { EosReportUsersInfoComponent } from '../eos-report/users-info/users-info.component';
+import { EosReportSummaryProtocolComponent } from 'eos-report/sum-protocol/sum-protocol.component';
 /// import { environment } from 'environments/environment';
 
 const childrenDictionariesComponent = [{
@@ -236,6 +237,11 @@ const routes: Routes = [{
     path: 'report/users-stats',
     canActivate: [AuthorizedGuard],
     component: EosReportUsersStatsComponent
+},
+{
+    path: 'report/sum-protocol',
+    canActivate: [AuthorizedGuard],
+    component: EosReportSummaryProtocolComponent
 },
 {
     path: '',

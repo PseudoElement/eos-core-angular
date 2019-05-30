@@ -35,7 +35,6 @@ export class EosReportUsersStatsComponent implements OnInit {
       USER_CL: PipRX.criteries({ 'DELETED': '0', 'PROTECTED': '0' })
     }).then(r => {
       this.items = r;
-      console.log(this.items);
       this.usersNumber = r.length;
       this.getSubSystems(this.items);
     });
