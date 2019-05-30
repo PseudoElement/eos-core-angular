@@ -59,23 +59,23 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
     constructor(
         @Inject(DOCUMENT) document,
-        private dictSrv: EosDictService,
-        private modalSrv: BsModalService,
-        private cdr: ChangeDetectorRef,
+        private _dictSrv: EosDictService,
+        private _modalSrv: BsModalService,
+        private _cdr: ChangeDetectorRef,
         private _zone: NgZone,
     ) {
 
-        dictSrv.visibleList$
+        _dictSrv.visibleList$
         .pipe(
             takeUntil(this.ngUnsubscribe)
         )
             .subscribe((nodes: EosDictionaryNode[]) => {
-                if (dictSrv.currentDictionary) {
+                if (_dictSrv.currentDictionary) {
 
-                    this.customFields = this.dictSrv.customFields;
+                    this.customFields = this._dictSrv.customFields;
                     this.updateViewFields(this.customFields);
 
-                    const _customTitles = this.dictSrv.customTitles;
+                    const _customTitles = this._dictSrv.customTitles;
                     _customTitles.forEach((_title) => {
                         const vField = this.viewFields.find((_field) => _field.key === _title.key);
                         if (vField) {
@@ -90,17 +90,17 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 this.updateMarks();
             });
 
-        dictSrv.viewParameters$
+        _dictSrv.viewParameters$
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe((params: IDictionaryViewParameters) => {
                 this.params = params;
-                if (this.dictSrv.userOrdered) {
+                if (this._dictSrv.userOrdered) {
                     this.orderBy = null;
                 } else {
-                    if (dictSrv.currentDictionary) {
-                        this.orderBy = dictSrv.currentDictionary.orderBy;
+                    if (_dictSrv.currentDictionary) {
+                        this.orderBy = _dictSrv.currentDictionary.orderBy;
                     }
                 }
                 this._recalcCounter = 0;
@@ -109,7 +109,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
     updateViewFields(customFields: IFieldView[]) {
         // also customFields for update
-        this.viewFields = this.dictSrv.currentDictionary.getListView(customFields);
+        this.viewFields = this._dictSrv.currentDictionary.getListView(customFields);
     }
 
     ngOnInit() {
@@ -156,7 +156,46 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         this.ngUnsubscribe.complete();
     }
 
-    checkState() {
+    markedNodes() {
+        return this.nodes.filter(n => n.isMarked);
+    }
+
+    onClickSelect (item, isMarked) {
+        const selectedItems = this.markedNodes();
+        const selectedCount = selectedItems.length;
+
+        if (isMarked) {
+            if (selectedCount === 1) {
+            } else {
+                selectedItems.forEach((node) => {
+                    if (node !== item) { node.isMarked = false; }
+                });
+            }
+            this._dictSrv.openNode(item.id);
+        } else {
+            if (selectedCount === 0) {
+                this._dictSrv.openNode('').then(() => {});
+            } else {
+                item.isMarked = true;
+                selectedItems.forEach((node) => {
+                    if (node !== item) { node.isMarked = false; }
+                });
+                this._dictSrv.openNode(selectedItems[0].id).then(() => {});
+            }
+        }
+
+        this.updateMarks();
+    }
+
+    onClickMark (item, isMarked) {
+        if (isMarked) {
+            this._dictSrv.openNode(item.id).then(() => {
+            });
+        } else {
+            const selectedItems = this.markedNodes();
+            const selectedCount = selectedItems.length;
+            this._dictSrv.openNode(selectedCount ? selectedItems[0].id : '').then(() => {});
+        }
         this.updateMarks();
     }
 
@@ -164,16 +203,16 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
      * @description Open modal with ColumnSettingsComponent, fullfill ColumnSettingsComponent data
      */
     configColumns() {
-        this.modalWindow = this.modalSrv.show(ColumnSettingsComponent, {class: 'column-settings-modal modal-lg'});
+        this.modalWindow = this._modalSrv.show(ColumnSettingsComponent, {class: 'column-settings-modal modal-lg'});
         this.modalWindow.content.fixedFields = EosUtils.deepUpdate([], this.viewFields);
-        this.modalWindow.content.customTitles = EosUtils.deepUpdate([], this.dictSrv.customTitles);
+        this.modalWindow.content.customTitles = EosUtils.deepUpdate([], this._dictSrv.customTitles);
         this.modalWindow.content.currentFields = EosUtils.deepUpdate([], this.customFields);
         this.modalWindow.content.dictionaryFields = EosUtils.deepUpdate([],
-            this.dictSrv.currentDictionary.descriptor.record.getFieldSet(E_FIELD_SET.allVisible));
+            this._dictSrv.currentDictionary.descriptor.record.getFieldSet(E_FIELD_SET.allVisible));
 
         const subscription = this.modalWindow.content.onChoose.subscribe(() => {
-            this.customFields = this.dictSrv.customFields;
-            const _customTitles = this.dictSrv.customTitles;
+            this.customFields = this._dictSrv.customFields;
+            const _customTitles = this._dictSrv.customTitles;
             this.viewFields.forEach((vField) => {
                 const _title = _customTitles.find((_f) => _f.key === vField.key);
                 vField.customTitle = _title ? _title.customTitle : null;
@@ -181,10 +220,10 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
 
             if (!this.isCorrectOrderBy()) {
-                this.orderBy = this.dictSrv.currentDictionary.orderDefault();
+                this.orderBy = this._dictSrv.currentDictionary.orderDefault();
             }
 
-            this.dictSrv.orderBy(this.orderBy, false);
+            this._dictSrv.orderBy(this.orderBy, false);
             this._recalcCounter = 0;
             subscription.unsubscribe();
         });
@@ -209,7 +248,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     openPrjDefaultValues(node: EosDictionaryNode) {
-        this.modalWindow = this.modalSrv.show(PrjDefaultValuesComponent, {
+        this.modalWindow = this._modalSrv.show(PrjDefaultValuesComponent, {
             class: 'prj-default-values-modal moodal-lg'});
         const content = {
             nodeDescription: node.title,
@@ -219,14 +258,14 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     openCopyProperties(node: EosDictionaryNode, fromParent: boolean) {
-        this.modalWindow = this.modalSrv.show(CopyPropertiesComponent, {
+        this.modalWindow = this._modalSrv.show(CopyPropertiesComponent, {
             class: 'copy-properties-modal moodal-lg'});
         this.modalWindow.content.init(node.data.rec, fromParent);
     }
 
     getMarkedTitles(): string[] {
         return this.nodes
-            .filter((node) => node.marked)
+            .filter((node) => node.isMarked)
             .map((node) => node.title);
     }
 
@@ -239,8 +278,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         } else {
             this.orderBy.ascend = !this.orderBy.ascend;
         }
-        this.dictSrv.orderBy(this.orderBy);
-        this.cdr.detectChanges();
+        this._dictSrv.orderBy(this.orderBy);
+        this._cdr.detectChanges();
     }
 
     showHint(hintConfig?: HintConfiguration) {
@@ -264,8 +303,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     toggleAllMarks(): void {
         this.anyMarked = this.allMarked;
         this.anyUnmarked = !this.allMarked;
-        this.nodes.forEach((node) => node.marked = this.allMarked);
-        this.dictSrv.markItem(this.allMarked);
+        this.nodes.forEach((node) => node.isMarked = this.allMarked);
+        this._dictSrv.markItem(this.allMarked);
+        const selectedItems = this.markedNodes();
+        const selectedCount = selectedItems.length;
+        this._dictSrv.openNode(selectedCount ? selectedItems[0].id : '').then(() => {});
     }
 
     toggleItem() {
@@ -273,10 +315,10 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     updateMarks(): void {
-        this.anyMarked = this.nodes.findIndex((node) => node.marked) > -1;
-        this.anyUnmarked = this.nodes.findIndex((node) => !node.marked) > -1;
+        this.anyMarked = this.nodes.findIndex((node) => node.isMarked) > -1;
+        this.anyUnmarked = this.nodes.findIndex((node) => !node.isMarked) > -1;
         this.allMarked = this.anyMarked;
-        this.dictSrv.markItem(this.allMarked);
+        this._dictSrv.markItem(this.allMarked);
     }
 
     writeValues(nodes: EosDictionaryNode[]) {
@@ -286,13 +328,13 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     moveUp(): void {
-        if (!this.dictSrv.viewParameters.showAllSubnodes) {
+        if (!this._dictSrv.viewParameters.showAllSubnodes) {
             for (let i = 0; i < this.nodes.length; i++) {
                 const element = this.nodes[i];
-                if (element.marked) {
+                if (element.isMarked) {
                     if (i > 0) {
                         const item = this.nodes[i - 1];
-                        if (!item.marked) {
+                        if (!item.isMarked) {
                             this.nodes[i - 1] = this.nodes[i];
                             this.nodes[i] = item;
                         }
@@ -303,14 +345,14 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         } else {
             for (let m = 0; m < this.nodes.length; m++) {
                 const element = this.nodes[m];
-                if (element.marked) {
+                if (element.isMarked) {
                     let targ_idx = m - 1;
                     for (let i = targ_idx; i >= 0; i--) {
                         if (element.originalParentId === this.nodes[i].originalParentId) {
                             targ_idx = i;
                             if (targ_idx >= 0) {
                                 const item = this.nodes[targ_idx];
-                                if (!item.marked) {
+                                if (!item.isMarked) {
                                     this.nodes[targ_idx] = this.nodes[m];
                                     this.nodes[m] = item;
                                 }
@@ -325,13 +367,13 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     moveDown(): void {
-        if (!this.dictSrv.viewParameters.showAllSubnodes) {
+        if (!this._dictSrv.viewParameters.showAllSubnodes) {
             for (let i = this.nodes.length - 1; i >= 0; i--) {
                 const element = this.nodes[i];
-                if (element.marked) {
+                if (element.isMarked) {
                     if (i < this.nodes.length - 1) {
                         const item = this.nodes[i + 1];
-                        if (!item.marked) {
+                        if (!item.isMarked) {
                             this.nodes[i + 1] = this.nodes[i];
                             this.nodes[i] = item;
                         }
@@ -342,14 +384,14 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         } else {
             for (let m = this.nodes.length - 1; m >= 0; m--) {
                 const element = this.nodes[m];
-                if (element.marked) {
+                if (element.isMarked) {
                     let targ_idx = m + 1;
                     for (let i = targ_idx; i < this.nodes.length; i++) {
                         if (this.nodes[m].originalId !== this.nodes[i].originalParentId) {
                             targ_idx = i;
                             if (targ_idx < this.nodes.length) {
                                 const item = this.nodes[targ_idx];
-                                if (!item.marked) {
+                                if (!item.isMarked) {
                                     this.nodes[targ_idx] = this.nodes[m];
                                     this.nodes[m] = item;
                                 }
@@ -364,11 +406,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     userOrdered(nodes: EosDictionaryNode[]) {
-        this.dictSrv.setUserOrder(nodes);
+        this._dictSrv.setUserOrder(nodes);
     }
 
     openNodeNavigate(backward = false): void {
-        let _idx = this.nodes.findIndex((n) => n.isSelected);
+        let _idx = this.nodes.findIndex((n) => n.isMarked);
 
         if (backward) {
             if (_idx > -1) {
@@ -381,7 +423,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
         const node = this.nodes[_idx];
         if (node && node.id) {
-            this.dictSrv.openNode(node.id);
+            this._dictSrv.openNode(node.id);
         }
     }
 
@@ -413,7 +455,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     onRightClick() {
-        this.dictSrv.incFirstUnfixedIndex();
+        this._dictSrv.incFirstUnfixedIndex();
     }
 
     getSlicedCustomFields() {
@@ -421,7 +463,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     onLeftClick() {
-        this.dictSrv.decFirstUnfixedIndex();
+        this._dictSrv.decFirstUnfixedIndex();
     }
 
     isShifted() {
@@ -478,7 +520,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             this.min_length = length;
         }
 
-        this.cdr.detectChanges();
+        this._cdr.detectChanges();
     }
 
 

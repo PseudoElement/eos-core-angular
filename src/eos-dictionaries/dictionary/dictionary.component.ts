@@ -539,14 +539,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     private _deleteItems(): void {
         let delCount = 0, allCount = 0;
         this._dictSrv.getMarkedNodes().forEach((node) => {
-            if (node.marked) {
+            if (node.isMarked) {
                 allCount++;
             }
-            if (node.marked && node.isDeleted) {
+            if (node.isMarked && node.isDeleted) {
                 delCount++;
             }
-            if (node.marked && node.isProtected) {
-                node.marked = false;
+            if (node.isMarked && node.isProtected) {
+                node.isMarked = false;
                 const warn = Object.assign({}, WARN_ELEMENT_PROTECTED);
                 warn.msg = warn.msg.replace('{{elem}}', node.title);
                 this._msgSrv.addNewMessage(warn);
@@ -565,14 +565,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         const fieldName = 'CLOSED';
         let rdyCount = 0, allCount = 0;
         this._dictSrv.getMarkedNodes().forEach((node) => {
-            if (node.marked) {
+            if (node.isMarked) {
                 allCount++;
             }
-            if (node.marked && node.data.rec[fieldName]) {
+            if (node.isMarked && node.data.rec[fieldName]) {
                 rdyCount++;
             }
-            if (node.marked && node.isDeleted) {
-                node.marked = false;
+            if (node.isMarked && node.isDeleted) {
+                node.isMarked = false;
                 const warn = Object.assign({}, WARN_ELEMENT_DELETED);
                 warn.msg = warn.msg.replace('{{elem}}', node.title);
                 this._msgSrv.addNewMessage(warn);
@@ -591,14 +591,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         const fieldName = 'CLOSED';
         let rdyCount = 0, allCount = 0;
         this._dictSrv.getMarkedNodes().forEach((node) => {
-            if (node.marked) {
+            if (node.isMarked) {
                 allCount++;
             }
-            if (node.marked && !node.data.rec[fieldName]) {
+            if (node.isMarked && !node.data.rec[fieldName]) {
                 rdyCount++;
             }
-            if (node.marked && node.isDeleted) {
-                node.marked = false;
+            if (node.isMarked && node.isDeleted) {
+                node.isMarked = false;
                 const warn = Object.assign({}, WARN_ELEMENT_DELETED);
                 warn.msg = warn.msg.replace('{{elem}}', node.title);
                 this._msgSrv.addNewMessage(warn);
@@ -671,7 +671,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         this._dictSrv.getMarkedNodes(false).forEach((node) => {
             if (node.parent && node.parent.isDeleted) {
                 this._msgSrv.addNewMessage(DANGER_LOGICALY_RESTORE_ELEMENT);
-                node.marked = false;
+                node.isMarked = false;
             } else {
                 if (node.isNode) {
                     hasFolding = true;

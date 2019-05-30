@@ -77,7 +77,10 @@
                                     [node]="item"
                                     [params]="params"
                                     [customFields]="customFields"
-                                    (mark)="checkState()"></eos-node-list-item>
+                                    (clickSelect)="onClickSelect(item,$event)"
+                                    (clickMark)="onClickMark(item,$event)"
+                                    >
+                                    </eos-node-list-item>
             </ng-container>
         </div>
     </div>

@@ -18,11 +18,6 @@ export class EosDictionaryNode {
     isActive: boolean;
 
     /**
-     * isSelected - true if node selected (highlight it in middle list)
-     */
-    isSelected: boolean;
-
-    /**
      * record data container
      * */
     data: any;
@@ -125,11 +120,11 @@ export class EosDictionaryNode {
         return this._dictionary.id;
     }
 
-    get marked(): boolean {
+    get isMarked(): boolean {
         return this._marked || this._autoMarked;
     }
 
-    set marked(marked: boolean) {
+    set isMarked(marked: boolean) {
         this._marked = marked;
         this._autoMarked = marked;
     }
@@ -140,7 +135,7 @@ export class EosDictionaryNode {
 
     constructor(dictionary: EosDictionary, data: any) {
         if (data) {
-            this.marked = !!this.marked;
+            this.isMarked = !!this.isMarked;
             this._dictionary = dictionary;
             this._descriptor = dictionary.descriptor.record;
             /* store all data from backend in .data */

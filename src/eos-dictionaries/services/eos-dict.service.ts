@@ -251,7 +251,7 @@ export class EosDictService {
                     const _represData: any[] = [];
                     if (_fullData && _fullData.data && _fullData.data.organization['ISN_NODE']) {
                         this._visibleListNodes.forEach((_node) => {
-                            if (_node.marked && _node.data.rec['IS_NODE']) {
+                            if (_node.isMarked && _node.data.rec['IS_NODE']) {
                                 _represData.push({
                                     SURNAME: _node.data.rec['SURNAME'],
                                     DUTY: _node.data.rec['DUTY'],
@@ -477,6 +477,10 @@ export class EosDictService {
     openNode(nodeId: string): Promise<EosDictionaryNode> {
         const dictionary = this.currentDictionary;
         if (dictionary) {
+            if (nodeId === '') {
+                this._openNode(null);
+                return Promise.resolve(null);
+            }
             if (!this._listNode || this._listNode.id !== nodeId) {
                 this.updateViewParameters({updatingInfo: false});
                 return dictionary.getFullNodeInfo(nodeId).then((node) => {
@@ -794,7 +798,7 @@ export class EosDictService {
         if (!this.viewParameters.showDeleted) {
             this._currentList.forEach((node) => {
                 if (node.isDeleted) {
-                    node.marked = false;
+                    node.isMarked = false;
                 }
             });
         }
@@ -1161,8 +1165,8 @@ export class EosDictService {
             const pageList = this._visibleListNodes.slice((page.start - 1) * page.length, page.current * page.length);
             /* unMark invisible nodes */
             this._currentList
-                .filter((listNode) => listNode.marked && pageList.findIndex((pageNode) => pageNode.id === listNode.id) === -1)
-                .forEach((listNode) => listNode.marked = false);
+                .filter((listNode) => listNode.isMarked && pageList.findIndex((pageNode) => pageNode.id === listNode.id) === -1)
+                .forEach((listNode) => listNode.isMarked = false);
 
             if (this._listNode && pageList.findIndex((node) => node.id === this._listNode.id) < 0) {
                 this._openNode(null);
@@ -1173,14 +1177,14 @@ export class EosDictService {
 
     private _openNode(node: EosDictionaryNode) {
         if (this._listNode !== node) {
-            if (this._listNode) {
-                this._listNode.isSelected = false;
-                this._listNode.autoMarked = false;
-            }
-            if (node) {
-                node.isSelected = true;
-                node.autoMarked = true;
-            }
+            // if (this._listNode) {
+            //     this._listNode.isMarked = false;
+            //     this._listNode.autoMarked = false;
+            // }
+            // if (node) {
+            //     node.isMarked = true;
+            //     node.autoMarked = true;
+            // }
             this._listNode = node;
             this._listNode$.next(node);
         }
@@ -1217,7 +1221,7 @@ export class EosDictService {
 
             if (this._treeNode) {
                 if (this._treeNode.children) {
-                    this._treeNode.children.forEach((child) => child.marked = false);
+                    this._treeNode.children.forEach((child) => child.isMarked = false);
                 }
                 this._treeNode.isActive = false;
             }
