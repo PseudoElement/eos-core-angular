@@ -632,7 +632,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         if (control) {
             let val = value['VALUE'];
             const item = this.prjDefaults.items.find((it) => it.id === value['DEFAULT_ID']
-                && item.type === E_FIELD_TYPE.boolean && val === '0');
+                && it.type === E_FIELD_TYPE.boolean && val === '0');
             if (item) {
                 val = 0;
             }
