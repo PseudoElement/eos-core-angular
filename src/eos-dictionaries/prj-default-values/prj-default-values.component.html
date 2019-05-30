@@ -23,54 +23,86 @@
                                [form]="form"></eos-dynamic-input>
             <!-- Срок исполнения -->
             <div class="clearfix">
-                <span>
+                <div>
                     <div class="term-exec">
                         <label>Срок исп. (План. дата)</label>
                         <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.TERM_EXEC']"
                                            [form]="form"></eos-dynamic-input>
                     </div>
                     <label>дня (дней) от даты регистрации</label>
-                </span>
+                </div>
             </div>
 
             <div class="clear-both">
                 <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.SECURLEVEL']"
+                                   [viewOpts]="selOpts"
                                    [form]="form"></eos-dynamic-input>
             </div>
-            <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.PRJ_EXEC_LIST']"
-                               [form]="form"></eos-dynamic-input>
+            <div class="exec-list margin-b">
+                <p class="xl-font paragraph-title">Доп. исполнители</p>
+                <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.PRJ_EXEC_LIST']"
+                                   [viewOpts]="selOpts"
+                                   [form]="form"></eos-dynamic-input>
+                <div class="columns">
+                    <div class="left">
+                        <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.CAN_MANAGE_APPROVAL']"
+                                           [disabled]="!isPrjExecFull"
+                                           [form]="form"></eos-dynamic-input>
+                        <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.CAN_WORK_WITH_PRJ']"
+                                           [disabled]="!isPrjExecFull"
+                                           [form]="form"></eos-dynamic-input>
+                    </div>
+                    <div class="right">
+                        <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.CAN_WORK_WITH_FILES']"
+                                           [disabled]="!isPrjExecFull"
+                                           [form]="form"></eos-dynamic-input>
+                        <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.CAN_MANAGE_EXEC']"
+                                           [disabled]="!isPrjExecFull"
+                                           [form]="form"></eos-dynamic-input>
+                    </div>
+                </div>
+            </div>
+
             <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.ANNOTAT']"
                                [form]="form"></eos-dynamic-input>
             <div class="visa margin-b">
                 <p class="xl-font paragraph-title">Визы</p>
                     <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.VISA_ISN_LIST']"
+                                       [viewOpts]="selOpts"
                                        [form]="form"></eos-dynamic-input>
                     <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.VISA_OUTER_ISN_LIST']"
+                                       [viewOpts]="selOpts"
                                        [form]="form"></eos-dynamic-input>
             </div>
             <div class="sign margin-b">
                 <p class="xl-font paragraph-title">Подписи</p>
                     <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.SIGN_ISN_LIST']"
+                                       [viewOpts]="selOpts"
                                        [form]="form"></eos-dynamic-input>
                     <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.SIGN_OUTER_ISN_LIST']"
+                                       [viewOpts]="selOpts"
                                        [form]="form"></eos-dynamic-input>
             </div>
             <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.FILE']"
+                               [viewOpts]="selOpts"
                                [form]="form"></eos-dynamic-input>
             <div class="send margin-b">
                     <p class="xl-font paragraph-title">Адресаты</p>
                     <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.SEND_ISN_LIST_DEP']"
+                                       [viewOpts]="selOpts"
                                        [form]="form"></eos-dynamic-input>
                     <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.SEND_ISN_LIST_ORGANIZ']"
+                                       [viewOpts]="selOpts"
                                        [form]="form"></eos-dynamic-input>
             </div>
             <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.NOTE']"
                                [form]="form"></eos-dynamic-input>
             <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.RUBRIC_LIST']"
+                               [viewOpts]="selOpts"
                                [form]="form"></eos-dynamic-input>
         </div>
         <div class="requiredTab eos-rk-mandatory" [hidden]="!isReqiredTab">
-            <eos-dynamic-input *ngFor="let key of prjDefaults.requiredItems"
+            <eos-dynamic-input *ngFor="let key of requiredItems"
                                [input]="inputs[key]"
                                [readonly]="inputs[key].readonly"
                                [form]="form"></eos-dynamic-input>

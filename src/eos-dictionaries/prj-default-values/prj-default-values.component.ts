@@ -14,6 +14,7 @@ import {_ES} from '../../eos-rest/core/consts';
 import {BsModalRef} from 'ngx-bootstrap';
 import {VALIDATOR_TYPE, ValidatorsControl} from '../validators/validators-control';
 import {Subscription} from 'rxjs';
+import {IDynamicInputOptions} from '../../eos-common/dynamic-form-input/dynamic-input.component';
 
 const PRJ_DEFAULT_NAME = 'PRJ_DEFAULT_VALUE_List';
 const FILE_CONSTRAINT_NAME = 'DG_FILE_CONSTRAINT_List';
@@ -55,7 +56,7 @@ class PrjDefaultFactory {
     private readonly _items = Array<PrjDefaultItem>();
 
     constructor() {
-        this._getPrjDefaults().forEach((recs) => {
+        PrjDefaultFactory._getPrjDefaults().forEach((recs) => {
             this._items.push(new PrjDefaultItem(recs));
         });
     }
@@ -64,74 +65,7 @@ class PrjDefaultFactory {
         return this._items;
     }
 
-    get requiredItems() {
-        return [
-            'PRJ_DEFAULT_VALUE_List.FREE_NUM_M',
-            'PRJ_DEFAULT_VALUE_List.DOC_DATE_M',
-            'PRJ_DEFAULT_VALUE_List.ISN_PERSON_EXE_M',
-            'PRJ_DEFAULT_VALUE_List.TERM_EXEC_M',
-            'PRJ_DEFAULT_VALUE_List.SECURLEVEL_M',
-            'PRJ_DEFAULT_VALUE_List.CONSISTS_M',
-            'PRJ_DEFAULT_VALUE_List.ANNOTAT_M',
-            'PRJ_DEFAULT_VALUE_List.VISA_ISN_LIST_M',
-            'PRJ_DEFAULT_VALUE_List.SIGN_ISN_LIST_M',
-            'PRJ_DEFAULT_VALUE_List.PSND_M',
-            'PRJ_DEFAULT_VALUE_List.FILE_M',
-            'PRJ_DEFAULT_VALUE_List.PRUB_M',
-        ];
-    }
-
-    get dictionaries() {
-        return [
-            {
-                name: 'security',
-                req: {SECURITY_CL: {}},
-                titleFieldName: 'GRIF_NAME',
-                isnFieldName: 'SECURLEVEL',
-            }, {
-                name: 'user_list_104',
-                req: {USER_LISTS: PipRX.criteries({ISN_LCLASSIF: '-99', CLASSIF_ID: '104'}), orderby: 'WEIGHT'},
-                titleFieldName: 'NAME',
-                isnFieldName: 'ISN_LIST',
-            }, {
-                name: 'user_list_630',
-                req: {USER_LISTS: PipRX.criteries({ISN_LCLASSIF: '-99', CLASSIF_ID: '630'}), orderby: 'WEIGHT'},
-                titleFieldName: 'NAME',
-                isnFieldName: 'ISN_LIST',
-            }, {
-                name: 'doc_templates',
-                req: {DOC_TEMPLATES: PipRX.criteries({CATEGORY: 'ФАЙЛЫ ДОКУМЕНТОВ'}), orderby: 'WEIGHT'},
-                titleFieldName: 'DESCRIPTION',
-                isnFieldName: 'ISN_TEMPLATE',
-            }, {
-                name: 'user_list_107',
-                req: {USER_LISTS: PipRX.criteries({ISN_LCLASSIF: '-99', CLASSIF_ID: '107'}), orderby: 'WEIGHT'},
-                titleFieldName: 'NAME',
-                isnFieldName: 'REF_ISN_LIST',
-            }
-        ];
-    }
-
-    fillDictionariesLists(apiSrv: PipRX): Promise<any[]> {
-        const reads = [];
-        this.dictionaries.forEach((dict) => {
-            reads.push(new Promise<any>((resolve) => apiSrv.read(dict.req)
-                .then(records => {
-                    records.forEach((record) => {
-                        if (!this.options[dict.name]) {
-                            this.options[dict.name] = [];
-                        }
-                        this.options[dict.name].push({
-                            title: record[dict.titleFieldName],
-                            value: record[dict.isnFieldName]});
-                    });
-                    return resolve(records);
-                })));
-        });
-        return Promise.all(reads);
-    }
-
-    private _getPrjDefaults(): any[] {
+    private static _getPrjDefaults(): any[] {
         return [{
             DEFAULT_ID: 'ANNOTAT',
             DEFAULT_TYPE: E_FIELD_TYPE.text,
@@ -267,22 +201,6 @@ class PrjDefaultFactory {
             DEFAULT_TYPE: 'D',
             DESCRIPTION: ' Срок исполнения РК в каких днях',
         }, {
-            DEFAULT_ID: 'CAN_MANAGE_EXEC',
-            DEFAULT_TYPE: 'D',
-            DESCRIPTION: 'Управление исполнителями',
-        }, {
-            DEFAULT_ID: 'CAN_WORK_WITH_PRJ',
-            DEFAULT_TYPE: 'D',
-            DESCRIPTION: 'Работа с РКПД',
-        }, {
-            DEFAULT_ID: 'CAN_WORK_WITH_FILES',
-            DEFAULT_TYPE: 'D',
-            DESCRIPTION: 'Работа с файлами РКПД',
-        }, {
-            DEFAULT_ID: 'CAN_MANAGE_APPROVAL',
-            DEFAULT_TYPE: 'D',
-            DESCRIPTION: 'Организация согл-я и утв-я',
-        }, {
             DEFAULT_ID: 'PRJ_RC.MAX_SIZE',
             DEFAULT_TYPE: E_FIELD_TYPE.number,
             DESCRIPTION: 'Max размер',
@@ -322,7 +240,90 @@ class PrjDefaultFactory {
             CATEGORY: 'PRJ_VISA_SIGN',
             TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
             length: 255,
+        }, {
+            DEFAULT_ID: 'CAN_MANAGE_APPROVAL',
+            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+            DESCRIPTION: 'Управление Исполнителями',
+        }, {
+            DEFAULT_ID: 'CAN_WORK_WITH_FILES',
+            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+            DESCRIPTION: 'Работа с файлами РКПД',
+        }, {
+            DEFAULT_ID: 'CAN_WORK_WITH_PRJ',
+            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+            DESCRIPTION: 'Работа с РКПД',
+        }, {
+            DEFAULT_ID: 'CAN_MANAGE_EXEC',
+            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+            DESCRIPTION: 'Организация согл-я и утв-я',
         }];
+    }
+
+    static get requiredItems() {
+        return [
+            'PRJ_DEFAULT_VALUE_List.FREE_NUM_M',
+            'PRJ_DEFAULT_VALUE_List.DOC_DATE_M',
+            'PRJ_DEFAULT_VALUE_List.ISN_PERSON_EXE_M',
+            'PRJ_DEFAULT_VALUE_List.TERM_EXEC_M',
+            'PRJ_DEFAULT_VALUE_List.SECURLEVEL_M',
+            'PRJ_DEFAULT_VALUE_List.CONSISTS_M',
+            'PRJ_DEFAULT_VALUE_List.ANNOTAT_M',
+            'PRJ_DEFAULT_VALUE_List.VISA_ISN_LIST_M',
+            'PRJ_DEFAULT_VALUE_List.SIGN_ISN_LIST_M',
+            'PRJ_DEFAULT_VALUE_List.PSND_M',
+            'PRJ_DEFAULT_VALUE_List.FILE_M',
+            'PRJ_DEFAULT_VALUE_List.PRUB_M',
+        ];
+    }
+
+    static get dictionaries() {
+        return [
+            {
+                name: 'security',
+                req: {SECURITY_CL: {}},
+                titleFieldName: 'GRIF_NAME',
+                isnFieldName: 'SECURLEVEL',
+            }, {
+                name: 'user_list_104',
+                req: {USER_LISTS: PipRX.criteries({ISN_LCLASSIF: '-99', CLASSIF_ID: '104'}), orderby: 'WEIGHT'},
+                titleFieldName: 'NAME',
+                isnFieldName: 'ISN_LIST',
+            }, {
+                name: 'user_list_630',
+                req: {USER_LISTS: PipRX.criteries({ISN_LCLASSIF: '-99', CLASSIF_ID: '630'}), orderby: 'WEIGHT'},
+                titleFieldName: 'NAME',
+                isnFieldName: 'ISN_LIST',
+            }, {
+                name: 'doc_templates',
+                req: {DOC_TEMPLATES: PipRX.criteries({CATEGORY: 'ФАЙЛЫ ДОКУМЕНТОВ'}), orderby: 'WEIGHT'},
+                titleFieldName: 'DESCRIPTION',
+                isnFieldName: 'ISN_TEMPLATE',
+            }, {
+                name: 'user_list_107',
+                req: {USER_LISTS: PipRX.criteries({ISN_LCLASSIF: '-99', CLASSIF_ID: '107'}), orderby: 'WEIGHT'},
+                titleFieldName: 'NAME',
+                isnFieldName: 'REF_ISN_LIST',
+            }
+        ];
+    }
+
+    fillDictionariesLists(apiSrv: PipRX): Promise<any[]> {
+        const reads = [];
+        PrjDefaultFactory.dictionaries.forEach((dict) => {
+            reads.push(new Promise<any>((resolve) => apiSrv.read(dict.req)
+                .then(records => {
+                    records.forEach((record) => {
+                        if (!this.options[dict.name]) {
+                            this.options[dict.name] = [];
+                        }
+                        this.options[dict.name].push({
+                            title: record[dict.titleFieldName],
+                            value: record[dict.isnFieldName]});
+                    });
+                    return resolve(records);
+                })));
+        });
+        return Promise.all(reads);
     }
 }
 
@@ -333,6 +334,11 @@ class PrjDefaultFactory {
 
 export class PrjDefaultValuesComponent implements OnDestroy {
     @Input() form: FormGroup;
+
+    selOpts: IDynamicInputOptions = {
+        defaultValue: {value: '', title: '...'}
+    };
+
     nodeDescription: string;
     isnNode: number;
     formInvalid: boolean;
@@ -342,27 +348,36 @@ export class PrjDefaultValuesComponent implements OnDestroy {
     inputs: any = {};
     newData = {};
     isUpdating = true;
+    isPrjExecFull = false;
+    requiredItems = PrjDefaultFactory.requiredItems;
 
     prjDefaults = new PrjDefaultFactory();
     _currentFormStatus: any;
 
-    private subscriptions: Subscription[];
+    private $valueChanges: Subscription;
+    private $statusChanges: Subscription;
 
     constructor(
         public bsModalRef: BsModalRef,
         private _msgSrv: EosMessageService,
         private _inputCtrlSrv: InputControlService,
         private _apiSrv: PipRX ) {
-        this.subscriptions = [];
+    }
+
+    private static _getFieldKey(id, tableName) {
+        return PRJ_KEY_SHABLON.replace('{{id}}', id).replace('{{tableName}}', tableName);
+    }
+
+    private static _updateValidators(controls: any): any {
+        ValidatorsControl.appendValidator(controls['DG_FILE_CONSTRAINT_List.PRJ_RC.EXTENSIONS'],
+            ValidatorsControl.existValidator(VALIDATOR_TYPE.EXTENSION_DOT));
+        ValidatorsControl.appendValidator(controls['DG_FILE_CONSTRAINT_List.PRJ_VISA_SIGN.EXTENSIONS'],
+            ValidatorsControl.existValidator(VALIDATOR_TYPE.EXTENSION_DOT));
     }
 
     ngOnDestroy() {
-        this.subscriptions.forEach((subscr) => {
-            if (subscr) {
-                subscr.unsubscribe();
-            }
-        });
-        this.subscriptions = [];
+        this.$statusChanges.unsubscribe();
+        this.$valueChanges.unsubscribe();
     }
 
     get isDefaultTab() {
@@ -386,15 +401,16 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                         this.data = data[0];
                         this._fillInputsValues();
                         this.isUpdating = false;
+                        this._prjExecListOnChange();
                      });
-                this._updateValidators(this.form.controls);
-                this.subscriptions.push(this.form.statusChanges
+                PrjDefaultValuesComponent._updateValidators(this.form.controls);
+                this.$statusChanges = this.form.statusChanges
                     .subscribe((status) => {
                         if (this._currentFormStatus !== status) {
                             this.formInvalid = (status === 'INVALID');
                         }
                         this._currentFormStatus = status;
-                    }));
+                    });
             });
     }
 
@@ -418,9 +434,13 @@ export class PrjDefaultValuesComponent implements OnDestroy {
 
                 this.prjDefaults.items.forEach((item) => {
                     if (!item.readonly) {
-                        const control = this.form.controls[this._getFieldKey(item.id, item.tableName)];
+                        const control = this.form.controls[PrjDefaultValuesComponent._getFieldKey(item.id, item.tableName)];
                         if (control) {
-                            const value = control.value;
+                            let value = control.value;
+                            if (item.type === E_FIELD_TYPE.boolean) {
+                                value = value ? '1' : false;
+                            }
+
                             if (item.tableName === PRJ_DEFAULT_NAME) {
                                 const prj = docGroup.PRJ_DEFAULT_VALUE_List.find((f) => f.DEFAULT_ID === item.id);
                                 if (prj) {
@@ -500,9 +520,11 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                     if (ch.method === 'MERGE' || ch.method === 'DELETE') {
                         ch.requestUri = ch.requestUri
                             .replace('PRJ_DEFAULT_VALUE_List(\'', 'PRJ_DEFAULT_VALUE_List(\'' + docGroup.DUE + ' ');
-                        ch.requestUri = ch.requestUri
-                            .replace('DG_FILE_CONSTRAINT_List(' + docGroup.ISN_NODE + ')', 'DG_FILE_CONSTRAINT_List(\'' + docGroup.DUE
-                                + ' ' + ch.data.CATEGORY + '\')');
+                        if (ch.data) {
+                            ch.requestUri = ch.requestUri
+                                .replace('DG_FILE_CONSTRAINT_List(' + docGroup.ISN_NODE + ')', 'DG_FILE_CONSTRAINT_List(\'' + docGroup.DUE
+                                    + ' ' + ch.data.CATEGORY + '\')');
+                        }
                     }
                 });
                 this._apiSrv.batch(changes, '')
@@ -514,6 +536,27 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                         this._msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка записи'});
                     });
             });
+    }
+
+    private _prjExecListOnChange() {
+        if (this.$valueChanges) {
+            this.$valueChanges.unsubscribe();
+        }
+
+        const ctrl = this.form.controls['PRJ_DEFAULT_VALUE_List.PRJ_EXEC_LIST'];
+        if (ctrl) {
+            this.isPrjExecFull = !!ctrl.value;
+            if (!ctrl.value) {
+                this.form.controls['PRJ_DEFAULT_VALUE_List.CAN_MANAGE_APPROVAL'].setValue(0);
+                this.form.controls['PRJ_DEFAULT_VALUE_List.CAN_WORK_WITH_FILES'].setValue(0);
+                this.form.controls['PRJ_DEFAULT_VALUE_List.CAN_WORK_WITH_PRJ'].setValue(0);
+                this.form.controls['PRJ_DEFAULT_VALUE_List.CAN_MANAGE_EXEC'].setValue(0);
+            }
+        }
+
+        this.$valueChanges = this.form.valueChanges.subscribe(() => {
+            this._prjExecListOnChange();
+        });
     }
 
     private _getDGFileProperties(category) {
@@ -532,7 +575,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
     private _getDocGroupWithPrjDefaultValues(): Promise<any> {
         return this._apiSrv
             .read<DOCGROUP_CL>({
-                DOCGROUP_CL: PipRX.criteries({'ISN_NODE': this.isnNode.toString()}),
+                DOCGROUP_CL: PipRX.criteries({ISN_NODE: this.isnNode.toString()}),
                 expand: PRJ_DEFAULT_NAME + ',' + FILE_CONSTRAINT_NAME,
             });
     }
@@ -541,7 +584,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         return this.prjDefaults.fillDictionariesLists(this._apiSrv)
             .then(() => {
                 this.prjDefaults.items.forEach((prjDefault) => {
-                    const key = this._getFieldKey(prjDefault.id, prjDefault.tableName);
+                    const key = PrjDefaultValuesComponent._getFieldKey(prjDefault.id, prjDefault.tableName);
                     const commonParams = {
                         key: key,
                         label: prjDefault.descr,
@@ -563,7 +606,9 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                             break;
                         case E_FIELD_TYPE.select:
                             this.inputs[key] = new DropdownInput(Object.assign({}, commonParams, {
-                                options: this.prjDefaults.options[prjDefault.dictId]}));
+                                options: this.prjDefaults.options[prjDefault.dictId],
+
+                            }));
                             break;
                         case E_FIELD_TYPE.text:
                             this.inputs[key] = new TextInput(commonParams);
@@ -582,14 +627,16 @@ export class PrjDefaultValuesComponent implements OnDestroy {
             });
     }
 
-    private _getFieldKey(id, tableName) {
-        return PRJ_KEY_SHABLON.replace('{{id}}', id).replace('{{tableName}}', tableName);
-    }
-
     private _setValue(value: any, tableName) {
-        const control = this.form.controls[this._getFieldKey(value['DEFAULT_ID'], tableName)];
+        const control = this.form.controls[PrjDefaultValuesComponent._getFieldKey(value['DEFAULT_ID'], tableName)];
         if (control) {
-            control.setValue(value['VALUE']);
+            let val = value['VALUE'];
+            const item = this.prjDefaults.items.find((it) => it.id === value['DEFAULT_ID']
+                && item.type === E_FIELD_TYPE.boolean && val === '0');
+            if (item) {
+                val = 0;
+            }
+            control.setValue(val);
         }
     }
 
@@ -611,12 +658,5 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         this.data[FILE_CONSTRAINT_NAME].forEach(value => {
             this._setFileValue(value);
         });
-    }
-
-    private _updateValidators(controls: any): any {
-        ValidatorsControl.appendValidator(controls['DG_FILE_CONSTRAINT_List.PRJ_RC.EXTENSIONS'],
-            ValidatorsControl.existValidator(VALIDATOR_TYPE.EXTENSION_DOT));
-        ValidatorsControl.appendValidator(controls['DG_FILE_CONSTRAINT_List.PRJ_VISA_SIGN.EXTENSIONS'],
-            ValidatorsControl.existValidator(VALIDATOR_TYPE.EXTENSION_DOT));
     }
 }
