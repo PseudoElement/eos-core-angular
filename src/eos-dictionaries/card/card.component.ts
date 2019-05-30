@@ -136,7 +136,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe((nodes) => {
-                this.nodes = nodes.filter((node) => !node.isDeleted);
+                this.nodes = nodes.filter((node) => !node.isDeleted && node.isMarked);
             });
 
         this._dictSrv.currentTab = tabNum;
@@ -198,8 +198,12 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
     cancel(): void {
         this.isChanged = false;
-        /* _askForSaving fired on route change */
-        this._openNode(this.node, EDIT_CARD_MODES.view);
+
+        if (this.nodes && this.nodes.length > 1) {
+            this._openNode(this.node, EDIT_CARD_MODES.view);
+        } else {
+            this.close();
+        }
     }
 
     recordChanged(isChanged: boolean) {
@@ -452,6 +456,10 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         if (node) {
             this._initNodeData(node);
             this.cancel();
+        } else {
+            if (this.nodes && this.nodes.length <= 1) {
+                this.close();
+            }
         }
         this.disableSave = false;
     }
