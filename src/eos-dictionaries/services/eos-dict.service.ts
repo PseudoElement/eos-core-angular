@@ -316,6 +316,10 @@ export class EosDictService {
         return this.currentDictionary.getMarkedNodes(recursive);
     }
 
+    unmarkAll(): void {
+        this.getMarkedNodes().forEach( n => n.isMarked = false);
+    }
+
     isDataChanged(data: any, original: any): boolean {
         const dictionary = this._dictionaries[this._dictMode];
         if (dictionary) {
