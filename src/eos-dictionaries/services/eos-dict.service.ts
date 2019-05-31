@@ -310,6 +310,9 @@ export class EosDictService {
     }
 
     getMarkedNodes(recursive = false): EosDictionaryNode[] {
+        if (!this.currentDictionary) {
+            return [];
+        }
         return this.currentDictionary.getMarkedNodes(recursive);
     }
 

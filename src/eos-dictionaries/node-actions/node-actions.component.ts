@@ -133,7 +133,11 @@ export class NodeActionsComponent implements OnDestroy {
         let _show = false;
         let due = null;
 
-        if (this.dictionary && this._viewParams) {
+
+        if (this.dictionary && this._viewParams && this._dictSrv) {
+            const marklist = this._dictSrv.getMarkedNodes(false);
+            const listHasDeleted = marklist.filter(n => n.isDeleted).length !== 0;
+
             _enabled = !this._viewParams.updatingList;
             _show = this.dictionary.canDo(button.type);
             switch (button.type) {
@@ -145,12 +149,19 @@ export class NodeActionsComponent implements OnDestroy {
                     _show = this._viewParams.userOrdered && !this._viewParams.searchResults;
                     _enabled = _enabled && this._visibleCount > 1 && this._viewParams.hasMarked;
                     break;
+                case E_RECORD_ACTIONS.remove: {
+                    _enabled = _enabled && this._viewParams.hasMarked;
+                    _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
+                    break;
+                }
+                case E_RECORD_ACTIONS.restore: {
+                    _enabled = _enabled && listHasDeleted;
+                    break;
+                }
                 case E_RECORD_ACTIONS.AdvancedCardRK:
                 case E_RECORD_ACTIONS.additionalFields:
                 case E_RECORD_ACTIONS.CloseSelected:
                 case E_RECORD_ACTIONS.OpenSelected:
-                case E_RECORD_ACTIONS.restore:
-                case E_RECORD_ACTIONS.remove:
                 case E_RECORD_ACTIONS.removeHard:
                     _enabled = _enabled && this._viewParams.hasMarked;
                     break;
@@ -161,6 +172,7 @@ export class NodeActionsComponent implements OnDestroy {
                             _enabled = this.dictionary.descriptor.editOnlyNodes && this._dictSrv.listNode.isNode;
                         }
                     }
+                    _enabled = _enabled && !listHasDeleted;
                     break;
                 case E_RECORD_ACTIONS.showDeleted:
                     _active = this._viewParams.showDeleted;
