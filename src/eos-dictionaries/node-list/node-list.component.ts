@@ -4,10 +4,11 @@ import {
     OnDestroy,
     OnInit,
     Inject,
-    ChangeDetectorRef,
     AfterContentInit,
     AfterContentChecked,
-    NgZone
+    NgZone,
+    ChangeDetectorRef,
+    HostListener
 } from '@angular/core';
 import {SortableComponent, BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {Subject} from 'rxjs';
@@ -15,7 +16,7 @@ import {Subject} from 'rxjs';
 
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
 import {EosDictService} from '../services/eos-dict.service';
-import {IDictionaryViewParameters, IFieldView, IOrderBy, E_FIELD_SET} from 'eos-dictionaries/interfaces';
+import {IDictionaryViewParameters, IFieldView, IOrderBy, E_FIELD_SET, E_FIELD_TYPE} from 'eos-dictionaries/interfaces';
 import {LongTitleHintComponent} from '../long-title-hint/long-title-hint.component';
 import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
 import {ColumnSettingsComponent} from '../column-settings/column-settings.component';
@@ -26,7 +27,6 @@ import { takeUntil } from 'rxjs/operators';
 import {CopyPropertiesComponent} from '../copy-properties/copy-properties.component';
 
 const ITEM_WIDTH_FOR_NAN = 100;
-const MAX_PERCENT_WIDTH = 98;
 
 @Component({
     selector: 'eos-node-list',
@@ -52,9 +52,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
     private ngUnsubscribe: Subject<any> = new Subject();
     private nodeListElement: Element;
-    private _recalcCounter: number;
     private _recalcW: number;
-    private _recalcH: number;
     private _holder;
 
     constructor(
@@ -103,7 +101,6 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                         this.orderBy = _dictSrv.currentDictionary.orderBy;
                     }
                 }
-                this._recalcCounter = 0;
             });
     }
 
@@ -114,36 +111,13 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
     ngOnInit() {
         this._holder = document.getElementById('sizeholder');
-        const c = this.viewFields.length + this.customFields.length;
-        this._recalcCounter = 0;
-        this.viewFields.forEach((_f) => {
-            const element = document.getElementById('vf_' + _f.key);
-            if (element) {
-                // this.length[_f.key] = element.clientWidth;
-                this.min_length[_f.key] = 100 / c;
-            }
-        });
-
-        this.customFields.forEach((_f) => {
-            const element = document.getElementById('vf_' + _f.key);
-            if (element) {
-                // this.length[_f.key] = element.clientWidth;
-                this.min_length[_f.key] = 100 / c;
-            }
-        });
     }
 
     ngAfterContentChecked() {
-        if ((this._recalcW !== this._holder.clientWidth) || (this._recalcH !== this._holder.clientHeight)) {
-            this._recalcCounter = 0;
+        if ((this._recalcW !== this._holder.clientWidth)) {
+            this._recalcW = this._holder.clientWidth;
+            this._countColumnWidth();
         }
-        if (this._recalcCounter > 3) {
-            return;
-        }
-        this._recalcW = this._holder.clientWidth;
-        this._recalcH = this._holder.clientHeight;
-        this._recalcCounter++;
-        this._countColumnWidth();
     }
 
     ngAfterContentInit() {
@@ -224,7 +198,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             }
 
             this._dictSrv.orderBy(this.orderBy, false);
-            this._recalcCounter = 0;
+            this._countColumnWidth();
             subscription.unsubscribe();
         });
     }
@@ -470,58 +444,44 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         return (this.params.firstUnfixedIndex !== 0);
     }
 
+    @HostListener('window:resize')
+    onResize() {
+        this._countColumnWidth();
+    }
+
     private _countColumnWidth() {
-        // console.log('recalc');
-        let length = [];
-        this.viewFields.forEach((_f) => {
+        const calcLength = [];
+        let fullWidth = 0;
+
+        const fields: IFieldView[] = this.viewFields.concat(this.customFields);
+
+        fields.forEach((_f) => {
             const element = document.getElementById('vf_' + _f.key);
             if (element) {
-                length[_f.key] = element.clientWidth;
+                const itemWidth = element.clientWidth ? element.clientWidth : ITEM_WIDTH_FOR_NAN;
+                calcLength[_f.key] = itemWidth;
+                fullWidth += itemWidth;
             }
         });
 
-        this.customFields.forEach((_f) => {
-            const element = document.getElementById('vf_' + _f.key);
-            if (element) {
-                length[_f.key] = element.clientWidth;
-            }
-        });
-
-        this.length = length;
-        length = [];
+        this.length = calcLength;
 
         if (this.isOverflowed()) {
             this.min_length = [];
-            // console.log('over');
         } else {
-            // console.log('!over');
-            let fullWidth = 0;
-
-            this.viewFields.forEach((_f) => {
-                const itemWidth = this.length[_f.key];
-                length[_f.key] = itemWidth;
-                fullWidth += itemWidth;
-            });
-
-            if (this.customFields) {
-                this.customFields.forEach((_f) => {
-                    const itemWidth = this.length[_f.key] ? this.length[_f.key] : ITEM_WIDTH_FOR_NAN;
-                    length[_f.key] = itemWidth;
-                    fullWidth += itemWidth;
-                });
-                this.customFields.forEach((_f) => {
-                    length[_f.key] = length[_f.key] / fullWidth * MAX_PERCENT_WIDTH;
-                });
+            const minLength = [];
+            const lastField = fields[fields.length - 1];
+            if (lastField.type !== E_FIELD_TYPE.boolean) {
+                minLength[lastField.key] = (this._holder.clientWidth - (fullWidth - this.length[lastField.key])) - 50;
+                this.length[lastField.key] = minLength[lastField.key];
+                console.log(this.length[lastField.key], minLength[lastField.key], this._holder.clientWidth, fullWidth);
             }
-            this.viewFields.forEach((_f) => {
-                length[_f.key] = length[_f.key] / fullWidth * MAX_PERCENT_WIDTH;
-            });
-
-            this.min_length = length;
+            this.min_length = minLength;
         }
 
         this._cdr.detectChanges();
     }
+
 
 
 }
