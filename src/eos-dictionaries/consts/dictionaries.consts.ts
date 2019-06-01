@@ -12,7 +12,6 @@ import { ORG_TYPE_DICT } from './dictionaries/org-type.consts';
 import { ORGANIZ_DICT } from './dictionaries/organiz.consts';
 import { RESOL_CATEGORY_DICT } from './dictionaries/resolution-category.consts';
 import { RESPRJ_PRIORITY_DICT } from './dictionaries/resprj-priority.consts';
-import { RESPRJ_STATUS_DICT } from './dictionaries/resprj-status.consts';
 import { SECURITY_DICT } from './dictionaries/security.consts';
 import { SIGN_KIND_DICT } from './dictionaries/sign-kind.consts';
 import { STATUS_EXEC_DICT } from './dictionaries/status-exec.consts';
@@ -40,13 +39,11 @@ export const DICTIONARIES = [
     ORGANIZ_DICT,
     RESOL_CATEGORY_DICT,
     RESPRJ_PRIORITY_DICT,
-    RESPRJ_STATUS_DICT,
     SECURITY_DICT,
     SIGN_KIND_DICT,
     STATUS_EXEC_DICT,
     STATUS_REPLY_DICT,
     VISA_TYPE_DICT,
-    // CITIZENS_DICT,
     NOMENKL_DICT,
     EDS_CATEGORY_CL,
     LINK_DICT,
