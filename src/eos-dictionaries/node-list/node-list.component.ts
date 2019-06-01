@@ -474,7 +474,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             if (lastField.type !== E_FIELD_TYPE.boolean) {
                 minLength[lastField.key] = (this._holder.clientWidth - (fullWidth - this.length[lastField.key])) - 50;
                 this.length[lastField.key] = minLength[lastField.key];
-                console.log(this.length[lastField.key], minLength[lastField.key], this._holder.clientWidth, fullWidth);
+                // console.log(this.length[lastField.key], minLength[lastField.key], this._holder.clientWidth, fullWidth);
             }
             this.min_length = minLength;
         }
