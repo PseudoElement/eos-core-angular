@@ -8,7 +8,7 @@
             class="node-field-checkbox">
             <span class="eos-icon small"
                 aria-hidden="true"
-                [ngClass]="{'eos-icon-checkbox-grey': field.value, 'eos-icon-minus-grey': !field.value}"></span>
+                [ngClass]="{'eos-icon-checkbox-grey': field.value}"></span>
         </div>
         <ng-container *ngSwitchCase="types.select">
              {{currentValue()}}
