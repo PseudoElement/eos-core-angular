@@ -45,6 +45,7 @@ export class EosDictService {
     currentNode: EosDictionaryNode;
     currentTab: number;
 
+    public editFromForm: boolean;
     // private dictionary: EosDictionary;
     private _treeNode: EosDictionaryNode; // record selected in tree
     private _listNode: EosDictionaryNode; // record selected in list

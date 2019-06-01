@@ -400,7 +400,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     goUp() {
         if (this.treeNode && this.treeNode.parent) {
             const path = this.treeNode.parent.getPath();
-            console.log(path);
+            // console.log(path);
             this._router.navigate(path);
         }
     }

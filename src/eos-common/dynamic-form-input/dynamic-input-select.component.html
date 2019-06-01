@@ -1,8 +1,9 @@
 <div [formGroup]="form">
     <label [hidden]="input.hideLabel || hideLabel"
            [attr.for]="input.key">{{input.label}}</label>
+           <!-- из-за pad-left едут стили по всем формам. не надо этого сюда -->
     <p *ngIf="readonly"
-       class="form-control-static m-font pad-left pad-right"
+       class="form-control-static m-font"
        [ngClass]="{'placeholder': !hasValue()}">{{currentValue}}</p>
         <div class="eos-select" *ngIf="!readonly"
              [ngClass]="{'required': isRequired, 'disabled': disabled}">

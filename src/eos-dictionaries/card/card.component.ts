@@ -177,12 +177,14 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     edit() {
         const _canEdit = this._preventMultiEdit() && this._preventDeletedEdit();
         if (_canEdit) {
+            this._dictSrv.editFromForm = true;
             this._openNode(this.node, EDIT_CARD_MODES.edit);
         }
     }
 
     close() {
         const url = this._storageSrv.getItem(RECENT_URL);
+        this._dictSrv.editFromForm = false;
         if (url) {
             this.goTo(url);
         } else {
@@ -199,7 +201,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     cancel(): void {
         this.isChanged = false;
 
-        if (this.nodes && this.nodes.length > 1) {
+        if (this._dictSrv.editFromForm || (this.nodes && this.nodes.length > 1)) {
             this._openNode(this.node, EDIT_CARD_MODES.view);
         } else {
             this.close();
@@ -457,7 +459,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             this._initNodeData(node);
             this.cancel();
         } else {
-            if (this.nodes && this.nodes.length <= 1) {
+            if (this._dictSrv.editFromForm || (this.nodes && this.nodes.length <= 1)) {
                 this.close();
             }
         }
