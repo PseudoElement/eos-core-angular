@@ -32,7 +32,6 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       USER_AUDIT: ALL_ROWS
     })
       .then(data => {
-        console.log(data);
         this.usersAudit = data;
       });
   }

@@ -59,7 +59,6 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
       }
     })
       .then(data => {
-        console.log(data);
       });
     this._pipeSrv.read({
       USER_PARMS: {
@@ -69,7 +68,6 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
       }
     })
       .then(data => {
-        console.log(data);
       });
 
     this._pipeSrv.read({
@@ -79,7 +77,6 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
       }
     })
     .then(data => {
-      console.log(data);
     });
 
     this._pipeSrv.read({
@@ -89,7 +86,6 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
       }
     })
     .then(data => {
-      console.log(data);
     });
 
 
@@ -112,7 +108,6 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   }
 
   buttonChanged(e: Event) {
-    console.log(e);
   }
 
   selectUser() {
@@ -125,7 +120,6 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
       })
       .then(data => {
         this.isShell = false;
-        console.log(data[0]['SURNAME_PATRON']);
       })
       .catch(() => {
         this.isShell = false;
