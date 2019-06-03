@@ -35,5 +35,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
         this.usersAudit = data;
       });
   }
+  isActiveButton() {
+  }
 
 }
