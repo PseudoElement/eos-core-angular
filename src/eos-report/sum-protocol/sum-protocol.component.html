@@ -1,0 +1,37 @@
+<div class="teh-p">
+    <label class="checkbox minus-checkbox ">
+        <input type="checkbox" readonly="readonly" class="readonly">
+        <span class="eos-icon eos-icon-checkbox-black"></span>
+        Протоколирование работы со справочником 'Пользователи'</label>
+</div>
+<div class="list-user-select-wrapper">
+    <div class="table-wrapper usual-border">
+        <div class="eos-node-list">
+            <div class="table-header">
+                <div class="table-title contain-span">    
+                    <span class="text-center" (click)="isActiveButton()">
+                        Дата       
+                    </span>
+                    <span class="text-center">
+                        Событие
+                    </span>
+                    <span class="text-center">
+                        Редактировал
+                    </span> 
+                    <span class="text-center">
+                        Пользователя
+                    </span>
+                    <eos-filter-protocol></eos-filter-protocol>  
+                </div>
+            </div>
+            <div class="eos-node-list">
+                <eos-temp-sum-protocol *ngFor="let audit of usersAudit" [dataDate]=audit.EVENT_DATE [dataEvent]=dataEvent [dataEdit]=audit.ISN_WHO [dataUsers]=audit.ISN_USER></eos-temp-sum-protocol> 
+            </div>
+            
+        </div> 
+    </div>      
+</div>
+
+
+
+

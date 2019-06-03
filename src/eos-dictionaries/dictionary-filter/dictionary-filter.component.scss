@@ -184,22 +184,8 @@
     }
 }
 
-.full-search-form {
-    padding: 0 20px;
-    .tabs-wrapper {
-        background-color: $modal-block-background-main-theme;
-        border-bottom: 1px solid $border-color-main-theme;
-        width: auto;
-        height: $item-height;
-        .tabs {
-            .tab-item {
-                &.active {
-                    color: $black !important;
-                    border-color: $active-field-color-main-theme;
-                }
-            }
-        }
-    }
+.full-search-form-cust {
+    padding: 0;
     .form-control {
         padding: 8px 30px 8px 8px;
         height: 32px;
@@ -222,29 +208,11 @@
     .form-group:last-child {
         margin-bottom: 0;
     }
-    .first-col {
-        display: inline-block;
-        vertical-align: top;
-        width: 180px;
-    }
-    .second-col {
-        display: inline-block;
-        width: 540px;
-    }
-    .margin-r {
-        margin-right: 38px;
-    }
     form {
         padding: 20px;
         font-size: 0;
     }
-    .hidden-submit {
-        width: 0px;
-        height: 0px;
-        position: absolute;
-        top: -99999px;
-        left: -99999px;
-    }
+    
 }
 
 .popover {

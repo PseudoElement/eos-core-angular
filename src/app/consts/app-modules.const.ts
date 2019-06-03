@@ -10,7 +10,12 @@ export const APP_MODULES = [
     {
         title: 'Параметры системы',
         url: '/parameters',
-    }
+    },
+    {
+        title: 'Отчёт',
+        url: '/report',
+    },
+
 ];
 
 export const APP_MODULES_DROPDOWN = [
