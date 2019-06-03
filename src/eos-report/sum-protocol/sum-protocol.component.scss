@@ -37,12 +37,30 @@
     justify-content: space-around;
     width:81%;
 }
+.contain-span-header{
+    display: flex;
+    justify-content: space-around;
+    width:100%;
+}
 .item-table{
     line-height: 32px;
 }
 .pad-right-item{
     padding-right: 20px;
 }
+.pad-left-title1{
+    padding-left: 62px;
+}
+.pad-left-title2{
+    padding-left: 102px;
+}
+.pad-left-title3{
+    padding-left: 25px;
+}
+.filter-protocol{
+    padding-right: 65px;
+}
+
 
 // .cust-div{
 //     height: 500px;
