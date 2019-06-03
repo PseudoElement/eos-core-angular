@@ -33,7 +33,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap';
         FormsModule,
         ReactiveFormsModule,
         TooltipModule.forRoot(),
-        PopoverModule.forRoot(),
+        PopoverModule,
         BsDatepickerModule.forRoot()
     ],
 })

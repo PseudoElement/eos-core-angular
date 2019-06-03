@@ -38,9 +38,20 @@
         width: 48px;
     }
 }
-.form-control {  
+.form-date-control {  
     width: 200px;
     font-size: 14px; 
+    line-height: 32px;
+}
+.cont-datepick{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.group-datepick{
+    display: flex;
+    flex-direction: row;
+    
 }
 .datepick {
     position: relative;
@@ -59,8 +70,14 @@
     a {
         position: absolute;
         top: 0;
+        right: 1px;
         bottom: 0;
         margin: auto;
         height: 24px;
     }
 }
+.eos-icon.eos-icon-calendar-blue{
+    margin-top: 3px;
+}
+
+

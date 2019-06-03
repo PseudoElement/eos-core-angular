@@ -1,4 +1,4 @@
-<div class="teh-p" (click)="OutsideClick()">
+<div class="teh-p">
     <label class="checkbox minus-checkbox ">
         <input type="checkbox" readonly="readonly" class="readonly">
         <span class="eos-icon eos-icon-checkbox-black"></span>
@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="eos-node-list">
-                <eos-temp-sum-protocol [dataDate]=dataDate [dataEvent]=dataEvent [dataEdit]=dataEdit [dataUsers]=dataUsers></eos-temp-sum-protocol> 
+                <eos-temp-sum-protocol *ngFor="let audit of usersAudit" [dataDate]=audit.EVENT_DATE [dataEvent]=dataEvent [dataEdit]=audit.ISN_WHO [dataUsers]=audit.ISN_USER></eos-temp-sum-protocol> 
             </div>
             
         </div> 
