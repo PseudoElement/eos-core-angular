@@ -1,6 +1,13 @@
 eos-dynamic-input {
     font-size: 0;
     display: block;
+    .textareacounter {
+        font-size: 13px;
+        display: inline-block;
+        position: absolute;
+        bottom: 0;
+        right: 7px;
+    }
 }
 
 .form-group {
@@ -46,7 +53,9 @@ eos-dynamic-input {
         &:-ms-input-placeholder {
             color: $placeholder-color;
         }
-        &.ng-invalid.ng-dirty:not(:focus) {
+        &.ng-invalid {
+        //.ng-dirty {
+        //:not(:focus) {
             border-color: $invalid-color-main-theme;
             border-width: 2px;
             /* outline: $invalid-color-main-theme solid 1px !important; */
@@ -55,9 +64,9 @@ eos-dynamic-input {
         &.ng-valid {
             border-color: $border-color-main-theme;
         }
-        &:focus {
-            border-color: $active-field-color-main-theme;
-        }
+        // &:focus {
+        //     border-color: $active-field-color-main-theme;
+        // }
         &.readonly,
         &.readonly:focus {
             border-color: transparent;

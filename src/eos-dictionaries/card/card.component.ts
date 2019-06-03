@@ -287,7 +287,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     }
 
     isSaveDisabled(): boolean {
-        return !this.isChanged || this.disableSave;
+        return /*!this.isChanged ||*/ this.disableSave;
     }
 
     private _init() {
@@ -438,6 +438,10 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     }
 
     private _save(data: any): Promise<any> {
+        if (!this.isChanged) {
+            return Promise.resolve(this.node);
+        }
+
         return this._dictSrv.updateNode(this.node, data)
             .then((node) => this._afterUpdating(node))
             .catch((err) => {

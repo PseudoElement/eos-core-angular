@@ -41,6 +41,12 @@ export class NodeFieldComponent {
             return '';
         } else if (this.field.type === E_FIELD_TYPE.select) {
             return this.currentValue();
+        } else if (this.field.type === E_FIELD_TYPE.boolean) {
+            if (this.field.value) {
+                return 'Да';
+            } else {
+                return '';
+            }
         }
         return this.field.value;
     }
