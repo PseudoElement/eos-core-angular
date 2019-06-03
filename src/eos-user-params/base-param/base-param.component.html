@@ -108,7 +108,7 @@
         </div>
         <!-- Примечания -->
         <div>
-            <eos-dynamic-input [input]="inputs['NOTE2']" [form]="form" [readonly]="inputs['NOTE2'].readonly" style="width: 100%"></eos-dynamic-input>
+            <eos-dynamic-input onkeypress="return event.keyCode != 13;" [input]="inputs['NOTE2']" [form]="form" [readonly]="inputs['NOTE2'].readonly" style="width: 100%"></eos-dynamic-input>
         </div>
         <!-- Доступ к системам 1-й ряд -->
         <span class="l-font">Доступ к системам</span>

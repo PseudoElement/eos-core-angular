@@ -97,7 +97,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             .catch(e => {
                 const m: IMessage = {
                     type: 'warning',
-                    title: 'Ошибка сервера',
+                    title: 'Предупреждение',
                     msg: '',
                 };
                 if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
