@@ -13,6 +13,7 @@ import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/v
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_HAS_DELETED } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
+import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -165,6 +166,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     public clickTab (item: Ttab) {
         this.activeTab = item;
+        BaseCardEditComponent.autoFocusOnFirstStringElement('eos-adv-card-rk');
     }
 
     public initByNodeData(dndata: any) {
@@ -221,6 +223,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
                 this._subscribeToChanges();
                 this.isUpdating = false;
+                BaseCardEditComponent.autoFocusOnFirstStringElement('eos-adv-card-rk');
             });
         });
 
@@ -483,6 +486,4 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         }
         return false;
     }
-
-
 }

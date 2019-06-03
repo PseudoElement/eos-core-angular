@@ -87,15 +87,15 @@
 }
 
 .full-search-popover {
-    right: 0;
-    left: auto !important;
+    //right: 0;
+    //left: auto !important;
     width: 800px;
     max-width: 800px;
     border-radius: 0;
-    .popover-arrow.arrow {
-        right: 61px !important;
-        left: auto !important;
-    }
+    //.popover-arrow.arrow {
+    //    right: 61px !important;
+    //    left: auto !important;
+    //}
     .popover-content {
         padding: 0 !important;
     }
