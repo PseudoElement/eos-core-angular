@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { DynamicInputBase } from './dynamic-input-base';
-import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { EosUtils } from '../core/utils';
 
 @Component({
@@ -24,7 +24,9 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
 
     @ViewChild('dpw') datePickerWrapper: ElementRef;
 
-    constructor() {
+    constructor(
+        private localeService: BsLocaleService,
+    ) {
         super();
         this.bsConfig = {
             // locale: 'ru',
@@ -43,6 +45,7 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
     }
 
     ngOnInit() {
+        this.localeService.use('ru');
         this.updateDatePickerPlacement();
     }
 
