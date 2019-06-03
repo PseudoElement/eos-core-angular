@@ -336,7 +336,7 @@ export class EosDictionary {
     getMarkedNodes(recursive = false): EosDictionaryNode[] {
         const nodes: EosDictionaryNode[] = [];
         this._nodes.forEach((node) => {
-            if (node.marked) {
+            if (node.isMarked) {
                 nodes.push(node);
                 if (recursive) {
                     node.getAllChildren().forEach((chld) => nodes.push(chld));
@@ -353,7 +353,7 @@ export class EosDictionary {
         const records = this._getMarkedRecords();
         return this.descriptor.deleteRecords(records).then (r => {
             this._nodes.forEach((node) => {
-                if (node.marked) {
+                if (node.isMarked) {
                     node.delete();
                     this._nodes.delete(node.id);
                 }
@@ -429,7 +429,8 @@ export class EosDictionary {
 
     getListView(customFields: IFieldView[]) {
         const fields = this.descriptor.record.getListView({});
-        const updatefields = fields.concat(customFields);
+        const infoFields = this.descriptor.record.getInfoView({});
+        const updatefields = fields.concat(customFields).concat(infoFields);
         this.descriptor.getRelatedFields(updatefields.filter(i => i.dictionaryId)
                                 .map(i => i.dictionaryId ? i.dictionaryId : null))
             .then((related) => {
@@ -542,7 +543,7 @@ export class EosDictionary {
         const records: any[] = [];
 
         this._nodes.forEach((node) => {
-            if (node.marked) {
+            if (node.isMarked) {
                 if (recursive) {
                     node.getAllChildren().forEach((chld) => records.push(chld.data.rec));
                 }
@@ -554,8 +555,8 @@ export class EosDictionary {
 
     private _resetMarked() {
         this._nodes.forEach((node) => {
-            if (node.marked) {
-                node.marked = false;
+            if (node.isMarked) {
+                node.isMarked = false;
             }
         });
     }

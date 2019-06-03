@@ -53,9 +53,9 @@
     <div class="base-param-main">
         <!-- Логин и Аутентификация с помощью ОС -->
         <div class="wrapper-password">
-            <div class="base-text-input base-login-input" [formGroup]="form">
+            <div class="base-text-input base-login-input" [formGroup]="form" [tooltip]="validClassif" container="body" placement="bottom" containerClass="tooltip-error">
                 <label [hidden]="inputs['CLASSIF_NAME'].hideLabel" [attr.for]="inputs['CLASSIF_NAME'].key">{{inputs['CLASSIF_NAME'].label}}</label>
-                <input class="form-control m-font" maxlength="12" [formControlName]="inputs['CLASSIF_NAME'].key" [readonly]="inputs['CLASSIF_NAME'].readonly" autocomplete="off">
+                <input  class="form-control m-font" maxlength="12" [formControlName]="inputs['CLASSIF_NAME'].key" [readonly]="inputs['CLASSIF_NAME'].readonly" autocomplete="off">
             </div>
             <!-- <eos-dynamic-input
                 class="base-text-input base-login-input"
@@ -69,7 +69,9 @@
         <div>
             <div class="wrapper-password">
                 <eos-dynamic-input style="width: 180px" class="inline-block" [form]="form" [input]="inputs['PASSWORD_DATE']" [readonly]="inputs['PASSWORD_DATE'].readonly || !editMode"></eos-dynamic-input>
-
+                <!-- что бы не вставлялся логин в поле даты -->
+                <input type="text" style="opacity: 0; width: 0px; height: 0px; border: none">
+                <input type="password" style="opacity: 0; width: 0px; height: 0px; border: none">
                 <div [formGroup]="formControls" class="dynamic-input-wrapper base-text-input">
                     <label [hidden]="controls['pass'].hideLabel" [attr.for]="controls['pass'].key">{{controls['pass'].label}}</label>
                     <div class="vision" [ngClass]="{'disabled': controls['pass'].disabled}">
@@ -106,7 +108,7 @@
         </div>
         <!-- Примечания -->
         <div>
-            <eos-dynamic-input [input]="inputs['NOTE2']" [form]="form" [readonly]="inputs['NOTE2'].readonly" style="width: 100%"></eos-dynamic-input>
+            <eos-dynamic-input onkeypress="return event.keyCode != 13;" [input]="inputs['NOTE2']" [form]="form" [readonly]="inputs['NOTE2'].readonly" style="width: 100%"></eos-dynamic-input>
         </div>
         <!-- Доступ к системам 1-й ряд -->
         <span class="l-font">Доступ к системам</span>
@@ -119,29 +121,29 @@
         </div>
         <hr style="margin-top: 0;">
         <!-- Доступ к системам 2-й ряд -->
-        <div>
+      <div class="access-syst-wr">
+        <div class="access-syst-part">
             <eos-dynamic-input [input]="accessInputs['26']" [form]="formAccess" [readonly]="formAccess.get('26').disabled" class="base-checkbox-input"></eos-dynamic-input>
-            <eos-dynamic-input [input]="accessInputs['2']" [form]="formAccess" [readonly]="formAccess.get('2').disabled" class="base-checkbox-input"></eos-dynamic-input>
-            <eos-dynamic-input [input]="accessInputs['16']" [form]="formAccess" [readonly]="formAccess.get('16').disabled"></eos-dynamic-input>
-        </div>
-        <!-- Доступ к системам 3-й ряд -->
-        <div>
             <eos-dynamic-input [input]="accessInputs['23']" [form]="formAccess" [readonly]="formAccess.get('23').disabled" class="base-checkbox-input"></eos-dynamic-input>
-            <eos-dynamic-input [input]="accessInputs['3']" [form]="formAccess" [readonly]="formAccess.get('3').disabled" class="base-checkbox-input"></eos-dynamic-input>
-            <eos-dynamic-input [input]="accessInputs['5']" [form]="formAccess" [readonly]="formAccess.get('5').disabled"></eos-dynamic-input>
-            <span (click)="getSerts(template)" class="eos-icon small icon-electronic" [ngClass]="{'eos-icon-electronic-signature-blue pointer': editMode, 'eos-icon-electronic-signature-grey': !editMode}" [tooltip]="editMode ? 'Выбор сертификатов пользователя' : null"
-                placement="bottom" containerClass="tooltip-info"></span>
-        </div>
-        <!-- Доступ к системам 4-й ряд -->
-        <div>
             <eos-dynamic-input [input]="accessInputs['25']" [form]="formAccess" [readonly]="formAccess.get('25').disabled" class="base-checkbox-input"></eos-dynamic-input>
-            <eos-dynamic-input [input]="accessInputs['15']" [form]="formAccess" [readonly]="formAccess.get('15').disabled" class="base-checkbox-input"></eos-dynamic-input>
             <eos-dynamic-input [input]="accessInputs['21']" [form]="formAccess" [readonly]="formAccess.get('21').disabled"></eos-dynamic-input>
         </div>
-        <!-- Доступ к системам 5-й ряд -->
-        <div>
+        <!-- Доступ к системам 3-й ряд -->
+        <div class="access-syst-part">
+            <eos-dynamic-input [input]="accessInputs['2']" [form]="formAccess" [readonly]="formAccess.get('2').disabled" class="base-checkbox-input"></eos-dynamic-input>
+            <eos-dynamic-input [input]="accessInputs['3']" [form]="formAccess" [readonly]="formAccess.get('3').disabled" class="base-checkbox-input"></eos-dynamic-input>
+            <eos-dynamic-input [input]="accessInputs['15']" [form]="formAccess" [readonly]="formAccess.get('15').disabled" class="base-checkbox-input"></eos-dynamic-input>
             <eos-dynamic-input [input]="accessInputs['17']" [form]="formAccess" [readonly]="formAccess.get('17').disabled"></eos-dynamic-input>
         </div>
+        <!-- Доступ к системам 4-й ряд -->
+        <div class="access-syst-part">
+            <eos-dynamic-input [input]="accessInputs['16']" [form]="formAccess" [readonly]="formAccess.get('16').disabled"></eos-dynamic-input>
+            <eos-dynamic-input [input]="accessInputs['5']" [form]="formAccess" [readonly]="formAccess.get('5').disabled"></eos-dynamic-input>
+            <span (click)="getSerts(template)" class="eos-icon small icon-electronic" [ngClass]="{'eos-icon-electronic-signature-blue pointer': editMode, 'eos-icon-electronic-signature-grey': !editMode}" [tooltip]="editMode ? 'Выбор сертификатов пользователя' : null"
+            placement="bottom" containerClass="tooltip-info"></span>
+        </div>
+      </div>
+
     </div>
 </div>
 

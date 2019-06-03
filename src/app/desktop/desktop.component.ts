@@ -1,6 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router, ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { EosDictService } from '../../eos-dictionaries/services/eos-dict.service';
 import { EosDeskService } from '../services/eos-desk.service';
@@ -44,7 +45,9 @@ export class DesktopComponent implements OnDestroy {
     ) {
         this.referencesList = [];
         this._routerSubscription = this._router.events
-            .filter((evt) => evt instanceof NavigationEnd)
+            .pipe(
+                filter((evt) => evt instanceof NavigationEnd)
+            )
             .subscribe(() => this._dictSrv.getDictionariesList());
 
         this._selectedDeskSubscription = _deskSrv.selectedDesk.subscribe(

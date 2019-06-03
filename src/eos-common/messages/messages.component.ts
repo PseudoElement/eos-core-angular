@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 
 import { EosMessageService } from '../services/eos-message.service';
 import { IMessage } from '../core/message.interface';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'eos-messages',

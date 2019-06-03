@@ -1,15 +1,18 @@
 import { FormGroup } from '@angular/forms';
-import { IBaseParameters } from './interfaces/parameters.interfaces';
 import { Output, EventEmitter, OnDestroy, OnInit, Input, Injector } from '@angular/core';
-import { Subscription } from 'rxjs/Rx';
-import { ParamApiSrv } from './service/parameters-api.service';
+
+import { Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
+import { ParamApiSrv } from './service/parameters-api.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { EosUtils } from 'eos-common/core/utils';
 import { ParamDescriptorSrv } from './service/param-descriptor.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from './consts/eos-parameters.const';
+import { EosUtils } from 'eos-common/core/utils';
+import { IBaseParameters } from './interfaces/parameters.interfaces';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from './consts/eos-parameters.const';
 
 export class BaseParamComponent implements OnDestroy, OnInit {
     @Input() btnDisabled;
@@ -71,7 +74,9 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     subscribeChangeForm() {
         this.subscriptions.push(
             this.form.valueChanges
-                .debounceTime(200)
+                .pipe(
+                    debounceTime(200)
+                )
                 .subscribe(newVal => {
                     let changed = false;
                     Object.keys(newVal).forEach(path => {
@@ -108,7 +113,6 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         return { rec: d };
     }
     submit() {
-        console.log('sub2');
         if (this.newData) {
             this.formChanged.emit(false);
             this.isChangeForm = false;
@@ -199,7 +203,6 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         }
         this.newData = EosUtils.setValueByPath(this.newData, path, _value);
         const oldValue = EosUtils.getValueByPath(this.prepareData, path, false);
-
         if (oldValue !== _value) {
             // console.log('changed', path, oldValue, 'to', _value, this.prepareData.rec, this.newData.rec);
         }
@@ -240,7 +243,15 @@ export class BaseParamComponent implements OnDestroy, OnInit {
                     dataInput.rec[key] = false;
                 }
             } else {
-                dataInput.rec[key] = this.prepareData.rec[key];
+                if (this._fieldsType[key] === 'numberIncrement') {
+                    if (this.prepareData.rec[key] === 'null' || this.prepareData.rec[key] === null) {
+                        // для сравнения в методе changeByPath
+                        this.prepareData.rec[key] = '';
+                    }
+                    dataInput.rec[key] = this.prepareData.rec[key];
+                }   else {
+                    dataInput.rec[key] = this.prepareData.rec[key];
+                }
             }
         });
         return this.dataSrv.getInputs(this.prepInputs, dataInput);

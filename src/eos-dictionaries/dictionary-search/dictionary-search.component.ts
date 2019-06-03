@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { EosDictService } from '../services/eos-dict.service';
 import { E_DICT_TYPE, E_FIELD_SET, IRecordModeDescription, ISearchSettings, SEARCH_MODES } from 'eos-dictionaries/interfaces';
@@ -76,7 +76,7 @@ export class DictionarySearchComponent implements OnDestroy {
     }
 
     isActiveButton(): boolean {
-        return (this.fSearchPop.isOpen || (!this.noSearchData && this.searchActive) || this.searchActive);
+        return (this.fSearchPop.isOpen /*|| (!this.noSearchData && this.searchActive) || this.searchActive*/);
     }
 
     setTab(key: string) {

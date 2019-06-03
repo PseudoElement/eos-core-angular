@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { OTHER_USER_ADDRESSES } from '../../shared-user-param/consts/other.consts';
 import { UserParamsService } from '../../../shared/services/user-params.service';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { FormHelperService } from '../../../shared/services/form-helper.services';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup } from '@angular/forms';
@@ -24,6 +24,7 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     public form: FormGroup;
     public inputs: any;
+    public flagBacground: boolean = false;
     public sendFrom: string = '';
     private sendFromOrigin: string = '';
     private _ngUnsebscribe: Subject<any> = new Subject();
@@ -33,7 +34,6 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
     private mapChanges = new Map();
     private defoltInputs: any;
     private flagEdit: boolean = false;
-    private flagBacground: boolean = false;
     constructor(
         private _userSrv: UserParamsService,
         private formHelp: FormHelperService,

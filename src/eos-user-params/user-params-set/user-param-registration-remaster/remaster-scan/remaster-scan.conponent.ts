@@ -1,13 +1,16 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { REGISTRATION_SCAN } from '../../../user-params-set/shared-user-param/consts/remaster-email.const';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormHelperService } from '../../../shared/services/form-helper.services';
-import { FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs/Subject';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
 import { FORMAT_CL, DOC_TEMPLATES } from 'eos-rest/interfaces/structures';
-import { IFieldDescriptor } from 'eos-user-params/shared/intrfaces/user-params.interfaces';
+import { IFieldDescriptor } from 'eos-dictionaries/interfaces';
 @Component({
     selector: 'eos-remaster-scan',
     templateUrl: 'remaster-scan.conponent.html',
@@ -36,17 +39,33 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
         private dataConv: EosDataConvertService,
         private _RemasterService: RemasterService,
     ) {
-        this._RemasterService.cancelEmit.takeUntil(this.ngUnsub).subscribe(() => {
+        this._RemasterService.cancelEmit
+        .pipe(
+            takeUntil(this.ngUnsub)
+        )
+        .subscribe(() => {
             this.cancel();
         });
-        this._RemasterService.defaultEmit.takeUntil(this.ngUnsub).subscribe(() => {
+        this._RemasterService.defaultEmit
+        .pipe(
+            takeUntil(this.ngUnsub)
+        )
+        .subscribe(() => {
             this.default();
         });
-        this._RemasterService.submitEmit.takeUntil(this.ngUnsub).subscribe(() => {
+        this._RemasterService.submitEmit
+        .pipe(
+            takeUntil(this.ngUnsub)
+        )
+        .subscribe(() => {
             this.setNewValInputs();
             this.form.disable({ emitEvent: false });
         });
-        this._RemasterService.editEmit.takeUntil(this.ngUnsub).subscribe(data => {
+        this._RemasterService.editEmit
+        .pipe(
+            takeUntil(this.ngUnsub)
+        )
+        .subscribe(data => {
             this.form.enable({ emitEvent: false });
             this.checkDisableInputs();
         });
@@ -127,7 +146,11 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
     }
 
     subscribeChange(): void {
-        this.form.valueChanges.takeUntil(this.ngUnsub).subscribe(data => {
+        this.form.valueChanges
+        .pipe(
+            takeUntil(this.ngUnsub)
+        )
+        .subscribe(data => {
             Object.keys(data).forEach(item => {
                 if (!this.checkChanges(data, item)) {
                     this.countError++;

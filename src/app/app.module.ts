@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler, LOCALE_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -19,6 +19,7 @@ import { EosRestModule } from '../eos-rest/eos-rest.module';
 import { EosParametersModule } from '../eos-parameters/eos-parameters.module';
 import { EosUserParamsModule } from 'eos-user-params/eos-user-params.module';
 import { EosUserSelectModule } from 'eos-user-select/eos-user-select.module';
+import { EosReportModule } from 'eos-report/eos-report.module';
 
 import { AppComponent } from './app.component';
 import { BreadcrumbsComponent } from './breadcrumb/breadcrumb.component';
@@ -78,7 +79,7 @@ import { PermissionsGuard } from './guards/permissions.guard';
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
-        HttpModule,
+        HttpClientModule,
         BsDropdownModule.forRoot(),
         SortableModule.forRoot(),
         TooltipModule.forRoot(),
@@ -88,6 +89,7 @@ import { PermissionsGuard } from './guards/permissions.guard';
         EosParametersModule,
         EosUserParamsModule,
         EosUserSelectModule,
+        EosReportModule
     ],
     entryComponents: [
         LoginFormComponent,

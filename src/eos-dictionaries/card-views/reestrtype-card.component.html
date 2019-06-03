@@ -19,16 +19,18 @@
                 [form]="form"
                 [readonly]="!editMode"></eos-dynamic-input>
         </div>
-        <div class="print">
-            <eos-dynamic-input class="max" [input]="inputs['rec.EMERGENCY']"
-                [form]="form"
-                [readonly]="!editMode"></eos-dynamic-input>
-            <eos-dynamic-input class="max" [input]="inputs['rec.IMPOTANCE']"
-                [form]="form"
-                [readonly]="!editMode"></eos-dynamic-input>
-        </div>
     </div>
 
+    <p class="xl-font paragraph-title">Печать отметок</p>
+    <div class="print">
+        <eos-dynamic-input class="max" [input]="inputs['rec.EMERGENCY']"
+            [form]="form"
+            [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input class="max" [input]="inputs['rec.IMPOTANCE']"
+            [form]="form"
+            [readonly]="!editMode"></eos-dynamic-input>
+    </div>
+    <p class="xl-font paragraph-title"></p>
     <eos-dynamic-input [input]="inputs['rec.NOTE']"
         [form]="form"
         [readonly]="!editMode"></eos-dynamic-input>

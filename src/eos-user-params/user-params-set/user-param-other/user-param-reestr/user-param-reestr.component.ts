@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { OTHER_USER_REESTR } from '../../shared-user-param/consts/other.consts';
 import { UserParamsService } from '../../../shared/services/user-params.service';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { FormHelperService } from '../../../shared/services/form-helper.services';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup } from '@angular/forms';
@@ -27,6 +27,7 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
     @Output() pushIncrementError: EventEmitter<any> = new EventEmitter<any>();
     public form: FormGroup;
     public inputs: any;
+    public flagBacground: boolean = false;
     public list: NodeDocsTree[] = [];
     private listDocGroup: NodeDocsTree[] = [];
     private _ngUnsebscribe: Subject<any> = new Subject();
@@ -36,7 +37,6 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
     private mapChanges = new Map();
     private defoltInputs: any;
     private flagEdit: boolean = false;
-    private flagBacground: boolean = false;
     constructor(
         private _userSrv: UserParamsService,
         private formHelp: FormHelperService,

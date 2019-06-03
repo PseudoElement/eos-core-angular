@@ -68,6 +68,7 @@ export interface INodeDocsTreeCfg {
     allowed?: boolean;
     data?: any;
     viewAllowed?: boolean;
+    flagCheckNode?: any;
 }
 
 export interface NpUserLinks {
@@ -91,4 +92,10 @@ export interface SertsBase {
     id_enc: string;
     id_sing_origin: string;
     id_enc_origin: string;
+}
+
+export interface IGetUserCfg {
+    expand?: string;
+    isn_cl?: number;
+    shortSys?: boolean;
 }

@@ -1,17 +1,17 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
-import { FormGroup } from '@angular/forms';
 import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import {FormHelperService} from '../shared/services/form-helper.services';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-// import { IMessage } from 'eos-common/interfaces';
-// import { RestError } from 'eos-rest/core/rest-error';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
-import { Subject } from 'rxjs/Subject';
 import {ErrorHelperServices} from '../shared/services/helper-error.services';
+
 const BASE_PARAM_INPUTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
@@ -70,7 +70,9 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.complete();
     }
     ngOnInit() {
-        this._userParamSrv.getUserIsn()
+        this._userParamSrv.getUserIsn({
+            expand: 'USER_PARMS_List'
+        })
         .then(() => {
             this.curentUser = this._userParamSrv.curentUser;
             this.title = `${this.curentUser['SURNAME_PATRON']} (${this.curentUser['CLASSIF_NAME']}) Поточное сканирование`;
@@ -80,7 +82,9 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
             this._errorSrv.errorHandler(error);
         });
         this._userParamSrv.saveData$
-        .takeUntil(this._ngUnsubscribe)
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
         .subscribe(() => {
             this._userParamSrv.submitSave =  this.submit(null);
         });
@@ -92,14 +96,6 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
         this.subscribeForm();
     }
-
-    preparethisInputFields() {
-        const newVal = this.newData['STREAM_SCAN_RIGHTS'].slice(0, 3).split('');
-        this.inputFields.forEach((inp: IInputParamControl, index) => {
-            inp.value = String(newVal[index]) === '1' ? true : false;
-        });
-    }
-
     submit(event): Promise<any> {
         this.flagShow = false;
         const query = [];
@@ -112,7 +108,7 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                 this.flagShow = true;
                 this.disableBtn = true;
-                this.preparethisInputFields();
+                this.prepInputs();
                 this._pushState();
                 this.editMode = false;
                 this.setDisableOrEneble();
@@ -122,10 +118,21 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
             this.cancel(false);
         });
     }
+    prepInputs() {
+        Object.keys(this.inputs).forEach(key => {
+            this.inputs[key].value = this.form.controls[key].value;
+        });
+    }
+    prepForm() {
+        Object.keys(this.inputs).forEach(key => {
+            const val = this.inputs[key].value;
+           this.form.controls[key].patchValue(val, {emitEvent: false});
+        });
+    }
     cancel(event) {
         this.editMode = event;
         this.setDisableOrEneble();
-        this.init();
+        this.prepForm();
         this.disableBtn = true;
         this._pushState();
     }
@@ -133,7 +140,6 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
     edit(event) {
         this.editMode = event;
         this.setDisableOrEneble();
-
     }
     setDisableOrEneble() {
         for (const key in this.form.controls) {
@@ -151,7 +157,7 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         this.newData = {};
         this.form.valueChanges.subscribe(value => {
            let string = '';
-           this.disableBtn = this._formHelper.changesForm(this.inputFields, value);
+           this.disableBtn = this._formHelper.changesForm(this.inputs, value);
            this._pushState();
            Object.keys(value).forEach(key => {
             string += value[key] ? 1 : 0;
@@ -161,29 +167,6 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
            };
         });
     }
-
-    // private cathError(e) {
-    //     const m: IMessage = {
-    //         type: 'warning',
-    //         title: 'Ошибка сервера',
-    //         msg: '',
-    //     };
-    //     if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
-    //         this._router.navigate(['login'], {
-    //             queryParams: {
-    //                 returnUrl: this._router.url
-    //             }
-    //         });
-    //         return undefined;
-    //     }
-    //     if (e instanceof RestError) {
-    //         m.msg = 'ошибка сервера';
-    //     } else {
-    //         m.msg = e.message ? e.message : e;
-    //     }
-    //     this._msgSrv.addNewMessage(m);
-    // }
-
     private _pushState () {
         this._userParamSrv.setChangeState({isChange: !this.disableBtn});
   }

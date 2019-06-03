@@ -3,7 +3,7 @@ import { UserParamsService } from '../services/user-params.service';
 import { UserParamApiSrv } from './user-params-api.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ALL_ROWS } from 'eos-rest/core/consts';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import {NpUserLinks} from '../intrfaces/user-parm.intterfaces';
 @Injectable()
@@ -27,11 +27,7 @@ export class LimitedAccesseService {
     getAccessCode() {
         const user = this._userServices.userContextId;
         const query = {
-            USER_CL: {
-                criteries: {
-                    ISN_LCLASSIF: String(user)
-                }
-            },
+            USER_CL: [user],
             expand: 'USER_DOCGROUP_ACCESS_List'
         };
 
@@ -172,11 +168,7 @@ preAddNewDocument(form) {
     getDataGrifs() {
         const user = this._userServices.userContextId;
         const query = {
-            USER_CL: {
-                criteries: {
-                    ISN_LCLASSIF: String(user)
-                }
-            },
+            USER_CL: [user],
             expand: 'USERSECUR_List'
         };
      return   this._pipSrv.getData(query);

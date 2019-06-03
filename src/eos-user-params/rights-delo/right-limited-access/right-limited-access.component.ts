@@ -1,4 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { LimitedAccesseService } from '../../shared/services/limited-access.service';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -7,8 +12,6 @@ import { OPEN_CLASSIF_DOCGR } from '../../../eos-user-select/shered/consts/creat
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { IMessage } from 'eos-common/interfaces';
-import { Subject } from 'rxjs/Subject';
-import { Router } from '@angular/router';
 import { DOCGROUP_CL } from 'eos-rest';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 @Component({
@@ -66,21 +69,35 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         private _userServices: UserParamsService,
         private _router: Router,
         private _errorSrv: ErrorHelperServices,
+        private _snap: ActivatedRoute,
     ) {
         this.activeLink = true;
         this.flagGrifs = true;
         this.flagLinks = true;
         this.bacgHeader = false;
         this._userServices.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userServices.submitSave = this.saveAllForm();
             });
+        this._snap.queryParams
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe((data: Object) => {
+            if (data.hasOwnProperty('flag')) {
+                this.currTab = 1;
+            }
+        });
     }
     async ngOnInit() {
-        await this._userServices.getUserIsn();
+        await this._userServices.getUserIsn({
+            expand: 'USERCARD_List'
+        });
         this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ограничение доступа`;
-        this.checkUserCard = this._userServices['_userContext']['USERCARD_List'];
+        this.checkUserCard = this._userServices.curentUser['USERCARD_List'];
         this.isLoading = false;
         this._limitservise.getInfoGrifs().then(result => {
             this.checkGrifs = result[0][0]['USERSECUR_List'];

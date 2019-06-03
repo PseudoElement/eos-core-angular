@@ -2,8 +2,8 @@ import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { AdvCardRKEditComponent } from './../adv-card/adv-card-rk.component';
 import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Subject} from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import {Subject} from 'rxjs';
+
 
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 
@@ -47,6 +47,7 @@ import {CounterNpEditComponent, E_COUNTER_TYPE} from '../counter-np-edit/counter
 import {CustomTreeNode} from '../tree2/custom-tree.component';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { DID_NOMENKL_CL } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -177,10 +178,16 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             }
         });
 
-        _sandwichSrv.currentDictState$.takeUntil(this.ngUnsubscribe)
+        _sandwichSrv.currentDictState$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((state: boolean[]) => this.currentState = state);
 
-        _dictSrv.dictionary$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.dictionary$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((dictionary: EosDictionary) => {
                 if (dictionary) {
                     if (this.params !== undefined) {
@@ -205,7 +212,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 }
             });
 
-        _dictSrv.listDictionary$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.listDictionary$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((dictionary: EosDictionary) => {
                 if (dictionary) {
                     this.dictMode = this._dictSrv.dictMode;
@@ -219,7 +229,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 }
             });
 
-        _dictSrv.treeNode$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.treeNode$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((node: EosDictionaryNode) => {
                 if (node) {
                     this.title = node.getTreeView().map((fld) => fld.value).join(' ');
@@ -232,18 +245,26 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 }
             });
 
-        _dictSrv.paginationConfig$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.paginationConfig$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((config: IPaginationConfig) => {
                 if (config) {
                     this.paginationConfig = config;
                 }
             });
 
-        _dictSrv.viewParameters$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.viewParameters$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((viewParameters: IDictionaryViewParameters) => this.params = viewParameters);
 
         _bcSrv._eventFromBc$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((action: IActionEvent) => this.doAction(action));
     }
 
@@ -355,6 +376,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.prjDefaultValues:
                 this._openPrjDefaultValues();
                 break;
+            case E_RECORD_ACTIONS.copyProperties:
+                this._openCopyProperties();
+                break;
+            case E_RECORD_ACTIONS.copyPropertiesFromParent:
+                this._openCopyProperties(true);
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -373,7 +400,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     goUp() {
         if (this.treeNode && this.treeNode.parent) {
             const path = this.treeNode.parent.getPath();
-            console.log(path);
+            // console.log(path);
             this._router.navigate(path);
         }
     }
@@ -475,20 +502,22 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         let data: {};
         let editDescr: {};
         let dictionary: EosDictionary;
-        const createWarning = this.dictionary.descriptor.preCreateCheck(this);
+        dictionary = this._dictSrv.currentDictionary;
+        editDescr = dictionary.getEditDescriptor();
+        data = dictionary.getNewNode({rec: recParams}, this.treeNode);
+
+        const createWarning = dictionary.descriptor.preCreateCheck(this);
         if (createWarning) {
             this._msgSrv.addNewMessage(createWarning);
             return;
         }
 
-        if (this.dictionary.descriptor.id === 'broadcast-channel') {
+        if (dictionary.descriptor.id === 'broadcast-channel') {
             this.modalWindow = this._modalSrv.show(CreateNodeBroadcastChannelComponent, {class: 'creating-modal'});
         } else {
             this.modalWindow = this._modalSrv.show(CreateNodeComponent, {class: 'creating-modal'});
         }
-        dictionary = this._dictSrv.currentDictionary;
-        editDescr = dictionary.getEditDescriptor();
-        data = dictionary.getNewNode({rec: recParams}, this.treeNode);
+
         this._dictSrv.clearCurrentNode();
 
         this.modalWindow.content.fieldsDescription = editDescr;
@@ -510,14 +539,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     private _deleteItems(): void {
         let delCount = 0, allCount = 0;
         this._dictSrv.getMarkedNodes().forEach((node) => {
-            if (node.marked) {
+            if (node.isMarked) {
                 allCount++;
             }
-            if (node.marked && node.isDeleted) {
+            if (node.isMarked && node.isDeleted) {
                 delCount++;
             }
-            if (node.marked && node.isProtected) {
-                node.marked = false;
+            if (node.isMarked && node.isProtected) {
+                node.isMarked = false;
                 const warn = Object.assign({}, WARN_ELEMENT_PROTECTED);
                 warn.msg = warn.msg.replace('{{elem}}', node.title);
                 this._msgSrv.addNewMessage(warn);
@@ -536,14 +565,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         const fieldName = 'CLOSED';
         let rdyCount = 0, allCount = 0;
         this._dictSrv.getMarkedNodes().forEach((node) => {
-            if (node.marked) {
+            if (node.isMarked) {
                 allCount++;
             }
-            if (node.marked && node.data.rec[fieldName]) {
+            if (node.isMarked && node.data.rec[fieldName]) {
                 rdyCount++;
             }
-            if (node.marked && node.isDeleted) {
-                node.marked = false;
+            if (node.isMarked && node.isDeleted) {
+                node.isMarked = false;
                 const warn = Object.assign({}, WARN_ELEMENT_DELETED);
                 warn.msg = warn.msg.replace('{{elem}}', node.title);
                 this._msgSrv.addNewMessage(warn);
@@ -562,14 +591,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         const fieldName = 'CLOSED';
         let rdyCount = 0, allCount = 0;
         this._dictSrv.getMarkedNodes().forEach((node) => {
-            if (node.marked) {
+            if (node.isMarked) {
                 allCount++;
             }
-            if (node.marked && !node.data.rec[fieldName]) {
+            if (node.isMarked && !node.data.rec[fieldName]) {
                 rdyCount++;
             }
-            if (node.marked && node.isDeleted) {
-                node.marked = false;
+            if (node.isMarked && node.isDeleted) {
+                node.isMarked = false;
                 const warn = Object.assign({}, WARN_ELEMENT_DELETED);
                 warn.msg = warn.msg.replace('{{elem}}', node.title);
                 this._msgSrv.addNewMessage(warn);
@@ -642,7 +671,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         this._dictSrv.getMarkedNodes(false).forEach((node) => {
             if (node.parent && node.parent.isDeleted) {
                 this._msgSrv.addNewMessage(DANGER_LOGICALY_RESTORE_ELEMENT);
-                node.marked = false;
+                node.isMarked = false;
             } else {
                 if (node.isNode) {
                     hasFolding = true;
@@ -703,4 +732,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             this._msgSrv.addNewMessage(WARN_SELECT_NODE);
         }
     }
+
+    private _openCopyProperties(fromParent = false) {
+        const node = this._dictSrv.listNode;
+        if (node) {
+            this.nodeList.openCopyProperties(node, fromParent);
+        } else {
+            this._msgSrv.addNewMessage(WARN_SELECT_NODE);
+        }
+    }
+
 }

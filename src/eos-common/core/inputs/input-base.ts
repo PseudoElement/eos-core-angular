@@ -1,7 +1,7 @@
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { DynamicInputBase } from 'eos-common/dynamic-form-input/dynamic-input-base';
 
-export class InputBase<T>{
+export class InputBase<T> {
     value: T;
     key: string;
     dict: string;

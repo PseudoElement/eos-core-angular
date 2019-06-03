@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { UserSelectNode } from '../../list-user-select/user-node-select';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { Subject } from 'rxjs/Subject';
+import { Subject ,  Observable } from 'rxjs';
 import { UserParamApiSrv } from '../../../eos-user-params/shared/services/user-params-api.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class RtUserSelectService {

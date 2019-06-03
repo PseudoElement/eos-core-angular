@@ -1,4 +1,8 @@
 import { Injectable, Injector } from '@angular/core';
+
+import { Subject } from 'rxjs';
+import { takeUntil, debounceTime } from 'rxjs/operators';
+
 import { BaseUserSrv } from './base-user.service';
 import { OTHER_USER } from '../consts/other.consts';
 import { ALL_ROWS } from 'eos-rest/core/consts';
@@ -7,7 +11,6 @@ import { DOCGROUP_CL, DEPARTMENT } from 'eos-rest';
 import { NodeDocsTree } from '../../../../eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { PARM_SUCCESS_SAVE, PARM_ERROR_SEND_FROM, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
 import { INodeDocsTreeCfg } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class UserParamOtherSrv extends BaseUserSrv {
@@ -65,7 +68,9 @@ export class UserParamOtherSrv extends BaseUserSrv {
         });
 
         this._userParamsSetSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
@@ -127,7 +132,9 @@ export class UserParamOtherSrv extends BaseUserSrv {
         let count_error = 0;
         this.subscriptions.push(
             this.form.valueChanges
-                .debounceTime(200)
+                .pipe(
+                    debounceTime(200)
+                )
                 .subscribe(newVal => {
                     Object.keys(newVal).forEach(val => {
                         if (!this.getFactValueFuck(newVal[val], val)) {
@@ -243,8 +250,7 @@ export class UserParamOtherSrv extends BaseUserSrv {
             .setData(this.createObjRequest())
             .then(data => {
                 this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                const userId = this._userParamsSetSrv.userContextId;
-                return this._userParamsSetSrv.getUserIsn(String(userId)).then(() => {
+                return this._userParamsSetSrv.getUserIsn().then(() => {
                     this.saveValueSendForm = this.sendFrom;
 
                     this.editFlag = false;

@@ -1,10 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../../../eos-user-params/user-params-set/shared-user-param/consts/eos-user-params.const';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { RemasterService } from '../shared-user-param/services/remaster-service';
-import { Subject } from 'rxjs/Subject';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { FormHelperService } from '../../shared/services/form-helper.services';
 @Component({
@@ -48,11 +51,17 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         private _formHelper: FormHelperService,
     ) {}
     async ngOnInit() {
-        this._userSrv.saveData$.takeUntil(this._ngUnsubscribe).subscribe(() => {
+        this._userSrv.saveData$
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe(() => {
             this._userSrv.submitSave = this.submit(null);
         });
-        await this._userSrv.getUserIsn();
-        this.accessSustem = this._userSrv.curentUser['ACCESS_SYSTEMS'];
+        await this._userSrv.getUserIsn({
+            expand: 'USER_PARMS_List'
+        });
+        this.accessSustem = this._userSrv.curentUser.ACCESS_SYSTEMS;
         this.hash = this._userSrv.hashUserContext;
         this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Регистрация`;
 

@@ -37,6 +37,7 @@ export class DictionariesQuickSearchComponent implements AfterViewInit {
             if (this.searchDone) {
                 this.srchString = (this.srchString) ? this.srchString.trim() : '';
                 if (this.srchString !== '') {
+                    this._dictSrv.unmarkAll();
                     this.searchDone = false;
                     this.settings.deleted = this._dictSrv.viewParameters.showDeleted;
                     this._dictSrv.search(this.srchString, this.settings)

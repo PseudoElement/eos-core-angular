@@ -11,13 +11,13 @@ export class AppComponent {
     isAuthorized = false;
     firstLoadAuth = true;
 
-    private _containerRef: ViewContainerRef;
+    // private _containerRef: ViewContainerRef;
 
     constructor(
         viewContainerRef: ViewContainerRef,
         private _profileSrv: EosUserProfileService,
     ) {
-        this._containerRef = viewContainerRef;
+        // this._containerRef = viewContainerRef;
         this._profileSrv.authorized$.subscribe((auth) => {
             this.isAuthorized = auth;
             if (auth !== null) {

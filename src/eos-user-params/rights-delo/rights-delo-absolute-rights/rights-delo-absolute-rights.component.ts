@@ -1,10 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { ABSOLUTE_RIGHTS, CONTROL_ALL_NOTALL } from './absolute-rights.consts';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
-import { FormGroup, FormControl } from '@angular/forms';
 import { E_RIGHT_DELO_ACCESS_CONTENT, IChengeItemAbsolute } from './right-delo.intefaces';
 import { RadioInput } from 'eos-common/core/inputs/radio-input';
 import { NodeAbsoluteRight } from './node-absolute';
@@ -14,8 +19,6 @@ import { USERDEP, USER_TECH } from 'eos-rest';
 // import { RestError } from 'eos-rest/core/rest-error';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
-import { Subject } from 'rxjs/Subject';
-import { Router } from '@angular/router';
 
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
@@ -53,15 +56,18 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     ) {}
     async ngOnInit() {
         this._userParamsSetSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
 
-        await this._userParamsSetSrv.getUserIsn();
+        await this._userParamsSetSrv.getUserIsn({
+            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List'
+        });
         const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
         this.curentUser = this._userParamsSetSrv.curentUser;
-
         this.flagGrifs = await this._userParamsSetSrv.checkGrifs(id);
         this.init();
     }
@@ -82,7 +88,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
         this.listRight = this._createList(ABSOLUTE_RIGHTS);
         this.form.valueChanges
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this.listRight.forEach(node => {
                     this.arrNEWDeloRight[+node.key] = node.value.toString();
@@ -140,19 +148,15 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this.selectedNode = null;
                 this.editMode = false;
                 this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-                this._userParamsSetSrv.getUserIsn().then(() => {
+                this._userParamsSetSrv.getUserIsn({
+                    expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List'
+                })
+                .then(() => {
                     this.init();
                 });
             })
             .catch((e) => {
                 this._errorSrv.errorHandler(e);
-                // if (e instanceof RestError) {
-                //     this._msgSrv.addNewMessage({
-                //         type: 'danger',
-                //         title: e.code.toString() === '2000' ? 'Ошибка' : e.code.toString(),
-                //         msg: e.message
-                //     });
-                // }
                 this.cancel();
             });
     }
@@ -161,7 +165,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.editMode = false;
         this.btnDisabled = true;
         this._pushState();
-        this._userParamsSetSrv.getUserIsn()
+        this._userParamsSetSrv.getUserIsn({
+            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List'
+        })
             .then(() => {
                 this.init();
             });

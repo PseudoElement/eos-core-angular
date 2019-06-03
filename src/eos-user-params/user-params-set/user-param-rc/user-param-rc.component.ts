@@ -5,13 +5,14 @@ import { FormGroup } from '@angular/forms';
 import { IOpenClassifParams } from '../../../eos-common/interfaces/interfaces';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../shared-user-param/consts/eos-user-params.const';
 import { FormHelperService } from '../../shared/services/form-helper.services';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { PipRX } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { takeUntil } from 'rxjs/operators';
 @Component({
     selector: 'eos-user-param-rc',
     templateUrl: 'user-param-rc.component.html',
@@ -23,6 +24,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     public inputs;
     public form: FormGroup;
     public allData;
+    public disabledFlagDelite = false;
     public dopRec: Array<any> = null;
     public flagBacground;
     public cutentTab: number;
@@ -32,7 +34,6 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     private prepareData;
     private prepareInputs;
     private _ngUnsubscribe: Subject<any> = new Subject();
-    private disabledFlagDelite = false;
     private mapChanges = new Map();
     private creatchesheDefault: any;
     private defoltInputs: any;
@@ -49,11 +50,15 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     ) {}
     async ngOnInit() {
         this._userParamsSetSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
-        await this._userParamsSetSrv.getUserIsn();
+        await this._userParamsSetSrv.getUserIsn({
+            expand: 'USER_PARMS_List'
+        });
         this.allData = this._userParamsSetSrv.hashUserContext;
         this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - РК`;
         this.cutentTab = 0;

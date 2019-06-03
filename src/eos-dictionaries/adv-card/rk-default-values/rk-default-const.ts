@@ -13,6 +13,8 @@ export class TDFSelectOption {
     title: string;
     disabled?: boolean;
     rec?: any;
+    hasDeleted?: boolean;
+    isEmpty?: boolean;
 }
 
 export class TDefaultField {

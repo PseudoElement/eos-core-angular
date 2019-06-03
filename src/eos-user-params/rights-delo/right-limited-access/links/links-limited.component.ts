@@ -1,7 +1,10 @@
 import {Component, OnInit, Output, EventEmitter, OnDestroy} from '@angular/core';
-import {LimitedAccesseService} from '../../../shared/services/limited-access.service';
 import { FormGroup, FormControl, FormArray} from '@angular/forms';
-import { Subject } from 'rxjs/Subject';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import {LimitedAccesseService} from '../../../shared/services/limited-access.service';
 @Component({
     selector: 'eos-links-limited',
     styleUrls: ['links-limited.component.scss'],
@@ -19,11 +22,13 @@ export class LinksLimitedComponent implements OnInit, OnDestroy {
     ) {
         this.flagChande = true;
         this.limitedServise.subscribe
-        .takeUntil(this.Unsub)
+        .pipe(
+            takeUntil(this.Unsub)
+        )
         .subscribe(data => {
                if (data) {
                    this.resetForm();
-               }else {
+               } else {
                this.updateForm();
                }
         });
@@ -34,7 +39,11 @@ export class LinksLimitedComponent implements OnInit, OnDestroy {
             this.oldDate = info.slice();
             this.createArrayFormControll(info);
             this.createFrom();
-            this.myForm.valueChanges.takeUntil(this.Unsub).subscribe(chenges => {
+            this.myForm.valueChanges
+            .pipe(
+                takeUntil(this.Unsub)
+            )
+            .subscribe(chenges => {
                this.checkChenges(chenges);
             });
         });
@@ -51,7 +60,7 @@ export class LinksLimitedComponent implements OnInit, OnDestroy {
         let dataFroInit = null;
         if (sessionStorage.getItem('links')) {
             dataFroInit = JSON.parse(sessionStorage.getItem('links'));
-        }else {
+        } else {
             dataFroInit = array;
         }
         dataFroInit.forEach(elemForm => {
@@ -84,7 +93,7 @@ export class LinksLimitedComponent implements OnInit, OnDestroy {
             }
             if (count_error > 0) {
                 this.flagChande = false;
-            }else {
+            } else {
                 this.flagChande = true;
         }
        sessionStorage.setItem('links', JSON.stringify(storage));

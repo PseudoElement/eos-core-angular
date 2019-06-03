@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { DragulaService } from 'ng2-dragula';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import {
     PRJ_TEMPLATE_ELEMENTS,
@@ -21,6 +21,7 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     @Input() dgTemplate: string;
     @Input() forProject: boolean;
     @Input() rcType: number;
+    @Input() allowEmpty: boolean;
 
     @Output() onSave: EventEmitter<string> = new EventEmitter<string>();
 
@@ -104,6 +105,8 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
             this.dgTemplate = content.dgTemplate;
             this.forProject = content.forProject;
             this.rcType = content.rcType;
+            this.allowEmpty = content.allowEmpty;
+
         }
 
         this.parseTemplate();
@@ -141,6 +144,10 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     }
 
     isTemplateValid(): boolean {
+        if (this.allowEmpty && (!this.dgTemplate || !this.dgTemplate.length)) {
+            return true;
+        }
+
         if (this.forProject) {
             return VALID_PRJ_TEMPLATE_EXPR.test(this.dgTemplate);
         } else {

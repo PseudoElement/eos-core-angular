@@ -17,7 +17,7 @@ eos-dynamic-input {
         color: $secondary-font-color-main-theme;
         border-radius: 0;
         padding: 6px 8px;
-        background-color: $light-grey-1;
+        // background-color: $light-grey-1;
         border-width: 1px;
         box-shadow: none;
         min-height: 32px;
@@ -27,12 +27,15 @@ eos-dynamic-input {
     }
     textarea.form-control,
     textarea.form-control-static {
-        height: 50px;
+        height: 120px;
     }
     .form-control-static {
         padding-left: 0;
         padding-right: 0;
-        background-color: transparent;
+        // background-color: #eeeeee;
+    }
+    .static-date {
+        padding-left: 10px;
     }
     .form-control {
         display: inline-block;
@@ -84,7 +87,7 @@ eos-dynamic-input {
             background-color: $invalid-color-main-theme;
         }
     }
-    .disabled{
+    .disabled {
         pointer-events: none;
         opacity: 0.65;
     }
@@ -167,13 +170,19 @@ eos-dynamic-input {
             }
         }
     }
+    .pad-left {
+        padding-left: 20px;
+    }
+    .pad-right {
+        padding-right: 20px;
+    }
     .input-button-container {
         // width: 300px;
         .inbutton {
-           float: right;
-           position: absolute;
-           right: 2px;
-           top: 5px;
+            float: right;
+            position: absolute;
+            right: 2px;
+            top: 5px;
         }
         vertical-align: middle;
         white-space: nowrap;
@@ -233,7 +242,6 @@ eos-dynamic-input {
     padding: 1px;
     font-size: 14px;
     height: 44px;
-
     .label-text {
         position: relative;
         bottom: 4px;
@@ -241,7 +249,6 @@ eos-dynamic-input {
         margin: 0 10px 0 15px;
         font-size: 14px;
         cursor: pointer;
-
         &.disabled {
             cursor: default;
         }
@@ -252,29 +259,23 @@ eos-dynamic-input {
         top: 9px;
         width: 38px;
         height: 24px;
-
         input {
             display: none;
-
-            &:checked + .slider {
+            &:checked+.slider {
                 background-color: #2196f3;
             }
-
-            &:focus + .slider {
+            &:focus+.slider {
                 box-shadow: 0 0 1px #2196f3;
             }
-
-            &:checked + .slider:before {
+            &:checked+.slider:before {
                 -webkit-transform: translateX(14px);
                 -ms-transform: translateX(14px);
                 transform: translateX(14px);
             }
-
             &[disabled]+.slider {
                 cursor: default;
             }
         }
-
         .slider {
             position: absolute;
             cursor: pointer;
@@ -286,7 +287,6 @@ eos-dynamic-input {
             -webkit-transition: 0.4s;
             transition: 0.4s;
             border-radius: 20px;
-
             &::before {
                 position: absolute;
                 content: '';

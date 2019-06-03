@@ -1,12 +1,15 @@
 import { OnDestroy, OnInit, Injectable, Injector, Output, Input, EventEmitter } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { Router} from '@angular/router';
-import { E_FIELD_TYPE, IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
+
+import { Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+
+import { IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
 import { UserParamApiSrv } from '../../../shared/services/user-params-api.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { Subscription } from 'rxjs/Rx';
 import { UserParamsDescriptorSrv } from '../../../shared/services/user-params-descriptor.service';
 import { EosUtils } from 'eos-common/core/utils';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../consts/eos-user-params.const';
@@ -14,6 +17,7 @@ import { UserParamsService } from '../../../shared/services/user-params.service'
 import { USER_PARMS } from 'eos-rest';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import {ErrorHelperServices} from '../../../shared/services/helper-error.services';
+import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 @Injectable()
 export class BaseUserSrv implements OnDestroy, OnInit {
     @Input() btnDisabled;
@@ -101,7 +105,9 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     subscribeChangeForm() {
         this.subscriptions.push(
             this.form.valueChanges
-                .debounceTime(200)
+                .pipe(
+                    debounceTime(200)
+                )
                 .subscribe(newVal => {
                     let changed = false;
                     Object.keys(newVal).forEach(path => {
@@ -212,17 +218,15 @@ export class BaseUserSrv implements OnDestroy, OnInit {
     }
     submit() {
         if (this.newData || this.prepareData) {
-            const userId = '' + this._userParamsSetSrv.userContextId;
             this.formChanged.emit(false);
             this.isChangeForm = false;
-            // this._userParamsSetSrv.getUserIsn();
             if (this.newData) {
             this.userParamApiSrv
                 .setData(this.createObjRequest())
                 .then(data => {
                    // this.prepareData.rec = Object.assign({}, this.newData.rec);
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                    this._userParamsSetSrv.getUserIsn(userId);
+                    this._userParamsSetSrv.getUserIsn();
                 })
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));
@@ -231,7 +235,7 @@ export class BaseUserSrv implements OnDestroy, OnInit {
                 .setData(this.createObjRequestForDefaultValues())
                 .then(data => {
                     this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                    this._userParamsSetSrv.getUserIsn(userId);
+                    this._userParamsSetSrv.getUserIsn();
                 })
                 // tslint:disable-next-line:no-console
                 .catch(data => console.log(data));

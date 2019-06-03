@@ -26,6 +26,6 @@
         [disabled]="!formIsValid || !hasChanges || upadating"
         (click)="create(false)">Добавить ещё</button>
     <button class="btn btn-primary-full"
-        [disabled]="!formIsValid || !hasChanges || upadating"
+        [disabled]="isInsertDisabled()"
         (click)="create()">Добавить</button>
 </div>

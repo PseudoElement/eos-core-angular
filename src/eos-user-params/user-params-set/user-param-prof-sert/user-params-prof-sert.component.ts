@@ -1,12 +1,15 @@
 import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
+
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+
+import { Subject, of } from 'rxjs';
+import { takeUntil, catchError } from 'rxjs/operators';
+
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { CarmaHttpService } from 'app/services/carmaHttp.service';
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, PARM_ERROR_DB, PARM_ERROR_CARMA } from '../shared-user-param/consts/eos-user-params.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
 import { USER_CERT_PROFILE } from 'eos-rest/interfaces/structures';
 import {ErrorHelperServices} from '../../shared/services/helper-error.services';
 export interface Istore {
@@ -43,11 +46,11 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     public selectedFromAllList: SertInfo;
     public editFlag = false;
     public btnDisabled: boolean = false;
+    public modalRef: BsModalRef;
     public titleHeader: string;
     public flagHideBtn: boolean = false;
     private DBserts: USER_CERT_PROFILE[] = [];
     private isCarma: boolean = true;
-    private modalRef: BsModalRef;
     private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public certStoresService: CarmaHttpService,
@@ -63,12 +66,16 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     }
     async ngOnInit() {
         this._userSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userSrv.submitSave = this.submit(null);
             });
 
-        await this._userSrv.getUserIsn();
+        await this._userSrv.getUserIsn({
+            expand: 'USER_PARMS_List'
+        });
         this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Профиль сертификатов`;
         this.selectedSertificatePopup = null;
 
@@ -121,9 +128,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     objectForSertInfo(infoSert, id, selected, create, del): SertInfo {
         if (infoSert.hasOwnProperty('certInfo')) {
             return {
-                whom: infoSert['certInfo']['Issuer'],
+                who: infoSert['certInfo']['Issuer'],
                 sn: infoSert['certInfo']['Serial'],
-                who: this.parseSertWhom(infoSert['certInfo']['X500Description']),
+                whom: this.parseSertWhom(infoSert['certInfo']['X500Description']),
                 data: infoSert,
                 selected: selected,
                 id: id,
@@ -133,9 +140,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             };
         } else {
             return {
-                whom: infoSert['Issuer'],
+                who: infoSert['Issuer'],
                 sn: infoSert['Serial'],
-                who: this.parseSertWhom(infoSert['X500Description']),
+                whom: this.parseSertWhom(infoSert['X500Description']),
                 data: infoSert,
                 selected: selected,
                 id: id,
@@ -199,9 +206,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             this.DBserts = result;
             this.DBserts.forEach(sert => {
                 this.listsSertInfo.push({
-                    whom: 'нет данных',
-                    sn: sert['ID_CERTIFICATE'],
                     who: 'нет данных',
+                    sn: sert['ID_CERTIFICATE'],
+                    whom: 'нет данных',
                     data: sert,
                     selected: false,
                     id: sert['ID_CERTIFICATE'],
@@ -232,9 +239,9 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         return Promise.all(arrRequestSerts).then(data => {
             data.forEach((infoSert, index) => {
                 this.listsSertInfo.push({
-                    whom: infoSert['certInfo']['Issuer'],
+                    who: infoSert['certInfo']['Issuer'],
                     sn: infoSert['certInfo']['Serial'],
-                    who: this.parseSertWhom(infoSert['certInfo']['X500Description']),
+                    whom: this.parseSertWhom(infoSert['certInfo']['X500Description']),
                     data: infoSert,
                     selected: false,
                     id: this.DBserts[index]['ID_CERTIFICATE'],
@@ -312,11 +319,14 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     }
 
     openCarmWindow(idSert) {
-        this.certStoresService.ShowCert(String(idSert)).catch(e => {
-            this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
-            return Observable.of(null);
-        })
-            .subscribe(() => { });
+        this.certStoresService.ShowCert(String(idSert))
+        .pipe(
+            catchError(e => {
+                this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
+                return of(null);
+            })
+        )
+        .subscribe(() => { });
     }
 
 

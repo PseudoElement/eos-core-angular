@@ -1,6 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
 import { UserSelectNode } from './user-node-select';
@@ -21,6 +24,7 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosStorageService } from '../../app/services/eos-storage.service';
 import { EosBreadcrumbsService } from '../../app/services/eos-breadcrumbs.service';
 import { AppContext } from '../../eos-rest/services/appContext.service';
+import { ErrorHelperServices } from '../../eos-user-params/shared/services/helper-error.services';
 interface TypeBread {
     action: number;
 }
@@ -62,17 +66,22 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private _storage: EosStorageService,
         private _breadSrv: EosBreadcrumbsService,
         private _appContext: AppContext,
+        private _errorSrv: ErrorHelperServices,
     ) {
         this.checkFlagTech();
         this.helpersClass = new HelpersSortFunctions();
         this._apiSrv.initSort();
         this._route.params
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe(param => {
                 this.initView(param['nodeId']);
             });
         this._pagSrv.NodeList$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((data) => {
                 this.flagScan = null;
                 this.flagChecked = null;
@@ -86,22 +95,34 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             });
 
         this._treeSrv.changeListUsers$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe(r => {
                 this.initView();
             });
         this._sandwichSrv.currentDictState$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((state: boolean[]) => {
                 this.currentState = state;
             });
 
-        this.rtUserService.subjectScan.takeUntil(this.ngUnsubscribe).subscribe(flagBtnScan => {
+        this.rtUserService.subjectScan
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe(flagBtnScan => {
             this.flagScan = !flagBtnScan;
             this.buttons.buttons[5].disabled = this.flagScan;
             this.buttons.moreButtons[7].disabled = this.flagScan;
         });
-        this._breadSrv._eventFromBc$.takeUntil(this.ngUnsubscribe).subscribe((type: TypeBread) => {
+        this._breadSrv._eventFromBc$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe((type: TypeBread) => {
             if (type.action !== 1) {
                 this.changeCurentSelectedUser(type);
             } else {
@@ -184,8 +205,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.isLoading = false;
                 this.countMaxSize = this._pagSrv.countMaxSize;
             }).catch(error => {
-                error.message = 'Серверная ошибка,  обратитесь к системному администратору';
-                this.cathError(error);
+               this._errorSrv.errorHandler(error);
             });
     }
     checkSortSessionStore() {

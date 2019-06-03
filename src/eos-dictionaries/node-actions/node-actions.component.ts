@@ -1,13 +1,27 @@
 import {Component, EventEmitter, OnDestroy, Output} from '@angular/core';
-import {Subject} from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
-import 'rxjs/add/operator/combineLatest';
+import {Subject} from 'rxjs';
+
 
 import {EosDictService} from '../services/eos-dict.service';
 import {EosDictionary} from '../core/eos-dictionary';
-import {COMMON_ADD_MENU, DEPARTMENT_ADD_MENU, MORE_RECORD_ACTIONS, ORGANIZ_ADD_MENU, RECORD_ACTIONS, RUBRIC_UNIQ_ADD_MENU} from '../consts/record-actions.consts';
-import {E_DICT_TYPE, E_RECORD_ACTIONS, IAction, IActionButton, IActionEvent, IDictionaryViewParameters} from 'eos-dictionaries/interfaces';
-import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
+import {
+    COMMON_ADD_MENU,
+    DEPARTMENT_ADD_MENU,
+    MORE_RECORD_ACTIONS,
+    ORGANIZ_ADD_MENU,
+    RECORD_ACTIONS,
+    RUBRIC_UNIQ_ADD_MENU
+} from '../consts/record-actions.consts';
+import {
+    E_DICT_TYPE,
+    E_RECORD_ACTIONS,
+    IAction,
+    IActionButton,
+    IActionEvent,
+    IDictionaryViewParameters
+} from 'eos-dictionaries/interfaces';
+import {APS_DICT_GRANT, EosAccessPermissionsService} from 'eos-dictionaries/services/eos-access-permissions.service';
+import {combineLatest, takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'eos-node-actions',
@@ -49,8 +63,10 @@ export class NodeActionsComponent implements OnDestroy {
 
         this._dictSrv = _dictSrv;
         _dictSrv.listDictionary$
-            .takeUntil(this.ngUnsubscribe)
-            .combineLatest(_dictSrv.openedNode$, _dictSrv.viewParameters$, _dictSrv.visibleList$)
+            .pipe(
+                takeUntil(this.ngUnsubscribe),
+                combineLatest(_dictSrv.openedNode$, _dictSrv.viewParameters$, _dictSrv.visibleList$)
+            )
             .subscribe(([dict, node, params, list]) => {
                 this.dictionary = dict;
                 this._visibleCount = list.length;
@@ -117,7 +133,11 @@ export class NodeActionsComponent implements OnDestroy {
         let _show = false;
         let due = null;
 
-        if (this.dictionary && this._viewParams) {
+
+        if (this.dictionary && this._viewParams && this._dictSrv) {
+            const marklist = this._dictSrv.getMarkedNodes(false);
+            const listHasDeleted = marklist.filter(n => n.isDeleted).length !== 0;
+
             _enabled = !this._viewParams.updatingList;
             _show = this.dictionary.canDo(button.type);
             switch (button.type) {
@@ -129,12 +149,19 @@ export class NodeActionsComponent implements OnDestroy {
                     _show = this._viewParams.userOrdered && !this._viewParams.searchResults;
                     _enabled = _enabled && this._visibleCount > 1 && this._viewParams.hasMarked;
                     break;
+                case E_RECORD_ACTIONS.remove: {
+                    _enabled = _enabled && this._viewParams.hasMarked;
+                    _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
+                    break;
+                }
+                case E_RECORD_ACTIONS.restore: {
+                    _enabled = _enabled && listHasDeleted;
+                    break;
+                }
                 case E_RECORD_ACTIONS.AdvancedCardRK:
                 case E_RECORD_ACTIONS.additionalFields:
                 case E_RECORD_ACTIONS.CloseSelected:
                 case E_RECORD_ACTIONS.OpenSelected:
-                case E_RECORD_ACTIONS.restore:
-                case E_RECORD_ACTIONS.remove:
                 case E_RECORD_ACTIONS.removeHard:
                     _enabled = _enabled && this._viewParams.hasMarked;
                     break;
@@ -145,6 +172,7 @@ export class NodeActionsComponent implements OnDestroy {
                             _enabled = this.dictionary.descriptor.editOnlyNodes && this._dictSrv.listNode.isNode;
                         }
                     }
+                    _enabled = _enabled && !listHasDeleted;
                     break;
                 case E_RECORD_ACTIONS.showDeleted:
                     _active = this._viewParams.showDeleted;
@@ -178,6 +206,7 @@ export class NodeActionsComponent implements OnDestroy {
                     }
                     break;
                 case E_RECORD_ACTIONS.counterDepartment:
+                case E_RECORD_ACTIONS.copyPropertiesFromParent:
                     if (this._dictSrv && this._dictSrv.listNode) {
                         _enabled = this._dictSrv.listNode.isNode;
                     } else {
@@ -190,6 +219,8 @@ export class NodeActionsComponent implements OnDestroy {
                     } else {
                         _enabled = false;
                     }
+                    break;
+                case E_RECORD_ACTIONS.copyProperties:
                     break;
             }
             due = this._dictSrv.treeNodeIdByDict(this.dictionary.id);

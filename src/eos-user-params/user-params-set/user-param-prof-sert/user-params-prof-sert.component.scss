@@ -1,25 +1,28 @@
-.input-user-other-rk-forwarding-wrapper{
+.input-user-other-rk-forwarding-wrapper {
     position: relative;
 }
 
-.selected{
+.selected {
     background-color: #e3f2fd;
 }
-.sert-table-nav{
+
+.sert-table-nav {
     margin-left: 18px;
     display: flex;
 }
+
 .sert-table-body {
     padding: 7px 0px;
     .colorValid {
-      color :  #fdc309;
+        color: #fdc309;
     }
     .grayItem {
         background-color: #e6e6e6;
         color: #a9a3a3;
     }
 }
-.sert-table-head{
+
+.sert-table-head {
     display: flex;
     justify-content: space-between;
     margin-top: 6px;
@@ -34,12 +37,14 @@
         padding-left: 20px;
     }
 }
-.scrollWrapper{
+
+.scrollWrapper {
     overflow: auto;
     max-height: calc(100vh - 308px);
     min-height: calc(100vh - 490px);
 }
-.new-sert-name{
+
+.new-sert-name {
     border: 1px solid #ccc;
     display: inline-block;
     width: 80%;
@@ -48,15 +53,17 @@
     margin-right: 13px;
     margin-left: 20px;
 }
-.sert-table-content{
-    span{
+
+.sert-table-content {
+    span {
         width: calc(100% / 3);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
 }
-.sert-info-wr{
+
+.sert-info-wr {
     width: 100%;
     height: 100%;
     display: flex;
@@ -64,29 +71,31 @@
     display: flex;
     justify-content: space-between;
     cursor: pointer;
-    span{
-        &:nth-child(2){
+    span {
+        &:nth-child(2) {
             margin-right: 5px;
         }
-        &:first-child{
+        &:first-child {
             margin-right: 5px;
         }
     }
-    .whom{
+    .whom {
         padding-left: 10px;
     }
 }
-.sert-title{
+
+.sert-title {
     display: inline-block;
     padding-top: 20px;
     padding-left: 20px;
 }
-.flex-wr{
+
+.flex-wr {
     display: flex;
     align-items: center;
 }
 
-.edit-bacground{
+.edit-bacground {
     display: block;
     position: absolute;
     left: 0;
@@ -97,30 +106,43 @@
     opacity: 0.5;
     z-index: 1;
 }
-.modal-body{
+
+.modal-body {
     background-color: #fff;
     width: 800px;
-    .sert-table-content{
+    .sert-table-content {
         display: flex;
         justify-content: space-between;
         cursor: pointer;
         padding: 5px 0;
     }
 }
-.modal-header{
+
+.modal-header {
     background-color: #fff;
     width: 800px;
 }
-.modal-flex-wr{
+
+.modal-flex-wr {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-.modal-button{
-    button{
+
+.modal-button {
+    button {
         border: 1px solid #2196f3;
+        min-width: 88px;
+    }
+    > button {
+        margin-right: 10px;
+    }
+    >button {
+        margin-right: 10px;
+        width: 100px;
     }
 }
-.user-input-group button:hover{
+
+.user-input-group button:hover {
     background-color: #ffff;
 }

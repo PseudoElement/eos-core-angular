@@ -1,0 +1,88 @@
+<div class="list-user-select-wrapper">
+    <div class="table-wrapper usual-border">
+        <div class="table-header">
+            <div class="table-header-wrapper">
+                <div class="selected-node-title">
+                    <span class="long-title xl-font">Статистика по пользователям и опциям</span>
+                </div>
+            </div>
+        </div>
+        <div class="eos-node-list">
+            <div class="mar-items1">
+                <span class="item-count-content">
+                    Всего Пользователей
+                </span>
+                <span class="item-count-param1">
+                    {{usersNumber}}
+                </span>
+            </div>
+            <div class="mar-items">
+                <span class="item-count-content">
+                    Заблокировано технологом
+                </span>
+                <span class="item-count-param2">
+                    {{blockByTech}}
+                </span>
+            </div>
+            <div class="mar-items">
+                <span class="item-count-content">
+                    Заблокировано при входе в систему
+                </span>
+                <span class="item-count-param3">
+                    {{blockAuthUsers}}
+                </span>
+            </div>
+            <div class="mar-items">
+                <span class="item-count-content">
+                    Система не зарегистрирована
+                </span>
+            </div>
+            <div class="mar-items">
+                <div class="cont-items">
+                        <span class="item-count-content">
+                            Протоколирование "Пользователей"
+                        </span>
+                        <span class="item-count-param4">
+                           {{logUsers}}
+                        </span>             
+                </div>    
+            </div>
+            <div class="mar-items4">
+                <span class="item-count-content">
+                    Данные о пользователях по подсистемам
+                </span>
+            </div>
+            <div class="table-header">
+                <div class="table-title">    
+                        <span class="user-title-name user-first-colomn text-center">
+                            Подсистема   
+                        </span>
+                        <span class="user-two-colomn text-center">
+                            Всего
+                        </span>
+                        <span class="user-third-colomn text-center">
+                            Макс.
+                        </span> 
+                        <span class="user-four-colomn text-center">
+                            Срок Действия
+                        </span>
+                </div>
+            </div>
+            <div class="eos-node-list">
+                <eos-subsystem  [subSystem]=subsystem.delo.label [subValue]=delo></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.delowebLGO.label [subValue]=delowebLGO></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.delowebKL.label [subValue]=delowebKL></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.Shif.label [subValue]=Shif></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.SCAN.label [subValue]=SCAN></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.Pscan.label [subValue]=Pscan></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.Scan_code.label [subValue]=Scan_code></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.Search_code.label [subValue]=Search_code></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.Notifer.label [subValue]=Notifer></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.Informer.label [subValue]=Informer></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.EOS.label [subValue]=EOS></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.MobNet.label [subValue]=MobNet></eos-subsystem> 
+                <eos-subsystem  [subSystem]=subsystem.APM.label [subValue]=APM></eos-subsystem>   
+            </div>
+        </div>
+    </div>     
+</div>

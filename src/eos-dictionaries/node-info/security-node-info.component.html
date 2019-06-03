@@ -10,7 +10,7 @@
                     <p class="field-value m-font">{{nodeDataFull.rec['SEC_INDEX']}}</p>
                 </div>
                 <div class="field">
-                    <p class="field-title unimportant-text s-font">Требуется</p>
+                    <p class="field-title unimportant-text s-font">Защита документов при отправке <br>по электронной почте</p>
                     <label class="checkbox field-title unimportant-text s-font"><input type="checkbox"
                         [ngModel]="nodeDataFull.rec['EDS_FLAG']"
                         disabled><span></span>{{fieldsDescriptionFull.rec['EDS_FLAG'].title}}</label>
@@ -20,7 +20,7 @@
                 </div>
                 <div class="field">
                     <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec['NOTE'].title}}</p>
-                    <p class="field-value m-font">{{nodeDataFull.rec['NOTE']}}</p>
+                    <p class="field-value m-font">{{nodeDataFull.rec['NOTE'] || '...'}}</p>
                 </div>
             </div>
         </div>

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { PipRX, DEPARTMENT } from 'eos-rest';
 import { TreeUserNode } from 'eos-user-select/tree-user-select/core/tree-user-node';
 import { E_MODES_USER_SELECT } from '../interfaces/user-select.interface';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 const DEPARTMENT_QUERY = {DEPARTMENT: PipRX.criteries({
     LAYER: '1:2',
     IS_NODE: '0',

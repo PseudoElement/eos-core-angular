@@ -1,7 +1,10 @@
 import { Injectable, Injector } from '@angular/core';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { BaseUserSrv } from './base-user.service';
 import { VISUALIZATION_USER } from '../consts/visualization.consts';
-import { Subject } from 'rxjs/Subject';
 import { EosUtils } from 'eos-common/core/utils';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../consts/eos-user-params.const';
 @Injectable()
@@ -13,7 +16,9 @@ export class UserParamVisualizationSrv extends BaseUserSrv {
         this.init();
         this.editMode();
         this._userParamsSetSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
@@ -37,7 +42,6 @@ export class UserParamVisualizationSrv extends BaseUserSrv {
     }
     submit(): Promise<any> {
         if (this.newData || this.prepareData) {
-            const userId = '' + this._userParamsSetSrv.userContextId;
             this.formChanged.emit(false);
             this.isChangeForm = false;
             this.flagEdit = false;
@@ -50,7 +54,7 @@ export class UserParamVisualizationSrv extends BaseUserSrv {
                     .then(data => {
                         // this.prepareData.rec = Object.assign({}, this.newData.rec);
                         this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                        this._userParamsSetSrv.getUserIsn(userId);
+                        this._userParamsSetSrv.getUserIsn();
                     })
                     // tslint:disable-next-line:no-console
                     .catch(error => {
@@ -62,7 +66,7 @@ export class UserParamVisualizationSrv extends BaseUserSrv {
                     .setData(this.createObjRequestForDefaultValues())
                     .then(data => {
                         this.msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-                        this._userParamsSetSrv.getUserIsn(userId);
+                        this._userParamsSetSrv.getUserIsn();
                     })
                     // tslint:disable-next-line:no-console
                     .catch(error => {

@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { EosDictService } from '../services/eos-dict.service';
 import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 
@@ -15,7 +15,10 @@ export class NodeInfoSwitcherComponent implements OnDestroy {
 
     constructor(private _dictSrv: EosDictService) {
         this._dictSrv.openedNode$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+
+            )
             .subscribe((node) => {
                 this.node = node;
             });

@@ -69,4 +69,20 @@ export const CONFIRM_CABINET_NON_EMPTY1: IConfirmWindow2 = {
     ]
 };
 
+export const RK_SELECTED_LIST_IS_EMPTY: IConfirmWindow2 = {
+    title: 'Внимание',
+    body: 'В реквизите "{{REK}}" выбран пустой список. Продолжить?',
+    buttons: [
+        {title: 'Да', result: 1, },
+        {title: 'Нет', result: 2, },
+    ],
+};
 
+export const RK_SELECTED_LIST_HAS_DELETED: IConfirmWindow2 = {
+    title: 'Внимание',
+    body: 'В реквизите "{{REK}}" выбран список, в котором некоторые элементы логически удалены. Продолжить?',
+    buttons: [
+        {title: 'Да', result: 1, },
+        {title: 'Нет', result: 2, },
+    ],
+};

@@ -1,8 +1,9 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { APP_MODULES, APP_MODULES_DROPDOWN } from '../consts/app-modules.const';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
+
 
 @Component({
     selector: 'eos-header',
@@ -20,8 +21,11 @@ export class EosHeaderComponent implements OnDestroy {
         private _route: ActivatedRoute,
     ) {
         this.update();
-        _router.events.filter((evt) => evt instanceof NavigationEnd)
-            .takeUntil(this.ngUnsubscribe)
+        _router.events
+            .pipe(
+                filter((evt) => evt instanceof NavigationEnd),
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe(() => this.update());
     }
 

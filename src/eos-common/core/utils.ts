@@ -79,7 +79,7 @@ export class EosUtils {
         } else {
             const tmpPath = key.split('[');
             aKey = tmpPath[0];
-            aIdx = Number.parseInt(tmpPath[1]);
+            aIdx = Number.parseInt(tmpPath[1], 10);
             if (isNaN(aIdx)) {
                 aIdx = undefined;
             }

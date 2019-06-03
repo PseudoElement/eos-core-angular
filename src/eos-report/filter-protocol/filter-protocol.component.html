@@ -1,0 +1,102 @@
+<div [popover]="searchModal"  
+    containerClass="head-protocol"
+    placement="bottom"
+    container="body"
+    class="cust-style-mod" 
+    #full="bs-popover"
+    [outsideClick]="true"
+    >
+    <button [ngClass]="{'opened': formBol}"
+        class="btn btn-primary-light search-btn"
+        tooltip="Расширенный поиск"
+        placement="bottom"
+        container="body"
+    
+        (click)="isActiveButton()"
+        containerClass="tooltip-info">
+            <i [hidden]="formBol"class="eos-icon eos-icon-filter-blue small" aria-hidden="true"></i>
+            <i [hidden]="!formBol" class="eos-icon eos-icon-filter-white small" aria-hidden="true"></i>
+    </button> 
+</div>
+<ng-template #searchModal>                    
+    <div class="full-search-top usual-border">
+        <span class="pull-left title xl-font">Фильтр</span>
+        <div class="pull-right srch-btns">
+            <button
+                class="btn btn-primary s-font upper"
+                >Сбросить</button>
+            <button 
+                class="btn btn-primary-full s-font upper">Найти</button>
+        </div>
+    </div> 
+    <div class="full-search-form-cust">
+    <form id="reshen">
+        <div class="cont-datepick">
+            <div class="form-group unimportant-text">
+                <label class="s-font"for="title">От</label>
+                <div class="form-date-control group-datepick">
+                    <input type="text" eosDateMask class="form-control m-font"  placeholder="--.--.----">
+                    <a bsDatepicker [bsConfig]="bsConfig" [bsValue]="bsDate"><span class="eos-icon eos-icon-calendar-blue small"></span></a>
+                </div>
+            </div>
+            <div class="form-group unimportant-text">
+                <label class="s-font" for="title">До</label>
+                <div class="form-date-control group-datepick">
+                    <input type="text" eosDateMask class="form-control m-font"  placeholder="--.--.----">
+                    <a bsDatepicker [bsConfig]="bsConfig" [bsValue]="bsDate"><span class="eos-icon eos-icon-calendar-blue small"></span></a>
+                </div>
+            </div>  
+        </div>
+        <div class="form-group unimportant-text">
+            <label class="s-font" for="title">Событие:</label>
+            <div class="datepick">
+                <select class="form-control m-font">
+                    <option>1</option>
+                    <option>2</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group unimportant-text">
+            <label class="s-font"
+                for="note">Редактировал:</label>
+            <div class="search-fld">
+                <input id="note"
+                    name="note"
+                    type="text"
+                    class="form-control m-font"
+                 >
+                <a class="clear-btn"><span class="icon eos-icon eos-icon-avatar-blue small icon-add-department" (click)="selectUser()"></span></a>
+            </div>
+        </div>
+        <div class="form-group unimportant-text">
+            <label class="s-font"
+                for="note">Пользователь:</label>
+            <div class="search-fld">
+                <input id="note"
+                    name="note"
+                    type="text"
+                    class="form-control light"
+                 >
+                 <a class="clear-btn"><span class="icon eos-icon eos-icon-avatar-blue small icon-add-department" (click)="selectUser()"></span></a>
+                <!-- <span class="eos-icon eos-icon-close-blue"></span></a> -->
+            </div>
+        </div>
+    </form>
+</div>
+</ng-template>       
+            <!-- <div class="pull-right srch-btns">
+               <button [disabled]="noSearchData"
+                   class="btn btn-primary s-font upper"
+                   (click)="clearForm()">Сбросить</button>
+               <button [disabled]="noSearchData"
+                   (click)="fullSearch()"
+                   class="btn btn-primary-full s-font upper">Найти</button>
+           </div>
+       </div>
+       <div class="full-search-settings-container usual-border">
+           <div class="line">
+               <label class="checkbox-inline"><input type="checkbox" name="seeDelete"><span></span><span class="m-font">Учитывать логически удаленные</span></label>
+           </div>
+       </div> -->
+   
+

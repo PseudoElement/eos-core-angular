@@ -3,7 +3,7 @@ import { Injectable, } from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ConfirmWindowComponent, IConfirmWindow, IConfirmWindowContent } from './confirm-window.component';
 import { IConfirmWindow2, ConfirmWindow2Component, IConfirmWindow2Content, IConfirmButton } from './confirm-window2.component';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 @Injectable()
 export class ConfirmWindowService {
@@ -43,21 +43,23 @@ export class ConfirmWindowService {
 
             this.subscr1 = this._bsModalSrv.onHide.subscribe(reason => {
                 if (reason === 'backdrop-click' || reason === 'esc') {
-                    this.unsubscribe();
                     res(null);
+                    // this.unsubscribe();
                 }
             });
 
             this.subscr2 = _wnd.confirmEvent.subscribe((confirm: IConfirmButton) => {
-                this.unsubscribe();
-                res(confirm);
+                if (confirm !== undefined) {
+                    res(confirm);
+                }
+                // this.unsubscribe();
             });
         });
     }
 
-    private unsubscribe() {
+    unsubscribe() {
         if (this.subscr1) { this.subscr1.unsubscribe(); }
-        if (this.subscr2) { this.subscr1.unsubscribe(); }
+        if (this.subscr2) { this.subscr2.unsubscribe(); }
     }
 
 

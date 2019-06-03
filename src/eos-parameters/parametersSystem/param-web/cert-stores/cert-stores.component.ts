@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy, ViewChild, AfterContentInit, ElementRef } from '@angular/core';
 import { CertStoresService, IListCertStotes } from '../cert-stores.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable ,  Subject } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
 import { ModalDirective } from 'ngx-bootstrap';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { PARM_NOT_CARMA_SERVER } from '../../shared/consts/eos-parameters.const';
-import { Subject } from 'rxjs/Subject';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'eos-cert-stores',
@@ -39,17 +39,23 @@ export class CertStoresComponent implements OnInit, OnDestroy, AfterContentInit 
         this.certStoresService.initCarma(certStores);
         this.listCertStores = this.certStoresService.getListCetsStores;
         this.certStoresService.getCurrentSelectedNode$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((list: IListCertStotes) => {
             this.CurrentSelect = list;
         });
         this.certStoresService.getIsCarmaServer$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((data: boolean) => {
             this.isCarma = data;
         });
         this.certStoresService.updateFormControlStore$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((data: string) => {
             this.formControlStores.patchValue(data);
         });

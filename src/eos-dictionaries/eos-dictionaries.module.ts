@@ -7,7 +7,7 @@ import { SevParticipantCardEditComponent } from './card-views/sev-participant-ca
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+// import { HttpModule } from '@angular/http';
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { SortableModule } from 'ngx-bootstrap/sortable';
@@ -17,7 +17,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { TypeaheadModule } from 'ngx-bootstrap/typeahead';
 import { AccordionModule } from 'ngx-bootstrap/accordion';
-
 import { DragulaModule } from 'ng2-dragula';
 
 // import { APP_CONFIG } from 'app/app.config.local';
@@ -83,6 +82,7 @@ import { AdvCardRKEditComponent } from './adv-card/adv-card-rk.component';
 import { RKDefaultValuesCardComponent } from './adv-card/rk-default-values/rk-default-values.component';
 import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-files.component';
 import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter.component';
+import {CopyPropertiesComponent} from './copy-properties/copy-properties.component';
 
 @NgModule({
     declarations: [
@@ -138,6 +138,7 @@ import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter
         PrjDefaultValuesComponent,
         LinkCardComponent,
         NadzorCardEditComponent,
+        CopyPropertiesComponent,
     ],
     entryComponents: [
         ColumnSettingsComponent,
@@ -150,12 +151,13 @@ import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter
         CreateNodeBroadcastChannelComponent,
         DocgroupTemplateConfigComponent,
         PrjDefaultValuesComponent,
+        CopyPropertiesComponent,
     ],
     imports: [
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
-        HttpModule,
+        // HttpModule,
         AppRoutingModule,
         SortableModule.forRoot(),
         //        EosRestModule.forRoot(APP_CONFIG),

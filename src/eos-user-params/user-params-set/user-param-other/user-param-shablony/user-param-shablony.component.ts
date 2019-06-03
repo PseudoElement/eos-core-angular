@@ -1,10 +1,13 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { OTHER_USER_SHABLONY } from '../../shared-user-param/consts/other.consts';
 import { UserParamsService } from '../../../shared/services/user-params.service';
-import { Subject } from 'rxjs/Subject';
 import { FormHelperService } from '../../../shared/services/form-helper.services';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
 // import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -37,20 +40,40 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
         // private _msg: EosMessageService,
         // private _errorSrv: ErrorHelperServices,
     ) {
-        this.remaster.submitEmit.takeUntil(this._ngUnsebscribe).subscribe(() => {
+        this.remaster.submitEmit
+        .pipe(
+            takeUntil(this._ngUnsebscribe)
+        )
+        .subscribe(() => {
             this.submit();
         });
-        this.remaster.cancelEmit.takeUntil(this._ngUnsebscribe).subscribe(() => {
+        this.remaster.cancelEmit
+        .pipe(
+            takeUntil(this._ngUnsebscribe)
+        )
+        .subscribe(() => {
             this.cancel();
         });
-        this.remaster.defaultEmit.takeUntil(this._ngUnsebscribe).subscribe(() => {
+        this.remaster.defaultEmit
+        .pipe(
+            takeUntil(this._ngUnsebscribe)
+        )
+        .subscribe(() => {
             this.default();
         });
-        this.remaster.editEmit.takeUntil(this._ngUnsebscribe).subscribe(() => {
+        this.remaster.editEmit
+        .pipe(
+            takeUntil(this._ngUnsebscribe)
+        )
+        .subscribe(() => {
             this.flagEdit = true;
             this.editMode();
         });
-        this.remaster.emitDefaultFalues.takeUntil(this._ngUnsebscribe).subscribe((value) => {
+        this.remaster.emitDefaultFalues
+        .pipe(
+            takeUntil(this._ngUnsebscribe)
+        )
+        .subscribe((value) => {
             this.defaultValues = value;
             this.initShablony = this.getInitShablony(this.defaultValues);
         });

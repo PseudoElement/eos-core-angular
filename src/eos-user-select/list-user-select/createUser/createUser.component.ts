@@ -1,12 +1,15 @@
-import { Component, Output, EventEmitter, OnInit, OnDestroy} from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { CREATE_USER_INPUTS, OPEN_CLASSIF_DEPARTMENT, OPEN_CLASSIF_USER_CL } from 'eos-user-select/shered/consts/create-user.consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { PipRX, DEPARTMENT, USER_CL } from 'eos-rest';
-import { FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs/Subject';
 import { ALL_ROWS } from 'eos-rest/core/consts';
-import { Router } from '@angular/router';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
@@ -94,7 +97,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             .catch(e => {
                 const m: IMessage = {
                     type: 'warning',
-                    title: 'Ошибка сервера',
+                    title: 'Предупреждение',
                     msg: '',
                 };
                 if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
@@ -151,7 +154,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 } else {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
-                        title: 'Предупреждалочка',
+                        title: 'Предупреждение',
                         msg: 'Должностное лицо не соответствует текущему подразделению',
                         dismissOnTimeout: 6000,
                     });
@@ -211,25 +214,33 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     private _subscribe() {
         const f = this.form;
         f.get('teсhUser').valueChanges
-            .takeUntil(this.ngUnsubscribe)
-            .subscribe(data => {
-                if (data) {
-                    f.get('DUE_DEP_NAME').patchValue('');
-                    f.get('DUE_DEP_NAME').disable();
-                    delete this.data['dueDL'];
-                } else {
-                    f.get('DUE_DEP_NAME').enable();
-                }
-            });
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe(data => {
+            if (data) {
+                f.get('DUE_DEP_NAME').patchValue('');
+                f.get('DUE_DEP_NAME').disable();
+                delete this.data['dueDL'];
+            } else {
+                f.get('DUE_DEP_NAME').enable();
+            }
+        });
+
+
+
         f.valueChanges
-            .takeUntil(this.ngUnsubscribe)
-            .subscribe(d => {
-                for (const c in d) {
-                    if (c !== 'teсhUser') {
-                        this.data[c] = d[c];
-                    }
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe(d => {
+            // tslint:disable-next-line:forin
+            for (const c in d) {
+                if (c !== 'teсhUser') {
+                    this.data[c] = d[c];
                 }
                 this.btnDisabled = this.form.invalid;
-            });
+            }
+        });
     }
 }

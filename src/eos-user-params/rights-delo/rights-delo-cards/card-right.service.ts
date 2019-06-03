@@ -3,8 +3,7 @@ import { UserParamsService } from 'eos-user-params/shared/services/user-params.s
 import { USERCARD, DEPARTMENT, USER_CARD_DOCGROUP, DOCGROUP_CL, PipRX, IEnt } from 'eos-rest';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { FuncNum } from './funcnum.model';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
+import { Subject, Observable } from 'rxjs';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { _ES } from 'eos-rest/core/consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';
@@ -27,7 +26,7 @@ export class CardRightSrv {
     }
     private _selectingNode$: Subject<void>;
     private _chengeState$: Subject<boolean>;
-    constructor (
+    constructor(
         private _userParamsSetSrv: UserParamsService,
         private _apiSrv: UserParamApiSrv,
         private _pipSrv: PipRX,
@@ -44,12 +43,12 @@ export class CardRightSrv {
         const userCardList: USERCARD[] = this._userParamsSetSrv.curentUser.USERCARD_List;
         const str: string[] = userCardList.map((card: USERCARD) => card.DUE);
         return this._apiSrv.getDepartment(str)
-        .then((deps) => {
-            deps.forEach((dep: DEPARTMENT) => {
-                this.departments.set(dep.DUE, dep);
+            .then((deps) => {
+                deps.forEach((dep: DEPARTMENT) => {
+                    this.departments.set(dep.DUE, dep);
+                });
+                return userCardList;
             });
-            return userCardList;
-        });
     }
     selectFuncnum() {
         this._selectingNode$.next();
@@ -60,29 +59,21 @@ export class CardRightSrv {
             listDG.push(doc.DUE);
         });
         return this._getDocGroupEntity$(listDG)
-        .then(() => {
-            const nodeList: NodeDocsTree[] = [];
-            docs.forEach((userCardDG: USER_CARD_DOCGROUP) => {
-                const docGroup = this._docGroup.get(userCardDG.DUE);
-                this._createListNode(nodeList, {docGroup, userCardDG});
+            .then(() => {
+                const nodeList: NodeDocsTree[] = [];
+                docs.forEach((userCardDG: USER_CARD_DOCGROUP) => {
+                    const docGroup = this._docGroup.get(userCardDG.DUE);
+                    this._createListNode(nodeList, { docGroup, userCardDG });
+                });
+                return nodeList;
             });
-            return nodeList;
-        });
     }
     saveChenge$() {
         const chl = [];
         this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
             if (card._State) {
-                // console.log(`card ${card.DUE}`);
                 this._createChangeList(chl, card);
             }
-            // card.USER_CARD_DOCGROUP_List.forEach((dg: USER_CARD_DOCGROUP) => {
-                // if (dg._State) {
-                //     // console.log(`dg ${dg.DUE}`);
-                //     this._createChangeList(chl, dg, card);
-                // }
-            // });
-
             for (let i = 0; card.USER_CARD_DOCGROUP_List.length > i; i++) {
                 const dg: USER_CARD_DOCGROUP = card.USER_CARD_DOCGROUP_List[i];
                 if (dg._State) {
@@ -95,17 +86,20 @@ export class CardRightSrv {
             }
         });
         return this._pipSrv.batch(chl, '')
-        .then((d) => {
-            this._userParamsSetSrv.setChangeState({isChange: false});
-            return this._userParamsSetSrv.getUserIsn();
-        })
-        .then(() => {
-            this.prepareforEdit();
-            this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-        });
-        // .catch((e) => {
-        //     console.log(e);
-        // });
+            .then((d) => {
+                this._userParamsSetSrv.setChangeState({ isChange: false });
+                this.prepareforEdit();
+                this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+            })
+            .catch((err) => {
+                const errMessage = err.message ? err.message : err;
+                this._msgSrv.addNewMessage({
+                    type: 'danger',
+                    title: 'Ошибка операции',
+                    msg: errMessage
+                });
+                return null;
+            });
     }
     // test() {
     //     const arr = [];
@@ -173,66 +167,79 @@ export class CardRightSrv {
         }
         this._checkChenge();
     }
-    addingDocGroup$ (card: USERCARD): Promise<NodeDocsTree[]> {
+    addingDocGroup$(card: USERCARD): Promise<NodeDocsTree[]> {
         let dues: string[];
         let msg: string = '';
         return this._waitClassifSrv.openClassif(OPEN_CLASSIF_DOCGROUP_CL)
-        .then((str: string) => { // 0.1K9B.|0.1K9D.
-            if (!str) {
-                throw null;
-            }
-            dues = str.split('|');
-
-            // получить инстансы по дуе в мап
-            return this._getDocGroupEntity$(dues);
-        })
-        .then(() => {
-            const userDocGroup: USER_CARD_DOCGROUP[] = [];
-            // Проверяем, существуют ли они в списке
-            card.USER_CARD_DOCGROUP_List.forEach((doc: USER_CARD_DOCGROUP) => {
-                const index = dues.findIndex((due: string) => doc.DUE === due && doc.FUNC_NUM === this.selectedFuncNum.funcNum);
-                if (index !== -1) {
-                    if (doc._State === _ES.Deleted) {
-                        delete doc._State;
-                        doc.ALLOWED = doc._orig.ALLOWED;
-                        userDocGroup.push(doc);
-                    } else {
-                        msg += `'${this._docGroup.get(doc.DUE).CLASSIF_NAME}',\n`;
-                    }
-                    dues.splice(index, 1);
+            .then((str: string) => { // 0.1K9B.|0.1K9D.
+                if (!str) {
+                    throw null;
                 }
-            });
-            if (msg.length) {
-                this._msgSrv.addNewMessage({
-                    type: 'warning',
-                    title: '',
-                    msg: `Элемент ${msg} не будет добавлен\nтак как он уже существует`
+                dues = str.split('|');
+
+                // получить инстансы по дуе в мап
+                return this._getDocGroupEntity$(dues);
+            })
+            .then(() => {
+                const userDocGroup: USER_CARD_DOCGROUP[] = [];
+                // Проверяем, существуют ли они в списке
+                card.USER_CARD_DOCGROUP_List.forEach((doc: USER_CARD_DOCGROUP) => {
+                    const index = dues.findIndex((due: string) => doc.DUE === due && doc.FUNC_NUM === this.selectedFuncNum.funcNum);
+                    if (index !== -1) {
+                        if (doc._State === _ES.Deleted) {
+                            delete doc._State;
+                            doc.ALLOWED = doc._orig.ALLOWED;
+                            userDocGroup.push(doc);
+                        } else {
+                            msg += `'${this._docGroup.get(doc.DUE).CLASSIF_NAME}',\n`;
+                        }
+                        dues.splice(index, 1);
+                    }
                 });
-            }
-            if (!dues.length && !userDocGroup.length) {
-                this._msgSrv.addNewMessage(EMPTY_ADD_ELEMENT_WARN);
-                return null;
-            }
+                if (msg.length) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: '',
+                        msg: `Элемент ${msg} не будет добавлен\nтак как он уже существует`
+                    });
+                }
+                if (!dues.length && !userDocGroup.length) {
+                    this._msgSrv.addNewMessage(EMPTY_ADD_ELEMENT_WARN);
+                    return null;
+                }
 
-            // Создаем ентити USER_CARD_DOCGROUP и добовляем в модель
-            let userDG: USER_CARD_DOCGROUP[] = this._createDGEntity(card, dues);
-            card.USER_CARD_DOCGROUP_List.splice(-1, 0, ...userDG);
+                // Создаем ентити USER_CARD_DOCGROUP и добовляем в модель
+                let userDG: USER_CARD_DOCGROUP[] = this._createDGEntity(card, dues);
+                card.USER_CARD_DOCGROUP_List.splice(-1, 0, ...userDG);
 
-            // Создаем и возвращаем массив класса NodeDocsTree
-            const nodeList: NodeDocsTree[] = [];
-            userDG = userDG.concat(userDocGroup);
-            userDG.forEach((userCardDG: USER_CARD_DOCGROUP) => {
-                const docGroup = this._docGroup.get(userCardDG.DUE);
-                this._createListNode(nodeList, {docGroup, userCardDG});
+                // Создаем и возвращаем массив класса NodeDocsTree
+                const nodeList: NodeDocsTree[] = [];
+                userDG = userDG.concat(userDocGroup);
+                userDG.forEach((userCardDG: USER_CARD_DOCGROUP) => {
+                    const docGroup = this._docGroup.get(userCardDG.DUE);
+                    this._createListNode(nodeList, { docGroup, userCardDG });
+                });
+                this._checkChenge();
+                return nodeList;
             });
-            this._checkChenge();
-            return nodeList;
-        });
     }
     checkChenge() {
         this._checkChenge();
     }
-    private _createListNode (list: NodeDocsTree[], data): void { // {docGroup, userCardDG}
+
+    cancelChanges() {
+        this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
+            card.FUNCLIST = card._orig.FUNCLIST;
+            delete card._State;
+            delete card.USER_CARD_DOCGROUP_List;
+            card.USER_CARD_DOCGROUP_List = card._orig.USER_CARD_DOCGROUP_List;
+            card.USER_CARD_DOCGROUP_List.forEach((dg: USER_CARD_DOCGROUP) => {
+                delete dg._State;
+                this._pipSrv.entityHelper.prepareForEdit(dg);
+            });
+        });
+    }
+    private _createListNode(list: NodeDocsTree[], data): void { // {docGroup, userCardDG}
         list.push(new NodeDocsTree({
             due: data.docGroup.DUE,
             label: data.docGroup.CLASSIF_NAME,
@@ -258,7 +265,7 @@ export class CardRightSrv {
             });
         });
         this._chengeState$.next(state);
-        this._userParamsSetSrv.setChangeState({isChange: state});
+        this._userParamsSetSrv.setChangeState({ isChange: state });
     }
     private _createDGEntity(card: USERCARD, dues: string[]): USER_CARD_DOCGROUP[] {
         const newUserCardDG: USER_CARD_DOCGROUP[] = [];
@@ -275,21 +282,21 @@ export class CardRightSrv {
         return newUserCardDG;
     }
     private _getDocGroupEntity$(dues: string[]): Promise<void> {
-            const queryDue: string[] = [];
-            dues.forEach((due: string) => {
-                if (!this._docGroup.has(due)) {
-                    queryDue.push(due);
-                }
-            });
-            if (queryDue.length) {
-                return this._apiSrv.getDocGroup(queryDue)
+        const queryDue: string[] = [];
+        dues.forEach((due: string) => {
+            if (!this._docGroup.has(due)) {
+                queryDue.push(due);
+            }
+        });
+        if (queryDue.length) {
+            return this._apiSrv.getDocGroup(queryDue)
                 .then((list: DOCGROUP_CL[]) => {
                     list.forEach((dg: DOCGROUP_CL) => {
                         this._docGroup.set(dg.DUE, dg);
                     });
                 });
-            }
-            return Promise.resolve();
+        }
+        return Promise.resolve();
     }
     private _prepareforEdit(arr) {
         arr.forEach((item) => {
@@ -338,7 +345,7 @@ export class CardRightSrv {
             }
             if (ent._State === _ES.Modified) {
                 ch['requestUri'] = uri;
-                ch['data'] = {ALLOWED: ent['ALLOWED']};
+                ch['data'] = { ALLOWED: ent['ALLOWED'] };
             }
             chl.push(ch);
             delete ent._State;

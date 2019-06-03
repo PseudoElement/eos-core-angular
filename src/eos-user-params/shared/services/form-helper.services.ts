@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { IInputParamControl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
-import {IFieldDescriptor} from 'eos-user-params/shared/intrfaces/user-params.interfaces';
+import { E_FIELD_TYPE, IFieldDescriptor } from 'eos-dictionaries/interfaces';
 @Injectable()
 export class FormHelperService {
     public _fieldsType = {};
@@ -50,15 +49,14 @@ export class FormHelperService {
         }
     }
 
-    fillInputFieldsSetParams(inputFields: IInputParamControl[]) {
-        const user_param = this._userSrv.curentUser['USER_PARMS_HASH'];
+    fillInputFieldsSetParams(inputFields: IInputParamControl[], data) {
         const arrayFills: IInputParamControl[]  = [];
         inputFields.forEach((inputVal: IInputParamControl, index) => {
             const f: IInputParamControl = Object.assign({}, inputVal);
             arrayFills.push(f);
             if (f.controlType === E_FIELD_TYPE.boolean) {
-              if (String(user_param[f['key']]) !==  'null' && String(user_param[f['key']]) !==  'undefined') {
-                if (user_param[f['key']] === 'NO') {
+              if (String(data[f['key']]) !==  'null' && String(data[f['key']]) !==  'undefined') {
+                if (data[f['key']] === 'NO') {
                     f['value']  = false;
                 }   else {
                     f['value']  = true;
@@ -69,8 +67,8 @@ export class FormHelperService {
             }
 
             if (f.controlType === E_FIELD_TYPE.string) {
-                if (String(user_param[f['key']]) !== 'null' && String(user_param[f['key']]) !==  'undefined') {
-                    f['value'] = user_param[f['key']];
+                if (String(data[f['key']]) !== 'null' && String(data[f['key']]) !==  'undefined') {
+                    f['value'] = data[f['key']];
                 }   else {
                     f['value']  = '';
                 }
@@ -80,15 +78,15 @@ export class FormHelperService {
         return arrayFills;
     }
 
-    changesForm(inputs: IInputParamControl[], newVal) {
+    changesForm(inputs, newVal) {
         let countChanges = 0;
         let btnDisableFlag = null;
-        inputs.forEach((field, index) => {
-            if (field.value !== newVal[field.key]) {
-                this.newFormData[field.key] = field.value;
+        Object.keys(inputs).forEach((field, index) => {
+            if (inputs.value !== newVal[field]) {
+                this.newFormData[field] = inputs.value;
                 countChanges += 1;
             } else {
-                delete this.newFormData[field.key];
+                delete this.newFormData[field];
             }
         });
         countChanges > 0 ? btnDisableFlag = false : btnDisableFlag = true;
@@ -161,7 +159,7 @@ export class FormHelperService {
                 obj[field.key] = userData[field.key];
             } else if (field.type === 'string') {
                 obj[field.key] = userData[field.key] === (null || '' || undefined) ? '' : userData[field.key];
-            }else if (field.type === 'boolean') {
+            } else if (field.type === 'boolean') {
                 if (!isNaN(userData[field.key])) {
                     this._fieldsTypeParce[field.key] = 'number';
                     if (+userData[field.key] === 0) {
@@ -195,7 +193,7 @@ export class FormHelperService {
                 } else {
                     if (String(userData['DEF_SEARCH_CITIZEN'].charAt(field.keyPosition)) === '0') {
                         obj[field.key] = false;
-                    }else {
+                    } else {
                         obj[field.key] = true;
                     }
                 }

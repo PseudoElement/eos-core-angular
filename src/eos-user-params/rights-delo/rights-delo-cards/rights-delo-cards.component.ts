@@ -1,14 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { Router } from '@angular/router';
 import { CARD_FUNC_LIST } from './card-func-list.consts';
 import { FuncNum } from './funcnum.model';
 import { CardRightSrv } from './card-right.service';
-import { Subject } from 'rxjs/Subject';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import {ErrorHelperServices} from '../../shared/services/helper-error.services';
-// import { Subject } from 'rxjs/Subject';
+import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 
 @Component({
     selector: 'eos-rights-delo-cards',
@@ -34,35 +36,41 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
     ) {
         this._cardSrv.chengeState$
-        .takeUntil(this._ngUnsubscribe)
-        .subscribe((state: boolean) => {
-            this.btnDisabled = !state;
-        });
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
+            .subscribe((state: boolean) => {
+                this.btnDisabled = !state;
+            });
         this._userParamsSetSrv.saveData$
-        .takeUntil(this._ngUnsubscribe)
-        .subscribe(() => {
-            this._userParamsSetSrv.submitSave =  this.submit();
-        });
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
+            .subscribe(() => {
+                this._userParamsSetSrv.submitSave = this.submit();
+            });
     }
     ngOnInit() {
-        // получение пользователя
-        // await Promise.resolve();
-         this._userParamsSetSrv.getUserIsn().then(() => {
-         this._userParamsSetSrv.checkGrifs(this._userParamsSetSrv.userContextId).then((flagG) => {
+        this._userParamsSetSrv.getUserIsn({
+            expand: 'USERCARD_List/USER_CARD_DOCGROUP_List'
+        })
+        .then(() => {
+            return this._userParamsSetSrv.checkGrifs(this._userParamsSetSrv.userContextId);
+        })
+        .then((flagG) => {
             this._flagGrifs = flagG;
-        }).catch(error => {
-            this._errorSrv.errorHandler(error);
-        });
-        this._cardSrv.prepareforEdit();
-        this.editableUser = this._userParamsSetSrv.curentUser;
-        this.titleHeader = `${this.editableUser.SURNAME_PATRON} - Права в картотеках`;
-        if (!this.editableUser.USERCARD_List || !this.editableUser.USERCARD_List.length) {
-            this.pageState = 'EMPTY';
-            return;
-        }
-        this.funcList = CARD_FUNC_LIST.map(node => new FuncNum(node));
-        this.pageState = 'VIEW';
-        }).catch(error => {
+
+            this._cardSrv.prepareforEdit();
+            this.editableUser = this._userParamsSetSrv.curentUser;
+            this.titleHeader = `${this.editableUser.SURNAME_PATRON} - Права в картотеках`;
+            if (!this.editableUser.USERCARD_List || !this.editableUser.USERCARD_List.length) {
+                this.pageState = 'EMPTY';
+                return;
+            }
+            this.funcList = CARD_FUNC_LIST.map(node => new FuncNum(node));
+            this.pageState = 'VIEW';
+        })
+        .catch(error => {
             this._errorSrv.errorHandler(error);
         });
 
@@ -75,27 +83,25 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
     submit() {
         this.pageState = 'LOADING';
         this._cardSrv.saveChenge$()
-        .then(() => {
-            this.pageState = 'VIEW';
-            this.cancel();
-        }).catch(error => {
-            this._errorSrv.errorHandler(error);
-            this.cancel();
-            this.ngOnInit();
-        });
+            .then(() => {
+                this.pageState = 'VIEW';
+                this.btnDisabled = true;
+                this._clearView();
+            }).catch(error => {
+                this._errorSrv.errorHandler(error);
+                this._clearView();
+                this.ngOnInit();
+            });
     }
     cancel() {
-        this._userParamsSetSrv.setChangeState({isChange: false});
-        this.editMode = false;
-        this._selectedFuncNum.isSelected = false;
-        this._selectedFuncNum = null;
-        this._cardSrv.selectedFuncNum = null;
+        this._clearView();
+        this._cardSrv.cancelChanges();
     }
     edit() {
         if (!this._flagGrifs) {
             this._router.navigate(['user-params-set/', 'access-limitation'],
                 {
-                    queryParams: {isn_cl: this._userParamsSetSrv.userContextId}
+                    queryParams: { isn_cl: this._userParamsSetSrv.userContextId }
                 });
             this._msgSrv.addNewMessage({ // TODO Перенести обьект сообщения в константы.
                 type: 'warning',
@@ -121,5 +127,12 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this._selectedFuncNum.isSelected = true;
         this._cardSrv.selectedFuncNum = node;
         this._cardSrv.selectFuncnum();
+    }
+    private _clearView (): void {
+        this._userParamsSetSrv.setChangeState({ isChange: false });
+        this.editMode = false;
+        this._selectedFuncNum.isSelected = false;
+        this._selectedFuncNum = null;
+        this._cardSrv.selectedFuncNum = null;
     }
 }

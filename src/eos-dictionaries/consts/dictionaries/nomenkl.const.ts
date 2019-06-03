@@ -38,7 +38,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         default: 0,
         required: true,
     }, {
-        key: 'SECURITY',
+    key: 'SECURITY',
         title: 'Гриф',
         type: 'select',
         length: 64,

@@ -9,7 +9,7 @@ import {BtnAction, BtnActionFields} from '../shered/interfaces/btn-action.interf
 export class BtnActionComponent implements OnInit {
 
     @Input() buttons: BtnAction;
-    @Output() showAction = new EventEmitter();
+    @Output() showAction: EventEmitter<any> = new EventEmitter<any>();
 
     constructor() {
     }

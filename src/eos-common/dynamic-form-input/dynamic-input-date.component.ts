@@ -27,7 +27,7 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
     constructor() {
         super();
         this.bsConfig = {
-            locale: 'ru',
+            // locale: 'ru',
             showWeekNumbers: false,
             containerClass: 'theme-dark-blue',
             dateInputFormat: 'DD.MM.YYYY',

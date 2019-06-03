@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 /* end:todo */
 
 import { NgModule, Optional, ModuleWithProviders, SkipSelf } from '@angular/core';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { DeliveryComponent } from './clman/delivery.component';
 import { RubricComponent } from './clman/rubric.component';
@@ -21,13 +21,14 @@ import { AuthService } from './services/auth.service';
 // import { ContextService } from './services/appContext.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { ViewManager } from 'eos-rest/services/viewManager';
+import { EosTemplateComponent } from './clman/eos-template/eos-template.component';
 // import { commonMergeMeta } from 'eos-rest/common/initMetaData';
 
 @NgModule({
     imports: [
         BrowserModule,
         FormsModule,
-        HttpModule,
+        HttpClientModule,
     ],
     declarations: [
         DeliveryComponent,
@@ -35,6 +36,7 @@ import { ViewManager } from 'eos-rest/services/viewManager';
         DeliveryDetailComponent,
         DepartmentComponent,
         UserRestComponent,
+        EosTemplateComponent,
     ],
     exports: [
         DeliveryComponent,

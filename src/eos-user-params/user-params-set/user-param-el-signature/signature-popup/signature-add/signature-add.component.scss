@@ -1,20 +1,23 @@
-.add-cert-wr{
+.add-cert-wr {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    > div {
+    padding-left: 20px;
+    padding-right: 10px;
+    >div {
         margin-right: 10px;
-        button{
+        button {
             margin-left: 10px;
         }
     }
 }
-.list-stores{
+
+.list-stores {
     max-height: 315px;
     overflow: auto;
-    li{
+    li {
         cursor: pointer;
-        &:hover{
+        &:hover {
             background-color: #e3f2fd
         }
     }

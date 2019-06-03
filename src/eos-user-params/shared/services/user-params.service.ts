@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { UserParamApiSrv } from './user-params-api.service';
 import { USER_CL, DEPARTMENT, PipRX, IEnt } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { IParamUserCl, IUserSetChanges } from '../intrfaces/user-parm.intterfaces';
-import { Subject } from 'rxjs/Subject';
+import { IParamUserCl, IUserSetChanges, IGetUserCfg } from '../intrfaces/user-parm.intterfaces';
+import { Subject, Observable } from 'rxjs';
 import { IMessage } from 'eos-common/interfaces';
 import { ALL_ROWS } from 'eos-rest/core/consts';
-import { Observable } from 'rxjs/Observable';
 import { EosStorageService } from 'app/services/eos-storage.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class UserParamsService {
@@ -66,34 +66,52 @@ export class UserParamsService {
         private _msgSrv: EosMessageService,
         private _pipRx: PipRX,
         private _storageSrv: EosStorageService,
+        private _router: Router,
     ) {}
-    getUserIsn(isn_cl?: string): Promise<boolean> {
-
-        if (!isn_cl) {
-            isn_cl = this._storageSrv.getItem('userEditableId');
+    getUserIsn(cfg?: IGetUserCfg): Promise<boolean> {
+        const defaultExpand: string = 'USER_PARMS_List,USERCARD_List/USER_CABINET_List,USER_RIGHT_DOCGROUP_List,USERDEP_List,USERCARD_List/USER_CARD_DOCGROUP_List,NTFY_USER_EMAIL_List,USER_TECH_List';
+        let isn: number;
+        let expand: string;
+        expand = cfg && cfg.expand ? cfg.expand : defaultExpand;
+        if (cfg && cfg.isn_cl) {
+            isn = cfg.isn_cl;
+        } else {
+            isn = this._storageSrv.getItem('userEditableId');
+        }
+        if (!isn) {
+            this._router.navigate(['user_param']);
         }
 
         const queryUser = {
-            [`USER_CL(${+isn_cl})`]: ALL_ROWS,
-            expand: 'USER_PARMS_List,USERCARD_List/USER_CABINET_List,USER_RIGHT_DOCGROUP_List,USERDEP_List,USERCARD_List/USER_CARD_DOCGROUP_List,NTFY_USER_EMAIL_List,USER_TECH_List'
+            [`USER_CL(${isn})`]: ALL_ROWS,
+            expand: expand
         };
         const _user = this._pipSrv.getData<USER_CL>(queryUser);
-        const _sys = this.fetchSysParams();
+        const _sys = cfg && cfg.shortSys ? this.fetchSysParams() : Promise.resolve([]);
         return Promise.all([_user, _sys])
         .then(([user, sys]) => {
-            this._sysParams = sys;
             this._userContext = user[0];
             this.userTechList = [];
             this.userRightDocgroupList = [];
-            this._userContext.USER_TECH_List.forEach(item => this.userTechList.push(Object.assign({}, item)));
-            this._userContext.USER_RIGHT_DOCGROUP_List.forEach(item => this.userRightDocgroupList.push(Object.assign({}, item)));
             this._userContext['DUE_DEP_NAME'] = '';
             this._isTechUser = !this._userContext['DUE_DEP'];
             this._userContext['isTechUser'] = !this._userContext['DUE_DEP'];
-            this._userContext['isAccessDelo'] = !!this._userContext.USERCARD_List.length;
-            this._userContext['ACCESS_SYSTEMS'] = this._userContext['AV_SYSTEMS'].split('');
+            this._userContext.ACCESS_SYSTEMS = this._userContext['AV_SYSTEMS'].split('');
             this.SubEmail.next(this._userContext);
-            this._createHash();
+
+            if (this._userContext.USER_TECH_List) {
+                this._userContext.USER_TECH_List.forEach(item => this.userTechList.push(Object.assign({}, item)));
+            }
+            if (this._userContext.USER_RIGHT_DOCGROUP_List) {
+                this._userContext.USER_RIGHT_DOCGROUP_List.forEach(item => this.userRightDocgroupList.push(Object.assign({}, item)));
+            }
+            if (this._userContext.USERCARD_List) {
+                this._userContext['isAccessDelo'] = !!this._userContext.USERCARD_List.length;
+            }
+
+            if (this._userContext.USER_PARMS_List) {
+                this._createHash();
+            }
             if (!this._isTechUser) {
                 return this.getDepartmentFromUser([this._userContext['DUE_DEP']]);
             }
@@ -110,6 +128,7 @@ export class UserParamsService {
             return true;
         })
         .catch(err => {
+            console.log(err);
             this._errorHandler(err);
             return false;
         });

@@ -1,6 +1,9 @@
 import { Component, OnDestroy, AfterViewInit, DoCheck, ViewChild, HostListener } from '@angular/core';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.service';
-import { Subject } from 'rxjs/Subject';
 import { NavParamService } from 'app/services/nav-param.service';
 @Component({
     selector: 'eos-user-selector',
@@ -23,7 +26,10 @@ export class UserSelectComponent implements OnDestroy, AfterViewInit, DoCheck {
         private _sandwichSrv: EosSandwichService,
         private _navSrv: NavParamService,
     ) {
-        _sandwichSrv.currentDictState$.takeUntil(this.ngUnsubscribe)
+        _sandwichSrv.currentDictState$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((state: boolean[]) => {
                 this.currentState = state;
             });

@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {USER_CL} from 'eos-rest';
-import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
+import {Subject, Observable} from 'rxjs';
 import {IPaginationConfig} from '../../../eos-dictionaries/node-list-pagination/node-list-pagination.interfaces';
 import {EosStorageService} from '../../../../src/app/services/eos-storage.service';
 import {PAGES_SELECT, LS_PAGE_LENGTH} from 'eos-user-select/shered/consts/pagination-user-select.consts';
