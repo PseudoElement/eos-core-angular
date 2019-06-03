@@ -1,16 +1,16 @@
-import {Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, OnChanges} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, OnChanges } from '@angular/core';
+import { Router } from '@angular/router';
 
-import {EosStorageService} from 'app/services/eos-storage.service';
+import { EosStorageService } from 'app/services/eos-storage.service';
 
-import {RECENT_URL} from 'app/consts/common.consts';
+import { RECENT_URL } from 'app/consts/common.consts';
 
-import {EosDictService} from '../services/eos-dict.service';
-import {EosDictionaryNode} from '../core/eos-dictionary-node';
-import {IDictionaryViewParameters, IFieldView} from 'eos-dictionaries/interfaces';
-import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
-import {EosUtils} from 'eos-common/core/utils';
-import {E_VISIBLE_TIPE} from '../interfaces/dictionary.interfaces';
+import { EosDictService } from '../services/eos-dict.service';
+import { EosDictionaryNode } from '../core/eos-dictionary-node';
+import { IDictionaryViewParameters, IFieldView } from 'eos-dictionaries/interfaces';
+import { HintConfiguration } from '../long-title-hint/hint-configuration.interface';
+import { EosUtils } from 'eos-common/core/utils';
+import { E_VISIBLE_TIPE } from '../interfaces/dictionary.interfaces';
 
 @Component({
     selector: 'eos-node-list-item',
@@ -23,7 +23,8 @@ export class NodeListItemComponent implements OnInit, OnChanges {
     @Input('params') params: IDictionaryViewParameters;
     @Input('length') length: any = {};
     @Input('customFields') customFields: IFieldView[];
-    @Output('mark') mark: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output('clickMark') clickMark: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output('clickSelect') clickSelect: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output('onHoverItem') onHoverItem: EventEmitter<HintConfiguration> = new EventEmitter<HintConfiguration>();
 
     viewFields: IFieldView[];
@@ -61,15 +62,13 @@ export class NodeListItemComponent implements OnInit, OnChanges {
 
     selectNode(evt: Event): void {
         evt.stopPropagation();
-        this._openNode();
+        this.node.isMarked = !this.node.isMarked;
+        this.clickSelect.emit(this.node.isMarked);
     }
 
     markNode(marked: boolean) {
-        this.node.marked = marked;
-        this.mark.emit(this.node.marked);
-        if (!this._dictSrv.listNode) {
-            this._openNode();
-        }
+        this.node.isMarked = marked;
+        this.clickMark.emit(this.node.isMarked);
     }
 
     viewNode(evt: MouseEvent, view = false) {
@@ -90,14 +89,6 @@ export class NodeListItemComponent implements OnInit, OnChanges {
 
     isShifted() {
         return this.params.firstUnfixedIndex !== 0;
-    }
-
-    private _openNode() {
-        if (/*!this.node.isDeleted && */ this.node.id !== '') {
-            this._dictSrv.openNode(this.node.id).then( () => {
-                this.mark.emit(true);
-            });
-        }
     }
 
     private _updateFieldValue(_field: IFieldView) {

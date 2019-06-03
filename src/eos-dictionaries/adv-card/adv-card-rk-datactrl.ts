@@ -164,6 +164,12 @@ export class AdvCardRKDataCtrl {
 
                             el.options = opts;
                             return data;
+                        }).then ((data) => {
+                            if (el.dict.dictId === 'USER_LISTS') {
+                                this._appendListInfo(el, data);
+                            }
+
+                            return data;
                         }));
                     }
                 }
@@ -175,6 +181,39 @@ export class AdvCardRKDataCtrl {
             return responses;
         });
     }
+
+    _appendListInfo(dict: TDefaultField, data: any[]) {
+        const listreqs = [];
+
+        for (let i = 0; i < data.length; i++) {
+            const el = data[i];
+
+            const query = { args: { isn: el.ISN_LIST } };
+            const req = { ValidateUserList4DefaultValues: query};
+            listreqs.push(
+                this._apiSrv.read(req).then((response) => {
+                    if (String(response) === 'ok') {
+
+                    } else {
+                    const opt = dict.options.find((dopt) => dopt.value === el.ISN_LIST);
+                        if (opt) {
+                            if (String(response) === 'LIST_IS_EMPTY') {
+                                opt.isEmpty = true;
+                            } else if (String(response) === 'LIST_CONTAINS_DELETED') {
+                                opt.hasDeleted = true;
+                            }
+                        }
+                    }
+                })
+            );
+        }
+
+        return Promise.all(listreqs)
+        .then((responses) => {
+            return responses;
+        });
+    }
+
 
     public fixDBValueByType(value: any, type: E_FIELD_TYPE): any {
         if (value === undefined) {

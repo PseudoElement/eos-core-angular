@@ -25,7 +25,8 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
     }
 
     get isNode(): boolean {
-        return this.data.rec['IS_NODE'] === 1;
+        return (this.data.rec['IS_NODE'] !== undefined && this.data.rec['IS_NODE'] === 0);
+        // return this.data.rec['IS_NODE'] === 1;
     }
 
     get eDocument(): boolean {
@@ -55,7 +56,8 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
 
     ngOnInit(): void {
         super.ngOnInit();
-        this._clearControlValidators('rec.SHABLON', !this.isNode);
+        this.updateForm({});
+        this._setRequired('rec.SHABLON', !this.isNode);
     }
 
     editTemplate(forProject = false) {
@@ -64,7 +66,8 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         const content = {
             forProject: forProject,
             dgTemplate: this.getValue(path),
-            rcType: this.rcType * 1
+            rcType: this.rcType * 1,
+            allowEmpty: (forProject ? false : this.isNode),
         };
 
         this.templateModal.content.init(content);
@@ -82,15 +85,11 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         }
     }
 
-    private _clearControlValidators(path: string, condition: boolean, reset: boolean = false) {
-        const tempControl = this.form.controls[path];
-        if (tempControl) {
-            if (reset) {
-                tempControl.setValidators(Validators.required);
-            }
-            if (condition) {
-                tempControl.setValidators(null);
-            }
+    private _setRequired(path: string, isRequired: boolean) {
+        const control = this.form.controls[path];
+        if (control) {
+            control.setValidators(isRequired ? Validators.required : null);
+            control.updateValueAndValidity();
         }
     }
 
@@ -102,7 +101,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
 
         let isRcTypeChanged = this._isChanged('rec.RC_TYPE', formChanges);
 
-        if (this.isNode) {
+        if (!this.isNode) {
             if (this._isChanged('rec.RC_TYPE_NODE', formChanges)) {
                 this.setValue('rec.RC_TYPE', this.getValue('rec.RC_TYPE_NODE'));
                 isRcTypeChanged = true;
@@ -134,7 +133,8 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
             }
         }
 
-        this._clearControlValidators('rec.PRJ_SHABLON', !this.isNode || !this.isPrjFlag, true);
+        this._setRequired('rec.PRJ_SHABLON', !this.isNode && this.isPrjFlag);
+        // TODO: избавиться от костыля в виде RC_TYPE_NODE
 
         // toggle auto register flag
         this.toggleInput(this.isPrjFlag && !AUTO_REG_EXPR.test(tpl), 'rec.PRJ_AUTO_REG', formChanges, updates);

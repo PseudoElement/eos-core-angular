@@ -2,7 +2,9 @@ $access-first-col-width: 251px;
 .dropdown-menu.owners-menu {
     z-index: 1060;
 }
-
+bs-dropdown-container {
+    z-index: 10000;
+}
 .owners-menu {
     max-height: 300px;
     overflow-y: auto;

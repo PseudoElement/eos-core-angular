@@ -96,6 +96,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
                     this._currentFormStatus = status;
                 }));
         }
+
     }
 
     afterGetForm(form: FormGroup, inputs: any): any {

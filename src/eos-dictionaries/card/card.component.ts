@@ -136,7 +136,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe((nodes) => {
-                this.nodes = nodes.filter((node) => !node.isDeleted);
+                this.nodes = nodes.filter((node) => !node.isDeleted && node.isMarked);
             });
 
         this._dictSrv.currentTab = tabNum;
@@ -177,12 +177,14 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     edit() {
         const _canEdit = this._preventMultiEdit() && this._preventDeletedEdit();
         if (_canEdit) {
+            this._dictSrv.editFromForm = true;
             this._openNode(this.node, EDIT_CARD_MODES.edit);
         }
     }
 
     close() {
         const url = this._storageSrv.getItem(RECENT_URL);
+        this._dictSrv.editFromForm = false;
         if (url) {
             this.goTo(url);
         } else {
@@ -198,8 +200,12 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
     cancel(): void {
         this.isChanged = false;
-        /* _askForSaving fired on route change */
-        this._openNode(this.node, EDIT_CARD_MODES.view);
+
+        if (this._dictSrv.editFromForm || (this.nodes && this.nodes.length > 1)) {
+            this._openNode(this.node, EDIT_CARD_MODES.view);
+        } else {
+            this.close();
+        }
     }
 
     recordChanged(isChanged: boolean) {
@@ -278,6 +284,10 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             }
         }
         return (this.node && !this.node.updating);
+    }
+
+    isSaveDisabled(): boolean {
+        return !this.isChanged || this.disableSave;
     }
 
     private _init() {
@@ -448,6 +458,10 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         if (node) {
             this._initNodeData(node);
             this.cancel();
+        } else {
+            if (this._dictSrv.editFromForm || (this.nodes && this.nodes.length <= 1)) {
+                this.close();
+            }
         }
         this.disableSave = false;
     }

@@ -39,6 +39,8 @@ export class NodeFieldComponent {
     get tooltipValue(): string {
         if (this.field.key === 'CODE') {
             return '';
+        } else if (this.field.type === E_FIELD_TYPE.select) {
+            return this.currentValue();
         }
         return this.field.value;
     }

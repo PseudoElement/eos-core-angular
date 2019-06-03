@@ -154,13 +154,34 @@ export class EosAccessPermissionsService {
 
     // --------------------------------------------------------------
     private _userTechListGranted(tech: E_TECH_RIGHT, due: string): APS_DICT_GRANT {
-        const list = this.appCtx.CurrentUser.USER_TECH_List.filter(e => e['FUNC_NUM'] === tech);
-        for (let i = 0; i < list.length; i++) {
-            const rec = list[i];
-            if (rec.ALLOWED) {
-                if (rec.DUE === due || due.substr(0, rec.DUE.length) === rec.DUE) {
-                    return APS_DICT_GRANT.readwrite;
+        // сначала ищем явное правило
+        const direct_rule = this.appCtx.CurrentUser.USER_TECH_List.find(e => (e['FUNC_NUM'] === tech && e['DUE'] === due));
+        if (direct_rule) {
+            if (direct_rule.ALLOWED) {
+                return APS_DICT_GRANT.readwrite;
+            } else {
+                return APS_DICT_GRANT.denied;
+            }
+        }
+
+        // Ищем правило по дереву, начиная с глубейших
+        const list = this.appCtx.CurrentUser.USER_TECH_List
+            .filter(e => (e['FUNC_NUM'] === tech) && due.substr(0, e.DUE.length) === e.DUE)
+            .sort((a, b) => {
+                if (a.DUE.length > b.DUE.length) {
+                    return -1;
+                } else {
+                    return 1;
                 }
+            }
+        );
+
+        if (list && list.length) {
+            const rec = list[0];
+            if (rec.ALLOWED) {
+                return APS_DICT_GRANT.readwrite;
+            } else {
+                return APS_DICT_GRANT.denied;
             }
         }
         return APS_DICT_GRANT.denied;

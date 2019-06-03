@@ -10,6 +10,9 @@ import { Subscription } from 'rxjs';
 import { RKBasePage } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_HAS_DELETED } from 'app/consts/confirms.const';
+import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -40,10 +43,8 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     nodes: any[];
     tabs: Ttab [];
     dataController: AdvCardRKDataCtrl;
-    // changeEvent: Subject<any> = new Subject();
     activeTab: Ttab;
     form: FormGroup;
-
 
     values: any;
 
@@ -53,30 +54,24 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     storedValuesDG: any;
     editValues: any;
     isChanged: boolean;
-    _currentFormStatus: any;
     formInvalid: boolean;
     isEDoc: boolean;
     rkType: number;
-    // protected formChanges$: Subscription;
-    private subscriptions: Subscription[];
 
-    @ViewChild('currentPage')
-    private currentPage: RKBasePage;
-    // protected apiSrv: PipRX;
+
+    @ViewChild('currentPage') private currentPage: RKBasePage;
+    private subscriptions: Subscription[];
     private _node = {};
     private isn_node: number;
-
+    private _currentFormStatus: any;
 
     constructor(
         public injector: Injector,
         public bsModalRef: BsModalRef,
         public zone: NgZone,
-        // private _apiSrv: PipRX,
         private _dataSrv: EosDataConvertService,
         private _inputCtrlSrv: InputControlService,
-        // private _msgSrv: EosMessageService,
-        // private _dictSrv: EosDictService,
-        // private _zone: NgZone,
+        private _confirmSrv: ConfirmWindowService,
     ) {
         this.isUpdating = true;
         this.tabs = tabs;
@@ -116,12 +111,45 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
     save(): void {
-        this.dataController.save(this.isn_node, this.inputs, this.newData).then (() => {
-            this.bsModalRef.hide();
-        }).catch (() => {
+        this.preSaveCheck(this.newData).then(isCancel => {
+            if (!isCancel) {
+                this.dataController.save(this.isn_node, this.inputs, this.newData).then (r => {
+                    this.bsModalRef.hide();
+                }).catch (err => {
 
+                });
+            }
         });
     }
+
+    preSaveCheck(newdata: any): Promise<any> {
+        let confPromise = Promise.resolve(false);
+        // проверить списки на предмет наличия логически удаленных записей.
+        const fields = this.descriptions[DEFAULTS_LIST_NAME];
+        for (let i = 0; i < fields.length; i++) {
+            const el: TDefaultField = fields[i];
+            if (!el.dict) { continue; }
+            if (el.dict.dictId !== 'USER_LISTS') { continue; }
+
+            // const id = el.dict.criteries['CLASSIF_ID'];
+            const val = newdata[DEFAULTS_LIST_NAME][el.key];
+            if (val) {
+                const opt = el.options.find ( o => Number(o.value) === Number(val));
+                if (opt && opt.isEmpty) {
+                    confPromise = this._presaveConfirmAppen(confPromise, el, RK_SELECTED_LIST_IS_EMPTY);
+                }
+
+                if (opt && opt.hasDeleted) {
+                    confPromise = this._presaveConfirmAppen(confPromise, el, RK_SELECTED_LIST_HAS_DELETED);
+                }
+
+            }
+        }
+
+        return confPromise;
+    }
+
+
 
     cancel(): void {
         this.bsModalRef.hide();
@@ -198,6 +226,19 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     }
 
+    private _presaveConfirmAppen(confPromise: Promise<boolean>, el: TDefaultField, win: IConfirmWindow2): Promise<boolean> {
+        return confPromise.then ((res) => {
+            const testc: IConfirmWindow2 = Object.assign({}, win);
+            testc.body = testc.body.replace('{{REK}}', el.title);
+            if (res) {
+                return res;
+            } else {
+                return this._confirmSrv.confirm2(testc).then((button) => {
+                    return (!button || button.result === 2);
+                });
+            }
+        });
+    }
     private _updateInputs(inputs: any): any {
         if (!this.isEDoc) {
             inputs['DOC_DEFAULT_VALUE_List.SPECIMEN'].required = true;

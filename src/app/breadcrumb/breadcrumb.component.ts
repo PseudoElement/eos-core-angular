@@ -75,7 +75,9 @@ export class BreadcrumbsComponent implements OnDestroy {
             )
             .subscribe((n) => {
                 this.hasInfoData = !!n;
-                this._isEditEnabled = this._calcisEditable(n);
+                if (this.hasInfoData) {
+                    this._isEditEnabled = !n.isDeleted && this._calcisEditable(n);
+                }
             });
         this._rtSrv.setFlagBtnHeader
             .pipe(

@@ -1,6 +1,6 @@
 <div [formGroup]="form" #dpw>
     <label [hidden]="input.hideLabel" [attr.for]="input.key">{{input.label}}</label>
-    <p class="form-control-static m-font static-date" [ngClass]="{'placeholder': !hasValue()}" *ngIf="readonly">{{currentValue}}</p>
+    <p class="form-control-static m-font static-date pad-right" [ngClass]="{'placeholder': !hasValue()}" *ngIf="readonly">{{currentValue}}</p>
     <div class="eos-datepicker" *ngIf="!readonly">
         <input type="text" eosDateMask [id]="input.key" [formControlName]="input.key" class="form-control" [ngClass]="{readonly: readonly}" [readonly]="readonly" placeholder="--.--.----" (focus)="onFocus()" (blur)="onBlur()" maxlength="11">
         <a bsDatepicker [placement]="placement" [bsConfig]="bsConfig" [bsValue]="bsDate" [minDate]="bsConfig.minDate" [maxDate]="bsConfig.maxDate" [isDisabled]="readonly" (bsValueChange)="dpChanged($event)"><span class="eos-icon eos-icon-calendar-blue small"></span></a>

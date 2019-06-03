@@ -17,7 +17,7 @@ eos-dynamic-input {
         color: $secondary-font-color-main-theme;
         border-radius: 0;
         padding: 6px 8px;
-        background-color: $light-grey-1;
+        // background-color: $light-grey-1;
         border-width: 1px;
         box-shadow: none;
         min-height: 32px;
@@ -27,12 +27,12 @@ eos-dynamic-input {
     }
     textarea.form-control,
     textarea.form-control-static {
-        height: 50px;
+        height: 120px;
     }
     .form-control-static {
         padding-left: 0;
         padding-right: 0;
-        background-color: #eeeeee;
+        // background-color: #eeeeee;
     }
     .static-date {
         padding-left: 10px;
@@ -170,8 +170,11 @@ eos-dynamic-input {
             }
         }
     }
-    .pad-left{
-        padding-left: 20px; 
+    .pad-left {
+        padding-left: 20px;
+    }
+    .pad-right {
+        padding-right: 20px;
     }
     .input-button-container {
         // width: 300px;
