@@ -7,6 +7,7 @@ import { EosMessageService } from '../../eos-common/services/eos-message.service
 import { SEARCH_NOT_DONE } from '../consts/messages.consts';
 import { EosDictionary } from '../core/eos-dictionary';
 import { SEARCH_TYPES } from 'eos-dictionaries/consts/search-types';
+import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
 
 
 @Component({
@@ -87,6 +88,11 @@ export class DictionarySearchComponent implements OnDestroy {
 
     ngOnDestroy() {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    }
+
+    autoFocus() {
+        setTimeout( () => BaseCardEditComponent.autoFocusOnFirstStringElement('popover-container'),
+            100);
     }
 
     fullSearch() {

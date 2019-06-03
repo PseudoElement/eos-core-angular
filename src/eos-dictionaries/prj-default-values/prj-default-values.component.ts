@@ -15,6 +15,7 @@ import {BsModalRef} from 'ngx-bootstrap';
 import {VALIDATOR_TYPE, ValidatorsControl} from '../validators/validators-control';
 import {Subscription} from 'rxjs';
 import {IDynamicInputOptions} from '../../eos-common/dynamic-form-input/dynamic-input.component';
+import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
 
 const PRJ_DEFAULT_NAME = 'PRJ_DEFAULT_VALUE_List';
 const FILE_CONSTRAINT_NAME = 'DG_FILE_CONSTRAINT_List';
@@ -402,6 +403,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                         this._fillInputsValues();
                         this.isUpdating = false;
                         this._prjExecListOnChange();
+                        this._autoFocus();
                      });
                 PrjDefaultValuesComponent._updateValidators(this.form.controls);
                 this.$statusChanges = this.form.statusChanges
@@ -416,6 +418,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
 
     setTab(i: number) {
         this.currTab = i;
+        this._autoFocus();
     }
 
     cancel(): void {
@@ -658,5 +661,10 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         this.data[FILE_CONSTRAINT_NAME].forEach(value => {
             this._setFileValue(value);
         });
+    }
+
+    private _autoFocus() {
+        setTimeout(() => BaseCardEditComponent.autoFocusOnFirstStringElement('eos-prj-default-values'),
+            100);
     }
 }
