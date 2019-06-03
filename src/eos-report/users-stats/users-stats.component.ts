@@ -16,6 +16,7 @@ export class EosReportUsersStatsComponent implements OnInit {
   usersNumber: number;
   paramValue: number;
   logUsers: string;
+  subSysArray = [];
 
   delo: number = 0; delowebLGO: number = 0; delowebKL: number = 0;
   Shif: number = 0; SCAN: number = 0; Pscan: number = 0; Scan_code: number = 0;
@@ -104,6 +105,21 @@ export class EosReportUsersStatsComponent implements OnInit {
       }
     }
     this.delowebLGO = this.delowebLGO - this.delo;
+    this.subSysArray = [
+      {subSystem: this.subsystem.delo.label, subValue: this.delo },
+      {subSystem: this.subsystem.delowebLGO.label, subValue: this.delowebLGO },
+      {subSystem: this.subsystem.delowebKL.label, subValue: this.delowebKL },
+      {subSystem: this.subsystem.Shif.label, subValue: this.Shif },
+      {subSystem: this.subsystem.SCAN.label, subValue: this.SCAN },
+      {subSystem: this.subsystem.Pscan.label, subValue: this.Pscan },
+      {subSystem: this.subsystem.Scan_code.label, subValue: this.Scan_code },
+      {subSystem: this.subsystem.Search_code.label, subValue: this.Search_code },
+      {subSystem: this.subsystem.Notifer.label, subValue: this.Notifer },
+      {subSystem: this.subsystem.Informer.label, subValue: this.Informer },
+      {subSystem: this.subsystem.EOS.label, subValue: this.EOS },
+      {subSystem: this.subsystem.MobNet.label, subValue: this.MobNet },
+      {subSystem: this.subsystem.APM.label, subValue: this.APM }
+    ];
   }
 
 }

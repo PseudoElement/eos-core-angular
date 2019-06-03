@@ -54,7 +54,7 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
       USER_PARMS: {
         criteries: {
           ISN_USER_OWNER: '-99',
-          PARM_NAME: 'CATEGORIES_FOR_USER'
+          PARM_NAME: 'CATEGORIES_FOR_USER|USER_EDIT_AUDIT'
         }
       }
     })
@@ -76,8 +76,8 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
         }
       }
     })
-    .then(data => {
-    });
+      .then(data => {
+      });
 
     this._pipeSrv.read({
       USER_AUDIT: {
@@ -85,8 +85,8 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
         }
       }
     })
-    .then(data => {
-    });
+      .then(data => {
+      });
 
 
 
