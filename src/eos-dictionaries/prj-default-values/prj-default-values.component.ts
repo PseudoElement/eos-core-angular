@@ -403,7 +403,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                         this._fillInputsValues();
                         this.isUpdating = false;
                         this._prjExecListOnChange();
-                        this._autoFocus();
+                        BaseCardEditComponent.autoFocusOnFirstStringElement('eos-prj-default-values');
                      });
                 PrjDefaultValuesComponent._updateValidators(this.form.controls);
                 this.$statusChanges = this.form.statusChanges
@@ -418,7 +418,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
 
     setTab(i: number) {
         this.currTab = i;
-        this._autoFocus();
+        BaseCardEditComponent.autoFocusOnFirstStringElement('eos-prj-default-values');
     }
 
     cancel(): void {
@@ -663,8 +663,4 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         });
     }
 
-    private _autoFocus() {
-        setTimeout(() => BaseCardEditComponent.autoFocusOnFirstStringElement('eos-prj-default-values'),
-            100);
-    }
 }

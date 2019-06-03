@@ -91,8 +91,7 @@ export class DictionarySearchComponent implements OnDestroy {
     }
 
     autoFocus() {
-        setTimeout( () => BaseCardEditComponent.autoFocusOnFirstStringElement('popover-container'),
-            100);
+        BaseCardEditComponent.autoFocusOnFirstStringElement('popover-container');
     }
 
     fullSearch() {

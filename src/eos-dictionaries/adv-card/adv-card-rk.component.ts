@@ -166,7 +166,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     public clickTab (item: Ttab) {
         this.activeTab = item;
-        this._autoFocus();
+        BaseCardEditComponent.autoFocusOnFirstStringElement('eos-adv-card-rk');
     }
 
     public initByNodeData(dndata: any) {
@@ -223,7 +223,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
                 this._subscribeToChanges();
                 this.isUpdating = false;
-                this._autoFocus();
+                BaseCardEditComponent.autoFocusOnFirstStringElement('eos-adv-card-rk');
             });
         });
 
@@ -486,10 +486,4 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         }
         return false;
     }
-
-    private _autoFocus() {
-        setTimeout(() => BaseCardEditComponent.autoFocusOnFirstStringElement('eos-adv-card-rk'),
-            100);
-    }
-
 }

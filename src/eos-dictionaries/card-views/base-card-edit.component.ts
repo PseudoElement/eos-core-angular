@@ -38,26 +38,28 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     public static autoFocusOnFirstStringElement(parentTag: string) {
-        let autofocusFlag = false;
-        const parents = document.getElementsByTagName(parentTag);
-        if (parents.length > 0) {
-            const inputs = parents[0].getElementsByTagName('input');
-            for (let i = 0; i < inputs.length; i++) {
-                if (inputs[i].type === 'text' && inputs[i].scrollWidth > 0) {
-                    inputs[i].autofocus = true;
-                    inputs[i].focus();
-                    autofocusFlag = true;
-                    break;
+        setTimeout( () => {
+            let autofocusFlag = false;
+            const parents = document.getElementsByTagName(parentTag);
+            if (parents.length > 0) {
+                const inputs = parents[0].getElementsByTagName('input');
+                for (let i = 0; i < inputs.length; i++) {
+                    if (inputs[i].type === 'text' && inputs[i].scrollWidth > 0) {
+                        inputs[i].autofocus = true;
+                        inputs[i].focus();
+                        autofocusFlag = true;
+                        break;
+                    }
+                }
+                if (!autofocusFlag) {
+                    const textAreas = parents[0].getElementsByTagName('textarea');
+                    if (textAreas.length > 0) {
+                        textAreas[0].autofocus = true;
+                        textAreas[0].focus();
+                    }
                 }
             }
-            if (!autofocusFlag) {
-                const textAreas = parents[0].getElementsByTagName('textarea');
-                if (textAreas.length > 0) {
-                    textAreas[0].autofocus = true;
-                    textAreas[0].focus();
-                }
-            }
-        }
+        }, 100);
     }
 
     ngAfterViewInit(): void {
