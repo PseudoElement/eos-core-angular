@@ -19,7 +19,7 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
                 return EosUtils.dateToStringValue(control.value);
             }
         }
-        return this.input.label;
+        return '--.--.----';
     }
 
     @ViewChild('dpw') datePickerWrapper: ElementRef;

@@ -15,8 +15,8 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     @Input() hideLabel: boolean;
     @Input() viewOpts: IDynamicInputOptions;
 
+    public isFocused: boolean;
     protected subscriptions: Subscription[] = [];
-    protected isFocused: boolean;
 
     get currentValue(): any {
         const control = this.control;
