@@ -87,20 +87,7 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     })
       .then(data => {
       });
-
-
-
   }
-  //   UserAuditEventKindEnum {
-  //     LOGICAL_DELETE = 1,
-  //     LOGICAL_UNDELETE = 2,
-  //     USER_CREATE = 3,
-  //     USER_LOGIN_CHANGE = 4,
-  //     USER_DELO_CHANGE = 5,
-  //     USER_STREAM_SCAN_CHANGE = 6,
-  //     USER_ARCHIVE_CHANGE = 7,
-  //     PHYSICAL_DELETE = 8
-  // }
 
   isActiveButton(): boolean {
     this.formBol = !this.formBol;

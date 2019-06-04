@@ -8,20 +8,17 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
   styleUrls: ['./sum-protocol.component.scss']
 })
 export class EosReportSummaryProtocolComponent implements OnInit {
-  dataDate = 'dataDate';
-  dataEvent = 'dataEvent';
-  dataEdit = 'dataEdit';
-  usersAudit;
-  dataUsers = 'dataUsers';
-  event_kind = {
-    1: 'Блокирование Пользователя',
-    2: 'Разблокирование Пользователя',
-    3: 'Создание пользователя',
-    4: 'Редактирование пользователя БД',
-    5: 'Редактирование прав ДЕЛА',
-    6: 'Редактирование прав поточного сканирования',
-    7: 'Удаление Пользователя'
-  };
+  usersAudit: any;
+  eventKind = [
+    'Блокирование Пользователя',
+    'Разблокирование Пользователя',
+    'Создание пользователя',
+    'Редактирование пользователя БД',
+    'Редактирование прав ДЕЛА',
+    'Редактирование прав поточного сканирования',
+    'Удаление Пользователя'
+  ];
+  critUsers: [];
 
   @ViewChild('full') fSearchPop;
 
@@ -33,10 +30,28 @@ export class EosReportSummaryProtocolComponent implements OnInit {
     })
       .then(data => {
         this.usersAudit = data;
+        this.SelectUsers(data);
+      });
+    this._pipeSrv.read({
+      USER_CL: {
+        criteries: {
+
+        }
+      }
+    })
+      .then(data => {
       });
   }
   isActiveButton() {
 
+  }
+
+  SelectUsers(data) {
+    // for (const item of data) {
+      // this.critUsers.push(item.ISN_USER)
+      // if(item.ISN_USER && item.ISN_WHO)
+      // if(item.ISN_USER && item.ISN_WHO)
+    // }
   }
 
 }

@@ -27,10 +27,12 @@
             <div class="eos-node-list">
                 <div class="user-item" >
                     <div class="contain-span" *ngFor="let audit of usersAudit">
-                        <span class="text-center item-table">{{audit.EVENT_DATE}}</span>
+                        <span class="text-center item-table">
+                            {{audit.EVENT_DATE}}
+                        </span>
                         <span class="text-center item-table">
                             <div class="pad-right-item">
-                                {{dataEvent}}
+                                {{eventKind[audit.EVENT_KIND-1]}}
                             </div>
                         </span>
                         <span class="text-center item-table pad-right-item">
