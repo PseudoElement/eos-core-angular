@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'; // ViewChild, HostListener
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core'; // ViewChild, HostListener
 import { BsDatepickerConfig } from 'ngx-bootstrap';
 import { OPEN_CLASSIF_USER_CL, CREATE_USER_INPUTS } from 'eos-user-select/shered/consts/create-user.consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';
@@ -13,15 +13,7 @@ import { InputParamControlService } from 'eos-user-params/shared/services/input-
   styleUrls: ['./filter-protocol.component.scss']
 })
 export class EosReportSummaryFilterProtocolComponent implements OnInit {
-  // @ViewChild('full')  full;
-  // @HostListener('document:click', ['$event.target'])
-  //   onClick(event) {
-  //       const clickedInside = this.full.popover.elementRef.nativeElement.contains(event)
-  //       console.log(clickedInside);
-  //       if (!clickedInside) {
-  //           console.log("outside");
-  //       }
-  //   }
+  @ViewChild('full') full;
   users: USER_CL[] = [];
   selectEvents: any[] = [];
   data = {};
@@ -46,6 +38,15 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
       minDate: new Date('01/01/1900'),
       maxDate: new Date('12/31/2100'),
     };
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClick() {
+    setTimeout(() => {
+      if (this.full.isOpen === false) {
+        this.formBol = false;
+      }
+    }, 0);
   }
 
   ngOnInit() {
@@ -123,14 +124,6 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     };
     return this._pipeSrv.read<USER_CL>(queryUser);
   }
-
-  // onClick() {
-  // console.log( this.insideElement);
-  // const clickedInside = this.insideElement.nativeElement.contains(targetElement);
-  // if (!clickedInside) {
-  //   console.log('outside clicked');
-  // }
-  // }
 
 }
 

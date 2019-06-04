@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
-
 import { PipRX, USER_CL, USER_PARMS } from 'eos-rest';
 
 @Component({
@@ -33,17 +32,17 @@ export class EosReportUsersStatsComponent implements OnInit {
   }
 
   getData() {
-
-    this.pip.read<USER_CL>({
+    const a = this.pip.read<USER_CL>({
       USER_CL: PipRX.criteries({ 'DELETED': '0', 'PROTECTED': '0' }) // 'SURNAME_PATRON': 'Администратор'
     }).then((r: any) => {
       this.items = r;
       this.getSubSystems(this.items);
-      this.getAllDeletedUsers();
-      this.usersNumber = this.usersNumber + this.items.length;
-    });
-
-    this.pip.read<USER_PARMS>({
+    })
+      .then(() => {
+        this.getAllDeletedUsers();
+        this.usersNumber = this.usersNumber + this.items.length;
+      });
+    const b = this.pip.read<USER_PARMS>({
       USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'MAX_LOGIN_ATTEMPTS|USER_EDIT_AUDIT' })
     }).then((r: any) => {
       if (r[1].PARM_VALUE === 'NO') {
@@ -53,8 +52,7 @@ export class EosReportUsersStatsComponent implements OnInit {
       }
       this.paramValue = parseInt(r[0].PARM_VALUE, 10);
     });
-
-
+    Promise.all([a, b]);
   }
   getAllDeletedUsers() {
     this.pip.read<USER_CL>({
