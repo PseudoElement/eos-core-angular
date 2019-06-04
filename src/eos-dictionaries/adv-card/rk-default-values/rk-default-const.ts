@@ -21,6 +21,7 @@ export class TDefaultField {
     key: string;
     type: E_FIELD_TYPE;
     title: string;
+    longTitle?: string; // Расширеное поле текстовое для случаев когда title один и тот же у разных полей
     dict?: TDFSelect;
     options?: TDFSelectOption[];
     pattern?: RegExp;
@@ -724,6 +725,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // kind_doc '1,2,3',
         // title: 'Список адресатов ДЛ',
         title: 'Адресаты',
+        longTitle: 'Внутренние адресаты',
         // classif_id:  545
         dict: {
             dictId: 'USER_LISTS',
@@ -739,6 +741,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // kind_doc '1,2,3',
         // title: 'Список адресатов организаций',
         title: 'Адресаты',
+        longTitle: 'Внешние адресаты',
         // classif_id:  545
         dict: {
             dictId: 'USER_LISTS',
