@@ -120,6 +120,10 @@ export class EosDictionaryNode {
         return this._dictionary.id;
     }
 
+    get dictionary() {
+        return this._dictionary;
+    }
+
     get isMarked(): boolean {
         return this._marked || this._autoMarked;
     }
