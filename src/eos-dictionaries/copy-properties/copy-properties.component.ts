@@ -36,8 +36,8 @@ export class CopyPropertiesComponent implements OnDestroy {
     formValid: boolean;
     fromParent: boolean;
     title: string;
-    private rec_from;
     private rec_to;
+    private rec_from;
     private properties;
     private properties_for_request = [];
     private formChanges$: Subscription;
@@ -58,7 +58,7 @@ export class CopyPropertiesComponent implements OnDestroy {
 
     public init(rec: any, fromParent: boolean) {
         this.isUpdating = true;
-        this.rec_from = rec;
+        this.rec_to = rec;
         this.fromParent = fromParent;
 
         if (this.fromParent) {
@@ -88,7 +88,7 @@ export class CopyPropertiesComponent implements OnDestroy {
             flagStr += (this.form.controls[prop].value ? '1' : '0');
         });
 
-        Object.assign(args, this.fromParent ? {due: this.rec_from.DUE} : {due_from: this.rec_from.DUE,
+        Object.assign(args, this.fromParent ? {due: this.rec_to.DUE} : {due_from: this.rec_from.DUE,
             due_to: this.rec_to.DUE});
 
         Object.assign(args, {flags: flagStr});
@@ -125,27 +125,27 @@ export class CopyPropertiesComponent implements OnDestroy {
             }, {
                 key: 'a_prj_shablon',
                 label: 'Свойства РКПД (наличие проектов и шаблон рег.№)',
-                disabled: !this.rec_from.PRJ_NUM_FLAG,
+                disabled: !this.rec_to.PRJ_NUM_FLAG,
             }, {
                 key: 'a_default_rek_prj',
                 label: 'Правила заполнения реквизитов РКПД по умолчанию',
-                disabled: !this.rec_from.PRJ_NUM_FLAG,
+                disabled: !this.rec_to.PRJ_NUM_FLAG,
             }, {
                 key: 'a_mand_rek_prj',
                 label: 'Перечень реквизитов РКПД, обязательных для заполнения',
-                disabled: !this.rec_from.PRJ_NUM_FLAG,
+                disabled: !this.rec_to.PRJ_NUM_FLAG,
             }, {
                 key: 'a_fc_prj',
                 label: 'Ограничения файлов для РКПД',
-                disabled: !this.rec_from.PRJ_NUM_FLAG,
+                disabled: !this.rec_to.PRJ_NUM_FLAG,
             }, {
                 key: 'a_add_rek',
                 label: 'Дополнительные реквизиты и правила их заполнения',
-                disabled: !this.rec_from.PRJ_NUM_FLAG,
+                disabled: !this.rec_to.PRJ_NUM_FLAG,
             }, {
                 key: 'a_add_rub',
                 label: 'Дополнительные реквизиты рубрик',
-                disabled: !this.rec_from.PRJ_NUM_FLAG,
+                disabled: !this.rec_to.PRJ_NUM_FLAG,
             }];
         this.properties_for_request = ['a_shablon', 'a_default_rek', 'a_mand_rek', 'a_write_rek', 'a_prj_shablon',
             'a_default_rek_prj', 'a_mand_rek_prj', 'a_add_rek', 'a_add_rub', 'a_fc_rc', 'a_fc_prj'];
@@ -174,7 +174,7 @@ export class CopyPropertiesComponent implements OnDestroy {
             }, {
                 key: 'a_prj_rek',
                 label: 'Свойства проектов документов',
-                disabled: !this.rec_from.PRJ_NUM_FLAG,
+                disabled: !this.rec_to.PRJ_NUM_FLAG,
             }];
         this.properties_for_request = ['a_shablon', 'a_add_rek', 'a_default_rek', 'a_mand_rek', 'a_write_rek',
             'a_prj_rek', 'a_fc'];
@@ -205,15 +205,15 @@ export class CopyPropertiesComponent implements OnDestroy {
         this._waitClassif.openClassif({classif: CLASSIF_NAME, selectMulty: false}, true)
             .then((isn) => {
                 if (isn) {
-                    if (this.rec_from.ISN_NODE.toString() === isn) {
+                    if (this.rec_to.ISN_NODE.toString() === isn) {
                         this.hideModal();
                         this._msgSrv.addNewMessage(THE_SAME_GROUP_WARNING_MESSAGE);
                     } else {
                         this._apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries({ISN_NODE: isn})})
                             .then(([docGroup]) => {
-                                this.rec_to = {};
-                                Object.assign(this.rec_to, docGroup);
-                                if (docGroup.RC_TYPE.toString() !== this.rec_from.RC_TYPE.toString()) {
+                                this.rec_from = {};
+                                Object.assign(this.rec_from, docGroup);
+                                if (docGroup.RC_TYPE.toString() !== this.rec_to.RC_TYPE.toString()) {
                                     this.hideModal();
                                     this._msgSrv.addNewMessage(RC_TYPE_IS_DIFFERENT_WARNING_MESSAGE);
                                 }
