@@ -1,24 +1,24 @@
 <div class="card-content-wrapper">
     <div>
-        <fieldset>
-            <legend>Прямая связка</legend>
-            <eos-dynamic-input [input]="inputs['rec.LINK_INDEX']"
-                               [form]="form"
-                               [readonly]="!editMode"></eos-dynamic-input>
-            <eos-dynamic-input [input]="inputs['rec.CLASSIF_NAME']"
-                               [form]="form"
-                               [readonly]="!editMode"></eos-dynamic-input>
-            <eos-dynamic-input [input]="inputs['rec.TRANSPARENT']"
-                               [form]="form"
-                               [readonly]="!editMode"></eos-dynamic-input>
-            <eos-dynamic-input [input]="inputs['rec.NOTE']"
-                               [form]="form"
-                               [readonly]="!editMode"></eos-dynamic-input>
-        </fieldset>
+            <p class="xl-font paragraph-title">Прямая связка</p>
+            <div class="margin-l">
+                <eos-dynamic-input [input]="inputs['rec.LINK_INDEX']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.CLASSIF_NAME']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.TRANSPARENT']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+                <eos-dynamic-input [input]="inputs['rec.NOTE']"
+                                   [form]="form"
+                                   [readonly]="!editMode"></eos-dynamic-input>
+            </div>
     </div>
     <div *ngIf="isNotLinksEqualsOrNew">
-        <fieldset>
-            <legend>Обратная связка</legend>
+        <p class="xl-font paragraph-title">Обратная связка</p>
+        <div class="margin-l">
             <eos-dynamic-input [input]="inputs['PARE_LINK_Ref.LINK_INDEX']"
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
@@ -31,7 +31,7 @@
             <eos-dynamic-input [input]="inputs['PARE_LINK_Ref.NOTE']"
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
-        </fieldset>
+        </div>
     </div>
     <div [ngStyle]="{'margin-top.px': 20}">
         <label class="pull-left"
