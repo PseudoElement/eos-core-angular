@@ -153,10 +153,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     checkChangeForm(data): void {
         Object.keys(data).forEach((val, index) => {
             if (val === 'PASSWORD_DATE') {
-                if (data[val].toString() === this.inputs[val].value.toString()) {
+                if (String(data[val]).toString() === String(this.inputs[val].value).toString()) {
                     this._newData.delete(val);
                 } else {
-                    this._newData.set(val, this._descSrv.dateToString(data[val]));
+                    const newDate = data[val] ? this._descSrv.dateToString(data[val]) : null;
+                    this._newData.set(val, newDate);
                 }
             } else {
                 if (data[val] !== this.inputs[val].value) {
