@@ -29,6 +29,18 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   usersAudit;
   ISN_USER;
   ISN_WHO;
+  valueEdit = [];
+  valueWho = [];
+  eventKind = [
+    { value: '' },
+    { value: 'Блокирование Пользователя' },
+    { value: 'Разблокирование Пользователя' },
+    { value: 'Создание пользователя' },
+    { value: 'Редактирование пользователя БД' },
+    { value: 'Редактирование прав ДЕЛА' },
+    { value: 'Редактирование прав поточного сканирования' },
+    { value: 'Удаление Пользователя' }
+  ];
 
   constructor(private _waitClassifSrv: WaitClassifService, private _inputCtrlSrv: InputParamControlService, private _pipeSrv: PipRX, public _apiSrv: UserParamApiSrv) {
     this.bsConfig = {
@@ -61,24 +73,15 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     })
       .then(data => {
       });
-    this._pipeSrv.read({
-      USER_PARMS: {
-        criteries: {
-          PARM_NAME: 'USER_EDIT_AUDIT'
-        }
-      }
-    })
-      .then(data => {
-      });
 
-    this._pipeSrv.read({
-      USER_CL: {
-        criteries: {
-        }
-      }
-    })
-      .then(data => {
-      });
+    // this._pipeSrv.read({
+    //   USER_CL: {
+    //     criteries: {
+    //     }
+    //   }
+    // })
+    //   .then(data => {
+    //   });
 
     this._pipeSrv.read({
       USER_AUDIT: {
@@ -98,8 +101,9 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   buttonChanged(e: Event) {
   }
 
-  selectUser() {
+  selectUserEdit() {
     OPEN_CLASSIF_USER_CL['criteriesName'] = this._apiSrv.configList.titleDue;
+    OPEN_CLASSIF_USER_CL['selectMulty'] = true;
     this.isShell = true;
     this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
       .then(data => {
@@ -108,10 +112,37 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
       })
       .then(data => {
         this.isShell = false;
+        data.map((user) => {
+          this.valueEdit.push(user.SURNAME_PATRON);
+        });
+        return this.valueEdit;
       })
       .catch(() => {
         this.isShell = false;
       });
+
+  }
+
+  selectUserWho() {
+    OPEN_CLASSIF_USER_CL['criteriesName'] = this._apiSrv.configList.titleDue;
+    OPEN_CLASSIF_USER_CL['selectMulty'] = true;
+    this.isShell = true;
+    this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
+      .then(data => {
+        this.data['ISN_USER_COPY'] = data;
+        return this._getUserCl(data);
+      })
+      .then(data => {
+        this.isShell = false;
+        data.map((user) => {
+          this.valueWho.push(user.SURNAME_PATRON);
+        });
+        return this.valueWho.toString();
+      })
+      .catch(() => {
+        this.isShell = false;
+      });
+
   }
 
   private _getUserCl(isn) {
