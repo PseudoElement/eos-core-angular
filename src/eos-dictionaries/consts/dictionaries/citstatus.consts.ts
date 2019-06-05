@@ -56,6 +56,6 @@ export const CITSTATUS_DICT: ITreeDictionaryDescriptor = {
     fullSearchFields: ['CODE', 'CLASSIF_NAME', 'NOTE'],
     quickViewFields: ['CODE', 'CLASSIF_NAME', 'NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME'],
-    listFields: ['CODE', 'CLASSIF_NAME'],
-    allVisibleFields: ['NOTE'],
+    listFields: ['CLASSIF_NAME'],
+    allVisibleFields: ['CODE', 'NOTE'],
 };

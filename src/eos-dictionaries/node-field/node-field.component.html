@@ -24,7 +24,7 @@
         </ng-container>
         <ng-container *ngSwitchDefault>
             <div class="table-field-ico"
-                *ngIf="node.isNode && (field.key === 'CLASSIF_NAME' || field.foreignKey === 'CLASSIF_NAME')">
+                *ngIf="hasIcon">
                 <span class="folder small eos-icon"
                     (click)="viewNode($event)"
                     [ngClass]="getIcon()" >
