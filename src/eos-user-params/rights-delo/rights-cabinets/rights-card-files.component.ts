@@ -15,6 +15,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 @Component({
     selector: 'eos-card-files',
+    styleUrls: ['./rights-card-style.component.scss'],
     templateUrl: 'rights-card-files.component.html',
     providers: [RigthsCabinetsServices]
 })
@@ -44,7 +45,9 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
     ) {}
     async ngOnInit() {
-        await this._userSrv.getUserIsn();
+        await this._userSrv.getUserIsn({
+            expand: 'USERCARD_List'
+        });
         this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Картотеки и Кабинеты';
         this.flagChangeCards = true;
 

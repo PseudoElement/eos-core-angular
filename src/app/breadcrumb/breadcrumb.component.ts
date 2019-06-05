@@ -6,12 +6,14 @@ import { IBreadcrumb } from '../core/breadcrumb.interface';
 import { EosSandwichService } from '../../eos-dictionaries/services/eos-sandwich.service';
 import { Subject } from 'rxjs';
 import { takeUntil, filter } from 'rxjs/operators';
-import { RECORD_ACTIONS_EDIT,
+import {
+    RECORD_ACTIONS_EDIT,
     RECORD_ACTIONS_NAVIGATION_UP,
-    RECORD_ACTIONS_NAVIGATION_DOWN } from '../../eos-dictionaries/consts/record-actions.consts';
+    RECORD_ACTIONS_NAVIGATION_DOWN
+} from '../../eos-dictionaries/consts/record-actions.consts';
 
 import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
-import {RtUserSelectService} from '../../eos-user-select/shered/services/rt-user-select.service';
+import { RtUserSelectService } from '../../eos-user-select/shered/services/rt-user-select.service';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 @Component({
     selector: 'eos-breadcrumb',
@@ -30,6 +32,7 @@ export class BreadcrumbsComponent implements OnDestroy {
     hasInfoData = false;
     showPushpin = false;
     showInfoAct = false;
+    private routeName: number;
 
 
     private ngUnsubscribe: Subject<any> = new Subject();
@@ -51,13 +54,14 @@ export class BreadcrumbsComponent implements OnDestroy {
             )
             .subscribe((bc: IBreadcrumb[]) => this.breadcrumbs = bc);
         this._update();
-
         this._router.events
             .pipe(
                 filter((evt) => evt instanceof NavigationEnd),
                 takeUntil(this.ngUnsubscribe)
             )
-            .subscribe(() => this._update());
+            .subscribe((evt) => {
+                this._update();
+            });
 
         this._sandwichSrv.currentDictState$
             .pipe(
@@ -79,10 +83,10 @@ export class BreadcrumbsComponent implements OnDestroy {
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
-        .subscribe(flag => {
-            this.hasInfoData = flag;
-            this._isEditEnabled = flag;
-        });
+            .subscribe(flag => {
+                this.hasInfoData = flag;
+                this._isEditEnabled = flag;
+            });
     }
 
     ngOnDestroy() {
@@ -91,7 +95,7 @@ export class BreadcrumbsComponent implements OnDestroy {
     }
 
     actionHandler(action) {
-        this._breadcrumbsSrv.sendAction({action: action});
+        this._breadcrumbsSrv.sendAction({ action: action });
     }
 
     treeButtonVisible() {
@@ -99,13 +103,16 @@ export class BreadcrumbsComponent implements OnDestroy {
     }
 
     isEditEnabled() {
-        if (!this._dictSrv.currentDictionary) {
-            return false;
-        }
-        if (this._eaps.isAccessGrantedForDictionary(this._dictSrv.currentDictionary.id,
+        if (this.routeName === -1) {
+            if (!this._dictSrv.currentDictionary) {
+                return false;
+            }
+            if (this._eaps.isAccessGrantedForDictionary(this._dictSrv.currentDictionary.id,
                 this._dictSrv.treeNodeIdByDict(this._dictSrv.currentDictionary.id)) < APS_DICT_GRANT.readwrite) {
-            return false;
+                return false;
+            }
         }
+
         return this._isEditEnabled;
     }
 
@@ -124,6 +131,7 @@ export class BreadcrumbsComponent implements OnDestroy {
     }
 
     private _update() {
+        this.routeName = this._router.url.toString().search('user_param');
         let _actRoute = this._route.snapshot;
         while (_actRoute.firstChild) { _actRoute = _actRoute.firstChild; }
         this.showPushpin = _actRoute.data.showPushpin;

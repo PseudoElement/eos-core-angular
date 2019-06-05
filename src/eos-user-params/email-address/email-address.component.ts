@@ -65,7 +65,9 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                 this._userServices.submitSave = this.saveAllForm(null);
             });
 
-        await this._userServices.getUserIsn();
+        await this._userServices.getUserIsn({
+            expand: 'NTFY_USER_EMAIL_List'
+        });
 
         this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ведение адресов электронной почты`;
         this.currentParams = '';
@@ -132,7 +134,9 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     saveAllForm(event): Promise<any> {
         return Promise.all([this._emailService.preAddEmail(this.ArrayForm), this._emailService.preDeliteEmail(this.delitedSetStore), this._emailService.preEditEmail(this.ArrayForm)])
             .then(result => {
-                return this._userServices.getUserIsn()
+                return this._userServices.getUserIsn({
+                    expand: 'NTFY_USER_EMAIL_List'
+                })
                     .then((flag: boolean) => {
                         if (flag) {
                             this.umailsInfo.splice(0, this.umailsInfo.length);

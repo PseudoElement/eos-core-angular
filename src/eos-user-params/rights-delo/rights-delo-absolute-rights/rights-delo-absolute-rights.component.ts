@@ -63,7 +63,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
 
-        await this._userParamsSetSrv.getUserIsn();
+        await this._userParamsSetSrv.getUserIsn({
+            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List'
+        });
         const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
         this.curentUser = this._userParamsSetSrv.curentUser;
         this.flagGrifs = await this._userParamsSetSrv.checkGrifs(id);
@@ -146,7 +148,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this.selectedNode = null;
                 this.editMode = false;
                 this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-                this._userParamsSetSrv.getUserIsn().then(() => {
+                this._userParamsSetSrv.getUserIsn({
+                    expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List'
+                })
+                .then(() => {
                     this.init();
                 });
             })
@@ -160,7 +165,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.editMode = false;
         this.btnDisabled = true;
         this._pushState();
-        this._userParamsSetSrv.getUserIsn()
+        this._userParamsSetSrv.getUserIsn({
+            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List'
+        })
             .then(() => {
                 this.init();
             });

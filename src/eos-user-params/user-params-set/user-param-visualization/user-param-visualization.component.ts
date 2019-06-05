@@ -54,7 +54,10 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
 
     }
     ngOnInit() {
-        this._userParamsSetSr.getUserIsn().then(() => {
+        this._userParamsSetSr.getUserIsn({
+            expand: 'USER_PARMS_List'
+        })
+        .then(() => {
             this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Визуализация';
             this.allData = this._userParamsSetSr.hashUserContext;
             this.inint();

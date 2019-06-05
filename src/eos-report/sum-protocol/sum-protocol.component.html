@@ -1,0 +1,58 @@
+<div class="teh-p">
+    <label class="checkbox minus-checkbox ">
+        <input type="checkbox" readonly="readonly" class="readonly">
+        <span class="eos-icon eos-icon-checkbox-black"></span>
+        Протоколирование работы со справочником 'Пользователи'</label>
+</div>
+<div class="list-user-select-wrapper">
+    <div class="table-wrapper usual-border">
+        <div class="eos-node-list">
+            <div class="table-header">
+                <div class="table-title contain-span-header">    
+                    <span class="text-center pad-left-title1">
+                        Дата       
+                    </span>
+                    <span class="text-center pad-left-title2">
+                        Событие
+                    </span>
+                    <span class="text-center pad-left-title3">
+                        Редактировал
+                    </span> 
+                    <span class="text-center">
+                        Пользователя
+                    </span>
+                    <eos-filter-protocol class="filter-protocol"></eos-filter-protocol>  
+                </div>
+            </div>
+            <div class="eos-node-list">
+                <div class="user-item" >
+                    <div class="contain-span" *ngFor="let audit of usersAudit">
+                        <span class="text-center item-table">
+                            {{audit.EVENT_DATE}}
+                        </span>
+                        <span class="text-center item-table">
+                            <div class="pad-right-item">
+                                {{eventKind[audit.EVENT_KIND-1]}}
+                            </div>
+                        </span>
+                        <span class="text-center item-table pad-right-item">
+                                <div class="pad-right-item">
+
+                                {{audit.ISN_WHO}}
+                            </div>
+                        </span>
+                        <span class="text-center item-table">
+                            <div class="pad-right-item">
+                                {{audit.ISN_USER}}
+                            </div>
+                        </span>
+                    </div>
+                </div> 
+            </div>
+        </div> 
+    </div>      
+</div>
+
+
+
+

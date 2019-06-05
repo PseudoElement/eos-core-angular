@@ -87,17 +87,16 @@ export class UserParamsService {
             expand: expand
         };
         const _user = this._pipSrv.getData<USER_CL>(queryUser);
-        const _sys = this.fetchSysParams();
+        const _sys = cfg && cfg.shortSys ? this.fetchSysParams() : Promise.resolve([]);
         return Promise.all([_user, _sys])
         .then(([user, sys]) => {
-            this._sysParams = sys;
             this._userContext = user[0];
             this.userTechList = [];
             this.userRightDocgroupList = [];
             this._userContext['DUE_DEP_NAME'] = '';
             this._isTechUser = !this._userContext['DUE_DEP'];
             this._userContext['isTechUser'] = !this._userContext['DUE_DEP'];
-            this._userContext['ACCESS_SYSTEMS'] = this._userContext['AV_SYSTEMS'].split('');
+            this._userContext.ACCESS_SYSTEMS = this._userContext['AV_SYSTEMS'].split('');
             this.SubEmail.next(this._userContext);
 
             if (this._userContext.USER_TECH_List) {
@@ -110,7 +109,9 @@ export class UserParamsService {
                 this._userContext['isAccessDelo'] = !!this._userContext.USERCARD_List.length;
             }
 
-            this._createHash();
+            if (this._userContext.USER_PARMS_List) {
+                this._createHash();
+            }
             if (!this._isTechUser) {
                 return this.getDepartmentFromUser([this._userContext['DUE_DEP']]);
             }

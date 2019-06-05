@@ -58,8 +58,10 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         .subscribe(() => {
             this._userSrv.submitSave = this.submit(null);
         });
-        await this._userSrv.getUserIsn();
-        this.accessSustem = this._userSrv.curentUser['ACCESS_SYSTEMS'];
+        await this._userSrv.getUserIsn({
+            expand: 'USER_PARMS_List'
+        });
+        this.accessSustem = this._userSrv.curentUser.ACCESS_SYSTEMS;
         this.hash = this._userSrv.hashUserContext;
         this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Регистрация`;
 

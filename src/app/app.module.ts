@@ -19,6 +19,7 @@ import { EosRestModule } from '../eos-rest/eos-rest.module';
 import { EosParametersModule } from '../eos-parameters/eos-parameters.module';
 import { EosUserParamsModule } from 'eos-user-params/eos-user-params.module';
 import { EosUserSelectModule } from 'eos-user-select/eos-user-select.module';
+import { EosReportModule } from 'eos-report/eos-report.module';
 
 import { AppComponent } from './app.component';
 import { BreadcrumbsComponent } from './breadcrumb/breadcrumb.component';
@@ -88,6 +89,7 @@ import { PermissionsGuard } from './guards/permissions.guard';
         EosParametersModule,
         EosUserParamsModule,
         EosUserSelectModule,
+        EosReportModule
     ],
     entryComponents: [
         LoginFormComponent,

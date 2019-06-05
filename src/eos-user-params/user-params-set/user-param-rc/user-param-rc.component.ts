@@ -56,7 +56,9 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
-        await this._userParamsSetSrv.getUserIsn();
+        await this._userParamsSetSrv.getUserIsn({
+            expand: 'USER_PARMS_List'
+        });
         this.allData = this._userParamsSetSrv.hashUserContext;
         this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - РК`;
         this.cutentTab = 0;

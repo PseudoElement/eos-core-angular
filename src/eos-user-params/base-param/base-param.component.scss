@@ -109,14 +109,14 @@
          overflow-y: scroll;
          .base-text-input {
              width: 250px;
-             margin-left: 26px;
+             margin-left: 33px;
              display: inline-block;
          }
          .mt-ceck {
              margin-top: 30px;
          }
          .base-login-input {
-             margin-left: 209px;
+             margin-left: 212px;
          }
          .elem-input-radio {
              font-size: 14px;
@@ -124,7 +124,7 @@
              margin-right: 20px;
          }
          .base-checkbox-input {
-             width: 220px;
+             width: 222px;
          }
          .icon-electronic {
              margin-bottom: -8px;
@@ -161,7 +161,7 @@
          }
      }
  }
- 
+
  .shell {
      width: 100vw;
      height: 100vh;
@@ -171,7 +171,7 @@
      left: 0;
      z-index: 2000;
  }
- 
+
  .wrapper-password {
      display: flex;
      justify-content: space-between;
@@ -188,7 +188,17 @@
          }
      }
  }
- 
+ .access-syst-wr{
+     display: flex;
+    .access-syst-part {
+         width: 30%;
+        &:last-child {
+         width: 40%;
+     }
+     }
+
+
+ }
  .serts {
      top: 30%;
  }

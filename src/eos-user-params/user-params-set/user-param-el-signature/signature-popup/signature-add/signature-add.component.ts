@@ -44,7 +44,7 @@ export class SignatureAddComponent implements OnInit {
 
     }
     searchStore() {
-        if (this.certSystemStore === 'sslm' || this.certSystemStore === 'sscu') {
+        if (this.certSystemStore === 'sslm' || this.certSystemStore === 'sscu' || this.certSystemStore === 'remote') {
             this.listStores$ = this.certStoresService.showListStores(this.certSystemStore, this.certSystemAddress)
                 .pipe(
                     catchError(e => {

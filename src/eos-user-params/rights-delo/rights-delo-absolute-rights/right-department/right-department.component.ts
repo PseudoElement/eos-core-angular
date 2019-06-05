@@ -86,6 +86,8 @@ export class RightDepertmentComponent implements OnInit {
                     deepValue: deep,
                 };
                 node.viewAllowed =  true;
+            }   else {
+                node.viewAllowed = false;
             }
         }   else {
             node.viewAllowed = false;
@@ -133,6 +135,7 @@ export class RightDepertmentComponent implements OnInit {
                             userDep: newUserDep,
                         },
                     };
+                    console.log(dep);
                     this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
                     const newNode = new NodeDocsTree(cfg);
                     this.curentUser.USERDEP_List.push(newUserDep);

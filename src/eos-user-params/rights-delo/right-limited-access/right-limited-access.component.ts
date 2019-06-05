@@ -93,9 +93,11 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         });
     }
     async ngOnInit() {
-        await this._userServices.getUserIsn();
+        await this._userServices.getUserIsn({
+            expand: 'USERCARD_List'
+        });
         this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ограничение доступа`;
-        this.checkUserCard = this._userServices['_userContext']['USERCARD_List'];
+        this.checkUserCard = this._userServices.curentUser['USERCARD_List'];
         this.isLoading = false;
         this._limitservise.getInfoGrifs().then(result => {
             this.checkGrifs = result[0][0]['USERSECUR_List'];

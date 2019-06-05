@@ -53,7 +53,10 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
 
     }
     ngOnInit() {
-        this._userParamsSetSr.getUserIsn().then(() => {
+        this._userParamsSetSr.getUserIsn({
+            expand: 'USER_PARMS_List'
+        })
+        .then(() => {
             this.allData = this._userParamsSetSr.hashUserContext;
             this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Поиск';
             this.inint();

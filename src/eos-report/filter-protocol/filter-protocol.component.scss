@@ -1,0 +1,84 @@
+.cust-div{
+    height: 300px;
+    width: 300px;
+}
+.full-search-pop {
+    right: 0;
+    width: 300px;
+    max-width: 300px;
+    border-radius: 0;
+}
+
+.full-search-bottom {
+    height: 500px;
+    border-top-width: 1px;
+    border-top-style: solid;
+    padding: 8px 20px;
+    .btn {
+        width: 82px;
+        height: 32px;
+    }
+}
+.search-btn{
+    display: flex;
+    justify-content: center;
+    
+}
+.cust-style-mod{
+    width: 48px;
+    height: 48px;
+    margin-left: 50%;
+}
+.btn {
+    &.search-btn {
+        height: 48px;
+        width: 48px;
+    }
+    &.quick-search-btn {
+        height: 48px;
+        width: 48px;
+    }
+}
+.form-date-control {  
+    width: 200px;
+    font-size: 14px; 
+    line-height: 32px;
+}
+.cont-datepick{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.group-datepick{
+    display: flex;
+    flex-direction: row;
+    
+}
+.datepick {
+    position: relative;
+    input {
+        margin-right: 5px;
+        padding-right: 32px !important;
+        &.stub {
+            box-shadow: none;
+            background-image: none;
+            padding: 0;
+        }
+        &.hidden {
+            display: none;
+        }
+    }
+    a {
+        position: absolute;
+        top: 0;
+        right: 1px;
+        bottom: 0;
+        margin: auto;
+        height: 24px;
+    }
+}
+.eos-icon.eos-icon-calendar-blue{
+    margin-top: 3px;
+}
+
+
