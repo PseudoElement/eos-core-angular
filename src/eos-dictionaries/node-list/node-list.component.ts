@@ -384,20 +384,24 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     openNodeNavigate(backward = false): void {
-        let _idx = this.nodes.findIndex((n) => n.isMarked);
-
-        if (backward) {
-            if (_idx > -1) {
-                _idx--;
-            }
-        } else {
-            _idx++;
+        const markList = this.nodes.filter( n => n.isMarked);
+        if (markList.length <= 1) {
+            return;
         }
-        _idx = (_idx + this.nodes.length) % this.nodes.length;
 
-        const node = this.nodes[_idx];
-        if (node && node.id) {
-            this._dictSrv.openNode(node.id);
+        const currentNode =  this._dictSrv.listNode;
+
+        for (let i = 0; i < markList.length; i++) {
+            const element = markList[i];
+            if (element === currentNode) {
+                if (backward) {
+                    this._dictSrv.openNode(markList[(i === 0 ? markList.length - 1 : i - 1)].id);
+                } else {
+                    this._dictSrv.openNode(markList[(i === markList.length - 1 ? 0 : i + 1)].id);
+                }
+                break;
+            }
+
         }
     }
 
