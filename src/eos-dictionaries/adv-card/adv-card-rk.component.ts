@@ -13,6 +13,7 @@ import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/v
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_HAS_DELETED } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
+import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -131,16 +132,15 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             if (!el.dict) { continue; }
             if (el.dict.dictId !== 'USER_LISTS') { continue; }
 
-            // const id = el.dict.criteries['CLASSIF_ID'];
             const val = newdata[DEFAULTS_LIST_NAME][el.key];
             if (val) {
                 const opt = el.options.find ( o => Number(o.value) === Number(val));
                 if (opt && opt.isEmpty) {
-                    confPromise = this._presaveConfirmAppen(confPromise, el, RK_SELECTED_LIST_IS_EMPTY);
+                    confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_IS_EMPTY);
                 }
 
                 if (opt && opt.hasDeleted) {
-                    confPromise = this._presaveConfirmAppen(confPromise, el, RK_SELECTED_LIST_HAS_DELETED);
+                    confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_HAS_DELETED);
                 }
 
             }
@@ -165,6 +165,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     public clickTab (item: Ttab) {
         this.activeTab = item;
+        BaseCardEditComponent.autoFocusOnFirstStringElement('eos-adv-card-rk');
     }
 
     public initByNodeData(dndata: any) {
@@ -221,15 +222,16 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
                 this._subscribeToChanges();
                 this.isUpdating = false;
+                BaseCardEditComponent.autoFocusOnFirstStringElement('eos-adv-card-rk');
             });
         });
 
     }
 
-    private _presaveConfirmAppen(confPromise: Promise<boolean>, el: TDefaultField, win: IConfirmWindow2): Promise<boolean> {
+    private _presaveConfirmAppend(confPromise: Promise<boolean>, el: TDefaultField, win: IConfirmWindow2): Promise<boolean> {
         return confPromise.then ((res) => {
             const testc: IConfirmWindow2 = Object.assign({}, win);
-            testc.body = testc.body.replace('{{REK}}', el.title);
+            testc.body = testc.body.replace('{{REK}}', (el.longTitle || el.title));
             if (res) {
                 return res;
             } else {
@@ -483,6 +485,4 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         }
         return false;
     }
-
-
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { IFieldView, E_FIELD_TYPE } from '../interfaces';
 import { HintConfiguration } from '../long-title-hint/hint-configuration.interface';
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
@@ -7,7 +7,7 @@ import { EosDictionaryNode } from '../core/eos-dictionary-node';
     selector: 'eos-node-field',
     templateUrl: 'node-field.component.html'
 })
-export class NodeFieldComponent {
+export class NodeFieldComponent implements OnInit {
     @Input() field: IFieldView;
     @Input() node: EosDictionaryNode;
     @Input() width: number;
@@ -16,9 +16,18 @@ export class NodeFieldComponent {
 
     types = E_FIELD_TYPE;
     length = {};
+    private _hasIcon: boolean;
+
+    constructor() {
+    }
 
     viewNode(evt: Event) {
         this.view.emit(evt);
+    }
+
+    ngOnInit(): void {
+        this._hasIcon = this.node.dictionary.isTreeType() && (this.field.key === 'CLASSIF_NAME' || this.field.foreignKey === 'CLASSIF_NAME');
+        // this._hasIcon = this.node.isNode && (this.field.key === 'CLASSIF_NAME' || this.field.foreignKey === 'CLASSIF_NAME');
     }
 
     currentValue(): string {
@@ -41,6 +50,14 @@ export class NodeFieldComponent {
             return '';
         } else if (this.field.type === E_FIELD_TYPE.select) {
             return this.currentValue();
+        } else if (this.field.type === E_FIELD_TYPE.dictionary) {
+            return this.decodeDictionary();
+        } else if (this.field.type === E_FIELD_TYPE.boolean) {
+            if (this.field.value) {
+                return 'Да';
+            } else {
+                return '';
+            }
         }
         return this.field.value;
     }
@@ -51,19 +68,28 @@ export class NodeFieldComponent {
         }
         return false;
     }
+
+    get hasIcon(): boolean {
+        return this._hasIcon;
+    }
+
     getIcon() {
-        if (this.node.isDeleted) {
-            if (this.node.data.rec['CARD_FLAG']) {
-                return 'eos-icon-card-index-grey';
+        if (this.node.isNode) {
+            if (this.node.isDeleted) {
+                if (this.node.data.rec['CARD_FLAG']) {
+                    return 'eos-icon-card-index-grey';
+                } else {
+                    return 'eos-icon-folder-grey';
+                }
             } else {
-                return 'eos-icon-folder-grey';
+                if (this.node.data.rec['CARD_FLAG']) {
+                    return 'eos-icon-card-index-blue';
+                } else {
+                    return 'eos-icon-folder-blue';
+                }
             }
         } else {
-            if (this.node.data.rec['CARD_FLAG']) {
-                return 'eos-icon-card-index-blue';
-            } else {
-                return 'eos-icon-folder-blue';
-            }
+            return 'emptyicon';
         }
     }
 }

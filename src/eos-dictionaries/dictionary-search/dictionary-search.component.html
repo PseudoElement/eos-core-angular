@@ -10,7 +10,8 @@
             tooltip="Расширенный поиск"
             placement="bottom"
             container="body"
-            containerClass="tooltip-info">
+            containerClass="tooltip-info"
+            (click)="autoFocus()">
             <i [hidden]="isActiveButton()" class="eos-icon eos-icon-filter-blue small" aria-hidden="true"></i>
             <i [hidden]="!isActiveButton()" class="eos-icon eos-icon-filter-white small" aria-hidden="true"></i>
         </button>
@@ -426,86 +427,84 @@
                 type="submit"
                 (click)="fullSearch()"
                 class="hidden-submit">Найти</button>
-                <div class="second-col">
-                    <div class="form-group unimportant-text">
-                        <label class="s-font"
-                               for="docCode">{{fieldsDescription.rec['CODE']?.title}}</label>
-                        <div class="search-fld">
-                            <input id="docCode"
-                                   name="docCode"
-                                   type="text"
-                                   class="form-control light"
-                                   [(ngModel)]="searchModel['CODE']"
-                                   placeholder="{{fieldsDescription.rec['CODE']?.title}}"
-                                   maxlength="{{fieldsDescription.rec['CODE']?.length}}">
-                            <a class="clear-btn"
-                               [ngClass]="{'hide': !searchModel['CODE']}"
-                               (click)="searchModel['CODE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
-                        </div>
+                <div class="form-group unimportant-text">
+                    <label class="s-font"
+                           for="docCode">{{fieldsDescription.rec['CODE']?.title}}</label>
+                    <div class="search-fld">
+                        <input id="docCode"
+                               name="docCode"
+                               type="text"
+                               class="form-control light"
+                               [(ngModel)]="searchModel['CODE']"
+                               placeholder="{{fieldsDescription.rec['CODE']?.title}}"
+                               maxlength="{{fieldsDescription.rec['CODE']?.length}}">
+                        <a class="clear-btn"
+                           [ngClass]="{'hide': !searchModel['CODE']}"
+                           (click)="searchModel['CODE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
                     </div>
-                    <div class="form-group unimportant-text">
-                        <label class="s-font"
-                            for="docName">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
-                        <div class="search-fld">
-                            <input id="docName"
-                                name="docName"
-                                type="text"
-                                class="form-control light"
-                                [(ngModel)]="searchModel['CLASSIF_NAME']"
-                                placeholder="{{fieldsDescription.rec['CLASSIF_NAME']?.title}}"
-                                maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
-                            <a class="clear-btn"
-                                [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
-                                (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
-                        </div>
+                </div>
+                <div class="form-group unimportant-text">
+                    <label class="s-font"
+                        for="docName">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
+                    <div class="search-fld">
+                        <input id="docName"
+                            name="docName"
+                            type="text"
+                            class="form-control light"
+                            [(ngModel)]="searchModel['CLASSIF_NAME']"
+                            placeholder="{{fieldsDescription.rec['CLASSIF_NAME']?.title}}"
+                            maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
+                        <a class="clear-btn"
+                            [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
+                            (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
                     </div>
+                </div>
 
-                    <div class="form-group unimportant-text">
-                        <label class="s-font"
-                            for="docFullTitle">{{fieldsDescription.rec['FULLNAME']?.title}}</label>
-                        <div class="search-fld">
-                            <input id="docFullTitle"
-                                name="docFullTitle"
-                                type="text"
-                                class="form-control light"
-                                [(ngModel)]="searchModel['FULLNAME']"
-                                placeholder="{{fieldsDescription.rec['FULLNAME']?.title}}"
-                                maxlength="{{fieldsDescription.rec['FULLNAME']?.length}}">
-                            <a class="clear-btn"
-                                [ngClass]="{'hide': !searchModel['FULLNAME']}"
-                                (click)="searchModel['FULLNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
-                        </div>
+                <div class="form-group unimportant-text">
+                    <label class="s-font"
+                        for="docFullTitle">{{fieldsDescription.rec['FULLNAME']?.title}}</label>
+                    <div class="search-fld">
+                        <input id="docFullTitle"
+                            name="docFullTitle"
+                            type="text"
+                            class="form-control light"
+                            [(ngModel)]="searchModel['FULLNAME']"
+                            placeholder="{{fieldsDescription.rec['FULLNAME']?.title}}"
+                            maxlength="{{fieldsDescription.rec['FULLNAME']?.length}}">
+                        <a class="clear-btn"
+                            [ngClass]="{'hide': !searchModel['FULLNAME']}"
+                            (click)="searchModel['FULLNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
                     </div>
-                    <div class="form-group unimportant-text">
-                        <label class="s-font" for="docIndex">{{fieldsDescription.rec['DOCGROUP_INDEX']?.title}}</label>
-                        <div class="search-fld">
-                            <input id="docIndex"
-                                   name="docIndex"
-                                   type="text"
-                                   class="form-control light"
-                                   [(ngModel)]="searchModel['DOCGROUP_INDEX']"
-                                   placeholder="{{fieldsDescription.rec['DOCGROUP_INDEX']?.title}}"
-                                   maxlength="{{fieldsDescription.rec['DOCGROUP_INDEX']?.length}}">
-                            <a class="clear-btn"
-                               [ngClass]="{'hide': !searchModel['DOCGROUP_INDEX']}"
-                               (click)="searchModel['DOCGROUP_INDEX'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
-                        </div>
+                </div>
+                <div class="form-group unimportant-text">
+                    <label class="s-font" for="docIndex">{{fieldsDescription.rec['DOCGROUP_INDEX']?.title}}</label>
+                    <div class="search-fld">
+                        <input id="docIndex"
+                               name="docIndex"
+                               type="text"
+                               class="form-control light"
+                               [(ngModel)]="searchModel['DOCGROUP_INDEX']"
+                               placeholder="{{fieldsDescription.rec['DOCGROUP_INDEX']?.title}}"
+                               maxlength="{{fieldsDescription.rec['DOCGROUP_INDEX']?.length}}">
+                        <a class="clear-btn"
+                           [ngClass]="{'hide': !searchModel['DOCGROUP_INDEX']}"
+                           (click)="searchModel['DOCGROUP_INDEX'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
                     </div>
-                    <div class="form-group unimportant-text">
-                        <label class="s-font"
-                            for="docNote">{{fieldsDescription.rec['NOTE']?.title}}</label>
-                        <div class="search-fld">
-                            <input id="docNote"
-                                name="docNote"
-                                type="text"
-                                class="form-control light"
-                                [(ngModel)]="searchModel['NOTE']"
-                                placeholder="{{fieldsDescription.rec['NOTE']?.title}}"
-                                maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
-                            <a class="clear-btn"
-                                [ngClass]="{'hide': !searchModel['NOTE']}"
-                                (click)="searchModel['NOTE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
-                        </div>
+                </div>
+                <div class="form-group unimportant-text">
+                    <label class="s-font"
+                        for="docNote">{{fieldsDescription.rec['NOTE']?.title}}</label>
+                    <div class="search-fld">
+                        <input id="docNote"
+                            name="docNote"
+                            type="text"
+                            class="form-control light"
+                            [(ngModel)]="searchModel['NOTE']"
+                            placeholder="{{fieldsDescription.rec['NOTE']?.title}}"
+                            maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
+                        <a class="clear-btn"
+                            [ngClass]="{'hide': !searchModel['NOTE']}"
+                            (click)="searchModel['NOTE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
                     </div>
                 </div>
         </form>

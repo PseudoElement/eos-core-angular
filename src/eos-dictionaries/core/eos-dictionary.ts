@@ -96,6 +96,12 @@ export class EosDictionary {
         };
     }
 
+    isTreeType(): any {
+        return this.descriptor.dictionaryType === E_DICT_TYPE.custom ||
+               this.descriptor.dictionaryType === E_DICT_TYPE.tree ||
+               this.descriptor.dictionaryType === E_DICT_TYPE.department;
+    }
+
 
     unbindOrganization() {
         // todo: решить с data.__relfield

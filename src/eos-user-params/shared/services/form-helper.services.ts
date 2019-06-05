@@ -55,7 +55,7 @@ export class FormHelperService {
             const f: IInputParamControl = Object.assign({}, inputVal);
             arrayFills.push(f);
             if (f.controlType === E_FIELD_TYPE.boolean) {
-              if (String(data[f['key']]) !==  'null' && String(data[f['key']]) !==  'undefined') {
+              if (String(data[f['key']]) !==  'null' && String(data[f['key']]) !==  'undefined' &&  String(data[f['key']]).replace(/\s/g, '')  !== '') {
                 if (data[f['key']] === 'NO') {
                     f['value']  = false;
                 }   else {

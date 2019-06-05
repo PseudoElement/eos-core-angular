@@ -1,4 +1,4 @@
-import { Input, Injector, OnDestroy, OnInit } from '@angular/core';
+import {Input, Injector, OnDestroy, OnInit, AfterViewInit} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { EosDictService } from '../services/eos-dict.service';
@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { NOT_EMPTY_STRING } from '../consts/input-validation';
 import { IDynamicInputOptions } from 'eos-common/dynamic-form-input/dynamic-input.component';
 
-export class BaseCardEditComponent implements OnDestroy, OnInit {
+export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
     @Input() form: FormGroup;
     @Input() inputs: any;
     @Input() data: any;
@@ -35,6 +35,35 @@ export class BaseCardEditComponent implements OnDestroy, OnInit {
         this.dictSrv = injector.get(EosDictService);
         this.currTab = this.dictSrv.currentTab ? this.dictSrv.currentTab : 0;
         this.prevValues = [];
+    }
+
+    public static autoFocusOnFirstStringElement(parentTag: string) {
+        setTimeout( () => {
+            let autofocusFlag = false;
+            const parents = document.getElementsByTagName(parentTag);
+            if (parents.length > 0) {
+                const inputs = parents[0].getElementsByTagName('input');
+                for (let i = 0; i < inputs.length; i++) {
+                    if (inputs[i].type === 'text' && inputs[i].scrollWidth > 0) {
+                        inputs[i].autofocus = true;
+                        inputs[i].focus();
+                        autofocusFlag = true;
+                        break;
+                    }
+                }
+                if (!autofocusFlag) {
+                    const textAreas = parents[0].getElementsByTagName('textarea');
+                    if (textAreas.length > 0) {
+                        textAreas[0].autofocus = true;
+                        textAreas[0].focus();
+                    }
+                }
+            }
+        }, 100);
+    }
+
+    ngAfterViewInit(): void {
+        BaseCardEditComponent.autoFocusOnFirstStringElement('eos-card-edit');
     }
 
     ngOnInit(): void {

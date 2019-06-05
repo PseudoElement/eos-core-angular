@@ -69,19 +69,14 @@
                 </div>
             </div>
             <div class="eos-node-list">
-                <eos-subsystem  [subSystem]=subsystem.delo.label [subValue]=delo></eos-subsystem> 
-                <eos-subsystem  [subSystem]=subsystem.delowebLGO.label [subValue]=delowebLGO></eos-subsystem> 
-                <eos-subsystem  [subSystem]=subsystem.delowebKL.label [subValue]=delowebKL></eos-subsystem> 
-                <eos-subsystem  [subSystem]=subsystem.Shif.label [subValue]=Shif></eos-subsystem> 
-                <eos-subsystem  [subSystem]=subsystem.SCAN.label [subValue]=SCAN></eos-subsystem> 
-                <eos-subsystem  [subSystem]=subsystem.Pscan.label [subValue]=Pscan></eos-subsystem> 
-                <eos-subsystem  [subSystem]=subsystem.Scan_code.label [subValue]=Scan_code></eos-subsystem> 
-                <eos-subsystem  [subSystem]=subsystem.Search_code.label [subValue]=Search_code></eos-subsystem> 
-                <eos-subsystem  [subSystem]=subsystem.Notifer.label [subValue]=Notifer></eos-subsystem> 
-                <eos-subsystem  [subSystem]=subsystem.Informer.label [subValue]=Informer></eos-subsystem> 
-                <eos-subsystem  [subSystem]=subsystem.EOS.label [subValue]=EOS></eos-subsystem> 
-                <eos-subsystem  [subSystem]=subsystem.MobNet.label [subValue]=MobNet></eos-subsystem> 
-                <eos-subsystem  [subSystem]=subsystem.APM.label [subValue]=APM></eos-subsystem>   
+                <div class="user-item">
+                    <div class="table-title" *ngFor="let subItem of subSysArray">
+                        <span class="cust-str1">{{subItem.subSystem}}</span>
+                        <span class="cust-str2 text-center">{{subItem.subValue}}</span>
+                        <span class="cust-str3 text-center">-</span>
+                        <span class="cust-str4">-</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>     

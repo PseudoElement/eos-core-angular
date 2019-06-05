@@ -11,7 +11,6 @@
         tooltip="Расширенный поиск"
         placement="bottom"
         container="body"
-    
         (click)="isActiveButton()"
         containerClass="tooltip-info">
             <i [hidden]="formBol"class="eos-icon eos-icon-filter-blue small" aria-hidden="true"></i>
@@ -51,8 +50,7 @@
             <label class="s-font" for="title">Событие:</label>
             <div class="datepick">
                 <select class="form-control m-font">
-                    <option>1</option>
-                    <option>2</option>
+                    <option *ngFor="let kind of eventKind" [value]="kind.value">{{kind.value}}</option>
                 </select>
             </div>
         </div>
@@ -64,8 +62,9 @@
                     name="note"
                     type="text"
                     class="form-control m-font"
+                    [value]="valueEdit.toString()"
                  >
-                <a class="clear-btn"><span class="icon eos-icon eos-icon-avatar-blue small icon-add-department" (click)="selectUser()"></span></a>
+                <a class="clear-btn"><span class="icon eos-icon eos-icon-avatar-blue small icon-add-department" (click)="selectUserEdit()"></span></a>
             </div>
         </div>
         <div class="form-group unimportant-text">
@@ -76,8 +75,9 @@
                     name="note"
                     type="text"
                     class="form-control light"
+                    [value]="valueWho.toString()"
                  >
-                 <a class="clear-btn"><span class="icon eos-icon eos-icon-avatar-blue small icon-add-department" (click)="selectUser()"></span></a>
+                 <a class="clear-btn"><span class="icon eos-icon eos-icon-avatar-blue small icon-add-department" (click)="selectUserWho()"></span></a>
                 <!-- <span class="eos-icon eos-icon-close-blue"></span></a> -->
             </div>
         </div>

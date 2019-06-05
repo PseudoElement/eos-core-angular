@@ -137,6 +137,7 @@ export class NodeActionsComponent implements OnDestroy {
         if (this.dictionary && this._viewParams && this._dictSrv) {
             const marklist = this._dictSrv.getMarkedNodes(false);
             const listHasDeleted = marklist.filter(n => n.isDeleted).length !== 0;
+            const listHasSelected = this._viewParams.hasMarked;
 
             _enabled = !this._viewParams.updatingList;
             _show = this.dictionary.canDo(button.type);
@@ -191,8 +192,10 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.tableCustomization:
                     break;
                 case E_RECORD_ACTIONS.counterDocgroup:
+                    _enabled = _enabled && listHasSelected;
                     break;
                 case E_RECORD_ACTIONS.counterDocgroupRKPD:
+                    _enabled = _enabled && listHasSelected;
                     break;
                 case E_RECORD_ACTIONS.counterDepartmentMain:
                     break;
@@ -208,19 +211,20 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.counterDepartment:
                 case E_RECORD_ACTIONS.copyPropertiesFromParent:
                     if (this._dictSrv && this._dictSrv.listNode) {
-                        _enabled = this._dictSrv.listNode.isNode;
+                        _enabled = this._dictSrv.listNode.isNode && listHasSelected;
                     } else {
                         _enabled = false;
                     }
                     break;
                 case E_RECORD_ACTIONS.prjDefaultValues:
                     if (this._dictSrv && this._dictSrv.listNode) {
-                        _enabled = this._dictSrv.listNode.isPrjDocGroup;
+                        _enabled = this._dictSrv.listNode.isPrjDocGroup && listHasSelected;
                     } else {
                         _enabled = false;
                     }
                     break;
                 case E_RECORD_ACTIONS.copyProperties:
+                    _enabled = _enabled && listHasSelected;
                     break;
             }
             due = this._dictSrv.treeNodeIdByDict(this.dictionary.id);

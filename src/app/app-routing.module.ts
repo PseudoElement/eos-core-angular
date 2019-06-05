@@ -236,12 +236,14 @@ const routes: Routes = [{
 {
     path: 'report/users-stats',
     canActivate: [AuthorizedGuard],
-    component: EosReportUsersStatsComponent
+    component: EosReportUsersStatsComponent,
+    data: {  title: 'Статистика по пользователям', showBreadcrumb: true }
 },
 {
     path: 'report/sum-protocol',
     canActivate: [AuthorizedGuard],
-    component: EosReportSummaryProtocolComponent
+    component: EosReportSummaryProtocolComponent,
+    data: {  title: 'Сводный протокол', showBreadcrumb: true }
 },
 {
     path: '',

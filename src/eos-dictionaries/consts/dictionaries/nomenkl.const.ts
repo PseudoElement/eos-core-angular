@@ -102,7 +102,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         type: 'boolean',
     }, {
         key: 'E_DOCUMENT',
-        title: 'Для эл. документов',
+        title: 'Для электронных документов',
         type: 'boolean',
         required: true,
         default: 0,

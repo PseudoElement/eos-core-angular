@@ -15,6 +15,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     @Input() hideLabel: boolean;
     @Input() viewOpts: IDynamicInputOptions;
 
+    public isFocused: boolean;
     protected subscriptions: Subscription[] = [];
 
     get currentValue(): any {
@@ -41,12 +42,19 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     }
 
     onFocus() {
+        this.isFocused = true;
         this.toggleTooltip(true);
     }
 
     onBlur() {
+        this.isFocused = false;
         this._updateMessage();
         this.toggleTooltip(false);
+    }
+    onInput(event) {
+        event.stopPropagation();
+        this._updateMessage();
+        this.toggleTooltip(true);
     }
 
     forceTooltip() {
@@ -74,6 +82,18 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     ngOnDestroy() {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
         this.subscriptions = [];
+    }
+
+    getCounterLabel(): string {
+        if (this.input.length) {
+            const control = this.control;
+            if (control) {
+                const len = this.control.value ? this.control.value.length : 0;
+                const maxlen = this.input.length;
+                return String(len) + '/' + String (maxlen);
+            }
+        }
+        return '';
     }
 
     get control(): AbstractControl {
@@ -114,7 +134,9 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
         if (!this.readonly) {
             const control = this.control;
             if (control) {
-                this.inputTooltip.visible = !focused && control.invalid && control.dirty;
+                this.inputTooltip.visible = /*!focused &&*/ control.invalid /*&& control.dirty*/;
+                this.inputTooltip.force = true;
+                this._updateMessage();
             } else {
                 this.inputTooltip.visible = false;
             }

@@ -1,35 +1,15 @@
 <div class="base-param-wrapper" *ngIf="!isLoading">
     <header>
         <div class="edit-header" [ngClass]="{'edited': editMode}">
-            <!-- <div class="move-wrapper">
-                        <div>
-                            <button *ngIf="!editMode"
-                                [disabled]="disManager(true, tt1)"
-                                #tt1="bs-tooltip"
-                                class="btn btn-primary-light"
-                                aria-hidden="true"
-                                (click)="prev()"
-                                tooltip="Предыдущая"
-                                placement="bottom"
-                                containerClass="tooltip-info"><span class="eos-icon eos-icon-arrow-v-blue-left small"></span></button>
-                            <button *ngIf="node && !editMode"
-                                [disabled]="disManager(false, tt2)"
-                                #tt2="bs-tooltip"
-                                class="btn btn-primary-light"
-                                aria-hidden="true"
-                                (click)="next()"
-                                tooltip="Следующая"
-                                placement="bottom"
-                                containerClass="tooltip-info"><span class="eos-icon eos-icon-arrow-v-blue-right small"></span></button>
-                        </div>
-                    </div> -->
             <div class="name-wrapper" [ngClass]="{'edited': editMode}">
                 <span class="edit-title primary-text long-title">{{title}}</span>
             </div>
             <div class="buttons-wrapper" *ngIf="editMode">
                 <div>
                     <button class="btn btn-primary upper" (click)="cancel()">Отменить</button>
-                    <button class="btn btn-primary-full upper" [disabled]="stateHeaderSubmit || errorPass || !getValidDate" (click)="submit()">Сохранить</button>
+                    <button class="btn btn-primary-full upper" [disabled]="!stateHeaderSubmit || errorPass || !getValidDate" (click)="submit()">Сохранить</button>
+                    <!-- <button class="btn btn-primary-full upper" [disabled]="stateHeaderSubmit || errorPass || !getValidDate" (click)="submit()">Сохранить</button> -->
+                    <!-- <button class="btn btn-primary-full upper" (click)="submit()">Сохранить</button> -->
                 </div>
             </div>
             <div class="action-wrapper" *ngIf="!editMode">
@@ -43,13 +23,7 @@
             </div>
         </div>
     </header>
-    <!-- <eos-user-header
-        [title]="title"
-        [statusBtnSub]="stateHeaderSubmit"
-        [isDefault]="false"
-        (submitForm)="submit()"
-        (cancelForm)="cancel()"
-    ></eos-user-header> -->
+
     <div class="base-param-main">
         <!-- Логин и Аутентификация с помощью ОС -->
         <div class="wrapper-password">
@@ -57,12 +31,6 @@
                 <label [hidden]="inputs['CLASSIF_NAME'].hideLabel" [attr.for]="inputs['CLASSIF_NAME'].key">{{inputs['CLASSIF_NAME'].label}}</label>
                 <input  class="form-control m-font" maxlength="12" [formControlName]="inputs['CLASSIF_NAME'].key" [readonly]="inputs['CLASSIF_NAME'].readonly" autocomplete="off">
             </div>
-            <!-- <eos-dynamic-input
-                class="base-text-input base-login-input"
-                [input]="inputs['CLASSIF_NAME']"
-                [form]="form"
-                [readonly]="inputs['CLASSIF_NAME'].disabled"
-            ></eos-dynamic-input> -->
             <eos-dynamic-input [input]="inputs['USERTYPE']" [form]="form" [readonly]="inputs['USERTYPE'].disabled" class="mt-ceck base-text-input"></eos-dynamic-input>
         </div>
         <!-- Дата смены пароля и поля для пароля -->
@@ -85,7 +53,6 @@
                     <div class="vision" [ngClass]="{'disabled': controls['pass'].disabled}">
                         <input class="form-control m-font" maxlength="30" [formControlName]="controls['passRepeated'].key" [id]="controls['passRepeated'].key" [type]="type1" [readonly]="controls['passRepeated'].readonly" [ngClass]="{'readonly': readonly}" [placeholder]="controls['passRepeated'].label"
                             [tooltip]="errorPass ? 'Пароли не совпадают' : 'Повторите пароль'" placement="bottom" [containerClass]="errorPass ? 'tooltip-error' : 'tooltip-info'" autocomplete="off">
-                        <!-- <span *ngIf="controls['passRepeated'].invalid" (click) = 'resetControll()' class="vision-close eos-icon small eos-icon-close-blue"></span> -->
                         <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-icon small" [ngClass]="editMode ? 'eos-icon-show-blue' : 'eos-icon-show-grey'"></span>
                     </div>
                 </div>
@@ -104,7 +71,7 @@
                     <span class="icon eos-icon small icon-add-department span-avatar-icon" [ngClass]="{'eos-icon-avatar-blue': !curentUser.isTechUser && editMode, 'eos-icon-avatar-grey': curentUser.isTechUser || !editMode}" (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"></span>
                 </div>
             </div>
-            <eos-dynamic-input class="base-text-input base-input-role" [input]="controls['SELECT_ROLE']" [form]="formControls" [readonly]="formControls.get('SELECT_ROLE').disabled"></eos-dynamic-input>
+            <eos-dynamic-input class="base-text-input base-input-role" [input]="controls['SELECT_ROLE']" [form]="formControls" [readonly]="curentUser.isTechUser"></eos-dynamic-input>
         </div>
         <!-- Примечания -->
         <div>
@@ -114,9 +81,9 @@
         <span class="l-font">Доступ к системам</span>
         <hr>
         <div>
-            <eos-dynamic-input [input]="accessInputs['0']" [form]="formAccess" [readonly]="formAccess.get('0').disabled" class="base-checkbox-input"></eos-dynamic-input>
-            <eos-dynamic-input [input]="accessInputs['0-1']" [form]="formAccess" [readonly]="formAccess.get('0-1').disabled" class="base-checkbox-input" (change)="tf()"></eos-dynamic-input>
-            <eos-dynamic-input [input]="accessInputs['delo_web']" [form]="formAccess" [readonly]="formAccess.get('delo_web').disabled" (change)="tf()"></eos-dynamic-input>
+            <eos-dynamic-input [input]="accessInputs['0']" [form]="formAccess" [readonly]="formAccess.get('0').disabled" class="base-checkbox-input"  (change)="[tf(), checkMeinControlAccess($event, '0')]"></eos-dynamic-input>
+            <eos-dynamic-input [input]="accessInputs['0-1']" [form]="formAccess" [readonly]="formAccess.get('0-1').disabled" class="base-checkbox-input" (change)="[tf(), checkMeinControlAccess($event, '0-1')]"></eos-dynamic-input>
+            <eos-dynamic-input [input]="accessInputs['delo_web']" [form]="formAccess" [readonly]="formAccess.get('delo_web').disabled" (change)="[tf(), checkMeinControlAccess($event, 'delo_web')]"></eos-dynamic-input>
             <eos-dynamic-input [input]="accessInputs['1-27']" [form]="formAccess" [readonly]="formAccess.get('1-27').disabled" class="pull-right"></eos-dynamic-input>
         </div>
         <hr style="margin-top: 0;">

@@ -8,26 +8,47 @@
     <div class="table-wrapper usual-border">
         <div class="eos-node-list">
             <div class="table-header">
-                <div class="table-title contain-span">    
-                    <span class="text-center" (click)="isActiveButton()">
+                <div class="table-title contain-span-header">    
+                    <span class="text-center pad-left-title1">
                         Дата       
                     </span>
-                    <span class="text-center">
+                    <span class="text-center pad-left-title2">
                         Событие
                     </span>
-                    <span class="text-center">
+                    <span class="text-center pad-left-title3">
                         Редактировал
                     </span> 
                     <span class="text-center">
                         Пользователя
                     </span>
-                    <eos-filter-protocol></eos-filter-protocol>  
+                    <eos-filter-protocol class="filter-protocol"></eos-filter-protocol>  
                 </div>
             </div>
             <div class="eos-node-list">
-                <eos-temp-sum-protocol *ngFor="let audit of usersAudit" [dataDate]=audit.EVENT_DATE [dataEvent]=dataEvent [dataEdit]=audit.ISN_WHO [dataUsers]=audit.ISN_USER></eos-temp-sum-protocol> 
+                <div class="user-item" >
+                    <div class="contain-span" *ngFor="let audit of usersAudit">
+                        <span class="text-center item-table">
+                            {{audit.EVENT_DATE}}
+                        </span>
+                        <span class="text-center item-table">
+                            <div class="pad-right-item">
+                                {{eventKind[audit.EVENT_KIND-1]}}
+                            </div>
+                        </span>
+                        <span class="text-center item-table pad-right-item">
+                                <div class="pad-right-item">
+
+                                {{audit.ISN_WHO}}
+                            </div>
+                        </span>
+                        <span class="text-center item-table">
+                            <div class="pad-right-item">
+                                {{audit.ISN_USER}}
+                            </div>
+                        </span>
+                    </div>
+                </div> 
             </div>
-            
         </div> 
     </div>      
 </div>

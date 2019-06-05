@@ -16,8 +16,6 @@ import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-us
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-// import { IMessage } from 'eos-common/interfaces';
-// import { RestError } from 'eos-rest/core/rest-error';
 import { ErrorHelperServices } from '../shared/services/helper-error.services';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { NavParamService } from 'app/services/nav-param.service';
@@ -35,8 +33,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     type: string = 'password';
     type1: string = 'password';
     curentUser: IParamUserCl;
-    stateHeaderSubmit: boolean = true;
-
     inputFields: IInputParamControl[];
     controlField: IInputParamControl[];
     accessField: IInputParamControl[];
@@ -51,21 +47,24 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     formControls: FormGroup;
     formAccess: FormGroup;
     /* формы */
-
     isLoading: Boolean = true;
-    isShell: Boolean = false;
-    errorPass: boolean = false;
     selfLink = null;
+    public isShell: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
+    public errorPass: boolean = false;
     private _sysParams;
     private _descSrv;
-    private _newData = {};
-    private _dataDb = {};
+    private _newData: Map<string, any> = new Map();
+    private _newDataformControls: Map<string, any> = new Map();
+    private _newDataformAccess: Map<string, any> = new Map();
     private modalRef: BsModalRef;
 
     private _ngUnsubscribe: Subject<void> = new Subject<void>();
     get sysParams() {
         return this._sysParams;
+    }
+    get stateHeaderSubmit() {
+        return this._newData.size > 0 || this._newDataformAccess.size > 0 || this._newDataformControls.size > 0;
     }
     constructor(
         private _router: Router,
@@ -78,16 +77,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         private modalService: BsModalService,
     ) { }
-    async ngOnInit() {
-        await this._userParamSrv.getUserIsn({
+    ngOnInit() {
+        this._userParamSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERCARD_List',
             shortSys: true
+        }).then(() => {
+            this.selfLink = this._router.url.split('?')[0];
+            this.init();
+            this.editModeF();
         });
-        this.selfLink = this._router.url.split('?')[0];
-        this.init();
-        this.editModeF();
-        this.checkSelectUser();
-        this._subscribeControls();
         this._userParamSrv
             .saveData$
             .pipe(
@@ -131,130 +129,198 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
         this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
-        this._dataDb['form'] = this.form.value;
-        this._dataDb['formControls'] = this.formControls.value;
-        this._dataDb['formAccess'] = this.formAccess.value;
+
         this.isLoading = false;
+        this.subscribeForms();
         return Promise.resolve();
     }
-    submit(): Promise<any> {
-        if (!this.stateHeaderSubmit) {
-            this.isLoading = true;
-            this.stateHeaderSubmit = false;
-            const id = this._userParamSrv.userContextId;
-            let accessSysString = '';
-            let qPass: Promise<any>;
-            const query = [];
-            if (this._newData['form'] || this._newData['accessSystems']) {
-                let d = {};
-                if (this._newData['form']) {
-                    this._newData['form']['USERTYPE'] = +this._newData['form']['USERTYPE'];
-                    d = Object.assign({}, this._newData['form']);
-                    delete d['DUE_DEP_NAME'];
-                    d['DUE_DEP'] = this.inputs['DUE_DEP_NAME'].data;
-                }
-                if (this._newData['accessSystems']) {
-                    accessSysString = this._newData['accessSystems'];
-                    d = Object.assign(d, { AV_SYSTEMS: this._newData['accessSystems'] });
-                }
 
-                this._nanParSrv.scanObserver(false);
-                query.push({
-                    method: 'MERGE',
-                    requestUri: `USER_CL(${id})`,
-                    data: d
+    subscribeForms() {
+        this.form.valueChanges.pipe(
+            takeUntil(this._ngUnsubscribe)
+        ).subscribe(data => {
+            this.checkChangeForm(data);
+        });
+
+        this.formControls.valueChanges.pipe(takeUntil(this._ngUnsubscribe)).subscribe(data => {
+            this.checkChangeFormControls(data);
+        });
+
+        this.formAccess.valueChanges.pipe(takeUntil(this._ngUnsubscribe)).subscribe(data => {
+            this.checkChangeFormAccess(data);
+        });
+    }
+    checkChangeForm(data): void {
+        Object.keys(data).forEach((val, index) => {
+            if (val === 'PASSWORD_DATE') {
+                if (String(data[val]).toString() === String(this.inputs[val].value).toString()) {
+                    this._newData.delete(val);
+                } else {
+                    const newDate = data[val] ? this._descSrv.dateToString(data[val]) : null;
+                    this._newData.set(val, newDate);
+                }
+            } else {
+                if (data[val] !== this.inputs[val].value) {
+                    this._newData.set(val, data[val]);
+                } else {
+                    this._newData.delete(val);
+                }
+            }
+        });
+        this._pushState();
+    }
+    checkChangeFormControls(data): void {
+        this.checkchangPass(data['pass'], data['passRepeated']);
+        Object.keys(data).forEach((val, index) => {
+            if (data[val] !== this.controls[val].value) {
+                this._newDataformControls.set(val, data[val]);
+            } else {
+                this._newDataformControls.delete(val);
+            }
+        });
+        this._pushState();
+    }
+    checkChangeFormAccess(data): void {
+        this.checRadioB();
+        Object.keys(this.accessInputs).forEach((input, index) => {
+            if (this.accessInputs[input].value !== this.formAccess.controls[input].value) {
+                this._newDataformAccess.set(input, this.formAccess.controls[input].value);
+            } else {
+                this._newDataformAccess.delete(input);
+            }
+        });
+        this._pushState();
+    }
+    submit(): Promise<any> {
+        const id = this._userParamSrv.userContextId;
+        const newD = {};
+        const query = [];
+        let accessStr = '';
+        let qPass: Promise<any>;
+        if (this._newDataformAccess.size || this._newData.size) {
+            if (this._newDataformAccess.size) {
+                accessStr = this._createAccessSystemsString(this.formAccess.controls);
+                newD['AV_SYSTEMS'] = accessStr;
+            }
+            if (this._newData.size) {
+                this._newData.forEach((val, key, arr) => {
+                    if (key === 'USERTYPE') {
+                        newD[key] = +val;
+                    } else {
+                        newD[key] = val;
+                    }
+                    if (key === 'DUE_DEP_NAME') {
+                        newD['DUE_DEP'] =  this.inputs['DUE_DEP_NAME'].data;
+                    }
+                    delete newD['DUE_DEP_NAME'];
                 });
             }
-            if (this._newData['formControls']) {
-                const data = this._newData['formControls'];
+            this._nanParSrv.scanObserver(false);
+            query.push({
+                method: 'MERGE',
+                requestUri: `USER_CL(${id})`,
+                data: newD
+            });
+        }
+        if (this._newDataformControls.size) {
+            if (this._newDataformControls.has('SELECT_ROLE')) {
                 query.push({
                     method: 'MERGE',
                     requestUri: `USER_CL(${id})/USER_PARMS_List('${id} CATEGORY')`,
                     data: {
-                        PARM_VALUE: data['SELECT_ROLE']
+                        PARM_VALUE: this._newDataformControls.get('SELECT_ROLE')
                     }
                 });
-                if (data && data['pass']) {
-                    if (this.curentUser['IS_PASSWORD'] === 0) {
-                        const url = `CreateLogin?pass='${encodeURI(data['pass'])}'&isn_user=${id}`;
-                        qPass = this._apiSrv.getData({ [url]: ALL_ROWS });
-                    } else {
-                        const url = `ChangePassword?isn_user=${id}&pass='${encodeURI(data['pass'])}'`;
-                        qPass = this._apiSrv.getData({ [url]: ALL_ROWS });
-                    }
-                } else {
-                    qPass = Promise.resolve();
-                }
             }
-            const form = this._apiSrv.setData(query);
-            return Promise.all([form, qPass])
-                .then(([f, pass]) => {
-                    if (accessSysString.length === 40) {
-                        const number = accessSysString.charAt(3);
-                        this._nanParSrv.scanObserver(number === '1' ? false : true);
-                    }
-                    if (this._newData['formControls'] && this._newData['formControls']['pass']) {
-                        this.formControls.get('pass').reset();
-                        this.formControls.get('passRepeated').reset();
-                    }
-                    this._newData = {};
-                    this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-                    return this._userParamSrv.getUserIsn({
-                        expand: 'USER_PARMS_List',
-                        shortSys: true
-                    })
-                        .then(() => {
-                            this.curentUser = this._userParamSrv.curentUser;
-                            this.editMode = false;
-                            this.init().then(() => {
-                                this.editModeF();
-                                this.checRadioB();
-                                this.checkSelectUser();
-                                this._subscribeControls();
-                                this.stateHeaderSubmit = true;
-                                this._pushState();
-                            });
-
-                        });
-                })
-                .catch(e => {
-                    this.cancel();
-                    this._errorSrv.errorHandler(e);
-                });
-        } else {
-            return Promise.resolve();
+            if (this._newDataformControls.has('pass')) {
+                const pass = this._newDataformControls.get('pass');
+                if (this.curentUser['IS_PASSWORD'] === 0) {
+                    const url = `CreateLogin?pass='${encodeURI(pass)}'&isn_user=${id}`;
+                    qPass = this._apiSrv.getData({ [url]: ALL_ROWS });
+                } else {
+                    const url = `ChangePassword?isn_user=${id}&pass='${encodeURI(pass)}'`;
+                    qPass = this._apiSrv.getData({ [url]: ALL_ROWS });
+                }
+            } else {
+                qPass = Promise.resolve();
+            }
         }
-    }
-    cancel() {
-        this.isLoading = true;
-        this.editMode = !this.editMode;
-        setTimeout(() => {
-            this.init().then(() => {
+        const form = this._apiSrv.setData(query);
+        return Promise.all([form, qPass]).then(data => {
+            if (accessStr.length > 1) {
+                const number = accessStr.charAt(3);
+                this._nanParSrv.scanObserver(number === '1' ? false : true);
+            }
+            if (this._newDataformControls.has('pass')) {
+                this.formControls.get('pass').reset('');
+                this.formControls.get('passRepeated').reset('');
+            }
+            this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+            this.clearMap();
+            this._userParamSrv.getUserIsn({
+                expand: 'USER_PARMS_List,USERCARD_List',
+                shortSys: true
+            }).then(() => {
+                this.editMode = false;
+                this.upform(this.inputs, this.form);
+                this.upform(this.controls, this.formControls);
+                this.upform(this.accessInputs, this.formAccess);
                 this.editModeF();
-                this._subscribeControls();
-                this.stateHeaderSubmit = true;
                 this._pushState();
             });
-        }, 1000);
+        }).catch(error => {
+            this.cancel();
+            this._errorSrv.errorHandler(error);
+        });
+    }
+    clearMap() {
+        this._newData.clear();
+        this._newDataformAccess.clear();
+        this._newDataformControls.clear();
+    }
+    upform(inputs, form: FormGroup) {
+        Object.keys(form.controls).forEach((key, val, arr) => {
+            inputs[key].value = form.controls[key].value;
+        });
+    }
+    cancel() {
+        //  this.isLoading = true;
+        this.editMode = !this.editMode;
+        this.editModeF();
+        this.cancelValues(this.inputs, this.form);
+        this.cancelValues(this.controls, this.formControls);
+        this.cancelValues(this.accessInputs, this.formAccess);
+        this.clearMap();
+        this._pushState();
+    }
+    cancelValues(inputs, form: FormGroup) {
+        Object.keys(inputs).forEach((key, val, arr) => {
+            form.controls[key].patchValue(inputs[key].value, { emitEvent: false });
+        });
+    }
+    gt(): any {
+        const delo = this.formAccess.get('0').value;
+        const delo_web_delo = this.formAccess.get('0-1').value;
+        const delo_web = this.formAccess.get('delo_web').value;
+        return {
+            delo, delo_web_delo, delo_web
+        };
     }
     edit() {
         this.editMode = !this.editMode;
         this.editModeF();
-        setTimeout(() => {
-            this.checRadioB();
-            this.checkSelectUser();
-            if (this.curentUser.isTechUser) {
-                this.formControls.controls['teсhUser'].disable({ emitEvent: false });
-            }
-            this.stateHeaderSubmit = true;
-            this._pushState();
-        });
-    }
-    checkSelectUser() {
-        if (this.curentUser.isAccessDelo && this.editMode) {
-            this.formControls.controls['SELECT_ROLE'].enable({ emitEvent: false });
+        this.checRadioB();
+        if (this.gt()['delo_web_delo']) {
+            this.checkMeinControlAccess({ target: { checked: true } }, '0-1');
+        } else if (this.gt()['delo_web']) {
+            this.checkMeinControlAccess({ target: { checked: true } }, 'delo_web');
+        } else if (this.gt()['delo']) {
+            this.checkMeinControlAccess({ target: { checked: true } }, '0');
         } else {
-            this.formControls.controls['SELECT_ROLE'].disable({ emitEvent: false });
+            this._toggleFormControl(this.formAccess.controls['0'], false);
+            this._toggleFormControl(this.formAccess.controls['0-1'], false);
+            this._toggleFormControl(this.formAccess.controls['delo_web'], false);
+            this._toggleFormControl(this.formAccess.controls['1-27'], true);
         }
     }
     tf() {
@@ -264,8 +330,23 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this.formControls.controls['SELECT_ROLE'].enable({ emitEvent: false });
         }
         if (!val1 && !val2) {
-            this.formControls.controls['SELECT_ROLE'].patchValue('');
+            this.formControls.controls['SELECT_ROLE'].patchValue(null);
             this.formControls.controls['SELECT_ROLE'].disable({ emitEvent: false });
+        }
+    }
+    checkMeinControlAccess($event, data) {
+        if (data === '0') {
+            this._toggleFormControl(this.formAccess.controls['0-1'], $event.target.checked);
+            this._toggleFormControl(this.formAccess.controls['delo_web'], $event.target.checked);
+            this._toggleFormControl(this.formAccess.controls['1-27'], true);
+        } else if (data === '0-1') {
+            this._toggleFormControl(this.formAccess.controls['0'], $event.target.checked);
+            this._toggleFormControl(this.formAccess.controls['delo_web'], $event.target.checked);
+            this._toggleFormControl(this.formAccess.controls['1-27'], true);
+        } else {
+            this._toggleFormControl(this.formAccess.controls['0'], $event.target.checked);
+            this._toggleFormControl(this.formAccess.controls['0-1'], $event.target.checked);
+            this._toggleFormControl(this.formAccess.controls['1-27'], !$event.target.checked);
         }
     }
     editModeF() {
@@ -281,7 +362,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     close() {
         this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
-        // this._router.navigate(['user_param']);
     }
 
     showDepartment() {
@@ -322,40 +402,38 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this.type1 = 'password';
         }
     }
-    resetControll() {
-        this.formControls['passRepeated'].patchValue();
-    }
     selectDepartment() {
         if (!this.curentUser.isTechUser && this.editMode) {
             this.showDepartment();
         }
     }
     checRadioB() {
-        const delo = this.formAccess.get('0').value;
-        const delo_web_delo = this.formAccess.get('0-1').value;
-        const delo_web = this.formAccess.get('delo_web').value;
-        if (!delo_web) {
-            this.formAccess.controls['1-27'].disable({ emitEvent: false });
+        if (!this.gt()['delo_web']) {
+            this.formAccess.controls['1-27'].patchValue(null, { emitEvent: false });
         } else {
-            this.formAccess.controls['0'].disable({ emitEvent: false });
-            this.formAccess.controls['0-1'].disable({ emitEvent: false });
+            if (this.formAccess.controls['1-27'].value === null) {
+                this.formAccess.controls['1-27'].patchValue('1', { emitEvent: false });
+            }
             this.formAccess.controls['26'].disable({ emitEvent: false });
-            // this.formAccess.controls['23'].enable({ emitEvent: false });
-            // this.formAccess.controls['21'].enable({ emitEvent: false });
+            this.formAccess.controls['26'].patchValue(false, { emitEvent: false });
+            this._toggleFormControl(this.formAccess.controls['23'], false);
+            this._toggleFormControl(this.formAccess.controls['21'], false);
+            this._toggleFormControl(this.formAccess.controls['25'], false);
         }
-        if (delo) {
-            this.formAccess.controls['0-1'].disable({ emitEvent: false });
-            this.formAccess.controls['delo_web'].disable({ emitEvent: false });
-            this.formAccess.controls['23'].disable({ emitEvent: true });
-            this.formAccess.controls['21'].disable({ emitEvent: true });
-            // this.formAccess.controls['26'].enable({ emitEvent: false });
+        if (this.gt()['delo']) {
+            this._toggleFormControl(this.formAccess.controls['23'], true);
+            this._toggleFormControl(this.formAccess.controls['21'], true);
+            this._toggleFormControl(this.formAccess.controls['25'], false);
+            this._toggleFormControl(this.formAccess.controls['26'], false);
+            this.formAccess.controls['23'].patchValue(false, { emitEvent: false });
+            this.formAccess.controls['21'].patchValue(false, { emitEvent: false });
         }
-        if (delo_web_delo) {
-            this.formAccess.controls['0'].disable({ emitEvent: false });
-            this.formAccess.controls['delo_web'].disable({ emitEvent: false });
-            // this.formAccess.controls['23'].enable({ emitEvent: false });
-            // this.formAccess.controls['21'].enable({ emitEvent: false });
-            // this.formAccess.controls['26'].enable({ emitEvent: false });
+        if (this.gt()['delo_web_delo']) {
+            this.disableAccessSyst(false);
+        }
+        if (!this.gt()['delo'] && !this.gt()['delo_web'] && !this.gt()['delo_web_delo']) {
+            this.patchVal();
+            this.disableAccessSyst(true);
         }
     }
 
@@ -366,83 +444,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     closeSerts() {
         this.modalRef.hide();
-    }
-    private _subscribeControls() {   /* подписки */
-        /* основная форма */
-        this.form.valueChanges
-            .subscribe((data) => {
-                if (data['PASSWORD_DATE']) {
-                    data['PASSWORD_DATE'] = this._descSrv.dateToString(data['PASSWORD_DATE']);
-                }
-                this._newData['form'] = data;
-                this._checkForChenge(false);
-            });
-
-        /* форма контролов */
-        this.formControls.valueChanges
-            .subscribe((data) => {
-                this._newData['formControls'] = data;
-                this._checkForChenge();
-            });
-
-        /* форма доступа к системам */
-        this.formAccess.valueChanges
-            .subscribe((data) => {
-                this._newData['accessSystems'] = this._createAccessSystemsString(data);
-                this._checkForChenge();
-            });
-
-        /* -----===== отключение элементов доступа к системам =====----- */
-        this.formAccess.get('0').valueChanges
-            .subscribe(data => {
-                this._toggleFormControl(this.formAccess.controls['0-1'], data);
-                this._toggleFormControl(this.formAccess.controls['delo_web'], data);
-                if (data) {
-                    this._toggleFormControl(this.formAccess.controls['23'], true);
-                    this._toggleFormControl(this.formAccess.controls['21'], true);
-                    this._toggleFormControl(this.formAccess.controls['25'], false);
-                    this._toggleFormControl(this.formAccess.controls['26'], false);
-                    this.formAccess.controls['23'].patchValue(false, { emitEvent: false });
-                    this.formAccess.controls['21'].patchValue(false, { emitEvent: false });
-                } else {
-                    this.patchVal();
-                    this.disableAccessSyst(true);
-                }
-            });
-        this.formAccess.get('0-1').valueChanges
-            .subscribe(data => {
-                this._toggleFormControl(this.formAccess.controls['0'], data);
-                this._toggleFormControl(this.formAccess.controls['delo_web'], data);
-                if (data) {
-                    this.disableAccessSyst(false);
-                } else {
-                    this.patchVal();
-                    this.disableAccessSyst(true);
-                }
-            });
-        this.formAccess.get('delo_web').valueChanges
-            .subscribe(data => {
-                this.formAccess.controls['26'].patchValue(false, { emitEvent: false });
-                this._toggleFormControl(this.formAccess.controls['0'], data);
-                this._toggleFormControl(this.formAccess.controls['0-1'], data);
-                this._toggleFormControl(this.formAccess.controls['1-27'], !data);
-                this._toggleFormControl(this.formAccess.controls['26'], true);
-                if (data) {
-                    this.formAccess.controls['1-27'].patchValue('1', { emitEvent: false });
-                    this._toggleFormControl(this.formAccess.controls['23'], false);
-                    this._toggleFormControl(this.formAccess.controls['21'], false);
-                    this._toggleFormControl(this.formAccess.controls['25'], false);
-                } else {
-                    this.formAccess.controls['1-27'].patchValue('', { emitEvent: false });
-                    this.formAccess.controls['23'].patchValue(false, { emitEvent: false });
-                    this.formAccess.controls['21'].patchValue(false, { emitEvent: false });
-                    this.formAccess.controls['25'].patchValue(false, { emitEvent: false });
-                    this._toggleFormControl(this.formAccess.controls['23'], true);
-                    this._toggleFormControl(this.formAccess.controls['21'], true);
-                    this._toggleFormControl(this.formAccess.controls['25'], true);
-
-                }
-            });
     }
     private patchVal() {
         this.formAccess.controls['23'].patchValue(false, { emitEvent: false });
@@ -484,112 +485,53 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         arr.forEach((val, index) => {
             switch (index) {
                 case 0:
-                    if (data.hasOwnProperty('0-1')) {
-                        if (data['0-1']) {
-                            newArr['0'] = '1';
-                            newArr['1'] = '1';
-                        } else {
-                            newArr['1'] = '0';
-                        }
+                    if (data['0-1'].value) {
+                        newArr['0'] = '1';
+                        newArr['1'] = '1';
                     } else {
-                        if (data.hasOwnProperty('0')) {
-                            newArr['0'] = data['0'] ? '1' : '0';
+                        newArr['1'] = '0';
+                        if (data['0'].value) {
+                            newArr['0'] = data['0'].value ? '1' : '0';
                         }
                     }
                     break;
                 case 1:
-                    if (data.hasOwnProperty('delo_web')) {
-                        if (data.hasOwnProperty('1-27')) {
-                            newArr[1] = (data['1-27'] === '1') ? '1' : '0';
-                            newArr[27] = (data['1-27'] === '27') ? '1' : '0';
-                        }
-                    } else {
-                        newArr[27] = '0';
+                    if (data['delo_web'].value) {
+                        newArr[1] = (data['1-27'].value === '1') ? '1' : '0';
+                        newArr[27] = (data['1-27'].value === '27') ? '1' : '0';
                     }
                     break;
                 case 27:
                     break;
                 default:
                     if (data.hasOwnProperty(index)) {
-                        newArr[index] = data[index] ? '1' : '0';
+                        newArr[index] = data[index].value ? '1' : '0';
                     }
                     break;
-
-
             }
         });
         return newArr.join('');
-        // tslint:disable-next-line:forin
-        // for (const key in data) {
-        //     switch (key) {
-        //         case 'delo_web':
-        //             if (data[key]) {
-        //                 arr[1] = (data['1-27'] === '1') ? '1' : '0';
-        //                 arr[27] = (data['1-27'] === '27') ? '1' : '0';
-        //             }
-        //             break;
-        //         case '1-27':
-        //             break;
-        //         case '0-1':
-        //             if (data[key]) {
-        //                 arr[0] = '1';
-        //                 arr[1] = '1';
-        //             }
-        //             break;
-        //         default:
-        //             arr[key] = +data[key];
-        //     }
-        // }
-        //   return arr.join('');
     }
-    private _checkForChenge(state: boolean = false) {
-        let change = false;
-        if (this._newData['form']) {
-            const data = this._newData['form'];
-            // tslint:disable-next-line:forin
-            for (const k in data) {
-                change = change || (data[k] !== this._dataDb['form'][k]);
-            }
-            this._newData['form'] = change ? this._newData['form'] : null;
-        }
-        if (this._newData['formControls']) {
-            const data = this._newData['formControls'];
-            let pass = false;
-            const role = data['SELECT_ROLE'] !== this._userParamSrv.hashUserContext['CATEGORY'];
-            if (data['pass'] && data['passRepeated']) {
-                pass = data['pass'] === data['passRepeated'];
-            }
-            this.checkchangPass(data['pass'], data['passRepeated']);
-            this._newData['formControls'] = (pass || role) ? this._newData['formControls'] : null;
-            change = change ? change : pass || role;
-        }
-        if (this._newData['accessSystems']) {
-            const c = this._newData['accessSystems'] !== this.curentUser['AV_SYSTEMS'];
-            this._newData['accessSystems'] = c ? this._newData['accessSystems'] : null;
-            change = change ? change : c;
-        }
-        // ибо и так не работало - !!!!
-        // this.stateHeaderSubmit = !change || state;
-        this.stateHeaderSubmit = false;
-        this._pushState();
-    }
+    // private _checkForChenge(state: boolean = false) {
+    //     this.stateHeaderSubmit = false;
+    //     this._pushState();
+    // }
 
-    private checkchangPass(data1, data2) {
-        if (data1 !== '' && data2 !== '') {
-            this.errorPass = data1 !== data2;
+    private checkchangPass(pass, passrepeat) {
+        if (pass !== '' && passrepeat !== '') {
+            this.errorPass = pass !== passrepeat;
             if (this.errorPass) {
                 this.formControls.get('passRepeated').setErrors({ repeat: true });
             } else {
                 this.errorPass = false;
             }
-        } else if (data1 !== '' || data2 !== '') {
+        } else if (pass !== '' || passrepeat !== '') {
             this.errorPass = true;
         } else {
             this.errorPass = false;
         }
     }
     private _pushState() {
-        this._userParamSrv.setChangeState({ isChange: !this.stateHeaderSubmit, disableSave: !this.getValidDate || this.errorPass });
+        this._userParamSrv.setChangeState({ isChange: this.stateHeaderSubmit, disableSave: !this.getValidDate || this.errorPass });
     }
-
 }
