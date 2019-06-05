@@ -1,45 +1,48 @@
-<div #el
-     class="node-field"
-     id="{{field.foreignKey}}"
-     [ngClass]="{'no-padding': node.isNode && (field.key === 'CLASSIF_NAME' || field.foreignKey === 'CLASSIF_NAME')}"
-     [tooltip]="this.tooltipValue" placement="bottom" containerClass="tooltip-info" container="body">
+<div
+    #el
+    class="node-field"
+    id="{{ field.foreignKey }}"
+    [ngClass]="{ 'no-padding': node.isNode && (field.key === 'CLASSIF_NAME' || field.foreignKey === 'CLASSIF_NAME') }"
+>
     <ng-container [ngSwitch]="field.type">
-        <div *ngSwitchCase="types.boolean"
-            class="node-field-checkbox">
-            <span class="eos-icon small"
+        <div *ngSwitchCase="types.boolean" class="node-field-checkbox">
+            <span
+                class="eos-icon small"
                 aria-hidden="true"
-                [ngClass]="{'eos-icon-checkbox-grey': field.value}"></span>
+                [ngClass]="{ 'eos-icon-checkbox-grey': field.value }"
+            ></span>
         </div>
         <ng-container *ngSwitchCase="types.select">
-             {{currentValue()}}
+            <label [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+                {{ currentValue() }}
+            </label>
         </ng-container>
         <ng-container *ngSwitchCase="types.buttons">
-            {{currentValue()}}
+            <label [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+                {{ currentValue() }}
+            </label>
         </ng-container>
         <ng-container *ngSwitchCase="types.date">
-            {{field.value | eosDate}}
+            <label [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+                {{ field.value | eosDate }}
+            </label>
         </ng-container>
         <ng-container *ngSwitchCase="types.dictionary">
-            {{decodeDictionary()}}
+            <label [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+                {{ decodeDictionary() }}
+            </label>
         </ng-container>
         <ng-container *ngSwitchDefault>
-            <div class="table-field-ico"
-                *ngIf="hasIcon">
-                <span class="folder small eos-icon"
-                    (click)="viewNode($event)"
-                    [ngClass]="getIcon()" >
-                </span>
+            <div class="table-field-ico" *ngIf="hasIcon">
+                <span class="folder small eos-icon" (click)="viewNode($event)" [ngClass]="getIcon()"> </span>
             </div>
-            <div class="table-field-ico"
-                *ngIf="(field.key === 'CLASSIF_NAME' || field.foreignKey === 'CLASSIF_NAME')">
-                <span class="special small eos-icon"
-                    *ngIf="specialIcon()"
-                    [ngClass]="'eos-icon-checkbox-blue'"></span>
+            <div class="table-field-ico" *ngIf="field.key === 'CLASSIF_NAME' || field.foreignKey === 'CLASSIF_NAME'">
+                <span class="special small eos-icon" *ngIf="specialIcon()" [ngClass]="'eos-icon-checkbox-blue'"></span>
             </div>
 
-            <!-- <div class="text"> -->
-            {{field.value}}
-            <!-- </div> -->
+            <label [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+                {{ field.value }}
+            </label>
         </ng-container>
     </ng-container>
 </div>
