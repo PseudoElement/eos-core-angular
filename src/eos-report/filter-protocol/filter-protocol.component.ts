@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'; // ViewChild, HostListener
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core'; // ViewChild, HostListener
 import { BsDatepickerConfig } from 'ngx-bootstrap';
 import { OPEN_CLASSIF_USER_CL, CREATE_USER_INPUTS } from 'eos-user-select/shered/consts/create-user.consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';
@@ -13,15 +13,7 @@ import { InputParamControlService } from 'eos-user-params/shared/services/input-
   styleUrls: ['./filter-protocol.component.scss']
 })
 export class EosReportSummaryFilterProtocolComponent implements OnInit {
-  // @ViewChild('full')  full;
-  // @HostListener('document:click', ['$event.target'])
-  //   onClick(event) {
-  //       const clickedInside = this.full.popover.elementRef.nativeElement.contains(event)
-  //       console.log(clickedInside);
-  //       if (!clickedInside) {
-  //           console.log("outside");
-  //       }
-  //   }
+  @ViewChild('full') full;
   users: USER_CL[] = [];
   selectEvents: any[] = [];
   data = {};
@@ -37,6 +29,18 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   usersAudit;
   ISN_USER;
   ISN_WHO;
+  valueEdit = [];
+  valueWho = [];
+  eventKind = [
+    { value: '' },
+    { value: 'Блокирование Пользователя' },
+    { value: 'Разблокирование Пользователя' },
+    { value: 'Создание пользователя' },
+    { value: 'Редактирование пользователя БД' },
+    { value: 'Редактирование прав ДЕЛА' },
+    { value: 'Редактирование прав поточного сканирования' },
+    { value: 'Удаление Пользователя' }
+  ];
 
   constructor(private _waitClassifSrv: WaitClassifService, private _inputCtrlSrv: InputParamControlService, private _pipeSrv: PipRX, public _apiSrv: UserParamApiSrv) {
     this.bsConfig = {
@@ -48,36 +52,36 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     };
   }
 
+  @HostListener('document:click', ['$event'])
+  onClick() {
+    setTimeout(() => {
+      if (this.full.isOpen === false) {
+        this.formBol = false;
+      }
+    }, 0);
+  }
+
   ngOnInit() {
     this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
     this._pipeSrv.read({
       USER_PARMS: {
         criteries: {
           ISN_USER_OWNER: '-99',
-          PARM_NAME: 'CATEGORIES_FOR_USER'
-        }
-      }
-    })
-      .then(data => {
-      });
-    this._pipeSrv.read({
-      USER_PARMS: {
-        criteries: {
-          PARM_NAME: 'USER_EDIT_AUDIT'
+          PARM_NAME: 'CATEGORIES_FOR_USER|USER_EDIT_AUDIT'
         }
       }
     })
       .then(data => {
       });
 
-    this._pipeSrv.read({
-      USER_CL: {
-        criteries: {
-        }
-      }
-    })
-    .then(data => {
-    });
+    // this._pipeSrv.read({
+    //   USER_CL: {
+    //     criteries: {
+    //     }
+    //   }
+    // })
+    //   .then(data => {
+    //   });
 
     this._pipeSrv.read({
       USER_AUDIT: {
@@ -85,22 +89,9 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
         }
       }
     })
-    .then(data => {
-    });
-
-
-
+      .then(data => {
+      });
   }
-  //   UserAuditEventKindEnum {
-  //     LOGICAL_DELETE = 1,
-  //     LOGICAL_UNDELETE = 2,
-  //     USER_CREATE = 3,
-  //     USER_LOGIN_CHANGE = 4,
-  //     USER_DELO_CHANGE = 5,
-  //     USER_STREAM_SCAN_CHANGE = 6,
-  //     USER_ARCHIVE_CHANGE = 7,
-  //     PHYSICAL_DELETE = 8
-  // }
 
   isActiveButton(): boolean {
     this.formBol = !this.formBol;
@@ -110,8 +101,9 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   buttonChanged(e: Event) {
   }
 
-  selectUser() {
+  selectUserEdit() {
     OPEN_CLASSIF_USER_CL['criteriesName'] = this._apiSrv.configList.titleDue;
+    OPEN_CLASSIF_USER_CL['selectMulty'] = true;
     this.isShell = true;
     this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
       .then(data => {
@@ -120,10 +112,37 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
       })
       .then(data => {
         this.isShell = false;
+        data.map((user) => {
+          this.valueEdit.push(user.SURNAME_PATRON);
+        });
+        return this.valueEdit;
       })
       .catch(() => {
         this.isShell = false;
       });
+
+  }
+
+  selectUserWho() {
+    OPEN_CLASSIF_USER_CL['criteriesName'] = this._apiSrv.configList.titleDue;
+    OPEN_CLASSIF_USER_CL['selectMulty'] = true;
+    this.isShell = true;
+    this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
+      .then(data => {
+        this.data['ISN_USER_COPY'] = data;
+        return this._getUserCl(data);
+      })
+      .then(data => {
+        this.isShell = false;
+        data.map((user) => {
+          this.valueWho.push(user.SURNAME_PATRON);
+        });
+        return this.valueWho.toString();
+      })
+      .catch(() => {
+        this.isShell = false;
+      });
+
   }
 
   private _getUserCl(isn) {
@@ -136,14 +155,6 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     };
     return this._pipeSrv.read<USER_CL>(queryUser);
   }
-
-  // onClick() {
-  // console.log( this.insideElement);
-  // const clickedInside = this.insideElement.nativeElement.contains(targetElement);
-  // if (!clickedInside) {
-  //   console.log('outside clicked');
-  // }
-  // }
 
 }
 

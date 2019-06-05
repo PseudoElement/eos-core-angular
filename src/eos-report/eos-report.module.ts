@@ -9,9 +9,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { EosReportComponent } from './eos-report.component';
 import { EosReportUsersInfoComponent } from './users-info/users-info.component';
 import { EosReportUsersStatsComponent } from './users-stats/users-stats.component';
-import { EosReporSubsystemComponent } from './subsystem/subsystem.component';
 import { EosReportSummaryProtocolComponent } from './sum-protocol/sum-protocol.component';
-import { EosReportTempSumProtocolComponent } from './temp-sum-protocol/temp-sum-protocol.component';
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { EosReportSummaryFilterProtocolComponent } from './filter-protocol/filter-protocol.component';
 import { BsDatepickerModule } from 'ngx-bootstrap';
@@ -22,9 +20,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap';
         EosReportComponent,
         EosReportUsersInfoComponent,
         EosReportUsersStatsComponent,
-        EosReporSubsystemComponent,
         EosReportSummaryProtocolComponent,
-        EosReportTempSumProtocolComponent,
         EosReportSummaryFilterProtocolComponent,
     ],
     imports: [
