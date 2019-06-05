@@ -43,13 +43,23 @@
                     [tooltip]='this.title'
                     placement="bottom"
                     container="body"
+                    (click)="goUp()"
                     containerClass="tooltip-info">
-                        <span class="long-title xl-font">{{sliced_title}}</span>
+                    <div class="pointer"
+                        [ngClass]="{'selected-text' : hasParent}"
+                        (click)="goUp()">
+                        <span class="long-title xl-font vertical-align-middle">{{sliced_title}}</span>
+                    </div>
+
                     </div>
                 </ng-template>
                 <ng-template #nonSlicedTitle>
                     <div class="selected-node-title">
-                        <span class="long-title xl-font">{{this.title}}</span>
+                        <div class="pointer"
+                        [ngClass]="{'selected-text' : hasParent}"
+                            (click)="goUp()">
+                            <span class="long-title xl-font vertical-align-middle">{{this.title}}</span>
+                        </div>
                     </div>
                 </ng-template>
 
