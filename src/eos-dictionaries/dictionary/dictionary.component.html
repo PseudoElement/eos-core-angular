@@ -81,17 +81,21 @@
                         </li>
                     </ul>
                 </div>
+
                 <div class="item-count usual-border m-font">
                     <ng-container *ngIf="params.searchResults; then foundRecords; else records"></ng-container>
                     <ng-template #records>
                         <span class="item-count-content">
                             Записей:
                             <span class="counter">{{paginationConfig?.itemsQty}}</span>
+                            Выбрано:
+                            <span class="counter">{{markedCounter()}}</span>
                         </span>
                     </ng-template>
                     <ng-template #foundRecords>
                         <span class="item-count-found">
-                            Найдено <span class="counter">{{paginationConfig?.itemsQty}}</span> записей
+                            Найдено: <span class="counter">{{paginationConfig?.itemsQty}}</span>
+                            Выбрано: <span class="counter">{{markedCounter()}}</span>
                         <button class="btn btn-primary-light"
                             tooltip="Очистить результаты"
                             placement="bottom"

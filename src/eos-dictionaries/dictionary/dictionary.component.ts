@@ -467,6 +467,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         return false;
     }
 
+    markedCounter(): number {
+        return this._dictSrv.getMarkedNodes().length;
+    }
     /**
      * @description convert selected persons to list of organization representatives,
      * add it to department organization if it exists upwards to tree
