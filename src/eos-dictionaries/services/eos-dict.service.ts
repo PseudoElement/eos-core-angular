@@ -675,7 +675,8 @@ export class EosDictService {
 
     search(searchString: string, params: ISearchSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
-        this._srchCriteries = dictionary.getSearchCriteries(searchString, params, this._treeNode);
+        const fixedString = searchString.replace(new RegExp('["|]', 'g'), '');
+        this._srchCriteries = dictionary.getSearchCriteries(fixedString, params, this._treeNode);
         return this._search(params.deleted);
     }
 
