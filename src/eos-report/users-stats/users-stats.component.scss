@@ -1,41 +1,20 @@
 @import '../../styles/variables';
-.list-user-select-wrapper {
-    .table-header {
-        .btn {
-            background: transparent;
-        }
-    }
-    .table-title {
+.users-stats-wrapper {
+    .table-stats-title {
         display: flex;
         align-items: center;
         justify-content: flex-start;
         width: 100%;
         padding-left: 10px;
     }
-    .eos-node-list {
+    .stats-list {
         background: $white;
         max-height: calc(100vh - 371px);
-        .user-select-node {
-            line-height: 30px;
-            cursor: pointer;
-        }
     }
-    .table-header-wrapper {
+    .table-stats-wrapper {
         display: flex;
         justify-content: space-between;
         padding-left: 20px;
-    }
-    .selected-node-title {
-        padding: 11px 0;
-        align-self: center;
-        -ms-grid-column: 2;
-        grid-column: 2;
-        max-height: 74px;
-    }
-    .selected-node-title {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
     }
     .item-count {
         align-self: center;
@@ -102,46 +81,42 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    .disabled {
-        cursor: not-allowed!important;
-        color: lightgray
-    }
     .user-check-label {
         padding-left: 0;
     }
-    .table-wrapper {
+    .table-wrapper-stats {
         overflow: visible;
     }
-    .mar-items{
+    .mar-items {
         padding: 10px;
     }
-    .mar-items1{
+    .mar-items1 {
         padding: 20px 10px 10px 10px;
     }
-    .mar-items4{
+    .mar-items4 {
         padding: 10px 10px 20px 10px;
     }
-    .cont-items{
+    .cont-items {
         display: flex;
         flex-direction: row;
     }
-    .cust-str1{
+    .cust-str1 {
         height: 32px;
         width: 60%;
         padding-top: 5px;
         padding-left: 20px;
     }
-    .cust-str2{
+    .cust-str2 {
         height: 32px;
         width: 10%;
         padding-top: 5px;
     }
-    .cust-str3{
+    .cust-str3 {
         height: 32px;
         width: 10%;
         padding-top: 5px;  
     }
-    .cust-str4{
+    .cust-str4 {
         height: 32px;
         width: 20%;    
         padding-top: 5px; 

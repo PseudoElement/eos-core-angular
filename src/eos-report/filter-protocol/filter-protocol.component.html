@@ -4,10 +4,9 @@
     container="body"
     class="cust-style-mod" 
     #full="bs-popover"
-    [outsideClick]="true"
     >
     <button [ngClass]="{'opened': formBol}"
-        class="btn btn-primary-light search-btn"
+        class="btn btn-primary-light search-btn-sum"
         tooltip="Расширенный поиск"
         placement="bottom"
         container="body"
@@ -18,7 +17,7 @@
     </button> 
 </div>
 <ng-template #searchModal>                    
-    <div class="full-search-top usual-border">
+    <div class="full-search-sum usual-border">
         <span class="pull-left title xl-font">Фильтр</span>
         <div class="pull-right srch-btns">
             <button
@@ -34,21 +33,21 @@
             <div class="form-group unimportant-text">
                 <label class="s-font"for="title">От</label>
                 <div class="form-date-control group-datepick">
-                    <input type="text" eosDateMask class="form-control m-font"  placeholder="--.--.----">
-                    <a bsDatepicker [bsConfig]="bsConfig" [bsValue]="bsDate"><span class="eos-icon eos-icon-calendar-blue small"></span></a>
+                    <input type="text" class="form-control m-font"  placeholder="--.--.----">
+                    <a bsDatepicker [bsConfig]="bsConfig" [bsValue]="bsDate"><span class="eos-icon eos-icon-calendar-blue calend-stat small"></span></a>
                 </div>
             </div>
             <div class="form-group unimportant-text">
                 <label class="s-font" for="title">До</label>
                 <div class="form-date-control group-datepick">
-                    <input type="text" eosDateMask class="form-control m-font"  placeholder="--.--.----">
-                    <a bsDatepicker [bsConfig]="bsConfig" [bsValue]="bsDate"><span class="eos-icon eos-icon-calendar-blue small"></span></a>
+                    <input type="text" class="form-control m-font"  placeholder="--.--.----">
+                    <a bsDatepicker [bsConfig]="bsConfig" [bsValue]="bsDate"><span class="eos-icon eos-icon-calendar-blue calend-stat small"></span></a>
                 </div>
             </div>  
         </div>
         <div class="form-group unimportant-text">
             <label class="s-font" for="title">Событие:</label>
-            <div class="datepick">
+            <div class="kind-pick">
                 <select class="form-control m-font">
                     <option *ngFor="let kind of eventKind" [value]="kind.value">{{kind.value}}</option>
                 </select>
@@ -78,25 +77,8 @@
                     [value]="valueWho.toString()"
                  >
                  <a class="clear-btn"><span class="icon eos-icon eos-icon-avatar-blue small icon-add-department" (click)="selectUserWho()"></span></a>
-                <!-- <span class="eos-icon eos-icon-close-blue"></span></a> -->
             </div>
         </div>
     </form>
 </div>
 </ng-template>       
-            <!-- <div class="pull-right srch-btns">
-               <button [disabled]="noSearchData"
-                   class="btn btn-primary s-font upper"
-                   (click)="clearForm()">Сбросить</button>
-               <button [disabled]="noSearchData"
-                   (click)="fullSearch()"
-                   class="btn btn-primary-full s-font upper">Найти</button>
-           </div>
-       </div>
-       <div class="full-search-settings-container usual-border">
-           <div class="line">
-               <label class="checkbox-inline"><input type="checkbox" name="seeDelete"><span></span><span class="m-font">Учитывать логически удаленные</span></label>
-           </div>
-       </div> -->
-   
-
