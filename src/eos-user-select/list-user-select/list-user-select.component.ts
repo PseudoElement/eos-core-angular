@@ -109,25 +109,25 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             });
 
         this.rtUserService.subjectScan
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
-        .subscribe(flagBtnScan => {
-            this.flagScan = !flagBtnScan;
-            this.buttons.buttons[5].disabled = this.flagScan;
-            this.buttons.moreButtons[7].disabled = this.flagScan;
-        });
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe(flagBtnScan => {
+                this.flagScan = !flagBtnScan;
+                this.buttons.buttons[5].disabled = this.flagScan;
+                this.buttons.moreButtons[7].disabled = this.flagScan;
+            });
         this._breadSrv._eventFromBc$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
-        .subscribe((type: TypeBread) => {
-            if (type.action !== 1) {
-                this.changeCurentSelectedUser(type);
-            } else {
-                this.RedactUser(this.selectedUser);
-            }
-        });
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe((type: TypeBread) => {
+                if (type.action !== 1) {
+                    this.changeCurentSelectedUser(type);
+                } else {
+                    this.RedactUser(this.selectedUser);
+                }
+            });
     }
 
     checkFlagTech() {
@@ -203,7 +203,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.isLoading = false;
                 this.countMaxSize = this._pagSrv.countMaxSize;
             }).catch(error => {
-               this._errorSrv.errorHandler(error);
+                this._errorSrv.errorHandler(error);
             });
     }
     checkSortSessionStore() {
@@ -528,6 +528,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             default:
                 return 'eos-icon-checkbox-square-blue';
         }
+    }
+    searchUsers($event) {
+        console.log($event);
     }
 
     private cathError(e) {
