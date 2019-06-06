@@ -26,24 +26,23 @@
             </div>
             <div class="eos-node-list">
                 <div class="user-item" >
-                    <div class="contain-span" *ngFor="let audit of usersAudit">
+                    <div class="contain-span" *ngFor="let user of frontData">
                         <span class="text-center item-table">
-                            {{audit.EVENT_DATE}}
+                            {{user.date}}
                         </span>
                         <span class="text-center item-table">
                             <div class="pad-right-item">
-                                {{eventKind[audit.EVENT_KIND-1]}}
+                                {{user.eventUser}}
                             </div>
                         </span>
                         <span class="text-center item-table pad-right-item">
                                 <div class="pad-right-item">
-
-                                {{audit.ISN_WHO}}
+                                {{user.isnWho}}
                             </div>
                         </span>
                         <span class="text-center item-table">
                             <div class="pad-right-item">
-                                {{audit.ISN_USER}}
+                                {{user.isnUser}}
                             </div>
                         </span>
                     </div>

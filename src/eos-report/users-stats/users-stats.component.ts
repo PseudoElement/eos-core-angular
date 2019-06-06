@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 import { PipRX, USER_CL, USER_PARMS } from 'eos-rest';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 @Component({
   selector: 'eos-report-stats',
@@ -17,13 +18,14 @@ export class EosReportUsersStatsComponent implements OnInit {
   logUsers: string;
   subSysArray = [];
   protUsers;
+  deletedUsers;
 
   delo: number = 0; delowebLGO: number = 0; delowebKL: number = 0;
   Shif: number = 0; SCAN: number = 0; Pscan: number = 0; Scan_code: number = 0;
   Search_code: number = 0; Notifer: number = 0; Informer: number = 0;
   EOS: number = 0; MobNet: number = 0; APM: number = 0;
 
-  constructor(private _selectedUser: RtUserSelectService, private pip: PipRX) {
+  constructor(private _selectedUser: RtUserSelectService, private pip: PipRX, private _errorSrv: ErrorHelperServices, ) {
     this.subsystem = this._selectedUser.ArraySystemHelper;
   }
 
@@ -33,14 +35,12 @@ export class EosReportUsersStatsComponent implements OnInit {
 
   getData() {
     const a = this.pip.read<USER_CL>({
-      USER_CL: PipRX.criteries({ 'DELETED': '0', 'PROTECTED': '0' }) // 'SURNAME_PATRON': 'Администратор'
+      USER_CL: PipRX.criteries({ 'DELETED': '0', 'PROTECTED': '0' })
     }).then((r: any) => {
       this.items = r;
-      this.getSubSystems(this.items);
     })
-      .then(() => {
-        this.getAllDeletedUsers();
-        this.usersNumber = this.usersNumber + this.items.length;
+      .catch((error) => {
+        this._errorSrv.errorHandler(error);
       });
     const b = this.pip.read<USER_PARMS>({
       USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'MAX_LOGIN_ATTEMPTS|USER_EDIT_AUDIT' })
@@ -51,19 +51,34 @@ export class EosReportUsersStatsComponent implements OnInit {
         this.logUsers = 'Выполнено';
       }
       this.paramValue = parseInt(r[0].PARM_VALUE, 10);
-    });
-    Promise.all([a, b]);
-  }
-  getAllDeletedUsers() {
-    this.pip.read<USER_CL>({
+    })
+      .catch((error) => {
+        this._errorSrv.errorHandler(error);
+      });
+
+    const c = this.pip.read<USER_CL>({
       USER_CL: PipRX.criteries({ 'DELETED': '1' })
     })
       .then((r: any) => {
-        this.getProtectedUsers(r);
+        this.deletedUsers = r;
+      })
+      .catch((error) => {
+        this._errorSrv.errorHandler(error);
       });
+    Promise.all([a, b, c]).then(() => {
+      this.getSubSystems(this.items);
+      this.getProtectedUsers(this.deletedUsers);
+      this.usersNumber = this.usersNumber + this.items.length;
+    }
+    )
+      .catch((error) => {
+        this._errorSrv.errorHandler(error);
+      })
+      ;
   }
 
-  getProtectedUsers(data): void {
+
+  getProtectedUsers(data) {
     for (const i of data) {
       if (i.DELETED === 1 && i.LOGIN_ATTEMPTS < this.paramValue && String(i.ORACLE_ID) !== 'null') {
         this.blockByTech++;
