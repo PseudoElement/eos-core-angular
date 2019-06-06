@@ -1,4 +1,4 @@
-.eos-dictionaries {
+.report-dictionaries {
     display: flex;
     flex-wrap: wrap;
     padding: 0;
@@ -6,7 +6,7 @@
     width: calc(100vw - 30px);
     overflow-y: auto;
     max-height: calc(100vh - 130px);
-    .dictionary {
+    .rep-dictionary {
         height: 100px;
         flex-basis: calc((100% - 4*10px) / 4);
         margin-right: 10px;
@@ -15,13 +15,13 @@
         text-align: left;
         overflow: hidden;
 
-        &.btn {
+        &.rep-btn {
             min-width: 400px;
             max-width: 490px;
             padding: 0;
         }
-
-        .text {
+        
+        .rep-span {
             position: relative;
             top: -8px;
             left: -6px;
@@ -30,13 +30,12 @@
             display: inline-block;
             text-overflow: ellipsis;
         }
-
-        .icon {
+        .rep-icon {
             height: 48px;
             width: 48px;
         }
 
-        .icon-wrapper {
+        .rep-icon-wrapper {
             display: inline-block;
             height: 99px;
             width: 100px;
@@ -47,7 +46,7 @@
 .head-protocol{
    height: 500px;
    min-width: 600px;
-   top: 370px !important;
+   top: 508px !important;
    border-radius: 0;
    .popover-content{
        padding: 0 !important;
