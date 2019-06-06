@@ -4,7 +4,6 @@
     container="body"
     class="cust-style-mod" 
     #full="bs-popover"
-    [outsideClick]="true"
     >
     <button [ngClass]="{'opened': formBol}"
         class="btn btn-primary-light search-btn"
@@ -34,15 +33,21 @@
             <div class="form-group unimportant-text">
                 <label class="s-font"for="title">От</label>
                 <div class="form-date-control group-datepick">
-                    <input type="text" eosDateMask class="form-control m-font"  placeholder="--.--.----">
-                    <a bsDatepicker [bsConfig]="bsConfig" [bsValue]="bsDate"><span class="eos-icon eos-icon-calendar-blue small"></span></a>
+                    <input type="text" #dp1="bsDatepicker" class="form-control m-font" bsDatepicker [bsConfig]="bsConfig" [bsValue]="bsDateFrom" [minDate]="bsConfig.minDate" 
+                    placeholder="--.--.----" maxlength="11" [maxDate]="bsConfig.maxDate">
+                    <a  (click)="dp1.toggle()" [attr.aria-expanded]="dp1.isOpen" >
+                        <span class="eos-icon eos-icon-calendar-blue small"></span>
+                    </a>
                 </div>
             </div>
             <div class="form-group unimportant-text">
                 <label class="s-font" for="title">До</label>
                 <div class="form-date-control group-datepick">
-                    <input type="text" eosDateMask class="form-control m-font"  placeholder="--.--.----">
-                    <a bsDatepicker [bsConfig]="bsConfig" [bsValue]="bsDate"><span class="eos-icon eos-icon-calendar-blue small"></span></a>
+                    <input [bsConfig]="bsConfig"  [maxDate]="bsConfig.maxDate" [minDate]="bsConfig.minDate" #dp2="bsDatepicker" type="text" 
+                    bsDatepicker class="form-control m-font"   placeholder="--.--.----" maxlength="11"  [bsValue]="bsDateBefore">
+                    <a (click)="dp2.toggle()" [attr.aria-expanded]="dp2.isOpen">
+                        <span class="eos-icon eos-icon-calendar-blue small"></span>
+                    </a>
                 </div>
             </div>  
         </div>
@@ -90,7 +95,7 @@
                    (click)="clearForm()">Сбросить</button>
                <button [disabled]="noSearchData"
                    (click)="fullSearch()"
-                   class="btn btn-primary-full s-font upper">Найти</button>
+                   class="btn btn-primary-full s-font upper">КОД ГАС ПСйти</button>
            </div>
        </div>
        <div class="full-search-settings-container usual-border">

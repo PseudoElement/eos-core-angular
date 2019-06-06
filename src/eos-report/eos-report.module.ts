@@ -21,7 +21,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap';
         EosReportUsersInfoComponent,
         EosReportUsersStatsComponent,
         EosReportSummaryProtocolComponent,
-        EosReportSummaryFilterProtocolComponent,
+        EosReportSummaryFilterProtocolComponent
     ],
     imports: [
         BrowserModule,

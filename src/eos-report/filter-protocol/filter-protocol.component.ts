@@ -12,23 +12,19 @@ import { InputParamControlService } from 'eos-user-params/shared/services/input-
   templateUrl: './filter-protocol.component.html',
   styleUrls: ['./filter-protocol.component.scss']
 })
+
 export class EosReportSummaryFilterProtocolComponent implements OnInit {
   @ViewChild('full') full;
-  users: USER_CL[] = [];
-  selectEvents: any[] = [];
   data = {};
   bsConfig: Partial<BsDatepickerConfig>;
   placement = 'bottom';
-  bsDate: Date;
+  bsDateFrom: Date;
+  bsDateBefore: Date;
+  isOpen = false;
   formBol: boolean = false;
-  isOpenQuick = false;
   isShell: boolean = false;
-  outsideClick: boolean = false;
   fields = CREATE_USER_INPUTS;
   inputs;
-  usersAudit;
-  ISN_USER;
-  ISN_WHO;
   valueEdit = [];
   valueWho = [];
   eventKind = [
@@ -73,15 +69,6 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     })
       .then(data => {
       });
-
-    // this._pipeSrv.read({
-    //   USER_CL: {
-    //     criteries: {
-    //     }
-    //   }
-    // })
-    //   .then(data => {
-    //   });
 
     this._pipeSrv.read({
       USER_AUDIT: {
