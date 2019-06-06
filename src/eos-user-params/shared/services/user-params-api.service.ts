@@ -147,6 +147,10 @@ export class UserParamApiSrv {
         }
     }
 
+    findUsers(config) {
+        this.users_pagination.UsersList = this.helpersClass.findUsers(this.Allcustomer, config);
+    }
+
     updateListUsersTech(userT: UserSelectNode[], userH: UserSelectNode[]) {
         const sortedT = this.helpersClass.sort(userT, this.srtConfig[this.currentSort].upDoun, this.currentSort);
         const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);

@@ -9,22 +9,26 @@ export const USER_SEARCH = {
         {
             key: 'LOGIN',
             type: 'string',
-            title: 'Логин'
+            title: 'Логин',
+            length: 2
         },
         {
             key: 'DEPARTMENT',
             type: 'string',
-            title: 'Подразделение'
+            title: 'Подразделение',
+            pattern: /\w{5,50}/,
         },
         {
             key: 'DUE_DEP',
             type: 'string',
-            title: 'Должностное лицо'
+            title: 'Должностное лицо',
+            pattern: /\w{5,50}/,
         },
         {
             key: 'CARD',
             type: 'string',
             title: 'Картотека',
+            pattern: /\w{5,50}/,
         },
     ]
 };

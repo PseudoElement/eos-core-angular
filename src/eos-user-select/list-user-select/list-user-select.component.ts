@@ -530,7 +530,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
     }
     searchUsers($event) {
-        console.log($event);
+        this._apiSrv.findUsers($event);
+        this._pagSrv._initPaginationConfig(true);
+        this._pagSrv.changePagination(this._pagSrv.paginationConfig);
+        this.countMaxSize = this._pagSrv.countMaxSize;
     }
 
     private cathError(e) {

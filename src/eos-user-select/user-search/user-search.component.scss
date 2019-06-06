@@ -1,5 +1,6 @@
 .search-container {
     display: flex;
+    margin-right: 16px;
     eos-dynamic-input {
         font-size: 14px;
     }
@@ -27,5 +28,8 @@
     .search-input-wr {
         width: 70%;
         margin-left: 20px;
+    }
+    .search-btn-wraper {
+        margin-left: 10px;
     }
 }

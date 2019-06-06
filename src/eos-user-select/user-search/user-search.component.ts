@@ -37,7 +37,21 @@ export class UserSearchComponent implements OnInit {
     isActiveButton() {
     }
     startSearch() {
-        this.search.emit(true);
+        const searchVal = this.form.value;
+        const newObj = {};
+        // if (this.form.controls['rec.CARD'].valid) {
+        //     newObj['CARD'] = searchVal['rec.CARD'];
+        // }
+        if (this.form.controls['rec.DEPARTMENT'].valid) {
+            newObj['DEPARTMENT'] = searchVal['rec.DEPARTMENT'];
+        }
+        if (this.form.controls['rec.DUE_DEP'].valid) {
+            newObj['DUE_DEP'] = searchVal['rec.DUE_DEP'];
+        }
+        if (this.form.controls['rec.LOGIN'].valid) {
+            newObj['LOGIN'] = searchVal['rec.LOGIN'];
+        }
+        this.search.emit(newObj);
     }
 
 }
