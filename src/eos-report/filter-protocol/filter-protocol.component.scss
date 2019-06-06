@@ -2,59 +2,27 @@
     height: 300px;
     width: 300px;
 }
-.full-search-pop {
-    right: 0;
-    width: 300px;
-    max-width: 300px;
-    border-radius: 0;
-}
-
-.full-search-bottom {
-    height: 500px;
-    border-top-width: 1px;
-    border-top-style: solid;
-    padding: 8px 20px;
-    .btn {
-        width: 82px;
-        height: 32px;
-    }
-}
-.search-btn{
-    display: flex;
-    justify-content: center;
-    
-}
-.cust-style-mod{
+.cust-style-mod {
     width: 48px;
     height: 48px;
     margin-left: 50%;
 }
-.btn {
-    &.search-btn {
-        height: 48px;
-        width: 48px;
-    }
-    &.quick-search-btn {
-        height: 48px;
-        width: 48px;
-    }
-}
+
 .form-date-control {  
     width: 200px;
     font-size: 14px; 
     line-height: 32px;
 }
-.cont-datepick{
+.cont-datepick {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
-.group-datepick{
+.group-datepick {
     display: flex;
-    flex-direction: row;
-    
+    flex-direction: row; 
 }
-.datepick {
+.kind-pick {
     position: relative;
     input {
         margin-right: 5px;
@@ -77,8 +45,10 @@
         height: 24px;
     }
 }
-.eos-icon.eos-icon-calendar-blue{
+.calend-stat {
     margin-top: 3px;
 }
-
-
+.btn.btn-primary-light.search-btn.opened {
+    height: 48px;
+    width: 48px;
+}
