@@ -23,7 +23,7 @@
             </label>
         </ng-container>
         <ng-container *ngSwitchCase="types.date">
-            <label [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+            <label [tooltip]=" field.value | eosDate " placement="auto" container="body" containerClass="tooltip-info">
                 {{ field.value | eosDate }}
             </label>
         </ng-container>
