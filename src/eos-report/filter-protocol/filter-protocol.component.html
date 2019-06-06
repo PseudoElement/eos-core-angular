@@ -6,7 +6,7 @@
     #full="bs-popover"
     >
     <button [ngClass]="{'opened': formBol}"
-        class="btn btn-primary-light search-btn-sum"
+        class="btn btn-primary-light search-btn"
         tooltip="Расширенный поиск"
         placement="bottom"
         container="body"
@@ -17,7 +17,7 @@
     </button> 
 </div>
 <ng-template #searchModal>                    
-    <div class="full-search-sum usual-border">
+    <div class="full-search-top usual-border">
         <span class="pull-left title xl-font">Фильтр</span>
         <div class="pull-right srch-btns">
             <button
@@ -36,7 +36,7 @@
                     <input type="text" #dp1="bsDatepicker" class="form-control m-font" bsDatepicker [bsConfig]="bsConfig" [bsValue]="bsDateFrom" [minDate]="bsConfig.minDate" 
                     placeholder="--.--.----" maxlength="11" [maxDate]="bsConfig.maxDate">
                     <a  (click)="dp1.toggle()" [attr.aria-expanded]="dp1.isOpen" >
-                        <span class="eos-icon eos-icon-calendar-blue small"></span>
+                        <span class="eos-icon eos-icon-calendar-blue small calend-stat"></span>
                     </a>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                     <input [bsConfig]="bsConfig"  [maxDate]="bsConfig.maxDate" [minDate]="bsConfig.minDate" #dp2="bsDatepicker" type="text" 
                     bsDatepicker class="form-control m-font"   placeholder="--.--.----" maxlength="11"  [bsValue]="bsDateBefore">
                     <a (click)="dp2.toggle()" [attr.aria-expanded]="dp2.isOpen">
-                        <span class="eos-icon eos-icon-calendar-blue small"></span>
+                        <span class="eos-icon eos-icon-calendar-blue small calend-stat"></span>
                     </a>
                 </div>
             </div>  

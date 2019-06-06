@@ -2,11 +2,6 @@
     height: 300px;
     width: 300px;
 }
-.search-btn-sum {
-    display: flex;
-    justify-content: center;
-    
-}
 .cust-style-mod {
     width: 48px;
     height: 48px;
@@ -53,5 +48,7 @@
 .calend-stat {
     margin-top: 3px;
 }
-
-
+.btn.btn-primary-light.search-btn.opened {
+    height: 48px;
+    width: 48px;
+}

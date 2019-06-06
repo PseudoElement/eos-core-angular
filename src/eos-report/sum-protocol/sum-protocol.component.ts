@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { ALL_ROWS } from 'eos-rest/core/consts';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 
 @Component({
   selector: 'eos-sum-protocol',
@@ -27,7 +28,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   critUsers: string = '';
   @ViewChild('full') fSearchPop;
 
-  constructor(private _pipeSrv: PipRX) { }
+  constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices) { }
 
   ngOnInit() {
     this._pipeSrv.read({
@@ -35,9 +36,13 @@ export class EosReportSummaryProtocolComponent implements OnInit {
     })
       .then((data: any) => {
         this.usersAudit = data;
-        this.SelectUsers(this.usersAudit);
+        return this.usersAudit;
+      })
+      .catch((error) => {
+        this._errorSrv.errorHandler(error);
       })
       .then(() => {
+        this.SelectUsers(this.usersAudit);
         return this._pipeSrv.read({
           USER_CL: {
             criteries: {
@@ -59,9 +64,6 @@ export class EosReportSummaryProtocolComponent implements OnInit {
         this.ShowData();
       });
   }
-  isActiveButton() {
-  }
-
   SelectUsers(data) {
     let isnUser,
       isnWho;

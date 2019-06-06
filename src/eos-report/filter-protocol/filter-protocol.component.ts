@@ -59,25 +59,6 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
 
   ngOnInit() {
     this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
-    this._pipeSrv.read({
-      USER_PARMS: {
-        criteries: {
-          ISN_USER_OWNER: '-99',
-          PARM_NAME: 'CATEGORIES_FOR_USER|USER_EDIT_AUDIT'
-        }
-      }
-    })
-      .then(data => {
-      });
-
-    this._pipeSrv.read({
-      USER_AUDIT: {
-        criteries: {
-        }
-      }
-    })
-      .then(data => {
-      });
   }
 
   isActiveButton(): boolean {
