@@ -12,23 +12,19 @@ import { InputParamControlService } from 'eos-user-params/shared/services/input-
   templateUrl: './filter-protocol.component.html',
   styleUrls: ['./filter-protocol.component.scss']
 })
+
 export class EosReportSummaryFilterProtocolComponent implements OnInit {
   @ViewChild('full') full;
-  users: USER_CL[] = [];
-  selectEvents: any[] = [];
   data = {};
   bsConfig: Partial<BsDatepickerConfig>;
   placement = 'bottom';
-  bsDate: Date;
+  bsDateFrom: Date;
+  bsDateBefore: Date;
+  isOpen = false;
   formBol: boolean = false;
-  isOpenQuick = false;
   isShell: boolean = false;
-  outsideClick: boolean = false;
   fields = CREATE_USER_INPUTS;
   inputs;
-  usersAudit;
-  ISN_USER;
-  ISN_WHO;
   valueEdit = [];
   valueWho = [];
   eventKind = [
@@ -63,34 +59,6 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
 
   ngOnInit() {
     this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
-    this._pipeSrv.read({
-      USER_PARMS: {
-        criteries: {
-          ISN_USER_OWNER: '-99',
-          PARM_NAME: 'CATEGORIES_FOR_USER|USER_EDIT_AUDIT'
-        }
-      }
-    })
-      .then(data => {
-      });
-
-    // this._pipeSrv.read({
-    //   USER_CL: {
-    //     criteries: {
-    //     }
-    //   }
-    // })
-    //   .then(data => {
-    //   });
-
-    this._pipeSrv.read({
-      USER_AUDIT: {
-        criteries: {
-        }
-      }
-    })
-      .then(data => {
-      });
   }
 
   isActiveButton(): boolean {
