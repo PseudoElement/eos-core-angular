@@ -41,10 +41,8 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
         setTimeout( () => {
             let autofocusFlag = false;
             const parents = document.getElementsByTagName(parentTag);
-            console.log(parents);
             if (parents.length > 0) {
                 const inputs = parents[0].getElementsByTagName('input');
-                console.log(inputs);
                 for (let i = 0; i < inputs.length; i++) {
                     if (inputs[i].type === 'text' && inputs[i].scrollWidth > 0) {
                         inputs[i].autofocus = true;
