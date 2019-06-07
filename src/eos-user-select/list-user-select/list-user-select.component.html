@@ -13,10 +13,10 @@
                 </div>
             </div>
         </div>
-        <div class="table-header">
+        <div class="table-header search-wr">
             <!-- header action -->
             <eos-btn-action [buttons]='buttons' (showAction)='showAction($event)'></eos-btn-action>
-
+            <eos-user-search (search)="searchUsers($event)" [flagDeep]="flagDeep"></eos-user-search>
         </div>
         <div class="table-header">
             <!-- header -->
@@ -60,7 +60,7 @@
                             <span class="user-list-third-colomn">
                                     <span *ngIf="user.deleted" class="eos-icon eos-icon-bin-forever-grey small"></span>
                             <span *ngIf="user.blockedUser && !user.deleted" class="eos-icon eos-icon-Blockeduser-Yellow  small"></span>
-                            <span *ngIf="user.blockedSystem" class="eos-icon eos-icon-Blockeduser-Red  small"></span>
+                            <span *ngIf="user.blockedSystem && !user.deleted" class="eos-icon eos-icon-Blockeduser-Red  small"></span>
                             </span>
                             <span class="user-list-two-colomn" tooltip="{{user.fullDueName}}" placement="bottom" containerClass="tooltip-info" container="body">{{user.fullDueName}}
                             </span>

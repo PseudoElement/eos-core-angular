@@ -23,6 +23,12 @@
                                [viewOpts]="selOpts"
                                [readonly]="!editMode"></eos-dynamic-input>
         </div>
+
+        <eos-dynamic-input *ngIf="inputs['rec.ARTICLE']"
+                           [input]="inputs['rec.ARTICLE']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
+
         <div class="row-wrapper space-between">
             <eos-dynamic-input
                                [input]="inputs['rec.CLOSED']"
@@ -35,10 +41,6 @@
                                [readonly]="!editMode"></eos-dynamic-input>
         </div>
 
-        <eos-dynamic-input *ngIf="inputs['rec.ARTICLE']"
-                           [input]="inputs['rec.ARTICLE']"
-                           [form]="form"
-                           [readonly]="!editMode"></eos-dynamic-input>
         <div class="row-wrapper space-between">
             <div>
             <label>ВВОД В ДЕЙСТВИЕ</label>
@@ -54,12 +56,12 @@
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
             </div>
-            <eos-dynamic-input *ngIf="inputs['rec.ARCH_DATE']"
-                               [input]="inputs['rec.ARCH_DATE']"
-                               [form]="form"
-                               [readonly]="!editMode"></eos-dynamic-input>
             <eos-dynamic-input class="checkbox-inline"
                                [input]="inputs['rec.ARCH_FLAG']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input *ngIf="inputs['rec.ARCH_DATE']"
+                               [input]="inputs['rec.ARCH_DATE']"
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
         </div>

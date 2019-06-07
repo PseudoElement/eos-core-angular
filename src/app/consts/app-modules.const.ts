@@ -23,4 +23,14 @@ export const APP_MODULES_DROPDOWN = [
         title: 'Тестовая страница',
         url: '/test'
     }
+    , {
+        id: 'export',
+        flag: 'ei',
+        title: 'Экспорт'
+    }
+    , {
+        id: 'import',
+        flag: 'ei',
+        title: 'Импорт'
+    }
 ];

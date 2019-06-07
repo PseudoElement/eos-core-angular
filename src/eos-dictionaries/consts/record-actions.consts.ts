@@ -320,6 +320,32 @@ const RECORD_DETAILS_RKPD: IAction = {
     accessNeed: APS_DICT_GRANT.readwrite,
 };
 
+const RECORD_ACTION_IMPORT_DIRECTORY: IAction = {
+    type: E_RECORD_ACTIONS.import ,
+    group: E_ACTION_GROUPS.common ,
+    title: 'Импорт справочника',
+    hint: 'Импорт справочника',
+    iconClass: 'eos-icon eos-icon-download small',
+    disabledIconClass: 'eos-icon eos-icon-download-grey small',
+    activeIconClass: '',
+    hoverIconClass: 'eos-icon eos-icon-download-dark-blue small',
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite
+};
+
+const RECORD_ACTION_EXPORT_DIRECTORY: IAction = {
+    type: E_RECORD_ACTIONS.export ,
+    group: E_ACTION_GROUPS.common ,
+    title: 'Экспорт справочника',
+    hint: 'Экспорт справочника',
+    iconClass: 'eos-icon eos-icon-share-blue small',
+    disabledIconClass: 'eos-icon eos-icon-share-grey small',
+    activeIconClass: '',
+    hoverIconClass: 'eos-icon eos-icon-share-dark-blue small',
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite
+};
+
 const RECORD_COPY_PROPERTIES: IAction = {
     type: E_RECORD_ACTIONS.copyProperties,
     group: E_ACTION_GROUPS.item,
@@ -370,6 +396,8 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_NOMENKL_OPS,
     RECORD_COPY_PROPERTIES_FROM_PARRENT,
     RECORD_COPY_PROPERTIES,
+    // RECORD_ACTION_EXPORT_DIRECTORY,
+    // RECORD_ACTION_IMPORT_DIRECTORY,
 ];
 
 export const MORE_RECORD_ACTIONS: IAction[] = [
@@ -387,6 +415,8 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_ACTIONS_ADDITIONAL_FIELDS,
     RECORD_ACTION_ADVCARDRK,
     RECORD_DETAILS_RKPD,
+    RECORD_ACTION_EXPORT_DIRECTORY,
+    RECORD_ACTION_IMPORT_DIRECTORY,
     RECORD_COPY_PROPERTIES_FROM_PARRENT,
     RECORD_COPY_PROPERTIES,
     RECORD_ACTION_SHOW_SETTINGS,
