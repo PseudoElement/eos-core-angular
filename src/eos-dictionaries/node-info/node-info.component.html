@@ -9,18 +9,24 @@
                 class="full-info usual-border">
                 <div *ngFor="let key of keys(fieldsDescriptionFull.rec)"
                     class="field">
-                    <ng-container *ngIf="fieldsDescriptionFull.rec[key].type === fieldTypes.boolean;then checkboxField else textField"></ng-container>
-                    <ng-template #checkboxField>
-                        <label class="checkbox field-title unimportant-text s-font"><input type="checkbox"
-                            [(ngModel)]="nodeDataFull.rec[key]"
-                            disabled><span></span>{{fieldsDescriptionFull.rec[key].title}}</label>
-                    </ng-template>
-                    <ng-template #textField>
-                        <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec[key].title}}</p>
-                        <p class="field-value m-font"
 
-                            >{{value(key) || '...'}}</p>
-                    </ng-template>
+                    <ng-container [ngSwitch]="fieldsDescriptionFull.rec[key].type">
+                        <ng-container *ngSwitchCase="fieldTypes.boolean">
+                                <label class="checkbox field-title unimportant-text s-font"><input type="checkbox"
+                                    [(ngModel)]="nodeDataFull.rec[key]"
+                                    disabled><span></span>{{fieldsDescriptionFull.rec[key].title}}</label>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="fieldTypes.date">
+                                <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec[key].title}}</p>
+                                <p class="field-value m-font"
+                                    >{{(value(key) | eosDate) || '...'}}</p>
+                        </ng-container>
+                        <ng-container *ngSwitchDefault>
+                                <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec[key].title}}</p>
+                                <p class="field-value m-font"
+                                    >{{value(key) || '...'}}</p>
+                        </ng-container>
+                    </ng-container>
                 </div>
                 <div *ngIf="nodeDataFull['sev']"
                     class="field">
