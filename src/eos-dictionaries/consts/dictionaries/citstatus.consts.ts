@@ -51,11 +51,11 @@ export const CITSTATUS_DICT: ITreeDictionaryDescriptor = {
         type: 'number'
     }]),
     treeFields: ['CLASSIF_NAME'],
-    editFields: ['CODE', 'CLASSIF_NAME', 'NOTE'],
-    searchFields: ['CODE', 'CLASSIF_NAME', /*'NOTE'*/],
-    fullSearchFields: ['CODE', 'CLASSIF_NAME', 'NOTE'],
-    quickViewFields: ['CODE', 'CLASSIF_NAME', 'NOTE'],
+    editFields: ['CLASSIF_NAME', 'NOTE'],
+    searchFields: ['CLASSIF_NAME', /*'NOTE'*/],
+    fullSearchFields: ['CLASSIF_NAME', 'NOTE'],
+    quickViewFields: ['CLASSIF_NAME', 'NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: ['CLASSIF_NAME'],
-    allVisibleFields: ['CODE', 'NOTE'],
+    allVisibleFields: ['NOTE'],
 };

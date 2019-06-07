@@ -56,6 +56,7 @@ export class CustomTreeComponent implements OnInit {
         const defaultRoot = this._dictSrv.currentDictionary.descriptor.defaultTreePath(this.data);
         if (defaultRoot) {
             setTimeout( () => {
+                console.log(defaultRoot);
                 this._router.navigate(defaultRoot);//this.data[0].children[0].path);
             }, 100);
         }
