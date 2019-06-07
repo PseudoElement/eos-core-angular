@@ -1,9 +1,9 @@
 <div class="search-container">
     <div [popover]="searchModal" containerClass="full-search-popover" class="search-btn-wraper" placement="bottom"
-        #full="bs-popover" [outsideClick]="true" [isOpen]="isOpen">
-        <button [ngClass]="{'opened': isActiveButton()}" class="btn btn-primary-light search-btn"
+        #full="bs-popover" [outsideClick]="true">
+        <button class="opened btn btn-primary-light search-btn"
             tooltip="Расширенный поиск" placement="bottom" container="body" containerClass="tooltip-info">
-            <i [hidden]="isActiveButton()" class="eos-icon eos-icon-filter-blue small" aria-hidden="true"></i>
+           <i  class="eos-icon eos-icon-filter-blue small" aria-hidden="true"></i>
             <i [hidden]="!isActiveButton()" class="eos-icon eos-icon-filter-white small" aria-hidden="true"></i>
         </button>
     </div>
@@ -23,7 +23,7 @@
         <h3 class="title">Критерии поиска</h3>
         <div class="btn-search">
             <button class="btn btn-primary upper" (click)="resetForm()">Сбросить</button>
-            <button class="btn btn-primary-full upper" [disabled]="!disableBtn()" (click)="[startSearch(),(isOpen = !!isOpen)]">Найти</button>
+            <button class="btn btn-primary-full upper" [disabled]="!disableBtn()" (click)="startSearch()">Найти</button>
         </div>
     </div>
     <div>

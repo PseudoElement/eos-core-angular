@@ -25,9 +25,9 @@ export class UserSearchComponent implements OnInit {
     ) {
 
     }
-     isActiveButton() {
+    //  isActiveButton() {
 
-    }
+    // }
 
     disableBtn() {
              if (this.form) {
