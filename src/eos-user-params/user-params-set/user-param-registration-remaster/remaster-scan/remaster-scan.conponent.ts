@@ -83,7 +83,9 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
             this.form = this.inpSrv.toFormGroup(this.inputs);
             this.form.disable({ emitEvent: false });
             this.subscribeChange();
-        });
+        }).catch((error => {
+            console.log(error);
+        }));
     }
     checkDisableInputs() {
         if (+this.accessSustem[3] === 0 && +this.accessSustem[15] === 0) {

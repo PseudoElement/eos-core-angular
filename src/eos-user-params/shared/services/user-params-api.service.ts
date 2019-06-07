@@ -126,24 +126,48 @@ export class UserParamApiSrv {
     }
 
     devideUsers() {
+        const prepareUser = this.prepareListUsers();
+        if (this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
+            this.updateListUsersTech(prepareUser.techUser, prepareUser.happyUser);
+        }
+
+        if (!this.flagTehnicalUsers && this.flagDelitedPermanantly) {
+            this.updateListUserDeleted(prepareUser.deletedUser, prepareUser.happyUser);
+        }
+
+        if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
+            this.updateListUserAnyFlags(prepareUser.techUser, prepareUser.deletedUser, prepareUser.happyUser);
+        }
+
+        if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
+            this.updateListUserEmptyFlags(prepareUser.happyUser);
+        }
+    }
+
+    prepareListUsers(): {techUser: UserSelectNode[], deletedUser: UserSelectNode[], happyUser: UserSelectNode[]} {
         this.users_pagination.UsersList = this.Allcustomer.slice();
         const techUser = this.damnTesterTechUser();
         const deletedUser = this.damnTesterDeletedUser();
         const happyUser = this.damnTesterHappyUsers();
-        if (this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
-            this.updateListUsersTech(techUser, happyUser);
+        return {
+            techUser,
+            deletedUser,
+            happyUser
+        };
+    }
+    findUsers(config) {
+        const prepareList = this.prepareListUsers();
+        if (config.TEH && !config.DEL_USER) {
+            this.users_pagination.UsersList = this.helpersClass.findUsers([].concat(prepareList.techUser, prepareList.happyUser), config);
         }
-
-        if (!this.flagTehnicalUsers && this.flagDelitedPermanantly) {
-            this.updateListUserDeleted(deletedUser, happyUser);
+        if (!config.TEH && config.DEL_USER) {
+            this.users_pagination.UsersList = this.helpersClass.findUsers([].concat(prepareList.deletedUser, prepareList.happyUser), config);
         }
-
-        if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
-            this.updateListUserAnyFlags(techUser, deletedUser, happyUser);
+        if (config.TEH && config.DEL_USER) {
+            this.users_pagination.UsersList = this.helpersClass.findUsers([].concat(prepareList.techUser, prepareList.happyUser, prepareList.deletedUser), config);
         }
-
-        if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
-            this.updateListUserEmptyFlags(happyUser);
+        if (!config.TEH && !config.DEL_USER) {
+            this.users_pagination.UsersList = this.helpersClass.findUsers(prepareList.happyUser, config);
         }
     }
 
