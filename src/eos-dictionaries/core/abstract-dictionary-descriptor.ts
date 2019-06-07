@@ -416,6 +416,10 @@ export abstract class AbstractDictionaryDescriptor {
             });
     }
 
+    findTreeParent(data: CustomTreeNode[], id: any): any {
+        return null;
+    }
+
     hasCustomTree() {
         return false;
     }
