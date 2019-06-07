@@ -3,7 +3,6 @@ import {LINEAR_TEMPLATE} from './_linear-template';
 import {COMMON_FIELD_NAME} from './_common';
 import {YEAR_PATTERN} from 'eos-common/consts/common.consts';
 
-
 export const DID_NOMENKL_CL = 'nomenkl';
 export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: DID_NOMENKL_CL,
@@ -12,7 +11,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     actions: [
         'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization', 'removeHard',
-        'edit', 'view', 'remove', 'removeHard', 'userOrder',
+        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'userOrder', 'export', 'import',
         'OpenSelected',
         'CloseSelected',
     ],
