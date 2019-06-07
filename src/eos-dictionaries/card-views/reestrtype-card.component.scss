@@ -7,11 +7,12 @@
             padding-right: 10px;
             min-width: 340px;
         }
-        .print {
+    }
+    .print {
+        width: 100%;
+        padding-left: 20px;
+        .max {
             width: 100%;
-            .max {
-                width: 100%;
-            }
         }
     }
 }
