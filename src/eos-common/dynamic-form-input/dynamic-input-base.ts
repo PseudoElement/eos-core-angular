@@ -88,7 +88,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
         if (this.input.length) {
             const control = this.control;
             if (control) {
-                const len = this.control.value ? this.control.value.length : 0;
+                const len = this.control.value ? String(this.control.value).length : 0;
                 const maxlen = this.input.length;
                 return String(len) + '/' + String (maxlen);
             }
