@@ -1,4 +1,4 @@
-
+const pattrenSearch = /^[а-яА-Яa-zA-Z0-9\s]{1,50}$/;
 export const USER_SEARCH = {
     id: '',
     title: '',
@@ -10,25 +10,37 @@ export const USER_SEARCH = {
             key: 'LOGIN',
             type: 'string',
             title: 'Логин',
-            length: 2
+            pattern: pattrenSearch,
         },
         {
             key: 'DEPARTMENT',
             type: 'string',
             title: 'Подразделение',
-            pattern: /\w{5,50}/,
+            pattern: pattrenSearch,
         },
         {
-            key: 'DUE_DEP',
+            key: 'fullDueName',
             type: 'string',
             title: 'Должностное лицо',
-            pattern: /\w{5,50}/,
+            pattern: pattrenSearch,
         },
         {
             key: 'CARD',
             type: 'string',
             title: 'Картотека',
-            pattern: /\w{5,50}/,
+            pattern: pattrenSearch,
+        },
+        {
+            key: 'TEH',
+            type: 'boolean',
+            title: 'Учитывать технических пользователей',
+            pattern: pattrenSearch,
+        },
+        {
+            key: 'DEL_USER',
+            type: 'boolean',
+            title: 'Учитавать удаленных пользователей',
+            pattern: pattrenSearch,
         },
     ]
 };

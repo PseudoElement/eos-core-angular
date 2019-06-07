@@ -49,6 +49,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     shooseP: number;
     // количество выбранных пользователей
     countcheckedField: number;
+    flagDeep: boolean = true;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public _apiSrv: UserParamApiSrv,
@@ -180,6 +181,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.shooseP = this._apiSrv.configList.shooseTab;
         if (!param || param === '0.') {
             this._apiSrv.configList.shooseTab === 0 ? this.titleCurrentDue = 'Все подразделения' : this.titleCurrentDue = 'Центральная картотека';
+            this._apiSrv.configList.shooseTab === 0  ? this.flagDeep = true :  this.flagDeep = false;
         } else {
             this.titleCurrentDue = this._apiSrv.configList.titleDue;
         }

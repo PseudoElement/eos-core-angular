@@ -32,4 +32,12 @@
     .search-btn-wraper {
         margin-left: 10px;
     }
+    .search-bool {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0px 20px;
+        padding-top: 15px;
+        height: 50px;
+    }
 }

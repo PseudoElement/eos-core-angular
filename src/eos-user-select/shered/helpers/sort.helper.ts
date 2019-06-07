@@ -18,14 +18,16 @@ export class HelpersSortFunctions {
         return {
             LOGIN: 'login',
             DEPARTMENT: 'department',
-            DUE_DEP: 'dueName',
+            fullDueName: 'fullDueName',
         };
     }
     findUsers(pageList: UserSelectNode[], config: { LOGIN?: string, DEPARTMENT?: string, DUE_DEP?: string, CARD?: string }) {
         const arraySearch = [];
         for (const param in config) {
             if (config.hasOwnProperty(param)) {
-                arraySearch.push(param);
+                if (param !== 'TEH' && param !== 'DEL_USER') {
+                    arraySearch.push(param);
+                }
             }
         }
         return pageList.filter((user: UserSelectNode) => {
@@ -38,7 +40,6 @@ export class HelpersSortFunctions {
             if (arraySearch.length === 3) {
                 return this.find3(user, arraySearch, config);
             }
-
         });
     }
     find1(user: UserSelectNode, arrSearh, config) {
