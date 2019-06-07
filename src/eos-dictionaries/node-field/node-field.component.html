@@ -13,22 +13,22 @@
             ></span>
         </div>
         <ng-container *ngSwitchCase="types.select">
-            <label [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
                 {{ currentValue() }}
             </label>
         </ng-container>
         <ng-container *ngSwitchCase="types.buttons">
-            <label [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
                 {{ currentValue() }}
             </label>
         </ng-container>
         <ng-container *ngSwitchCase="types.date">
-            <label [tooltip]=" field.value | eosDate " placement="auto" container="body" containerClass="tooltip-info">
+            <label class="fieldlabel" [tooltip]=" field.value | eosDate " placement="auto" container="body" containerClass="tooltip-info">
                 {{ field.value | eosDate }}
             </label>
         </ng-container>
         <ng-container *ngSwitchCase="types.dictionary">
-            <label [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
                 {{ decodeDictionary() }}
             </label>
         </ng-container>
@@ -40,7 +40,7 @@
                 <span class="special small eos-icon" *ngIf="specialIcon()" [ngClass]="'eos-icon-checkbox-blue'"></span>
             </div>
 
-            <label [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
                 {{ field.value }}
             </label>
         </ng-container>
