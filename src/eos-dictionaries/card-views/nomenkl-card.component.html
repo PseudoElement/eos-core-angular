@@ -56,12 +56,12 @@
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
             </div>
-            <eos-dynamic-input *ngIf="inputs['rec.ARCH_DATE']"
-                               [input]="inputs['rec.ARCH_DATE']"
-                               [form]="form"
-                               [readonly]="!editMode"></eos-dynamic-input>
             <eos-dynamic-input class="checkbox-inline"
                                [input]="inputs['rec.ARCH_FLAG']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input *ngIf="inputs['rec.ARCH_DATE']"
+                               [input]="inputs['rec.ARCH_DATE']"
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
         </div>
