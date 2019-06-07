@@ -9,10 +9,7 @@
         height: 48px;
         width: 48px;
     }
-    .activemore,
-    .activeShow {
-        background-color: #2196f3;
-    }
+
     .menu-list {
         border-top: solid 1px #e6e6e6;
     }
@@ -20,6 +17,10 @@
         pointer-events: none;
         cursor: not-allowed;
     }
+}
+.activemore,
+.activeShow {
+    background-color: #2196f3!important;
 }
 
 .menu-link {

@@ -48,6 +48,7 @@ import { CarmaHttpService } from './services/carmaHttp.service';
 import { NavParamService } from './services/nav-param.service';
 import { WaitClassifService } from './services/waitClassif.service';
 import {CertificateService} from './services/certificate.service';
+import { ExportImportClService } from './services/export-import-cl.service';
 
 /* guards */
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
@@ -114,6 +115,7 @@ import { PermissionsGuard } from './guards/permissions.guard';
         NavParamService,
         WaitClassifService,
         CertificateService,
+        ExportImportClService,
     ],
     bootstrap: [AppComponent],
 })

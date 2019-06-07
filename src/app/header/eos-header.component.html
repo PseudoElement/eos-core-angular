@@ -27,11 +27,18 @@
                     role="menu">
                     <li *ngFor="let item of modulesDropdown"
                         class="menuitem">
-                        <a [routerLink]="item.url"
-                            class="dropdown-item primary-text"
-                            routerLinkActive="active">
+                        <ng-container *ngIf="!item.flag; else ei">
+                            <a [routerLink]="item.url"
+                                class="dropdown-item primary-text"
+                                routerLinkActive="active">
+                                    <span class="" tooltip="{{item.title}}" placement="bottom" container="body" containerClass="tooltip-info">{{item.title}}</span>
+                            </a>
+                        </ng-container>
+                        <ng-template #ei>
+                            <a class="dropdown-item primary-text" (click)="eiCl(item.id)">
                                 <span class="" tooltip="{{item.title}}" placement="bottom" container="body" containerClass="tooltip-info">{{item.title}}</span>
-                        </a>
+                            </a>
+                        </ng-template>
                     </li>
                 </ul>
             </li>

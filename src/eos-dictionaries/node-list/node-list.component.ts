@@ -25,6 +25,7 @@ import {DOCUMENT} from '@angular/common';
 import {PrjDefaultValuesComponent} from '../prj-default-values/prj-default-values.component';
 import { takeUntil } from 'rxjs/operators';
 import {CopyPropertiesComponent} from '../copy-properties/copy-properties.component';
+import { ExportImportClService } from 'app/services/export-import-cl.service';
 
 const ITEM_WIDTH_FOR_NAN = 100;
 
@@ -61,6 +62,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         private _modalSrv: BsModalService,
         private _cdr: ChangeDetectorRef,
         private _zone: NgZone,
+        private _eiCl: ExportImportClService,
     ) {
 
         _dictSrv.visibleList$
@@ -377,6 +379,14 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             }
             this.userOrdered(this.nodes);
         }
+    }
+
+    export(dictionaryId: string): void {
+        this._eiCl.openExport(dictionaryId).then().catch(err => { });
+    }
+
+    import(dictionaryId: string, nodeId: string): void {
+        this._eiCl.openImport(dictionaryId, nodeId).then().catch(err => { });
     }
 
     userOrdered(nodes: EosDictionaryNode[]) {

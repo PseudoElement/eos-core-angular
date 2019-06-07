@@ -862,6 +862,12 @@
     &.eos-icon-download{
         background-image: url("../assets/icons/dict/Download-Blue.svg")
     }
+    &.eos-icon-download-grey{
+        background-image: url("../assets/icons/dict/Download-Grey.svg")
+    }
+    &.eos-icon-download-dark-blue{
+        background-image: url("../assets/icons/dict/Download-Dark-Blue.svg")
+    }
     &.eos-icon-Man-Black{
         background-image: url("../assets/icons/Man-Black.svg")
     }
@@ -871,7 +877,13 @@
     &.eos-icon-Man-Black{
         background-image: url("../assets/icons/Man-Grey.svg")
     }
-
-
-
+    &.eos-icon-share-blue{
+        background-image: url("../assets/icons/dict/Share-Blue.svg")
+    }
+    &.eos-icon-share-grey{
+        background-image: url("../assets/icons/dict/Share-Grey.svg")
+    }
+    &.eos-icon-share-dark-blue{
+        background-image: url("../assets/icons/dict/Share-Dark-Blue.svg")
+    }
 }

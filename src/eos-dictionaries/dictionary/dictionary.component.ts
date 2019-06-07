@@ -318,6 +318,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 this.nodeList.moveDown();
                 break;
 
+            case E_RECORD_ACTIONS.export:
+                this.nodeList.export(this.dictionaryId);
+                break;
+
+            case E_RECORD_ACTIONS.import:
+                this.nodeList.import(this.dictionaryId, this._nodeId);
+                break;
+
             case E_RECORD_ACTIONS.remove:
                 this._deleteItems();
                 break;
