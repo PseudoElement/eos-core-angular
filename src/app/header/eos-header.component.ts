@@ -3,7 +3,7 @@ import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { APP_MODULES, APP_MODULES_DROPDOWN } from '../consts/app-modules.const';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
-
+import { ExportImportClService } from './../services/export-import-cl.service';
 
 @Component({
     selector: 'eos-header',
@@ -19,6 +19,7 @@ export class EosHeaderComponent implements OnDestroy {
     constructor(
         _router: Router,
         private _route: ActivatedRoute,
+        private _eiCl: ExportImportClService,
     ) {
         this.update();
         _router.events
@@ -32,6 +33,14 @@ export class EosHeaderComponent implements OnDestroy {
     ngOnDestroy() {
         this.ngUnsubscribe.next(null);
         this.ngUnsubscribe.complete();
+    }
+
+    eiCl(id: any) {
+        if (id === 'export') {
+            this._eiCl.openExport('all').then().catch(err => { });
+        } else {
+            this._eiCl.openImport('all', 'all').then().catch(err => { });
+        }
     }
 
     private update() {

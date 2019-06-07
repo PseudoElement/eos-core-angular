@@ -150,6 +150,14 @@ export class NodeActionsComponent implements OnDestroy {
                     _show = this._viewParams.userOrdered && !this._viewParams.searchResults;
                     _enabled = _enabled && this._visibleCount > 1 && this._viewParams.hasMarked;
                     break;
+                case E_RECORD_ACTIONS.export:
+                case E_RECORD_ACTIONS.import:
+                    if (this.dictionary.id === 'sign-kind' || this.dictionary.id === 'eds-category') {
+                        _show = false;
+                    } else {
+                        _enabled = true;
+                    }
+                    break;
                 case E_RECORD_ACTIONS.remove: {
                     _enabled = _enabled && this._viewParams.hasMarked;
                     _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
