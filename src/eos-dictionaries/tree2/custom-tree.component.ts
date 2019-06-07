@@ -50,7 +50,6 @@ export class CustomTreeComponent implements OnInit {
             //     takeUntil(this.ngUnsubscribe)
             // )
             .subscribe((n) => {
-                console.log(n);
                 if (!n) {
                     return;
                 }
