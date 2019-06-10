@@ -10,7 +10,7 @@
     </ul>
 </div>
 <div class="card-content-wrapper">
-    <div [hidden]="currTab !== 0"
+    <div *ngIf="currTab === 0"
         class="clearfix">
         <div class="col-1 pull-left">
             <div class="current-image" [ngStyle]="{'background-image': photo}">
@@ -156,12 +156,12 @@
                             readonly>
                     </div>
                 </div>
-            </div>
+            </div> -->
             <!-- end of delegation -->
             <!-- endOf tab1 -->
         </div>
     </div>
-    <div [hidden]="currTab !== 1">
+    <div *ngIf="currTab === 1">
         <div class="contact-wrapper">
             <eos-dynamic-input class="cab"
                 [input]="inputs['rec.NUM_CAB']"
@@ -189,7 +189,7 @@
                 [readonly]="!editMode"></eos-dynamic-input>
         </div>
     </div>
-    <div [hidden]="currTab !== 2"
+    <div *ngIf="currTab === 2"
         class="additional-info">
         <div class="xl-font paragraph-title">Склонение должности <a *ngIf="editMode"
                 (click)="fillDeclineFields()"

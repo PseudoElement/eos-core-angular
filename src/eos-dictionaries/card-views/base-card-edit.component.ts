@@ -95,6 +95,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
     setTab(i: number) {
         this.currTab = i;
         this.dictSrv.currentTab = i;
+        this.form.updateValueAndValidity();
     }
 
     /**
