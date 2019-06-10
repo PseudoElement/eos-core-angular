@@ -43,13 +43,23 @@
                     [tooltip]='this.title'
                     placement="bottom"
                     container="body"
+                    (click)="goUp()"
                     containerClass="tooltip-info">
-                        <span class="long-title xl-font">{{sliced_title}}</span>
+                    <div class="pointer"
+                        [ngClass]="{'selected-text' : hasParent}"
+                        (click)="goUp()">
+                        <span class="long-title xl-font vertical-align-middle">{{sliced_title}}</span>
+                    </div>
+
                     </div>
                 </ng-template>
                 <ng-template #nonSlicedTitle>
                     <div class="selected-node-title">
-                        <span class="long-title xl-font">{{this.title}}</span>
+                        <div class="pointer"
+                        [ngClass]="{'selected-text' : hasParent}"
+                            (click)="goUp()">
+                            <span class="long-title xl-font vertical-align-middle">{{this.title}}</span>
+                        </div>
                     </div>
                 </ng-template>
 
@@ -71,17 +81,21 @@
                         </li>
                     </ul>
                 </div>
+
                 <div class="item-count usual-border m-font">
                     <ng-container *ngIf="params.searchResults; then foundRecords; else records"></ng-container>
                     <ng-template #records>
                         <span class="item-count-content">
                             Записей:
                             <span class="counter">{{paginationConfig?.itemsQty}}</span>
+                            Выбрано:
+                            <span class="counter">{{markedCounter()}}</span>
                         </span>
                     </ng-template>
                     <ng-template #foundRecords>
                         <span class="item-count-found">
-                            Найдено <span class="counter">{{paginationConfig?.itemsQty}}</span> записей
+                            Найдено: <span class="counter">{{paginationConfig?.itemsQty}}</span>
+                            Выбрано: <span class="counter">{{markedCounter()}}</span>
                         <button class="btn btn-primary-light"
                             tooltip="Очистить результаты"
                             placement="bottom"

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
+import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
 // import {EosDictService} from '../services/eos-dict.service';
 
 const BIG_PANEL = 340,
@@ -35,7 +36,7 @@ export class CustomTreeComponent implements OnInit {
 
     constructor(
         private _router: Router,
-        // private _dictSrv: EosDictService,
+        private _dictSrv: EosDictService,
     ) {
         // this.data = _dictSrv.currentDictionary.descriptor.getCustomTreeData();
         // this._dictSrv = _dictSrv;
@@ -44,6 +45,30 @@ export class CustomTreeComponent implements OnInit {
 
     ngOnInit() {
         this.onResize();
+        this._dictSrv.openedNode$
+            // .pipe(
+            //     takeUntil(this.ngUnsubscribe)
+            // )
+            .subscribe((n) => {
+                console.log(n);
+                if (!n) {
+                    return;
+                }
+                this.setActiveNode(this.data, n.data.rec.DUE);
+                // const t = n.dictionary.descriptor.findTreeParent(this.data, n.data.rec.DUE);
+                // if (t) {
+                //     n.dictionary.descriptor.expandToSelected(t, this.data)
+                //     t.isActive = true;
+                // }
+                // n.parent.isActive = true;
+                // this.hasInfoData = !!n;
+                // if (this.hasInfoData) {
+                //     this._isEditEnabled = !n.isDeleted && this._calcisEditable(n);
+                // }
+            });
+    }
+    ngUnsubscribe(ngUnsubscribe: any): any {
+        // throw new Error("Method not implemented.");
     }
 
     @HostListener('window:resize')
@@ -53,17 +78,7 @@ export class CustomTreeComponent implements OnInit {
 
     onExpand(evt: Event, node: CustomTreeNode/*, isDeleted: boolean*/) {
         evt.stopPropagation();
-        if (node.isExpanded) {
-            node.isExpanded = false;
-        } else {
-            // node.updating = true;
-            node.isExpanded = true;
-        //     this._dictSrv.expandNode(node.id)
-        //         .then((_node) => {
-        //             _node.isExpanded = true;
-        //             node.updating = false;
-        //         });
-        }
+        node.isExpanded = !node.isExpanded;
     }
 
     onSelect(evt: Event, node: CustomTreeNode) {
@@ -79,5 +94,57 @@ export class CustomTreeComponent implements OnInit {
 
     getNodeWidth(level: number): number {
         return this.w - (PADDING_W * level);
+    }
+
+
+    setActiveNode(treeData: CustomTreeNode[], id: any) {
+        const t = this.findTreeParent(treeData, id);
+        this.expandToSelected(t, treeData);
+        this.setActiveRecursive(treeData, false);
+        t.isActive = true;
+    }
+
+    setActiveRecursive(treeData: CustomTreeNode[], active: boolean) {
+        for (let i = 0; i < treeData.length; i++) {
+            const element = treeData[i];
+            element.isActive = active;
+            if (treeData[i].children && treeData[i].children.length) {
+                this.setActiveRecursive(treeData[i].children, active);
+            }
+        }
+    }
+
+    expandToSelected(node2expand: CustomTreeNode, nodes: CustomTreeNode[]) {
+        let r = node2expand;
+        if (r) {
+            while (r) {
+                if (r.expandable) {
+                    r.isExpanded = true;
+                }
+                r = this.findTreeParent(nodes, r.parent);
+                if (r) {
+                    r.isExpanded = true;
+                }
+            }
+        } else {
+            nodes.find((f) => f.id === '0.').isExpanded = true;
+        }
+        return r;
+    }
+
+    findTreeParent(treeData: CustomTreeNode[], id: any) {
+        let i: number;
+        let res: CustomTreeNode;
+        for (i = 0; i < treeData.length; i++) {
+            if (treeData[i].id === id) {
+                return treeData[i];
+            } else if (treeData[i].children && treeData[i].children.length) {
+                res = this.findTreeParent(treeData[i].children, id);
+                if (res) {
+                    return res;
+                }
+            }
+        }
+        return null;
     }
 }

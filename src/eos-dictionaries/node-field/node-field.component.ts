@@ -52,6 +52,8 @@ export class NodeFieldComponent implements OnInit {
             return this.currentValue();
         } else if (this.field.type === E_FIELD_TYPE.dictionary) {
             return this.decodeDictionary();
+        } else if (this.field.type === E_FIELD_TYPE.date) {
+            return this.field.value ? this.field.value.split('T')[0] : '';
         } else if (this.field.type === E_FIELD_TYPE.boolean) {
             if (this.field.value) {
                 return 'Да';

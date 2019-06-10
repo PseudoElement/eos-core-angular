@@ -3,7 +3,6 @@ import {LINEAR_TEMPLATE} from './_linear-template';
 import {COMMON_FIELD_NAME} from './_common';
 import {YEAR_PATTERN} from 'eos-common/consts/common.consts';
 
-
 export const DID_NOMENKL_CL = 'nomenkl';
 export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: DID_NOMENKL_CL,
@@ -12,7 +11,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     actions: [
         'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization', 'removeHard',
-        'edit', 'view', 'remove', 'removeHard', 'userOrder',
+        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'userOrder', 'export', 'import',
         'OpenSelected',
         'CloseSelected',
     ],
@@ -125,7 +124,8 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         'END_YEAR', 'ARTICLE', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', 'buttPer'],
     searchFields: ['CLASSIF_NAME', 'NOM_NUMBER', ],
     fullSearchFields: ['CLASSIF_NAME', 'NOTE', 'NOM_NUMBER'],
-    quickViewFields: ['CLASSIF_NAME', 'NOTE'],
+    quickViewFields: ['NOM_NUMBER', 'SHELF_LIFE', 'SECURITY', 'E_DOCUMENT', 'CLOSED',  'YEAR_NUMBER',
+    'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG',  'NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: ['NOM_NUMBER', 'CLASSIF_NAME', ],
     allVisibleFields: ['NOTE', 'CLOSED', 'SECURITY', 'SHELF_LIFE', 'YEAR_NUMBER',

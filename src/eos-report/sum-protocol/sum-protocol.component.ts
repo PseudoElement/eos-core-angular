@@ -31,16 +31,18 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices) { }
 
   ngOnInit() {
-    this._pipeSrv.read({
-      USER_AUDIT: ALL_ROWS
+    new Promise(() => {
+      this._pipeSrv.read({
+        USER_AUDIT: ALL_ROWS
+      })
+        .then((data: any) => {
+          this.usersAudit = data;
+          return this.usersAudit;
+        })
+        .catch((error) => {
+          this._errorSrv.errorHandler(error);
+        });
     })
-      .then((data: any) => {
-        this.usersAudit = data;
-        return this.usersAudit;
-      })
-      .catch((error) => {
-        this._errorSrv.errorHandler(error);
-      })
       .then(() => {
         this.SelectUsers(this.usersAudit);
         return this._pipeSrv.read({

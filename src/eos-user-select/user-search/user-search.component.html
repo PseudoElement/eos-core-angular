@@ -1,0 +1,47 @@
+<div class="search-container">
+    <div [popover]="searchModal" containerClass="full-search-popover" class="search-btn-wraper" placement="bottom"
+        #full="bs-popover" [outsideClick]="true">
+        <button class="opened btn btn-primary-light search-btn"
+            tooltip="Расширенный поиск" placement="bottom" container="body" containerClass="tooltip-info">
+           <!-- <i  class="eos-icon eos-icon-filter-blue small" aria-hidden="true"></i> -->
+            <i  class="eos-icon eos-icon-filter-white small" aria-hidden="true"></i>
+        </button>
+    </div>
+    <!-- <div class="search-btn-wraper" tooltip="Быстрый поиск" placement="bottom" container="body"
+        containerClass="tooltip-info" [isDisabled]="isOpenQuick">
+        <button [ngClass]="{'opened': isOpenQuick}" class="btn btn-primary-light search-btn quick-search-btn"
+            containerClass="quick-search-popover" placement="left" (click)="showFastSrch()">
+            <i [hidden]="isOpenQuick" class="eos-icon eos-icon-search-blue small" aria-hidden="true"></i>
+            <i [hidden]="!isOpenQuick" class="eos-icon eos-icon-search-white small" aria-hidden="true"></i>
+        </button>
+    </div> -->
+</div>
+
+
+<ng-template #searchModal>
+    <div class="btn-nav">
+        <h3 class="title">Критерии поиска</h3>
+        <div class="btn-search">
+            <button class="btn btn-primary upper" (click)="resetForm()">Сбросить</button>
+            <button class="btn btn-primary-full upper" [disabled]="!disableBtn()" (click)="startSearch()">Найти</button>
+        </div>
+    </div>
+    <div>
+        <div class="search-bool">
+            <eos-dynamic-input [input]="inputs['rec.TEH']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.DEL_USER']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
+        <div class="search-input-wr">
+            <eos-dynamic-input [input]="inputs['rec.LOGIN']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
+        <div class="search-input-wr">
+            <eos-dynamic-input [input]="inputs['rec.fullDueName']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
+        <div class="search-input-wr" *ngIf="flagDeep">
+            <eos-dynamic-input [input]="inputs['rec.DEPARTMENT']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
+        <div class="search-input-wr"  *ngIf="!flagDeep">
+            <eos-dynamic-input [input]="inputs['rec.CARD']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
+    </div>
+</ng-template>

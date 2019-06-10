@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { TooltipModule, ModalModule, AccordionModule, BsDropdownModule } from 'ngx-bootstrap';
+import { TooltipModule, ModalModule, AccordionModule, BsDropdownModule, PopoverModule } from 'ngx-bootstrap';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EosCommonModule } from 'eos-common/eos-common.module';
@@ -17,6 +17,7 @@ import {DepartUserSelectComponent} from './depart-user-select/depart-user-select
 import {CabinetUserComponent} from './cabinet-user/cabinet-user.component';
 import {UserSystemComponent} from './user-system/user-system.component';
 import {BtnActionComponent} from './btn-action/btn-action.component';
+import { UserSearchComponent } from './user-search/user-search.component';
 /*     ----Services----     */
 import { TreeUserSelectService } from './shered/services/tree-user-select.service';
 import { RtUserSelectService } from './shered/services/rt-user-select.service';
@@ -32,6 +33,7 @@ import { RtUserSelectService } from './shered/services/rt-user-select.service';
         UserSystemComponent,
         CabinetUserComponent,
         BtnActionComponent,
+        UserSearchComponent,
     ],
     entryComponents: [
         CreateUserComponent
@@ -40,6 +42,7 @@ import { RtUserSelectService } from './shered/services/rt-user-select.service';
         BrowserModule,
         TooltipModule.forRoot(),
         BsDropdownModule.forRoot(),
+        PopoverModule.forRoot(),
         AppRoutingModule,
         FormsModule,
         ReactiveFormsModule,
