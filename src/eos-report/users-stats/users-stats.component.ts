@@ -67,8 +67,8 @@ export class EosReportUsersStatsComponent implements OnInit {
       });
     Promise.all([a, b, c]).then(() => {
       this.getSubSystems(this.items);
-      this.getProtectedUsers(this.deletedUsers);
       this.usersNumber = this.usersNumber + this.items.length;
+      this.getProtectedUsers(this.deletedUsers, this.usersNumber);
     }
     )
       .catch((error) => {
@@ -78,7 +78,7 @@ export class EosReportUsersStatsComponent implements OnInit {
   }
 
 
-  getProtectedUsers(data) {
+  getProtectedUsers(data: any, usNum: number) {
     for (const i of data) {
       if (i.DELETED === 1 && i.LOGIN_ATTEMPTS < this.paramValue && String(i.ORACLE_ID) !== 'null') {
         this.blockByTech++;
@@ -87,7 +87,7 @@ export class EosReportUsersStatsComponent implements OnInit {
         this.blockAuthUsers++;
       }
     }
-    this.usersNumber = this.usersNumber + this.blockByTech + this.blockAuthUsers;
+    this.usersNumber = usNum + this.blockByTech + this.blockAuthUsers;
   }
 
 

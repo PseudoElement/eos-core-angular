@@ -1,54 +1,44 @@
-.cust-div{
-    height: 300px;
-    width: 300px;
+.filter-comp {
+    .cust-style-mod {
+        width: 48px;
+        height: 48px;
+        margin-left: 50%;
+    }
+    .btn.btn-primary-light.search-btn.opened {
+        height: 48px;
+        width: 48px;
+    }
 }
-.cust-style-mod {
-    width: 48px;
-    height: 48px;
-    margin-left: 50%;
+.full-search-form-prot{
+    .cont-datepick {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .lab-botttom{
+        padding-bottom: 12px;
+    }
+    .lab-font{
+        line-height: 16px;
+        font-size: 12px;
+    }
+    .form-group-filter {
+        label {
+            line-height: 0px !important;
+            margin-bottom: 8px;
+            font-weight: normal;
+            text-transform: uppercase;
+        }
+    }
+    form {
+        padding: 20px;
+    }
+    .pos-icon{
+        display: flex;
+        justify-content: flex-end;
+        bottom: 50px;
+        right: 10px;
+        position: relative;
+    }
 }
 
-.form-date-control {  
-    width: 200px;
-    font-size: 14px; 
-    line-height: 32px;
-}
-.cont-datepick {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-.group-datepick {
-    display: flex;
-    flex-direction: row; 
-}
-.kind-pick {
-    position: relative;
-    input {
-        margin-right: 5px;
-        padding-right: 32px !important;
-        &.stub {
-            box-shadow: none;
-            background-image: none;
-            padding: 0;
-        }
-        &.hidden {
-            display: none;
-        }
-    }
-    a {
-        position: absolute;
-        top: 0;
-        right: 1px;
-        bottom: 0;
-        margin: auto;
-        height: 24px;
-    }
-}
-.calend-stat {
-    margin-top: 3px;
-}
-.btn.btn-primary-light.search-btn.opened {
-    height: 48px;
-    width: 48px;
-}

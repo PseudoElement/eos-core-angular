@@ -1,20 +1,22 @@
-<div [popover]="searchModal"  
-    containerClass="head-protocol"
-    placement="bottom"
-    container="body"
-    class="cust-style-mod" 
-    #full="bs-popover"
-    >
-    <button [ngClass]="{'opened': formBol}"
-        class="btn btn-primary-light search-btn"
-        tooltip="Расширенный поиск"
+<div class="filter-comp">
+    <div [popover]="searchModal"  
+        containerClass="head-protocol"
         placement="bottom"
         container="body"
-        (click)="isActiveButton()"
-        containerClass="tooltip-info">
-            <i [hidden]="formBol"class="eos-icon eos-icon-filter-blue small" aria-hidden="true"></i>
-            <i [hidden]="!formBol" class="eos-icon eos-icon-filter-white small" aria-hidden="true"></i>
-    </button> 
+        class="cust-style-mod" 
+        #full="bs-popover"
+        >
+        <button [ngClass]="{'opened': formBol}"
+            class="btn btn-primary-light search-btn"
+            tooltip="Расширенный поиск"
+            placement="bottom"
+            container="body"
+            (click)="isActiveButton()"
+            containerClass="tooltip-info">
+                <i [hidden]="formBol"class="eos-icon eos-icon-filter-blue small" aria-hidden="true"></i>
+                <i [hidden]="!formBol" class="eos-icon eos-icon-filter-white small" aria-hidden="true"></i>
+        </button> 
+    </div>
 </div>
 <ng-template #searchModal>                    
     <div class="full-search-top usual-border">
@@ -22,71 +24,26 @@
         <div class="pull-right srch-btns">
             <button
                 class="btn btn-primary s-font upper"
+                (click)="ClearForm()"
                 >Сбросить</button>
-            <button 
-                class="btn btn-primary-full s-font upper">Найти</button>
+            <button class="btn btn-primary-full s-font upper">Найти</button>
         </div>
     </div> 
-    <div class="full-search-form-cust">
-    <form id="reshen">
-        <div class="cont-datepick">
-            <div class="form-group unimportant-text">
-                <label class="s-font"for="title">От</label>
-                <div class="form-date-control group-datepick">
-                    <input type="text" #dp1="bsDatepicker" class="form-control m-font" bsDatepicker [bsConfig]="bsConfig" [bsValue]="bsDateFrom" [minDate]="bsConfig.minDate" 
-                    placeholder="--.--.----" maxlength="11" [maxDate]="bsConfig.maxDate">
-                    <a  (click)="dp1.toggle()" [attr.aria-expanded]="dp1.isOpen" >
-                        <span class="eos-icon eos-icon-calendar-blue small calend-stat"></span>
-                    </a>
-                </div>
-            </div>
-            <div class="form-group unimportant-text">
-                <label class="s-font" for="title">До</label>
-                <div class="form-date-control group-datepick">
-                    <input [bsConfig]="bsConfig"  [maxDate]="bsConfig.maxDate" [minDate]="bsConfig.minDate" #dp2="bsDatepicker" type="text" 
-                    bsDatepicker class="form-control m-font"   placeholder="--.--.----" maxlength="11"  [bsValue]="bsDateBefore">
-                    <a (click)="dp2.toggle()" [attr.aria-expanded]="dp2.isOpen">
-                        <span class="eos-icon eos-icon-calendar-blue small calend-stat"></span>
-                    </a>
-                </div>
-            </div>  
-        </div>
-        <div class="form-group unimportant-text">
-            <label class="s-font" for="title">Событие:</label>
-            <div class="kind-pick">
-                <select class="form-control m-font">
-                    <option *ngFor="let kind of eventKind" [value]="kind.value">{{kind.value}}</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group unimportant-text">
-            <label class="s-font"
-                for="note">Редактировал:</label>
-            <div class="search-fld">
-                <input id="note"
-                    name="note"
-                    type="text"
-                    class="form-control m-font"
-                    [value]="valueEdit.toString()"
-                 >
-                <a class="clear-btn"><span class="icon eos-icon eos-icon-avatar-blue small icon-add-department" (click)="selectUserEdit()"></span></a>
-            </div>
-        </div>
-        <div class="form-group unimportant-text">
-            <label class="s-font"
-                for="note">Пользователь:</label>
-            <div class="search-fld">
-                <input id="note"
-                    name="note"
-                    type="text"
-                    class="form-control light"
-                    [value]="valueWho.toString()"
-                 >
-                 <a class="clear-btn"><span class="icon eos-icon eos-icon-avatar-blue small icon-add-department" (click)="selectUserWho()"></span></a>
-            </div>
-        </div>
-    </form>
-</div>
-</ng-template>       
+    <div class="full-search-form-prot">
+        <form id="reshen">
+            <div class="cont-datepick">
+                <eos-dynamic-input  class="s-font upper" [input]="inputs['rec.DATEFROM']" [form]="filterForm" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input  class="s-font upper" [input]="inputs['rec.DATETO']" [form]="filterForm" [readonly]="false"></eos-dynamic-input>
+            </div> 
+                <eos-dynamic-input  class="s-font upper"  [input]="inputs['rec.USEREVENTS']" [form]="filterForm" [readonly]="false"></eos-dynamic-input>
+                <eos-dynamic-input class="s-font upper" [input]="inputs['rec.USEREDIT']"  class="s-font" [form]="filterForm" [readonly]="false"></eos-dynamic-input>
+                <a class="clear-btn pos-icon"><span class="icon eos-icon eos-icon-avatar-blue small icon-add-department" (click)="selectUserEdit()"></span></a>
+                <eos-dynamic-input class="s-font upper" [input]="inputs['rec.USERWHO']" [form]="filterForm" [readonly]="false"></eos-dynamic-input>
+                <a class="clear-btn pos-icon"><span class="icon eos-icon eos-icon-avatar-blue small icon-add-department" (click)="selectUserWho()"></span></a>
+        </form>
+    </div>
+</ng-template>   
+
+    
    
 

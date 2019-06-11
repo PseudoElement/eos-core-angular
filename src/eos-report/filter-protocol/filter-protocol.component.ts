@@ -1,29 +1,33 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core'; // ViewChild, HostListener
-import { BsDatepickerConfig } from 'ngx-bootstrap';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { OPEN_CLASSIF_USER_CL, CREATE_USER_INPUTS } from 'eos-user-select/shered/consts/create-user.consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { USER_CL, PipRX } from 'eos-rest';
 import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api.service';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
-
+import { FormGroup } from '@angular/forms';
+import { FormHelperService } from 'eos-user-params/shared/services/form-helper.services';
+import { FILTER_PROTOCOL } from 'eos-user-params/user-params-set/shared-user-param/consts/filter-users.const';
+import { InputControlService } from 'eos-common/services/input-control.service';
+import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
 @Component({
   selector: 'eos-filter-protocol',
   templateUrl: './filter-protocol.component.html',
-  styleUrls: ['./filter-protocol.component.scss']
+  styleUrls: ['./filter-protocol.component.scss'],
+  providers: [FormHelperService]
 })
 
 export class EosReportSummaryFilterProtocolComponent implements OnInit {
   @ViewChild('full') full;
   data = {};
-  bsConfig: Partial<BsDatepickerConfig>;
   placement = 'bottom';
-  bsDateFrom: Date;
-  bsDateBefore: Date;
-  isOpen = false;
+  public prepareData;
+  public prepareInputs;
+  public allData;
   formBol: boolean = false;
   isShell: boolean = false;
   fields = CREATE_USER_INPUTS;
+  filterForm: FormGroup;
   inputs;
   valueEdit = [];
   valueWho = [];
@@ -38,14 +42,11 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     { value: 'Удаление Пользователя' }
   ];
 
-  constructor(private _waitClassifSrv: WaitClassifService, private _inputCtrlSrv: InputParamControlService, private _pipeSrv: PipRX, public _apiSrv: UserParamApiSrv) {
-    this.bsConfig = {
-      showWeekNumbers: false,
-      containerClass: 'theme-dark-blue',
-      dateInputFormat: 'DD.MM.YYYY',
-      minDate: new Date('01/01/1900'),
-      maxDate: new Date('12/31/2100'),
-    };
+  constructor(
+    private _waitClassifSrv: WaitClassifService, private _inputCtrlSrv: InputParamControlService,
+    private _pipeSrv: PipRX, public _apiSrv: UserParamApiSrv, private inpSrv: InputControlService,
+    private formHelp: FormHelperService, private dataConv: EosDataConvertService
+  ) {
   }
 
   @HostListener('document:click', ['$event'])
@@ -59,14 +60,32 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
 
   ngOnInit() {
     this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
+    this.init();
+  }
+  getInputValue(): void {
+    this.prepareData = this.formHelp.parse_Create(FILTER_PROTOCOL.fields, this.allData);
+    this.prepareInputs = this.formHelp.getObjectInputFields(FILTER_PROTOCOL.fields);
+    this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
+    this.filterForm = this.inpSrv.toFormGroup(this.inputs);
   }
 
+  init() {
+    this.pretInputs();
+  }
+
+  pretInputs(): void {
+    this.allData = {
+      DATEFROM: '',
+      DATETO: '',
+      USEREVENTS: '',
+      USEREDIT: '',
+      USERWHO: ''
+    };
+    this.getInputValue();
+  }
   isActiveButton(): boolean {
     this.formBol = !this.formBol;
     return this.formBol;
-  }
-
-  buttonChanged(e: Event) {
   }
 
   selectUserEdit() {
@@ -83,7 +102,8 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
         data.map((user) => {
           this.valueEdit.push(user.SURNAME_PATRON);
         });
-        return this.valueEdit;
+        this.allData.USEREDIT = this.valueEdit.toString();
+        this.getInputValue();
       })
       .catch(() => {
         this.isShell = false;
@@ -105,12 +125,19 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
         data.map((user) => {
           this.valueWho.push(user.SURNAME_PATRON);
         });
-        return this.valueWho.toString();
+        this.allData.USERWHO = this.valueWho.toString();
+        this.getInputValue();
       })
       .catch(() => {
         this.isShell = false;
       });
 
+  }
+
+  ClearForm() {
+    this.filterForm.controls['rec.DATEFROM'].patchValue('0');
+    this.filterForm.controls['rec.DATETO'].patchValue('0');
+    this.filterForm.reset();
   }
 
   private _getUserCl(isn) {
