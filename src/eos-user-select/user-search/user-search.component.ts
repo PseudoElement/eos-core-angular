@@ -4,6 +4,7 @@ import { FormHelperService } from '../../eos-user-params/shared/services/form-he
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { FormGroup } from '@angular/forms';
+import {SearchServices} from '../shered/services/search.service';
 @Component({
     selector: 'eos-user-search',
     templateUrl: './user-search.component.html',
@@ -22,6 +23,7 @@ export class UserSearchComponent implements OnInit {
         private _formHelper: FormHelperService,
         private dataConv: EosDataConvertService,
         private inpSrv: InputControlService,
+        private srhSrv: SearchServices,
     ) {
 
     }
@@ -31,7 +33,6 @@ export class UserSearchComponent implements OnInit {
 
     disableBtn() {
              if (this.form) {
-                 console.log(this.form.value);
             return this.form.value['rec.LOGIN'].length > 0
                 || (this.form.value['rec.DEPARTMENT'].length > 0 && this.form.controls['rec.DEPARTMENT'].valid)
                 || (this.form.value['rec.fullDueName'].length > 0 && this.form.controls['rec.fullDueName'].valid);
@@ -40,7 +41,6 @@ export class UserSearchComponent implements OnInit {
         }
     }
     ngOnInit() {
-        console.log(this.flagDeep);
         this.pretInputs();
 
     }
@@ -52,23 +52,26 @@ export class UserSearchComponent implements OnInit {
     }
     startSearch() {
         const searchVal = this.form.value;
-        const newObj = {};
+        this.srhSrv.getSearchCard(searchVal['rec.CARD']);
+        this.srhSrv.getSearchDepartment(searchVal['rec.fullDueName']);
+         const newObj = {};
         if (this.form.controls['rec.CARD'].valid && this.form.controls['rec.CARD'].value !== '') {
-            newObj['DEPARTMENT'] = searchVal['rec.CARD'];
+            newObj['CARD'] = searchVal['rec.CARD'];
         }
-        if (this.form.controls['rec.DEPARTMENT'].valid && this.form.controls['rec.DEPARTMENT'].value !== '') {
-            newObj['DEPARTMENT'] = searchVal['rec.DEPARTMENT'];
-        }
+        // if (this.form.controls['rec.DEPARTMENT'].valid && this.form.controls['rec.DEPARTMENT'].value !== '') {
+        //     newObj['DEPARTMENT'] = searchVal['rec.DEPARTMENT'];
+        // }
         if (this.form.controls['rec.fullDueName'].valid && this.form.controls['rec.fullDueName'].value !== '') {
             newObj['fullDueName'] = searchVal['rec.fullDueName'];
         }
-        if (this.form.controls['rec.LOGIN'].valid && this.form.controls['rec.LOGIN'].value !== '') {
-            newObj['LOGIN'] = searchVal['rec.LOGIN'];
-        }
-        newObj['TEH'] = searchVal['rec.TEH'];
-        newObj['DEL_USER'] = searchVal['rec.DEL_USER'];
-        this.bs_fail.isOpen = false;
-        this.search.emit(newObj);
+        // if (this.form.controls['rec.LOGIN'].valid && this.form.controls['rec.LOGIN'].value !== '') {
+        //     newObj['LOGIN'] = searchVal['rec.LOGIN'];
+        // }
+        // newObj['TEH'] = searchVal['rec.TEH'];
+        // newObj['DEL_USER'] = searchVal['rec.DEL_USER'];
+        // this.bs_fail.isOpen = false;
+        this.srhSrv.searchPrepareCardAndFullDue(newObj);
+      //   this.search.emit(null);
     }
     resetForm() {
         this.form.controls['rec.DEPARTMENT'].patchValue('');

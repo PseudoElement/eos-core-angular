@@ -155,20 +155,24 @@ export class UserParamApiSrv {
             happyUser
         };
     }
-    findUsers(config) {
-        const prepareList = this.prepareListUsers();
-        if (config.TEH && !config.DEL_USER) {
-            this.users_pagination.UsersList = this.helpersClass.findUsers([].concat(prepareList.techUser, prepareList.happyUser), config);
-        }
-        if (!config.TEH && config.DEL_USER) {
-            this.users_pagination.UsersList = this.helpersClass.findUsers([].concat(prepareList.deletedUser, prepareList.happyUser), config);
-        }
-        if (config.TEH && config.DEL_USER) {
-            this.users_pagination.UsersList = this.helpersClass.findUsers([].concat(prepareList.techUser, prepareList.happyUser, prepareList.deletedUser), config);
-        }
-        if (!config.TEH && !config.DEL_USER) {
-            this.users_pagination.UsersList = this.helpersClass.findUsers(prepareList.happyUser, config);
-        }
+    findUsers(users, fn) {
+        // const prepareList = this.prepareListUsers();
+        // if (config.TEH && !config.DEL_USER) {
+        //     this.users_pagination.UsersList = this.helpersClass.findUsers([].concat(prepareList.techUser, prepareList.happyUser), config);
+        // }
+        // if (!config.TEH && config.DEL_USER) {
+        //     this.users_pagination.UsersList = this.helpersClass.findUsers([].concat(prepareList.deletedUser, prepareList.happyUser), config);
+        // }
+        // if (config.TEH && config.DEL_USER) {
+        //     this.users_pagination.UsersList = this.helpersClass.findUsers([].concat(prepareList.techUser, prepareList.happyUser, prepareList.deletedUser), config);
+        // }
+        // if (!config.TEH && !config.DEL_USER) {
+        //     this.users_pagination.UsersList = this.helpersClass.findUsers(prepareList.happyUser, config);
+        // }
+
+        this.updatePageList(users, this.configList.shooseTab).then((res) => {
+            this.Allcustomer = this._getListUsers(res).slice();
+        });
     }
 
     updateListUsersTech(userT: UserSelectNode[], userH: UserSelectNode[]) {
