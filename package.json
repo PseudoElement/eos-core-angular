@@ -35,7 +35,7 @@
         "fs-extra": "^4.0.3",
         "moment": "^2.24.0",
         "ng2-dragula": "^1.5.0",
-        "ngx-bootstrap": "^4.3.0",
+        "ngx-bootstrap": "4.1.1",
         "rxjs": "^6.5.1",
         "stream": "0.0.2",
         "timers": "^0.1.1",
