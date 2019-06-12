@@ -24,7 +24,7 @@ export class UserParamApiSrv {
     };
     confiList$: Subject<IConfig>;
     currentSort: any = SortsList[3];
-    private Allcustomer: UserSelectNode[] = [];
+    public Allcustomer: UserSelectNode[] = [];
     private helpersClass;
     get _confiList$(): Observable<IConfig> {
         return this.confiList$.asObservable();
@@ -97,7 +97,7 @@ export class UserParamApiSrv {
         return this.getData(query)
             .then(data => {
                 const prepData = data.filter(user => user['ISN_LCLASSIF'] !== 0);
-                return this.updatePageList(prepData, this.configList.shooseTab).then(res => {
+                return this.updatePageList(prepData, this.configList.shooseTab).then((res) => {
                     this.Allcustomer = this._getListUsers(res).slice();
                     this.devideUsers();
                     this.initConfigTitle(dueDep);
@@ -155,21 +155,7 @@ export class UserParamApiSrv {
             happyUser
         };
     }
-    findUsers(users, fn) {
-        // const prepareList = this.prepareListUsers();
-        // if (config.TEH && !config.DEL_USER) {
-        //     this.users_pagination.UsersList = this.helpersClass.findUsers([].concat(prepareList.techUser, prepareList.happyUser), config);
-        // }
-        // if (!config.TEH && config.DEL_USER) {
-        //     this.users_pagination.UsersList = this.helpersClass.findUsers([].concat(prepareList.deletedUser, prepareList.happyUser), config);
-        // }
-        // if (config.TEH && config.DEL_USER) {
-        //     this.users_pagination.UsersList = this.helpersClass.findUsers([].concat(prepareList.techUser, prepareList.happyUser, prepareList.deletedUser), config);
-        // }
-        // if (!config.TEH && !config.DEL_USER) {
-        //     this.users_pagination.UsersList = this.helpersClass.findUsers(prepareList.happyUser, config);
-        // }
-
+    findUsers(users) {
         this.updatePageList(users, this.configList.shooseTab).then((res) => {
             this.Allcustomer = this._getListUsers(res).slice();
         });
@@ -372,7 +358,7 @@ export class UserParamApiSrv {
         };
     }
 
-    private _getListUsers(data): UserSelectNode[] {
+    public _getListUsers(data): UserSelectNode[] {
         const list: UserSelectNode[] = [];
         data.forEach(user => list.push(new UserSelectNode(user, this.sysParam)));
         return list;

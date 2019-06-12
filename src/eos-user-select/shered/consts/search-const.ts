@@ -44,3 +44,10 @@ export const USER_SEARCH = {
         },
     ]
 };
+
+export interface USERSRCH {
+    CARD?: string;
+    DEPARTMENT?: string;
+    LOGIN?: string;
+    fullDueName?: string;
+}

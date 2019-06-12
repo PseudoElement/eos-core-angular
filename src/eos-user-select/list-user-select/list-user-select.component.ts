@@ -181,7 +181,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.shooseP = this._apiSrv.configList.shooseTab;
         if (!param || param === '0.') {
             this._apiSrv.configList.shooseTab === 0 ? this.titleCurrentDue = 'Все подразделения' : this.titleCurrentDue = 'Центральная картотека';
-            this._apiSrv.configList.shooseTab === 0  ? this.flagDeep = true :  this.flagDeep = false;
+            this._apiSrv.configList.shooseTab === 0 ? this.flagDeep = true : this.flagDeep = false;
         } else {
             this.titleCurrentDue = this._apiSrv.configList.titleDue;
         }
@@ -532,14 +532,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
     }
     searchUsers($event) {
-        this._apiSrv.findUsers($event, this.call);
-        this._pagSrv._initPaginationConfig(true);
-        this._pagSrv.changePagination(this._pagSrv.paginationConfig);
-        this.countMaxSize = this._pagSrv.countMaxSize;
-    }
-    call() {
-        console.log('fsdfds');
-        this.countMaxSize = 5555;
+        console.log($event);
+        this._apiSrv.updatePageList($event, this.shooseP).then((res) => {
+            this._apiSrv.Allcustomer = this._apiSrv._getListUsers(res).slice();
+            this._pagSrv.UsersList = this._apiSrv.Allcustomer;
+            this._pagSrv._initPaginationConfig(true);
+            this._pagSrv.changePagination(this._pagSrv.paginationConfig);
+            this.countMaxSize = this._pagSrv.countMaxSize;
+        });
     }
 
     private cathError(e) {
