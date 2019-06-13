@@ -1,11 +1,11 @@
 import { Component, HostListener, ViewChild, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
 // import {toNumber} from 'ngx-bootstrap/timepicker/timepicker.utils';
 
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import {filter, pairwise, takeUntil } from 'rxjs/operators';
 
 
 import { CanDeactivateGuard } from '../../app/guards/can-deactivate.guard';
@@ -130,6 +130,10 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             tabNum = +params.tabNum;
             this._init();
         });
+        this._router.events.pipe(filter((e) => e instanceof NavigationEnd),
+        pairwise()).subscribe(data => {
+            console.log(data);
+        });
 
         this._dictSrv.currentList$
             .pipe(
@@ -184,6 +188,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
     close() {
         const url = this._storageSrv.getItem(RECENT_URL);
+        console.log(url);
         this._dictSrv.editFromForm = false;
         if (url) {
             this.goTo(url);
