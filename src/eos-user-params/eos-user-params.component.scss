@@ -102,3 +102,15 @@
         }
     }
 }
+@media(max-width: 1450px) {
+    .nav-accordion {
+        min-width: 310px;
+        left: -$dictionary-block-width-big-display;
+        &.show-accordion {
+            left: 0;
+        }
+    }
+    .user-params-set{
+        margin-left: 315px;
+    }
+}
