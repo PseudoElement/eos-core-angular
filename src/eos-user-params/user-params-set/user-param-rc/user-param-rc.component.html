@@ -1,10 +1,10 @@
 <div class="input-user-wrapper input-user-rc-wrapper " *ngIf="inputs">
     <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="btnDisabled" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
-    <div class="user-input-group scrollWrapper">
+    <div class="scrollWrapper user-input-group">
         <div class="rc-div">
             <span class="l-font l-font-t">Открывать закладку доп. реквизиты при открытии РК для групп документов.</span>
+            <hr>
         </div>
-        <hr>
         <div class="btn-controll">
             <button class="btn btn-primary-light" [disabled]="!flagEdit" tooltip="Добавить" containerClass="tooltip-info" placement="bottom" triggers="hover" (click)="addRcDoc()">
                     <span class="eos-icon small" [ngClass] = "flagEdit ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
@@ -15,9 +15,11 @@
         </div>
         <div class="user-input-group user-input-group-flex rc-doc-margin">
             <span class="rc-doc" *ngFor='let title of dopRec; let i = index' [ngClass]="{'current' : cutentTab === i}" (click)='setTab(i)'>{{title.CLASSIF_NAME}}
-                </span>
+            </span>
         </div>
-        <hr>
+        <div class="rc-doc-margin ">
+            <hr>
+        </div>
         <div class="rc-box">
             <div class="user-input-group">
                 <span class="l-font">Поручения в подвале РК</span>

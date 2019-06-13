@@ -1,25 +1,27 @@
 <div class="input-user-wrapper  input-user-other-rk-forwarding-wrapper" *ngIf="inputs">
-    <div class="user-input-group">
-        <span class="l-font">Пересылка</span>
+    <div class="pad-other-set">
+        <div>
+            <span class="l-font">Пересылка</span>
+            <hr>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.SEND_DIALOG']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
         <hr>
-        <eos-dynamic-input class="inline-block" [input]="inputs['rec.SEND_DIALOG']" [form]="form" [readonly]="false"></eos-dynamic-input>
-    </div>
-    <hr>
-    <div class="user-input-group">
-        <span class="l-font">Удалять РК из текущего кабинета после пересылки</span>
+        <div>
+            <span class="l-font">Удалять РК из текущего кабинета после пересылки</span>
+            <hr>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.DELFROMCAB']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
         <hr>
-        <eos-dynamic-input class="inline-block" [input]="inputs['rec.DELFROMCAB']" [form]="form" [readonly]="false"></eos-dynamic-input>
-    </div>
-    <hr>
-    <div class="user-input-group">
-        <span class="l-font">Добавлять адресатов пересылки РК в ЖПД</span>
+        <div>
+            <span class="l-font">Добавлять адресатов пересылки РК в ЖПД</span>
+            <hr>
+            <eos-dynamic-input [input]="inputs['rec.MARKDOC']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
         <hr>
-        <eos-dynamic-input [input]="inputs['rec.MARKDOC']" [form]="form" [readonly]="false"></eos-dynamic-input>
-    </div>
-    <hr>
-    <div class="user-input-group">
-        <span class="l-font">Передавать</span>
-        <hr>
-        <eos-dynamic-input [input]="inputs['rec.MARKDOCKND']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        <div>
+            <span class="l-font">Передавать</span>
+            <hr>
+            <eos-dynamic-input [input]="inputs['rec.MARKDOCKND']" [form]="form" [readonly]="false"></eos-dynamic-input>
+        </div>
     </div>
 </div>
