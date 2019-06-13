@@ -11,6 +11,7 @@
     display: flex;
     justify-content: space-around;
     width:100%;
+    position: absolute;
 }
 .item-table{
     line-height: 46px;
@@ -30,5 +31,8 @@
 }
 .filter-protocol{
     padding-right: 65px;
+}
+.sum-report-list{
+    background-color: white;
 }
 

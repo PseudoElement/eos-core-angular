@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener, Output, EventEmitter } from '@angular/core';
 import { OPEN_CLASSIF_USER_CL, CREATE_USER_INPUTS } from 'eos-user-select/shered/consts/create-user.consts';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { USER_CL, PipRX } from 'eos-rest';
@@ -29,18 +29,8 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   fields = CREATE_USER_INPUTS;
   filterForm: FormGroup;
   inputs;
-  valueEdit = [];
-  valueWho = [];
-  eventKind = [
-    { value: '' },
-    { value: 'Блокирование Пользователя' },
-    { value: 'Разблокирование Пользователя' },
-    { value: 'Создание пользователя' },
-    { value: 'Редактирование пользователя БД' },
-    { value: 'Редактирование прав ДЕЛА' },
-    { value: 'Редактирование прав поточного сканирования' },
-    { value: 'Удаление Пользователя' }
-  ];
+
+  @Output() filterProtocol: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private _waitClassifSrv: WaitClassifService, private _inputCtrlSrv: InputParamControlService,
@@ -62,15 +52,10 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
     this.init();
   }
-  getInputValue(): void {
-    this.prepareData = this.formHelp.parse_Create(FILTER_PROTOCOL.fields, this.allData);
-    this.prepareInputs = this.formHelp.getObjectInputFields(FILTER_PROTOCOL.fields);
-    this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
-    this.filterForm = this.inpSrv.toFormGroup(this.inputs);
-  }
 
   init() {
     this.pretInputs();
+    this.filterForm = this.inpSrv.toFormGroup(this.inputs);
   }
 
   pretInputs(): void {
@@ -81,8 +66,11 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
       USEREDIT: '',
       USERWHO: ''
     };
-    this.getInputValue();
+    this.prepareData = this.formHelp.parse_Create(FILTER_PROTOCOL.fields, this.allData);
+    this.prepareInputs = this.formHelp.getObjectInputFields(FILTER_PROTOCOL.fields);
+    this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
   }
+
   isActiveButton(): boolean {
     this.formBol = !this.formBol;
     return this.formBol;
@@ -99,11 +87,12 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
       })
       .then(data => {
         this.isShell = false;
+        const valueEdit = [];
         data.map((user) => {
-          this.valueEdit.push(user.SURNAME_PATRON);
+          valueEdit.push(user.SURNAME_PATRON);
         });
-        this.allData.USEREDIT = this.valueEdit.toString();
-        this.getInputValue();
+        this.allData.USEREDIT = valueEdit.toString();
+        this.filterForm.controls['rec.USEREDIT'].patchValue(this.allData.USEREDIT);
       })
       .catch(() => {
         this.isShell = false;
@@ -122,11 +111,13 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
       })
       .then(data => {
         this.isShell = false;
+        const valueWho = [];
         data.map((user) => {
-          this.valueWho.push(user.SURNAME_PATRON);
+          valueWho.push(user.SURNAME_PATRON);
         });
-        this.allData.USERWHO = this.valueWho.toString();
-        this.getInputValue();
+        this.allData.USERWHO = valueWho.toString();
+
+        this.filterForm.controls['rec.USERWHO'].patchValue(this.allData.USERWHO);
       })
       .catch(() => {
         this.isShell = false;
@@ -140,6 +131,11 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     this.filterForm.reset();
   }
 
+  FilterUsers() {
+    this.filterProtocol.emit(this.filterForm.value);
+    this.full.isOpen = false;
+  }
+
   private _getUserCl(isn) {
     const queryUser = {
       USER_CL: {
@@ -150,6 +146,4 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     };
     return this._pipeSrv.read<USER_CL>(queryUser);
   }
-
 }
-

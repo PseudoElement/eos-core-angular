@@ -1,57 +1,52 @@
 <div>
     <label class="checkbox minus-checkbox">
-        <input type="checkbox" [checked]="logUsers"  (click)="CheckProtocol()">
+        <input type="checkbox" [checked]="logUsers" (click)="CheckProtocol()">
         <span class="eos-icon eos-icon-checkbox-black"></span>
         Протоколирование работы со справочником 'Пользователи'</label>
 </div>
-<div class="list-user-select-wrapper">
+<div class="sum-report-wrapper">
     <div class="table-wrapper usual-border">
-        <div class="eos-node-list">
+        <div class="sum-report-list">
             <div class="table-header">
-                <div class="table-title contain-span-header">    
+                <div class="table-title contain-span-header">
                     <span class="text-center pad-left-title1">
-                        Дата       
+                        Дата
                     </span>
                     <span class="text-center pad-left-title2">
                         Событие
                     </span>
                     <span class="text-center pad-left-title3">
                         Редактировал
-                    </span> 
+                    </span>
                     <span class="text-center">
                         Пользователя
                     </span>
-                    <eos-filter-protocol class="filter-protocol"></eos-filter-protocol>  
+                    <eos-filter-protocol (filterProtocol)="filterProtocol($event)" class="filter-protocol">
+                    </eos-filter-protocol>
                 </div>
             </div>
-            <div class="eos-node-list">
-                <div class="user-item" >
-                    <div class="contain-span" *ngFor="let user of frontData">
-                        <span class="text-center item-table">
-                            {{user.date}}
-                        </span>
-                        <span class="text-center item-table">
-                            <div class="pad-right-item">
-                                {{user.eventUser}}
-                            </div>
-                        </span>
-                        <span class="text-center item-table pad-right-item">
-                                <div class="pad-right-item">
-                                {{user.isnWho}}
-                            </div>
-                        </span>
-                        <span class="text-center item-table">
-                            <div class="pad-right-item">
-                                {{user.isnUser}}
-                            </div>
-                        </span>
-                    </div>
-                </div> 
+            <div class="user-item">
+                <div class="contain-span" *ngFor="let user of frontData">
+                    <span class="text-center item-table">
+                        {{user.date}}
+                    </span>
+                    <span class="text-center item-table">
+                        <div class="pad-right-item">
+                            {{user.eventUser}}
+                        </div>
+                    </span>
+                    <span class="text-center item-table pad-right-item">
+                        <div class="pad-right-item">
+                            {{user.isnWho}}
+                        </div>
+                    </span>
+                    <span class="text-center item-table">
+                        <div class="pad-right-item">
+                            {{user.isnUser}}
+                        </div>
+                    </span>
+                </div>
             </div>
-        </div> 
-    </div>      
+        </div>
+    </div>
 </div>
-
-
-
-
