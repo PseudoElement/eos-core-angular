@@ -240,6 +240,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             flagUserSelected = false;
         } else {
             if (!user.deleted) {
+                this.resetFlags();
                 this.selectedNodeSetFlags(user);
                 this.rtUserService.changeSelectedUser(user);
             } else {
@@ -262,7 +263,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.updateFlafListen();
         this.disabledBtnAction(flagUserSelected);
     }
-
+    resetFlags() {
+        this.listUsers.forEach(user => {
+            user.isChecked = false;
+            user.selectedMark = false;
+        });
+    }
     selectedNodeSetFlags(user) {
         if (this.selectedUser) {
             this.selectedUser.isSelected = false;
@@ -420,6 +426,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         } else {
             user.isChecked = !user.isChecked;
         }
+        this.selectedUser.isSelected = false;
+        this.selectedUser = user;
         this.updateFlafListen();
         this.disabledBtnDeleted();
     }

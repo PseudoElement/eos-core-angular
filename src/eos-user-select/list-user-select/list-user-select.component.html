@@ -48,7 +48,7 @@
         </div>
         <div *ngIf="!isLoading; else spiner" class="eos-node-list">
             <div *ngIf="listUsers.length; else emptyCert" class="block " [ngStyle]="{'width.px': tableWidth}" #listContent>
-                <div *ngFor="let user of listUsers" class="user-item" [ngClass]="{'highlighted': user.isSelected}" (dblclick)="RedactUser(user)">
+                <div *ngFor="let user of listUsers" class="user-item" [ngClass]="{'highlighted': user.isSelected || (user.isChecked && !user.selectedMark) || user.selectedMark}" (dblclick)="RedactUser(user)">
                     <div class="table-title user-select-node" [ngClass]="{'disabled': user.deleted, 'delitedDue': user.deletedOffFace}">
                         <span *ngIf='user.deleted' class="deleted-user-border"></span>
                         <label *ngIf='!user.deleted' class="checkbox">
