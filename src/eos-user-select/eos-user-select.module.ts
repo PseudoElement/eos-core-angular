@@ -21,6 +21,7 @@ import { UserSearchComponent } from './user-search/user-search.component';
 /*     ----Services----     */
 import { TreeUserSelectService } from './shered/services/tree-user-select.service';
 import { RtUserSelectService } from './shered/services/rt-user-select.service';
+import {SearchServices} from '../eos-user-select/shered/services/search.service';
 @NgModule({
     declarations: [
         UserSelectComponent,
@@ -53,7 +54,8 @@ import { RtUserSelectService } from './shered/services/rt-user-select.service';
     ],
     providers: [
         TreeUserSelectService,
-        RtUserSelectService
+        RtUserSelectService,
+        SearchServices,
     ],
 })
 export class EosUserSelectModule {}

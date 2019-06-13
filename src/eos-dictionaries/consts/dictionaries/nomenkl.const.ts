@@ -93,7 +93,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         length: 512,
     }, {
         key: 'ARCH_DATE',
-        title: 'Передано в архив',
+        title: 'Сдано в архив',
         type: 'date',
     }, {
         key: 'ARCH_FLAG',
@@ -116,6 +116,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         Object.assign({}, COMMON_FIELD_NAME, {
             title: 'Заголовок',
             length: 2000,
+            type: 'text',
         }),
     ]),
 

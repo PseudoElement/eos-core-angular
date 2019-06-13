@@ -258,6 +258,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         this._cdr.detectChanges();
     }
 
+    untrimmedValue(value: string): string {
+        const res = value.replace(/ /g, '\u00A0');
+        return res;
+    }
+
     showHint(hintConfig?: HintConfiguration) {
         if (!hintConfig) {
             this.hint.hideHint({
