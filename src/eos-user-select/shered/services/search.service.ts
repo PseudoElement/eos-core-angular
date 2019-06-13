@@ -16,23 +16,14 @@ export class SearchServices {
             }
         });
     }
-    getSearchLogin(due) {
-        return this._pipApisrv.read({
-            USER_CL: {
-                criteries: { DUE_DEP: `${due}` }
-            }
-        }).then(data => {
-            console.log(data);
-        });
-    }
 
     searchPrepareCardAndFullDue(config: USERSRCH, flagTab: boolean): Promise<any> {
         let cardQuery, fullDueQuery;
-        fullDueQuery = { SURNAME: `${config.fullDueName}%` };
+        fullDueQuery = { SURNAME: `%${config.fullDueName}%` };
         if (flagTab) {
-            cardQuery = { CARD_NAME: `${config.CARD}%` };
+            cardQuery = { CARD_NAME: `%${config.CARD}%` };
         } else {
-            cardQuery = { CLASSIF_NAME: `${config.DEPARTMENT}%` };
+            cardQuery = { CLASSIF_NAME: `%${config.DEPARTMENT}%` };
         }
         const queryCard = this.getSearchDepartment(cardQuery);
         const queryFullDuename = this.getSearchDepartment(fullDueQuery);
@@ -40,7 +31,7 @@ export class SearchServices {
         return Promise.all([queryCard, queryFullDuename]).then((data: Array<DEPARTMENT[]>) => {
             if (data[0].length === 0 || data[1].length === 0) {
                 console.log('Поиск не дал результатов');
-                return Promise.resolve(false as any);
+                return Promise.resolve([] as any);
             } else {
                 const findDepartments: DEPARTMENT[] = data[1].filter((value: DEPARTMENT) => {
                     return data[0].some((val: DEPARTMENT) => {
@@ -55,7 +46,7 @@ export class SearchServices {
                     //    return this.getUsersToGo(config, due);
                 } else {
                     console.log('Поиск не дал результатов');
-                    return Promise.resolve(false);
+                    return Promise.resolve([] as any);
                 }
 
             }
@@ -82,12 +73,11 @@ export class SearchServices {
     searchCardOneCardParam(config: USERSRCH, flagTab: boolean): Promise<any> {
         let dueQuery;
         if (flagTab) {
-            dueQuery = { CARD_NAME: `${config.CARD}%` };
+            dueQuery = { CARD_NAME: `%${config.CARD}%` };
         } else {
-            dueQuery = { CLASSIF_NAME: `${config.DEPARTMENT}%` };
+            dueQuery = { CLASSIF_NAME: `%${config.DEPARTMENT}%` };
         }
         return this.getSearchDepartment(dueQuery).then((deepCard: DEPARTMENT[]) => {
-            console.log(deepCard);
             if (deepCard.length) {
                 const ISN_HIGH_NODE = this.getDue(deepCard, 'ISN_NODE');
                 return Promise.all([...this.createArrayRequestDeeparnments(ISN_HIGH_NODE, 'ISN_HIGH_NODE', this.getSearchDepartment.bind(this))]).then(departmentsfind => {
@@ -100,11 +90,11 @@ export class SearchServices {
                         //  return this.getUsersToGo(config, due);
                     } else {
                         console.log('Поиск не дал результатов');
-                        return Promise.resolve(false as any);
+                        return Promise.resolve([] as any);
                     }
                 });
             } else {
-                return Promise.resolve(false);
+                return Promise.resolve([] as any);
             }
         });
     }
@@ -147,11 +137,15 @@ export class SearchServices {
                 criteries: {}
             }
         };
-        if (due) {
-            query.USER_CL.criteries['DUE_DEP'] = due;
-        }
-        if (config.LOGIN) {
-            query.USER_CL.criteries['CLASSIF_NAME'] = `${config.LOGIN}%`;
+        if (config.SURNAME) {
+            query.USER_CL.criteries['SURNAME_PATRON'] = `%${config.SURNAME}%`;
+        }   else {
+            if (due) {
+                query.USER_CL.criteries['DUE_DEP'] = due;
+            }
+            if (config.LOGIN) {
+                query.USER_CL.criteries['CLASSIF_NAME'] = `%${config.LOGIN}%`;
+            }
         }
         return this._pipApisrv.read(query).then((users: USER_CL[]) => {
             if (users.length) {

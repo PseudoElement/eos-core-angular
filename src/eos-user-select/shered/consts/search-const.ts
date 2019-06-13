@@ -31,15 +31,15 @@ export const USER_SEARCH = {
         //    pattern: pattrenSearch,
         },
         {
-            key: 'TEH',
+            key: 'DEL_USER',
             type: 'boolean',
-            title: 'Учитывать технических пользователей',
+            title: 'Поиск удаленных пользователей',
             pattern: pattrenSearch,
         },
         {
-            key: 'DEL_USER',
-            type: 'boolean',
-            title: 'Учитавать удаленных пользователей',
+            key: 'SURNAME',
+            type: 'string',
+            title: 'Фамилия',
             pattern: pattrenSearch,
         },
     ]
@@ -50,4 +50,5 @@ export interface USERSRCH {
     DEPARTMENT?: string;
     LOGIN?: string;
     fullDueName?: string;
+    SURNAME?: string;
 }
