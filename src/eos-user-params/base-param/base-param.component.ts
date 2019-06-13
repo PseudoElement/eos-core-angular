@@ -262,6 +262,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 shortSys: true
             }).then(() => {
                 this.editMode = false;
+                this.curentUser = this._userParamSrv.curentUser;
                 this.upform(this.inputs, this.form);
                 this.upform(this.controls, this.formControls);
                 this.upform(this.accessInputs, this.formAccess);
