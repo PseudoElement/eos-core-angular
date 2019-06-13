@@ -1,50 +1,86 @@
-<div>
-    <label class="checkbox minus-checkbox">
-        <input type="checkbox" [checked]="logUsers" (click)="CheckProtocol()">
-        <span class="eos-icon eos-icon-checkbox-black"></span>
-        Протоколирование работы со справочником 'Пользователи'</label>
-</div>
-<div class="sum-report-wrapper">
-    <div class="table-wrapper usual-border">
-        <div class="sum-report-list">
-            <div class="table-header">
-                <div class="table-title contain-span-header">
-                    <span class="text-center pad-left-title1">
-                        Дата
+<div class="sum-protocol">
+    <div>
+        <label class="checkbox minus-checkbox">
+            <input type="checkbox" [checked]="logUsers" (click)="CheckProtocol()">
+            <span class="eos-icon eos-icon-checkbox-black"></span>
+            Протоколирование работы со справочником 'Пользователи'</label>
+    </div>
+    <div class="sum-report-wrapper">
+        <div class="table-wrapper usual-border">
+            <div class="sum-report-list">
+                <div class="table-header header-pos-sum">
+                    <div class="btn-group-sum">
+                        <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
+                            <button class="btn btn-primary-light bth-size-sum" tooltip="Просмотреть"
+                                placement="bottom" container="body" containerClass="tooltip-info">
+                                <span class="eos-icon eos-icon-edit-blue small"></span>
+                            </button>
+                        </div>
+                        <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
+                            <button class="btn btn-primary-light bth-size-sum" tooltip="Удалить"
+                                placement="bottom" container="body" containerClass="tooltip-info">
+                                <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+                            </button>
+                        </div>
+                    </div>
+                <div class="item-count-sum usual-border-sum m-font-sum">
+                    <span class="item-count-content-sum">
+                        Записей:
+                        <span class="counter-sum">3</span>
                     </span>
-                    <span class="text-center pad-left-title2">
-                        Событие
-                    </span>
-                    <span class="text-center pad-left-title3">
-                        Редактировал
-                    </span>
-                    <span class="text-center">
-                        Пользователя
-                    </span>
-                    <eos-filter-protocol (filterProtocol)="filterProtocol($event)" class="filter-protocol">
-                    </eos-filter-protocol>
                 </div>
-            </div>
-            <div class="user-item">
-                <div class="contain-span" *ngFor="let user of frontData">
-                    <span class="text-center item-table">
-                        {{user.date}}
-                    </span>
-                    <span class="text-center item-table">
-                        <div class="pad-right-item">
-                            {{user.eventUser}}
+                </div>
+                <div class="table-header">
+                    <div class="table-title contain-span-header">
+                        <div class="check-sum">
+                            <label class="checkbox minus-checkbox">
+                                <input type="checkbox" (change)="toggleAllMarks($event)" >
+                                <span class="eos-icon eos-icon-checkbox-black" [ngClass]="getflagChecked"></span>
+                            </label>
                         </div>
-                    </span>
-                    <span class="text-center item-table pad-right-item">
-                        <div class="pad-right-item">
-                            {{user.isnWho}}
+                        <span class=" width-title1 likeLink-sum">
+                            Дата
+                        </span>
+                        <span class=" width-title2 likeLink-sum">
+                            Событие
+                        </span>
+                        <span class=" width-title3 likeLink-sum">
+                            Редактировал
+                        </span>
+                        <span class=" likeLink-sum width-title3">
+                            Пользователя
+                        </span>
+                        <eos-filter-protocol (filterProtocol)="filterProtocol($event)" class="filter-protocol">
+                        </eos-filter-protocol>
+                    </div>
+                </div>
+                <div class="user-item">
+                    <div class="contain-span-header" *ngFor="let user of frontData">
+                        <div class="check-sum">
+                            <label class="checkbox minus-checkbox">
+                                <input type="checkbox" [checked]="user.checked || flagChecked" [ngModel]="user.checked" (ngModelChange)="markNode($event,user)">
+                                <span class="eos-icon eos-icon-checkbox-black"></span>
+                            </label>
                         </div>
-                    </span>
-                    <span class="text-center item-table">
-                        <div class="pad-right-item">
-                            {{user.isnUser}}
-                        </div>
-                    </span>
+                        <span class="item-table width-title1">
+                            {{user.date}}
+                        </span>
+                        <span class=" item-table width-title2">
+                            <div class="">
+                                {{user.eventUser}}
+                            </div>
+                        </span>
+                        <span class="item-table width-title3">
+                            <div class="">
+                                {{user.isnWho}}
+                            </div>
+                        </span>
+                        <span class="item-table width-title3">
+                            <div class="">
+                                {{user.isnUser}}
+                            </div>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>

@@ -15,6 +15,8 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   frontData: any;
   usersAudit: any;
   logUsers: boolean;
+  checkUser: boolean;
+  flagChecked: boolean;
   options = [
     { value: '0', title: '' },
     { value: '1', title: 'Блокирование Пользователя' },
@@ -130,6 +132,28 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       }
     }
   }
+  markNode(marked: boolean, user) {
+    user.checked = marked;
+
+  }
+  checkNotAllUsers() {
+    // for(const user of this.frontData){
+    //   let trueUser = user.checked.indexOf(true);
+    //   let falseUser = user.checked.indexOf(false);
+    // }
+  }
+
+  toggleAllMarks(event) {
+    if (event.target.checked) {
+      this.frontData.forEach(node => {
+        node.checked = event.target.checked;
+      });
+    } else {
+      this.frontData.forEach(node => {
+        node.checked = event.target.checked;
+      });
+    }
+  }
   ShowData() {
     let eventUser;
     this.frontData = undefined;
@@ -138,6 +162,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       eventUser = this.eventKind[user.EVENT_KIND - 1];
       if (this.frontData === undefined) {
         this.frontData = [{
+          checked: this.checkUser,
           date: date,
           eventUser: eventUser,
           isnWho: this.getUserName(user.ISN_WHO),
@@ -145,6 +170,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
         }];
       } else {
         this.frontData.push({
+          checked: this.checkUser,
           date: date,
           eventUser: eventUser,
           isnWho: this.getUserName(user.ISN_WHO),
@@ -208,14 +234,26 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       if (date !== undefined && eventUser !== undefined && isnUser !== undefined && isnWho !== undefined) {
         date = this.ConvertDate(date.toISOString());
         if (arr === undefined) {
-          arr = [{ date: date, eventUser: eventUser, isnUser: isnUser, isnWho: isnWho }];
+          arr = [{ checked: this.checkUser, date: date, eventUser: eventUser, isnUser: isnUser, isnWho: isnWho }];
         } else {
-          arr.push({ date: date, eventUser: eventUser, isnUser: isnUser, isnWho: isnWho });
+          arr.push({ checked: this.checkUser, date: date, eventUser: eventUser, isnUser: isnUser, isnWho: isnWho });
         }
       }
     }
     this.frontData = arr;
   }
+
+  get getflagChecked() {
+    switch (this.flagChecked) {
+      case true:
+        return 'eos-icon-checkbox-square-v-blue';
+      case false:
+        return 'eos-icon-checkbox-square-minus-blue';
+      default:
+        return 'eos-icon-checkbox-square-blue';
+    }
+  }
+
   ConvertDate(convDate) {
     const date = new Date(convDate);
     const curr_date = date.getDate();

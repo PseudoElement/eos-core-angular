@@ -1,38 +1,100 @@
-.contain-span{
-    display: flex;
-    justify-content: space-around;
+.sum-protocol{
+    .contain-span{
+        display: flex;
+        justify-content: space-around;
+    }
+    .contain-span{
+        display: flex;
+        justify-content: space-around;
+        width:81%;
+    }
+    .contain-span-header{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        padding-left: 10px;
+    }
+    .item-table{
+        line-height: 46px;
+    }
+    .width-title1{
+        width: 18%;
+    }
+    .width-title2{
+        width: 26%;
+    }
+    .width-title3{
+        width: 16%;
+    }
+    .sum-report-list{
+        background-color: white;
+        // max-height: calc(100vh - 371px);
+        // overflow-y: auto;
+        // overflow-x: auto;
+    }
+    .header-pos-sum{
+        display: flex;
+        justify-content: space-between;
+    }
+    .btn-group-sum{
+        position: relative;
+        display: inline-flex;
+        vertical-align: middle;
+    }
+    .bth-size-sum{
+        height: 48px;
+        width: 48px;;
+    }
+    .item-count-content-sum{
+        padding: 0 20px;
+        line-height: 24px;
+        font-size: 16px;
+    }
+    .item-count-sum {
+        align-self: center;
+        height: 100%;
+        width: fit-content;
+        display: inline-block;
+        border-left-width: 1px;
+        border-left-style: solid;
+        -ms-grid-column: 4;
+        grid-column: 4;
+    }
+    
+    .usual-border-sum {
+        border-color: #e6e6e6;
+        border-width: 1px;
+    }
+    .m-font-sum {
+        line-height: 20px;
+        font-size: 14px;
+    }
+    .counter-sum{
+        margin-left: 20px;
+        padding: 6.5px 10px;
+        background: #bababa;
+        border-radius: 2px;
+        color: #fff;
+    }
+    .likeLink-sum{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        cursor: pointer;
+        color: #2196f3;
+    } 
+    .sum-check-label {
+        padding-left: 0;
+    }
+    .eos-icon {
+        .small-sum {
+            height: 24px;
+            width: 24px;
+        }
+    }
+    .check-sum{
+        margin: 0;
+        padding-top: 6px;
+    }
 }
-.contain-span{
-    display: flex;
-    justify-content: space-around;
-    width:81%;
-}
-.contain-span-header{
-    display: flex;
-    justify-content: space-around;
-    width:100%;
-    position: absolute;
-}
-.item-table{
-    line-height: 46px;
-}
-
-.pad-right-item{
-    padding-right: 20px;
-}
-.pad-left-title1{
-    padding-left: 17px;
-}
-.pad-left-title2{
-    padding-left: 110px;
-}
-.pad-left-title3{
-    padding-left: 61px;
-}
-.filter-protocol{
-    padding-right: 65px;
-}
-.sum-report-list{
-    background-color: white;
-}
-
