@@ -17,6 +17,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
 
     public isFocused: boolean;
     protected subscriptions: Subscription[] = [];
+    private _syncTimer: NodeJS.Timer;
 
     get currentValue(): any {
         const control = this.control;
@@ -53,12 +54,22 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     }
     onInput(event) {
         event.stopPropagation();
+        this._delayedTooltip();
+    }
+
+    _delayedTooltip(): void {
         this._updateMessage();
-        this.toggleTooltip(true);
+        if (this.inputTooltip.message !== '' && !this._syncTimer) {
+            this.inputTooltip.visible = false;
+            this._syncTimer = setTimeout(() => {
+                this.inputTooltip.force = true;
+                this.inputTooltip.visible = true;
+                this._syncTimer = null;
+            }, 300);
+        }
     }
 
     forceTooltip() {
-        // this._updateMessage();
         this.inputTooltip.force = true;
     }
 
@@ -127,6 +138,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
                 })
                 .join(' ');
         }
+        // this._cdr.detectChanges();
         this.inputTooltip.message = msg;
     }
 
@@ -134,9 +146,9 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
         if (!this.readonly) {
             const control = this.control;
             if (control) {
+                this._updateMessage();
                 this.inputTooltip.visible = /*!focused &&*/ control.invalid /*&& control.dirty*/;
                 this.inputTooltip.force = true;
-                this._updateMessage();
             } else {
                 this.inputTooltip.visible = false;
             }

@@ -442,6 +442,10 @@ export abstract class AbstractDictionaryDescriptor {
         return null;
     }
 
+    defaultTreePath(data: CustomTreeNode[]): any {
+        return null;
+    }
+
     protected _postChanges(data: any, updates: any): Promise<any[]> {
         // console.log('_postChanges', data, updates);
         Object.assign(data, updates);

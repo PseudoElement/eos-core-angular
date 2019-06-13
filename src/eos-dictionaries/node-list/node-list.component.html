@@ -19,8 +19,8 @@
                      class="item l-font"
                      [attr.id]="'vf_'+field.key"
                      [ngStyle]="{'min-width.px': min_length[field.key]}">
-                    <span class="text selected-text"
-                          (click)="orderByField(field.key)">{{field.customTitle || field.title}}</span>
+                    <span class="text selected-text ng-bind-html"
+                          (click)="orderByField(field.key)">{{untrimmedValue(field.customTitle || field.title)}}</span>
                     <span class="order-icon">
                         <span *ngIf="orderBy?.fieldKey === field.key"
                               class="icon eos-icon small"

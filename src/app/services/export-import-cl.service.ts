@@ -11,6 +11,9 @@ export class ExportImportClService {
     constructor(
         protected apiSrv: PipRX
     ) {
+        if (!window['popParamsDefault']) {
+            window['popParamsDefault'] = {};
+        }
         window['Rootpath'] = function () {
             return 'classif';
         };

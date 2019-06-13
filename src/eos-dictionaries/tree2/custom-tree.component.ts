@@ -46,26 +46,19 @@ export class CustomTreeComponent implements OnInit {
     ngOnInit() {
         this.onResize();
         this._dictSrv.openedNode$
-            // .pipe(
-            //     takeUntil(this.ngUnsubscribe)
-            // )
             .subscribe((n) => {
-                console.log(n);
                 if (!n) {
                     return;
                 }
                 this.setActiveNode(this.data, n.data.rec.DUE);
-                // const t = n.dictionary.descriptor.findTreeParent(this.data, n.data.rec.DUE);
-                // if (t) {
-                //     n.dictionary.descriptor.expandToSelected(t, this.data)
-                //     t.isActive = true;
-                // }
-                // n.parent.isActive = true;
-                // this.hasInfoData = !!n;
-                // if (this.hasInfoData) {
-                //     this._isEditEnabled = !n.isDeleted && this._calcisEditable(n);
-                // }
             });
+
+        const defaultRoot = this._dictSrv.currentDictionary.descriptor.defaultTreePath(this.data);
+        if (defaultRoot) {
+            setTimeout( () => {
+                this._router.navigate(defaultRoot);
+            }, 100);
+        }
     }
     ngUnsubscribe(ngUnsubscribe: any): any {
         // throw new Error("Method not implemented.");
