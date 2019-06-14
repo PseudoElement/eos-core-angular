@@ -21,14 +21,14 @@
         placement="bottom"
         container="body"
         containerClass="tooltip-info"
-        [isDisabled]="isOpenQuick">
-        <button [ngClass]="{'hidden': !hasQuick, 'opened': isOpenQuick}"
+        [isDisabled]="quickSrchObj.isOpenQuick">
+        <button [ngClass]="{'hidden': !hasQuick, 'opened': quickSrchObj.isOpenQuick}"
             class="btn btn-primary-light search-btn quick-search-btn"
             containerClass="quick-search-popover"
             placement="left"
             (click)="showFastSrch()">
-            <i [hidden]="isOpenQuick" class="eos-icon eos-icon-search-blue small" aria-hidden="true"></i>
-            <i [hidden]="!isOpenQuick" class="eos-icon eos-icon-search-white small" aria-hidden="true"></i>
+            <i [hidden]="quickSrchObj.isOpenQuick" class="eos-icon eos-icon-search-blue small" aria-hidden="true"></i>
+            <i [hidden]="!quickSrchObj.isOpenQuick" class="eos-icon eos-icon-search-white small" aria-hidden="true"></i>
         </button>
     </div>
 </div>
