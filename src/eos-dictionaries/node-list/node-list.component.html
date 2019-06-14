@@ -52,7 +52,8 @@
         </div>
     </div>
     <div class="eos-node-list"
-         (scroll)="onListScroll($event)">
+        #eosNodeList
+        (scroll)="onListScroll($event)">
         <div class="block list"
              [ngStyle]="{'width.%': 100}">
             <p *ngIf="params.updatingList"

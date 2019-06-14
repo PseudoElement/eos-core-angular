@@ -37,6 +37,8 @@ const ITEM_WIDTH_FOR_NAN = 100;
 export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, AfterContentChecked {
     @ViewChild(SortableComponent) sortableComponent: SortableComponent;
     @ViewChild(LongTitleHintComponent) hint: LongTitleHintComponent;
+    @ViewChild('eosNodeList') eosNodeList;
+
 
     allMarked: boolean;
     anyMarked: boolean;
@@ -435,6 +437,13 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         if (element) {
             element.setAttribute('style', 'display: none');
         }
+
+        this._dictSrv.currentScrollTop = evt.srcElement.scrollTop;
+
+    }
+
+    updateScrollTop(): void {
+        this.eosNodeList.nativeElement.scrollTop = this._dictSrv.currentScrollTop;
     }
 
     hasOverflowedColumns() {
@@ -494,7 +503,6 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             if (lastField.type !== E_FIELD_TYPE.boolean) {
                 minLength[lastField.key] = (this._holder.clientWidth - (fullWidth - this.length[lastField.key])) - 50;
                 this.length[lastField.key] = minLength[lastField.key];
-                // console.log(this.length[lastField.key], minLength[lastField.key], this._holder.clientWidth, fullWidth);
             }
             this.min_length = minLength;
         }

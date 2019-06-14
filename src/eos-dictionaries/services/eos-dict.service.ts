@@ -69,6 +69,8 @@ export class EosDictService {
     private _listDictionary$: BehaviorSubject<EosDictionary>;
     private filters: any = {};
     private _cDue: string;
+    private _currentScrollTop = 0;
+
 
     /* Observable dictionary for subscribing on updates in components */
     get dictionary$(): Observable<EosDictionary> {
@@ -157,6 +159,14 @@ export class EosDictService {
         } else {
             return [];
         }
+    }
+
+    get currentScrollTop(): number {
+        return this._currentScrollTop;
+    }
+
+    set currentScrollTop(mode: number) {
+        this._currentScrollTop = mode;
     }
 
     set customFields(val: IFieldView[]) {

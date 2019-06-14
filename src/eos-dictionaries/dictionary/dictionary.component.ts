@@ -283,6 +283,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     ngAfterViewInit() {
         this._treeScrollTop = this._sandwichSrv.treeScrollTop;
         this.treeEl.nativeElement.scrollTop = this._treeScrollTop;
+        this.nodeList.updateScrollTop();
     }
 
     ngDoCheck() {
