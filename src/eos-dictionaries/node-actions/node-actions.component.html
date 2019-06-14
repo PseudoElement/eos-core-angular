@@ -11,6 +11,7 @@
                     <div [tooltip]="item.hint"
                         #itemTooltip="bs-tooltip"
                         placement="bottom"
+                        [delay]="tooltipDelay"
                         containerClass="tooltip-info">
                         <button *ngIf="item.enabled"
                             dropdownToggle
@@ -46,6 +47,7 @@
                     <div [tooltip]="item.hint"
                         #itemTooltip="bs-tooltip"
                         placement="bottom"
+                        [delay]="tooltipDelay"
                         containerClass="tooltip-info">
                         <button [disabled]="!item.enabled"
                             class="btn btn-primary-light {{item.buttonClass}}"
@@ -66,6 +68,7 @@
             [tooltip]="showMenuTooltip"
             #itemTooltip="bs-tooltip"
             placement="bottom"
+            [delay]="tooltipDelay"
             containerClass="tooltip-info"
             dropdownToggle
             (click)="itemTooltip.hide()">
@@ -87,6 +90,7 @@
                         [ngClass]="{'highlighted': item.isActive}"
                         tooltip="{{item.hint}}"
                         placement="bottom"
+                        [delay]="tooltipDelay"
                         containerClass="tooltip-info"
                         *ngIf="item.type !== ADD_ACTION"
                         (click)="doAction($event, item); menuMng($event, item.enabled, dropdown)">

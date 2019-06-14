@@ -41,6 +41,7 @@
                 <ng-template #slicedTitle>
                     <div class="selected-node-title"
                     [tooltip]='this.title'
+                    [delay]="tooltipDelay"
                     placement="bottom"
                     container="body"
                     (click)="goUp()"

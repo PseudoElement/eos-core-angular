@@ -6,7 +6,11 @@
             <div *ngIf="params.markItems"
                  class="checkbox-inline">
                 <label [ngClass]="{'group-checkbox': anyUnmarked && anyMarked}"
-                       [tooltip]="markAllTooltip" placement="bottom" container="body" containerClass="tooltip-info">
+                       [tooltip]="markAllTooltip"
+                       placement="bottom"
+                       container="body"
+                       [delay]="tooltipDelay"
+                       containerClass="tooltip-info">
                     <input type="checkbox" [(ngModel)]="allMarked" (change)="toggleAllMarks()">
                     <span></span>
                 </label>

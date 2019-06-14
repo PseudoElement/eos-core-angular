@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { IFieldView, E_FIELD_TYPE } from '../interfaces';
 import { HintConfiguration } from '../long-title-hint/hint-configuration.interface';
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
 
 @Component({
     selector: 'eos-node-field',
@@ -16,6 +17,7 @@ export class NodeFieldComponent implements OnInit {
     @Output() view: EventEmitter<any> = new EventEmitter<any>();
     @Output() fieldHover: EventEmitter<HintConfiguration> = new EventEmitter<HintConfiguration>();
 
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
     types = E_FIELD_TYPE;
     length = {};
     private _hasIcon: boolean;

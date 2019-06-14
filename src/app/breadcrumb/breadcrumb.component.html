@@ -4,6 +4,7 @@
                   placement="right"
                   container="body"
                   containerClass="tooltip-info no-arrow word-break"
+                  [delay]="tooltipDelay"
         [isLeft]="true"></eos-sandwich>
     <div class="pull-left">
     <ol class="breadcrumb">
@@ -14,12 +15,14 @@
                 placement="bottom"
                 container="body"
                 containerClass="tooltip-info word-break"
+                [delay]="tooltipDelay"
                 *ngIf="!isLast">{{route.title}}</a>
             <span class="breadcrumb-item selected-text l-font"
                 tooltip="{{route.title}}"
                 placement="bottom"
                 container="body"
                 containerClass="tooltip-info word-break"
+                [delay]="tooltipDelay"
                 *ngIf="isLast"> {{route.title}}</span>
         </li>
     </ol>
@@ -31,6 +34,7 @@
                       placement="left"
                       container="body"
                       containerClass="tooltip-info no-arrow word-break"
+                      [delay]="tooltipDelay"
                       [isLeft]="false"></eos-sandwich>
     </span>
     <div *ngIf="showInfoAct && hasInfoData"
@@ -41,12 +45,14 @@
             tooltip="{{actionNavigationUp.hint}}"
             containerClass="tooltip-info"
             container="body"
+            [delay]="tooltipDelay"
             placement="bottom"><span class="icon eos-icon eos-icon-arrow-v-blue-left small"></span></button>
         <button class="btn icon-btn right"
             (click)="actionHandler(actionNavigationDown.type)"
             tooltip="{{actionNavigationDown.hint}}"
             containerClass="tooltip-info"
             container="body"
+            [delay]="tooltipDelay"
             placement="bottom"><span class="icon eos-icon eos-icon-arrow-v-blue-right small"></span></button>
         <button class="btn icon-btn edit"
             (click)="actionHandler(actionEdit.type)"
@@ -54,6 +60,7 @@
             tooltip="{{actionEdit.hint}}"
             containerClass="tooltip-info"
             container="body"
+            [delay]="tooltipDelay"
             placement="bottom"><span class="icon {{actionEdit.iconClass}} small"></span></button>
     </div>
 </div>

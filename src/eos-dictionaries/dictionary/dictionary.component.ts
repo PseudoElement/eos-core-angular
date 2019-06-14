@@ -1,3 +1,4 @@
+import { TOOLTIP_DELAY_VALUE } from './../../eos-common/services/eos-message.service';
 import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { AdvCardRKEditComponent } from './../adv-card/adv-card-rk.component';
 import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild} from '@angular/core';
@@ -58,6 +59,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     @ViewChild('custom-tree') customTreeEl;
     @ViewChild('selectedWrapper') selectedEl;
 
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
     dictionary: EosDictionary;
     listDictionary: EosDictionary;
 

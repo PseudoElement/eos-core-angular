@@ -26,6 +26,7 @@ import {PrjDefaultValuesComponent} from '../prj-default-values/prj-default-value
 import { takeUntil } from 'rxjs/operators';
 import {CopyPropertiesComponent} from '../copy-properties/copy-properties.component';
 import { ExportImportClService } from 'app/services/export-import-cl.service';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
 
 const ITEM_WIDTH_FOR_NAN = 100;
 
@@ -49,7 +50,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     params: IDictionaryViewParameters;
     headerOffset = 0;
     viewFields: IFieldView[] = [];
-
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
 
     private ngUnsubscribe: Subject<any> = new Subject();
     private nodeListElement: Element;
