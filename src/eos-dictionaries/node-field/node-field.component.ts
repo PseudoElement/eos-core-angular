@@ -66,6 +66,9 @@ export class NodeFieldComponent implements OnInit {
                 return '';
             }
         }
+        if (this.field.value && this.field.value.length < 6) {
+            return '';
+        }
         return this.field.value;
     }
 
