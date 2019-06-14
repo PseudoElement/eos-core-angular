@@ -1178,7 +1178,12 @@ export class EosDictService {
                 .forEach((listNode) => listNode.isMarked = false);
 
             if (this._listNode && pageList.findIndex((node) => node.id === this._listNode.id) < 0) {
-                this._openNode(null);
+                const firstMarkedIndex = pageList.findIndex((node) => node.isMarked);
+                if (firstMarkedIndex < 0) {
+                    this._openNode(null);
+                } else {
+                    this._openNode(pageList[firstMarkedIndex]);
+                }
             }
             this._visibleList$.next(pageList);
         }
