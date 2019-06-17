@@ -19,7 +19,7 @@ import { RestError } from 'eos-rest/core/rest-error';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_DELETE } from '../shered/consts/confirm-users.const';
-import { PipRX, USER_TECH } from 'eos-rest';
+import { PipRX, USER_TECH, USER_CL } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosStorageService } from '../../app/services/eos-storage.service';
 import { EosBreadcrumbsService } from '../../app/services/eos-breadcrumbs.service';
@@ -49,7 +49,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     shooseP: number;
     // количество выбранных пользователей
     countcheckedField: number;
-    flagDeep: boolean = true;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public _apiSrv: UserParamApiSrv,
@@ -181,7 +180,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.shooseP = this._apiSrv.configList.shooseTab;
         if (!param || param === '0.') {
             this._apiSrv.configList.shooseTab === 0 ? this.titleCurrentDue = 'Все подразделения' : this.titleCurrentDue = 'Центральная картотека';
-            this._apiSrv.configList.shooseTab === 0  ? this.flagDeep = true :  this.flagDeep = false;
         } else {
             this.titleCurrentDue = this._apiSrv.configList.titleDue;
         }
@@ -242,6 +240,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             flagUserSelected = false;
         } else {
             if (!user.deleted) {
+                this.resetFlags();
                 this.selectedNodeSetFlags(user);
                 this.rtUserService.changeSelectedUser(user);
             } else {
@@ -264,7 +263,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.updateFlafListen();
         this.disabledBtnAction(flagUserSelected);
     }
-
+    resetFlags() {
+        this.listUsers.forEach(user => {
+            user.isChecked = false;
+            user.selectedMark = false;
+        });
+    }
     selectedNodeSetFlags(user) {
         if (this.selectedUser) {
             this.selectedUser.isSelected = false;
@@ -422,6 +426,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         } else {
             user.isChecked = !user.isChecked;
         }
+        this.selectedUser.isSelected = false;
+        this.selectedUser = user;
         this.updateFlafListen();
         this.disabledBtnDeleted();
     }
@@ -531,8 +537,24 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 return 'eos-icon-checkbox-square-blue';
         }
     }
-    searchUsers($event) {
-        this._apiSrv.findUsers($event);
+    searchUsers($event: USER_CL[]) {
+        if (!$event.length) {
+            this._apiSrv.Allcustomer = [];
+            this.setListSearch();
+            this._msgSrv.addNewMessage({
+                title: 'Ничего не найдено',
+                msg: 'попробуйте изменить поисковую фразу',
+                type: 'warning'
+            });
+        } else {
+            this._apiSrv.updatePageList($event, this.shooseP).then((res) => {
+                this._apiSrv.Allcustomer = this._apiSrv._getListUsers(res).slice();
+                this.setListSearch();
+            });
+        }
+    }
+    setListSearch() {
+        this._pagSrv.UsersList = this._apiSrv.Allcustomer;
         this._pagSrv._initPaginationConfig(true);
         this._pagSrv.changePagination(this._pagSrv.paginationConfig);
         this.countMaxSize = this._pagSrv.countMaxSize;

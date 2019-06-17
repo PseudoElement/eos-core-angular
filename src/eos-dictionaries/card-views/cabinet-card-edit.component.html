@@ -11,7 +11,7 @@
 </div>
 <div class="card-content-wrapper"
      [ngClass]="{'main-data': currTab === 0}">
-    <div [hidden]="currTab !== 0"
+    <div *ngIf="currTab === 0"
          class="eos-cabinet-tab">
         <div class="clearfix">
             <eos-dynamic-input *ngIf="inputs['rec.CABINET_NAME']"
@@ -132,7 +132,7 @@
             </div>
         </div>
     </div>
-    <div [hidden]="currTab !== 1"
+    <div *ngIf="currTab === 1"
          class="cabinet-access eos-cabinet-tab">
         <div class="table-wrapper row"
              [ngClass]="{scrollable: showScroll}">

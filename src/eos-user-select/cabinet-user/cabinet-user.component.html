@@ -1,5 +1,5 @@
 <div  class="cabinet-user-wr" *ngIf=CabinetInfo>
-    <a  [routerLink]="['/spravochniki','cabinet', CabinetInfo.CABINET_LIST.ISN_CABINET, 'view', '0']"   class="cabinet-title">{{CabinetInfo.CABINET_LIST.CABINET_NAME}}</a>
+    <a  (click)="writeRecentUrl()" [routerLink]="['/spravochniki','cabinet', CabinetInfo.CABINET_LIST.ISN_CABINET, 'view', '0']"   class="cabinet-title">{{CabinetInfo.CABINET_LIST.CABINET_NAME}}</a>
     <span class="" *ngIf=CabinetInfo.CUSTOM_FIELD_MAIN
         tooltip="Пользователь - владелец кабинета"
         placement="bottom"

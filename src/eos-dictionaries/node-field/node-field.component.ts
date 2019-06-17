@@ -1,3 +1,5 @@
+import { DOCGROUP_DICT } from './../consts/dictionaries/docgroup.consts';
+import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { IFieldView, E_FIELD_TYPE } from '../interfaces';
 import { HintConfiguration } from '../long-title-hint/hint-configuration.interface';
@@ -26,7 +28,8 @@ export class NodeFieldComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this._hasIcon = this.node.dictionary.isTreeType() && (this.field.key === 'CLASSIF_NAME' || this.field.foreignKey === 'CLASSIF_NAME');
+        this._hasIcon = this.node.dictionary.isTreeType() && (this.field.key === 'CLASSIF_NAME' || this.field.foreignKey === 'CLASSIF_NAME')
+            && (this.node.dictionary.id === DEPARTMENTS_DICT.id || this.node.dictionary.id === DOCGROUP_DICT.id);
         // this._hasIcon = this.node.isNode && (this.field.key === 'CLASSIF_NAME' || this.field.foreignKey === 'CLASSIF_NAME');
     }
 

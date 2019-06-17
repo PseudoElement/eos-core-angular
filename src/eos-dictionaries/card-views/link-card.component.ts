@@ -1,5 +1,8 @@
 import {Component, Injector, OnChanges, SimpleChanges} from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
+import {AbstractControl, ValidatorFn, Validators} from '@angular/forms';
+import {EosUtils} from '../../eos-common/core/utils';
+import {EosDictService} from '../services/eos-dict.service';
 
 @Component({
     selector: 'eos-link-card',
@@ -7,7 +10,8 @@ import { BaseCardEditComponent } from './base-card-edit.component';
     styleUrls: ['./link-card.component.scss']
 })
 export class LinkCardComponent extends BaseCardEditComponent implements OnChanges {
-    constructor(injector: Injector) {
+    constructor(injector: Injector,
+    private _dictSrv: EosDictService) {
         super(injector);
     }
 
@@ -72,12 +76,20 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
     ngOnChanges(changes: SimpleChanges) {
         if (this.form) {
             this.unsubscribe();
+            this._setValidators();
             this._subscribeOnChanges();
         }
     }
 
     private _subscribeOnChanges() {
         this.formChanges$ = this.form.valueChanges.subscribe((fc) => this._updateForm(fc));
+    }
+
+    private _setValidators() {
+        this.form.controls['rec.CLASSIF_NAME'].setValidators([this._unicValueValidator('rec.CLASSIF_NAME'),
+            Validators.required]);
+        this.form.controls['PARE_LINK_Ref.CLASSIF_NAME']
+            .setValidators([this._unicValueValidator('PARE_LINK_Ref.CLASSIF_NAME'), Validators.required]);
     }
 
     private _updateForm(formChanges: any) {
@@ -97,5 +109,43 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
         }
 
         this._subscribeOnChanges();
+    }
+
+    private _unicValueValidator(path: string): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: any } => {
+            let valid = true;
+            if (control.value) {
+                const val = control.value.trim().toLowerCase();
+                const isn = this.getValue('rec.ISN_LCLASSIF');
+                const isn_pair = this.getValue('rec.ISN_PARE_LINK');
+                const records = Array.from(this._dictSrv.currentDictionary.nodes.values());
+
+                valid = records.findIndex((node) => {
+                    let name = EosUtils.getValueByPath(node.data, 'rec.CLASSIF_NAME');
+                    let namePair = EosUtils.getValueByPath(node.data, 'PARE_LINK_Ref.CLASSIF_NAME');
+
+                    if ('string' === typeof name) {
+                        name = name.trim().toLowerCase();
+                    }
+                    if ('string' === typeof namePair) {
+                        namePair = namePair.trim().toLowerCase();
+                    }
+
+                    let res = false;
+                    if (EosUtils.getValueByPath(node.data, 'rec.ISN_LCLASSIF') !== isn) {
+                        res = (val === name) || (val === namePair);
+                    } else {
+                        if (path === 'PARE_LINK_Ref.CLASSIF_NAME') {
+                            res = (name === val) && (isn !== isn_pair);
+                        } else {
+                            res = (namePair === val) && (isn !== isn_pair);
+                        }
+                    }
+                    return res;
+                }) === -1;
+            }
+
+            return valid ? null : {'isUnique': !valid};
+        };
     }
 }

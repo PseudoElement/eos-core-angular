@@ -11,7 +11,8 @@ export class NodeInfoComponent extends BaseNodeInfoComponent {
         let res = this.nodeDataFull.rec[key];
 
         const field = this.fieldsDescriptionFull.rec[key];
-        if (field.type === this.fieldTypes.select && field.options.length) {
+
+        if ((field.type === this.fieldTypes.select || field.type === this.fieldTypes.buttons ) && field.options.length) {
             const f = field.options.find((op) => op.value === res);
             if (f) {
                 res = f.title;
