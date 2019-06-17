@@ -59,7 +59,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
         return this._pipeSrv.read({
           USER_CL: {
             criteries: {
-              ISN_LCLASSIF: this.critUsers
+              ISN_LCLASSIF: String(1122)
             }
           }
         });
