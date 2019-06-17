@@ -11,11 +11,6 @@
         <li *ngFor="let route of breadcrumbs; let isLast = last; let i = index;">
             <a class="breadcrumb-item link primary-text l-font"
                 [routerLink]="[route.url]"
-                tooltip="{{route.title}}"
-                placement="bottom"
-                container="body"
-                containerClass="tooltip-info word-break"
-                [delay]="tooltipDelay"
                 *ngIf="!isLast">{{route.title}}</a>
             <span class="breadcrumb-item selected-text l-font"
                 tooltip="{{route.title}}"

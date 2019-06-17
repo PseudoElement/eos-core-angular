@@ -99,6 +99,13 @@ export class CardEditComponent implements OnChanges, OnDestroy {
 
     }
 
+    getCardTitle(): any {
+        if (this.baseCardEditRef) {
+            return this.baseCardEditRef.getCardTitle();
+        }
+        return null;
+    }
+
     afterGetForm(form: FormGroup, inputs: any): any {
         if (this.dictionaryId === RUBRICATOR_DICT.id) {
             const input = inputs['rec.CLASSIF_NAME'];
