@@ -41,6 +41,7 @@
                 <ng-template #slicedTitle>
                     <div class="selected-node-title"
                     [tooltip]='this.title'
+                    [delay]="tooltipDelay"
                     placement="bottom"
                     container="body"
                     (click)="goUp()"
@@ -111,10 +112,10 @@
                     <eos-node-actions (action)="doAction($event)"></eos-node-actions>
                 </div>
                 <div class="pull-right">
-                    <eos-dictionary-search (switchFastSrch)="switchFastSearch($event)"></eos-dictionary-search>
+                    <eos-dictionary-search #searchCtl (switchFastSrch)="switchFastSearch($event)"></eos-dictionary-search>
                 </div>
             </div>
-            <eos-dictionary-quick-search *ngIf="fastSearch"></eos-dictionary-quick-search>
+            <eos-dictionary-quick-search #quickSearchCtl *ngIf="fastSearch" (closeFastSrch)="this.onCloseFastSrch($event)"></eos-dictionary-quick-search>
             <div class="first-line" *ngIf="hasFilter()" [hidden]="params.hideTopMenu || accessDenied">
                 <div class="">
                     <eos-dictionary-filter (switchFastSrch)="switchFastSearch($event)"></eos-dictionary-filter>

@@ -13,22 +13,22 @@
             ></span>
         </div>
         <ng-container *ngSwitchCase="types.select">
-            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ currentValue() }}
             </label>
         </ng-container>
         <ng-container *ngSwitchCase="types.buttons">
-            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ currentValue() }}
             </label>
         </ng-container>
         <ng-container *ngSwitchCase="types.date">
-            <label class="fieldlabel" [tooltip]=" field.value | eosDate " placement="auto" container="body" containerClass="tooltip-info">
+            <label class="fieldlabel" [tooltip]=" field.value | eosDate " placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ field.value | eosDate }}
             </label>
         </ng-container>
         <ng-container *ngSwitchCase="types.dictionary">
-            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ decodeDictionary() }}
             </label>
         </ng-container>
@@ -39,8 +39,7 @@
             <div class="table-field-ico" *ngIf="field.key === 'CLASSIF_NAME' || field.foreignKey === 'CLASSIF_NAME'">
                 <span class="special small eos-icon" *ngIf="specialIcon()" [ngClass]="'eos-icon-checkbox-blue'"></span>
             </div>
-
-            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ field.value }}
             </label>
         </ng-container>

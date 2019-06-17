@@ -32,6 +32,7 @@ export class NodeActionsComponent implements OnDestroy {
     // @Input('params') params: INodeListParams;
     @Output('action') action: EventEmitter<IActionEvent> = new EventEmitter<IActionEvent>();
 
+    tooltipDelay = ''; // TOOLTIP_DELAY_VALUE;
     buttons: IActionButton[];
     moreButtons: IActionButton[];
 

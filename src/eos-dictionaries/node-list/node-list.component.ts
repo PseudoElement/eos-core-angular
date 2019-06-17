@@ -26,6 +26,7 @@ import {PrjDefaultValuesComponent} from '../prj-default-values/prj-default-value
 import { takeUntil } from 'rxjs/operators';
 import {CopyPropertiesComponent} from '../copy-properties/copy-properties.component';
 import { ExportImportClService } from 'app/services/export-import-cl.service';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
 
 const ITEM_WIDTH_FOR_NAN = 100;
 
@@ -36,6 +37,8 @@ const ITEM_WIDTH_FOR_NAN = 100;
 export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, AfterContentChecked {
     @ViewChild(SortableComponent) sortableComponent: SortableComponent;
     @ViewChild(LongTitleHintComponent) hint: LongTitleHintComponent;
+    @ViewChild('eosNodeList') eosNodeList;
+
 
     allMarked: boolean;
     anyMarked: boolean;
@@ -49,7 +52,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     params: IDictionaryViewParameters;
     headerOffset = 0;
     viewFields: IFieldView[] = [];
-
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
 
     private ngUnsubscribe: Subject<any> = new Subject();
     private nodeListElement: Element;
@@ -434,6 +437,13 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         if (element) {
             element.setAttribute('style', 'display: none');
         }
+
+        this._dictSrv.currentScrollTop = evt.srcElement.scrollTop;
+
+    }
+
+    updateScrollTop(): void {
+        this.eosNodeList.nativeElement.scrollTop = this._dictSrv.currentScrollTop;
     }
 
     hasOverflowedColumns() {
@@ -493,7 +503,6 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             if (lastField.type !== E_FIELD_TYPE.boolean) {
                 minLength[lastField.key] = (this._holder.clientWidth - (fullWidth - this.length[lastField.key])) - 50;
                 this.length[lastField.key] = minLength[lastField.key];
-                // console.log(this.length[lastField.key], minLength[lastField.key], this._holder.clientWidth, fullWidth);
             }
             this.min_length = minLength;
         }

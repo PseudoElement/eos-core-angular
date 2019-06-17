@@ -9,17 +9,25 @@ import { EosDictionary } from '../core/eos-dictionary';
 import { SEARCH_TYPES } from 'eos-dictionaries/consts/search-types';
 import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
 
+export interface IQuickSrchObj {
+    isOpenQuick: boolean;
+}
 
 @Component({
     selector: 'eos-dictionary-search',
     templateUrl: 'dictionary-search.component.html'
 })
+
 export class DictionarySearchComponent implements OnDestroy {
     // @Output() setFilter: EventEmitter<any> = new EventEmitter(); // todo add filter type
-    @Output() switchFastSrch: EventEmitter<boolean> = new EventEmitter();
+    @Output() switchFastSrch: EventEmitter<IQuickSrchObj> = new EventEmitter();
 
     @ViewChild('full') fSearchPop;
     @ViewChild('quick') qSearchPop;
+
+    quickSrchObj: IQuickSrchObj  = {
+        isOpenQuick: false,
+    };
 
     fieldsDescription = {
         rec: {}
@@ -38,7 +46,8 @@ export class DictionarySearchComponent implements OnDestroy {
     modes: IRecordModeDescription[];
     searchDone = true; // Flag search is done, false while not received data
 
-    isOpenQuick = false;
+
+
     dataQuick = null;
 
     hasQuick: boolean;
@@ -114,8 +123,11 @@ export class DictionarySearchComponent implements OnDestroy {
     }
 
     showFastSrch() {
-        this.isOpenQuick = !this.isOpenQuick;
-        this.switchFastSrch.emit(this.isOpenQuick);
+        this.switchFastSrch.emit(this.quickSrchObj);
+    }
+
+    close() {
+        this.quickSrchObj.isOpenQuick = false;
     }
 
     public considerDel() {

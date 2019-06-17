@@ -62,6 +62,10 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
         }, 500);
     }
 
+    getCardTitle(): any {
+        return null;
+    }
+
     ngAfterViewInit(): void {
         BaseCardEditComponent.autoFocusOnFirstStringElement('eos-card-edit');
     }

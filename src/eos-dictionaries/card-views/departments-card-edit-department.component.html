@@ -2,10 +2,10 @@
 <div class="card-content-wrapper">
     <div class="clearfix">
         <div class="col-1 pull-left">
-            <eos-dynamic-input [input]="inputs['rec.CODE']"
+            <eos-dynamic-input [input]="inputs['rec.indexDep']"
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
-            <eos-dynamic-input [input]="inputs['rec.indexDep']"
+            <eos-dynamic-input [input]="inputs['sev.GLOBAL_ID']"
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
         </div>
@@ -14,24 +14,7 @@
                 <eos-dynamic-input [input]="inputs['rec.shorttitle']"
                                    [form]="form"
                                    [readonly]="!editMode"></eos-dynamic-input>
-                <div class="duty-flag">
-                    <eos-dynamic-input [input]="inputs['printInfo.NOT_USE_IN_DUTY']"
-                                       [form]="form"
-                                       [readonly]="!editMode"></eos-dynamic-input>
-                </div>
             </div>
-        </div>
-    </div>
-    <div class="clearfix">
-        <div class="col-1 pull-left">
-            <eos-dynamic-input [input]="inputs['sev.GLOBAL_ID']"
-                               [form]="form"
-                               [readonly]="!editMode"></eos-dynamic-input>
-            <eos-dynamic-input [input]="inputs['rec.ID_GAS_PS']"
-                               [form]="form"
-                               [readonly]="!editMode"></eos-dynamic-input>
-        </div>
-        <div class="col-2 pull-right">
             <div class="department-fullname">
                 <eos-dynamic-input [input]="inputs['rec.fullTitle']"
                                    [form]="form"
@@ -41,6 +24,28 @@
     </div>
     <div class="clearfix">
         <div class="col-1 pull-left">
+            <eos-dynamic-input [input]="inputs['rec.ID_GAS_PS']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.CODE']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+        </div>
+        <div class="col-2 pull-right">
+
+            <eos-dynamic-input [input]="inputs['printInfo.DEPARTMENT_RP']"
+                               [form]="form"
+                               [readonly]="!editMode"></eos-dynamic-input>
+            <div class="duty-flag">
+                <eos-dynamic-input [input]="inputs['printInfo.NOT_USE_IN_DUTY']"
+                                    [form]="form"
+                                    [readonly]="!editMode"></eos-dynamic-input>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix">
+        <div class="col-1 pull-left">
+
         </div>
     </div>
     <div class="clearfix">
@@ -53,9 +58,6 @@
                                [readonly]="!editMode"></eos-dynamic-input>
         </div>
         <div class="col-2 pull-right">
-            <eos-dynamic-input [input]="inputs['printInfo.DEPARTMENT_RP']"
-                               [form]="form"
-                               [readonly]="!editMode"></eos-dynamic-input>
             <div class="form-group">
                 <div class="organization-wrapper">
                     <label [ngClass]="{'unimportant-text': !editMode }">Организация <a

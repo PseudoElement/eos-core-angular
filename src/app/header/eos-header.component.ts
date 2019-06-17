@@ -4,6 +4,7 @@ import { APP_MODULES, APP_MODULES_DROPDOWN } from '../consts/app-modules.const';
 import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { ExportImportClService } from './../services/export-import-cl.service';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
 
 @Component({
     selector: 'eos-header',
@@ -14,6 +15,7 @@ export class EosHeaderComponent implements OnDestroy {
     modulesDropdown = APP_MODULES_DROPDOWN;
     breadcrumbView = true;
     navParamView = false;
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
     private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(

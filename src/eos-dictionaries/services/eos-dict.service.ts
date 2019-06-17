@@ -69,6 +69,8 @@ export class EosDictService {
     private _listDictionary$: BehaviorSubject<EosDictionary>;
     private filters: any = {};
     private _cDue: string;
+    private _currentScrollTop = 0;
+
 
     /* Observable dictionary for subscribing on updates in components */
     get dictionary$(): Observable<EosDictionary> {
@@ -157,6 +159,14 @@ export class EosDictService {
         } else {
             return [];
         }
+    }
+
+    get currentScrollTop(): number {
+        return this._currentScrollTop;
+    }
+
+    set currentScrollTop(mode: number) {
+        this._currentScrollTop = mode;
     }
 
     set customFields(val: IFieldView[]) {
@@ -675,9 +685,13 @@ export class EosDictService {
 
     search(searchString: string, params: ISearchSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
-        const fixedString = searchString.replace(new RegExp('["|]', 'g'), '');
-        this._srchCriteries = dictionary.getSearchCriteries(fixedString, params, this._treeNode);
-        return this._search(params.deleted);
+        const fixedString = searchString.replace(new RegExp('["|\']', 'g'), '');
+        if (fixedString !== '') {
+            this._srchCriteries = dictionary.getSearchCriteries(fixedString, params, this._treeNode);
+            return this._search(params.deleted);
+        } else {
+            return Promise.resolve(null);
+        }
     }
 
     setFilter(filter: any) {
@@ -1178,7 +1192,12 @@ export class EosDictService {
                 .forEach((listNode) => listNode.isMarked = false);
 
             if (this._listNode && pageList.findIndex((node) => node.id === this._listNode.id) < 0) {
-                this._openNode(null);
+                const firstMarkedIndex = pageList.findIndex((node) => node.isMarked);
+                if (firstMarkedIndex < 0) {
+                    this._openNode(null);
+                } else {
+                    this._openNode(pageList[firstMarkedIndex]);
+                }
             }
             this._visibleList$.next(pageList);
         }
