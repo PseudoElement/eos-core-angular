@@ -38,9 +38,11 @@
                 </span>
                 <span class="user-list-first-colomn likeLink" (click)="sortPageList('fullDueName')">Должностное лицо
                 <span *ngIf ="_apiSrv.srtConfig.fullDueName.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
-                </span>
-                <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')" [textContent]="shooseP === 0 ? 'Подразделение' : 'Картотека'"></span>
-                <span *ngIf="_apiSrv.srtConfig.department.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)"></span>
+                </span>   
+                <div class="pos-depart">
+                    <span class="user-title-name user-list-first-colomn likeLink dep-width" (click)="sortPageList('department')" [textContent]="shooseP === 0 ? 'Подразделение' : 'Картотека'"></span>
+                    <span *ngIf="_apiSrv.srtConfig.department.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)"></span>
+                </div>
                 <!-- <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
                     <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>
                 </span> -->
