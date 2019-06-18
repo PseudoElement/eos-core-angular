@@ -3,6 +3,9 @@ import { BaseCardEditComponent } from './base-card-edit.component';
 import {AbstractControl, ValidatorFn, Validators} from '@angular/forms';
 import {EosUtils} from '../../eos-common/core/utils';
 import {EosDictService} from '../services/eos-dict.service';
+import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
+import {LINK_CL, PipRX} from '../../eos-rest';
+import {CONFIRM_LINK_CHECK_CATEGORY} from '../consts/confirm.consts';
 
 @Component({
     selector: 'eos-link-card',
@@ -10,8 +13,12 @@ import {EosDictService} from '../services/eos-dict.service';
     styleUrls: ['./link-card.component.scss']
 })
 export class LinkCardComponent extends BaseCardEditComponent implements OnChanges {
+    private _prev = {};
+
     constructor(injector: Injector,
-    private _dictSrv: EosDictService) {
+                private _confirmSrv: ConfirmWindowService,
+                private _apiSrv: PipRX,
+                private _dictSrv: EosDictService) {
         super(injector);
     }
 
@@ -81,6 +88,33 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
         }
     }
 
+    private _isChanged(path, changes): boolean {
+        return this._prev[path] !== changes[path];
+    }
+
+    private _restorePrevious(path) {
+        if (this._prev[path]) {
+            this.setValue(path, this._prev[path]);
+        } else {
+            this.setValue(path, null);
+        }
+    }
+
+    private _changeCategory(linkType): Promise<any> {
+        return this._apiSrv.read<LINK_CL>({LINK_CL: PipRX.criteries({LINK_TYPE: linkType.toString()})})
+            .then((records) => {
+                const isn = this.getValue('rec.ISN_LCLASSIF');
+                const findCurrent = records.find((rec) => rec['ISN_LCLASSIF'] === isn);
+                if (records.length && !findCurrent) {
+                    return this._confirmSrv.confirm(CONFIRM_LINK_CHECK_CATEGORY)
+                        .then((res) => {
+                            return res;
+                        });
+                }
+                return Promise.resolve(true);
+            });
+    }
+
     private _subscribeOnChanges() {
         this.formChanges$ = this.form.valueChanges.subscribe((fc) => this._updateForm(fc));
     }
@@ -95,20 +129,33 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
     private _updateForm(formChanges: any) {
         this.unsubscribe();
 
-        if (!formChanges['rec.LINK_TYPE'] || formChanges['rec.LINK_TYPE'] === '0') {
-            this.setValue('rec.LINK_TYPE', null);
-            this.setValue('rec.LINK_DIR', null);
-            this.setValue('PARE_LINK_Ref.LINK_TYPE', null);
-            this.setValue('PARE_LINK_Ref.LINK_DIR', null);
-        } else {
-            this.setValue('PARE_LINK_Ref.LINK_TYPE', formChanges['rec.LINK_TYPE']);
-            if (this.getValue('rec.LINK_DIR') === null) {
-                this.setValue('rec.LINK_DIR', 0);
-                this.setValue('PARE_LINK_Ref.LINK_DIR', 1);
+        if (this._isChanged('rec.LINK_TYPE', formChanges)) {
+            if (!formChanges['rec.LINK_TYPE'] || formChanges['rec.LINK_TYPE'] === '0') {
+                this.setValue('rec.LINK_TYPE', null);
+                this.setValue('rec.LINK_DIR', null);
+                this.setValue('PARE_LINK_Ref.LINK_TYPE', null);
+                this.setValue('PARE_LINK_Ref.LINK_DIR', null);
+
+                Object.assign(this._prev, formChanges);
+                this._subscribeOnChanges();
+            } else {
+                this._changeCategory(formChanges['rec.LINK_TYPE'])
+                    .then((res) => {
+                        if (!res) {
+                            this._restorePrevious('rec.LINK_TYPE');
+                        } else {
+                            this.setValue('PARE_LINK_Ref.LINK_TYPE', formChanges['rec.LINK_TYPE']);
+                            if (this.getValue('rec.LINK_DIR') === null) {
+                                this.setValue('rec.LINK_DIR', 0);
+                                this.setValue('PARE_LINK_Ref.LINK_DIR', 1);
+                            }
+                        }
+                        Object.assign(this._prev, formChanges);
+                        this._prev['rec.LINK_TYPE'] = this.linkType;
+                        this._subscribeOnChanges();
+                    });
             }
         }
-
-        this._subscribeOnChanges();
     }
 
     private _unicValueValidator(path: string): ValidatorFn {
