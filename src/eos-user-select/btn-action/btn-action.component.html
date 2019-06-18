@@ -30,7 +30,6 @@
                             #itemTooltip="bs-tooltip"
                             placement="bottom"
                             containerClass="tooltip-info"
-                            [delay]="tooltipDelay"
                             (click)="doAction(moreBtn.name)" [ngClass]="[moreBtn.isActive ? moreBtn.activeBtnClass : '', moreBtn.disabled ? 'disabled' : '']">
                             <span class="btn-icon" *ngIf='!moreBtn.isActive' [ngClass]="!moreBtn.disabled ? moreBtn.enableClass : moreBtn.disabledClass"></span>
                             <span class="btn-title" *ngIf='moreBtn.isActive' [ngClass]="moreBtn.activeClass"></span>
