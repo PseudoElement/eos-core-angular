@@ -1,20 +1,21 @@
-<div class="report-dictionaries">
-    <button class="rep-dictionary rep-btn btn block xl-font" routerLink="/report/users-stats">
+<div *ngIf="route.children.length === 0" class="report-dictionaries">
+    <button class="rep-dictionary rep-btn btn block xl-font" routerLink="users-stats">
         <span class="rep-icon-wrapper">
             <span class="rep-icon disabled  eos-icon eos-icon-folder-group-blue"></span>
         </span>
         <span class="text rep-span">Статистика</span>
     </button>
-    <button class="rep-dictionary rep-btn btn block xl-font" routerLink="/report/users-info">
+    <button class="rep-dictionary rep-btn btn block xl-font" routerLink="users-info">
         <span class="rep-icon-wrapper">
             <span class="rep-icon disabled eos-icon eos-icon-department-blue"></span>
         </span>
         <span class="text rep-span">Данные по пользователям</span>
     </button>
-    <button class="rep-dictionary rep-btn btn block xl-font" routerLink="/report/sum-protocol">
+    <button class="rep-dictionary rep-btn btn block xl-font" routerLink="sum-protocol">
         <span class="rep-icon-wrapper">
             <span class="rep-icon disabled eos-icon eos-icon-new-doc-blue"></span>
         </span>
         <span class="text rep-span">Сводный протокол</span>
     </button>
 </div>
+<router-outlet></router-outlet>

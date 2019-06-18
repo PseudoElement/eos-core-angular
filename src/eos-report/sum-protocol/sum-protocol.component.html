@@ -11,13 +11,13 @@
                 <div class="table-header header-pos-sum">
                     <div class="btn-group-sum">
                         <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
-                            <button class="btn btn-primary-light bth-size-sum" tooltip="Просмотреть"
+                            <button class="btn btn-primary-light bth-size-sum" tooltip="Просмотреть" (click)="ShowDataUser()"
                                 placement="bottom" container="body" containerClass="tooltip-info">
                                 <span class="eos-icon eos-icon-edit-blue small"></span>
                             </button>
                         </div>
                         <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
-                            <button class="btn btn-primary-light bth-size-sum" tooltip="Удалить"
+                            <button class="btn btn-primary-light bth-size-sum" tooltip="Удалить" (click)="DeleteEventUser()"
                                 placement="bottom" container="body" containerClass="tooltip-info">
                                 <span class="eos-icon eos-icon-bin-forever-blue small"></span>
                             </button>
@@ -32,10 +32,12 @@
                 </div>
                 <div class="table-header">
                     <div class="table-title contain-span-header">
-                        <div class="check-sum">
-                            <label class="checkbox minus-checkbox">
-                                <input type="checkbox" (change)="toggleAllMarks($event)" >
-                                <span class="eos-icon eos-icon-checkbox-black" [ngClass]="getflagChecked"></span>
+                        <div class="check-sum mar-check">
+                            <label class="checkbox">
+                                <input [checked]="flagChecked" type="checkbox" (change)="toggleAllMarks($event)">
+                                <div>
+                                    <span class="eos-icon small" [ngClass]="getflagChecked"></span>
+                                </div>
                             </label>
                         </div>
                         <span class=" width-title1 likeLink-sum">
@@ -55,27 +57,27 @@
                     </div>
                 </div>
                 <div class="user-item">
-                    <div class="contain-span-header" *ngFor="let user of frontData">
+                    <div class="contain-span-header" *ngFor="let user of frontData" [ngClass]="{'highlighted': user.checked === true}">
                         <div class="check-sum">
                             <label class="checkbox minus-checkbox">
-                                <input type="checkbox" [checked]="user.checked || flagChecked" [ngModel]="user.checked" (ngModelChange)="markNode($event,user)">
+                                <input type="checkbox" [checked]="user.checked || flagChecked" [ngModel]="user.checked" (ngModelChange)="markNode($event,user)" (click)="CheckUser(user)">
                                 <span class="eos-icon eos-icon-checkbox-black"></span>
                             </label>
                         </div>
-                        <span class="item-table width-title1">
+                        <span class="item-table width-title1"  (click)="SingleUserCheck(user)">
                             {{user.date}}
                         </span>
-                        <span class=" item-table width-title2">
+                        <span class=" item-table width-title2"  (click)="SingleUserCheck(user)">
                             <div class="">
                                 {{user.eventUser}}
                             </div>
                         </span>
-                        <span class="item-table width-title3">
+                        <span class="item-table width-title3"  (click)="SingleUserCheck(user)">
                             <div class="">
                                 {{user.isnWho}}
                             </div>
                         </span>
-                        <span class="item-table width-title3">
+                        <span class="item-table width-title3"  (click)="SingleUserCheck(user)">
                             <div class="">
                                 {{user.isnUser}}
                             </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'eos-eos-report',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EosReportComponent implements OnInit {
 
-  constructor() {
+  constructor(public route: ActivatedRoute) {
   }
 
   ngOnInit() {
