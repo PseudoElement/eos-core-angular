@@ -6,8 +6,13 @@
                 *ngFor="let tab of modes"
                 role="presentation"
                 [ngClass]="{'active secondary-text': tab.key === currMode}"
-                (click)="setTab(tab.key)">
-                <span class="tab-title">{{tab.title}}</span>
+                (click)="setTab(tab.key)"
+                >
+                <span 
+                containerClass="tooltip-info"
+                tooltip="{{tab.tooltip}}"
+                placement="bottom"
+                class="tab-title">{{tab.title}}</span>
             </li>
         </ul>
     </div>
