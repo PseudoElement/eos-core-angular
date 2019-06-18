@@ -334,6 +334,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.goSortList();
     }
     goSortList(pageList?) {
+        console.log(this._pagSrv.UsersList, this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun, this._apiSrv.currentSort);
         this._pagSrv.UsersList = this.helpersClass.sort(this._pagSrv.UsersList, this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun, this._apiSrv.currentSort);
         this._pagSrv._initPaginationConfig(true);
         this._pagSrv.changePagination(this._pagSrv.paginationConfig);

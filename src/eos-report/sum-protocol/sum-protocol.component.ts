@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
+import { USER_PARMS } from 'eos-rest';
 
 @Component({
   selector: 'eos-sum-protocol',
@@ -9,11 +10,11 @@ import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-erro
   styleUrls: ['./sum-protocol.component.scss']
 })
 
-
 export class EosReportSummaryProtocolComponent implements OnInit {
   findUsers: any;
   frontData: any;
   usersAudit: any;
+  logUsers: boolean;
   eventKind = [
     'Блокирование Пользователя',
     'Разблокирование Пользователя',
@@ -31,24 +32,34 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices) { }
 
   ngOnInit() {
-    new Promise(() => {
-      this._pipeSrv.read({
-        USER_AUDIT: ALL_ROWS
-      })
-        .then((data: any) => {
-          this.usersAudit = data;
-          return this.usersAudit;
-        })
-        .catch((error) => {
-          this._errorSrv.errorHandler(error);
-        });
+    this._pipeSrv.read<USER_PARMS>({
+      USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'USER_EDIT_AUDIT' })
+    }).then((r: any) => {
+      if (r[0].PARM_VALUE === 'NO') {
+        this.logUsers = false;
+      } else {
+        this.logUsers = true;
+      }
     })
+      .catch((error) => {
+        this._errorSrv.errorHandler(error);
+      });
+    this._pipeSrv.read({
+      USER_AUDIT: ALL_ROWS
+    })
+      .then((data: any) => {
+        this.usersAudit = data;
+        return this.usersAudit;
+      })
+      .catch((error) => {
+        this._errorSrv.errorHandler(error);
+      })
       .then(() => {
         this.SelectUsers(this.usersAudit);
         return this._pipeSrv.read({
           USER_CL: {
             criteries: {
-              ISN_LCLASSIF: this.critUsers
+              ISN_LCLASSIF: String(1122)
             }
           }
         });
@@ -65,6 +76,26 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       .then(() => {
         this.ShowData();
       });
+  }
+  MergeProtocol(): any {
+    let parValCheck;
+    if (this.logUsers === false) {
+      parValCheck = 'NO';
+    } else {
+      parValCheck = 'YES';
+    }
+    return [{
+      method: 'MERGE',
+      requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 USER_EDIT_AUDIT')`,
+      data: {
+        PARM_VALUE: parValCheck
+      }
+    }];
+  }
+  CheckProtocol() {
+    this.logUsers = !this.logUsers;
+    const query = this.MergeProtocol();
+    this._pipeSrv.batch(query, '');
   }
   SelectUsers(data) {
     let isnUser,

@@ -13,6 +13,9 @@ import { EosReportSummaryProtocolComponent } from './sum-protocol/sum-protocol.c
 import { PopoverModule } from 'ngx-bootstrap/popover';
 import { EosReportSummaryFilterProtocolComponent } from './filter-protocol/filter-protocol.component';
 import { BsDatepickerModule } from 'ngx-bootstrap';
+import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
+import { FormHelperService } from 'eos-user-params/shared/services/form-helper.services';
+import { EosCommonModule } from 'eos-common/eos-common.module';
 /*     ----Services----     */
 
 @NgModule({
@@ -30,8 +33,13 @@ import { BsDatepickerModule } from 'ngx-bootstrap';
         ReactiveFormsModule,
         TooltipModule.forRoot(),
         PopoverModule,
+        EosCommonModule,
         BsDatepickerModule.forRoot()
     ],
+    providers: [
+        InputParamControlService,
+        FormHelperService
+    ]
 })
 
 export class EosReportModule { }
