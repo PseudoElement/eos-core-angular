@@ -1,3 +1,5 @@
+import { IQuickSrchObj } from './../dictionary-search/dictionary-search.component';
+import { TOOLTIP_DELAY_VALUE } from './../../eos-common/services/eos-message.service';
 import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { AdvCardRKEditComponent } from './../adv-card/adv-card-rk.component';
 import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild} from '@angular/core';
@@ -57,7 +59,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     @ViewChild('tree') treeEl;
     @ViewChild('custom-tree') customTreeEl;
     @ViewChild('selectedWrapper') selectedEl;
+    @ViewChild('quickSearchCtl') quickSearchCtl;
+    @ViewChild('searchCtl') searchCtl;
 
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
     dictionary: EosDictionary;
     listDictionary: EosDictionary;
 
@@ -278,6 +283,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     ngAfterViewInit() {
         this._treeScrollTop = this._sandwichSrv.treeScrollTop;
         this.treeEl.nativeElement.scrollTop = this._treeScrollTop;
+        this.nodeList.updateScrollTop();
     }
 
     ngDoCheck() {
@@ -399,6 +405,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     resetSearch() {
         this._dictSrv.resetSearch();
         this._dictSrv.updateViewParameters({searchResults: false });
+        this.forcedCloseFastSrch();
     }
 
     userOrdered(nodes: EosDictionaryNode[]) {
@@ -413,8 +420,26 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         }
     }
 
-    switchFastSearch(val: boolean) {
-        this.fastSearch = val;
+    forcedCloseFastSrch() {
+        if (this.quickSearchCtl) {
+            if (this.searchCtl) {
+                this.searchCtl.close();
+            }
+            this.fastSearch = false;
+        }
+    }
+
+    onCloseFastSrch(event) {
+        this.forcedCloseFastSrch();
+    }
+
+    switchFastSearch(val: IQuickSrchObj) {
+        if (this.quickSearchCtl && this.quickSearchCtl.srchString && this.quickSearchCtl.srchString !== '') {
+            this.quickSearchCtl.quickSearch({ keyCode: 13 });
+        } else {
+            val.isOpenQuick = !val.isOpenQuick;
+            this.fastSearch = val.isOpenQuick;
+        }
     }
 
     /**

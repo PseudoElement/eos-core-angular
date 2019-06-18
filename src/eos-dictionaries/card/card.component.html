@@ -29,7 +29,7 @@
                     [ngClass]="{'edited': editMode}">
                     <span *ngIf="node"
                         class="edit-title primary-text long-title"
-                        [ngClass]="{'deleted': node.isDeleted}">{{nodeName}}</span>
+                        [ngClass]="{'deleted': node.isDeleted}">{{getCardTitle()}}</span>
                 </div>
                 <div class="buttons-wrapper"
                     *ngIf="editMode">
