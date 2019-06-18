@@ -242,7 +242,7 @@ class PrjDefaultFactory {
             TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
             length: 255,
         }, {
-            DEFAULT_ID: 'CAN_MANAGE_APPROVAL',
+            DEFAULT_ID: 'CAN_MANAGE_EXEC',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Управление Исполнителями',
         }, {
@@ -254,7 +254,7 @@ class PrjDefaultFactory {
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Работа с РКПД',
         }, {
-            DEFAULT_ID: 'CAN_MANAGE_EXEC',
+            DEFAULT_ID: 'CAN_MANAGE_APPROVAL',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Организация согл-я и утв-я',
         }];
