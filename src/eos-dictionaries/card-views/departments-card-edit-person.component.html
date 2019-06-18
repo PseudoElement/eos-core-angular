@@ -27,20 +27,20 @@
             <eos-dynamic-input [input]="inputs['rec.POST_H']"
                 [form]="form"
                 [readonly]="!editMode"></eos-dynamic-input>
-            <eos-dynamic-input [input]="inputs['rec.CODE']"
-                [form]="form"
-                [readonly]="!editMode"></eos-dynamic-input>
             <eos-dynamic-input [input]="inputs['rec.indexPerson']"
-                [form]="form"
-                [readonly]="!editMode"></eos-dynamic-input>
-            <eos-dynamic-input class="sev"
-                [input]="inputs['sev.GLOBAL_ID']"
                 [form]="form"
                 [readonly]="!editMode"></eos-dynamic-input>
             <eos-dynamic-input [input]="inputs['rec.START_DATE']"
                 [form]="form"
                 [readonly]="!editMode"></eos-dynamic-input>
             <eos-dynamic-input [input]="inputs['rec.END_DATE']"
+                [form]="form"
+                [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input class="sev"
+                [input]="inputs['sev.GLOBAL_ID']"
+                [form]="form"
+                [readonly]="!editMode"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.CODE']"
                 [form]="form"
                 [readonly]="!editMode"></eos-dynamic-input>
         </div>
@@ -64,14 +64,41 @@
             <eos-dynamic-input [input]="inputs['rec.DUTY']"
                 [form]="form"
                 [readonly]="!editMode"></eos-dynamic-input>
-            <eos-dynamic-input class="person-fullname"
+            <!-- <eos-dynamic-input class="person-fullname"
                 [input]="inputs['rec.fullPosition']"
                 [form]="form"
-                [readonly]="!editMode"></eos-dynamic-input>
+                [readonly]="!editMode"></eos-dynamic-input> -->
             <eos-dynamic-input class="person-note"
                 [input]="inputs['rec.NOTE']"
                 [form]="form"
                 [readonly]="!editMode"></eos-dynamic-input>
+
+                <div class="contact-wrapper">
+                    <eos-dynamic-input class="cab"
+                        [input]="inputs['rec.NUM_CAB']"
+                        [form]="form"
+                        [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="phone"
+                        [input]="inputs['rec.PHONE']"
+                        [form]="form"
+                        [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="phone-local"
+                        [input]="inputs['rec.PHONE_LOCAL']"
+                        [form]="form"
+                        [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="fax"
+                        [input]="inputs['rec.FAX']"
+                        [form]="form"
+                        [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="email"
+                        [input]="inputs['rec.E_MAIL']"
+                        [form]="form"
+                        [readonly]="!editMode"></eos-dynamic-input>
+                    <eos-dynamic-input class="skype"
+                        [input]="inputs['rec.SKYPE']"
+                        [form]="form"
+                        [readonly]="!editMode"></eos-dynamic-input>
+                </div>
             <!-- DON'T REMOVE!!! Uncomment when alternates will exist-->
             <!-- delegation
             <div>
@@ -161,7 +188,7 @@
             <!-- endOf tab1 -->
         </div>
     </div>
-    <div *ngIf="currTab === 1">
+    <!-- <div *ngIf="currTab === 1">
         <div class="contact-wrapper">
             <eos-dynamic-input class="cab"
                 [input]="inputs['rec.NUM_CAB']"
@@ -188,8 +215,8 @@
                 [form]="form"
                 [readonly]="!editMode"></eos-dynamic-input>
         </div>
-    </div>
-    <div *ngIf="currTab === 2"
+    </div> -->
+    <div *ngIf="currTab === 1"
         class="additional-info">
         <div class="xl-font paragraph-title">Склонение должности <a *ngIf="editMode"
                 (click)="fillDeclineFields()"
