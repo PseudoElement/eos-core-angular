@@ -19,6 +19,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   flagChecked: boolean;
   isnRefFile: number;
   lastUser;
+  // currentState: boolean[] = [true, true];
   options = [
     { value: '0', title: '' },
     { value: '1', title: 'Блокирование Пользователя' },
@@ -49,6 +50,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
     this._pipeSrv.read<USER_PARMS>({
       USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'USER_EDIT_AUDIT' })
     }).then((r: any) => {
+      console.log(r);
       if (r[0].PARM_VALUE === 'NO') {
         this.logUsers = false;
       } else {
@@ -62,6 +64,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       USER_AUDIT: ALL_ROWS
     })
       .then((data: any) => {
+        console.log(data);
         this.usersAudit = data;
         return this.usersAudit;
       })
@@ -73,12 +76,13 @@ export class EosReportSummaryProtocolComponent implements OnInit {
         return this._pipeSrv.read({
           USER_CL: {
             criteries: {
-              ISN_LCLASSIF: String(1122)
+              ISN_LCLASSIF: this.critUsers
             }
           }
         });
       })
       .then((data: any) => {
+        console.log(data);
         for (const user of data) {
           if (this.findUsers === undefined) {
             this.findUsers = [{ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON }];
@@ -306,7 +310,8 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   }
   DeleteEvent(isnEvent) {
     const query = this.createRequestForDelete(isnEvent);
-    this._pipeSrv.batch(query, '').then((data) => { });
+    console.log(query);
+    this._pipeSrv.batch(query, '');
   }
   createRequestForDelete(isnEvent) {
     return [{
@@ -323,13 +328,14 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   }
 
   ShowDataUser() {
-    console.log(this.lastUser);
-    // return this.GetDataUser(this.lastUser.isnEvent);
+    return this.GetDataUser(this.lastUser.isnEvent);
   }
   GetDataUser(isnEvent) {
-    window.open(`/x1807/getfile.aspx/${4542}/3x.html`, 'example', 'width=900,height=700');
+    console.log(isnEvent);
+    this.openFrame(12);
+    // window.open(`/x1807/getfile.aspx/${isnEvent}/3x.html`, 'example', 'width=900,height=700');
     // this._pipeSrv.read({
-    //  // REF_FILE: PipRX.criteries({ 'ISN_REF_DOC': String(isnEvent), 'KIND_DOC': '587' })
+    //   REF_FILE: PipRX.criteries({ 'ISN_REF_DOC': String(isnEvent) })
     // })
     //   .then((data: any) => {
     //     this.isnRefFile = data[0].ISN_REF_FILE;
@@ -337,7 +343,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
     //   })
     //   .then((data)=>{
     //     console.log(data);
-    //     this.openFrame(data);
+    //    // this.openFrame(data);
     //   })
     //   .catch((error) => {
     //     this._errorSrv.errorHandler(error);
