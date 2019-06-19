@@ -474,7 +474,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
     save(): void {
         this._preSaveCheck()
             .then((res) => {
-                if (!res) { return; }
+                if (res) { return; }
                 this._apiSrv
                     .read<DOCGROUP_CL>({
                         DOCGROUP_CL: PipRX.criteries({'ISN_NODE': this.data['ISN_NODE'].toString()}),
