@@ -1,4 +1,4 @@
-const pattrenSearch = /^[^\s*][а-яА-Яa-zA-Z0-9\s\.-]{1,50}$/;
+const pattrenSearch = /^([а-яА-Яa-zA-Z0-9\s\.-]{0,50})$/;
 export const USER_SEARCH = {
     id: '',
     title: '',

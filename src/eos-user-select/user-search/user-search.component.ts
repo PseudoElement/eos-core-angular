@@ -36,13 +36,11 @@ export class UserSearchComponent implements OnInit {
 
     get disableBtn() {
         if (this.form) {
-            return this.form.value['rec.LOGIN'].length > 0
+            return this.form.status === 'VALID' && ((this.form.value['rec.LOGIN'].length > 0 && this.form.controls['rec.LOGIN'].valid)
                 || (this.form.value['rec.DEPARTMENT'].length > 0 && this.form.controls['rec.DEPARTMENT'].valid)
                 || (this.form.value['rec.fullDueName'].length > 0 && this.form.controls['rec.fullDueName'].valid)
                 || (this.form.value['rec.CARD'].length > 0 && this.form.controls['rec.CARD'].valid)
-                || (this.form.value['rec.SURNAME'].length > 0 && this.form.controls['rec.SURNAME'].valid);
-        } else {
-            return true;
+                || (this.form.value['rec.SURNAME'].length > 0 && this.form.controls['rec.SURNAME'].valid));
         }
     }
     get showSurnameField() {
@@ -82,6 +80,7 @@ export class UserSearchComponent implements OnInit {
         }
         if (this.form.controls['rec.DEPARTMENT'].valid && this.form.controls['rec.DEPARTMENT'].value !== '') {
             newObj['DEPARTMENT'] = searchVal['rec.DEPARTMENT'].replace(/\s/g, '_').trim();
+
         }
         if (this.form.controls['rec.fullDueName'].valid && this.form.controls['rec.fullDueName'].value !== '') {
             newObj['fullDueName'] = searchVal['rec.fullDueName'].replace(/\s/g, '_').trim();
