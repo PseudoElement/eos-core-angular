@@ -36,6 +36,7 @@ export class CopyPropertiesComponent implements OnDestroy {
     formValid: boolean;
     fromParent: boolean;
     title: string;
+    saveButtonLabel: string;
     private rec_to;
     private rec_from;
     private properties;
@@ -63,11 +64,13 @@ export class CopyPropertiesComponent implements OnDestroy {
 
         if (this.fromParent) {
             this.title = 'Обновить свойства подчиненных групп документов';
+            this.saveButtonLabel = 'Обновить';
             this._initPropertiesFromParent();
             this._initInputs();
             this.isUpdating = false;
         } else {
             this.title = 'Копирование свойств группы документов';
+            this.saveButtonLabel = 'Копировать';
             this._initProperties();
             this._initInputs();
             this._chooseDocGroup();
