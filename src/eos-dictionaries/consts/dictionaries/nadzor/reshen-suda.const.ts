@@ -11,7 +11,8 @@ export const NP_SUD_RESHEN_TYPE_CL: ITreeDictionaryDescriptor = /*Object.assign(
     iconName: '',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
-        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes'
+        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes',
+        'export', 'import'
     ],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',

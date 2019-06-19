@@ -20,7 +20,6 @@ import { RemasterService } from '../../shared-user-param/services/remaster-servi
 export class UserParamShablonyComponent implements OnDestroy, OnInit {
     @Input() defaultValues;
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
-    readonly fieldTemplates: string[] = ['Имя шаблона', 'Значение по умолчанию', 'Текущее значение'];
     public initShablony: Array<any>;
     public form: FormGroup;
     public inputs: any;

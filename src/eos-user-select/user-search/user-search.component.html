@@ -19,14 +19,16 @@
 
 
 <ng-template #searchModal>
+    <form (ngSubmit)="startSearch()">
     <div class="btn-nav">
         <h3 class="title">Критерии поиска</h3>
         <div class="btn-search">
-            <button class="btn btn-primary upper" (click)="resetForm()">Сбросить</button>
-            <button class="btn btn-primary-full upper" [disabled]="!disableBtn" (click)="startSearch()">Найти</button>
+            <button class="btn btn-primary upper" type="button" (click)="resetForm()">Сбросить</button>
+            <button class="btn btn-primary-full upper" type="submit" [disabled]="!disableBtn">Найти</button>
         </div>
     </div>
     <div *ngIf=form>
+       
         <div class="search-bool">
             <!-- <eos-dynamic-input [input]="inputs['rec.TEH']" [form]="form" [readonly]="false"></eos-dynamic-input> -->
             <eos-dynamic-input [input]="inputs['rec.DEL_USER']" [form]="form" [readonly]="false"></eos-dynamic-input>
@@ -51,4 +53,5 @@
             </div>
         </div>
     </div>
+</form>
 </ng-template>

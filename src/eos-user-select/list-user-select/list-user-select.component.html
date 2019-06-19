@@ -41,15 +41,15 @@
                 </span>   
                 <div class="pos-depart">
                     <span class="user-title-name user-list-first-colomn likeLink dep-width" (click)="sortPageList('department')" [textContent]="shooseP === 0 ? 'Подразделение' : 'Картотека'"></span>
-                    <span *ngIf="_apiSrv.srtConfig.department.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)"></span>
+                    <span *ngIf="_apiSrv.srtConfig.department.checked" class="curs-span-arrow"  [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)" (click)="sortPageList('department')"></span>
                 </div>
                 <!-- <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
                     <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>
                 </span> -->
             </div>
         </div>
-        <div *ngIf="!isLoading; else spiner" class="eos-node-list">
-            <div *ngIf="listUsers.length; else emptyCert" class="block " [ngStyle]="{'width.px': tableWidth}" #listContent>
+        <div *ngIf="!isLoading; else spiner" class="list-user-sel">
+            <div *ngIf="listUsers.length; else emptyCert" class="block" [ngStyle]="{'width.px': tableWidth}" #listContent>
                 <div *ngFor="let user of listUsers" class="user-item" [ngClass]="{'highlighted': user.isSelected || (user.isChecked && !user.selectedMark) || user.selectedMark}" (dblclick)="RedactUser(user)">
                     <div class="table-title user-select-node" [ngClass]="{'disabled': user.deleted, 'delitedDue': user.deletedOffFace}">
                         <span *ngIf='user.deleted' class="deleted-user-border"></span>

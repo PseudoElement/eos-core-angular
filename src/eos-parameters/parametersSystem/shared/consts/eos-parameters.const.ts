@@ -74,6 +74,6 @@ export const REG_RANGE_0_24 = /^1?\d$|^2[0-4]$/;
 export const REG_RANGE_0_12 = /^\d$|^1[0-2]$/;
 
 
-export const REG_RANGE_0_60_2 = /^([1-5][0-9]?|60)$/;
+export const REG_RANGE_0_60_2 = /^([1-5][0-9]|[1-9]?|60)$/;
 export const REG_RANGE_0_10_2 = /^([1-9]|10)$/;
 export const REG_RANGE_0_24_2 = /^([1-9]|[1][0-9]|[2][0-4])$/;
