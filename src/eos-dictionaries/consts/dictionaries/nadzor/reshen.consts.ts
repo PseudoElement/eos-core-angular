@@ -12,7 +12,7 @@ export const NP_RESHEN_CL: ITreeDictionaryDescriptor = {
     iconName: '',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'removeHard', 'tableCustomization',
-        'edit', 'view', 'remove', 'userOrder', 'showAllSubnodes', 'restore'],
+        'edit', 'view', 'remove', 'userOrder', 'showAllSubnodes', 'restore', 'export', 'import'],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
     searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
