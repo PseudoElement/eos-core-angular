@@ -205,7 +205,11 @@ export class CopyPropertiesComponent implements OnDestroy {
     }
 
     private _chooseDocGroup() {
-        this._waitClassif.openClassif({classif: CLASSIF_NAME, selectMulty: false}, true)
+        this._waitClassif.openClassif({
+            classif: CLASSIF_NAME,
+            selectMulty: false,
+            skipDeleted: false,
+        }, true)
             .then((isn) => {
                 if (isn) {
                     if (this.rec_to.ISN_NODE.toString() === isn) {
