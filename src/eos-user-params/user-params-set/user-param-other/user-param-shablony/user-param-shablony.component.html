@@ -1,9 +1,15 @@
 <div class="table-wrapper usual-border " *ngIf="initShablony">
-    <div class="table-header ">
-        <div class="table-header-content ">
-            <div class="template-title ">
-                <div *ngFor="let field of fieldTemplates " class="item l-font ">
-                    <span class="text " [ngClass]="{ 'selected-text': '#2196f3'} " tooltip="{{field}} " placement="bottom " containerClass="tooltip-info ">{{field}}</span>
+    <div class="table-header">
+        <div class="table-header-content">
+            <div class="header-cust-other">
+                <div class="item l-font">
+                    <span class="text " [ngClass]="{ 'selected-text': '#2196f3'} " tooltip="Имя шаблона" placement="bottom " containerClass="tooltip-info ">Имя шаблона</span>
+                </div>
+                <div class="item l-font item-width">
+                    <span class="text " [ngClass]="{ 'selected-text': '#2196f3'} " tooltip="Значение по умолчанию" placement="bottom " containerClass="tooltip-info ">Значение по умолчанию</span>
+                </div>
+                <div class="item l-font">
+                    <span class="text " [ngClass]="{ 'selected-text': '#2196f3'} " tooltip="Текущее значение" placement="bottom " containerClass="tooltip-info ">Текущее значение</span>
                 </div>
             </div>
         </div>
