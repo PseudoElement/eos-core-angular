@@ -86,7 +86,7 @@
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
     </div>
-    <ng-container *ngIf="isPrjFlag">
+    <ng-container *ngIf="isPrjFlag&&!isNode">
         <eos-dynamic-input [input]="inputs['rec.PRJ_DEL_AFTER_REG']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
