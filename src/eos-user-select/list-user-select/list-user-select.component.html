@@ -41,7 +41,7 @@
                 </span>   
                 <div class="pos-depart">
                     <span class="user-title-name user-list-first-colomn likeLink dep-width" (click)="sortPageList('department')" [textContent]="shooseP === 0 ? 'Подразделение' : 'Картотека'"></span>
-                    <span *ngIf="_apiSrv.srtConfig.department.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)"></span>
+                    <span *ngIf="_apiSrv.srtConfig.department.checked" class="curs-span-arrow"  [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)" (click)="sortPageList('department')"></span>
                 </div>
                 <!-- <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
                     <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>

@@ -134,7 +134,7 @@ export class EosReportUsersStatsComponent implements OnInit {
       }
     }
 
-    this.delowebLGO = this.delowebLGO - this.delo;
+    this.delowebLGO = this.items.length - this.delo - this.delowebKL;
     this.subSysArray = [
       { subSystem: this.subsystem.delo.label, subValue: this.delo },
       { subSystem: this.subsystem.delowebLGO.label, subValue: this.delowebLGO },
