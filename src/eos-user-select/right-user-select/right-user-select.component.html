@@ -44,7 +44,19 @@
             <div class="rt-cabinet">
                 <span class="rt-grey">Кабинеты</span>
                 <div class="" *ngIf='UserCabinetInfo'>
-                    <eos-cabinet-user *ngFor="let Cabinet of UserCabinetInfo" [CabinetInfo]=Cabinet></eos-cabinet-user>
+                    <div *ngFor="let Cabinet of UserCabinetInfo" >
+                        <div class="cabinet-user-wr" *ngIf=Cabinet>
+                                <a  (click)="writeRecentUrl()" [routerLink]="['/spravochniki','cabinet', Cabinet.CABINET_LIST.ISN_CABINET, 'view', '0']"   class="cabinet-title">{{Cabinet.CABINET_LIST.CABINET_NAME}}</a>
+                                <span class="" *ngIf=Cabinet.CUSTOM_FIELD_MAIN
+                                    tooltip="Пользователь - владелец кабинета"
+                                    placement="bottom"
+                                    containerClass="tooltip-info"
+                                    trigger="hover"
+                                    container="body"
+                                >
+                                <span class="eos-icon eos-icon-keyfile-blue small" ></span></span>
+                        </div>
+                    </div>
                 </div>
                 <div class="is-user">
                     <span class="is-user-title">Логин</span>
