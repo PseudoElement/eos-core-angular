@@ -51,7 +51,7 @@ class PrjDefaultItem {
             this.category = rec.CATEGORY ? rec.CATEGORY : null;
             this.pattern = rec.PATTERN ? rec.PATTERN : undefined;
             this.tableName = rec.TABLE_NAME ? rec.TABLE_NAME : 'PRJ_DEFAULT_VALUE_List';
-            this.length = rec.length;
+            this.length = rec.LENGTH;
         }
     }
 }
@@ -76,17 +76,17 @@ class PrjDefaultFactory {
             DEFAULT_ID: 'ANNOTAT',
             DEFAULT_TYPE: E_FIELD_TYPE.text,
             DESCRIPTION: 'Содержание',
-            length: 2000,
+            LENGTH: 2000,
         }, {
             DEFAULT_ID: 'ANNOTAT_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Содержание',
-            length: 2000,
+            LENGTH: 2000,
         }, {
             DEFAULT_ID: 'CONSISTS_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Состав',
-            length: 255,
+            LENGTH: 255,
         }, {
             DEFAULT_ID: 'DOC_DATE_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
@@ -198,11 +198,12 @@ class PrjDefaultFactory {
             DEFAULT_ID: 'CONSISTS',
             DEFAULT_TYPE: E_FIELD_TYPE.string,
             DESCRIPTION: 'Состав',
-            length: 255,
+            LENGTH: 255,
         }, {
             DEFAULT_ID: 'NOTE',
             DEFAULT_TYPE: E_FIELD_TYPE.text,
             DESCRIPTION: 'Примечание',
+            LENGTH: 2000,
         }, {
             DEFAULT_ID: 'RUBRIC_LIST',
             DEFAULT_TYPE: E_FIELD_TYPE.select,
@@ -231,7 +232,7 @@ class PrjDefaultFactory {
             DESCRIPTION: 'С расширением',
             CATEGORY: 'PRJ_RC',
             TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
-            length: 255,
+            LENGTH: 255,
         }, {
             DEFAULT_ID: 'PRJ_VISA_SIGN.MAX_SIZE',
             DEFAULT_TYPE: E_FIELD_TYPE.number,
@@ -251,7 +252,7 @@ class PrjDefaultFactory {
             DESCRIPTION: 'С расширением',
             CATEGORY: 'PRJ_VISA_SIGN',
             TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
-            length: 255,
+            LENGTH: 255,
         }, {
             DEFAULT_ID: 'CAN_MANAGE_EXEC',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
