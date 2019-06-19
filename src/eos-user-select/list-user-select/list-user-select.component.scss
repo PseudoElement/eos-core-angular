@@ -143,7 +143,7 @@
     .list-user-sel {
         position: relative;
         background: $white;
-        overflow: auto;
+        overflow: hidden;
         max-height: calc(100vh - 371px);
         .user-select-node {
             line-height: 30px;
