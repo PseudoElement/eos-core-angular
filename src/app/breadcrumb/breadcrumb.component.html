@@ -41,6 +41,7 @@
             containerClass="tooltip-info"
             container="body"
             [delay]="tooltipDelay"
+            [disabled]="!isNavigationEnabled()"
             placement="bottom"><span class="icon eos-icon eos-icon-arrow-v-blue-left small"></span></button>
         <button class="btn icon-btn right"
             (click)="actionHandler(actionNavigationDown.type)"
@@ -48,6 +49,7 @@
             containerClass="tooltip-info"
             container="body"
             [delay]="tooltipDelay"
+            [disabled]="!isNavigationEnabled()"
             placement="bottom"><span class="icon eos-icon eos-icon-arrow-v-blue-right small"></span></button>
         <button class="btn icon-btn edit"
             (click)="actionHandler(actionEdit.type)"

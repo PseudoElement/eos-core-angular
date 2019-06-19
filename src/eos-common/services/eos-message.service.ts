@@ -3,7 +3,7 @@ import { Observable ,  BehaviorSubject } from 'rxjs/';
 
 import { IMessage , DEFAULT_DISMISS_TIMEOUT, DANGER_DISMISS_TIMEOUT, WARN_DISMISS_TIMEOUT } from '../core/message.interface';
 
-export const TOOLTIP_DELAY_VALUE = '1000';
+export const TOOLTIP_DELAY_VALUE = undefined;
 @Injectable()
 export class EosMessageService {
     messages: IMessage[];

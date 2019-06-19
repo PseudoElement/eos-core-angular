@@ -287,7 +287,14 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
 
         this.updateAccessMarks();
         this.updateOwnersMarks();
-        this.updateScroller();
+
+        if (this._interval) {
+            window.clearInterval(this._interval);
+        }
+        this._interval = setInterval(() => {
+            this.updateScroller();
+        }, this.scrollInterval);
+
     }
 
     private reorderCabinetOwners() {

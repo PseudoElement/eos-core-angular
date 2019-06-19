@@ -45,7 +45,6 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
                 const inputs = parents[0].getElementsByTagName('input');
                 for (let i = 0; i < inputs.length; i++) {
                     if (inputs[i].type === 'text' && inputs[i].scrollWidth > 0) {
-                        inputs[i].autofocus = true;
                         inputs[i].focus();
                         autofocusFlag = true;
                         break;
@@ -54,7 +53,6 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
                 if (!autofocusFlag) {
                     const textAreas = parents[0].getElementsByTagName('textarea');
                     if (textAreas.length > 0) {
-                        textAreas[0].autofocus = true;
                         textAreas[0].focus();
                     }
                 }
