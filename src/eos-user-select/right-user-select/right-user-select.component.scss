@@ -183,3 +183,22 @@
 .teh-p {
     font-size: 15px;
 }
+
+.cabinet-user-wr{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    color: #2196f3;
+    .cabinet-title{
+        cursor: pointer;
+        line-height: 32px;
+        font-size: 14px;
+        overflow: hidden;
+        margin-right: 20px;
+    }
+    .icon_key{
+        width: 24px;
+        height: 24px;
+    }
+}

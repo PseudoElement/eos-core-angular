@@ -16,6 +16,9 @@ import {VALIDATOR_TYPE, ValidatorsControl} from '../validators/validators-contro
 import {Subscription} from 'rxjs';
 import {IDynamicInputOptions} from '../../eos-common/dynamic-form-input/dynamic-input.component';
 import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
+import {RK_SELECTED_LIST_HAS_DELETED, RK_SELECTED_LIST_IS_EMPTY} from '../../app/consts/confirms.const';
+import {IConfirmWindow2} from '../../eos-common/confirm-window/confirm-window2.component';
+import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 
 const PRJ_DEFAULT_NAME = 'PRJ_DEFAULT_VALUE_List';
 const FILE_CONSTRAINT_NAME = 'DG_FILE_CONSTRAINT_List';
@@ -27,6 +30,7 @@ class PrjDefaultItem {
     id: string;
     type: E_FIELD_TYPE;
     descr: string;
+    fullDescr: string;
     dictId: string;
     readonly: boolean;
     defaultValue: any;
@@ -40,13 +44,14 @@ class PrjDefaultItem {
             this.id = rec.DEFAULT_ID;
             this.type = rec.DEFAULT_TYPE;
             this.descr = rec.DESCRIPTION;
+            this.fullDescr = rec.FULL_DESCRIPTION;
             this.dictId = rec.CLASSIF_ID;
             this.readonly = rec.READONLY;
             this.defaultValue = rec.DEFAULT_VALUE ? rec.DEFAULT_VALUE : null;
             this.category = rec.CATEGORY ? rec.CATEGORY : null;
             this.pattern = rec.PATTERN ? rec.PATTERN : undefined;
             this.tableName = rec.TABLE_NAME ? rec.TABLE_NAME : 'PRJ_DEFAULT_VALUE_List';
-            this.length = rec.length;
+            this.length = rec.LENGTH;
         }
     }
 }
@@ -71,17 +76,17 @@ class PrjDefaultFactory {
             DEFAULT_ID: 'ANNOTAT',
             DEFAULT_TYPE: E_FIELD_TYPE.text,
             DESCRIPTION: 'Содержание',
-            length: 2000,
+            LENGTH: 2000,
         }, {
             DEFAULT_ID: 'ANNOTAT_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Содержание',
-            length: 2000,
+            LENGTH: 2000,
         }, {
             DEFAULT_ID: 'CONSISTS_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Состав',
-            length: 255,
+            LENGTH: 255,
         }, {
             DEFAULT_ID: 'DOC_DATE_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
@@ -127,16 +132,19 @@ class PrjDefaultFactory {
             DEFAULT_ID: 'SEND_ISN_LIST_DEP',
             DEFAULT_TYPE: E_FIELD_TYPE.select,
             DESCRIPTION: 'Внутренние',
+            FULL_DESCRIPTION: 'Внутренние адресаты',
             CLASSIF_ID: 'user_list_104'
         }, {
             DEFAULT_ID: 'SEND_ISN_LIST_ORGANIZ',
             DEFAULT_TYPE: E_FIELD_TYPE.select,
             DESCRIPTION: 'Внешние',
+            FULL_DESCRIPTION: 'Внешние адресаты',
             CLASSIF_ID: 'user_list_630'
         }, {
             DEFAULT_ID: 'SIGN_ISN_LIST',
             DEFAULT_TYPE: E_FIELD_TYPE.select,
             DESCRIPTION: 'Внутренние',
+            FULL_DESCRIPTION: 'Внутренние подписи',
             CLASSIF_ID: 'user_list_104'
         }, {
             DEFAULT_ID: 'SIGN_ISN_LIST_M',
@@ -154,6 +162,7 @@ class PrjDefaultFactory {
             DEFAULT_ID: 'VISA_ISN_LIST',
             DEFAULT_TYPE: E_FIELD_TYPE.select,
             DESCRIPTION: 'Внутренние',
+            FULL_DESCRIPTION: 'Внутренние визы',
             CLASSIF_ID: 'user_list_104'
         }, {
             DEFAULT_ID: 'VISA_ISN_LIST_M',
@@ -172,11 +181,13 @@ class PrjDefaultFactory {
             DEFAULT_ID: 'SIGN_OUTER_ISN_LIST',
             DEFAULT_TYPE: E_FIELD_TYPE.select,
             DESCRIPTION: 'Внешние',
+            FULL_DESCRIPTION: 'Внешние подписи',
             CLASSIF_ID: 'user_list_630',
         }, {
             DEFAULT_ID: 'VISA_OUTER_ISN_LIST',
             DEFAULT_TYPE: E_FIELD_TYPE.select,
             DESCRIPTION: 'Внешние',
+            FULL_DESCRIPTION: 'Внешние визы',
             CLASSIF_ID: 'user_list_630',
         }, {
             DEFAULT_ID: 'PRJ_EXEC_LIST',
@@ -187,11 +198,12 @@ class PrjDefaultFactory {
             DEFAULT_ID: 'CONSISTS',
             DEFAULT_TYPE: E_FIELD_TYPE.string,
             DESCRIPTION: 'Состав',
-            length: 255,
+            LENGTH: 255,
         }, {
             DEFAULT_ID: 'NOTE',
             DEFAULT_TYPE: E_FIELD_TYPE.text,
             DESCRIPTION: 'Примечание',
+            LENGTH: 2000,
         }, {
             DEFAULT_ID: 'RUBRIC_LIST',
             DEFAULT_TYPE: E_FIELD_TYPE.select,
@@ -220,7 +232,7 @@ class PrjDefaultFactory {
             DESCRIPTION: 'С расширением',
             CATEGORY: 'PRJ_RC',
             TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
-            length: 255,
+            LENGTH: 255,
         }, {
             DEFAULT_ID: 'PRJ_VISA_SIGN.MAX_SIZE',
             DEFAULT_TYPE: E_FIELD_TYPE.number,
@@ -240,7 +252,7 @@ class PrjDefaultFactory {
             DESCRIPTION: 'С расширением',
             CATEGORY: 'PRJ_VISA_SIGN',
             TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
-            length: 255,
+            LENGTH: 255,
         }, {
             DEFAULT_ID: 'CAN_MANAGE_EXEC',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
@@ -289,11 +301,15 @@ class PrjDefaultFactory {
                 req: {USER_LISTS: PipRX.criteries({ISN_LCLASSIF: '-99', CLASSIF_ID: '104'}), orderby: 'WEIGHT'},
                 titleFieldName: 'NAME',
                 isnFieldName: 'ISN_LIST',
+                isUserList: true,
+                isEmpty: false,
             }, {
                 name: 'user_list_630',
                 req: {USER_LISTS: PipRX.criteries({ISN_LCLASSIF: '-99', CLASSIF_ID: '630'}), orderby: 'WEIGHT'},
                 titleFieldName: 'NAME',
                 isnFieldName: 'ISN_LIST',
+                isUserList: true,
+                isEmpty: false,
             }, {
                 name: 'doc_templates',
                 req: {DOC_TEMPLATES: PipRX.criteries({CATEGORY: 'ФАЙЛЫ ДОКУМЕНТОВ'}), orderby: 'WEIGHT'},
@@ -304,6 +320,8 @@ class PrjDefaultFactory {
                 req: {USER_LISTS: PipRX.criteries({ISN_LCLASSIF: '-99', CLASSIF_ID: '107'}), orderby: 'WEIGHT'},
                 titleFieldName: 'NAME',
                 isnFieldName: 'REF_ISN_LIST',
+                isUserList: true,
+                isEmpty: false,
             }
         ];
     }
@@ -313,18 +331,46 @@ class PrjDefaultFactory {
         PrjDefaultFactory.dictionaries.forEach((dict) => {
             reads.push(new Promise<any>((resolve) => apiSrv.read(dict.req)
                 .then(records => {
+                    if (!this.options[dict.name]) {
+                        this.options[dict.name] = [];
+                    }
                     records.forEach((record) => {
-                        if (!this.options[dict.name]) {
-                            this.options[dict.name] = [];
-                        }
                         this.options[dict.name].push({
                             title: record[dict.titleFieldName],
-                            value: record[dict.isnFieldName]});
+                            value: record[dict.isnFieldName],
+                            isEmpty: false,
+                            hasDeleted: false,
+                        });
                     });
-                    return resolve(records);
+                    if (dict.isUserList) {
+                        this._appendListInfo(this.options[dict.name], apiSrv)
+                            .then(() => {
+                                return resolve(records);
+                            });
+                    } else {
+                        return resolve(records);
+                    }
                 })));
         });
         return Promise.all(reads);
+    }
+    private _appendListInfo(options: [any], apiSrv: PipRX) {
+        const listreqs = [];
+
+        for (let i = 0; i < options.length; i++) {
+            const el = options[i];
+
+            const query = { args: { isn: el.value } };
+            const req = { ValidateUserList4DefaultValues: query};
+            listreqs.push(apiSrv.read(req).then((response) => {
+                if (String(response) === 'LIST_IS_EMPTY') {
+                    el.isEmpty = true;
+                } else if (String(response) === 'LIST_CONTAINS_DELETED') {
+                    el.hasDeleted = true;
+                }
+            }));
+        }
+        return Promise.all(listreqs);
     }
 }
 
@@ -362,7 +408,8 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         public bsModalRef: BsModalRef,
         private _msgSrv: EosMessageService,
         private _inputCtrlSrv: InputControlService,
-        private _apiSrv: PipRX ) {
+        private _apiSrv: PipRX,
+        private _confirmSrv: ConfirmWindowService) {
     }
 
     private static _getFieldKey(id, tableName) {
@@ -426,119 +473,165 @@ export class PrjDefaultValuesComponent implements OnDestroy {
     }
 
     save(): void {
-        this._apiSrv
-            .read<DOCGROUP_CL>({
-                DOCGROUP_CL: PipRX.criteries({'ISN_NODE': this.data['ISN_NODE'].toString()}),
-                expand: PRJ_DEFAULT_NAME + ',' + FILE_CONSTRAINT_NAME,
-                foredit: true,
-            })
-            .then(([docGroup]) => {
-                this._apiSrv.entityHelper.prepareForEdit(docGroup);
+        this._preSaveCheck()
+            .then((res) => {
+                if (res) { return; }
+                this._apiSrv
+                    .read<DOCGROUP_CL>({
+                        DOCGROUP_CL: PipRX.criteries({'ISN_NODE': this.data['ISN_NODE'].toString()}),
+                        expand: PRJ_DEFAULT_NAME + ',' + FILE_CONSTRAINT_NAME,
+                        foredit: true,
+                    })
+                    .then(([docGroup]) => {
+                        this._apiSrv.entityHelper.prepareForEdit(docGroup);
 
-                this.prjDefaults.items.forEach((item) => {
-                    if (!item.readonly) {
-                        const control = this.form.controls[PrjDefaultValuesComponent._getFieldKey(item.id, item.tableName)];
-                        if (control) {
-                            let value = control.value;
-                            if (item.type === E_FIELD_TYPE.boolean) {
-                                value = value ? '1' : false;
-                            }
+                        this.prjDefaults.items.forEach((item) => {
+                            if (!item.readonly) {
+                                const key = PrjDefaultValuesComponent._getFieldKey(item.id, item.tableName);
+                                const control = this.form.controls[key];
+                                if (control) {
+                                    let value = control.value;
+                                    if (item.type === E_FIELD_TYPE.boolean) {
+                                        value = value ? '1' : false;
+                                    }
 
-                            if (item.tableName === PRJ_DEFAULT_NAME) {
-                                const prj = docGroup.PRJ_DEFAULT_VALUE_List.find((f) => f.DEFAULT_ID === item.id);
-                                if (prj) {
-                                    if (prj.VALUE !== value) {
-                                        if (value) {
-                                            prj.VALUE = value.toString();
-                                            prj._State = _ES.Modified;
+                                    if (item.tableName === PRJ_DEFAULT_NAME) {
+                                        const prj = docGroup.PRJ_DEFAULT_VALUE_List
+                                            .find((f) => f.DEFAULT_ID === item.id);
+                                        if (prj) {
+                                            if (prj.VALUE !== value) {
+                                                if (value) {
+                                                    prj.VALUE = value.toString();
+                                                    prj._State = _ES.Modified;
+                                                } else {
+                                                    prj._State = _ES.Deleted;
+                                                }
+                                            }
                                         } else {
-                                            prj._State = _ES.Deleted;
+                                            if (value) {
+                                                const newPrj = <PRJ_DEFAULT_VALUE>{
+                                                    _State: _ES.Added,
+                                                    DEFAULT_ID: item.id,
+                                                    DUE: docGroup.DUE,
+                                                    ISN_DOCGROUP: this.isnNode,
+                                                    VALUE: value.toString(),
+                                                };
+                                                docGroup.PRJ_DEFAULT_VALUE_List.push(newPrj);
+                                            }
                                         }
                                     }
-                                } else {
-                                    if (value) {
-                                        const newPrj = <PRJ_DEFAULT_VALUE>{
-                                            _State: _ES.Added,
-                                            DEFAULT_ID: item.id,
-                                            DUE: docGroup.DUE,
-                                            ISN_DOCGROUP: this.isnNode,
-                                            VALUE: value.toString(),
-                                        };
-                                        docGroup.PRJ_DEFAULT_VALUE_List.push(newPrj);
-                                    }
                                 }
                             }
-                        }
-                    }
-                });
+                        });
 
-                const categories = ['PRJ_RC', 'PRJ_VISA_SIGN'];
-                categories.forEach((category) => {
-                    const dgFile = docGroup.DG_FILE_CONSTRAINT_List.find((f) => f.CATEGORY === category);
-                    const prop = this._getDGFileProperties(category);
-                    if (dgFile) {
-                        FILE_FIELDS.forEach(f => {
-                            if (dgFile[f] !== prop[f]) {
-                                if (prop[f]) {
-                                    dgFile[f] = prop[f];
-                                } else {
-                                    dgFile[f] = null;
-                                    if (f === 'ONE_FILE') {
-                                        dgFile[f] = 0;
+                        const categories = ['PRJ_RC', 'PRJ_VISA_SIGN'];
+                        categories.forEach((category) => {
+                            const dgFile = docGroup.DG_FILE_CONSTRAINT_List
+                                .find((f) => f.CATEGORY === category);
+                            const prop = this._getDGFileProperties(category);
+                            if (dgFile) {
+                                FILE_FIELDS.forEach(f => {
+                                    if (dgFile[f] !== prop[f]) {
+                                        if (prop[f]) {
+                                            dgFile[f] = prop[f];
+                                        } else {
+                                            dgFile[f] = null;
+                                            if (f === 'ONE_FILE') {
+                                                dgFile[f] = 0;
+                                            }
+                                        }
+                                        dgFile._State = _ES.Modified;
+                                    } else {
+                                        if (dgFile[f]) {
+                                            dgFile[f] = dgFile[f];
+                                        }
                                     }
-                                }
-                                dgFile._State = _ES.Modified;
+                                });
                             } else {
-                                if (dgFile[f]) {
-                                    dgFile[f] = dgFile[f];
+                                const newDgFile = <DG_FILE_CONSTRAINT> {
+                                    _State: _ES.Added,
+                                    CATEGORY: category,
+                                    DUE: docGroup.DUE,
+                                    ISN_DOCGROUP: this.isnNode,
+                                    MAX_SIZE: null,
+                                    ONE_FILE: 0,
+                                    EXTENSIONS: null,
+                                };
+                                let addDgFile = false;
+                                FILE_FIELDS.forEach(f => {
+                                    if (prop[f]) {
+                                        addDgFile = true;
+                                        newDgFile[f] = prop[f];
+                                        newDgFile._State = _ES.Added;
+                                    }
+                                });
+                                if (addDgFile) {
+                                    docGroup.DG_FILE_CONSTRAINT_List.push(newDgFile);
                                 }
                             }
                         });
-                    } else {
-                        const newDgFile = <DG_FILE_CONSTRAINT> {
-                            _State: _ES.Added,
-                            CATEGORY: category,
-                            DUE: docGroup.DUE,
-                            ISN_DOCGROUP: this.isnNode,
-                            MAX_SIZE: null,
-                            ONE_FILE: 0,
-                            EXTENSIONS: null,
-                        };
-                        let addDgFile = false;
-                        FILE_FIELDS.forEach(f => {
-                            if (prop[f]) {
-                                addDgFile = true;
-                                newDgFile[f] = prop[f];
-                                newDgFile._State = _ES.Added;
+
+                        const changes = this._apiSrv.changeList([docGroup]);
+                        changes.forEach(ch => {
+                            if (ch.method === 'MERGE' || ch.method === 'DELETE') {
+                                ch.requestUri = ch.requestUri
+                                    .replace('PRJ_DEFAULT_VALUE_List(\'', 'PRJ_DEFAULT_VALUE_List(\'' + docGroup.DUE + ' ');
+                                if (ch.data) {
+                                    ch.requestUri = ch.requestUri
+                                        .replace('DG_FILE_CONSTRAINT_List(' + docGroup.ISN_NODE + ')', 'DG_FILE_CONSTRAINT_List(\'' + docGroup.DUE
+                                            + ' ' + ch.data.CATEGORY + '\')');
+                                }
                             }
                         });
-                        if (addDgFile) {
-                            docGroup.DG_FILE_CONSTRAINT_List.push(newDgFile);
-                        }
-                    }
-                });
-
-                const changes = this._apiSrv.changeList([docGroup]);
-                changes.forEach(ch => {
-                    if (ch.method === 'MERGE' || ch.method === 'DELETE') {
-                        ch.requestUri = ch.requestUri
-                            .replace('PRJ_DEFAULT_VALUE_List(\'', 'PRJ_DEFAULT_VALUE_List(\'' + docGroup.DUE + ' ');
-                        if (ch.data) {
-                            ch.requestUri = ch.requestUri
-                                .replace('DG_FILE_CONSTRAINT_List(' + docGroup.ISN_NODE + ')', 'DG_FILE_CONSTRAINT_List(\'' + docGroup.DUE
-                                    + ' ' + ch.data.CATEGORY + '\')');
-                        }
-                    }
-                });
-                this._apiSrv.batch(changes, '')
-                    .then(() => {
-                        this._msgSrv.addNewMessage(SUCCESS_SAVE);
-                        this.bsModalRef.hide();
-                    })
-                    .catch((err) => {
-                        this._msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка записи'});
+                        this._apiSrv.batch(changes, '')
+                            .then(() => {
+                                this._msgSrv.addNewMessage(SUCCESS_SAVE);
+                                this.bsModalRef.hide();
+                            })
+                            .catch((err) => {
+                                this._msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка записи'});
+                            });
                     });
             });
+    }
+
+    private _preSaveCheck(): Promise<any> {
+        let confPromise = Promise.resolve(false);
+        // проверить списки на предмет наличия логически удаленных записей.
+        const fields = this.prjDefaults.items;
+        for (let i = 0; i < fields.length; i++) {
+            const el = fields[i];
+            if (!el.dictId) { continue; }
+            const currentDict = PrjDefaultFactory.dictionaries.find(d => d.name === el.dictId);
+            if (!currentDict.isUserList) { continue; }
+
+            const val = this.form.controls[PrjDefaultValuesComponent._getFieldKey(el.id, el.tableName)].value;
+            if (val) {
+                const opt = this.prjDefaults.options[el.dictId].find(o => Number(o.value) === Number(val));
+                if (opt) {
+                    if (opt.isEmpty) {
+                        confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_IS_EMPTY);
+                    } else if (opt.hasDeleted) {
+                        confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_HAS_DELETED);
+                    }
+                }
+            }
+        }
+        return confPromise;
+    }
+
+    private _presaveConfirmAppend(confPromise: Promise<boolean>, el: PrjDefaultItem, win: IConfirmWindow2): Promise<boolean> {
+        return confPromise.then ((res) => {
+            const testc: IConfirmWindow2 = Object.assign({}, win);
+            testc.body = testc.body.replace('{{REK}}', (el.fullDescr || el.descr));
+            if (res) {
+                return res;
+            } else {
+                return this._confirmSrv.confirm2(testc).then((button) => {
+                    return (!button || button.result === 2);
+                });
+            }
+        });
     }
 
     private _prjExecListOnChange() {
@@ -663,4 +756,5 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         });
     }
 
+    // TODO: после подключения кнопки 'Ведение списков' сделать обновление options
 }
