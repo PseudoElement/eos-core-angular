@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 /*     ----Components----     */
 import { EosReportComponent } from './eos-report.component';
@@ -34,6 +35,7 @@ import { EosCommonModule } from 'eos-common/eos-common.module';
         TooltipModule.forRoot(),
         PopoverModule,
         EosCommonModule,
+        BsDropdownModule,
         BsDatepickerModule.forRoot()
     ],
     providers: [

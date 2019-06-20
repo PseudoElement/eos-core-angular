@@ -1,8 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { USER_PARMS } from 'eos-rest';
+import { IPaginationConfig } from 'eos-dictionaries/node-list-pagination/node-list-pagination.interfaces';
+import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
+import { EosStorageService } from 'app/services/eos-storage.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { PAGES } from 'eos-dictionaries/node-list-pagination/node-list-pagination.consts';
+import { LS_PAGE_LENGTH } from 'eos-user-select/shered/consts/pagination-user-select.consts';
 
 @Component({
   selector: 'eos-sum-protocol',
@@ -16,10 +23,15 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   usersAudit: any;
   logUsers: boolean;
   checkUser: boolean = false;
-  flagChecked: boolean;
+  flagChecked: boolean = false;
   isnRefFile: number;
   lastUser;
-  // currentState: boolean[] = [true, true];
+  posts: number;
+  public config: IPaginationConfig;
+  readonly pageLengths = PAGES;
+
+  pageCount = 1;
+  pages: number[] = [];
   options = [
     { value: '0', title: '' },
     { value: '1', title: 'Блокирование Пользователя' },
@@ -39,18 +51,29 @@ export class EosReportSummaryProtocolComponent implements OnInit {
     'Редактирование прав поточного сканирования',
     'Удаление Пользователя'
   ];
-
-
   critUsers: string = '';
-  @ViewChild('full') fSearchPop;
+  private readonly _buttonsTotal = 5;
+  private ngUnsubscribe: Subject<any> = new Subject();
 
-  constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices) { }
+  constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private _dictSrv: EosDictService,
+    private _storageSrv: EosStorageService) {
+    _dictSrv.paginationConfig$
+      .pipe(
+        takeUntil(this.ngUnsubscribe)
+      )
+      .subscribe((config: IPaginationConfig) => {
+        if (config) {
+          this.config = config;
+          this._update();
+          console.log(config);
+        }
+      });
+  }
 
   ngOnInit() {
     this._pipeSrv.read<USER_PARMS>({
       USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'USER_EDIT_AUDIT' })
     }).then((r: any) => {
-      console.log(r);
       if (r[0].PARM_VALUE === 'NO') {
         this.logUsers = false;
       } else {
@@ -61,15 +84,17 @@ export class EosReportSummaryProtocolComponent implements OnInit {
         this._errorSrv.errorHandler(error);
       });
     this._pipeSrv.read({
-      USER_AUDIT: ALL_ROWS
+      USER_AUDIT: ALL_ROWS,
+      orderby: 'ISN_EVENT',
+
     })
       .then((data: any) => {
-        console.log(data);
         this.usersAudit = data;
+        this.posts = this.usersAudit.length;
+        this.config.itemsQty = this.posts;
+        this._update();
+
         return this.usersAudit;
-      })
-      .catch((error) => {
-        this._errorSrv.errorHandler(error);
       })
       .then(() => {
         this.SelectUsers(this.usersAudit);
@@ -78,11 +103,10 @@ export class EosReportSummaryProtocolComponent implements OnInit {
             criteries: {
               ISN_LCLASSIF: this.critUsers
             }
-          }
+          },
         });
       })
       .then((data: any) => {
-        console.log(data);
         for (const user of data) {
           if (this.findUsers === undefined) {
             this.findUsers = [{ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON }];
@@ -93,6 +117,10 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       })
       .then(() => {
         this.ShowData();
+
+      })
+      .catch((error) => {
+        this._errorSrv.errorHandler(error);
       });
   }
   MergeProtocol(): any {
@@ -310,7 +338,6 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   }
   DeleteEvent(isnEvent) {
     const query = this.createRequestForDelete(isnEvent);
-    console.log(query);
     this._pipeSrv.batch(query, '');
   }
   createRequestForDelete(isnEvent) {
@@ -332,22 +359,23 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   }
   GetDataUser(isnEvent) {
     console.log(isnEvent);
-    this.openFrame(12);
+    // this.openFrame(12);
     // window.open(`/x1807/getfile.aspx/${isnEvent}/3x.html`, 'example', 'width=900,height=700');
-    // this._pipeSrv.read({
-    //   REF_FILE: PipRX.criteries({ 'ISN_REF_DOC': String(isnEvent) })
-    // })
-    //   .then((data: any) => {
-    //     this.isnRefFile = data[0].ISN_REF_FILE;
-    //     return this.isnRefFile;
-    //   })
-    //   .then((data)=>{
-    //     console.log(data);
-    //    // this.openFrame(data);
-    //   })
-    //   .catch((error) => {
-    //     this._errorSrv.errorHandler(error);
-    //   })
+    this._pipeSrv.read({
+      REF_FILE: PipRX.criteries({ 'ISN_REF_DOC': String(isnEvent) })
+    })
+      .then((data: any) => {
+        console.log(data);
+        this.isnRefFile = data[0].ISN_REF_FILE;
+        return this.isnRefFile;
+      })
+      .then((data) => {
+        console.log(data);
+        this.openFrame(data);
+      })
+      .catch((error) => {
+        this._errorSrv.errorHandler(error);
+      });
   }
   openFrame(isnFile) {
     window.open(`/x1807/getfile.aspx/${isnFile}/3x.html`, 'example', 'width=900,height=700');
@@ -361,4 +389,44 @@ export class EosReportSummaryProtocolComponent implements OnInit {
     const parseDate = `${curr_year}.${curr_month}.${curr_date} ${hms}`;
     return parseDate;
   }
+  public setPageLength(length: number): void {
+    this._storageSrv.setItem(LS_PAGE_LENGTH, length, true);
+    this.config.length = length;
+    this._dictSrv.changePagination(this.config);
+  }
+
+  public showMore() {
+    this.config.current++;
+    this._dictSrv.changePagination(this.config);
+  }
+
+  public showPage(page: number): void {
+    if (page !== this.config.current) {
+      this.config.current = page;
+      this.config.start = page;
+      this._dictSrv.changePagination(this.config);
+    }
+  }
+
+  private _update() {
+    let total = Math.ceil(this.config.itemsQty / this.config.length);
+    if (total === 0) { total = 1; }
+    const firstSet = this._buttonsTotal - this.config.current;
+    const lastSet = total - this._buttonsTotal + 1;
+    const middleSet = this._buttonsTotal - 3;
+
+    this.pageCount = total;
+    this.pages = [];
+    for (let i = 1; i <= this.pageCount; i++) {
+      if (
+        i === 1 || i === this.pageCount || // first & last pages
+        (1 < firstSet && i < this._buttonsTotal) || // first 4 pages
+        (1 < this.config.current - lastSet && i - lastSet > 0) || // last 4 pages
+        (middleSet > this.config.current - i && i - this.config.current < middleSet)  // middle pages
+      ) {
+        this.pages.push(i);
+      }
+    }
+  }
+
 }

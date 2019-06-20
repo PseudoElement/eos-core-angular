@@ -100,4 +100,8 @@
     .mar-check{
         margin-right: 12px;
     }
+    .sum-list-prot{
+        overflow: auto;
+        max-height: calc(100vh - 371px);
+    }
 }

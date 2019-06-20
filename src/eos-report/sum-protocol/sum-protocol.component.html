@@ -26,7 +26,7 @@
                 <div class="item-count-sum usual-border-sum m-font-sum">
                     <span class="item-count-content-sum">
                         Записей:
-                        <span class="counter-sum">3</span>
+                        <span class="counter-sum">{{posts}}</span>
                     </span>
                 </div>
                 </div>
@@ -56,7 +56,7 @@
                         </eos-filter-protocol>
                     </div>
                 </div>
-                <div class="user-item">
+                <div class="user-item sum-list-prot">
                     <div class="contain-span-header" *ngFor="let user of frontData" [ngClass]="{'highlighted': user.checked === true}">
                         <div class="check-sum">
                             <label class="checkbox minus-checkbox">
@@ -87,5 +87,51 @@
             </div>
         </div>
     </div>
-    <!-- <eos-user-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-user-list-pagination> -->
+    <div class="pagination-option l-font"
+        >
+        <div class="pagination">
+            <button class="pag-btn btn-default prev"
+            [disabled]="config?.current === 1"
+            (click)="showPage(config.current - 1)"
+            >
+                <span class="icon-btn eos-icon eos-icon-arrow-v-blue-left small to-left"></span>
+            </button>
+            <button *ngFor="let page of pages let i = index" class="pag-btn btn-default selected-text"(click)="showPage(page)">{{page}}</button>
+            <button class="pag-btn btn-default next"  (click)="showPage(config.current + 1)" [disabled]="config?.current === pageCount">
+                <span class="icon-btn eos-icon eos-icon-arrow-v-blue-left small to-rigth"></span>
+            </button>
+        </div>
+
+        <button class="btn show-more selected-text" [disabled]="config?.current*config?.length >= config?.itemsQty"
+            (click)="showMore()">Показать еще</button>
+
+        <div dropdown
+            placement="top right"
+            dropup="true"
+            #dd="bs-dropdown"
+            class="show-by">
+            <button type="button"
+                dropdownToggle
+                class="drop-btn btn btn-transparent selected-text"
+                style="height: 48px; width: 336px;">
+                <span>Показывать по {{config?.length}}</span>
+                <div class="arrow">
+                    <span class="icon-btn eos-icon small"
+                      ></span>
+                </div>
+            </button>
+            <ul *dropdownMenu
+                class="dropdown-menu dropdown-menu-right"
+                role="menu">
+                <li role="menuitem"
+                    *ngFor="let item of pageLengths"
+                    (click)="setPageLength(item.value)"
+                    class="menuitem">
+                    <a class="dropdown-item text-center">
+                        <span class="l-font">Показывать по {{item.title}}</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </div>
