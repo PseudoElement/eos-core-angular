@@ -14,7 +14,6 @@ import { ListUserSelectComponent } from './list-user-select/list-user-select.com
 import { CreateUserComponent } from './list-user-select/createUser/createUser.component';
 import {RightUserSelectComponent} from './right-user-select/right-user-select.component';
 import {DepartUserSelectComponent} from './depart-user-select/depart-user-select.component';
-import {CabinetUserComponent} from './cabinet-user/cabinet-user.component';
 import {UserSystemComponent} from './user-system/user-system.component';
 import {BtnActionComponent} from './btn-action/btn-action.component';
 import { UserSearchComponent } from './user-search/user-search.component';
@@ -32,7 +31,6 @@ import {SearchServices} from '../eos-user-select/shered/services/search.service'
         RightUserSelectComponent,
         DepartUserSelectComponent,
         UserSystemComponent,
-        CabinetUserComponent,
         BtnActionComponent,
         UserSearchComponent,
     ],
