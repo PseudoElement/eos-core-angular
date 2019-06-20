@@ -3,7 +3,6 @@ import { IFieldView, E_FIELD_TYPE } from '../interfaces';
 import { HintConfiguration } from '../long-title-hint/hint-configuration.interface';
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
-import { ICONS_CONTAINER } from 'eos-dictionaries/consts/dictionaries/_common';
 
 
 interface ISpecialIcon {
