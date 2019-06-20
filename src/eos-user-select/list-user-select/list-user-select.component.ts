@@ -427,10 +427,29 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         } else {
             user.isChecked = !user.isChecked;
         }
-        this.selectedUser.isSelected = false;
-        this.selectedUser = user;
+        if (this.selectedUser) {
+            this.selectedUser.isSelected = false;
+        }
+        if (event.target.checked) {
+            this.rtUserService.changeSelectedUser(user);
+            this.selectedUser = user;
+        } else {
+            const chekUsers = this.getCheckedUsers();
+            if (chekUsers.length) {
+                this.selectedUser = chekUsers[0];
+                this.rtUserService.changeSelectedUser(chekUsers[0]);
+            } else {
+                this.selectedUser = undefined;
+                this.rtUserService.changeSelectedUser(null);
+            }
+        }
         this.updateFlafListen();
         this.disabledBtnDeleted();
+    }
+    getCheckedUsers() {
+        return this.listUsers.filter((user: UserSelectNode) => {
+            return user.isChecked || user.isSelected;
+        });
     }
 
     updateFlafListen() {
@@ -593,11 +612,17 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
 
     private disabledBtnDeleted() {
         if (this.countcheckedField === 0) {
+            this.buttons.buttons[1].disabled = true;
             this.buttons.buttons[2].disabled = true;
             this.buttons.buttons[3].disabled = true;
+            this.buttons.buttons[4].disabled = true;
+            this.buttons.buttons[6].disabled = true;
         } else {
+            this.buttons.buttons[1].disabled = false;
             this.buttons.buttons[2].disabled = false;
             this.buttons.buttons[3].disabled = false;
+            this.buttons.buttons[4].disabled = false;
+            this.buttons.buttons[6].disabled = false;
         }
     }
 
