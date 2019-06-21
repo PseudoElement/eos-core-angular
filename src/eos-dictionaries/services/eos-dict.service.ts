@@ -55,6 +55,7 @@ export class EosDictService {
     private _listNode: EosDictionaryNode; // record selected in list
     private _currentList: EosDictionaryNode[];
     private _visibleListNodes: EosDictionaryNode[];
+    private _bufferNodes: EosDictionaryNode[];
     private paginationConfig: IPaginationConfig;
     private _dictionary$: BehaviorSubject<EosDictionary>;
     private _treeNode$: BehaviorSubject<EosDictionaryNode>;
@@ -197,6 +198,10 @@ export class EosDictService {
 
     get currentDictionary(): EosDictionary {
         return this._dictionaries[this._dictMode];
+    }
+
+    get bufferNodes(): EosDictionaryNode[] {
+        return this._bufferNodes;
     }
 
 
@@ -923,7 +928,9 @@ export class EosDictService {
         return this._cDue;
     }
 
-
+    fillBufferNodes() {
+        this._bufferNodes = this.getMarkedNodes(false);
+    }
 
     private getDictionaryById(id: string): Promise<EosDictionary> {
         const existDict = this._dictionaries.find((dictionary) => dictionary && dictionary.id === id);
@@ -960,6 +967,7 @@ export class EosDictService {
             tableCustomization: false,
             firstUnfixedIndex: 0,
         };
+        this._bufferNodes = [];
     }
 
     /**

@@ -1,0 +1,37 @@
+<div class="modal-header">
+    <h4 class="modal-title pull-left">{{title}}</h4>
+</div>
+<div class="modal-body">
+    <div class="modal-body-container">
+        <div class="edit-content">
+            <div>
+                Год ввода в действие
+                <div class="clear-both">
+                    <eos-dynamic-input class="radio-inline no-margin"
+                                       [input]="inputs['С_YEAR']"
+                                       [form]="form"></eos-dynamic-input>
+                    <eos-dynamic-input class="radio-inline no-margin"
+                                       [input]="inputs['YEAR']"
+                                       [form]="form"></eos-dynamic-input>
+                    год
+                </div>
+            </div>
+            <div *ngFor="let prop of _properties">
+                {{prop.label}}
+                <div class="clear-both">
+                    <eos-dynamic-input class="radio-inline no-margin"
+                                       [input]="inputs[prop.key]"
+                                       [form]="form"></eos-dynamic-input>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <span class="pull-right">
+    <button type="button" class="btn btn-primary-full upper fixed-width"
+            (click)="save()">Продолжить</button>
+    <button type="button" class="btn btn-primary have-margin fixed-width"
+            (click)="hideModal()">Отмена</button>
+    </span>
+</div>

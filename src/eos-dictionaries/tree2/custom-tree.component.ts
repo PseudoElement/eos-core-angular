@@ -94,7 +94,9 @@ export class CustomTreeComponent implements OnInit {
         const t = this.findTreeParent(treeData, id);
         this.expandToSelected(t, treeData);
         this.setActiveRecursive(treeData, false);
-        t.isActive = true;
+        if (t) {
+            t.isActive = true;
+        }
     }
 
     setActiveRecursive(treeData: CustomTreeNode[], active: boolean) {

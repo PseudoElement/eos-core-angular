@@ -33,6 +33,8 @@ export enum E_RECORD_ACTIONS {
     prjDefaultValues,
     copyPropertiesFromParent,
     copyProperties,
+    copyNodes,
+    pasteNodes,
     // createRepresentative,
     // slantForForms,
     /* to be extended */
