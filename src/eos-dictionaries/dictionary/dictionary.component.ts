@@ -1,7 +1,7 @@
-import { IQuickSrchObj } from './../dictionary-search/dictionary-search.component';
-import { TOOLTIP_DELAY_VALUE } from './../../eos-common/services/eos-message.service';
-import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
-import { AdvCardRKEditComponent } from './../adv-card/adv-card-rk.component';
+import {IQuickSrchObj} from './../dictionary-search/dictionary-search.component';
+import {TOOLTIP_DELAY_VALUE} from './../../eos-common/services/eos-message.service';
+import {DEPARTMENTS_DICT} from './../consts/dictionaries/department.consts';
+import {AdvCardRKEditComponent} from './../adv-card/adv-card-rk.component';
 import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subject} from 'rxjs';
@@ -23,21 +23,21 @@ import {EosSandwichService} from '../services/eos-sandwich.service';
 import {EosBreadcrumbsService} from '../../app/services/eos-breadcrumbs.service';
 
 import {
+    DANGER_ACCESS_DENIED_DICT,
+    DANGER_DEPART_IS_LDELETED,
+    DANGER_DEPART_NO_NUMCREATION,
     DANGER_EDIT_DELETED_ERROR,
+    DANGER_EDIT_DICT_NOTALLOWED,
     DANGER_EDIT_ROOT_ERROR,
     DANGER_HAVE_NO_ELEMENTS,
     DANGER_LOGICALY_RESTORE_ELEMENT,
     WARN_EDIT_ERROR,
-    WARN_ELEMENT_PROTECTED,
-    WARN_LOGIC_DELETE,
-    DANGER_EDIT_DICT_NOTALLOWED,
-    WARN_SELECT_NODE,
     WARN_ELEMENT_DELETED,
+    WARN_ELEMENT_PROTECTED,
     WARN_LOGIC_CLOSE,
+    WARN_LOGIC_DELETE,
     WARN_LOGIC_OPEN,
-    DANGER_DEPART_IS_LDELETED,
-    DANGER_DEPART_NO_NUMCREATION,
-    DANGER_ACCESS_DENIED_DICT,
+    WARN_SELECT_NODE,
 } from '../consts/messages.consts';
 
 import {RECENT_URL} from 'app/consts/common.consts';
@@ -47,9 +47,9 @@ import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.in
 import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
 import {CounterNpEditComponent, E_COUNTER_TYPE} from '../counter-np-edit/counter-np-edit.component';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
-import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
-import { DID_NOMENKL_CL } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
-import { takeUntil } from 'rxjs/operators';
+import {APS_DICT_GRANT, EosAccessPermissionsService} from 'eos-dictionaries/services/eos-access-permissions.service';
+import {DID_NOMENKL_CL} from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -395,6 +395,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 break;
             case E_RECORD_ACTIONS.copyPropertiesFromParent:
                 this._openCopyProperties(true);
+                break;
+            case E_RECORD_ACTIONS.copyNodes:
+                this._copyNodesToBuffer();
+                break;
+            case E_RECORD_ACTIONS.pasteNodes:
+                this._openCopyNode();
                 break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
@@ -776,6 +782,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         } else {
             this._msgSrv.addNewMessage(WARN_SELECT_NODE);
         }
+    }
+
+    private _copyNodesToBuffer() {
+        this._dictSrv.fillBufferNodes();
+    }
+
+    private _openCopyNode() {
+        this.nodeList.openCopyNode(this._dictSrv.bufferNodes);
     }
 
 }
