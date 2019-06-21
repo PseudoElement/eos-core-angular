@@ -59,7 +59,7 @@ export class NodeActionsComponent implements OnDestroy {
     constructor(
         _dictSrv: EosDictService,
         private _eaps: EosAccessPermissionsService,
-        ) {
+    ) {
         this._initButtons();
 
         this._dictSrv = _dictSrv;
@@ -91,7 +91,7 @@ export class NodeActionsComponent implements OnDestroy {
         const tooltip_fix = e.currentTarget['disabled'];
         e.currentTarget['disabled'] = true;
         if (item.enabled) {
-            this.action.emit({ action: item.type, params: params });
+            this.action.emit({action: item.type, params: params});
             this._update();
         } else {
             e.stopPropagation();
@@ -237,14 +237,19 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.copyProperties:
                     _enabled = _enabled && listHasSelected;
                     break;
+                case E_RECORD_ACTIONS.copyNodes:
+                    _enabled = _enabled && listHasSelected;
+                    break;
+                case E_RECORD_ACTIONS.pasteNodes:
+                    _enabled = (this._dictSrv.bufferNodes) && (!!this._dictSrv.bufferNodes.length);
+                    break;
             }
             due = this._dictSrv.treeNodeIdByDict(this.dictionary.id);
         }
 
 
-
         const grant = this.dictionary ? this._eaps.isAccessGrantedForDictionary(this.dictionary.id, due) :
-                        APS_DICT_GRANT.denied;
+            APS_DICT_GRANT.denied;
         const is_granted = (button.accessNeed <= grant);
 
         button.show = _show;

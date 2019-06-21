@@ -20,7 +20,7 @@
             justify-content: flex-start;
             cursor: pointer;
             color: #2196f3;
-            margin-left: 20px;
+            margin-left: 17px;
             >span {
                 margin-left: 8px;
             }
@@ -135,10 +135,14 @@
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        width: 41%;
+        width: 39%;
     }
     .dep-width{
+        margin-left: 13px !important;
         width: 110px;
+    }
+    .mar-left {
+        margin-left: 13px;
     }
     .list-user-sel {
         position: relative;

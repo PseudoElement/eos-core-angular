@@ -63,7 +63,7 @@ export const REESTRTYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_T
     }],
     quickViewFields: ['ISN_ADDR_CATEGORY', 'ISN_DELIVERY', 'GROUP_MAIL', 'FLAG_TYPE', 'EMERGENCY', 'IMPOTANCE', 'NOTE'],
     editFields: [...LINEAR_TEMPLATE.editFields, 'ISN_ADDR_CATEGORY', 'ISN_DELIVERY', 'GROUP_MAIL', 'FLAG_TYPE', 'EMERGENCY', 'IMPOTANCE'],
-    allVisibleFields: [...LINEAR_TEMPLATE.listFields, 'ISN_ADDR_CATEGORY', 'ISN_DELIVERY'],
+    allVisibleFields: ['ISN_ADDR_CATEGORY', 'ISN_DELIVERY'],
     listFields: [...LINEAR_TEMPLATE.listFields]
 });
 
