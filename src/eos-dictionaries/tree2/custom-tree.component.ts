@@ -1,6 +1,7 @@
-import { Component, Input, OnInit, HostListener } from '@angular/core';
+import { Component, Input, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
+import { Subscription } from 'rxjs';
 // import {EosDictService} from '../services/eos-dict.service';
 
 const BIG_PANEL = 340,
@@ -27,11 +28,12 @@ export class CustomTreeNode {
     selector: 'eos-custom-tree',
     templateUrl: './custom-tree.component.html'
 })
-export class CustomTreeComponent implements OnInit {
+export class CustomTreeComponent implements OnInit, OnDestroy {
     @Input() data: CustomTreeNode[];
     @Input() showDeleted: boolean;
 
     private w: number;
+    private _subscription: Subscription;
     // private data: CustomTreeNode[];
 
     constructor(
@@ -45,12 +47,11 @@ export class CustomTreeComponent implements OnInit {
 
     ngOnInit() {
         this.onResize();
-        this._dictSrv.openedNode$
+        this._subscription = this._dictSrv.openedNode$
             .subscribe((n) => {
-                if (!n) {
-                    return;
+                if (n) {
+                    this.setActiveNode(this.data, n.data.rec.DUE);
                 }
-                this.setActiveNode(this.data, n.data.rec.DUE);
             });
 
         const defaultRoot = this._dictSrv.currentDictionary.descriptor.defaultTreePath(this.data);
@@ -60,8 +61,9 @@ export class CustomTreeComponent implements OnInit {
             }, 100);
         }
     }
-    ngUnsubscribe(ngUnsubscribe: any): any {
-        // throw new Error("Method not implemented.");
+
+    ngOnDestroy() {
+        this._subscription.unsubscribe();
     }
 
     @HostListener('window:resize')
@@ -91,10 +93,14 @@ export class CustomTreeComponent implements OnInit {
 
 
     setActiveNode(treeData: CustomTreeNode[], id: any) {
-        const t = this.findTreeParent(treeData, id);
-        this.expandToSelected(t, treeData);
-        this.setActiveRecursive(treeData, false);
-        t.isActive = true;
+        if (id) {
+            const t = this.findTreeParent(treeData, id);
+            if (t) {
+                this.expandToSelected(t, treeData);
+                this.setActiveRecursive(treeData, false);
+                t.isActive = true;
+            }
+        }
     }
 
     setActiveRecursive(treeData: CustomTreeNode[], active: boolean) {

@@ -27,6 +27,7 @@ import { takeUntil } from 'rxjs/operators';
 import {CopyPropertiesComponent} from '../copy-properties/copy-properties.component';
 import { ExportImportClService } from 'app/services/export-import-cl.service';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
+import {CopyNodeComponent} from '../copy-node/copy-node.component';
 
 const ITEM_WIDTH_FOR_NAN = 100;
 @Component({
@@ -241,6 +242,12 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         this.modalWindow.content.init(node.data.rec, fromParent);
     }
 
+    openCopyNode(nodes: EosDictionaryNode[]) {
+        this.modalWindow = this._modalSrv.show(CopyNodeComponent, {
+            class: 'copy-node-modal moodal-lg'});
+        this.modalWindow.content.init(nodes);
+    }
+
     getMarkedTitles(): string[] {
         return this.nodes
             .filter((node) => node.isMarked)
@@ -370,8 +377,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             }
         }
         if ( changeList !== {} ) {
-            this._dictSrv.storeDBWeights(this._dictSrv.currentDictionary, changeList);
-            this.userOrdered(this.nodes);
+            this._dictSrv.storeDBWeights(this._dictSrv.currentDictionary, changeList).then(() => {
+                this.userOrdered(this.nodes);
+            });
         }
     }
 
