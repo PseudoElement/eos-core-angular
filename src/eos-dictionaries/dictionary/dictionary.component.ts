@@ -160,25 +160,25 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 this._nodeId = params.nodeId;
                 if (this.dictionaryId) {
                     this._dictSrv.openDictionary(this.dictionaryId)
-                        .then(() => {
-                            if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
-                                this.dictionary.root.children = null;
-                                const n: CustomTreeNode = this._dictSrv.currentDictionary.descriptor.setRootNode(this._nodeId);
-                                if (n) {
-                                    this.title = n.title;
-                                }
-                                this._dictSrv.setCustomNodeId(this._nodeId);
-                                this._dictSrv.selectCustomTreeNode().then ((data) => {
-                                });
-                            } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
-                                if (this._nodeId === '0.' ) {
-                                    this._nodeId = '';
-                                }
-                                this._dictSrv.selectTreeNode(this._nodeId);
-                            } else {
-                                this._dictSrv.selectTreeNode(this._nodeId);
+                    .then(() => {
+                        if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
+                            this.dictionary.root.children = null;
+                            const n: CustomTreeNode = this._dictSrv.currentDictionary.descriptor.setRootNode(this._nodeId);
+                            if (n) {
+                                this.title = n.title;
                             }
-                        });
+                            this._dictSrv.setCustomNodeId(this._nodeId);
+                            this._dictSrv.selectCustomTreeNode().then ((data) => {
+                            });
+                        } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
+                            if (this._nodeId === '0.' ) {
+                                this._nodeId = '';
+                            }
+                            this._dictSrv.selectTreeNode(this._nodeId);
+                        } else {
+                            this._dictSrv.selectTreeNode(this._nodeId);
+                        }
+                    });
                 }
             }
         });
@@ -279,7 +279,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         this.ngUnsubscribe.complete();
     }
 
-
+    onSetActiveNode(n) {
+        if (n) {
+            this.title = n.title;
+        }
+    }
     ngAfterViewInit() {
         this._treeScrollTop = this._sandwichSrv.treeScrollTop;
         this.treeEl.nativeElement.scrollTop = this._treeScrollTop;

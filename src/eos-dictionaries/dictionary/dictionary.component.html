@@ -16,6 +16,7 @@
             [showDeleted]="params.showDeleted"></eos-tree>
         <eos-custom-tree *ngIf="hasCustomTree && customTreeData"
                          [data]="customTreeData"
+                         (onSetActiveNode)="onSetActiveNode($event)"
                          [showDeleted]="params.showDeleted"></eos-custom-tree>
         <div class="fon highlighted"
             [style.width]="fonConf.width"

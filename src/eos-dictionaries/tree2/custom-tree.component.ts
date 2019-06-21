@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, HostListener, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
 import { Subscription } from 'rxjs';
@@ -31,6 +31,7 @@ export class CustomTreeNode {
 export class CustomTreeComponent implements OnInit, OnDestroy {
     @Input() data: CustomTreeNode[];
     @Input() showDeleted: boolean;
+    @Output() onSetActiveNode: EventEmitter<CustomTreeNode> = new EventEmitter<CustomTreeNode>();
 
     private w: number;
     private _subscription: Subscription;
@@ -99,6 +100,7 @@ export class CustomTreeComponent implements OnInit, OnDestroy {
                 this.expandToSelected(t, treeData);
                 this.setActiveRecursive(treeData, false);
                 t.isActive = true;
+                this.onSetActiveNode.emit(t);
                 this.setScrollIntoView(t.id);
             }
         }
