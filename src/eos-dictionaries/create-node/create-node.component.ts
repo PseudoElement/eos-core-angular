@@ -75,6 +75,7 @@ export class CreateNodeComponent {
                 if (res) {
                     this.upadating = true;
                     this._sendDataOnCreate(data, hide);
+                    this._dictSrv.currentTab = 0;
                 }
             });
     }

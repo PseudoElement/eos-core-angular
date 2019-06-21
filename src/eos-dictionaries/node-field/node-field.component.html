@@ -32,12 +32,17 @@
                 {{ decodeDictionary() }}
             </label>
         </ng-container>
-        <ng-container *ngSwitchDefault>
-            <div class="table-field-ico" *ngIf="hasIcon">
-                <span class="folder small eos-icon" (click)="viewNode($event)" [ngClass]="getIcon()"> </span>
+        <ng-container *ngSwitchCase="types.icon">
+            <div class="table-field-ico" *ngFor="let icon of iconsArray;">
+                <span class="folder small eos-icon"
+                    [ngClass]="icon.class"
+                    [tooltip]="icon.tooltip"
+                    placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay"></span>
             </div>
-            <div class="table-field-ico" *ngIf="field.key === 'CLASSIF_NAME' || field.foreignKey === 'CLASSIF_NAME'">
-                <span class="special small eos-icon" *ngIf="specialIcon()" [ngClass]="'eos-icon-checkbox-blue'"></span>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+            <div class="table-field-ico" *ngIf="hasFolderIcon">
+                <span class="folder small eos-icon" (click)="viewNode($event)" [ngClass]="getFolderIcon()"> </span>
             </div>
             <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ field.value }}

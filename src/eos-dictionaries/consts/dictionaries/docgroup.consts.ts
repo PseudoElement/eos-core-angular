@@ -1,7 +1,7 @@
 
 import { E_DICT_TYPE, ITreeDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { SEARCH_TYPES } from '../search-types';
-import {COMMON_FIELDS, COMMON_FIELD_CODE, COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_NOTE} from './_common';
+import {COMMON_FIELDS, COMMON_FIELD_CODE, COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_NOTE, COMMON_FIELD_ICONS, ICONS_CONTAINER} from './_common';
 import { ISelectOption } from 'eos-common/interfaces';
 
 export const RK_TYPE_OPTIONS_NODE: ISelectOption[] = [
@@ -43,6 +43,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         title: 'ID',
         length: 248,
     },
+    COMMON_FIELD_ICONS,
     Object.assign({}, COMMON_FIELD_CODE, {lenght: 10}),
     Object.assign({}, COMMON_FIELD_NOTE, {lenght: 100}),
     Object.assign({}, COMMON_FIELD_NAME, {lenght: 100, uniqueInDict: true, isUnique: true}),
@@ -153,6 +154,6 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     fullSearchFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME', 'DOCGROUP_INDEX', 'NOTE'],
     quickViewFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME', 'NOTE', 'DOCGROUP_INDEX', 'RC_TYPE' ],
     shortQuickViewFields: ['CLASSIF_NAME'],
-    listFields: ['CODE', 'CLASSIF_NAME'],
+    listFields: [ICONS_CONTAINER, 'CLASSIF_NAME'],
     allVisibleFields: ['NOTE', 'FULLNAME'],
 };

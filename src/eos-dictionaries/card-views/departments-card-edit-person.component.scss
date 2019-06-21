@@ -50,7 +50,7 @@
     .person-fullname textarea {
         height: 102px;
     }
-    .person-note textarea {
+    .text-shorter textarea {
         height: 80px;
     }
     .contact-wrapper {
@@ -93,20 +93,22 @@
             grid-column-end: 3;
             -ms-grid-row: 3;
             grid-row: 3;
-            -ms-grid-column-span: 3;
-            -ms-grid-column: 3;
-
+            -ms-grid-column-span: 2;
+            // -ms-grid-column: 1;
+            // grid-column: 1;
         }
         .skype {
             margin-left: 100px;
 
             -ms-grid-column-start: 2;
             grid-column-start: 2;
-            -ms-grid-column-end: 3;
+            -ms-grid-column-end: 4;
             grid-column-end: 4;
-            -ms-grid-row: 4;
+            -ms-grid-row: 3;
             grid-row: 3;
-            -ms-grid-column: 4;
+            -ms-grid-column-span: 2;
+            -ms-grid-column: 2;
+            // grid-column: 2;
         }
     }
     .alternate-button-wrapper {
