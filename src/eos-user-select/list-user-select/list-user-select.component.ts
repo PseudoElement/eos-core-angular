@@ -449,8 +449,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             if (this.countcheckedField > 0 && this.countcheckedField < leng) {
                 this.flagChecked = false;
             }
+            if (this.countcheckedField === 1) {
+                this.rtUserService.btnDisabled = true;
+            } else {
+                this.rtUserService.btnDisabled = false;
+            }
         }
-
     }
     filterForFlagChecked() {
         return this.listUsers.filter((user: UserSelectNode) => {

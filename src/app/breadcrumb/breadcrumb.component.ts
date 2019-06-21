@@ -105,7 +105,11 @@ export class BreadcrumbsComponent implements OnDestroy {
     }
 
     isNavigationEnabled(): boolean {
-        return (this._dictSrv.getMarkedNodes().length > 1);
+        if (this._breadcrumbsSrv.currentLink.url === '/user_param' && this._rtSrv.btnDisabled !== true) {
+            return true;
+        } else {
+            return (this._dictSrv.getMarkedNodes().length > 1);
+        }
     }
 
     isEditEnabled() {
