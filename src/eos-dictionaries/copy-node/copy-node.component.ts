@@ -21,7 +21,7 @@ export class CopyNodeComponent {
     inputs: any = {};
     title: string;
 
-    private _properties;
+    properties;
     private _nodes: EosDictionaryNode[];
 
     constructor(
@@ -117,7 +117,7 @@ export class CopyNodeComponent {
     }
 
     private _initProperties() {
-        this._properties = [
+        this.properties = [
             {
                 key: 'С_ONE_YEAR',
                 label: 'Текущее/Переходящее',
@@ -169,7 +169,7 @@ export class CopyNodeComponent {
             ]
         });
 
-        this._properties.forEach((prop) => {
+        this.properties.forEach((prop) => {
             this.inputs[prop.key] = new RadioInput({
                 key: prop.key,
                 label: prop.label,
