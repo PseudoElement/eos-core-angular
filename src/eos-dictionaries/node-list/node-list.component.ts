@@ -370,8 +370,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             }
         }
         if ( changeList !== {} ) {
-            this._dictSrv.storeDBWeights(this._dictSrv.currentDictionary, changeList);
-            this.userOrdered(this.nodes);
+            this._dictSrv.storeDBWeights(this._dictSrv.currentDictionary, changeList).then(() => {
+                this.userOrdered(this.nodes);
+            });
         }
     }
 

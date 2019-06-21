@@ -21,7 +21,7 @@ import {FieldsDecline} from 'eos-dictionaries/interfaces/fields-decline.inerface
 import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.interfaces';
 import {IImage} from 'eos-dictionaries/interfaces/image.interface';
 import {LS_PAGE_LENGTH, PAGES} from '../node-list-pagination/node-list-pagination.consts';
-import {WARN_NO_ORGANIZATION, WARN_NOT_ELEMENTS_FOR_REPRESENTATIVE, WARN_SEARCH_NOTFOUND, SUCCESS_SAVE} from '../consts/messages.consts';
+import {WARN_NO_ORGANIZATION, WARN_NOT_ELEMENTS_FOR_REPRESENTATIVE, WARN_SEARCH_NOTFOUND} from '../consts/messages.consts';
 import {EosMessageService} from 'eos-common/services/eos-message.service';
 import {EosStorageService} from 'app/services/eos-storage.service';
 import {EosDepartmentsService} from './eos-department-service';
@@ -74,6 +74,7 @@ export class EosDictService {
     private filters: any = {};
     private _cDue: string;
     private _currentScrollTop = 0;
+    private _weightOrdered: boolean;
 
 
     /* Observable dictionary for subscribing on updates in components */
@@ -120,8 +121,14 @@ export class EosDictService {
     }
 
     get userOrdered(): boolean {
-        return this.currentDictionary && this.currentDictionary.weightOrdered;
+        return this._weightOrdered;
+        // return this.currentDictionary && this.currentDictionary.weightOrdered;
     }
+
+    set userOrdered(value: boolean) {
+        this._weightOrdered = value;
+    }
+
     get treeNodeTitle(): any {
         return this._treeNode.title;
     }
@@ -247,7 +254,7 @@ export class EosDictService {
 
             return this._apiSrv.batch(changes, '')
                 .then(() => {
-                    this._msgSrv.addNewMessage(SUCCESS_SAVE);
+                    // this._msgSrv.addNewMessage(SUCCESS_SAVE);
                 })
                 .catch((err) => {
                     this._msgSrv.addNewMessage({ msg: err.message, type: 'danger', title: 'Ошибка записи' });
@@ -377,6 +384,21 @@ export class EosDictService {
     // May be need used always instead this._viewParameters$.next();
     // Because this.viewParametrs is and may be changed from other classes need way for share state
     updateViewParameters(updates?: any) {
+        if ( updates && updates.hasOwnProperty('userOrdered') ) {
+            console.log (updates );
+            this.userOrdered = updates.userOrdered;
+            const dictionary = this.currentDictionary;
+            if (dictionary) {
+                if (this.userOrdered) {
+                    dictionary.orderBy = {
+                        fieldKey: 'WEIGHT',
+                        ascend: true,
+                    };
+                } else {
+                    dictionary.orderSetDefault();
+                }
+            }
+        }
         Object.assign(this.viewParameters, updates);
         this._viewParameters$.next(this.viewParameters);
     }
@@ -779,12 +801,12 @@ export class EosDictService {
     }
 
     toggleWeightOrder(value?: boolean) {
-        const dictionary = this.currentDictionary;
 
         this.updateViewParameters({
             userOrdered: (value === undefined) ? !this.viewParameters.userOrdered : value
         });
 
+        const dictionary = this.currentDictionary;
         if (dictionary) {
             if (this.viewParameters.userOrdered) {
                 dictionary.orderBy = {

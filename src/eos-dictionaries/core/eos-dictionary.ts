@@ -48,14 +48,6 @@ export class EosDictionary {
         return this._nodes;
     }
 
-    get weightOrdered(): boolean {
-        return this._orderBy.fieldKey === 'WEIGHT';
-    }
-
-    // set weightOrdered(userOrdered: boolean) {
-    //     this._userOrdered = userOrdered;
-    // }
-
     set orderBy(order: IOrderBy) {
         this._orderBy = order;
     }

@@ -225,7 +225,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 if (dictionary) {
                     this.dictMode = this._dictSrv.dictMode;
                     const setParams = this.params === undefined;
-                    this.params = Object.assign({}, this.params, {userSort: dictionary.weightOrdered});
+                    this.params = Object.assign({}, this.params, {userSort: this._dictSrv.userOrdered});
                     this.params.markItems = dictionary.canDo(E_RECORD_ACTIONS.markRecords);
                     if (setParams) {
                         this.params.hideTopMenu = dictionary.descriptor.hideTopMenu;

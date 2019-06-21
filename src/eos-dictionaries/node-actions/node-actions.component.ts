@@ -133,6 +133,7 @@ export class NodeActionsComponent implements OnDestroy {
         let _active = false;
         let _show = false;
         let due = null;
+        let _isWriteAction = true;
 
 
         if (this.dictionary && this._viewParams && this._dictSrv) {
@@ -190,6 +191,7 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.userOrder:
                     _enabled = _enabled && !this._viewParams.searchResults;
                     _active = this._viewParams.userOrdered;
+                    _isWriteAction = false;
                     break;
                 case E_RECORD_ACTIONS.showAllSubnodes:
                     _enabled = _enabled && !this._viewParams.searchResults;
@@ -246,7 +248,7 @@ export class NodeActionsComponent implements OnDestroy {
         const is_granted = (button.accessNeed <= grant);
 
         button.show = _show;
-        button.enabled = _enabled && is_granted;
+        button.enabled = _enabled && (!_isWriteAction || is_granted);
         button.isActive = _active;
     }
 
