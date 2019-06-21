@@ -13,7 +13,6 @@ import { TreeUserSelectComponent } from './tree-user-select/tree-user-select.com
 import { ListUserSelectComponent } from './list-user-select/list-user-select.component';
 import { CreateUserComponent } from './list-user-select/createUser/createUser.component';
 import {RightUserSelectComponent} from './right-user-select/right-user-select.component';
-import {DepartUserSelectComponent} from './depart-user-select/depart-user-select.component';
 import {UserSystemComponent} from './user-system/user-system.component';
 import {BtnActionComponent} from './btn-action/btn-action.component';
 import { UserSearchComponent } from './user-search/user-search.component';
@@ -29,7 +28,6 @@ import {SearchServices} from '../eos-user-select/shered/services/search.service'
         ListUserSelectComponent,
         CreateUserComponent,
         RightUserSelectComponent,
-        DepartUserSelectComponent,
         UserSystemComponent,
         BtnActionComponent,
         UserSearchComponent,
