@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, AfterContentChecked } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
@@ -32,7 +32,8 @@ interface TypeBread {
     selector: 'eos-list-user-select',
     templateUrl: 'list-user-select.component.html'
 })
-export class ListUserSelectComponent implements OnDestroy, OnInit {
+export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentChecked {
+    @ViewChild('listContent') listContent;
     currentState: boolean[];
     createUserModal: BsModalRef;
     listUsers: UserSelectNode[];
@@ -51,12 +52,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     countcheckedField: number;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
+        public rtUserService: RtUserSelectService,
         public _apiSrv: UserParamApiSrv,
         private _modalSrv: BsModalService,
         private _pagSrv: UserPaginationService,
         private _route: ActivatedRoute,
         private _router: Router,
-        private rtUserService: RtUserSelectService,
         private _sandwichSrv: EosSandwichService,
         private _treeSrv: TreeUserSelectService,
         private _confirmSrv: ConfirmWindowService,
@@ -67,6 +68,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private _appContext: AppContext,
         private _errorSrv: ErrorHelperServices,
     ) {
+
+    }
+    ngOnInit() {
+        this.buttons = Allbuttons;
+        this.rtUserService.flagDeleteScroll = true;
+        this.rtUserService.flagDeleteSelectedUser = true;
         this.checkFlagTech();
         this.helpersClass = new HelpersSortFunctions();
         this._apiSrv.initSort();
@@ -90,7 +97,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 } else {
                     this.selectedNode(null);
                 }
-                this.updateFlafListen();
+                this._storage.removeItem('main_scroll');
+                this.listContent.nativeElement.scrollTop = 0;
+                // this.updateFlafListen();
             });
 
         this._treeSrv.changeListUsers$
@@ -98,6 +107,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe(r => {
+                this._storage.removeItem('selected_user_save');
                 this.initView();
             });
         this._sandwichSrv.currentDictState$
@@ -130,6 +140,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             });
     }
 
+    ngAfterContentChecked () {
+        if (this._storage.getItem('main_scroll')) {
+            this.listContent.nativeElement.scrollTop = this._storage.getItem('main_scroll');
+        }
+    }
     checkFlagTech() {
         const arrThech = this._appContext.CurrentUser.USER_TECH_List;
         const flag = arrThech.some((el: USER_TECH) => {
@@ -195,13 +210,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                     * this._pagSrv.paginationConfig.length);
                 if (this.listUsers && this.listUsers.length) {
                     this.selectedNode(this.findSelectedSaveUsers()[0] ? this.findSelectedSaveUsers()[0] : this.listUsers[0]);
-                    this._storage.removeItem('selected_user_save');
+                //    this._storage.removeItem('selected_user_save');
                 } else {
                     this.selectedNode(null);
                 }
-                this.updateFlafListen();
+                //  this.updateFlafListen();
                 this.isLoading = false;
                 this.countMaxSize = this._pagSrv.countMaxSize;
+
             }).catch(error => {
                 this._errorSrv.errorHandler(error);
             });
@@ -225,15 +241,16 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             return false;
         }
     }
-    ngOnInit() {
-        this.buttons = Allbuttons;
-    }
+
     ngOnDestroy() {
+        if (this.rtUserService.flagDeleteScroll && this.rtUserService.flagDeleteSelectedUser) {
+            this._storage.removeItem('main_scroll');
+        }
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
     }
 
-    selectedNode(user: UserSelectNode) {
+    selectedNode(user: UserSelectNode, flag?) {
         let flagUserSelected: boolean = true;
         if (!user) {
             this.rtUserService.changeSelectedUser(null);
@@ -242,6 +259,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             if (!user.deleted) {
                 this.resetFlags();
                 this.selectedNodeSetFlags(user);
+                if (flag) {
+                     flag = false;
+                }
                 this.rtUserService.changeSelectedUser(user);
             } else {
                 const searchSelected = this.listUsers.filter(userList => {
@@ -250,12 +270,18 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 if (searchSelected.length > 0) {
                     this.selectedNodeSetFlags(searchSelected[0]);
                     this.rtUserService.changeSelectedUser(searchSelected[0]);
+                    if (flag) {
+                        flag = false;
+                   }
                 } else {
                     flagUserSelected = false;
                     if (this.selectedUser && this.selectedUser.hasOwnProperty('isSelected')) {
                         this.selectedUser.isSelected = false;
                     }
                     this.rtUserService.changeSelectedUser(null);
+                    if (flag) {
+                        flag = true;
+                   }
                 }
             }
         }
@@ -288,7 +314,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
         }
         if (this.selectedUser && !this.selectedUser.deleted) {
-            this._storage.setItem('selected_user_save', this.selectedUser, false);
+            this._storage.setItem('selected_user_save', this.selectedUser);
+            this.rtUserService.flagDeleteScroll = false;
             this._router.navigate(['user-params-set'], {
                 queryParams: { isn_cl: this.selectedUser.id }
             });
@@ -334,7 +361,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.goSortList();
     }
     goSortList(pageList?) {
-        console.log(this._pagSrv.UsersList, this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun, this._apiSrv.currentSort);
         this._pagSrv.UsersList = this.helpersClass.sort(this._pagSrv.UsersList, this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun, this._apiSrv.currentSort);
         this._pagSrv._initPaginationConfig(true);
         this._pagSrv.changePagination(this._pagSrv.paginationConfig);
@@ -395,8 +421,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 queryParams: { isn_cl: this.selectedUser.id }
             }
         );
-        // this._confirmSrv.confirm(CONFIRM_SCANSYST).then(res => {
-        // });
     }
     setCheckedAllFlag() {
         const leng = this.filterForFlagChecked().length;
@@ -418,6 +442,21 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
         });
         this.updateFlafListen();
+        if (this.countcheckedField === 0) {
+            this.rtUserService.changeSelectedUser(null);
+            if (this.selectedUser) {
+                this.selectedUser.isSelected = false;
+            }
+        } else {
+            const checkUser = this.getCheckedUsers();
+            if (this.selectedUser) {
+                this.selectedUser.isSelected = false;
+            }
+            this.selectedUser = checkUser[0];
+            this.selectedUser.isSelected = true;
+            this.rtUserService.changeSelectedUser(this.selectedUser);
+            this.rtUserService.flagDeleteSelectedUser = true;
+        }
         this.disabledBtnDeleted();
     }
 
@@ -427,10 +466,32 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         } else {
             user.isChecked = !user.isChecked;
         }
-        this.selectedUser.isSelected = false;
-        this.selectedUser = user;
+        if (this.selectedUser) {
+            this.selectedUser.isSelected = false;
+        }
+        if (event.target.checked) {
+            this.rtUserService.changeSelectedUser(user);
+            this.selectedUser = user;
+            this.rtUserService.flagDeleteSelectedUser = false;
+        } else {
+            const chekUsers = this.getCheckedUsers();
+            if (chekUsers.length) {
+                this.selectedUser = chekUsers[0];
+                this.rtUserService.changeSelectedUser(chekUsers[0]);
+                this.rtUserService.flagDeleteSelectedUser = false;
+            } else {
+                this.selectedUser = undefined;
+                this.rtUserService.changeSelectedUser(null);
+                this.rtUserService.flagDeleteSelectedUser = true;
+            }
+        }
         this.updateFlafListen();
         this.disabledBtnDeleted();
+    }
+    getCheckedUsers() {
+        return this.listUsers.filter((user: UserSelectNode) => {
+            return user.isChecked || user.isSelected || user.selectedMark;
+        });
     }
 
     updateFlafListen() {
@@ -487,8 +548,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.selectedNode(this.listUsers[0]);
             } else {
                 this.selectedUser = undefined;
+                this.updateFlafListen();
             }
-            this.updateFlafListen();
             this.isLoading = false;
         }).catch(error => {
             error.message = 'Не удалось заблокировать пользователя,  обратитесь к системному администратору';
@@ -560,6 +621,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._pagSrv.changePagination(this._pagSrv.paginationConfig);
         this.countMaxSize = this._pagSrv.countMaxSize;
     }
+    savePositionSelectUser($event) {
+        this._storage.setItem('main_scroll', $event.target.scrollTop);
+    }
 
     private cathError(e) {
         if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
@@ -593,11 +657,17 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
 
     private disabledBtnDeleted() {
         if (this.countcheckedField === 0) {
+            this.buttons.buttons[1].disabled = true;
             this.buttons.buttons[2].disabled = true;
             this.buttons.buttons[3].disabled = true;
+            this.buttons.buttons[4].disabled = true;
+            this.buttons.buttons[6].disabled = true;
         } else {
+            this.buttons.buttons[1].disabled = false;
             this.buttons.buttons[2].disabled = false;
             this.buttons.buttons[3].disabled = false;
+            this.buttons.buttons[4].disabled = false;
+            this.buttons.buttons[6].disabled = false;
         }
     }
 
