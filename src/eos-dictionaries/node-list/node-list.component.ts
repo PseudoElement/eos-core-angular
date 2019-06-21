@@ -29,7 +29,6 @@ import { ExportImportClService } from 'app/services/export-import-cl.service';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
 
 const ITEM_WIDTH_FOR_NAN = 100;
-
 @Component({
     selector: 'eos-node-list',
     templateUrl: 'node-list.component.html',
@@ -311,21 +310,45 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         }
     }
 
+    _nodesSwap(changeList: {}, i1: number, i2: number): any {
+        const item1 = this.nodes[i1];
+        const item2 = this.nodes[i2];
+        let w1 = item1.data.rec['WEIGHT'];
+        let w2 = item2.data.rec['WEIGHT'];
+        const signedOne = (i1 > i2 ? -1 : 1);
+
+        if (w1 === w2) {
+            w1 += signedOne;
+        }
+
+        if (w1 === 0) { w1 += signedOne; }
+        if (w2 === 0) { w2 -= signedOne; }
+
+        item1.data.rec['WEIGHT'] = w2;
+        item2.data.rec['WEIGHT'] = w1;
+
+        changeList[item1.id] = item1.data.rec['WEIGHT'];
+        changeList[item2.id] = item2.data.rec['WEIGHT'];
+
+        this.nodes[i1] = item2;
+        this.nodes[i2] = item1;
+    }
+
     moveUp(): void {
+        const changeList = {};
+
         if (!this._dictSrv.viewParameters.showAllSubnodes) {
             for (let i = 0; i < this.nodes.length; i++) {
-                const element = this.nodes[i];
-                if (element.isMarked) {
+                const item1 = this.nodes[i];
+                if (item1.isMarked) {
                     if (i > 0) {
-                        const item = this.nodes[i - 1];
-                        if (!item.isMarked) {
-                            this.nodes[i - 1] = this.nodes[i];
-                            this.nodes[i] = item;
+                        const item2 = this.nodes[i - 1];
+                        if (!item2.isMarked) {
+                            this._nodesSwap(changeList, i, i - 1);
                         }
                     }
                 }
             }
-            this.userOrdered(this.nodes);
         } else {
             for (let m = 0; m < this.nodes.length; m++) {
                 const element = this.nodes[m];
@@ -337,8 +360,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                             if (targ_idx >= 0) {
                                 const item = this.nodes[targ_idx];
                                 if (!item.isMarked) {
-                                    this.nodes[targ_idx] = this.nodes[m];
-                                    this.nodes[m] = item;
+                                    this._nodesSwap(changeList, targ_idx, m);
                                 }
                             }
                             break;
@@ -346,11 +368,16 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                     }
                 }
             }
+        }
+        if ( changeList !== {} ) {
+            this._dictSrv.storeDBWeights(this._dictSrv.currentDictionary, changeList);
             this.userOrdered(this.nodes);
         }
     }
 
     moveDown(): void {
+        const changeList = {};
+
         if (!this._dictSrv.viewParameters.showAllSubnodes) {
             for (let i = this.nodes.length - 1; i >= 0; i--) {
                 const element = this.nodes[i];
@@ -358,13 +385,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                     if (i < this.nodes.length - 1) {
                         const item = this.nodes[i + 1];
                         if (!item.isMarked) {
-                            this.nodes[i + 1] = this.nodes[i];
-                            this.nodes[i] = item;
+                            this._nodesSwap(changeList, i, i + 1);
                         }
                     }
                 }
             }
-            this.userOrdered(this.nodes);
         } else {
             for (let m = this.nodes.length - 1; m >= 0; m--) {
                 const element = this.nodes[m];
@@ -376,8 +401,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                             if (targ_idx < this.nodes.length) {
                                 const item = this.nodes[targ_idx];
                                 if (!item.isMarked) {
-                                    this.nodes[targ_idx] = this.nodes[m];
-                                    this.nodes[m] = item;
+                                    this._nodesSwap(changeList, targ_idx, m);
                                 }
                             }
                             break;
@@ -385,6 +409,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                     }
                 }
             }
+        }
+        if ( changeList !== {} ) {
+            this._dictSrv.storeDBWeights(this._dictSrv.currentDictionary, changeList);
             this.userOrdered(this.nodes);
         }
     }

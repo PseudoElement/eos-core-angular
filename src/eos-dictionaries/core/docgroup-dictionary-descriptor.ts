@@ -6,7 +6,6 @@ import {CONFIRM_DOCGROUP_CHECK_DUPLINDEXES} from '../consts/confirm.consts';
 import {PipRX} from '../../eos-rest';
 
 const RC_TYPE = 'RC_TYPE';
-const RC_TYPE_NODE = 'RC_TYPE_NODE';
 const DOCGROUP_INDEX = 'DOCGROUP_INDEX';
 const ISN_NODE = 'ISN_NODE';
 const inheritFiields = [RC_TYPE, DOCGROUP_INDEX, 'ACCESS_MODE', 'ACCESS_MODE_FIXED', 'SHABLON', 'PRJ_SHABLON'];
@@ -17,7 +16,6 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
         EosUtils.deepUpdate(newPreset, preSetData);
         if (parentNode) {
             inheritFiields.forEach((f) => this._fillParentField(newPreset, parentNode.data, f));
-            Object.assign(newPreset['rec'], {[RC_TYPE_NODE]: this._getRecField(newPreset, RC_TYPE)});
         }
         return super.getNewRecord(newPreset, parentNode);
     }
@@ -25,7 +23,6 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
     getData(query?: any, order?: string, limit?: number): Promise<any[]> {
         return super.getData(query, order, limit)
             .then((data) => {
-                data.forEach((d) => d[RC_TYPE_NODE] = d[RC_TYPE]);
                 return data;
             });
     }

@@ -63,7 +63,28 @@
                     <a [routerLink]="['/user-params-set','base-param']" [queryParams]="{'isn_cl': CurrentUser.id}">{{CurrentUser.login}}</a>
                 </div>
             </div>
-            <eos-depart-user-select [showComponent]="showDep" [department]="departmentInfo"></eos-depart-user-select>
+            <!-- Разобраться с этим компонентом
+
+            <eos-depart-user-select [showComponent]="showDep" [department]="departmentInfo"></eos-depart-user-select>-->
+            <div class="rt-info" *ngIf="showDep">
+                <div class="info-wr">
+                    <div class="info-job">
+                        <span class="rt-grey">ДОЛЖНОСТЬ</span>
+                        <span class="rt-black">{{departmentInfo.FULLNAME || departmentInfo.DUTY || 'Не указана'}}</span>
+                    </div>
+                    <div class="info-pfone">
+                        <span class="rt-grey">ТЕЛЕФОН</span>
+                        <span class="rt-black">{{departmentInfo.PHONE ? departmentInfo.PHONE : departmentInfo.PHONE_LOCAL ? departmentInfo.PHONE_LOCAL : 'Не указан'}}</span>
+                    </div>
+                    <div class="info-mail">
+                        <span class="rt-grey">E-MAIL</span>
+                        <a *ngIf='departmentInfo.E_MAIL' href="mailto:{{departmentInfo.E_MAIL}}">{{departmentInfo.E_MAIL}}</a>
+                        <span class="rt-black" *ngIf='!departmentInfo.E_MAIL' >Не указан</span>
+                    </div>
+                </div>
+                <ng-content ></ng-content>
+            </div>
+            
             <div class="rt-sustem">
                 <div class="sustem-tab-rw" (click)='openedSustem()'>
                     <span class="sustem-title">ДОСТУП К СИСТЕМАМ</span>

@@ -1,15 +1,21 @@
-import { DOCGROUP_DICT } from './../consts/dictionaries/docgroup.consts';
-import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { IFieldView, E_FIELD_TYPE } from '../interfaces';
 import { HintConfiguration } from '../long-title-hint/hint-configuration.interface';
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
 
+
+interface ISpecialIcon {
+    class: string;
+    tooltip: string;
+}
+
 @Component({
     selector: 'eos-node-field',
     templateUrl: 'node-field.component.html'
 })
+
+
 export class NodeFieldComponent implements OnInit {
     @Input() field: IFieldView;
     @Input() node: EosDictionaryNode;
@@ -20,7 +26,8 @@ export class NodeFieldComponent implements OnInit {
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     types = E_FIELD_TYPE;
     length = {};
-    private _hasIcon: boolean;
+    iconsArray: ISpecialIcon[] = [];
+    private _hasFolderIcon: boolean;
 
     constructor() {
     }
@@ -30,9 +37,24 @@ export class NodeFieldComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this._hasIcon = this.node.dictionary.isTreeType() && (this.field.key === 'CLASSIF_NAME' || this.field.foreignKey === 'CLASSIF_NAME')
-            && (this.node.dictionary.id === DEPARTMENTS_DICT.id || this.node.dictionary.id === DOCGROUP_DICT.id);
-        // this._hasIcon = this.node.isNode && (this.field.key === 'CLASSIF_NAME' || this.field.foreignKey === 'CLASSIF_NAME');
+        this._hasFolderIcon = this.node.dictionary.isTreeType() && (this.field.key === 'CLASSIF_NAME' || this.field.foreignKey === 'CLASSIF_NAME');
+
+        if (this.field.type === E_FIELD_TYPE.icon) {
+            if (this.node.data.rec['CARD_FLAG']) {
+                this.iconsArray.push({
+                    class: this.node.isDeleted ? 'eos-icon-card-index-grey' : 'eos-icon-card-index-blue',
+                    tooltip: 'Картотека',
+                });
+            }
+
+            if (this.node.data.rec['DOCNUMBER_FLAG'] || this.node.data.rec['NUMCREATION_FLAG']) {
+                this.iconsArray.push({
+                    class: this.node.isDeleted ? 'eos-icon-checkbox-grey' : 'eos-icon-checkbox-blue',
+                    tooltip: 'Номерообразование',
+                });
+            }
+
+        }
     }
 
     currentValue(): string {
@@ -72,34 +94,18 @@ export class NodeFieldComponent implements OnInit {
         return this.field.value;
     }
 
-    specialIcon () {
-        if (this.node.data.rec['DOCNUMBER_FLAG'] || this.node.data.rec['NUMCREATION_FLAG']) {
-            return true;
-        }
-        return false;
+    get hasFolderIcon(): boolean {
+        return this._hasFolderIcon;
     }
 
-    get hasIcon(): boolean {
-        return this._hasIcon;
-    }
-
-    getIcon() {
+    public getFolderIcon() {
         if (this.node.isNode) {
             if (this.node.isDeleted) {
-                if (this.node.data.rec['CARD_FLAG']) {
-                    return 'eos-icon-card-index-grey';
-                } else {
                     return 'eos-icon-folder-grey';
-                }
             } else {
-                if (this.node.data.rec['CARD_FLAG']) {
-                    return 'eos-icon-card-index-blue';
-                } else {
                     return 'eos-icon-folder-blue';
-                }
             }
-        } else {
-            return 'emptyicon';
         }
+        return 'emptyicon';
     }
 }

@@ -104,6 +104,10 @@ export class BreadcrumbsComponent implements OnDestroy {
         return !this._sandwichSrv.treeIsBlocked;
     }
 
+    isNavigationEnabled(): boolean {
+        return (this._dictSrv.getMarkedNodes().length > 1);
+    }
+
     isEditEnabled() {
         if (this.routeName === -1) {
             if (!this._dictSrv.currentDictionary) {

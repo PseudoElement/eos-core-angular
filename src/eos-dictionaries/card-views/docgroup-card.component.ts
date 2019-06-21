@@ -2,7 +2,8 @@ import {Component, Injector, OnChanges, OnInit, SimpleChanges} from '@angular/co
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DocgroupTemplateConfigComponent } from '../docgroup-template-config/docgroup-template-config.component';
-import {Validators} from '@angular/forms';
+import { Validators } from '@angular/forms';
+import { RK_TYPE_OPTIONS } from '../consts/dictionaries/docgroup.consts';
 
 const AUTO_REG_EXPR = /\{(9|A|B|C|@|1#|2#|3#)\}/;
 const UNIQ_CHECK_EXPR = /\{2|E\}/;
@@ -49,6 +50,8 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
 
     ngOnChanges(changes: SimpleChanges) {
         if (this.form) {
+            this._setRcTypeOptions();
+
             this.unsubscribe();
             this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this.updateForm(formChanges));
         }
@@ -93,25 +96,20 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         }
     }
 
+    private _setRcTypeOptions() {
+        const rkTypeInput = this.inputs['rec.RC_TYPE'];
+        if (rkTypeInput && !this.isNode) {
+                rkTypeInput.options = RK_TYPE_OPTIONS;
+        }
+    }
+
     private updateForm(formChanges: any) {
         this.unsubscribe();
         const updates = {};
 
         const tpl = formChanges['rec.SHABLON'];
 
-        let isRcTypeChanged = this._isChanged('rec.RC_TYPE', formChanges);
-
-        if (!this.isNode) {
-            if (this._isChanged('rec.RC_TYPE_NODE', formChanges)) {
-                this.setValue('rec.RC_TYPE', this.getValue('rec.RC_TYPE_NODE'));
-                isRcTypeChanged = true;
-            }
-        } else {
-            if (this._isChanged('rec.RC_TYPE', formChanges)) {
-                this.setValue('rec.RC_TYPE_NODE', this.getValue('rec.RC_TYPE'));
-                isRcTypeChanged = true;
-            }
-        }
+        const isRcTypeChanged = this._isChanged('rec.RC_TYPE', formChanges);
 
         if (isRcTypeChanged) {
             if (this.rcType * 1 === 3) {
@@ -134,15 +132,12 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         }
 
         this._setRequired('rec.PRJ_SHABLON', !this.isNode && this.isPrjFlag);
-        // TODO: избавиться от костыля в виде RC_TYPE_NODE
 
         // toggle auto register flag
         this.toggleInput(this.isPrjFlag && !AUTO_REG_EXPR.test(tpl), 'rec.PRJ_AUTO_REG', formChanges, updates);
 
         // toggle auto remove flag
         this.toggleInput(this.isPrjFlag, 'rec.PRJ_DEL_AFTER_REG', formChanges, updates);
-
-        this.setValue('rec.RC_TYPE_NODE', this.getValue('rec.RC_TYPE'));
 
         if (this.eDocument && this.getValue('rec.IS_COPYCOUNT')) {
             this.setValue('rec.IS_COPYCOUNT', false);

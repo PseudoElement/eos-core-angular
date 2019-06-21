@@ -36,6 +36,7 @@ export class CopyPropertiesComponent implements OnDestroy {
     formValid: boolean;
     fromParent: boolean;
     title: string;
+    saveButtonLabel: string;
     private rec_to;
     private rec_from;
     private properties;
@@ -63,11 +64,13 @@ export class CopyPropertiesComponent implements OnDestroy {
 
         if (this.fromParent) {
             this.title = 'Обновить свойства подчиненных групп документов';
+            this.saveButtonLabel = 'Обновить';
             this._initPropertiesFromParent();
             this._initInputs();
             this.isUpdating = false;
         } else {
             this.title = 'Копирование свойств группы документов';
+            this.saveButtonLabel = 'Копировать';
             this._initProperties();
             this._initInputs();
             this._chooseDocGroup();
@@ -115,7 +118,7 @@ export class CopyPropertiesComponent implements OnDestroy {
                 label: 'Правила заполнения реквизитов РК по умолчанию',
             }, {
                 key: 'a_mand_rek',
-                label: 'Перечень реквизитов РК, обязазательных для заполнения',
+                label: 'Перечень реквизитов РК, обязательных для заполнения',
             }, {
                 key: 'a_write_rek',
                 label: 'Правила заполнения реквизитов РК при записи',
@@ -202,7 +205,11 @@ export class CopyPropertiesComponent implements OnDestroy {
     }
 
     private _chooseDocGroup() {
-        this._waitClassif.openClassif({classif: CLASSIF_NAME, selectMulty: false}, true)
+        this._waitClassif.openClassif({
+            classif: CLASSIF_NAME,
+            selectMulty: false,
+            skipDeleted: false,
+        }, true)
             .then((isn) => {
                 if (isn) {
                     if (this.rec_to.ISN_NODE.toString() === isn) {

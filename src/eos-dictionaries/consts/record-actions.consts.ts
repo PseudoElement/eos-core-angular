@@ -349,8 +349,8 @@ const RECORD_ACTION_EXPORT_DIRECTORY: IAction = {
 const RECORD_COPY_PROPERTIES: IAction = {
     type: E_RECORD_ACTIONS.copyProperties,
     group: E_ACTION_GROUPS.item,
-    title: 'Копирование свойства',
-    hint: 'Копирование свойства',
+    title: 'Копировать свойства',
+    hint: 'Копировать свойства',
     iconClass: 'eos-icon eos-icon-clip-blue small',
     disabledIconClass: 'eos-icon eos-icon-clip-grey small',
     activeIconClass: '',
