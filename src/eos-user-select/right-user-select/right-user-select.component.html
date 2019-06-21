@@ -60,7 +60,7 @@
                 </div>
                 <div class="is-user">
                     <span class="is-user-title">Логин</span>
-                    <a [routerLink]="['/user-params-set','base-param']" [queryParams]="{'isn_cl': CurrentUser.id}">{{CurrentUser.login}}</a>
+                    <a (click)="goToLogin()" [routerLink]="['/user-params-set','base-param']" [queryParams]="{'isn_cl': CurrentUser.id}">{{CurrentUser.login}}</a>
                 </div>
             </div>
             <!-- Разобраться с этим компонентом
@@ -84,7 +84,7 @@
                 </div>
                 <ng-content ></ng-content>
             </div>
-            
+
             <div class="rt-sustem">
                 <div class="sustem-tab-rw" (click)='openedSustem()'>
                     <span class="sustem-title">ДОСТУП К СИСТЕМАМ</span>
