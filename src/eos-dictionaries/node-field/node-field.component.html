@@ -13,34 +13,38 @@
             ></span>
         </div>
         <ng-container *ngSwitchCase="types.select">
-            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ currentValue() }}
             </label>
         </ng-container>
         <ng-container *ngSwitchCase="types.buttons">
-            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ currentValue() }}
             </label>
         </ng-container>
         <ng-container *ngSwitchCase="types.date">
-            <label class="fieldlabel" [tooltip]=" field.value | eosDate " placement="auto" container="body" containerClass="tooltip-info">
+            <label class="fieldlabel" [tooltip]=" field.value | eosDate " placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ field.value | eosDate }}
             </label>
         </ng-container>
         <ng-container *ngSwitchCase="types.dictionary">
-            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ decodeDictionary() }}
             </label>
         </ng-container>
+        <ng-container *ngSwitchCase="types.icon">
+            <div class="table-field-ico" *ngFor="let icon of iconsArray;">
+                <span class="folder small eos-icon"
+                    [ngClass]="icon.class"
+                    [tooltip]="icon.tooltip"
+                    placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay"></span>
+            </div>
+        </ng-container>
         <ng-container *ngSwitchDefault>
-            <div class="table-field-ico" *ngIf="hasIcon">
-                <span class="folder small eos-icon" (click)="viewNode($event)" [ngClass]="getIcon()"> </span>
+            <div class="table-field-ico" *ngIf="hasFolderIcon">
+                <span class="folder small eos-icon" (click)="viewNode($event)" [ngClass]="getFolderIcon()"> </span>
             </div>
-            <div class="table-field-ico" *ngIf="field.key === 'CLASSIF_NAME' || field.foreignKey === 'CLASSIF_NAME'">
-                <span class="special small eos-icon" *ngIf="specialIcon()" [ngClass]="'eos-icon-checkbox-blue'"></span>
-            </div>
-
-            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info">
+            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ field.value }}
             </label>
         </ng-container>

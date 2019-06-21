@@ -46,7 +46,8 @@
 .head-protocol{
    height: 500px;
    min-width: 600px;
-   top: 508px !important;
+   position: relative;
+   top: 370px !important;
    border-radius: 0;
    .popover-content{
        padding: 0 !important;

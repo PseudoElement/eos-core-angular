@@ -183,3 +183,76 @@
 .teh-p {
     font-size: 15px;
 }
+
+.cabinet-user-wr{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    color: #2196f3;
+    .cabinet-title{
+        cursor: pointer;
+        line-height: 32px;
+        font-size: 14px;
+        overflow: hidden;
+        margin-right: 20px;
+    }
+    .icon_key{
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.rt-info{
+    width: 100%;
+    border-bottom:  1px solid #e6e6e6;
+    .info-wr{
+        display: flex;
+        flex-direction: column;
+        .info-job, .info-role, .info-pfone, .info-mail, .info-note{
+            flex-direction: column;
+            display: flex;
+            text-transform: uppercase;
+            .rt-grey{
+                color: #646464;
+                line-height: 10px;
+                text-transform: initial;
+                margin-bottom: 8px;
+            }
+            .rt-black{
+                cursor: default;
+                color: #000000;
+                overflow: hidden;
+                line-height: 32px;
+                text-transform: initial;
+            }
+            .rt-blue{
+                color: #2196f3;
+                text-transform: lowercase;
+            }
+            .email-tittle{
+                color: #646464;
+                text-transform: initial;
+            }
+        }
+        .info-mail{
+            margin-bottom: 8px;
+            a{
+                display: block;
+                width: 100%;
+                overflow: hidden;
+
+            }
+        }
+        .info-pfone, .info-mail{
+            padding: 20px 0px 0px 0px;
+        }
+    }
+}
+.border{
+    width: calc(100% - 40px);
+    padding: 0 20px;
+    height: 1px;
+    margin: 0 auto;
+    background-color: #bababa;
+}

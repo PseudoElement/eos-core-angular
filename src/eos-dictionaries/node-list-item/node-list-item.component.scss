@@ -9,6 +9,11 @@
         //text-overflow: ellipsis;
     }
     .node-list-item {
+        &.deleted {
+            label {
+                color: $disabled-color-main-theme;
+            }
+        }
         overflow: hidden;
         min-height: 32px;
         display: inline-flex;

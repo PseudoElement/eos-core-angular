@@ -20,35 +20,9 @@
             justify-content: flex-start;
             cursor: pointer;
             color: #2196f3;
-            margin-left: 20px;
+            margin-left: 17px;
             >span {
                 margin-left: 8px;
-            }
-        }
-    }
-    .eos-node-list {
-        background: $white;
-        max-height: calc(100vh - 371px);
-        .user-select-node {
-            line-height: 30px;
-            cursor: pointer;
-        }
-        .user-select-node-t {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            width: calc(100% - 52px);
-            span {
-                padding-left: 5px;
-                box-sizing: border-box;
-            }
-        }
-        .user-select-empty-list {
-            margin-left: 20px;
-        }
-        .user-item {
-            &:hover {
-                background-color: #e3f2fd
             }
         }
     }
@@ -156,5 +130,49 @@
     }
     .dropdown-menu {
         width: 355px;
+    }
+    .pos-depart{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 39%;
+    }
+    .dep-width{
+        margin-left: 13px !important;
+        width: 110px;
+    }
+    .mar-left {
+        margin-left: 13px;
+    }
+    .list-user-sel {
+        position: relative;
+        background: $white;
+        overflow: auto;
+        max-height: calc(100vh - 371px);
+        .user-select-node {
+            line-height: 30px;
+            cursor: pointer;
+        }
+        .user-select-node-t {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: calc(100% - 52px);
+            span {
+                padding-left: 5px;
+                box-sizing: border-box;
+            }
+        }
+        .user-select-empty-list {
+            margin-left: 20px;
+        }
+        .user-item {
+            &:hover {
+                background-color: #e3f2fd
+            }
+        }
+    }
+    .curs-span-arrow {
+        cursor: pointer;
     }
 }

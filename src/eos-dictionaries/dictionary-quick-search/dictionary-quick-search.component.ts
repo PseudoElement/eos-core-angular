@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, ViewChild, EventEmitter, Output} from '@angular/core';
 import { EosDictService } from '../services/eos-dict.service';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { ISearchSettings, SEARCH_MODES, E_DICT_TYPE } from 'eos-dictionaries/interfaces';
@@ -15,6 +15,7 @@ export class DictionariesQuickSearchComponent implements AfterViewInit {
         deleted: false
     };
 
+    @Output() closeFastSrch: EventEmitter<any> = new EventEmitter();
     @ViewChild('quickSearchField') private searchElementRef: ElementRef;
 
     private searchDone = true;
@@ -33,6 +34,9 @@ export class DictionariesQuickSearchComponent implements AfterViewInit {
     }
 
     quickSearch(evt: KeyboardEvent) {
+        if (evt.keyCode === 27) {
+            this.closeQuickForm();
+        }
         if (evt.keyCode === 13) {
             if (this.searchDone) {
                 this.srchString = (this.srchString) ? this.srchString.trim() : '';
@@ -51,5 +55,9 @@ export class DictionariesQuickSearchComponent implements AfterViewInit {
 
     clearQuickForm() {
         this.srchString = '';
+    }
+
+    closeQuickForm () {
+        this.closeFastSrch.emit({});
     }
 }

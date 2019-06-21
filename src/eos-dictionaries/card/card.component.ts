@@ -197,6 +197,14 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         }
     }
 
+    getCardTitle() {
+        const cardtitle = (this.cardEditRef ? this.cardEditRef.getCardTitle() : null);
+        if (cardtitle) {
+            return cardtitle;
+        } else {
+            return this.nodeName;
+        }
+    }
 
     cancel(): void {
         this.isChanged = false;

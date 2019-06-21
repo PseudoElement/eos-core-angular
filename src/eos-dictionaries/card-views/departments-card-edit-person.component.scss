@@ -50,55 +50,65 @@
     .person-fullname textarea {
         height: 102px;
     }
-    .person-note textarea {
-        height: 172px;
+    .text-shorter textarea {
+        height: 80px;
     }
     .contact-wrapper {
         display: -ms-grid;
         display: grid;
-        -ms-grid-columns: 140px 220px 220px 180px;
-        grid-template-columns: 140px 220px 220px 180px;
-        .cab,
-        .phone,
-        .phone-local,
-        .email {
-            margin-right: 40px;
-        }
+        -ms-grid-columns: 180px 180px 180px;
+        grid-template-columns: 180px 180px 180px;
         .cab {
+            margin-right: 40px;
             -ms-grid-column: 1;
             grid-column: 1;
         }
         .phone {
-            -ms-grid-column: 2;
-            grid-column: 2;
+            margin-right: 10px;
+            -ms-grid-column: 1;
+            grid-column: 1;
+            -ms-grid-row: 2;
+            grid-row: 2;
         }
         .phone-local {
-            -ms-grid-column: 3;
-            grid-column: 3;
+            margin-right: 10px;
+            margin-left: 10px;
+            -ms-grid-column: 2;
+            grid-column: 2;
+            -ms-grid-row: 2;
+            grid-row: 2;
         }
         .fax {
-            -ms-grid-column: 4;
-            grid-column: 4;
+            margin-left: 10px;
+            -ms-grid-column: 3;
+            grid-column: 3;
+            -ms-grid-row: 2;
+            grid-row: 2;
         }
         .email {
+            margin-right: 100px;
+            -ms-grid-column-start: 1;
+            grid-column-start: 1;
+            -ms-grid-column-end: 3;
+            grid-column-end: 3;
+            -ms-grid-row: 3;
+            grid-row: 3;
+            -ms-grid-column-span: 2;
+            // -ms-grid-column: 1;
+            // grid-column: 1;
+        }
+        .skype {
+            margin-left: 100px;
+
             -ms-grid-column-start: 2;
             grid-column-start: 2;
             -ms-grid-column-end: 4;
             grid-column-end: 4;
-            -ms-grid-row: 2;
-            grid-row: 2;
+            -ms-grid-row: 3;
+            grid-row: 3;
             -ms-grid-column-span: 2;
             -ms-grid-column: 2;
-
-        }
-        .skype {
-            -ms-grid-column-start: 4;
-            grid-column-start: 4;
-            -ms-grid-column-end: 5;
-            grid-column-end: 5;
-            -ms-grid-row: 2;
-            grid-row: 2;
-            -ms-grid-column: 4;
+            // grid-column: 2;
         }
     }
     .alternate-button-wrapper {

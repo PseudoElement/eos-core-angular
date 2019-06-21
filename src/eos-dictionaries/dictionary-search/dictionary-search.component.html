@@ -21,14 +21,14 @@
         placement="bottom"
         container="body"
         containerClass="tooltip-info"
-        [isDisabled]="isOpenQuick">
-        <button [ngClass]="{'hidden': !hasQuick, 'opened': isOpenQuick}"
+        [isDisabled]="quickSrchObj.isOpenQuick">
+        <button [ngClass]="{'hidden': !hasQuick, 'opened': quickSrchObj.isOpenQuick}"
             class="btn btn-primary-light search-btn quick-search-btn"
             containerClass="quick-search-popover"
             placement="left"
             (click)="showFastSrch()">
-            <i [hidden]="isOpenQuick" class="eos-icon eos-icon-search-blue small" aria-hidden="true"></i>
-            <i [hidden]="!isOpenQuick" class="eos-icon eos-icon-search-white small" aria-hidden="true"></i>
+            <i [hidden]="quickSrchObj.isOpenQuick" class="eos-icon eos-icon-search-blue small" aria-hidden="true"></i>
+            <i [hidden]="!quickSrchObj.isOpenQuick" class="eos-icon eos-icon-search-white small" aria-hidden="true"></i>
         </button>
     </div>
 </div>
@@ -368,15 +368,15 @@
                 <div class="second-col">
                     <div class="form-group unimportant-text">
                         <label class="s-font"
-                            for="title">{{fieldsDescription.rec['shorttitle']?.title}}</label>
+                            for="title">{{fieldsDescription.rec['nametitle']?.title}}</label>
                         <div class="search-fld">
                             <input id="title"
                                 name="title"
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['CLASSIF_NAME']"
-                                placeholder="{{fieldsDescription.rec['shorttitle']?.title}}"
-                                maxlength="{{fieldsDescription.rec['shorttitle']?.length}}">
+                                placeholder="{{fieldsDescription.rec['nametitle']?.title}}"
+                                maxlength="{{fieldsDescription.rec['nametitle']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
                                 (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>

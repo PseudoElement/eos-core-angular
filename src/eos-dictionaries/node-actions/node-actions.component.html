@@ -6,10 +6,12 @@
             *ngIf="item.show">
             <ng-container *ngIf="item.type === ADD_ACTION && isTree">
                 <div dropdown
-                    class="btn-group">
+                class="btn-group"
+                #dropdown="bs-dropdown"
+                (mouseenter) = "dropdown.show();"
+                (mouseleave) = "dropdown.hide();">
                     <!--Icons button for tree and ADD-->
-                    <div [tooltip]="item.hint"
-                        #itemTooltip="bs-tooltip"
+                    <div
                         placement="bottom"
                         containerClass="tooltip-info">
                         <button *ngIf="item.enabled"
@@ -17,7 +19,7 @@
                             [disabled]="!item.enabled"
                             class="btn btn-primary-light {{item.buttonClass}}"
                             [ngClass]="{'active': item.isActive}"
-                            (click)="itemTooltip.hide();"><span [ngClass]="!item.isActive ? item.iconClass : item.activeIconClass"></span>
+                            ><span [ngClass]="!item.isActive ? item.iconClass : item.activeIconClass"></span>
                         </button>
                         <button *ngIf="!item.enabled"
                             disabled
@@ -46,6 +48,7 @@
                     <div [tooltip]="item.hint"
                         #itemTooltip="bs-tooltip"
                         placement="bottom"
+                        [delay]="tooltipDelay"
                         containerClass="tooltip-info">
                         <button [disabled]="!item.enabled"
                             class="btn btn-primary-light {{item.buttonClass}}"
@@ -66,6 +69,7 @@
             [tooltip]="showMenuTooltip"
             #itemTooltip="bs-tooltip"
             placement="bottom"
+            [delay]="tooltipDelay"
             containerClass="tooltip-info"
             dropdownToggle
             (click)="itemTooltip.hide()">
@@ -87,6 +91,7 @@
                         [ngClass]="{'highlighted': item.isActive}"
                         tooltip="{{item.hint}}"
                         placement="bottom"
+                        [delay]="tooltipDelay"
                         containerClass="tooltip-info"
                         *ngIf="item.type !== ADD_ACTION"
                         (click)="doAction($event, item); menuMng($event, item.enabled, dropdown)">

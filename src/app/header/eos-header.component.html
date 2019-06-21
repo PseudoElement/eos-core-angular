@@ -2,7 +2,12 @@
 <div class="header-wrapper usual-border">
     <div class="menu">
         <div class="eos-title primary-text">
-            <eos-title tooltip="Вернуться в Надзор-Web" placement="bottom" container="body" containerClass="tooltip-info"></eos-title>
+            <eos-title
+            tooltip="Вернуться в Надзор-Web"
+            placement="bottom"
+            container="body"
+            [delay]="tooltipDelay"
+            containerClass="tooltip-info"></eos-title>
         </div>
         <ul class="header-content left">
             <li class="header-item primary-text">
@@ -12,7 +17,11 @@
                 class="header-item primary-text">
                 <a class="link-name primary-text xl-font"
                     [routerLink]="item.url"
-                    routerLinkActive="active"><span tooltip="{{item.title}}" placement="bottom" container="body" containerClass="tooltip-info">{{item.title}}</span></a>
+                    routerLinkActive="active">
+                    <span tooltip="{{item.title}}"
+                    placement="bottom"
+                    [delay]="tooltipDelay"
+                    container="body" containerClass="tooltip-info">{{item.title}}</span></a>
             </li>
             <li class="header-item else-dropdown primary-text"
                 dropdown
@@ -31,12 +40,12 @@
                             <a [routerLink]="item.url"
                                 class="dropdown-item primary-text"
                                 routerLinkActive="active">
-                                    <span class="" tooltip="{{item.title}}" placement="bottom" container="body" containerClass="tooltip-info">{{item.title}}</span>
+                                    <span class="" tooltip="{{item.title}}" [delay]="tooltipDelay" placement="bottom" container="body" containerClass="tooltip-info">{{item.title}}</span>
                             </a>
                         </ng-container>
                         <ng-template #ei>
                             <a class="dropdown-item primary-text" (click)="eiCl(item.id)">
-                                <span class="" tooltip="{{item.title}}" placement="bottom" container="body" containerClass="tooltip-info">{{item.title}}</span>
+                                <span class="" tooltip="{{item.title}}" [delay]="tooltipDelay" placement="bottom" container="body" containerClass="tooltip-info">{{item.title}}</span>
                             </a>
                         </ng-template>
                     </li>

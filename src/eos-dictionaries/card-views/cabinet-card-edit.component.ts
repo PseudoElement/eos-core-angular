@@ -106,6 +106,13 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
         }
     }
 
+    getCardTitle(): any {
+        if (this.data && this.data.department && this.data.department.CLASSIF_NAME) {
+            return this.data.department.CLASSIF_NAME;
+        }
+        return null;
+    }
+
     add(owner: ICabinetOwner) {
         if (!owner.data['DELETED']) {
             this.setValue(this.getOwnerPath(owner.index), this.data.rec.ISN_CABINET);
@@ -280,7 +287,14 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
 
         this.updateAccessMarks();
         this.updateOwnersMarks();
-        this.updateScroller();
+
+        if (this._interval) {
+            window.clearInterval(this._interval);
+        }
+        this._interval = setInterval(() => {
+            this.updateScroller();
+        }, this.scrollInterval);
+
     }
 
     private reorderCabinetOwners() {

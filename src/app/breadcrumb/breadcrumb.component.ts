@@ -15,6 +15,7 @@ import {
 import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import { RtUserSelectService } from '../../eos-user-select/shered/services/rt-user-select.service';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
 @Component({
     selector: 'eos-breadcrumb',
     templateUrl: 'breadcrumb.component.html',
@@ -32,6 +33,7 @@ export class BreadcrumbsComponent implements OnDestroy {
     hasInfoData = false;
     showPushpin = false;
     showInfoAct = false;
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
     private routeName: number;
 
 
@@ -100,6 +102,10 @@ export class BreadcrumbsComponent implements OnDestroy {
 
     treeButtonVisible() {
         return !this._sandwichSrv.treeIsBlocked;
+    }
+
+    isNavigationEnabled(): boolean {
+        return (this._dictSrv.getMarkedNodes().length > 1);
     }
 
     isEditEnabled() {
