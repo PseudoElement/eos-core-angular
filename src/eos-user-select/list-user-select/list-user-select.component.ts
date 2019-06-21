@@ -90,7 +90,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 } else {
                     this.selectedNode(null);
                 }
-                this.updateFlafListen();
+               // this.updateFlafListen();
             });
 
         this._treeSrv.changeListUsers$
@@ -199,7 +199,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 } else {
                     this.selectedNode(null);
                 }
-                this.updateFlafListen();
+              //  this.updateFlafListen();
                 this.isLoading = false;
                 this.countMaxSize = this._pagSrv.countMaxSize;
             }).catch(error => {
@@ -334,7 +334,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.goSortList();
     }
     goSortList(pageList?) {
-        console.log(this._pagSrv.UsersList, this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun, this._apiSrv.currentSort);
         this._pagSrv.UsersList = this.helpersClass.sort(this._pagSrv.UsersList, this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun, this._apiSrv.currentSort);
         this._pagSrv._initPaginationConfig(true);
         this._pagSrv.changePagination(this._pagSrv.paginationConfig);
@@ -395,8 +394,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 queryParams: { isn_cl: this.selectedUser.id }
             }
         );
-        // this._confirmSrv.confirm(CONFIRM_SCANSYST).then(res => {
-        // });
     }
     setCheckedAllFlag() {
         const leng = this.filterForFlagChecked().length;
@@ -418,6 +415,20 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
         });
         this.updateFlafListen();
+        if (this.countcheckedField === 0) {
+            this.rtUserService.changeSelectedUser(null);
+            if (this.selectedUser) {
+                this.selectedUser.isSelected = false;
+            }
+        }   else {
+            const checkUser = this.getCheckedUsers();
+            if (this.selectedUser) {
+                this.selectedUser.isSelected = false;
+            }
+            this.selectedUser = checkUser[0];
+            this.selectedUser.isSelected = true;
+            this.rtUserService.changeSelectedUser(this.selectedUser);
+        }
         this.disabledBtnDeleted();
     }
 
@@ -448,7 +459,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
     getCheckedUsers() {
         return this.listUsers.filter((user: UserSelectNode) => {
-            return user.isChecked || user.isSelected;
+            return user.isChecked || user.isSelected || user.selectedMark;
         });
     }
 
@@ -506,8 +517,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 this.selectedNode(this.listUsers[0]);
             } else {
                 this.selectedUser = undefined;
+                this.updateFlafListen();
             }
-            this.updateFlafListen();
             this.isLoading = false;
         }).catch(error => {
             error.message = 'Не удалось заблокировать пользователя,  обратитесь к системному администратору';
