@@ -99,6 +99,17 @@ export class CustomTreeComponent implements OnInit, OnDestroy {
                 this.expandToSelected(t, treeData);
                 this.setActiveRecursive(treeData, false);
                 t.isActive = true;
+                this.setScrollIntoView(t.id);
+            }
+        }
+    }
+
+    setScrollIntoView(id: string): void {
+        const elSelect = document.getElementById(id);
+        if (elSelect) {
+            const container = document.getElementsByTagName('eos-custom-tree')[0].parentElement;
+            if (container) {
+                container.scrollTop = elSelect.offsetTop - container.clientHeight / 2;
             }
         }
     }
