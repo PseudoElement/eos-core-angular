@@ -742,6 +742,7 @@ export class EosDictService {
 
     resetSearch(): Promise<any> {
         this._srchCriteries = null;
+        this.unmarkAll();
         return this._reloadList();
     }
 
