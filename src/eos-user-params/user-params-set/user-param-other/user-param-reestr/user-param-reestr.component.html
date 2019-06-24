@@ -38,12 +38,12 @@
                 </div>
             </div>
             <div style="display: inline " class="btn-action ">
-                <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover " containerClass="tooltip-info " (click)="selectfromTheDirectory() ">
+                <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover " containerClass="tooltip-info " (click)="selectfromTheDirectory() " placement="left">
                     <span class="eos-icon eos-icon-folder-blue small "></span>
                 </button>
             </div>
             <div style="display: inline " class=" " *ngIf="list">
-                <button [disabled]="list.length===0 || !flagEdit " tooltip="Очистить " trigers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteDirectory() ">
+                <button [disabled]="list.length===0 || !flagEdit " tooltip="Очистить " trigers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteDirectory() " placement="left">
                     <span class="eos-icon eos-icon-close-blue small "></span>
                 </button>
             </div>
