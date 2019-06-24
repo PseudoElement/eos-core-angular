@@ -120,7 +120,7 @@ export class CopyNodeComponent {
         this.properties = [
             {
                 key: 'С_ONE_YEAR',
-                label: 'Текущее/Переходящее',
+                label: 'Текущие/Переходящие',
                 opt_label: 'Текущие',
             }, {
                 key: 'С_CLOSED',

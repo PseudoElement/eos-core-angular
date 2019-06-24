@@ -427,22 +427,7 @@
                 type="submit"
                 (click)="fullSearch()"
                 class="hidden-submit">Найти</button>
-                <div class="form-group unimportant-text">
-                    <label class="s-font"
-                           for="docCode">{{fieldsDescription.rec['CODE']?.title}}</label>
-                    <div class="search-fld">
-                        <input id="docCode"
-                               name="docCode"
-                               type="text"
-                               class="form-control light"
-                               [(ngModel)]="searchModel['CODE']"
-                               placeholder="..."
-                               maxlength="{{fieldsDescription.rec['CODE']?.length}}">
-                        <a class="clear-btn"
-                           [ngClass]="{'hide': !searchModel['CODE']}"
-                           (click)="searchModel['CODE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
-                    </div>
-                </div>
+                
                 <div class="form-group unimportant-text">
                     <label class="s-font"
                         for="docName">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
