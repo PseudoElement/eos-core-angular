@@ -126,7 +126,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     searchFields: ['CLASSIF_NAME', 'NOM_NUMBER', ],
     fullSearchFields: ['CLASSIF_NAME', 'NOTE', 'NOM_NUMBER'],
     quickViewFields: ['NOM_NUMBER', 'SHELF_LIFE', 'SECURITY', 'E_DOCUMENT', 'CLOSED',  'YEAR_NUMBER',
-    'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG',  'NOTE'],
+    'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_FLAG', 'ARCH_DATE', 'NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: ['NOM_NUMBER', 'CLASSIF_NAME', ],
     allVisibleFields: ['NOTE', 'CLOSED', 'SECURITY', 'SHELF_LIFE', 'YEAR_NUMBER',

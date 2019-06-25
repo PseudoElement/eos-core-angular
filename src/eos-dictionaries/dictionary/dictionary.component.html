@@ -5,6 +5,7 @@
         'tree': currentState[0] && !currentState[1] && !hideTree}"
     (transitionend)="transitionEnd()">
     <div class="tree-wrapper block"
+        id = "leftTreeView"
         #tree
         [ngClass]="{'open-tree': currentState[0] && !hideTree && !accessDenied,
                     'has-spinner': ((hasCustomTree && !customTreeData) || !treeNodes.length) }"

@@ -109,9 +109,9 @@ export class CustomTreeComponent implements OnInit, OnDestroy {
     setScrollIntoView(id: string): void {
         const elSelect = document.getElementById(id);
         if (elSelect) {
-            const container = document.getElementsByTagName('eos-custom-tree')[0].parentElement;
-            if (container) {
-                container.scrollTop = elSelect.offsetTop - container.clientHeight / 2;
+            const treeViewElement = document.getElementById('leftTreeView');
+            if (treeViewElement) {
+                treeViewElement.scrollTop = elSelect.offsetTop - treeViewElement.clientHeight / 2 + elSelect.offsetHeight / 2;
             }
         }
     }

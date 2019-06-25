@@ -89,10 +89,6 @@
                     class="menuitem">
                     <a class="dropdown-item"
                         [ngClass]="{'highlighted': item.isActive}"
-                        tooltip="{{item.hint}}"
-                        placement="bottom"
-                        [delay]="tooltipDelay"
-                        containerClass="tooltip-info"
                         *ngIf="item.type !== ADD_ACTION"
                         (click)="doAction($event, item); menuMng($event, item.enabled, dropdown)">
                         <div class="menu-icon">
@@ -107,9 +103,6 @@
                     <a class="dropdown-item"
                         [ngClass]="{'highlighted': item.isActive}"
                         dropdownToggle
-                        tooltip="{{item.hint}}"
-                        placement="bottom"
-                        containerClass="tooltip-info"
                         *ngIf="item.type === ADD_ACTION"
                         (click)="isTree ? stopCloseMenu($event) : doAction($event, item)">
                         <div class="menu-icon">
