@@ -138,7 +138,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                     this.RedactUser(this.selectedUser);
                 }
             });
-        this.rtUserService.btnDisabled = false;
     }
 
     ngAfterContentChecked () {
@@ -269,6 +268,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 }
                 this.rtUserService.changeSelectedUser(user);
             } else {
+                this.resetFlags();
                 const searchSelected = this.listUsers.filter(userList => {
                     return userList.deleted === false;
                 });
@@ -511,6 +511,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             if (this.countcheckedField === 0) {
                 this.flagChecked = null;
                 this.rtUserService.changeSelectedUser(null);
+                this.buttons.moreButtons[7].disabled = true;
             }
             if (this.countcheckedField >= 1) {
                 this.rtUserService.changeSelectedUser(this.selectedUser);
@@ -518,7 +519,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             if (this.countcheckedField > 0 && this.countcheckedField < leng) {
                 this.flagChecked = false;
             }
-            if (this.countcheckedField === 1 || this.countcheckedField === 0) {
+            if (this.countcheckedField === 1 ) {
                 this.rtUserService.btnDisabled = true;
             } else {
                 this.rtUserService.btnDisabled = false;
