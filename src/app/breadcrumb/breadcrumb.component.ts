@@ -105,7 +105,11 @@ export class BreadcrumbsComponent implements OnDestroy {
     }
 
     isNavigationEnabled(): boolean {
-        return (this._dictSrv.getMarkedNodes().length > 1);
+        if (this._breadcrumbsSrv.currentLink.title === 'Пользователи' && this._rtSrv.btnDisabled !== true) {
+            return true;
+        } else {
+            return (this._dictSrv.getMarkedNodes().length > 1);
+        }
     }
 
     isEditEnabled() {

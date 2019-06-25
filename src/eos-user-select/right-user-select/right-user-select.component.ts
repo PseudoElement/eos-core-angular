@@ -94,6 +94,10 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
 
     writeRecentUrl() {
         this._storageSrv.setItem(RECENT_URL, this._router.url);
+        this._selectedUser.flagDeleteScroll = false;
+    }
+    goToLogin() {
+        this._selectedUser.flagDeleteScroll = false;
     }
 
     getInfo(isn, due?): void {

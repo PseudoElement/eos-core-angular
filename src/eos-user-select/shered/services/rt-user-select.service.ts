@@ -10,6 +10,7 @@ export class RtUserSelectService {
     subject: Subject<any> = new Subject();
     subjectScan: Subject<any> = new Subject();
     subjectFlagBtnHeader: Subject<any> = new Subject();
+    btnDisabled: boolean;
      ArraySystemHelper = {
         delo: {
             label: 'Дело',
@@ -68,6 +69,9 @@ export class RtUserSelectService {
             checked: false
         }
     };
+    scrollPosition: number = 0;
+    flagDeleteScroll: boolean = true;
+    flagDeleteSelectedUser: boolean = true;
     private _ChangeSelectUser: UserSelectNode;
     private UserCabinetInfo: Array<any>;
     constructor(private apiSrv: PipRX,

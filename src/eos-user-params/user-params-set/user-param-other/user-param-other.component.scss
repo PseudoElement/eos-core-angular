@@ -135,6 +135,11 @@
     .table-templates {
         padding-left: 7%;
     }
+    @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        .table-templates {
+            padding-left: 1%!important;
+        }
+    }
     .eos-template-list {
         padding: 10px 20px;
         .template-list-wrapper {
@@ -151,6 +156,11 @@
             }
             .form-group {
                 margin-bottom: 0;
+            }
+            @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+                .form-group {
+                    padding-left: 22%!important;
+                }
             }
         }
     }

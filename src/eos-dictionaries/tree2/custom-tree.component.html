@@ -26,7 +26,8 @@
             </div>
             <div class="title"
                 [ngClass]="{'deleted': node.isDeleted, 'select': node.isActive}"
-                [style.width.px]="getNodeWidth(level)">
+                [style.width.px]="getNodeWidth(level)"
+                [attr.id]="node.id">
                 <span class="title-item">{{node.title}}</span>
                 <eos-spinner *ngIf="node.updating"
                     size="sm"></eos-spinner>

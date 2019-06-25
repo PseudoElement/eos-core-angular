@@ -13,7 +13,9 @@
             [formControlName]="input.key"
             [id]="input.key"
             [readonly]="readonly"
-            [ngClass]="{'readonly': readonly}">
+            [ngClass]="{'readonly': readonly}"
+            (keydown)="inputCheck($event)"
+            >
         <span *ngIf="!readonly"
                 class="decrease fa fa-minus"
                 (click)="onDecrease()"

@@ -14,6 +14,7 @@ import {ButtonsInput} from '../core/inputs/buttons-input';
 import {E_FIELD_TYPE} from 'eos-dictionaries/interfaces';
 import {EosUtils} from '../core/utils';
 import {NOT_EMPTY_STRING} from '../consts/common.consts';
+import { NumberIncrementInput } from 'eos-common/core/inputs/number-increment-input';
 
 @Injectable()
 export class InputControlService {
@@ -24,6 +25,9 @@ export class InputControlService {
         const set: InputBase<any>[] = [];
         inputs.forEach((input) => {
             switch (E_FIELD_TYPE[input.controlType]) {
+                case E_FIELD_TYPE.numberIncrement:
+                    set.push(new NumberIncrementInput(input));
+                    break;
                 case E_FIELD_TYPE.text:
                     set.push(new TextInput(input));
                     break;
