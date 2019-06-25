@@ -502,6 +502,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     updateFlafListen() {
         this.countCheckedField();
         const leng = this.filterForFlagChecked().length;
+        console.log(leng);
         if (leng === 0) {
             this.flagChecked = null;
         } else {
@@ -635,6 +636,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     }
     savePositionSelectUser($event) {
         this._storage.setItem('main_scroll', $event.target.scrollTop);
+    }
+
+    markedCounter(): number {
+        return this.countcheckedField;
     }
 
     private cathError(e) {
