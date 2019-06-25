@@ -48,4 +48,12 @@ export class DynamicInputNumberIncrementComponent extends DynamicInputBase  impl
         }
     }
 
+    inputCheck(e) {
+        if (e.metaKey || e.ctrlKey || e.altKey) {
+            return true;
+        }
+        return !(/^[А-Яа-яA-Za-z ]$/.test(e.key));
+    }
+
+
 }

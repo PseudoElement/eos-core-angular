@@ -69,6 +69,9 @@ export class RtUserSelectService {
             checked: false
         }
     };
+    scrollPosition: number = 0;
+    flagDeleteScroll: boolean = true;
+    flagDeleteSelectedUser: boolean = true;
     private _ChangeSelectUser: UserSelectNode;
     private UserCabinetInfo: Array<any>;
     constructor(private apiSrv: PipRX,

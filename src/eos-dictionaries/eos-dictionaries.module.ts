@@ -83,6 +83,7 @@ import { RKDefaultValuesCardComponent } from './adv-card/rk-default-values/rk-de
 import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-files.component';
 import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter.component';
 import {CopyPropertiesComponent} from './copy-properties/copy-properties.component';
+import {CopyNodeComponent} from './copy-node/copy-node.component';
 
 @NgModule({
     declarations: [
@@ -139,6 +140,7 @@ import {CopyPropertiesComponent} from './copy-properties/copy-properties.compone
         LinkCardComponent,
         NadzorCardEditComponent,
         CopyPropertiesComponent,
+        CopyNodeComponent,
     ],
     entryComponents: [
         ColumnSettingsComponent,
@@ -152,6 +154,7 @@ import {CopyPropertiesComponent} from './copy-properties/copy-properties.compone
         DocgroupTemplateConfigComponent,
         PrjDefaultValuesComponent,
         CopyPropertiesComponent,
+        CopyNodeComponent,
     ],
     imports: [
         BrowserModule,

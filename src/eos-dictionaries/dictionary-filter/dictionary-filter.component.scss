@@ -36,8 +36,13 @@
         vertical-align: middle;
         line-height: 0;
         input {
-            width: 64px;
+            width: 100px;
         }
+        .clearfix {
+            display: inline-block;
+            width: 20px;
+        }
+
         .date,
         span {
             vertical-align: -webkit-baseline-middle;
@@ -212,7 +217,7 @@
         padding: 20px;
         font-size: 0;
     }
-    
+
 }
 
 .popover {

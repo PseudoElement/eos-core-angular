@@ -59,7 +59,7 @@ export class NodeActionsComponent implements OnDestroy {
     constructor(
         _dictSrv: EosDictService,
         private _eaps: EosAccessPermissionsService,
-        ) {
+    ) {
         this._initButtons();
 
         this._dictSrv = _dictSrv;
@@ -91,7 +91,7 @@ export class NodeActionsComponent implements OnDestroy {
         const tooltip_fix = e.currentTarget['disabled'];
         e.currentTarget['disabled'] = true;
         if (item.enabled) {
-            this.action.emit({ action: item.type, params: params });
+            this.action.emit({action: item.type, params: params});
             this._update();
         } else {
             e.stopPropagation();
@@ -133,6 +133,7 @@ export class NodeActionsComponent implements OnDestroy {
         let _active = false;
         let _show = false;
         let due = null;
+        let _isWriteAction = true;
 
 
         if (this.dictionary && this._viewParams && this._dictSrv) {
@@ -190,6 +191,7 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.userOrder:
                     _enabled = _enabled && !this._viewParams.searchResults;
                     _active = this._viewParams.userOrdered;
+                    _isWriteAction = false;
                     break;
                 case E_RECORD_ACTIONS.showAllSubnodes:
                     _enabled = _enabled && !this._viewParams.searchResults;
@@ -235,18 +237,23 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.copyProperties:
                     _enabled = _enabled && listHasSelected;
                     break;
+                case E_RECORD_ACTIONS.copyNodes:
+                    _enabled = _enabled && listHasSelected;
+                    break;
+                case E_RECORD_ACTIONS.pasteNodes:
+                    _enabled = (this._dictSrv.bufferNodes) && (!!this._dictSrv.bufferNodes.length);
+                    break;
             }
             due = this._dictSrv.treeNodeIdByDict(this.dictionary.id);
         }
 
 
-
         const grant = this.dictionary ? this._eaps.isAccessGrantedForDictionary(this.dictionary.id, due) :
-                        APS_DICT_GRANT.denied;
+            APS_DICT_GRANT.denied;
         const is_granted = (button.accessNeed <= grant);
 
         button.show = _show;
-        button.enabled = _enabled && is_granted;
+        button.enabled = _enabled && (!_isWriteAction || is_granted);
         button.isActive = _active;
     }
 
