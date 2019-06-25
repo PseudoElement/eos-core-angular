@@ -67,18 +67,19 @@ export class CopyNodeComponent implements OnDestroy {
                 YEAR_NUMBER: currentRec['YEAR_NUMBER'],
                 NOM_NUMBER: rec['NOM_NUMBER'],
                 SHELF_LIFE: currentRec['SHELF_LIFE'],
-                END_YEAR: node.data['END_YEAR'],
-                ARTICLE: node.data['ARTICLE'],
-                CLOSED: node.data['CLOSED'],
-                SECURITY: node.data['SECURITY'],
-                ARCH_FLAG: node.data['ARCH_FLAG'],
-                E_DOCUMENT: node.data['E_DOCUMENT'],
+                END_YEAR: currentRec['END_YEAR'],
+                ARTICLE: currentRec['ARTICLE'],
+                CLOSED: currentRec['CLOSED'],
+                SECURITY: currentRec['SECURITY'],
+                ARCH_FLAG: currentRec['ARCH_FLAG'],
+                E_DOCUMENT: currentRec['E_DOCUMENT'],
                 PROTECTED: 0,
                 DELETED: 0,
                 IS_FINAL: 0,
                 STATUS: '',
             };
 
+            console.log(_newRec);
             if (!this.form.controls['C_YEAR'].value) {
                 _newRec.YEAR_NUMBER = this.form.controls['YEAR'].value;
             }
