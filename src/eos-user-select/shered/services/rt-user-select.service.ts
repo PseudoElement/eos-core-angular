@@ -10,6 +10,7 @@ export class RtUserSelectService {
     subject: Subject<any> = new Subject();
     subjectScan: Subject<any> = new Subject();
     subjectFlagBtnHeader: Subject<any> = new Subject();
+    btnDisabled: boolean;
      ArraySystemHelper = {
         delo: {
             label: 'Дело',

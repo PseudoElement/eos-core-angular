@@ -138,6 +138,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                     this.RedactUser(this.selectedUser);
                 }
             });
+        this.rtUserService.btnDisabled = false;
     }
 
     ngAfterContentChecked () {
@@ -159,9 +160,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
 
     changeCurentSelectedUser(type: TypeBread) {
         const usersNotDeleted = this.listUsers.filter((user: UserSelectNode) => {
-            return !user.deleted;
+            return user.selectedMark === true || user.isSelected === true || user.isChecked === true;
         });
-        if (usersNotDeleted.length) {
+        if (usersNotDeleted.length > 0) {
             const index = usersNotDeleted.indexOf(this.selectedUser);
             if (type.action === 13) {
                 this.setNewCurrUserByBreadMinus(index, usersNotDeleted);
@@ -174,18 +175,22 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
 
     setNewCurrUserByBreadMinus(index, usersNotDeleted) {
         if (index === 0) {
-            this.selectedNode(usersNotDeleted[usersNotDeleted.length - 1]);
+            this.selectedUser = usersNotDeleted[usersNotDeleted.length - 1];
+            this.rtUserService.changeSelectedUser(usersNotDeleted[usersNotDeleted.length - 1]);
         } else {
             index--;
-            this.selectedNode(usersNotDeleted[index]);
+            this.selectedUser = usersNotDeleted[index];
+            this.rtUserService.changeSelectedUser(this.selectedUser);
         }
     }
     setNewCurrUserByBreadPlus(index, usersNotDeleted) {
         if (index === usersNotDeleted.length - 1) {
-            this.selectedNode(usersNotDeleted[0]);
+            this.selectedUser = usersNotDeleted[0];
+            this.rtUserService.changeSelectedUser(this.selectedUser);
         } else {
             index++;
-            this.selectedNode(usersNotDeleted[index]);
+            this.selectedUser = usersNotDeleted[index];
+            this.rtUserService.changeSelectedUser(this.selectedUser);
         }
     }
 
@@ -505,13 +510,20 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             }
             if (this.countcheckedField === 0) {
                 this.flagChecked = null;
+                this.rtUserService.changeSelectedUser(null);
             }
-
+            if (this.countcheckedField >= 1) {
+                this.rtUserService.changeSelectedUser(this.selectedUser);
+            }
             if (this.countcheckedField > 0 && this.countcheckedField < leng) {
                 this.flagChecked = false;
             }
+            if (this.countcheckedField === 1 || this.countcheckedField === 0) {
+                this.rtUserService.btnDisabled = true;
+            } else {
+                this.rtUserService.btnDisabled = false;
+            }
         }
-
     }
     filterForFlagChecked() {
         return this.listUsers.filter((user: UserSelectNode) => {
