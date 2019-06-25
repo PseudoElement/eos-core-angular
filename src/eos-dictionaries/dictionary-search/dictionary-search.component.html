@@ -69,7 +69,7 @@
                         type="text"
                         class="form-control light"
                         [(ngModel)]="searchModel['CLASSIF_NAME']"
-                        placeholder="{{fieldsDescription.rec['CLASSIF_NAME']?.title}}"
+                        placeholder="..."
                         maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
@@ -85,7 +85,7 @@
                         type="text"
                         class="form-control light"
                         [(ngModel)]="searchModel['NOTE']"
-                        placeholder="{{fieldsDescription.rec['NOTE']?.title}}"
+                        placeholder="..."
                         maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['NOTE']}"
@@ -127,7 +127,7 @@
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['CODE']"
-                                placeholder="{{fieldsDescription.rec['CODE']?.title}}"
+                                placeholder="..."
                                 maxlength="{{fieldsDescription.rec['CODE']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['CODE']}"
@@ -143,7 +143,7 @@
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['PHONE_LOCAL']"
-                                placeholder="{{fieldsDescription.rec['PHONE']?.title}}"
+                                placeholder="..."
                                 maxlength="{{fieldsDescription.rec['PHONE']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['PHONE_LOCAL']}"
@@ -159,7 +159,7 @@
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['E_MAIL']"
-                                placeholder="{{fieldsDescription.rec['E_MAIL']?.title}}"
+                                placeholder="..."
                                 maxlength="{{fieldsDescription.rec['E_MAIL']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['E_MAIL']}"
@@ -176,7 +176,7 @@
                                    type="text"
                                    class="form-control light"
                                    [(ngModel)]="searchModel['SURNAME']"
-                                   placeholder="{{fieldsDescription.rec['SURNAME']?.title}}">
+                                   placeholder="...">
                             <a class="clear-btn"
                                [ngClass]="{'hide': !searchModel['SURNAME']}"
                                (click)="searchModel['SURNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
@@ -191,7 +191,7 @@
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['printInfo.SURNAME']"
-                                placeholder="Фамилия"
+                                placeholder="..."
                                 maxlength="64">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['printInfo.SURNAME']}"
@@ -208,7 +208,7 @@
                                     type="text"
                                     class="form-control light"
                                     [(ngModel)]="searchModel['printInfo.NAME']"
-                                    placeholder="Имя"
+                                    placeholder="..."
                                     maxlength="64">
                                 <a class="clear-btn"
                                     [ngClass]="{'hide': !searchModel['printInfo.NAME']}"
@@ -224,7 +224,7 @@
                                     type="text"
                                     class="form-control light"
                                     [(ngModel)]="searchModel['printInfo.PATRON']"
-                                    placeholder="Отчество"
+                                    placeholder="..."
                                     maxlength="64">
                                 <a class="clear-btn"
                                     [ngClass]="{'hide': !searchModel['printInfo.PATRON']}"
@@ -242,14 +242,14 @@
                                     type="text"
                                     class="form-control light"
                                     [(ngModel)]="searchModel['DUTY']"
-                                    placeholder="{{fieldsDescription.rec['DUTY']?.title}}"
+                                    placeholder="..."
                                     maxlength="{{fieldsDescription.rec['DUTY']?.length}}">
                                 <a class="clear-btn"
                                     [ngClass]="{'hide': !searchModel['DUTY']}"
                                     (click)="searchModel['DUTY'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
                             </div>
                         </div>
-                        <div class="form-group unimportant-text col-250">
+                        <!-- <div class="form-group unimportant-text col-250">
                             <label class="s-font"
                                 for="fullPosition">{{fieldsDescription.rec['fullPosition']?.title}}</label>
                             <div class="search-fld">
@@ -264,7 +264,7 @@
                                     [ngClass]="{'hide': !searchModel['FULLNAME']}"
                                     (click)="searchModel['FULLNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="form-group unimportant-text">
                         <label class="s-font"
@@ -275,7 +275,7 @@
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['NOTE']"
-                                placeholder="{{fieldsDescription.rec['NOTE']?.title}}"
+                                placeholder="..."
                                 maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['NOTE']}"
@@ -301,7 +301,7 @@
                             type="text"
                             class="form-control light"
                             [(ngModel)]="searchModel['CABINET_NAME']"
-                            placeholder="{{fieldsDescription.rec['titleRoom']?.title}}">
+                            placeholder="...">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['CABINET_NAME']}"
                             (click)="searchModel['CABINET_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
@@ -316,7 +316,7 @@
                                type="text"
                                class="form-control light"
                                [(ngModel)]="searchModel['fullCabinet']"
-                               placeholder="{{fieldsDescription.rec['fullCabinet']?.title}}">
+                               placeholder="...">
                         <a class="clear-btn"
                            [ngClass]="{'hide': !searchModel['fullCabinet']}"
                            (click)="searchModel['fullCabinet'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
@@ -341,7 +341,7 @@
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['CODE']"
-                                placeholder="{{fieldsDescription.rec['CODE']?.title}}"
+                                placeholder="..."
                                 maxlength="{{fieldsDescription.rec['CODE']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['CODE']}"
@@ -357,7 +357,7 @@
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['DEPARTMENT_INDEX']"
-                                placeholder="{{fieldsDescription.rec['indexDep']?.title}}"
+                                placeholder="..."
                                 maxlength="{{fieldsDescription.rec['indexDep']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['DEPARTMENT_INDEX']}"
@@ -375,7 +375,7 @@
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['CLASSIF_NAME']"
-                                placeholder="{{fieldsDescription.rec['nametitle']?.title}}"
+                                placeholder="..."
                                 maxlength="{{fieldsDescription.rec['nametitle']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
@@ -391,7 +391,7 @@
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['FULLNAME']"
-                                placeholder="{{fieldsDescription.rec['fullTitle']?.title}}"
+                                placeholder="..."
                                 maxlength="{{fieldsDescription.rec['fullTitle']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['FULLNAME']}"
@@ -407,7 +407,7 @@
                                 type="text"
                                 class="form-control light"
                                 [(ngModel)]="searchModel['NOTE']"
-                                placeholder="{{fieldsDescription.rec['NOTE']?.title}}"
+                                placeholder="..."
                                 maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['NOTE']}"
@@ -427,6 +427,7 @@
                 type="submit"
                 (click)="fullSearch()"
                 class="hidden-submit">Найти</button>
+                
                 <div class="form-group unimportant-text">
                     <label class="s-font"
                         for="docName">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>
@@ -436,7 +437,7 @@
                             type="text"
                             class="form-control light"
                             [(ngModel)]="searchModel['CLASSIF_NAME']"
-                            placeholder="{{fieldsDescription.rec['CLASSIF_NAME']?.title}}"
+                            placeholder="..."
                             maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
@@ -453,7 +454,7 @@
                             type="text"
                             class="form-control light"
                             [(ngModel)]="searchModel['FULLNAME']"
-                            placeholder="{{fieldsDescription.rec['FULLNAME']?.title}}"
+                            placeholder="..."
                             maxlength="{{fieldsDescription.rec['FULLNAME']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['FULLNAME']}"
@@ -468,7 +469,7 @@
                                type="text"
                                class="form-control light"
                                [(ngModel)]="searchModel['DOCGROUP_INDEX']"
-                               placeholder="{{fieldsDescription.rec['DOCGROUP_INDEX']?.title}}"
+                               placeholder="..."
                                maxlength="{{fieldsDescription.rec['DOCGROUP_INDEX']?.length}}">
                         <a class="clear-btn"
                            [ngClass]="{'hide': !searchModel['DOCGROUP_INDEX']}"
@@ -484,7 +485,7 @@
                             type="text"
                             class="form-control light"
                             [(ngModel)]="searchModel['NOTE']"
-                            placeholder="{{fieldsDescription.rec['NOTE']?.title}}"
+                            placeholder="..."
                             maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['NOTE']}"
@@ -512,7 +513,7 @@
                             type="text"
                             class="form-control light"
                             [(ngModel)]="searchModel['RUBRIC_CODE']"
-                            placeholder="{{fieldsDescription.rec['RUBRIC_CODE']?.title}}"
+                            placeholder="..."
                             maxlength="{{fieldsDescription.rec['RUBRIC_CODE']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['RUBRIC_CODE']}"
@@ -530,7 +531,7 @@
                             type="text"
                             class="form-control light"
                             [(ngModel)]="searchModel['CLASSIF_NAME']"
-                            placeholder="{{fieldsDescription.rec['CLASSIF_NAME']?.title}}"
+                            placeholder="..."
                             maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
@@ -547,7 +548,7 @@
                             type="text"
                             class="form-control light"
                             [(ngModel)]="searchModel['FULLNAME']"
-                            placeholder="{{fieldsDescription.rec['FULLNAME']?.title}}"
+                            placeholder="..."
                             maxlength="{{fieldsDescription.rec['FULLNAME']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['FULLNAME']}"
@@ -563,7 +564,7 @@
                             type="text"
                             class="form-control light"
                             [(ngModel)]="searchModel['NOTE']"
-                            placeholder="{{fieldsDescription.rec['NOTE']?.title}}"
+                            placeholder="..."
                             maxlength="{{fieldsDescription.rec['NOTE']?.length}}">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['NOTE']}"
@@ -609,7 +610,7 @@
                         type="text"
                         class="form-control"
                         [(ngModel)]="searchModel['CLASSIF_NAME']"
-                        placeholder="{{fieldsDescription.rec['CLASSIF_NAME']?.title}}"
+                        placeholder="..."
                         maxlength="{{fieldsDescription.rec['CLASSIF_NAME']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
@@ -645,7 +646,7 @@
                         type="text"
                         class="form-control"
                         [(ngModel)]="searchModel['CABINET_NAME']"
-                        placeholder="{{fieldsDescription.rec['CABINET_NAME']?.title}}"
+                        placeholder="..."
                         maxlength="{{fieldsDescription.rec['CABINET_NAME']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['CABINET_NAME']}"
@@ -661,7 +662,7 @@
                         type="text"
                         class="form-control"
                         [(ngModel)]="searchModel['FULLNAME']"
-                        placeholder="{{fieldsDescription.rec['FULLNAME']?.title}}"
+                        placeholder="..."
                         maxlength="{{fieldsDescription.rec['FULLNAME']?.length}}">
                     <a class="clear-btn"
                         [ngClass]="{'hide': !searchModel['FULLNAME']}"
