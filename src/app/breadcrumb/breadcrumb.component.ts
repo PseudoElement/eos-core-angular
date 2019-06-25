@@ -33,6 +33,7 @@ export class BreadcrumbsComponent implements OnDestroy {
     hasInfoData = false;
     showPushpin = false;
     showInfoAct = false;
+    showUserInfo: boolean = true;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     private routeName: number;
 
@@ -77,6 +78,7 @@ export class BreadcrumbsComponent implements OnDestroy {
             )
             .subscribe((n) => {
                 this.hasInfoData = !!n;
+                this.showUserInfo = true;
                 if (this.hasInfoData) {
                     this._isEditEnabled = !n.isDeleted && this._calcisEditable(n);
                 }
@@ -88,6 +90,13 @@ export class BreadcrumbsComponent implements OnDestroy {
             .subscribe(flag => {
                 this.hasInfoData = flag;
                 this._isEditEnabled = flag;
+            });
+        this._rtSrv.subject
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe(data => {
+                this.showUserInfo = !!data;
             });
     }
 

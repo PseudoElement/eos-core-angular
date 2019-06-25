@@ -32,7 +32,7 @@
                       [delay]="tooltipDelay"
                       [isLeft]="false"></eos-sandwich>
     </span>
-    <div *ngIf="showInfoAct && hasInfoData"
+    <div *ngIf="showInfoAct && hasInfoData && showUserInfo"
         class="opened-node-actions info-actions usual-border"
         [ngClass]="{'o-info' : infoOpened, 'c-info': !infoOpened, 'hiden': !infoOpened}">
         <button class="btn icon-btn left"
