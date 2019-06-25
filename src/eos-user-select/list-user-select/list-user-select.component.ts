@@ -48,6 +48,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     flagTachRigth: boolean = null;
     countMaxSize: number;
     shooseP: number;
+    checkAll: string;
     // количество выбранных пользователей
     countcheckedField: number;
     private ngUnsubscribe: Subject<any> = new Subject();
@@ -604,10 +605,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     get getflagChecked() {
         switch (this.flagChecked) {
             case true:
+                this.checkAll = 'Снять пометки';
                 return 'eos-icon-checkbox-square-v-blue';
             case false:
+                this.checkAll = 'Пометить все';
                 return 'eos-icon-checkbox-square-minus-blue';
             default:
+                this.checkAll = 'Пометить все';
                 return 'eos-icon-checkbox-square-blue';
         }
     }

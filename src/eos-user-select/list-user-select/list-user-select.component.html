@@ -26,7 +26,12 @@
                     <label class="user-check-label">
                     <input  [checked]="flagChecked"  type="checkbox" (change)="setCheckedAllFlag()">
                     <div>
-                        <span class="eos-icon small" [ngClass]="getflagChecked"></span>
+                        <span class="eos-icon small"
+                            [ngClass]="getflagChecked" 
+                            [tooltip]="checkAll" 
+                            containerClass="tooltip-info"
+                            placement="bottom"
+                        ></span>
                     </div>
                 </label>
                 </div>
