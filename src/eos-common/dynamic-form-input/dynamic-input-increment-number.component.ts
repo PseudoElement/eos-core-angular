@@ -27,10 +27,12 @@ export class DynamicInputNumberIncrementComponent extends DynamicInputBase  impl
             this.control.markAsDirty();
         }
     }
+
     ngOnChanges() {
-           if ( !this.input.pattern) {
-                 this.control.setValidators(Validators.pattern(/^\d{0,5}$/));
-           }
+        super.ngOnChanges();
+        if (!this.input.pattern) {
+            this.control.setValidators(Validators.pattern(/^\d{0,5}$/));
+        }
     }
 
     checkMinValue() {
