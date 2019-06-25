@@ -638,10 +638,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         this._storage.setItem('main_scroll', $event.target.scrollTop);
     }
 
-    markedCounter(): number {
-        return this.countcheckedField;
-    }
-
     private cathError(e) {
         if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
             return undefined;
