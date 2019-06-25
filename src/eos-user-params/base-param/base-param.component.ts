@@ -94,6 +94,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 this._userParamSrv.submitSave = this.submit();
             });
+        if (localStorage.getItem('lastNodeDue') == null) {
+            localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
+        }
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
