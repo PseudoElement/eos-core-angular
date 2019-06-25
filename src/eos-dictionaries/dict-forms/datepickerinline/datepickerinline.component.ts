@@ -21,6 +21,12 @@ enum dayType {
 
 const TEST_INPUTS = <IBaseInput[]>[
 {
+    controlType: 'string',
+    key: 'dateString',
+    label: 'string',
+    required: true,
+    pattern: DATE_INPUT_PATERN,
+}, {
     controlType: 'select',
     key: 'type',
     label: 'день',
@@ -34,14 +40,11 @@ const TEST_INPUTS = <IBaseInput[]>[
         value: dayType.workday,
         title: 'Рабочий день'
     }]
-}, {
-    controlType: 'string',
-    key: 'dateString',
-    label: 'string',
-    required: true,
-    pattern: DATE_INPUT_PATERN,
 }, ];
 
+interface CalendarRecord extends CALENDAR_CL {
+    isChanged?: boolean;
+}
 @Component({
   selector: 'eos-datepickerinline',
   templateUrl: './datepickerinline.component.html',
@@ -58,7 +61,7 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
     inputs: InputBase<any>[];
 
     selectedDate;
-    dbDates: CALENDAR_CL[];
+    dbDates: CalendarRecord[];
 
     bsDatepickerCfg: BsDatepickerConfig = Object.assign(new BsDatepickerConfig(), {
         showWeekNumbers: false,
@@ -91,7 +94,6 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
                 if (this._manualUpdating) {
                     return;
                 }
-                console.log('edit:', ch);
                 this.setTypeFor(Number(ch['type']), this.datepicker.value);
             });
 
@@ -110,26 +112,14 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
 
     setTypeFor(type: number, date: Date) {
         const d = this._toDBFormattedDate(date);
-        const t = this.dbDates.find( v => String(v.DATE_CALENDAR) === d);
-        const dayOfWeek = date.getDay();
-        const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+        let t = this.dbDates.find( v => String(v.DATE_CALENDAR) === d);
         if (t) {
-            if ((isWeekend && type === dayType.weekend) ||
-                (!isWeekend && type === dayType.workday)
-            ) {
-                this.dbDates.splice(this.dbDates.indexOf(t), 1);
-            } else {
-                t.DATE_TYPE = type;
-            }
+            t.DATE_TYPE = type;
+            t.isChanged = true;
         } else {
-            if ((isWeekend && type === dayType.weekend) ||
-                (!isWeekend && type === dayType.workday)
-            ) {
-            } else {
-                this.dbDates.push({ ISN_CALENDAR: -1, DATE_CALENDAR: d, DATE_TYPE: type });
-            }
+            t = { ISN_CALENDAR: -1, DATE_CALENDAR: d, DATE_TYPE: type, isChanged: true };
+            this.dbDates.push(t);
         }
-        // this._updateControlsFor(this.selectedDate);
         this.datepicker._repaint();
     }
 
@@ -137,22 +127,28 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
         if (!this.dbDates) {
             this.refreshDB();
         } else {
+            this.selectedDate = date;
             this._updateControlsFor(date);
         }
-        // console.log(date);
     }
 
     onDataMouseMove($event) {
        // this._updateCalendar();
     }
 
-    onSave() {
+    onClear() {
+        this.refreshDB();
+    }
 
+    onSave() {
         this._readDBSaved().then((storedData) => {
-            const changes = this._calcChanges(storedData, this.dbDates);
+            const toSaveList = this.dbDates.filter(r => r.isChanged);
+            const changes = this._calcChanges(storedData, toSaveList);
             if (changes) {
                 this._apiSrv.batch(changes, '')
                     .then(() => {
+                        this.refreshDB();
+
                         this._msgSrv.addNewMessage(SUCCESS_SAVE);
                     })
                     .catch((err) => {
@@ -163,24 +159,55 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
         });
     }
 
-    _calcChanges(storedData: CALENDAR_CL[], dbDates: CALENDAR_CL[]): any[] {
+    _calcChanges(storedData: CALENDAR_CL[], toSaveList: CalendarRecord[]): any[] {
         const changes = [];
-        // if (!dbDates || !storedData) {
-        //     return null;
-        // }
-        // for (let i = 0; i < dbDates.length; i++) {
-        //     const e: CALENDAR_CL = dbDates[i];
-        //     if (e.ISN_CALENDAR === -1) {
-        //         changes.push (
-        //             {
-        //                 method: 'POST',
-        //                 data: e,
-        //                 requestUri: 'CALENDAR_CL',
-        //             }
-        //         );
-        //     }
-        // }
 
+        for (let i = 0; i < toSaveList.length; i++) {
+            const rec = toSaveList[i];
+            const date: Date = new Date(rec.DATE_CALENDAR);
+            const type = Number(rec.DATE_TYPE);
+            const dayOfWeek = date.getDay();
+            const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+
+            if ((isWeekend && type === dayType.weekend) ||
+                (!isWeekend && type === dayType.workday)
+            ) {
+                // ненужная запись - описывает то что и так ясно из календаря
+                if (rec.ISN_CALENDAR === -1) {
+                    // ненужная запись - просто натыкали, игнорируем, в БД отсутствует
+                    continue;
+                } else {
+                    // ненужная запись - удалить из БД
+                    changes.push ({
+                        method: 'DELETE',
+                        data: '',
+                        requestUri: 'CALENDAR_CL(' + rec.ISN_CALENDAR + ')',
+                    });
+                }
+            } else {
+                // Нужная запись
+                const saved_rec = storedData.find(r => r.ISN_CALENDAR === rec.ISN_CALENDAR);
+                if (saved_rec) {
+                    if (saved_rec.DATE_TYPE === rec.DATE_TYPE) {
+                        continue;
+                    } else {
+                        changes.push ({
+                            method: 'MERGE',
+                            data:  { DATE_CALENDAR: rec.DATE_CALENDAR, DATE_TYPE: rec.DATE_TYPE },
+                            requestUri: 'CALENDAR_CL(' + rec.ISN_CALENDAR + ')',
+                        });
+                    }
+                } else {
+                    changes.push ({
+                        method: 'POST',
+                        data:  { DATE_CALENDAR: rec.DATE_CALENDAR, DATE_TYPE: rec.DATE_TYPE },
+                        requestUri: 'CALENDAR_CL',
+                    });
+                }
+            }
+
+
+        }
         return changes;
     }
 
@@ -302,6 +329,7 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
     refreshDB() {
         this._readDBSaved().then((data) => {
             this.dbDates = data;
+            console.log(this.selectedDate);
             this._updateControlsFor(this.selectedDate);
             this.datepicker._repaint();
             return data;

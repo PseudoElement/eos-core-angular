@@ -1,50 +1,66 @@
 <div class="bs-datepicker theme-dark-blue" style="width: 308px;">
-<div class="bs-datepicker-container theme-dark-blue">
-    <div class="bs-calendar-container theme-dark-blue" role="application">
-      <div class="bs-media-container theme-dark-blue">
-          <div>
-
-            <div class="bs-datepicker-head">
-              <div style="display: contents;">
-                <button class="previous" style="visibility: visible;"
-                    (click)="onLeftClick()">
-                  <span>‹</span>
-                </button>​
-                <button class="current"
-                    (click)="onMonthClick()">
-                  <span>{{rumonths[displayMonth]}}</span></button>​
-                <button class="current"
-                    (click)="onYearClick()">
-                  <span>{{displayYear}}</span></button>​
-                <button class="next" style="visibility: visible;"
-                    (click)="onRightClick()">
-                  <span>›</span></button>
-              </div>
+    <div class="bs-datepicker-container theme-dark-blue">
+        <div class="bs-calendar-container theme-dark-blue" role="application">
+            <div class="bs-media-container theme-dark-blue">
+                <div>
+                    <div class="bs-datepicker-head">
+                        <div style="display: contents;">
+                            <button class="previous" style="visibility: visible;" (click)="onLeftClick()">
+                                <span>‹</span></button
+                            >​
+                            <button class="current" (click)="onMonthClick()" *ngIf="displayMode === 0">
+                                <span>{{ rumonths[displayMonth] }}</span></button
+                            >​
+                            <button class="current" (click)="onYearClick()">
+                                <span>{{ (displayMode === 2 ? ((displayYear - 7) + ' - ' + (displayYear + 8)) : displayYear) }}</span></button
+                            >​
+                            <button class="next" style="visibility: visible;" (click)="onRightClick()">
+                                <span>›</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bs-datepicker-body">
+                        <table class="days weeks" role="grid" [hidden]="displayMode !== 0">
+                            <thead>
+                                <tr>
+                                    <th aria-label="weekday">пн</th>
+                                    <th aria-label="weekday">вт</th>
+                                    <th aria-label="weekday">ср</th>
+                                    <th aria-label="weekday">чт</th>
+                                    <th aria-label="weekday">пт</th>
+                                    <th aria-label="weekday">сб</th>
+                                    <th aria-label="weekday">вс</th>
+                                </tr>
+                            </thead>
+                            <tbody #daystbody></tbody>
+                        </table>
+                        <table class="months" role="grid" *ngIf="displayMode === 1">
+                            <tbody>
+                                <tr *ngFor="let row of monthsTable; let r = index">
+                                    <td role="gridcell" *ngFor="let item of row; let c = index"
+                                    [ngClass]="{'is-highlighted': hoverFlags[r*3+c]}"
+                                    (mouseenter)="hoverFlags[r*3+c]=true"
+                                    (mouseleave)="hoverFlags[r*3+c]=false"
+                                    (click)="monthSelect(r*3+c)"
+                                    ><span>{{item}}</span><td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="years" role="grid" *ngIf="displayMode === 2">
+                            <tbody>
+                                <tr *ngFor="let row of yearsItemsArr; let r = index">
+                                    <td role="gridcell" *ngFor="let item of row; let c = index"
+                                    [ngClass]="{'is-highlighted': hoverFlags[r*4+c]}"
+                                    (mouseenter)="hoverFlags[r*4+c]=true"
+                                    (mouseleave)="hoverFlags[r*4+c]=false"
+                                    (click)="yearSelect(item)"
+                                    ><span>{{item}}</span><td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="bs-datepicker-body">
-              <table class="days weeks" role="grid">
-                <thead>
-                  <tr>
-                    <th aria-label="weekday">пн </th>
-                    <th aria-label="weekday">вт </th>
-                    <th aria-label="weekday">ср </th>
-                    <th aria-label="weekday">чт </th>
-                    <th aria-label="weekday">пт </th>
-                    <th aria-label="weekday">сб </th>
-                    <th aria-label="weekday">вс </th>
-                  </tr>
-                </thead>
-                <tbody #daystbody>
-                </tbody>
-              </table>
-            </div>
-
-          </div>
-
-      </div>
-
-
+        </div>
     </div>
-
-  </div>
 </div>

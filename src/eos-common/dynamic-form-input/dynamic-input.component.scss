@@ -228,16 +228,6 @@ eos-dynamic-input {
     background-color: $button-color-main-theme !important;
 }
 
-.bs-datepicker-body table td {
-    color: black !important;
-    &.typeweekend {
-        color: red !important
-    }
-    &.typeworkday {
-        color: black !important
-    }
-}
-
 .toggle-wrap {
     background: $light-grey-1;
     border: 1px solid $border-color-main-theme;

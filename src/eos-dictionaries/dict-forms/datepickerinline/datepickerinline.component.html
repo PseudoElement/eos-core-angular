@@ -1,16 +1,18 @@
 
-<div class="test-form">
-    <div class="row">
-        <div class="col-xs-12 col-12 col-md-4 form-group">
+<div class="eos-calendar-form">
+    <div class="form-group">
+        <div class="col-1">
+
+
             <!-- <bs-datepicker-container #datepicker></bs-datepicker-container> -->
-            <bs-datepicker-inline
+            <!-- <bs-datepicker-inline
                 id="bsdatp"
                 [bsValue]="bsInlineValue"
                 [bsConfig]="bsDatepickerCfg"
                 (bsValueChange)="onDateChange($event)"
                 (mousemove)="onDataMouseMove($event)"
                 >
-            </bs-datepicker-inline>
+            </bs-datepicker-inline> -->
 
             <eos-datepicker-inline
                 #datepicker
@@ -18,33 +20,22 @@
                 [getClassForDate]="getClassForDate.bind(this)"
                 (bsValueChange)="onDateChange($event)"
             >
-                <!-- [bsConfig]="bsDatepickerCfg" -->
-                <!-- (bsBeforeShowDay)="beforeShowDay($event)" -->
-                <!-- (bsValueChange)="onDateChange($event)" -->
-                <!-- (mousemove)="onDataMouseMove($event)" -->
-            <!-- [bsValue]="bsInlineValue"
-            [bsConfig]="bsDatepickerCfg"
-            (bsBeforeShowDay)="beforeShowDay($event)"
-            (bsValueChange)="onDateChange($event)"
-            (mousemove)="onDataMouseMove($event)" -->
-
             </eos-datepicker-inline>
 
 
         </div>
-        <div class="col-sm-9">
-            <div class="row">
-                <div class="col-sm-4"
+        <div class="col-1">
+            <div class="form-group">
+                <div
                 *ngFor="let ctrl of inputs">
-                    <div class="form-group">
-                        <eos-dynamic-input [input]="ctrl"
-                        [form]="form"
-                        [readonly]="false"></eos-dynamic-input>
-                    </div>
+                    <eos-dynamic-input [input]="ctrl"
+                    [form]="form"
+                    [hideLabel]="true"
+                    [readonly]="false"></eos-dynamic-input>
                 </div>
-                <button (click)="onSave()">Сохранить</button>
             </div>
-
+            <button class="abutton btn btn-primary-full" (click)="onSave()">Сохранить</button>
+            <button class="abutton btn btn-primary-full" (click)="onClear()">Очистить</button>
         </div>
 
     </div>

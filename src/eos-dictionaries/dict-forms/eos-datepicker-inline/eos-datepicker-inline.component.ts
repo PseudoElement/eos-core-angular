@@ -8,7 +8,8 @@ export interface EDPCustomedDate {
     customClass?: string;
     isAnotherMonth?: boolean;
 }
-
+const MIN_YEAR = 1900;
+const MAX_YEAR = 2100;
 @Component({
     selector: 'eos-datepicker-inline',
     templateUrl: './eos-datepicker-inline.component.html',
@@ -27,28 +28,37 @@ export class EosDatepickerInlineComponent implements OnInit {
         'декабрь'
     ];
 
+    hoverFlags = [];
+    monthsTable = [
+        [this.rumonths[0], this.rumonths[1],  this.rumonths[2],  ],
+        [this.rumonths[3], this.rumonths[4],  this.rumonths[5],  ],
+        [this.rumonths[6], this.rumonths[7],  this.rumonths[8],  ],
+        [this.rumonths[9], this.rumonths[10], this.rumonths[11], ],
+    ];
+
     @Input('bsValue') bsValue: Date;
     @Input('getClassForDate') getClassForDate: Function;
 
     @ViewChild('daystbody') daystbody: ElementRef;
 
     @Output('bsValueChange') bsValueChange: EventEmitter<Date>;
-    // _bsValue: any;
-    // getClassForDate: EventEmitter<Date>;
+    yearsItemsArr: number[][];
 
     constructor (
-        // private elementRef: ElementRef,
         private renderer: Renderer2,
     ) {
         this.bsValueChange = new EventEmitter();
     }
 
     ngOnInit() {
+        if (!this.bsValue) {
+            this.bsValue = new Date();
+        }
         this.displayYear = this.bsValue.getFullYear();
         this.displayMonth = this.bsValue.getMonth();
         this.displayMode = 0;
         this._repaint();
-
+        this.bsValueChange.emit(this.bsValue);
     }
 
     sameDay(d1, d2) {
@@ -68,6 +78,17 @@ export class EosDatepickerInlineComponent implements OnInit {
             } else {
                 this.displayMonth--;
             }
+        } else if (this.displayMode === 1) {
+            if (this.displayYear - 1 >= MIN_YEAR) {
+                this.displayYear--;
+            }
+        } else if (this.displayMode === 2) {
+            if (this.displayYear - 7 >= MIN_YEAR) {
+                this.displayYear -= 7;
+            } else {
+                this.displayYear = MIN_YEAR;
+            }
+            this.yearsItemsArr = this._yearsItems(this.displayYear);
         }
         this._repaint();
     }
@@ -80,6 +101,17 @@ export class EosDatepickerInlineComponent implements OnInit {
             } else {
                 this.displayMonth++;
             }
+        } else if (this.displayMode === 1) {
+            if (this.displayYear + 1 <= MAX_YEAR) {
+                this.displayYear++;
+            }
+        } else if (this.displayMode === 2) {
+            if (this.displayYear + 8 <= MAX_YEAR) {
+                this.displayYear += 8;
+            } else {
+                this.displayYear = MAX_YEAR;
+            }
+            this.yearsItemsArr = this._yearsItems(this.displayYear);
         }
         this._repaint();
     }
@@ -96,13 +128,7 @@ export class EosDatepickerInlineComponent implements OnInit {
         this.bsValueChange.emit(value);
     }
 
-    _repaint() {
-
-        const childElements = this.daystbody.nativeElement.childNodes;
-        while (childElements.length) {
-            this.renderer.removeChild(this.daystbody.nativeElement, childElements[0]);
-        }
-
+    _paintDays() {
         const today = new Date();
         const year = this.displayYear;
         const month = this.displayMonth + 1;
@@ -142,9 +168,10 @@ export class EosDatepickerInlineComponent implements OnInit {
                 span.classList.add('is-other-month');
             } else if (currentDate.getMonth() === nextMonth) {
                 span.classList.add('is-other-month');
-            } else if (this.sameDay(currentDate, this.value)) {
-                span.classList.add('selected');
             } else {
+                if (this.sameDay(currentDate, this.value)) {
+                    span.classList.add('selected');
+                }
                 if (this.getClassForDate) {
                     const strclass = this.getClassForDate(currentDate);
                     if (strclass) {
@@ -165,33 +192,76 @@ export class EosDatepickerInlineComponent implements OnInit {
             currentDate.setDate(currentDate.getDate() + 1);
         }
     }
+    _paintMonths () {
+
+    }
+    _repaint() {
+        this.hoverFlags = [];
+
+        const childElements = this.daystbody.nativeElement.childNodes;
+        while (childElements.length) {
+            this.renderer.removeChild(this.daystbody.nativeElement, childElements[0]);
+        }
+
+        if (this.displayMode === 0) {
+            this._paintDays();
+        } else if (this.displayMode === 1) {
+
+            this._paintMonths();
+        }
+
+    }
 
     _dateforRowColumn(month: number, year: number): EDPCustomedDate {
         let currentDate = new Date(year, month, 1);
-        let lastDayOfPreviousMonth = new Date(year, month - 1, 0).getDate();
+        const lastDayOfPreviousMonth = new Date(year, month - 1, 0).getDate();
         if (currentDate.getDay() !== 0) {
                     currentDate = new Date(year, month - 2, lastDayOfPreviousMonth - currentDate.getDay() + 1);
                 }
 
         const res: EDPCustomedDate = {
             date: new Date(),
-        }
+        };
 
         return res;
     }
 
-    // textMonth(): string {
-
-    //     // return rumonths[this.displayMonth];
-    // }
-
     onYearClick() {
-
+        this.yearsItemsArr = this._yearsItems(this.displayYear);
+        this.displayMode = 2;
+        this._repaint();
     }
 
     onMonthClick() {
+        this.displayMode = 1;
+        this._repaint();
+    }
 
+    monthSelect(month: number) {
+        this.displayMonth = month;
+        this.displayMode = 0;
+        this._repaint();
+    }
+
+    yearSelect(year: number) {
+        this.displayYear = year;
+        this.displayMode = 1;
+        this._repaint();
     }
 
 
+    private _yearsItems (startYear: number): number[][] {
+        let y = startYear - 7;
+        const res = [];
+        let row = [];
+        for (let i = 0; i < 16; i++) {
+            row.push(y);
+            y++;
+            if (i % 4 === 3) {
+                res.push(row);
+                row = [];
+            }
+        }
+        return res;
+    }
 }

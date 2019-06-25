@@ -1,0 +1,26 @@
+eos-datepicker-inline {
+    .bs-datepicker-body table td {
+        color: black !important;
+        &.typeweekend {
+            .selected {
+                color: indianred !important
+            }
+            color: red !important
+        }
+        &.typeworkday {
+            color: black !important
+        }
+    }
+}
+
+.eos-calendar-form {
+    .col-1 {
+        padding: 20px;
+        display: inline-block;
+        vertical-align: top;
+    }
+    .abutton {
+        margin: 10px;
+        min-width: 100px;
+    }
+}
