@@ -53,18 +53,18 @@
             <div class="margin-t">{{leftDirectionTitle}}</div>
             <div class="full-width">
                 <div class="display-flex">
-                    <ng-container *ngIf="!direction; then arrowLeft else nonArrow"></ng-container>
+                    <ng-container *ngIf="direction; then arrowLeft else nonArrow"></ng-container>
                     <input class="form-control m-font margin-b"
                            [disabled]="true"
                            placeholder="{{classifName}}">
-                    <ng-container *ngIf="!direction; then nonArrow else arrowRight"></ng-container>
+                    <ng-container *ngIf="direction; then nonArrow else arrowRight"></ng-container>
                 </div>
                 <div class="display-flex">
-                    <ng-container *ngIf="!direction; then nonArrow else arrowLeft"></ng-container>
+                    <ng-container *ngIf="direction; then nonArrow else arrowLeft"></ng-container>
                     <input class="form-control m-font margin-b"
                            [disabled]="true"
                            placeholder="{{pairName}}">
-                    <ng-container *ngIf="!direction; then arrowRight else nonArrow"></ng-container>
+                    <ng-container *ngIf="direction; then arrowRight else nonArrow"></ng-container>
                 </div>
             </div>
             <div class="margin-t">{{rightDirectionTitle}}</div>

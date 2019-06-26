@@ -112,6 +112,19 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
             });
     }
 
+    getFullName(): string {
+        let res = '';
+        const f = this.nodeDataFull['printInfo']['SURNAME'];
+        const i = this.nodeDataFull['printInfo']['NAME'];
+        const o = this.nodeDataFull['printInfo']['PATRON'];
+
+        res += f ? f : '';
+        res += i ? ' ' + i + (i.length === 1 ? '.' : '') : '';
+        res += o ? ' ' + o + (o.length === 1 ? '.' : '') : '';
+
+        return res;
+    }
+
     private fioTogin(text: string) {
         return this.toTranslit(text.replace(/ /g, '').replace(/-/g, '').replace(/\./g, '').slice(0, 12));
     }
