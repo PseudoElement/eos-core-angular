@@ -22,6 +22,17 @@ import {EosStorageService} from 'app/services/eos-storage.service';
 import {EosSandwichService} from '../services/eos-sandwich.service';
 import {EosBreadcrumbsService} from '../../app/services/eos-breadcrumbs.service';
 
+import {RECENT_URL} from 'app/consts/common.consts';
+import {NodeListComponent} from '../node-list/node-list.component';
+import {CreateNodeComponent} from '../create-node/create-node.component';
+import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.interfaces';
+import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
+import {CounterNpEditComponent, E_COUNTER_TYPE} from '../counter-np-edit/counter-np-edit.component';
+import {CustomTreeNode} from '../tree2/custom-tree.component';
+import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { DID_NOMENKL_CL } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
+import { takeUntil } from 'rxjs/operators';
+
 import {
     DANGER_ACCESS_DENIED_DICT,
     DANGER_DEPART_IS_LDELETED,
@@ -39,17 +50,6 @@ import {
     WARN_LOGIC_OPEN,
     WARN_SELECT_NODE,
 } from '../consts/messages.consts';
-
-import {RECENT_URL} from 'app/consts/common.consts';
-import {NodeListComponent} from '../node-list/node-list.component';
-import {CreateNodeComponent} from '../create-node/create-node.component';
-import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.interfaces';
-import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
-import {CounterNpEditComponent, E_COUNTER_TYPE} from '../counter-np-edit/counter-np-edit.component';
-import {CustomTreeNode} from '../tree2/custom-tree.component';
-import {APS_DICT_GRANT, EosAccessPermissionsService} from 'eos-dictionaries/services/eos-access-permissions.service';
-import {DID_NOMENKL_CL} from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
-import {takeUntil} from 'rxjs/operators';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -160,25 +160,25 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 this._nodeId = params.nodeId;
                 if (this.dictionaryId) {
                     this._dictSrv.openDictionary(this.dictionaryId)
-                    .then(() => {
-                        if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
-                            this.dictionary.root.children = null;
-                            const n: CustomTreeNode = this._dictSrv.currentDictionary.descriptor.setRootNode(this._nodeId);
-                            if (n) {
-                                this.title = n.title;
+                        .then(() => {
+                            if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
+                                this.dictionary.root.children = null;
+                                const n: CustomTreeNode = this._dictSrv.currentDictionary.descriptor.setRootNode(this._nodeId);
+                                if (n) {
+                                    this.title = n.title;
+                                }
+                                this._dictSrv.setCustomNodeId(this._nodeId);
+                                this._dictSrv.selectCustomTreeNode().then ((data) => {
+                                });
+                            } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
+                                if (this._nodeId === '0.' ) {
+                                    this._nodeId = '';
+                                }
+                                this._dictSrv.selectTreeNode(this._nodeId);
+                            } else {
+                                this._dictSrv.selectTreeNode(this._nodeId);
                             }
-                            this._dictSrv.setCustomNodeId(this._nodeId);
-                            this._dictSrv.selectCustomTreeNode().then ((data) => {
-                            });
-                        } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
-                            if (this._nodeId === '0.' ) {
-                                this._nodeId = '';
-                            }
-                            this._dictSrv.selectTreeNode(this._nodeId);
-                        } else {
-                            this._dictSrv.selectTreeNode(this._nodeId);
-                        }
-                    });
+                        });
                 }
             }
         });

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, OnInit} from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { DynamicInputBase } from './dynamic-input-base';
 import { BsDatepickerConfig, BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { EosUtils } from '../core/utils';
@@ -11,6 +11,8 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
     bsConfig: Partial<BsDatepickerConfig>;
     placement = 'bottom';
     bsDate: Date;
+
+    hidePicker = false;
 
     get currentValue(): string {
         const control = this.control;
@@ -45,6 +47,7 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
     }
 
     ngOnInit() {
+        this.hidePicker = (this.viewOpts ? this.viewOpts.hidePicker : false);
         this.localeService.use('ru');
         this.updateDatePickerPlacement();
     }

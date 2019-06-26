@@ -84,11 +84,15 @@ import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-fi
 import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter.component';
 import {CopyPropertiesComponent} from './copy-properties/copy-properties.component';
 import {CopyNodeComponent} from './copy-node/copy-node.component';
-
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { DictFormComponent } from './dict-forms/dict-form.component';
+import { EosDatepickerInlineComponent } from './dict-forms/eos-datepicker-inline/eos-datepicker-inline.component';
+import { CalendarFormComponent } from './dict-forms/calendar-form/calendar-form.component';
 @NgModule({
     declarations: [
         CardComponent,
         CardEditComponent,
+        DictFormComponent,
         ColumnSettingsComponent,
         CounterNpEditComponent,
         AdvCardRKEditComponent,
@@ -139,6 +143,8 @@ import {CopyNodeComponent} from './copy-node/copy-node.component';
         PrjDefaultValuesComponent,
         LinkCardComponent,
         NadzorCardEditComponent,
+        CalendarFormComponent,
+        EosDatepickerInlineComponent,
         CopyPropertiesComponent,
         CopyNodeComponent,
     ],
@@ -153,6 +159,8 @@ import {CopyNodeComponent} from './copy-node/copy-node.component';
         CreateNodeBroadcastChannelComponent,
         DocgroupTemplateConfigComponent,
         PrjDefaultValuesComponent,
+        CalendarFormComponent,
+        EosDatepickerInlineComponent,
         CopyPropertiesComponent,
         CopyNodeComponent,
     ],
@@ -173,6 +181,7 @@ import {CopyNodeComponent} from './copy-node/copy-node.component';
         BsDropdownModule.forRoot(),
         TypeaheadModule.forRoot(),
         DragulaModule,
+        BsDatepickerModule.forRoot(),
     ],
     exports: [
         DictionaryComponent,
@@ -184,6 +193,8 @@ import {CopyNodeComponent} from './copy-node/copy-node.component';
         RecordViewComponent,
         RKDefaultValuesCardComponent,
         RulesSelectComponent,
+        CalendarFormComponent,
+        EosDatepickerInlineComponent,
     ],
     providers: [
         DictionaryDescriptorService,

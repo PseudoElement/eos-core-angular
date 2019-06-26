@@ -65,7 +65,7 @@
             },
             "configurations": {
               "production": {
-                "browserTarget": "test-app:build:production"
+                "browserTarget": "eos:build:production"
               }
             }
           },

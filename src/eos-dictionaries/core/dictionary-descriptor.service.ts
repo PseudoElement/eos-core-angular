@@ -1,4 +1,4 @@
-import { DID_NOMENKL_CL } from './../consts/dictionaries/nomenkl.const';
+import { NOMENKL_DICT } from './../consts/dictionaries/nomenkl.const';
 import { Injectable } from '@angular/core';
 import { IDictionaryDescriptor, E_DICT_TYPE } from 'eos-dictionaries/interfaces';
 import { AbstractDictionaryDescriptor } from 'eos-dictionaries/core/abstract-dictionary-descriptor';
@@ -103,7 +103,7 @@ export class DictionaryDescriptorService {
                     case 'link':
                         res = new LinkDictionaryDescriptor(descr, this.apiSrv);
                         break;
-                    case DID_NOMENKL_CL:
+                    case NOMENKL_DICT.id:
                         res = new NomenklDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case 'reestrtype':

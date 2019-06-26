@@ -1,3 +1,4 @@
+import { DICTIONARIES } from 'eos-dictionaries/consts/dictionaries.consts';
 import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { DOCGROUP_DICT } from './../consts/dictionaries/docgroup.consts';
 import { Injectable, Injector } from '@angular/core';
@@ -239,6 +240,16 @@ export class EosDictService {
         this._initPaginationConfig();
     }
 
+    getDescr(dictionaryId: string): IDictionaryDescriptor {
+        for (let i = 0; i < DICTIONARIES.length; i++) {
+            const dict = DICTIONARIES[i];
+            if (dict.id === dictionaryId) {
+                return dict;
+            }
+        }
+        return null;
+    }
+
     storeDBWeights(dict: EosDictionary, changeList: {}): Promise<any> {
 
         const changes = [];
@@ -390,7 +401,6 @@ export class EosDictService {
     // Because this.viewParametrs is and may be changed from other classes need way for share state
     updateViewParameters(updates?: any) {
         if ( updates && updates.hasOwnProperty('userOrdered') ) {
-            console.log (updates );
             this.userOrdered = updates.userOrdered;
             const dictionary = this.currentDictionary;
             if (dictionary) {

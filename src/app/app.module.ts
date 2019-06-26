@@ -19,7 +19,6 @@ import { EosRestModule } from '../eos-rest/eos-rest.module';
 import { EosParametersModule } from '../eos-parameters/eos-parameters.module';
 import { EosUserParamsModule } from 'eos-user-params/eos-user-params.module';
 import { EosUserSelectModule } from 'eos-user-select/eos-user-select.module';
-import { EosReportModule } from 'eos-report/eos-report.module';
 
 import { AppComponent } from './app.component';
 import { BreadcrumbsComponent } from './breadcrumb/breadcrumb.component';
@@ -49,11 +48,13 @@ import { NavParamService } from './services/nav-param.service';
 import { WaitClassifService } from './services/waitClassif.service';
 import {CertificateService} from './services/certificate.service';
 import { ExportImportClService } from './services/export-import-cl.service';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 /* guards */
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
 import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { PermissionsGuard } from './guards/permissions.guard';
+import { EosReportModule } from 'eos-report/eos-report.module';
 /* end guards */
 
 
@@ -73,7 +74,7 @@ import { PermissionsGuard } from './guards/permissions.guard';
         TestPageComponent,
         TitleComponent,
         UserComponent,
-        NavParamComponent
+        NavParamComponent,
     ],
     imports: [
         AppRoutingModule,
@@ -85,6 +86,7 @@ import { PermissionsGuard } from './guards/permissions.guard';
         SortableModule.forRoot(),
         TooltipModule.forRoot(),
         EosRestModule.forRoot(APP_CONFIG_LOCAL),
+        BsDatepickerModule.forRoot(),
         EosCommonModule,
         EosDictionariesModule,
         EosParametersModule,
