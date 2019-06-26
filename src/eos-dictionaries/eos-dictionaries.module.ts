@@ -84,8 +84,8 @@ import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-fi
 import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DictFormComponent } from './dict-forms/dict-form.component';
-import { DatepickerinlineComponent } from './dict-forms/datepickerinline/datepickerinline.component';
 import { EosDatepickerInlineComponent } from './dict-forms/eos-datepicker-inline/eos-datepicker-inline.component';
+import { CalendarFormComponent } from './dict-forms/calendar-form/calendar-form.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -141,7 +141,7 @@ import { EosDatepickerInlineComponent } from './dict-forms/eos-datepicker-inline
         PrjDefaultValuesComponent,
         LinkCardComponent,
         NadzorCardEditComponent,
-        DatepickerinlineComponent,
+        CalendarFormComponent,
         EosDatepickerInlineComponent,
     ],
     entryComponents: [
@@ -155,7 +155,7 @@ import { EosDatepickerInlineComponent } from './dict-forms/eos-datepicker-inline
         CreateNodeBroadcastChannelComponent,
         DocgroupTemplateConfigComponent,
         PrjDefaultValuesComponent,
-        DatepickerinlineComponent,
+        CalendarFormComponent,
         EosDatepickerInlineComponent,
     ],
     imports: [
@@ -187,7 +187,7 @@ import { EosDatepickerInlineComponent } from './dict-forms/eos-datepicker-inline
         RecordViewComponent,
         RKDefaultValuesCardComponent,
         RulesSelectComponent,
-        DatepickerinlineComponent,
+        CalendarFormComponent,
         EosDatepickerInlineComponent,
     ],
     providers: [

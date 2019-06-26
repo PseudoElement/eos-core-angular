@@ -130,4 +130,9 @@ export class EosUtils {
         }
         return msg;
     }
+
+    static isValidDate(d) {
+        return d instanceof Date && !isNaN(d.getTime());
+    }
+
 }

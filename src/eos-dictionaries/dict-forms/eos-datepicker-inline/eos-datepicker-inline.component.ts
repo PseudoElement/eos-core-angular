@@ -1,8 +1,5 @@
 import { Input, OnInit, ViewChild, ElementRef, Renderer2, Component, EventEmitter, Output } from '@angular/core';
 
-
-
-
 export interface EDPCustomedDate {
     date: Date;
     customClass?: string;
@@ -10,6 +7,7 @@ export interface EDPCustomedDate {
 }
 const MIN_YEAR = 1900;
 const MAX_YEAR = 2100;
+
 @Component({
     selector: 'eos-datepicker-inline',
     templateUrl: './eos-datepicker-inline.component.html',

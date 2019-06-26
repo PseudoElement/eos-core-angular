@@ -1,4 +1,4 @@
-import { DATE_INPUT_PATERN } from './../../../eos-common/consts/common.consts';
+import { DATE_INPUT_PATERN } from '../../../eos-common/consts/common.consts';
 import { FormGroup } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Component, OnInit, OnChanges, Injector, ViewChild } from '@angular/core';
@@ -10,6 +10,8 @@ import { PipRX, CALENDAR_CL } from 'eos-rest';
 import { EosDatepickerInlineComponent } from '../eos-datepicker-inline/eos-datepicker-inline.component';
 import { SUCCESS_SAVE } from 'eos-dictionaries/consts/messages.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { IDictFormBase } from '../dict-form-base.interface';
+import { EosUtils } from 'eos-common/core/utils';
 
 
 enum dayType {
@@ -44,22 +46,23 @@ const TEST_INPUTS = <IBaseInput[]>[
 interface CalendarRecord extends CALENDAR_CL {
     isChanged?: boolean;
 }
+
 @Component({
-  selector: 'eos-datepickerinline',
-  templateUrl: './datepickerinline.component.html',
-  styleUrls: ['./datepickerinline.component.scss']
+  selector: 'eos-calendar-form',
+  templateUrl: './calendar-form.component.html',
+  styleUrls: ['./calendar-form.component.scss']
 })
 
-export class DatepickerinlineComponent implements OnInit, OnChanges {
+export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
 
     @ViewChild('datepicker') datepicker: EosDatepickerInlineComponent;
 
 
-    bsInlineValue = new Date();
+    // bsInlineValue = new Date();
     form: FormGroup;
     inputs: InputBase<any>[];
 
-    selectedDate;
+    selectedDate = new Date();
     dbDates: CalendarRecord[];
 
     bsDatepickerCfg: BsDatepickerConfig = Object.assign(new BsDatepickerConfig(), {
@@ -78,6 +81,7 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
     private _apiSrv: PipRX;
     private _manualUpdating: boolean;
     private _msgSrv: EosMessageService;
+    private _formHasChanges: boolean = false;
 
     constructor(
         private localeService: BsLocaleService,
@@ -98,21 +102,18 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
 
     }
 
-    isValidDate(d) {
-        return d instanceof Date && !isNaN(d.getTime());
+    hasChanges(): boolean {
+        return this._formHasChanges;
     }
 
     ngOnInit() {
         this.localeService.use('ru');
-        this.selectedDate = this.bsInlineValue;
-        // const dateFilter = this.form.controls['filter.stateDate'];
         this.form.valueChanges.subscribe((data) => {
-            if (this.selectedDate !== data.dateString && this.isValidDate(data.dateString)) {
+            if (this.selectedDate !== data.dateString && EosUtils.isValidDate(data.dateString)) {
                 this.datepicker.value = data.dateString;
             }
         });
     }
-
 
     ngOnChanges() {
     }
@@ -127,6 +128,7 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
             t = { ISN_CALENDAR: -1, DATE_CALENDAR: d, DATE_TYPE: type, isChanged: true };
             this.dbDates.push(t);
         }
+        this._formHasChanges = true;
         this.datepicker._repaint();
     }
 
@@ -145,6 +147,7 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
 
     onClear() {
         this.refreshDB();
+        this._formHasChanges = false;
     }
 
     onSave() {
@@ -155,7 +158,7 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
                 this._apiSrv.batch(changes, '')
                     .then(() => {
                         this.refreshDB();
-
+                        this._formHasChanges = false;
                         this._msgSrv.addNewMessage(SUCCESS_SAVE);
                     })
                     .catch((err) => {

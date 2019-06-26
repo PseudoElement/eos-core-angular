@@ -1,5 +1,5 @@
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces/index';
-import { Component, HostListener, OnDestroy } from '@angular/core';
+import { Component, HostListener, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 // import {toNumber} from 'ngx-bootstrap/timepicker/timepicker.utils';
@@ -21,16 +21,17 @@ import { CONFIRM_SAVE_ON_LEAVE } from '../consts/confirm.consts';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { EDIT_CARD_MODES } from 'eos-dictionaries/card/card.component';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-// import { UUID } from 'angular2-uuid';
-
-
+import { IDictFormBase } from './dict-form-base.interface';
 @Component({
     selector: 'eos-dict-form',
     templateUrl: 'dict-form.component.html',
     // styleUrls: ['./dict-form.component.scss']
 })
 export class DictFormComponent implements CanDeactivateGuard, OnDestroy {
-    isChanged = false;
+
+    @ViewChild('formElement') formElement: IDictFormBase;
+
+    // isChanged = false;
     fieldsDescription: any = {};
 
     dictionaryId: string;
@@ -67,9 +68,7 @@ export class DictFormComponent implements CanDeactivateGuard, OnDestroy {
         this._route.params.subscribe((params) => {
             this.dictionaryId = params.dictionaryId;
             this.dictDescr = this._dictSrv.getDescr(params.dictionaryId);
-            // this.nodeId = params.nodeId;
             this.selfLink = this._router.url;
-            // tabNum = (toNumber(params.tabNum));
             tabNum = +params.tabNum;
             this._init();
         });
@@ -93,7 +92,7 @@ export class DictFormComponent implements CanDeactivateGuard, OnDestroy {
             /* cann't handle user answer */
             // this._clearEditingCardLink();
         }
-        if (this.isChanged) {
+        if (this.formElement.hasChanges()) {
             evt.returnValue = CONFIRM_SAVE_ON_LEAVE.body;
             return false;
         }
@@ -116,19 +115,6 @@ export class DictFormComponent implements CanDeactivateGuard, OnDestroy {
         this.disableSave = val;
     }
 
-    // forceView() {
-    //     if (this._mode === EDIT_CARD_MODES.edit) {
-    //         this._openNode(this.node, EDIT_CARD_MODES.view);
-    //     }
-    // }
-
-    // edit() {
-    //     const _canEdit = this._preventMultiEdit() && this._preventDeletedEdit();
-    //     if (_canEdit) {
-    //         this._openNode(this.node, EDIT_CARD_MODES.edit);
-    //     }
-    // }
-
     close() {
         const url = this._storageSrv.getItem(RECENT_URL);
         if (url) {
@@ -139,60 +125,15 @@ export class DictFormComponent implements CanDeactivateGuard, OnDestroy {
         }
     }
 
-
-    cancel(): void {
-        this.isChanged = false;
-        /* _askForSaving fired on route change */
-        // this._openNode(this.node, EDIT_CARD_MODES.view);
-    }
-
-    recordChanged(isChanged: boolean) {
-        this.isChanged = isChanged;
-        // this.isChanged = this._dictSrv.isDataChanged(this.nodeData, this._originalData);
-    }
-
-    // next() {
-    //     if (this.nodeIndex < this.nodes.length - 1) {
-    //         this.nodeIndex++;
-    //         this._openNode(this.nodes[this.nodeIndex]);
-    //     }
+    // cancel(): void {
+    //     this.isChanged = false;
+    //     /* _askForSaving fired on route change */
+    //     // this._openNode(this.node, EDIT_CARD_MODES.view);
     // }
 
-    // prev() {
-    //     if (this.nodeIndex > 0) {
-    //         this.nodeIndex--;
-    //         this._openNode(this.nodes[this.nodeIndex]);
-    //     }
-    // }
-
-    // save(): void {
-    //     const _data = this.cardEditRef.getNewData();
-    //     this._confirmSave(_data)
-    //         .then((res: boolean) => {
-    //             if (res) {
-    //                 this.disableSave = true;
-    //                 this._save(_data)
-    //                     .then((node: EosDictionaryNode) => this._afterSaving(node));
-    //             }
-    //          });
-    // }
-
-    // disManager(mod: boolean, tooltip: any): boolean {
-    //     if (mod) {
-    //         if (this.isFirst || !this.node.parent) {
-    //             tooltip.hide();
-    //             return true;
-    //         } else {
-    //             return false;
-    //         }
-    //     } else {
-    //         if (this.isLast || !this.node.parent) {
-    //             tooltip.hide();
-    //             return true;
-    //         } else {
-    //             return false;
-    //         }
-    //     }
+    // recordChanged(isChanged: boolean) {
+    //     this.isChanged = isChanged;
+    //     // this.isChanged = this._dictSrv.isDataChanged(this.nodeData, this._originalData);
     // }
 
     goTo(url: string): void {
@@ -208,30 +149,18 @@ export class DictFormComponent implements CanDeactivateGuard, OnDestroy {
     }
 
     isEditEnabled(): boolean {
-
         if (this._eaps.isAccessGrantedForDictionary(this.dictionaryId,
             this._dictSrv.treeNodeIdByDict(this._dictSrv.currentDictionary.id)) < APS_DICT_GRANT.readwrite) {
             return false;
         }
-
-        // if (this._dictSrv.currentDictionary.descriptor.editOnlyNodes !== undefined) {
-        //     if (this._dictSrv && this.node) {
-        //         if (!(this._dictSrv.currentDictionary.descriptor.editOnlyNodes && this.node && this.node.isNode)) {
-        //             return false;
-        //         }
-        //     }
-        // }
-        // return (this.node && !this.node.updating);
     }
 
     private _init() {
         this.nextRoute = this._router.url;
     }
 
-
-
     private _askForSaving(): Promise<boolean> {
-        if (this.isChanged) {
+        if (this.formElement.hasChanges()) {
             return this._confirmSrv.confirm(Object.assign({}, CONFIRM_SAVE_ON_LEAVE,
                 { confirmDisabled: this.disableSave }))
                 .then((doSave) => {
@@ -252,87 +181,5 @@ export class DictFormComponent implements CanDeactivateGuard, OnDestroy {
         }
     }
 
-    // private _confirmSave(data): Promise<boolean> {
-    //     // return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv);
-    // }
-
-    // private _save(data: any): Promise<any> {
-    //     return this._dictSrv.updateNode(this.node, data)
-    //         .then((node) => this._afterUpdating(node))
-    //         .catch((err) => {
-    //             if (err === 'cancel' && this.cardEditRef.dictionaryId === 'reestrtype') {
-    //                 const oldDelivery = this.cardEditRef.data.rec._orig['ISN_DELIVERY'];
-    //                 this.cardEditRef.inputs['rec.ISN_DELIVERY'].value = oldDelivery;
-    //                 this.cardEditRef.newData.rec['ISN_DELIVERY'] = oldDelivery;
-    //                 this.cardEditRef.form.controls['rec.ISN_DELIVERY'].setValue(oldDelivery, this.cardEditRef.inputs['rec.ISN_DELIVERY'].options);
-    //                 return null;
-    //             } else if (err === 'cancel') {
-    //                 return null;
-    //             }
-    //             this._errHandler(err);
-    //         });
-    // }
-
-    // private _afterSaving(node: EosDictionaryNode) {
-    //     if (node) {
-    //         this._initNodeData(node);
-    //         this.cancel();
-    //     }
-    //     this.disableSave = false;
-    // }
-
-    // private _afterUpdating(node: EosDictionaryNode): EosDictionaryNode {
-    //     if (node) {
-    //         node.data['updateTrules'] = [];
-    //         this.recordChanged(node.data);
-    //         this.isChanged = false;
-    //         this._msgSrv.addNewMessage(SUCCESS_SAVE);
-    //         this._deskSrv.addRecentItem({
-    //             url: this._router.url,
-    //             title: node.title,
-    //             iconName: '',
-    //         });
-    //         this._clearEditingCardLink();
-    //     } else {
-    //         this._msgSrv.addNewMessage(WARN_SAVE_FAILED);
-    //     }
-    //     return node;
-    // }
-
-
-    // private _setEditingCardLink() {
-    //     this.getLastEditedCard();
-    //     if (!this.lastEditedCard) {
-    //         this.lastEditedCard = {
-    //             'id': this.nodeId,
-    //             'title': this.nodeName,
-    //             'link': this._makeUrl(this.nodeId, EDIT_CARD_MODES.edit),
-    //             // uuid: this._uuid
-    //         };
-    //         // console.log('this.nodeId', this.nodeId);
-    //         this._storageSrv.setItem(LS_EDIT_CARD, this.lastEditedCard, true);
-    //     }
-    // }
-
-    // private _clearEditingCardLink(): void {
-    //     if (this.lastEditedCard && this.lastEditedCard.id === this.nodeId) {
-    //         this.lastEditedCard = null;
-    //         this._storageSrv.removeItem(LS_EDIT_CARD);
-    //     }
-    // }
-
-    // private getLastEditedCard() {
-    //     this.lastEditedCard = this._storageSrv.getItem(LS_EDIT_CARD);
-    // }
-
-    // private _errHandler(err) {
-    //     const errMessage = err.message ? err.message : err;
-    //     this._msgSrv.addNewMessage({
-    //         type: 'danger',
-    //         title: 'Ошибка операции',
-    //         msg: errMessage
-    //     });
-    //     return null;
-    // }
 
 }
