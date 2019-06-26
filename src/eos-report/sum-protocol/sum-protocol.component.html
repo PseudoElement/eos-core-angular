@@ -26,7 +26,7 @@
                 <div class="item-count-sum usual-border-sum m-font-sum">
                     <span class="item-count-content-sum">
                         Записей:
-                        <span class="counter-sum">{{posts}}</span>
+                        <span class="counter-sum">{{config?.itemsQty}}</span>
                     </span>
                 </div>
                 </div>
@@ -57,31 +57,33 @@
                     </div>
                 </div>
                 <div class="user-item sum-list-prot">
-                    <div class="contain-span-header" *ngFor="let user of frontData" [ngClass]="{'highlighted': user.checked === true}">
-                        <div class="check-sum">
-                            <label class="checkbox minus-checkbox">
-                                <input type="checkbox" [checked]="user.checked || flagChecked" [ngModel]="user.checked" (ngModelChange)="markNode($event,user)" (click)="CheckUser(user)">
-                                <span class="eos-icon eos-icon-checkbox-black"></span>
-                            </label>
+                    <div *ngFor="let user of frontData; let i = index ">
+                        <div class="contain-span-header"  [ngClass]="{'highlighted': user.checked === true}">
+                            <div class="check-sum">
+                                <label class="checkbox minus-checkbox">
+                                    <input type="checkbox" [checked]="user.checked || flagChecked" [ngModel]="user.checked" (ngModelChange)="markNode($event,user)" (click)="CheckUser(user)">
+                                    <span class="eos-icon eos-icon-checkbox-black"></span>
+                                </label>
+                            </div>
+                            <span class="item-table width-title1"  (click)="SingleUserCheck(user)">
+                                {{user.date}}
+                            </span>
+                            <span class=" item-table width-title2"  (click)="SingleUserCheck(user)">
+                                <div class="">
+                                    {{user.eventUser}}
+                                </div>
+                            </span>
+                            <span class="item-table width-title3"  (click)="SingleUserCheck(user)">
+                                <div class="">
+                                    {{user.isnWho}}
+                                </div>
+                            </span>
+                            <span class="item-table width-title3"  (click)="SingleUserCheck(user)">
+                                <div class="">
+                                    {{user.isnUser}}
+                                </div>
+                            </span>
                         </div>
-                        <span class="item-table width-title1"  (click)="SingleUserCheck(user)">
-                            {{user.date}}
-                        </span>
-                        <span class=" item-table width-title2"  (click)="SingleUserCheck(user)">
-                            <div class="">
-                                {{user.eventUser}}
-                            </div>
-                        </span>
-                        <span class="item-table width-title3"  (click)="SingleUserCheck(user)">
-                            <div class="">
-                                {{user.isnWho}}
-                            </div>
-                        </span>
-                        <span class="item-table width-title3"  (click)="SingleUserCheck(user)">
-                            <div class="">
-                                {{user.isnUser}}
-                            </div>
-                        </span>
                     </div>
                 </div>
             </div>
@@ -96,15 +98,17 @@
             >
                 <span class="icon-btn eos-icon eos-icon-arrow-v-blue-left small to-left"></span>
             </button>
-            <button *ngFor="let page of pages let i = index" class="pag-btn btn-default selected-text"(click)="showPage(page)">{{page}}</button>
-            <button class="pag-btn btn-default next"  (click)="showPage(config.current + 1)" [disabled]="config?.current === pageCount">
+            <button *ngFor="let page of pages let i = index" class="pag-btn btn-default selected-text" (click)="showPage(page)">{{page}}</button>
+            <button class="pag-btn btn-default next"  (click)="showPage(config.current + 1)" [disabled]="config?.current*config?.length >= config?.itemsQty">
                 <span class="icon-btn eos-icon eos-icon-arrow-v-blue-left small to-rigth"></span>
             </button>
         </div>
 
-        <button class="btn show-more selected-text" [disabled]="config?.current*config?.length >= config?.itemsQty"
-            (click)="showMore()">Показать еще</button>
-
+        <button class="btn show-more selected-text" 
+            (click)="showMore()"
+            [disabled]="config?.current*config?.length >= config?.itemsQty" 
+            >Показать еще</button>
+             
         <div dropdown
             placement="top right"
             dropup="true"

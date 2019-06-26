@@ -17,6 +17,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { FormHelperService } from 'eos-user-params/shared/services/form-helper.services';
 import { EosCommonModule } from 'eos-common/eos-common.module';
+import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
 /*     ----Services----     */
 
 @NgModule({
@@ -40,7 +41,8 @@ import { EosCommonModule } from 'eos-common/eos-common.module';
     ],
     providers: [
         InputParamControlService,
-        FormHelperService
+        FormHelperService,
+        EosDictService
     ]
 })
 

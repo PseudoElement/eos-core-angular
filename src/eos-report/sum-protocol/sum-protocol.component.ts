@@ -29,7 +29,6 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   posts: number;
   public config: IPaginationConfig;
   readonly pageLengths = PAGES;
-
   pageCount = 1;
   pages: number[] = [];
   options = [
@@ -64,8 +63,6 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       .subscribe((config: IPaginationConfig) => {
         if (config) {
           this.config = config;
-          this._update();
-          console.log(config);
         }
       });
   }
@@ -83,21 +80,25 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       .catch((error) => {
         this._errorSrv.errorHandler(error);
       });
+    this.GetTopEvents(this.config.length);
+  }
+
+  GetTopEvents(length?, skip?) {
     this._pipeSrv.read({
       USER_AUDIT: ALL_ROWS,
       orderby: 'ISN_EVENT',
-
+      top: length,
+      skip: skip,
+      inlinecount: 'allpages'
     })
       .then((data: any) => {
+        const parsePosts = data.TotalRecords;
+        this.GetCountPosts(parsePosts);
         this.usersAudit = data;
-        this.posts = this.usersAudit.length;
-        this.config.itemsQty = this.posts;
-        this._update();
-
         return this.usersAudit;
       })
-      .then(() => {
-        this.SelectUsers(this.usersAudit);
+      .then((data) => {
+        this.SelectUsers(data);
         return this._pipeSrv.read({
           USER_CL: {
             criteries: {
@@ -114,15 +115,24 @@ export class EosReportSummaryProtocolComponent implements OnInit {
             this.findUsers.push({ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON });
           }
         }
-      })
-      .then(() => {
         this.ShowData();
-
-      })
-      .catch((error) => {
+        this._update();
+      }).catch((error) => {
         this._errorSrv.errorHandler(error);
       });
   }
+
+  GetCountPosts(posts: string): number {
+    if (posts !== undefined) {
+      posts = posts.split('').reverse().join('');
+      posts = posts.split(',')[0];
+      posts = posts.split('').reverse().join('');
+      this.posts = parseInt(posts, 10);
+      this.config.itemsQty = parseInt(posts, 10);
+      return this.config.itemsQty;
+    }
+  }
+
   MergeProtocol(): any {
     let parValCheck;
     if (this.logUsers === false) {
@@ -138,11 +148,13 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       }
     }];
   }
+
   CheckProtocol() {
     this.logUsers = !this.logUsers;
     const query = this.MergeProtocol();
     this._pipeSrv.batch(query, '');
   }
+
   SelectUsers(data) {
     let isnUser,
       isnWho;
@@ -166,6 +178,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       }
     }
   }
+
   markNode(marked: boolean, user) {
     user.checked = marked;
     if (marked === true) {
@@ -173,6 +186,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
     }
     this.checkNotAllUsers();
   }
+
   checkNotAllUsers() {
     const usersCheck = [];
     const usersNotCheck = [];
@@ -193,6 +207,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       return this.flagChecked = true;
     }
   }
+
   get getflagChecked() {
     switch (this.flagChecked) {
       case true:
@@ -229,7 +244,6 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       user.checked = true;
     }
     this.lastUser = user;
-
   }
 
   CheckUser(user) {
@@ -272,7 +286,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
         });
       }
     });
-    return this.frontData;
+    return this.frontData.length;
   }
   filterProtocol(evnt: any) {
     let arr = [];
@@ -336,16 +350,19 @@ export class EosReportSummaryProtocolComponent implements OnInit {
     }
     this.frontData = arr;
   }
+
   DeleteEvent(isnEvent) {
     const query = this.createRequestForDelete(isnEvent);
     this._pipeSrv.batch(query, '');
   }
+
   createRequestForDelete(isnEvent) {
     return [{
       method: 'DELETE',
       requestUri: `USER_AUDIT(${isnEvent})`
     }];
   }
+
   DeleteEventUser() {
     for (const user of this.frontData) {
       if (user.checked === true) {
@@ -357,20 +374,18 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   ShowDataUser() {
     return this.GetDataUser(this.lastUser.isnEvent);
   }
+
   GetDataUser(isnEvent) {
-    console.log(isnEvent);
     // this.openFrame(12);
     // window.open(`/x1807/getfile.aspx/${isnEvent}/3x.html`, 'example', 'width=900,height=700');
     this._pipeSrv.read({
       REF_FILE: PipRX.criteries({ 'ISN_REF_DOC': String(isnEvent) })
     })
       .then((data: any) => {
-        console.log(data);
         this.isnRefFile = data[0].ISN_REF_FILE;
         return this.isnRefFile;
       })
       .then((data) => {
-        console.log(data);
         this.openFrame(data);
       })
       .catch((error) => {
@@ -389,23 +404,32 @@ export class EosReportSummaryProtocolComponent implements OnInit {
     const parseDate = `${curr_year}.${curr_month}.${curr_date} ${hms}`;
     return parseDate;
   }
-  public setPageLength(length: number): void {
-    this._storageSrv.setItem(LS_PAGE_LENGTH, length, true);
-    this.config.length = length;
-    this._dictSrv.changePagination(this.config);
-  }
 
   public showMore() {
+    this.GetTopEvents(this.config.length * 2, this.config.current * this.config.length - this.config.length);
     this.config.current++;
     this._dictSrv.changePagination(this.config);
   }
 
-  public showPage(page: number): void {
+  public showPage(page: number): any {
     if (page !== this.config.current) {
+      this._storageSrv.setItem('page_number_user_settings', page, false);
       this.config.current = page;
       this.config.start = page;
       this._dictSrv.changePagination(this.config);
+      this.GetTopEvents(this.config.length, this.config.length * this.config.current - this.config.length);
+      this.ShowData();
     }
+  }
+
+  public setPageLength(length: number): void {
+    this._storageSrv.setItem(LS_PAGE_LENGTH, length, true);
+    this.config.length = length;
+    if (this.config.length > this.config.itemsQty) {
+      this.config.current = 1;
+    }
+    this.GetTopEvents(this.config.length);
+    this._dictSrv.changePagination(this.config);
   }
 
   private _update() {
@@ -414,15 +438,14 @@ export class EosReportSummaryProtocolComponent implements OnInit {
     const firstSet = this._buttonsTotal - this.config.current;
     const lastSet = total - this._buttonsTotal + 1;
     const middleSet = this._buttonsTotal - 3;
-
     this.pageCount = total;
     this.pages = [];
     for (let i = 1; i <= this.pageCount; i++) {
       if (
-        i === 1 || i === this.pageCount || // first & last pages
-        (1 < firstSet && i < this._buttonsTotal) || // first 4 pages
-        (1 < this.config.current - lastSet && i - lastSet > 0) || // last 4 pages
-        (middleSet > this.config.current - i && i - this.config.current < middleSet)  // middle pages
+        i === 1 || i === this.pageCount ||
+        (1 < firstSet && i < this._buttonsTotal) ||
+        (1 < this.config.current - lastSet && i - lastSet > 0) ||
+        (middleSet > this.config.current - i && i - this.config.current < middleSet)
       ) {
         this.pages.push(i);
       }
