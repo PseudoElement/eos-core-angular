@@ -11,10 +11,10 @@
                 </div>
             </div>
             <ng-template #fullName>
-                <span>{{getFullName()}} </span>
+                <div>{{getFullName()}} </div>
             </ng-template>
             <ng-template #shortName>
-                <span>{{nodeDataFull.rec['SURNAME']}}</span>
+                <div>{{nodeDataFull.rec['SURNAME']}}</div>
             </ng-template>
 
             <div *ngIf="nodeDataFull.rec"

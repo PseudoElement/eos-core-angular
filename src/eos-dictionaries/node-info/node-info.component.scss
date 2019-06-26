@@ -46,12 +46,10 @@
             flex: 0 1 239px;
             max-height: $photo-radius;
             max-width: calc(100% - 100px);
-            span {
+            div {
                 max-width: 100%;
                 display: inline-block;
                 overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
             }
         }
     }
