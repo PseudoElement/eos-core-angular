@@ -19,6 +19,7 @@ export class IDynamicInputEvents {
 }
 export class IDynamicInputOptions {
     hideLabel?: boolean; // default: false;
+    hidePicker?: boolean; // default: false;
     selEmptyEn?: boolean; // default: false;
     defaultValue?: { value: string, title: string };
     enRemoveButton?: boolean; // for dictlink second button

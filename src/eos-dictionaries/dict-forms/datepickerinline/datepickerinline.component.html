@@ -1,7 +1,7 @@
 
 <div class="eos-calendar-form">
     <div class="form-group">
-        <div class="col-1">
+        <div class="inline">
 
 
             <!-- <bs-datepicker-container #datepicker></bs-datepicker-container> -->
@@ -24,15 +24,22 @@
 
 
         </div>
-        <div class="col-1">
+        <div class="inline">
             <div class="form-group">
-                <div
-                *ngFor="let ctrl of inputs">
-                    <eos-dynamic-input [input]="ctrl"
-                    [form]="form"
-                    [hideLabel]="true"
-                    [readonly]="false"></eos-dynamic-input>
-                </div>
+                <eos-dynamic-input [input]="inputs[0]"
+                class="date-field-input"
+                [form]="form"
+                [hideLabel]="true"
+                [viewOpts]="{ hidePicker: true }"
+                [readonly]="false"></eos-dynamic-input>
+
+                <button class="date-field-btn abutton btn btn-primary-full" (click)="setToday()">Сегодня</button>
+
+                <eos-dynamic-input [input]="inputs[1]"
+                [form]="form"
+                [hideLabel]="true"
+                [readonly]="false"></eos-dynamic-input>
+
             </div>
             <button class="abutton btn btn-primary-full" (click)="onSave()">Сохранить</button>
             <button class="abutton btn btn-primary-full" (click)="onClear()">Очистить</button>

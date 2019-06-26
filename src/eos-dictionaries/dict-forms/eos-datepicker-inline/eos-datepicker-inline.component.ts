@@ -125,7 +125,15 @@ export class EosDatepickerInlineComponent implements OnInit {
             return;
         }
         this.bsValue = value;
+        this.jumpToValue(value);
         this.bsValueChange.emit(value);
+    }
+
+    jumpToValue(value: Date) {
+        this.displayMode = 0;
+        this.displayMonth = value.getMonth();
+        this.displayYear = value.getFullYear();
+        this._repaint();
     }
 
     _paintDays() {

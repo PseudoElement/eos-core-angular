@@ -12,6 +12,8 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
     placement = 'bottom';
     bsDate: Date;
 
+    hidePicker = false;
+
     get currentValue(): string {
         const control = this.control;
         if (control) {
@@ -43,6 +45,7 @@ export class DynamicInputDateComponent extends DynamicInputBase implements OnIni
     }
 
     ngOnInit() {
+        this.hidePicker = (this.viewOpts ? this.viewOpts.hidePicker : false);
         this.updateDatePickerPlacement();
     }
 

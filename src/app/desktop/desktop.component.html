@@ -1,53 +1,53 @@
 <div class="eos-desktop">
     <div class="desktop-wrapper">
         <div class="links-container">
-            <bs-sortable [(ngModel)]="referencesList"
+            <bs-sortable
+                [(ngModel)]="referencesList"
                 [itemTemplate]="referenceTemplate"
                 itemClass="sortable-item xl-font"
                 itemActiveClass="sortable-item-active"
                 placeholderItem="На этом рабочем столе нет ссылок"
                 placeholderClass="placeholderStyle"
-                wrapperClass="sortable-wrapper"></bs-sortable>
+                wrapperClass="sortable-wrapper"
+            ></bs-sortable>
         </div>
 
         <!--<div [ngClass]="{'left': historyToLeft}"-->
-            <!--class="block recent xl-font">-->
-            <!--<span class="recent-title-wrapper usual-border">-->
-                <!--<span class="icon eos-icon eos-icon-arrow-v-blue-left" *ngIf="!historyToLeft" (click)="historyToLeft = true"-->
-                    <!--tooltip="Переместить влево" placement="bottom" containerClass="tooltip-info"></span>-->
-            <!--<span class="recent-title">История:</span>-->
-            <!--<span class="icon eos-icon eos-icon-arrow-v-blue-right"-->
-                <!--aria-hidden="true"-->
-                <!--*ngIf="historyToLeft"-->
-                <!--(click)="historyToLeft = false"-->
-                <!--tooltip="Переместить вправо"-->
-                <!--placement="bottom"-->
-                <!--containerClass="tooltip-info"></span>-->
-            <!--</span>-->
-            <!--<ul *ngIf="recentItems"-->
-                <!--class="recent-list">-->
-                <!--<li class="recent-item usual-border"-->
-                    <!--*ngFor="let link of recentItems"-->
-                    <!--tooltip="{{link.title}}"-->
-                    <!--placement="bottom"-->
-                    <!--containerClass="tooltip-info word-break">-->
-                    <!--<a class="link-text"-->
-                        <!--(click)="goToCard(link)">{{link.title}}</a>-->
-                <!--</li>-->
-            <!--</ul>-->
+        <!--class="block recent xl-font">-->
+        <!--<span class="recent-title-wrapper usual-border">-->
+        <!--<span class="icon eos-icon eos-icon-arrow-v-blue-left" *ngIf="!historyToLeft" (click)="historyToLeft = true"-->
+        <!--tooltip="Переместить влево" placement="bottom" containerClass="tooltip-info"></span>-->
+        <!--<span class="recent-title">История:</span>-->
+        <!--<span class="icon eos-icon eos-icon-arrow-v-blue-right"-->
+        <!--aria-hidden="true"-->
+        <!--*ngIf="historyToLeft"-->
+        <!--(click)="historyToLeft = false"-->
+        <!--tooltip="Переместить вправо"-->
+        <!--placement="bottom"-->
+        <!--containerClass="tooltip-info"></span>-->
+        <!--</span>-->
+        <!--<ul *ngIf="recentItems"-->
+        <!--class="recent-list">-->
+        <!--<li class="recent-item usual-border"-->
+        <!--*ngFor="let link of recentItems"-->
+        <!--tooltip="{{link.title}}"-->
+        <!--placement="bottom"-->
+        <!--containerClass="tooltip-info word-break">-->
+        <!--<a class="link-text"-->
+        <!--(click)="goToCard(link)">{{link.title}}</a>-->
+        <!--</li>-->
+        <!--</ul>-->
         <!--</div>-->
     </div>
 </div>
 
-<ng-template #referenceTemplate
-    let-item="item"
-    let-index="index">
-    <div class="item-content xl-font block edited"
-        *ngIf="editing(item.value)">
+<ng-template #referenceTemplate let-item="item" let-index="index">
+    <div class="item-content xl-font block edited" *ngIf="editing(item.value)">
         <span class="icon-wrapper">
-            <span class="icon eos-icon {{item.value.iconName}}"></span>
+            <span class="icon eos-icon {{ item.value.iconName }}"></span>
         </span>
-        <input id="title"
+        <input
+            id="title"
             name="title"
             #title
             class="title-input form-control light xl-font"
@@ -57,70 +57,78 @@
             required
             autofocus
             [pattern]="notEmptyString.source"
-            maxlength="255" />
-        <button class="icon-btn btn lefter"
+            maxlength="255"
+        />
+        <button
+            class="icon-btn btn lefter"
             [disabled]="!title.checkValidity()"
             (click)="save($event)"
             tooltip="Сохранить"
             placement="bottom"
             containerClass="tooltip-info"
-            container="body">
-            <span class="eos-icon eos-icon-checkbox-blue small"
-                aria-hidden="true"></span>
+            container="body"
+        >
+            <span class="eos-icon eos-icon-checkbox-blue small" aria-hidden="true"></span>
         </button>
-        <button class="icon-btn btn"
+        <button
+            class="icon-btn btn"
             (click)="cancel($event)"
             tooltip="Отмена"
             placement="bottom"
             containerClass="tooltip-info"
-            container="body">
-            <span class="eos-icon eos-icon-close-blue small"
-                aria-hidden="true"></span>
+            container="body"
+        >
+            <span class="eos-icon eos-icon-close-blue small" aria-hidden="true"></span>
         </button>
     </div>
 
-    <div *ngIf="!editing(item.value)"
+    <div
+        *ngIf="!editing(item.value)"
         (mousedown)="tryMove($event)"
         class="item-content xl-font block"
-        [routerLink]="[item.value.url]">
+        [ngClass]="{ disabled: item.value.linkType === 1 }"
+        [routerLink]="item.value.linkType === 1 ? null : [item.value.url]"
+    >
         <span class="icon-wrapper">
-            <span class="icon eos-icon {{item.value.iconName}}"></span>
+            <span class="icon eos-icon {{ item.value.iconName }}"></span>
         </span>
-        <span [hidden]="editing(item.value)"
-            class="text">
-            {{item.value.title}}
+        <span [hidden]="editing(item.value)" class="text">
+            {{ item.value.title }}
         </span>
-        <button *ngIf="deskId !== 'system'"
+        <button
+            *ngIf="deskId !== 'system'"
             (mouseover)="dragResolve = true"
             (mouseleave)="dragResolve = false"
             class="icon-btn btn leftest"
             tooltip="Пеместить"
             placement="bottom"
             containerClass="tooltip-info"
-            container="body">
-            <span class="fa fa-arrows selected-text xl-font "
-                aria-hidden="true"></span>
+            container="body"
+        >
+            <span class="fa fa-arrows selected-text xl-font " aria-hidden="true"></span>
         </button>
-        <button class="icon-btn btn"
+        <button
+            class="icon-btn btn"
             (click)="edit($event, item.value)"
-            [ngClass]="{'lefter': deskId !== 'system'}"
+            [ngClass]="{ lefter: deskId !== 'system' }"
             *ngIf="deskId !== 'system'"
             tooltip="Редактировать"
             placement="bottom"
             containerClass="tooltip-info"
-            container="body">
-            <span class="eos-icon eos-icon-edit-blue small"
-                aria-hidden="true"></span>
+            container="body"
+        >
+            <span class="eos-icon eos-icon-edit-blue small" aria-hidden="true"></span>
         </button>
-        <button class="icon-btn btn"
+        <button
+            class="icon-btn btn"
             (click)="removeLink(item.value, $event)"
             *ngIf="deskId !== 'system'"
             tooltip="Удалить"
             placement="bottom"
             containerClass="tooltip-info"
-            container="body">
-            <span class="eos-icon eos-icon-bin-blue small"
-                aria-hidden="true"></span>
+            container="body"
+        >
+            <span class="eos-icon eos-icon-bin-blue small" aria-hidden="true"></span>
         </button>
     </div>
 </ng-template>

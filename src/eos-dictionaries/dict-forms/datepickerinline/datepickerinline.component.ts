@@ -6,7 +6,6 @@ import { BsLocaleService } from 'ngx-bootstrap';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { InputBase } from 'eos-common/core/inputs/input-base';
 import { IBaseInput } from 'eos-common/interfaces';
-import { EosUtils } from 'eos-common/core/utils';
 import { PipRX, CALENDAR_CL } from 'eos-rest';
 import { EosDatepickerInlineComponent } from '../eos-datepicker-inline/eos-datepicker-inline.component';
 import { SUCCESS_SAVE } from 'eos-dictionaries/consts/messages.consts';
@@ -21,7 +20,7 @@ enum dayType {
 
 const TEST_INPUTS = <IBaseInput[]>[
 {
-    controlType: 'string',
+    controlType: 'date',
     key: 'dateString',
     label: 'string',
     required: true,
@@ -99,11 +98,19 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
 
     }
 
+    isValidDate(d) {
+        return d instanceof Date && !isNaN(d.getTime());
+    }
+
     ngOnInit() {
         this.localeService.use('ru');
         this.selectedDate = this.bsInlineValue;
-
-
+        // const dateFilter = this.form.controls['filter.stateDate'];
+        this.form.valueChanges.subscribe((data) => {
+            if (this.selectedDate !== data.dateString && this.isValidDate(data.dateString)) {
+                this.datepicker.value = data.dateString;
+            }
+        });
     }
 
 
@@ -324,7 +331,9 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
     //     });
     //     return changes;
     // }
-
+    setToday() {
+        this.datepicker.value = new Date();
+    }
 
     refreshDB() {
         this._readDBSaved().then((data) => {
@@ -360,7 +369,8 @@ export class DatepickerinlineComponent implements OnInit, OnChanges {
 
         this._manualUpdating = true;
 
-        this.form.controls['dateString'].setValue(EosUtils.dateToStringValue(date));
+        // this.form.controls['dateString'].setValue(EosUtils.dateToStringValue(date));
+        this.form.controls['dateString'].setValue(date);
 
         const d = this._toDBFormattedDate(date);
 
