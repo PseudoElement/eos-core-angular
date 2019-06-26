@@ -32,6 +32,7 @@ const formDictionariesComponent = [
         //     showSandwichInBreadcrumb: true,
         //     showPushpin: true
         // },
+        canDeactivate: [CanDeactivateGuard],
         component: DictFormComponent,
     },
 ];
@@ -120,6 +121,7 @@ const routes: Routes = [{
     path: 'form',
     data: { title: 'Справочники', showInBreadcrumb: false },
     canActivate: [AuthorizedGuard],
+    canDeactivate: [CanDeactivateGuard],
     children: formDictionariesComponent,
 }, {
     path: 'desk',

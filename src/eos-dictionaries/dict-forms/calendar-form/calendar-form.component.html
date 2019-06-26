@@ -17,7 +17,7 @@
             <eos-datepicker-inline
                 #datepicker
                 [bsValue]="selectedDate"
-                [getClassForDate]="getClassForDate.bind(this)"
+                [getClassForDate]="getClassForDate()"
                 (bsValueChange)="onDateChange($event)"
             >
             </eos-datepicker-inline>
