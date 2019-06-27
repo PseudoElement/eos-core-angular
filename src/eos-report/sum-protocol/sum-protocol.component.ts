@@ -328,9 +328,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   }
 
   filterProtocol(evnt: any) {
-    let isnWho, isnUser, eventUser;
-    let dateTo = evnt['rec.DATETO'];
-    let dateFrom = evnt['rec.DATEFROM'];
+    let isnWho, isnUser, eventUser, dateTo, dateFrom, dateSearch;
     if (evnt['rec.USEREDITISN'] === '' || evnt['rec.USEREDITISN'] === null) {
       isnUser = undefined;
     } else {
@@ -355,23 +353,28 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       eventUser = evnt['rec.USEREVENTS'];
     }
 
-    if (dateFrom === '' || dateFrom === null) {
+    if (evnt['rec.DATEFROM'] === '' || evnt['rec.DATEFROM'] === null) {
       dateFrom = undefined;
     } else {
       dateFrom = evnt['rec.DATEFROM'];
       dateFrom = this.ConvertToFilterDate(dateFrom);
     }
-    if (dateTo === '' || dateTo === null) {
+    if (evnt['rec.DATETO'] === '' || evnt['rec.DATETO'] === null) {
       dateTo = undefined;
     } else {
       dateTo = evnt['rec.DATETO'];
       dateTo = this.ConvertToFilterDate(dateTo);
     }
+    if (dateTo !== undefined && dateFrom !== undefined) {
+      dateSearch = `${dateFrom}:${dateTo}`;
+    } else {
+      dateSearch = undefined;
+    }
     this._pipeSrv.read({
       USER_AUDIT: {
         criteries: {
           EVENT_KIND: eventUser,
-          EVENT_DATE: `${dateFrom}:${dateTo}`,
+          EVENT_DATE: dateSearch,
           ISN_USER: isnUser,
           ISN_WHO: isnWho
         }

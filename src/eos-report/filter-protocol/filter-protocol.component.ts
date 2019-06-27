@@ -26,10 +26,11 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   public allData;
   formBol: boolean = false;
   isShell: boolean = false;
+  filterBtn: boolean = false;
   fields = CREATE_USER_INPUTS;
   filterForm: FormGroup;
   inputs;
-
+  searchModel = {};
   @Output() filterProtocol: EventEmitter<any> = new EventEmitter();
 
   constructor(
@@ -56,6 +57,10 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   init() {
     this.pretInputs();
     this.filterForm = this.inpSrv.toFormGroup(this.inputs);
+  }
+  get disableBtn() {
+      return Object.keys(this.filterForm.value).findIndex((prop) =>
+      this.filterForm.value[prop] && this.filterForm.value[prop].trim()) === -1 || this.filterForm.controls['rec.USEREVENTS'].value === '0';
   }
 
   pretInputs(): void {
