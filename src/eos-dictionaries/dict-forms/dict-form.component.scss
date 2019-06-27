@@ -15,6 +15,7 @@
     }
     .edit-header {
         min-height: $item-height;
+        height: $item-height;
         text-align: left;
         margin: 0 auto;
         width: 800px;
@@ -40,6 +41,7 @@
         .move-wrapper,
         .buttons-wrapper,
         .action-wrapper {
+            height: $item-height;
             display: flex;
             flex-direction: column;
             justify-content: space-around;
