@@ -6,17 +6,18 @@
         </div>
     </div>
 </li>
-<li *ngFor="let desk of deskList"
+<li *ngFor="let desk of deskList; let i = index"
     role="menuitem"
     class="menuitem dropdown-item"
     [ngClass]="{'highlighted': selectedMarker && desk.name === selectedDesk.name, 'withMarker': selectedMarker}"
-    (click)="selectDesk(desk, $event)">
+    tooltip="{{desk.name}}"
+    #pop="bs-tooltip"
+    placement="bottom"
+    containerClass="tooltip-info"
+    container="body"
+    (click)="pop.hide(); selectDesk(desk, $event);">
     <ng-container *ngIf="!desk.edited; else editItemTpl">
-        <div tooltip="{{desk.name}}"
-            placement="bottom"
-            containerClass="tooltip-info"
-            class="item-title m-font"
-            container="body">{{desk.name}}
+        <div class="item-title m-font">{{desk.name}}
         </div>
         <div class="menu-icon">
             <span *ngIf="desk.name === selectedDesk.name"
