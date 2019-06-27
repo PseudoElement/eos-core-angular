@@ -40,6 +40,7 @@ import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev-p
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { PipRX } from 'eos-rest';
+import { NADZORDICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
 
 export const SORT_USE_WEIGHT = true;
 export const CUSTOM_SORT_FIELD = 'WEIGHT';
@@ -247,6 +248,13 @@ export class EosDictService {
                 return dict;
             }
         }
+        for (let i = 0; i < NADZORDICTIONARIES.length; i++) {
+            const dict = NADZORDICTIONARIES[i];
+            if (dict.id === dictionaryId) {
+                return dict;
+            }
+        }
+
         return null;
     }
 
