@@ -25,8 +25,16 @@ import { EosReportComponent } from '../eos-report/eos-report.component';
 import { EosReportUsersStatsComponent } from '../eos-report/users-stats/users-stats.component';
 import { EosReportUsersInfoComponent } from '../eos-report/users-info/users-info.component';
 import { EosReportSummaryProtocolComponent } from 'eos-report/sum-protocol/sum-protocol.component';
+import { DictFormComponent } from 'eos-dictionaries/dict-forms/dict-form.component';
 /// import { environment } from 'environments/environment';
 
+const formDictionariesComponent = [
+    {
+        path: ':dictionaryId',
+        canDeactivate: [CanDeactivateGuard],
+        component: DictFormComponent,
+    },
+];
 const childrenDictionariesComponent = [{
     path: '',
     pathMatch: 'full',
@@ -108,6 +116,12 @@ const routes: Routes = [{
     data: { title: 'Справочники', showInBreadcrumb: true },
     canActivate: [AuthorizedGuard],
     children: childrenDictionariesComponent,
+}, {
+    path: 'form',
+    data: { title: 'Справочники', showInBreadcrumb: false },
+    canActivate: [AuthorizedGuard],
+    canDeactivate: [CanDeactivateGuard],
+    children: formDictionariesComponent,
 }, {
     path: 'desk',
     data: { title: 'Главная', showInBreadcrumb: false },
