@@ -128,8 +128,8 @@ export class EosReportSummaryProtocolComponent implements OnInit {
         }
       },
     })
-      .then(() => {
-        for (const user of data) {
+      .then((users: any) => {
+        for (const user of users) {
           if (this.findUsers === undefined) {
             this.findUsers = [{ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON }];
           } else {
