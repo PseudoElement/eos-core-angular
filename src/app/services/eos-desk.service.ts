@@ -99,6 +99,11 @@ export class EosDeskService {
                 title: `Параметры системы (${lable.title})`,
                 url: '/parameters/' + lable.url
             };
+        } else if (this._router.url.split('/')[1] === 'user_param') {
+            item = {
+                title: 'Пользователи',
+                url: '/user_param',
+            };
         } else {
             item = {
                 title: this._dictSrv.dictionaryTitle,
@@ -113,7 +118,7 @@ export class EosDeskService {
                 return false;
             }
             const col = this.viewManager.addViewColumn(view);
-            col.BLOCK_ID = dictionaryURL;
+            col.BLOCK_ID = dictionaryURL || 'user_param';
             col.LABEL = item.title;
             this.viewManager.saveView(view).then(() => this._appCtx.reInit());
         }
@@ -294,6 +299,14 @@ export class EosDeskService {
                 title: ''
             };
         }
+
+        if (blockId === 'user_param') {
+            return {
+                url: '/user_param',
+                title: ''
+            };
+        }
+
         const defaults = this._desksList[0].references;
         const s = '/spravochniki/' + blockId;
         const result = defaults.find(it => it.url === s);
