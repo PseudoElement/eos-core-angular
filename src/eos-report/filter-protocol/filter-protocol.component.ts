@@ -64,7 +64,9 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
       DATETO: '',
       USEREVENTS: '',
       USEREDIT: '',
-      USERWHO: ''
+      USERWHO: '',
+      USEREDITISN: '',
+      USERWHOISN: '',
     };
     this.prepareData = this.formHelp.parse_Create(FILTER_PROTOCOL.fields, this.allData);
     this.prepareInputs = this.formHelp.getObjectInputFields(FILTER_PROTOCOL.fields);
@@ -89,9 +91,11 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
         this.isShell = false;
         const valueEdit = [];
         data.map((user) => {
-          valueEdit.push(user.SURNAME_PATRON);
+          valueEdit.push(user.SURNAME_PATRON, user.ISN_LCLASSIF);
         });
-        this.allData.USEREDIT = valueEdit.toString();
+        this.allData.USEREDIT = valueEdit[0].toString();
+        this.allData.USEREDITISN = valueEdit[1].toString();
+        this.filterForm.controls['rec.USEREDITISN'].patchValue(this.allData.USEREDITISN);
         this.filterForm.controls['rec.USEREDIT'].patchValue(this.allData.USEREDIT);
       })
       .catch(() => {
@@ -113,10 +117,11 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
         this.isShell = false;
         const valueWho = [];
         data.map((user) => {
-          valueWho.push(user.SURNAME_PATRON);
+          valueWho.push(user.SURNAME_PATRON, user.ISN_LCLASSIF);
         });
-        this.allData.USERWHO = valueWho.toString();
-
+        this.allData.USERWHO = valueWho[0].toString();
+        this.allData.USERWHOISN = valueWho[1].toString();
+        this.filterForm.controls['rec.USERWHOISN'].patchValue(this.allData.USERWHOISN);
         this.filterForm.controls['rec.USERWHO'].patchValue(this.allData.USERWHO);
       })
       .catch(() => {

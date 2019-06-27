@@ -8,6 +8,19 @@
     <div class="sum-report-wrapper">
         <div class="table-wrapper usual-border">
             <div class="sum-report-list">
+                <div class="table-header">
+                    <div class="table-sum-wraper">
+                        <div class="selected-sum-title">
+                            <span class="long-title xl-font">Сводный протокол</span>
+                        </div>
+                        <div class="item-count-sum usual-border m-font">
+                            <span class="item-count-content-sum">
+                                    Записей:
+                                <span class="counter-sum">{{config?.itemsQty}}</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
                 <div class="table-header header-pos-sum">
                     <div class="btn-group-sum">
                         <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
@@ -23,12 +36,7 @@
                             </button>
                         </div>
                     </div>
-                <div class="item-count-sum usual-border-sum m-font-sum">
-                    <span class="item-count-content-sum">
-                        Записей:
-                        <span class="counter-sum">{{config?.itemsQty}}</span>
-                    </span>
-                </div>
+                    <eos-filter-protocol (filterProtocol)="filterProtocol($event)"></eos-filter-protocol>
                 </div>
                 <div class="table-header">
                     <div class="table-title contain-span-header">
@@ -52,8 +60,6 @@
                         <span class=" likeLink-sum width-title3">
                             Пользователя
                         </span>
-                        <eos-filter-protocol (filterProtocol)="filterProtocol($event)" class="filter-protocol">
-                        </eos-filter-protocol>
                     </div>
                 </div>
                 <div class="user-item sum-list-prot">
@@ -98,7 +104,12 @@
             >
                 <span class="icon-btn eos-icon eos-icon-arrow-v-blue-left small to-left"></span>
             </button>
-            <button *ngFor="let page of pages let i = index" class="pag-btn btn-default selected-text" (click)="showPage(page)">{{page}}</button>
+            <div *ngIf="pages.length !== 0">
+                <button  [ngClass]="{'btn-primary-full': config.current === page}" *ngFor="let page of pages let i = index" class="pag-btn btn-default selected-text" (click)="showPage(page)">{{page}}</button>
+            </div>
+            <div *ngIf="pages.length === 0">
+                <button class="pag-btn btn-default btn-primary-full selected-text">1</button>
+            </div>
             <button class="pag-btn btn-default next"  (click)="showPage(config.current + 1)" [disabled]="config?.current*config?.length >= config?.itemsQty">
                 <span class="icon-btn eos-icon eos-icon-arrow-v-blue-left small to-rigth"></span>
             </button>

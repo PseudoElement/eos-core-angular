@@ -10,6 +10,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { PAGES } from 'eos-dictionaries/node-list-pagination/node-list-pagination.consts';
 import { LS_PAGE_LENGTH } from 'eos-user-select/shered/consts/pagination-user-select.consts';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
 
 @Component({
   selector: 'eos-sum-protocol',
@@ -55,7 +56,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private _dictSrv: EosDictService,
-    private _storageSrv: EosStorageService) {
+    private _storageSrv: EosStorageService, private _msgSrv: EosMessageService, ) {
     _dictSrv.paginationConfig$
       .pipe(
         takeUntil(this.ngUnsubscribe)
@@ -80,7 +81,24 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       .catch((error) => {
         this._errorSrv.errorHandler(error);
       });
-    this.GetTopEvents(this.config.length);
+    this._pipeSrv.read({
+      USER_AUDIT: ALL_ROWS,
+      orderby: 'ISN_EVENT',
+      skip: 1,
+      top: 1,
+      inlinecount: 'allpages'
+    })
+      .then((data: any) => {
+        if (data.length !== 0) {
+          const parsePosts = data.TotalRecords;
+          this.GetCountPosts(parsePosts);
+          this.GetTopEvents(this.config.length);
+        } else {
+          this.flagChecked = null;
+        }
+      }).catch((error) => {
+        this._errorSrv.errorHandler(error);
+      });
   }
 
   GetTopEvents(length?, skip?) {
@@ -92,22 +110,25 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       inlinecount: 'allpages'
     })
       .then((data: any) => {
-        const parsePosts = data.TotalRecords;
-        this.GetCountPosts(parsePosts);
         this.usersAudit = data;
+        this.ParseInitData(this.usersAudit);
         return this.usersAudit;
       })
-      .then((data) => {
-        this.SelectUsers(data);
-        return this._pipeSrv.read({
-          USER_CL: {
-            criteries: {
-              ISN_LCLASSIF: this.critUsers
-            }
-          },
-        });
-      })
-      .then((data: any) => {
+      .catch((error) => {
+        this._errorSrv.errorHandler(error);
+      });
+  }
+
+  ParseInitData(data) {
+    this.SelectUsers(data);
+    this._pipeSrv.read({
+      USER_CL: {
+        criteries: {
+          ISN_LCLASSIF: this.critUsers
+        }
+      },
+    })
+      .then(() => {
         for (const user of data) {
           if (this.findUsers === undefined) {
             this.findUsers = [{ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON }];
@@ -117,19 +138,20 @@ export class EosReportSummaryProtocolComponent implements OnInit {
         }
         this.ShowData();
         this._update();
-      }).catch((error) => {
+      })
+      .catch((error) => {
         this._errorSrv.errorHandler(error);
       });
   }
 
-  GetCountPosts(posts: string): number {
+  GetCountPosts(posts: string): void {
     if (posts !== undefined) {
       posts = posts.split('').reverse().join('');
       posts = posts.split(',')[0];
       posts = posts.split('').reverse().join('');
       this.posts = parseInt(posts, 10);
       this.config.itemsQty = parseInt(posts, 10);
-      return this.config.itemsQty;
+      this.posts = this.config.itemsQty;
     }
   }
 
@@ -220,18 +242,20 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   }
 
   toggleAllMarks(event) {
-    this.flagChecked = event.target.checked;
-    if (this.flagChecked === false) {
-      this.flagChecked = null;
-    }
-    if (event.target.checked) {
-      this.frontData.forEach(node => {
-        node.checked = event.target.checked;
-      });
-    } else {
-      this.frontData.forEach(node => {
-        node.checked = event.target.checked;
-      });
+    if (this.frontData !== undefined) {
+      this.flagChecked = event.target.checked;
+      if (this.flagChecked === false) {
+        this.flagChecked = null;
+      }
+      if (event.target.checked) {
+        this.frontData.forEach(node => {
+          node.checked = event.target.checked;
+        });
+      } else {
+        this.frontData.forEach(node => {
+          node.checked = event.target.checked;
+        });
+      }
     }
   }
 
@@ -288,67 +312,111 @@ export class EosReportSummaryProtocolComponent implements OnInit {
     });
     return this.frontData.length;
   }
+  ConvertToFilterDate(date): string {
+    const oldDate = new Date(date);
+    let dd = oldDate.getDate();
+    let mm = oldDate.getMonth() + 1;
+    const yyyy = oldDate.getFullYear();
+    if (dd < 10) {
+      dd = 0 + dd;
+    }
+    if (mm < 10) {
+      mm = 0 + mm;
+    }
+    const newDate = dd + '/' + mm + '/' + yyyy;
+    return newDate;
+  }
+
   filterProtocol(evnt: any) {
-    let arr = [];
-    if (evnt['rec.DATEFROM'] !== '' && evnt['rec.DATETO'] !== '' && evnt['rec.USEREVENTS'] !== '' && evnt['rec.USERWHO'] !== '' && evnt['rec.USEREDIT'] !== '') {
-      this.ShowData();
-      arr = [];
+    let isnWho, isnUser, eventUser;
+    let dateTo = evnt['rec.DATETO'];
+    let dateFrom = evnt['rec.DATEFROM'];
+    if (evnt['rec.USEREDITISN'] === '' || evnt['rec.USEREDITISN'] === null) {
+      isnUser = undefined;
+    } else {
+      isnUser = evnt['rec.USEREDITISN'];
     }
-    for (const userSum of this.frontData) {
-      let date, isnWho, isnUser, eventUser;
-      let dateFrom, dateTo, formatDate;
-      formatDate = new Date(userSum.date);
-      dateTo = evnt['rec.DATETO'];
+
+    if (evnt['rec.USERWHOISN'] === '' || evnt['rec.USERWHOISN'] === null) {
+      isnWho = undefined;
+    } else {
+      isnWho = evnt['rec.USERWHOISN'];
+    }
+
+    if (evnt['rec.USEREVENTS'] === '' || evnt['rec.USEREVENTS'] === null) {
+      eventUser = undefined;
+    } else {
+      eventUser = evnt['rec.USEREVENTS'];
+    }
+
+    if (evnt['rec.USEREVENTS'] === '' || evnt['rec.USEREVENTS'] === null) {
+      eventUser = undefined;
+    } else {
+      eventUser = evnt['rec.USEREVENTS'];
+    }
+
+    if (dateFrom === '' || dateFrom === null) {
+      dateFrom = undefined;
+    } else {
       dateFrom = evnt['rec.DATEFROM'];
-      if (dateFrom === '' && dateTo === '' || dateFrom === null && dateTo === null) {
-        date = formatDate;
-      } else if (formatDate >= dateFrom && formatDate <= dateTo && (dateFrom !== '' && dateTo !== '' || dateFrom !== null && dateTo !== null)) {
-        date = formatDate;
-      } else if (dateFrom !== '' && dateTo === '' || dateFrom !== null && dateTo === null) {
-        if (formatDate >= dateFrom) {
-          date = formatDate;
+      dateFrom = this.ConvertToFilterDate(dateFrom);
+    }
+    if (dateTo === '' || dateTo === null) {
+      dateTo = undefined;
+    } else {
+      dateTo = evnt['rec.DATETO'];
+      dateTo = this.ConvertToFilterDate(dateTo);
+    }
+    this._pipeSrv.read({
+      USER_AUDIT: {
+        criteries: {
+          EVENT_KIND: eventUser,
+          EVENT_DATE: `${dateFrom}:${dateTo}`,
+          ISN_USER: isnUser,
+          ISN_WHO: isnWho
         }
-      } else if (dateFrom === '' && dateTo !== '' || dateFrom === null && dateTo !== null) {
-        if (formatDate <= dateTo) {
-          date = formatDate;
-        }
-      } else {
-        date = undefined;
-      }
-
-      if (evnt['rec.USEREDIT'] === '' || evnt['rec.USEREDIT'] === null) {
-        isnWho = userSum.isnWho;
-      } else if ((evnt['rec.USEREDIT'] !== '' || evnt['rec.USEREDIT'] !== null) && evnt['rec.USEREDIT'] === userSum.isnWho) {
-        isnWho = userSum.isnWho;
-      } else if ((evnt['rec.USEREDIT'] !== '' || evnt['rec.USEREDIT'] !== null) && evnt['rec.USEREDIT'] !== userSum.isnWho) {
-        isnWho = undefined;
-      }
-      if (evnt['rec.USERWHO'] === '' || evnt['rec.USERWHO'] === null) {
-        isnUser = userSum.isnUser;
-      } else if ((evnt['rec.USERWHO'] !== '' || evnt['rec.USERWHO'] !== null) && evnt['rec.USERWHO'] === userSum.isnUser) {
-        isnUser = userSum.isnUser;
-      } else if ((evnt['rec.USERWHO'] !== '' || evnt['rec.USERWHO'] !== null) && evnt['rec.USERWHO'] !== userSum.isnUser) {
-        isnUser = undefined;
-      }
-
-      if (this.eventKind[evnt['rec.USEREVENTS'] - 1] === '' || this.eventKind[evnt['rec.USEREVENTS'] - 1] === undefined
-        || evnt['rec.USEREVENTS'] === null || evnt['rec.USEREVENTS'] === 0) {
-        eventUser = userSum.eventUser;
-      } else if (userSum.eventUser === this.eventKind[evnt['rec.USEREVENTS'] - 1] && this.eventKind[evnt['rec.USEREVENTS'] - 1] !== undefined) {
-        eventUser = userSum.eventUser;
-      } else if (userSum.eventUser !== this.eventKind[evnt['rec.USEREVENTS'] - 1] && this.eventKind[evnt['rec.USEREVENTS'] - 1] !== undefined) {
-        eventUser = undefined;
-      }
-      if (date !== undefined && eventUser !== undefined && isnUser !== undefined && isnWho !== undefined) {
-        date = this.ConvertDate(date.toISOString());
-        if (arr === undefined) {
-          arr = [{ checked: this.checkUser, date: date, eventUser: eventUser, isnUser: isnUser, isnWho: isnWho, isnEvent: userSum.isnEvent }];
+      },
+      orderby: 'ISN_EVENT',
+    })
+      .then((data: any) => {
+        this.usersAudit = data;
+        if (this.usersAudit.length === 0) {
+          this._msgSrv.addNewMessage({
+            title: 'Ничего не найдено',
+            msg: 'попробуйте изменить поисковую фразу',
+            type: 'warning'
+          });
+          this.frontData = [];
         } else {
-          arr.push({ checked: this.checkUser, date: date, eventUser: eventUser, isnUser: isnUser, isnWho: isnWho, isnEvent: userSum.isnEvent });
+          this.ParseDate(this.usersAudit);
         }
+        this.config.current = 1;
+        this.config.start = 1;
+        this._dictSrv.changePagination(this.config);
+        this._update(this.frontData.length);
+      })
+      .catch((error) => {
+        this._errorSrv.errorHandler(error);
+      });
+  }
+
+  ParseDate(data) {
+    this.SelectUsers(data);
+    this._pipeSrv.read({
+      USER_CL: {
+        criteries: {
+          ISN_LCLASSIF: this.critUsers
+        }
+      },
+    });
+    for (const user of data) {
+      if (this.findUsers === undefined) {
+        this.findUsers = [{ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON }];
+      } else {
+        this.findUsers.push({ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON });
       }
     }
-    this.frontData = arr;
+    this.ShowData();
   }
 
   DeleteEvent(isnEvent) {
@@ -364,20 +432,22 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   }
 
   DeleteEventUser() {
-    for (const user of this.frontData) {
-      if (user.checked === true) {
-        this.DeleteEvent(user.isnEvent);
+    if (this.frontData !== undefined) {
+      for (const user of this.frontData) {
+        if (user.checked === true) {
+          this.DeleteEvent(user.isnEvent);
+        }
       }
     }
   }
 
   ShowDataUser() {
-    return this.GetDataUser(this.lastUser.isnEvent);
+    if (this.lastUser !== undefined) {
+      return this.GetDataUser(this.lastUser.isnEvent);
+    }
   }
 
   GetDataUser(isnEvent) {
-    // this.openFrame(12);
-    // window.open(`/x1807/getfile.aspx/${isnEvent}/3x.html`, 'example', 'width=900,height=700');
     this._pipeSrv.read({
       REF_FILE: PipRX.criteries({ 'ISN_REF_DOC': String(isnEvent) })
     })
@@ -391,6 +461,8 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       .catch((error) => {
         this._errorSrv.errorHandler(error);
       });
+    // this.openFrame(12);
+    // window.open(`/x1807/getfile.aspx/${isnEvent}/3x.html`, 'example', 'width=900,height=700');
   }
   openFrame(isnFile) {
     window.open(`/x1807/getfile.aspx/${isnFile}/3x.html`, 'example', 'width=900,height=700');
@@ -423,17 +495,25 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   }
 
   public setPageLength(length: number): void {
+
     this._storageSrv.setItem(LS_PAGE_LENGTH, length, true);
     this.config.length = length;
     if (this.config.length > this.config.itemsQty) {
       this.config.current = 1;
     }
-    this.GetTopEvents(this.config.length);
+    if (this.frontData !== undefined) {
+      this.GetTopEvents(this.config.length);
+    }
     this._dictSrv.changePagination(this.config);
   }
 
-  private _update() {
-    let total = Math.ceil(this.config.itemsQty / this.config.length);
+  private _update(filNum?: number) {
+    let total;
+    if (filNum !== undefined) {
+      total = Math.ceil(filNum / this.config.length);
+    } else {
+      total = Math.ceil(this.config.itemsQty / this.config.length);
+    }
     if (total === 0) { total = 1; }
     const firstSet = this._buttonsTotal - this.config.current;
     const lastSet = total - this._buttonsTotal + 1;

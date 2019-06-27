@@ -19,13 +19,13 @@
         line-height: 46px;
     }
     .width-title1{
-        width: 18%;
+        width: 19%;
     }
     .width-title2{
-        width: 26%;
+        width: 30%;
     }
     .width-title3{
-        width: 16%;
+        width: 24%;
     }
     .sum-report-list{
         background-color: white;
@@ -58,7 +58,6 @@
         display: inline-block;
         border-left-width: 1px;
         border-left-style: solid;
-        -ms-grid-column: 4;
         grid-column: 4;
     }
     
@@ -103,5 +102,19 @@
     .sum-list-prot{
         overflow: auto;
         max-height: calc(100vh - 371px);
+    }
+    .table-sum-wraper{
+        display: flex;
+        justify-content: space-between;
+        padding-left: 20px;
+    }
+    .selected-sum-title {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 11px 0;
+        align-self: center;
+        grid-column: 2;
+        max-height: 74px;
     }
 }
