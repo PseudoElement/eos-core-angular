@@ -43,7 +43,7 @@ import { PipRX } from 'eos-rest';
 
 export const SORT_USE_WEIGHT = true;
 export const CUSTOM_SORT_FIELD = 'WEIGHT';
-
+export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
 @Injectable()
 export class EosDictService {
     viewParameters: IDictionaryViewParameters;
@@ -758,7 +758,7 @@ export class EosDictService {
 
     search(searchString: string, params: ISearchSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
-        const fixedString = searchString.replace(new RegExp('["|\']', 'g'), '');
+        const fixedString = searchString.replace(SEARCH_INCORRECT_SYMBOLS, '');
         if (fixedString !== '') {
             this._srchCriteries = dictionary.getSearchCriteries(fixedString, params, this._treeNode);
             return this._search(params.deleted);
@@ -776,6 +776,9 @@ export class EosDictService {
     }
 
     fullSearch(data: any, params: ISearchSettings) {
+
+        this.fixSearchSymbols(data, SEARCH_INCORRECT_SYMBOLS);
+
         const dictionary = this.currentDictionary;
         if (data.srchMode === 'person') {
             this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
@@ -792,6 +795,20 @@ export class EosDictService {
         } else {
             this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
             return this._search(params.deleted);
+        }
+    }
+
+    fixSearchSymbols(data: any, reg: RegExp): any {
+        for (const key in data) {
+            if (key!== 'srchMode' && data.hasOwnProperty(key)) {
+                const list = data[key];
+                for (const k in list) {
+                    if (list.hasOwnProperty(k)) {
+                        const fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
+                        list[k] = fixed;
+                    }
+                }
+            }
         }
     }
 
