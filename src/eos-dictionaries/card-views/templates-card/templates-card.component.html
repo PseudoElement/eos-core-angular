@@ -1,0 +1,14 @@
+<div class="doc_card_wrapper">
+    <div class="">
+        <label *ngIf="isNewRecord">
+            <input type="file">
+        </label>
+        <eos-dynamic-input [input]="inputs['rec.NAME_TEMPLATE']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+    </div>
+    <div class="">
+        <eos-dynamic-input [input]="inputs['rec.CATEGORY']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+    </div>
+    <div class="">
+        <eos-dynamic-input [input]="inputs['rec.DESCRIPTION']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+    </div>
+</div>

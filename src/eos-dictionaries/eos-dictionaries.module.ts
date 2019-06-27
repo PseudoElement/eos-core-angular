@@ -88,6 +88,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DictFormComponent } from './dict-forms/dict-form.component';
 import { EosDatepickerInlineComponent } from './dict-forms/eos-datepicker-inline/eos-datepicker-inline.component';
 import { CalendarFormComponent } from './dict-forms/calendar-form/calendar-form.component';
+import { TemplatesCardComponent } from './card-views/templates-card/templates-card.component';
+
 @NgModule({
     declarations: [
         CardComponent,
@@ -147,6 +149,7 @@ import { CalendarFormComponent } from './dict-forms/calendar-form/calendar-form.
         EosDatepickerInlineComponent,
         CopyPropertiesComponent,
         CopyNodeComponent,
+        TemplatesCardComponent,
     ],
     entryComponents: [
         ColumnSettingsComponent,

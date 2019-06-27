@@ -23,6 +23,7 @@ import { REESTRTYPE_DICT } from './dictionaries/reestrtype.consts';
 import {NOMENKL_DICT} from './dictionaries/nomenkl.const';
 import {EDS_CATEGORY_CL} from './dictionaries/category-eds.consts';
 import { CALENDAR_DICT } from './dictionaries/calendar.consts';
+import {Templates} from './dictionaries/templates.consts';
 
 export const DICTIONARIES = [
     /* tree dictionaries */
@@ -49,8 +50,9 @@ export const DICTIONARIES = [
     NOMENKL_DICT,
     EDS_CATEGORY_CL,
     LINK_DICT,
-     // SEV
-     // Отключено (В текущей версии Надзора справочники СЭВ не используются, отложим до возврата к работам по дельской ветке проекта.)
+    Templates,
+    // SEV
+    // Отключено (В текущей версии Надзора справочники СЭВ не используются, отложим до возврата к работам по дельской ветке проекта.)
     // RULES_SEV_DICT,
     // COLLISIONS_SEV_DICT,
     // PARTICIPANT_SEV_DICT,
