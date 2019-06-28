@@ -10,9 +10,8 @@ import { DELIVERY_DICT } from './dictionaries/delivery.consts';
 import { DOCGROUP_DICT } from './dictionaries/docgroup.consts';
 import { ORG_TYPE_DICT } from './dictionaries/org-type.consts';
 import { ORGANIZ_DICT } from './dictionaries/organiz.consts';
-import { RESOLUTION_CATEGORY_DICT } from './dictionaries/resolution-category.consts';
+import { RESOL_CATEGORY_DICT } from './dictionaries/resolution-category.consts';
 import { RESPRJ_PRIORITY_DICT } from './dictionaries/resprj-priority.consts';
-import { RESPRJ_STATUS_DICT } from './dictionaries/resprj-status.consts';
 import { SECURITY_DICT } from './dictionaries/security.consts';
 import { SIGN_KIND_DICT } from './dictionaries/sign-kind.consts';
 import { STATUS_EXEC_DICT } from './dictionaries/status-exec.consts';
@@ -23,6 +22,7 @@ import { NADZOR } from './dictionaries/nadzor.consts';
 import { REESTRTYPE_DICT } from './dictionaries/reestrtype.consts';
 import {NOMENKL_DICT} from './dictionaries/nomenkl.const';
 import {EDS_CATEGORY_CL} from './dictionaries/category-eds.consts';
+import { CALENDAR_DICT } from './dictionaries/calendar.consts';
 
 export const DICTIONARIES = [
     /* tree dictionaries */
@@ -30,6 +30,7 @@ export const DICTIONARIES = [
     DEPARTMENTS_DICT,
     REGION_DICT,
     RUBRICATOR_DICT,
+    CALENDAR_DICT,
     /* linear dictionaries */
     ADDR_CATEGORY_DICT,
     CABINET_DICT,
@@ -38,15 +39,13 @@ export const DICTIONARIES = [
     DOCGROUP_DICT,
     ORG_TYPE_DICT,
     ORGANIZ_DICT,
-    RESOLUTION_CATEGORY_DICT,
+    RESOL_CATEGORY_DICT,
     RESPRJ_PRIORITY_DICT,
-    RESPRJ_STATUS_DICT,
     SECURITY_DICT,
     SIGN_KIND_DICT,
     STATUS_EXEC_DICT,
     STATUS_REPLY_DICT,
     VISA_TYPE_DICT,
-    // CITIZENS_DICT,
     NOMENKL_DICT,
     EDS_CATEGORY_CL,
     LINK_DICT,

@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
+import { AbstractControl } from '@angular/forms';
+import { Subject, of, Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+
 import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
-import { Subject } from 'rxjs/Subject';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { PARM_NOT_CARMA_SERVER, PARM_ERR_OPEN_CERT_STORES, CARMA_UNIC_VALUE } from '../shared/consts/eos-parameters.const';
-import { AbstractControl } from '@angular/forms';
 import { IListStores } from '../shared/consts/web.consts';
-import { Observable } from 'rxjs/Observable';
 
 export interface IListCertStotes extends Istore {
     marked: boolean;
@@ -107,14 +108,14 @@ export class CertStoresService {
     addStores(node: IListStores) {
         if (this.unicStoreName.has(node.name)) {
             this.msgSrv.addNewMessage(CARMA_UNIC_VALUE);
-        }else {
+        } else {
             this.unicStoreName.add(node.name);
             this.listsCetsStores.push(this.createListCertStotes(node));
             this.updateFormControl$.next(this.createStringForUpdate());
             this.carmaService.SetCurrentStores(this.listsCetsStores);
         }
     }
-    showListCertNode() {
+    showListCertNode(): Observable<string[]> {
         if (this.isCarmaServer) {
             const curName = this.currentSelectedNode.Name;
             let name;
@@ -133,7 +134,7 @@ export class CertStoresService {
             return new Subject();
         }
     }
-    showListStores(location, address) {
+    showListStores(location, address): Observable<string[]> {
         return this.carmaService.EnumStores(location, address);
     }
     deleteStores(): string {
@@ -162,10 +163,12 @@ export class CertStoresService {
     }
     showCert(certId: string) {
         this.carmaService.ShowCert(certId)
-            .catch(e => {
-                this.msgSrv.addNewMessage(PARM_ERR_OPEN_CERT_STORES);
-                return Observable.of(null);
-            })
+            .pipe(
+                catchError(e => {
+                    this.msgSrv.addNewMessage(PARM_ERR_OPEN_CERT_STORES);
+                    return of(null);
+                })
+            )
             .subscribe(() => {});
     }
     private createInitCarmaStores(listCertStores: string[]) {

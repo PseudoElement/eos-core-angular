@@ -20,7 +20,7 @@ export const OTHER_PARAM: IBaseParameters = {
             key: 'NOTIFY_MANAGMENT',
             type: 'string',
             readonly: true,
-            title: 'Подсистемы Оповещения и уведомления и управление процессами',
+            title: 'Подсистемы "Оповещения и уведомления" и "управление процессами"',
         },
         {
             key: 'EMAIL_ISN_DELIVERY',

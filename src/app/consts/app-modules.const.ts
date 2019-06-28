@@ -8,14 +8,29 @@ export const APP_MODULES = [
         url: '/user_param',
     },
     {
-        title: 'Настройки системы',
+        title: 'Параметры системы',
         url: '/parameters',
-    }
+    },
+    {
+        title: 'Отчёт',
+        url: '/report',
+    },
+
 ];
 
 export const APP_MODULES_DROPDOWN = [
     {
         title: 'Тестовая страница',
         url: '/test'
+    }
+    , {
+        id: 'export',
+        flag: 'ei',
+        title: 'Экспорт'
+    }
+    , {
+        id: 'import',
+        flag: 'ei',
+        title: 'Импорт'
     }
 ];

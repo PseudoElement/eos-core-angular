@@ -1,11 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 import { ParamDescriptorSrv } from './shared/service/param-descriptor.service';
 import { EOS_PARAMETERS_TAB } from './shared/consts/eos-parameters.const';
 import { NavParamService } from 'app/services/nav-param.service';
-import { Subject } from 'rxjs/Subject';
 
 @Component({
     // selector: 'eos-parameters-system',
@@ -27,7 +30,9 @@ export class ParametersSystemComponent implements OnInit, OnDestroy {
     ) {
         this._route.params.subscribe(params => (this.paramId = params['id']));
         this._navSrv.StateSandwich$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((state: boolean) => {
                 this.isWide = state;
             });

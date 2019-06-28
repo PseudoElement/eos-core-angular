@@ -1,6 +1,7 @@
 .idea/
 .nvmrc
 .htaccess
+.vs
 .vscode
 stage_deploy.sh
 node_modules

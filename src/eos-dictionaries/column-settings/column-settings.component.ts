@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { DragulaService } from 'ng2-dragula';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 import { IFieldView } from 'eos-dictionaries/interfaces';
 import { EosDictService } from '../services/eos-dict.service';
@@ -66,7 +66,7 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
         });
 
         dragulaService.setOptions('fixed-bag', {
-            moves: (el/*, source, handle, sibling*/) => !el.classList.contains('fixed-item')
+            moves: (el/*, source, handle, sibling*/) => el.classList.contains('fixed-item')
         });
     }
 
@@ -202,7 +202,7 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
      * @description set newTitle as customTitle for editedItem
      */
     saveNewTitle() {
-        const trimNewTitle = this.newTitle.trim();
+        const trimNewTitle = this.newTitle; // .trim();
         if (trimNewTitle !== this.editedItem.title) {
             this.editedItem.customTitle = trimNewTitle;
         } else {

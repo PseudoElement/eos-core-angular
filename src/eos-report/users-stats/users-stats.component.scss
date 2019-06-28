@@ -1,0 +1,125 @@
+@import '../../styles/variables';
+.users-stats-wrapper {
+    .table-stats-title {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        padding-left: 10px;
+    }
+    .stats-list {
+        background: $white;
+        max-height: calc(100vh - 371px);
+    }
+    .table-stats-wrapper {
+        display: flex;
+        justify-content: space-between;
+        padding-left: 20px;
+    }
+    .item-count {
+        align-self: center;
+        height: 100%;
+        width: fit-content;
+        display: inline-block;
+        border-left-width: 1px;
+        border-left-style: solid;
+        -ms-grid-column: 4;
+        grid-column: 4;
+    }
+    .item-count-content {
+        line-height: 24px;
+        font-size: 16px;
+        .counter {
+            margin-left: 20px;
+            padding: 6.5px 10px;
+            background: $disabled-color-main-theme;
+            border-radius: 2px;
+            color: $white;
+        }
+    }
+    .item-count-param1{
+        padding-left: 260px;
+    }
+    .item-count-param2{
+        padding-left: 217px;
+    }
+    .item-count-param3{
+        padding-left: 152px;
+    }
+    .item-count-param4{
+        padding-top: 3px;
+        padding-left: 120px;  
+    }
+    .user-first-colomn {
+        width: 60%;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: bottom;
+        line-height: 32px;
+        height: 32px;
+    }
+    .user-two-colomn {
+        width: 10%;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        vertical-align: bottom;
+        line-height: 32px;
+        height: 32px;
+    }
+    .user-third-colomn {
+        width: 10%;
+        display: inline-block;
+    }
+    .user-fourth-colomn {
+        width: 20%;
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .user-check-label {
+        padding-left: 0;
+    }
+    .table-wrapper-stats {
+        overflow: auto;
+    }
+    .mar-items {
+        padding: 10px;
+    }
+    .mar-items1 {
+        padding: 20px 10px 10px 10px;
+    }
+    .mar-items4 {
+        padding: 10px 10px 20px 10px;
+    }
+    .cont-items {
+        display: flex;
+        flex-direction: row;
+    }
+    .cust-str1 {
+        height: 32px;
+        width: 60%;
+        padding-top: 5px;
+        padding-left: 20px;
+    }
+    .cust-str2 {
+        height: 32px;
+        width: 10%;
+        padding-top: 5px;
+    }
+    .cust-str3 {
+        height: 32px;
+        width: 10%;
+        padding-top: 5px;  
+    }
+    .cust-str4 {
+        height: 32px;
+        width: 20%;    
+        padding-top: 5px; 
+        padding-left: 50px; 
+    }
+}

@@ -13,7 +13,7 @@ export const NP_CODEX_TYPE_CL: IDictionaryDescriptor = Object.assign({}, NADZOR_
     actions: [
         'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'removeHard', 'tableCustomization',
-        'edit', 'view', 'remove', 'removeHard', 'userOrder'],
+        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'export', 'import'],
     keyField: 'ISN_LCLASSIF',
     searchConfig: [SEARCH_TYPES.quick],
     fields: [{

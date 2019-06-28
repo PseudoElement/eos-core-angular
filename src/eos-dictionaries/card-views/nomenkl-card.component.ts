@@ -2,9 +2,6 @@ import {Component, Injector, OnChanges, OnInit, SimpleChanges} from '@angular/co
 import { BaseCardEditComponent } from './base-card-edit.component';
 import {PipRX} from '../../eos-rest';
 import {AbstractControl, ValidatorFn} from '@angular/forms';
-import { IDynamicInputOptions } from 'eos-common/dynamic-form-input/dynamic-input.component';
-
-
 
 @Component({
     selector: 'eos-nomenkl-card',
@@ -13,12 +10,6 @@ import { IDynamicInputOptions } from 'eos-common/dynamic-form-input/dynamic-inpu
 })
 
 export class NomenklCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
-    selOpts: IDynamicInputOptions = {
-        defaultValue: {
-            value: '',
-            title: '...',
-        }
-    };
 
     private previousValues: SimpleChanges;
 
@@ -29,17 +20,6 @@ export class NomenklCardComponent extends BaseCardEditComponent implements OnCha
         super(injector);
     }
     ngOnInit(): void {
-        const i = this.inputs['rec.SECURITY'];
-        i.options = [];
-        const req = {'SECURITY_CL': []};
-        this._apiSrv
-            .read(req)
-            .then((rdata: any[]) => {
-                rdata.forEach((d) => {
-                    i.options.push({ title: d['CLASSIF_NAME'], value: d['CLASSIF_NAME']});
-                });
-            });
-
         const v = [this.endYearValueValidator()];
         if (this.form.controls['rec.END_YEAR'].validator) {
             v.push(this.form.controls['rec.END_YEAR'].validator);
@@ -75,10 +55,18 @@ export class NomenklCardComponent extends BaseCardEditComponent implements OnCha
         }
     }
 
-
-
     ngOnChanges(changes: SimpleChanges) {
         if (this.form) {
+            const i = this.inputs['rec.SECURITY'];
+            i.options = [];
+            const req = {'SECURITY_CL': []};
+            this._apiSrv
+                .read(req)
+                .then((rdata: any[]) => {
+                    rdata.forEach((d) => {
+                        i.options.push({ title: d['CLASSIF_NAME'], value: d['CLASSIF_NAME']});
+                    });
+                });
             this.unsubscribe();
             this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this.updateForm(formChanges));
         }

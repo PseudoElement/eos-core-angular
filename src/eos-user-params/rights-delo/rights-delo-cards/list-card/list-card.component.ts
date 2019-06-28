@@ -1,8 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { CardRightSrv } from '../card-right.service';
 import { CardRight } from './card.model';
 import { USERCARD } from 'eos-rest';
-import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'eos-list-card-right',
@@ -19,7 +22,9 @@ export class ListCardRightComponent implements OnInit, OnDestroy {
     ) {
         this._ngUnsubscribe = new Subject<void>();
         this._cardSrv.selectingNode$
-        .takeUntil(this._ngUnsubscribe)
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
         .subscribe(() => {
             this._createList();
         });

@@ -170,6 +170,14 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
         }
     }
 
+    defaultTreePath(data: CustomTreeNode[]): any {
+        if (data && data[0].id === NP_NOM_ROOT_DUE && this._filterDUE === NP_NOM_ROOT_DUE) {
+            return data[0].children[0].path;
+        }
+
+        return null;
+    }
+
     protected _initRecord(data: IDictionaryDescriptor) {
         this.record = new NomenklRecordDescriptor(this, <ITreeDictionaryDescriptor>data);
     }

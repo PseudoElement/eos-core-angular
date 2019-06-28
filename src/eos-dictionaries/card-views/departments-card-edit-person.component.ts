@@ -11,7 +11,7 @@ import { UPLOAD_IMG_FALLED, INFO_PERSONE_DONT_HAVE_CABINET } from '../consts/mes
     templateUrl: 'departments-card-edit-person.component.html',
 })
 export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent implements OnChanges {
-    readonly fieldGroups: string[] = ['Основные данные', 'Контактная информация', 'Дополнительные сведения'];
+    readonly fieldGroups: string[] = ['Основные данные', 'Дополнительные сведения'];
 
     photo: any;
 

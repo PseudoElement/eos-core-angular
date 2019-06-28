@@ -137,8 +137,8 @@ export class RussianNameProcessor {
                 return pick;
             }
         }
-        const pick = this.pick(word, sex, gcase, rules.suffixes, false);
-        return pick || word;
+        const pick1 = this.pick(word, sex, gcase, rules.suffixes, false);
+        return pick1 || word;
     }
 
     static init () {

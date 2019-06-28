@@ -12,7 +12,8 @@ export enum E_DICT_TYPE {
     linear,
     tree,
     department,
-    custom
+    custom,
+    form,
 }
 
 export enum E_FIELD_SET {
@@ -29,6 +30,7 @@ export enum E_VISIBLE_TIPE {
     all,
     onlyNode,
     onlyChild,
+    fromParentIfNode,
 }
 export enum E_FIELD_TYPE {
     string,
@@ -76,6 +78,8 @@ export interface IFieldDescriptor {
     groupLabel?: string;
     minValue?: number;
     maxValue?: number;
+    parent?: any;
+    keyPosition?: number| string;
 }
 
 export interface IFieldDescriptorBase {
@@ -144,6 +148,11 @@ export interface ITreeDictionaryDescriptor extends IDictionaryDescriptor {
     shortQuickViewFields: string[];
     editFields: string[];
     listFields: string[];
+
+}
+
+export interface IFormDictionaryDescriptor extends IDictionaryDescriptor {
+    dictType: E_DICT_TYPE.form;
 
 }
 

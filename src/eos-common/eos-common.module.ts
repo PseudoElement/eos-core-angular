@@ -1,11 +1,12 @@
+import { ConfirmWindow2Component } from './confirm-window/confirm-window2.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
-import { defineLocale } from 'ngx-bootstrap/bs-moment';
-import { ru } from 'ngx-bootstrap/locale';
-defineLocale('ru', ru);
+import { defineLocale } from 'ngx-bootstrap/chronos';
+import { ruLocale } from 'ngx-bootstrap/locale';
+defineLocale('ru', ruLocale);
 
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { AlertModule } from 'ngx-bootstrap/alert';
@@ -45,6 +46,7 @@ import { DynamicInputLinkButtonComponent } from './dynamic-form-input/dynamic-in
 @NgModule({
     declarations: [
         ConfirmWindowComponent,
+        ConfirmWindow2Component,
         InfoComponent,
         MessagesComponent,
         InputCleanerDirective,
@@ -76,6 +78,7 @@ import { DynamicInputLinkButtonComponent } from './dynamic-form-input/dynamic-in
     ],
     exports: [
         ConfirmWindowComponent,
+        ConfirmWindow2Component,
         InfoComponent,
         MessagesComponent,
         InputCleanerDirective,
@@ -87,6 +90,7 @@ import { DynamicInputLinkButtonComponent } from './dynamic-form-input/dynamic-in
     ],
     entryComponents: [
         ConfirmWindowComponent,
+        ConfirmWindow2Component,
     ],
     providers: [
         ConfirmWindowService,

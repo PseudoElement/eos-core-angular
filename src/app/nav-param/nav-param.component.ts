@@ -1,7 +1,8 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { NavParamService } from '../services/nav-param.service';
+import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'eos-nav-param',
@@ -17,8 +18,12 @@ export class NavParamComponent implements OnDestroy {
         _router: Router
     ) {
         this._update();
-        _router.events.filter((evt) => evt instanceof NavigationEnd)
-            .takeUntil(this.ngUnsubscribe)
+        _router.events
+            .pipe(
+                filter((evt) => evt instanceof NavigationEnd),
+                takeUntil(this.ngUnsubscribe)
+
+            )
             .subscribe(() => this._update());
     }
     ngOnDestroy(): void {

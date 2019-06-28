@@ -1,14 +1,11 @@
 import {EosUtils} from '../../eos-common/core/utils';
 import {ALL_ROWS} from '../../eos-rest/core/consts';
-import {PipRX} from '../../eos-rest/services/pipRX.service';
+import {PipRX} from '../../eos-rest';
 import {IDictionaryDescriptor, IRecordOperationResult} from '../interfaces';
 import {DictionaryDescriptor} from './dictionary-descriptor';
-import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
-import {CONFIRM_LINK_CHECK_CATEGORY} from '../consts/confirm.consts';
-import {LINK_CL} from 'eos-rest';
 import {RecordDescriptor} from './record-descriptor';
+import {LINK_CL} from '../../eos-rest';
 
-const LINK_TYPE = 'LINK_TYPE';
 const ISN_LCLASSIF = 'ISN_LCLASSIF';
 
 export class LinkRecordDescrtiptor extends RecordDescriptor {
@@ -21,7 +18,6 @@ export class LinkRecordDescrtiptor extends RecordDescriptor {
 
 export class LinkDictionaryDescriptor extends DictionaryDescriptor {
     record: LinkRecordDescrtiptor;
-    private _findedNodes: any;
 
     constructor(
         descriptor: IDictionaryDescriptor,
@@ -86,16 +82,14 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
         const changes = this.apiSrv.changeList([_newRec, _newPare]);
 
         if (changes) {
-            this._appendCategoryOldChange(changes);
-            return this.apiSrv.batch(changes, '')
-                .then((res) => {
-                    res.forEach((r) => {
-                        results.push({success: true, record: r.ID});
-                        }
-                    );
-
-                    return results;
-                });
+            return this._appendCategoryOldChange(changes, data)
+                .then(() => {
+                    return this.apiSrv.batch(changes, '')
+                        .then((res) => {
+                            res.forEach((r) => results.push({success: true, record: r.ID}));
+                            return results;
+                        });
+            });
         } else {
             return Promise.resolve(results);
         }
@@ -119,11 +113,13 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
         const record = EosUtils.deepUpdate(originalData.rec, updates.rec);
         const changes = this.apiSrv.changeList(changeData);
         if (changes.length) {
-            this._appendCategoryOldChange(changes);
-            return this.apiSrv.batch(changes, '')
+            return this._appendCategoryOldChange(changes, updates)
                 .then(() => {
-                    results.push({success: true, record: record});
-                    return results;
+                    return this.apiSrv.batch(changes, '')
+                        .then(() => {
+                            results.push({success: true, record: record});
+                            return results;
+                        });
                 });
         } else {
             return Promise.resolve(results);
@@ -143,49 +139,29 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
         return this.apiSrv.batch(changes, '');
     }
 
-    confirmSave(nodeData: any, confirmSrv: ConfirmWindowService): Promise<boolean> {
-        const linkType = this._getRecField(nodeData, LINK_TYPE);
-        if (linkType) {
-            return this.apiSrv.read<LINK_CL>({LINK_CL: PipRX.criteries({LINK_TYPE: linkType.toString()})})
-                .then((records) => {
-                    const isn = this._getRecField(nodeData, ISN_LCLASSIF);
-                    const findCurrent = records.find((rec) => rec[ISN_LCLASSIF] === isn);
-                    if (records.length && !findCurrent) {
-                        this._findedNodes = records;
-                        return this._confimDuplCategory(linkType, confirmSrv);
-                    }
-                    return true;
-                });
-        }
-        return Promise.resolve(true);
-    }
-
     protected _initRecord(descriptorData: IDictionaryDescriptor) {
         this.record = new LinkRecordDescrtiptor(this, descriptorData);
     }
 
-    private _appendCategoryOldChange(changes) {
+    private _appendCategoryOldChange(changes, updates: any): Promise<any> {
         const changeData = [];
-        if (this._findedNodes) {
-            this.prepareForEdit(this._findedNodes);
-            this._findedNodes.forEach(el => {
-                changeData.push(Object.assign(el, {LINK_TYPE: null, LINK_DIR: null}));
-            });
-
-            changes.push(...this.apiSrv.changeList(changeData));
-            this._findedNodes = null;
+        const linkType = updates.rec['LINK_TYPE'];
+        if (linkType) {
+            return this.apiSrv.read<LINK_CL>({LINK_CL: PipRX.criteries({LINK_TYPE: linkType.toString()})})
+                .then((records) => {
+                    const isn = updates.rec[ISN_LCLASSIF];
+                    const findCurrent = records.find((rec) => rec[ISN_LCLASSIF] === isn);
+                    if (records.length && !findCurrent) {
+                        this.prepareForEdit(records);
+                        records.forEach(el => {
+                            changeData.push(Object.assign(el, {LINK_TYPE: null, LINK_DIR: null}));
+                        });
+                        changes.push(...this.apiSrv.changeList(changeData));
+                    }
+                });
+        } else {
+            return Promise.resolve(null);
         }
-    }
-
-    private _getRecField(data: any, fieldName: string): any {
-        return data['rec'] ? data['rec'][fieldName] : null;
-    }
-
-    private _confimDuplCategory(index: string, confirmSrv: ConfirmWindowService): Promise<boolean> {
-        return confirmSrv.confirm(CONFIRM_LINK_CHECK_CATEGORY)
-            .then((doSave) => {
-                return doSave;
-            });
     }
 }
 

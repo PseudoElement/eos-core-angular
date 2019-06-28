@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { PipRX, DEPARTMENT } from 'eos-rest';
 import { TreeUserNode } from 'eos-user-select/tree-user-select/core/tree-user-node';
 import { E_MODES_USER_SELECT } from '../interfaces/user-select.interface';
-import {Subject} from 'rxjs/Subject';
+import {Subject} from 'rxjs';
 const DEPARTMENT_QUERY = {DEPARTMENT: PipRX.criteries({
     LAYER: '1:2',
     IS_NODE: '0',
+    orderby: 'INS_DATE'
 })};
 
 @Injectable()
@@ -35,7 +36,7 @@ export class TreeUserSelectService {
         if (mode === E_MODES_USER_SELECT.card) {
             this.cardFlag = 1;
             query.DEPARTMENT.criteries['CARD_FLAG'] = '1';
-            this.root.title = 'Все картотеки';
+            this.root.title = 'Центральная картотека';
         } else {
             delete query.DEPARTMENT.criteries['CARD_FLAG'];
             this.cardFlag = 0;
@@ -161,13 +162,15 @@ export class TreeUserSelectService {
                 DUE: d.DUE + '%',
                 IS_NODE: '0',
                 LAYER: (layer + 1) + '',
-                CARD_FLAG: this.cardFlag.toString()
+                CARD_FLAG: this.cardFlag.toString(),
+                orderby: 'INS_DATE',
             };
         }   else {
              criteries = {
                 DUE: d.DUE + '%',
                 IS_NODE: '0',
                 LAYER: (layer + 1) + '',
+                orderby: 'INS_DATE',
             };
         }
         return this.apiSrv.read<DEPARTMENT>({DEPARTMENT: PipRX.criteries(criteries)});

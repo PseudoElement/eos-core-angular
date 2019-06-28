@@ -10,7 +10,9 @@
         type="button"
         class="dropdown-button dropdown-toggle usual-border">
         <span class="wr">
-            <span class="selected-desktop m-font" tooltip="{{selectedDesk.name}}" placement="bottom" [isDisabled]="dropDown.isOpen" #hint="bs-tooltip"
+            <span class="selected-desktop m-font" tooltip="{{selectedDesk.name}}"
+                placement="bottom" [isDisabled]="dropDown.isOpen" #hint="bs-tooltip"
+                [delay]="tooltipDelay"
                 containerClass="tooltip-info" container="body">
                 {{selectedDesk.name}}
             </span>

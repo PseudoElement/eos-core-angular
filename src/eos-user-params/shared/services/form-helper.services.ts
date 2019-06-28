@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { IInputParamControl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
-import {IFieldDescriptor} from 'eos-user-params/shared/intrfaces/user-params.interfaces';
+import { E_FIELD_TYPE, IFieldDescriptor } from 'eos-dictionaries/interfaces';
 @Injectable()
 export class FormHelperService {
     public _fieldsType = {};
@@ -50,15 +49,14 @@ export class FormHelperService {
         }
     }
 
-    fillInputFieldsSetParams(inputFields: IInputParamControl[]) {
-        const user_param = this._userSrv.curentUser['USER_PARMS_HASH'];
+    fillInputFieldsSetParams(inputFields: IInputParamControl[], data) {
         const arrayFills: IInputParamControl[]  = [];
         inputFields.forEach((inputVal: IInputParamControl, index) => {
             const f: IInputParamControl = Object.assign({}, inputVal);
             arrayFills.push(f);
             if (f.controlType === E_FIELD_TYPE.boolean) {
-              if (String(user_param[f['key']]) !==  'null' && String(user_param[f['key']]) !==  'undefined') {
-                if (user_param[f['key']] === 'NO') {
+              if (String(data[f['key']]) !==  'null' && String(data[f['key']]) !==  'undefined' &&  String(data[f['key']]).replace(/\s/g, '')  !== '') {
+                if (data[f['key']] === 'NO') {
                     f['value']  = false;
                 }   else {
                     f['value']  = true;
@@ -69,8 +67,8 @@ export class FormHelperService {
             }
 
             if (f.controlType === E_FIELD_TYPE.string) {
-                if (String(user_param[f['key']]) !== 'null' && String(user_param[f['key']]) !==  'undefined') {
-                    f['value'] = user_param[f['key']];
+                if (String(data[f['key']]) !== 'null' && String(data[f['key']]) !==  'undefined') {
+                    f['value'] = data[f['key']];
                 }   else {
                     f['value']  = '';
                 }
@@ -80,15 +78,15 @@ export class FormHelperService {
         return arrayFills;
     }
 
-    changesForm(inputs: IInputParamControl[], newVal) {
+    changesForm(inputs, newVal) {
         let countChanges = 0;
         let btnDisableFlag = null;
-        inputs.forEach((field, index) => {
-            if (field.value !== newVal[field.key]) {
-                this.newFormData[field.key] = field.value;
+        Object.keys(inputs).forEach((field, index) => {
+            if (inputs.value !== newVal[field]) {
+                this.newFormData[field] = inputs.value;
                 countChanges += 1;
             } else {
-                delete this.newFormData[field.key];
+                delete this.newFormData[field];
             }
         });
         countChanges > 0 ? btnDisableFlag = false : btnDisableFlag = true;
@@ -161,7 +159,7 @@ export class FormHelperService {
                 obj[field.key] = userData[field.key];
             } else if (field.type === 'string') {
                 obj[field.key] = userData[field.key] === (null || '' || undefined) ? '' : userData[field.key];
-            }else if (field.type === 'boolean') {
+            } else if (field.type === 'boolean') {
                 if (!isNaN(userData[field.key])) {
                     this._fieldsTypeParce[field.key] = 'number';
                     if (+userData[field.key] === 0) {
@@ -195,7 +193,7 @@ export class FormHelperService {
                 } else {
                     if (String(userData['DEF_SEARCH_CITIZEN'].charAt(field.keyPosition)) === '0') {
                         obj[field.key] = false;
-                    }else {
+                    } else {
                         obj[field.key] = true;
                     }
                 }
@@ -223,6 +221,61 @@ export class FormHelperService {
             }
         });
         return obj;
+    }
+    getObjQueryInputsFieldForDefault(inputs: Array<any>) {
+        return {
+            USER_PARMS: {
+                criteries: {
+                    PARM_NAME: inputs.join('||'),
+                    ISN_USER_OWNER: '-99'
+                }
+            }
+        };
+    }
+
+    getObjQueryInputsField() {
+        return {
+            USER_PARMS: {
+                criteries: {
+                    ISN_USER_OWNER: '-99'
+                }
+            }
+        };
+    }
+
+    pushIntoArrayRequest(storeReq: Array<any>, data: Map<string, any>, id, encodeurl: boolean = false): Array<any> {
+        Array.from(data).forEach(val => {
+            let parn_Val;
+            if (typeof val[1] === 'boolean') {
+                val[1] === false ? parn_Val = 'NO' : parn_Val = 'YES';
+            } else {
+                String(val[1]) === 'null' ? parn_Val = '' : parn_Val = val[1];
+            }
+            storeReq.push({
+                method: 'MERGE',
+                requestUri: `USER_CL(${id})/USER_PARMS_List(\'${id} ${val[0]}\')`,
+                encodeurl: encodeurl,
+                data: {
+                    PARM_VALUE: `${parn_Val}`
+                }
+            });
+        });
+        return storeReq;
+    }
+    queryparams(data, key) {
+        const arraQlist = [];
+        data[key].forEach(el => {
+            arraQlist.push(el.key);
+        });
+        return arraQlist;
+    }
+
+    createhash(data: any) {
+        const a = {};
+        data.forEach((el: any) => {
+            a[el.PARM_NAME] = el.PARM_VALUE;
+        });
+        return a;
     }
 
 }

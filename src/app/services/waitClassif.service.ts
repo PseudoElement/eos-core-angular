@@ -15,20 +15,23 @@ const USER_LISTS: string = '../Pages/User/USER_LISTS.aspx';
 @Injectable()
 export class WaitClassifService {
     constructor() {
-        window['Rootpath'] = function() {
+        window['Rootpath'] = function () {
             return 'classif';
         };
     }
-    openClassif(params: IOpenClassifParams): Promise<String> {
+    openClassif(params: IOpenClassifParams, flag?: boolean): Promise<String> {
         let url: string = '';
         if (params.classif === 'USER_LISTS') {
             url = USER_LISTS;
+            if (params.user_id !== undefined && params.user_id !== null) {
+                url += `?user_id=${params.user_id}`;
+            }
         } else {
-            url = this._prepareUrl(params);
+            url = this._prepareUrl(params, flag);
         }
 
         return new Promise((resolve, reject) => {
-        const w =  openPopup(url, function(event, str) {
+            const w = openPopup(url, function (event, str) {
                 if (str !== '') {
                     return resolve(str);
                 }
@@ -47,9 +50,13 @@ export class WaitClassifService {
             }, 500);
         });
     }
-    private _prepareUrl(params: IOpenClassifParams): string {
+    private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
         let url = '../';
-        url += (LIST_OLD_PAGES.indexOf(params.classif) !== -1) ? OLD_VIEW_URL : NEW_VIEW_URL;
+        if (flag) {
+            url +=  OLD_VIEW_URL;
+        } else {
+            url += (LIST_OLD_PAGES.indexOf(params.classif) !== -1) ? OLD_VIEW_URL : NEW_VIEW_URL;
+        }
         url += `Classif=${params.classif}`;
         url += params.return_due ? '&return_due=true' : '';
         url += params.id ? `&value_id=${params.id}_Ids&name_id=${params.id}` : '';
@@ -69,8 +76,13 @@ export class WaitClassifService {
         if (params.nomenkl_jou !== undefined && params.nomenkl_jou !== null) {
             url += `&nomenkl_jou=${params.nomenkl_jou}`;
         }
-
+        if (params.user_id !== undefined && params.user_id !== null) {
+            url += `&user_id=${params.user_id}`;
+        }
         url += params.classif === 'CONTACT' || params.classif === 'ORGANIZ_CL' ? '&app=nadzor' : '';
+        // if (params.criteriesSearch) {
+        //     url += '&criteries=note:' +  encodeURIComponent('Руководство');
+        // }
         return url;
     }
 }

@@ -1,16 +1,19 @@
 import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
-import { EmailAddressService } from '../shared/services/email-address.service';
+import { FormGroup, FormControl, FormArray } from '@angular/forms';
+
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+import { EmailAddressService } from '../shared/services/email-address.service';
 import { UserParamsService } from '../shared/services/user-params.service';
-import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { NTFY_USER_EMAIL } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { IMessage } from 'eos-common/interfaces';
 import { RestError } from 'eos-rest/core/rest-error';
-import { Subject } from 'rxjs/Subject';
-import { Router } from '@angular/router';
 import { ErrorHelperServices } from '../shared/services/helper-error.services';
 @Component({
     selector: 'eos-params-email-address',
@@ -22,7 +25,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     public isDefault = false;
     public statusBtnSub: boolean = true;
     public username: string;
-    public umailsInfo: Array<any>;
+    public umailsInfo: Array<any> = [];
     public currentIndex: number;
     public prevIndex: number;
     public dismissible: boolean = true;
@@ -50,9 +53,22 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         private modalService: BsModalService,
         private _userServices: UserParamsService,
         private _msgSrv: EosMessageService,
-        private _router: Router,
         private _errorSrv: ErrorHelperServices,
-    ) {
+    ) {}
+
+    async ngOnInit() {
+        this._userServices.saveData$
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
+            .subscribe(() => {
+                this._userServices.submitSave = this.saveAllForm(null);
+            });
+
+        await this._userServices.getUserIsn({
+            expand: 'NTFY_USER_EMAIL_List'
+        });
+
         this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ведение адресов электронной почты`;
         this.currentParams = '';
         this.CODE = null;
@@ -67,10 +83,24 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         this.umailsInfo.length > 0 ? this.currentIndex = 0 : this.currentIndex = null;
         this.prevIndex = 0;
         this.umailsInfo.length > 0 ? this.newEmail = this.umailsInfo[0].EMAIL : this.newEmail = '';
-        this._userServices.saveData$
-            .takeUntil(this._ngUnsubscribe)
-            .subscribe(() => {
-                this._userServices.submitSave = this.saveAllForm(null);
+        this.init();
+    }
+    init () { // возможно лучше переименовать по другому
+        this._emailService.getCode2()
+            .then((map: Map<string, string>) => {
+                this.sortArray(this.umailsInfo);
+                this.sortArray(this.saveParams);
+                this._emailService.Decode(this.umailsInfo, map);
+                this.CODE = map;
+                this.createForm(false, false);
+                this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+                this.myForm.valueChanges.subscribe(data => {
+                    this.checkChanges(data);
+                });
+                this.editMode();
+            }).catch(error => {
+                error.message = 'Ошибка сервера';
+                this.cathError(error);
             });
     }
     ngOnDestroy() {
@@ -104,7 +134,9 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     saveAllForm(event): Promise<any> {
         return Promise.all([this._emailService.preAddEmail(this.ArrayForm), this._emailService.preDeliteEmail(this.delitedSetStore), this._emailService.preEditEmail(this.ArrayForm)])
             .then(result => {
-                return this._userServices.getUserIsn()
+                return this._userServices.getUserIsn({
+                    expand: 'NTFY_USER_EMAIL_List'
+                })
                     .then((flag: boolean) => {
                         if (flag) {
                             this.umailsInfo.splice(0, this.umailsInfo.length);
@@ -218,6 +250,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         this.modalRef.hide();
     }
     parseChildParams() {
+        this.childParams.delete('');
         return Array.from(this.childParams).join(';');
     }
 
@@ -259,25 +292,6 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     onClosed(type): void {
         this.defaultAlerts.delete(type);
         this.alerts = Array.from(this.defaultAlerts);
-    }
-
-    ngOnInit() {
-        this._emailService.getCode2()
-            .then((map: Map<string, string>) => {
-                this.sortArray(this.umailsInfo);
-                this.sortArray(this.saveParams);
-                this._emailService.Decode(this.umailsInfo, map);
-                this.CODE = map;
-                this.createForm(false, false);
-                this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
-                this.myForm.valueChanges.subscribe(data => {
-                    this.checkChanges(data);
-                });
-                this.editMode();
-            }).catch(error => {
-                error.message = 'Ошибка сервера';
-                this.cathError(error);
-            });
     }
 
     createForm(changedField: boolean, newField: boolean, flagBackForm?: boolean) {
@@ -415,9 +429,6 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     edit($event) {
         this.flagEdit = $event;
         this.editMode();
-    }
-    close(event?) {
-        this._router.navigate(['user_param']);
     }
     default(event?) {
         return;

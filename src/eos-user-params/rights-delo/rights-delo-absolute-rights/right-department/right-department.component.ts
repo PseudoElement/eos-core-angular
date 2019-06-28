@@ -28,12 +28,13 @@ export class RightDepertmentComponent implements OnInit {
     isShell: Boolean = false;
     selectedDep: NodeDocsTree;
 
-    constructor (
+    constructor(
         private _msgSrv: EosMessageService,
         private _userParmSrv: UserParamsService,
         private _waitClassifSrv: WaitClassifService,
         private apiSrv: UserParamApiSrv,
-    ) {}
+    ) {
+     }
     ngOnInit() {
         this.isLoading = true;
         this.userDep = this.curentUser['USERDEP_List'];
@@ -52,12 +53,14 @@ export class RightDepertmentComponent implements OnInit {
                     const cfg: INodeDocsTreeCfg = {
                         due: userDep.DUE,
                         label: dep.CLASSIF_NAME,
-                        viewAllowed: false,
+                        allowed: !!userDep.DEEP,
                         data: {
                             dep: dep,
                             userDep: userDep,
                         },
                     };
+                    this.addFieldChwckProp(cfg, dep.IS_NODE, userDep.DEEP);
+
                     this.listUserDep.push(new NodeDocsTree(cfg));
                 });
                 this.isLoading = false;
@@ -76,74 +79,90 @@ export class RightDepertmentComponent implements OnInit {
                 }
             });
     }
+    addFieldChwckProp(node: INodeDocsTreeCfg, is_node: number, deep: number) {
+        if (this.selectedNode['_constData'].data.flagcheck) {
+            if (is_node === 0) {
+                node['flagCheckNode'] = {
+                    deepValue: deep,
+                };
+                node.viewAllowed =  true;
+            }   else {
+                node.viewAllowed = false;
+            }
+        }   else {
+            node.viewAllowed = false;
+        }
+    }
     selectNode(dep: NodeDocsTree) {
         this.selectedDep = dep;
     }
     addDep() {
         this.isShell = true;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT_FULL)
-        .then((data: string) => {
-            if (data === '') {
-                throw new Error();
-            }
-            return this._userParmSrv.getDepartmentFromUser(data.split('|'));
-        })
-        .then((data: DEPARTMENT[]) => {
-            if (this._checkRepeat(data)) {
-                this._msgSrv.addNewMessage({
-                    type: 'warning',
-                    title: '',
-                    msg: 'Нет элементов для добавления'
+            .then((data: string) => {
+                if (data === '') {
+                    throw new Error();
+                }
+                return this._userParmSrv.getDepartmentFromUser(data.split('|'));
+            })
+            .then((data: DEPARTMENT[]) => {
+                if (this._checkRepeat(data)) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: '',
+                        msg: 'Нет элементов для добавления'
+                    });
+                    this.isShell = false;
+                    return;
+                }
+
+                const newNodes: NodeDocsTree[] = [];
+                data.forEach((dep: DEPARTMENT) => {
+                    const newUserDep: USERDEP = this._userParmSrv.createEntyti<USERDEP>({
+                        ISN_LCLASSIF: this._userParmSrv.userContextId,
+                        DUE: dep.DUE,
+                        FUNC_NUM: this.funcNum,
+                        WEIGHT: this._getMaxWeight(),
+                        DEEP: 1,
+                        ALLOWED: null,
+                    }, 'USERDEP');
+                    const cfg: INodeDocsTreeCfg = {
+                        due: newUserDep.DUE,
+                        label: dep.CLASSIF_NAME,
+                        allowed: !!newUserDep.DEEP,
+                        data: {
+                            dep: dep,
+                            userDep: newUserDep,
+                        },
+                    };
+                    console.log(dep);
+                    this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
+                    const newNode = new NodeDocsTree(cfg);
+                    this.curentUser.USERDEP_List.push(newUserDep);
+                    this.selectedNode.pushChange({
+                        method: 'POST',
+                        due: newUserDep.DUE,
+                        data: newUserDep
+                    });
+                    newNodes.push(newNode);
                 });
+
+                this.listUserDep = this.listUserDep.concat(newNodes);
+                this.selectedNode.isCreate = false;
                 this.isShell = false;
-                return;
-            }
-
-            const newNodes: NodeDocsTree[] = [];
-            data.forEach((dep: DEPARTMENT) => {
-                const newUserDep: USERDEP = this._userParmSrv.createEntyti<USERDEP>({
-                    ISN_LCLASSIF: this._userParmSrv.userContextId,
-                    DUE: dep.DUE,
-                    FUNC_NUM: this.funcNum,
-                    WEIGHT: this._getMaxWeight(),
-                    DEEP: 1,
-                    ALLOWED: null,
-                }, 'USERDEP');
-                const cfg: INodeDocsTreeCfg = {
-                    due: newUserDep.DUE,
-                    label: dep.CLASSIF_NAME,
-                    viewAllowed: false,
-                    data: {
-                        dep: dep,
-                        userDep: newUserDep,
-                    },
-                };
-                const newNode = new NodeDocsTree(cfg);
-                this.curentUser.USERDEP_List.push(newUserDep);
-                this.selectedNode.pushChange({
-                    method: 'POST',
-                    due: newUserDep.DUE,
-                    data: newUserDep
-                });
-                newNodes.push(newNode);
+                this.Changed.emit();
+            })
+            .catch(() => {
+                this.isShell = false;
+                if (this.selectedNode.isCreate) {
+                    this.selectedNode.value = 0;
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: '',
+                        msg: 'Необходимо выбрать элемент'
+                    });
+                }
             });
-
-            this.listUserDep = this.listUserDep.concat(newNodes);
-            this.selectedNode.isCreate = false;
-            this.isShell = false;
-            this.Changed.emit();
-        })
-        .catch(() => {
-            this.isShell = false;
-            if (this.selectedNode.isCreate) {
-                this.selectedNode.value = 0;
-                this._msgSrv.addNewMessage({
-                    type: 'warning',
-                    title: '',
-                    msg: 'Необходимо выбрать элемент'
-                });
-            }
-        });
     }
     DeleteDep() {
         this.curentUser['USERDEP_List'] = this.curentUser['USERDEP_List'].filter(i => {
@@ -166,6 +185,18 @@ export class RightDepertmentComponent implements OnInit {
     }
     markedSendPrj(event) {
         this.selectedNode.value = event.target.checked ? 2 : 1;
+    }
+    checkedNode($event: NodeDocsTree) {
+        $event.flagCheckNode.deepValue = Number($event.isAllowed);
+        const a = Object.assign({}, $event.data.userDep, { DEEP: Number($event.isAllowed) });
+        delete a['CompositePrimaryKey'];
+        this.selectedNode.pushChange({
+            method: 'MERGE',
+            due: $event.DUE,
+            user_cl: true,
+            data: a
+        });
+        this.Changed.emit();
     }
     private _getMaxWeight(): number {
         let w = 0;

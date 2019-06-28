@@ -11,7 +11,7 @@ import {RecordDescriptor} from 'eos-dictionaries/core/record-descriptor';
 import {commonMergeMeta} from 'eos-rest/common/initMetaData';
 import {FieldsDecline} from 'eos-dictionaries/interfaces/fields-decline.inerface';
 import {PipRX} from 'eos-rest/services/pipRX.service';
-import {ALL_ROWS, _ES} from 'eos-rest/core/consts';
+import {ALL_ROWS, _ES, _T} from 'eos-rest/core/consts';
 import {ITypeDef, IEnt, DELO_BLOB} from 'eos-rest';
 import {SevIndexHelper} from 'eos-rest/services/sevIndex-helper';
 import {PrintInfoHelper} from 'eos-rest/services/printInfo-helper';
@@ -85,6 +85,11 @@ export abstract class AbstractDictionaryDescriptor {
     abstract getSubtree(...params): Promise<any[]>;
 
     abstract onPreparePrintInfo(dec: FieldsDecline): Promise<any[]>;
+
+    public PKForEntity(v: string): string {
+        const et = this.metadata;
+        return this.apiInstance + ((et.properties[et.pk] === _T.s) ? ('(\'' + v + '\')') : ('(' + v + ')'));
+    }
 
     addBlob(ext: string, blobData: string): Promise<string | number> {
         const delo_blob = this.apiSrv.entityHelper.prepareAdded<DELO_BLOB>({
@@ -307,7 +312,7 @@ export abstract class AbstractDictionaryDescriptor {
      * @param updates changes
      * @returns Promise<any[]>
      */
-    updateRecord(originalData: any, updates: any): Promise<IRecordOperationResult[]> {
+    updateRecord(originalData: any, updates: any, appendToChanges: any = null): Promise<IRecordOperationResult[]> {
         const changeData = [];
         let pSev: Promise<IRecordOperationResult> = Promise.resolve(null);
         const results: IRecordOperationResult[] = [];
@@ -366,7 +371,10 @@ export abstract class AbstractDictionaryDescriptor {
                 }
             })
             .then(() => {
-                const changes = this.apiSrv.changeList(changeData);
+                let changes = this.apiSrv.changeList(changeData);
+                if (appendToChanges) {
+                    changes = changes.concat(appendToChanges);
+                }
                 if (changes.length) {
                     return this.apiSrv.batch(changes, '')
                         .then(() => {
@@ -413,6 +421,10 @@ export abstract class AbstractDictionaryDescriptor {
             });
     }
 
+    findTreeParent(data: CustomTreeNode[], id: any): any {
+        return null;
+    }
+
     hasCustomTree() {
         return false;
     }
@@ -432,6 +444,10 @@ export abstract class AbstractDictionaryDescriptor {
     }
 
     preCreateCheck(dict: DictionaryComponent): IMessage {
+        return null;
+    }
+
+    defaultTreePath(data: CustomTreeNode[]): any {
         return null;
     }
 

@@ -19,8 +19,9 @@ export class IDynamicInputEvents {
 }
 export class IDynamicInputOptions {
     hideLabel?: boolean; // default: false;
+    hidePicker?: boolean; // default: false;
     selEmptyEn?: boolean; // default: false;
-    defaultValue?: { value: string, title: string };
+    defaultValue?: { value: string, title: string , disabled?: boolean };
     enRemoveButton?: boolean; // for dictlink second button
     events?: IDynamicInputEvents;
     // selEmptyValDis?: boolean; // default: false;
@@ -46,4 +47,6 @@ export class DynamicInputComponent {
             this.viewOpts = <IDynamicInputOptions> {};
         }
     }
+
+
 }

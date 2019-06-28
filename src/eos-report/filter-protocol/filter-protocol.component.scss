@@ -1,0 +1,44 @@
+.filter-comp {
+    .cust-style-mod {
+        width: 48px;
+        height: 48px;
+        margin-left: 50%;
+    }
+    .btn.btn-primary-light.search-btn.opened {
+        height: 48px;
+        width: 48px;
+    }
+}
+.full-search-form-prot{
+    .cont-datepick {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .lab-botttom{
+        padding-bottom: 12px;
+    }
+    .lab-font{
+        line-height: 16px;
+        font-size: 12px;
+    }
+    .form-group-filter {
+        label {
+            line-height: 0px !important;
+            margin-bottom: 8px;
+            font-weight: normal;
+            text-transform: uppercase;
+        }
+    }
+    form {
+        padding: 20px;
+    }
+    .pos-icon{
+        display: flex;
+        justify-content: flex-end;
+        bottom: 50px;
+        right: 10px;
+        position: relative;
+    }
+}
+

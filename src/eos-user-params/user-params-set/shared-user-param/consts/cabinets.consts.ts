@@ -22,7 +22,7 @@ export const CABINETS_USER: IBaseUsers = {
         {
             key: 'FOLDERCOLORSTATUS_FOR_EXECUTION',
             type: 'boolean',
-            title: 'На исполнение'
+            title: 'На исполнении'
         },
         {
             key: 'FOLDERCOLORSTATUS_UNDER_CONTROL',

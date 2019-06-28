@@ -37,6 +37,14 @@ export const COMMON_FIELD_NOTE = {
     length: 250,
 };
 
+export const ICONS_CONTAINER = 'ICONS_TYPE';
+export const COMMON_FIELD_ICONS = {
+    key: ICONS_CONTAINER,
+    title: 'Тип',
+    type: 'icon',
+    length: 5,
+};
+
 export const COMMON_FIELDS: IFieldDescriptor[] = [{
     key: 'DELETED',
     title: 'Признак удаления',

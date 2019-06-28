@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler, LOCALE_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
@@ -46,11 +46,15 @@ import { EosUserProfileService } from './services/eos-user-profile.service';
 import { CarmaHttpService } from './services/carmaHttp.service';
 import { NavParamService } from './services/nav-param.service';
 import { WaitClassifService } from './services/waitClassif.service';
+import {CertificateService} from './services/certificate.service';
+import { ExportImportClService } from './services/export-import-cl.service';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 /* guards */
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
 import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { PermissionsGuard } from './guards/permissions.guard';
+import { EosReportModule } from 'eos-report/eos-report.module';
 /* end guards */
 
 
@@ -70,23 +74,25 @@ import { PermissionsGuard } from './guards/permissions.guard';
         TestPageComponent,
         TitleComponent,
         UserComponent,
-        NavParamComponent
+        NavParamComponent,
     ],
     imports: [
         AppRoutingModule,
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
-        HttpModule,
+        HttpClientModule,
         BsDropdownModule.forRoot(),
         SortableModule.forRoot(),
         TooltipModule.forRoot(),
         EosRestModule.forRoot(APP_CONFIG_LOCAL),
+        BsDatepickerModule.forRoot(),
         EosCommonModule,
         EosDictionariesModule,
         EosParametersModule,
         EosUserParamsModule,
         EosUserSelectModule,
+        EosReportModule
     ],
     entryComponents: [
         LoginFormComponent,
@@ -110,6 +116,8 @@ import { PermissionsGuard } from './guards/permissions.guard';
         CarmaHttpService,
         NavParamService,
         WaitClassifService,
+        CertificateService,
+        ExportImportClService,
     ],
     bootstrap: [AppComponent],
 })

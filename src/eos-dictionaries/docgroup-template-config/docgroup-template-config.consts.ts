@@ -28,7 +28,7 @@ export const DG_TPL_INDEX: DGTplElement = { key: '{F}', title: 'Индекс о�
 
 
 export const VALID_TEMPLATE_EXPR = /\{2|A|B|C|D|E|2#|3#|@}|@2\}/;
-export const VALID_PRJ_TEMPLATE_EXPR = /\{2|@}|@2\}/;
+export const VALID_PRJ_TEMPLATE_EXPR = /\{2|@}|@2|E\}/;
 export const SINGLE_TEMPLATE_ITEM_EXPR = /\{@}|2#|3#\}/;
 export const ORDER_NUM_TEMPLATE_ITEM_EXPR = /\{2|@2|E\}/;
 
@@ -66,4 +66,6 @@ export const PRJ_TEMPLATE_ELEMENTS = [
     DG_TPL_SEPARATOR2,
     DG_TPL_MANUAL_NUMBER,
     DG_TPL_COMB1,
+    DG_TPL_NUM_ORG,
+    DG_TPL_INDEX
 ];

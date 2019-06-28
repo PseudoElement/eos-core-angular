@@ -49,14 +49,7 @@
                            [readonly]="!editMode"></eos-dynamic-input>
     </div>
     <div class="row-wrapper">
-        <eos-dynamic-input *ngIf="isNode"
-                           class="rc-type"
-                           [input]="inputs['rec.RC_TYPE_NODE']"
-                           [form]="form"
-                           [disabled]="havesRC"
-                           [readonly]="!editMode"></eos-dynamic-input>
-        <eos-dynamic-input *ngIf="!isNode"
-                           class="rc-type"
+        <eos-dynamic-input class="rc-type"
                            [input]="inputs['rec.RC_TYPE']"
                            [form]="form"
                            [disabled]="havesRC"
@@ -93,7 +86,7 @@
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
     </div>
-    <ng-container *ngIf="isPrjFlag">
+    <ng-container *ngIf="isPrjFlag&&!isNode">
         <eos-dynamic-input [input]="inputs['rec.PRJ_DEL_AFTER_REG']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>

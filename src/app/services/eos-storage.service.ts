@@ -83,52 +83,6 @@ export class EosStorageService {
         }
     }
 
-    public setUserOrder(dictionary: string, node: string, ids: string[]) {
-        if (!this._data.userOrder) {
-            this._data.userOrder = {};
-        }
-        const userOrder = this._data.userOrder;
-
-        if (!userOrder[dictionary]) {
-            userOrder[dictionary] = {};
-        }
-
-        const dictionaryOrder = userOrder[dictionary];
-        dictionaryOrder[node] = ids;
-        this._data.__storage.userOrder = userOrder;
-        this._updateStorage();
-    }
-
-    public getUserOrder(dictionary: string): string[] {
-        if (this._data.userOrder) {
-            if (this._data.userOrder[dictionary]) {
-                return this._data.userOrder[dictionary];
-            }
-        }
-        return null;
-    }
-
-    public setUserOrderState(dictionary: string, state: boolean): void {
-        if (!this._data.userOrder) {
-            this._data.userOrder = {};
-        }
-        if (!this._data.userOrder[dictionary]) {
-            this._data.userOrder[dictionary] = {};
-        }
-        this._data.userOrder[dictionary].userOrderOn = state;
-        this._updateStorage();
-    }
-
-    public getUserOrderState(dictionary: string): boolean {
-        if (!this._data.userOrder) {
-            return false;
-        } else if (!this._data.userOrder[dictionary]) {
-            return false;
-        } else {
-            return this._data.userOrder[dictionary].userOrderOn;
-        }
-    }
-
     private _updateStorage() {
         // todo: implement lazy update
         try {

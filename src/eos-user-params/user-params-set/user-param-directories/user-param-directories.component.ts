@@ -1,12 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { DIRECTORIES_USER } from '../../user-params-set/shared-user-param/consts/directories.consts';
 import { UserParamsService } from '../../shared/services/user-params.service';
-import { Subject } from 'rxjs/Subject';
 import { FormHelperService } from '../../shared/services/form-helper.services';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { Router } from '@angular/router';
 import { PipRX, USER_PARMS } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import {ErrorHelperServices} from '../../shared/services/helper-error.services';
@@ -36,24 +38,28 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
         private formHelp: FormHelperService,
         private dataConv: EosDataConvertService,
         private inpSrv: InputControlService,
-        private _router: Router,
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
     ) {
-        this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Справочники';
         this.flagEdit = false;
         this.btnDisable = true;
         this._userParamsSetSr.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userParamsSetSr.submitSave = this.submit();
             });
     }
 
     ngOnInit() {
-        this._userParamsSetSr.getUserIsn().then(() => {
+        this._userParamsSetSr.getUserIsn({
+            expand: 'USER_PARMS_List'
+        })
+        .then((d) => {
             this.allData = this._userParamsSetSr.hashUserContext;
+            this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Справочники';
             this.inint();
         });
     }
@@ -248,10 +254,6 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
         this.flagEdit = false;
         this._pushState();
         this.editMode();
-    }
-    close(event) {
-        this.flagEdit = event;
-        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
     createMessage(type, title, msg) {
         return {

@@ -1,5 +1,5 @@
-// import { IErrorService } from '../interfaces/interfaces';
-import { Observable } from 'rxjs/Rx';
+
+import {throwError as observableThrowError, of } from 'rxjs';
 
 export class ErrorService /*implements IErrorService*/ {
     public LostConnectionAlerted = false;
@@ -20,7 +20,7 @@ export class ErrorService /*implements IErrorService*/ {
                     }
                     break;
                 case 404: case 403: // Просто так ошибкой не считаем
-                    return Observable.of([]);
+                    return of([]);
                 case 500: // InternalSerrverError
                     // this.$rootScope.$broadcast("srvError", err.http); // для обработки в поиске
                     this.defaultErrorHandler(err.http);
@@ -34,7 +34,7 @@ export class ErrorService /*implements IErrorService*/ {
             return this.odataErrorsHandler(err);
         }
 
-        return Observable.throw(new Error(err));
+        return observableThrowError(new Error(err));
     }
 
     odataErrorsHandler(err) {
@@ -46,13 +46,13 @@ export class ErrorService /*implements IErrorService*/ {
                 logic += e.message + '\n';
             } else {
                 this.WriteErrorHtml(e.message, e.stacktrace);
-                return Observable.throw(e);
+                return observableThrowError(e);
             }
         }
         if (logic !== '') {
             // console.log('odata error', logic);
         }
-        return Observable.throw(err);
+        return observableThrowError(err);
     }
 
     defaultLogicExceptionHandler(_e, data) {

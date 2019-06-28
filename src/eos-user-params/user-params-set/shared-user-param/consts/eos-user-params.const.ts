@@ -12,14 +12,14 @@ export const PARM_SUCCESS_SAVE: IMessage = {
     type: 'success',
     title: 'Изменения сохранены',
     msg: '',
-    dismissOnTimeout: 2000
+    dismissOnTimeout: 15000
 };
 
 export const PARM_CANCEL_CHANGE: IMessage = {
     type: 'warning',
     title: 'Изменения не сохранены',
     msg: '',
-    dismissOnTimeout: 2000
+    dismissOnTimeout: 15000
 };
 
 export const PARM_ERROR_SEND_FROM: IMessage = {

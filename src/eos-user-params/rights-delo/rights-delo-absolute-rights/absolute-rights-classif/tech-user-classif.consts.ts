@@ -123,7 +123,7 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
     },
     {
         key: 25,
-        label: 'Категории резолюций',
+        label: 'Категории поручений',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     },
     {
@@ -194,6 +194,11 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
     {
         key: 39,
         label: 'Обстоятельства дел',
+        expandable: E_TECH_USER_CLASSIF_CONTENT.none
+    },
+    {
+        key: 40,
+        label: 'Статусы проекта поручения',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     },
 ];

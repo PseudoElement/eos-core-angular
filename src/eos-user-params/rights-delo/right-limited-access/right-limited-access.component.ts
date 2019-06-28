@@ -1,4 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { LimitedAccesseService } from '../../shared/services/limited-access.service';
 import { FormGroup, FormControl, FormArray } from '@angular/forms';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -7,8 +12,6 @@ import { OPEN_CLASSIF_DOCGR } from '../../../eos-user-select/shered/consts/creat
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { IMessage } from 'eos-common/interfaces';
-import { Subject } from 'rxjs/Subject';
-import { Router } from '@angular/router';
 import { DOCGROUP_CL } from 'eos-rest';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 @Component({
@@ -66,20 +69,35 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         private _userServices: UserParamsService,
         private _router: Router,
         private _errorSrv: ErrorHelperServices,
+        private _snap: ActivatedRoute,
     ) {
         this.activeLink = true;
         this.flagGrifs = true;
         this.flagLinks = true;
         this.bacgHeader = false;
-        this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ограничение доступа`;
-        this.checkUserCard = this._userServices['_userContext']['USERCARD_List'];
         this._userServices.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userServices.submitSave = this.saveAllForm();
             });
+        this._snap.queryParams
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe((data: Object) => {
+            if (data.hasOwnProperty('flag')) {
+                this.currTab = 1;
+            }
+        });
     }
-    ngOnInit() {
+    async ngOnInit() {
+        await this._userServices.getUserIsn({
+            expand: 'USERCARD_List'
+        });
+        this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ограничение доступа`;
+        this.checkUserCard = this._userServices.curentUser['USERCARD_List'];
         this.isLoading = false;
         this._limitservise.getInfoGrifs().then(result => {
             this.checkGrifs = result[0][0]['USERSECUR_List'];
@@ -133,11 +151,11 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         if (this.grifsForm) {
             promise_all.push(this._limitservise.postGrifs(this.grifsForm), this._limitservise.deliteGrifs(this.grifsForm));
         }
-        if (this.LinksForm) {
-            const valueEdit = this.LinksForm.get('links').value;
-            // this._limitservise.createLinksNpUserLInk(valueEdit),
-            promise_all.push(this._limitservise.deliteLinksFromNpUserLink(valueEdit), this._limitservise.createLinksNpUserLInk(valueEdit));
-        }
+        // if (this.LinksForm) {
+        //     const valueEdit = this.LinksForm.get('links').value;
+        //     // this._limitservise.createLinksNpUserLInk(valueEdit),
+        //     promise_all.push(this._limitservise.deliteLinksFromNpUserLink(valueEdit), this._limitservise.createLinksNpUserLInk(valueEdit));
+        // }
         return Promise.all([...promise_all])
             .then(result => {
                 this._limitservise.getAccessCode()
@@ -151,13 +169,13 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                             this.umailsInfo = this.saveParams.slice();
                             this.statusBtnSub = true;
                             this.flagGrifs = true;
-                            this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
-                            this._limitservise.subscribe.next(false);
-                            promise_all.splice(0, promise_all.length);
                             this.editFlag = false;
+                            this.isLoading = true;
+                            this.grifsForm = null;
+                            this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
                             this.editModeForm();
                             this._pushState();
-                            this.isLoading = true;
+                            this._limitservise.subscribe.next(false);
                             if (!this.checkUserCard.length) {
                                 this._router.navigate(['user-params-set/', 'card-files'],
                                     {
@@ -340,7 +358,6 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.ArrayForm.push(new FormGroup(this.createFormControls(newFieldEmail, change, newField)));
     }
 
-
     sortArray(array) {
         array.sort(function (a, b) {
             return a.DUE - b.DUE;
@@ -356,13 +373,12 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.grifsForm = event.form;
         this._pushState();
     }
-    SubscribLInks(event) {
-        this.flagLinks = event.flag;
-        this.LinksForm = event.form;
-        this._pushState();
-    }
+    // SubscribLInks(event) {
+    //     this.flagLinks = event.flag;
+    //     this.LinksForm = event.form;
+    //     this._pushState();
+    // }
     ngOnDestroy() {
-        this._limitservise.GrifForm = undefined;
         //   this._limitservise.LinksFrom = undefined;
         sessionStorage.removeItem(`${this._userServices.userContextId}`);
         sessionStorage.removeItem('links');
@@ -373,10 +389,6 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.editFlag = $event;
         this.editModeForm();
         this._limitservise.editEmit.next();
-    }
-    close($event) {
-        this.editFlag = $event;
-        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
     get getBtn() {
         if (!this.statusBtnSub || !this.flagGrifs) {

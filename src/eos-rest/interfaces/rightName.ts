@@ -23,7 +23,7 @@ export enum E_TECH_RIGHT {
     ManageCertificate = 22, // Управление сертификатами
     VisaTypes = 23, // Типы виз
     SignTypes = 24, // Виды подписей
-    ResCategories = 25, // Категории резолюций
+    ResCategories = 25, // Категории поручений
     SystemParms = 26, // Параметры системы
     ExecStatuses = 27, // Cтатус исполнения (поручение)
     ReplyStatuses = 28, // Cтатус исполнения (исполнитель)
@@ -38,6 +38,7 @@ export enum E_TECH_RIGHT {
     EdsCategory = 37, // Категории ЭП
     NadzorCL = 38, // Справочники Надзора
     NpObst = 39, // Обстоятельства дел
+    StatPrjPor = 40, // Статусы проекта поручения
 }
 
 export enum E_CARD_RIGHT {

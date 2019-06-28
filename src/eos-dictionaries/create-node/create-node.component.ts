@@ -9,6 +9,7 @@ import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import { EosDepartmentsService } from '../services/eos-department-service';
 import { SUCCESS_SAVE } from '../consts/messages.consts';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
+import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
 
 @Component({
     selector: 'eos-create-node',
@@ -74,6 +75,7 @@ export class CreateNodeComponent {
                 if (res) {
                     this.upadating = true;
                     this._sendDataOnCreate(data, hide);
+                    this._dictSrv.currentTab = 0;
                 }
             });
     }
@@ -84,6 +86,10 @@ export class CreateNodeComponent {
      */
     recordChanged(hasChanges: boolean) {
         this.hasChanges = hasChanges;
+    }
+
+    isInsertDisabled(): boolean {
+        return !this.formIsValid || !this.hasChanges || this.upadating;
     }
 
     protected _sendDataOnCreate(data: any, hide = true) {
@@ -112,6 +118,7 @@ export class CreateNodeComponent {
         if (!hide) {
             this.onOpen.emit(true);
         }
+        BaseCardEditComponent.autoFocusOnFirstStringElement('eos-card-edit');
     }
 
     private _confirmSave(data): Promise<boolean> {

@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 import { EosStorageService } from '../../app/services/eos-storage.service';
 import { IPaginationConfig } from './node-list-pagination.interfaces';
 import { LS_PAGE_LENGTH, PAGES } from './node-list-pagination.consts';
 import { EosDictService } from '../services/eos-dict.service';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
     selector: 'eos-node-list-pagination',
@@ -24,7 +25,10 @@ export class NodeListPaginationComponent {
         private _dictSrv: EosDictService,
         private _storageSrv: EosStorageService,
     ) {
-        _dictSrv.paginationConfig$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.paginationConfig$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((config: IPaginationConfig) => {
                 if (config) {
                     this.config = config;

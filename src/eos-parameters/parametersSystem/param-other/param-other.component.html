@@ -1,35 +1,12 @@
-<div
-*ngIf="inputs"
-class="input-param-wrapper input-param-other-wrapper">
-    <eos-param-header
-        [title]="titleHeader"
-        (submitForm)="submit()"
-        (cancelForm)="cancel()"
-        [statusBtnSub]="btnDisabled"
-    ></eos-param-header>
+<div *ngIf="inputs" class="input-param-wrapper input-param-other-wrapper">
+    <eos-param-header [title]="titleHeader" (submitForm)="submit()" (cancelForm)="cancel()" [statusBtnSub]="btnDisabled"></eos-param-header>
     <div class="param-input-group">
         <span class="l-font">Подсистемы &laquo;Дело&raquo;</span>
         <hr>
-        <eos-dynamic-input
-            [input]="inputServer"
-            [form]="formServer"
-            [readonly]="true"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            [input]="inputs['rec.SEV_SERVER']"
-            [form]="form"
-            [readonly]="inputs['rec.SEV_SERVER'].readonly"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            [input]="inputs['rec.SEV_ROOT_DIR']"
-            [form]="form"
-            [readonly]="inputs['rec.SEV_ROOT_DIR'].readonly"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            [input]="inputs['rec.NOTIFY_MANAGMENT']"
-            [form]="form"
-            [readonly]="inputs['rec.NOTIFY_MANAGMENT'].readonly"
-        ></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputServer" [form]="formServer" [readonly]="true"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.SEV_SERVER']" [form]="form" [readonly]="inputs['rec.SEV_SERVER'].readonly"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.SEV_ROOT_DIR']" [form]="form" [readonly]="inputs['rec.SEV_ROOT_DIR'].readonly"></eos-dynamic-input>
+        <eos-dynamic-input [input]="inputs['rec.NOTIFY_MANAGMENT']" [form]="form" [readonly]="inputs['rec.NOTIFY_MANAGMENT'].readonly"></eos-dynamic-input>
     </div>
     <hr>
     <div class="param-input-group">
@@ -37,22 +14,12 @@ class="input-param-wrapper input-param-other-wrapper">
         <hr>
         <div>
             <span>E-mail</span>
-            <eos-dynamic-input
-                class="inline-block"
-                [input]="inputs['rec.EMAIL_ISN_DELIVERY']"
-                [form]="form"
-                [readonly]="false"
-            ></eos-dynamic-input>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.EMAIL_ISN_DELIVERY']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <span></span>
         </div>
-        <div>
+        <div class="param-other">
             <span>СЭВ</span>
-            <eos-dynamic-input
-                class="inline-block"
-                [input]="inputs['rec.SEV_ISN_DELIVERY']"
-                [form]="form"
-                [readonly]="false"
-            ></eos-dynamic-input>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.SEV_ISN_DELIVERY']" [form]="form" [readonly]="false"></eos-dynamic-input>
             <span></span>
         </div>
     </div>

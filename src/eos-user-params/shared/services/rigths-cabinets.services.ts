@@ -3,7 +3,7 @@ import { PipRX } from 'eos-rest';
 import {USERCARD, DEPARTMENT, CABINET, USER_CABINET} from '../../../eos-rest/interfaces/structures';
 import {CardsClass} from '../../rights-delo/rights-cabinets/helpers/cards-class';
 import {CardInit} from 'eos-user-params/shared/intrfaces/cabinets.interfaces';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 @Injectable()
 
 export class RigthsCabinetsServices {

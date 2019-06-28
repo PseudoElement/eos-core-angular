@@ -23,5 +23,17 @@ export const SEARCH_USER: IBaseUsers = {
                 {value: '1', title: 'Не задана'}
             ]
         }
+    ],
+    fieldsDefaultValue: [
+        {
+            key: 'SRCH_LIMIT_RESULT',
+            type: 'numberIncrement',
+            title: 'Максимальное кол-во записей:',
+        },
+        {
+            key: 'SEARCH_CONTEXT_CARD_EMPTY',
+            type: 'radio',
+            title: '',
+        }
     ]
 };

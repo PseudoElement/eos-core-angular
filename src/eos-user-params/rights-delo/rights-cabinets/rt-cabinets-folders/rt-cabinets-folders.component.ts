@@ -1,7 +1,10 @@
 import {Component, OnInit, Input, OnChanges, OnDestroy, Output, EventEmitter} from '@angular/core';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { CardsClass, Cabinets} from '../helpers/cards-class';
 import {RigthsCabinetsServices} from '../../../shared/services/rigths-cabinets.services';
-import { Subject } from 'rxjs/Subject';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 @Component({
     selector: 'eos-cabinets-folders',
@@ -19,11 +22,19 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         private _rtCabintsSrv: RigthsCabinetsServices,
         private _msgSrv: EosMessageService,
     ) {
-        this._rtCabintsSrv.changeCabinets.takeUntil(this.unSubscribe).subscribe((newCabinets: CardsClass) => {
+        this._rtCabintsSrv.changeCabinets
+        .pipe(
+            takeUntil(this.unSubscribe)
+        )
+        .subscribe((newCabinets: CardsClass) => {
             this.card = newCabinets;
             this.setFolders(this.card.cabinets[0]);
         });
-        this._rtCabintsSrv.submitRequest.takeUntil(this.unSubscribe).subscribe(() => {
+        this._rtCabintsSrv.submitRequest
+        .pipe(
+            takeUntil(this.unSubscribe)
+        )
+        .subscribe(() => {
            this.changedValuesMap.clear();
         });
     }

@@ -47,6 +47,7 @@ build_job:
     - '$TF checkin "${BUILD_URI_PATH}" -comment:"${COMMENT_TEXT}" -override:"Automated Build Process" -recursive'
   only:
     - dev
+    - tags
   artifacts:
     expire_in: 1 week
     paths:
@@ -64,4 +65,5 @@ cleanup_job:
     - '$TF workspace -delete $TMP_WORKSPACE'
   only:
     - dev
+    - tags
   when: always

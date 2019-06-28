@@ -1,16 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { UserParamsService } from '../../shared/services/user-params.service';
-import { Router } from '@angular/router';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../../../eos-user-params/user-params-set/shared-user-param/consts/eos-user-params.const';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { RemasterService } from '../shared-user-param/services/remaster-service';
-import { Subject } from 'rxjs/Subject';
-import {ErrorHelperServices} from '../../shared/services/helper-error.services';
+import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { FormHelperService } from '../../shared/services/form-helper.services';
 @Component({
     selector: 'eos-registration-remaster',
     styleUrls: ['user-param-registration-remaster.component.scss'],
-    templateUrl: 'user-param-registration-remaster.component.html'
+    templateUrl: 'user-param-registration-remaster.component.html',
+    providers: [FormHelperService]
 })
 
 export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy {
@@ -28,6 +32,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     public SabChangeFlag: boolean = false;
     public RcChangeflag: boolean = false;
     public editFlag: boolean = false;
+    public accessSustem: Array<string>;
     private newValuesMap = new Map();
     private newValuesDopOperation: Map<string, any> = new Map();
     private newValuesAddresses: Map<string, any> = new Map();
@@ -40,20 +45,28 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     constructor(
         private _userSrv: UserParamsService,
         private _apiSrv: PipRX,
-        private _route: Router,
         private _msgSrv: EosMessageService,
         private _RemasterService: RemasterService,
         private _errorSrv: ErrorHelperServices,
-    ) {
-        this.hash = this._userSrv.hashUserContext;
-        this._userSrv.saveData$.takeUntil(this._ngUnsubscribe).subscribe(() => {
+        private _formHelper: FormHelperService,
+    ) {}
+    async ngOnInit() {
+        this._userSrv.saveData$
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe(() => {
             this._userSrv.submitSave = this.submit(null);
         });
+        await this._userSrv.getUserIsn({
+            expand: 'USER_PARMS_List'
+        });
+        this.accessSustem = this._userSrv.curentUser.ACCESS_SYSTEMS;
+        this.hash = this._userSrv.hashUserContext;
         this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Регистрация`;
-    }
-    ngOnInit() {
-        this._apiSrv.read(this.getObjQueryInputsField()).then(data => {
-            this.create_hash_default(data);
+
+        this._apiSrv.read(this._formHelper.getObjQueryInputsField()).then(data => {
+            this.defaultValues = this._formHelper.createhash(data);
             this.isLoading = true;
         }).catch(error => {
             this._errorSrv.errorHandler(error);
@@ -62,13 +75,6 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     ngOnDestroy() {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
-    }
-    create_hash_default(data) {
-        const hashDefault = {};
-        data.forEach(item => {
-            hashDefault[item['PARM_NAME']] = item.PARM_VALUE;
-        });
-        this.defaultValues = hashDefault;
     }
     get btnDisabled(): boolean {
         if (this.EmailChangeFlag
@@ -82,16 +88,6 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             return true;
         }
         return false;
-    }
-
-    getObjQueryInputsField() {
-        return {
-            USER_PARMS: {
-                criteries: {
-                    ISN_USER_OWNER: '-99'
-                }
-            }
-        };
     }
     setTab(i: number) {
         this.currTab = i;
@@ -182,12 +178,11 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         return this._apiSrv.batch(this.createObjRequest(), '').then(response => {
             this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
             this.defaultSetFlagBtn();
-            const userId = this._userSrv.userContextId;
-            return this._userSrv.getUserIsn(String(userId)).then(res => {
-                this.hash = this._userSrv.hashUserContext;
-                this.editFlag = false;
-                this._RemasterService.submitEmit.next();
-            });
+            this.hash = this._userSrv.hashUserContext;
+            this.editFlag = false;
+            this._RemasterService.submitEmit.next();
+            // return this._userSrv.getUserIsn(String(userId)).then(res => {
+            // });
         }).catch(error => {
             this._errorSrv.errorHandler(error);
             this.cancel(false);
@@ -208,48 +203,28 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         const req = [];
         const userId = this._userSrv.userContextId;
         if (this.newValuesMap.size) {
-            req.concat(this.pushIntoArrayRequest(req, this.newValuesMap, userId));
+            req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesMap, userId));
         }
         if (this.newValuesDopOperation.size) {
-            req.concat(this.pushIntoArrayRequest(req, this.newValuesDopOperation, userId));
+            req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesDopOperation, userId));
         }
         if (this.newValuesAddresses.size) {
-            req.concat(this.pushIntoArrayRequest(req, this.newValuesAddresses, userId));
+            req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesAddresses, userId));
         }
         if (this.newValuesScan.size) {
-            req.concat(this.pushIntoArrayRequest(req, this.newValuesScan, userId));
+            req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesScan, userId));
         }
         if (this.newValuesAutoSearch.size) {
-            req.concat(this.pushIntoArrayRequest(req, this.newValuesAutoSearch, userId));
+            req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesAutoSearch, userId));
         }
         if (this.newValuesSab.size) {
-            req.concat(this.pushIntoArrayRequest(req, this.newValuesSab, userId));
+            req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesSab, userId));
         }
         if (this.newValuesRc.size) {
-            req.concat(this.pushIntoArrayRequest(req, this.newValuesRc, userId));
+            req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesRc, userId));
         }
         return req;
     }
-
-    pushIntoArrayRequest(storeReq: Array<any>, data: Map<string, any>, id): Array<any> {
-        Array.from(data).forEach(val => {
-            let parn_Val;
-            if (typeof val[1] === 'boolean') {
-                val[1] === false ? parn_Val = 'NO' : parn_Val = 'YES';
-            } else {
-                String(val[1]) === 'null' ? parn_Val = '' : parn_Val = val[1];
-            }
-            storeReq.push({
-                method: 'MERGE',
-                requestUri: `USER_CL(${id})/USER_PARMS_List(\'${id} ${val[0]}\')`,
-                data: {
-                    PARM_VALUE: `${parn_Val}`
-                }
-            });
-        });
-        return storeReq;
-    }
-
     cancel(event) {
         if (this.btnDisabled) {
             this._msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
@@ -264,9 +239,6 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         }
         this.editFlag = event;
         this._RemasterService.cancelEmit.next();
-    }
-    close(event?) {
-        this._route.navigate(['user_param']);
     }
     default(event) {
         this._RemasterService.defaultEmit.next();

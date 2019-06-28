@@ -13,12 +13,15 @@ export class TDFSelectOption {
     title: string;
     disabled?: boolean;
     rec?: any;
+    hasDeleted?: boolean;
+    isEmpty?: boolean;
 }
 
 export class TDefaultField {
     key: string;
     type: E_FIELD_TYPE;
     title: string;
+    longTitle?: string; // Расширеное поле текстовое для случаев когда title один и тот же у разных полей
     dict?: TDFSelect;
     options?: TDFSelectOption[];
     pattern?: RegExp;
@@ -109,6 +112,7 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'DOC_RC.EXTENSIONS',
         type: E_FIELD_TYPE.string,
         title: 'С расширением',
+        length: 255,
     }, {
         key: 'DOC_RC.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
@@ -124,6 +128,7 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'PRJ_RC.EXTENSIONS',
         type: E_FIELD_TYPE.string,
         title: 'С расширением',
+        length: 255,
     }, {
         key: 'PRJ_RC.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
@@ -139,6 +144,7 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'PRJ_VISA_SIGN.EXTENSIONS',
         type: E_FIELD_TYPE.string,
         title: 'С расширением',
+        length: 255,
     }, {
         key: 'PRJ_VISA_SIGN.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
@@ -154,6 +160,7 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'REPLY.EXTENSIONS',
         type: E_FIELD_TYPE.string,
         title: 'С расширением',
+        length: 255,
     }, {
         key: 'REPLY.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
@@ -169,6 +176,7 @@ export const RKFilesConstraints: TDefaultField[] = [
         key: 'RESOLUTION.EXTENSIONS',
         type: E_FIELD_TYPE.string,
         title: 'С расширением',
+        length: 255,
     }, {
         key: 'RESOLUTION.MAX_SIZE',
         type: E_FIELD_TYPE.numberIncrement,
@@ -690,6 +698,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // kind_doc '1,2,3',
         // title: 'Содержание РК',
         title: 'Содержание',
+        length: 2000,
         // classif_id: NULL
     }, {
         key: 'CONSISTS_M',
@@ -704,6 +713,7 @@ export const RKDefaultFields: TDefaultField[] = [
         type: E_FIELD_TYPE.string,
         // kind_doc '1,2,3',
         title: 'Состав',
+        length: 255,
         value: '',
 
         // classif_id: NULL
@@ -715,6 +725,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // kind_doc '1,2,3',
         // title: 'Список адресатов ДЛ',
         title: 'Адресаты',
+        longTitle: 'Внутренние адресаты',
         // classif_id:  545
         dict: {
             dictId: 'USER_LISTS',
@@ -730,6 +741,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // kind_doc '1,2,3',
         // title: 'Список адресатов организаций',
         title: 'Адресаты',
+        longTitle: 'Внешние адресаты',
         // classif_id:  545
         dict: {
             dictId: 'USER_LISTS',

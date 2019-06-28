@@ -1,16 +1,16 @@
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import {UserPaginationService} from '../services/users-pagination.service';
+import { UserPaginationService } from '../services/users-pagination.service';
 import { DEPARTMENT, DOCGROUP_CL } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
-import {Subject} from 'rxjs/Subject';
-import {Observable} from 'rxjs/Observable';
+import { Subject ,  Observable } from 'rxjs';
 import { IConfig } from 'eos-user-select/shered/interfaces/user-select.interface';
 import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-select';
-import {HelpersSortFunctions} from '../../../eos-user-select/shered/helpers/sort.helper';
-import {IUserSort} from '../../../eos-user-select/shered/interfaces/user-select.interface';
-import {SortsList} from '../../../eos-user-select/shered/interfaces/user-select.interface';
+import { HelpersSortFunctions } from '../../../eos-user-select/shered/helpers/sort.helper';
+import { IUserSort } from '../../../eos-user-select/shered/interfaces/user-select.interface';
+import { SortsList } from '../../../eos-user-select/shered/interfaces/user-select.interface';
+// import {EosStorageService} from '../../../../src/app/services/eos-storage.service';
 @Injectable()
 export class UserParamApiSrv {
     flagTehnicalUsers: boolean;
@@ -24,7 +24,7 @@ export class UserParamApiSrv {
     };
     confiList$: Subject<IConfig>;
     currentSort: any = SortsList[3];
-    private Allcustomer: UserSelectNode[] = [];
+    public Allcustomer: UserSelectNode[] = [];
     private helpersClass;
     get _confiList$(): Observable<IConfig> {
         return this.confiList$.asObservable();
@@ -33,6 +33,7 @@ export class UserParamApiSrv {
         private apiSrv: PipRX,
         private _router: Router,
         private users_pagination: UserPaginationService,
+        // private _storageSrv: EosStorageService,
     ) {
         this.helpersClass = new HelpersSortFunctions();
         this.initConfigTitle();
@@ -40,33 +41,33 @@ export class UserParamApiSrv {
         this.flagDelitedPermanantly = false;
         this.confiList$ = new Subject();
         this._confiList$.subscribe((data: IConfig) => {
-        this.configList = data;
+            this.configList = data;
         });
         this.getSysParamForBlockedUser();
     }
 
     getData<T>(query?: any): Promise<T[]> {
         return this.apiSrv
-        .read<T>(query)
-        .then((data: T[]) => {
-            return data;
-          /*  return new Promise<T[]>(function() {
-                setTimeout(() => { console.log(data); }, 3000);
-            });*/
-        })
-        .catch(err => {
-            if (err.code === 434) {
-                this._router.navigate(
-                    ['/login'],
-                    {
-                        queryParams: {
-                            returnUrl: this._router.url
+            .read<T>(query)
+            .then((data: T[]) => {
+                return data;
+                /*  return new Promise<T[]>(function() {
+                      setTimeout(() => { console.log(data); }, 3000);
+                  });*/
+            })
+            .catch(err => {
+                if (err.code === 434) {
+                    this._router.navigate(
+                        ['/login'],
+                        {
+                            queryParams: {
+                                returnUrl: this._router.url
+                            }
                         }
-                    }
-                );
-            }
-            throw err;
-        });
+                    );
+                }
+                throw err;
+            });
     }
 
     setData(query: any[]): Promise<any[]> {
@@ -74,41 +75,49 @@ export class UserParamApiSrv {
             return data;
         });
     }
+    getQueryforDB(dueDep?) {
+        let q;
+        if (this.configList.shooseTab === 0) {
+            if (!dueDep || dueDep === '0.') {
+                q = ALL_ROWS;
+            } else {
+                q = PipRX.criteries({ DUE_DEP: `${dueDep}%` });
+            }
+        }
+        if (this.configList.shooseTab === 1) {
+            q = PipRX.criteries({ 'USERCARD.DUE': `${dueDep ? dueDep : '0.'}` });
+        }
+        return q;
+    }
 
     getUsers(dueDep?: string): Promise<any> {
         this.dueDep = dueDep || '0.';
-        let q;
-        if (!dueDep || dueDep === '0.') {
-            q = ALL_ROWS;
-        } else {
-            q = PipRX.criteries({DUE_DEP: `${dueDep}%`});
-        }
-        const query = {USER_CL: q};
+        const q = this.getQueryforDB(dueDep);
+        const query = { USER_CL: q };
         return this.getData(query)
-        .then(data => {
-            const prepData = data.filter(user => user['ISN_LCLASSIF'] !== 0);
-            return this.updatePageList(prepData, this.configList.shooseTab).then(res => {
-                this.Allcustomer = this._getListUsers(res).slice();
-                this.users_pagination.UsersList = this.Allcustomer.slice();
-                this.devideUsers();
-                this.initConfigTitle(dueDep);
-                this.users_pagination._initPaginationConfig();
-                   return this.users_pagination.UsersList;
+            .then(data => {
+                const prepData = data.filter(user => user['ISN_LCLASSIF'] !== 0);
+                return this.updatePageList(prepData, this.configList.shooseTab).then((res) => {
+                    this.Allcustomer = this._getListUsers(res).slice();
+                    this.devideUsers();
+                    this.initConfigTitle(dueDep);
+                    this.users_pagination._initPaginationConfig(true);
+                    return this.users_pagination.UsersList;
                 });
             });
-            // перенес в list-user-select.component что бы включить сортировку в выборку
-            // .slice((this.users_pagination.paginationConfig.start - 1)
-            //         * this.users_pagination.paginationConfig.length,
-            //          this.users_pagination.paginationConfig.current
-            //         * this.users_pagination.paginationConfig.length);
+        // перенес в list-user-select.component что бы включить сортировку в выборку
+        // .slice((this.users_pagination.paginationConfig.start - 1)
+        //         * this.users_pagination.paginationConfig.length,
+        //          this.users_pagination.paginationConfig.current
+        //         * this.users_pagination.paginationConfig.length);
     }
     getSysParamForBlockedUser() {
         const QUERY = {
             USER_PARMS: {
-               criteries: {
-                PARM_NAME: 'MAX_LOGIN_ATTEMPTS',
-                ISN_USER_OWNER: '-99'
-               }
+                criteries: {
+                    PARM_NAME: 'MAX_LOGIN_ATTEMPTS',
+                    ISN_USER_OWNER: '-99'
+                }
             }
         };
         this.getData(QUERY).then(value => {
@@ -117,45 +126,59 @@ export class UserParamApiSrv {
     }
 
     devideUsers() {
+        const prepareUser = this.prepareListUsers();
+        if (this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
+            this.updateListUsersTech(prepareUser.techUser, prepareUser.happyUser);
+        }
+
+        if (!this.flagTehnicalUsers && this.flagDelitedPermanantly) {
+            this.updateListUserDeleted(prepareUser.deletedUser, prepareUser.happyUser);
+        }
+
+        if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
+            this.updateListUserAnyFlags(prepareUser.techUser, prepareUser.deletedUser, prepareUser.happyUser);
+        }
+
+        if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
+            this.updateListUserEmptyFlags(prepareUser.happyUser);
+        }
+    }
+
+    prepareListUsers(): {techUser: UserSelectNode[], deletedUser: UserSelectNode[], happyUser: UserSelectNode[]} {
         this.users_pagination.UsersList = this.Allcustomer.slice();
         const techUser = this.damnTesterTechUser();
         const deletedUser = this.damnTesterDeletedUser();
         const happyUser = this.damnTesterHappyUsers();
-        if (this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
-            this.updateListUsersTech(techUser, happyUser);
-        }
-
-        if (!this.flagTehnicalUsers && this.flagDelitedPermanantly) {
-            this.updateListUserDeleted(deletedUser, happyUser);
-        }
-
-        if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
-            this.updateListUserAnyFlags(techUser, deletedUser, happyUser);
-        }
-
-        if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
-            this.updateListUserEmptyFlags(happyUser);
-        }
+        return {
+            techUser,
+            deletedUser,
+            happyUser
+        };
+    }
+    findUsers(users) {
+        this.updatePageList(users, this.configList.shooseTab).then((res) => {
+            this.Allcustomer = this._getListUsers(res).slice();
+        });
     }
 
     updateListUsersTech(userT: UserSelectNode[], userH: UserSelectNode[]) {
-        const sortedT = this.helpersClass.sort(userT, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
-        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
+        const sortedT = this.helpersClass.sort(userT, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
         this.users_pagination.UsersList = [].concat(sortedT, sortedH);
     }
     updateListUserDeleted(userD: UserSelectNode[], userH: UserSelectNode[]) {
-        const sortedD = this.helpersClass.sort(userD, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
-        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
+        const sortedD = this.helpersClass.sort(userD, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
         this.users_pagination.UsersList = [].concat(sortedD, sortedH);
     }
     updateListUserAnyFlags(userT, userD, userH) {
-        const sortedT = this.helpersClass.sort(userT, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
-        const sortedD = this.helpersClass.sort(userD, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
-        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
+        const sortedT = this.helpersClass.sort(userT, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+        const sortedD = this.helpersClass.sort(userD, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
         this.users_pagination.UsersList = [].concat(sortedD, sortedT, sortedH);
     }
     updateListUserEmptyFlags(userH) {
-        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun,  this.currentSort);
+        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
         this.users_pagination.UsersList = sortedH;
     }
 
@@ -176,7 +199,7 @@ export class UserParamApiSrv {
     }
 
     getDepartment(due?: Array<string>): Promise<DEPARTMENT[]> {
-        const query = {DEPARTMENT: due};
+        const query = { DEPARTMENT: due };
         return this.getData<DEPARTMENT>(query);
     }
     getDocGroup(due?: string[]): Promise<DOCGROUP_CL[]> {
@@ -186,17 +209,17 @@ export class UserParamApiSrv {
         } else {
             q = due;
         }
-        const query = {DOCGROUP_CL: q};
+        const query = { DOCGROUP_CL: q };
         return this.getData<DOCGROUP_CL>(query);
     }
-    getEntity<T>(apiInstance: string, due?: string): Promise<T[]>  {
+    getEntity<T>(apiInstance: string, due?: string): Promise<T[]> {
         let q;
         if (!due) {
             q = ALL_ROWS;
         } else {
-            q = PipRX.criteries({DUE: due});
+            q = PipRX.criteries({ DUE: due });
         }
-        const query = {[apiInstance]: q};
+        const query = { [apiInstance]: q };
         return this.getData<T>(query);
     }
 
@@ -205,13 +228,13 @@ export class UserParamApiSrv {
         let data = {};
         users.forEach((user: UserSelectNode) => {
             if (user.isChecked || user.selectedMark) {
-                  if (user.blockedUser) {
+                if (user.blockedUser) {
                     data = {
-                        DELETED : 0,
+                        DELETED: 0,
                     };
                 } if (!user.blockedUser && !user.blockedSystem) {
                     data = {
-                        DELETED : 1,
+                        DELETED: 1,
                     };
                 } if (user.blockedSystem) {
                     data = {
@@ -228,25 +251,25 @@ export class UserParamApiSrv {
             }
         });
         if (ARRAY_QUERY_SET_DELETE.length > 0) {
-         return  this.setData(ARRAY_QUERY_SET_DELETE).then(response => {
-             return response;
+            return this.setData(ARRAY_QUERY_SET_DELETE).then(response => {
+                return response;
             }).catch(error => {
                 console.log(error);
             });
-        }   else {
+        } else {
             return Promise.resolve(false);
         }
-}
+    }
     public updatePageList(pageList, curTab): Promise<any> {
-      switch (curTab) {
-        case 0:
-        return this.updateDepartMent(pageList, 0);
-        case 1:
-        return this.updateDepartMent(pageList, 1);
-        case 2:
-        // заглушка для организций
-        return this.updateDepartMent(pageList, 1);
-      }
+        switch (curTab) {
+            case 0:
+                return this.updateDepartMent(pageList, 0);
+            case 1:
+                return this.updateDepartMent(pageList, 1);
+            case 2:
+                // заглушка для организций
+                return this.updateDepartMent(pageList, 1);
+        }
 
     }
 
@@ -262,49 +285,49 @@ export class UserParamApiSrv {
             }
         });
         stringQuery.length === 0 ? stringQuery = ['0000'] : stringQuery = stringQuery;
-        return  this.getDepartment(stringQuery)
-        .then(departments => {
-            departments.forEach(el => {
-                if (el.ISN_HIGH_NODE  >= 0) {
-                     parseStringUserDue = el.DUE.split('.');
-                    setQueryResult.add(parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.');
-                }
-            });
-            pageList.map(user => {
-                const findDepartInfo = departments.filter(dapartInfo => {
-                    return user.DUE_DEP === dapartInfo.DUE;
-                });
-                if (findDepartInfo.length > 0) {
-                    user['DEPARTMENT_SURNAME'] = findDepartInfo[0].SURNAME;
-                    user['DEPARTMENT_DYTU'] = findDepartInfo[0].DUTY;
-                    user['DEPARTMENT_DELETE'] = findDepartInfo[0].DELETED;
-                }else {
-                    user['DEPARTMENT_SURNAME'] = '';
-                    user['DEPARTMENT_DYTU'] = '';
-                    user['DEPARTMENT_DELETE'] = 0;
-                }
-            });
-            valueForPadQuery = Array.from(setQueryResult);
-            valueForPadQuery.length > 0 ? padQuery =  valueForPadQuery : padQuery = ['0000'];
-                return  this.getDepartment(padQuery)
-                .then(deepInfo => {
-                    pageList.map(user => {
-                    const findDue = deepInfo.filter(dueDeep => {
-                        if (user.DUE_DEP === null) {
-                            return false;
-                        }   else {
-                            parseStringUserDue = user.DUE_DEP.split('.');
-                            return parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.' === dueDeep.DUE;
-                        }
-                    });
-                    if (findDue.length > 0) {
-                        user['DEPARTMENT'] = tabs === 0 ? (findDue[0].DUE === '0.' ? 'Все подраздения' : findDue[0].CLASSIF_NAME)   : findDue[0].CARD_NAME;
-                    } else {
-                        user['DEPARTMENT'] = '...';
+        return this.getDepartment(stringQuery)
+            .then(departments => {
+                departments.forEach(el => {
+                    if (el.ISN_HIGH_NODE >= 0) {
+                        parseStringUserDue = el.DUE.split('.');
+                        setQueryResult.add(parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.');
                     }
                 });
-                return pageList;
+                pageList.map(user => {
+                    const findDepartInfo = departments.filter(dapartInfo => {
+                        return user.DUE_DEP === dapartInfo.DUE;
+                    });
+                    if (findDepartInfo.length > 0) {
+                        user['DEPARTMENT_SURNAME'] = findDepartInfo[0].SURNAME;
+                        user['DEPARTMENT_DYTU'] = findDepartInfo[0].DUTY;
+                        user['DEPARTMENT_DELETE'] = findDepartInfo[0].DELETED;
+                    } else {
+                        user['DEPARTMENT_SURNAME'] = '';
+                        user['DEPARTMENT_DYTU'] = '';
+                        user['DEPARTMENT_DELETE'] = 0;
+                    }
                 });
+                valueForPadQuery = Array.from(setQueryResult);
+                valueForPadQuery.length > 0 ? padQuery = valueForPadQuery : padQuery = ['0000'];
+                return this.getDepartment(padQuery)
+                    .then(deepInfo => {
+                        pageList.map(user => {
+                            const findDue = deepInfo.filter(dueDeep => {
+                                if (user.DUE_DEP === null) {
+                                    return false;
+                                } else {
+                                    parseStringUserDue = user.DUE_DEP.split('.');
+                                    return parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.' === dueDeep.DUE;
+                                }
+                            });
+                            if (findDue.length > 0) {
+                                user['DEPARTMENT'] = tabs === 0 ? (findDue[0].DUE === '0.' ? 'Все подраздения' : findDue[0].CLASSIF_NAME) : findDue[0].CARD_NAME;
+                            } else {
+                                user['DEPARTMENT'] = '...';
+                            }
+                        });
+                        return pageList;
+                    });
             });
     }
     initConfigTitle(dueDep?: string) {
@@ -325,7 +348,7 @@ export class UserParamApiSrv {
             upDoun: false,
             checked: true,
         };
-        this.srtConfig.fullDueName =  {
+        this.srtConfig.fullDueName = {
             upDoun: false,
             checked: false,
         };
@@ -335,7 +358,7 @@ export class UserParamApiSrv {
         };
     }
 
-    private _getListUsers (data): UserSelectNode[] {
+    public _getListUsers(data): UserSelectNode[] {
         const list: UserSelectNode[] = [];
         data.forEach(user => list.push(new UserSelectNode(user, this.sysParam)));
         return list;

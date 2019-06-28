@@ -1,4 +1,5 @@
 import { IConfirmWindow } from '../../eos-common/core/confirm-window.interface';
+import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 
 export const CONFIRM_DESK_DELETE: IConfirmWindow = {
     title: 'Подтверждение удаления',
@@ -58,3 +59,30 @@ export const CONFIRM_CABINET_NON_EMPTY: IConfirmWindow = {
     cancelTitle: 'Нет'
 };
 
+export const CONFIRM_CABINET_NON_EMPTY1: IConfirmWindow2 = {
+    title: 'Подтверждение удаления',
+    body: 'Для владельца кабинета существуют записи в папках. Удалить их?',
+    buttons: [
+        {title: 'Да', result: 1, isDefault: true},
+        {title: 'Нет', result: 2, },
+        {title: 'Отмена', result: 3, },
+    ]
+};
+
+export const RK_SELECTED_LIST_IS_EMPTY: IConfirmWindow2 = {
+    title: 'Внимание',
+    body: 'В реквизите "{{REK}}" выбран пустой список. Продолжить?',
+    buttons: [
+        {title: 'Да', result: 1, },
+        {title: 'Нет', result: 2, },
+    ],
+};
+
+export const RK_SELECTED_LIST_HAS_DELETED: IConfirmWindow2 = {
+    title: 'Внимание',
+    body: 'В реквизите "{{REK}}" выбран список, в котором некоторые элементы логически удалены. Продолжить?',
+    buttons: [
+        {title: 'Да', result: 1, },
+        {title: 'Нет', result: 2, },
+    ],
+};

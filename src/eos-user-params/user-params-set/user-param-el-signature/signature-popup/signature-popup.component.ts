@@ -1,9 +1,12 @@
 import {Component, TemplateRef, OnInit, Input} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { CertStoresService, IListCertStotes } from '../../../../eos-parameters/parametersSystem/param-web/cert-stores.service';
-import { Observable } from 'rxjs/Observable';
+
+import { Observable , Subject} from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import {Subject} from 'rxjs/Subject';
+
+import { CertStoresService, IListCertStotes } from '../../../../eos-parameters/parametersSystem/param-web/cert-stores.service';
 
 @Component({
     selector: 'eos-signature-popup',
@@ -33,7 +36,9 @@ export class SignaturePopupComponent implements OnInit {
     ngOnInit() {
       this.getItems();
       this.certStoresService.updateFormControlStore$
-      .takeUntil(this.ngUnsubscribe)
+      .pipe(
+          takeUntil(this.ngUnsubscribe)
+      )
       .subscribe((data: string) => {
         this.form.controls[this.inputName].patchValue(data);
   });

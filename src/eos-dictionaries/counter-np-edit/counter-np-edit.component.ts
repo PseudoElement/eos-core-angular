@@ -157,6 +157,15 @@ export class CounterNpEditComponent {
         this.isUpdating = true;
     }
 
+    private static _autoFocusOnValNumber() {
+        setTimeout(() => {
+            const val_number = document.getElementById('val_number');
+            if (val_number) {
+                val_number.focus();
+            }
+        }, 100);
+    }
+
     /**
      * summon a modal window for NP_NUMCREATION
      * @param dndata EosDictionaryNode.data.rec - use departament's data.rec.CLASSIF_NAME and data.rec.ISN_NODE
@@ -181,6 +190,7 @@ export class CounterNpEditComponent {
             const highId = dndata[NODE_HIGH_NAME];
             if (!this._decl.isCounterRK && !dndata[this._decl.dbNodeName] && highId !== null) {
                 this.isUpdating = false;
+                CounterNpEditComponent._autoFocusOnValNumber();
                 this._dictSrv.currentDictionary.getFullNodeInfo(highId)
                     .then(highNode => {
                         if (highNode) {
@@ -295,6 +305,7 @@ export class CounterNpEditComponent {
         return this._fillDocGroup()
             .then(() => {
                 this.isUpdating = false;
+                CounterNpEditComponent._autoFocusOnValNumber();
                 this.apiSrv.read(req)
                     .then((cnts) => {
                         this.nodes = cnts.filter(d => {

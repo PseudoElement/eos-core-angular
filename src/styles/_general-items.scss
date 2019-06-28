@@ -70,7 +70,7 @@
                 background-image: url("../assets/icons/Checkbox-Square-Grey.svg");
             }
             &:checked+span {
-                background-image: url("../assets/icons/Checkbox-Grey.svg");
+                background-image: url("../assets/icons/Checkbox-Black.svg");
             }
         }
     }
@@ -81,10 +81,10 @@
         &[disabled] {
             cursor: default;
             &+span {
-                background-image: url("../assets/icons/Minus-Grey.svg");
+                background-image: url("../assets/icons/Minus-Black.svg");
             }
             &:checked+span {
-                background-image: url("../assets/icons/Checkbox-Grey.svg");
+                background-image: url("../assets/icons/Checkbox-Black.svg");
             }
         }
     }
@@ -239,6 +239,10 @@ label {
 
 .upper {
     text-transform: uppercase;
+}
+
+.vertical-align-middle {
+    vertical-align: middle;
 }
 
 .no-drag {

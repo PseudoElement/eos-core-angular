@@ -1,8 +1,8 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { IMessage } from '../../eos-common/core/message.interface';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import {environment} from '../../environments/environment';
 
 @Component({

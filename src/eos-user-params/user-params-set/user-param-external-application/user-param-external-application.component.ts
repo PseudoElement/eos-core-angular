@@ -1,23 +1,26 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+
+import { Subject } from 'rxjs';
+import { takeUntil, debounceTime } from 'rxjs/operators';
+
 import { EXTERNAL_APPLICATION_USER } from '../../user-params-set/shared-user-param/consts/external-application.consts';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../shared-user-param/consts/eos-user-params.const';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { FormGroup } from '@angular/forms';
-import { E_FIELD_TYPE, IBaseUsers } from '../../shared/intrfaces/user-params.interfaces';
+import { IBaseUsers } from '../../shared/intrfaces/user-params.interfaces';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { Router } from '@angular/router';
-import {ErrorHelperServices} from '../../shared/services/helper-error.services';
-import { Subject } from 'rxjs/Subject';
+import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 
 @Component({
     selector: 'eos-user-param-external-application',
     templateUrl: 'user-param-external-application.component.html'
 })
 
-export class UserParamEAComponent implements OnDestroy {
+export class UserParamEAComponent implements OnInit, OnDestroy {
     public btnDisabled: boolean = true;
     public _fieldsType = {};
     public prepInputs;
@@ -37,16 +40,21 @@ export class UserParamEAComponent implements OnDestroy {
         private _inputCntlSrv: InputControlService,
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
-        private _route: Router,
         private _errorSrv: ErrorHelperServices,
-    ) {
-        this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
-        this.init();
+    ) {}
+    async ngOnInit() {
         this._userParamsSetSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
+        await this._userParamsSetSrv.getUserIsn({
+            expand: 'USER_PARMS_List'
+        });
+        this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
+        this.init();
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
@@ -123,7 +131,11 @@ export class UserParamEAComponent implements OnDestroy {
     }
     suscribeChanges() {
         let count_error = 0;
-        this.form.valueChanges.debounceTime(200).subscribe(data => {
+        this.form.valueChanges
+        .pipe(
+            debounceTime(200)
+        )
+        .subscribe(data => {
             Object.keys(data).forEach(val => {
                 if (!this.getFactValueFuck(data[val], val)) {
                     this.setNewData(data, val, true);
@@ -158,12 +170,12 @@ export class UserParamEAComponent implements OnDestroy {
     submit(event?): Promise<any> {
         return this.apiSrv.batch(this.createObjRequest(), '').then(response => {
             this.btnDisabled = true;
-          this.upStateInputs();
-          this.editFlag = false;
-          this.disableForEditAllForm(false);
-          this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
-          this._pushState();
-            return this._userParamsSetSrv.getUserIsn();
+            this.upStateInputs();
+            this.editFlag = false;
+            this.disableForEditAllForm(false);
+            this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+            this._pushState();
+            // return this._userParamsSetSrv.getUserIsn();
         }).catch(error => {
             this._errorSrv.errorHandler(error);
             this.cancellation();
@@ -171,8 +183,8 @@ export class UserParamEAComponent implements OnDestroy {
     }
     upStateInputs() {
         Object.keys(this.inputs).forEach(inp => {
-                const val = this.form.controls[inp].value;
-                this.inputs[inp].value = val;
+            const val = this.form.controls[inp].value;
+            this.inputs[inp].value = val;
         });
     }
     createObjRequest(): any[] {
@@ -217,14 +229,11 @@ export class UserParamEAComponent implements OnDestroy {
 
         Object.keys(this.inputs).forEach(key => {
             if (!event) {
-                this.form.controls[key].disable({emitEvent: false });
+                this.form.controls[key].disable({ emitEvent: false });
             } else {
                 this.form.controls[key].enable({ emitEvent: false });
             }
         });
-    }
-    close(event?) {
-        this._route.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
     defaults(event?) {
         const defaultListName = this.getQueryDefaultList(this.listForQuery);

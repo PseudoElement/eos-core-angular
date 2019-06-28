@@ -8,6 +8,7 @@ export const MODS_USER_SELECT: IModesUserSelect[] = [
     {
         key: E_MODES_USER_SELECT.card,
         title: 'Картотеки',
+        tooltip: 'Картотекообразующие подразделения'
     },
     // {
     //     key: E_MODES_USER_SELECT.organiz,

@@ -1,9 +1,9 @@
 <div #item class="eos-node-list-item secondary-text"
-     [ngClass]="{'highlighted': node.isSelected, 'flat-child': node.isActive}">
+     [ngClass]="{'highlighted': node.isMarked, 'flat-child': node.isActive}">
     <div [ngClass]="{'deleted': node.isDeleted}" class="node-list-item clearfix">
         <div *ngIf="params?.markItems" class="node-marker pull-left">
             <label *ngIf="params?.markItems" class="checkbox">
-                <input type="checkbox" [ngModel]="node.marked" (ngModelChange)="markNode($event)">
+                <input type="checkbox" [ngModel]="node.isMarked" (ngModelChange)="markNode($event)">
                 <span></span>
             </label>
         </div>

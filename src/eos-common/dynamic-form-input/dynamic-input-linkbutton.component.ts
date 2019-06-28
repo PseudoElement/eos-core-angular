@@ -52,4 +52,7 @@ export class DynamicInputLinkButtonComponent extends DynamicInputBase {
         return this.viewOpts && this.viewOpts.enRemoveButton;
     }
 
+    ignoreKeyDown(event) { // IE backspace
+        event.preventDefault();
+    }
 }

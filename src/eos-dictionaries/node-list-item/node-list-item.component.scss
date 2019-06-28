@@ -1,14 +1,20 @@
 .eos-node-list-item {
     .old-pull-left1 {
         display: inline-block;
+        vertical-align: top;
     }
-
+    vertical-align: top;
     display: flex;
     .pull-left {
         overflow: hidden;
         //text-overflow: ellipsis;
     }
     .node-list-item {
+        &.deleted {
+            label {
+                color: $disabled-color-main-theme;
+            }
+        }
         overflow: hidden;
         min-height: 32px;
         display: inline-flex;
@@ -31,6 +37,7 @@
             .checkbox,
             .checkbox-inline {
                 line-height: 32px;
+                top: -1px;
                 input[type="checkbox"] + span {
                     margin: 0;
                 }
@@ -38,7 +45,7 @@
         }
     }
 }
-.eos-node-list-item:hover {
-    background-color: $highlight-color-main-theme;
-    color: $secondary-font-color-main-theme;
-}
+// .eos-node-list-item:hover {
+//     background-color: $highlight-color-main-theme;
+//     color: $secondary-font-color-main-theme;
+// }

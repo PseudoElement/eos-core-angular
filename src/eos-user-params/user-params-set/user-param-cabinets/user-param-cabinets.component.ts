@@ -1,17 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
 import { FormHelperService } from '../../shared/services/form-helper.services';
-import { Subject } from 'rxjs/Subject';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { CABINETS_USER } from '../shared-user-param/consts/cabinets.consts';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
-import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { Router } from '@angular/router';
 import { WaitClassifService } from 'app/services/waitClassif.service';
-import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
 import { PipRX, USER_PARMS } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { RECENT_URL } from 'app/consts/common.consts';
+import { EosStorageService } from 'app/services/eos-storage.service';
 @Component({
     selector: 'eos-user-param-cabinets',
     templateUrl: 'user-param-cabinets.component.html',
@@ -52,20 +56,37 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         private dataConv: EosDataConvertService,
         private inpSrv: InputControlService,
         private _router: Router,
+        private _snap: ActivatedRoute,
         private _waitClassifSrv: WaitClassifService,
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
+        private _storageSrv: EosStorageService,
     ) {
-        this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
-        this.allData = this._userParamsSetSrv.hashUserContext;
+        this._snap.queryParams
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe((data: Object) => {
+            if (data.hasOwnProperty('BackCabinets')) {
+                this.currTab = 1;
+            }
+        });
+    }
+    async ngOnInit() {
         this._userParamsSetSrv.saveData$
-            .takeUntil(this._ngUnsubscribe)
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
-    }
-    ngOnInit() {
+
+        await this._userParamsSetSrv.getUserIsn({
+            expand: 'USER_PARMS_List'
+        });
+        this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
+        this.allData = this._userParamsSetSrv.hashUserContext;
         this.init();
         Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {
             CABINETS_USER.fields.map(fields => {
@@ -79,7 +100,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                     });
                 }
             });
-            this.init();
             if (author) {
                 this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
             }
@@ -169,8 +189,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             this.newFolderString = s.join('');
         }
     }
-
-
     checkDataToDisabled() {
         const val = this.form.controls[`rec.HILITE_RESOLUTION_BOOLEAN`].value;
         const val2 = this.form.controls[`rec.HILITE_PRJ_RC_BOOLEAN`].value;
@@ -237,6 +255,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         }
     }
     showInfoUser() {
+        this._storageSrv.setItem(RECENT_URL, this._router.url + '?BackCabinets=true');
         this._router.navigate(['/spravochniki/departments', this.dueForLink, 'view', '0']);
     }
     clearControlAuthor() {
@@ -254,7 +273,16 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             return;
         }
         this.bacgHeader = true;
-        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
+        const param = {
+            classif: 'DEPARTMENT',
+            return_due: true,
+            id: '0.',
+            skipDeleted: true,
+            selectMulty: false,
+            selectLeafs: true,
+            selectNodes: false,
+        };
+        this._waitClassifSrv.openClassif(param)
             .then((data: string) => {
                 this.dueForLink = data;
                 return this._userParamsSetSrv.getDepartmentFromUser([data]);
@@ -302,7 +330,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this.editMode();
                 this._pushState();
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
-                this._userParamsSetSrv.getUserIsn();
+                this._userParamsSetSrv.getUserIsn({
+                    expand: 'USER_PARMS_List'
+                });
             }).catch((error) => {
                 this._errorSrv.errorHandler(error);
                 this.cancel();
@@ -432,10 +462,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         this.editMode();
         this.checkDataToDisabled();
     }
-    close(event) {
-        this.flagEdit = event;
-        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
-    }
     editMode() {
         if (this.flagEdit) {
             this.form.enable({ emitEvent: false });
@@ -446,45 +472,23 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     default(event?) {
         this.prepareData = {};
         this.prepareInputs = {};
-        const prep = this.getObjQueryInputsFieldForDefault(this.queryparams());
+        const prep = this.formHelp.getObjQueryInputsFieldForDefault(this.formHelp.queryparams(CABINETS_USER, 'fieldsDefaultValue'));
         return this._pipRx.read(prep)
             .then((data: USER_PARMS[]) => {
                 this.controller = false;
-                this.creatchesheDefault = this.createhash(data);
+                this.creatchesheDefault = this.formHelp.createhash(data);
                 this.prepareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.creatchesheDefault);
                 this.prepareInputs = this.formHelp.getObjectInputFields(CABINETS_USER.fields);
+                console.log(this.prepareInputs);
                 this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
                 this.parseInputsFromString(this.defoltInputs, this.creatchesheDefault['FOLDERCOLORSTATUS']);
                 this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value;
                 this.prepFormCancel(this.defoltInputs, true);
+                this.checkDataToDisabled();
             })
             .catch(err => {
                 console.log(err);
             });
-    }
-    getObjQueryInputsFieldForDefault(inputs: Array<any>) {
-        return {
-            USER_PARMS: {
-                criteries: {
-                    PARM_NAME: inputs.join('||'),
-                    ISN_USER_OWNER: '-99'
-                }
-            }
-        };
-    }
-    createhash(data: USER_PARMS[]) {
-        const a = {};
-        data.forEach((el: USER_PARMS) => {
-            a[el.PARM_NAME] = el.PARM_VALUE;
-        });
-        return a;
-    }
-    queryparams() {
-        const arraQlist = [];
-        CABINETS_USER.fieldsDefaultValue.forEach(el => {
-            arraQlist.push(el.key);
-        });
-        return arraQlist;
     }
     createMessage(type, title, msg) {
         return {

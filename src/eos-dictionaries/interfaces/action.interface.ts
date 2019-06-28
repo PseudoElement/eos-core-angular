@@ -1,3 +1,4 @@
+import { APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 export enum E_RECORD_ACTIONS {
     add,
     edit,
@@ -30,6 +31,10 @@ export enum E_RECORD_ACTIONS {
     OpenSelected,
     AdvancedCardRK,
     prjDefaultValues,
+    copyPropertiesFromParent,
+    copyProperties,
+    copyNodes,
+    pasteNodes,
     // createRepresentative,
     // slantForForms,
     /* to be extended */
@@ -51,6 +56,8 @@ export interface IAction {
     hoverIconClass: string;
     activeIconClass: string;
     buttonClass: string;
+    accessNeed: APS_DICT_GRANT;
+
 }
 
 export interface IActionButton extends IAction {

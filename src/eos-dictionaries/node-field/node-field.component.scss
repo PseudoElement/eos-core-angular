@@ -1,3 +1,13 @@
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    .node-field {
+        label.fieldlabel {
+            display: inline;
+        }
+    }
+}
+
+
 .node-field {
     flex: 0 0 auto;
     padding-left: 20px;
@@ -12,6 +22,9 @@
         display: inline-block;
         text-align: center;
         line-height: 32px;
+        vertical-align: top;
+        top: -2px;
+        position: relative;
     }
     .no-padding {
         padding: 0;
@@ -20,6 +33,11 @@
         padding-right: 24px;
         text-align: center;
         vertical-align: middle;
+    }
+    .emptyicon {
+        position: relative;
+        top: 5px;
+        // min-width: 40px;
     }
     .special,
     .folder {
@@ -30,5 +48,8 @@
         display: inline-block;
         vertical-align: top;
     }
-
+    label.fieldlabel {
+        position: relative;
+        top: -1px;
+    }
 }

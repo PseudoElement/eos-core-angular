@@ -8,6 +8,7 @@ export interface ICollectionList extends PASS_STOP_LIST {
     marked: boolean;
     isSelected: boolean;
     selectedMark: boolean;
+    state: string;
 }
 
 @Injectable()
@@ -31,6 +32,7 @@ export class CollectionService {
                         marked: false,
                         isSelected: false,
                         selectedMark: false,
+                        state: 'old'
                     }, w);
                 });
                 this._collectionList = dataList;

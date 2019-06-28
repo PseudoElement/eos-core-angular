@@ -6,7 +6,11 @@
             <div *ngIf="params.markItems"
                  class="checkbox-inline">
                 <label [ngClass]="{'group-checkbox': anyUnmarked && anyMarked}"
-                       [tooltip]="markAllTooltip" placement="bottom" container="body" containerClass="tooltip-info">
+                       [tooltip]="markAllTooltip"
+                       placement="bottom"
+                       container="body"
+                       [delay]="tooltipDelay"
+                       containerClass="tooltip-info">
                     <input type="checkbox" [(ngModel)]="allMarked" (change)="toggleAllMarks()">
                     <span></span>
                 </label>
@@ -18,9 +22,9 @@
                 <div *ngFor="let field of viewFields"
                      class="item l-font"
                      [attr.id]="'vf_'+field.key"
-                     [ngStyle]="{'min-width.%': min_length[field.key]}">
-                    <span class="text selected-text"
-                          (click)="orderByField(field.key)">{{field.customTitle || field.title}}</span>
+                     [ngStyle]="{'min-width.px': min_length[field.key]}">
+                    <span class="text selected-text ng-bind-html"
+                          (click)="orderByField(field.key)">{{untrimmedValue(field.customTitle || field.title)}}</span>
                     <span class="order-icon">
                         <span *ngIf="orderBy?.fieldKey === field.key"
                               class="icon eos-icon small"
@@ -35,7 +39,7 @@
                      class="item l-font"
                      [class.left-shadowed]="first&&(isShifted())"
                      [attr.id]="'vf_'+field.key"
-                    [ngStyle]="{'min-width.%': min_length[field.key]}">
+                    [ngStyle]="{'min-width.px': min_length[field.key]}">
                     <span class="text selected-text"
                           (click)="orderByField(field.key)">{{field.customTitle || field.title}}</span><span class="order-icon">
                     <span *ngIf="orderBy?.fieldKey === field.key"
@@ -48,7 +52,8 @@
         </div>
     </div>
     <div class="eos-node-list"
-         (scroll)="onListScroll($event)">
+        #eosNodeList
+        (scroll)="onListScroll($event)">
         <div class="block list"
              [ngStyle]="{'width.%': 100}">
             <p *ngIf="params.updatingList"
@@ -77,7 +82,10 @@
                                     [node]="item"
                                     [params]="params"
                                     [customFields]="customFields"
-                                    (mark)="checkState()"></eos-node-list-item>
+                                    (clickSelect)="onClickSelect(item,$event)"
+                                    (clickMark)="onClickMark(item,$event)"
+                                    >
+                                    </eos-node-list-item>
             </ng-container>
         </div>
     </div>
@@ -93,5 +101,7 @@
                         [length]="length"
                         [params]="params"
                         [customFields]="customFields"
-                        (mark)="checkState()"></eos-node-list-item>
+                        (clickSelect)="onClickSelect(item.value,$event)"
+                        (clickMark)="onClickMark(item.value,$event)"
+                        ></eos-node-list-item>
 </ng-template>

@@ -24,11 +24,7 @@ export class EosDictionary {
     private _nodes: Map<string, EosDictionaryNode>;
 
     private _orderBy: IOrderBy;
-    private _userOrder: any;
-    private _userOrdered: boolean;
-    // private _orderedArray: { [parentId: string]: EosDictionaryNode[] };
     private _showDeleted: boolean;
-    // private _mode: number;
     private _dictionaries: { [key: string]: EosDictionary };
 
     get showDeleted(): boolean {
@@ -52,14 +48,6 @@ export class EosDictionary {
         return this._nodes;
     }
 
-    get userOrdered(): boolean {
-        return this._userOrdered;
-    }
-
-    set userOrdered(userOrdered: boolean) {
-        this._userOrdered = userOrdered;
-    }
-
     set orderBy(order: IOrderBy) {
         this._orderBy = order;
     }
@@ -78,19 +66,30 @@ export class EosDictionary {
             this.descriptor = descriptor;
             this._nodes = new Map<string, EosDictionaryNode>();
             this._dictionaries = {};
-            this.defaultOrder();
+            this.orderSetDefault();
             return this;
         } else {
             throw new Error('Словарь не поддерживается');
         }
     }
 
-    public defaultOrder() {
-        this._orderBy = {
+    public orderSetDefault() {
+        this._orderBy = this.orderDefault();
+    }
+
+    public orderDefault() {
+        return {
             ascend: true,
-            fieldKey: this.descriptor.defaultOrder
+            fieldKey: this.descriptor.defaultOrder,
         };
     }
+
+    isTreeType(): any {
+        return this.descriptor.dictionaryType === E_DICT_TYPE.custom ||
+               this.descriptor.dictionaryType === E_DICT_TYPE.tree ||
+               this.descriptor.dictionaryType === E_DICT_TYPE.department;
+    }
+
 
     unbindOrganization() {
         // todo: решить с data.__relfield
@@ -153,11 +152,6 @@ export class EosDictionary {
             });
     }
 
-    initUserOrder(userOrdered: boolean, userOrder: any) {
-        this._userOrdered = userOrdered;
-        this._userOrder = userOrder;
-    }
-
     expandNode(nodeId: string): Promise<EosDictionaryNode> {
         const node = this._nodes.get(nodeId);
         if (node) {
@@ -171,9 +165,9 @@ export class EosDictionary {
         }
     }
 
-    updateNodeData(node: EosDictionaryNode, data: any): Promise<IRecordOperationResult[]> {
+    updateNodeData(node: EosDictionaryNode, data: any, appendToChanges: any = null): Promise<IRecordOperationResult[]> {
         if (data) {
-            return this.descriptor.updateRecord(node.data, data)
+            return this.descriptor.updateRecord(node.data, data, appendToChanges)
                 .then((_resp) => {
                     node.relatedLoaded = false;
                     node.updateData(data.rec);
@@ -331,7 +325,7 @@ export class EosDictionary {
     getMarkedNodes(recursive = false): EosDictionaryNode[] {
         const nodes: EosDictionaryNode[] = [];
         this._nodes.forEach((node) => {
-            if (node.marked) {
+            if (node.isMarked) {
                 nodes.push(node);
                 if (recursive) {
                     node.getAllChildren().forEach((chld) => nodes.push(chld));
@@ -348,7 +342,7 @@ export class EosDictionary {
         const records = this._getMarkedRecords();
         return this.descriptor.deleteRecords(records).then (r => {
             this._nodes.forEach((node) => {
-                if (node.marked) {
+                if (node.isMarked) {
                     node.delete();
                     this._nodes.delete(node.id);
                 }
@@ -415,16 +409,17 @@ export class EosDictionary {
     }
 
 
-    getNodeUserOrder(nodeId: string): string[] {
-        if (this._userOrder && this._userOrder[nodeId]) {
-            return this._userOrder[nodeId];
-        }
-        return null;
-    }
+    // getNodeUserOrder(nodeId: string): string[] {
+    //     if (this._userOrder && this._userOrder[nodeId]) {
+    //         return this._userOrder[nodeId];
+    //     }
+    //     return null;
+    // }
 
     getListView(customFields: IFieldView[]) {
         const fields = this.descriptor.record.getListView({});
-        const updatefields = fields.concat(customFields);
+        const infoFields = this.descriptor.record.getInfoView({});
+        const updatefields = fields.concat(customFields).concat(infoFields);
         this.descriptor.getRelatedFields(updatefields.filter(i => i.dictionaryId)
                                 .map(i => i.dictionaryId ? i.dictionaryId : null))
             .then((related) => {
@@ -466,19 +461,8 @@ export class EosDictionary {
         return nodeData;
     }
 
-    setNodeUserOrder(nodeId: string, order: string[]) {
-        if (!this._userOrder) {
-            this._userOrder = {};
-        }
-        this._userOrder[nodeId] = order;
-    }
-
     reorderList(nodes: EosDictionaryNode[], subnodesCtrl: boolean, parentId?: string): EosDictionaryNode[] {
-        if (this._userOrdered) {
-            return this._doUserOrder(nodes, parentId, subnodesCtrl);
-        } else {
-            return this._orderByField(nodes);
-        }
+        return this._orderByField(nodes);
     }
 
     private _updateTree(nodes: EosDictionaryNode[]) {
@@ -537,7 +521,7 @@ export class EosDictionary {
         const records: any[] = [];
 
         this._nodes.forEach((node) => {
-            if (node.marked) {
+            if (node.isMarked) {
                 if (recursive) {
                     node.getAllChildren().forEach((chld) => records.push(chld.data.rec));
                 }
@@ -549,8 +533,8 @@ export class EosDictionary {
 
     private _resetMarked() {
         this._nodes.forEach((node) => {
-            if (node.marked) {
-                node.marked = false;
+            if (node.isMarked) {
+                node.isMarked = false;
             }
         });
     }
@@ -578,66 +562,6 @@ export class EosDictionary {
         }
     }
 
-    private _doUserOrder(nodes: EosDictionaryNode[], parentId: string, subnodesCtrl: boolean): EosDictionaryNode[] {
-        const userOrderedIDs = this._userOrder ? this._userOrder[parentId] : null;
-        if (userOrderedIDs) {
-            let orderedNodes = [];
-            for (let i = 0; i < userOrderedIDs.length; i++  ) {
-                const nodeId = userOrderedIDs[i];
-                const node = nodes.find((item) => item.id === nodeId);
-                if (node) {
-                    orderedNodes.push(node);
-                }
-            }
-
-            for (let i = 0; i < nodes.length; i++) {
-                const node = nodes[i];
-                if (orderedNodes.findIndex((item) => item.id === node.id) === -1) {
-                    orderedNodes.push(node);
-                }
-            }
-
-            if (subnodesCtrl) {
-                orderedNodes = this._resortSubTrees(orderedNodes);
-            }
-            return orderedNodes;
-        } else {
-            this.defaultOrder();
-            return this._orderByField(nodes);
-        }
-        // return nodes;
-    }
-
-    private _resortSubTrees(nodes: EosDictionaryNode[]) {
-        const orderedNodes = [];
-        nodes = nodes.reverse();
-        while (nodes.length) {
-            const node: EosDictionaryNode = nodes.shift();
-            let found = false;
-            for (let i = 0; i < orderedNodes.length; i++) {
-                if (node.originalParentId === orderedNodes[i].originalId) {
-                    orderedNodes.splice(i, 0, node);
-                    found = true;
-                    break;
-                }
-            }
-            if (found) {
-                continue;
-            }
-            for (let i = 0; i < nodes.length; i++) {
-                if (node.originalParentId === nodes[i].originalId) {
-                    nodes.push(node);
-                    found = true;
-                    break;
-                }
-            }
-            if (found) {
-                continue;
-            }
-            orderedNodes.push(node);
-        }
-        return orderedNodes.reverse();
-    }
     private _orderByField(nodes: EosDictionaryNode[], orderBy?: IOrderBy): EosDictionaryNode[] {
         const _orderBy = orderBy || this._orderBy; // DON'T USE THIS IN COMPARE FUNC!!! IT'S OTHER THIS!!!
 

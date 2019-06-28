@@ -2,8 +2,8 @@ import { IBaseParameters } from '../interfaces/parameters.interfaces';
 
 export const MAX_SIZE = 'Мах размер';
 export const ONE_FILE = 'Один файл';
-export const REG_EXTENSIONS: RegExp = /\..*\S$/;
-export const REG_MAX_SIZE: RegExp = /^\d{0,3}$|^1000$/; // 0-1000
+// export const REG_EXTENSIONS: RegExp = /\..*\S$/;
+export const REG_MAX_SIZE: RegExp = /^([1-9]\d{0,7}?|\s)$/; // '', 1 - 99999999
 export const FILES_PARAM: IBaseParameters = {
     id: 'files',
     title: 'Файлы',
@@ -15,6 +15,7 @@ export const FILES_PARAM: IBaseParameters = {
             title: 'Система хранения',
             readonly: true,
             options: [
+                {value: 'NADZOR', title: 'Надзор'},
                 {value: 'DELO', title: 'Дело'}
             ]
         },
@@ -69,7 +70,7 @@ export const FILES_PARAM: IBaseParameters = {
             key: 'DOC_RC_EXTENSIONS',
             type: 'string',
             title: '',
-            pattern: REG_EXTENSIONS
+            /* pattern: REG_EXTENSIONS, */
         },
         {
             key: 'PRJ_RC_MAX_SIZE',
@@ -86,7 +87,7 @@ export const FILES_PARAM: IBaseParameters = {
             key: 'PRJ_RC_EXTENSIONS',
             type: 'string',
             title: '',
-            pattern: REG_EXTENSIONS
+            /* pattern: REG_EXTENSIONS */
         },
         {
             key: 'PRJ_VISA_SIGN_MAX_SIZE',
@@ -103,7 +104,7 @@ export const FILES_PARAM: IBaseParameters = {
             key: 'PRJ_VISA_SIGN_EXTENSIONS',
             type: 'string',
             title: '',
-            pattern: REG_EXTENSIONS
+           /*  pattern: REG_EXTENSIONS */
         },
         {
             key: 'REPLY_MAX_SIZE',
@@ -120,7 +121,7 @@ export const FILES_PARAM: IBaseParameters = {
             key: 'REPLY_EXTENSIONS',
             type: 'string',
             title: '',
-            pattern: REG_EXTENSIONS
+           /*  pattern: REG_EXTENSIONS */
         },
         {
             key: 'RESOLUTION_MAX_SIZE',
@@ -137,7 +138,7 @@ export const FILES_PARAM: IBaseParameters = {
             key: 'RESOLUTION_EXTENSIONS',
             type: 'string',
             title: '',
-            pattern: REG_EXTENSIONS
+            /* pattern: REG_EXTENSIONS */
         },
     ]
 };

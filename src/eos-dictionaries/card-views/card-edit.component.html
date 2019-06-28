@@ -140,6 +140,14 @@
                                       [data]="data"
                                       [isNewRecord]="isNewRecord"
                                       [editMode]="editMode"></eos-nadzor-card-edit>
+                <eos-nadzor-card-edit *ngSwitchCase="'ob-return'"
+                                      #cardEditEl
+                                      class="simple-card-edit"
+                                      [form]="form"
+                                      [inputs]="inputs"
+                                      [data]="data"
+                                      [isNewRecord]="isNewRecord"
+                                      [editMode]="editMode"></eos-nadzor-card-edit>
                 <eos-nadzor-card-edit *ngSwitchCase="'ob-osnov'"
                                       #cardEditEl
                                       class="simple-card-edit"

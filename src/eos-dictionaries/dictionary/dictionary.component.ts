@@ -1,9 +1,11 @@
-import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
-import { AdvCardRKEditComponent } from './../adv-card/adv-card-rk.component';
+import {IQuickSrchObj} from './../dictionary-search/dictionary-search.component';
+import {TOOLTIP_DELAY_VALUE} from './../../eos-common/services/eos-message.service';
+import {DEPARTMENTS_DICT} from './../consts/dictionaries/department.consts';
+import {AdvCardRKEditComponent} from './../adv-card/adv-card-rk.component';
 import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Subject} from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import {Subject} from 'rxjs';
+
 
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 
@@ -20,24 +22,6 @@ import {EosStorageService} from 'app/services/eos-storage.service';
 import {EosSandwichService} from '../services/eos-sandwich.service';
 import {EosBreadcrumbsService} from '../../app/services/eos-breadcrumbs.service';
 
-import {
-    DANGER_EDIT_DELETED_ERROR,
-    DANGER_EDIT_ROOT_ERROR,
-    DANGER_HAVE_NO_ELEMENTS,
-    DANGER_LOGICALY_RESTORE_ELEMENT,
-    WARN_EDIT_ERROR,
-    WARN_ELEMENT_PROTECTED,
-    WARN_LOGIC_DELETE,
-    DANGER_EDIT_DICT_NOTALLOWED,
-    WARN_SELECT_NODE,
-    WARN_ELEMENT_DELETED,
-    WARN_LOGIC_CLOSE,
-    WARN_LOGIC_OPEN,
-    DANGER_DEPART_IS_LDELETED,
-    DANGER_DEPART_NO_NUMCREATION,
-    DANGER_ACCESS_DENIED_DICT,
-} from '../consts/messages.consts';
-
 import {RECENT_URL} from 'app/consts/common.consts';
 import {NodeListComponent} from '../node-list/node-list.component';
 import {CreateNodeComponent} from '../create-node/create-node.component';
@@ -45,8 +29,27 @@ import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.in
 import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
 import {CounterNpEditComponent, E_COUNTER_TYPE} from '../counter-np-edit/counter-np-edit.component';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
-import { EosAccessPermissionsService } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { DID_NOMENKL_CL } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
+import { takeUntil } from 'rxjs/operators';
+
+import {
+    DANGER_ACCESS_DENIED_DICT,
+    DANGER_DEPART_IS_LDELETED,
+    DANGER_DEPART_NO_NUMCREATION,
+    DANGER_EDIT_DELETED_ERROR,
+    DANGER_EDIT_DICT_NOTALLOWED,
+    DANGER_EDIT_ROOT_ERROR,
+    DANGER_HAVE_NO_ELEMENTS,
+    DANGER_LOGICALY_RESTORE_ELEMENT,
+    WARN_EDIT_ERROR,
+    WARN_ELEMENT_DELETED,
+    WARN_ELEMENT_PROTECTED,
+    WARN_LOGIC_CLOSE,
+    WARN_LOGIC_DELETE,
+    WARN_LOGIC_OPEN,
+    WARN_SELECT_NODE,
+} from '../consts/messages.consts';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -56,7 +59,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     @ViewChild('tree') treeEl;
     @ViewChild('custom-tree') customTreeEl;
     @ViewChild('selectedWrapper') selectedEl;
+    @ViewChild('quickSearchCtl') quickSearchCtl;
+    @ViewChild('searchCtl') searchCtl;
 
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
     dictionary: EosDictionary;
     listDictionary: EosDictionary;
 
@@ -145,7 +151,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             if (params) {
 
                 this.dictionaryId = params.dictionaryId;
-                if (!this._eaps.isAccessGrantedForDictionary(this.dictionaryId)) {
+                if (this._eaps.isAccessGrantedForDictionary(this.dictionaryId, null) === APS_DICT_GRANT.denied) {
                     this.accessDenied = true;
                     this._msgSrv.addNewMessage(DANGER_ACCESS_DENIED_DICT);
                     return;
@@ -155,12 +161,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 if (this.dictionaryId) {
                     this._dictSrv.openDictionary(this.dictionaryId)
                         .then(() => {
+                            this._dictSrv.unmarkAll();
                             if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
                                 this.dictionary.root.children = null;
                                 const n: CustomTreeNode = this._dictSrv.currentDictionary.descriptor.setRootNode(this._nodeId);
                                 if (n) {
                                     this.title = n.title;
                                 }
+                                this._dictSrv.setCustomNodeId(this._nodeId);
                                 this._dictSrv.selectCustomTreeNode().then ((data) => {
                                 });
                             } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
@@ -176,10 +184,16 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             }
         });
 
-        _sandwichSrv.currentDictState$.takeUntil(this.ngUnsubscribe)
+        _sandwichSrv.currentDictState$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((state: boolean[]) => this.currentState = state);
 
-        _dictSrv.dictionary$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.dictionary$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((dictionary: EosDictionary) => {
                 if (dictionary) {
                     if (this.params !== undefined) {
@@ -204,12 +218,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 }
             });
 
-        _dictSrv.listDictionary$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.listDictionary$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((dictionary: EosDictionary) => {
                 if (dictionary) {
                     this.dictMode = this._dictSrv.dictMode;
                     const setParams = this.params === undefined;
-                    this.params = Object.assign({}, this.params, {userSort: dictionary.userOrdered});
+                    this.params = Object.assign({}, this.params, {userSort: this._dictSrv.userOrdered});
                     this.params.markItems = dictionary.canDo(E_RECORD_ACTIONS.markRecords);
                     if (setParams) {
                         this.params.hideTopMenu = dictionary.descriptor.hideTopMenu;
@@ -218,7 +235,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 }
             });
 
-        _dictSrv.treeNode$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.treeNode$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((node: EosDictionaryNode) => {
                 if (node) {
                     this.title = node.getTreeView().map((fld) => fld.value).join(' ');
@@ -231,18 +251,26 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 }
             });
 
-        _dictSrv.paginationConfig$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.paginationConfig$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((config: IPaginationConfig) => {
                 if (config) {
                     this.paginationConfig = config;
                 }
             });
 
-        _dictSrv.viewParameters$.takeUntil(this.ngUnsubscribe)
+        _dictSrv.viewParameters$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((viewParameters: IDictionaryViewParameters) => this.params = viewParameters);
 
         _bcSrv._eventFromBc$
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((action: IActionEvent) => this.doAction(action));
     }
 
@@ -252,10 +280,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         this.ngUnsubscribe.complete();
     }
 
-
+    onSetActiveNode(n) {
+        if (n) {
+            this.title = n.title;
+        }
+    }
     ngAfterViewInit() {
         this._treeScrollTop = this._sandwichSrv.treeScrollTop;
         this.treeEl.nativeElement.scrollTop = this._treeScrollTop;
+        this.nodeList.updateScrollTop();
     }
 
     ngDoCheck() {
@@ -285,7 +318,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 break;
 
             case E_RECORD_ACTIONS.userOrder:
-                this._dictSrv.toggleUserOrder();
+                this._dictSrv.toggleWeightOrder();
                 break;
 
             case E_RECORD_ACTIONS.moveUp:
@@ -294,6 +327,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
             case E_RECORD_ACTIONS.moveDown:
                 this.nodeList.moveDown();
+                break;
+
+            case E_RECORD_ACTIONS.export:
+                this.nodeList.export(this.dictionaryId);
+                break;
+
+            case E_RECORD_ACTIONS.import:
+                this.nodeList.import(this.dictionaryId, this._nodeId);
                 break;
 
             case E_RECORD_ACTIONS.remove:
@@ -354,6 +395,18 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.prjDefaultValues:
                 this._openPrjDefaultValues();
                 break;
+            case E_RECORD_ACTIONS.copyProperties:
+                this._openCopyProperties();
+                break;
+            case E_RECORD_ACTIONS.copyPropertiesFromParent:
+                this._openCopyProperties(true);
+                break;
+            case E_RECORD_ACTIONS.copyNodes:
+                this._copyNodesToBuffer();
+                break;
+            case E_RECORD_ACTIONS.pasteNodes:
+                this._openCopyNode();
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -363,6 +416,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     resetSearch() {
         this._dictSrv.resetSearch();
         this._dictSrv.updateViewParameters({searchResults: false });
+        this.forcedCloseFastSrch();
     }
 
     userOrdered(nodes: EosDictionaryNode[]) {
@@ -372,13 +426,31 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     goUp() {
         if (this.treeNode && this.treeNode.parent) {
             const path = this.treeNode.parent.getPath();
-            console.log(path);
+            // console.log(path);
             this._router.navigate(path);
         }
     }
 
-    switchFastSearch(val: boolean) {
-        this.fastSearch = val;
+    forcedCloseFastSrch() {
+        if (this.quickSearchCtl) {
+            if (this.searchCtl) {
+                this.searchCtl.close();
+            }
+            this.fastSearch = false;
+        }
+    }
+
+    onCloseFastSrch(event) {
+        this.forcedCloseFastSrch();
+    }
+
+    switchFastSearch(val: IQuickSrchObj) {
+        if (this.quickSearchCtl && this.quickSearchCtl.srchString && this.quickSearchCtl.srchString !== '') {
+            this.quickSearchCtl.quickSearch({ keyCode: 13 });
+        } else {
+            val.isOpenQuick = !val.isOpenQuick;
+            this.fastSearch = val.isOpenQuick;
+        }
     }
 
     /**
@@ -409,8 +481,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
     isDictModeEnabled (mode: number): boolean {
         const dict = this._dictSrv.dictionaryByMode(mode).id;
-        const access = this._eaps.isAccessGrantedForDictionary(dict);
-        return access;
+        return this._eaps.isAccessGrantedForDictionary(dict, null) !== APS_DICT_GRANT.denied;
     }
     setDictMode(mode: number) {
         if (mode === 0 && this.treeNode.isDeleted) {
@@ -440,6 +511,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         return false;
     }
 
+    markedCounter(): number {
+        return this._dictSrv.getMarkedNodes().length;
+    }
     /**
      * @description convert selected persons to list of organization representatives,
      * add it to department organization if it exists upwards to tree
@@ -475,20 +549,22 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         let data: {};
         let editDescr: {};
         let dictionary: EosDictionary;
-        const createWarning = this.dictionary.descriptor.preCreateCheck(this);
+        dictionary = this._dictSrv.currentDictionary;
+        editDescr = dictionary.getEditDescriptor();
+        data = dictionary.getNewNode({rec: recParams}, this.treeNode);
+
+        const createWarning = dictionary.descriptor.preCreateCheck(this);
         if (createWarning) {
             this._msgSrv.addNewMessage(createWarning);
             return;
         }
 
-        if (this.dictionary.descriptor.id === 'broadcast-channel') {
+        if (dictionary.descriptor.id === 'broadcast-channel') {
             this.modalWindow = this._modalSrv.show(CreateNodeBroadcastChannelComponent, {class: 'creating-modal'});
         } else {
             this.modalWindow = this._modalSrv.show(CreateNodeComponent, {class: 'creating-modal'});
         }
-        dictionary = this._dictSrv.currentDictionary;
-        editDescr = dictionary.getEditDescriptor();
-        data = dictionary.getNewNode({rec: recParams}, this.treeNode);
+
         this._dictSrv.clearCurrentNode();
 
         this.modalWindow.content.fieldsDescription = editDescr;
@@ -510,14 +586,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     private _deleteItems(): void {
         let delCount = 0, allCount = 0;
         this._dictSrv.getMarkedNodes().forEach((node) => {
-            if (node.marked) {
+            if (node.isMarked) {
                 allCount++;
             }
-            if (node.marked && node.isDeleted) {
+            if (node.isMarked && node.isDeleted) {
                 delCount++;
             }
-            if (node.marked && node.isProtected) {
-                node.marked = false;
+            if (node.isMarked && node.isProtected) {
+                node.isMarked = false;
                 const warn = Object.assign({}, WARN_ELEMENT_PROTECTED);
                 warn.msg = warn.msg.replace('{{elem}}', node.title);
                 this._msgSrv.addNewMessage(warn);
@@ -536,14 +612,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         const fieldName = 'CLOSED';
         let rdyCount = 0, allCount = 0;
         this._dictSrv.getMarkedNodes().forEach((node) => {
-            if (node.marked) {
+            if (node.isMarked) {
                 allCount++;
             }
-            if (node.marked && node.data.rec[fieldName]) {
+            if (node.isMarked && node.data.rec[fieldName]) {
                 rdyCount++;
             }
-            if (node.marked && node.isDeleted) {
-                node.marked = false;
+            if (node.isMarked && node.isDeleted) {
+                node.isMarked = false;
                 const warn = Object.assign({}, WARN_ELEMENT_DELETED);
                 warn.msg = warn.msg.replace('{{elem}}', node.title);
                 this._msgSrv.addNewMessage(warn);
@@ -562,14 +638,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         const fieldName = 'CLOSED';
         let rdyCount = 0, allCount = 0;
         this._dictSrv.getMarkedNodes().forEach((node) => {
-            if (node.marked) {
+            if (node.isMarked) {
                 allCount++;
             }
-            if (node.marked && !node.data.rec[fieldName]) {
+            if (node.isMarked && !node.data.rec[fieldName]) {
                 rdyCount++;
             }
-            if (node.marked && node.isDeleted) {
-                node.marked = false;
+            if (node.isMarked && node.isDeleted) {
+                node.isMarked = false;
                 const warn = Object.assign({}, WARN_ELEMENT_DELETED);
                 warn.msg = warn.msg.replace('{{elem}}', node.title);
                 this._msgSrv.addNewMessage(warn);
@@ -642,7 +718,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         this._dictSrv.getMarkedNodes(false).forEach((node) => {
             if (node.parent && node.parent.isDeleted) {
                 this._msgSrv.addNewMessage(DANGER_LOGICALY_RESTORE_ELEMENT);
-                node.marked = false;
+                node.isMarked = false;
             } else {
                 if (node.isNode) {
                     hasFolding = true;
@@ -703,4 +779,22 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             this._msgSrv.addNewMessage(WARN_SELECT_NODE);
         }
     }
+
+    private _openCopyProperties(fromParent = false) {
+        const node = this._dictSrv.listNode;
+        if (node) {
+            this.nodeList.openCopyProperties(node, fromParent);
+        } else {
+            this._msgSrv.addNewMessage(WARN_SELECT_NODE);
+        }
+    }
+
+    private _copyNodesToBuffer() {
+        this._dictSrv.fillBufferNodes();
+    }
+
+    private _openCopyNode() {
+        this.nodeList.openCopyNode(this._dictSrv.bufferNodes);
+    }
+
 }

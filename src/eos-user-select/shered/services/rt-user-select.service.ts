@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { UserSelectNode } from '../../list-user-select/user-node-select';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { Subject } from 'rxjs/Subject';
+import { Subject ,  Observable } from 'rxjs';
 import { UserParamApiSrv } from '../../../eos-user-params/shared/services/user-params-api.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class RtUserSelectService {
     subject: Subject<any> = new Subject();
     subjectScan: Subject<any> = new Subject();
     subjectFlagBtnHeader: Subject<any> = new Subject();
+    btnDisabled: boolean =  false;
      ArraySystemHelper = {
         delo: {
             label: 'Дело',
@@ -69,6 +69,9 @@ export class RtUserSelectService {
             checked: false
         }
     };
+    scrollPosition: number = 0;
+    flagDeleteScroll: boolean = true;
+    flagDeleteSelectedUser: boolean = true;
     private _ChangeSelectUser: UserSelectNode;
     private UserCabinetInfo: Array<any>;
     constructor(private apiSrv: PipRX,

@@ -1,18 +1,19 @@
-import { Component, Output, EventEmitter, OnDestroy, OnInit, OnChanges, ViewChild, NgZone } from '@angular/core';
+import { Component, Output, EventEmitter, OnDestroy, OnInit, OnChanges, ViewChild, NgZone, Injector } from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
-import {PipRX} from '../../eos-rest';
 import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME, FICT_CONTROLS_LIST_NAME, IUpdateDictEvent } from './adv-card-rk-datactrl';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { TDefaultField, TDFSelectOption } from './rk-default-values/rk-default-const';
-import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { TDefaultField } from './rk-default-values/rk-default-const';
 import { EosUtils } from 'eos-common/core/utils';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { RKBasePage } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
-import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
+import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_HAS_DELETED } from 'app/consts/confirms.const';
+import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
+import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
@@ -48,7 +49,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     activeTab: Ttab;
     form: FormGroup;
 
-
     values: any;
 
     descriptions: any;
@@ -57,28 +57,29 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     storedValuesDG: any;
     editValues: any;
     isChanged: boolean;
-    _currentFormStatus: any;
     formInvalid: boolean;
     isEDoc: boolean;
     rkType: number;
     // protected formChanges$: Subscription;
-    private subscriptions: Subscription[];
 
-    @ViewChild('currentPage')
-    private currentPage: RKBasePage;
+
+    @ViewChild('currentPage') private currentPage: RKBasePage;
+    private subscriptions: Subscription[];
     private _node = {};
     private isn_node: number;
-
+    private _currentFormStatus: any;
 
     constructor(
+        public injector: Injector,
         public bsModalRef: BsModalRef,
         public zone: NgZone,
-        private _apiSrv: PipRX,
+        // private _apiSrv: PipRX,
         private _dataSrv: EosDataConvertService,
         private _inputCtrlSrv: InputControlService,
-        private _msgSrv: EosMessageService,
-        private _dictSrv: EosDictService,
-        private _zone: NgZone,
+        private _confirmSrv: ConfirmWindowService,
+        // private _msgSrv: EosMessageService,
+        // private _dictSrv: EosDictService,
+        // private _zone: NgZone,
         private _waitClassifSrv: WaitClassifService,
     ) {
         this.isUpdating = true;
@@ -117,34 +118,36 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         }
     }
 
-    updateLinks (el: TDefaultField, options: TDFSelectOption[], data: any) {
-        if (el.key === 'JOURNAL_ISN_NOMENC' ||
-            el.key === 'JOURNAL_ISN_NOMENC_W'
-            ) {
-            const rec = data[0];
-            if (rec['DUE'] === '0.') {
-                options[0].title = '...';
-            } else {
-                options[0].title = rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
-            }
-        }
-    }
+    // updateLinks (el: TDefaultField, options: TDFSelectOption[], data: any) {
+    //     if (el.key === 'JOURNAL_ISN_NOMENC' ||
+    //         el.key === 'JOURNAL_ISN_NOMENC_W'
+    //         ) {
+    //         const rec = data[0];
+    //         if (rec['DUE'] === '0.') {
+    //             options[0].title = '...';
+    //             options[0].rec = null;
+    //         } else {
+    //             options[0].rec = rec;
+    //             options[0].title = rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
+    //         }
+    //     }
+    // }
 
     save(): void {
-        this.dataController.save(this.isn_node, this.newData).then (r => {
-            this.bsModalRef.hide();
-        }).catch (err => {
+        this.preSaveCheck(this.newData).then(isCancel => {
+            if (!isCancel) {
+                this.dataController.save(this.isn_node, this.inputs, this.newData).then (r => {
+                    this.bsModalRef.hide();
+                }).catch (err => {
 
+                });
+            }
         });
     }
 
-    cancel(): void {
-        this.bsModalRef.hide();
-    }
+     public userListsEdit() {
 
-    public userListsEdit() {
-
-        this._waitClassifSrv.openClassif({classif: 'USER_LISTS'})
+        this._waitClassifSrv.openClassif({classif: 'USER_LISTS', user_id: -99 })
         .then(result => {
             console.log('result: ', result);
             this.dataController.zone.run(() => {
@@ -179,6 +182,37 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     }
 
+    preSaveCheck(newdata: any): Promise<any> {
+        let confPromise = Promise.resolve(false);
+        // проверить списки на предмет наличия логически удаленных записей.
+        const fields = this.descriptions[DEFAULTS_LIST_NAME];
+        for (let i = 0; i < fields.length; i++) {
+            const el: TDefaultField = fields[i];
+            if (!el.dict) { continue; }
+            if (el.dict.dictId !== 'USER_LISTS') { continue; }
+
+            const val = newdata[DEFAULTS_LIST_NAME][el.key];
+            if (val) {
+                const opt = el.options.find ( o => Number(o.value) === Number(val));
+                if (opt && opt.isEmpty) {
+                    confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_IS_EMPTY);
+                }
+
+                if (opt && opt.hasDeleted) {
+                    confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_HAS_DELETED);
+                }
+
+            }
+        }
+
+        return confPromise;
+    }
+
+
+
+    cancel(): void {
+        this.bsModalRef.hide();
+    }
 
     public hideModal(): void {
         this.bsModalRef.hide();
@@ -190,6 +224,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     public clickTab (item: Ttab) {
         this.activeTab = item;
+        BaseCardEditComponent.autoFocusOnFirstStringElement('eos-adv-card-rk');
     }
 
     public initByNodeData(dndata: any) {
@@ -203,10 +238,10 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
         this.activeTab = tabs[0];
 
-        this.dataController = new AdvCardRKDataCtrl(this._zone, this._apiSrv, this._msgSrv, this._dictSrv);
+        this.dataController = new AdvCardRKDataCtrl(this.injector/*, this._zone, this._apiSrv, this._msgSrv, this._dictSrv*/);
         this.descriptions = this.dataController.getDescriptions();
 
-        this.dataController.readValues(this.isn_node).then (values => {
+        this.dataController.readDGValues(this.isn_node).then (values => {
             this.storedValuesDG = values[0];
             if (this.storedValuesDG['E_DOCUMENT'] === 1) {
                 this.isEDoc = true;
@@ -215,7 +250,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             }
 
             this.rkType = this.storedValuesDG['RC_TYPE'];
-
 
             this.values = {
                 [DEFAULTS_LIST_NAME]: this._makeDefaults(this.descriptions[DEFAULTS_LIST_NAME]),
@@ -226,8 +260,9 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             this._appendDBDefValues(this.values[DEFAULTS_LIST_NAME], this.storedValuesDG[DEFAULTS_LIST_NAME]);
             this._appendDBFilesValues(this.values[FILE_CONSTRAINT_LIST_NAME], this.storedValuesDG[FILE_CONSTRAINT_LIST_NAME]);
             this.isChanged = true;
-            this._checkCorrectValuesLogic(this.values, this.descriptions);
+            this._checkCorrectValuesLogic(this.values /*, this.descriptions*/);
             this.editValues = this._makePrevValues(this.values);
+
             this.dataController.updateDictsOptions(null, this.values, this.updateLinks2).then (() => {
                 this.inputs = this._getInputs();
                 this._updateInputs(this.inputs);
@@ -246,14 +281,34 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
                 this._subscribeToChanges();
                 this.isUpdating = false;
+                BaseCardEditComponent.autoFocusOnFirstStringElement('eos-adv-card-rk');
             });
         });
 
+    }
+
+    private _presaveConfirmAppend(confPromise: Promise<boolean>, el: TDefaultField, win: IConfirmWindow2): Promise<boolean> {
+        return confPromise.then ((res) => {
+            const testc: IConfirmWindow2 = Object.assign({}, win);
+            testc.body = testc.body.replace('{{REK}}', (el.longTitle || el.title));
+            if (res) {
+                return res;
+            } else {
+                return this._confirmSrv.confirm2(testc).then((button) => {
+                    return (!button || button.result === 2);
+                });
+            }
+        });
     }
     private _updateInputs(inputs: any): any {
         if (!this.isEDoc) {
             inputs['DOC_DEFAULT_VALUE_List.SPECIMEN'].required = true;
         }
+        inputs['DOC_DEFAULT_VALUE_List.FREE_NUM_M'].value = 1;
+        inputs['DOC_DEFAULT_VALUE_List.DOC_DATE_M'].value = 1;
+        inputs['DOC_DEFAULT_VALUE_List.SECURLEVEL_M'].value = 1;
+        inputs['DOC_DEFAULT_VALUE_List.ISN_CARD_REG_M'].value = 1;
+        inputs['DOC_DEFAULT_VALUE_List.ISN_CABINET_REG_M'].value = 1;
     }
 
     private _updateValidators(controls: any): any {
@@ -290,7 +345,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
 
-    private _checkCorrectValuesLogic(values: any, descriptions: any): any {
+    private _checkCorrectValuesLogic(values: any): any {
         // Внутренние адресаты
         if (values[DEFAULTS_LIST_NAME]['SEND_ISN_LIST_DEP']) {
             if (!values[DEFAULTS_LIST_NAME]['SEND_MARKSEND']) {
@@ -484,11 +539,9 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         if (value !== prevValue) {
             this.isChanged = true;
             this._setPrevValue(path, value);
-            this.currentPage.onDataChanged(path, prevValue, value);
+            if (this.currentPage) { this.currentPage.onDataChanged(path, prevValue, value); }
             return true;
         }
         return false;
     }
-
-
 }

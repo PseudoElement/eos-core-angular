@@ -1,5 +1,8 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+
 import { CertStoresService } from '../../cert-stores.service';
 import { PARM_ERR_OPEN_CERT_STORES } from '../../../shared/consts/eos-parameters.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -33,51 +36,55 @@ export class AddCertStoresComponent {
     searchStore() {
         if (this.certSystemStore === 'sslm') {
             this.listStores$ = this.certStoresService.showListStores(this.certSystemStore, this.certSystemAddress)
-                .catch(e => {
-                    this.msgSrv.addNewMessage(PARM_ERR_OPEN_CERT_STORES);
-                    return Observable.of(null);
-                })
-                .map(data => {
-                    const listStores = [];
-                    if (data && data.length) {
-                        data.forEach(item => {
-                            const arr = item.split('\\');
-                            listStores.push({
-                                title: arr[arr.length - 1],
-                                name: arr[arr.length - 1],
-                                selected: false,
-                                location: 'sslm',
-                                address: arr[arr.length - 2] || ''
-                            });
-                        });
-                    }
-                    this.listStores = listStores;
-                    return data;
-                });
-            }
-            if (this.certSystemStore === 'sss') {
-                this.listStores$ = this.certStoresService.showListStores(this.certSystemStore, this.certSystemAddress)
-                    .catch(e => {
+                .pipe(
+                    catchError(e => {
                         this.msgSrv.addNewMessage(PARM_ERR_OPEN_CERT_STORES);
-                        return Observable.of(null);
-                    })
-                    .map(data => {
+                        return of(null);
+                    }),
+                    map(data => {
                         const listStores = [];
                         if (data && data.length) {
                             data.forEach(item => {
                                 const arr = item.split('\\');
                                 listStores.push({
                                     title: arr[arr.length - 1],
-                                    name: item,
+                                    name: arr[arr.length - 1],
                                     selected: false,
-                                    location: 'sss',
-                                    address: arr[arr.length - 2]
+                                    location: 'sslm',
+                                    address: arr[arr.length - 2] || ''
                                 });
                             });
                         }
                         this.listStores = listStores;
                         return data;
-                    });
+                    })
+                );
+            }
+            if (this.certSystemStore === 'sss') {
+                this.listStores$ = this.certStoresService.showListStores(this.certSystemStore, this.certSystemAddress)
+                    .pipe(
+                        catchError(e => {
+                            this.msgSrv.addNewMessage(PARM_ERR_OPEN_CERT_STORES);
+                            return of(null);
+                        }),
+                        map(data => {
+                            const listStores = [];
+                            if (data && data.length) {
+                                data.forEach(item => {
+                                    const arr = item.split('\\');
+                                    listStores.push({
+                                        title: arr[arr.length - 1],
+                                        name: item,
+                                        selected: false,
+                                        location: 'sss',
+                                        address: arr[arr.length - 2]
+                                    });
+                                });
+                            }
+                            this.listStores = listStores;
+                            return data;
+                        })
+                    );
         }
     }
     selectNode(list: IListStores) {

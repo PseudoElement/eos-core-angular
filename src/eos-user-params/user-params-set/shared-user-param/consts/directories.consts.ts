@@ -11,8 +11,8 @@ export const DIRECTORIES_USER: IBaseUsers = {
             title: '',
             readonly: false,
             options: [
-                {value: '1', title: 'Вертикальное'},
-                {value: '0', title: 'Горизонтальное'}
+                {value: '1', title: 'Вертикальные'},
+                {value: '0', title: 'Горизонтальные'}
             ]
         },
         {

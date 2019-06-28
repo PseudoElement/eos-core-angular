@@ -27,7 +27,7 @@
     }
 
     .no-margin-bottom {
-        margin-bottom: 0px;
+        margin-bottom: 0;
     }
 
     .bottom-buttons {
@@ -58,6 +58,17 @@
     }
 
     .no-marigin-bottom {
-        margin-bottom: 0px;
+        margin-bottom: 0;
+    }
+    .columns{
+        overflow: hidden;
+    }
+    .left {
+        float: left;
+        width: 50%;
+    }
+    .right {
+        float: left;
+        width: 50%;
     }
 }

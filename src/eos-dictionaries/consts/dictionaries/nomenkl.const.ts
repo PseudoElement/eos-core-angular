@@ -3,7 +3,6 @@ import {LINEAR_TEMPLATE} from './_linear-template';
 import {COMMON_FIELD_NAME} from './_common';
 import {YEAR_PATTERN} from 'eos-common/consts/common.consts';
 
-
 export const DID_NOMENKL_CL = 'nomenkl';
 export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: DID_NOMENKL_CL,
@@ -12,7 +11,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     actions: [
         'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization', 'removeHard',
-        'edit', 'view', 'remove', 'removeHard', 'userOrder',
+        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'userOrder', 'export', 'import', 'copyNodes', 'pasteNodes',
         'OpenSelected',
         'CloseSelected',
     ],
@@ -38,7 +37,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         default: 0,
         required: true,
     }, {
-        key: 'SECURITY',
+    key: 'SECURITY',
         title: 'Гриф',
         type: 'select',
         length: 64,
@@ -94,7 +93,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         length: 512,
     }, {
         key: 'ARCH_DATE',
-        title: 'Передано в архив',
+        title: 'Сдано в архив',
         type: 'date',
     }, {
         key: 'ARCH_FLAG',
@@ -102,7 +101,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         type: 'boolean',
     }, {
         key: 'E_DOCUMENT',
-        title: 'Для эл. документов',
+        title: 'Для электронных документов',
         type: 'boolean',
         required: true,
         default: 0,
@@ -117,6 +116,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         Object.assign({}, COMMON_FIELD_NAME, {
             title: 'Заголовок',
             length: 2000,
+            type: 'text',
         }),
     ]),
 
@@ -125,7 +125,8 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         'END_YEAR', 'ARTICLE', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', 'buttPer'],
     searchFields: ['CLASSIF_NAME', 'NOM_NUMBER', ],
     fullSearchFields: ['CLASSIF_NAME', 'NOTE', 'NOM_NUMBER'],
-    quickViewFields: ['CLASSIF_NAME', 'NOTE'],
+    quickViewFields: ['NOM_NUMBER', 'SHELF_LIFE', 'SECURITY', 'E_DOCUMENT', 'CLOSED',  'YEAR_NUMBER',
+    'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_FLAG', 'ARCH_DATE', 'NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: ['NOM_NUMBER', 'CLASSIF_NAME', ],
     allVisibleFields: ['NOTE', 'CLOSED', 'SECURITY', 'SHELF_LIFE', 'YEAR_NUMBER',

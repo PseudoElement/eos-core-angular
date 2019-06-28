@@ -84,7 +84,7 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
     getBoss(departmentDue: string): Promise<any> {
         return this.apiSrv.read({
             'DEPARTMENT': PipRX.criteries({
-                'DEPARTMENT_DUE': departmentDue,
+                'DUE': departmentDue + '%',
                 'IS_NODE': '1',
                 'POST_H': '1',
             })

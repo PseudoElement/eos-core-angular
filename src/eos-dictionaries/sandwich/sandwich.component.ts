@@ -1,8 +1,9 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { EosSandwichService } from '../services/eos-sandwich.service';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/takeUntil';
+import { Subject } from 'rxjs';
+import { takeUntil, filter } from 'rxjs/operators';
+
 
 @Component({
     selector: 'eos-sandwich',
@@ -27,8 +28,11 @@ export class SandwichComponent implements OnDestroy {
     ) {
         this.update();
         _router.events
-            .filter((evt) => evt instanceof NavigationEnd)
-            .takeUntil(this.ngUnsubscribe)
+            .pipe(
+                filter((evt) => evt instanceof NavigationEnd),
+                takeUntil(this.ngUnsubscribe)
+
+            )
             .subscribe(() => this.update());
 
         this._sandwichSrv.currentDictState$.subscribe((state) => {

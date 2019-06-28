@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import {BtnAction, BtnActionFields} from '../shered/interfaces/btn-action.interfase';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
 @Component({
     selector: 'eos-btn-action',
     templateUrl: 'btn-action.component.html',
@@ -9,7 +10,9 @@ import {BtnAction, BtnActionFields} from '../shered/interfaces/btn-action.interf
 export class BtnActionComponent implements OnInit {
 
     @Input() buttons: BtnAction;
-    @Output() showAction = new EventEmitter();
+    @Output() showAction: EventEmitter<any> = new EventEmitter<any>();
+
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
 
     constructor() {
     }

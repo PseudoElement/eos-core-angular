@@ -3,7 +3,7 @@ import { Input, OnChanges, OnDestroy } from '@angular/core';
 import { InputBase } from '../core/inputs/input-base';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { INPUT_ERROR_MESSAGES } from '../consts/common.consts';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 
 export class DynamicInputBase implements OnChanges, OnDestroy {
     @Input() input: InputBase<any>;
@@ -15,7 +15,9 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     @Input() hideLabel: boolean;
     @Input() viewOpts: IDynamicInputOptions;
 
+    public isFocused: boolean;
     protected subscriptions: Subscription[] = [];
+    private _syncTimer: NodeJS.Timer;
 
     get currentValue(): any {
         const control = this.control;
@@ -41,16 +43,33 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     }
 
     onFocus() {
+        this.isFocused = true;
         this.toggleTooltip(true);
     }
 
     onBlur() {
+        this.isFocused = false;
         this._updateMessage();
         this.toggleTooltip(false);
     }
+    onInput(event) {
+        event.stopPropagation();
+        this._delayedTooltip();
+    }
+
+    _delayedTooltip(): void {
+        this._updateMessage();
+        if (this.inputTooltip.message !== '' && !this._syncTimer) {
+            this.inputTooltip.visible = false;
+            this._syncTimer = setTimeout(() => {
+                this.inputTooltip.force = true;
+                this.inputTooltip.visible = true;
+                this._syncTimer = null;
+            }, 300);
+        }
+    }
 
     forceTooltip() {
-        // this._updateMessage();
         this.inputTooltip.force = true;
     }
 
@@ -74,6 +93,18 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     ngOnDestroy() {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
         this.subscriptions = [];
+    }
+
+    getCounterLabel(): string {
+        if (this.input.length) {
+            const control = this.control;
+            if (control) {
+                const len = this.control.value ? String(this.control.value).length : 0;
+                const maxlen = this.input.length;
+                return String(len) + '/' + String (maxlen);
+            }
+        }
+        return '';
     }
 
     get control(): AbstractControl {
@@ -107,6 +138,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
                 })
                 .join(' ');
         }
+        // this._cdr.detectChanges();
         this.inputTooltip.message = msg;
     }
 
@@ -114,7 +146,9 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
         if (!this.readonly) {
             const control = this.control;
             if (control) {
-                this.inputTooltip.visible = !focused && control.invalid && control.dirty;
+                this._updateMessage();
+                this.inputTooltip.visible = /*!focused &&*/ control.invalid /*&& control.dirty*/;
+                this.inputTooltip.force = true;
             } else {
                 this.inputTooltip.visible = false;
             }

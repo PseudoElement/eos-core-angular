@@ -1,13 +1,15 @@
-﻿import { Injectable, Optional } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/toPromise';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/reduce';
+
+import { throwError as observableThrowError, Observable, of } from 'rxjs';
+import { map, catchError, mergeMap, reduce } from 'rxjs/operators';
+import { Injectable, Optional } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+
+
+
+
+
+
 
 import { ApiCfg } from '../core/api-cfg';
 import { ALL_ROWS, HTTP_OPTIONS, BATCH_BOUNDARY, CHANGESET_BOUNDARY } from '../core/consts';
@@ -33,7 +35,7 @@ export class PipRX extends PipeUtils {
     private _cfg: ApiCfg;
     private _options = HTTP_OPTIONS;
 
-    constructor(private http: Http, @Optional() config: ApiCfg) {
+    constructor(private http: HttpClient, @Optional() config: ApiCfg) {
         super();
         this.initConfig(config);
         this._metadata = new Metadata(this._cfg);
@@ -57,8 +59,8 @@ export class PipRX extends PipeUtils {
         for (const k in args) {
             const quot = typeof (args[k]) === 'string' ? '\'' : '';
             ar.push(k + '=' + quot +
-            encodeURIComponent(args[k])
-             + quot);
+                encodeURIComponent(args[k])
+                + quot);
         }
 
         chr.push({
@@ -159,7 +161,7 @@ export class PipRX extends PipeUtils {
                 // encode id because of hash issue
                 result.push([this._cfg.dataApiUrl, r._et, '/?ids=', encodeURIComponent(idss[i]), url].join(''));
             }
-        } else if (typeof ids === 'string' || typeof  ids === 'number') {
+        } else if (typeof ids === 'string' || typeof ids === 'number') {
             result.push([this._cfg.dataApiUrl, r._et, '/?ids=', encodeURIComponent(ids.toString()), url].join(''));
         } else {
             result.push(this._cfg.dataApiUrl + r._et + url.replace('&', '?'));
@@ -183,71 +185,87 @@ export class PipRX extends PipeUtils {
     //
     private _odataGet<T>(urls: string[], req: IRequest): Observable<T[]> {
         const _options = Object.assign({}, this._options, {
-            headers: new Headers({
+            headers: new HttpHeaders({
                 // 'MaxDataServiceVersion': '3.0',
                 'Accept': 'application/json;odata=light;q=1,application/json;odata=minimalmetadata;'
             })
         });
 
-        const rl = Observable.of(...urls).mergeMap(url => {
-            return this.http
-                .get(url, _options)
-                .map((r: Response) => {
-                    try {
-                        return this.nativeParser(r.json());
-                    } catch (e) {
-                        throw new RestError({ odataErrors: [e], _request: req, _response: r });
-                        // return this.errorService.errorHandler({ odataErrors: [e], _request: req, _response: r });
-                    }
-                })
-                .catch(this.httpErrorHandler);
-            /*
-            (err, caught) => {
-                if (err instanceof RestError) {
-                    return Observable.throw(err);
-                } else {
-                    return Observable.throw(new RestError({ http: err, _request: req }));
-                }
-                // return [];
-            });
-            */
-        });
+        const rl = of(...urls)
+            .pipe(
+                mergeMap(url => {
+                    return this.http
+                        .get(url, _options)
+                        .pipe(
+                            map((r: Response) => {
+                                try {
+                                    return this.nativeParser(r);
+                                } catch (e) {
+                                    throw new RestError({ odataErrors: [e], _request: req, _response: r });
+                                    // return this.errorService.errorHandler({ odataErrors: [e], _request: req, _response: r });
+                                }
+                            }),
+                            catchError(this.httpErrorHandler)
+                        );
 
-        return rl.reduce((acc: T[], v: T[]) => {
-            acc.push(...v);
-            return acc;
-        });
+                    /*
+                    (err, caught) => {
+                        if (err instanceof RestError) {
+                            return Observable.throw(err);
+                        } else {
+                            return Observable.throw(new RestError({ http: err, _request: req }));
+                        }
+                        // return [];
+                    });
+                    */
+                })
+
+            );
+
+        return rl
+            .pipe(
+                reduce((acc: T[], v: T[]) => {
+                    acc.push(...v);
+                    return acc;
+                })
+            );
     }
 
     private _batch(changeSet: any[], vc: string): Observable<any> {
         if (changeSet.length === 0) {
-            return Observable.of([]);
+            return of([]);
         }
 
-        const _options = Object.assign({}, this._options, {
-            headers: new Headers({
-                // 'DataServiceVersion': '1.0', //todo: add in Allowed-Headers in OPTIONS response
-                'Accept': 'multipart/mixed',
-                'Content-Type': 'multipart/mixed;boundary=' + BATCH_BOUNDARY,
-                // 'MaxDataServiceVersion': '3.0'
-            })
-        });
+        // const _options = Object.assign({}, this._options, {
+        //     headers: new HttpHeaders({
+        //         // 'DataServiceVersion': '1.0', //todo: add in Allowed-Headers in OPTIONS response
+        //         'Accept': 'multipart/mixed',
+        //         'Content-Type': 'multipart/mixed;boundary=' + BATCH_BOUNDARY,
+        //         // 'MaxDataServiceVersion': '3.0'
+        //     })
+        // });
 
         const d = this.buildBatch(changeSet);
         // console.log(this._cfg.dataSrv + '$batch?' + vc, d, _options);
         return this.http
-            .post(this._cfg.dataApiUrl + '$batch?' + vc, d, _options)
-            .map((r) => {
-                // console.log('response', r);
-                const answer: any[] = [];
-                const e = this.parseBatchResponse(r, answer);
-                if (e) {
-                    throw new RestError({ odataErrors: e });
-                    // return this.errorService.errorHandler({ odataErrors: e });
+            .post(this._cfg.dataApiUrl + '$batch?' + vc, d, {
+                observe: 'response', responseType: 'text', headers: {
+                    'Accept': 'multipart/mixed',
+                    'Content-Type': 'multipart/mixed;boundary=' + BATCH_BOUNDARY,
                 }
-                return answer;
             })
-            .catch(this.httpErrorHandler);
+            .pipe(
+                map((r) => {
+                    const answer: any[] = [];
+                    const e = this.parseBatchResponse(r, answer);
+                    if (e) {
+                        throw new RestError({ odataErrors: e });
+                        // return this.errorService.errorHandler({ odataErrors: e });
+                    }
+                    return answer;
+                }),
+                catchError(this.httpErrorHandler)
+            );
     }
 
     private buildBatch(changeSets: any[]) {
@@ -278,8 +296,8 @@ export class PipRX extends PipeUtils {
         return batch;
     }
 
-    private parseBatchResponse(response: Response, answer: any[]): any[] {
-        const dd = response.text().split('--changesetresponse');
+    private parseBatchResponse(response: any, answer: any[]): any[] {
+        const dd = response.body.split('--changesetresponse');
         dd.shift();
         dd.pop();
         for (let i = 0; i < dd.length; i++) {
@@ -306,9 +324,9 @@ export class PipRX extends PipeUtils {
     }
     private httpErrorHandler(error) {
         if (error instanceof RestError) {
-            return Observable.throw(error);
+            return observableThrowError(error);
         } else {
-            return Observable.throw(new RestError({ http: error }));
+            return observableThrowError(new RestError({ http: error }));
         }
     }
 }

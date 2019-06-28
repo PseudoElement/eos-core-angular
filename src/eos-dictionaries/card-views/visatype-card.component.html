@@ -8,11 +8,6 @@
         [readonly]="!editMode">
     </eos-dynamic-input>
     <div class="row-wrapper">
-        <eos-dynamic-input [input]="inputs['rec.DELETED']"
-            class="flag"
-            [form]="form"
-            [readonly]="!editMode">
-        </eos-dynamic-input>
         <eos-dynamic-input [input]="inputs['rec.IS_FINAL']"
             class="flag"
             [form]="form"
@@ -21,6 +16,7 @@
         <eos-dynamic-input [input]="inputs['rec.STATUS']"
             class="status"
             [form]="form"
+            [viewOpts]="selOpts"
             [readonly]="!editMode">
         </eos-dynamic-input>
     </div>

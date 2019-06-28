@@ -1,0 +1,27 @@
+import { E_DICT_TYPE, IFormDictionaryDescriptor } from 'eos-dictionaries/interfaces';
+
+export const CALENDAR_DICT: IFormDictionaryDescriptor = {
+    id: 'calendar',
+    apiInstance: 'CALENDAR_CL',
+    title: 'Ведение календаря',
+    visible: true,
+    iconName: 'eos-icon-building-blue',
+    defaultOrder: '',
+    actions: [],
+    // keyField: 'DUE',
+    searchConfig: [],
+    treeFields: [],
+    // editFields: ['PARENT_DUE', 'CLASSIF_NAME', 'CLASSIF_NAME_SEARCH', 'FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS',
+    //     'MAIL_FOR_ALL', 'NOTE', 'OKPO', 'INN', 'ISN_REGION', 'OKONH', 'LAW_ADRESS', 'ISN_ORGANIZ_TYPE', 'SERTIFICAT',
+    //     'ISN_ADDR_CATEGORY', 'CODE', 'OGRN', 'contact', 'bank-recvisit', 'ar-organiz-value', 'sev'],
+    fields: [],
+    keyField: 'ISN_CALENDAR',
+    editFields: [],
+    searchFields: [],
+    fullSearchFields: [],
+    quickViewFields: [],
+    shortQuickViewFields: [],
+    listFields: [],
+    allVisibleFields: [],
+    dictType: E_DICT_TYPE.form,
+};

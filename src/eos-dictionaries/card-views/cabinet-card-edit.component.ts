@@ -5,7 +5,7 @@ import { CABINET_FOLDERS } from 'eos-dictionaries/consts/dictionaries/cabinet.co
 import { DEPARTMENT, PipRX } from 'eos-rest';
 import { IOrderBy } from '../interfaces';
 import { AbstractControl, FormControl } from '@angular/forms';
-import { CONFIRM_CABINET_NON_EMPTY } from 'app/consts/confirms.const';
+import { CONFIRM_CABINET_NON_EMPTY1 } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 interface ICabinetOwner {
@@ -79,8 +79,10 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     /* tslint:enable:no-bitwise */
 
     get possibleOwners(): any[] {
-        return this.cabinetOwners
-            .filter((owner) => !owner.data['ISN_CABINET']);
+        const res = this.cabinetOwners
+        .filter((owner) => !owner.data['ISN_CABINET'] && !owner.data['ISN_ORGANIZ']
+            && owner.data['ISN_HIGH_NODE']);
+        return res;
     }
 
     private scrollStep = 5;
@@ -103,6 +105,13 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
         if (this.data && this.data.rec) {
             this.init(this.data);
         }
+    }
+
+    getCardTitle(): any {
+        if (this.data && this.data.department && this.data.department.CLASSIF_NAME) {
+            return this.data.department.CLASSIF_NAME;
+        }
+        return null;
     }
 
     add(owner: ICabinetOwner) {
@@ -154,11 +163,15 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     remove() {
         this.cabinetOwners.filter((owner) => owner.marked)
             .forEach((owner) => {
+                let canceled = false;
                 this._checkDeletion(owner.data['DUE']).then(result => {
                     if (result === 'DOC_FOLDER_NOT_EMPTY_BY_RESOLUTION' ||
                         result === 'DOC_FOLDER_NOT_EMPTY_BY_REPLY') {
-                        this._confirmSrv.confirm(CONFIRM_CABINET_NON_EMPTY).then(confirmation => {
-                            if (confirmation) {
+                        return this._confirmSrv.confirm2(CONFIRM_CABINET_NON_EMPTY1).then(button => {
+                            if (!button || button.result === 3) {
+                                canceled = true;
+
+                            } else if (button.result === 1) {
                                 if (!this.data['updateTrules']) {
                                     this.data['updateTrules'] = [];
                                 }
@@ -166,11 +179,13 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                             }
                         });
                     }
+                }).then( () => {
+                    if (!canceled) {
+                        this.setValue(this.getOwnerPath(owner.index), null);
+                        owner.data['ISN_CABINET'] = null;
+                        owner.marked = false;
+                    }
                 });
-
-                this.setValue(this.getOwnerPath(owner.index), null);
-                owner.data['ISN_CABINET'] = null;
-                owner.marked = false;
             });
         this.updateOwnersMarks();
         // this.formChanged.emit(this.data);
@@ -273,7 +288,14 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
 
         this.updateAccessMarks();
         this.updateOwnersMarks();
-        this.updateScroller();
+
+        if (this._interval) {
+            window.clearInterval(this._interval);
+        }
+        this._interval = setInterval(() => {
+            this.updateScroller();
+        }, this.scrollInterval);
+
     }
 
     private reorderCabinetOwners() {

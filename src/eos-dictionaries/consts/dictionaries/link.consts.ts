@@ -67,5 +67,7 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
     keyField: 'ISN_LCLASSIF',
     editFields: ['LINK_INDEX', 'CLASSIF_NAME', 'TRANSPARENT', 'LINK_TYPE', 'LINK_DIR', 'ISN_LCLASSIF', 'NOTE',
         'PARE_LINK_Ref', 'ISN_PARE_LINK'],
-    listFields: ['LINK', 'PAIR_LINK', 'TYPE'],
+    listFields: ['LINK', 'PAIR_LINK', 'TYPE', ],
+    quickViewFields: ['LINK', 'PAIR_LINK', 'LINK_INDEX', 'TYPE', 'NOTE'],
+    allVisibleFields: ['LINK_INDEX', 'NOTE'],
 });

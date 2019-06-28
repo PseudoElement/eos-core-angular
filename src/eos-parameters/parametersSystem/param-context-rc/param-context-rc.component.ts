@@ -3,21 +3,24 @@ import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from './../shared/consts/eos-pa
 import { FormGroup, FormControl } from '@angular/forms';
 import { CONTEXT_RC_PARAM } from './../shared/consts/context-rc-consts';
 import { BaseParamComponent } from './../shared/base-param.component';
-import { Component, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit, OnDestroy } from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil, debounceTime } from 'rxjs/operators';
 
 @Component({
     selector: 'eos-param-context-rc',
     templateUrl: 'param-context-rc.component.html'
 })
-export class ParamContextRcComponent extends BaseParamComponent implements OnInit {
+export class ParamContextRcComponent extends BaseParamComponent implements OnInit, OnDestroy {
     formContextChoice: FormGroup;
     formReadonli: boolean;
     hiddenFilesContext = false;
     hiddenInputRadioResolution: boolean;
+    _unsubsCribe: Subject<any> = new Subject();
     inputChoiceFiles = {
-            key: 'contextFile',
-            label: 'Формировать и индексировать файлы контекста'
-        };
+        key: 'contextFile',
+        label: 'Формировать и индексировать файлы контекста'
+    };
     inputcontextResolution = {
         key: 'contextResolution',
         label: 'Резолюции'
@@ -32,17 +35,28 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
             text: 'РК проекта документа'
         }
     ];
-    constructor( injector: Injector ) {
+    constructor(injector: Injector) {
         super(injector, CONTEXT_RC_PARAM);
+        this.descriptorSrv.saveData$
+        .pipe(
+            takeUntil(this._unsubsCribe)
+        )
+        .subscribe(() => {
+            this.submit();
+        });
+    }
+    ngOnDestroy() {
+        this._unsubsCribe.next();
+        this._unsubsCribe.complete();
     }
 
     ngOnInit() {
         this.queryObj = this.getObjQueryInputsField(['CONTEXT_SECTIONS_ENABLED']);
         this.prepInputs = this.getObjectInputFields(this.constParam.fields);
         this.formContextChoice = new FormGroup({
-            contextFile: new FormControl(''),
+            contextFile: new FormControl(true),
             contextRC: new FormControl('rc'),
-            contextResolution: new FormControl('')
+            contextResolution: new FormControl(true)
         });
         this.initContext();
     }
@@ -62,30 +76,27 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
             this.prepareData = this.prepDataContext(data);
             this.inputs = this.getInputs();
             this.form = this.inputCtrlSrv.toFormGroup(this.inputs);
-            this.subscribeChangeForm();
-            this.subscribeChoiceForm();
-            if (data) {
-                this.formContextChoice.controls.contextFile.patchValue(true);
-            } else {
-                this.formContextChoice.controls.contextFile.patchValue(false);
-            }
-        })
-        .catch(err => {
-            if (err.code !== 434) {
-                console.log(err);
-            }
-        });
+                this.subscribeChangeForm();
+                this.subscribeChoiceForm();
+                if (!data) {
+                    this.formContextChoice.controls.contextFile.patchValue(false);
+                }
+            })
+            .catch(err => {
+                if (err.code !== 434) {
+                    console.log(err);
+                }
+            });
     }
     prepDataContext(data) {
-        const prepareData = {rec: {}};
+        const prepareData = { rec: {} };
         if (data) {
             this.prepInputs._list.forEach(key => {
                 if (key === 'RESOLUTION') {
                     const resol: any = data.hasOwnProperty('RESOLUTION_ALL') ? 'RESOLUTION_ALL' : false ||
-                    data.hasOwnProperty('RESOLUTION_FIRST') ? 'RESOLUTION_FIRST' : false;
+                        data.hasOwnProperty('RESOLUTION_FIRST') ? 'RESOLUTION_FIRST' : false;
                     if (resol) {
                         prepareData.rec[key] = resol;
-                        this.formContextChoice.controls.contextResolution.patchValue(true);
                     } else {
                         prepareData.rec[key] = false;
                         this.formContextChoice.controls.contextResolution.patchValue(false);
@@ -165,7 +176,10 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
     subscribeChangeForm() {
         this.subscriptions.push(
             this.form.valueChanges
-                .debounceTime(200)
+                .pipe(
+                    debounceTime(200)
+
+                )
                 .subscribe(newVal => {
                     if (!newVal.hasOwnProperty('rec.RESOLUTION')) {
                         newVal['rec.RESOLUTION'] = this.form.controls['rec.RESOLUTION'].value;
@@ -178,7 +192,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
                     });
                     this.formChanged.emit(changed);
                     this.isChangeForm = changed;
-            })
+                })
         );
         this.subscriptions.push(
             this.form.statusChanges.subscribe(status => {
@@ -229,6 +243,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
                 .subscribe(value => {
                     if (value) {
                         setTimeout(() => {
+                            this.form.controls['rec.RESOLUTION'].patchValue('RESOLUTION_ALL');
                             this.form.controls['rec.RESOLUTION'].enable();
                         }, 0);
                         this.hiddenInputRadioResolution = false;
@@ -236,7 +251,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
                         this.form.controls['rec.RESOLUTION'].patchValue(false);
                         this.hiddenInputRadioResolution = true;
                         setTimeout(() => {
-                            this.form.controls['rec.RESOLUTION'].disable({emitEvent: true});
+                            this.form.controls['rec.RESOLUTION'].disable({ emitEvent: true });
                         }, 0);
                     }
                 })

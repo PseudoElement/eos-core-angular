@@ -17,5 +17,5 @@ export const ADDR_CATEGORY_DICT: IDictionaryDescriptor = Object.assign({}, LINEA
     listFields: ['CLASSIF_NAME'],
     allVisibleFields: ['NOTE'],
     quickViewFields: ['CLASSIF_NAME', 'NOTE'],
-    searchFields: ['CLASSIF_NAME'],
+    searchFields: ['CLASSIF_NAME', 'NOTE'],
 });

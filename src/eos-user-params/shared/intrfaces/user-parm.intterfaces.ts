@@ -68,6 +68,7 @@ export interface INodeDocsTreeCfg {
     allowed?: boolean;
     data?: any;
     viewAllowed?: boolean;
+    flagCheckNode?: any;
 }
 
 export interface NpUserLinks {
@@ -79,4 +80,22 @@ export interface NpUserLinks {
 export interface IUserSetChanges {
     isChange: boolean;
     disableSave?: boolean;
+}
+
+
+export interface SertsBase {
+    sing_mail: string;
+    enc_mail: string;
+    sing_mail_origin: string;
+    enc_mail_origin: string;
+    id_sing: string;
+    id_enc: string;
+    id_sing_origin: string;
+    id_enc_origin: string;
+}
+
+export interface IGetUserCfg {
+    expand?: string;
+    isn_cl?: number;
+    shortSys?: boolean;
 }

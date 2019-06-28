@@ -41,5 +41,5 @@ export const VISA_TYPE_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
         }]),
     quickViewFields: ['NOTE', 'IS_FINAL', 'STATUS'],  // CLASSIF_NAME is in shortQuickViewFields
     allVisibleFields: ['NOTE', 'IS_FINAL', 'STATUS'],
-    editFields: ['CLASSIF_NAME', 'NOTE', 'IS_FINAL', 'STATUS', 'DELETED']
+    editFields: ['CLASSIF_NAME', 'NOTE', 'IS_FINAL', 'STATUS']
 });

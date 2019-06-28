@@ -1,5 +1,7 @@
-import { Component, Input, OnInit, HostListener } from '@angular/core';
+import { Component, Input, OnInit, HostListener, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
+import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
+import { Subscription } from 'rxjs';
 // import {EosDictService} from '../services/eos-dict.service';
 
 const BIG_PANEL = 340,
@@ -26,16 +28,18 @@ export class CustomTreeNode {
     selector: 'eos-custom-tree',
     templateUrl: './custom-tree.component.html'
 })
-export class CustomTreeComponent implements OnInit {
+export class CustomTreeComponent implements OnInit, OnDestroy {
     @Input() data: CustomTreeNode[];
     @Input() showDeleted: boolean;
+    @Output() onSetActiveNode: EventEmitter<CustomTreeNode> = new EventEmitter<CustomTreeNode>();
 
     private w: number;
+    private _subscription: Subscription;
     // private data: CustomTreeNode[];
 
     constructor(
         private _router: Router,
-        // private _dictSrv: EosDictService,
+        private _dictSrv: EosDictService,
     ) {
         // this.data = _dictSrv.currentDictionary.descriptor.getCustomTreeData();
         // this._dictSrv = _dictSrv;
@@ -44,6 +48,23 @@ export class CustomTreeComponent implements OnInit {
 
     ngOnInit() {
         this.onResize();
+        this._subscription = this._dictSrv.openedNode$
+            .subscribe((n) => {
+                if (n) {
+                    this.setActiveNode(this.data, n.data.rec.DUE);
+                }
+            });
+
+        const defaultRoot = this._dictSrv.currentDictionary.descriptor.defaultTreePath(this.data);
+        if (defaultRoot) {
+            setTimeout( () => {
+                this._router.navigate(defaultRoot);
+            }, 100);
+        }
+    }
+
+    ngOnDestroy() {
+        this._subscription.unsubscribe();
     }
 
     @HostListener('window:resize')
@@ -53,17 +74,7 @@ export class CustomTreeComponent implements OnInit {
 
     onExpand(evt: Event, node: CustomTreeNode/*, isDeleted: boolean*/) {
         evt.stopPropagation();
-        if (node.isExpanded) {
-            node.isExpanded = false;
-        } else {
-            // node.updating = true;
-            node.isExpanded = true;
-        //     this._dictSrv.expandNode(node.id)
-        //         .then((_node) => {
-        //             _node.isExpanded = true;
-        //             node.updating = false;
-        //         });
-        }
+        node.isExpanded = !node.isExpanded;
     }
 
     onSelect(evt: Event, node: CustomTreeNode) {
@@ -79,5 +90,73 @@ export class CustomTreeComponent implements OnInit {
 
     getNodeWidth(level: number): number {
         return this.w - (PADDING_W * level);
+    }
+
+
+    setActiveNode(treeData: CustomTreeNode[], id: any) {
+        if (id) {
+            const t = this.findTreeParent(treeData, id);
+            if (t) {
+                this.expandToSelected(t, treeData);
+                this.setActiveRecursive(treeData, false);
+                t.isActive = true;
+                this.onSetActiveNode.emit(t);
+                this.setScrollIntoView(t.id);
+            }
+        }
+    }
+
+    setScrollIntoView(id: string): void {
+        const elSelect = document.getElementById(id);
+        if (elSelect) {
+            const treeViewElement = document.getElementById('leftTreeView');
+            if (treeViewElement) {
+                treeViewElement.scrollTop = elSelect.offsetTop - treeViewElement.clientHeight / 2 + elSelect.offsetHeight / 2;
+            }
+        }
+    }
+
+    setActiveRecursive(treeData: CustomTreeNode[], active: boolean) {
+        for (let i = 0; i < treeData.length; i++) {
+            const element = treeData[i];
+            element.isActive = active;
+            if (treeData[i].children && treeData[i].children.length) {
+                this.setActiveRecursive(treeData[i].children, active);
+            }
+        }
+    }
+
+    expandToSelected(node2expand: CustomTreeNode, nodes: CustomTreeNode[]) {
+        let r = node2expand;
+        if (r) {
+            while (r) {
+                if (r.expandable) {
+                    r.isExpanded = true;
+                }
+                r = this.findTreeParent(nodes, r.parent);
+                if (r) {
+                    r.isExpanded = true;
+                }
+            }
+        } else {
+            nodes.find((f) => f.id === '0.').isExpanded = true;
+        }
+        return r;
+    }
+
+    findTreeParent(treeData: CustomTreeNode[], id: any) {
+        let i: number;
+        let res: CustomTreeNode;
+        for (i = 0; i < treeData.length; i++) {
+            if (treeData[i].id === id) {
+                return treeData[i];
+            } else if (treeData[i].children && treeData[i].children.length) {
+                res = this.findTreeParent(treeData[i].children, id);
+                if (res) {
+                    return res;
+                }
+            }
+        }
+        return null;
     }
 }
