@@ -18,6 +18,13 @@
                                     Записей:
                                 <span class="counter-sum">{{config?.itemsQty}}</span>
                             </span>
+                            <button *ngIf="clearResult" class="btn btn-primary-light btn-s"
+                            tooltip="Очистить результаты"
+                            placement="bottom"
+                            container="body"
+                            containerClass="tooltip-info"
+                            (click)="resetSearch()"><span class="eos-icon eos-icon-close-blue small"></span>
+                            </button> 
                         </div>
                     </div>
                 </div>
@@ -110,14 +117,14 @@
             <div *ngIf="pages.length === 0">
                 <button class="pag-btn btn-default btn-primary-full selected-text">1</button>
             </div>
-            <button class="pag-btn btn-default next"  (click)="showPage(config.current + 1)" [disabled]="config?.current*config?.length >= config?.itemsQty">
+            <button class="pag-btn btn-default next"  (click)="showPage(config.current + 1)" [disabled]="config?.current*config?.length >= config?.itemsQty || clearResult" >
                 <span class="icon-btn eos-icon eos-icon-arrow-v-blue-left small to-rigth"></span>
             </button>
         </div>
 
         <button class="btn show-more selected-text" 
             (click)="showMore()"
-            [disabled]="config?.current*config?.length >= config?.itemsQty" 
+            [disabled]="config?.current*config?.length >= config?.itemsQty || clearResult" 
             >Показать еще</button>
              
         <div dropdown

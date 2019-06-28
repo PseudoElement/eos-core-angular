@@ -238,7 +238,7 @@ const routes: Routes = [{
 },
 {
     path: 'report',
-    data: { title: 'Отчёт', showInBreadcrumb: true },
+    data: { title: 'Протокол', showInBreadcrumb: true },
     canActivate: [AuthorizedGuard],
     component: EosReportComponent,
     children: [

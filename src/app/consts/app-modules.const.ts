@@ -12,7 +12,7 @@ export const APP_MODULES = [
         url: '/parameters',
     },
     {
-        title: 'Отчёт',
+        title: 'Протокол',
         url: '/report',
     },
 

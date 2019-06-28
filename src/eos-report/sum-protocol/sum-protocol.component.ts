@@ -28,6 +28,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
   isnRefFile: number;
   lastUser;
   posts: number;
+  clearResult: boolean = false;
   public config: IPaginationConfig;
   readonly pageLengths = PAGES;
   pageCount = 1;
@@ -151,7 +152,6 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       posts = posts.split('').reverse().join('');
       this.posts = parseInt(posts, 10);
       this.config.itemsQty = parseInt(posts, 10);
-      this.posts = this.config.itemsQty;
     }
   }
 
@@ -397,6 +397,7 @@ export class EosReportSummaryProtocolComponent implements OnInit {
         this.config.start = 1;
         this._dictSrv.changePagination(this.config);
         this._update(this.frontData.length);
+        this.clearResult = true;
       })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
@@ -495,6 +496,10 @@ export class EosReportSummaryProtocolComponent implements OnInit {
       this.GetTopEvents(this.config.length, this.config.length * this.config.current - this.config.length);
       this.ShowData();
     }
+  }
+  resetSearch() {
+    this.GetTopEvents(this.config.length);
+    this.clearResult = false;
   }
 
   public setPageLength(length: number): void {
