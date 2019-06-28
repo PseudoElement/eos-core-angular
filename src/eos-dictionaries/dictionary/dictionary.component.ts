@@ -161,6 +161,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 if (this.dictionaryId) {
                     this._dictSrv.openDictionary(this.dictionaryId)
                         .then(() => {
+                            this._dictSrv.unmarkAll();
                             if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
                                 this.dictionary.root.children = null;
                                 const n: CustomTreeNode = this._dictSrv.currentDictionary.descriptor.setRootNode(this._nodeId);

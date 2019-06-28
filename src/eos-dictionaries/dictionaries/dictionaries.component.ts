@@ -42,7 +42,7 @@ export class DictionariesComponent {
     routeForDict (dictId: string) {
 
         const d = this._dictSrv.getDescr(dictId);
-        if (d.dictType === E_DICT_TYPE.form) {
+        if (d && d.dictType === E_DICT_TYPE.form) {
             return ['/form', dictId];
         } else {
             return ['/spravochniki', dictId];

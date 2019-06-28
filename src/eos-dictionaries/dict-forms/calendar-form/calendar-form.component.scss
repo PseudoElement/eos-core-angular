@@ -14,6 +14,9 @@ eos-datepicker-inline {
 }
 
 .eos-calendar-form {
+    .controls-group {
+        margin-top: 40px;
+    }
     .inline {
         padding: 20px;
         display: inline-block;
@@ -24,11 +27,11 @@ eos-datepicker-inline {
         min-width: 100px;
     }
 
-    .date-field-btn{
+    .date-field-btn {
         width: 50px;
         display: inline-block;
         vertical-align: top;
-        margin-top: 40px;
+        margin-top: 3px;
     }
     .date-field-input {
         width: 120px;
