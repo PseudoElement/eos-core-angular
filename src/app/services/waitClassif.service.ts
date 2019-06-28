@@ -11,6 +11,7 @@ const LIST_OLD_PAGES: string[] = [
 const OLD_VIEW_URL: string = 'Pages/Classif/ChooseClassif.aspx?';
 const NEW_VIEW_URL: string = 'Eos.Delo.JsControls/Classif/ChooseClassif.aspx?';
 const USER_LISTS: string = '../Pages/User/USER_LISTS.aspx';
+const TECH_LISTS: string = '../Pages/Common/TECH_LISTS.aspx';
 
 @Injectable()
 export class WaitClassifService {
@@ -26,6 +27,8 @@ export class WaitClassifService {
             if (params.user_id !== undefined && params.user_id !== null) {
                 url += `?user_id=${params.user_id}`;
             }
+        } else if (params.classif === 'TECH_LISTS') {
+            url = TECH_LISTS;
         } else {
             url = this._prepareUrl(params, flag);
         }
