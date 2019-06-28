@@ -325,7 +325,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     listFields: [ICONS_CONTAINER, /*'CODE',*/ 'nametitle', /*'DUTY',*/    ],
     fullSearchFields: {
         person: ['CODE', 'PHONE', 'PHONE_LOCAL', 'E_MAIL', 'DUTY', 'SURNAME', 'NOTE', 'printInfo'],
-        department: ['CODE', 'nametitle', 'indexDep', 'NOTE', 'fullTitle'],
+        department: ['CODE', 'nametitleDep', 'indexDep', 'NOTE', 'fullTitle'],
         cabinet: ['titleRoom', 'fullCabinet']
     },
     quickViewFields: ['photo', 'fullTitle', 'DUTY', 'PHONE', 'PHONE_LOCAL', 'E_MAIL', 'IS_NODE', 'POST_H', 'SURNAME',

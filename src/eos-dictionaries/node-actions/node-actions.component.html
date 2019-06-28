@@ -108,11 +108,11 @@
                         <div class="menu-icon">
                             <span [ngClass]="item.enabled ? item.iconClass : item.disabledIconClass"></span>
                         </div>
-                        <div class="title">
-                            <span class="m-font"
-                                [ngClass]="{'disabled': !item.enabled}">{{item.title}}</span>
+                        <div class="title" [ngClass]="{'disabled': !item.enabled}">
+                            <span class="m-font">{{item.title}}</span>
                         </div>
-                        <ng-container *ngIf="isTree && item.type === ADD_ACTION">
+
+                        <ng-container *ngIf="isTree && item.type === ADD_ACTION && item.enabled">
                             <ul *dropdownMenu
                                 class="dropdown-menu second"
                                 role="menu">

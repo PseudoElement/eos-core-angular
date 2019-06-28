@@ -368,7 +368,7 @@
                 <div class="second-col">
                     <div class="form-group unimportant-text">
                         <label class="s-font"
-                            for="title">{{fieldsDescription.rec['nametitle']?.title}}</label>
+                            for="title">{{fieldsDescription.rec['nametitleDep']?.title}}</label>
                         <div class="search-fld">
                             <input id="title"
                                 name="title"
@@ -376,7 +376,7 @@
                                 class="form-control light"
                                 [(ngModel)]="searchModel['CLASSIF_NAME']"
                                 placeholder="..."
-                                maxlength="{{fieldsDescription.rec['nametitle']?.length}}">
+                                maxlength="{{fieldsDescription.rec['nametitleDep']?.length}}">
                             <a class="clear-btn"
                                 [ngClass]="{'hide': !searchModel['CLASSIF_NAME']}"
                                 (click)="searchModel['CLASSIF_NAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
@@ -427,7 +427,7 @@
                 type="submit"
                 (click)="fullSearch()"
                 class="hidden-submit">Найти</button>
-                
+
                 <div class="form-group unimportant-text">
                     <label class="s-font"
                         for="docName">{{fieldsDescription.rec['CLASSIF_NAME']?.title}}</label>

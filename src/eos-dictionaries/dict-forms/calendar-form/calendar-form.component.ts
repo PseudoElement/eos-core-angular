@@ -24,9 +24,10 @@ const TEST_INPUTS = <IBaseInput[]>[
     {
         controlType: 'date',
         key: 'dateString',
-        label: 'string',
+        label: '',
         required: true,
         pattern: DATE_INPUT_PATERN,
+        hideLabel: true,
     }, {
         controlType: 'select',
         key: 'type',

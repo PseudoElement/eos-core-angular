@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 /*     ----Components----     */
 import { EosReportComponent } from './eos-report.component';
@@ -16,6 +17,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { FormHelperService } from 'eos-user-params/shared/services/form-helper.services';
 import { EosCommonModule } from 'eos-common/eos-common.module';
+import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
 /*     ----Services----     */
 
 @NgModule({
@@ -34,11 +36,13 @@ import { EosCommonModule } from 'eos-common/eos-common.module';
         TooltipModule.forRoot(),
         PopoverModule,
         EosCommonModule,
+        BsDropdownModule,
         BsDatepickerModule.forRoot()
     ],
     providers: [
         InputParamControlService,
-        FormHelperService
+        FormHelperService,
+        EosDictService
     ]
 })
 

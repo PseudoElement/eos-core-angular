@@ -76,7 +76,7 @@ const childrenDictionariesComponent = [{
                     path: ':tabNum',
                     component: CardComponent,
                     canDeactivate: [CanDeactivateGuard],
-            }],
+                }],
         }, {
             path: 'view',
             data: {
@@ -96,7 +96,7 @@ const childrenDictionariesComponent = [{
                 {
                     path: ':tabNum',
                     component: CardComponent,
-            }],
+                }],
         }],
     }, {
         path: '',
@@ -238,26 +238,39 @@ const routes: Routes = [{
 },
 {
     path: 'report',
-    data: { title: 'Отчёт', showInBreadcrumb: true },
+    data: { title: 'Протокол', showInBreadcrumb: true },
     canActivate: [AuthorizedGuard],
-    component: EosReportComponent
-},
-{
-    path: 'report/users-info',
-    canActivate: [AuthorizedGuard],
-    component: EosReportUsersInfoComponent
-},
-{
-    path: 'report/users-stats',
-    canActivate: [AuthorizedGuard],
-    component: EosReportUsersStatsComponent,
-    data: {  title: 'Статистика по пользователям', showBreadcrumb: true }
-},
-{
-    path: 'report/sum-protocol',
-    canActivate: [AuthorizedGuard],
-    component: EosReportSummaryProtocolComponent,
-    data: {  title: 'Сводный протокол', showBreadcrumb: true }
+    component: EosReportComponent,
+    children: [
+        {
+            path: 'users-info',
+            component: EosReportUsersInfoComponent,
+            data: {
+                title: 'Информация о пользователях',
+                showBreadcrumb: true,
+                showInBreadcrumb: true,
+            }
+        },
+        {
+            path: 'users-stats',
+            component: EosReportUsersStatsComponent,
+            data: {
+                title: 'Статистика по пользователям',
+                showBreadcrumb: true,
+                showInBreadcrumb: true,
+            }
+        },
+        {
+            path: 'sum-protocol',
+            component: EosReportSummaryProtocolComponent,
+            data: {
+                title: 'Сводный протокол',
+                showBreadcrumb: true,
+                showInBreadcrumb: true,
+            }
+        },
+
+    ]
 },
 {
     path: '',

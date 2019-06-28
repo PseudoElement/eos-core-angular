@@ -141,7 +141,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             });
     }
 
-    ngAfterContentChecked () {
+    ngAfterContentChecked() {
         if (this._storage.getItem('main_scroll')) {
             this.listContent.nativeElement.scrollTop = this._storage.getItem('main_scroll');
         }
@@ -215,7 +215,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                     * this._pagSrv.paginationConfig.length);
                 if (this.listUsers && this.listUsers.length) {
                     this.selectedNode(this.findSelectedSaveUsers()[0] ? this.findSelectedSaveUsers()[0] : this.listUsers[0]);
-                //    this._storage.removeItem('selected_user_save');
+                    //    this._storage.removeItem('selected_user_save');
                 } else {
                     this.selectedNode(null);
                 }
@@ -265,7 +265,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 this.resetFlags();
                 this.selectedNodeSetFlags(user);
                 if (flag) {
-                     flag = false;
+                    flag = false;
                 }
                 this.rtUserService.changeSelectedUser(user);
             } else {
@@ -278,7 +278,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                     this.rtUserService.changeSelectedUser(searchSelected[0]);
                     if (flag) {
                         flag = false;
-                   }
+                    }
                 } else {
                     flagUserSelected = false;
                     if (this.selectedUser && this.selectedUser.hasOwnProperty('isSelected')) {
@@ -287,7 +287,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                     this.rtUserService.changeSelectedUser(null);
                     if (flag) {
                         flag = true;
-                   }
+                    }
                 }
             }
         }
@@ -641,6 +641,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     }
     savePositionSelectUser($event) {
         this._storage.setItem('main_scroll', $event.target.scrollTop);
+    }
+    getClassTooltip(lust: boolean): string {
+        if (lust === true) {
+            return `tooltip-info tooltip-pos-l`;
+        } else {
+            return `tooltip-info`;
+        }
     }
 
     private cathError(e) {
