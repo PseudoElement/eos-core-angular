@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy} from '@angular/core';
+import {Component, Input, NgZone, OnDestroy} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {InputControlService} from '../../eos-common/services/input-control.service';
 import {DG_FILE_CONSTRAINT, DOCGROUP_CL, PipRX, PRJ_DEFAULT_VALUE} from '../../eos-rest';
@@ -19,6 +19,7 @@ import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
 import {RK_SELECTED_LIST_HAS_DELETED, RK_SELECTED_LIST_IS_EMPTY} from '../../app/consts/confirms.const';
 import {IConfirmWindow2} from '../../eos-common/confirm-window/confirm-window2.component';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
+import {WaitClassifService} from '../../app/services/waitClassif.service';
 
 const PRJ_DEFAULT_NAME = 'PRJ_DEFAULT_VALUE_List';
 const FILE_CONSTRAINT_NAME = 'DG_FILE_CONSTRAINT_List';
@@ -328,6 +329,7 @@ class PrjDefaultFactory {
 
     fillDictionariesLists(apiSrv: PipRX): Promise<any[]> {
         const reads = [];
+        this.options = new Map<string, any[]>();
         PrjDefaultFactory.dictionaries.forEach((dict) => {
             reads.push(new Promise<any>((resolve) => apiSrv.read(dict.req)
                 .then(records => {
@@ -409,6 +411,8 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         private _msgSrv: EosMessageService,
         private _inputCtrlSrv: InputControlService,
         private _apiSrv: PipRX,
+        private _zone: NgZone,
+        private _waitClassifSrv: WaitClassifService,
         private _confirmSrv: ConfirmWindowService) {
     }
 
@@ -595,6 +599,17 @@ export class PrjDefaultValuesComponent implements OnDestroy {
             });
     }
 
+    public userListsEdit() {
+        this._waitClassifSrv.openClassif({classif: 'TECH_LISTS'})
+            .then()
+            .catch(err => {
+                console.log('window closed');
+                this._zone.run(() => {
+                    this._rereadUserLists();
+                });
+            });
+    }
+
     private _preSaveCheck(): Promise<any> {
         let confPromise = Promise.resolve(false);
         // проверить списки на предмет наличия логически удаленных записей.
@@ -756,5 +771,15 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         });
     }
 
-    // TODO: после подключения кнопки 'Ведение списков' сделать обновление options
+    private _rereadUserLists() {
+        this.prjDefaults.fillDictionariesLists(this._apiSrv)
+            .then(() => {
+                this.prjDefaults.items.forEach((prjDefault) => {
+                    if (prjDefault.type === E_FIELD_TYPE.select) {
+                        const key = PrjDefaultValuesComponent._getFieldKey(prjDefault.id, prjDefault.tableName);
+                        this.inputs[key].options = this.prjDefaults.options[prjDefault.dictId];
+                    }
+                });
+            });
+    }
 }
