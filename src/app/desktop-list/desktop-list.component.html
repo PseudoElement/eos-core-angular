@@ -10,13 +10,7 @@
     role="menuitem"
     class="menuitem dropdown-item"
     [ngClass]="{'highlighted': selectedMarker && desk.name === selectedDesk.name, 'withMarker': selectedMarker}"
-    tooltip="{{desk.name}}"
-    #pop="bs-tooltip"
-    placement="bottom"
-    containerClass="tooltip-info"
-    container="body"
-    [isDisabled]="desk.name.length <= 30"
-    (click)="pop.hide(); selectDesk(desk, $event);">
+    (click)="selectDesk(desk, $event);">
     <ng-container *ngIf="!desk.edited; else editItemTpl">
         <div class="inline-flex">
             <div class="desktop-menu-icon">
