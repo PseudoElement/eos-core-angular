@@ -6,7 +6,7 @@
         </div>
     </div>
 </li>
-<li *ngFor="let desk of deskList; let i = index"
+<li *ngFor="let desk of deskList"
     role="menuitem"
     class="menuitem dropdown-item"
     [ngClass]="{'highlighted': selectedMarker && desk.name === selectedDesk.name, 'withMarker': selectedMarker}"
@@ -15,31 +15,34 @@
     placement="bottom"
     containerClass="tooltip-info"
     container="body"
+    [isDisabled]="desk.name.length <= 30"
     (click)="pop.hide(); selectDesk(desk, $event);">
     <ng-container *ngIf="!desk.edited; else editItemTpl">
-        <div class="item-title m-font">{{desk.name}}
-        </div>
-        <div class="menu-icon">
-            <span *ngIf="desk.name === selectedDesk.name"
-                class="eos-icon eos-icon-checkbox-blue small"></span>
-        </div>
-        <div class="item-actions"
-            *ngIf="desk.id !== 'system'">
-            <div class="action-icon"
-                (click)="openEditForm($event, desk)"
-                tooltip="Редактировать"
-                placement="bottom"
-                container="body"
-                containerClass="tooltip-info">
-                <span class="eos-icon eos-icon-edit-blue x-small"></span>
+        <div class="inline-flex">
+            <div class="desktop-menu-icon">
+                <span *ngIf="desk.name === selectedDesk.name"
+                      class="eos-icon eos-icon-checkbox-blue small"></span>
+                <span *ngIf="desk.name !== selectedDesk.name"
+                      class="eos-icon small"></span>
             </div>
-            <div class="action-icon"
-                (click)="removeDesk(desk,$event)"
-                tooltip="Удалить"
-                placement="bottom"
-                container="body"
-                containerClass="tooltip-info">
-                <span class="eos-icon eos-icon-close-blue x-small"></span>
+            <span class="item-title m-font">{{desk.name}}</span>
+            <div *ngIf="desk.id !== 'system'" class="item-actions">
+                <div class="action-icon"
+                    (click)="openEditForm($event, desk)"
+                    tooltip="Редактировать"
+                    placement="top"
+                    container="body"
+                    containerClass="tooltip-info">
+                    <span class="eos-icon eos-icon-edit-blue x-small"></span>
+                </div>
+                <div class="action-icon"
+                    (click)="removeDesk(desk,$event)"
+                    tooltip="Удалить"
+                    placement="top"
+                    container="body"
+                    containerClass="tooltip-info">
+                    <span class="eos-icon eos-icon-close-blue x-small"></span>
+                </div>
             </div>
         </div>
     </ng-container>
@@ -47,8 +50,12 @@
 <ng-container *ngIf="deskList.length < 6">
     <li class="menuitem dropdown-item"
         (click)="openCreateForm($event)">
-        <span class="item-title m-font"
-            *ngIf="!creating; else editItemTpl">Создать рабочий стол</span>
+        <div class="inline-flex">
+            <div *ngIf="!creating" class="desktop-menu-icon">
+                <span class="eos-icon eos-icon-plus-blue small"></span>
+            </div>
+            <span *ngIf="!creating; else editItemTpl" class="item-title m-font">Создать рабочий стол</span>
+        </div>
     </li>
 </ng-container>
 <ng-template #editItemTpl>
@@ -74,14 +81,14 @@
                     (click)="saveDesk($event)"
                     type="button"
                     tooltip="Сохранить"
-                    placement="bottom"
+                    placement="top"
                     containerClass="tooltip-info"
                     [disabled]="!editForm.valid"><span class="eos-icon eos-icon-checkbox-black x-small"></span></button>
                 <button class="btn btn-default"
                     (click)="cancelEdit($event)"
                     type="button"
                     tooltip="Отменить"
-                    placement="bottom"
+                    placement="top"
                     containerClass="tooltip-info"><span class="eos-icon eos-icon-close-black x-small"></span></button>
             </div>
         </div>
