@@ -27,7 +27,7 @@
             </div>
 
             <!-- checkbox and label -->
-            <label *ngIf="node.isviewAllowed" class="checkbox tree-checkbox" (click)="clickLable($event, node)">
+            <label *ngIf="node.isviewAllowed" class="checkbox tree-checkbox" [ngClass]="node.classChecBox" (click)="clickLable($event, node)">
                 <span style="width:60px; display:inline-block;" *ngIf = "node.flagCheckNode">{{node.isAllowed ? '(С вл.)' : '(Без вл.)'}}</span>
                 <input type="checkbox"
                     hide

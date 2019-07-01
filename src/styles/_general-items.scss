@@ -89,6 +89,13 @@
         }
     }
 }
+.redUnchecked {
+    input[type="checkbox"] {
+        &+span {
+            background-image: url("../assets/icons/A-Blue.svg")!important;
+        }
+    }
+}
 
 .radio-inline,
 .radio {

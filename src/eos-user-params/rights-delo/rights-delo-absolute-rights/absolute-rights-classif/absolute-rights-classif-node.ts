@@ -123,7 +123,7 @@ export class RightClassifNode {
                     FUNC_NUM: this.key,
                     CLASSIF_ID: E_CLASSIF_ID[(this.key.toString())],
                     DUE: entity['DUE'],
-                    ALLOWED: 1,
+                    ALLOWED: this.getAllowedParent() ? 1 : 0,
                 }, 'USER_TECH');
                 const d = {
                     userTech: newTechRight,
@@ -135,7 +135,7 @@ export class RightClassifNode {
                     allowed: !!newTechRight['ALLOWED'],
                     data: d,
                 };
-                newList.push(new NodeDocsTree(cfg));
+                newList.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true));
 
                 this._parentNode.pushChange({
                     method: 'POST',
@@ -153,6 +153,24 @@ export class RightClassifNode {
         .catch(() => {
             this.isShell = false;
         });
+    }
+    getAllowedParent() {
+        if (this.listContent.length) {
+            return this.excludeNode(this.type);
+        }
+        return true;
+    }
+    excludeNode(nameNode: number) {
+        const exist = [2, 3, 4].some(value => {
+            return value === nameNode;
+        });
+        if (exist) {
+            return this.listContent[0].isAllowed ? false : true;
+        } else {
+            return true;
+        }
+
+
     }
     DeleteInstance() {
         if (this.curentSelectedNode) {
@@ -208,7 +226,7 @@ export class RightClassifNode {
                     allowed: uT['ALLOWED'],
                     data: d,
                 };
-                listContent.push(new NodeDocsTree(cfg));
+                listContent.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true));
             });
             this.isLoading = false;
         });
