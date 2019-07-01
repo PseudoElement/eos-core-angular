@@ -196,7 +196,7 @@ export class AdvCardRKDataCtrl {
                     }
 
                 }
-                console.log ('promise done');
+                // console.log ('promise done');
                 callback ({ path: el.key, options: opts_ptr, el: el });
                 el.options = opts_ptr;
 

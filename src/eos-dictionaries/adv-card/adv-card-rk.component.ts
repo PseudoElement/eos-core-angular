@@ -147,18 +147,18 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
      public userListsEdit() {
 
-        this._waitClassifSrv.openClassif({classif: 'TECH_LISTS'/*, user_id: -99 */})
+        this._waitClassifSrv.openClassif({classif: 'TECH_LISTS'})
         .then(result => {
-            console.log('result: ', result);
-            this.dataController.zone.run(() => {
-                console.log('zone');
-                this.rereadUserLists();
-            });
+            // console.log('result: ', result);
+            // this.dataController.zone.run(() => {
+            //     console.log('zone');
+            //     this.rereadUserLists();
+            // });
         })
         .catch(err => {
             console.log('window closed');
             this.dataController.zone.run(() => {
-                console.log('zone');
+                // console.log('zone');
                 this.rereadUserLists();
             });
         });
@@ -177,7 +177,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     rereadUserLists() {
         this.dataController.markCacheForDirty('USER_LISTS');
         this.dataController.updateDictsOptions('USER_LISTS', null, (event) => {
-            console.log(event);
+            // console.log(event);
         });
 
     }

@@ -20,6 +20,7 @@ export class WaitClassifService {
             return 'classif';
         };
     }
+
     openClassif(params: IOpenClassifParams, flag?: boolean): Promise<String> {
         let url: string = '';
         if (params.classif === 'USER_LISTS') {
@@ -53,6 +54,7 @@ export class WaitClassifService {
             }, 500);
         });
     }
+
     private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
         let url = '../';
         if (flag) {
