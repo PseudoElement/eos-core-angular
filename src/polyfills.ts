@@ -72,3 +72,24 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
  */
 // import 'intl/locale-data/jsonp/en';
 (window as any)['global'] = window;
+
+if (!Element.prototype.matches) {
+  Element.prototype.matches = (<any>Element.prototype).msMatchesSelector ||
+      Element.prototype.webkitMatchesSelector;
+}
+
+(function() {
+    if (!Element.prototype.closest) {
+      Element.prototype.closest = function(css) {
+        let node = this;
+        while (node) {
+          if (node.matches(css)) {
+              return node;
+            } else {
+                node = node.parentElement;
+            }
+        }
+        return null;
+      };
+    }
+  })();

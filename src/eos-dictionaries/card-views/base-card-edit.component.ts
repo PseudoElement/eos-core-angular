@@ -6,6 +6,18 @@ import { Subscription } from 'rxjs';
 import { NOT_EMPTY_STRING } from '../consts/input-validation';
 import { IDynamicInputOptions } from 'eos-common/dynamic-form-input/dynamic-input.component';
 
+export class TabOptions {
+    id: string;
+    name: string;
+    isValid: boolean;
+}
+
+enum TabStatus {
+    TabValid,
+    TabInvalid,
+    TabEmpty,
+}
+
 export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
     @Input() form: FormGroup;
     @Input() inputs: any;
@@ -19,6 +31,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
     nodeId: string;
     currTab = 0;
     prevValues: any[];
+    tabOptions: Array<TabOptions> = [];
 
     selOpts: IDynamicInputOptions = {
         defaultValue: {
@@ -110,6 +123,63 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
         } else {
             return [];
         }
+    }
+
+    updateValidTabs() {
+        for (let i = 0;  i < this.tabOptions.length; i++) {
+            const tabOption =  this.tabOptions[i];
+            const tabContainsInvalidField = this.getStatusTabByFields(tabOption.id);
+            switch (tabContainsInvalidField) {
+                case TabStatus.TabInvalid: {
+                    tabOption.isValid = false;
+                    break;
+                }
+                case TabStatus.TabValid: {
+                    tabOption.isValid = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    getStatusTabByFields(tabId: string): TabStatus {
+        const invalidControls = this.getInvalidControl();
+        for (let i = 0; i < invalidControls.length; i++) {
+            const invalidControl = invalidControls[i];
+            const invalidElement = document.getElementById(invalidControl);
+            if (!invalidElement) {
+                return TabStatus.TabEmpty;
+            }
+            const tab = invalidElement.closest('.tab');
+            if (!tab) {
+                return TabStatus.TabEmpty;
+            }
+            if (tabId === tab.id) {
+                return TabStatus.TabInvalid;
+            }
+        }
+        return TabStatus.TabValid;
+    }
+
+    tabsToArray(tabs: string[]) {
+        for (let i = 0; i < tabs.length; i++) {
+            this.tabOptions.push({
+                id: 'tab' + i,
+                name: tabs[i],
+                isValid: true
+            });
+        }
+    }
+
+    getInvalidControl(): string[] {
+        const invalid = [];
+        const controls = this.form.controls;
+        for (const name in controls) {
+            if (controls[name].invalid) {
+                invalid.push(name);
+            }
+        }
+        return invalid;
     }
 
     ngOnDestroy() {

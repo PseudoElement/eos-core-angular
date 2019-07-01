@@ -199,7 +199,24 @@ label {
             color: $black;
         }
     }
+    .tab-item-invalid {
+        display: inline-block;
+        border-bottom: 6px solid transparent;
+        padding: 12px 0 5px;
+        position: relative;
+        cursor: pointer;
+        height: $item-height;
+        margin-right: 40px;
+        color: $red;
+        &.active-invalid {
+            border-bottom-color: $red;
+            color: $black;
+        }
+    }
     .tab-item:last-child {
+        margin: 0;
+    }
+    .tab-item-invalid:last-child {
         margin: 0;
     }
 }

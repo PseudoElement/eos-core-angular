@@ -329,6 +329,11 @@
     color: $button-color-main-theme !important;
 }
 
+.active-invalid {
+    border-color: $button-color-main-theme;
+    color: $red !important;
+}
+
 .transparent-border {
     border-color: transparent;
 }

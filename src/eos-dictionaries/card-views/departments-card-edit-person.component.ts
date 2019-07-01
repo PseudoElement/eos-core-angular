@@ -37,10 +37,14 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         }
 
         this.prevValues = this.makePrevValues(this.data);
+        this.tabsToArray(this.fieldGroups);
 
         if (this.form) {
             this.unsubscribe();
-            this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this.updateForm(formChanges));
+            this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => {
+                this.updateForm(formChanges);
+                this.updateValidTabs();
+            });
         }
     }
 
