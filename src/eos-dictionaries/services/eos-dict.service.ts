@@ -810,10 +810,14 @@ export class EosDictService {
         for (const key in data) {
             if (key !== 'srchMode' && data.hasOwnProperty(key)) {
                 const list = data[key];
-                for (const k in list) {
-                    if (list.hasOwnProperty(k)) {
-                        const fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
-                        list[k] = fixed;
+                if (typeof list === 'string') {
+                    data[key] = list.replace(SEARCH_INCORRECT_SYMBOLS, '');
+                } else {
+                    for (const k in list) {
+                        if (list.hasOwnProperty(k)) {
+                            const fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
+                            list[k] = fixed;
+                        }
                     }
                 }
             }
