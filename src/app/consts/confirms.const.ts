@@ -88,8 +88,8 @@ export const RK_SELECTED_LIST_HAS_DELETED: IConfirmWindow2 = {
 };
 
 export const CONFIRM_SAVE_INVALID: IConfirmWindow2 = {
-    title: 'Ну удалось сохранить',
-    body: 'Не заполнены обязательные поля: \n{{errors}}\n при попытке сохранить',
+    title: 'Не удалось сохранить',
+    body: '{{errors}}',
     buttons: [
         {title: 'Ок', result: 1, isDefault: true}
     ],
