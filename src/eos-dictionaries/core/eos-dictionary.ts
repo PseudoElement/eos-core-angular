@@ -581,15 +581,17 @@ export class EosDictionary {
                 _b = '';
             }
 
-            if (_a > _b) {
-                return _orderBy.ascend ? 1 : -1;
-            }
-            if (_a < _b) {
-                return _orderBy.ascend ? -1 : 1;
-            }
-            if (_a === _b) {
-                return 0;
-            }
+            return (_orderBy.ascend ? 1 : -1) * _a.toString().localeCompare(_b.toString());
+
+            // if (_a > _b) {
+            //     return _orderBy.ascend ? 1 : -1;
+            // }
+            // if (_a < _b) {
+            //     return _orderBy.ascend ? -1 : 1;
+            // }
+            // if (_a === _b) {
+            //     return 0;
+            // }
         });
     }
 
