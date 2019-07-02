@@ -128,15 +128,17 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
     updateValidTabs() {
         for (let i = 0;  i < this.tabOptions.length; i++) {
             const tabOption =  this.tabOptions[i];
-            const tabContainsInvalidField = this.getStatusTabByFields(tabOption.id);
-            switch (tabContainsInvalidField) {
-                case TabStatus.TabInvalid: {
-                    tabOption.isValid = false;
-                    break;
-                }
-                case TabStatus.TabValid: {
-                    tabOption.isValid = true;
-                    break;
+            if (this.currTab === i) {
+                const tabContainsInvalidField = this.getStatusTabByFields(tabOption.id);
+                switch (tabContainsInvalidField) {
+                    case TabStatus.TabInvalid: {
+                        tabOption.isValid = false;
+                        break;
+                    }
+                    case TabStatus.TabValid: {
+                        tabOption.isValid = true;
+                        break;
+                    }
                 }
             }
         }
@@ -144,20 +146,25 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
 
     getStatusTabByFields(tabId: string): TabStatus {
         const invalidControls = this.getInvalidControl();
+        const currentTab = document.getElementById(tabId);
+        if (!currentTab) {
+            return TabStatus.TabEmpty;
+        }
         for (let i = 0; i < invalidControls.length; i++) {
             const invalidControl = invalidControls[i];
             const invalidElement = document.getElementById(invalidControl);
             if (!invalidElement) {
-                return TabStatus.TabEmpty;
+                continue;
             }
             const tab = invalidElement.closest('.tab');
             if (!tab) {
-                return TabStatus.TabEmpty;
+                continue;
             }
             if (tabId === tab.id) {
                 return TabStatus.TabInvalid;
             }
         }
+
         return TabStatus.TabValid;
     }
 
