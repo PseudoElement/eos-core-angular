@@ -64,7 +64,7 @@ export class NomenklCardComponent extends BaseCardEditComponent implements OnCha
                 .read(req)
                 .then((rdata: any[]) => {
                     rdata.forEach((d) => {
-                        i.options.push({ title: d['CLASSIF_NAME'], value: d['CLASSIF_NAME']});
+                        i.options.push({ title: d['CLASSIF_NAME'], value: d['CLASSIF_NAME'], disabled: d['DELETED']});
                     });
                 });
             this.unsubscribe();
