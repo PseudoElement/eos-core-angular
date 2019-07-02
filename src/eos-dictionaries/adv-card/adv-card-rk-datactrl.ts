@@ -12,11 +12,26 @@ export const DEFAULTS_LIST_NAME = 'DOC_DEFAULT_VALUE_List';
 export const FILE_CONSTRAINT_LIST_NAME = 'DG_FILE_CONSTRAINT_List';
 export const FICT_CONTROLS_LIST_NAME = 'fict';
 
+
+export class IUpdateDictEvent {
+    path: string;
+    options: TDFSelectOption[];
+    el: TDefaultField;
+    data?: any;
+}
+
+export class ICashedDict {
+    hash: string;
+    dict: any[] = [];
+    forceReload?: boolean;
+    promise: Promise<any>;
+}
+
 export class AdvCardRKDataCtrl {
 
     name: string;
-    loadedDicts: any;
     public zone: NgZone;
+    private _cachedDicts: ICashedDict[];
 
     private _descr = {
         [DEFAULTS_LIST_NAME]:  RKDefaultFields,
@@ -30,7 +45,7 @@ export class AdvCardRKDataCtrl {
     constructor (
         injector: Injector,
     ) {
-        this.loadedDicts = {};
+        this._cachedDicts = [];
         this.zone = injector.get(NgZone);
         this._apiSrv = injector.get(PipRX);
         this._msgSrv = injector.get(EosMessageService);
@@ -84,7 +99,7 @@ export class AdvCardRKDataCtrl {
         }
     }
 
-    public readDictLinkValue(el: TDefaultField, value: any, updateLink: Function = null): Promise<any> {
+    public readDictLinkValue(el: TDefaultField, value: any, callback: (event: IUpdateDictEvent) => void = null): Promise<any> {
         const dict = el.dict;
         if (dict) {
             let query: any;
@@ -95,7 +110,6 @@ export class AdvCardRKDataCtrl {
             }
             query.criteries[dict.dictKey] = value;
 
-
             const req = {[el.dict.dictId]: query};
 
             return this._apiSrv.read(req).then((data) => {
@@ -105,11 +119,15 @@ export class AdvCardRKDataCtrl {
                     opts.push ({value: element[el.dict.dictKey], title: element[el.dict.dictKeyTitle]});
                 }
 
-                if (updateLink) {
-                    updateLink(el, opts, data);
+                if (callback) {
+                    callback ({
+                        path: el.key,
+                        options: opts,
+                        el: el,
+                        data: data,
+                    });
                 }
                 el.options = opts;
-                this.loadedDicts[el.dict.dictId] = opts;
                 return data;
             });
 
@@ -117,102 +135,139 @@ export class AdvCardRKDataCtrl {
         return Promise.resolve(null);
     }
 
-    public loadDictsOptions (values: any, updateLink: Function = null): Promise<any> {
+    public markCacheForDirty(filter: string) {
+        const fields = this.getDescriptions();
+        Object.keys(fields).forEach ((key) => {
+            for (let i = 0; i < fields[key].length; i++) {
+                const el: TDefaultField = fields[key][i];
+                if (!el.dict) { continue; }
+                if (el.dict.dictId !== filter) {
+                    continue;
+                }
+                const hash = this.calcHash(el.dict);
+                if (!this._cachedDicts[hash]) {
+                    this._cachedDicts[hash] = new ICashedDict;
+                }
+                this._cachedDicts[hash].forceReload = true;
+            }
+        });
+    }
+
+    public cashedReadDict(el: TDefaultField, callback: (event: IUpdateDictEvent) => void = null): Promise<any> {
+        const dict = el.dict;
+        const hash = this.calcHash(dict);
+        let cache: ICashedDict = this._cachedDicts[hash];
+
+        if (cache && !cache.forceReload) {
+            el.options = cache.dict;
+            return cache.promise.then( () => {
+                callback ({ path: el.key, options: el.options, el: el });
+                return el.options;
+            });
+        } else {
+            if (!cache) {
+                cache = new ICashedDict;
+                this._cachedDicts[hash] = cache;
+            }
+
+            cache.forceReload = false;
+
+            let query: any;
+            if (el.dict.criteries) {
+                query = { criteries: el.dict.criteries};
+            } else {
+                query = ALL_ROWS;
+            }
+            const req = {[el.dict.dictId]: query};
+
+            cache.promise = this._apiSrv.read(req).then((data) => {
+                cache.dict.length = 0;
+
+                const opts_ptr: TDFSelectOption[] = cache.dict;
+                for (let index = 0; index < data.length; index++) {
+                    const element = data[index];
+                    const value = element[el.dict.dictKey];
+                    const title = element[el.dict.dictKeyTitle];
+                    const deleted = element['DELETED'];
+                    if (deleted) {
+                        opts_ptr.push ({value: value, title: title, disabled: true});
+                    } else {
+                        opts_ptr.push ({value: value, title: title });
+                    }
+
+                }
+                // console.log ('promise done');
+                callback ({ path: el.key, options: opts_ptr, el: el });
+                el.options = opts_ptr;
+
+                return opts_ptr;
+            });
+
+            return cache.promise;
+        }
+    }
+
+    public updateDictsOptions(filter: string, linkValues: any, callback: (event: IUpdateDictEvent) => void = null): Promise<any> {
         const reqs = [];
         const fields = this.getDescriptions();
 
         Object.keys(fields).forEach ((key) => {
             for (let i = 0; i < fields[key].length; i++) {
+
                 const el: TDefaultField = fields[key][i];
-                if (!el.dict) {
-                    continue;
-                }
+
+                if (!el.dict) { continue; }
+                if (filter && el.dict.dictId !== filter) { continue; }
+
                 if (el.type === E_FIELD_TYPE.dictLink) {
-                    reqs.push(this.readDictLinkValue(el, values[key][el.key], updateLink));
-                } else if (el.type === E_FIELD_TYPE.select) {
-                    const hash = this.calcHash(el.dict);
-                    if (this.loadedDicts[hash]) {
-                        el.options = this.loadedDicts[hash];
-                    } else {
-                        let query: any;
-                        if (el.dict.criteries) {
-                            query = { criteries: el.dict.criteries};
-                        } else {
-                            query = ALL_ROWS;
-                        }
-                        this.loadedDicts[hash] = [];
-
-                        const req = {[el.dict.dictId]: query};
-
-                        reqs.push(this._apiSrv.read(req).then((data) => {
-                            const opts: TDFSelectOption[] = this.loadedDicts[hash];
-                            const curval = values[key][el.key];
-                            // opts.push ({value: '', title: '...'});
-                            for (let index = 0; index < data.length; index++) {
-                                const element = data[index];
-                                const value = element[el.dict.dictKey];
-                                const title = element[el.dict.dictKeyTitle];
-                                const deleted = element['DELETED'];
-                                if (deleted) {
-                                    if (String(curval) === String(value)) {
-                                        opts.push ({value: value, title: title, disabled: true});
-                                    }
-                                } else {
-                                    opts.push ({value: value, title: title });
-                                }
-                            }
-
-                            el.options = opts;
-                            return data;
-                        }).then ((data) => {
-                            if (el.dict.dictId === 'USER_LISTS') {
-                                this._appendListInfo(el, data);
-                            }
-
-                            return data;
-                        }));
-                    }
+                    reqs.push(this.readDictLinkValue(el, linkValues[key][el.key], (event: IUpdateDictEvent) => {
+                        event.path = key + '.' + el.key;
+                        callback(event);
+                    }));
                 }
+
+                if (el.type !== E_FIELD_TYPE.select)  { continue; }
+
+                reqs.push(this.cashedReadDict(el, callback));
             }
         });
 
-        return Promise.all(reqs)
-            .then((responses) => {
+        return Promise.all(reqs).then((responses) => {
             return responses;
         });
     }
 
-    _appendListInfo(dict: TDefaultField, data: any[]) {
-        const listreqs = [];
+    // private _appendListInfo(dict: TDefaultField, data: any[]) {
+    //     const listreqs = [];
 
-        for (let i = 0; i < data.length; i++) {
-            const el = data[i];
+    //     for (let i = 0; i < data.length; i++) {
+    //         const el = data[i];
 
-            const query = { args: { isn: el.ISN_LIST } };
-            const req = { ValidateUserList4DefaultValues: query};
-            listreqs.push(
-                this._apiSrv.read(req).then((response) => {
-                    if (String(response) === 'ok') {
+    //         const query = { args: { isn: el.ISN_LIST } };
+    //         const req = { ValidateUserList4DefaultValues: query};
+    //         listreqs.push(
+    //             this._apiSrv.read(req).then((response) => {
+    //                 if (String(response) === 'ok') {
 
-                    } else {
-                    const opt = dict.options.find((dopt) => dopt.value === el.ISN_LIST);
-                        if (opt) {
-                            if (String(response) === 'LIST_IS_EMPTY') {
-                                opt.isEmpty = true;
-                            } else if (String(response) === 'LIST_CONTAINS_DELETED') {
-                                opt.hasDeleted = true;
-                            }
-                        }
-                    }
-                })
-            );
-        }
+    //                 } else {
+    //                 const opt = dict.options.find((dopt) => dopt.value === el.ISN_LIST);
+    //                     if (opt) {
+    //                         if (String(response) === 'LIST_IS_EMPTY') {
+    //                             opt.isEmpty = true;
+    //                         } else if (String(response) === 'LIST_CONTAINS_DELETED') {
+    //                             opt.hasDeleted = true;
+    //                         }
+    //                     }
+    //                 }
+    //             })
+    //         );
+    //     }
 
-        return Promise.all(listreqs)
-        .then((responses) => {
-            return responses;
-        });
-    }
+    //     return Promise.all(listreqs)
+    //     .then((responses) => {
+    //         return responses;
+    //     });
+    // }
 
 
     public fixDBValueByType(value: any, type: E_FIELD_TYPE): any {
@@ -241,7 +296,6 @@ export class AdvCardRKDataCtrl {
         }
         return value;
     }
-
 
     public calcHash (obj: any): string {
         let res: string = '';

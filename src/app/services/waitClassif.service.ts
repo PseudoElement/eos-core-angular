@@ -11,6 +11,7 @@ const LIST_OLD_PAGES: string[] = [
 const OLD_VIEW_URL: string = 'Pages/Classif/ChooseClassif.aspx?';
 const NEW_VIEW_URL: string = 'Eos.Delo.JsControls/Classif/ChooseClassif.aspx?';
 const USER_LISTS: string = '../Pages/User/USER_LISTS.aspx';
+const TECH_LISTS: string = '../Pages/Common/TECH_LISTS.aspx';
 
 @Injectable()
 export class WaitClassifService {
@@ -19,10 +20,16 @@ export class WaitClassifService {
             return 'classif';
         };
     }
+
     openClassif(params: IOpenClassifParams, flag?: boolean): Promise<String> {
         let url: string = '';
         if (params.classif === 'USER_LISTS') {
             url = USER_LISTS;
+            if (params.user_id !== undefined && params.user_id !== null) {
+                url += `?user_id=${params.user_id}`;
+            }
+        } else if (params.classif === 'TECH_LISTS') {
+            url = TECH_LISTS;
         } else {
             url = this._prepareUrl(params, flag);
         }
@@ -47,6 +54,7 @@ export class WaitClassifService {
             }, 500);
         });
     }
+
     private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
         let url = '../';
         if (flag) {
@@ -72,6 +80,9 @@ export class WaitClassifService {
         }
         if (params.nomenkl_jou !== undefined && params.nomenkl_jou !== null) {
             url += `&nomenkl_jou=${params.nomenkl_jou}`;
+        }
+        if (params.user_id !== undefined && params.user_id !== null) {
+            url += `&user_id=${params.user_id}`;
         }
         url += params.classif === 'CONTACT' || params.classif === 'ORGANIZ_CL' ? '&app=nadzor' : '';
         // if (params.criteriesSearch) {

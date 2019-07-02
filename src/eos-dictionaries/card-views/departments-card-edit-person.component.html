@@ -220,11 +220,11 @@
     <div *ngIf="currTab === 1"
         class="additional-info">
         <div class="xl-font paragraph-title">Склонение должности <a *ngIf="editMode"
-                (click)="fillDeclineFields()"
-                class="s-font pull-right"
+                (click)="fillDeclineFields({dep: true})"
+                class="xl-font pull-right"
                 containerClass="tooltip-info"
-                placement="bottom"
-                tooltip="Автоматическое заполнение полей склонения">[Заполнить поля]</a></div>
+                placement="left"
+                tooltip="Автоматическое заполнение полей склонения">[ А ]</a></div>
         <eos-dynamic-input [input]="inputs['printInfo.DUTY_RP']"
             [form]="form"
             [readonly]="!editMode"></eos-dynamic-input>
@@ -234,7 +234,14 @@
         <eos-dynamic-input [input]="inputs['printInfo.DUTY_VP']"
             [form]="form"
             [readonly]="!editMode"></eos-dynamic-input>
-        <span class="paragraph-title xl-font">Склонение фамилии, имени, отчества</span>
+        <!-- <span class="paragraph-title xl-font">Склонение фамилии, имени, отчества</span> -->
+        <div class="xl-font paragraph-title">Склонение фамилии, имени, отчества<a *ngIf="editMode"
+            (click)="fillDeclineFields({fio: true})"
+            class="xl-font pull-right"
+            containerClass="tooltip-info"
+            placement="left"
+            tooltip="Автоматическое заполнение полей склонения">[ А ]</a></div>
+
         <eos-dynamic-input [input]="inputs['printInfo.PRINT_SURNAME_DP']"
             [form]="form"
             [readonly]="!editMode"></eos-dynamic-input>
@@ -316,7 +323,15 @@
                 [form]="form"
                 [readonly]="!editMode"></eos-dynamic-input>
         </div>
-        <span class="paragraph-title xl-font">Данные для формирования поручений</span>
+        <!-- <span class="paragraph-title xl-font">Данные для формирования поручений</span> -->
+
+        <div class="xl-font paragraph-title">Данные для формирования поручений <a *ngIf="editMode"
+            (click)="fillDeclineFields({adv: true})"
+            class="xl-font pull-right"
+            containerClass="tooltip-info"
+            placement="left"
+            tooltip="Автоматическое заполнение полей">[ А ]</a></div>
+
         <eos-dynamic-input [input]="inputs['printInfo.PRINT_DUTY']"
             [form]="form"
             [readonly]="!editMode"></eos-dynamic-input>

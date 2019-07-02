@@ -27,6 +27,7 @@ export interface IOpenClassifParams {
     selected? ;
     criteriesSearch?: boolean;
     criteriesName?: string;
+    user_id?: number;
 }
 
 export interface ICertificateInit {

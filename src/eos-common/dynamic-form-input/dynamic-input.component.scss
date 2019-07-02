@@ -47,6 +47,11 @@ eos-dynamic-input {
     .form-control {
         display: inline-block;
         border-color: $border-color-main-theme;
+
+        &.link-input {
+            background-color: #fafafa;
+        }
+
         &.light {
             background-color: $modal-block-background-main-theme;
         }
