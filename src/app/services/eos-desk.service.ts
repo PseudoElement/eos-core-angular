@@ -59,7 +59,7 @@ export class EosDeskService {
         private _eaps: EosAccessPermissionsService,
     ) {
         this.selectedDeskId = 'system';
-        this._desksList = DEFAULT_DESKS;
+        this._desksList = [...DEFAULT_DESKS];
 
         this._desksList$ = new BehaviorSubject(this._desksList);
         this._selectedDesk = this._desksList[0];
@@ -204,6 +204,7 @@ export class EosDeskService {
             }
 
             this._desksList = this._desksList.filter((d) => d.id !== desk.id);
+            this._sortDeskList();
             this._desksList$.next(this._desksList);
         });
     }
@@ -218,8 +219,9 @@ export class EosDeskService {
             res = this.viewManager.saveView(deskView);
         }
         res.then(() => {
-            this._desksList.splice(this._desksList.indexOf(desk), 1, desk);
-            this._desksList$.next(this._desksList);
+            this.readDeskList();
+            // this._desksList.splice(this._desksList.indexOf(desk), 1, desk);
+            // this._desksList$.next(this._desksList);
             // console.log('editing done');
         });
         return res;
@@ -241,6 +243,7 @@ export class EosDeskService {
                     .then(() => {
                         desk.id = isn_view.toString();
                         this._desksList.push(desk);
+                        this._sortDeskList();
                         this._desksList$.next(this._desksList);
                         return desk;
                     });
@@ -271,12 +274,21 @@ export class EosDeskService {
     }
 
     private readDeskList() {
+        this._desksList = [...DEFAULT_DESKS];
         const view = this._appCtx.UserViews.filter((uv) => uv.SRCH_KIND_NAME === 'clmanDesc');
         for (let i = 0; i < view.length; i++) {
             this._desksList.push(this.readDesc(view[i]));
         }
+        this._sortDeskList();
         this._desksList$.next(this._desksList);
         this.updateSelectedDesk();
+    }
+
+    private _sortDeskList() {
+        this._desksList.sort((a, b) => {
+            return (a.id === 'system') ? -1 : (b.id === 'system') ? 1 :
+                a.name.localeCompare(b.name);
+        });
     }
 
     private readDesc(v: SRCH_VIEW): EosDesk {
