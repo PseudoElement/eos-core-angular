@@ -20,9 +20,9 @@ export class RightClassifNode {
         }
     }
     get isExpanded() {
-       return this._isExpanded;
+        return this._isExpanded;
     }
-    get expandable (): boolean {
+    get expandable(): boolean {
         return (this._item.expandable !== E_TECH_USER_CLASSIF_CONTENT.none) && !!this._value;
     }
     get key(): number {
@@ -34,10 +34,10 @@ export class RightClassifNode {
     get label(): string {
         return this._item.label;
     }
-    get value (): number {
+    get value(): number {
         return this._value;
     }
-    set value (v) {
+    set value(v) {
         this._valueLast = this._value;
         this._value = +v;
 
@@ -99,12 +99,12 @@ export class RightClassifNode {
         this._component = component;
         const v = +(this._curentUser['TECH_RIGHTS'][item.key - 1]);
         if ((this.type !== E_TECH_USER_CLASSIF_CONTENT.none) && !this._parentNode.isCreate) {
-           this._listUserTech = this._component.userTechList.filter((i) => i['FUNC_NUM'] === this.key);
+            this._listUserTech = this._component.userTechList.filter((i) => i['FUNC_NUM'] === this.key);
         }
         if (this.type !== E_TECH_USER_CLASSIF_CONTENT.none) {
             this._config = this._component.getConfig(this.type);
         }
-        if (this._parentNode.isCreate ) {
+        if (this._parentNode.isCreate) {
             this._value = 0;
             this.value = v;
             return;
@@ -115,44 +115,75 @@ export class RightClassifNode {
     addInstance() {
         this.isShell = true;
         this._component.addInstance(this._config, this)
-        .then(data => {
-            const newList: NodeDocsTree[] = [];
-            data.forEach(entity => {
-                const newTechRight: USER_TECH = this._component.createEntyti<USER_TECH>({
-                    ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
-                    FUNC_NUM: this.key,
-                    CLASSIF_ID: E_CLASSIF_ID[(this.key.toString())],
-                    DUE: entity['DUE'],
-                    ALLOWED: 1,
-                }, 'USER_TECH');
-                const d = {
-                    userTech: newTechRight,
-                    instance: entity
-                };
-                const cfg: INodeDocsTreeCfg = {
-                    due: entity['DUE'],
-                    label: entity[this._config.label],
-                    allowed: !!newTechRight['ALLOWED'],
-                    data: d,
-                };
-                newList.push(new NodeDocsTree(cfg));
+            .then(data => {
+                const newList: NodeDocsTree[] = [];
+                data.forEach(entity => {
+                    const newTechRight: USER_TECH = this._component.createEntyti<USER_TECH>({
+                        ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
+                        FUNC_NUM: this.key,
+                        CLASSIF_ID: E_CLASSIF_ID[(this.key.toString())],
+                        DUE: entity['DUE'],
+                        ALLOWED: this.getAllowedParent(entity['DUE']) ? 0 : 1,
+                    }, 'USER_TECH');
+                    const d = {
+                        userTech: newTechRight,
+                        instance: entity
+                    };
+                    const cfg: INodeDocsTreeCfg = {
+                        due: entity['DUE'],
+                        label: entity[this._config.label],
+                        allowed: !!newTechRight['ALLOWED'],
+                        data: d,
+                    };
+                    newList.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true));
 
-                this._parentNode.pushChange({
-                    method: 'POST',
-                    due: entity.DUE,
-                    funcNum: this.key,
-                    data: newTechRight,
+                    this._parentNode.pushChange({
+                        method: 'POST',
+                        due: entity.DUE,
+                        funcNum: this.key,
+                        data: newTechRight,
+                    });
+                    this._listUserTech.push(newTechRight);
+                    this._component.userTechList.push(newTechRight);
                 });
-                this._listUserTech.push(newTechRight);
-                this._component.userTechList.push(newTechRight);
+                this.listContent = this.listContent.concat(newList);
+                this._component.Changed.emit();
+                this.isShell = false;
+            })
+            .catch(() => {
+                this.isShell = false;
             });
-            this.listContent = this.listContent.concat(newList);
-            this._component.Changed.emit();
-            this.isShell = false;
-        })
-        .catch(() => {
-            this.isShell = false;
+    }
+    getAllowedParent(due: string) {
+        if (this.listContent.length) {
+            return this.excludeNode(this.type, due);
+        }
+        return false;
+    }
+    excludeNode(nameNode: number, due: string) {
+        const exist = [2, 3, 4].some(value => {
+            return value === nameNode;
         });
+        if (exist) {
+            return this.findParent(due);
+        } else {
+            return false;
+        }
+    }
+
+    findParent(due: string) {
+        if (due !== '0.') {
+            const findElement = this.listContent.filter((element: NodeDocsTree) => {
+                return element.DUE === due;
+            });
+            if (findElement[0]) {
+                return findElement[0].isAllowed ? true : false;
+            } else {
+              return  this.findParent(due.slice(0, -5));
+            }
+        } else {
+            return this.listContent[0].isAllowed ? true : false;
+        }
     }
     DeleteInstance() {
         if (this.curentSelectedNode) {
@@ -188,30 +219,30 @@ export class RightClassifNode {
         });
         this._component.Changed.emit();
     }
-    private _createListContent (userTech: any[], listContent: NodeDocsTree[]) {
+    private _createListContent(userTech: any[], listContent: NodeDocsTree[]) {
         this.isLoading = true;
         const arr = [];
         userTech.forEach(i => {
             arr.push(i['DUE']);
         });
         this._component.getEntyti(arr.join('||'), this._config)
-        .then(data => {
-            data.forEach(item => {
-                const uT = userTech.find(i => i['DUE'] === item['DUE']);
-                const d = {
-                    userTech: uT,
-                    instance: item
-                };
-                const cfg: INodeDocsTreeCfg = {
-                    due: uT['DUE'],
-                    label: uT['DUE'] === '0.' ? this._config.rootLabel : item[this._config.label],
-                    allowed: uT['ALLOWED'],
-                    data: d,
-                };
-                listContent.push(new NodeDocsTree(cfg));
+            .then(data => {
+                data.forEach(item => {
+                    const uT = userTech.find(i => i['DUE'] === item['DUE']);
+                    const d = {
+                        userTech: uT,
+                        instance: item
+                    };
+                    const cfg: INodeDocsTreeCfg = {
+                        due: uT['DUE'],
+                        label: uT['DUE'] === '0.' ? this._config.rootLabel : item[this._config.label],
+                        allowed: uT['ALLOWED'],
+                        data: d,
+                    };
+                    listContent.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true));
+                });
+                this.isLoading = false;
             });
-            this.isLoading = false;
-        });
     }
     private _deletAll() {
         let count = this._component.userTechList.length;

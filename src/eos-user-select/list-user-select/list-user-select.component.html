@@ -58,7 +58,7 @@
         <div  #listContent class="list-user-sel" (scroll)="savePositionSelectUser($event)">
            <div *ngIf="!isLoading">
             <div *ngIf="listUsers.length; else emptyCert" class="block" [ngStyle]="{'width.px': tableWidth}">
-                <div *ngFor="let user of listUsers" class="user-item" [ngClass]="{'highlighted': user.isSelected || (user.isChecked && !user.selectedMark) || user.selectedMark}" (dblclick)="RedactUser(user)">
+                <div *ngFor="let user of listUsers;   let last = last" class="user-item" [ngClass]="{'highlighted': user.isSelected || (user.isChecked && !user.selectedMark) || user.selectedMark}" (dblclick)="RedactUser(user)">
                     <div class="table-title user-select-node" [ngClass]="{'disabled': user.deleted, 'delitedDue': user.deletedOffFace}">
                         <span *ngIf='user.deleted' class="deleted-user-border"></span>
                         <label *ngIf='!user.deleted' class="checkbox">
@@ -72,7 +72,7 @@
                             <span *ngIf="user.blockedUser && !user.deleted" class="eos-icon eos-icon-Blockeduser-Yellow  small"></span>
                             <span *ngIf="user.blockedSystem && !user.deleted" class="eos-icon eos-icon-Blockeduser-Red  small"></span>
                             </span>
-                            <span class="user-list-two-colomn " tooltip="{{user.fullDueName}}" placement="bottom" containerClass="tooltip-info" container="body">{{user.fullDueName}}
+                            <span class="user-list-two-colomn " tooltip="{{user.fullDueName}}" placement="bottom" [ngClass]="{'last-tooltip' : last }" [containerClass]="getClassTooltip(last)" container="body">{{user.fullDueName}}
                             </span>
                             <span class="user-list-first-colomn" tooltip="{{user.department}}" placement="auto" containerClass="tooltip-info" container="body">{{user.department}}
                             </span>

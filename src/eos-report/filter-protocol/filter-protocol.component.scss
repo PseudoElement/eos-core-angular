@@ -1,8 +1,8 @@
 .filter-comp {
+    margin-right: 20px;
     .cust-style-mod {
         width: 48px;
         height: 48px;
-        margin-left: 50%;
     }
     .btn.btn-primary-light.search-btn.opened {
         height: 48px;
@@ -40,5 +40,9 @@
         right: 10px;
         position: relative;
     }
+    .del-mar{
+        height: 95px;
+    }
+    
 }
 
