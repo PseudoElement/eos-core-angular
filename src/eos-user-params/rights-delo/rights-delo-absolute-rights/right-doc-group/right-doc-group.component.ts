@@ -73,7 +73,7 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
                     ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
                     FUNC_NUM: +this.selectedNode.key + 1,
                     DUE: doc.DUE,
-                    ALLOWED: 0
+                    ALLOWED: this.getAllowedParent(doc.DUE) ? 0 : 1,
                 };
                 const node = this._createNode(rDocgroup, doc);
 
@@ -95,6 +95,37 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
         .catch(() => {
             this.isShell = false;
         });
+    }
+    getAllowedParent(due: string) {
+        if (this.list.length) {
+            return this.excludeNode(28, due);
+        }
+        return false;
+    }
+    excludeNode(nameNode: number, due: string) {
+        const exist = [28].some(value => {
+            return value === nameNode;
+        });
+        if (exist) {
+            return this.findParent(due);
+        } else {
+            return false;
+        }
+    }
+
+    findParent(due: string) {
+        if (due !== '0.') {
+            const findElement = this.list.filter((element: NodeDocsTree) => {
+                return element.DUE === due;
+            });
+            if (findElement[0]) {
+                return findElement[0].isAllowed ? true : false;
+            } else {
+              return  this.findParent(due.slice(0, -5));
+            }
+        } else {
+            return this.list[0].isAllowed ? true : false;
+        }
     }
     DeleteDoc() {
         this.list = this.list.filter(node => node !== this.curentNode);
@@ -172,7 +203,7 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
                 docGroup: doc
             },
         };
-        return new NodeDocsTree(cfg);
+        return new NodeDocsTree(cfg, true);
     }
     private _checkRepeat(arrDoc: DOCGROUP_CL[]): boolean {
         this.list.forEach((node: NodeDocsTree) => {
