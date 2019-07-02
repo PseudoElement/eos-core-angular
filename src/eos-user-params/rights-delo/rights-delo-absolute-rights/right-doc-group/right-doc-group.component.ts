@@ -114,14 +114,17 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
     }
 
     findParent(due: string) {
-        if (due !== '0.') {
+        const n = due.split('.');
+        n.pop();
+        const d = due + '.';
+        if (d !== '0.') {
             const findElement = this.list.filter((element: NodeDocsTree) => {
-                return element.DUE === due;
+                return element.DUE === d;
             });
             if (findElement[0]) {
                 return findElement[0].isAllowed ? true : false;
             } else {
-              return  this.findParent(due.slice(0, -5));
+              return  this.findParent(n.join('.'));
             }
         } else {
             return this.list[0].isAllowed ? true : false;

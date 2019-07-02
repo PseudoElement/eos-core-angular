@@ -150,7 +150,8 @@ export class RightClassifNode {
                 this._component.Changed.emit();
                 this.isShell = false;
             })
-            .catch(() => {
+            .catch((error) => {
+                console.log(error);
                 this.isShell = false;
             });
     }
@@ -172,14 +173,17 @@ export class RightClassifNode {
     }
 
     findParent(due: string) {
-        if (due !== '0.') {
+        const n = due.split('.');
+        n.pop();
+        const d = due + '.';
+        if (d !== '0.') {
             const findElement = this.listContent.filter((element: NodeDocsTree) => {
-                return element.DUE === due;
+                return element.DUE === d;
             });
             if (findElement[0]) {
                 return findElement[0].isAllowed ? true : false;
             } else {
-              return  this.findParent(due.slice(0, -5));
+                return this.findParent(n.join('.'));
             }
         } else {
             return this.listContent[0].isAllowed ? true : false;
