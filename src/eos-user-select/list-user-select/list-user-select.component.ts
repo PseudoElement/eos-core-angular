@@ -503,7 +503,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     updateFlafListen() {
         this.countCheckedField();
         const leng = this.filterForFlagChecked().length;
-        console.log(leng);
         if (leng === 0) {
             this.flagChecked = null;
         } else {

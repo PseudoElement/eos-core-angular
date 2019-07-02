@@ -174,11 +174,9 @@ export class RightClassifNode {
     findParent(due: string) {
         if (due !== '0.') {
             const findElement = this.listContent.filter((element: NodeDocsTree) => {
-                console.log(due);
                 return element.DUE === due;
             });
             if (findElement[0]) {
-                console.log(findElement);
                 return findElement[0].isAllowed ? true : false;
             } else {
               return  this.findParent(due.slice(0, -5));

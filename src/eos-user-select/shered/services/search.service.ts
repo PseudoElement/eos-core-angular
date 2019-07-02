@@ -89,7 +89,6 @@ export class SearchServices {
                         });
                         //  return this.getUsersToGo(config, due);
                     } else {
-                        console.log('Поиск не дал результатов');
                         return Promise.resolve([] as any);
                     }
                 });
