@@ -43,7 +43,6 @@ export class DictionaryFilterComponent implements OnDestroy {
             label: 'Состояние на',
             pattern: YEAR_PATTERN,
             hideLabel: true,
-            required: true,
             readonly: false,
             minValue: 1900,
             maxValue: 2100,
