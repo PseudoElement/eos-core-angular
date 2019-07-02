@@ -18,6 +18,8 @@ export interface IBaseInput {
     disabled?: boolean;
     password?: boolean;
     groupLabel?: string;
+    minValue?: number;
+    maxValue?: number;
 }
 
 export interface ISelectInput extends IBaseInput {
