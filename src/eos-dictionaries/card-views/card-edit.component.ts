@@ -81,8 +81,10 @@ export class CardEditComponent implements OnChanges, OnDestroy {
                 .subscribe((newVal) => {
                     let changed = false;
                     Object.keys(newVal).forEach((path) => {
-                        if (this.changeByPath(path, newVal[path])) {
-                            changed = true;
+                        if (!this.inputs[path].isNoDBInput) {
+                            if (this.changeByPath(path, newVal[path])) {
+                                changed = true;
+                            }
                         }
                     });
                     this.formChanged.emit(changed);
@@ -164,12 +166,13 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         } else {
             _value = value;
         }
+
         this.newData = EosUtils.setValueByPath(this.newData, path, _value);
         const oldValue = EosUtils.getValueByPath(this.data, path, false);
 
-        if (oldValue !== _value) {
-            // console.warn('changed', path, oldValue, 'to', _value, this.data.rec);
-        }
+        // if (oldValue !== _value) {
+        //     console.warn('changed', path, oldValue, 'to', _value, this.data.rec);
+        // }
         return _value !== oldValue;
     }
 

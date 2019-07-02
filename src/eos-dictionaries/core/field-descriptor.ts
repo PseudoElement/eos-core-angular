@@ -24,6 +24,7 @@ export class FieldDescriptor implements IFieldDescriptorBase {
     readonly minValue?: number;
     readonly maxValue?: number;
     readonly dictionaryLink?: IDictionaryLink;
+    readonly isNoDBInput?: boolean;
 
     constructor(data: IFieldDescriptor) {
         if (data.key) {
@@ -64,6 +65,7 @@ export class FieldDescriptor implements IFieldDescriptorBase {
         this.forNode = data.forNode;
         this.default = data.default;
         this.dictionaryId = data.dictionaryId;
+        this.isNoDBInput = data.isNoDBInput;
 
         this.password = !!data.password;
         this.dictionaryLink = data.dictionaryLink;

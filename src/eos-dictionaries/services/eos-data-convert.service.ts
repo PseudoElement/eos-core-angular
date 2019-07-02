@@ -255,6 +255,7 @@ export class EosDataConvertService {
                                         value: data[_dict][descr[_key].foreignKey]
                                             || descr[_key].default,
                                         disabled: !editMode,
+                                        isNoDBInput: descr[_key].isNoDBInput,
                                     });
                                     break;
                                 case E_FIELD_TYPE.date:

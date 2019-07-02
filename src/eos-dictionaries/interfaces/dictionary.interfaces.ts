@@ -80,6 +80,7 @@ export interface IFieldDescriptor {
     maxValue?: number;
     parent?: any;
     keyPosition?: number| string;
+    isNoDBInput?: boolean;
 }
 
 export interface IFieldDescriptorBase {
@@ -103,6 +104,7 @@ export interface IFieldDescriptorBase {
     readonly password?: boolean;
     readonly groupLabel?: string;
     readonly dictionaryLink?: IDictionaryLink;
+    readonly isNoDBInput?: boolean;
 }
 
 export interface IFieldView extends IFieldDescriptorBase {

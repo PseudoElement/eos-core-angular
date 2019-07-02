@@ -189,6 +189,7 @@ export class RecordDescriptor {
                         groupLabel: _f.groupLabel,
                         maxValue: _f.maxValue,
                         minValue: _f.minValue,
+                        isNoDBInput: _f.isNoDBInput,
                     };
                 }
             });
