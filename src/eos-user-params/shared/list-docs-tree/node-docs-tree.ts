@@ -13,12 +13,19 @@ export class NodeDocsTree implements IListDocsTree {
     isAllowed: boolean;
     isviewAllowed: boolean;
     flagCheckNode: any;
-    constructor({due, label, allowed, data, viewAllowed, flagCheckNode}: INodeDocsTreeCfg) {
+    redFlag: boolean;
+    get classChecBox() {
+        return {
+            'redUnchecked': !this.isAllowed && this.redFlag,
+        };
+    }
+    constructor({due, label, allowed, data, viewAllowed, flagCheckNode}: INodeDocsTreeCfg, redFlag?) {
         this.DUE = due;
         this.label = label;
         this.isAllowed = allowed;
         this.isviewAllowed = viewAllowed === undefined ? true : viewAllowed;
         this.flagCheckNode = flagCheckNode ? flagCheckNode : undefined;
+        this.redFlag = redFlag ? redFlag : undefined;
         this.data = data;
         this.link = due.split('.');
         this.link.pop();
