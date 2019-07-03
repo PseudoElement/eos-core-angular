@@ -150,7 +150,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         'PRJ_DEL_AFTER_REG', 'PRJ_APPLY_EXEC_EDS', 'PRJ_APPLY2_EDS', 'PRJ_APPLY_EDS', 'PRJ_AUTO_REG', 'PRJ_SHABLON', 'PRJ_NUM_FLAG',
         'TEST_UNIQ_FLAG', 'ENCRYPT_FLAG', 'EDS_FLAG', 'SHABLON', 'DOCNUMBER_FLAG', 'DOCGROUP_INDEX', 'RC_TYPE', 'INITIATIVE_RESOLUTION',
         'ACCESS_MODE'],
-    searchFields: ['CODE', 'CLASSIF_NAME'],
+    searchFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME'],
     fullSearchFields: ['CLASSIF_NAME', 'FULLNAME', 'DOCGROUP_INDEX', 'NOTE'],
     quickViewFields: ['CLASSIF_NAME', 'FULLNAME', 'NOTE', 'DOCGROUP_INDEX', 'RC_TYPE' ],
     shortQuickViewFields: ['CLASSIF_NAME'],
