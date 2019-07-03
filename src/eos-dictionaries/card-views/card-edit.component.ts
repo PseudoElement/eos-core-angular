@@ -81,7 +81,8 @@ export class CardEditComponent implements OnChanges, OnDestroy {
                 .subscribe((newVal) => {
                     let changed = false;
                     Object.keys(newVal).forEach((path) => {
-                        if (!this.inputs[path].isNoDBInput) {
+                        const input = this.inputs[path];
+                        if (input && !this.inputs[path].isNoDBInput) {
                             if (this.changeByPath(path, newVal[path])) {
                                 changed = true;
                             }
