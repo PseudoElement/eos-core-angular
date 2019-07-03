@@ -692,6 +692,8 @@ export class EosDictService {
             searchResults: false
         });
 
+
+        this.unmarkAll();
         this._srchCriteries = null;
         return this._reloadList()
             .then((val) => {
