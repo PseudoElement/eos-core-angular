@@ -1,12 +1,14 @@
 import { E_FIELD_TYPE } from './../../interfaces/dictionary.interfaces';
 import { DIGIT3_PATTERN, DIGIT4_WITH_PERIOD_LIST_SEPARATED } from 'eos-common/consts/common.consts';
 
+export const USER_LIST_ORDERBY = 'WEIGHT';
 export class TDFSelect {
     dictId: string;
     dictKey: string;
     dictKeyTitle: string;
     version?: any;
     criteries?: any;
+    orderby?: string;
 }
 export class TDFSelectOption {
     value: any;
@@ -30,7 +32,6 @@ export class TDefaultField {
     minValue?: number;
     maxValue?: number;
     default?: any;
-
 }
 
 export const RKFieldsFict: TDefaultField[] = [
@@ -355,6 +356,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+            orderby: USER_LIST_ORDERBY,
         }
         // title: 'Исполнители РК',
         // classif_id:  545
@@ -732,6 +734,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+            orderby: USER_LIST_ORDERBY,
         }
     }, {
         // Внешние адресаты - Адресаты
@@ -748,6 +751,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '630', ISN_LCLASSIF: '-99', },
+            orderby: USER_LIST_ORDERBY,
         }
     }, {
         key: 'JOURNAL_WHERE_REDIRECTION_W',
@@ -760,6 +764,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+            orderby: USER_LIST_ORDERBY,
         }
 
         // classif_id: NULL
@@ -775,6 +780,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+            orderby: USER_LIST_ORDERBY,
         }
     }, {
         key: 'REF_FILE_ACCESS_LIST',
@@ -788,6 +794,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+            orderby: USER_LIST_ORDERBY,
         }
     }, {
         key: 'JOURNAL_WHO_EMPTY_W',
@@ -800,6 +807,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+            orderby: USER_LIST_ORDERBY,
         }
         // classif_id:  545
     }, {
@@ -815,6 +823,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+            orderby: USER_LIST_ORDERBY,
         }
 
     }, {
@@ -828,6 +837,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+            orderby: USER_LIST_ORDERBY,
         }
         // classif_id:  545
     }, {
@@ -841,6 +851,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+            orderby: USER_LIST_ORDERBY,
         }
         // classif_id:  545
     }, {
@@ -855,6 +866,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+            orderby: USER_LIST_ORDERBY,
         }
     }, {
         key: 'FORWARD_ISN_LIST_DEP_W',
@@ -868,6 +880,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+            orderby: USER_LIST_ORDERBY,
         }
 
         // classif_id:  545
@@ -883,6 +896,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+            orderby: USER_LIST_ORDERBY,
         }
     }, {
         key: 'SIGN_ISN_LIST',
@@ -894,6 +908,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+            orderby: USER_LIST_ORDERBY,
         }
         // kind_doc '3',
         // title: 'Список подписывающих РК',
@@ -912,7 +927,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
-
+            orderby: USER_LIST_ORDERBY,
         }
         // classif_id:  545
     }, {
@@ -929,7 +944,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_LIST',
             dictKeyTitle: 'NAME',
             criteries: { CLASSIF_ID: '107', ISN_LCLASSIF: '-99', },
-
+            orderby: USER_LIST_ORDERBY,
         }
     }, {
         key: 'TERM_EXEC',

@@ -210,7 +210,13 @@ export class AdvCardRKDataCtrl {
             } else {
                 query = ALL_ROWS;
             }
+
+
             const req = {[el.dict.dictId]: query};
+            if (el.dict.orderby) {
+                req['orderby'] = el.dict.orderby;
+            }
+
 
             cache.promise = this._apiSrv.read(req).then((data) => {
                 cache.dict.length = 0;
