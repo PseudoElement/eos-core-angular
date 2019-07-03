@@ -31,8 +31,6 @@ const tabs: Ttab [] = [
 
 // declare function openPopup(url: string, callback?: Function): boolean;
 
-// Реквизит "Срок исполнения" может быть заполнен только в одном месте
-
 @Component({
     selector: 'eos-adv-card-rk',
     templateUrl: 'adv-card-rk.component.html',
@@ -60,8 +58,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     formInvalid: boolean;
     isEDoc: boolean;
     rkType: number;
-    // protected formChanges$: Subscription;
-
 
     @ViewChild('currentPage') private currentPage: RKBasePage;
     private subscriptions: Subscription[];
@@ -73,13 +69,9 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         public injector: Injector,
         public bsModalRef: BsModalRef,
         public zone: NgZone,
-        // private _apiSrv: PipRX,
         private _dataSrv: EosDataConvertService,
         private _inputCtrlSrv: InputControlService,
         private _confirmSrv: ConfirmWindowService,
-        // private _msgSrv: EosMessageService,
-        // private _dictSrv: EosDictService,
-        // private _zone: NgZone,
         private _waitClassifSrv: WaitClassifService,
     ) {
         this.isUpdating = true;
@@ -118,21 +110,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         }
     }
 
-    // updateLinks (el: TDefaultField, options: TDFSelectOption[], data: any) {
-    //     if (el.key === 'JOURNAL_ISN_NOMENC' ||
-    //         el.key === 'JOURNAL_ISN_NOMENC_W'
-    //         ) {
-    //         const rec = data[0];
-    //         if (rec['DUE'] === '0.') {
-    //             options[0].title = '...';
-    //             options[0].rec = null;
-    //         } else {
-    //             options[0].rec = rec;
-    //             options[0].title = rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
-    //         }
-    //     }
-    // }
-
     save(): void {
         this.preSaveCheck(this.newData).then(isCancel => {
             if (!isCancel) {
@@ -162,18 +139,8 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 this.rereadUserLists();
             });
         });
-
-
-        // const config = this.dataController.getApiConfig();
-        // const url = config.webBaseUrl + '/Pages/User/USER_LISTS.aspx?user_id=-99';
-        // console.log('open');
-        // openPopup(url, ((event, str) => {
-        //     console.log('close');
-        //     return Promise.resolve(str);
-        // }).bind(this));
-        // this.rereadUserLists();
-
     }
+
     rereadUserLists() {
         this.dataController.markCacheForDirty('USER_LISTS');
         this.dataController.updateDictsOptions('USER_LISTS', null, (event) => {

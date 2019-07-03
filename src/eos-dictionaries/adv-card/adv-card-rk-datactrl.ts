@@ -135,6 +135,38 @@ export class AdvCardRKDataCtrl {
         return Promise.resolve(null);
     }
 
+    _appendListInfo(dict: TDefaultField, data: any[]) {
+        const listreqs = [];
+
+        for (let i = 0; i < data.length; i++) {
+            const el = data[i];
+
+            const query = { args: { isn: el.value } };
+            const req = { ValidateUserList4DefaultValues: query};
+            listreqs.push(
+                this._apiSrv.read(req).then((response) => {
+                    if (String(response) === 'ok') {
+
+                    } else {
+                    const opt = dict.options.find((dopt) => dopt.value === el.value);
+                        if (opt) {
+                            if (String(response) === 'LIST_IS_EMPTY') {
+                                opt.isEmpty = true;
+                            } else if (String(response) === 'LIST_CONTAINS_DELETED') {
+                                opt.hasDeleted = true;
+                            }
+                        }
+                    }
+                })
+            );
+        }
+
+        return Promise.all(listreqs)
+        .then((responses) => {
+            return responses;
+        });
+    }
+
     public markCacheForDirty(filter: string) {
         const fields = this.getDescriptions();
         Object.keys(fields).forEach ((key) => {
@@ -197,6 +229,13 @@ export class AdvCardRKDataCtrl {
 
                 }
                 // console.log ('promise done');
+
+                return opts_ptr;
+            }).then((opts_ptr) => {
+                if (el.dict.dictId === 'USER_LISTS') {
+                    this._appendListInfo(el, opts_ptr);
+                }
+
                 callback ({ path: el.key, options: opts_ptr, el: el });
                 el.options = opts_ptr;
 
@@ -236,39 +275,6 @@ export class AdvCardRKDataCtrl {
             return responses;
         });
     }
-
-    // private _appendListInfo(dict: TDefaultField, data: any[]) {
-    //     const listreqs = [];
-
-    //     for (let i = 0; i < data.length; i++) {
-    //         const el = data[i];
-
-    //         const query = { args: { isn: el.ISN_LIST } };
-    //         const req = { ValidateUserList4DefaultValues: query};
-    //         listreqs.push(
-    //             this._apiSrv.read(req).then((response) => {
-    //                 if (String(response) === 'ok') {
-
-    //                 } else {
-    //                 const opt = dict.options.find((dopt) => dopt.value === el.ISN_LIST);
-    //                     if (opt) {
-    //                         if (String(response) === 'LIST_IS_EMPTY') {
-    //                             opt.isEmpty = true;
-    //                         } else if (String(response) === 'LIST_CONTAINS_DELETED') {
-    //                             opt.hasDeleted = true;
-    //                         }
-    //                     }
-    //                 }
-    //             })
-    //         );
-    //     }
-
-    //     return Promise.all(listreqs)
-    //     .then((responses) => {
-    //         return responses;
-    //     });
-    // }
-
 
     public fixDBValueByType(value: any, type: E_FIELD_TYPE): any {
         if (value === undefined) {
