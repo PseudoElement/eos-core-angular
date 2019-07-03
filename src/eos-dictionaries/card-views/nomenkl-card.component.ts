@@ -59,7 +59,7 @@ export class NomenklCardComponent extends BaseCardEditComponent implements OnCha
         if (this.form) {
             const i = this.inputs['rec.SECURITY'];
             i.options = [];
-            const req = {'SECURITY_CL': []};
+            const req = {'SECURITY_CL': [], orderby: 'WEIGHT'};
             this._apiSrv
                 .read(req)
                 .then((rdata: any[]) => {

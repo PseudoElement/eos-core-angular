@@ -569,6 +569,18 @@ export class EosDictionary {
             let _a = a.getFieldValueByName(_orderBy.fieldKey); // data.rec[_orderBy.fieldKey];
             let _b = b.getFieldValueByName(_orderBy.fieldKey); // data.rec[_orderBy.fieldKey];
 
+            if (typeof(_a) === 'number' || typeof (_b) === 'number') {
+                if (_a > _b) {
+                    return _orderBy.ascend ? 1 : -1;
+                }
+                if (_a < _b) {
+                    return _orderBy.ascend ? -1 : 1;
+                }
+                if (_a === _b) {
+                    return 0;
+                }
+            }
+
             if (_a !== null && _a !== undefined) {
                 _a = (_a + '').trim().toLowerCase();
             } else {
@@ -582,16 +594,6 @@ export class EosDictionary {
             }
 
             return (_orderBy.ascend ? 1 : -1) * _a.toString().localeCompare(_b.toString());
-
-            // if (_a > _b) {
-            //     return _orderBy.ascend ? 1 : -1;
-            // }
-            // if (_a < _b) {
-            //     return _orderBy.ascend ? -1 : 1;
-            // }
-            // if (_a === _b) {
-            //     return 0;
-            // }
         });
     }
 
