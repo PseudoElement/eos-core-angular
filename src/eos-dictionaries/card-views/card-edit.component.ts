@@ -75,17 +75,15 @@ export class CardEditComponent implements OnChanges, OnDestroy {
             const isNode = this.data.rec && this.data.rec.IS_NODE;
             this.form = this._inputCtrlSrv.toFormGroup(inputs, isNode);
             this.inputs = inputs;
-            this.afterGetForm(this.form, inputs);
+            this.afterGetForm(inputs);
 
             this.subscriptions.push(this.form.valueChanges
                 .subscribe((newVal) => {
                     let changed = false;
                     Object.keys(newVal).forEach((path) => {
-                        const input = this.inputs[path];
-                        if (!input || !this.inputs[path].isNoDBInput) {
-                            if (this.changeByPath(path, newVal[path])) {
-                                changed = true;
-                            }
+                        if (this.changeByPath(path, newVal[path])) {
+                            // console.warn('changed by', path);
+                            changed = true;
                         }
                     });
                     this.formChanged.emit(changed);
@@ -109,7 +107,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         return null;
     }
 
-    afterGetForm(form: FormGroup, inputs: any): any {
+    afterGetForm(inputs: any): any {
         if (this.dictionaryId === RUBRICATOR_DICT.id) {
             const input = inputs['rec.CLASSIF_NAME'];
             if (input) {
@@ -169,11 +167,13 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         }
 
         this.newData = EosUtils.setValueByPath(this.newData, path, _value);
-        const oldValue = EosUtils.getValueByPath(this.data, path, false);
-
-        // if (oldValue !== _value) {
-        //     console.warn('changed', path, oldValue, 'to', _value, this.data.rec);
-        // }
+        let oldValue = EosUtils.getValueByPath(this.data, path, false);
+        if (oldValue === '') { // fix empty strings in IE
+            oldValue = null;
+        }
+        if (oldValue !== _value) {
+            // console.warn('changed', path, oldValue, 'to', _value, this.data.rec);
+        }
         return _value !== oldValue;
     }
 

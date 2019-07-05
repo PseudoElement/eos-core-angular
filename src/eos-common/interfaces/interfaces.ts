@@ -13,6 +13,7 @@ export interface IAppCfg {
 export interface ISelectOption {
     value: string | number;
     title: string;
+    disabled?: boolean;
 }
 
 export interface IOpenClassifParams {

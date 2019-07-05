@@ -786,8 +786,7 @@ const commonMeta = {
         relations: [
             // { name: 'DEPARTMENT_Ref', __type: 'DEPARTMENT', sf: 'DUE', tf: 'DUE' },
             { name: 'USER_Ref', __type: 'USER_CL', sf: 'CLOSE_WHO', tf: 'ISN_LCLASSIF' },
-            // { name: 'SECURITY_CL_Ref', __type: 'SECURITY_CL', sf: 'SECURITY', tf: 'SECURLEVEL' }
-
+            { name: 'SECURITY_CL_Ref', __type: 'SECURITY_CL', sf: 'SECURITY', tf: 'SECURLEVEL' }
         ]
     },
     NTFY_SYSTEM_PARAMS: {

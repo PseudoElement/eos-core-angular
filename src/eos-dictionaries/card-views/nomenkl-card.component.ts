@@ -1,6 +1,5 @@
 import {Component, Injector, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
-import {PipRX} from '../../eos-rest';
 import {AbstractControl, ValidatorFn} from '@angular/forms';
 
 @Component({
@@ -15,11 +14,12 @@ export class NomenklCardComponent extends BaseCardEditComponent implements OnCha
 
     constructor(
         injector: Injector,
-        private _apiSrv: PipRX,
+        // private _apiSrv: PipRX,
     ) {
         super(injector);
     }
     ngOnInit(): void {
+        super.ngOnInit();
         const v = [this.endYearValueValidator()];
         if (this.form.controls['rec.END_YEAR'].validator) {
             v.push(this.form.controls['rec.END_YEAR'].validator);
@@ -57,16 +57,22 @@ export class NomenklCardComponent extends BaseCardEditComponent implements OnCha
 
     ngOnChanges(changes: SimpleChanges) {
         if (this.form) {
-            const i = this.inputs['rec.SECURITY'];
-            i.options = [];
-            const req = {'SECURITY_CL': [], orderby: 'WEIGHT'};
-            this._apiSrv
-                .read(req)
-                .then((rdata: any[]) => {
-                    rdata.forEach((d) => {
-                        i.options.push({ title: d['CLASSIF_NAME'], value: d['CLASSIF_NAME'], disabled: d['DELETED']});
-                    });
-                });
+
+        //     const i = this.inputs['rec.SECURITY'];
+        //     const val = this.getValue('rec.SECURITY');
+        //     if (i && i.options) {
+        //         i.options = i.options.filter(o => (!o.disabled || val === o.value));
+        //     }
+
+        //     // i.options = [];
+        //     // const req = {'SECURITY_CL': [], orderby: 'WEIGHT'};
+        //     // this._apiSrv
+        //     //     .read(req)
+        //     //     .then((rdata: any[]) => {
+        //     //         rdata.forEach((d) => {
+        //     //             i.options.push({ title: d['CLASSIF_NAME'], value: d['CLASSIF_NAME'], disabled: d['DELETED']});
+        //     //         });
+        //     //     });
             this.unsubscribe();
             this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this.updateForm(formChanges));
         }
@@ -96,6 +102,6 @@ export class NomenklCardComponent extends BaseCardEditComponent implements OnCha
         if (ye1 !== ys) {
             p = false;
         }
-        this.form.controls['rec.buttPer'].setValue(p ? 0 : 1);
+        this.form.controls['rec.buttPer'].setValue(p ? 0 : 1, {onlySelf: true, emitEvent: false });
     }
 }

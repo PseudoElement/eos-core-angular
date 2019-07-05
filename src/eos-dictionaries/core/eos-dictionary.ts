@@ -416,24 +416,39 @@ export class EosDictionary {
     //     return null;
     // }
 
-    getListView(customFields: IFieldView[]) {
-        const fields = this.descriptor.record.getListView({});
-        const infoFields = this.descriptor.record.getInfoView({});
-        const updatefields = fields.concat(customFields).concat(infoFields);
-        this.descriptor.getRelatedFields(updatefields.filter(i => i.dictionaryId)
+
+    loadRelatedFieldsOptions(updatefields: IFieldView[]): Promise<any> {
+
+        return this.descriptor.getRelatedFields(updatefields.filter(i => i.dictionaryId)
                                 .map(i => i.dictionaryId ? i.dictionaryId : null))
             .then((related) => {
                 updatefields.forEach((field) => {
                     if ((field.dictionaryId !== undefined)) {
                         field.options.splice(0, field.options.length);
+                        const t = this.descriptor.getMetadata();
+                        // Есть таблицы с PK integer и FK string (Nomencl_cl.security)
+                        const type_fk = field.dictionaryLink ? t.properties[field.dictionaryLink.fk] : null;
+                        const fn = (field.dictionaryLink ? field.dictionaryLink.pk : 'ISN_LCLASSIF');
+                        const ln = (field.dictionaryLink ? field.dictionaryLink.label : 'CLASSIF_NAME');
+
                         related[field.dictionaryId].forEach((rel) => {
-                            const fn = (field.dictionaryLink ? field.dictionaryLink.pk : 'ISN_LCLASSIF');
-                            const ln = (field.dictionaryLink ? field.dictionaryLink.label : 'CLASSIF_NAME');
-                            field.options.push({value: rel[fn], title: rel[ln]});
+                            const el = {value: rel[fn], title: rel[ln], disabled: !!rel['DELETED'] };
+                            if (type_fk === 's') {
+                                el.value = String(el.value);
+                            }
+
+                            field.options.push(el);
                         });
                     }
                 });
             });
+    }
+
+    getListView(customFields: IFieldView[]) {
+        const fields = this.descriptor.record.getListView({});
+        const infoFields = this.descriptor.record.getInfoView({});
+        const updatefields = fields.concat(customFields).concat(infoFields);
+        this.loadRelatedFieldsOptions(updatefields);
         return fields;
     }
 

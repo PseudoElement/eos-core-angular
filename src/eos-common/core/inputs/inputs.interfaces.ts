@@ -20,7 +20,6 @@ export interface IBaseInput {
     groupLabel?: string;
     minValue?: number;
     maxValue?: number;
-    isNoDBInput?: boolean;
 }
 
 export interface ISelectInput extends IBaseInput {

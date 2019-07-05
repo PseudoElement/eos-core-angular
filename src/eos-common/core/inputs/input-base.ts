@@ -25,7 +25,6 @@ export class InputBase<T> {
     minValue?: number;
     maxValue?: number;
     dib?: DynamicInputBase;
-    isNoDBInput?: boolean;
 
     constructor(options: {
         value?: T,
@@ -50,7 +49,6 @@ export class InputBase<T> {
         formatDbBinary?: boolean,
         minValue?: number;
         maxValue?: number;
-        isNoDBInput?: boolean;
     } = {}) {
         this.value = options.value;
         this.key = options.key || '';
@@ -75,6 +73,5 @@ export class InputBase<T> {
         this.isGroup = options.isGroup;
         this.minValue = options.minValue;
         this.maxValue = options.maxValue;
-        this.isNoDBInput = options.isNoDBInput;
     }
 }
