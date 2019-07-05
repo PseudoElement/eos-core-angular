@@ -83,7 +83,9 @@ export class CardRightSrv {
                     card.USER_CARD_DOCGROUP_List.splice(i, 1);
                     i--;
                 }
+                delete dg._State;
             }
+            delete card._State;
         });
         return this._pipSrv.batch(chl, '')
             .then((d) => {
@@ -348,7 +350,7 @@ export class CardRightSrv {
                 ch['data'] = { ALLOWED: ent['ALLOWED'] };
             }
             chl.push(ch);
-            delete ent._State;
+            // delete ent._State;
             // this._saveOrigin(ent);
         }
     }
