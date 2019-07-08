@@ -33,6 +33,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     initDue: string;
     initLogin: string;
     title: string;
+    tehnicUser: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public _apiSrv: UserParamApiSrv,
@@ -81,39 +82,55 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         this.ngUnsubscribe.complete();
     }
 
+    createUser(): boolean {
+        const d = this.data;
+        if ( d['dueDL'] === undefined &&  !this.tehnicUser) {
+            return false;
+        }
+        return true;
+    }
+
     submit() {
+        if ( this.createUser() ) {
+            const url = this._createUrlForSop();
 
-        const url = this._createUrlForSop();
-
-        this._pipeSrv.read({
-            [url]: ALL_ROWS,
-        })
-            .then(data => {
-                this.closedModal.emit();
-                this._router.navigate(['user-params-set'], {
-                    queryParams: { isn_cl: data[0] }
-                });
+            this._pipeSrv.read({
+                [url]: ALL_ROWS,
             })
-            .catch(e => {
-                const m: IMessage = {
-                    type: 'warning',
-                    title: 'Предупреждение',
-                    msg: '',
-                };
-                if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
-                    this._router.navigate(['login'], {
-                        queryParams: {
-                            returnUrl: this._router.url
-                        }
+                .then(data => {
+                    this.closedModal.emit();
+                    this._router.navigate(['user-params-set'], {
+                        queryParams: { isn_cl: data[0] }
                     });
-                }
-                if (e instanceof RestError && e.code === 500) {
-                    m.msg = 'Пользователь с таким логином уже существует';
-                } else {
-                    m.msg = e.message ? e.message : e;
-                }
-                this._msgSrv.addNewMessage(m);
-            });
+                })
+                .catch(e => {
+                    const m: IMessage = {
+                        type: 'warning',
+                        title: 'Предупреждение',
+                        msg: '',
+                    };
+                    if (e instanceof RestError && (e.code === 434 || e.code === 0)) {
+                        this._router.navigate(['login'], {
+                            queryParams: {
+                                returnUrl: this._router.url
+                            }
+                        });
+                    }
+                    if (e instanceof RestError && e.code === 500) {
+                        m.msg = 'Пользователь с таким логином уже существует';
+                    } else {
+                        m.msg = e.message ? e.message : e;
+                    }
+                    this._msgSrv.addNewMessage(m);
+                });
+        } else {
+            const m: IMessage = {
+                type: 'warning',
+                title: 'Предупреждение',
+                msg: 'Укажите пользователя техническим, либо добавьте должностное лицо',
+            };
+            this._msgSrv.addNewMessage(m);
+        }
     }
     cancel() {
         this.closedModal.emit();
@@ -218,6 +235,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             takeUntil(this.ngUnsubscribe)
         )
         .subscribe(data => {
+            this.tehnicUser = data;
             if (data) {
                 f.get('DUE_DEP_NAME').patchValue('');
                 f.get('DUE_DEP_NAME').disable();
