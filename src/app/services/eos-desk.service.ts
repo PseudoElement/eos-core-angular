@@ -138,6 +138,10 @@ export class EosDeskService {
         }
     }
 
+    reloadDeskList() {
+        this._readDeskList();
+    }
+
     /* getDesk(id: string): Promise<EosDesk> {
         return new Promise((res, rej) => { // tslint:disable-line:no-unused-variable
             res(this._desksList.find((_desk) => id === _desk.id));
@@ -300,7 +304,7 @@ export class EosDeskService {
     }
 
     private _readDeskList() {
-        this._desksList = [...DEFAULT_DESKS];
+        const list = [...DEFAULT_DESKS];
         const viewIds = this._appCtx.UserViews
             .filter((uv) => uv.SRCH_KIND_NAME === 'clmanDesc')
             .map((uv) => uv.ISN_VIEW);
@@ -308,17 +312,19 @@ export class EosDeskService {
             this._apiSrv.read<SRCH_VIEW>({SRCH_VIEW: viewIds})
                 .then((views) => {
                     views.forEach((view) => {
-                        this._desksList.push(<EosDesk>{
+                        list.push(<EosDesk>{
                             id: view.ISN_VIEW.toString(),
                             name: view.VIEW_NAME,
                             edited: false,
                             references: [],
                         });
                     });
+                    this._desksList = list;
                     this._sortDeskList();
                     this._desksList$.next(this._desksList);
                 });
         } else {
+            this._desksList = list;
             this._desksList$.next(this._desksList);
         }
     }
