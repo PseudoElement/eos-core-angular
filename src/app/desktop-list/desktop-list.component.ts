@@ -1,19 +1,20 @@
-import { Component, Output, EventEmitter, Input, OnChanges } from '@angular/core';
+import {Component, Output, EventEmitter, Input, OnChanges, OnDestroy} from '@angular/core';
 import { EosDesk } from '../core/eos-desk';
-import { EosDeskService } from '../services/eos-desk.service';
+import {DEFAULT_DESKS, EosDeskService} from '../services/eos-desk.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { WARN_DESK_EDITING, WARN_DESK_CREATING, DANGER_DESK_CREATING } from '../consts/messages.consts';
 import { CONFIRM_DESK_DELETE } from '../consts/confirms.const';
 import { NgForm } from '@angular/forms';
 import { EosUtils } from 'eos-common/core/utils';
+import {Subscription} from 'rxjs';
 
 
 @Component({
     selector: 'eos-desktop-list',
     templateUrl: './desktop-list.component.html'
 })
-export class DesktopListComponent implements OnChanges {
+export class DesktopListComponent implements OnChanges, OnDestroy {
     @Input() selectedMarker = true;
     @Input() hideSystem = false;
 
@@ -40,21 +41,31 @@ export class DesktopListComponent implements OnChanges {
 
     private list: EosDesk[] = [];
 
+    private _desksListSubscription: Subscription;
+    private _selectedDeskSubscription: Subscription;
+
     constructor(
         private _deskSrv: EosDeskService,
         private _msgSrv: EosMessageService,
         private _confirmSrv: ConfirmWindowService,
     ) {
-        this.deskList = [];
-        this._deskSrv.desksList.subscribe((res) => {
+        this.deskList = DEFAULT_DESKS;
+        this.selectedDesk = DEFAULT_DESKS[0];
+        this._desksListSubscription = this._deskSrv.desksList.subscribe((res) => {
             this.list = EosUtils.deepUpdate([], res);
             this.ngOnChanges();
         });
-        this._deskSrv.selectedDesk.subscribe((desk) => this.selectedDesk = desk);
+        this._selectedDeskSubscription = this._deskSrv.selectedDesk.subscribe((desk) =>
+            setTimeout(() => this.selectedDesk = desk, 0));
     }
 
     ngOnChanges() {
         this.deskList = this.list.filter((desk) => !this.hideSystem || desk.id !== 'system');
+    }
+
+    ngOnDestroy(): void {
+        this._desksListSubscription.unsubscribe();
+        this._selectedDeskSubscription.unsubscribe();
     }
 
     openEditForm(evt: Event, desk: EosDesk) {

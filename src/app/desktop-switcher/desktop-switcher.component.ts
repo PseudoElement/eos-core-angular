@@ -1,38 +1,37 @@
-import { Component, ViewChild, HostListener } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import {Component, ViewChild, OnDestroy, OnInit} from '@angular/core';
+import { Router } from '@angular/router';
 import { BsDropdownDirective } from 'ngx-bootstrap/dropdown';
 
 import { EosDeskService } from '../services/eos-desk.service';
 import { EosDesk } from '../core/eos-desk';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
+import {Subscription} from 'rxjs';
 
 @Component({
     selector: 'eos-desktop-switcher',
     templateUrl: 'desktop-switcher.component.html',
 })
-export class DesktopSwitcherComponent {
+export class DesktopSwitcherComponent implements OnInit, OnDestroy {
     selectedDesk: EosDesk;
-    innerClick: boolean;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     @ViewChild('dropDown') private _dropDown: BsDropdownDirective;
 
+    private _selectedDeskSubscription: Subscription;
+
     constructor(private _deskSrv: EosDeskService,
         private _router: Router,
-        activeRoute: ActivatedRoute
     ) {
-        this._deskSrv.selectedDesk.subscribe((res) => this.selectedDesk = res);
+        this._selectedDeskSubscription = this._deskSrv.selectedDesk.subscribe((res) =>
+            setTimeout(() => this.selectedDesk = res, 0));
     }
 
-    @HostListener('window:click', [])
-    clickout() {
-        if (!this.innerClick) {
-            this._dropDown.toggle(false);
-        }
-        this.innerClick = false;
+    ngOnInit(): void {
+        this._deskSrv.reloadDeskList();
     }
 
-    setInnerClick() {
-        this.innerClick = true;
+    ngOnDestroy(): void {
+        this._dropDown.autoClose = false;
+        this._selectedDeskSubscription.unsubscribe();
     }
 
     openDesk(desk: EosDesk): void {
