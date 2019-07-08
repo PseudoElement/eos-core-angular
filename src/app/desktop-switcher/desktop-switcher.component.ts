@@ -13,12 +13,10 @@ import {Subscription} from 'rxjs';
 })
 export class DesktopSwitcherComponent implements OnInit, OnDestroy {
     selectedDesk: EosDesk;
-    innerClick: boolean;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     @ViewChild('dropDown') private _dropDown: BsDropdownDirective;
 
     private _selectedDeskSubscription: Subscription;
-    private _boundClickCallback: EventListener;
 
     constructor(private _deskSrv: EosDeskService,
         private _router: Router,
@@ -28,25 +26,12 @@ export class DesktopSwitcherComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this._boundClickCallback = this.clickOut.bind(this);
-        window.addEventListener('click', this._boundClickCallback);
         this._deskSrv.reloadDeskList();
     }
 
     ngOnDestroy(): void {
+        this._dropDown.autoClose = false;
         this._selectedDeskSubscription.unsubscribe();
-        window.removeEventListener('click', this._boundClickCallback);
-    }
-
-    clickOut() {
-        if (!this.innerClick) {
-            this._dropDown.toggle(false);
-        }
-        this.innerClick = false;
-    }
-
-    setInnerClick() {
-        this.innerClick = true;
     }
 
     openDesk(desk: EosDesk): void {
