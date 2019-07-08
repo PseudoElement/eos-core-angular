@@ -2,6 +2,7 @@ import {E_DICT_TYPE, IDictionaryDescriptor} from 'eos-dictionaries/interfaces';
 import {LINEAR_TEMPLATE} from './_linear-template';
 import {COMMON_FIELD_NAME} from './_common';
 import {YEAR_PATTERN} from 'eos-common/consts/common.consts';
+import { SECURITY_DICT } from './security.consts';
 
 export const DID_NOMENKL_CL = 'nomenkl';
 export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
@@ -42,8 +43,14 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         type: 'select',
         length: 64,
         // default: 'общий',
-        default: '',
+        // default: '',
         options: [],
+        dictionaryId: SECURITY_DICT.apiInstance,
+        dictionaryLink: {
+            pk: 'SECURLEVEL',
+            fk: 'SECURITY',
+            label: 'GRIF_NAME',
+        },
     }, {
         key: 'SHELF_LIFE',
         title: 'Срок хранения',
@@ -99,6 +106,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         key: 'ARCH_FLAG',
         title: 'Подлежит сдаче в архив',
         type: 'boolean',
+        default: false,
     }, {
         key: 'E_DOCUMENT',
         title: 'Для электронных документов',
@@ -112,7 +120,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         length: 100,
         options: [{value: 0, title: 'Текущее'}, {value: 1, title: 'Переходящее'}],
         default: null,
-        isNoDBInput: true,
+        // isNoDBInput: true,
     },
         Object.assign({}, COMMON_FIELD_NAME, {
             title: 'Заголовок',

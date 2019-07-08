@@ -122,7 +122,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         });
     }
 
-     public userListsEdit() {
+    public userListsEdit() {
 
         this._waitClassifSrv.openClassif({classif: 'TECH_LISTS'})
         .then(result => {

@@ -5,6 +5,7 @@ import { EosDictService } from '../services/eos-dict.service';
 import { Subscription } from 'rxjs';
 import { NOT_EMPTY_STRING } from '../consts/input-validation';
 import { IDynamicInputOptions } from 'eos-common/dynamic-form-input/dynamic-input.component';
+import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 
 export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
     @Input() form: FormGroup;
@@ -72,22 +73,18 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
         const descriptor = this.dictSrv.currentDictionary.descriptor;
         const list = descriptor.record.getEditView({});
 
-        descriptor.getRelatedFields(list.filter(i => i.dictionaryId)
-                                .map(i => i.dictionaryId ? i.dictionaryId : null))
-            .then((related) => {
-                list.forEach((field) => {
-                    if ((field.dictionaryId !== undefined)) {
-                        field.options.length = 0;
-                        // field.options.splice(0, field.options.length);
-                        related[field.dictionaryId].forEach((rel) => {
-                            const fn = (field.dictionaryLink ? field.dictionaryLink.pk : 'ISN_LCLASSIF');
-                            const ln = (field.dictionaryLink ? field.dictionaryLink.label : 'CLASSIF_NAME');
-                            field.options.push({value: rel[fn], title: rel[ln]});
-                        });
+        this.dictSrv.currentDictionary.loadRelatedFieldsOptions(list.filter(i => i.dictionaryId)).then((d) => {
+            for (const key in this.inputs) {
+                if (this.inputs.hasOwnProperty(key)) {
+                    const input = this.inputs[key];
+                    if (input && input.options && input.controlType === E_FIELD_TYPE.select) {
+                        const value = this.getValue(key);
+                        console.log(key, value);
+                        input.options = input.options.filter(o => (!o.disabled || String(value) === String(o.value)));
                     }
-                });
-            });
-
+                }
+            }
+        });
     }
 
     /**
