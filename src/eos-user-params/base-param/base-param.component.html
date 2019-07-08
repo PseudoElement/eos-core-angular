@@ -58,10 +58,10 @@
                 </div>
             </div>
         </div>
-        <!-- технический пользователь -->
-        <div *ngIf="curentUser.isTechUser">
-            <eos-dynamic-input [input]="controls['teсhUser']" [form]="formControls" [readonly]="controls['teсhUser'].readonly" tooltip="к Техническому пользователю невозможно привязать должностное лицо" placement="bottom" containerClass="tooltip-info"></eos-dynamic-input>
-        </div>
+        <!-- технический пользователь 
+        <div *ngIf="curentUser.isTechUser"> [readonly]="controls['teсhUser'].readonly"-->
+            <eos-dynamic-input [input]="controls['teсhUser']" [form]="formControls" tooltip="Технический пользователь" placement="bottom" containerClass="tooltip-info"></eos-dynamic-input>
+        <!--</div> -->
         <!-- должностное лицо и роль -->
         <div class="row-department-role">
             <div [formGroup]="form" class="dynamic-input-wrapper inline-block base-department-input">
