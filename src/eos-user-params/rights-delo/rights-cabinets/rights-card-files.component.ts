@@ -171,9 +171,9 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     }
 
     selectCurentCard(card: CardsClass) {
-        if (this.currentCard && !this.flagEdit) {
+       /* if (this.currentCard && !this.flagEdit) {
             return;
-        }
+        }*/
         if (this.currentCard) {
             this.currentCard.current = false;
         }
