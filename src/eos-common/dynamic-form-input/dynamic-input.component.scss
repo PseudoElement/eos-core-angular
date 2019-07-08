@@ -47,6 +47,11 @@ eos-dynamic-input {
     .form-control {
         display: inline-block;
         border-color: $border-color-main-theme;
+
+        &.link-input {
+            background-color: #fafafa;
+        }
+
         &.light {
             background-color: $modal-block-background-main-theme;
         }
@@ -241,10 +246,6 @@ eos-dynamic-input {
 .theme-dark-blue .bs-datepicker-body table td span[class*='select-']:after,
 .theme-dark-blue .bs-datepicker-body table td[class*='select-'] span:after {
     background-color: $button-color-main-theme !important;
-}
-
-.bs-datepicker-body table td {
-    color: black !important;
 }
 
 .toggle-wrap {

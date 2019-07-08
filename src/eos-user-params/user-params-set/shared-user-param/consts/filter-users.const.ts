@@ -32,12 +32,22 @@ export const FILTER_PROTOCOL = {
         },
         {
             key: 'USEREDIT',
-            title: 'РЕДАКТИРОВАЛ:',
+            title: 'ПОЛЬЗОВАТЕЛЬ:',
+            type: 'string',
+        },
+        {
+            key: 'USEREDITISN',
+            title: 'ПОЛЬЗОВАТЕЛЬ:',
             type: 'string',
         },
         {
             key: 'USERWHO',
-            title: 'Пользователь:',
+            title: 'РЕДАКТИРОВАЛ:',
+            type: 'string',
+        },
+        {
+            key: 'USERWHOISN',
+            title: 'РЕДАКТИРОВАЛ:',
             type: 'string',
         }
     ],

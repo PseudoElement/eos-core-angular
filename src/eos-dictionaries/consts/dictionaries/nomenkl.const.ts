@@ -2,6 +2,7 @@ import {E_DICT_TYPE, IDictionaryDescriptor} from 'eos-dictionaries/interfaces';
 import {LINEAR_TEMPLATE} from './_linear-template';
 import {COMMON_FIELD_NAME} from './_common';
 import {YEAR_PATTERN} from 'eos-common/consts/common.consts';
+import { SECURITY_DICT } from './security.consts';
 
 export const DID_NOMENKL_CL = 'nomenkl';
 export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
@@ -11,7 +12,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     actions: [
         'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization', 'removeHard',
-        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'userOrder', 'export', 'import',
+        'edit', 'view', 'remove', 'removeHard', 'userOrder', 'userOrder', 'export', 'import', 'copyNodes', 'pasteNodes',
         'OpenSelected',
         'CloseSelected',
     ],
@@ -42,8 +43,14 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         type: 'select',
         length: 64,
         // default: 'общий',
-        default: '',
+        // default: '',
         options: [],
+        dictionaryId: SECURITY_DICT.apiInstance,
+        dictionaryLink: {
+            pk: 'SECURLEVEL',
+            fk: 'SECURITY',
+            label: 'GRIF_NAME',
+        },
     }, {
         key: 'SHELF_LIFE',
         title: 'Срок хранения',
@@ -99,6 +106,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         key: 'ARCH_FLAG',
         title: 'Подлежит сдаче в архив',
         type: 'boolean',
+        default: false,
     }, {
         key: 'E_DOCUMENT',
         title: 'Для электронных документов',
@@ -111,7 +119,8 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         title: '',
         length: 100,
         options: [{value: 0, title: 'Текущее'}, {value: 1, title: 'Переходящее'}],
-        // default: 1,
+        default: null,
+        // isNoDBInput: true,
     },
         Object.assign({}, COMMON_FIELD_NAME, {
             title: 'Заголовок',
@@ -122,11 +131,11 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
 
     treeFields: ['CLASSIF_NAME'],
     editFields: ['CLASSIF_NAME', 'NOTE', 'CLOSED', 'SECURITY', 'YEAR_NUMBER', 'SHELF_LIFE', 'NOM_NUMBER',
-        'END_YEAR', 'ARTICLE', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', 'buttPer'],
+        'END_YEAR', 'ARTICLE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG', 'E_DOCUMENT', 'buttPer'],
     searchFields: ['CLASSIF_NAME', 'NOM_NUMBER', ],
     fullSearchFields: ['CLASSIF_NAME', 'NOTE', 'NOM_NUMBER'],
     quickViewFields: ['NOM_NUMBER', 'SHELF_LIFE', 'SECURITY', 'E_DOCUMENT', 'CLOSED',  'YEAR_NUMBER',
-    'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_DATE', 'ARCH_FLAG',  'NOTE'],
+    'END_YEAR', 'ARTICLE', 'CLOSE_WHO', 'CLOSE_DATE', 'DOC_UID', 'ARCH_FLAG', 'ARCH_DATE', 'NOTE'],
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: ['NOM_NUMBER', 'CLASSIF_NAME', ],
     allVisibleFields: ['NOTE', 'CLOSED', 'SECURITY', 'SHELF_LIFE', 'YEAR_NUMBER',

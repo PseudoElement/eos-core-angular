@@ -31,7 +31,7 @@
             <button tooltip="Открыть" #itemTooltip="bs-tooltip" containerClass="tooltip-info" trigger="hover" container="body" (click)="openPopup(template, 'CERT_OTHER_STORES')" [disabled]="!editFlag || disablebtnCarma">Хранилища прочих сертификатов</button>
         </div>
     </div>
-    <div class="user-input-group">
+    <div class="user-input-group checkbox-line">
         <eos-dynamic-input class="inline-block" [input]="inputs['REMOTE_CRYPTO_SERVER']" [form]="form" [readonly]="false" (change)='disableOrEnabel()'></eos-dynamic-input>
         <hr>
     </div>
@@ -55,10 +55,10 @@
         <button [disabled]="!editFlag || !disablebtnCarma" (click)="openPopup(template, 'CERT_WEB_STORES')" tooltip="Открыть" #itemTooltip="bs-tooltip" placement="bottom" containerClass="tooltip-info" trigger="hover">Хранилища сертификатов для сервера удаленной проверки</button>
     </div>
 
-    <div class="user-input-group">
+    <!--<div class="user-input-group">
         <eos-dynamic-input class="inline-block" [input]="inputs['WEB_EDS_VERIFY_ON_SERVER']" [form]="form" [readonly]="false"></eos-dynamic-input>
         <hr>
-    </div>
+    </div>-->
 </div>
 <ng-template #template>
     <div class="modal-header">

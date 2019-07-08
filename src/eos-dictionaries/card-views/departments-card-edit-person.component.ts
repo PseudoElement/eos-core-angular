@@ -6,6 +6,14 @@ import { IImage } from '../interfaces/image.interface';
 import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { UPLOAD_IMG_FALLED, INFO_PERSONE_DONT_HAVE_CABINET } from '../consts/messages.consts';
 
+
+interface IToDeclineFields {
+    fio?: boolean;
+    gender?: boolean;
+    dep?: boolean;
+    adv?: boolean;
+}
+
 @Component({
     selector: 'eos-departments-card-edit-person',
     templateUrl: 'departments-card-edit-person.component.html',
@@ -94,20 +102,22 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         return res;
     }
 
-    public fillDeclineFields(): void {
+    public fillDeclineFields(opt: IToDeclineFields): void {
         const gender = this.getValue('printInfo.GENDER');
         const field: FieldsDecline = {
             DUTY: this.getValue('rec.DUTY') || '',
             NAME: this.getValue('printInfo.NAME') || '',
             PATRON: this.getValue('printInfo.PATRON') || '',
             SURNAME: this.getValue('printInfo.SURNAME') || '',
-            // PRINT_SURNAME_DP: 'test PRINT SURNAME_DP'
         };
-        if (gender !== null) {
-            field['GENDER'] = gender;
-        }
 
-        this.dictSrv.inclineFields(field)
+
+        if (opt.dep || opt.adv) {
+            if (gender !== null) {
+                field['GENDER'] = gender;
+            }
+
+            this.dictSrv.inclineFields(field)
             .then(([res]: any) => {
                 const name = res['NAME'];
                 if (name && name.length === 1) {
@@ -118,48 +128,89 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
                     res['NAME_VP'] = name;
                 }
 
-                // const rn = new RussianName('Петрова Зоя Сергеевна');
-                const rn = new RussianName(res['SURNAME'], res['NAME'], res['PATRON'],
-                    res['GENDER'] === 0 ? RussianNameProcessor.sexM :
-                    res['GENDER'] === 1 ? RussianNameProcessor.sexF :
-                    null
-                    );
-                res['GENDER'] = rn.sex === RussianNameProcessor.sexF ? 1 :
-                                rn.sex === RussianNameProcessor.sexM ? 0 : null;
-
-                res.NAME_DP = rn.firstName(rn.gcaseDat);
-                res.NAME_PP = rn.firstName(rn.gcasePred);
-                res.NAME_RP = rn.firstName(rn.gcaseRod);
-                res.NAME_TP = rn.firstName(rn.gcaseTvor);
-                res.NAME_VP = rn.firstName(rn.gcaseVin);
-                res.PATRON_DP = rn.middleName(rn.gcaseDat);
-                res.PATRON_PP = rn.middleName(rn.gcasePred);
-                res.PATRON_RP = rn.middleName(rn.gcaseRod);
-                res.PATRON_TP = rn.middleName(rn.gcaseTvor);
-                res.PATRON_VP = rn.middleName(rn.gcaseVin);
-                res.SURNAME_DP = rn.lastName(rn.gcaseDat);
-                res.SURNAME_PP = rn.lastName(rn.gcasePred);
-                res.SURNAME_RP = rn.lastName(rn.gcaseRod);
-                res.SURNAME_TP = rn.lastName(rn.gcaseTvor);
-                res.SURNAME_VP = rn.lastName(rn.gcaseVin);
-
-                res.PRINT_SURNAME = this._genIOFamily(rn, rn.gcaseIm);
-                res.PRINT_SURNAME_DP = this._genFamilyIO(rn, rn.gcaseDat);
-                res.PRINT_SURNAME_RP = this._genFamilyIO(rn, rn.gcaseRod);
                 if (res) {
                     Object.keys(res).forEach((key) => {
                         if (key !== 'PRINT_DEPARTMENT') {
-                            this.setValue('printInfo.' + key, res[key]);
-                            this.setDirty('printInfo.' + key);
+                            if ((opt.dep && (key === 'DUTY_RP' || key === 'DUTY_DP' || key === 'DUTY_VP' || key === 'DEPARTMENT_RP')) ||
+                                (opt.adv && (key === 'PRINT_DEPARTMENT' || key === 'PRINT_DUTY' ))
+
+                            ) {
+                                this.setValue('printInfo.' + key, res[key]);
+                                this.setDirty('printInfo.' + key);
+                            }
                         }
                     });
                 }
             });
 
-        if (this.dictSrv.currentNode) {
-            this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.currentNode.parent.data.rec['CLASSIF_NAME']);
-        } else {
-            this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.treeNodeTitle);
+            if (opt.adv) {
+                if (this.dictSrv.currentNode) {
+                    this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.currentNode.parent.data.rec['CLASSIF_NAME']);
+                } else {
+                    this.setValue('printInfo.PRINT_DEPARTMENT', this.dictSrv.treeNodeTitle);
+                }
+            }
+        }
+
+        if (opt.fio) {
+            const data: any = Object.assign(field);
+                // const rn = new RussianName('Петрова Зоя Сергеевна');
+            if (data['SURNAME'] + data['NAME'] + data['PATRON'] === '') {
+                const sn = this.getValue('rec.SURNAME');
+                data['SURNAME'] = (sn || '').replace(/\./g, ' ');
+            }
+
+            const rn = new RussianName(data['SURNAME'], data['NAME'], data['PATRON'],
+                data['GENDER'] === 0 ? RussianNameProcessor.sexM :
+                data['GENDER'] === 1 ? RussianNameProcessor.sexF :
+                null
+            );
+
+            if (opt.gender) {
+                data['GENDER'] = rn.sex === RussianNameProcessor.sexF ? 1 :
+                                rn.sex === RussianNameProcessor.sexM ? 0 : null;
+            }
+
+            data.NAME_DP = rn.firstName(rn.gcaseDat);
+            data.NAME_PP = rn.firstName(rn.gcasePred);
+            data.NAME_RP = rn.firstName(rn.gcaseRod);
+            data.NAME_TP = rn.firstName(rn.gcaseTvor);
+            data.NAME_VP = rn.firstName(rn.gcaseVin);
+            data.PATRON_DP = rn.middleName(rn.gcaseDat);
+            data.PATRON_PP = rn.middleName(rn.gcasePred);
+            data.PATRON_RP = rn.middleName(rn.gcaseRod);
+            data.PATRON_TP = rn.middleName(rn.gcaseTvor);
+            data.PATRON_VP = rn.middleName(rn.gcaseVin);
+            data.SURNAME_DP = rn.lastName(rn.gcaseDat);
+            data.SURNAME_PP = rn.lastName(rn.gcasePred);
+            data.SURNAME_RP = rn.lastName(rn.gcaseRod);
+            data.SURNAME_TP = rn.lastName(rn.gcaseTvor);
+            data.SURNAME_VP = rn.lastName(rn.gcaseVin);
+
+            data.PRINT_SURNAME = this._genIOFamily(rn, rn.gcaseIm);
+            data.PRINT_SURNAME_DP = this._genFamilyIO(rn, rn.gcaseDat);
+            data.PRINT_SURNAME_RP = this._genFamilyIO(rn, rn.gcaseRod);
+
+            // const n = this.getValue('printInfo.SURNAME');
+            // if (n === null || n === '') {
+            //     this.setValue('printInfo.SURNAME', res.SURNAME);
+            // }
+            delete data.SURNAME;
+            delete data.DUTY;
+            delete data.NAME;
+            delete data.PATRON;
+
+            console.log(data);
+
+            if (data) {
+                Object.keys(data).forEach((key) => {
+                    if (key !== 'PRINT_DEPARTMENT') {
+                        this.setValue('printInfo.' + key, data[key]);
+                        this.setDirty('printInfo.' + key);
+                    }
+                });
+            }
+
         }
 
     }
@@ -215,10 +266,19 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             this.prevValues['printInfo.SURNAME'] !== formChanges['printInfo.SURNAME'] ||
             this.prevValues['printInfo.PATRON'] !== formChanges['printInfo.PATRON']
         ) {
+            this.prevValues['printInfo.NAME'] = formChanges['printInfo.NAME'];
+            this.prevValues['printInfo.SURNAME'] = formChanges['printInfo.SURNAME'];
+            this.prevValues['printInfo.PATRON'] = formChanges['printInfo.PATRON'];
             setSurname = this.formatSurname(formChanges['printInfo.SURNAME'],
                                         formChanges['printInfo.NAME'],
                                         formChanges['printInfo.PATRON']);
+            this.fillDeclineFields({fio: true});
 
+        }
+
+        if (this.prevValues['printInfo.GENDER'] !== formChanges['printInfo.GENDER']) {
+            this.prevValues['printInfo.GENDER'] = formChanges['printInfo.GENDER'];
+            this.fillDeclineFields({fio: true});
         }
 
         this.prevValues = formChanges;

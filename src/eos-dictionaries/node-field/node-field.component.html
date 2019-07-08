@@ -43,8 +43,8 @@
         <ng-container *ngSwitchDefault>
             <div class="table-field-ico" *ngIf="hasFolderIcon">
                 <span class="folder small eos-icon" (click)="viewNode($event)" [ngClass]="getFolderIcon()"> </span>
-            </div>
-            <label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
+            </div><!--
+            --><label class="fieldlabel" [tooltip]="this.tooltipValue" placement="auto" container="body" containerClass="tooltip-info" [delay]="tooltipDelay">
                 {{ field.value }}
             </label>
         </ng-container>

@@ -20,7 +20,15 @@
         .btn {
             padding: 0;
         }
+
         .item-content {
+
+            &.disabled {
+                cursor: not-allowed;
+                opacity: 0.65;
+                box-shadow: none;
+            }
+
             position: relative;
             cursor: pointer;
             &.edited {

@@ -176,7 +176,7 @@ export class TestPageComponent implements OnInit, OnChanges {
         };
     }
     chooseUserLists() {
-        this._waitClassifSrv.openClassif({classif: 'USER_LISTS'})
+        this._waitClassifSrv.openClassif({classif: 'TECH_LISTS'})
         .then(result => {
             console.log('result: ', result);
         })

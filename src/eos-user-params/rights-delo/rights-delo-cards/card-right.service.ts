@@ -76,10 +76,11 @@ export class CardRightSrv {
             }
             for (let i = 0; card.USER_CARD_DOCGROUP_List.length > i; i++) {
                 const dg: USER_CARD_DOCGROUP = card.USER_CARD_DOCGROUP_List[i];
+                const saveState = dg._State;
                 if (dg._State) {
                     this._createChangeList(chl, dg, card);
                 }
-                if (dg._State === _ES.Deleted) {
+                if (saveState === _ES.Deleted) {
                     card.USER_CARD_DOCGROUP_List.splice(i, 1);
                     i--;
                 }

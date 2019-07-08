@@ -83,11 +83,16 @@ import { RKDefaultValuesCardComponent } from './adv-card/rk-default-values/rk-de
 import { RKFilesCardComponent } from './adv-card/rk-default-values/rk-default-files.component';
 import { DictionaryFilterComponent } from './dictionary-filter/dictionary-filter.component';
 import {CopyPropertiesComponent} from './copy-properties/copy-properties.component';
-
+import {CopyNodeComponent} from './copy-node/copy-node.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { DictFormComponent } from './dict-forms/dict-form.component';
+import { EosDatepickerInlineComponent } from './dict-forms/eos-datepicker-inline/eos-datepicker-inline.component';
+import { CalendarFormComponent } from './dict-forms/calendar-form/calendar-form.component';
 @NgModule({
     declarations: [
         CardComponent,
         CardEditComponent,
+        DictFormComponent,
         ColumnSettingsComponent,
         CounterNpEditComponent,
         AdvCardRKEditComponent,
@@ -138,7 +143,10 @@ import {CopyPropertiesComponent} from './copy-properties/copy-properties.compone
         PrjDefaultValuesComponent,
         LinkCardComponent,
         NadzorCardEditComponent,
+        CalendarFormComponent,
+        EosDatepickerInlineComponent,
         CopyPropertiesComponent,
+        CopyNodeComponent,
     ],
     entryComponents: [
         ColumnSettingsComponent,
@@ -151,7 +159,10 @@ import {CopyPropertiesComponent} from './copy-properties/copy-properties.compone
         CreateNodeBroadcastChannelComponent,
         DocgroupTemplateConfigComponent,
         PrjDefaultValuesComponent,
+        CalendarFormComponent,
+        EosDatepickerInlineComponent,
         CopyPropertiesComponent,
+        CopyNodeComponent,
     ],
     imports: [
         BrowserModule,
@@ -170,6 +181,7 @@ import {CopyPropertiesComponent} from './copy-properties/copy-properties.compone
         BsDropdownModule.forRoot(),
         TypeaheadModule.forRoot(),
         DragulaModule,
+        BsDatepickerModule.forRoot(),
     ],
     exports: [
         DictionaryComponent,
@@ -181,6 +193,8 @@ import {CopyPropertiesComponent} from './copy-properties/copy-properties.compone
         RecordViewComponent,
         RKDefaultValuesCardComponent,
         RulesSelectComponent,
+        CalendarFormComponent,
+        EosDatepickerInlineComponent,
     ],
     providers: [
         DictionaryDescriptorService,

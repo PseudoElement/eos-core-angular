@@ -25,8 +25,16 @@ import { EosReportComponent } from '../eos-report/eos-report.component';
 import { EosReportUsersStatsComponent } from '../eos-report/users-stats/users-stats.component';
 import { EosReportUsersInfoComponent } from '../eos-report/users-info/users-info.component';
 import { EosReportSummaryProtocolComponent } from 'eos-report/sum-protocol/sum-protocol.component';
+import { DictFormComponent } from 'eos-dictionaries/dict-forms/dict-form.component';
 /// import { environment } from 'environments/environment';
 
+const formDictionariesComponent = [
+    {
+        path: ':dictionaryId',
+        canDeactivate: [CanDeactivateGuard],
+        component: DictFormComponent,
+    },
+];
 const childrenDictionariesComponent = [{
     path: '',
     pathMatch: 'full',
@@ -68,7 +76,7 @@ const childrenDictionariesComponent = [{
                     path: ':tabNum',
                     component: CardComponent,
                     canDeactivate: [CanDeactivateGuard],
-            }],
+                }],
         }, {
             path: 'view',
             data: {
@@ -88,7 +96,7 @@ const childrenDictionariesComponent = [{
                 {
                     path: ':tabNum',
                     component: CardComponent,
-            }],
+                }],
         }],
     }, {
         path: '',
@@ -108,6 +116,12 @@ const routes: Routes = [{
     data: { title: 'Справочники', showInBreadcrumb: true },
     canActivate: [AuthorizedGuard],
     children: childrenDictionariesComponent,
+}, {
+    path: 'form',
+    data: { title: 'Справочники', showInBreadcrumb: false },
+    canActivate: [AuthorizedGuard],
+    canDeactivate: [CanDeactivateGuard],
+    children: formDictionariesComponent,
 }, {
     path: 'desk',
     data: { title: 'Главная', showInBreadcrumb: false },
@@ -224,26 +238,39 @@ const routes: Routes = [{
 },
 {
     path: 'report',
-    data: { title: 'Отчёт', showInBreadcrumb: true },
+    data: { title: 'Протокол', showInBreadcrumb: true },
     canActivate: [AuthorizedGuard],
-    component: EosReportComponent
-},
-{
-    path: 'report/users-info',
-    canActivate: [AuthorizedGuard],
-    component: EosReportUsersInfoComponent
-},
-{
-    path: 'report/users-stats',
-    canActivate: [AuthorizedGuard],
-    component: EosReportUsersStatsComponent,
-    data: {  title: 'Статистика по пользователям', showBreadcrumb: true }
-},
-{
-    path: 'report/sum-protocol',
-    canActivate: [AuthorizedGuard],
-    component: EosReportSummaryProtocolComponent,
-    data: {  title: 'Сводный протокол', showBreadcrumb: true }
+    component: EosReportComponent,
+    children: [
+        {
+            path: 'users-info',
+            component: EosReportUsersInfoComponent,
+            data: {
+                title: 'Информация о пользователях',
+                showBreadcrumb: true,
+                showInBreadcrumb: true,
+            }
+        },
+        {
+            path: 'users-stats',
+            component: EosReportUsersStatsComponent,
+            data: {
+                title: 'Статистика по пользователям',
+                showBreadcrumb: true,
+                showInBreadcrumb: true,
+            }
+        },
+        {
+            path: 'sum-protocol',
+            component: EosReportSummaryProtocolComponent,
+            data: {
+                title: 'Сводный протокол',
+                showBreadcrumb: true,
+                showInBreadcrumb: true,
+            }
+        },
+
+    ]
 },
 {
     path: '',

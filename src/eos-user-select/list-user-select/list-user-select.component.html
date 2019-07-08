@@ -9,6 +9,8 @@
                     <span class="item-count-content">
                         Записей:
                         <span class="counter">{{countMaxSize}}</span>
+                        Выбрано:
+                        <span class="counter">{{countcheckedField}}</span>
                     </span>
                 </div>
             </div>
@@ -26,7 +28,12 @@
                     <label class="user-check-label">
                     <input  [checked]="flagChecked"  type="checkbox" (change)="setCheckedAllFlag()">
                     <div>
-                        <span class="eos-icon small" [ngClass]="getflagChecked"></span>
+                        <span class="eos-icon small"
+                            [ngClass]="getflagChecked" 
+                            [tooltip]="checkAll" 
+                            containerClass="tooltip-info"
+                            placement="bottom"
+                        ></span>
                     </div>
                 </label>
                 </div>
@@ -38,8 +45,8 @@
                 </span>
                 <span class="user-list-first-colomn likeLink mar-left" (click)="sortPageList('fullDueName')">Должностное лицо
                 <span *ngIf ="_apiSrv.srtConfig.fullDueName.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
-                </span>   
-                <div class="pos-depart">
+                </span>
+                <div class="pos-depart" >
                     <span class="user-title-name user-list-first-colomn likeLink dep-width" (click)="sortPageList('department')" [textContent]="shooseP === 0 ? 'Подразделение' : 'Картотека'"></span>
                     <span *ngIf="_apiSrv.srtConfig.department.checked" class="curs-span-arrow"  [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)" (click)="sortPageList('department')"></span>
                 </div>
@@ -48,23 +55,24 @@
                 </span> -->
             </div>
         </div>
-        <div *ngIf="!isLoading; else spiner" class="list-user-sel">
-            <div *ngIf="listUsers.length; else emptyCert" class="block" [ngStyle]="{'width.px': tableWidth}" #listContent>
-                <div *ngFor="let user of listUsers" class="user-item" [ngClass]="{'highlighted': user.isSelected || (user.isChecked && !user.selectedMark) || user.selectedMark}" (dblclick)="RedactUser(user)">
+        <div  #listContent class="list-user-sel" (scroll)="savePositionSelectUser($event)">
+           <div *ngIf="!isLoading">
+            <div *ngIf="listUsers.length; else emptyCert" class="block" [ngStyle]="{'width.px': tableWidth}">
+                <div *ngFor="let user of listUsers;   let last = last" class="user-item" [ngClass]="{'highlighted': user.isSelected || (user.isChecked && !user.selectedMark) || user.selectedMark}" (dblclick)="RedactUser(user)">
                     <div class="table-title user-select-node" [ngClass]="{'disabled': user.deleted, 'delitedDue': user.deletedOffFace}">
                         <span *ngIf='user.deleted' class="deleted-user-border"></span>
                         <label *ngIf='!user.deleted' class="checkbox">
                             <input   [checked]="(user.isChecked && !user.selectedMark) || user.selectedMark" [disabled]="user.deleted ? true : false"  type="checkbox" (change)="setFlagChecked($event, user)">
                             <span class="eos-icon eos-icon-checkbox-black"></span>
                         </label>
-                        <div class="user-select-node-t" (click)="!user.deleted ? selectedNode(user) : false">
+                        <div class="user-select-node-t" (click)="!user.deleted ? selectedNode(user, rtUserService.flagDeleteSelectedUser) : false">
                             <span class="user-list-fourth-colomn">{{user.login}}</span>
                             <span class="user-list-third-colomn">
                                     <span *ngIf="user.deleted" class="eos-icon eos-icon-bin-forever-grey small"></span>
                             <span *ngIf="user.blockedUser && !user.deleted" class="eos-icon eos-icon-Blockeduser-Yellow  small"></span>
                             <span *ngIf="user.blockedSystem && !user.deleted" class="eos-icon eos-icon-Blockeduser-Red  small"></span>
                             </span>
-                            <span class="user-list-two-colomn " tooltip="{{user.fullDueName}}" placement="bottom" containerClass="tooltip-info" container="body">{{user.fullDueName}}
+                            <span class="user-list-two-colomn " tooltip="{{user.fullDueName}}" placement="bottom" [ngClass]="{'last-tooltip' : last }" [containerClass]="getClassTooltip(last)" container="body">{{user.fullDueName}}
                             </span>
                             <span class="user-list-first-colomn" tooltip="{{user.department}}" placement="auto" containerClass="tooltip-info" container="body">{{user.department}}
                             </span>
@@ -73,6 +81,8 @@
                 </div>
             </div>
         </div>
+        </div>
+
     </div>
 </div>
 <!-- <ng-template #markAllTooltip>

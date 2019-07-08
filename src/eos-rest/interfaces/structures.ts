@@ -1632,7 +1632,7 @@ export interface CALENDAR_CL extends IEnt {
     /**
      * Дата
      */
-    DATE_CALENDAR: number;
+    DATE_CALENDAR: string;
     /**
      * Тип даты
      */

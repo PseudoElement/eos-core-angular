@@ -38,7 +38,8 @@
 </div>
 <div class="bottom-buttons">
         <button class="btn btn-primary-full upper"
-            [disabled]="true">Ведение списков</button>
+            (click)="userListsEdit()"
+            >Ведение списков</button>
         <div class="bottom-buttons-clearfix"></div>
         <button class="btn btn-primary-full upper"
             [disabled]="!isChanged || formInvalid"

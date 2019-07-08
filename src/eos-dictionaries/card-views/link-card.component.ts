@@ -155,6 +155,9 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
                         this._subscribeOnChanges();
                     });
             }
+        } else {
+            Object.assign(this._prev, formChanges);
+            this._subscribeOnChanges();
         }
     }
 

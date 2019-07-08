@@ -13,6 +13,8 @@ import { EosMessageService } from '../../eos-common/services/eos-message.service
 import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import { NAVIGATE_TO_ELEMENT_WARN } from '../consts/messages.consts';
 import { NOT_EMPTY_STRING } from 'eos-common/consts/common.consts';
+import { EosStorageService } from 'app/services/eos-storage.service';
+import { RECENT_URL } from 'app/consts/common.consts';
 
 @Component({
     templateUrl: 'desktop.component.html',
@@ -42,6 +44,7 @@ export class DesktopComponent implements OnDestroy {
         private _confirmSrv: ConfirmWindowService,
         // private _storageSrv: EosStorageService,
         private _msgSrv: EosMessageService,
+        private _storageSrv: EosStorageService,
     ) {
         this.referencesList = [];
         this._routerSubscription = this._router.events
@@ -69,6 +72,7 @@ export class DesktopComponent implements OnDestroy {
                 _deskSrv.setSelectedDesk(id);
             }
         );
+        this._storageSrv.setItem(RECENT_URL, this._router.url);
         this._dictSrv.closeDictionary();
     }
 

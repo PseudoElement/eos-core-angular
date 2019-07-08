@@ -27,10 +27,12 @@ export class DynamicInputNumberIncrementComponent extends DynamicInputBase  impl
             this.control.markAsDirty();
         }
     }
+
     ngOnChanges() {
-           if ( !this.input.pattern) {
-                 this.control.setValidators(Validators.pattern(/^\d{0,5}$/));
-           }
+        super.ngOnChanges();
+        if (!this.input.pattern) {
+            this.control.setValidators(Validators.pattern(/^\d{0,5}$/));
+        }
     }
 
     checkMinValue() {
@@ -47,5 +49,13 @@ export class DynamicInputNumberIncrementComponent extends DynamicInputBase  impl
             return +this.input.maxValue;
         }
     }
+
+    inputCheck(e) {
+        if (e.metaKey || e.ctrlKey || e.altKey) {
+            return true;
+        }
+        return !(/^[А-Яа-яA-Za-z ]$/.test(e.key));
+    }
+
 
 }

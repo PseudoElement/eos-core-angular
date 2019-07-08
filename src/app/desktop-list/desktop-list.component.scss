@@ -1,15 +1,23 @@
 .dropdown-menu {
     eos-desktop-list {
+        .inline-flex {
+            display: inline-flex;
+            width: 100%;
+            padding-right: 5px;
+        }
+        .eos-icon-checkbox-black {
+            min-width: 16px;
+        }
         .menuitem {
             position: relative;
             .item-title {
-                margin-left: 20px;
+                margin-left: 5px;
                 vertical-align: middle;
-                width: 210px;
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 overflow: hidden;
                 display: inline-block;
+                width: 100%;
             }
             .input-group {
                 .form-control {
@@ -27,9 +35,9 @@
         }
         .item-actions {
             display: none;
-            position: absolute;
-            top: 0;
-            right: 48px;
+            //position: absolute;
+            //top: 0;
+            //right: 48px;
             .action-icon {
                 display: inline-block;
             }
@@ -37,7 +45,7 @@
         .menuitem:hover {
             background: $modal-block-background-main-theme;
             .item-actions {
-                display: block;
+                display: inline-flex;
             }
         }
         .li-spiner {

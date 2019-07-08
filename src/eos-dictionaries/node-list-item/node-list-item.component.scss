@@ -1,8 +1,9 @@
 .eos-node-list-item {
     .old-pull-left1 {
         display: inline-block;
+        vertical-align: top;
     }
-
+    vertical-align: top;
     display: flex;
     .pull-left {
         overflow: hidden;
@@ -36,6 +37,7 @@
             .checkbox,
             .checkbox-inline {
                 line-height: 32px;
+                top: -1px;
                 input[type="checkbox"] + span {
                     margin: 0;
                 }

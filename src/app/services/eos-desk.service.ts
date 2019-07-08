@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 
 import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import { IDeskItem } from '../core/desk-item.interface';
+import { IDeskItem, DeskItemVisibleType as DITEM_VISIBLE_TYPE } from '../core/desk-item.interface';
 import { EosDesk, IDesk } from '../core/eos-desk';
 
 import { AppContext } from 'eos-rest/services/appContext.service';
@@ -15,6 +15,8 @@ import { ViewManager } from 'eos-rest/services/viewManager';
 import { _ES } from 'eos-rest/core/consts';
 import { WARN_DESK_MAX_COUNT } from '../consts/messages.consts';
 import { EOS_PARAMETERS_TAB } from 'eos-parameters/parametersSystem/shared/consts/eos-parameters.const';
+import { E_DICT_TYPE } from 'eos-dictionaries/interfaces';
+import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 
 const DEFAULT_DESKTOP_NAME = 'Мой рабочий стол';
 const DEFAULT_DESKS: EosDesk[] = [{
@@ -53,10 +55,11 @@ export class EosDeskService {
         private _msgSrv: EosMessageService,
         private _router: Router,
         private _appCtx: AppContext,
-        private viewManager: ViewManager
+        private viewManager: ViewManager,
+        private _eaps: EosAccessPermissionsService,
     ) {
         this.selectedDeskId = 'system';
-        this._desksList = DEFAULT_DESKS;
+        this._desksList = [...DEFAULT_DESKS];
 
         this._desksList$ = new BehaviorSubject(this._desksList);
         this._selectedDesk = this._desksList[0];
@@ -67,9 +70,11 @@ export class EosDeskService {
             .then((dictionariesList) => {
                 this._desksList[0].references = dictionariesList.map((dictionary) => {
                     return {
-                        url: '/spravochniki/' + dictionary.id,
+                        url: (dictionary.dictType === E_DICT_TYPE.form ? '/form/' : '/spravochniki/') + dictionary.id,
                         title: dictionary.title,
                         iconName: dictionary.iconName,
+                        linkType: this._eaps.isAccessGrantedForDictionary(dictionary.id, null) === APS_DICT_GRANT.denied ?
+                                  DITEM_VISIBLE_TYPE.disabled : DITEM_VISIBLE_TYPE.enabled,
                     };
                 });
             });
@@ -94,6 +99,11 @@ export class EosDeskService {
                 title: `Параметры системы (${lable.title})`,
                 url: '/parameters/' + lable.url
             };
+        } else if (this._router.url.split('/')[1] === 'user_param') {
+            item = {
+                title: 'Пользователи',
+                url: '/user_param',
+            };
         } else {
             item = {
                 title: this._dictSrv.dictionaryTitle,
@@ -108,7 +118,7 @@ export class EosDeskService {
                 return false;
             }
             const col = this.viewManager.addViewColumn(view);
-            col.BLOCK_ID = dictionaryURL;
+            col.BLOCK_ID = dictionaryURL || 'user_param';
             col.LABEL = item.title;
             this.viewManager.saveView(view).then(() => this._appCtx.reInit());
         }
@@ -194,6 +204,7 @@ export class EosDeskService {
             }
 
             this._desksList = this._desksList.filter((d) => d.id !== desk.id);
+            this._sortDeskList();
             this._desksList$.next(this._desksList);
         });
     }
@@ -208,8 +219,9 @@ export class EosDeskService {
             res = this.viewManager.saveView(deskView);
         }
         res.then(() => {
-            this._desksList.splice(this._desksList.indexOf(desk), 1, desk);
-            this._desksList$.next(this._desksList);
+            this.readDeskList();
+            // this._desksList.splice(this._desksList.indexOf(desk), 1, desk);
+            // this._desksList$.next(this._desksList);
             // console.log('editing done');
         });
         return res;
@@ -231,6 +243,7 @@ export class EosDeskService {
                     .then(() => {
                         desk.id = isn_view.toString();
                         this._desksList.push(desk);
+                        this._sortDeskList();
                         this._desksList$.next(this._desksList);
                         return desk;
                     });
@@ -261,12 +274,21 @@ export class EosDeskService {
     }
 
     private readDeskList() {
+        this._desksList = [...DEFAULT_DESKS];
         const view = this._appCtx.UserViews.filter((uv) => uv.SRCH_KIND_NAME === 'clmanDesc');
         for (let i = 0; i < view.length; i++) {
             this._desksList.push(this.readDesc(view[i]));
         }
+        this._sortDeskList();
         this._desksList$.next(this._desksList);
         this.updateSelectedDesk();
+    }
+
+    private _sortDeskList() {
+        this._desksList.sort((a, b) => {
+            return (a.id === 'system') ? -1 : (b.id === 'system') ? 1 :
+                a.name.localeCompare(b.name);
+        });
     }
 
     private readDesc(v: SRCH_VIEW): EosDesk {
@@ -289,6 +311,14 @@ export class EosDeskService {
                 title: ''
             };
         }
+
+        if (blockId === 'user_param') {
+            return {
+                url: '/user_param',
+                title: ''
+            };
+        }
+
         const defaults = this._desksList[0].references;
         const s = '/spravochniki/' + blockId;
         const result = defaults.find(it => it.url === s);

@@ -14,7 +14,7 @@ export const WARN_DESK_CREATING: IMessage = {
 
 export const WARN_DESK_MAX_COUNT: IMessage = {
     type: 'warning',
-    title: 'Предупреждение: максимальное колличество рабочих столов!',
+    title: 'Предупреждение: максимальное количество рабочих столов!',
     msg: 'У вас может быть не более 5 рабочих столов',
 };
 

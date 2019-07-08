@@ -80,7 +80,8 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
 
     get possibleOwners(): any[] {
         const res = this.cabinetOwners
-        .filter((owner) => (!owner.data['ISN_CABINET']) && (!owner.data['ISN_ORGANIZ']));
+        .filter((owner) => !owner.data['ISN_CABINET'] && !owner.data['ISN_ORGANIZ']
+            && owner.data['ISN_HIGH_NODE']);
         return res;
     }
 

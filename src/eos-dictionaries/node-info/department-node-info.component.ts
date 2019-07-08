@@ -16,6 +16,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implements OnChanges {
     public photo;
     public update: boolean;
+    public canCreateUser: boolean;
     public roles = ROLES_IN_WORKFLOW;
     createUserModal: BsModalRef;
 
@@ -29,6 +30,11 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
         private _msgSrv: EosMessageService,
     ) {
         super();
+
+        this._eaps.isAccessGrantedForUsers()
+            .then((res) => {
+                this.canCreateUser = res;
+            });
     }
 
     ngOnChanges() {
@@ -74,7 +80,7 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
     }
 
     createUser() {
-        if (this._eaps.isAccessGrantedForUsers()) {
+        if (this.canCreateUser) {
             this.createUserModal = this._modalSrv.show(CreateUserComponent, {
                 class: 'param-create-user',
                 ignoreBackdropClick: true,
@@ -110,6 +116,19 @@ export class DepartmentNodeInfoComponent extends BaseNodeInfoComponent implement
                     ];
                 return t[index];
             });
+    }
+
+    getFullName(): string {
+        let res = '';
+        const f = this.nodeDataFull['printInfo']['SURNAME'];
+        const i = this.nodeDataFull['printInfo']['NAME'];
+        const o = this.nodeDataFull['printInfo']['PATRON'];
+
+        res += f ? f : '';
+        res += i ? ' ' + i + (i.length === 1 ? '.' : '') : '';
+        res += o ? ' ' + o + (o.length === 1 ? '.' : '') : '';
+
+        return res;
     }
 
     private fioTogin(text: string) {

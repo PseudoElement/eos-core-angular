@@ -1,3 +1,4 @@
+import { CALENDAR_DICT } from './../consts/dictionaries/calendar.consts';
 import { LINK_DICT } from './../consts/dictionaries/link.consts';
 import { NOMENKL_DICT } from './../consts/dictionaries/nomenkl.const';
 import { ADDR_CATEGORY_DICT } from './../consts/dictionaries/addr-category.consts';
@@ -97,6 +98,9 @@ const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean, } []
     // Статусы проекта поручения
     { id: RESPRJ_STATUS_DICT.id,    tech: E_TECH_RIGHT.StatPrjPor,
         listedUT: false },
+    // Ведение календаря
+    { id: CALENDAR_DICT.id,         tech: E_TECH_RIGHT.CalendarSettings,
+        listedUT: false}
 ];
 
 
@@ -142,8 +146,11 @@ export class EosAccessPermissionsService {
         return APS_DICT_GRANT.denied;
     }
     // --------------------------------------------------------------
-    public isAccessGrantedForUsers(): boolean {
-        return this._checkAccessTech(E_TECH_RIGHT.Users);
+    public isAccessGrantedForUsers(): Promise<boolean> {
+        return this.appCtx.init()
+            .then(() => {
+                return this._checkAccessTech(E_TECH_RIGHT.Users);
+            });
     }
 
     // --------------------------------------------------------------

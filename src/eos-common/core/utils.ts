@@ -10,7 +10,9 @@ export class EosUtils {
         if (d instanceof Date) {
             return d.getFullYear() +
                 '-' + EosUtils.pad(d.getMonth() + 1) +
-                '-' + EosUtils.pad(d.getDate());
+                '-' + EosUtils.pad(d.getDate())
+                + 'T00:00:00';
+
             /*'T' + pad(d.getHours()) +
             ':' + pad(d.getMinutes()) +
             ':' + pad(d.getSeconds()); */
@@ -130,4 +132,13 @@ export class EosUtils {
         }
         return msg;
     }
+
+    static isValidDate(d): boolean {
+        return d instanceof Date && !isNaN(d.getTime());
+    }
+
+    static isDateEqual(d1: Date, d2: Date): boolean {
+        return (d1.getDate() === d2.getDate()) && (d1.getFullYear () === d2.getFullYear()) && (d1.getMonth () === d2.getMonth());
+    }
+
 }

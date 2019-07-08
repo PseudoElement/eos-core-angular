@@ -10,6 +10,8 @@ import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDictionary } from '../core/eos-dictionary';
 import { SEARCH_TYPES } from 'eos-dictionaries/consts/search-types';
 import { DID_NOMENKL_CL } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
+import { IBaseInput } from 'eos-common/interfaces';
+import { YEAR_PATTERN } from 'eos-common/consts/common.consts';
 
 /*
 const SEARCH_MODEL = {
@@ -26,7 +28,7 @@ const SEARCH_MODEL = {
 export class DictionaryFilterComponent implements OnDestroy {
     @Output() setFilter: EventEmitter<any> = new EventEmitter(); // todo add filter type
 
-    filterInputs = [
+    filterInputs: IBaseInput[] = [
         {
             controlType: 'date',
             key: 'filter.stateDate',
@@ -39,8 +41,11 @@ export class DictionaryFilterComponent implements OnDestroy {
             key: 'filter.stateYear',
             value: new Date().getFullYear(),
             label: 'Состояние на',
+            pattern: YEAR_PATTERN,
             hideLabel: true,
-            readonly: false
+            readonly: false,
+            minValue: 1900,
+            maxValue: 2100,
         }, {
             controlType: 'boolean',
             key: 'filter.CB1',

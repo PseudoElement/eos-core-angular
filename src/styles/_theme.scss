@@ -422,6 +422,14 @@
             vertical-align: middle;
         }
     }
+    .desktop-menu-icon {
+        display: inline-block;
+        text-align: center;
+        margin-left: 5px;
+        .eos-icon {
+            vertical-align: middle;
+        }
+    }
     .has-padding {
         padding: 0 20px;
     }

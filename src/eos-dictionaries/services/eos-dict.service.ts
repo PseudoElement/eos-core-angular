@@ -1,3 +1,4 @@
+import { DICTIONARIES } from 'eos-dictionaries/consts/dictionaries.consts';
 import { DEPARTMENTS_DICT } from './../consts/dictionaries/department.consts';
 import { DOCGROUP_DICT } from './../consts/dictionaries/docgroup.consts';
 import { Injectable, Injector } from '@angular/core';
@@ -21,7 +22,7 @@ import {FieldsDecline} from 'eos-dictionaries/interfaces/fields-decline.inerface
 import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.interfaces';
 import {IImage} from 'eos-dictionaries/interfaces/image.interface';
 import {LS_PAGE_LENGTH, PAGES} from '../node-list-pagination/node-list-pagination.consts';
-import {WARN_NO_ORGANIZATION, WARN_NOT_ELEMENTS_FOR_REPRESENTATIVE, WARN_SEARCH_NOTFOUND, SUCCESS_SAVE} from '../consts/messages.consts';
+import {WARN_NO_ORGANIZATION, WARN_NOT_ELEMENTS_FOR_REPRESENTATIVE, WARN_SEARCH_NOTFOUND} from '../consts/messages.consts';
 import {EosMessageService} from 'eos-common/services/eos-message.service';
 import {EosStorageService} from 'app/services/eos-storage.service';
 import {EosDepartmentsService} from './eos-department-service';
@@ -39,10 +40,11 @@ import { PARTICIPANT_SEV_DICT } from 'eos-dictionaries/consts/dictionaries/sev-p
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { PipRX } from 'eos-rest';
+import { NADZORDICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
 
 export const SORT_USE_WEIGHT = true;
 export const CUSTOM_SORT_FIELD = 'WEIGHT';
-
+export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
 @Injectable()
 export class EosDictService {
     viewParameters: IDictionaryViewParameters;
@@ -55,6 +57,7 @@ export class EosDictService {
     private _listNode: EosDictionaryNode; // record selected in list
     private _currentList: EosDictionaryNode[];
     private _visibleListNodes: EosDictionaryNode[];
+    private _bufferNodes: EosDictionaryNode[];
     private paginationConfig: IPaginationConfig;
     private _dictionary$: BehaviorSubject<EosDictionary>;
     private _treeNode$: BehaviorSubject<EosDictionaryNode>;
@@ -74,6 +77,7 @@ export class EosDictService {
     private filters: any = {};
     private _cDue: string;
     private _currentScrollTop = 0;
+    private _weightOrdered: boolean;
 
 
     /* Observable dictionary for subscribing on updates in components */
@@ -120,8 +124,14 @@ export class EosDictService {
     }
 
     get userOrdered(): boolean {
-        return this.currentDictionary && this.currentDictionary.weightOrdered;
+        return this._weightOrdered;
+        // return this.currentDictionary && this.currentDictionary.weightOrdered;
     }
+
+    set userOrdered(value: boolean) {
+        this._weightOrdered = value;
+    }
+
     get treeNodeTitle(): any {
         return this._treeNode.title;
     }
@@ -199,6 +209,10 @@ export class EosDictService {
         return this._dictionaries[this._dictMode];
     }
 
+    get bufferNodes(): EosDictionaryNode[] {
+        return this._bufferNodes;
+    }
+
 
     constructor(
         // private _router: Router,
@@ -227,6 +241,23 @@ export class EosDictService {
         this._initPaginationConfig();
     }
 
+    getDescr(dictionaryId: string): IDictionaryDescriptor {
+        for (let i = 0; i < DICTIONARIES.length; i++) {
+            const dict = DICTIONARIES[i];
+            if (dict.id === dictionaryId) {
+                return dict;
+            }
+        }
+        for (let i = 0; i < NADZORDICTIONARIES.length; i++) {
+            const dict = NADZORDICTIONARIES[i];
+            if (dict.id === dictionaryId) {
+                return dict;
+            }
+        }
+
+        return null;
+    }
+
     storeDBWeights(dict: EosDictionary, changeList: {}): Promise<any> {
 
         const changes = [];
@@ -247,7 +278,7 @@ export class EosDictService {
 
             return this._apiSrv.batch(changes, '')
                 .then(() => {
-                    this._msgSrv.addNewMessage(SUCCESS_SAVE);
+                    // this._msgSrv.addNewMessage(SUCCESS_SAVE);
                 })
                 .catch((err) => {
                     this._msgSrv.addNewMessage({ msg: err.message, type: 'danger', title: 'Ошибка записи' });
@@ -377,6 +408,20 @@ export class EosDictService {
     // May be need used always instead this._viewParameters$.next();
     // Because this.viewParametrs is and may be changed from other classes need way for share state
     updateViewParameters(updates?: any) {
+        if ( updates && updates.hasOwnProperty('userOrdered') ) {
+            this.userOrdered = updates.userOrdered;
+            const dictionary = this.currentDictionary;
+            if (dictionary) {
+                if (this.userOrdered) {
+                    dictionary.orderBy = {
+                        fieldKey: 'WEIGHT',
+                        ascend: true,
+                    };
+                } else {
+                    dictionary.orderSetDefault();
+                }
+            }
+        }
         Object.assign(this.viewParameters, updates);
         this._viewParameters$.next(this.viewParameters);
     }
@@ -647,6 +692,8 @@ export class EosDictService {
             searchResults: false
         });
 
+
+        this.unmarkAll();
         this._srchCriteries = null;
         return this._reloadList()
             .then((val) => {
@@ -715,12 +762,13 @@ export class EosDictService {
 
     resetSearch(): Promise<any> {
         this._srchCriteries = null;
+        this.unmarkAll();
         return this._reloadList();
     }
 
     search(searchString: string, params: ISearchSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
-        const fixedString = searchString.replace(new RegExp('["|\']', 'g'), '');
+        const fixedString = searchString.replace(SEARCH_INCORRECT_SYMBOLS, '');
         if (fixedString !== '') {
             this._srchCriteries = dictionary.getSearchCriteries(fixedString, params, this._treeNode);
             return this._search(params.deleted);
@@ -738,6 +786,9 @@ export class EosDictService {
     }
 
     fullSearch(data: any, params: ISearchSettings) {
+
+        this.fixSearchSymbols(data, SEARCH_INCORRECT_SYMBOLS);
+
         const dictionary = this.currentDictionary;
         if (data.srchMode === 'person') {
             this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
@@ -754,6 +805,24 @@ export class EosDictService {
         } else {
             this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
             return this._search(params.deleted);
+        }
+    }
+
+    fixSearchSymbols(data: any, reg: RegExp): any {
+        for (const key in data) {
+            if (key !== 'srchMode' && data.hasOwnProperty(key)) {
+                const list = data[key];
+                if (typeof list === 'string') {
+                    data[key] = list.replace(SEARCH_INCORRECT_SYMBOLS, '');
+                } else {
+                    for (const k in list) {
+                        if (list.hasOwnProperty(k)) {
+                            const fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
+                            list[k] = fixed;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -779,12 +848,12 @@ export class EosDictService {
     }
 
     toggleWeightOrder(value?: boolean) {
-        const dictionary = this.currentDictionary;
 
         this.updateViewParameters({
             userOrdered: (value === undefined) ? !this.viewParameters.userOrdered : value
         });
 
+        const dictionary = this.currentDictionary;
         if (dictionary) {
             if (this.viewParameters.userOrdered) {
                 dictionary.orderBy = {
@@ -923,7 +992,9 @@ export class EosDictService {
         return this._cDue;
     }
 
-
+    fillBufferNodes() {
+        this._bufferNodes = this.getMarkedNodes(false);
+    }
 
     private getDictionaryById(id: string): Promise<EosDictionary> {
         const existDict = this._dictionaries.find((dictionary) => dictionary && dictionary.id === id);
@@ -960,6 +1031,7 @@ export class EosDictService {
             tableCustomization: false,
             firstUnfixedIndex: 0,
         };
+        this._bufferNodes = [];
     }
 
     /**
