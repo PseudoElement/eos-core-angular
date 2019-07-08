@@ -1,5 +1,5 @@
 import { Component, ViewChild, HostListener } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { BsDropdownDirective } from 'ngx-bootstrap/dropdown';
 
 import { EosDeskService } from '../services/eos-desk.service';
@@ -18,9 +18,9 @@ export class DesktopSwitcherComponent {
 
     constructor(private _deskSrv: EosDeskService,
         private _router: Router,
-        activeRoute: ActivatedRoute
     ) {
-        this._deskSrv.selectedDesk.subscribe((res) => this.selectedDesk = res);
+        this._deskSrv.selectedDesk.subscribe((res) =>
+            setTimeout(() => this.selectedDesk = res, 0));
     }
 
     @HostListener('window:click', [])
