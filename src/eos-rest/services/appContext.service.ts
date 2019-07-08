@@ -51,10 +51,10 @@ export class AppContext {
         })
             .then(([d]) => {
                 const isnViews = d.USER_VIEW_List.map((view) => view.ISN_VIEW);
-                let res = Promise.resolve({ user: d, views: [] });
+                let res = Promise.resolve({user: d, views: []});
                 if (isnViews.length) {
-                    res = p.read<SRCH_VIEW>({ SRCH_VIEW: isnViews })
-                        .then((views) => ({ user: d, views: views }));
+                    res = p.read<SRCH_VIEW>({SRCH_VIEW: isnViews, expand: 'SRCH_VIEW_DESC_List'})
+                        .then((views) => ({user: d, views: views}));
                 }
                 return res;
             });
