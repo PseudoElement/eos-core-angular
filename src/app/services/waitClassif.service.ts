@@ -12,6 +12,7 @@ const OLD_VIEW_URL: string = 'Pages/Classif/ChooseClassif.aspx?';
 const NEW_VIEW_URL: string = 'Eos.Delo.JsControls/Classif/ChooseClassif.aspx?';
 const USER_LISTS: string = '../Pages/User/USER_LISTS.aspx';
 const TECH_LISTS: string = '../Pages/Common/TECH_LISTS.aspx';
+const StdText: string = '../Pages/Common/StdText.aspx';
 
 @Injectable()
 export class WaitClassifService {
@@ -30,6 +31,8 @@ export class WaitClassifService {
             }
         } else if (params.classif === 'TECH_LISTS') {
             url = TECH_LISTS;
+        } else if (params.classif === 'StdText') {
+            url = this.stdTextUrl(StdText, params);
         } else {
             url = this._prepareUrl(params, flag);
         }
@@ -54,7 +57,22 @@ export class WaitClassifService {
             }, 500);
         });
     }
+    private stdTextUrl(url, params: IOpenClassifParams) {
+        if (params.id_std !== undefined && params.id_std !== null) {
+            url += `?id=${params.id_std}`;
+        }
+        if (params.name !== undefined && params.name !== null) {
+            url += `&name=${params.name}`;
+        }
+        if (params.form !== undefined && params.form !== null) {
+            url += `&form=${params.form}`;
+        }
+        if (params.isn_user !== undefined && params.isn_user !== null) {
+            url += `&isn_user=${params.isn_user}`;
+        }
 
+        return url;
+    }
     private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
         let url = '../';
         if (flag) {
