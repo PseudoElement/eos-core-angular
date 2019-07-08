@@ -3,7 +3,7 @@
         <div class="cabinets-wrapper">
             <div class="eos-select">
                  <form>
-                    <select [disabled]="!flagEdit" class="select-cabinet" [style.color]="Cabinet.homeCabinet ? 'red' : 'black'" name="Cabinet" [(ngModel)]="Cabinet">
+                    <select class="select-cabinet" [style.color]="Cabinet.homeCabinet ? 'red' : 'black'" name="Cabinet" [(ngModel)]="Cabinet">
                         <option [style.color]="cabinet.homeCabinet ? 'red' : 'black'"  *ngFor="let cabinet of card.cabinets; let i = index" [ngValue] ="cabinet">{{cabinet.name}}</option>
                     </select>
                 </form>
