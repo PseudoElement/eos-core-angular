@@ -116,6 +116,18 @@ export const OpenRightsSystemCaseDelo: BtnActionFields = {
     isActive: false,
 };
 
+export const GeneralLists: BtnActionFields = {
+    name: 'GeneralLists',
+    title: 'Ведение Общих списков стандартных текстов',
+    disabledClass: 'eos-icon eos-icon-H-Grey small',
+    enableClass: 'eos-icon eos-icon-H-Blue small',
+    tooltip: 'Ведение Общих списков стандартных текстов',
+    disabled: false,
+    activeClass: 'eos-icon eos-icon-H-Blue small',
+    activeBtnClass: '',
+    isActive: false,
+};
+
 // export const OpenMoreMenu: BtnActionFields = {
 //     name: 'OpenMoreMenu',
 //     title: 'Показать меню',
@@ -149,6 +161,7 @@ export const Allbuttons: BtnAction = {
         OpenAddressManagementWindow,
         OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
+        GeneralLists
     ],
     moreButtonCheck: {
         check: false,

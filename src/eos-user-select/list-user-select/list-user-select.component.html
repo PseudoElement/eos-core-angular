@@ -29,8 +29,8 @@
                     <input  [checked]="flagChecked"  type="checkbox" (change)="setCheckedAllFlag()">
                     <div>
                         <span class="eos-icon small"
-                            [ngClass]="getflagChecked" 
-                            [tooltip]="checkAll" 
+                            [ngClass]="getflagChecked"
+                            [tooltip]="checkAll"
                             containerClass="tooltip-info"
                             placement="bottom"
                         ></span>
@@ -99,3 +99,5 @@
         <eos-spinner size="lg"></eos-spinner>
     </div>
 </ng-template>
+
+<div class="shadow-wr" *ngIf="shadow"></div>
