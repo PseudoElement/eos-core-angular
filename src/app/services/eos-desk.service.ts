@@ -107,7 +107,7 @@ export class EosDeskService {
         }
         const view: SRCH_VIEW = this.findView(desk.id);
         if (view !== undefined) {
-            if (view.SRCH_VIEW_DESC_List.find(el => el.BLOCK_ID === item.url.split('/')[2])) {
+            if (view.SRCH_VIEW_DESC_List.find(el => el.BLOCK_ID === item.blockId)) {
                 return false;
             }
             const col = this.viewManager.addViewColumn(view);
@@ -151,14 +151,12 @@ export class EosDeskService {
     }*/
 
     setSelectedDesk(deskId) {
-        if (deskId !== this._selectedDesk.id) {
-            const desk = this._desksList.find((d) => d.id === deskId);
-            if (!desk) {
-                this._router.navigate(['/desk', 'system']);
-            } else {
-                this._selectedDesk = desk;
-                this._selectedDesk$.next(this._selectedDesk);
-            }
+        const desk = this._desksList.find((d) => d.id === deskId);
+        if (!desk) {
+            this._router.navigate(['/desk', 'system']);
+        } else {
+            this._selectedDesk = desk;
+            this._selectedDesk$.next(this._selectedDesk);
         }
     }
 
