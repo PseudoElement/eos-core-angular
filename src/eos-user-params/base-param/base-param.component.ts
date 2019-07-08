@@ -20,6 +20,8 @@ import { ErrorHelperServices } from '../shared/services/helper-error.services';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { NavParamService } from 'app/services/nav-param.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
+import { CONFIRM_UPDATE_USER } from '../../eos-user-select/shered/consts/confirm-users.const';
 
 @Component({
     selector: 'eos-params-base-param',
@@ -76,6 +78,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private _nanParSrv: NavParamService,
         private _errorSrv: ErrorHelperServices,
         private modalService: BsModalService,
+        private _confirmSrv: ConfirmWindowService,
     ) { }
     ngOnInit() {
         this._userParamSrv.getUserIsn({
@@ -85,6 +88,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this.selfLink = this._router.url.split('?')[0];
             this.init();
             this.editModeF();
+            this._subscribe();
         });
         this._userParamSrv
             .saveData$
@@ -194,12 +198,39 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         });
         this._pushState();
     }
+
+    dueDepNameNullUndef(date: any): boolean {
+        if ( date === null) {
+            return false;
+        }
+        if ( date === undefined ) {
+            return false;
+        }
+        if ( date === '' ) {
+            return false;
+        }
+        return true;
+    }
+
     submit(): Promise<any> {
+        if ( !this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value) && !this.curentUser.isTechUser ) {
+            this._msgSrv.addNewMessage({
+                type: 'warning',
+                title: 'Предупреждение',
+                msg: 'Нельзя сохранить не указано должностное лицо',
+                dismissOnTimeout: 6000,
+            });
+            return ;
+        }
         const id = this._userParamSrv.userContextId;
         const newD = {};
         const query = [];
         let accessStr = '';
         let qPass: Promise<any>;
+        if ( this.curentUser.isTechUser ) {
+            this.form.get('DUE_DEP_NAME').patchValue('');
+            this.form.get('DUE_DEP_NAME').disable();
+        }
         if (this._newDataformAccess.size || this._newData.size) {
             if (this._newDataformAccess.size) {
                 accessStr = this._createAccessSystemsString(this.formAccess.controls);
@@ -213,6 +244,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         newD[key] = val;
                     }
                     if (key === 'DUE_DEP_NAME') {
+                        if ( this.curentUser.isTechUser ) {
+                            this.inputs['DUE_DEP_NAME'].data = '';
+                        }
                         newD['DUE_DEP'] =  this.inputs['DUE_DEP_NAME'].data;
                     }
                     delete newD['DUE_DEP_NAME'];
@@ -311,6 +345,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         };
     }
     edit() {
+        this.curentUser.isTechUser = this.formControls.get('teсhUser').value;
         this.editMode = !this.editMode;
         this.editModeF();
         this.checRadioB();
@@ -538,4 +573,32 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     private _pushState() {
         this._userParamSrv.setChangeState({ isChange: this.stateHeaderSubmit, disableSave: !this.getValidDate || this.errorPass });
     }
+
+    private _subscribe() {
+        const f = this.formControls;
+        f.get('teсhUser').valueChanges
+        .pipe(
+            takeUntil(this._ngUnsubscribe)
+        )
+        .subscribe(data => {
+            if (data) {
+                this.curentUser.isTechUser = data;
+                if ( this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value) ) {
+                    this._confirmSrv.confirm(CONFIRM_UPDATE_USER).then(confirmation => {
+                        if ( confirmation ) {
+
+                        } else {
+                            this.curentUser.isTechUser = data;
+                            f.get('teсhUser').setValue(false);
+                        }
+                    }).catch(error => {
+                        console.log('Ошибка', error);
+                    });
+                }
+            } else {
+                this.curentUser.isTechUser = data;
+            }
+        });
+    }
+
 }
