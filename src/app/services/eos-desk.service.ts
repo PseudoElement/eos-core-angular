@@ -90,12 +90,14 @@ export class EosDeskService {
             const lable = EOS_PARAMETERS_TAB.find((i) => i.url === dictionaryURL);
             item = {
                 title: `Параметры системы (${lable.title})`,
-                url: '/parameters/' + lable.url
+                url: '/parameters/' + lable.url,
+                blockId: lable.url,
             };
         } else if (this._router.url.split('/')[1] === 'user_param') {
             item = {
                 title: 'Пользователи',
                 url: '/user_param',
+                blockId: 'user_param',
             };
         } else {
             item = {
@@ -103,6 +105,7 @@ export class EosDeskService {
                 /* fullTitle: this._dictSrv.dictionaryTitle, */
                 url: '/spravochniki/' + dictionaryURL,
                 iconName: '',
+                blockId: dictionaryURL,
             };
         }
         const view: SRCH_VIEW = this.findView(desk.id);
