@@ -7,5 +7,6 @@ export interface IDeskItem {
     title: any;
     iconName?: string;
     linkType?: DeskItemVisibleType; // Для отображения прав доступа к справочникам
+    blockId?: string;
     /* fullTitle: string; */
 }

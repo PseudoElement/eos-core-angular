@@ -9,14 +9,14 @@
 <li *ngFor="let desk of deskList"
     role="menuitem"
     class="menuitem dropdown-item"
-    [ngClass]="{'highlighted': selectedMarker && desk.name === selectedDesk.name, 'withMarker': selectedMarker}"
+    [ngClass]="{'highlighted': selectedMarker && desk.id === selectedDesk.id, 'withMarker': selectedMarker}"
     (click)="selectDesk(desk, $event);">
     <ng-container *ngIf="!desk.edited; else editItemTpl">
         <div class="inline-flex">
             <div class="desktop-menu-icon">
-                <span *ngIf="desk.name === selectedDesk.name"
+                <span *ngIf="desk.id === selectedDesk.id"
                       class="eos-icon eos-icon-checkbox-blue small"></span>
-                <span *ngIf="desk.name !== selectedDesk.name"
+                <span *ngIf="desk.id !== selectedDesk.id"
                       class="eos-icon small"></span>
             </div>
             <span class="item-title m-font">{{desk.name}}</span>

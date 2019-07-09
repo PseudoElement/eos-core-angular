@@ -9,7 +9,7 @@ import { IDeskItem, DeskItemVisibleType as DITEM_VISIBLE_TYPE } from '../core/de
 import { EosDesk, IDesk } from '../core/eos-desk';
 
 import { AppContext } from 'eos-rest/services/appContext.service';
-import { SRCH_VIEW } from 'eos-rest/interfaces/structures';
+import {SRCH_VIEW, SRCH_VIEW_DESC} from 'eos-rest/interfaces/structures';
 
 import { ViewManager } from 'eos-rest/services/viewManager';
 import { _ES } from 'eos-rest/core/consts';
@@ -17,9 +17,10 @@ import { WARN_DESK_MAX_COUNT } from '../consts/messages.consts';
 import { EOS_PARAMETERS_TAB } from 'eos-parameters/parametersSystem/shared/consts/eos-parameters.const';
 import { E_DICT_TYPE } from 'eos-dictionaries/interfaces';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
+import {PipRX} from '../../eos-rest';
 
 const DEFAULT_DESKTOP_NAME = 'Мой рабочий стол';
-const DEFAULT_DESKS: EosDesk[] = [{
+export const DEFAULT_DESKS: EosDesk[] = [{
     id: 'system',
     name: 'Стандартный рабочий стол',
     references: [],
@@ -28,26 +29,27 @@ const DEFAULT_DESKS: EosDesk[] = [{
 
 @Injectable()
 export class EosDeskService {
-    private _desksList: EosDesk[];
-    private _selectedDesk: EosDesk;
-    private _recentItems: IDeskItem[];
+    private _desksList: EosDesk[] = [];
+    private readonly _recentItems: IDeskItem[];
 
     private _desksList$: BehaviorSubject<EosDesk[]>;
-    private _selectedDesk$: BehaviorSubject<EosDesk>;
     private _recentItems$: BehaviorSubject<IDeskItem[]>;
+    private _currentReferences$: BehaviorSubject<IDeskItem[]>;
+    private _selectedDesk$: BehaviorSubject<EosDesk>;
 
-    private selectedDeskId: string;
+    private _currentReferences: IDeskItem[] = [];
+    private _selectedDesk: EosDesk;
 
     get desksList(): Observable<EosDesk[]> {
         return this._desksList$.asObservable();
     }
 
-    get selectedDesk(): Observable<EosDesk> {
-        return this._selectedDesk$.asObservable();
+    get currentReferences(): Observable<IDeskItem[]> {
+        return this._currentReferences$.asObservable();
     }
 
-    get recentItems(): Observable<IDeskItem[]> {
-        return this._recentItems$.asObservable();
+    get selectedDesk(): Observable<EosDesk> {
+        return this._selectedDesk$.asObservable();
     }
 
     constructor(
@@ -55,36 +57,27 @@ export class EosDeskService {
         private _msgSrv: EosMessageService,
         private _router: Router,
         private _appCtx: AppContext,
+        private _apiSrv: PipRX,
         private viewManager: ViewManager,
         private _eaps: EosAccessPermissionsService,
     ) {
-        this.selectedDeskId = 'system';
+        this._selectedDesk = DEFAULT_DESKS[0];
         this._desksList = [...DEFAULT_DESKS];
-
-        this._desksList$ = new BehaviorSubject(this._desksList);
-        this._selectedDesk = this._desksList[0];
-        this._selectedDesk$ = new BehaviorSubject(this._selectedDesk);
-        this._recentItems$ = new BehaviorSubject(this._recentItems);
-
-        _dictSrv.getDictionariesList()
-            .then((dictionariesList) => {
-                this._desksList[0].references = dictionariesList.map((dictionary) => {
-                    return {
-                        url: (dictionary.dictType === E_DICT_TYPE.form ? '/form/' : '/spravochniki/') + dictionary.id,
-                        title: dictionary.title,
-                        iconName: dictionary.iconName,
-                        linkType: this._eaps.isAccessGrantedForDictionary(dictionary.id, null) === APS_DICT_GRANT.denied ?
-                                  DITEM_VISIBLE_TYPE.disabled : DITEM_VISIBLE_TYPE.enabled,
-                    };
-                });
-            });
-
         this._recentItems = [];
+
+        this._desksList$ = new BehaviorSubject([]);
+        this._recentItems$ = new BehaviorSubject(this._recentItems);
+        this._currentReferences$ = new BehaviorSubject(this._currentReferences);
+        this._selectedDesk$ = new BehaviorSubject(this._selectedDesk);
+
+        this.selectedDesk.subscribe((desk) => {
+            this._readReferences();
+        });
         this._appCtx.ready()
             .then(() => {
-                this.readDeskList();
+                this._readDeskList();
             });
-    }
+     }
 
     /**
      * Add dictionary to desktop
@@ -97,12 +90,14 @@ export class EosDeskService {
             const lable = EOS_PARAMETERS_TAB.find((i) => i.url === dictionaryURL);
             item = {
                 title: `Параметры системы (${lable.title})`,
-                url: '/parameters/' + lable.url
+                url: '/parameters/' + lable.url,
+                blockId: lable.url,
             };
         } else if (this._router.url.split('/')[1] === 'user_param') {
             item = {
                 title: 'Пользователи',
                 url: '/user_param',
+                blockId: 'user_param',
             };
         } else {
             item = {
@@ -110,11 +105,12 @@ export class EosDeskService {
                 /* fullTitle: this._dictSrv.dictionaryTitle, */
                 url: '/spravochniki/' + dictionaryURL,
                 iconName: '',
+                blockId: dictionaryURL,
             };
         }
         const view: SRCH_VIEW = this.findView(desk.id);
         if (view !== undefined) {
-            if (view.SRCH_VIEW_DESC_List.find(el => el.BLOCK_ID === item.url.split('/')[2])) {
+            if (view.SRCH_VIEW_DESC_List.find(el => el.BLOCK_ID === item.blockId)) {
                 return false;
             }
             const col = this.viewManager.addViewColumn(view);
@@ -134,18 +130,19 @@ export class EosDeskService {
      * Update link name on the server
      * @param link editing item
      */
-    public updateName(link: IDeskItem): Promise<any> {
-        const v = this.findView(this._selectedDesk.id);
-        if (v !== undefined) {
-            const blockId = link.url.split('/')[2];
-            this.viewManager.updateViewColumn(v, blockId, link.title);
-            return this.viewManager.saveView(v).then(() => {
-                this._appCtx.reInit();
-                this._selectedDesk$.next(this._selectedDesk);
+    public updateName(deskItem: IDeskItem) {
+        const view = this.findView(this._selectedDesk.id);
+        if (view) {
+            this.viewManager.updateViewColumn(view, deskItem.blockId, deskItem.title);
+            this.viewManager.saveView(view)
+                .then(() => {
+                    this._readReferences();
             });
-        } else {
-            return Promise.resolve(null);
         }
+    }
+
+    reloadDeskList() {
+        this._readDeskList();
     }
 
     /* getDesk(id: string): Promise<EosDesk> {
@@ -160,27 +157,26 @@ export class EosDeskService {
         return _name;
     }*/
 
-    setSelectedDesk(deskId: string) {
-        if (deskId !== this.selectedDeskId) {
-            this.selectedDeskId = deskId;
-            this.updateSelectedDesk();
+    setSelectedDesk(deskId) {
+        const desk = this._desksList.find((d) => d.id === deskId);
+        if (!desk) {
+            this._router.navigate(['/desk', 'system']);
+        } else {
+            this._selectedDesk = desk;
+            this._selectedDesk$.next(this._selectedDesk);
         }
     }
 
-    unpinRef(link: IDeskItem): void {
-        const v = this.findView(this._selectedDesk.id);
-        if (v !== undefined) {
-            const blockId = link.url.split('/')[2];
-            this.viewManager.delViewColumn(v, blockId);
-            this.viewManager.saveView(v)
+    unpinRef(deskItem: IDeskItem) {
+        const view = this.findView(this._selectedDesk.id);
+        if (view && deskItem.blockId) {
+            this.viewManager.delViewColumn(view, deskItem.blockId);
+            this.viewManager.saveView(view)
                 .then(() => {
-                    v.SRCH_VIEW_DESC_List = v.SRCH_VIEW_DESC_List.filter(c => c.BLOCK_ID !== blockId);
-                    // Костыль, рефакторить!
+                    view.SRCH_VIEW_DESC_List = view.SRCH_VIEW_DESC_List.filter(c => c.BLOCK_ID !== deskItem.blockId);
+                    this._readReferences();
                 });
         }
-
-        this._selectedDesk.references = this._selectedDesk.references.filter((r) => r !== link);
-        this._selectedDesk$.next(this._selectedDesk);
     }
 
     addRecentItem(link: IDeskItem): void {
@@ -211,7 +207,6 @@ export class EosDeskService {
 
     editDesk(desk: EosDesk): Promise<any> {
         const deskView = this.findView(desk.id);
-        // console.log('editdesk', deskView);
 
         let res = Promise.resolve(null);
         if (deskView) {
@@ -219,7 +214,7 @@ export class EosDeskService {
             res = this.viewManager.saveView(deskView);
         }
         res.then(() => {
-            this.readDeskList();
+            this._readDeskList();
             // this._desksList.splice(this._desksList.indexOf(desk), 1, desk);
             // this._desksList$.next(this._desksList);
             // console.log('editing done');
@@ -249,6 +244,7 @@ export class EosDeskService {
                     });
             });
     }
+
     /**
      * @description Checks does it exist deskatop with that name
      * @param name Name of desktop
@@ -273,15 +269,67 @@ export class EosDeskService {
         return _newName;
     }
 
-    private readDeskList() {
-        this._desksList = [...DEFAULT_DESKS];
-        const view = this._appCtx.UserViews.filter((uv) => uv.SRCH_KIND_NAME === 'clmanDesc');
-        for (let i = 0; i < view.length; i++) {
-            this._desksList.push(this.readDesc(view[i]));
+    private _readReferences() {
+        this._appCtx.init()
+            .then( () => {
+                this._dictSrv.getDictionariesList()
+                    .then((descriptors) => {
+                        this._currentReferences = descriptors.map((descr) =>
+                            this._deskItemByDescriptor(descr));
+                        if (Number(this._selectedDesk.id)) {
+                            this._apiSrv.read<SRCH_VIEW>({
+                                SRCH_VIEW: Number(this._selectedDesk.id),
+                                expand: 'SRCH_VIEW_DESC_List'
+                            })
+                                .then(([view]) => {
+                                    const references = [];
+                                    view.SRCH_VIEW_DESC_List.forEach((dl) => {
+                                        references.push(this.mapToDefaultDescItem(dl, this._currentReferences));
+                                    });
+                                    this._currentReferences = references;
+                                    this._currentReferences$.next(this._currentReferences);
+                                });
+                        } else {
+                            this._currentReferences$.next(this._currentReferences);
+                        }
+                    });
+            });
+    }
+
+    private _deskItemByDescriptor(descr): IDeskItem {
+        return <IDeskItem>{
+            url: (descr.dictType === E_DICT_TYPE.form ? '/form/' : '/spravochniki/') + descr.id,
+            title: descr.title,
+            iconName: descr.iconName,
+            linkType: this._eaps.isAccessGrantedForDictionary(descr.id, null) === APS_DICT_GRANT.denied ?
+                DITEM_VISIBLE_TYPE.disabled : DITEM_VISIBLE_TYPE.enabled,
+        };
+    }
+
+    private _readDeskList() {
+        const list = [...DEFAULT_DESKS];
+        const viewIds = this._appCtx.UserViews
+            .filter((uv) => uv.SRCH_KIND_NAME === 'clmanDesc')
+            .map((uv) => uv.ISN_VIEW);
+        if (viewIds.length) {
+            this._apiSrv.read<SRCH_VIEW>({SRCH_VIEW: viewIds})
+                .then((views) => {
+                    views.forEach((view) => {
+                        list.push(<EosDesk>{
+                            id: view.ISN_VIEW.toString(),
+                            name: view.VIEW_NAME,
+                            edited: false,
+                            references: [],
+                        });
+                    });
+                    this._desksList = list;
+                    this._sortDeskList();
+                    this._desksList$.next(this._desksList);
+                });
+        } else {
+            this._desksList = list;
+            this._desksList$.next(this._desksList);
         }
-        this._sortDeskList();
-        this._desksList$.next(this._desksList);
-        this.updateSelectedDesk();
     }
 
     private _sortDeskList() {
@@ -291,38 +339,30 @@ export class EosDeskService {
         });
     }
 
-    private readDesc(v: SRCH_VIEW): EosDesk {
-        const res = <EosDesk>{ id: v.ISN_VIEW.toString(), name: v.VIEW_NAME, edited: false, references: [] };
-        const cols = v.SRCH_VIEW_DESC_List;
-        for (let i = 0; i !== cols.length; i++) {
-            const col = cols[i];
-            const di = this.mapToDefaultDescItem(cols[i].BLOCK_ID);
-            di.title = col.LABEL;
-            res.references.push(di);
-        }
-        return res;
-    }
-
-    private mapToDefaultDescItem(blockId: string): IDeskItem {
-        const lable = EOS_PARAMETERS_TAB.find(i => i.url === blockId);
+    private mapToDefaultDescItem(dl: SRCH_VIEW_DESC, defaults: IDeskItem[]): IDeskItem {
+        const lable = EOS_PARAMETERS_TAB.find(i => i.url === dl.BLOCK_ID);
         if (lable) {
             return {
                 url: '/parameters/' + lable.url,
-                title: ''
+                title: dl.LABEL,
+                blockId: dl.BLOCK_ID,
             };
         }
 
-        if (blockId === 'user_param') {
+        if (dl.BLOCK_ID === 'user_param') {
             return {
                 url: '/user_param',
-                title: ''
+                title: dl.LABEL,
+                blockId: dl.BLOCK_ID,
             };
         }
 
-        const defaults = this._desksList[0].references;
-        const s = '/spravochniki/' + blockId;
+        const s = '/spravochniki/' + dl.BLOCK_ID;
         const result = defaults.find(it => it.url === s);
-        return Object.assign({}, result);
+        return Object.assign({}, result, {
+            title: dl.LABEL,
+            blockId: dl.BLOCK_ID,
+        });
     }
 
     /**
@@ -336,10 +376,5 @@ export class EosDeskService {
             // TODO: может отругаться?
         }
         return v;
-    }
-
-    private updateSelectedDesk() {
-        this._selectedDesk = this._desksList.find((d) => d.id === this.selectedDeskId);
-        this._selectedDesk$.next(this._selectedDesk || this._desksList[0]);
     }
 }
