@@ -542,14 +542,8 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_INVALID);
             confirmParams.body = confirmParams.body.replace('{{errors}}', this._getValidateMessages().join('\n'));
             return this._confirmSrv.confirm2(confirmParams, )
-                .then((doSave) => {
-                    if (doSave) {
-                        return true;
-                    } else {
-                        const url = this._storageSrv.getItem(RECENT_URL);
-                        this.isChanged = false;
-                        this.goTo(url);
-                    }
+                .then(() => {
+                   return false;
                 })
                 .catch(() => {
                     return false;
