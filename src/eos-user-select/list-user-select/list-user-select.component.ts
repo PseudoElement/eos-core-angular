@@ -76,6 +76,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
 
     }
     ngOnInit() {
+        this._pagSrv.getSumIteq = false;
         this.buttons = Allbuttons;
         this.rtUserService.flagDeleteScroll = true;
         this.rtUserService.flagDeleteSelectedUser = true;
