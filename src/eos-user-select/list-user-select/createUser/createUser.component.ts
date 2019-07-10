@@ -75,6 +75,14 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 }
                 this.isLoading = false;
                 this._subscribe();
+            })
+            .catch(e => {
+                this._router.navigate(['login'], {
+                    queryParams: {
+                        returnUrl: this._router.url
+                    }
+                });
+                this.closedModal.emit();
             });
     }
     ngOnDestroy() {
@@ -115,6 +123,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                                 returnUrl: this._router.url
                             }
                         });
+                        this.closedModal.emit();
                     }
                     if (e instanceof RestError && e.code === 500) {
                         m.msg = 'Пользователь с таким логином уже существует';

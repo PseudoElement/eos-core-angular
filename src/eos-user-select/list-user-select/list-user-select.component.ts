@@ -340,13 +340,17 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     }
 
     CreateUser() {
-        this.createUserModal = this._modalSrv.show(CreateUserComponent, {
-            class: 'param-create-user',
-            ignoreBackdropClick: true,
-        });
-        this.createUserModal.content.closedModal.subscribe(() => {
-            this.createUserModal.hide();
-        });
+            this.createUserModal = this._modalSrv.show(CreateUserComponent, {
+                class: 'param-create-user',
+                ignoreBackdropClick: true,
+                animated:  false,
+                show: false,
+            });
+            this.createUserModal.content.closedModal.subscribe(() => {
+                setTimeout(() => {
+                    this.createUserModal.hide();
+                });
+            });
     }
 
     sortPageList(nameSort: string) {
