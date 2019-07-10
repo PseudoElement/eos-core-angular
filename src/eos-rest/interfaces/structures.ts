@@ -634,6 +634,7 @@ export interface USER_CL extends ILinearCL {
      * список используемых для этого пользователя группы документов абсолютных прав
      */
     USER_RIGHT_DOCGROUP_List: USER_RIGHT_DOCGROUP[];
+    USER_EDIT_ORG_TYPE_List;
 }
 
 /**
@@ -3861,5 +3862,10 @@ export interface NP_SUD_RESHEN_TYPE_CL extends IHierCL {
     LAYER: number;
     WEIGHT: number;
     MAXDUE: string;
+}
+
+export interface USER_EDIT_ORG_TYPE extends IEnt {
+    ISN_USER: number;
+    ISN_ORG_TYPE: number;
 }
 

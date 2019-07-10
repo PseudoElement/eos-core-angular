@@ -94,6 +94,15 @@ export class NodeAbsoluteRight {
                 return;
             }
         }
+
+        if (this._change.length && (this.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.editOrganiz)) {
+            const index = this._change.findIndex((item: IChengeItemAbsolute) => item.isn_org === node.isn_org);
+            if (index >= 0) {
+                this._transformChenge(node, index);
+                return;
+            }
+        }
+
         this.touched = true;
         this._change.push(node);
     }

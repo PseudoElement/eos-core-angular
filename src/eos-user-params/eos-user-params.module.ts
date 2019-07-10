@@ -60,6 +60,7 @@ import {UserParamAddressesComponent} from './user-params-set/user-param-other/us
 import {UserParamReestrComponent} from './user-params-set/user-param-other/user-param-reestr/user-param-reestr.component';
 import {UserParamShablonyComponent} from './user-params-set/user-param-other/user-param-shablony/user-param-shablony.component';
 import {BaseSertsComponent} from './base-param/base-serts/base-serts.component';
+import { OrganizEditTypeComponent } from './rights-delo/rights-delo-absolute-rights/organiz-edit-type/organiz-edit-type.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -106,6 +107,7 @@ import {BaseSertsComponent} from './base-param/base-serts/base-serts.component';
         UserParamReestrComponent,
         UserParamShablonyComponent,
         BaseSertsComponent,
+        OrganizEditTypeComponent,
     ],
     imports: [
         BrowserModule,

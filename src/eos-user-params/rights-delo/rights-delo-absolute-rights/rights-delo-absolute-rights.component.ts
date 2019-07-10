@@ -53,7 +53,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private _inputCtrlSrv: InputParamControlService,
         private _router: Router,
         private _errorSrv: ErrorHelperServices,
-    ) {}
+    ) {  }
     async ngOnInit() {
         this._userParamsSetSrv.saveData$
             .pipe(
@@ -64,7 +64,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             });
 
         await this._userParamsSetSrv.getUserIsn({
-            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List'
+            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
         });
         const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
         this.curentUser = this._userParamsSetSrv.curentUser;
@@ -149,11 +149,11 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this.editMode = false;
                 this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                 this._userParamsSetSrv.getUserIsn({
-                    expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List'
+                    expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
                 })
-                .then(() => {
-                    this.init();
-                });
+                        .then(() => {
+                            this.init();
+                        });
             })
             .catch((e) => {
                 this._errorSrv.errorHandler(e);
@@ -166,7 +166,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.btnDisabled = true;
         this._pushState();
         this._userParamsSetSrv.getUserIsn({
-            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List'
+            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
         })
             .then(() => {
                 this.init();
@@ -261,29 +261,43 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
         return fields;
     }
+    private formAllEditType() {
+        if (this.formGroupAll) {
+            this.subs['all'].unsubscribe();
+            this.formGroupAll = null;
+        }
+        this.formGroupAll = new FormGroup({
+            all: new FormControl(this.selectedNode.value ? this.arrNEWDeloRight[+this.selectedNode.key] : '0')
+        });
+        setTimeout(() => {
+            this.selectedNode.value ? this.formGroupAll.enable({ emitEvent: false }) : this.formGroupAll.disable({ emitEvent: false });
+        }, 0);
+        this.subs['all'] = this.formGroupAll.valueChanges
+            .subscribe(data => {
+                this.selectedNode.value = +data['all'];
+                this.checkChange();
+            });
+    }
     private _viewContent() {
-        this.rightContent = false;
+      //  this.rightContent = false;
         if (!this.selectedNode) {
             return;
         }
+        if (this.selectedNode.contentProp === 2 || this.selectedNode.contentProp !== 5)  {
+            this.rightContent = false;
+        }
         switch (this.selectedNode.contentProp) {
             case E_RIGHT_DELO_ACCESS_CONTENT.all:
-                if (this.formGroupAll) {
-                    this.subs['all'].unsubscribe();
-                    this.formGroupAll = null;
-                }
-                this.formGroupAll = new FormGroup({
-                    all: new FormControl(this.selectedNode.value ? this.arrNEWDeloRight[+this.selectedNode.key] : '0')
-                });
-                setTimeout(() => {
-                    this.selectedNode.value ? this.formGroupAll.enable({ emitEvent: false }) : this.formGroupAll.disable({ emitEvent: false });
-                }, 0);
-                this.subs['all'] = this.formGroupAll.valueChanges
-                    .subscribe(data => {
-                        this.selectedNode.value = +data['all'];
-                        this.checkChange();
-                    });
+                this.formAllEditType();
                 this.rightContent = true;
+                break;
+            case E_RIGHT_DELO_ACCESS_CONTENT.editOrganiz:
+                this.formAllEditType();
+                if (this.selectedNode.value) {
+                    setTimeout(() => {
+                        this.rightContent = true;
+                    }, 0);
+                }
                 break;
             case E_RIGHT_DELO_ACCESS_CONTENT.classif:
             case E_RIGHT_DELO_ACCESS_CONTENT.docGroup:
@@ -388,14 +402,33 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 url = `/USER_TECH_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.data['FUNC_NUM']} ${chenge.due}')`}`;
                 break;
         }
-        const batch = {
-            method: chenge.method,
-            requestUri: `USER_CL(${uId})${url}`,
-        };
-        if (chenge.method === 'POST' || chenge.method === 'MERGE') {
+        let batch = {};
+        if (node.contentProp === 5) {
+           batch = this._batchEditOrgType(chenge, uId);
+        }   else {
+             batch = {
+                method: chenge.method,
+                requestUri: `USER_CL(${uId})${url}`,
+            };
+            if (chenge.method === 'POST' || chenge.method === 'MERGE') {
+                delete chenge.data['CompositePrimaryKey'];
+                delete chenge.data['__metadata'];
+                batch['data'] = chenge.data;
+            }
+        }
+        return batch;
+    }
+    private _batchEditOrgType(chenge: IChengeItemAbsolute, uId) {
+        const batch = {};
+        batch['method'] = chenge.method;
+        if (chenge.method === 'POST') {
+            batch['requestUri'] = `USER_EDIT_ORG_TYPE`;
             delete chenge.data['CompositePrimaryKey'];
             delete chenge.data['__metadata'];
             batch['data'] = chenge.data;
+        }
+        if (chenge.method === 'DELETE') {
+            batch['requestUri'] = 'USER_EDIT_ORG_TYPE(${uId})${chenge.isn_org}`';
         }
         return batch;
     }
