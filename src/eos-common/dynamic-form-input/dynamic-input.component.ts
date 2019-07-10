@@ -42,6 +42,7 @@ export class DynamicInputComponent {
 
     types = E_FIELD_TYPE;
     tooltip: ErrorTooltip = new ErrorTooltip;
+
     constructor () {
         if (!this.viewOpts) {
             this.viewOpts = <IDynamicInputOptions> {};
