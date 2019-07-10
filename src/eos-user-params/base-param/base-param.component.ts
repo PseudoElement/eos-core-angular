@@ -98,7 +98,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 takeUntil(this._ngUnsubscribe)
             )
             .subscribe(() => {
-                this._userParamSrv.submitSave = this.submit();
+                this._userParamSrv.submitSave = this.submit('not');
             });
         if (localStorage.getItem('lastNodeDue') == null) {
             localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
@@ -208,15 +208,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         return true;
     }
 
-    submit(): Promise<any> {
-        if ( !this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value) && !this.curentUser.isTechUser ) {
+    submit(meta?: string): Promise<any> {
+        if (!this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value) && !this.curentUser.isTechUser) {
             this._msgSrv.addNewMessage({
                 type: 'warning',
                 title: 'Предупреждение',
                 msg: 'Нельзя сохранить не указано должностное лицо',
                 dismissOnTimeout: 6000,
             });
-            return ;
+            return;
         }
         const id = this._userParamSrv.userContextId;
         const newD = {};
@@ -236,12 +236,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         newD[key] = val;
                     }
                     if (key === 'DUE_DEP_NAME') {
-                        if ( this.curentUser.isTechUser ) {
+                        if (this.curentUser.isTechUser) {
                             this.inputs['DUE_DEP_NAME'].data = '';
                             this.form.get('NOTE').patchValue(null);
                         }
                         newD['NOTE'] = '' + this.form.get('NOTE').value;
-                        newD['DUE_DEP'] =  this.inputs['DUE_DEP_NAME'].data;
+                        newD['DUE_DEP'] = this.inputs['DUE_DEP_NAME'].data;
                     }
                     delete newD['DUE_DEP_NAME'];
                 });
@@ -288,18 +288,25 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
             this.clearMap();
-            this._userParamSrv.getUserIsn({
-                expand: 'USER_PARMS_List,USERCARD_List',
-                shortSys: true
-            }).then(() => {
+            if (meta && meta === 'not') {
                 this.editMode = false;
-                this.curentUser = this._userParamSrv.curentUser;
-                this.upform(this.inputs, this.form);
-                this.upform(this.controls, this.formControls);
-                this.upform(this.accessInputs, this.formAccess);
                 this.editModeF();
                 this._pushState();
-            });
+            } else {
+                this._userParamSrv.getUserIsn({
+                    expand: 'USER_PARMS_List,USERCARD_List',
+                    shortSys: true
+                }).then(() => {
+                    this.editMode = false;
+                    this.curentUser = this._userParamSrv.curentUser;
+                    this.upform(this.inputs, this.form);
+                    this.upform(this.controls, this.formControls);
+                    this.upform(this.accessInputs, this.formAccess);
+                    this.editModeF();
+                    this._pushState();
+                });
+            }
+
         }).catch(error => {
             this.cancel();
             this._errorSrv.errorHandler(error);
@@ -406,9 +413,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
         };
         return this.apiSrvRx.read(queryCabinet)
-        .then(result => {
-            return result;
-        });
+            .then(result => {
+                return result;
+            });
     }
 
     showDepartment() {
@@ -423,7 +430,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 return this._userParamSrv.getDepartmentFromUser([dueDep]);
             })
             .then((data: DEPARTMENT[]) => {
-                this.getUserDepartment(data[0].ISN_HIGH_NODE).then( result => {
+                this.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
                     this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
                 });
                 return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true);
@@ -588,35 +595,35 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     private _subscribe() {
         const f = this.formControls;
         f.get('teсhUser').valueChanges
-        .pipe(
-            takeUntil(this._ngUnsubscribe)
-        )
-        .subscribe(data => {
-            if (data) {
-                this.curentUser.isTechUser = data;
-                if ( this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value) ) {
-                    this._confirmSrv.confirm(CONFIRM_UPDATE_USER).then(confirmation => {
-                        if ( confirmation ) {
-                            this.form.get('DUE_DEP_NAME').patchValue('');
-                            this.form.get('DUE_DEP_NAME').disable();
-                            this.formControls.controls['SELECT_ROLE'].patchValue('');
-                            this.formControls.controls['SELECT_ROLE'].disable();
-                        } else {
-                            this.curentUser.isTechUser = data;
-                            f.get('teсhUser').setValue(false);
-                        }
-                    }).catch(error => {
-                        console.log('Ошибка', error);
-                    });
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
+            .subscribe(data => {
+                if (data) {
+                    this.curentUser.isTechUser = data;
+                    if (this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value)) {
+                        this._confirmSrv.confirm(CONFIRM_UPDATE_USER).then(confirmation => {
+                            if (confirmation) {
+                                this.form.get('DUE_DEP_NAME').patchValue('');
+                                this.form.get('DUE_DEP_NAME').disable();
+                                this.formControls.controls['SELECT_ROLE'].patchValue('');
+                                this.formControls.controls['SELECT_ROLE'].disable();
+                            } else {
+                                this.curentUser.isTechUser = data;
+                                f.get('teсhUser').setValue(false);
+                            }
+                        }).catch(error => {
+                            console.log('Ошибка', error);
+                        });
+                    }
+                    this.formControls.controls['SELECT_ROLE'].patchValue('...');
+                    this.formControls.controls['SELECT_ROLE'].disable();
+                } else {
+                    this.curentUser.isTechUser = data;
+                    this.formControls.controls['SELECT_ROLE'].patchValue('...');
+                    this.formControls.controls['SELECT_ROLE'].enable();
                 }
-                this.formControls.controls['SELECT_ROLE'].patchValue('...');
-                this.formControls.controls['SELECT_ROLE'].disable();
-            } else {
-                this.curentUser.isTechUser = data;
-                this.formControls.controls['SELECT_ROLE'].patchValue('...');
-                this.formControls.controls['SELECT_ROLE'].enable();
-            }
-        });
+            });
     }
 
 }
