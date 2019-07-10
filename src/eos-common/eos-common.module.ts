@@ -42,6 +42,9 @@ import { UnicValidatorDirective } from './directives/unic-validator.directive';
 /* pipes */
 import { EosDatePipe } from './pipes/eos-date.pipe';
 import { DynamicInputLinkButtonComponent } from './dynamic-form-input/dynamic-input-linkbutton.component';
+import { UserSelectPaginationComponent } from './pagination-user-select/pagination-user-select.component';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
 
 @NgModule({
     declarations: [
@@ -66,12 +69,14 @@ import { DynamicInputLinkButtonComponent } from './dynamic-form-input/dynamic-in
         DynamicInputLinkButtonComponent,
         EosDateMaskDirective,
         EosDatePipe,
+        UserSelectPaginationComponent
     ],
     imports: [
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
         BsDatepickerModule.forRoot(),
+        BsDropdownModule.forRoot(),
         TooltipModule.forRoot(),
         AlertModule.forRoot(),
         ModalModule.forRoot(),
@@ -87,6 +92,7 @@ import { DynamicInputLinkButtonComponent } from './dynamic-form-input/dynamic-in
         UnicValidatorDirective,
         DynamicInputComponent,
         EosDatePipe,
+        UserSelectPaginationComponent
     ],
     entryComponents: [
         ConfirmWindowComponent,
@@ -96,6 +102,7 @@ import { DynamicInputLinkButtonComponent } from './dynamic-form-input/dynamic-in
         ConfirmWindowService,
         EosMessageService,
         InputControlService,
+        UserPaginationService
     ]
 })
 export class EosCommonModule { }
