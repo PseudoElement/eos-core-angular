@@ -59,8 +59,7 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     this.filterForm = this.inpSrv.toFormGroup(this.inputs);
   }
   get disableBtn() {
-      return Object.keys(this.filterForm.value).findIndex((prop) =>
-      this.filterForm.value[prop] && this.filterForm.value[prop].trim()) === -1 || this.filterForm.controls['rec.USEREVENTS'].value === '0';
+      return Object.keys(this.filterForm.value).findIndex((prop) => this.filterForm.value[prop] ) === -1;
   }
 
   pretInputs(): void {
