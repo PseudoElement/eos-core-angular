@@ -23,9 +23,9 @@
     <button class="btn btn-primary"
         (click)="cancelCreate()">Отмена</button>
     <button class="btn btn-primary-full"
-        [disabled]="!formIsValid || !hasChanges || upadating"
+        [disabled]="this.upadating"
         (click)="create(false)">Добавить ещё</button>
     <button class="btn btn-primary-full"
-        [disabled]="isInsertDisabled()"
-        (click)="create()">Добавить</button>
+        [disabled]="this.upadating"
+        (click)="create(true)">Добавить</button>
 </div>
