@@ -277,6 +277,7 @@ export class EosDataConvertService {
                             value: data['sev'] ? data['sev']['GLOBAL_ID'] : null,
                             pattern: NOT_EMPTY_STRING,
                             disabled: !editMode,
+                            length: 255,
                         });
                         break;
                     case 'contact':
