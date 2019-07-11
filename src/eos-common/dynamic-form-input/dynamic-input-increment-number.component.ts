@@ -7,6 +7,7 @@ import { Validators } from '@angular/forms';
     templateUrl: 'dynamic-input-increment-number.component.html'
 })
 export class DynamicInputNumberIncrementComponent extends DynamicInputBase  implements OnChanges {
+
     onIncrease() {
         if (this.control.enabled) {
             if (!isNaN(parseInt(this.control.value, 10))) {

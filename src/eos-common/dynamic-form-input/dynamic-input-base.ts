@@ -2,8 +2,8 @@ import { ErrorTooltip, IDynamicInputOptions } from './dynamic-input.component';
 import { Input, OnChanges, OnDestroy } from '@angular/core';
 import { InputBase } from '../core/inputs/input-base';
 import { FormGroup, AbstractControl } from '@angular/forms';
-import { INPUT_ERROR_MESSAGES } from '../consts/common.consts';
 import { Subscription } from 'rxjs';
+import { EosUtils } from 'eos-common/core/utils';
 
 export class DynamicInputBase implements OnChanges, OnDestroy {
     @Input() input: InputBase<any>;
@@ -44,13 +44,13 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
 
     onFocus() {
         this.isFocused = true;
-        this.toggleTooltip(true);
+        this.toggleTooltip();
     }
 
     onBlur() {
         this.isFocused = false;
         this._updateMessage();
-        this.toggleTooltip(false);
+        this.toggleTooltip();
     }
     onInput(event) {
         event.stopPropagation();
@@ -78,7 +78,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
         this.input.dib = this;
         if (control) {
             this.ngOnDestroy();
-            this.subscriptions.push(control.statusChanges.subscribe((status) => {
+            this.subscriptions.push(control.statusChanges.subscribe(() => {
                 if (this.inputTooltip.force) {
                     this._updateMessage();
                     this.inputTooltip.visible = true;
@@ -111,38 +111,22 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
         return this.form.controls[this.input.key];
     }
 
-    private _updateMessage() {
+    public getErrorMessage(): string {
         let msg = '';
         const control = this.control;
         if (control && control.errors) {
-            msg = Object.keys(control.errors)
-                .map((key) => {
-                    switch (key) {
-                        case 'wrongDate':
-                        case 'minDate':
-                        case 'maxDate':
-                        case 'pattern':
-                        case 'required':
-                            return INPUT_ERROR_MESSAGES[key];
-                        case 'isUnique':
-                            return INPUT_ERROR_MESSAGES[key][+(!!this.input.uniqueInDict)];
-                        case 'maxlength':
-                            return 'Максимальная длина ' + this.input.length + ' символ(а|ов).';
-                        case 'valueError':
-                        case 'dateCompare':
-                            return control.errors[key];
-                        default:
-                            // console.warn('unhandled error key', key);
-                            return INPUT_ERROR_MESSAGES.default;
-                    }
-                })
-                .join(' ');
+            msg = EosUtils.getControlErrorMessage(control, {uniqueInDict: !!this.input.uniqueInDict, maxLength: this.input.length });
         }
-        // this._cdr.detectChanges();
-        this.inputTooltip.message = msg;
+
+        return msg;
     }
 
-    private toggleTooltip(focused: boolean) {
+
+    private _updateMessage() {
+        this.inputTooltip.message = this.getErrorMessage();
+    }
+
+    private toggleTooltip() {
         if (!this.readonly) {
             const control = this.control;
             if (control) {

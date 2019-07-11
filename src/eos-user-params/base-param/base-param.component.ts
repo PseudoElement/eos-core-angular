@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
+import { PipRX } from 'eos-rest/services/pipRX.service';
 import { DEPARTMENT, USER_CERTIFICATE } from 'eos-rest';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { BASE_PARAM_INPUTS, BASE_PARAM_CONTROL_INPUT, BASE_PARAM_ACCESS_INPUT } from 'eos-user-params/shared/consts/base-param.consts';
@@ -79,6 +80,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         private modalService: BsModalService,
         private _confirmSrv: ConfirmWindowService,
+        private apiSrvRx: PipRX,
     ) { }
     ngOnInit() {
         this._userParamSrv.getUserIsn({
@@ -96,7 +98,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 takeUntil(this._ngUnsubscribe)
             )
             .subscribe(() => {
-                this._userParamSrv.submitSave = this.submit();
+                this._userParamSrv.submitSave = this.submit('not');
             });
         if (localStorage.getItem('lastNodeDue') == null) {
             localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
@@ -200,37 +202,27 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
 
     dueDepNameNullUndef(date: any): boolean {
-        if ( date === null) {
-            return false;
-        }
-        if ( date === undefined ) {
-            return false;
-        }
-        if ( date === '' ) {
+        if (!date) {
             return false;
         }
         return true;
     }
 
-    submit(): Promise<any> {
-        if ( !this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value) && !this.curentUser.isTechUser ) {
+    submit(meta?: string): Promise<any> {
+        if (!this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value) && !this.curentUser.isTechUser) {
             this._msgSrv.addNewMessage({
                 type: 'warning',
                 title: 'Предупреждение',
                 msg: 'Нельзя сохранить не указано должностное лицо',
                 dismissOnTimeout: 6000,
             });
-            return ;
+            return;
         }
         const id = this._userParamSrv.userContextId;
         const newD = {};
         const query = [];
         let accessStr = '';
         let qPass: Promise<any>;
-        if ( this.curentUser.isTechUser ) {
-            this.form.get('DUE_DEP_NAME').patchValue('');
-            this.form.get('DUE_DEP_NAME').disable();
-        }
         if (this._newDataformAccess.size || this._newData.size) {
             if (this._newDataformAccess.size) {
                 accessStr = this._createAccessSystemsString(this.formAccess.controls);
@@ -244,10 +236,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         newD[key] = val;
                     }
                     if (key === 'DUE_DEP_NAME') {
-                        if ( this.curentUser.isTechUser ) {
+                        if (this.curentUser.isTechUser) {
                             this.inputs['DUE_DEP_NAME'].data = '';
+                            this.form.get('NOTE').patchValue(null);
                         }
-                        newD['DUE_DEP'] =  this.inputs['DUE_DEP_NAME'].data;
+                        newD['NOTE'] = '' + this.form.get('NOTE').value;
+                        newD['DUE_DEP'] = this.inputs['DUE_DEP_NAME'].data;
                     }
                     delete newD['DUE_DEP_NAME'];
                 });
@@ -294,18 +288,25 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
             this.clearMap();
-            this._userParamSrv.getUserIsn({
-                expand: 'USER_PARMS_List,USERCARD_List',
-                shortSys: true
-            }).then(() => {
+            if (meta && meta === 'not') {
                 this.editMode = false;
-                this.curentUser = this._userParamSrv.curentUser;
-                this.upform(this.inputs, this.form);
-                this.upform(this.controls, this.formControls);
-                this.upform(this.accessInputs, this.formAccess);
                 this.editModeF();
                 this._pushState();
-            });
+            } else {
+                this._userParamSrv.getUserIsn({
+                    expand: 'USER_PARMS_List,USERCARD_List',
+                    shortSys: true
+                }).then(() => {
+                    this.editMode = false;
+                    this.curentUser = this._userParamSrv.curentUser;
+                    this.upform(this.inputs, this.form);
+                    this.upform(this.controls, this.formControls);
+                    this.upform(this.accessInputs, this.formAccess);
+                    this.editModeF();
+                    this._pushState();
+                });
+            }
+
         }).catch(error => {
             this.cancel();
             this._errorSrv.errorHandler(error);
@@ -403,6 +404,20 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 
+    getUserDepartment(isn_cl): Promise<any> {
+        const queryCabinet = {
+            DEPARTMENT: {
+                criteries: {
+                    ISN_NODE: String(isn_cl)
+                }
+            }
+        };
+        return this.apiSrvRx.read(queryCabinet)
+            .then(result => {
+                return result;
+            });
+    }
+
     showDepartment() {
         this.isShell = true;
         let dueDep = '';
@@ -415,6 +430,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 return this._userParamSrv.getDepartmentFromUser([dueDep]);
             })
             .then((data: DEPARTMENT[]) => {
+                this.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
+                    this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
+                });
                 return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true);
             })
             .then((dep: DEPARTMENT) => {
@@ -577,28 +595,35 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     private _subscribe() {
         const f = this.formControls;
         f.get('teсhUser').valueChanges
-        .pipe(
-            takeUntil(this._ngUnsubscribe)
-        )
-        .subscribe(data => {
-            if (data) {
-                this.curentUser.isTechUser = data;
-                if ( this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value) ) {
-                    this._confirmSrv.confirm(CONFIRM_UPDATE_USER).then(confirmation => {
-                        if ( confirmation ) {
-
-                        } else {
-                            this.curentUser.isTechUser = data;
-                            f.get('teсhUser').setValue(false);
-                        }
-                    }).catch(error => {
-                        console.log('Ошибка', error);
-                    });
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
+            .subscribe(data => {
+                if (data) {
+                    this.curentUser.isTechUser = data;
+                    if (this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value)) {
+                        this._confirmSrv.confirm(CONFIRM_UPDATE_USER).then(confirmation => {
+                            if (confirmation) {
+                                this.form.get('DUE_DEP_NAME').patchValue('');
+                                this.form.get('DUE_DEP_NAME').disable();
+                                this.formControls.controls['SELECT_ROLE'].patchValue('');
+                                this.formControls.controls['SELECT_ROLE'].disable();
+                            } else {
+                                this.curentUser.isTechUser = data;
+                                f.get('teсhUser').setValue(false);
+                            }
+                        }).catch(error => {
+                            console.log('Ошибка', error);
+                        });
+                    }
+                    this.formControls.controls['SELECT_ROLE'].patchValue('...');
+                    this.formControls.controls['SELECT_ROLE'].disable();
+                } else {
+                    this.curentUser.isTechUser = data;
+                    this.formControls.controls['SELECT_ROLE'].patchValue('...');
+                    this.formControls.controls['SELECT_ROLE'].enable();
                 }
-            } else {
-                this.curentUser.isTechUser = data;
-            }
-        });
+            });
     }
 
 }

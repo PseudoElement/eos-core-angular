@@ -6,6 +6,5 @@ import { DynamicInputBase } from './dynamic-input-base';
     templateUrl: 'dynamic-input-text.component.html'
 })
 export class DynamicInputTextComponent extends DynamicInputBase {
-
 }
 

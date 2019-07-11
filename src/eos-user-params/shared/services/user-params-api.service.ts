@@ -42,6 +42,7 @@ export class UserParamApiSrv {
         this.confiList$ = new Subject();
         this._confiList$.subscribe((data: IConfig) => {
             this.configList = data;
+            sessionStorage.setItem('titleDue', this.configList.titleDue);
         });
         this.getSysParamForBlockedUser();
     }
@@ -332,7 +333,7 @@ export class UserParamApiSrv {
     }
     initConfigTitle(dueDep?: string) {
         if (!this.configList.titleDue || !dueDep) {
-            this.configList.titleDue = 'Все подразделения';
+            this.configList.titleDue = sessionStorage.getItem('titleDue');
         }
         if (!this.configList.shooseTab) {
             this.configList.shooseTab = 0;

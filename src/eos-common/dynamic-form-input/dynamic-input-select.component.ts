@@ -6,6 +6,7 @@ import { DynamicInputBase } from './dynamic-input-base';
     templateUrl: 'dynamic-input-select.component.html'
 })
 export class DynamicInputSelectComponent extends DynamicInputBase {
+
     get currentValue(): string {
         let value = '...'; // ..this.input.label;
         const ctrl = this.control;

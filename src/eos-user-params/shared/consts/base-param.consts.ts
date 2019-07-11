@@ -26,6 +26,13 @@ export const BASE_PARAM_INPUTS: IInputParamControl[] = [
         length: 2000
     },
     {
+        controlType: E_FIELD_TYPE.text,
+        key: 'NOTE',
+        label: 'Департамент',
+        length: 2000
+    },
+
+    {
         controlType: E_FIELD_TYPE.string,
         key: 'DUE_DEP_NAME',
         label: 'ДОЛЖНОСТНОЕ ЛИЦО',

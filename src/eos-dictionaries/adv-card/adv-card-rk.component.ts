@@ -151,10 +151,17 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     preSaveCheck(newdata: any): Promise<any> {
         let confPromise = Promise.resolve(false);
+
         // проверить списки на предмет наличия логически удаленных записей.
-        const fields = this.descriptions[DEFAULTS_LIST_NAME];
-        for (let i = 0; i < fields.length; i++) {
-            const el: TDefaultField = fields[i];
+        const fields_ = this.descriptions[DEFAULTS_LIST_NAME];
+
+        // Выводить ошибки в заданном порядке.
+        const sortable = fields_.sort((a, b) => a.order > b.order ? 1 : a.order < b.order ? -1 :
+            (a.order === undefined ?  1 :
+            (b.order === undefined ? -1 : 0) ));
+
+        for (let i = 0; i < sortable.length; i++) {
+            const el: TDefaultField = sortable[i];
             if (!el.dict) { continue; }
             if (el.dict.dictId !== 'USER_LISTS') { continue; }
 
@@ -168,7 +175,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 if (opt && opt.hasDeleted) {
                     confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_HAS_DELETED);
                 }
-
             }
         }
 

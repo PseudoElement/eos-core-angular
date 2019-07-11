@@ -1,9 +1,9 @@
 <div class="tabs-wrapper secondary-block border-bottom usual-border">
     <ul class="tabs">
-        <li class="tab-item"
+        <li
             *ngFor="let tab of tabs; let i = index"
             role="presentation"
-            [ngClass]="{'active secondary-text': i === currTab}"
+            [ngClass]="{'tab-item': tabOptions[i].isValid,'tab-item-invalid': !tabOptions[i].isValid, 'active secondary-text': i === currTab && tabOptions[i].isValid, 'active-invalid secondary-text': i === currTab && !tabOptions[i].isValid}"
             (click)="setTab(i)">
             <span class="tab-title">{{tab}}</span>
         </li>
@@ -12,7 +12,7 @@
 <div class="card-content-wrapper"
      [ngClass]="{'main-data': currTab === 0}">
     <div *ngIf="currTab === 0"
-         class="eos-cabinet-tab">
+         class="eos-cabinet-tab tab" id="tab0">
         <!-- <div class="clearfix"> -->
             <eos-dynamic-input *ngIf="inputs['rec.CABINET_NAME']"
                                [input]="inputs['rec.CABINET_NAME']"
@@ -130,7 +130,8 @@
         </div>
     </div>
     <div *ngIf="currTab === 1"
-         class="cabinet-access eos-cabinet-tab">
+         class="cabinet-access eos-cabinet-tab tab"
+         id="tab1">
         <div class="table-wrapper row"
              [ngClass]="{scrollable: showScroll}">
             <button class="btn btn-primary-light scroll-btn"

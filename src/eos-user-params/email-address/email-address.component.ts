@@ -54,9 +54,9 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         private _userServices: UserParamsService,
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
-    ) {}
+    ) { }
 
-    async ngOnInit() {
+     ngOnInit() {
         this._userServices.saveData$
             .pipe(
                 takeUntil(this._ngUnsubscribe)
@@ -64,28 +64,31 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 this._userServices.submitSave = this.saveAllForm(null);
             });
-
-        await this._userServices.getUserIsn({
+        this._userServices.getUserIsn({
             expand: 'NTFY_USER_EMAIL_List'
+        }).then(() => {
+            this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ведение адресов электронной почты`;
+            this.currentParams = '';
+            this.CODE = null;
+            this.editFalg = false;
+            this.username = this._userServices.curentUser['SURNAME_PATRON'];
+            // для работы с формой создание, удаление, редакт.
+            this.umailsInfo = this._userServices.curentUser['NTFY_USER_EMAIL_List'].slice();
+            // для хранения первоночального состояния формы.
+            this.saveParams = this.umailsInfo.slice();
+            this.sortArray(this.umailsInfo);
+            this.sortArray(this.saveParams);
+            this.umailsInfo.length > 0 ? this.currentIndex = 0 : this.currentIndex = null;
+            this.prevIndex = 0;
+            this.umailsInfo.length > 0 ? this.newEmail = this.umailsInfo[0].EMAIL : this.newEmail = '';
+            this.init();
+        }).catch(error => {
+            this.cathError(error);
         });
 
-        this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ведение адресов электронной почты`;
-        this.currentParams = '';
-        this.CODE = null;
-        this.editFalg = false;
-        this.username = this._userServices.curentUser['SURNAME_PATRON'];
-        // для работы с формой создание, удаление, редакт.
-        this.umailsInfo = this._userServices.curentUser['NTFY_USER_EMAIL_List'].slice();
-        // для хранения первоночального состояния формы.
-        this.saveParams = this.umailsInfo.slice();
-        this.sortArray(this.umailsInfo);
-        this.sortArray(this.saveParams);
-        this.umailsInfo.length > 0 ? this.currentIndex = 0 : this.currentIndex = null;
-        this.prevIndex = 0;
-        this.umailsInfo.length > 0 ? this.newEmail = this.umailsInfo[0].EMAIL : this.newEmail = '';
-        this.init();
+
     }
-    init () { // возможно лучше переименовать по другому
+    init() { // возможно лучше переименовать по другому
         this._emailService.getCode2()
             .then((map: Map<string, string>) => {
                 this.sortArray(this.umailsInfo);

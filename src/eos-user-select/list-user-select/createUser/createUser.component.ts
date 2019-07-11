@@ -75,6 +75,14 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 }
                 this.isLoading = false;
                 this._subscribe();
+            })
+            .catch(e => {
+                this._router.navigate(['login'], {
+                    queryParams: {
+                        returnUrl: this._router.url
+                    }
+                });
+                this.closedModal.emit();
             });
     }
     ngOnDestroy() {
@@ -115,6 +123,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                                 returnUrl: this._router.url
                             }
                         });
+                        this.closedModal.emit();
                     }
                     if (e instanceof RestError && e.code === 500) {
                         m.msg = 'Пользователь с таким логином уже существует';
@@ -223,7 +232,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         let url = 'CreateUserCl?';
         url += `classifName='${d['classifName'] ? encodeURI(d['classifName']) : ''}'`;
         url += `&dueDL='${d['dueDL'] ? d['dueDL'] : ''}'`;
-        url += `&role='${d['SELECT_ROLE'] ? encodeURI(d['SELECT_ROLE']) : ''}'`;
+        url += `&role='${d['SELECT_ROLE'] && !this.tehnicUser ? encodeURI(d['SELECT_ROLE']) : ''}'`;
         url += `&isn_user_copy_from=${d['ISN_USER_COPY'] ? d['ISN_USER_COPY'] : '0'}`; // если не выбран пользователь для копирования передаем '0'
         return url;
     }
@@ -239,9 +248,13 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             if (data) {
                 f.get('DUE_DEP_NAME').patchValue('');
                 f.get('DUE_DEP_NAME').disable();
+                f.get('SELECT_ROLE').patchValue('');
+                f.get('SELECT_ROLE').disable();
                 delete this.data['dueDL'];
+                delete this.data['SELECT_ROLE'];
             } else {
                 f.get('DUE_DEP_NAME').enable();
+                f.get('SELECT_ROLE').enable();
             }
         });
 

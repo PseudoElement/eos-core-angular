@@ -60,7 +60,7 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                             value: ''
                         }
                     ];
-                    if (this._userParamSrv.curentUser['isAccessDelo']) {
+                    // if (this._userParamSrv.curentUser['isAccessDelo']) {
                         if (this._userParamSrv.sysParams['CATEGORIES_FOR_USER']) {
                             const str: String = this._userParamSrv.sysParams['CATEGORIES_FOR_USER'];
                             str.substr(1).split(';').forEach(role => {
@@ -70,11 +70,11 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                                 });
                             });
                             f['value'] = this._userParamSrv.hashUserContext['CATEGORY'];
-                        }
-                    } else {
+                         }
+                    /*} else {
                         f['disabled'] = true;
                         f['readonly'] = true;
-                    }
+                    }*/
                     break;
             }
         });
