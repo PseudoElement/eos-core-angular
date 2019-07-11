@@ -19,7 +19,6 @@ import { USERDEP, USER_TECH } from 'eos-rest';
 // import { RestError } from 'eos-rest/core/rest-error';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
-
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
     templateUrl: 'rights-delo-absolute-rights.component.html'
@@ -53,7 +52,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private _inputCtrlSrv: InputParamControlService,
         private _router: Router,
         private _errorSrv: ErrorHelperServices,
-    ) {  }
+    ) {}
     async ngOnInit() {
         this._userParamsSetSrv.saveData$
             .pipe(
@@ -139,6 +138,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     }
                 });
                 node.deleteChange();
+                console.log(node);
             }
         });
         return this.apiSrv.setData(this.queryForSave)
@@ -422,13 +422,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         const batch = {};
         batch['method'] = chenge.method;
         if (chenge.method === 'POST') {
-            batch['requestUri'] = `USER_EDIT_ORG_TYPE`;
+            batch['requestUri'] =  `USER_CL(${uId})/USER_EDIT_ORG_TYPE_List`;
             delete chenge.data['CompositePrimaryKey'];
             delete chenge.data['__metadata'];
             batch['data'] = chenge.data;
         }
         if (chenge.method === 'DELETE') {
-            batch['requestUri'] = 'USER_EDIT_ORG_TYPE(${uId})${chenge.isn_org}`';
+            batch['requestUri'] = `USER_CL(${uId})/USER_EDIT_ORG_TYPE_List(\'${uId} ${chenge.isn_org}\')`;
         }
         return batch;
     }
