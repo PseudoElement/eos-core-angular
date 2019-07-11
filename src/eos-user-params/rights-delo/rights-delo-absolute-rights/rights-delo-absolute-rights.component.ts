@@ -138,7 +138,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     }
                 });
                 node.deleteChange();
-                console.log(node);
             }
         });
         return this.apiSrv.setData(this.queryForSave)
