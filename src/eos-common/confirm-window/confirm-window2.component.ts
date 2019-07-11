@@ -14,6 +14,7 @@ export interface IConfirmWindow2 {
     body: string;
     buttons: IConfirmButton [];
     confirmDisabled?: boolean;
+    manualCR?: boolean;
 }
 
 export interface IConfirmWindow2Content extends IConfirmWindow2 {

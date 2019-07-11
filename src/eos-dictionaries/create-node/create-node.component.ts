@@ -10,6 +10,9 @@ import { EosDepartmentsService } from '../services/eos-department-service';
 import { SUCCESS_SAVE } from '../consts/messages.consts';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
+import { CONFIRM_SAVE_INVALID } from 'app/consts/confirms.const';
+import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
+import { EosUtils } from 'eos-common/core/utils';
 
 @Component({
     selector: 'eos-create-node',
@@ -67,6 +70,15 @@ export class CreateNodeComponent {
      * @param hide indicates whether to close the modal window after or open new one
      */
     public create(hide = true) {
+
+        if (!this.formIsValid) {
+            this._windowInvalidSave();
+            return;
+        }
+
+        if (!this.hasChanges) {
+            return;
+        }
         const data = this.cardEditRef.getNewData();
         Object.assign(data.rec, this.nodeData.rec); // update with predefined data
 
@@ -104,6 +116,39 @@ export class CreateNodeComponent {
                 }
             });
     }
+
+    private _windowInvalidSave(): Promise<boolean> {
+            const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_INVALID);
+            confirmParams.body = confirmParams.body.replace('{{errors}}', this._getValidateMessages().join('\n'));
+            return this._confirmSrv.confirm2(confirmParams, )
+                .then((doSave) => {
+                    return true;
+                })
+                .catch(() => {
+                    return false;
+                });
+    }
+
+    private _getValidateMessages(): string[] {
+        const invalid = [];
+        const inputs = this.cardEditRef.inputs;
+        for (const inputKey of Object.keys(this.cardEditRef.inputs)) {
+            const input = inputs[inputKey];
+            const inputDib = input.dib;
+            if (!inputDib) {
+                continue;
+            }
+            const control = inputDib.control;
+            if (control.invalid) {
+                const title = input.label;
+                control.updateValueAndValidity();
+                const validateMessage = EosUtils.getControlErrorMessage(control, { maxLength: input.length });
+                invalid.push(' - ' + title + ' (' + validateMessage + ')');
+            }
+        }
+        return invalid;
+    }
+
 
     private _afterAdding(node: EosDictionaryNode, hide: boolean): void {
         if (node) {

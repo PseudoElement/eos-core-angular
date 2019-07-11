@@ -113,25 +113,37 @@ export class EosUtils {
     }
 
     static getControlErrorMessage(control: AbstractControl, params: any): string {
+
+        // {uniqueInDict: !!this.input.uniqueInDict, maxLength: this.input.length }
+
         let msg = '';
         if (control && control.errors) {
             msg = Object.keys(control.errors)
                 .map((key) => {
                     switch (key) {
                         case 'wrongDate':
+                        case 'minDate':
+                        case 'maxDate':
                         case 'pattern':
                         case 'required':
                             return INPUT_ERROR_MESSAGES[key];
+                        case 'isUnique':
+                            return INPUT_ERROR_MESSAGES[key][+(params.uniqueInDict)];
                         case 'maxlength':
-                            return 'Максимальная длина ' + params.maxLength + ' символ(а|ов).';
+                            return 'Максимальная длина ' + params.maxLength + ' ' + EosUtils.endingByNumber(params.maxLength);
+                        case 'valueError':
                         case 'dateCompare':
                             return control.errors[key];
+                        default:
+                            // console.warn('unhandled error key', key);
+                            return INPUT_ERROR_MESSAGES.default;
                     }
                 })
                 .join(' ');
         }
         return msg;
     }
+
 
     static isValidDate(d): boolean {
         return d instanceof Date && !isNaN(d.getTime());
