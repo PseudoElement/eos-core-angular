@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { ALL_ROWS } from 'eos-rest/core/consts';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
-import { USER_PARMS, USER_AUDIT } from 'eos-rest';
+import { USER_PARMS } from 'eos-rest';
 import { IPaginationConfig } from 'eos-dictionaries/node-list-pagination/node-list-pagination.interfaces';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { ALL_ROWS } from 'eos-rest/core/consts';
 
 @Component({
   selector: 'eos-sum-protocol',
@@ -28,6 +28,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   initPage: boolean = false;
   posts: number;
   clearResult: boolean = false;
+  orderBy: boolean = false;
+  orderByStr: string = 'EVENT_DATE asc';
   options = [
     { value: '0', title: '' },
     { value: '1', title: 'Блокирование Пользователя' },
@@ -50,6 +52,14 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   critUsers = [];
   initConfig: boolean = false;
   currentState: boolean[] = [true, true];
+  status: string;
+  SortUp: string;
+  arrSort = [
+    { date: true },
+    { event: false },
+    { who: false },
+    { isn: false }
+  ];
   public config: IPaginationConfig;
   private ngUnsubscribe: Subject<any> = new Subject();
 
@@ -64,14 +74,15 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           this.config = config;
           if (this._user_pagination.totalPages !== undefined) {
             if (this.config.current > this.config.start) {
-              this.PaginateData(this.config.length * 2);
+              this.PaginateData(this.config.length * 2, this.orderByStr);
             } else if (this.config.current && this.initPage === true) {
-              this.PaginateData(this.config.length, this.config.length * this.config.current - this.config.length);
+              this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
             }
           }
         }
       });
   }
+
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
@@ -82,7 +93,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'USER_EDIT_AUDIT' })
     }).then((r: any) => {
       this._user_pagination._initPaginationConfig(true);
-      this.PaginateData(this.config.length, 0);
+      this.PaginateData(this.config.length, this.orderByStr, 0);
       this._user_pagination.totalPages = undefined;
       if (r[0].PARM_VALUE === 'NO') {
         this.logUsers = false;
@@ -92,11 +103,10 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     });
   }
 
-
-  PaginateData(length, skip?) {
+  PaginateData(length, orderStr, skip?) {
     this._pipeSrv.read({
       USER_AUDIT: ALL_ROWS,
-      orderby: 'ISN_EVENT',
+      orderby: orderStr,
       top: length,
       skip: skip,
       inlinecount: 'allpages'
@@ -119,7 +129,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         } else {
           this.flagChecked = null;
         }
-
       })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
@@ -159,38 +168,39 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     switch (crit) {
       case 1:
         critSearch = 'EVENT_DATE';
+        this.arrSort[0].date = !this.arrSort[0].date;
+        this.SortUp = this.arrSort[0].date ? 'asc' : 'desc';
+        this.status = critSearch;
         break;
       case 2:
         critSearch = 'eventUser';
+        this.arrSort[1].event = !this.arrSort[1].event;
+        this.SortUp = this.arrSort[1].event ? 'asc' : 'desc';
+        this.status = critSearch;
         break;
       case 3:
         critSearch = 'WHO';
+        this.arrSort[2].who = !this.arrSort[2].who;
+        this.SortUp = this.arrSort[2].who ? 'asc' : 'desc';
+        this.status = critSearch;
         break;
       case 4:
         critSearch = 'USER';
+        this.arrSort[3].isn = !this.arrSort[3].isn;
+        this.SortUp = this.arrSort[3].isn ? 'asc' : 'desc';
+        this.status = critSearch;
         break;
     }
     if (critSearch === 'WHO' || critSearch === 'USER') {
-      this._pipeSrv.read<USER_AUDIT>({
-        USER_AUDIT:
-          PipRX.criteries({
-            orderby: `${critSearch}.CLASSIF_NAME`
-          })
-      }).then((data) => {
-      });
+      // this.orderByStr = `${critSearch}.SURNAME_PATRON ${this.SortUp}`;
+      // this._pipeSrv.read({
+      //   USER_AUDIT: PipRX.criteries({ orderby: this.orderByStr }),
+      // }).then((data) => {
+      // });
     } else if (critSearch === 'EVENT_DATE') {
-      this._pipeSrv.read<USER_AUDIT>({
-        USER_AUDIT: ALL_ROWS,
-        orderby: critSearch,
-        foredit: false,
-      }).then((data) => {
-      });
+      this.orderByStr = `${critSearch} ${this.SortUp}`;
+      this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
     }
-  }
-  sort(pageList, flag, key): any {
-    return pageList.sort(function (a, b) {
-      return (flag ? -1 : 1) * String(a[key]).localeCompare(String(b[key]));
-    });
   }
 
   MergeProtocol(): any {
@@ -517,7 +527,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   }
 
   resetSearch() {
-    this.PaginateData(this.config.length, 1);
+    this.PaginateData(this.config.length, this.orderByStr, 1);
     this.clearResult = false;
   }
 
