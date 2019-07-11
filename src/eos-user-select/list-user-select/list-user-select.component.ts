@@ -25,6 +25,8 @@ import { EosStorageService } from '../../app/services/eos-storage.service';
 import { EosBreadcrumbsService } from '../../app/services/eos-breadcrumbs.service';
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { ErrorHelperServices } from '../../eos-user-params/shared/services/helper-error.services';
+import { WaitClassifService } from 'app/services/waitClassif.service';
+ import { IOpenClassifParams } from 'eos-common/interfaces';
 interface TypeBread {
     action: number;
 }
@@ -51,6 +53,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     checkAll: string;
     // количество выбранных пользователей
     countcheckedField: number;
+    shadow: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public rtUserService: RtUserSelectService,
@@ -68,10 +71,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         private _breadSrv: EosBreadcrumbsService,
         private _appContext: AppContext,
         private _errorSrv: ErrorHelperServices,
+        private _waitCl: WaitClassifService
     ) {
 
     }
     ngOnInit() {
+        this._pagSrv.getSumIteq = false;
         this.buttons = Allbuttons;
         this.rtUserService.flagDeleteScroll = true;
         this.rtUserService.flagDeleteSelectedUser = true;
@@ -340,13 +345,17 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     }
 
     CreateUser() {
-        this.createUserModal = this._modalSrv.show(CreateUserComponent, {
-            class: 'param-create-user',
-            ignoreBackdropClick: true,
-        });
-        this.createUserModal.content.closedModal.subscribe(() => {
-            this.createUserModal.hide();
-        });
+            this.createUserModal = this._modalSrv.show(CreateUserComponent, {
+                class: 'param-create-user',
+                ignoreBackdropClick: true,
+                animated:  false,
+                show: false,
+            });
+            this.createUserModal.content.closedModal.subscribe(() => {
+                setTimeout(() => {
+                    this.createUserModal.hide();
+                });
+            });
     }
 
     sortPageList(nameSort: string) {
@@ -428,6 +437,21 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             }
         );
     }
+
+    GeneralLists() {
+        const param: IOpenClassifParams = {
+            classif: 'StdText',
+            id_std: '463_DOC_RC_ANNOTAT',
+            isn_user: -99,
+            form: 'DOC_RC.aspx',
+            name: 'ANNOTAT463'
+        };
+        this.shadow = true;
+        this._waitCl.openClassif(param).then(data => {
+        }).catch(error => {
+            this.shadow = false;
+        });
+    }
     setCheckedAllFlag() {
         const leng = this.filterForFlagChecked().length;
         if (leng === 0) {
@@ -503,7 +527,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     updateFlafListen() {
         this.countCheckedField();
         const leng = this.filterForFlagChecked().length;
-        console.log(leng);
         if (leng === 0) {
             this.flagChecked = null;
         } else {

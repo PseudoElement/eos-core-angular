@@ -1,10 +1,10 @@
 import { Component, Output, EventEmitter, OnDestroy, OnInit, OnChanges, ViewChild, NgZone, Injector } from '@angular/core';
 import {BsModalRef} from 'ngx-bootstrap';
-import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME, FICT_CONTROLS_LIST_NAME } from './adv-card-rk-datactrl';
+import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME, FICT_CONTROLS_LIST_NAME, IUpdateDictEvent } from './adv-card-rk-datactrl';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { TDefaultField, TDFSelectOption } from './rk-default-values/rk-default-const';
+import { TDefaultField } from './rk-default-values/rk-default-const';
 import { EosUtils } from 'eos-common/core/utils';
 import { Subscription } from 'rxjs';
 import { RKBasePage } from './rk-default-values/rk-base-page';
@@ -14,6 +14,7 @@ import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.s
 import { RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_HAS_DELETED } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
+import { WaitClassifService } from 'app/services/waitClassif.service';
 
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
 class Ttab {
@@ -28,8 +29,7 @@ const tabs: Ttab [] = [
     {tag: 3, title: 'Файлы'},
 ];
 
-
-// Реквизит "Срок исполнения" может быть заполнен только в одном месте
+// declare function openPopup(url: string, callback?: Function): boolean;
 
 @Component({
     selector: 'eos-adv-card-rk',
@@ -59,7 +59,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     isEDoc: boolean;
     rkType: number;
 
-
     @ViewChild('currentPage') private currentPage: RKBasePage;
     private subscriptions: Subscription[];
     private _node = {};
@@ -73,6 +72,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         private _dataSrv: EosDataConvertService,
         private _inputCtrlSrv: InputControlService,
         private _confirmSrv: ConfirmWindowService,
+        private _waitClassifSrv: WaitClassifService,
     ) {
         this.isUpdating = true;
         this.tabs = tabs;
@@ -96,17 +96,16 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         this.subscriptions = [];
     }
 
-    updateLinks (el: TDefaultField, options: TDFSelectOption[], data: any) {
+    updateLinks2 (event: IUpdateDictEvent) {
+        const el = event.el;
         if (el.key === 'JOURNAL_ISN_NOMENC' ||
             el.key === 'JOURNAL_ISN_NOMENC_W'
             ) {
-            const rec = data[0];
+            const rec = event.data[0];
             if (rec['DUE'] === '0.') {
-                options[0].title = '...';
-                options[0].rec = null;
+                event.options[0].title = '...';
             } else {
-                options[0].rec = rec;
-                options[0].title = rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
+                event.options[0].title = rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
             }
         }
     }
@@ -123,12 +122,46 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         });
     }
 
+    public userListsEdit() {
+
+        this._waitClassifSrv.openClassif({classif: 'TECH_LISTS'})
+        .then(result => {
+            // console.log('result: ', result);
+            // this.dataController.zone.run(() => {
+            //     console.log('zone');
+            //     this.rereadUserLists();
+            // });
+        })
+        .catch(err => {
+            console.log('window closed');
+            this.dataController.zone.run(() => {
+                // console.log('zone');
+                this.rereadUserLists();
+            });
+        });
+    }
+
+    rereadUserLists() {
+        this.dataController.markCacheForDirty('USER_LISTS');
+        this.dataController.updateDictsOptions('USER_LISTS', null, (event) => {
+            // console.log(event);
+        });
+
+    }
+
     preSaveCheck(newdata: any): Promise<any> {
         let confPromise = Promise.resolve(false);
+
         // проверить списки на предмет наличия логически удаленных записей.
-        const fields = this.descriptions[DEFAULTS_LIST_NAME];
-        for (let i = 0; i < fields.length; i++) {
-            const el: TDefaultField = fields[i];
+        const fields_ = this.descriptions[DEFAULTS_LIST_NAME];
+
+        // Выводить ошибки в заданном порядке.
+        const sortable = fields_.sort((a, b) => a.order > b.order ? 1 : a.order < b.order ? -1 :
+            (a.order === undefined ?  1 :
+            (b.order === undefined ? -1 : 0) ));
+
+        for (let i = 0; i < sortable.length; i++) {
+            const el: TDefaultField = sortable[i];
             if (!el.dict) { continue; }
             if (el.dict.dictId !== 'USER_LISTS') { continue; }
 
@@ -142,7 +175,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 if (opt && opt.hasDeleted) {
                     confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_HAS_DELETED);
                 }
-
             }
         }
 
@@ -201,10 +233,10 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             this._appendDBDefValues(this.values[DEFAULTS_LIST_NAME], this.storedValuesDG[DEFAULTS_LIST_NAME]);
             this._appendDBFilesValues(this.values[FILE_CONSTRAINT_LIST_NAME], this.storedValuesDG[FILE_CONSTRAINT_LIST_NAME]);
             this.isChanged = true;
-            this._checkCorrectValuesLogic(this.values);
+            this._checkCorrectValuesLogic(this.values /*, this.descriptions*/);
             this.editValues = this._makePrevValues(this.values);
 
-            this.dataController.loadDictsOptions(this.values, this.updateLinks).then (() => {
+            this.dataController.updateDictsOptions(null, this.values, this.updateLinks2).then (() => {
                 this.inputs = this._getInputs();
                 this._updateInputs(this.inputs);
                 this._updateOptions(this.inputs);

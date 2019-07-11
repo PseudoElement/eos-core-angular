@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy} from '@angular/core';
+import {Component, Input, NgZone, OnDestroy} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {InputControlService} from '../../eos-common/services/input-control.service';
 import {DG_FILE_CONSTRAINT, DOCGROUP_CL, PipRX, PRJ_DEFAULT_VALUE} from '../../eos-rest';
@@ -19,6 +19,7 @@ import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
 import {RK_SELECTED_LIST_HAS_DELETED, RK_SELECTED_LIST_IS_EMPTY} from '../../app/consts/confirms.const';
 import {IConfirmWindow2} from '../../eos-common/confirm-window/confirm-window2.component';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
+import {WaitClassifService} from '../../app/services/waitClassif.service';
 
 const PRJ_DEFAULT_NAME = 'PRJ_DEFAULT_VALUE_List';
 const FILE_CONSTRAINT_NAME = 'DG_FILE_CONSTRAINT_List';
@@ -38,6 +39,7 @@ class PrjDefaultItem {
     category: string;
     pattern: string;
     length?: number;
+    order?: number;
 
     constructor(rec) {
         if (rec) {
@@ -52,6 +54,7 @@ class PrjDefaultItem {
             this.pattern = rec.PATTERN ? rec.PATTERN : undefined;
             this.tableName = rec.TABLE_NAME ? rec.TABLE_NAME : 'PRJ_DEFAULT_VALUE_List';
             this.length = rec.LENGTH;
+            this.order = rec.order;
         }
     }
 }
@@ -67,7 +70,7 @@ class PrjDefaultFactory {
         });
     }
 
-    get items() {
+    get items(): PrjDefaultItem[] {
         return this._items;
     }
 
@@ -77,6 +80,7 @@ class PrjDefaultFactory {
             DEFAULT_TYPE: E_FIELD_TYPE.text,
             DESCRIPTION: 'Содержание',
             LENGTH: 2000,
+            order: 100,
         }, {
             DEFAULT_ID: 'ANNOTAT_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
@@ -119,6 +123,7 @@ class PrjDefaultFactory {
             DESCRIPTION: 'Доступ',
             DEFAULT_VALUE: 1,
             CLASSIF_ID: 'security',
+            order: 30,
         }, {
             DEFAULT_ID: 'SECURLEVEL_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
@@ -133,19 +138,22 @@ class PrjDefaultFactory {
             DEFAULT_TYPE: E_FIELD_TYPE.select,
             DESCRIPTION: 'Внутренние',
             FULL_DESCRIPTION: 'Внутренние адресаты',
-            CLASSIF_ID: 'user_list_104'
+            CLASSIF_ID: 'user_list_104',
+            order: 160,
         }, {
             DEFAULT_ID: 'SEND_ISN_LIST_ORGANIZ',
             DEFAULT_TYPE: E_FIELD_TYPE.select,
             DESCRIPTION: 'Внешние',
             FULL_DESCRIPTION: 'Внешние адресаты',
-            CLASSIF_ID: 'user_list_630'
+            CLASSIF_ID: 'user_list_630',
+            order: 170,
         }, {
             DEFAULT_ID: 'SIGN_ISN_LIST',
             DEFAULT_TYPE: E_FIELD_TYPE.select,
             DESCRIPTION: 'Внутренние',
             FULL_DESCRIPTION: 'Внутренние подписи',
-            CLASSIF_ID: 'user_list_104'
+            CLASSIF_ID: 'user_list_104',
+            order: 130,
         }, {
             DEFAULT_ID: 'SIGN_ISN_LIST_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
@@ -154,6 +162,7 @@ class PrjDefaultFactory {
             DEFAULT_ID: 'TERM_EXEC',
             DEFAULT_TYPE: E_FIELD_TYPE.numberIncrement,
             DESCRIPTION: 'Срок исп. (План. дата), от даты регистрации',
+            order: 20,
         }, {
             DEFAULT_ID: 'TERM_EXEC_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
@@ -163,7 +172,8 @@ class PrjDefaultFactory {
             DEFAULT_TYPE: E_FIELD_TYPE.select,
             DESCRIPTION: 'Внутренние',
             FULL_DESCRIPTION: 'Внутренние визы',
-            CLASSIF_ID: 'user_list_104'
+            CLASSIF_ID: 'user_list_104',
+            order: 110,
         }, {
             DEFAULT_ID: 'VISA_ISN_LIST_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
@@ -173,6 +183,7 @@ class PrjDefaultFactory {
             DEFAULT_TYPE: E_FIELD_TYPE.select,
             DESCRIPTION: 'Файлы',
             CLASSIF_ID: 'doc_templates',
+            order: 150,
         }, {
             DEFAULT_ID: 'FILE_M',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
@@ -183,32 +194,38 @@ class PrjDefaultFactory {
             DESCRIPTION: 'Внешние',
             FULL_DESCRIPTION: 'Внешние подписи',
             CLASSIF_ID: 'user_list_630',
+            order: 140,
         }, {
             DEFAULT_ID: 'VISA_OUTER_ISN_LIST',
             DEFAULT_TYPE: E_FIELD_TYPE.select,
             DESCRIPTION: 'Внешние',
             FULL_DESCRIPTION: 'Внешние визы',
             CLASSIF_ID: 'user_list_630',
+            order: 120,
         }, {
             DEFAULT_ID: 'PRJ_EXEC_LIST',
             DEFAULT_TYPE: E_FIELD_TYPE.select,
             DESCRIPTION: 'Доп. исполнители',
-            CLASSIF_ID: 'user_list_104'
+            CLASSIF_ID: 'user_list_104',
+            order: 40,
         }, {
             DEFAULT_ID: 'CONSISTS',
             DEFAULT_TYPE: E_FIELD_TYPE.string,
             DESCRIPTION: 'Состав',
             LENGTH: 255,
+            order: 10,
         }, {
             DEFAULT_ID: 'NOTE',
             DEFAULT_TYPE: E_FIELD_TYPE.text,
             DESCRIPTION: 'Примечание',
             LENGTH: 2000,
+            order: 180,
         }, {
             DEFAULT_ID: 'RUBRIC_LIST',
             DEFAULT_TYPE: E_FIELD_TYPE.select,
             DESCRIPTION: 'Рубрики',
-            CLASSIF_ID: 'user_list_107'
+            CLASSIF_ID: 'user_list_107',
+            order: 190,
         }, {
             DEFAULT_ID: 'TERM_EXEC_TYPE',
             DEFAULT_TYPE: 'D',
@@ -220,12 +237,14 @@ class PrjDefaultFactory {
             CATEGORY: 'PRJ_RC',
             PATTERN: REG_MAX_SIZE,
             TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+            order: 1000,
         }, {
             DEFAULT_ID: 'PRJ_RC.ONE_FILE',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Один файл',
             CATEGORY: 'PRJ_RC',
             TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+            order: 1010,
         }, {
             DEFAULT_ID: 'PRJ_RC.EXTENSIONS',
             DEFAULT_TYPE: E_FIELD_TYPE.string,
@@ -233,6 +252,7 @@ class PrjDefaultFactory {
             CATEGORY: 'PRJ_RC',
             TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
             LENGTH: 255,
+            order: 1020,
         }, {
             DEFAULT_ID: 'PRJ_VISA_SIGN.MAX_SIZE',
             DEFAULT_TYPE: E_FIELD_TYPE.number,
@@ -240,12 +260,14 @@ class PrjDefaultFactory {
             CATEGORY: 'PRJ_VISA_SIGN',
             PATTERN: REG_MAX_SIZE,
             TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+            order: 1030,
         }, {
             DEFAULT_ID: 'PRJ_VISA_SIGN.ONE_FILE',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Один файл',
             CATEGORY: 'PRJ_VISA_SIGN',
             TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+            order: 1040,
         }, {
             DEFAULT_ID: 'PRJ_VISA_SIGN.EXTENSIONS',
             DEFAULT_TYPE: E_FIELD_TYPE.string,
@@ -253,22 +275,27 @@ class PrjDefaultFactory {
             CATEGORY: 'PRJ_VISA_SIGN',
             TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
             LENGTH: 255,
+            order: 1050,
         }, {
             DEFAULT_ID: 'CAN_MANAGE_EXEC',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Управление Исполнителями',
+            order: 50,
         }, {
             DEFAULT_ID: 'CAN_WORK_WITH_FILES',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Работа с файлами РКПД',
+            order: 70,
         }, {
             DEFAULT_ID: 'CAN_WORK_WITH_PRJ',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Работа с РКПД',
+            order: 60,
         }, {
             DEFAULT_ID: 'CAN_MANAGE_APPROVAL',
             DEFAULT_TYPE: E_FIELD_TYPE.boolean,
             DESCRIPTION: 'Организация согл-я и утв-я',
+            order: 80,
         }];
     }
 
@@ -328,6 +355,7 @@ class PrjDefaultFactory {
 
     fillDictionariesLists(apiSrv: PipRX): Promise<any[]> {
         const reads = [];
+        this.options = new Map<string, any[]>();
         PrjDefaultFactory.dictionaries.forEach((dict) => {
             reads.push(new Promise<any>((resolve) => apiSrv.read(dict.req)
                 .then(records => {
@@ -338,6 +366,7 @@ class PrjDefaultFactory {
                         this.options[dict.name].push({
                             title: record[dict.titleFieldName],
                             value: record[dict.isnFieldName],
+                            disabled: record['DELETED'],
                             isEmpty: false,
                             hasDeleted: false,
                         });
@@ -409,6 +438,8 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         private _msgSrv: EosMessageService,
         private _inputCtrlSrv: InputControlService,
         private _apiSrv: PipRX,
+        private _zone: NgZone,
+        private _waitClassifSrv: WaitClassifService,
         private _confirmSrv: ConfirmWindowService) {
     }
 
@@ -595,12 +626,29 @@ export class PrjDefaultValuesComponent implements OnDestroy {
             });
     }
 
+    public userListsEdit() {
+        this._waitClassifSrv.openClassif({classif: 'TECH_LISTS'})
+            .then()
+            .catch(err => {
+                console.log('window closed');
+                this._zone.run(() => {
+                    this._rereadUserLists();
+                });
+            });
+    }
+
     private _preSaveCheck(): Promise<any> {
         let confPromise = Promise.resolve(false);
         // проверить списки на предмет наличия логически удаленных записей.
-        const fields = this.prjDefaults.items;
-        for (let i = 0; i < fields.length; i++) {
-            const el = fields[i];
+        const fields1 = this.prjDefaults.items;
+
+        // Выводить ошибки в заданном порядке.
+        const sortable = fields1.sort((a, b) => a.order > b.order ? 1 : a.order < b.order ? -1 :
+            (a.order === undefined ?  1 :
+            (b.order === undefined ? -1 : 0) ));
+
+        for (let i = 0; i < sortable.length; i++) {
+            const el = sortable[i];
             if (!el.dictId) { continue; }
             const currentDict = PrjDefaultFactory.dictionaries.find(d => d.name === el.dictId);
             if (!currentDict.isUserList) { continue; }
@@ -756,5 +804,15 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         });
     }
 
-    // TODO: после подключения кнопки 'Ведение списков' сделать обновление options
+    private _rereadUserLists() {
+        this.prjDefaults.fillDictionariesLists(this._apiSrv)
+            .then(() => {
+                this.prjDefaults.items.forEach((prjDefault) => {
+                    if (prjDefault.type === E_FIELD_TYPE.select) {
+                        const key = PrjDefaultValuesComponent._getFieldKey(prjDefault.id, prjDefault.tableName);
+                        this.inputs[key].options = this.prjDefaults.options[prjDefault.dictId];
+                    }
+                });
+            });
+    }
 }

@@ -10,7 +10,9 @@ export class EosUtils {
         if (d instanceof Date) {
             return d.getFullYear() +
                 '-' + EosUtils.pad(d.getMonth() + 1) +
-                '-' + EosUtils.pad(d.getDate());
+                '-' + EosUtils.pad(d.getDate())
+                + 'T00:00:00';
+
             /*'T' + pad(d.getHours()) +
             ':' + pad(d.getMinutes()) +
             ':' + pad(d.getSeconds()); */
@@ -111,19 +113,30 @@ export class EosUtils {
     }
 
     static getControlErrorMessage(control: AbstractControl, params: any): string {
+
+        // {uniqueInDict: !!this.input.uniqueInDict, maxLength: this.input.length }
+
         let msg = '';
         if (control && control.errors) {
             msg = Object.keys(control.errors)
                 .map((key) => {
                     switch (key) {
                         case 'wrongDate':
+                        case 'minDate':
+                        case 'maxDate':
                         case 'pattern':
                         case 'required':
                             return INPUT_ERROR_MESSAGES[key];
+                        case 'isUnique':
+                            return INPUT_ERROR_MESSAGES[key][+(params.uniqueInDict)];
                         case 'maxlength':
-                            return 'Максимальная длина ' + params.maxLength + ' символ(а|ов).';
+                            return 'Максимальная длина ' + params.maxLength + ' ' + EosUtils.endingByNumber(params.maxLength);
+                        case 'valueError':
                         case 'dateCompare':
                             return control.errors[key];
+                        default:
+                            // console.warn('unhandled error key', key);
+                            return INPUT_ERROR_MESSAGES.default;
                     }
                 })
                 .join(' ');
@@ -131,8 +144,39 @@ export class EosUtils {
         return msg;
     }
 
-    static isValidDate(d) {
+    static endingByNumber(value: number) {
+        const mod100 = value % 100;
+
+        if (mod100 >= 10 && mod100 <= 20) {
+            return 'символов';
+        }
+
+        const mod10 = value % 10;
+        switch (mod10) {
+            case 1:
+                return 'символ';
+            case 2:
+            case 3:
+            case 4:
+                return 'символа';
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 0:
+            default:
+                return 'символов';
+        }
+
+    }
+
+    static isValidDate(d): boolean {
         return d instanceof Date && !isNaN(d.getTime());
+    }
+
+    static isDateEqual(d1: Date, d2: Date): boolean {
+        return (d1.getDate() === d2.getDate()) && (d1.getFullYear () === d2.getFullYear()) && (d1.getMonth () === d2.getMonth());
     }
 
 }

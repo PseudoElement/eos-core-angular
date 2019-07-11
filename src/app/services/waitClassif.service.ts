@@ -11,6 +11,8 @@ const LIST_OLD_PAGES: string[] = [
 const OLD_VIEW_URL: string = 'Pages/Classif/ChooseClassif.aspx?';
 const NEW_VIEW_URL: string = 'Eos.Delo.JsControls/Classif/ChooseClassif.aspx?';
 const USER_LISTS: string = '../Pages/User/USER_LISTS.aspx';
+const TECH_LISTS: string = '../Pages/Common/TECH_LISTS.aspx';
+const StdText: string = '../Pages/Common/StdText.aspx';
 
 @Injectable()
 export class WaitClassifService {
@@ -19,10 +21,18 @@ export class WaitClassifService {
             return 'classif';
         };
     }
+
     openClassif(params: IOpenClassifParams, flag?: boolean): Promise<String> {
         let url: string = '';
         if (params.classif === 'USER_LISTS') {
             url = USER_LISTS;
+            if (params.user_id !== undefined && params.user_id !== null) {
+                url += `?user_id=${params.user_id}`;
+            }
+        } else if (params.classif === 'TECH_LISTS') {
+            url = TECH_LISTS;
+        } else if (params.classif === 'StdText') {
+            url = this.stdTextUrl(StdText, params);
         } else {
             url = this._prepareUrl(params, flag);
         }
@@ -46,6 +56,22 @@ export class WaitClassifService {
                 }
             }, 500);
         });
+    }
+    private stdTextUrl(url, params: IOpenClassifParams) {
+        if (params.id_std !== undefined && params.id_std !== null) {
+            url += `?id=${params.id_std}`;
+        }
+        if (params.name !== undefined && params.name !== null) {
+            url += `&name=${params.name}`;
+        }
+        if (params.form !== undefined && params.form !== null) {
+            url += `&form=${params.form}`;
+        }
+        if (params.isn_user !== undefined && params.isn_user !== null) {
+            url += `&isn_user=${params.isn_user}`;
+        }
+
+        return url;
     }
     private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
         let url = '../';
@@ -72,6 +98,9 @@ export class WaitClassifService {
         }
         if (params.nomenkl_jou !== undefined && params.nomenkl_jou !== null) {
             url += `&nomenkl_jou=${params.nomenkl_jou}`;
+        }
+        if (params.user_id !== undefined && params.user_id !== null) {
+            url += `&user_id=${params.user_id}`;
         }
         url += params.classif === 'CONTACT' || params.classif === 'ORGANIZ_CL' ? '&app=nadzor' : '';
         // if (params.criteriesSearch) {

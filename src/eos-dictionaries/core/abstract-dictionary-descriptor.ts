@@ -91,6 +91,10 @@ export abstract class AbstractDictionaryDescriptor {
         return this.apiInstance + ((et.properties[et.pk] === _T.s) ? ('(\'' + v + '\')') : ('(' + v + ')'));
     }
 
+    getMetadata(): any {
+        return this.metadata;
+    }
+
     addBlob(ext: string, blobData: string): Promise<string | number> {
         const delo_blob = this.apiSrv.entityHelper.prepareAdded<DELO_BLOB>({
             ISN_BLOB: this.apiSrv.sequenceMap.GetTempISN(),

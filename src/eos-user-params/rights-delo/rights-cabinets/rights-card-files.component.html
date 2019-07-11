@@ -38,7 +38,7 @@
                 </button>
             </div>
             <div class="card-wrr">
-                <div class="cards-wr" [ngClass]="card.current && flagEdit ? 'ativeCard' : ''" *ngFor='let card of mainArrayCards'>
+                <div class="cards-wr" [ngClass]="card.current ? 'ativeCard' : ''" *ngFor='let card of mainArrayCards'>
                     <span *ngIf='!card.deleted' class="cards-item" [ngClass]="card.homeCard && flagEdit ? 'homeCard' : ''" (click)='selectCurentCard(card)'>{{card.cardName}}</span>
                 </div>
                 <div *ngIf="!currentCard">

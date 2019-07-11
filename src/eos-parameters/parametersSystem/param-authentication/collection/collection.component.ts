@@ -144,7 +144,6 @@ export class AuthenticationCollectionComponent implements OnInit {
         this._closed();
     }
     cancelModalWord() {
-        console.log('cancel');
         this.modalWordRef.hide();
         this.isNewWord = false;
         this.inputWordValue = '';

@@ -133,6 +133,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
+        this._cdr.detach();
     }
 
     markedNodes() {
@@ -264,7 +265,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             this.orderBy.ascend = !this.orderBy.ascend;
         }
         this._dictSrv.orderBy(this.orderBy);
-        this._cdr.detectChanges();
+        if (!this._cdr['destroyed']) {
+            this._cdr.detectChanges();
+        }
     }
 
     untrimmedValue(value: string): string {
@@ -542,9 +545,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             this.min_length = minLength;
         }
 
-        this._cdr.detectChanges();
+        if (!this._cdr['destroyed']) {
+            this._cdr.detectChanges();
+        }
     }
-
-
-
 }

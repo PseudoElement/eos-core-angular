@@ -150,8 +150,11 @@ export class EosAccessPermissionsService {
         return APS_DICT_GRANT.denied;
     }
     // --------------------------------------------------------------
-    public isAccessGrantedForUsers(): boolean {
-        return this._checkAccessTech(E_TECH_RIGHT.Users);
+    public isAccessGrantedForUsers(): Promise<boolean> {
+        return this.appCtx.init()
+            .then(() => {
+                return this._checkAccessTech(E_TECH_RIGHT.Users);
+            });
     }
 
     // --------------------------------------------------------------

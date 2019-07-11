@@ -29,7 +29,7 @@
                             <span [ngClass]="!item.isActive ? item.iconClass : item.activeIconClass"></span>
                         </button>
                     </div>
-                    <ul *dropdownMenu
+                    <ul *ngIf="item.enabled"
                         class="dropdown-menu create-menu"
                         role="menu">
                         <li *ngFor="let elem of addMenu"

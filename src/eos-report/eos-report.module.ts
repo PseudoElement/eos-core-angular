@@ -18,6 +18,7 @@ import { InputParamControlService } from 'eos-user-params/shared/services/input-
 import { FormHelperService } from 'eos-user-params/shared/services/form-helper.services';
 import { EosCommonModule } from 'eos-common/eos-common.module';
 import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
+import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
 /*     ----Services----     */
 
 @NgModule({
@@ -42,7 +43,8 @@ import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
     providers: [
         InputParamControlService,
         FormHelperService,
-        EosDictService
+        EosDictService,
+        UserPaginationService
     ]
 })
 

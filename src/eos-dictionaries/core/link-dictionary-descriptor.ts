@@ -139,6 +139,17 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
         return this.apiSrv.batch(changes, '');
     }
 
+
+    search(criteries: any[]): Promise<any[]> {
+        const _search = criteries.map((critery) => this._findRawData(PipRX.criteries(critery)));
+
+        return Promise.all(_search)
+            .then((results) => {
+                return [].concat(...results);
+            }
+        );
+    }
+
     protected _initRecord(descriptorData: IDictionaryDescriptor) {
         this.record = new LinkRecordDescrtiptor(this, descriptorData);
     }
@@ -163,5 +174,30 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
             return Promise.resolve(null);
         }
     }
+
+    private _findRawData(query?: any, order?: string, limit?: number): Promise<any[]> {
+        if (!query) {
+            query = ALL_ROWS;
+        }
+        const req = {[this.apiInstance]: query};
+
+        return this.apiSrv
+            .read(req)
+            .then((data: any[]) => {
+                const id_list = [];
+                data.forEach((rec) => {
+                    id_list.push(rec[ISN_LCLASSIF]);
+                    id_list.push(rec['ISN_PARE_LINK']);
+                });
+
+                const q1 = Array.from(new Set(id_list));
+                if (q1.length > 0) {
+                    return this.getData(q1, order, limit);
+                } else {
+                    return Promise.resolve([]);
+                }
+            });
+    }
+
 }
 

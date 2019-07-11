@@ -13,6 +13,7 @@ export interface IAppCfg {
 export interface ISelectOption {
     value: string | number;
     title: string;
+    disabled?: boolean;
 }
 
 export interface IOpenClassifParams {
@@ -27,6 +28,13 @@ export interface IOpenClassifParams {
     selected? ;
     criteriesSearch?: boolean;
     criteriesName?: string;
+    user_id?: number;
+
+    // для STDText
+    isn_user?: number;
+    name?: string;
+    form?: string;
+    id_std?: string;
 }
 
 export interface ICertificateInit {

@@ -5,6 +5,19 @@ import { EosDictService } from '../services/eos-dict.service';
 import { Subscription } from 'rxjs';
 import { NOT_EMPTY_STRING } from '../consts/input-validation';
 import { IDynamicInputOptions } from 'eos-common/dynamic-form-input/dynamic-input.component';
+import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+
+export class TabOptions {
+    id: string;
+    name: string;
+    isValid: boolean;
+}
+
+enum TabStatus {
+    TabValid,
+    TabInvalid,
+    TabEmpty,
+}
 
 export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
     @Input() form: FormGroup;
@@ -19,6 +32,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
     nodeId: string;
     currTab = 0;
     prevValues: any[];
+    tabOptions: Array<TabOptions> = [];
 
     selOpts: IDynamicInputOptions = {
         defaultValue: {
@@ -72,22 +86,18 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
         const descriptor = this.dictSrv.currentDictionary.descriptor;
         const list = descriptor.record.getEditView({});
 
-        descriptor.getRelatedFields(list.filter(i => i.dictionaryId)
-                                .map(i => i.dictionaryId ? i.dictionaryId : null))
-            .then((related) => {
-                list.forEach((field) => {
-                    if ((field.dictionaryId !== undefined)) {
-                        field.options.length = 0;
-                        // field.options.splice(0, field.options.length);
-                        related[field.dictionaryId].forEach((rel) => {
-                            const fn = (field.dictionaryLink ? field.dictionaryLink.pk : 'ISN_LCLASSIF');
-                            const ln = (field.dictionaryLink ? field.dictionaryLink.label : 'CLASSIF_NAME');
-                            field.options.push({value: rel[fn], title: rel[ln]});
-                        });
+        this.dictSrv.currentDictionary.loadRelatedFieldsOptions(list.filter(i => i.dictionaryId)).then((d) => {
+            for (const key in this.inputs) {
+                if (this.inputs.hasOwnProperty(key)) {
+                    const input = this.inputs[key];
+                    if (input && input.options && input.controlType === E_FIELD_TYPE.select) {
+                        const value = this.getValue(key);
+                        console.log(key, value);
+                        input.options = input.options.filter(o => (!o.disabled || String(value) === String(o.value)));
                     }
-                });
-            });
-
+                }
+            }
+        });
     }
 
     /**
@@ -110,6 +120,70 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
         } else {
             return [];
         }
+    }
+
+    updateValidTabs() {
+        for (let i = 0;  i < this.tabOptions.length; i++) {
+            const tabOption =  this.tabOptions[i];
+            if (this.currTab === i) {
+                const tabContainsInvalidField = this.getStatusTabByFields(tabOption.id);
+                switch (tabContainsInvalidField) {
+                    case TabStatus.TabInvalid: {
+                        tabOption.isValid = false;
+                        break;
+                    }
+                    case TabStatus.TabValid: {
+                        tabOption.isValid = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    getStatusTabByFields(tabId: string): TabStatus {
+        const invalidControls = this.getInvalidControl();
+        const currentTab = document.getElementById(tabId);
+        if (!currentTab) {
+            return TabStatus.TabEmpty;
+        }
+        for (let i = 0; i < invalidControls.length; i++) {
+            const invalidControl = invalidControls[i];
+            const invalidElement = document.getElementById(invalidControl);
+            if (!invalidElement) {
+                continue;
+            }
+            const tab = invalidElement.closest('.tab');
+            if (!tab) {
+                continue;
+            }
+            if (tabId === tab.id) {
+                return TabStatus.TabInvalid;
+            }
+        }
+
+        return TabStatus.TabValid;
+    }
+
+    tabsToArray(tabs: string[]) {
+        for (let i = 0; i < tabs.length; i++) {
+            this.tabOptions.push({
+                id: 'tab' + i,
+                name: tabs[i],
+                isValid: true
+            });
+        }
+    }
+
+    getInvalidControl(): string[] {
+        const invalid = [];
+        const controls = this.form.controls;
+        for (const name in controls) {
+            if (controls[name].invalid) {
+                invalid.push(name);
+            }
+        }
+        return invalid;
     }
 
     ngOnDestroy() {

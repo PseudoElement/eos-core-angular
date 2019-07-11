@@ -329,6 +329,11 @@
     color: $button-color-main-theme !important;
 }
 
+.active-invalid {
+    border-color: $button-color-main-theme;
+    color: $red !important;
+}
+
 .transparent-border {
     border-color: transparent;
 }
@@ -418,6 +423,14 @@
         display: inline-block;
         width: $item-width;
         text-align: center;
+        .eos-icon {
+            vertical-align: middle;
+        }
+    }
+    .desktop-menu-icon {
+        display: inline-block;
+        text-align: center;
+        margin-left: 5px;
         .eos-icon {
             vertical-align: middle;
         }
