@@ -75,6 +75,14 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 }
                 this.isLoading = false;
                 this._subscribe();
+            })
+            .catch(e => {
+                this._router.navigate(['login'], {
+                    queryParams: {
+                        returnUrl: this._router.url
+                    }
+                });
+                this.closedModal.emit();
             });
     }
     ngOnDestroy() {
@@ -115,6 +123,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                                 returnUrl: this._router.url
                             }
                         });
+                        this.closedModal.emit();
                     }
                     if (e instanceof RestError && e.code === 500) {
                         m.msg = 'Пользователь с таким логином уже существует';
@@ -239,9 +248,13 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             if (data) {
                 f.get('DUE_DEP_NAME').patchValue('');
                 f.get('DUE_DEP_NAME').disable();
+                f.get('SELECT_ROLE').patchValue('');
+                f.get('SELECT_ROLE').disable();
                 delete this.data['dueDL'];
+                delete this.data['SELECT_ROLE'];
             } else {
                 f.get('DUE_DEP_NAME').enable();
+                f.get('SELECT_ROLE').enable();
             }
         });
 

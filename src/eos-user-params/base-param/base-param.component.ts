@@ -599,8 +599,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         if ( confirmation ) {
                             this.form.get('DUE_DEP_NAME').patchValue('');
                             this.form.get('DUE_DEP_NAME').disable();
-                            this.formControls.controls['SELECT_ROLE'].patchValue(null);
-                            this.formControls.controls['SELECT_ROLE'].disable({ emitEvent: false });
+                            this.formControls.controls['SELECT_ROLE'].patchValue('');
+                            this.formControls.controls['SELECT_ROLE'].disable();
                         } else {
                             this.curentUser.isTechUser = data;
                             f.get('teсhUser').setValue(false);
@@ -609,8 +609,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                         console.log('Ошибка', error);
                     });
                 }
+                this.formControls.controls['SELECT_ROLE'].patchValue('...');
+                this.formControls.controls['SELECT_ROLE'].disable();
             } else {
                 this.curentUser.isTechUser = data;
+                this.formControls.controls['SELECT_ROLE'].patchValue('...');
+                this.formControls.controls['SELECT_ROLE'].enable();
             }
         });
     }
