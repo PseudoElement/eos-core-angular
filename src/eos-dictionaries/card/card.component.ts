@@ -543,13 +543,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             confirmParams.body = confirmParams.body.replace('{{errors}}', this._getValidateMessages().join('\n'));
             return this._confirmSrv.confirm2(confirmParams, )
                 .then((doSave) => {
-                    if (doSave) {
-                        return true;
-                    } else {
-                        const url = this._storageSrv.getItem(RECENT_URL);
-                        this.isChanged = false;
-                        this.goTo(url);
-                    }
+                    return true;
                 })
                 .catch(() => {
                     return false;
@@ -568,10 +562,11 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             if (!inputDib) {
                 continue;
             }
-            const inputControl = inputDib.control;
-            if (inputControl.invalid) {
+            const control = inputDib.control;
+            if (control.invalid) {
                 const title = input.label;
-                const validateMessage = inputDib.inputTooltip.message.replace('.', '').toLowerCase();
+                control.updateValueAndValidity();
+                const validateMessage = EosUtils.getControlErrorMessage(control, { maxLength: input.length });
                 invalid.push(' - ' + title + ' (' + validateMessage + ')');
             }
         }
