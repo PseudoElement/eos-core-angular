@@ -75,7 +75,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     getCardTitle(): any {
-        return null;
+        return '';
     }
 
     ngAfterViewInit(): void {
