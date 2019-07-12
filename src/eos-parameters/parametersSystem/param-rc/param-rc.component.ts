@@ -67,6 +67,7 @@ export class ParamRcComponent extends BaseParamComponent {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
             this.isChangeForm = false;
             this.formChanged.emit(false);
+            this.form.controls['rec.REG_PERIOD'].patchValue('1', { emitEvent: true });
             this.ngOnDestroy();
             this.init()
                 .then(() => {

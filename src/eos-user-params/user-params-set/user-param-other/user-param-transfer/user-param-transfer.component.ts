@@ -133,7 +133,7 @@ export class UserParamTransferComponent implements OnDestroy, OnInit {
     }
     cancel($event?) {
         this.flagEdit = false;
-        this.prepFormCancel(this.inputs, false);
+        this.prepFormCancel(this.inputs, true);
         this.mapChanges.clear();
         this.editMode();
     }
