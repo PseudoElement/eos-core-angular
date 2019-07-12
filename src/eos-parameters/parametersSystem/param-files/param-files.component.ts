@@ -74,10 +74,7 @@ export class ParamFielsComponent extends BaseParamComponent {
     cancel() {
         if (this.isChangeForm || this.isChangeFormAttach) {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
-            Object.keys(this.inputAttach).forEach((key) => {
-                const val = this.inputAttach[key].value;
-                this.formAttach.controls[key].patchValue(val, { emitEvent: true });
-            });
+            this.formAttach.reset();
             this.isChangeForm = false;
             this.isChangeFormAttach = false;
             this.formChanged.emit(false);

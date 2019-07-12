@@ -33,8 +33,7 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
             this.isChangeForm = false;
             this.formChanged.emit(false);
-            const val = this.inputs['rec.MAX_LOGIN_ATTEMPTS'].value;
-            this.form.controls['rec.MAX_LOGIN_ATTEMPTS'].patchValue(val, { emitEvent: true });
+            this.form.controls['rec.MAX_LOGIN_ATTEMPTS'].reset();
             this.ngOnDestroy();
             this.init()
                 .then(() => {
