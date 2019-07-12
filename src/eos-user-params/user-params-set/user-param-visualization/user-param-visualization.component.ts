@@ -179,7 +179,7 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
     }
     cancel($event?) {
         this.flagEdit = false;
-        this.prepFormCancel(this.inputs, false);
+        this.prepFormCancel(this.inputs, true);
         this.mapChanges.clear();
         this.btnDisable = true;
         this.flagEdit = false;
