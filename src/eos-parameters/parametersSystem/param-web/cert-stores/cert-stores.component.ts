@@ -15,7 +15,7 @@ import { takeUntil } from 'rxjs/operators';
 export class CertStoresComponent implements OnInit, OnDestroy, AfterContentInit {
     @ViewChild('InfoCertModal') InfoCertModal: ModalDirective;
     @ViewChild('addCertStoresModal') addCertStoresModal: ModalDirective;
-    @ViewChild('х') wrapper: ElementRef;
+    @ViewChild('wrapper') wrapper: ElementRef;
     offsetLeftModal: number;
     formControlStores: AbstractControl;
     CurrentSelect: IListCertStotes;
