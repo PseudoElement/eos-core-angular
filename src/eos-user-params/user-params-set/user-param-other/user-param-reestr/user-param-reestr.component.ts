@@ -178,7 +178,7 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
                 this.getListDoc(result);
             }
         });
-        this.prepFormCancel(this.inputs, false);
+        this.prepFormCancel(this.inputs, true);
         this.mapChanges.clear();
         this.editMode();
     }

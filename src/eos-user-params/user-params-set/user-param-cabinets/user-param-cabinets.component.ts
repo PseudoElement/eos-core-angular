@@ -437,7 +437,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     cancel($event?) {
         this.flagEdit = false;
-        this.prepFormCancel(this.inputs, false);
+        this.prepFormCancel(this.inputs, true);
         this.newFolderString = this.FOLDERCOLORSTATUS;
         this.mapChanges.clear();
         this.btnDisable = true;
