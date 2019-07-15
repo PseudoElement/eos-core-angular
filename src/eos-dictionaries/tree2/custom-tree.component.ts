@@ -46,13 +46,29 @@ export class CustomTreeComponent implements OnInit, OnDestroy {
         // this._dictDiscr = _dictDiscr;
     }
 
+    static findTreeParent(treeData: CustomTreeNode[], id: any) {
+        let i: number;
+        let res: CustomTreeNode;
+        for (i = 0; i < treeData.length; i++) {
+            if (treeData[i].id === id) {
+                return treeData[i];
+            } else if (treeData[i].children && treeData[i].children.length) {
+                res = this.findTreeParent(treeData[i].children, id);
+                if (res) {
+                    return res;
+                }
+            }
+        }
+        return null;
+    }
+
     ngOnInit() {
         this.onResize();
         this._subscription = this._dictSrv.openedNode$
             .subscribe((n) => {
-                if (n) {
-                    this.setActiveNode(this.data, n.data.rec.DUE);
-                }
+                // if (n) {
+                    // this.setActiveNode(this.data, n.data.rec.DUE);
+                // }
             });
 
         const defaultRoot = this._dictSrv.currentDictionary.descriptor.defaultTreePath(this.data);
@@ -95,7 +111,7 @@ export class CustomTreeComponent implements OnInit, OnDestroy {
 
     setActiveNode(treeData: CustomTreeNode[], id: any) {
         if (id) {
-            const t = this.findTreeParent(treeData, id);
+            const t = CustomTreeComponent.findTreeParent(treeData, id);
             if (t) {
                 this.expandToSelected(t, treeData);
                 this.setActiveRecursive(treeData, false);
@@ -133,7 +149,7 @@ export class CustomTreeComponent implements OnInit, OnDestroy {
                 if (r.expandable) {
                     r.isExpanded = true;
                 }
-                r = this.findTreeParent(nodes, r.parent);
+                r = CustomTreeComponent.findTreeParent(nodes, r.parent);
                 if (r) {
                     r.isExpanded = true;
                 }
@@ -144,19 +160,4 @@ export class CustomTreeComponent implements OnInit, OnDestroy {
         return r;
     }
 
-    findTreeParent(treeData: CustomTreeNode[], id: any) {
-        let i: number;
-        let res: CustomTreeNode;
-        for (i = 0; i < treeData.length; i++) {
-            if (treeData[i].id === id) {
-                return treeData[i];
-            } else if (treeData[i].children && treeData[i].children.length) {
-                res = this.findTreeParent(treeData[i].children, id);
-                if (res) {
-                    return res;
-                }
-            }
-        }
-        return null;
-    }
 }

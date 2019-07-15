@@ -88,6 +88,20 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
             });
     }
 
+    getParentFor(due: any): any {
+        let result = null;
+        if (this._treeData) {
+            this._parseTree(this._treeData, (item: CustomTreeNode) => {
+                if (item.id === due) {
+                    result = item;
+                    return true;
+                }
+                return false;
+            });
+        }
+        return result;
+    }
+
     getRoot(): Promise<any[]> {
         return this.getData();
     }
@@ -182,15 +196,20 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
         this.record = new NomenklRecordDescriptor(this, <ITreeDictionaryDescriptor>data);
     }
 
-    private _parseTree(treeData: CustomTreeNode[], callback) {
+    private _parseTree(treeData: CustomTreeNode[], callback): boolean {
         let i: number;
 
         for (i = 0; i < treeData.length; i++) {
-            callback(treeData[i]);
+            if (callback(treeData[i])) {
+                return true;
+            }
             if (treeData[i].children && treeData[i].children.length) {
-                this._parseTree(treeData[i].children, callback);
+                if (this._parseTree(treeData[i].children, callback)) {
+                    return true;
+                }
             }
         }
+        return false;
     }
 
 
