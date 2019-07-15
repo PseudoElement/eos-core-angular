@@ -5,6 +5,9 @@ export enum VALIDATOR_TYPE  {
 }
 
 export class ValidatorsControl {
+
+    static optionInvalidValue = -0xDEADBEEF;
+
     static appendValidator(control: AbstractControl, fn: ValidatorFn): any {
         const v = [fn];
 
@@ -40,5 +43,28 @@ export class ValidatorsControl {
             }
             return null;
         };
+   }
+
+   static optionsCorrect(options: any[]) {
+        return (control: AbstractControl): { [key: string]: any } => {
+            if (!control.value) {
+                return null;
+            }
+            const t = options.find( o => String(o.value) === String(control.value));
+            if (!t) {
+                return { valueError: 'Deleted option'};
+            }
+            return null;
+        };
+   }
+
+   static optionCustomValidate(err: string) {
+    return (control: AbstractControl): { [key: string]: any } => {
+        if (control.value === ValidatorsControl.optionInvalidValue) {
+            return { valueError: err};
+        }
+        return null;
+    };
+
    }
 }
