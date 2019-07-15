@@ -69,6 +69,7 @@ export class EosDictService {
     private _paginationConfig$: BehaviorSubject<IPaginationConfig>;
     private _mDictionaryPromise: Map<string, Promise<EosDictionary>>;
     private _srchCriteries: any[];
+    private _srchParams: ISearchSettings;
     private _customFields: any;
     private _customTitles: any;
     private _dictMode = 0;
@@ -768,11 +769,20 @@ export class EosDictService {
         return this._reloadList();
     }
 
+    isSearchEnabled(): boolean {
+        return !!this._srchCriteries;
+    }
+
+    isSearchFullDictionary(): boolean {
+        return this._srchParams ? this._srchParams.mode === SEARCH_MODES.totalDictionary : false;
+    }
+
     search(searchString: string, params: ISearchSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
         const fixedString = searchString.replace(SEARCH_INCORRECT_SYMBOLS, '');
         if (fixedString !== '') {
             this._srchCriteries = dictionary.getSearchCriteries(fixedString, params, this._treeNode);
+            this._srchParams = params;
             return this._search(params.deleted);
         } else {
             return Promise.resolve(null);
