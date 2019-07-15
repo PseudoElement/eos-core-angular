@@ -128,8 +128,14 @@ export class NodeAbsoluteRight {
             return;
         }
         if (this._change[index].method === 'DELETE') {
-            node.method = 'MERGE';
-            this._change.splice(index, 1, node);
+            if (this.contentProp === 5) {
+                this._change.splice(index, 1);
+                this._checkTouched();
+                return;
+            }   else {
+                node.method = 'MERGE';
+                this._change.splice(index, 1, node);
+            }
             return;
         }
         if (this._change[index].method === 'MERGE' && (node.method === 'DELETE')) {
