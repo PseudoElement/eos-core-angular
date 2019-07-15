@@ -16,7 +16,9 @@ import { USER_CL } from 'eos-rest';
 
 export class UserSearchComponent implements OnInit {
     @Output() search = new EventEmitter<any>();
-    @ViewChild('full') bs_fail: any;
+    @Output() quickSearch = new EventEmitter<any>();
+    @ViewChild('full') fSearchPop;
+    @Input() quickSearchOpen;
     @Input() flagDeep;
     private prapareData: any;
     private prepareInputs: any;
@@ -33,6 +35,18 @@ export class UserSearchComponent implements OnInit {
     //  isActiveButton() {
 
     // }
+    isActiveButton(): boolean {
+        return (this.fSearchPop.isOpen);
+    }
+    isActiveButtonQuick() {
+        return (this.quickSearchOpen);
+    }
+    closeFastSrch() {
+        this.quickSearchOpen = false;
+    }
+    showFastSrch() {
+        this.quickSearch.emit(true);
+    }
 
     get disableBtn() {
         if (this.form) {
@@ -67,7 +81,7 @@ export class UserSearchComponent implements OnInit {
                 this.withOutCard(newObj);
             }
         }
-        this.bs_fail.isOpen = false;
+        this.fSearchPop.isOpen = false;
         //   this.search.emit(null);
     }
     setConfSearch(newObj) {
