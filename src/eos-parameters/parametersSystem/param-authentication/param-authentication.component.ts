@@ -17,73 +17,74 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
     constructor(
         private _modalSrv: BsModalService,
         injector: Injector
-        ) {
+    ) {
         super(injector, AUTH_PARAM);
         this.init()
-        .then(() => {
-            this.afterInitRC();
-        }).catch(err => {
-            if (err.code !== 434) {
-                console.log(err);
-            }
-        });
+            .then(() => {
+                this.afterInitRC();
+            }).catch(err => {
+                if (err.code !== 434) {
+                    console.log(err);
+                }
+            });
     }
     cancel() {
         if (this.isChangeForm) {
             this.msgSrv.addNewMessage(PARM_CANCEL_CHANGE);
             this.isChangeForm = false;
             this.formChanged.emit(false);
+            this.form.controls['rec.MAX_LOGIN_ATTEMPTS'].reset();
             this.ngOnDestroy();
             this.init()
-            .then(() => {
-                this.afterInitRC();
-            })
-            .catch(err => {
-                if (err.code !== 434) {
-                    console.log(err);
-                }
-            });
+                .then(() => {
+                    this.afterInitRC();
+                })
+                .catch(err => {
+                    if (err.code !== 434) {
+                        console.log(err);
+                    }
+                });
         }
     }
     afterInitRC() {
         this.subscriptions.push(
             this.form.controls['rec.CHANGE_PASS'].valueChanges
-            .subscribe(newValue => {
-                this.checkDataToDisabled('CHANGE_PASS', true);
-            })
+                .subscribe(newValue => {
+                    this.checkDataToDisabled('CHANGE_PASS', true);
+                })
         );
         this.form.controls['rec.CHANGE_PASS'].updateValueAndValidity();
 
         this.subscriptions.push(
             this.form.controls['rec.PASS_ALF'].valueChanges
-            .subscribe(newValue => {
-                if (this.form.controls['rec.PASS_ALF'].enabled) {
-                    if (+newValue > 1) {
-                        this.readOnlyPassCase = false;
-                        this.form.controls['rec.PASS_CASE'].enable();
-                    } else {
-                        this.readOnlyPassCase = true;
-                        this.form.controls['rec.PASS_CASE'].patchValue(false);
-                        this.form.controls['rec.PASS_CASE'].disable();
+                .subscribe(newValue => {
+                    if (this.form.controls['rec.PASS_ALF'].enabled) {
+                        if (+newValue > 1) {
+                            this.readOnlyPassCase = false;
+                            this.form.controls['rec.PASS_CASE'].enable();
+                        } else {
+                            this.readOnlyPassCase = true;
+                            this.form.controls['rec.PASS_CASE'].patchValue(false);
+                            this.form.controls['rec.PASS_CASE'].disable();
+                        }
                     }
-                }
-            })
+                })
         );
         this.form.controls['rec.PASS_ALF'].updateValueAndValidity();
 
         this.subscriptions.push(
             this.form.controls['rec.PASS_LIST'].valueChanges
-            .subscribe(newValue => {
-                if (this.form.controls['rec.PASS_LIST'].enabled) {
-                    if (newValue) {
-                        this.readOnlyPassListSubstr = false;
-                        this.form.controls['rec.PASS_LIST_SUBSTR'].enable();
-                    } else {
-                        this.readOnlyPassListSubstr = true;
-                        this.form.controls['rec.PASS_LIST_SUBSTR'].disable();
+                .subscribe(newValue => {
+                    if (this.form.controls['rec.PASS_LIST'].enabled) {
+                        if (newValue) {
+                            this.readOnlyPassListSubstr = false;
+                            this.form.controls['rec.PASS_LIST_SUBSTR'].enable();
+                        } else {
+                            this.readOnlyPassListSubstr = true;
+                            this.form.controls['rec.PASS_LIST_SUBSTR'].disable();
+                        }
                     }
-                }
-            })
+                })
         );
         this.form.controls['rec.PASS_LIST'].updateValueAndValidity();
 

@@ -166,7 +166,7 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
     cancel($event?) {
         this.flagEdit = false;
         this.sendFrom = this.sendFromOrigin;
-        this.prepFormCancel(this.inputs, false);
+        this.prepFormCancel(this.inputs, true);
         this.mapChanges.clear();
         this.editMode();
     }

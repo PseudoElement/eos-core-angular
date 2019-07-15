@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'eos-report-info',
+  selector: 'eos-users-info',
   templateUrl: './users-info.component.html',
   styleUrls: ['./users-info.component.scss']
 })
