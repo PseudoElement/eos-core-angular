@@ -11,11 +11,6 @@ export const APP_MODULES = [
         title: 'Параметры системы',
         url: '/parameters',
     },
-    {
-        title: 'Протокол',
-        url: '/report',
-    },
-
 ];
 
 export const APP_MODULES_DROPDOWN = [

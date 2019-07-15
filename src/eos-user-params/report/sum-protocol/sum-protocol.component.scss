@@ -121,4 +121,23 @@
         height: 48px;
         width: 48px;
     }
+    .mar-edit-span-start {
+        margin-right: 0px;
+    }
 }
+
+ @media (min-width: 1500px) and (max-width: 1899px) {
+    .mar-edit-span {
+        margin-right: 29px;
+    }
+  }
+ @media (min-width: 1900px) {
+    .mar-edit-span {
+        margin-right: 38px;
+    }
+  }
+  @media (min-width: 700px) and (max-width: 1499px) {
+    .mar-edit-span {
+        margin-right: 18px;
+    }
+  }

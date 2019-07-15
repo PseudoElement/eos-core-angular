@@ -21,11 +21,10 @@ import { UserParamsComponent } from 'eos-user-params/eos-user-params.component';
 import { UserSelectComponent } from 'eos-user-select/eos-user-select.component';
 import { PermissionsGuard } from './guards/permissions.guard';
 import { EosTemplateComponent } from 'eos-rest/clman/eos-template/eos-template.component';
-import { EosReportComponent } from '../eos-report/eos-report.component';
-import { EosReportUsersStatsComponent } from '../eos-report/users-stats/users-stats.component';
-import { EosReportUsersInfoComponent } from '../eos-report/users-info/users-info.component';
-import { EosReportSummaryProtocolComponent } from 'eos-report/sum-protocol/sum-protocol.component';
+
 import { DictFormComponent } from 'eos-dictionaries/dict-forms/dict-form.component';
+import { EosReportUsersStatsComponent } from 'eos-user-params/report/users-stats/users-stats.component';
+import { EosReportSummaryProtocolComponent } from 'eos-user-params/report/sum-protocol/sum-protocol.component';
 /// import { environment } from 'environments/environment';
 
 const formDictionariesComponent = [
@@ -215,6 +214,24 @@ const routes: Routes = [{
     },
     children: [
         {
+            path: 'sum-protocol',
+            component: EosReportSummaryProtocolComponent,
+            data: {
+                title: 'Сводный протокол',
+                showBreadcrumb: true,
+                showInBreadcrumb: true,
+            }
+        },
+        {
+            path: 'users-stats',
+            component: EosReportUsersStatsComponent,
+            data: {
+                title: 'Статистика по пользователям',
+                showBreadcrumb: true,
+                showInBreadcrumb: true,
+            }
+        },
+        {
             path: ':nodeId',
             component: UserSelectComponent,
             data: {
@@ -232,44 +249,8 @@ const routes: Routes = [{
                 showInBreadcrumb: true,
                 showSandwichInBreadcrumb: true,
                 showPushpin: true
-            },
+            }
         }
-    ]
-},
-{
-    path: 'report',
-    data: { title: 'Протокол', showInBreadcrumb: true },
-    canActivate: [AuthorizedGuard],
-    component: EosReportComponent,
-    children: [
-        {
-            path: 'users-info',
-            component: EosReportUsersInfoComponent,
-            data: {
-                title: 'Информация о пользователях',
-                showBreadcrumb: true,
-                showInBreadcrumb: true,
-            }
-        },
-        {
-            path: 'users-stats',
-            component: EosReportUsersStatsComponent,
-            data: {
-                title: 'Статистика по пользователям',
-                showBreadcrumb: true,
-                showInBreadcrumb: true,
-            }
-        },
-        {
-            path: 'sum-protocol',
-            component: EosReportSummaryProtocolComponent,
-            data: {
-                title: 'Сводный протокол',
-                showBreadcrumb: true,
-                showInBreadcrumb: true,
-            }
-        },
-
     ]
 },
 {
