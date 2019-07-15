@@ -15,7 +15,7 @@ import { RadioInput } from 'eos-common/core/inputs/radio-input';
 import { NodeAbsoluteRight } from './node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
-import { USERDEP, USER_TECH } from 'eos-rest';
+import { USERDEP, USER_TECH, USER_EDIT_ORG_TYPE } from 'eos-rest';
 // import { RestError } from 'eos-rest/core/rest-error';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
@@ -220,6 +220,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.classif)) {
                 this._deleteAllClassif(item);
             }
+            if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.editOrganiz)) {
+                this._deleteAllOrgType(item);
+            }
 
 
             if (item !== this.selectedNode && item.isCreate) {
@@ -377,6 +380,23 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         this._userParamsSetSrv.userTechList.splice(0, this._userParamsSetSrv.userTechList.length);
         this.checkChange();
+    }
+
+    private _deleteAllOrgType(node: NodeAbsoluteRight) {
+        node.deleteChange();
+        const list = this._userParamsSetSrv.curentUser.USER_EDIT_ORG_TYPE_List;
+        console.log(this._userParamsSetSrv.curentUser);
+        if (list.length) {
+            list.forEach((item: USER_EDIT_ORG_TYPE) => {
+                node.pushChange({
+                    method: 'DELETE',
+                    isn_org: item.ISN_ORG_TYPE,
+                    data: item
+                });
+            });
+            this._userParamsSetSrv.curentUser.USER_EDIT_ORG_TYPE_List.splice(0, list.length);
+            this.checkChange();
+        }
     }
 
     private _createBatch(chenge: IChengeItemAbsolute, node: NodeAbsoluteRight, qUserCl) {
