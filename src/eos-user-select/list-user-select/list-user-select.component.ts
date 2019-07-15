@@ -459,11 +459,16 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     }
 
     OpenSumProtocol() {
-        this._router.navigate(['user_param/sum-protocol']);
+        setTimeout(() => {
+            this._router.navigate(['user_param/sum-protocol']);
+        }, 0);
     }
 
     OpenUsersStats() {
-        this._router.navigate(['user_param/users-stats']);
+        setTimeout(() => {
+            this._router.navigate(['user_param/users-stats']);
+        }, 0);
+
     }
 
     OpenUsersInfo() {
