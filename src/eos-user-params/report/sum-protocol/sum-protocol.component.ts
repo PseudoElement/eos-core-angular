@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { USER_PARMS } from 'eos-rest';
@@ -15,7 +15,8 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
   styleUrls: ['./sum-protocol.component.scss']
 })
 
-export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
+export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, AfterContentChecked {
+  @ViewChild('someVar') el: ElementRef;
   findUsers: any;
   frontData: any;
   usersAudit: any;
@@ -54,6 +55,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   currentState: boolean[] = [true, true];
   status: string;
   SortUp: string;
+  checkOverflow: boolean;
   arrSort = [
     { date: true },
     { event: false },
@@ -63,7 +65,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   public config: IPaginationConfig;
   private ngUnsubscribe: Subject<any> = new Subject();
 
-  constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices,
+  constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private cdr: ChangeDetectorRef,
     private _msgSrv: EosMessageService, private _user_pagination: UserPaginationService) {
     _user_pagination.paginationConfig$
       .pipe(
@@ -172,24 +174,24 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         this.SortUp = this.arrSort[0].date ? 'asc' : 'desc';
         this.status = critSearch;
         break;
-      case 2:
-        critSearch = 'eventUser';
-        this.arrSort[1].event = !this.arrSort[1].event;
-        this.SortUp = this.arrSort[1].event ? 'asc' : 'desc';
-        this.status = critSearch;
-        break;
-      case 3:
-        critSearch = 'WHO';
-        this.arrSort[2].who = !this.arrSort[2].who;
-        this.SortUp = this.arrSort[2].who ? 'asc' : 'desc';
-        this.status = critSearch;
-        break;
-      case 4:
-        critSearch = 'USER';
-        this.arrSort[3].isn = !this.arrSort[3].isn;
-        this.SortUp = this.arrSort[3].isn ? 'asc' : 'desc';
-        this.status = critSearch;
-        break;
+      // case 2:
+      //   critSearch = 'eventUser';
+      //   this.arrSort[1].event = !this.arrSort[1].event;
+      //   this.SortUp = this.arrSort[1].event ? 'asc' : 'desc';
+      //   this.status = critSearch;
+      //   break;
+      // case 3:
+      //   critSearch = 'WHO';
+      //   this.arrSort[2].who = !this.arrSort[2].who;
+      //   this.SortUp = this.arrSort[2].who ? 'asc' : 'desc';
+      //   this.status = critSearch;
+      //   break;
+      // case 4:
+      //   critSearch = 'USER';
+      //   this.arrSort[3].isn = !this.arrSort[3].isn;
+      //   this.SortUp = this.arrSort[3].isn ? 'asc' : 'desc';
+      //   this.status = critSearch;
+      //   break;
     }
     if (critSearch === 'WHO' || critSearch === 'USER') {
       // this.orderByStr = `${critSearch}.SURNAME_PATRON ${this.SortUp}`;
@@ -529,6 +531,20 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   resetSearch() {
     this.PaginateData(this.config.length, this.orderByStr, 1);
     this.clearResult = false;
+  }
+
+  ngAfterContentChecked() {
+    this.checkOverflow = true;
+    this.cdr.detectChanges();
+  }
+  get getOverflow() {
+    if (this.checkOverflow === true) {
+      if (this.el.nativeElement.scrollHeight > this.el.nativeElement.clientHeight || this.el.nativeElement.scrollWidth > this.el.nativeElement.clientWidth) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   }
 
 }

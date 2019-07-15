@@ -114,3 +114,37 @@
         margin-left: 315px;
     }
 }
+.head-protocol{
+    height: 500px;
+    min-width: 600px;
+    position: relative;
+    border-radius: 0;
+    .popover-content{
+        padding: 0 !important;
+    }
+ }
+ .theme-green .bs-datepicker-head,
+ .theme-green .bs-datepicker-body table td span.selected,
+ .theme-green .bs-datepicker-body table td.selected span,
+ .theme-green .bs-datepicker-body table td span[class*='select-']:after,
+ .theme-green .bs-datepicker-body table td[class*='select-'] span:after {
+     background-color: #2196f3 !important;
+ }
+ 
+ .bs-datepicker-body table td {
+     color: black !important;
+ }
+ .sum-protocol{
+     @media(min-width: 1500px) {
+         .pagination-option {
+             &.full {
+                 left: 20px;
+                 right: 20px;
+             }
+             &.info {
+                 left: 20px;
+                 right: 20px;
+             }
+         }
+     }
+ }
