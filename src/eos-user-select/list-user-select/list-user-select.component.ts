@@ -451,6 +451,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         };
         this.shadow = true;
         this._waitCl.openClassif(param).then(data => {
+            this.shadow = false;
         }).catch(error => {
             this.shadow = false;
         });
