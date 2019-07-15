@@ -9,6 +9,8 @@ import { UserPaginationService } from 'eos-user-params/shared/services/users-pag
 import { UserSelectNode } from './user-node-select';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { CreateUserComponent } from './createUser/createUser.component';
+import { SearchServices } from '../shered/services/search.service';
+import { USERSRCH } from '../../eos-user-select/shered/consts/search-const';
 import { RtUserSelectService } from '../shered/services/rt-user-select.service';
 import { EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.service';
 import { HelpersSortFunctions } from '../shered/helpers/sort.helper';
@@ -54,6 +56,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     // количество выбранных пользователей
     countcheckedField: number;
     shadow: boolean = false;
+    fastSearch: boolean = false;
+    public srchString = '';
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public rtUserService: RtUserSelectService,
@@ -71,7 +75,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         private _breadSrv: EosBreadcrumbsService,
         private _appContext: AppContext,
         private _errorSrv: ErrorHelperServices,
-        private _waitCl: WaitClassifService
+        private _waitCl: WaitClassifService,
+        private srhSrv: SearchServices,
     ) {
 
     }
@@ -695,6 +700,38 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             return `tooltip-info tooltip-pos-l`;
         } else {
             return `tooltip-info`;
+        }
+    }
+    closeFastSrch() {
+        this.fastSearch = false;
+    }
+    openFastSrch() {
+        this.fastSearch = !this.fastSearch;
+    }
+    clearQuickForm() {
+        this.fastSearch = false;
+        this.srchString = '';
+    }
+    /*public ngAfterViewInit(): void {
+        this.searchElementRef.nativeElement.focus();
+    }*/
+    fastSetConfSearch(newObj, evn: string): USERSRCH {
+        newObj['LOGIN'] = evn.replace(/\s/g, '_').trim();
+        newObj['DEL_USER'] = false;
+        return newObj;
+    }
+    quickSearchKey(evn) {
+        if (evn.keyCode === 27) {
+            this.clearQuickForm();
+        }
+        if (evn.keyCode === 13) {
+            const newObj: USERSRCH = {};
+            this.fastSetConfSearch(newObj, this.srchString);
+            if (event) {
+                this.srhSrv.getUsersToGo(newObj).then((users: USER_CL[]) => {
+                    this.searchUsers(users);
+                });
+            }
         }
     }
 

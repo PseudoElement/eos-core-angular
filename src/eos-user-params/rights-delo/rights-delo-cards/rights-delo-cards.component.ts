@@ -89,7 +89,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
     }
     submit() {
         this.pageState = 'LOADING';
-        this._cardSrv.saveChenge$()
+     return  this._cardSrv.saveChenge$()
             .then(() => {
                 this.pageState = 'VIEW';
                 this.btnDisabled = true;

@@ -52,14 +52,14 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private _inputCtrlSrv: InputParamControlService,
         private _router: Router,
         private _errorSrv: ErrorHelperServices,
-    ) {}
+    ) { }
     async ngOnInit() {
         this._userParamsSetSrv.saveData$
             .pipe(
                 takeUntil(this._ngUnsubscribe)
             )
             .subscribe(() => {
-                this._userParamsSetSrv.submitSave = this.submit();
+                this._userParamsSetSrv.submitSave = this.submit(true);
             });
 
         await this._userParamsSetSrv.getUserIsn({
@@ -105,10 +105,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         this.inputAll = { all: new RadioInput(CONTROL_ALL_NOTALL) };
     }
-    submit(): Promise<any> {
+    submit(flag?): Promise<any> {
         if (this._checkCreatePRJNotEmptyAllowed()) {
             this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
-            return Promise.resolve();
+            return Promise.resolve(true);
         }
         // this.selectedNode = null;
         this.editMode = false;
@@ -147,12 +147,14 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this.selectedNode = null;
                 this.editMode = false;
                 this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-                this._userParamsSetSrv.getUserIsn({
-                    expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
-                })
+                if (!flag) {
+                    return this._userParamsSetSrv.getUserIsn({
+                        expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
+                    })
                         .then(() => {
                             this.init();
                         });
+                }
             })
             .catch((e) => {
                 this._errorSrv.errorHandler(e);
@@ -278,11 +280,11 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             });
     }
     private _viewContent() {
-      //  this.rightContent = false;
+        //  this.rightContent = false;
         if (!this.selectedNode) {
             return;
         }
-        if (this.selectedNode.contentProp === 2 || this.selectedNode.contentProp !== 5)  {
+        if (this.selectedNode.contentProp === 2 || this.selectedNode.contentProp !== 5) {
             this.rightContent = false;
         }
         switch (this.selectedNode.contentProp) {
@@ -403,9 +405,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         let batch = {};
         if (node.contentProp === 5) {
-           batch = this._batchEditOrgType(chenge, uId);
-        }   else {
-             batch = {
+            batch = this._batchEditOrgType(chenge, uId);
+        } else {
+            batch = {
                 method: chenge.method,
                 requestUri: `USER_CL(${uId})${url}`,
             };
@@ -421,7 +423,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         const batch = {};
         batch['method'] = chenge.method;
         if (chenge.method === 'POST') {
-            batch['requestUri'] =  `USER_CL(${uId})/USER_EDIT_ORG_TYPE_List`;
+            batch['requestUri'] = `USER_CL(${uId})/USER_EDIT_ORG_TYPE_List`;
             delete chenge.data['CompositePrimaryKey'];
             delete chenge.data['__metadata'];
             batch['data'] = chenge.data;
