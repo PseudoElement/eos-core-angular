@@ -56,8 +56,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     // количество выбранных пользователей
     countcheckedField: number;
     shadow: boolean = false;
-    fastSearch: boolean = false;
-    public srchString = '';
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public rtUserService: RtUserSelectService,
@@ -677,37 +675,19 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             return `tooltip-info`;
         }
     }
-    closeFastSrch() {
-        this.fastSearch = false;
-    }
-    openFastSrch() {
-        this.fastSearch = !this.fastSearch;
-    }
-    clearQuickForm() {
-        this.fastSearch = false;
-        this.srchString = '';
-    }
-    /*public ngAfterViewInit(): void {
-        this.searchElementRef.nativeElement.focus();
-    }*/
     fastSetConfSearch(newObj, evn: string): USERSRCH {
         newObj['LOGIN'] = evn.replace(/\s/g, '_').trim();
         newObj['DEL_USER'] = false;
         return newObj;
     }
     quickSearchKey(evn) {
-        if (evn.keyCode === 27) {
-            this.clearQuickForm();
-        }
-        if (evn.keyCode === 13) {
             const newObj: USERSRCH = {};
-            this.fastSetConfSearch(newObj, this.srchString);
+            this.fastSetConfSearch(newObj, evn);
             if (event) {
                 this.srhSrv.getUsersToGo(newObj).then((users: USER_CL[]) => {
                     this.searchUsers(users);
                 });
             }
-        }
     }
 
     private cathError(e) {

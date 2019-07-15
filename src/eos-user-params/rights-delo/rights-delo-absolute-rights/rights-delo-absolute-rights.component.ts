@@ -385,7 +385,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     private _deleteAllOrgType(node: NodeAbsoluteRight) {
         node.deleteChange();
         const list = this._userParamsSetSrv.curentUser.USER_EDIT_ORG_TYPE_List;
-        console.log(this._userParamsSetSrv.curentUser);
         if (list.length) {
             list.forEach((item: USER_EDIT_ORG_TYPE) => {
                 node.pushChange({

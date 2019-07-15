@@ -16,10 +16,12 @@ import { USER_CL } from 'eos-rest';
 
 export class UserSearchComponent implements OnInit {
     @Output() search = new EventEmitter<any>();
-    @Output() quickSearch = new EventEmitter<any>();
+    @Output() quickSearchKey = new EventEmitter<any>();
     @ViewChild('full') fSearchPop;
     @Input() quickSearchOpen;
     @Input() flagDeep;
+    public srchString: string;
+    public fastSearch: boolean = false;
     private prapareData: any;
     private prepareInputs: any;
     private inputs: any;
@@ -32,9 +34,6 @@ export class UserSearchComponent implements OnInit {
     ) {
 
     }
-    //  isActiveButton() {
-
-    // }
     isActiveButton(): boolean {
         return (this.fSearchPop.isOpen);
     }
@@ -44,14 +43,11 @@ export class UserSearchComponent implements OnInit {
     closeFastSrch() {
         this.quickSearchOpen = false;
     }
-    showFastSrch() {
-        this.quickSearch.emit(true);
-    }
 
     get disableBtn() {
         if (this.form) {
             return this.form.status === 'VALID' && (this.form.value['rec.LOGIN'].length > 0 || this.form.value['rec.DEPARTMENT'].length > 0 ||
-            this.form.value['rec.fullDueName'].length > 0 || this.form.value['rec.CARD'].length > 0 || this.form.value['rec.SURNAME'].length > 0);
+                this.form.value['rec.fullDueName'].length > 0 || this.form.value['rec.CARD'].length > 0 || this.form.value['rec.SURNAME'].length > 0);
         }
     }
     get showSurnameField() {
@@ -142,6 +138,22 @@ export class UserSearchComponent implements OnInit {
             });
         }
     }
+    openFastSrch() {
+        this.fastSearch = !this.fastSearch;
+    }
+    clickKey($event) {
+        if ($event.keyCode === 27) {
+            this.clearQuickForm();
+        }
+        if ($event.keyCode === 13) {
+            this.quickSearchKey.emit(this.srchString);
+        }
+    }
+    clearQuickForm() {
+        this.fastSearch = false;
+        this.srchString = '';
+    }
+
     resetForm() {
         this.form.controls['rec.DEPARTMENT'].patchValue('');
         this.form.controls['rec.CARD'].patchValue('');
