@@ -152,29 +152,29 @@ export const UsersStats: BtnActionFields = {
     isActive: false,
 };
 
-export const UsersInfo: BtnActionFields = {
-    name: 'OpenUsersInfo',
-    title: 'Данные по отмеченным пользователям',
-    disabledClass: 'eos-icon eos-icon-department-blue small',
-    enableClass: 'eos-icon eos-icon-department-blue small',
-    tooltip: 'Данные по отмеченным пользователям',
-    disabled: false,
-    activeClass: 'eos-icon eos-icon-department-blue small',
-    activeBtnClass: '',
-    isActive: false,
-};
+// export const UsersInfo: BtnActionFields = {
+//     name: 'OpenUsersInfo',
+//     title: 'Данные по отмеченным пользователям',
+//     disabledClass: 'eos-icon eos-icon-department-blue small',
+//     enableClass: 'eos-icon eos-icon-department-blue small',
+//     tooltip: 'Данные по отмеченным пользователям',
+//     disabled: false,
+//     activeClass: 'eos-icon eos-icon-department-blue small',
+//     activeBtnClass: '',
+//     isActive: false,
+// };
 
-export const Protocol: BtnActionFields = {
-    name: 'OpenProtocol',
-    title: 'Протокол',
-    disabledClass: 'eos-icon eos-icon-new-doc-blue small',
-    enableClass: 'eos-icon eos-icon-new-doc-blue small',
-    tooltip: 'Протокол',
-    disabled: false,
-    activeClass: 'eos-icon eos-icon-new-doc-blue small',
-    activeBtnClass: '',
-    isActive: false,
-};
+// export const Protocol: BtnActionFields = {
+//     name: 'OpenProtocol',
+//     title: 'Протокол',
+//     disabledClass: 'eos-icon eos-icon-new-doc-blue small',
+//     enableClass: 'eos-icon eos-icon-new-doc-blue small',
+//     tooltip: 'Протокол',
+//     disabled: false,
+//     activeClass: 'eos-icon eos-icon-new-doc-blue small',
+//     activeBtnClass: '',
+//     isActive: false,
+// };
 
 // export const OpenMoreMenu: BtnActionFields = {
 //     name: 'OpenMoreMenu',
@@ -210,9 +210,9 @@ export const Allbuttons: BtnAction = {
         OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
         GeneralLists,
-        UsersInfo,
+      //  UsersInfo,
         UsersStats,
-        Protocol,
+       // Protocol,
         SumProtocol
     ],
     moreButtonCheck: {
