@@ -75,11 +75,12 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
     }
 
     getCardTitle(): any {
-        return null;
+        return '';
     }
 
     ngAfterViewInit(): void {
         BaseCardEditComponent.autoFocusOnFirstStringElement('eos-card-edit');
+
     }
 
     ngOnInit(): void {
@@ -98,6 +99,11 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
                 }
             }
         });
+
+        setTimeout(() => {
+            this.updateValidTabs();
+        }, 0);
+
     }
 
     /**

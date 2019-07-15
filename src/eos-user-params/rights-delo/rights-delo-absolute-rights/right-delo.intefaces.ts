@@ -24,6 +24,7 @@ export interface IChengeItemAbsolute {
     method: 'POST'|'DELETE'|'MERGE';
     data: any;
     due?: string;
+    isn_org?: number;
     user_cl?: boolean;
     funcNum?: number;
 }

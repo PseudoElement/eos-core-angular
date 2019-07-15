@@ -1,0 +1,12 @@
+<span class="title">
+    Типы организаций
+</span>
+<div class="org_type_list" *ngIf="LIstOrgType">
+    <div class="org_type_item"  *ngFor="let item of LIstOrgType">
+        <label class="checkbox">
+            <input type="checkbox" [checked]="item.checked" (change) ="setChecked(item)">
+            <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+            {{item.name}}
+        </label>
+    </div>
+</div>

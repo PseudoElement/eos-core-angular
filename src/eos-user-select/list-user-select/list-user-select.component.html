@@ -18,8 +18,9 @@
         <div class="table-header search-wr">
             <!-- header action -->
             <eos-btn-action [buttons]='buttons' (showAction)='showAction($event)'></eos-btn-action>
-            <eos-user-search (search)="searchUsers($event)" [flagDeep]="shooseP"></eos-user-search>
+            <eos-user-search  (quickSearchKey)="quickSearchKey($event)" (search)="searchUsers($event)"  [flagDeep]="shooseP"></eos-user-search>
         </div>
+        <!--Быстрый поиск-->
         <div class="table-header">
             <!-- header -->
             <!-- [ngClass]="flagChecked ? eos-icon-checkbox-square-blue : eos-icon-checkbox-square-minus-blue" -->

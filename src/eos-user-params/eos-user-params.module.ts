@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { TooltipModule, ModalModule, AccordionModule } from 'ngx-bootstrap';
+import { TooltipModule, ModalModule, AccordionModule, PopoverModule, BsDropdownModule, BsDatepickerModule } from 'ngx-bootstrap';
 import { AppRoutingModule } from 'app/app-routing.module';
 import { EosCommonModule } from 'eos-common/eos-common.module';
 
@@ -60,6 +60,13 @@ import {UserParamAddressesComponent} from './user-params-set/user-param-other/us
 import {UserParamReestrComponent} from './user-params-set/user-param-other/user-param-reestr/user-param-reestr.component';
 import {UserParamShablonyComponent} from './user-params-set/user-param-other/user-param-shablony/user-param-shablony.component';
 import {BaseSertsComponent} from './base-param/base-serts/base-serts.component';
+import { OrganizEditTypeComponent } from './rights-delo/rights-delo-absolute-rights/organiz-edit-type/organiz-edit-type.component';
+import { EosReportSummaryProtocolComponent } from './report/sum-protocol/sum-protocol.component';
+import { EosReportUsersStatsComponent } from './report/users-stats/users-stats.component';
+import { EosReportSummaryFilterProtocolComponent } from './report/filter-protocol/filter-protocol.component';
+import { EosReportUsersInfoComponent } from './report/users-info/users-info.component';
+import { EosReportProtocolComponent } from './report/protocol/protocol.component';
+import { FormHelperService } from './shared/services/form-helper.services';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -106,6 +113,12 @@ import {BaseSertsComponent} from './base-param/base-serts/base-serts.component';
         UserParamReestrComponent,
         UserParamShablonyComponent,
         BaseSertsComponent,
+        OrganizEditTypeComponent,
+        EosReportSummaryProtocolComponent,
+        EosReportUsersStatsComponent,
+        EosReportSummaryFilterProtocolComponent,
+        EosReportUsersInfoComponent,
+        EosReportProtocolComponent
     ],
     imports: [
         BrowserModule,
@@ -115,7 +128,10 @@ import {BaseSertsComponent} from './base-param/base-serts/base-serts.component';
         ReactiveFormsModule,
         EosCommonModule,
         ModalModule,
-        AccordionModule
+        AccordionModule,
+        PopoverModule,
+        BsDropdownModule,
+        BsDatepickerModule.forRoot()
     ],
     providers: [
         UserParamApiSrv,
@@ -129,6 +145,7 @@ import {BaseSertsComponent} from './base-param/base-serts/base-serts.component';
         RigthsCabinetsServices,
         CardRightSrv,
         ErrorHelperServices,
+        FormHelperService
     ]
 })
 export class EosUserParamsModule { }

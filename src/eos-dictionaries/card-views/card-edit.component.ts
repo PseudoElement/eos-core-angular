@@ -104,7 +104,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         if (this.baseCardEditRef) {
             return this.baseCardEditRef.getCardTitle();
         }
-        return null;
+        return '';
     }
 
     afterGetForm(inputs: any): any {

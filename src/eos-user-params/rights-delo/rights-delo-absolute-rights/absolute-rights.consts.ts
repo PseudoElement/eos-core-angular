@@ -108,7 +108,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         label: 'Редактирование организаций',
         data: {
             isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.all
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.editOrganiz
         }
     },
     {

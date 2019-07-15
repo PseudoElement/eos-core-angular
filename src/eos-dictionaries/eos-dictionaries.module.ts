@@ -90,6 +90,7 @@ import { EosDatepickerInlineComponent } from './dict-forms/eos-datepicker-inline
 import { CalendarFormComponent } from './dict-forms/calendar-form/calendar-form.component';
 import { TemplatesCardComponent } from './card-views/templates-card/templates-card.component';
 
+import { NomenkNodeInfoComponent } from './node-info/nomenk-node-info.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -131,6 +132,7 @@ import { TemplatesCardComponent } from './card-views/templates-card/templates-ca
         CustomTreeComponent,
         NodeInfoSwitcherComponent,
         DepartmentNodeInfoComponent,
+        NomenkNodeInfoComponent,
         CabinetNodeInfoComponent,
         LongTitleHintComponent,
         SecurityCardEditComponent,
