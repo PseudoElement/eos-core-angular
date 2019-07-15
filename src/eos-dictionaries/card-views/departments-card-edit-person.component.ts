@@ -35,7 +35,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
     }
 
     ngOnChanges() {
-        if (this.currentNodeId !== this.nodeId) { // todo: re-factor condition
+        if (this.currentNodeId !== this.nodeId || !this.nodeId) { // todo: re-factor condition
             this.currTab = 0;
         }
         if (this.data.photo && this.data.photo.url) {
