@@ -297,11 +297,12 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 break;
             case E_RIGHT_DELO_ACCESS_CONTENT.editOrganiz:
                 this.formAllEditType();
-                if (this.selectedNode.value) {
-                    setTimeout(() => {
-                        this.rightContent = true;
-                    }, 0);
-                }
+                this.rightContent = true;
+                // if (this.selectedNode.value) {
+                //     setTimeout(() => {
+                //         this.rightContent = true;
+                //     }, 0);
+                // }
                 break;
             case E_RIGHT_DELO_ACCESS_CONTENT.classif:
             case E_RIGHT_DELO_ACCESS_CONTENT.docGroup:
