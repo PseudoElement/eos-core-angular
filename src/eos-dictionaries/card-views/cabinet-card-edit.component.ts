@@ -101,6 +101,7 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
     ngOnChanges() {
         if (this.data && this.data.rec) {
             this.init(this.data);
+            this.currTab = 0;
         }
         this.tabsToArray(this.tabs);
         if (this.form) {
