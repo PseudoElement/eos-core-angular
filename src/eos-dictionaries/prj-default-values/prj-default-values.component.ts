@@ -16,7 +16,7 @@ import {VALIDATOR_TYPE, ValidatorsControl} from '../validators/validators-contro
 import {Subscription} from 'rxjs';
 import {IDynamicInputOptions} from '../../eos-common/dynamic-form-input/dynamic-input.component';
 import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
-import {RK_SELECTED_LIST_HAS_DELETED, RK_SELECTED_LIST_IS_EMPTY} from '../../app/consts/confirms.const';
+import {RK_SELECTED_LIST_CONTAIN_DELETED, RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_BEEN_DELETED} from '../../app/consts/confirms.const';
 import {IConfirmWindow2} from '../../eos-common/confirm-window/confirm-window2.component';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 import {WaitClassifService} from '../../app/services/waitClassif.service';
@@ -660,8 +660,10 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                     if (opt.isEmpty) {
                         confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_IS_EMPTY);
                     } else if (opt.hasDeleted) {
-                        confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_HAS_DELETED);
+                        confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_CONTAIN_DELETED);
                     }
+                } else {
+                    confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_BEEN_DELETED);
                 }
             }
         }
