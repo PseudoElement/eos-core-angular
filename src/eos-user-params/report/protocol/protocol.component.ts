@@ -266,16 +266,16 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy, AfterConte
     this.ShowData();
   }
 
-  // ShowDataUser() {
-  //   if (this.lastUser !== undefined) {
-  //     return this.GetDataUser(this.lastUser.isnEvent);
-  //   }
-  // }
-  // CompareWithEvent() {
-  //   if (this.lastUser !== undefined) {
-  //     return this.GetDataUser(this.lastUser.isnEvent);
-  //   }
-  // }
+  ShowDataUser() {
+    // if (this.lastUser !== undefined) {
+    //   return this.GetDataUser(this.lastUser.isnEvent);
+    // }
+  }
+  CompareWithEvent() {
+    // if (this.lastUser !== undefined) {
+    //   return this.GetDataUser(this.lastUser.isnEvent);
+    // }
+  }
 
   GetDataUser(isnEvent) {
     this._pipeSrv.read({
