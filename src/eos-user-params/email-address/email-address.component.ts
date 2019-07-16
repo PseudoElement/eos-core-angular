@@ -82,7 +82,11 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
             this.prevIndex = 0;
             this.umailsInfo.length > 0 ? this.newEmail = this.umailsInfo[0].EMAIL : this.newEmail = '';
             this.init();
-        }).catch(error => {
+        })
+        .catch((err: boolean) => {
+
+        })
+        .catch(error => {
             this.cathError(error);
         });
 

@@ -53,7 +53,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _errorSrv: ErrorHelperServices,
     ) { }
-    async ngOnInit() {
+    ngOnInit() {
         this._userParamsSetSrv.saveData$
             .pipe(
                 takeUntil(this._ngUnsubscribe)
@@ -62,13 +62,19 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this._userParamsSetSrv.submitSave = this.submit(true);
             });
 
-        await this._userParamsSetSrv.getUserIsn({
+        this._userParamsSetSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
+        })
+        .then(() => {
+            const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
+            this.curentUser = this._userParamsSetSrv.curentUser;
+            this._userParamsSetSrv.checkGrifs(id).then(el => {
+                this.flagGrifs = el;
+                this.init();
+            });
+        })
+        .catch(el => {
         });
-        const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
-        this.curentUser = this._userParamsSetSrv.curentUser;
-        this.flagGrifs = await this._userParamsSetSrv.checkGrifs(id);
-        this.init();
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();

@@ -48,7 +48,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         private _msg: EosMessageService,
         private _errorSrv: ErrorHelperServices,
     ) {}
-    async ngOnInit() {
+    ngOnInit() {
         this._userParamsSetSrv.saveData$
             .pipe(
                 takeUntil(this._ngUnsubscribe)
@@ -56,24 +56,29 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
-        await this._userParamsSetSrv.getUserIsn({
+        this._userParamsSetSrv.getUserIsn({
             expand: 'USER_PARMS_List'
-        });
-        this.allData = this._userParamsSetSrv.hashUserContext;
-        this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - РК`;
-        this.cutentTab = 0;
+        })
+        .then(() => {
+            this.allData = this._userParamsSetSrv.hashUserContext;
+            this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - РК`;
+            this.cutentTab = 0;
 
-        this.init();
-        this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
-            this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
-            this.checRcShowRes();
-            this.editMode();
-        }).catch(error => {
-            this._msg.addNewMessage({
-                type: 'warning',
-                title: 'Предупреждение',
-                msg: 'Некорркетное значение в базе данных, попробуйте сбросить настройки по умолчанию'
+            this.init();
+            this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
+                this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
+                this.checRcShowRes();
+                this.editMode();
+            }).catch(error => {
+                this._msg.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение',
+                    msg: 'Некорркетное значение в базе данных, попробуйте сбросить настройки по умолчанию'
+                });
             });
+        })
+        .catch(err => {
+
         });
     }
     setTab(i: number) {

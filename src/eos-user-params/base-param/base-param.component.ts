@@ -91,6 +91,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this.init();
             this.editModeF();
             this._subscribe();
+        })
+        .catch(err => {
+
         });
         this._userParamSrv
             .saveData$

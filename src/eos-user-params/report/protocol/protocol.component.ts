@@ -81,6 +81,8 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy, AfterConte
       this.PaginateData(this.config.length, this.orderByStr, 0);
       this._user_pagination.totalPages = undefined;
     })
+    .catch((error: boolean) => {
+    })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
       });
@@ -266,16 +268,16 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy, AfterConte
     this.ShowData();
   }
 
-  // ShowDataUser() {
+   ShowDataUser() {
   //   if (this.lastUser !== undefined) {
   //     return this.GetDataUser(this.lastUser.isnEvent);
   //   }
-  // }
-  // CompareWithEvent() {
+   }
+   CompareWithEvent() {
   //   if (this.lastUser !== undefined) {
   //     return this.GetDataUser(this.lastUser.isnEvent);
   //   }
-  // }
+   }
 
   GetDataUser(isnEvent) {
     this._pipeSrv.read({

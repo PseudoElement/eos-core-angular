@@ -80,8 +80,8 @@ export class UserParamsService {
         }
         if (!isn) {
             this._router.navigate(['user_param']);
+            return Promise.reject(false);
         }
-
         const queryUser = {
             [`USER_CL(${isn})`]: ALL_ROWS,
             expand: expand

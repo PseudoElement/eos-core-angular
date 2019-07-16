@@ -42,7 +42,7 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
     ) {}
-    async ngOnInit() {
+    ngOnInit() {
         this._userParamsSetSrv.saveData$
             .pipe(
                 takeUntil(this._ngUnsubscribe)
@@ -50,11 +50,16 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
-        await this._userParamsSetSrv.getUserIsn({
+        this._userParamsSetSrv.getUserIsn({
             expand: 'USER_PARMS_List'
+        })
+        .then(() => {
+            this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
+            this.init();
+        })
+        .catch(err => {
+
         });
-        this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
-        this.init();
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
