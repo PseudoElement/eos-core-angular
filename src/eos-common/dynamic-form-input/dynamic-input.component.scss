@@ -162,8 +162,7 @@ eos-dynamic-input {
         display: flex;
         display: -webkit-flex;
         .switch-item {
-
-            flex: 1 1 1px;
+            flex: 1 1 auto;
         }
         .btn {
             line-height: 30px;
