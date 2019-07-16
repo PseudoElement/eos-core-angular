@@ -29,7 +29,7 @@
                             (click)="doAction(moreBtn.name)" [ngClass]="[moreBtn.isActive ? moreBtn.activeBtnClass : '', moreBtn.disabled ? 'disabled' : '']">
                             <span class="btn-icon" *ngIf='!moreBtn.isActive' [ngClass]="!moreBtn.disabled ? moreBtn.enableClass : moreBtn.disabledClass"></span>
                             <span class="btn-title" *ngIf='moreBtn.isActive' [ngClass]="moreBtn.activeClass"></span>
-                            <span class="btn-title">{{moreBtn.title}}</span>
+                            <span class="btn-title not-active-btn">{{moreBtn.title}}</span>
                         </a>
                     </li>
                 </ng-container>
@@ -37,3 +37,5 @@
         </div>
     </div>
 </div>
+
+
