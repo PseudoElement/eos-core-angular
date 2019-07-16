@@ -246,7 +246,8 @@ export class CardRightSrv {
             label: data.docGroup.CLASSIF_NAME,
             allowed: !!data.userCardDG.ALLOWED,
             data
-        }));
+        },
+        this.selectedFuncNum.label === 'Отправка сообщений СЭВ' ? null : true));
     }
     private _checkChenge() {
         let state: boolean = false;
