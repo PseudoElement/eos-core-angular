@@ -7,6 +7,7 @@ export class NodeAbsoluteRight {
     isCreate: boolean = false;
     touched: boolean = false;
     control: AbstractControl;
+    ischeckedAll: boolean = false;
 
     get contentProp(): E_RIGHT_DELO_ACCESS_CONTENT {
         return this._constData.data['rightContent'];

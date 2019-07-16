@@ -18,8 +18,8 @@ export class OrganizEditTypeComponent implements OnInit {
     public LIstOrgType = [];
     public listUserOrg;
     constructor(
-                private _pipRx: PipRX,
-                private _userParmSrv: UserParamsService,
+        private _pipRx: PipRX,
+        private _userParmSrv: UserParamsService,
     ) { }
 
     ngOnInit() {
@@ -27,10 +27,15 @@ export class OrganizEditTypeComponent implements OnInit {
     }
 
     init() {
-        this.listUserOrg = this.curentUser.USER_EDIT_ORG_TYPE_List;
+        this.listUserOrg = this._userParmSrv.userEditOrgType;
         this.getOrgType().then(data => {
             if (data) {
-               this.createListOrgType(data);
+                if (this.selectedNode.ischeckedAll) {
+                    this.selectedNode.deleteChange();
+                    this.createListIsCreate(data);
+                } else {
+                    this.createListOrgType(data);
+                }
             }
         });
     }
@@ -40,33 +45,33 @@ export class OrganizEditTypeComponent implements OnInit {
     }
     createEntity(item) {
         const newUserDep: USER_EDIT_ORG_TYPE = this._userParmSrv.createEntyti<USER_EDIT_ORG_TYPE>({
-           ISN_USER: this.curentUser.ISN_LCLASSIF,
-           ISN_ORG_TYPE: item.isn
+            ISN_USER: this.curentUser.ISN_LCLASSIF,
+            ISN_ORG_TYPE: item.isn
         }, 'USER_EDIT_ORG_TYPE');
         return newUserDep;
     }
     findREpeatList(item) {
         const newUserDep = this.createEntity(item);
-       if (item.checked) {
-        this.listUserOrg.push({
-            ISN_USER: this.curentUser['ISN_LCLASSIF'],
-            ISN_ORG_TYPE: item['isn']
-        });
-        this.selectedNode.pushChange({
-            method: 'POST',
-            isn_org: newUserDep.ISN_ORG_TYPE,
-            data: newUserDep
-        });
-       } else {
-        const index = this.actionUserOrg(item);
-        this.listUserOrg.splice(index, 1);
-        this.selectedNode.pushChange({
-            method: 'DELETE',
-            isn_org: newUserDep.ISN_ORG_TYPE,
-            data: newUserDep
-        });
-       }
-       this.Changed.emit();
+        if (item.checked) {
+            this.listUserOrg.push({
+                ISN_USER: this.curentUser['ISN_LCLASSIF'],
+                ISN_ORG_TYPE: item['isn']
+            });
+            this.selectedNode.pushChange({
+                method: 'POST',
+                isn_org: newUserDep.ISN_ORG_TYPE,
+                data: newUserDep
+            });
+        } else {
+            const index = this.actionUserOrg(item);
+            this.listUserOrg.splice(index, 1);
+            this.selectedNode.pushChange({
+                method: 'DELETE',
+                isn_org: newUserDep.ISN_ORG_TYPE,
+                data: newUserDep
+            });
+        }
+        this.Changed.emit();
     }
     actionUserOrg(items): number {
         const index = this.listUserOrg.findIndex((item) => item['ISN_USER'] === this.curentUser['ISN_LCLASSIF'] && item['ISN_ORG_TYPE'] === items['isn']);
@@ -86,6 +91,31 @@ export class OrganizEditTypeComponent implements OnInit {
             obj['name'] = el.CLASSIF_NAME;
             obj['isn'] = el.ISN_LCLASSIF;
             obj['checked'] = this.setcheked(el.ISN_LCLASSIF);
+            this.LIstOrgType.push(obj);
+        });
+    }
+    private createListIsCreate(data: ORG_TYPE_CL[]) {
+        data.forEach((el: ORG_TYPE_CL) => {
+            const obj = {};
+            obj['name'] = el.CLASSIF_NAME;
+            obj['isn'] = el.ISN_LCLASSIF;
+            if (this.setcheked(el.ISN_LCLASSIF)) {
+                obj['checked'] = true;
+            } else {
+                obj['checked'] = true;
+                const objN = {};
+                objN['isn'] = el.ISN_LCLASSIF;
+                const newUserDep = this.createEntity(objN);
+                this.listUserOrg.push({
+                    ISN_USER: this.curentUser['ISN_LCLASSIF'],
+                    ISN_ORG_TYPE: el.ISN_LCLASSIF
+                });
+                this.selectedNode.pushChange({
+                    method: 'POST',
+                    isn_org: el.ISN_LCLASSIF,
+                    data: newUserDep
+                });
+            }
             this.LIstOrgType.push(obj);
         });
     }
