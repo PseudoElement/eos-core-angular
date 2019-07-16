@@ -11,7 +11,7 @@ import { RKBasePage } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_BEEN_DELETED, RK_SELECTED_LIST_CONTAIN_DELETED, RK_SELECTED_VALUE_LOGIC_DELETED } from 'app/consts/confirms.const';
+import { RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_BEEN_DELETED, RK_SELECTED_LIST_CONTAIN_DELETED, /* RK_SELECTED_VALUE_LOGIC_DELETED */ } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
