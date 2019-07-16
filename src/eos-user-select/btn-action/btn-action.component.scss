@@ -27,18 +27,23 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    width: 100%;
     .btn-icon {
         margin-left: 10px;
     }
     .btn-title {
         font-size: 13px;
         margin-left: 10px;
+        white-space: normal;
+        line-height: normal;
+    }
+    .not-active-btn{
+        width: 252px;
     }
 }
 
 .menu-expand {
-    padding-right: 20px;
+    width: 300px;
+    white-space: normal;
 }
 
 @media (max-width: 1200px) {

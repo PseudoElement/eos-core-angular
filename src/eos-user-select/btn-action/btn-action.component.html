@@ -22,14 +22,14 @@
                 <span
                     [ngClass]="dropdown.isOpen ? 'eos-icon eos-icon-fab-white small': 'eos-icon eos-icon-fab-blue small'"></span>
             </button>
-            <ul *dropdownMenu class="dropdown-menu menu-expand" role="menu">
+            <ul *dropdownMenu class="dropdown-menu" role="menu">
                 <ng-container *ngFor='let moreBtn of buttons.moreButtons'>
                     <li role="menuitem" placement="right" container="body" dropdown triggers="mouseclick" class="menu-link">
                         <a class="dropdown-item menu-link"
                             (click)="doAction(moreBtn.name)" [ngClass]="[moreBtn.isActive ? moreBtn.activeBtnClass : '', moreBtn.disabled ? 'disabled' : '']">
                             <span class="btn-icon" *ngIf='!moreBtn.isActive' [ngClass]="!moreBtn.disabled ? moreBtn.enableClass : moreBtn.disabledClass"></span>
                             <span class="btn-title" *ngIf='moreBtn.isActive' [ngClass]="moreBtn.activeClass"></span>
-                            <span class="btn-title">{{moreBtn.title}}</span>
+                            <span class="btn-title not-active-btn">{{moreBtn.title}}</span>
                         </a>
                     </li>
                 </ng-container>
@@ -37,3 +37,5 @@
         </div>
     </div>
 </div>
+
+
