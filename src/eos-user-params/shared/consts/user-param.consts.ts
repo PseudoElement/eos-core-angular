@@ -95,11 +95,11 @@ export const USER_PARAMS_LIST_NAV: IParamAccordionList[] = [
         url: 'inline-scaning',
         disabled: false,
     },
-    // {
-    //     title: 'Протокол',
-    //     url: 'protocol',
-    //     disabled: false,
-    // },
+    {
+        title: 'Протокол',
+        url: 'protocol',
+        disabled: false,
+    },
     // {
     //     title: 'Данные по отмеченным пользователям',
     //     url: 'users-info',

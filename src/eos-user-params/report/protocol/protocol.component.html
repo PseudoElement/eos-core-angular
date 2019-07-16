@@ -1,3 +1,71 @@
-<div>
-    Протокол
+<div class="prot-dictionary">
+    <div class="table-wrapper usual-border">
+        <div class="prot-report-list">
+            <div class="table-header">
+                <div class="table-prot-wraper">
+                    <div class="selected-prot-title">
+                        <span class="long-title xl-font">Протокол редактирования пользователя {{username}}</span>
+                    </div>
+                    <div class="item-count-prot usual-border m-font">
+                        <span class="item-count-content-prot">
+                                Записей:
+                            <span class="counter-prot">{{config?.itemsQty}}</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="table-header header-pos-prot">
+                <div class="btn-group-prot">
+                    <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
+                        <button disabled="true" class="btn btn-primary-light bth-size-prot" tooltip="Просмотреть" (click)="ShowDataUser()"
+                            placement="bottom" container="body" containerClass="tooltip-info">
+                            <span class="eos-icon eos-icon-review-blue small"></span>
+                        </button>
+                        <button disabled="true" class="btn btn-primary-light bth-size-prot" tooltip="Сравнить с предыдущей" (click)="CompareWithEvent()"
+                            placement="bottom" container="body" containerClass="tooltip-info">
+                            <span class="eos-icon eos-icon-folder-group-blue small"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-header header-pad">
+                <div class="table-title contain-span-header">
+                    <span class=" width-title1 likeLink-prot" (click)="SortPageList(1)">
+                        Дата
+                        <span *ngIf="status === 'EVENT_DATE' || status === undefined" class="icon eos-icon small" [ngClass]="{'eos-icon-arrow-blue-top': arrSort[0].date, 'eos-icon-arrow-blue-bottom': !arrSort[0].date}"></span>
+                    </span>
+                    <span class=" width-title2 likeLink-prot" (click)="SortPageList(2)">
+                        Событие
+                        <span *ngIf="status === 'eventUser'" class="icon eos-icon small" [ngClass]="{'eos-icon-arrow-blue-top': arrSort[1].event, 'eos-icon-arrow-blue-bottom': !arrSort[1].event}"></span>
+                    </span>
+                    <span class=" width-title3 likeLink-prot" (click)="SortPageList(3)" [ngClass]="getOverflow ? 'mar-edit-span' : 'mar-edit-span-start'">
+                        Пользователь
+                        <span *ngIf="status === 'WHO'" class="icon eos-icon small" [ngClass]="{'eos-icon-arrow-blue-top': arrSort[2].who, 'eos-icon-arrow-blue-bottom': !arrSort[2].who}"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="selected-wrapper">
+                <div class="user-item prot-list-prot" #someVar>
+                    <div *ngFor="let user of frontData; let i = index ">
+                        <div class="contain-span-header"  [ngClass]="{'highlighted': user.checked === true}">
+                            <span class="item-table width-title1"  (click)="SingleUserCheck(user)">
+                                {{user.date}}
+                            </span>
+                            <span class=" item-table width-title2"  (click)="SingleUserCheck(user)">
+                                <div>
+                                    {{user.eventUser}}
+                                </div>
+                            </span>
+                            <span class="item-table width-title3"  (click)="SingleUserCheck(user)">
+                                <div>
+                                    {{user.isnWho}}
+                                </div>
+                            </span>
+                        </div>  
+                    </div>
+                </div>
+            <eos-user-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-user-list-pagination> 
+        </div>
+    </div>
+</div>
 </div>
