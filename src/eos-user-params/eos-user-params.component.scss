@@ -134,17 +134,3 @@
  .bs-datepicker-body table td {
      color: black !important;
  }
- .sum-protocol{
-     @media(min-width: 1500px) {
-         .pagination-option {
-             &.full {
-                 left: 20px;
-                 right: 20px;
-             }
-             &.info {
-                 left: 20px;
-                 right: 20px;
-             }
-         }
-     }
- }

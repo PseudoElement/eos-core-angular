@@ -478,13 +478,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     //     );
     // }
 
-    // OpenProtocol() {
-    //     this._router.navigate(['user-params-set/', 'protocol'],
-    //         {
-    //             queryParams: { isn_cl: this.selectedUser.id }
-    //         }
-    //     );
-    // }
+    OpenProtocol() {
+        this._router.navigate(['user-params-set/', 'protocol'],
+            {
+                queryParams: { isn_cl: this.selectedUser.id }
+            }
+        );
+    }
 
     setCheckedAllFlag() {
         const leng = this.filterForFlagChecked().length;

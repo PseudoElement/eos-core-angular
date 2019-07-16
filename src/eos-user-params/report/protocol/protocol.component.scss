@@ -1,0 +1,125 @@
+.prot-dictionary {
+    .contain-span{
+        display: flex;
+        justify-content: space-around;
+    }
+    .contain-span{
+        display: flex;
+        justify-content: space-around;
+        width:81%;
+    }
+    .contain-span-header{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        padding-left: 10px;
+    }
+    .item-table{
+        line-height: 46px;
+        cursor: pointer;
+    }
+    .width-title1{
+        width: 31%;
+    }
+    .width-title2{
+        width: 45%;
+    }
+    .width-title3{
+        width: 24%;
+    }
+    .prot-report-list{
+        background-color: white;
+    }
+    .header-pos-prot{
+        display: flex;
+        justify-content: space-between;
+    }
+    .btn-group-prot{
+        position: relative;
+        display: inline-flex;
+        vertical-align: middle;
+    }
+    .bth-size-prot{
+        height: 48px;
+        width: 48px;;
+    }
+    .item-count-content-prot{
+        padding: 0 20px;
+        line-height: 24px;
+        font-size: 16px;
+    }
+    .item-count-prot {
+        align-self: center;
+        height: 100%;
+        width: fit-content;
+        display: inline-block;
+        border-left-width: 1px;
+        border-left-style: solid;
+        grid-column: 4;
+    }
+    
+    .usual-border-prot {
+        border-color: #e6e6e6;
+        border-width: 1px;
+    }
+    .m-font-prot {
+        line-height: 20px;
+        font-size: 14px;
+    }
+    .counter-prot{
+        margin-left: 20px;
+        padding: 6.5px 10px;
+        background: #bababa;
+        border-radius: 2px;
+        color: #fff;
+    }
+    .likeLink-prot{
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        cursor: pointer;
+        color: #2196f3;
+    } 
+    .prot-check-label {
+        padding-left: 0;
+    }
+    .eos-icon {
+        .small-prot {
+            height: 24px;
+            width: 24px;
+        }
+    }
+    .check-prot{
+        margin: 0;
+        padding-top: 3px;
+    }
+    .mar-check{
+        margin-right: 12px;
+    }
+    .prot-list-prot{
+        overflow: auto;
+        max-height: calc(100vh - 371px);
+    }
+    .table-prot-wraper{
+        display: flex;
+        justify-content: space-between;
+        padding-left: 20px;
+    }
+    .selected-prot-title {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        padding: 11px 0;
+        align-self: center;
+        grid-column: 2;
+        max-height: 74px;
+    }
+    .btn-s{
+        height: 48px;
+        width: 48px;
+    }
+    .mar-edit-span-start {
+        margin-right: 0px;
+    }
+}

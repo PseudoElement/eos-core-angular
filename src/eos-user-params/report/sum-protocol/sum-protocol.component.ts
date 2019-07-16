@@ -27,20 +27,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
   isnRefFile: number;
   lastUser;
   initPage: boolean = false;
-  posts: number;
   clearResult: boolean = false;
-  orderBy: boolean = false;
   orderByStr: string = 'EVENT_DATE asc';
-  options = [
-    { value: '0', title: '' },
-    { value: '1', title: 'Блокирование Пользователя' },
-    { value: '2', title: 'Разблокирование Пользователя' },
-    { value: '3', title: 'Создание пользователя' },
-    { value: '4', title: 'Редактирование пользователя БД' },
-    { value: '5', title: 'Редактирование прав ДЕЛА' },
-    { value: '6', title: 'Редактирование прав поточного сканирования' },
-    { value: '7', title: 'Удаление Пользователя' },
-  ];
   eventKind = [
     'Блокирование Пользователя',
     'Разблокирование Пользователя',
@@ -51,7 +39,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
     'Удаление Пользователя'
   ];
   critUsers = [];
-  initConfig: boolean = false;
   currentState: boolean[] = [true, true];
   status: string;
   SortUp: string;
@@ -159,7 +146,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
       posts = posts.split('').reverse().join('');
       posts = posts.split(',')[0];
       posts = posts.split('').reverse().join('');
-      this.posts = parseInt(posts, 10);
       let data;
       data = parseInt(posts, 10);
       return data;
@@ -520,8 +506,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
   }
   ConvertDate(convDate) {
     const date = new Date(convDate);
-    const curr_date = date.getDate();
-    const curr_month = date.getMonth() + 1;
+    const curr_date = ('0' + date.getDate()).slice(-2);
+    const curr_month = ('0' + (date.getMonth() + 1) ).slice(-2);
     const curr_year = date.getFullYear();
     const hms = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().substr(11, 8);
     const parseDate = `${curr_year}.${curr_month}.${curr_date} ${hms}`;
