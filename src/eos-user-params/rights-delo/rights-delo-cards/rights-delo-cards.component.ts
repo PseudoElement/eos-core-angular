@@ -47,7 +47,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
                 takeUntil(this._ngUnsubscribe)
             )
             .subscribe(() => {
-                this._userParamsSetSrv.submitSave = this.submit();
+                this._userParamsSetSrv.submitSave = this.submit(true);
             });
     }
     ngOnInit() {
@@ -69,8 +69,11 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
             this.funcList = CARD_FUNC_LIST.map(node => new FuncNum(node));
             this.pageState = 'VIEW';
         })
+        .catch((error: boolean) => {
+
+        })
         .catch(error => {
-            this._errorSrv.errorHandler(error);
+                this._errorSrv.errorHandler(error);
         });
     }
     afterSubmit() {
@@ -87,13 +90,15 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
-    submit() {
+    submit(flag?) {
         this.pageState = 'LOADING';
      return  this._cardSrv.saveChenge$()
             .then(() => {
                 this.pageState = 'VIEW';
                 this.btnDisabled = true;
-                this.afterSubmit();
+                if (!flag) {
+                    this.afterSubmit();
+                }
               //  this.ngOnInit();
                 this._clearView();
             }).catch(error => {

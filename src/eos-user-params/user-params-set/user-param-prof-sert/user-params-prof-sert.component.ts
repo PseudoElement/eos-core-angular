@@ -64,7 +64,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
-    async ngOnInit() {
+    ngOnInit() {
         this._userSrv.saveData$
             .pipe(
                 takeUntil(this._ngUnsubscribe)
@@ -73,32 +73,37 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                 this._userSrv.submitSave = this.submit(null);
             });
 
-        await this._userSrv.getUserIsn({
+        this._userSrv.getUserIsn({
             expand: 'USER_PARMS_List'
-        });
-        this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Профиль сертификатов`;
-        this.selectedSertificatePopup = null;
+        })
+        .then(() => {
+            this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Профиль сертификатов`;
+            this.selectedSertificatePopup = null;
 
-        const store: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
-        this.certStoresService.init(null, store)
-            .subscribe(
-                (data) => {
-                    this.isCarma = true;
-                    this.certStoresService.EnumCertificates('', '', '').subscribe(infoSert => {
-                        this.getSerts();
-                        if (this.checkVersion()) {
-                            this.waitSerts(infoSert);
-                        } else {
-                            this.oldWaitSerts(infoSert);
-                        }
-                    });
-                },
-                (error) => {
-                    this.isCarma = false;
-                    this.getSertNotCarma();
-                    // this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
-                }
-            );
+            const store: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
+            this.certStoresService.init(null, store)
+                .subscribe(
+                    (data) => {
+                        this.isCarma = true;
+                        this.certStoresService.EnumCertificates('', '', '').subscribe(infoSert => {
+                            this.getSerts();
+                            if (this.checkVersion()) {
+                                this.waitSerts(infoSert);
+                            } else {
+                                this.oldWaitSerts(infoSert);
+                            }
+                        });
+                    },
+                    (error) => {
+                        this.isCarma = false;
+                        this.getSertNotCarma();
+                        // this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
+                    }
+                );
+        })
+        .catch(err => {
+
+        });
     }
     checkVersion(): boolean {
         const arrVersion = this.certStoresService.ServiceInfo.carmaVersion.split('.');

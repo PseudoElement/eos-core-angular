@@ -60,6 +60,9 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
             this.allData = this._userParamsSetSr.hashUserContext;
             this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Поиск';
             this.inint();
+        })
+        .catch(err => {
+
         });
     }
     inint() {

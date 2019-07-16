@@ -92,30 +92,35 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             }
         });
     }
-    async ngOnInit() {
-        await this._userServices.getUserIsn({
+    ngOnInit() {
+        this._userServices.getUserIsn({
             expand: 'USERCARD_List'
-        });
-        this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ограничение доступа`;
-        this.checkUserCard = this._userServices.curentUser['USERCARD_List'];
-        this.isLoading = false;
-        this._limitservise.getInfoGrifs().then(result => {
-            this.checkGrifs = result[0][0]['USERSECUR_List'];
-        });
-        this._limitservise.getAccessCode()
-            .then((result) => {
-                this.umailsInfo = result.slice();
-                this.sortArray(this.umailsInfo);
-                this.saveParams = this.umailsInfo.slice();
-                this.umailsInfo.length > 0 ? this.currentIndex = 0 : this.currentIndex = null;
-                this.createForm(false, false);
-                this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
-                this.myForm.valueChanges.subscribe(data => {
-                    this.checkChanges(data);
-                });
-                this.editModeForm();
-                this.isLoading = true;
+        })
+        .then(() => {
+            this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ограничение доступа`;
+            this.checkUserCard = this._userServices.curentUser['USERCARD_List'];
+            this.isLoading = false;
+            this._limitservise.getInfoGrifs().then(result => {
+                this.checkGrifs = result[0][0]['USERSECUR_List'];
             });
+            this._limitservise.getAccessCode()
+                .then((result) => {
+                    this.umailsInfo = result.slice();
+                    this.sortArray(this.umailsInfo);
+                    this.saveParams = this.umailsInfo.slice();
+                    this.umailsInfo.length > 0 ? this.currentIndex = 0 : this.currentIndex = null;
+                    this.createForm(false, false);
+                    this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
+                    this.myForm.valueChanges.subscribe(data => {
+                        this.checkChanges(data);
+                    });
+                    this.editModeForm();
+                    this.isLoading = true;
+                });
+        })
+        .catch(err => {
+
+        });
     }
     clearForm(): void {
         sessionStorage.removeItem(String(this._userServices.userContextId));

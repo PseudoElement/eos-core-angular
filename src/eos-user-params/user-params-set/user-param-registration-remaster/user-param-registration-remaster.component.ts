@@ -50,7 +50,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         private _errorSrv: ErrorHelperServices,
         private _formHelper: FormHelperService,
     ) {}
-    async ngOnInit() {
+    ngOnInit() {
         this._userSrv.saveData$
         .pipe(
             takeUntil(this._ngUnsubscribe)
@@ -58,18 +58,23 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
         .subscribe(() => {
             this._userSrv.submitSave = this.submit(null);
         });
-        await this._userSrv.getUserIsn({
+        this._userSrv.getUserIsn({
             expand: 'USER_PARMS_List'
-        });
-        this.accessSustem = this._userSrv.curentUser.ACCESS_SYSTEMS;
-        this.hash = this._userSrv.hashUserContext;
-        this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Регистрация`;
+        })
+        .then(() => {
+            this.accessSustem = this._userSrv.curentUser.ACCESS_SYSTEMS;
+            this.hash = this._userSrv.hashUserContext;
+            this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Регистрация`;
 
-        this._apiSrv.read(this._formHelper.getObjQueryInputsField()).then(data => {
-            this.defaultValues = this._formHelper.createhash(data);
-            this.isLoading = true;
-        }).catch(error => {
-            this._errorSrv.errorHandler(error);
+            this._apiSrv.read(this._formHelper.getObjQueryInputsField()).then(data => {
+                this.defaultValues = this._formHelper.createhash(data);
+                this.isLoading = true;
+            }).catch(error => {
+                this._errorSrv.errorHandler(error);
+            });
+        })
+        .catch(err => {
+
         });
     }
     ngOnDestroy() {

@@ -81,6 +81,8 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy, AfterConte
       this.PaginateData(this.config.length, this.orderByStr, 0);
       this._user_pagination.totalPages = undefined;
     })
+    .catch((error: boolean) => {
+    })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
       });

@@ -46,7 +46,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         private _errorSrv: ErrorHelperServices,
 
     ) {}
-    async ngOnInit() {
+    ngOnInit() {
         this._userSrv.saveData$
         .pipe(
             takeUntil(this._ngUnsubscribe)
@@ -55,15 +55,20 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             this._userSrv.submitSave = this.submit(null);
         });
 
-        await this._userSrv.getUserIsn({
+        this._userSrv.getUserIsn({
             expand: 'USER_PARMS_List'
-        });
-        this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Прочее`;
+        })
+        .then(() => {
+            this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Прочее`;
 
-        const prep = this._formHelper.getObjQueryInputsField();
-        this._pipRx.read(prep).then((data) => {
-            this.defaultValues = this._formHelper.createhash(data);
-            this.remaster.emitDefaultFalues.next(this.defaultValues);
+            const prep = this._formHelper.getObjQueryInputsField();
+            this._pipRx.read(prep).then((data) => {
+                this.defaultValues = this._formHelper.createhash(data);
+                this.remaster.emitDefaultFalues.next(this.defaultValues);
+            });
+        })
+        .catch(err => {
+
         });
     }
     get btnDisabled() {

@@ -78,7 +78,10 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
             this.title = `${this.curentUser['SURNAME_PATRON']} (${this.curentUser['CLASSIF_NAME']}) Поточное сканирование`;
             this.init();
             this.flagShow = true;
-        }).catch(error => {
+        })
+        .catch((error: boolean) => {
+        })
+        .catch(error => {
             this._errorSrv.errorHandler(error);
         });
         this._userParamSrv.saveData$

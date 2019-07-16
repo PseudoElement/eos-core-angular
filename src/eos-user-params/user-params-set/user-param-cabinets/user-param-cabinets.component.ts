@@ -73,7 +73,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             }
         });
     }
-    async ngOnInit() {
+    ngOnInit() {
         this._userParamsSetSrv.saveData$
             .pipe(
                 takeUntil(this._ngUnsubscribe)
@@ -82,27 +82,31 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
 
-        await this._userParamsSetSrv.getUserIsn({
+        this._userParamsSetSrv.getUserIsn({
             expand: 'USER_PARMS_List'
-        });
-        this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
-        this.allData = this._userParamsSetSrv.hashUserContext;
-        this.init();
-        Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {
-            CABINETS_USER.fields.map(fields => {
-                if (fields.key === 'CABSORT_ISN_DOCGROUP_LIST') {
-                    fields.options.splice(0, fields.options.length);
-                    sort.forEach(element => {
-                        fields.options.push({
-                            value: element.ISN_LIST,
-                            title: element.NAME
+        }).then(() => {
+            this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
+            this.allData = this._userParamsSetSrv.hashUserContext;
+            this.init();
+            Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {
+                CABINETS_USER.fields.map(fields => {
+                    if (fields.key === 'CABSORT_ISN_DOCGROUP_LIST') {
+                        fields.options.splice(0, fields.options.length);
+                        sort.forEach(element => {
+                            fields.options.push({
+                                value: element.ISN_LIST,
+                                title: element.NAME
+                            });
                         });
-                    });
+                    }
+                });
+                if (author) {
+                    this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
                 }
             });
-            if (author) {
-                this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
-            }
+        })
+        .catch(error => {
+
         });
     }
     init() {

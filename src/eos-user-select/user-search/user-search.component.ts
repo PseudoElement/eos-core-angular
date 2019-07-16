@@ -146,9 +146,11 @@ export class UserSearchComponent implements OnInit {
             this.clearQuickForm();
         }
         if ($event.keyCode === 13) {
-            const strSearch = this.srchString.replace(/[&\/\\#,!+()$~%.'":*?<>{}]/g, '').trim();
-            if (strSearch) {
-                this.quickSearchKey.emit(strSearch);
+            if (this.srchString) {
+                const strSearch = this.srchString.replace(/[&\/\\#,!+()$~%.'":*?<>{}]/g, '').trim();
+                if (strSearch) {
+                    this.quickSearchKey.emit(strSearch);
+                }
             }
         }
     }
