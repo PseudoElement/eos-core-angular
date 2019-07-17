@@ -118,10 +118,10 @@ export const OpenRightsSystemCaseDelo: BtnActionFields = {
 
 export const GeneralLists: BtnActionFields = {
     name: 'GeneralLists',
-    title: 'Ведение Общих списков стандартных текстов',
+    title: 'Ведение общих списков стандартных текстов',
     disabledClass: 'eos-icon eos-icon-H-Grey small',
     enableClass: 'eos-icon eos-icon-H-Blue small',
-    tooltip: 'Ведение Общих списков стандартных текстов',
+    tooltip: 'Ведение общих списков стандартных текстов',
     disabled: false,
     activeClass: 'eos-icon eos-icon-H-Blue small',
     activeBtnClass: '',
