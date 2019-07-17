@@ -28,6 +28,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
   lastUser;
   initPage: boolean = false;
   clearResult: boolean = false;
+  resetPage: boolean = false;
   orderByStr: string = 'EVENT_DATE asc';
   eventKind = [
     'Блокирование Пользователя',
@@ -61,7 +62,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
       .subscribe((config: IPaginationConfig) => {
         if (config) {
           this.config = config;
-          if (this._user_pagination.totalPages !== undefined) {
+          if (this._user_pagination.totalPages !== undefined && this.resetPage === false) {
             if (this.config.current > this.config.start) {
               this.PaginateData(this.config.length * 2, this.orderByStr);
             } else if (this.config.current && this.initPage === true) {
@@ -113,6 +114,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
             this._user_pagination.getSumIteq = true;
             this._user_pagination.changePagination(this.config);
             this.initPage = true;
+            this.resetPage = false;
           }
           this.ParseInitData(this.usersAudit);
         } else {
@@ -421,12 +423,18 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
           EVENT_DATE: dateSearch,
           ISN_USER: isnUser,
           ISN_WHO: isnWho
-        }
+        },
+        //  orderby: 'ISN_EVENT',
+        orderby: this.orderByStr,
+        top: this._user_pagination.paginationConfig.length,
+        skip: 0,
+        inlinecount: 'allpages'
       },
-      orderby: 'ISN_EVENT',
     })
       .then((data: any) => {
+        console.log(data);
         this.usersAudit = data;
+        this.initPage = false;
         if (this.usersAudit.length === 0) {
           this._msgSrv.addNewMessage({
             title: 'Ничего не найдено',
@@ -435,9 +443,17 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
           });
           this.frontData = [];
         } else {
+          const parsePosts = data.TotalRecords;
+          if (parsePosts !== undefined) {
+            this._user_pagination.totalPages = this.GetCountPosts(parsePosts);
+          } else {
+            this._user_pagination.totalPages = this.usersAudit.length;
+          }
+          this._user_pagination.changePagination(this.config);
           this.ParseDate(this.usersAudit);
         }
         this.clearResult = true;
+        this.initPage = true;
       })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
@@ -507,7 +523,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
   ConvertDate(convDate) {
     const date = new Date(convDate);
     const curr_date = ('0' + date.getDate()).slice(-2);
-    const curr_month = ('0' + (date.getMonth() + 1) ).slice(-2);
+    const curr_month = ('0' + (date.getMonth() + 1)).slice(-2);
     const curr_year = date.getFullYear();
     const hms = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().substr(11, 8);
     const parseDate = `${curr_year}.${curr_month}.${curr_date} ${hms}`;
@@ -515,7 +531,9 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
   }
 
   resetSearch() {
-    this.PaginateData(this.config.length, this.orderByStr, 1);
+    this.resetPage = true;
+    this._user_pagination.totalPages = undefined;
+    this.PaginateData(this.config.length, this.orderByStr, 0);
     this.clearResult = false;
   }
 
