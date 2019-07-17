@@ -404,7 +404,9 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
       dateTo = this.ConvertToFilterDate(dateTo);
     }
     if (dateTo !== undefined && dateFrom !== undefined) {
-      dateSearch = `${dateFrom}:${dateTo}`;
+      if (dateTo !== dateFrom) {
+        dateSearch = `${dateFrom}:${dateTo}`;
+      }
     } else if (dateTo === undefined && dateFrom !== undefined) {
       const dateNow = new Date();
       const dateStr = this.ConvertToFilterDate(dateNow);
@@ -417,22 +419,20 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
       dateSearch = undefined;
     }
     this._pipeSrv.read({
-      USER_AUDIT: {
-        criteries: {
+      USER_AUDIT:
+        PipRX.criteries({
           EVENT_KIND: eventUser,
           EVENT_DATE: dateSearch,
           ISN_USER: isnUser,
-          ISN_WHO: isnWho
-        },
-        //  orderby: 'ISN_EVENT',
-        orderby: this.orderByStr,
-        top: this._user_pagination.paginationConfig.length,
-        skip: 0,
-        inlinecount: 'allpages'
-      },
+          ISN_WHO: isnWho,
+        }),
+      top: this.config.length,
+      skip: 0,
+      orderby: this.orderByStr,
+      inlinecount: 'allpages'
+
     })
       .then((data: any) => {
-        console.log(data);
         this.usersAudit = data;
         this.initPage = false;
         if (this.usersAudit.length === 0) {
@@ -449,6 +449,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
           } else {
             this._user_pagination.totalPages = this.usersAudit.length;
           }
+          this.config.current = 1;
+          this.config.start = 1;
           this._user_pagination.changePagination(this.config);
           this.ParseDate(this.usersAudit);
         }

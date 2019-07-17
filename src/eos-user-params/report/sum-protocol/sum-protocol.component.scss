@@ -125,6 +125,12 @@
     .mar-edit-span-start {
         margin-right: 0px;
     }
+    .table-wrapper-head{
+        width: 100%;
+        border-width: 1px;
+        border-style: solid;
+        position: relative;
+    }
 }
 
  @media (min-width: 1500px) and (max-width: 1899px) {
