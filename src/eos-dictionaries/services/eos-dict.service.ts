@@ -41,6 +41,7 @@ import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.const
 import { NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { PipRX } from 'eos-rest';
 import { NADZORDICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.consts';
+import { STORAGE_WEIGHTORDER } from 'app/consts/common.consts';
 
 export const SORT_USE_WEIGHT = true;
 export const CUSTOM_SORT_FIELD = 'WEIGHT';
@@ -68,6 +69,7 @@ export class EosDictService {
     private _paginationConfig$: BehaviorSubject<IPaginationConfig>;
     private _mDictionaryPromise: Map<string, Promise<EosDictionary>>;
     private _srchCriteries: any[];
+    private _srchParams: ISearchSettings;
     private _customFields: any;
     private _customTitles: any;
     private _dictMode = 0;
@@ -239,6 +241,7 @@ export class EosDictService {
         this._dictMode = 0;
         this._dictMode$ = new BehaviorSubject<number>(this._dictMode);
         this._initPaginationConfig();
+        this._weightOrdered = !!this._storageSrv.getItem(STORAGE_WEIGHTORDER);
     }
 
     getDescr(dictionaryId: string): IDictionaryDescriptor {
@@ -414,7 +417,7 @@ export class EosDictService {
             if (dictionary) {
                 if (this.userOrdered) {
                     dictionary.orderBy = {
-                        fieldKey: 'WEIGHT',
+                        fieldKey: CUSTOM_SORT_FIELD,
                         ascend: true,
                     };
                 } else {
@@ -766,11 +769,20 @@ export class EosDictService {
         return this._reloadList();
     }
 
+    isSearchEnabled(): boolean {
+        return !!this._srchCriteries;
+    }
+
+    isSearchFullDictionary(): boolean {
+        return this._srchParams ? this._srchParams.mode === SEARCH_MODES.totalDictionary : false;
+    }
+
     search(searchString: string, params: ISearchSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
         const fixedString = searchString.replace(SEARCH_INCORRECT_SYMBOLS, '');
         if (fixedString !== '') {
             this._srchCriteries = dictionary.getSearchCriteries(fixedString, params, this._treeNode);
+            this._srchParams = params;
             return this._search(params.deleted);
         } else {
             return Promise.resolve(null);
@@ -849,15 +861,18 @@ export class EosDictService {
 
     toggleWeightOrder(value?: boolean) {
 
+
         this.updateViewParameters({
             userOrdered: (value === undefined) ? !this.viewParameters.userOrdered : value
         });
+
+        this._storageSrv.setItem(STORAGE_WEIGHTORDER, !!this.viewParameters.userOrdered, true);
 
         const dictionary = this.currentDictionary;
         if (dictionary) {
             if (this.viewParameters.userOrdered) {
                 dictionary.orderBy = {
-                    fieldKey: 'WEIGHT',
+                    fieldKey: CUSTOM_SORT_FIELD,
                     ascend: true,
                 };
             } else {

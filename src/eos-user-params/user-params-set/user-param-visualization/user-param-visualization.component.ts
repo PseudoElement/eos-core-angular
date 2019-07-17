@@ -61,6 +61,9 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
             this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Визуализация';
             this.allData = this._userParamsSetSr.hashUserContext;
             this.inint();
+        })
+        .catch(err => {
+
         });
     }
     inint() {
@@ -179,7 +182,7 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
     }
     cancel($event?) {
         this.flagEdit = false;
-        this.prepFormCancel(this.inputs, false);
+        this.prepFormCancel(this.inputs, true);
         this.mapChanges.clear();
         this.btnDisable = true;
         this.flagEdit = false;

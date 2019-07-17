@@ -28,9 +28,9 @@ import {CreateNodeComponent} from '../create-node/create-node.component';
 import {IPaginationConfig} from '../node-list-pagination/node-list-pagination.interfaces';
 import {CreateNodeBroadcastChannelComponent} from '../create-node-broadcast-channel/create-node-broadcast-channel.component';
 import {CounterNpEditComponent, E_COUNTER_TYPE} from '../counter-np-edit/counter-np-edit.component';
-import {CustomTreeNode} from '../tree2/custom-tree.component';
+import {CustomTreeNode } from '../tree2/custom-tree.component';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
-import { DID_NOMENKL_CL } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
+import { DID_NOMENKL_CL, NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { takeUntil } from 'rxjs/operators';
 
 import {
@@ -50,6 +50,7 @@ import {
     WARN_LOGIC_OPEN,
     WARN_SELECT_NODE,
 } from '../consts/messages.consts';
+import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -72,6 +73,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     params: IDictionaryViewParameters;
     treeNode: EosDictionaryNode;
     title: string;
+
 
     SLICE_LEN = 110;
     customTreeData: CustomTreeNode[];
@@ -265,7 +267,64 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         .pipe(
             takeUntil(this.ngUnsubscribe)
         )
-            .subscribe((viewParameters: IDictionaryViewParameters) => this.params = viewParameters);
+            .subscribe((viewParameters: IDictionaryViewParameters) => {
+                this.params = viewParameters;
+                if (this.params.searchResults) {
+                    if ((this._dictSrv.currentDictionary.isTreeType() || this._dictSrv.currentDictionary.id === CABINET_DICT.id)
+                        && this._dictSrv.isSearchEnabled()) {
+                            if (this._dictSrv.isSearchFullDictionary() || this._dictSrv.currentDictionary.id === CABINET_DICT.id) {
+                                this.title = 'Поиск во всем справочнике';
+                                this.hasParent = false;
+                                return;
+                            }
+                    }
+                }
+
+                if (!viewParameters.updatingList && this.treeNode) {
+                    if (this.dictionaryId === NOMENKL_DICT.id) {
+                        const n = this.dictionary.descriptor.getActive();
+                        if (n) { this.title = n.title; }
+                    }  else {
+                        this.title = this.treeNode.title;
+                        this.hasParent = !!this.treeNode.parent;
+                    }
+                }
+
+            });
+
+        _dictSrv.openedNode$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+            .subscribe((node) => {
+                // if (this._dictSrv.currentDictionary.isTreeType() && this._dictSrv.isSearchEnabled()) {
+                //     if (this._dictSrv.isSearchFullDictionary()) {
+                //         this.title = 'Поиск во всем справочнике';
+                //     }
+                // }
+
+                // Может пригодится - вывод принадлежности ноды в режиме поиска
+                // if (this._dictSrv.currentDictionary.isTreeType() && this._dictSrv.isSearchEnabled()) {
+                //     if (!node) {
+                //         this.title = '';
+                //         this._titleId = null;
+                //         return;
+                //     }
+                //     if (this.dictionaryId === NOMENKL_DICT.id) {
+                //         if (this._titleId !== node.data.rec.DUE) {
+                //             this._titleId = node.data.rec.DUE;
+                //             const parentNode: CustomTreeNode = CustomTreeComponent.findTreeParent(this.customTreeData, node.data.rec.DUE);
+                //             if (parentNode) {
+                //                 this.title = parentNode.title;
+                //             }
+                //         }
+                //     } else if (node.dictionaryId === CABINET_DICT.id) {
+                //         this.title = node.data.department['CLASSIF_NAME'];
+                //     } else {
+                //         this.title = node.parent.title;
+                //     }
+                // }
+        });
 
         _bcSrv._eventFromBc$
             .pipe(
@@ -281,9 +340,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     }
 
     onSetActiveNode(n) {
-        if (n) {
-            this.title = n.title;
-        }
+        // this.treeNode = n;
+        // if (n) {
+        //     this.title = 'onSetActiveNode';
+        // }
     }
     ngAfterViewInit() {
         this._treeScrollTop = this._sandwichSrv.treeScrollTop;

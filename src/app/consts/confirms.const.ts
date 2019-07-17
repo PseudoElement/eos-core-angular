@@ -78,11 +78,37 @@ export const RK_SELECTED_LIST_IS_EMPTY: IConfirmWindow2 = {
     ],
 };
 
-export const RK_SELECTED_LIST_HAS_DELETED: IConfirmWindow2 = {
+export const RK_SELECTED_LIST_CONTAIN_DELETED: IConfirmWindow2 = {
     title: 'Внимание',
     body: 'В реквизите "{{REK}}" выбран список, в котором некоторые элементы логически удалены. Продолжить?',
     buttons: [
         {title: 'Да', result: 1, },
         {title: 'Нет', result: 2, },
     ],
+};
+
+export const RK_SELECTED_LIST_BEEN_DELETED: IConfirmWindow2 = {
+    title: 'Внимание',
+    body: 'В реквизите "{{REK}}" выбран список, который был удален. Значение очищено. Выберите корректное значение.',
+    buttons: [
+        {title: 'Отмена', result: 2, },
+    ],
+};
+
+export const RK_SELECTED_VALUE_LOGIC_DELETED: IConfirmWindow2 = {
+    title: 'Внимание',
+    body: 'В реквизите "{{REK}}" выбрано логически удаленное значение. Продолжить?',
+    buttons: [
+        {title: 'Да', result: 1, },
+        {title: 'Нет', result: 2, },
+    ],
+};
+
+export const CONFIRM_SAVE_INVALID: IConfirmWindow2 = {
+    title: 'Не удалось сохранить',
+    body: '{{errors}}',
+    buttons: [
+        {title: 'Ок', result: 1, isDefault: true}
+    ],
+    manualCR: true
 };

@@ -116,6 +116,66 @@ export const OpenRightsSystemCaseDelo: BtnActionFields = {
     isActive: false,
 };
 
+export const GeneralLists: BtnActionFields = {
+    name: 'GeneralLists',
+    title: 'Ведение общих списков стандартных текстов',
+    disabledClass: 'eos-icon eos-icon-H-Grey small',
+    enableClass: 'eos-icon eos-icon-H-Blue small',
+    tooltip: 'Ведение общих списков стандартных текстов',
+    disabled: false,
+    activeClass: 'eos-icon eos-icon-H-Blue small',
+    activeBtnClass: '',
+    isActive: false,
+};
+
+export const SumProtocol: BtnActionFields = {
+    name: 'OpenSumProtocol',
+    title: 'Сводный протокол',
+    disabledClass: 'eos-icon eos-icon-new-doc-blue small',
+    enableClass: 'eos-icon eos-icon-new-doc-blue small',
+    tooltip: 'Сводный протокол',
+    disabled: false,
+    activeClass: 'eos-icon eos-icon-new-doc-blue small',
+    activeBtnClass: '',
+    isActive: false,
+};
+
+export const UsersStats: BtnActionFields = {
+    name: 'OpenUsersStats',
+    title: 'Статистика по пользователям и опциям',
+    disabledClass: 'eos-icon eos-icon eos-icon-folder-group-blue small',
+    enableClass: 'eos-icon eos-icon eos-icon-folder-group-blue small',
+    tooltip: 'Статистика по пользователям и опциям',
+    disabled: false,
+    activeClass: 'eos-icon eos-icon eos-icon-folder-group-blue small',
+    activeBtnClass: '',
+    isActive: false,
+};
+
+// export const UsersInfo: BtnActionFields = {
+//     name: 'OpenUsersInfo',
+//     title: 'Данные по отмеченным пользователям',
+//     disabledClass: 'eos-icon eos-icon-department-blue small',
+//     enableClass: 'eos-icon eos-icon-department-blue small',
+//     tooltip: 'Данные по отмеченным пользователям',
+//     disabled: false,
+//     activeClass: 'eos-icon eos-icon-department-blue small',
+//     activeBtnClass: '',
+//     isActive: false,
+// };
+
+export const Protocol: BtnActionFields = {
+    name: 'OpenProtocol',
+    title: 'Протокол',
+    disabledClass: 'eos-icon eos-icon-new-doc-blue small',
+    enableClass: 'eos-icon eos-icon-new-doc-blue small',
+    tooltip: 'Протокол',
+    disabled: false,
+    activeClass: 'eos-icon eos-icon-new-doc-blue small',
+    activeBtnClass: '',
+    isActive: false,
+};
+
 // export const OpenMoreMenu: BtnActionFields = {
 //     name: 'OpenMoreMenu',
 //     title: 'Показать меню',
@@ -149,6 +209,11 @@ export const Allbuttons: BtnAction = {
         OpenAddressManagementWindow,
         OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
+        GeneralLists,
+      //  UsersInfo,
+        UsersStats,
+        Protocol,
+        SumProtocol
     ],
     moreButtonCheck: {
         check: false,

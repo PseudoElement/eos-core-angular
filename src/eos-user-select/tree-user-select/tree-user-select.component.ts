@@ -50,6 +50,7 @@ export class TreeUserSelectComponent implements OnInit {
     }
      setTab(key) {
         sessionStorage.setItem('key', key);
+        sessionStorage.setItem('titleDue', '');
         this.currMode = key;
         this._apiSrv.confiList$.next({
             shooseTab: this.currMode,

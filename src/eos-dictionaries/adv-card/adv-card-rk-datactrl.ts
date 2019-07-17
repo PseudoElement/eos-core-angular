@@ -405,20 +405,24 @@ export class AdvCardRKDataCtrl {
         this.keys(newData[FILE_CONSTRAINT_LIST_NAME]).forEach((key) => {
             const savedData = docGroup[FILE_CONSTRAINT_LIST_NAME].find (f => f.CATEGORY === key);
             let hasChanges = false;
-            for (const sk in RKFilesConstraintsFields) {
-                if (RKFilesConstraintsFields.hasOwnProperty(sk)) {
+            if (!savedData) {
+                hasChanges = true;
+            } else {
+                for (const sk in RKFilesConstraintsFields) {
+                    if (RKFilesConstraintsFields.hasOwnProperty(sk)) {
 
-                    const f = RKFilesConstraintsFields[sk];
-                    const spath = key + '.' + f;
-                    const field = fields[FILE_CONSTRAINT_LIST_NAME].find(i => i.key === spath);
-                    const type: E_FIELD_TYPE = field.type;
-                    const t1 = newData[FILE_CONSTRAINT_LIST_NAME];
-                    const t2 = t1[key];
-                    const savedValue = this.fixDBValueByType(savedData[f], type);
-                    const formValue = this.fixDBValueByType(t2[f], type);
-                    if (savedValue !== formValue) {
-                        hasChanges = true;
-                        break;
+                        const f = RKFilesConstraintsFields[sk];
+                        const spath = key + '.' + f;
+                        const field = fields[FILE_CONSTRAINT_LIST_NAME].find(i => i.key === spath);
+                        const type: E_FIELD_TYPE = field.type;
+                        const t1 = newData[FILE_CONSTRAINT_LIST_NAME];
+                        const t2 = t1[key];
+                        const savedValue = this.fixDBValueByType(savedData[f], type);
+                        const formValue = this.fixDBValueByType(t2[f], type);
+                        if (savedValue !== formValue) {
+                            hasChanges = true;
+                            break;
+                        }
                     }
                 }
             }

@@ -9,6 +9,8 @@ import { UserPaginationService } from 'eos-user-params/shared/services/users-pag
 import { UserSelectNode } from './user-node-select';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { CreateUserComponent } from './createUser/createUser.component';
+import { SearchServices } from '../shered/services/search.service';
+import { USERSRCH } from '../../eos-user-select/shered/consts/search-const';
 import { RtUserSelectService } from '../shered/services/rt-user-select.service';
 import { EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.service';
 import { HelpersSortFunctions } from '../shered/helpers/sort.helper';
@@ -25,6 +27,8 @@ import { EosStorageService } from '../../app/services/eos-storage.service';
 import { EosBreadcrumbsService } from '../../app/services/eos-breadcrumbs.service';
 import { AppContext } from '../../eos-rest/services/appContext.service';
 import { ErrorHelperServices } from '../../eos-user-params/shared/services/helper-error.services';
+import { WaitClassifService } from 'app/services/waitClassif.service';
+import { IOpenClassifParams } from 'eos-common/interfaces';
 interface TypeBread {
     action: number;
 }
@@ -52,6 +56,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     // количество выбранных пользователей
     countcheckedField: number;
     titleDue: string;
+    shadow: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public rtUserService: RtUserSelectService,
@@ -69,10 +74,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         private _breadSrv: EosBreadcrumbsService,
         private _appContext: AppContext,
         private _errorSrv: ErrorHelperServices,
+        private _waitCl: WaitClassifService,
+        private srhSrv: SearchServices,
     ) {
 
     }
     ngOnInit() {
+        this._pagSrv.getSumIteq = false;
         this.buttons = Allbuttons;
         this.rtUserService.flagDeleteScroll = true;
         this.rtUserService.flagDeleteSelectedUser = true;
@@ -345,9 +353,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         this.createUserModal = this._modalSrv.show(CreateUserComponent, {
             class: 'param-create-user',
             ignoreBackdropClick: true,
+            animated: false,
+            show: false,
         });
         this.createUserModal.content.closedModal.subscribe(() => {
-            this.createUserModal.hide();
+            setTimeout(() => {
+                this.createUserModal.hide();
+            });
         });
     }
 
@@ -432,6 +444,52 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             }
         );
     }
+
+    GeneralLists() {
+        const param: IOpenClassifParams = {
+            classif: 'StdText',
+            id_std: '463_DOC_RC_ANNOTAT',
+            isn_user: -99,
+            form: 'DOC_RC.aspx',
+            name: 'ANNOTAT463'
+        };
+        this.shadow = true;
+        this._waitCl.openClassif(param).then(data => {
+            this.shadow = false;
+        }).catch(error => {
+            this.shadow = false;
+        });
+    }
+
+    OpenSumProtocol() {
+        setTimeout(() => {
+            this._router.navigate(['user_param/sum-protocol']);
+        }, 0);
+    }
+
+    OpenUsersStats() {
+        setTimeout(() => {
+            this._router.navigate(['user_param/users-stats']);
+        }, 0);
+
+    }
+
+    // OpenUsersInfo() {
+    //     this._router.navigate(['user-params-set/', 'users-info'],
+    //         {
+    //             queryParams: { isn_cl: this.selectedUser.id }
+    //         }
+    //     );
+    // }
+
+    OpenProtocol() {
+        this._router.navigate(['user-params-set/', 'protocol'],
+            {
+                queryParams: { isn_cl: this.selectedUser.id }
+            }
+        );
+    }
+
     setCheckedAllFlag() {
         const leng = this.filterForFlagChecked().length;
         if (leng === 0) {
@@ -524,7 +582,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             if (this.countcheckedField > 0 && this.countcheckedField < leng) {
                 this.flagChecked = false;
             }
-            if (this.countcheckedField === 1 ) {
+            if (this.countcheckedField === 1) {
                 this.rtUserService.btnDisabled = true;
             } else {
                 this.rtUserService.btnDisabled = false;
@@ -651,6 +709,20 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         } else {
             return `tooltip-info`;
         }
+    }
+    fastSetConfSearch(newObj, evn: string): USERSRCH {
+        newObj['LOGIN'] = evn.replace(/\s/g, '_').trim();
+        newObj['DEL_USER'] = false;
+        return newObj;
+    }
+    quickSearchKey(evn) {
+            const newObj: USERSRCH = {};
+            this.fastSetConfSearch(newObj, evn);
+            if (event) {
+                this.srhSrv.getUsersToGo(newObj).then((users: USER_CL[]) => {
+                    this.searchUsers(users);
+                });
+            }
     }
 
     private cathError(e) {

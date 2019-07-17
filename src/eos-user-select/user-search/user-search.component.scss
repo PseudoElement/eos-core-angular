@@ -1,3 +1,7 @@
+.btn.search-btn{
+    height: 48px;
+    width: 48px;
+}
 .search-container {
     display: flex;
     margin-right: 16px;
@@ -12,9 +16,6 @@
         align-items: center;
         border: 1px solid #e6e6e6;
         background-color: #fafafa;
-    }
-    .title{
-        /* padding-left: 20px; */
     }
     .btn-search{
         button {
@@ -40,4 +41,62 @@
         padding-top: 15px;
         height: 50px;
     }
+
+}
+.user-srch{
+    position: absolute;
+    top: 51px;
+    left: 0;
+    height: 48px;
+    width: 100%;
+    border-left: 1px #e6e6e6 solid;
+    border-right: 1px #e6e6e6 solid;
+    border-top: 1px solid #e6e6e6;
+    .item {
+        height: 48px;
+        width: 100%;
+        .form-control {
+            color: #000000;
+            padding: 8px 54px 8px 8px;
+            border: 1px #2196f3 solid;
+            height: 48px;
+        }
+        .clear-btn {
+            position: absolute;
+            top: 1px;
+            right: 12px;
+            height: 43px;
+            width: 48px;
+            border: 0;
+            background-color: transparent;
+            padding: 6px 8px;
+            margin-right: -8px;
+            z-index: 1;
+        }
+        .clear-btn{
+            margin-right: 0px;
+        }
+    }
+    .tringle {
+        position: absolute;
+        background: #2196f3;
+        transform: rotate(45deg);
+        width: 15px;
+        height: 15px;
+        top: -6px;
+        right: 30px;;
+    }
+    .tringle-fon {
+        background: #fafafa;
+        position: absolute;
+        transform: rotate(45deg);
+        width: 15px;
+        height: 15px;
+        top: -5px;
+        right: 30px;
+        right: 30px;
+    }
+}
+.user-srch-heigth {
+    height: 100px;
 }

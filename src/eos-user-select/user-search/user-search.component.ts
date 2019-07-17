@@ -16,8 +16,12 @@ import { USER_CL } from 'eos-rest';
 
 export class UserSearchComponent implements OnInit {
     @Output() search = new EventEmitter<any>();
-    @ViewChild('full') bs_fail: any;
+    @Output() quickSearchKey = new EventEmitter<any>();
+    @ViewChild('full') fSearchPop;
+    @Input() quickSearchOpen;
     @Input() flagDeep;
+    public srchString: string;
+    public fastSearch: boolean = false;
     private prapareData: any;
     private prepareInputs: any;
     private inputs: any;
@@ -30,14 +34,20 @@ export class UserSearchComponent implements OnInit {
     ) {
 
     }
-    //  isActiveButton() {
-
-    // }
+    isActiveButton(): boolean {
+        return (this.fSearchPop.isOpen);
+    }
+    isActiveButtonQuick() {
+        return (this.fastSearch);
+    }
+    closeFastSrch() {
+        this.fastSearch = false;
+    }
 
     get disableBtn() {
         if (this.form) {
             return this.form.status === 'VALID' && (this.form.value['rec.LOGIN'].length > 0 || this.form.value['rec.DEPARTMENT'].length > 0 ||
-            this.form.value['rec.fullDueName'].length > 0 || this.form.value['rec.CARD'].length > 0 || this.form.value['rec.SURNAME'].length > 0);
+                this.form.value['rec.fullDueName'].length > 0 || this.form.value['rec.CARD'].length > 0 || this.form.value['rec.SURNAME'].length > 0);
         }
     }
     get showSurnameField() {
@@ -67,7 +77,7 @@ export class UserSearchComponent implements OnInit {
                 this.withOutCard(newObj);
             }
         }
-        this.bs_fail.isOpen = false;
+        this.fSearchPop.isOpen = false;
         //   this.search.emit(null);
     }
     setConfSearch(newObj) {
@@ -128,6 +138,27 @@ export class UserSearchComponent implements OnInit {
             });
         }
     }
+    openFastSrch() {
+        this.fastSearch = !this.fastSearch;
+    }
+    clickKey($event) {
+        if ($event.keyCode === 27) {
+            this.clearQuickForm();
+        }
+        if ($event.keyCode === 13) {
+            if (this.srchString) {
+                const strSearch = this.srchString.replace(/[&\/\\#,!+()$~%.'":*?<>{}]/g, '').trim();
+                if (strSearch) {
+                    this.quickSearchKey.emit(strSearch);
+                }
+            }
+        }
+    }
+    clearQuickForm() {
+        this.fastSearch = false;
+        this.srchString = '';
+    }
+
     resetForm() {
         this.form.controls['rec.DEPARTMENT'].patchValue('');
         this.form.controls['rec.CARD'].patchValue('');

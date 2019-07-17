@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 export class UserParamsService {
     userTechList: any[] = [];
     userRightDocgroupList: any[] = [];
+    userEditOrgType: any[] = [];
     public SubEmail: Subject<any> = new Subject();
     public submitSave;
     private _saveFromAsk$: Subject<void> = new Subject<void>();
@@ -80,8 +81,8 @@ export class UserParamsService {
         }
         if (!isn) {
             this._router.navigate(['user_param']);
+            return Promise.reject(false);
         }
-
         const queryUser = {
             [`USER_CL(${isn})`]: ALL_ROWS,
             expand: expand
@@ -93,6 +94,7 @@ export class UserParamsService {
             this._userContext = user[0];
             this.userTechList = [];
             this.userRightDocgroupList = [];
+            this.userEditOrgType = [];
             this._userContext['DUE_DEP_NAME'] = '';
             this._isTechUser = !this._userContext['DUE_DEP'];
             this._userContext['isTechUser'] = !this._userContext['DUE_DEP'];
@@ -104,6 +106,9 @@ export class UserParamsService {
             }
             if (this._userContext.USER_RIGHT_DOCGROUP_List) {
                 this._userContext.USER_RIGHT_DOCGROUP_List.forEach(item => this.userRightDocgroupList.push(Object.assign({}, item)));
+            }
+            if (this._userContext.USER_EDIT_ORG_TYPE_List) {
+                this._userContext.USER_EDIT_ORG_TYPE_List.forEach(item => this.userEditOrgType.push(Object.assign({}, item)));
             }
             if (this._userContext.USERCARD_List) {
                 this._userContext['isAccessDelo'] = !!this._userContext.USERCARD_List.length;

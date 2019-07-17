@@ -4,8 +4,8 @@ import { TooltipModule, ModalModule, AccordionModule, BsDropdownModule, PopoverM
 import { AppRoutingModule } from 'app/app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EosCommonModule } from 'eos-common/eos-common.module';
-import { UserSelectPaginationComponent } from './pagination-user-select/pagination-user-select.component';
 import { EosParametersModule } from 'eos-parameters/eos-parameters.module';
+import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
 
 /*     ----Components----     */
 import { UserSelectComponent } from './eos-user-select.component';
@@ -24,7 +24,6 @@ import {SearchServices} from '../eos-user-select/shered/services/search.service'
     declarations: [
         UserSelectComponent,
         TreeUserSelectComponent,
-        UserSelectPaginationComponent,
         ListUserSelectComponent,
         CreateUserComponent,
         RightUserSelectComponent,
@@ -52,6 +51,7 @@ import {SearchServices} from '../eos-user-select/shered/services/search.service'
         TreeUserSelectService,
         RtUserSelectService,
         SearchServices,
+        UserPaginationService
     ],
 })
 export class EosUserSelectModule {}

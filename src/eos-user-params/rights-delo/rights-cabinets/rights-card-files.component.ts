@@ -44,28 +44,30 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         private _pipSrv: PipRX,
         private _errorSrv: ErrorHelperServices,
     ) {}
-    async ngOnInit() {
-        await this._userSrv.getUserIsn({
+    ngOnInit() {
+        this._userSrv.getUserIsn({
             expand: 'USERCARD_List'
+        })
+        .then(() => {
+            this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Картотеки и Кабинеты';
+            this.flagChangeCards = true;
+            this.userId = this._userSrv.userContextId;
+
+            this._userSrv.saveData$
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
+            .subscribe(() => {
+                this._userSrv.submitSave = this.submit(event);
+            });
+            this._userSrv.checkGrifs(this.userId).then(elem => {
+
+                this.flagGrifs = elem;
+                this.init();
+            });
+        })
+        .catch(err => {
         });
-        this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Картотеки и Кабинеты';
-        this.flagChangeCards = true;
-
-
-
-        this.userId = this._userSrv.userContextId;
-
-        this._userSrv.saveData$
-        .pipe(
-            takeUntil(this._ngUnsubscribe)
-        )
-        .subscribe(() => {
-            this._userSrv.submitSave = this.submit(event);
-        });
-
-
-        this.flagGrifs = await this._userSrv.checkGrifs(this.userId);
-        this.init();
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
@@ -171,9 +173,9 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     }
 
     selectCurentCard(card: CardsClass) {
-        if (this.currentCard && !this.flagEdit) {
+       /* if (this.currentCard && !this.flagEdit) {
             return;
-        }
+        }*/
         if (this.currentCard) {
             this.currentCard.current = false;
         }

@@ -25,6 +25,7 @@ import {EosDictionaryNode} from 'eos-dictionaries/core/eos-dictionary-node';
 import {DictionaryComponent} from 'eos-dictionaries/dictionary/dictionary.component';
 
 export abstract class AbstractDictionaryDescriptor {
+
     /**
      * decription of dictionary fields
      */
@@ -85,6 +86,10 @@ export abstract class AbstractDictionaryDescriptor {
     abstract getSubtree(...params): Promise<any[]>;
 
     abstract onPreparePrintInfo(dec: FieldsDecline): Promise<any[]>;
+
+    getParentFor(arg0: any): any {
+        return null;
+    }
 
     public PKForEntity(v: string): string {
         const et = this.metadata;

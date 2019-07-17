@@ -54,7 +54,6 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AuthorizedGuard, UnauthorizedGuard } from './guards/eos-auth.guard';
 import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { PermissionsGuard } from './guards/permissions.guard';
-import { EosReportModule } from 'eos-report/eos-report.module';
 /* end guards */
 
 
@@ -92,7 +91,6 @@ import { EosReportModule } from 'eos-report/eos-report.module';
         EosParametersModule,
         EosUserParamsModule,
         EosUserSelectModule,
-        EosReportModule
     ],
     entryComponents: [
         LoginFormComponent,

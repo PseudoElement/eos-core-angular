@@ -23,7 +23,6 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
 
     photo: any;
 
-    private currentNodeId: string;
     private bossWarning: boolean;
 
     constructor(
@@ -31,11 +30,10 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         private _msgSrv: EosMessageService
     ) {
         super(injector);
-        this.currentNodeId = this.nodeId;
     }
 
     ngOnChanges() {
-        if (this.currentNodeId !== this.nodeId) { // todo: re-factor condition
+        if (this.isNewRecord) {
             this.currTab = 0;
         }
         if (this.data.photo && this.data.photo.url) {
@@ -45,10 +43,14 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         }
 
         this.prevValues = this.makePrevValues(this.data);
+        this.tabsToArray(this.fieldGroups);
 
         if (this.form) {
             this.unsubscribe();
-            this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => this.updateForm(formChanges));
+            this.formChanges$ = this.form.valueChanges.subscribe((formChanges) => {
+                this.updateForm(formChanges);
+                this.updateValidTabs();
+            });
         }
     }
 

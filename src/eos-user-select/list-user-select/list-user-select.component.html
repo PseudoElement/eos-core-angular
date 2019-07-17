@@ -18,8 +18,9 @@
         <div class="table-header search-wr">
             <!-- header action -->
             <eos-btn-action [buttons]='buttons' (showAction)='showAction($event)'></eos-btn-action>
-            <eos-user-search (search)="searchUsers($event)" [flagDeep]="shooseP"></eos-user-search>
+            <eos-user-search  (quickSearchKey)="quickSearchKey($event)" (search)="searchUsers($event)"  [flagDeep]="shooseP"></eos-user-search>
         </div>
+        <!--Быстрый поиск-->
         <div class="table-header">
             <!-- header -->
             <!-- [ngClass]="flagChecked ? eos-icon-checkbox-square-blue : eos-icon-checkbox-square-minus-blue" -->
@@ -29,8 +30,8 @@
                     <input  [checked]="flagChecked"  type="checkbox" (change)="setCheckedAllFlag()">
                     <div>
                         <span class="eos-icon small"
-                            [ngClass]="getflagChecked" 
-                            [tooltip]="checkAll" 
+                            [ngClass]="getflagChecked"
+                            [tooltip]="checkAll"
                             containerClass="tooltip-info"
                             placement="bottom"
                         ></span>
@@ -99,3 +100,5 @@
         <eos-spinner size="lg"></eos-spinner>
     </div>
 </ng-template>
+
+<div class="shadow-wr" *ngIf="shadow"></div>

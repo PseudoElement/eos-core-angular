@@ -34,6 +34,8 @@ import { CardEditComponent } from 'eos-dictionaries/card-views/card-edit.compone
 import { EosDepartmentsService } from '../services/eos-department-service';
 import {EosUtils} from '../../eos-common/core/utils';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
+import { CONFIRM_SAVE_INVALID } from 'app/consts/confirms.const';
 // import { UUID } from 'angular2-uuid';
 
 export enum EDIT_CARD_MODES {
@@ -198,7 +200,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     }
 
     getCardTitle() {
-        const cardtitle = (this.cardEditRef ? this.cardEditRef.getCardTitle() : null);
+        const cardtitle = (this.cardEditRef ? this.cardEditRef.getCardTitle() : '');
         if (cardtitle) {
             return cardtitle;
         } else {
@@ -236,6 +238,10 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     }
 
     save(): void {
+        if (this.isSaveDisabled()) {
+            this._windowInvalidSave();
+            return;
+        }
         const _data = this.cardEditRef.getNewData();
         this._confirmSave(_data)
             .then((res: boolean) => {
@@ -531,5 +537,39 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         });
         return null;
     }
+    private _windowInvalidSave(): Promise<boolean> {
+        if (this.isChanged) {
+            const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_INVALID);
+            confirmParams.body = confirmParams.body.replace('{{errors}}', this._getValidateMessages().join('\n'));
+            return this._confirmSrv.confirm2(confirmParams, )
+                .then((doSave) => {
+                    return true;
+                })
+                .catch(() => {
+                    return false;
+                });
+        } else {
+            return Promise.resolve(true);
+        }
+    }
 
+    private _getValidateMessages(): string[] {
+        const invalid = [];
+        const inputs = this.cardEditRef.inputs;
+        for (const inputKey of Object.keys(this.cardEditRef.inputs)) {
+            const input = inputs[inputKey];
+            const inputDib = input.dib;
+            if (!inputDib) {
+                continue;
+            }
+            const control = inputDib.control;
+            if (control.invalid) {
+                const title = input.label;
+                control.updateValueAndValidity();
+                const validateMessage = EosUtils.getControlErrorMessage(control, { maxLength: input.length });
+                invalid.push(' - ' + title + ' (' + validateMessage + ')');
+            }
+        }
+        return invalid;
+    }
 }

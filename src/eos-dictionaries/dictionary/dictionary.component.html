@@ -42,7 +42,7 @@
                 <ng-container *ngIf="this.isTitleSliced; then slicedTitle else nonSlicedTitle"></ng-container>
                 <ng-template #slicedTitle>
                     <div class="selected-node-title"
-                    [tooltip]='this.title'
+                    [tooltip]="this.title"
                     [delay]="tooltipDelay"
                     placement="bottom"
                     container="body"
