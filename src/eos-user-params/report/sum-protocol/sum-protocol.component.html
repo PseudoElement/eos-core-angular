@@ -6,7 +6,7 @@
             Протоколирование работы со справочником 'Пользователи'</label>
     </div>
     <div class="sum-report-wrapper">
-        <div class="table-wrapper usual-border">
+        <div class="table-wrapper-head usual-border">
             <div class="sum-report-list">
                 <div class="table-header">
                     <div class="table-sum-wraper">
@@ -48,10 +48,11 @@
                 <div class="table-header">
                     <div class="table-title contain-span-header">
                         <div class="check-sum mar-check">
-                            <label class="checkbox">
-                                <input [checked]="flagChecked" type="checkbox" (change)="toggleAllMarks($event)">
+                            <label class="checkbox" >
+                                <input #checkAllMarkes [checked]="flagChecked" type="checkbox" (change)="toggleAllMarks($event)">
                                 <div>
-                                    <span class="eos-icon small" [ngClass]="getflagChecked"></span>
+                                    <span class="eos-icon small" [ngClass]="getflagChecked" [tooltip]="checkAllMarkes.checked ? 'Снять пометки' : 'Пометить все'"
+                                     placement="bottom" containerClass="tooltip-info fix-pos-check" ></span>
                                 </div>
                             </label>
                         </div>
