@@ -1,4 +1,4 @@
-import { Component, Injector, ViewChild } from '@angular/core';
+import { Component, Injector, ViewChild, Input } from '@angular/core';
 import { FormGroup, FormControl, AbstractControl, /* ValidatorFn */ } from '@angular/forms';
 import { ModalDirective } from 'ngx-bootstrap';
 import { debounceTime } from 'rxjs/operators';
@@ -16,6 +16,7 @@ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 })
 export class ParamFielsComponent extends BaseParamComponent {
     @ViewChild('infoAttachFilesModal') infoAttachFilesModal: ModalDirective;
+    @Input() btnError;
     formAttachChoice: FormGroup;
     _currentFormAttachStatus;
     dataAttachDb;

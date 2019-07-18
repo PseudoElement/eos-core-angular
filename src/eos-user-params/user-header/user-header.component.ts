@@ -13,6 +13,7 @@ export class UserHeaderComponent {
     @Input() title: string;
     @Input() disableBtn: boolean;
     @Input() defaultBtn?: boolean = false;
+    @Input() errorSave: boolean = false;
     @Output() defaultEmit = new EventEmitter<any>();
     @Output() submitEmit = new EventEmitter<any>();
     @Output() cancelEmit = new EventEmitter<boolean>();
@@ -33,7 +34,11 @@ export class UserHeaderComponent {
         this.cancelEmit.emit(false);
     }
     submit() {
-        this.submitEmit.emit(false);
+        if (this.disableBtn) {
+            this.cancel();
+        } else {
+            this.submitEmit.emit(false);
+        }
     }
     edit() {
         this.editMode = !this.editMode;

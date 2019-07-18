@@ -328,12 +328,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     cancel() {
         //  this.isLoading = true;
         this.editMode = !this.editMode;
-        this.editModeF();
         this.cancelValues(this.inputs, this.form);
         this.cancelValues(this.controls, this.formControls);
         this.cancelValues(this.accessInputs, this.formAccess);
         this.clearMap();
         this._pushState();
+        this.editModeF();
     }
     cancelValues(inputs, form: FormGroup) {
         Object.keys(inputs).forEach((key, val, arr) => {
