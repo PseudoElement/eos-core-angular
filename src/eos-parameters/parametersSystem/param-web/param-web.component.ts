@@ -1,4 +1,4 @@
-import { Component, Injector, ViewChild } from '@angular/core';
+import { Component, Injector, ViewChild, Input } from '@angular/core';
 import { WEB_PARAM } from '../shared/consts/web.consts';
 import { BaseParamComponent } from '../shared/base-param.component';
 import { PARM_CANCEL_CHANGE } from '../shared/consts/eos-parameters.const';
@@ -13,6 +13,7 @@ import { CertStoresService } from './cert-stores.service';
 })
 export class ParamWebComponent extends BaseParamComponent {
     @ViewChild('certStores') certStores: CertStoresComponent;
+    @Input() btnError;
     constructor(
         injector: Injector,
         private certStoresService: CertStoresService

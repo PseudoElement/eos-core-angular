@@ -1,4 +1,4 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { BaseParamComponent } from '../shared/base-param.component';
 import { RC_PARAM } from '../shared/consts/rc.consts';
 import {
@@ -16,6 +16,7 @@ import { ValidatorsControl } from 'eos-dictionaries/validators/validators-contro
     templateUrl: 'param-rc.component.html'
 })
 export class ParamRcComponent extends BaseParamComponent {
+    @Input() btnError;
     constructor(injector: Injector) {
         super(injector, RC_PARAM);
         this.init()

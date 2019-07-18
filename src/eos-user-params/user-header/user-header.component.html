@@ -7,7 +7,7 @@
             <div>
                 <button *ngIf='defaultBtn' class="btn btn-primary" (click)="default()">ПО УМОЛЧАНИЮ</button>
                 <button class="btn btn-primary" (click)="cancel()">ОТМЕНИТЬ</button>
-                <button class="btn btn-primary-full" [disabled]="disableBtn" (click)="submit()">СОХРАНИТЬ</button>
+                <button class="btn btn-primary-full" [disabled]="errorSave"  (click)="submit()">СОХРАНИТЬ</button><!---->
             </div>
         </div>
         <div class="action-wrapper" *ngIf="!editMode">

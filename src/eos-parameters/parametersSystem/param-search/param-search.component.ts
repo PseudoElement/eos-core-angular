@@ -1,4 +1,4 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { debounceTime } from 'rxjs/operators';
 
 import { PARM_CANCEL_CHANGE } from './../shared/consts/eos-parameters.const';
@@ -10,6 +10,7 @@ import { BaseParamComponent } from './../shared/base-param.component';
     templateUrl: 'param-search.component.html'
 })
 export class ParamSearchComponent extends BaseParamComponent {
+    @Input() btnError;
     constructor(injector: Injector) {
         super(injector, SEARCH_PARAM);
         this.init()

@@ -3,7 +3,7 @@ import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from './../shared/consts/eos-pa
 import { FormGroup, FormControl } from '@angular/forms';
 import { CONTEXT_RC_PARAM } from './../shared/consts/context-rc-consts';
 import { BaseParamComponent } from './../shared/base-param.component';
-import { Component, Injector, OnInit, OnDestroy } from '@angular/core';
+import { Component, Injector, OnInit, OnDestroy, Input } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil, debounceTime } from 'rxjs/operators';
 
@@ -12,6 +12,7 @@ import { takeUntil, debounceTime } from 'rxjs/operators';
     templateUrl: 'param-context-rc.component.html'
 })
 export class ParamContextRcComponent extends BaseParamComponent implements OnInit, OnDestroy {
+    @Input() btnError;
     formContextChoice: FormGroup;
     formReadonli: boolean;
     hiddenFilesContext = false;
