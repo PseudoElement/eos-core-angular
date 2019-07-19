@@ -34,6 +34,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     initLogin: string;
     title: string;
     tehnicUser: boolean = false;
+    isn_prot: any;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public _apiSrv: UserParamApiSrv,
@@ -110,10 +111,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                     this._router.navigate(['user-params-set'], {
                         queryParams: { isn_cl: data[0] }
                     });
-                    setTimeout(() => {
-                        this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 3);
-                    }, 1000);
-
+                    this.isn_prot = data[0];
+                    this._userParamSrv.ProtocolService(this.isn_prot, 3);
                 })
                 .catch(e => {
                     const m: IMessage = {
