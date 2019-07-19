@@ -146,6 +146,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                 })
                     .then((flag: boolean) => {
                         if (flag) {
+                            this._userServices.ProtocolService(this._userServices.curentUser.ISN_LCLASSIF, 4);
                             this.umailsInfo.splice(0, this.umailsInfo.length);
                             this.saveParams = this._userServices.curentUser['NTFY_USER_EMAIL_List'].slice();
                             this.saveParams = this._emailService.Decode(this.saveParams, this.CODE).slice();
