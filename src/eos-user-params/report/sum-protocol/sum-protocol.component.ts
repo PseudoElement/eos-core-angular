@@ -44,6 +44,10 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
   status: string;
   SortUp: string;
   checkOverflow: boolean;
+  dateCrit: string;
+  eventUser: string;
+  isnUser: string;
+  isnWho: string;
   arrSort = [
     { date: true },
     { event: false },
@@ -65,6 +69,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
           if (this._user_pagination.totalPages !== undefined && this.resetPage === false) {
             if (this.config.current > this.config.start) {
               this.PaginateData(this.config.length * 2, this.orderByStr);
+            } else if (this.config.current && this.initPage === true && this.clearResult === true) {
+              this.GetSortData();
             } else if (this.config.current && this.initPage === true) {
               this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
             }
@@ -91,6 +97,36 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
         this.logUsers = true;
       }
     });
+  }
+
+  GetSortData() {
+    this._pipeSrv.read({
+      USER_AUDIT:
+        PipRX.criteries({
+          EVENT_KIND: this.eventUser,
+          EVENT_DATE: this.dateCrit,
+          ISN_USER: this.isnUser,
+          ISN_WHO: this.isnWho,
+        }),
+      orderby: this.orderByStr,
+      top: this.config.length,
+      skip: this.config.length * this.config.current - this.config.length,
+      inlinecount: 'allpages'
+    }).then((data: any) => {
+      this.usersAudit = data;
+      if (this.usersAudit.length === 0) {
+        this._msgSrv.addNewMessage({
+          title: 'Ничего не найдено',
+          msg: 'попробуйте изменить поисковую фразу',
+          type: 'warning'
+        });
+      } else {
+        this.ParseDate(this.usersAudit);
+      }
+    })
+      .catch((error) => {
+        this._errorSrv.errorHandler(error);
+      });
   }
 
   PaginateData(length, orderStr, skip?) {
@@ -189,7 +225,11 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
       // });
     } else if (critSearch === 'EVENT_DATE') {
       this.orderByStr = `${critSearch} ${this.SortUp}`;
-      this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+      if (this.clearResult === true) {
+        this.GetSortData();
+      } else {
+        this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+      }
     }
   }
 
@@ -416,6 +456,10 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
     } else {
       dateSearch = undefined;
     }
+    this.dateCrit = dateSearch;
+    this.eventUser = eventUser;
+    this.isnUser = isnUser;
+    this.isnWho = isnWho;
     this._pipeSrv.read({
       USER_AUDIT:
         PipRX.criteries({
@@ -423,12 +467,11 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
           EVENT_DATE: dateSearch,
           ISN_USER: isnUser,
           ISN_WHO: isnWho,
+          orderby: this.orderByStr,
         }),
       top: this.config.length,
       skip: 0,
-      orderby: this.orderByStr,
       inlinecount: 'allpages'
-
     })
       .then((data: any) => {
         this.usersAudit = data;
@@ -533,6 +576,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
   resetSearch() {
     this.resetPage = true;
     this._user_pagination.totalPages = undefined;
+    this._user_pagination.paginationConfig.start = 1;
+    this._user_pagination.paginationConfig.current = 1;
     this.PaginateData(this.config.length, this.orderByStr, 0);
     this.clearResult = false;
   }
