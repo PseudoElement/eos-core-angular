@@ -3,7 +3,6 @@ import {
     ViewChild,
     OnDestroy,
     OnInit,
-    Inject,
     AfterContentInit,
     AfterContentChecked,
     NgZone,
@@ -22,7 +21,6 @@ import {LongTitleHintComponent} from '../long-title-hint/long-title-hint.compone
 import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
 import {ColumnSettingsComponent} from '../column-settings/column-settings.component';
 import {EosUtils} from 'eos-common/core/utils';
-import {DOCUMENT} from '@angular/common';
 import {PrjDefaultValuesComponent} from '../prj-default-values/prj-default-values.component';
 import { takeUntil } from 'rxjs/operators';
 import {CopyPropertiesComponent} from '../copy-properties/copy-properties.component';
@@ -56,28 +54,36 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     tooltipDelay = TOOLTIP_DELAY_VALUE;
 
     public hasOverflowedColumns: boolean;
+    public firstColumnIndex: number;
     private ngUnsubscribe: Subject<any> = new Subject();
     private nodeListElement: Element;
     private _recalcW: number;
     private _holder;
     private _recalcEvent: any;
+    private _dictId: string;
+    private _repaintFlag: any;
 
 
     constructor(
-        @Inject(DOCUMENT) document,
+        // @Inject(DOCUMENT) document,
         private _dictSrv: EosDictService,
         private _modalSrv: BsModalService,
         private _cdr: ChangeDetectorRef,
         private _zone: NgZone,
         private _eiCl: ExportImportClService,
     ) {
-
+        this.firstColumnIndex = 0;
         _dictSrv.visibleList$
         .pipe(
             takeUntil(this.ngUnsubscribe)
         )
             .subscribe((nodes: EosDictionaryNode[]) => {
                 if (_dictSrv.currentDictionary) {
+                    this._repaintFlag = true;
+                    if (_dictSrv.currentDictionary.id !== this._dictId) {
+                        this.firstColumnIndex = 0;
+                    }
+                    this._dictId = _dictSrv.currentDictionary.id;
 
                     this.customFields = this._dictSrv.customFields;
                     this.updateViewFields(this.customFields);
@@ -93,8 +99,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 this.nodes = nodes;
                 setTimeout(() => {
                     this._countColumnWidth();
+                    this._repaintFlag = false;
                 }, 10);
-                // this.updateMarks();
             });
 
         _dictSrv.viewParameters$
@@ -464,32 +470,34 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     isOverflowed() {
-        return (this.params.firstUnfixedIndex !== 0) || this.hasOverflowedColumns;
+        return (this.firstColumnIndex !== 0) || this.hasOverflowedColumns;
     }
 
     onRightClick() {
-        if (this.customFields.length > this.params.firstUnfixedIndex + 1) {
-            this._dictSrv.incFirstUnfixedIndex();
+        if (this.customFields.length > this.firstColumnIndex + 1) {
+            this.firstColumnIndex ++;
             this._countColumnWidth();
         }
     }
 
     getSlicedCustomFields() {
-        return this.customFields.slice(this.params.firstUnfixedIndex);
+        return this.customFields.slice(this.firstColumnIndex);
     }
 
     onLeftClick() {
-        this._dictSrv.decFirstUnfixedIndex();
-        this._countColumnWidth();
-    }
-
-    isShifted() {
-        return (this.params.firstUnfixedIndex !== 0);
+        if (this.firstColumnIndex > 0 ) {
+            this.firstColumnIndex--;
+            this._countColumnWidth();
+        }
     }
 
     @HostListener('window:resize')
     onResize() {
         this._countColumnWidth();
+    }
+
+    get recalcDone() {
+        return /*!this._recalcEvent && */!this._repaintFlag;
     }
     private _countColumnWidth() {
         if (!this._recalcEvent) {

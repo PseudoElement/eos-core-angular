@@ -30,14 +30,14 @@
                               class="icon eos-icon small"
                               [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span></div>
 
-                <div *ngIf="isShifted()" class="arrow-left selected-text" (click)="onLeftClick()">
+                <div *ngIf="firstColumnIndex > 0" class="arrow-left selected-text" (click)="onLeftClick()">
                     <div class="arrow-left-fix">
                     <i class="fa fa-angle-left "></i>
                     </div>
                 </div>
                 <div *ngFor="let field of getSlicedCustomFields();let first=first;"
                      class="item l-font"
-                     [class.left-shadowed]="first&&(isShifted())"
+                     [class.left-shadowed]="first && (firstColumnIndex > 0)"
                      [attr.id]="'vf_'+field.key"
                     [ngStyle]="{'min-width.px': min_length[field.key]}">
                     <span class="text selected-text"
@@ -56,14 +56,14 @@
         (scroll)="onListScroll($event)">
         <div class="block list"
              [ngStyle]="{'width.%': 100}">
-            <p *ngIf="params.updatingList"
+            <p *ngIf="params.updatingList || !recalcDone"
                class="spinner-container text-center">
                 <eos-spinner size="lg"></eos-spinner>
             </p>
             <p *ngIf="!nodes?.length && !params.updatingList"
                class="text-center text-info node-list-info">Нет записей.</p>
             <!--Sortable list-->
-            <ng-container *ngIf="params.userOrdered && nodes?.length && !params.searchResults && !params.updatingList ">
+            <ng-container *ngIf="params.userOrdered && nodes?.length && !params.searchResults && !params.updatingList && recalcDone">
                 <bs-sortable [(ngModel)]="nodes"
                              [itemTemplate]="childTemplate"
                              itemClass="{'highlighted': node.isSelected}"
@@ -75,13 +75,14 @@
                 </bs-sortable>
             </ng-container>
             <!--Simple list-->
-            <ng-container *ngIf="!params.userOrdered && nodes?.length && !params.updatingList || params.searchResults && !params.updatingList">
+            <ng-container *ngIf="!params.userOrdered && nodes?.length && !params.updatingList && recalcDone || params.searchResults && !params.updatingList && recalcDone">
                 <eos-node-list-item *ngFor="let item of nodes"
                                     [ngStyle]="{'width.%': 100}"
                                     [length]="length"
                                     [node]="item"
                                     [params]="params"
                                     [customFields]="customFields"
+                                    [firstColumnIndex]="firstColumnIndex"
                                     (clickSelect)="onClickSelect(item)"
                                     (clickMark)="onClickMark(item,$event)"
                                     >
@@ -101,6 +102,7 @@
                         [length]="length"
                         [params]="params"
                         [customFields]="customFields"
+                        [firstColumnIndex]="firstColumnIndex"
                         (clickSelect)="onClickSelect(item.value,$event)"
                         (clickMark)="onClickMark(item.value,$event)"
                         ></eos-node-list-item>

@@ -994,7 +994,6 @@ export class EosDictService {
                 this._dictionaries[mode] = this._dictionaries[0].getDictionaryIdByMode(mode);
             }
             this._dictMode$.next(this._dictMode);
-            this.updateViewParameters({firstUnfixedIndex: 0});
             this._reloadList();
         }
         return access;
@@ -1085,18 +1084,6 @@ export class EosDictService {
             .catch((err) => this._errHandler(err));
     }
 
-    incFirstUnfixedIndex() {
-        this.updateViewParameters({firstUnfixedIndex: this.viewParameters.firstUnfixedIndex + 1});
-    }
-
-    decFirstUnfixedIndex() {
-        if (this.viewParameters.firstUnfixedIndex === 0) {
-            return;
-        }
-        this.updateViewParameters({firstUnfixedIndex: this.viewParameters.firstUnfixedIndex - 1});
-
-    }
-
     setCustomNodeId(_nodeId: string) {
         this._cDue = _nodeId;
     }
@@ -1141,7 +1128,6 @@ export class EosDictService {
             updatingList: false,
             hideTopMenu: false,
             tableCustomization: false,
-            firstUnfixedIndex: 0,
         };
         this._bufferNodes = [];
     }

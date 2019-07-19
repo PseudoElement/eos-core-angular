@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, OnChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { EosStorageService } from 'app/services/eos-storage.service';
@@ -23,41 +23,57 @@ export class NodeListItemComponent implements OnInit, OnChanges {
     @Input('params') params: IDictionaryViewParameters;
     @Input('length') length: any = {};
     @Input('customFields') customFields: IFieldView[];
+    @Input('firstColumnIndex') firstColumnIndex: number;
     @Output('clickMark') clickMark: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output('clickSelect') clickSelect: EventEmitter<EosDictionaryNode> = new EventEmitter<EosDictionaryNode>();
     @Output('onHoverItem') onHoverItem: EventEmitter<HintConfiguration> = new EventEmitter<HintConfiguration>();
 
     viewFields: IFieldView[];
     custom: IFieldView[];
+    customSliced: IFieldView[];
 
     constructor(
         private _storageSrv: EosStorageService,
         private _dictSrv: EosDictService,
         private _router: Router,
     ) {
+        this.viewFields = [];
+        this.custom = [];
+        this.customSliced = [];
     }
 
     ngOnInit() {
         this.viewFields = this.node.getListView();
     }
 
-    ngOnChanges() {
-        if (this.viewFields) {
-            this.viewFields.forEach((_field) => {
-                this._updateFieldValue(_field);
-            });
+    ngOnChanges(changes: SimpleChanges) {
 
+        for (const propName in changes) {
+            if (changes.hasOwnProperty(propName)) {
+                // const change = changes[propName];
+                if (propName === 'node') {
+                    if (this.viewFields) {
+                        this.viewFields.forEach((_field) => {
+                            this._updateFieldValue(_field);
+                        });
+                    }
+                 } else if (propName === 'customFields') {
+                    if (this.customFields) {
+                        this.custom = EosUtils.deepUpdate({}, this.customFields);
+                        this.custom.forEach((_field) => {
+                            this._updateFieldValue(_field);
+                        });
+                        this.customSliced = this.custom.slice(this.firstColumnIndex);
+                    }
+                 } else if (propName === 'firstColumnIndex') {
+                    if (this.custom) {
+                        this.customSliced = this.custom.slice(this.firstColumnIndex);
+                    }
+                 }
+            }
         }
-        if (this.customFields) {
-            this.custom = EosUtils.deepUpdate({}, this.customFields);
-            this.custom.forEach((_field) => {
-                this._updateFieldValue(_field);
-            });
-        }
-    }
 
-    getSlicedCustomFields() {
-        return this.custom.slice(this.params.firstUnfixedIndex);
+
     }
 
     selectNode(evt: Event): void {
@@ -83,10 +99,6 @@ export class NodeListItemComponent implements OnInit, OnChanges {
 
     onFieldHover(config: HintConfiguration) {
         this.onHoverItem.emit(config);
-    }
-
-    isShifted() {
-        return this.params.firstUnfixedIndex !== 0;
     }
 
     private _updateFieldValue(_field: IFieldView) {
