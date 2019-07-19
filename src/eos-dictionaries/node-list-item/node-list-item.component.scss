@@ -33,6 +33,7 @@
         .node-marker {
             display: inline-block;
             width: $item-width;
+            min-width: $item-width;
             text-align: center;
             .checkbox,
             .checkbox-inline {

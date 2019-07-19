@@ -16,6 +16,7 @@ import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import { RtUserSelectService } from '../../eos-user-select/shered/services/rt-user-select.service';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
+
 @Component({
     selector: 'eos-breadcrumb',
     templateUrl: 'breadcrumb.component.html',
@@ -35,12 +36,12 @@ export class BreadcrumbsComponent implements OnDestroy {
     showInfoAct = false;
     showUserInfo: boolean = true;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
+    isNavigationEnabled: boolean;
+    isEditGranted: boolean;
+    isEditEnabled: boolean;
+
     private routeName: number;
-
-
     private ngUnsubscribe: Subject<any> = new Subject();
-    private _isEditEnabled: boolean;
-
 
     constructor(
         private _breadcrumbsSrv: EosBreadcrumbsService,
@@ -77,26 +78,48 @@ export class BreadcrumbsComponent implements OnDestroy {
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe((n) => {
+                this.isEditGranted = false;
                 this.hasInfoData = !!n;
                 this.showUserInfo = true;
                 if (this.hasInfoData) {
-                    this._isEditEnabled = !n.isDeleted && this._calcisEditable(n);
+                    if (this.routeName === -1) {
+                        if (this._dictSrv.currentDictionary) {
+                            if (this._eaps.isAccessGrantedForDictionary(n.dictionaryId,
+                                this._dictSrv.getDueForNode(n)) >= APS_DICT_GRANT.readwrite) {
+                                    this.isEditGranted = true;
+                            }
+                        }
+                    }
+                    this.isEditEnabled = !n.isDeleted && this.isEditGranted && this._calcisEditable(n);
                 }
             });
+
+        this._dictSrv.markedChanges$
+            .pipe(takeUntil(this.ngUnsubscribe))
+            .subscribe((n) => {
+                    this.isNavigationEnabled = (n && n.length > 1);
+            });
+
         this._rtSrv.setFlagBtnHeader
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe(flag => {
                 this.hasInfoData = flag;
-                this._isEditEnabled = flag;
+                this.isEditEnabled = flag;
             });
+
         this._rtSrv.subject
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe(data => {
                 this.showUserInfo = !!data;
+                if (this._breadcrumbsSrv.currentLink && this._breadcrumbsSrv.currentLink.title === 'Пользователи' && this._rtSrv.btnDisabled !== true) {
+                    this.isNavigationEnabled = true;
+                } else {
+                    this.isNavigationEnabled = false;
+                }
             });
     }
 
@@ -111,28 +134,6 @@ export class BreadcrumbsComponent implements OnDestroy {
 
     treeButtonVisible() {
         return !this._sandwichSrv.treeIsBlocked;
-    }
-
-    isNavigationEnabled(): boolean {
-        if (this._breadcrumbsSrv.currentLink.title === 'Пользователи' && this._rtSrv.btnDisabled !== true) {
-            return true;
-        } else {
-            return (this._dictSrv.getMarkedNodes().length > 1);
-        }
-    }
-
-    isEditEnabled() {
-        if (this.routeName === -1) {
-            if (!this._dictSrv.currentDictionary) {
-                return false;
-            }
-            if (this._eaps.isAccessGrantedForDictionary(this._dictSrv.currentDictionary.id,
-                this._dictSrv.treeNodeIdByDict(this._dictSrv.currentDictionary.id)) < APS_DICT_GRANT.readwrite) {
-                return false;
-            }
-        }
-
-        return this._isEditEnabled;
     }
 
     private _calcisEditable(node: EosDictionaryNode): boolean {
