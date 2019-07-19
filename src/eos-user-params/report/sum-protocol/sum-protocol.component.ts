@@ -483,6 +483,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
             type: 'warning'
           });
           this.frontData = [];
+          this._user_pagination.totalPages = 0;
         } else {
           const parsePosts = data.TotalRecords;
           if (parsePosts !== undefined) {
@@ -490,11 +491,11 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
           } else {
             this._user_pagination.totalPages = this.usersAudit.length;
           }
-          this.config.current = 1;
-          this.config.start = 1;
-          this._user_pagination.changePagination(this.config);
           this.ParseDate(this.usersAudit);
         }
+        this.config.current = 1;
+        this.config.start = 1;
+        this._user_pagination.changePagination(this.config);
         this.clearResult = true;
         this.initPage = true;
       })
