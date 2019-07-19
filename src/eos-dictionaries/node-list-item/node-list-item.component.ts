@@ -24,7 +24,7 @@ export class NodeListItemComponent implements OnInit, OnChanges {
     @Input('length') length: any = {};
     @Input('customFields') customFields: IFieldView[];
     @Output('clickMark') clickMark: EventEmitter<boolean> = new EventEmitter<boolean>();
-    @Output('clickSelect') clickSelect: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output('clickSelect') clickSelect: EventEmitter<EosDictionaryNode> = new EventEmitter<EosDictionaryNode>();
     @Output('onHoverItem') onHoverItem: EventEmitter<HintConfiguration> = new EventEmitter<HintConfiguration>();
 
     viewFields: IFieldView[];
@@ -62,13 +62,11 @@ export class NodeListItemComponent implements OnInit, OnChanges {
 
     selectNode(evt: Event): void {
         evt.stopPropagation();
-        this.node.isMarked = !this.node.isMarked;
-        this.clickSelect.emit(this.node.isMarked);
+        this.clickSelect.emit(this.node);
     }
 
     markNode(marked: boolean) {
-        this.node.isMarked = marked;
-        this.clickMark.emit(this.node.isMarked);
+        this.clickMark.emit(marked);
     }
 
     viewNode(evt: MouseEvent, view = false) {

@@ -6,7 +6,6 @@ export interface IDictionaryViewParameters {
     searchResults: boolean;
     updatingList: boolean;
     updatingInfo: boolean;
-    hasMarked: boolean;
     hideTopMenu: boolean;
     tableCustomization: boolean;
     firstUnfixedIndex: number;

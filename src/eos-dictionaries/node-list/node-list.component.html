@@ -41,12 +41,12 @@
                      [attr.id]="'vf_'+field.key"
                     [ngStyle]="{'min-width.px': min_length[field.key]}">
                     <span class="text selected-text"
-                          (click)="orderByField(field.key)">{{field.customTitle || field.title}}</span><span class="order-icon">
+                          (click)="orderByField(field.key)">{{untrimmedValue(field.customTitle || field.title)}}</span><span class="order-icon">
                     <span *ngIf="orderBy?.fieldKey === field.key"
                           class="eos-icon small"
                           [ngClass]="{'eos-icon-arrow-blue-top': orderBy?.ascend, 'eos-icon-arrow-blue-bottom': !orderBy?.ascend}"></span></span></div>
             </div>
-            <div *ngIf="hasOverflowedColumns()" class="arrow-right selected-text" (click)="onRightClick()">
+            <div *ngIf="hasOverflowedColumns" class="arrow-right selected-text" (click)="onRightClick()">
                 <i class="fa fa-angle-right "></i>
             </div>
         </div>
@@ -82,7 +82,7 @@
                                     [node]="item"
                                     [params]="params"
                                     [customFields]="customFields"
-                                    (clickSelect)="onClickSelect(item,$event)"
+                                    (clickSelect)="onClickSelect(item)"
                                     (clickMark)="onClickMark(item,$event)"
                                     >
                                     </eos-node-list-item>

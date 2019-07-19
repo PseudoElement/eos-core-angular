@@ -65,6 +65,7 @@ export class EosDictService {
     private _listNode$: BehaviorSubject<EosDictionaryNode>;
     private _currentList$: BehaviorSubject<EosDictionaryNode[]>;
     private _visibleList$: BehaviorSubject<EosDictionaryNode[]>;
+    private _markedList$: BehaviorSubject<EosDictionaryNode[]>;
     private _viewParameters$: BehaviorSubject<IDictionaryViewParameters>;
     private _paginationConfig$: BehaviorSubject<IPaginationConfig>;
     private _mDictionaryPromise: Map<string, Promise<EosDictionary>>;
@@ -80,6 +81,7 @@ export class EosDictService {
     private _cDue: string;
     private _currentScrollTop = 0;
     private _weightOrdered: boolean;
+    private _markedList: EosDictionaryNode[];
 
 
     /* Observable dictionary for subscribing on updates in components */
@@ -123,6 +125,10 @@ export class EosDictService {
 
     get visibleList$(): Observable<EosDictionaryNode[]> {
         return this._visibleList$.asObservable();
+    }
+
+    get markedChanges$(): Observable<EosDictionaryNode[]> {
+        return this._markedList$.asObservable();
     }
 
     get userOrdered(): boolean {
@@ -238,6 +244,8 @@ export class EosDictService {
         this._viewParameters$ = new BehaviorSubject<IDictionaryViewParameters>(this.viewParameters);
         this._paginationConfig$ = new BehaviorSubject<IPaginationConfig>(null);
         this._visibleList$ = new BehaviorSubject<EosDictionaryNode[]>([]);
+        this._markedList$ = new BehaviorSubject<EosDictionaryNode[]>([]);
+        this._markedList = [];
         this._dictMode = 0;
         this._dictMode$ = new BehaviorSubject<number>(this._dictMode);
         this._initPaginationConfig();
@@ -291,16 +299,45 @@ export class EosDictService {
         return Promise.resolve(null);
     }
 
-    treeNodeIdByDict(id: string) {
+    getDueForNode (node: EosDictionaryNode): string {
+        if (!node || !node.dictionary.isTreeType()) {
+            return null;
+        }
+        const id = node.dictionary.id;
+        if (id === CABINET_DICT.id) {
+            return node.data.department['DUE'];
+        } else if (id === DEPARTMENTS_DICT.id) {
+            return node.parentId;
+        } else if (id === NOMENKL_DICT.id) {
+            return node.data.rec['DUE'];
+        } else {
+            return node.parentId;
+        }
+
+        // Variation for node grant is included
+        // if (id === CABINET_DICT.id) {
+        //     return node.data.department['DUE'];
+        // } else if (id === DEPARTMENTS_DICT.id) {
+        //     return node.id;
+        // } else if (id === NOMENKL_DICT.id) {
+        //     return node.data.rec['DUE'];
+        // }
+        // return null;
+
+    }
+
+    getDueForTree(dictid: string) {
         if (!this._treeNode) {
             return null;
         }
-        if (id === CABINET_DICT.id) {
+        if (dictid === CABINET_DICT.id) {
             return this._treeNode.id;
-        } else if (id === DEPARTMENTS_DICT.id) {
+        } else if (dictid === DEPARTMENTS_DICT.id) {
             return this._treeNode.id;
-        } else if (id === NOMENKL_DICT.id) {
+        } else if (dictid === NOMENKL_DICT.id) {
             return this.getCustomNodeId();
+        } else {
+            return this._treeNode.id;
         }
         return null;
     }
@@ -393,11 +430,59 @@ export class EosDictService {
         if (!this.currentDictionary) {
             return [];
         }
-        return this.currentDictionary.getMarkedNodes(recursive);
+        if (recursive) {
+            return this.currentDictionary.getMarkedNodes(recursive);
+        } else {
+            return this._visibleListNodes.filter( n => n.isMarked);
+        }
     }
 
-    unmarkAll(): void {
-        this.getMarkedNodes().forEach( n => n.isMarked = false);
+    setMarkAll(emit: boolean = true): void {
+        this._markedList = this._visibleListNodes;
+        this._markedList.forEach( n => n.isMarked = true);
+        if (emit) {
+            this.updateMarked(false);
+        }
+    }
+
+    setMarkAllNone(emit: boolean = true): void {
+        if (this._markedList.length === 0) {
+            return;
+        }
+        this._markedList.forEach( n => n.isMarked = false);
+        this._markedList = [];
+        if (emit) {
+            this.updateMarked(false);
+        }
+
+    }
+
+    setMarkForNode(item: EosDictionaryNode, isMarked: boolean, emit: boolean): void {
+        if (item.isMarked === isMarked) {
+            return;
+        }
+
+        item.isMarked = isMarked;
+        this._markedList = this.getMarkedNodes(false);
+
+        if (emit) {
+            // todo: to info component
+            if (isMarked) {
+                this.openNode(item.id).then(() => {
+                });
+            } else {
+                const selectedCount = this._markedList.length;
+                this.openNode(selectedCount ? this._markedList[0].id : '').then(() => {});
+            }
+            this.updateMarked();
+        }
+    }
+
+    updateMarked(recalcMarked: boolean = false): void {
+        if (recalcMarked) {
+            this._markedList = this.getMarkedNodes();
+        }
+        this._markedList$.next(this._markedList);
     }
 
     isDataChanged(data: any, original: any): boolean {
@@ -425,8 +510,21 @@ export class EosDictService {
                 }
             }
         }
-        Object.assign(this.viewParameters, updates);
-        this._viewParameters$.next(this.viewParameters);
+
+        let changes = false;
+        for (const key in updates) {
+            if (updates.hasOwnProperty(key)) {
+                const value = updates[key];
+                if (value !== this.viewParameters[key]) {
+                    this.viewParameters[key] = value;
+                    changes = true;
+                }
+            }
+        }
+        // Object.assign(this.viewParameters, updates);
+        if (changes) {
+            this._viewParameters$.next(this.viewParameters);
+        }
     }
 
     /**
@@ -462,6 +560,8 @@ export class EosDictService {
         this._currentList = [];
         this._currentList$.next([]);
         this._visibleList$.next([]);
+        this._markedList = [];
+        this._markedList$.next([]);
         this._listNode$.next(null);
         this._treeNode$.next(null);
         this._dictionary$.next(null);
@@ -696,7 +796,7 @@ export class EosDictService {
         });
 
 
-        this.unmarkAll();
+        this.setMarkAllNone();
         this._srchCriteries = null;
         return this._reloadList()
             .then((val) => {
@@ -720,6 +820,8 @@ export class EosDictService {
                 .then(() => this._reloadList())
                 .then(() => {
                     this.updateViewParameters({updatingList: false});
+                    this.setMarkAllNone();
+                    this.openNode('');
                     return true;
                 })
                 .catch((err) => this._reloadList().then(() => this._errHandler(err)));
@@ -765,7 +867,7 @@ export class EosDictService {
 
     resetSearch(): Promise<any> {
         this._srchCriteries = null;
-        this.unmarkAll();
+        this.setMarkAllNone();
         return this._reloadList();
     }
 
@@ -936,10 +1038,6 @@ export class EosDictService {
         this.updateViewParameters();
     }
 
-    markItem(val: boolean) {
-        this.updateViewParameters({hasMarked: val});
-    }
-
     isUnique(val: string, path: string, inDict = false): { [key: string]: any } {
         let records: EosDictionaryNode[] = [];
         let valid = true;
@@ -1041,7 +1139,6 @@ export class EosDictService {
             searchResults: false,
             updatingInfo: false,
             updatingList: false,
-            hasMarked: false,
             hideTopMenu: false,
             tableCustomization: false,
             firstUnfixedIndex: 0,
@@ -1311,19 +1408,12 @@ export class EosDictService {
                 }
             }
             this._visibleList$.next(pageList);
+            this.updateMarked(true);
         }
     }
 
     private _openNode(node: EosDictionaryNode) {
         if (this._listNode !== node) {
-            // if (this._listNode) {
-            //     this._listNode.isMarked = false;
-            //     this._listNode.autoMarked = false;
-            // }
-            // if (node) {
-            //     node.isMarked = true;
-            //     node.autoMarked = true;
-            // }
             this._listNode = node;
             this._listNode$.next(node);
         }
