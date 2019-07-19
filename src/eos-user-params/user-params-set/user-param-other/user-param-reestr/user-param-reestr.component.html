@@ -18,7 +18,7 @@
         <eos-dynamic-input [input]="inputs[ 'rec.REESTR_NOT_INCLUDED'] " [form]="form " [readonly]="false "></eos-dynamic-input>
     </div>
     <hr>
-    <div class="user-input-group ">
+    <div *ngIf='errorHidden' class="user-input-group ">
         <div class="number-increment-wrap ">
             <span>Дата передачи документов не позднее ( дней ):</span>
             <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.REESTR_DATE_INTERVAL'] " [form]="form " [readonly]="false "></eos-dynamic-input>

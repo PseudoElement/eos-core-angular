@@ -404,9 +404,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
       dateTo = this.ConvertToFilterDate(dateTo);
     }
     if (dateTo !== undefined && dateFrom !== undefined) {
-      if (dateTo !== dateFrom) {
-        dateSearch = `${dateFrom}:${dateTo}`;
-      }
+      dateSearch = `${dateFrom}:${dateTo}`;
     } else if (dateTo === undefined && dateFrom !== undefined) {
       const dateNow = new Date();
       const dateStr = this.ConvertToFilterDate(dateNow);

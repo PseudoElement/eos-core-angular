@@ -7,7 +7,7 @@
             <div class="buttons-wrapper" *ngIf="editMode">
                 <div>
                     <button class="btn btn-primary upper" (click)="cancel()">Отменить</button>
-                    <button class="btn btn-primary-full upper" [disabled]="!stateHeaderSubmit || errorPass || !getValidDate" (click)="submit()">Сохранить</button>
+                    <button class="btn btn-primary-full upper" [disabled]="errorPass || !getValidDate" (click)="!stateHeaderSubmit ? cancel() : submit()">Сохранить</button>
                     <!-- <button class="btn btn-primary-full upper" [disabled]="stateHeaderSubmit || errorPass || !getValidDate" (click)="submit()">Сохранить</button> -->
                     <!-- <button class="btn btn-primary-full upper" (click)="submit()">Сохранить</button> -->
                 </div>

@@ -23,6 +23,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 
 export class UserParamReestrComponent implements OnDestroy, OnInit {
     @Input() defaultValues;
+    @Input() errorHidden: boolean;
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     @Output() pushIncrementError: EventEmitter<any> = new EventEmitter<any>();
     public form: FormGroup;
@@ -115,7 +116,7 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
         }
         this.emitIncrementError();
     }
-    checkIncrement() {
+   checkIncrement() {
         const value = this.form.controls['rec.REESTR_DATE_INTERVAL'].valid;
         const value1 = this.form.controls['rec.REESTR_COPY_COUNT'].valid;
         if (!value || !value1) {
@@ -126,7 +127,7 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
     }
 
     emitIncrementError() {
-        if (!this.checkIncrement()) {
+         if (!this.checkIncrement()) {
             this.pushIncrementError.emit(false);
         }   else {
             this.pushIncrementError.emit(true);
