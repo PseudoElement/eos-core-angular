@@ -27,7 +27,7 @@
                             <div class="acess-content" *ngFor="let group of myForm.controls['groupForm'].controls; let i = index" (click)=chooseCurrentField(i) [ngClass]="{current: currentIndex === i}">
                                 <div class="access-list" formGroupName="{{i}}">
                                     <span [ngClass]="{current: currentIndex === i}" class="access-list-second">
-                                        <label class="checkbox disabled minus-checkbox">
+                                        <label class="checkbox disabled minus-checkbox redUnchecked">
                                             <input formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" >
                                             <!-- <input *ngIf="i == 0 " [attr.disabled]="true"  formControlName="checkbox" [attr.checked]="group.controls.checkbox ? 1 : 0"   type="checkbox" readonly="readonly" class="readonly" > -->
                                             <span class="eos-icon-checkbox-square-v-grey "></span>

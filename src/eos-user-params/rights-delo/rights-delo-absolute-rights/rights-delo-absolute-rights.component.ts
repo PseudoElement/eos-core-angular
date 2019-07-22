@@ -53,7 +53,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _errorSrv: ErrorHelperServices,
     ) { }
-    async ngOnInit() {
+    ngOnInit() {
         this._userParamsSetSrv.saveData$
             .pipe(
                 takeUntil(this._ngUnsubscribe)
@@ -62,13 +62,19 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this._userParamsSetSrv.submitSave = this.submit(true);
             });
 
-        await this._userParamsSetSrv.getUserIsn({
+        this._userParamsSetSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
-        });
-        const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
-        this.curentUser = this._userParamsSetSrv.curentUser;
-        this.flagGrifs = await this._userParamsSetSrv.checkGrifs(id);
-        this.init();
+        })
+            .then(() => {
+                const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
+                this.curentUser = this._userParamsSetSrv.curentUser;
+                this._userParamsSetSrv.checkGrifs(id).then(el => {
+                    this.flagGrifs = el;
+                    this.init();
+                });
+            })
+            .catch(el => {
+            });
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
@@ -117,6 +123,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         let qUserCl;
         const strNewDeloRight = this.arrNEWDeloRight.join('');
         const strDeloRight = this.arrDeloRight.join('');
+        this._userParamsSetSrv.ProtocolService(this.curentUser.ISN_LCLASSIF, 5);
         if (strNewDeloRight !== strDeloRight) {
             const q = {
                 method: 'MERGE',
@@ -199,6 +206,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             return;
         }
         if (event.target.tagName === 'LABEL') { // click to label
+            this.selectedNode.ischeckedAll = false;
             this.selectNode(item);
         }
         if (event.target.tagName === 'SPAN') { // click to checkbox
@@ -223,10 +231,11 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.editOrganiz)) {
                 this._deleteAllOrgType(item);
             }
-
-
             if (item !== this.selectedNode && item.isCreate) {
                 this.selectNode(item);
+            }
+            if (item.value === 1 && item.contentProp === 5) {
+                this.selectedNode.ischeckedAll = true;
             }
         }
     }
@@ -385,7 +394,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
 
     private _deleteAllOrgType(node: NodeAbsoluteRight) {
         node.deleteChange();
-        const list = this._userParamsSetSrv.curentUser.USER_EDIT_ORG_TYPE_List;
+        const list = this.curentUser.USER_EDIT_ORG_TYPE_List;
         if (list.length) {
             list.forEach((item: USER_EDIT_ORG_TYPE) => {
                 node.pushChange({
@@ -394,7 +403,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     data: item
                 });
             });
-            this._userParamsSetSrv.curentUser.USER_EDIT_ORG_TYPE_List.splice(0, list.length);
+            //   this._userParamsSetSrv.userEditOrgType.splice(0,  this._userParamsSetSrv.userEditOrgType.length);
             this.checkChange();
         }
     }

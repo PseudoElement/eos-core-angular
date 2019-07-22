@@ -63,7 +63,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
-    async ngOnInit() {
+    ngOnInit() {
         this._userSrv.saveData$
             .pipe(
                 takeUntil(this._ngUnsubscribe)
@@ -72,12 +72,14 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
                 this._userSrv.submitSave = this.submit();
             });
 
-        await this._userSrv.getUserIsn({
+        this._userSrv.getUserIsn({
             expand: 'USER_PARMS_List'
+        }).then(() => {
+            this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Электронная подпись';
+            this.init();
+        })
+        .catch(err => {
         });
-        this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Электронная подпись';
-
-        this.init();
     }
 
     init() {

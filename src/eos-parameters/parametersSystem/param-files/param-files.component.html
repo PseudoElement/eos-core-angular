@@ -1,6 +1,10 @@
 <div class="input-param-wrapper input-param-files-wrapper" *ngIf="inputs">
-    <eos-param-header (submitForm)="submit()" (cancelForm)="cancel()" [statusBtnSub]="btnDisabled" [title]="titleHeader">
-    </eos-param-header>
+    <eos-param-header 
+        (submitForm)="btnDisabled ? cancel() : submit()"
+        (cancelForm)="cancel()" 
+        [statusBtnSub]="btnError"
+        [title]="titleHeader"
+    ></eos-param-header>
     <div class="param-input-group">
         <span class="l-font">Параметры хранения прикрепленных файлов</span>
         <div class="info-icon-wrap" (click)="showInfoAttachFiles()">

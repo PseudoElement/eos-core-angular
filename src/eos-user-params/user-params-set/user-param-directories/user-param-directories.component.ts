@@ -61,6 +61,9 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
             this.allData = this._userParamsSetSr.hashUserContext;
             this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Справочники';
             this.inint();
+        })
+        .catch(err => {
+
         });
     }
     inint() {

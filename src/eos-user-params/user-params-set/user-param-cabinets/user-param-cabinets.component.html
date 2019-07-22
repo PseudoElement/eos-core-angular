@@ -1,5 +1,5 @@
 <div class="input-user-wrapper input-user-cabinets-rk-forwarding-wrapper" *ngIf="inputs">
-    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="btnDisable || MaxIncrement" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (closeEmit)='close($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="btnDisable" [errorSave] = "MaxIncrement" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (closeEmit)='close($event)' (defaultEmit)='default($event)'></eos-user-params-header>
     <div class="tabs-wrapper usual-border border-bottom">
         <ul class="tabs">
             <li class="tab-item" *ngFor="let tab of fieldGroupsForCabinets; let i = index" [ngClass]="{'active': i === currTab}" (click)="setTab(i)">
@@ -8,7 +8,7 @@
         </ul>
     </div>
 
-    <div [hidden]="currTab !== 0" class="clearfix scrollWrapper">
+    <div *ngIf="currTab === 0" class="clearfix scrollWrapper">
         <div class="user-input-group">
             <span class="l-font">Подсвечивать новые записи в папке</span>
             <hr>
@@ -56,7 +56,7 @@
             </div>
         </div>
     </div>
-    <div class="instructions  scrollWrapper" [hidden]="currTab !== 1">
+    <div class="instructions  scrollWrapper" *ngIf="currTab === 1">
         <span>Дата резолюции:</span>
         <div class="date-resolution">
             <eos-dynamic-input [input]="inputs['rec.RESOLUTION_DATE']" [form]="form" [readonly]="false"></eos-dynamic-input>
@@ -131,7 +131,7 @@
             </div>
         </div>
     </div>
-    <div class="informer" [hidden]="currTab !== 2">
+    <div class="informer" *ngIf="currTab === 2">
     </div>
 </div>
 <div *ngIf="bacgHeader" class="bacgrFixed"></div>

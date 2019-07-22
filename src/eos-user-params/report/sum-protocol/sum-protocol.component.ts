@@ -27,20 +27,9 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
   isnRefFile: number;
   lastUser;
   initPage: boolean = false;
-  posts: number;
   clearResult: boolean = false;
-  orderBy: boolean = false;
+  resetPage: boolean = false;
   orderByStr: string = 'EVENT_DATE asc';
-  options = [
-    { value: '0', title: '' },
-    { value: '1', title: 'Блокирование Пользователя' },
-    { value: '2', title: 'Разблокирование Пользователя' },
-    { value: '3', title: 'Создание пользователя' },
-    { value: '4', title: 'Редактирование пользователя БД' },
-    { value: '5', title: 'Редактирование прав ДЕЛА' },
-    { value: '6', title: 'Редактирование прав поточного сканирования' },
-    { value: '7', title: 'Удаление Пользователя' },
-  ];
   eventKind = [
     'Блокирование Пользователя',
     'Разблокирование Пользователя',
@@ -51,11 +40,14 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
     'Удаление Пользователя'
   ];
   critUsers = [];
-  initConfig: boolean = false;
   currentState: boolean[] = [true, true];
   status: string;
   SortUp: string;
   checkOverflow: boolean;
+  dateCrit: string;
+  eventUser: string;
+  isnUser: string;
+  isnWho: string;
   arrSort = [
     { date: true },
     { event: false },
@@ -74,9 +66,11 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
       .subscribe((config: IPaginationConfig) => {
         if (config) {
           this.config = config;
-          if (this._user_pagination.totalPages !== undefined) {
+          if (this._user_pagination.totalPages !== undefined && this.resetPage === false) {
             if (this.config.current > this.config.start) {
               this.PaginateData(this.config.length * 2, this.orderByStr);
+            } else if (this.config.current && this.initPage === true && this.clearResult === true) {
+              this.GetSortData();
             } else if (this.config.current && this.initPage === true) {
               this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
             }
@@ -105,6 +99,36 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
     });
   }
 
+  GetSortData() {
+    this._pipeSrv.read({
+      USER_AUDIT:
+        PipRX.criteries({
+          EVENT_KIND: this.eventUser,
+          EVENT_DATE: this.dateCrit,
+          ISN_USER: this.isnUser,
+          ISN_WHO: this.isnWho,
+        }),
+      orderby: this.orderByStr,
+      top: this.config.length,
+      skip: this.config.length * this.config.current - this.config.length,
+      inlinecount: 'allpages'
+    }).then((data: any) => {
+      this.usersAudit = data;
+      if (this.usersAudit.length === 0) {
+        this._msgSrv.addNewMessage({
+          title: 'Ничего не найдено',
+          msg: 'попробуйте изменить поисковую фразу',
+          type: 'warning'
+        });
+      } else {
+        this.ParseDate(this.usersAudit);
+      }
+    })
+      .catch((error) => {
+        this._errorSrv.errorHandler(error);
+      });
+  }
+
   PaginateData(length, orderStr, skip?) {
     this._pipeSrv.read({
       USER_AUDIT: ALL_ROWS,
@@ -126,6 +150,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
             this._user_pagination.getSumIteq = true;
             this._user_pagination.changePagination(this.config);
             this.initPage = true;
+            this.resetPage = false;
           }
           this.ParseInitData(this.usersAudit);
         } else {
@@ -159,7 +184,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
       posts = posts.split('').reverse().join('');
       posts = posts.split(',')[0];
       posts = posts.split('').reverse().join('');
-      this.posts = parseInt(posts, 10);
       let data;
       data = parseInt(posts, 10);
       return data;
@@ -201,7 +225,11 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
       // });
     } else if (critSearch === 'EVENT_DATE') {
       this.orderByStr = `${critSearch} ${this.SortUp}`;
-      this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+      if (this.clearResult === true) {
+        this.GetSortData();
+      } else {
+        this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+      }
     }
   }
 
@@ -428,19 +456,26 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
     } else {
       dateSearch = undefined;
     }
+    this.dateCrit = dateSearch;
+    this.eventUser = eventUser;
+    this.isnUser = isnUser;
+    this.isnWho = isnWho;
     this._pipeSrv.read({
-      USER_AUDIT: {
-        criteries: {
+      USER_AUDIT:
+        PipRX.criteries({
           EVENT_KIND: eventUser,
           EVENT_DATE: dateSearch,
           ISN_USER: isnUser,
-          ISN_WHO: isnWho
-        }
-      },
-      orderby: 'ISN_EVENT',
+          ISN_WHO: isnWho,
+          orderby: this.orderByStr,
+        }),
+      top: this.config.length,
+      skip: 0,
+      inlinecount: 'allpages'
     })
       .then((data: any) => {
         this.usersAudit = data;
+        this.initPage = false;
         if (this.usersAudit.length === 0) {
           this._msgSrv.addNewMessage({
             title: 'Ничего не найдено',
@@ -448,10 +483,21 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
             type: 'warning'
           });
           this.frontData = [];
+          this._user_pagination.totalPages = 0;
         } else {
+          const parsePosts = data.TotalRecords;
+          if (parsePosts !== undefined) {
+            this._user_pagination.totalPages = this.GetCountPosts(parsePosts);
+          } else {
+            this._user_pagination.totalPages = this.usersAudit.length;
+          }
           this.ParseDate(this.usersAudit);
         }
+        this.config.current = 1;
+        this.config.start = 1;
+        this._user_pagination.changePagination(this.config);
         this.clearResult = true;
+        this.initPage = true;
       })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
@@ -520,8 +566,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
   }
   ConvertDate(convDate) {
     const date = new Date(convDate);
-    const curr_date = date.getDate();
-    const curr_month = date.getMonth() + 1;
+    const curr_date = ('0' + date.getDate()).slice(-2);
+    const curr_month = ('0' + (date.getMonth() + 1)).slice(-2);
     const curr_year = date.getFullYear();
     const hms = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().substr(11, 8);
     const parseDate = `${curr_year}.${curr_month}.${curr_date} ${hms}`;
@@ -529,7 +575,11 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
   }
 
   resetSearch() {
-    this.PaginateData(this.config.length, this.orderByStr, 1);
+    this.resetPage = true;
+    this._user_pagination.totalPages = undefined;
+    this._user_pagination.paginationConfig.start = 1;
+    this._user_pagination.paginationConfig.current = 1;
+    this.PaginateData(this.config.length, this.orderByStr, 0);
     this.clearResult = false;
   }
 

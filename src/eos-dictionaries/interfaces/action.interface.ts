@@ -66,6 +66,14 @@ export interface IActionButton extends IAction {
     show: boolean;
 }
 
+export interface IActionUpdateOptions {
+    // markList: EosDictionaryNode[];
+    listHasItems: boolean;
+    listHasDeleted: boolean;
+    listHasSelected: boolean;
+    dictGrant: APS_DICT_GRANT;
+}
+
 export interface IActionEvent {
     action: E_RECORD_ACTIONS;
     params?: any;

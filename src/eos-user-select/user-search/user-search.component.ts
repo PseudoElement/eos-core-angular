@@ -38,10 +38,10 @@ export class UserSearchComponent implements OnInit {
         return (this.fSearchPop.isOpen);
     }
     isActiveButtonQuick() {
-        return (this.quickSearchOpen);
+        return (this.fastSearch);
     }
     closeFastSrch() {
-        this.quickSearchOpen = false;
+        this.fastSearch = false;
     }
 
     get disableBtn() {
@@ -146,7 +146,12 @@ export class UserSearchComponent implements OnInit {
             this.clearQuickForm();
         }
         if ($event.keyCode === 13) {
-            this.quickSearchKey.emit(this.srchString);
+            if (this.srchString) {
+                const strSearch = this.srchString.replace(/[&\/\\#,!+()$~%.'":*?<>{}]/g, '').trim();
+                if (strSearch) {
+                    this.quickSearchKey.emit(strSearch);
+                }
+            }
         }
     }
     clearQuickForm() {
