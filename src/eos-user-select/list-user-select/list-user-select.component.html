@@ -6,11 +6,17 @@
                     <span class="long-title xl-font">{{titleCurrentDue}}</span>
                 </div>
                 <div class="item-count usual-border m-font">
-                    <span class="item-count-content">
+                    <span class="item-count-content" [ngClass]="{search:showCloseQuickSearch}">
                         Записей:
                         <span class="counter">{{countMaxSize}}</span>
                         Выбрано:
                         <span class="counter">{{countcheckedField}}</span>
+                        <button *ngIf="showCloseQuickSearch" class="btn btn-primary-light btn-size"
+                            tooltip="Очистить результаты"
+                            placement="bottom"
+                            container="body"
+                            containerClass="tooltip-info"
+                            (click)=resetSearch()><span class="eos-icon eos-icon-close-blue small"></span></button>
                     </span>
                 </div>
             </div>
@@ -18,7 +24,7 @@
         <div class="table-header search-wr">
             <!-- header action -->
             <eos-btn-action [buttons]='buttons' (showAction)='showAction($event)'></eos-btn-action>
-            <eos-user-search  (quickSearchKey)="quickSearchKey($event)" (search)="searchUsers($event)"  [flagDeep]="shooseP"></eos-user-search>
+            <eos-user-search  (quickSearchKey)="quickSearchKey($event)" #quickSearchOpen (search)="searchUsers($event)"  [flagDeep]="shooseP"></eos-user-search>
         </div>
         <!--Быстрый поиск-->
         <div class="table-header">
