@@ -221,6 +221,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             });
             return;
         }
+        this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
         const id = this._userParamSrv.userContextId;
         const newD = {};
         const query = [];
