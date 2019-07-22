@@ -72,7 +72,12 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
             } else if (this.config.current && this.initPage === true && this.clearResult === true) {
               this.GetSortData();
             } else if (this.config.current && this.initPage === true) {
-              this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+              if (this.config.length !== 10) {
+                this.PaginateData(this.config.length + 1, this.orderByStr, this.config.length * this.config.current - this.config.length);
+              } else {
+                this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+              }
+
             }
           }
         }

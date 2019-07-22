@@ -27,6 +27,8 @@ export class UserPaginationService {
         private _storageSrv: EosStorageService,
     ) {
         this.totalPages = undefined;
+        // this.paginationConfig.current = 1;
+        // this.paginationConfig.start = 1;
         this._NodeList$ = new Subject();
         this._paginationConfig$ = new Subject();
         this._initPaginationConfig(true);
@@ -44,7 +46,9 @@ export class UserPaginationService {
     _initPaginationConfig(update?: boolean) {
         this.paginationConfig = Object.assign(this.paginationConfig || { start: 1, current: 1 }, {
             length: this._storageSrv.getItem(LS_PAGE_LENGTH) || PAGES_SELECT[0].value,
-            itemsQty: this._getCountPage()
+            itemsQty: this._getCountPage(),
+            start: 1,
+            current: 1
         });
         if (update) {
             this._fixCurrentPage();
