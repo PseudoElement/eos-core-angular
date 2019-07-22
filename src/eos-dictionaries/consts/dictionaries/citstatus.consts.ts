@@ -52,7 +52,7 @@ export const CITSTATUS_DICT: ITreeDictionaryDescriptor = {
         type: 'number'
     }]),
     treeFields: ['CLASSIF_NAME'],
-    editFields: ['CLASSIF_NAME', 'NOTE'],
+    editFields: ['CLASSIF_NAME', 'NOTE', 'CODE'],
     searchFields: ['CLASSIF_NAME', /*'NOTE'*/],
     fullSearchFields: ['CLASSIF_NAME', 'NOTE'],
     quickViewFields: ['CLASSIF_NAME', 'NOTE'],

@@ -93,7 +93,6 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
                     const input = this.inputs[key];
                     if (input && input.options && input.controlType === E_FIELD_TYPE.select) {
                         const value = this.getValue(key);
-                        console.log(key, value);
                         input.options = input.options.filter(o => (!o.disabled || String(value) === String(o.value)));
                     }
                 }

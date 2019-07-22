@@ -338,9 +338,10 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
         'nametitleDep', 'nametitle', 'DUE_LINK_ORGANIZ', 'indexDep', 'fullTitle', 'ISN_PHOTO', 'EXPEDITION_FLAG'],
     // ['fio', 'position', 'description', 'title', 'phone', 'email', 'rooms', 'associatedUsers']
     allVisibleFields: ['fullTitle', 'SKYPE', /* 'DEPARTMENT_DUE', */ 'indexDep', 'POST_H',
-        'CARD_FLAG',
+        // 'CARD_FLAG',
         'CARD_NAME', 'NOTE', 'START_DATE', 'END_DATE', 'PHONE_LOCAL', 'PHONE', 'FAX', 'E_MAIL', 'NUM_CAB', 'ID_GAS_PS',
-        'NUMCREATION_FLAG' , 'organization', /*, 'printInfo', 'sev',
+        // 'NUMCREATION_FLAG' ,
+        'organization', /*, 'printInfo', 'sev',
 , 'cabinet', 'user'*/],
 };
 /* tslint:enable:max-line-length */

@@ -26,6 +26,7 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
     Object.assign({}, COMMON_FIELD_NAME, {
         isUnique: true,
         uniqueInDict: true,
+        length: 64,
     }), {
         key: 'LINK',
         title: 'Связка',
@@ -44,6 +45,7 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
         key: 'LINK_INDEX',
         title: 'Индекс',
         type: 'string',
+        length: 24,
     }, {
         key: 'TRANSPARENT',
         title: 'Прозрачная связка',
