@@ -34,6 +34,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     initLogin: string;
     title: string;
     tehnicUser: boolean = false;
+    isn_prot: any;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public _apiSrv: UserParamApiSrv,
@@ -92,14 +93,14 @@ export class CreateUserComponent implements OnInit, OnDestroy {
 
     createUser(): boolean {
         const d = this.data;
-        if ( d['dueDL'] === undefined &&  !this.tehnicUser) {
+        if (d['dueDL'] === undefined && !this.tehnicUser) {
             return false;
         }
         return true;
     }
 
     submit() {
-        if ( this.createUser() ) {
+        if (this.createUser()) {
             const url = this._createUrlForSop();
 
             this._pipeSrv.read({
@@ -110,6 +111,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                     this._router.navigate(['user-params-set'], {
                         queryParams: { isn_cl: data[0] }
                     });
+                    this.isn_prot = data[0];
+                    this._userParamSrv.ProtocolService(this.isn_prot, 3);
                 })
                 .catch(e => {
                     const m: IMessage = {
@@ -234,44 +237,45 @@ export class CreateUserComponent implements OnInit, OnDestroy {
         url += `&dueDL='${d['dueDL'] ? d['dueDL'] : ''}'`;
         url += `&role='${d['SELECT_ROLE'] && !this.tehnicUser ? encodeURI(d['SELECT_ROLE']) : ''}'`;
         url += `&isn_user_copy_from=${d['ISN_USER_COPY'] ? d['ISN_USER_COPY'] : '0'}`; // если не выбран пользователь для копирования передаем '0'
+        //   url += `&delo_rights=0`;
         return url;
     }
 
     private _subscribe() {
         const f = this.form;
         f.get('teсhUser').valueChanges
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
-        .subscribe(data => {
-            this.tehnicUser = data;
-            if (data) {
-                f.get('DUE_DEP_NAME').patchValue('');
-                f.get('DUE_DEP_NAME').disable();
-                f.get('SELECT_ROLE').patchValue('');
-                f.get('SELECT_ROLE').disable();
-                delete this.data['dueDL'];
-                delete this.data['SELECT_ROLE'];
-            } else {
-                f.get('DUE_DEP_NAME').enable();
-                f.get('SELECT_ROLE').enable();
-            }
-        });
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe(data => {
+                this.tehnicUser = data;
+                if (data) {
+                    f.get('DUE_DEP_NAME').patchValue('');
+                    f.get('DUE_DEP_NAME').disable();
+                    f.get('SELECT_ROLE').patchValue('');
+                    f.get('SELECT_ROLE').disable();
+                    delete this.data['dueDL'];
+                    delete this.data['SELECT_ROLE'];
+                } else {
+                    f.get('DUE_DEP_NAME').enable();
+                    f.get('SELECT_ROLE').enable();
+                }
+            });
 
 
 
         f.valueChanges
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
-        .subscribe(d => {
-            // tslint:disable-next-line:forin
-            for (const c in d) {
-                if (c !== 'teсhUser') {
-                    this.data[c] = d[c];
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe(d => {
+                // tslint:disable-next-line:forin
+                for (const c in d) {
+                    if (c !== 'teсhUser') {
+                        this.data[c] = d[c];
+                    }
+                    this.btnDisabled = this.form.invalid;
                 }
-                this.btnDisabled = this.form.invalid;
-            }
-        });
+            });
     }
 }

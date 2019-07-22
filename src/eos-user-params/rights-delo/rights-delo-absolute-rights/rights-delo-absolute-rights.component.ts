@@ -65,16 +65,16 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this._userParamsSetSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
         })
-        .then(() => {
-            const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
-            this.curentUser = this._userParamsSetSrv.curentUser;
-            this._userParamsSetSrv.checkGrifs(id).then(el => {
-                this.flagGrifs = el;
-                this.init();
+            .then(() => {
+                const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
+                this.curentUser = this._userParamsSetSrv.curentUser;
+                this._userParamsSetSrv.checkGrifs(id).then(el => {
+                    this.flagGrifs = el;
+                    this.init();
+                });
+            })
+            .catch(el => {
             });
-        })
-        .catch(el => {
-        });
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
@@ -123,6 +123,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         let qUserCl;
         const strNewDeloRight = this.arrNEWDeloRight.join('');
         const strDeloRight = this.arrDeloRight.join('');
+        this._userParamsSetSrv.ProtocolService(this.curentUser.ISN_LCLASSIF, 5);
         if (strNewDeloRight !== strDeloRight) {
             const q = {
                 method: 'MERGE',

@@ -102,6 +102,7 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
     submit(event): Promise<any> {
         this.flagShow = false;
         const query = [];
+        this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 6);
         query.push({
             method: 'MERGE',
             requestUri: `USER_CL(${this.curentUser['ISN_LCLASSIF']})`,

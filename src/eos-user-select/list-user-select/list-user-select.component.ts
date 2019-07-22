@@ -29,6 +29,7 @@ import { AppContext } from '../../eos-rest/services/appContext.service';
 import { ErrorHelperServices } from '../../eos-user-params/shared/services/helper-error.services';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { IOpenClassifParams } from 'eos-common/interfaces';
+import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 interface TypeBread {
     action: number;
 }
@@ -75,6 +76,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         private _errorSrv: ErrorHelperServices,
         private _waitCl: WaitClassifService,
         private srhSrv: SearchServices,
+        private _userParamSrv: UserParamsService,
     ) {
 
     }
@@ -604,11 +606,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 if (users.isChecked || users.selectedMark) {
                     if (users.blockedUser) {
                         users.blockedUser = false;
+                        this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
                     } else {
                         if (!users.blockedUser && !users.blockedSystem) {
                             users.blockedUser = true;
+                            this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 1);
                         }
                         if (users.blockedSystem) {
+                            this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
                             users.blockedUser = false;
                             users.blockedSystem = false;
                         }
@@ -770,6 +775,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
 
     private _createUrlForSop(isn_user) {
         const url = `EraseUser?isn_user=${isn_user}`;
+        this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 8);
         return url;
     }
 
