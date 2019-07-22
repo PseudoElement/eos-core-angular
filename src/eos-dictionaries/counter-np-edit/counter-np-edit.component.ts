@@ -395,7 +395,7 @@ export class CounterNpEditComponent {
         if (this._decl.isCounterRK) {
             const criteries = {
                 DOCNUMBER_FLAG: String(1),
-                SHABLON: '%{E}%',
+                PRJ_SHABLON: '%{E}%',
             };
 
             if (this._decl.type === E_COUNTER_TYPE.counterDepartmentRKPD) {
