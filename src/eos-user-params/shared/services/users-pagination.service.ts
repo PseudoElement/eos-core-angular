@@ -43,17 +43,25 @@ export class UserPaginationService {
         }
     }
 
-    _initPaginationConfig(update?: boolean) {
-        this.paginationConfig = Object.assign(this.paginationConfig || { start: 1, current: 1 }, {
-            length: this._storageSrv.getItem(LS_PAGE_LENGTH) || PAGES_SELECT[0].value,
-            itemsQty: this._getCountPage(),
-            start: 1,
-            current: 1
-        });
+    _initPaginationConfig(update?: boolean, reset?: boolean) {
+        if (reset) {
+            this.paginationConfig = Object.assign(this.paginationConfig || { start: 1, current: 1 }, {
+                length: this._storageSrv.getItem(LS_PAGE_LENGTH) || PAGES_SELECT[0].value,
+                itemsQty: this._getCountPage(),
+                start: 1,
+                current: 1
+            });
+        } else {
+            this.paginationConfig = Object.assign(this.paginationConfig || { start: 1, current: 1 }, {
+                length: this._storageSrv.getItem(LS_PAGE_LENGTH) || PAGES_SELECT[0].value,
+                itemsQty: this._getCountPage(),
+            });
+        }
         if (update) {
             this._fixCurrentPage();
         } else {
             const pagination_number_save = this._storageSrv.getItem('page_number_user_settings');
+
             if (pagination_number_save) {
                 this.paginationConfig.current = pagination_number_save;
                 this.paginationConfig.start = pagination_number_save;

@@ -91,7 +91,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     this._pipeSrv.read<USER_PARMS>({
       USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'USER_EDIT_AUDIT' })
     }).then((r: any) => {
-      this._user_pagination._initPaginationConfig(true);
+      this._user_pagination._initPaginationConfig(true, true);
       this.PaginateData(this.config.length, this.orderByStr, 0);
       this._user_pagination.totalPages = undefined;
       if (r[0].PARM_VALUE === 'NO') {

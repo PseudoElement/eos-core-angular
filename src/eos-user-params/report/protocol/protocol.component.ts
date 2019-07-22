@@ -77,12 +77,12 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy, AfterConte
     this._userpar.getUserIsn().then(() => {
       this.curentUser = this._userpar.curentUser.ISN_LCLASSIF;
       this.username = this._userpar.curentUser.SURNAME_PATRON;
-      this._user_pagination._initPaginationConfig(true);
+      this._user_pagination._initPaginationConfig(true, true);
       this.PaginateData(this.config.length, this.orderByStr, 0);
       this._user_pagination.totalPages = undefined;
     })
-    .catch((error: boolean) => {
-    })
+      .catch((error: boolean) => {
+      })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
       });
@@ -302,7 +302,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy, AfterConte
   ConvertDate(convDate) {
     const date = new Date(convDate);
     const curr_date = ('0' + date.getDate()).slice(-2);
-    const curr_month = ('0' + (date.getMonth() + 1) ).slice(-2);
+    const curr_month = ('0' + (date.getMonth() + 1)).slice(-2);
     const curr_year = date.getFullYear();
     const hms = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().substr(11, 8);
     const parseDate = `${curr_year}.${curr_month}.${curr_date} ${hms}`;
