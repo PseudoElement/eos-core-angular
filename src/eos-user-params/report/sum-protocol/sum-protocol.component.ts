@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { USER_PARMS } from 'eos-rest';
@@ -15,8 +15,7 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
   styleUrls: ['./sum-protocol.component.scss']
 })
 
-export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, AfterContentChecked {
-  @ViewChild('someVar') el: ElementRef;
+export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   findUsers: any;
   frontData: any;
   usersAudit: any;
@@ -43,7 +42,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
   currentState: boolean[] = [true, true];
   status: string;
   SortUp: string;
-  checkOverflow: boolean;
   dateCrit: string;
   eventUser: string;
   isnUser: string;
@@ -57,7 +55,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
   public config: IPaginationConfig;
   private ngUnsubscribe: Subject<any> = new Subject();
 
-  constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private cdr: ChangeDetectorRef,
+  constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices,
     private _msgSrv: EosMessageService, private _user_pagination: UserPaginationService) {
     _user_pagination.paginationConfig$
       .pipe(
@@ -587,19 +585,4 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
     this.PaginateData(this.config.length, this.orderByStr, 0);
     this.clearResult = false;
   }
-
-  ngAfterContentChecked() {
-    this.checkOverflow = true;
-    this.cdr.detectChanges();
-  }
-  get getOverflow() {
-    if (this.checkOverflow === true) {
-      if (this.el.nativeElement.scrollHeight > this.el.nativeElement.clientHeight || this.el.nativeElement.scrollWidth > this.el.nativeElement.clientWidth) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
 }
