@@ -20,6 +20,7 @@ import {SevRulesDictionaryDescriptor} from './sev-rules-dictionary-descriptor';
 import {LinkDictionaryDescriptor} from './link-dictionary-descriptor';
 import {NomenklDictionaryDescriptor} from './nomenkl-dictionary-descriptor';
 import { ReestrtypeDictionaryDescriptor } from './reestrtype-dictionary-descriptor';
+import {TemplateDictionaryDescriptor} from './template-dictionary-descriptor';
 // import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 @Injectable()
@@ -109,6 +110,8 @@ export class DictionaryDescriptorService {
                     case 'reestrtype':
                         res = new ReestrtypeDictionaryDescriptor(descr, this.apiSrv);
                         break;
+                        case 'shablony':
+                            res = new TemplateDictionaryDescriptor(descr, this.apiSrv);
                 }
 
                 // Added for parent be a Nadzor

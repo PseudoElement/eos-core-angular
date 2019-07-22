@@ -8,7 +8,7 @@ export const Templates: IDictionaryDescriptor = {
     title: 'Шаблоны',
     visible: true,
     iconName: 'eos-icon-template-blue',
-    actions: ['add', 'markRecords', 'edit'],
+    actions: ['add', 'markRecords', 'edit', 'removeHard'],
     fields: [{
         key: 'NAME_TEMPLATE',
         title: 'Имя файла',
