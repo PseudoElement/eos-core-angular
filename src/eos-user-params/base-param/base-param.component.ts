@@ -434,6 +434,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 return this._userParamSrv.getDepartmentFromUser([dueDep]);
             })
             .then((data: DEPARTMENT[]) => {
+                // при переназначении ДЛ меняем это поле в бд, для ограниченного технолога
+                if (data) {
+                    this.form.get('TECH_DUE_DEP').patchValue(data[0]['DEPARTMENT_DUE']);
+                }
                 this.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
                     this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
                 });
@@ -608,6 +612,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     if (this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value)) {
                         this._confirmSrv.confirm(CONFIRM_UPDATE_USER).then(confirmation => {
                             if (confirmation) {
+                                this.form.get('TECH_DUE_DEP').patchValue('');
                                 this.form.get('DUE_DEP_NAME').patchValue('');
                                 this.form.get('DUE_DEP_NAME').disable();
                                 this.formControls.controls['SELECT_ROLE'].patchValue('');

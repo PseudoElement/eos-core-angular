@@ -9,7 +9,7 @@ import { InputBase } from 'eos-common/core/inputs/input-base';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { EosDictionary } from '../core/eos-dictionary';
 import { SEARCH_TYPES } from 'eos-dictionaries/consts/search-types';
-import { DID_NOMENKL_CL } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
+import { DID_NOMENKL_CL, NOMENKL_DICT } from 'eos-dictionaries/consts/dictionaries/nomenkl.const';
 import { IBaseInput } from 'eos-common/interfaces';
 import { YEAR_PATTERN } from 'eos-common/consts/common.consts';
 
@@ -86,12 +86,18 @@ export class DictionaryFilterComponent implements OnDestroy {
         const cb1Filter = this.searchForm.controls['filter.CB1'];
 
         this.searchForm.valueChanges.subscribe((data) => {
-            if (yearFilter.valid) {
-                this.numberFilter(data['filter.stateYear']);
+            if (this.dictId === NOMENKL_DICT.id) {
+                const nomenklFilt = {};
+                if (yearFilter.valid) {
+                    nomenklFilt['YEAR'] = data['filter.stateYear'];
+                }
+                if (cb1Filter) {
+                    nomenklFilt['CB1'] = data['filter.CB1'];
+                }
+
+                this._dictSrv.setFilter(nomenklFilt);
             }
-            if (cb1Filter) {
-                this.cbFilter(data['filter.CB1']);
-            }
+
             if (dateFilter.valid) {
                 this.dateFilter(data['filter.stateDate']);
             } else if (dateFilter.errors.minDate || dateFilter.errors.maxDate) {
@@ -117,14 +123,6 @@ export class DictionaryFilterComponent implements OnDestroy {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
 
-
-    numberFilter(n: number) {
-        this._dictSrv.setFilter({ YEAR: n});
-    }
-
-    cbFilter(n: boolean) {
-        this._dictSrv.setFilter({ CB1: n});
-    }
 
     dateFilter(date: Date) {
         if (!date || !this.date || date.getTime() !== this.date.getTime()) {
@@ -153,13 +151,11 @@ export class DictionaryFilterComponent implements OnDestroy {
             if (this.dictId === DID_NOMENKL_CL) {
                 const yearFilter = this.searchForm.controls['filter.stateYear'];
                 const cb1 = this.searchForm.controls['filter.CB1'];
-                const yv = this._dictSrv.getFilterValue('YEAR');
+                const yv = this._dictSrv.getFilterValue('YEAR') || yearFilter.value;
                 const cv = this._dictSrv.getFilterValue('CB1');
                 this.hasYear = true;
                 if (yv) {
                     yearFilter.setValue(yv);
-                } else {
-                    this.numberFilter(yearFilter.value);
                 }
 
                 if (cv) {

@@ -569,6 +569,15 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             if (this.countcheckedField === leng) {
                 this.flagChecked = true;
             }
+            if (this.countcheckedField === 1) {
+                this.rtUserService.btnDisabled = true;
+            } else {
+                this.rtUserService.btnDisabled = false;
+            }
+            if (this.countcheckedField > 0 && this.countcheckedField < leng) {
+                this.flagChecked = false;
+            }
+            // emit after variables update
             if (this.countcheckedField === 0) {
                 this.flagChecked = null;
                 this.rtUserService.changeSelectedUser(null);
@@ -576,14 +585,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             }
             if (this.countcheckedField >= 1) {
                 this.rtUserService.changeSelectedUser(this.selectedUser);
-            }
-            if (this.countcheckedField > 0 && this.countcheckedField < leng) {
-                this.flagChecked = false;
-            }
-            if (this.countcheckedField === 1) {
-                this.rtUserService.btnDisabled = true;
-            } else {
-                this.rtUserService.btnDisabled = false;
             }
         }
     }

@@ -296,7 +296,7 @@ export class EosDictionary {
                         node.data.rec._orig.DELETED = (+value); // force DELETED flag, because reload may doesn't referesh it
                     });
                 }
-                return this._resetMarked();
+                // return this._resetMarked();
             });
     }
 
@@ -347,7 +347,7 @@ export class EosDictionary {
                     this._nodes.delete(node.id);
                 }
             });
-            this._resetMarked();
+            // this._resetMarked();
             return Promise.resolve(r);
         });
     }
@@ -546,13 +546,13 @@ export class EosDictionary {
         return records;
     }
 
-    private _resetMarked() {
-        this._nodes.forEach((node) => {
-            if (node.isMarked) {
-                node.isMarked = false;
-            }
-        });
-    }
+    // private _resetMarked() {
+    //     this._nodes.forEach((node) => {
+    //         if (node.isMarked) {
+    //             node.isMarked = false;
+    //         }
+    //     });
+    // }
 
     private _extendCritery(critery: any, params: ISearchSettings, selectedNode?: EosDictionaryNode) {
         switch (this.descriptor.type) {
