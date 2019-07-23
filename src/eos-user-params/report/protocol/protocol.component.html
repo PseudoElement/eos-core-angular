@@ -38,14 +38,14 @@
                         Событие
                         <span *ngIf="status === 'eventUser'" class="icon eos-icon small" [ngClass]="{'eos-icon-arrow-blue-top': arrSort[1].event, 'eos-icon-arrow-blue-bottom': !arrSort[1].event}"></span>
                     </span>
-                    <span class=" width-title3 likeLink-prot" (click)="SortPageList(3)" [ngClass]="getOverflow ? 'mar-edit-span' : 'mar-edit-span-start'">
+                    <span class=" width-title3 likeLink-prot" (click)="SortPageList(3)">
                         Пользователь
                         <span *ngIf="status === 'WHO'" class="icon eos-icon small" [ngClass]="{'eos-icon-arrow-blue-top': arrSort[2].who, 'eos-icon-arrow-blue-bottom': !arrSort[2].who}"></span>
                     </span>
                 </div>
             </div>
             <div class="selected-wrapper">
-                <div class="user-item prot-list-prot" #someVar>
+                <div class="user-item prot-list-prot">
                     <div *ngFor="let user of frontData; let i = index ">
                         <div class="contain-span-header"  [ngClass]="{'highlighted': user.checked === true}">
                             <span class="item-table width-title1"  (click)="SingleUserCheck(user)">
@@ -64,8 +64,9 @@
                         </div>  
                     </div>
                 </div>
-            <eos-user-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-user-list-pagination> 
+           
         </div>
+        <eos-user-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-user-list-pagination> 
     </div>
 </div>
 </div>

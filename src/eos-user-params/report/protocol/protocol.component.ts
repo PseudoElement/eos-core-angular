@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { IPaginationConfig } from 'eos-dictionaries/node-list-pagination/node-list-pagination.interfaces';
@@ -12,8 +12,7 @@ import { UserParamsService } from 'eos-user-params/shared/services/user-params.s
   templateUrl: './protocol.component.html',
   styleUrls: ['./protocol.component.scss']
 })
-export class EosReportProtocolComponent implements OnInit, OnDestroy, AfterContentChecked {
-  @ViewChild('someVar') el: ElementRef;
+export class EosReportProtocolComponent implements OnInit, OnDestroy {
   findUsers: any;
   frontData: any;
   usersAudit: any;
@@ -33,7 +32,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy, AfterConte
     'Удаление Пользователя'
   ];
   critUsers = [];
-  currentState: boolean[] = [true, true];
+  currentState: boolean[] = [false, false];
   status: string;
   SortUp: string;
   checkOverflow: boolean;
@@ -48,7 +47,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy, AfterConte
   public config: IPaginationConfig;
   private ngUnsubscribe: Subject<any> = new Subject();
 
-  constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private cdr: ChangeDetectorRef, private _userpar: UserParamsService,
+  constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private _userpar: UserParamsService,
     private _user_pagination: UserPaginationService) {
     _user_pagination.paginationConfig$
       .pipe(
@@ -81,8 +80,8 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy, AfterConte
       this.PaginateData(this.config.length, this.orderByStr, 0);
       this._user_pagination.totalPages = undefined;
     })
-    .catch((error: boolean) => {
-    })
+      .catch((error: boolean) => {
+      })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
       });
@@ -90,15 +89,12 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy, AfterConte
 
   PaginateData(length, orderStr, skip?) {
     this._pipeSrv.read({
-      USER_AUDIT: {
-        criteries: {
-          'ISN_USER': `${this.curentUser}`,
-          orderby: orderStr,
-        },
-        top: length,
-        skip: skip,
-        inlinecount: 'allpages'
-      }
+      USER_AUDIT:
+        PipRX.criteries({ ISN_USER: `${this.curentUser}` }),
+      orderby: orderStr,
+      top: length,
+      skip: skip,
+      inlinecount: 'allpages'
     })
       .then((data: any) => {
         this.usersAudit = data;
@@ -302,26 +298,13 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy, AfterConte
   ConvertDate(convDate) {
     const date = new Date(convDate);
     const curr_date = ('0' + date.getDate()).slice(-2);
-    const curr_month = ('0' + (date.getMonth() + 1) ).slice(-2);
+    const curr_month = ('0' + (date.getMonth() + 1)).slice(-2);
     const curr_year = date.getFullYear();
     const hms = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().substr(11, 8);
     const parseDate = `${curr_year}.${curr_month}.${curr_date} ${hms}`;
     return parseDate;
   }
 
-  ngAfterContentChecked() {
-    this.checkOverflow = true;
-    this.cdr.detectChanges();
-  }
-  get getOverflow() {
-    if (this.checkOverflow === true) {
-      if (this.el.nativeElement.scrollHeight > this.el.nativeElement.clientHeight || this.el.nativeElement.scrollWidth > this.el.nativeElement.clientWidth) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
 
 }
 

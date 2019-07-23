@@ -6,13 +6,11 @@
     .contain-span{
         display: flex;
         justify-content: space-around;
-        width:81%;
     }
     .contain-span-header{
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        width: 100%;
         padding-left: 10px;
     }
     .item-table{
@@ -20,13 +18,13 @@
         cursor: pointer;
     }
     .width-title1{
-        width: 31%;
+        width: 200px;
     }
     .width-title2{
-        width: 45%;
+        width: 350px;
     }
     .width-title3{
-        width: 24%;
+        width: 100px;
     }
     .prot-report-list{
         background-color: white;
@@ -51,7 +49,6 @@
     }
     .item-count-prot {
         align-self: center;
-        height: 100%;
         width: fit-content;
         display: inline-block;
         border-left-width: 1px;
@@ -118,8 +115,5 @@
     .btn-s{
         height: 48px;
         width: 48px;
-    }
-    .mar-edit-span-start {
-        margin-right: 0px;
     }
 }
