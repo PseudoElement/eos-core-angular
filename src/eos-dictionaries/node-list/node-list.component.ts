@@ -45,7 +45,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     customFields: IFieldView[] = [];
     length = {};
     min_length = {};
-    modalWindow: BsModalRef;
+    modalWindow: BsModalRef = null;
     nodes: EosDictionaryNode[] = []; // Elements for one page
     orderBy: IOrderBy;
     params: IDictionaryViewParameters;
@@ -86,6 +86,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                     this._dictId = _dictSrv.currentDictionary.id;
 
                     this.customFields = this._dictSrv.customFields;
+
                     this.updateViewFields(this.customFields);
 
                     const _customTitles = this._dictSrv.customTitles;
@@ -177,6 +178,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         this.modalWindow.content.dictionaryFields = EosUtils.deepUpdate([],
             this._dictSrv.currentDictionary.descriptor.record.getFieldSet(E_FIELD_SET.allVisible));
 
+        const subscriptionClose = this.modalWindow.content.onClose.subscribe(() => {
+            this.modalWindow = null;
+            subscriptionClose.unsubscribe();
+        });
+
         const subscription = this.modalWindow.content.onChoose.subscribe(() => {
             this.customFields = this._dictSrv.customFields;
             const _customTitles = this._dictSrv.customTitles;
@@ -190,13 +196,17 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 this.orderBy = this._dictSrv.currentDictionary.orderDefault();
             }
 
-            this._dictSrv.orderBy(this.orderBy, false);
+            this.updateViewFields(this.customFields);
+            this._dictSrv.updateVisibleList();
             this._countColumnWidth();
             subscription.unsubscribe();
         });
     }
 
     isCorrectOrderBy(): boolean {
+        if (this.orderBy === null) {
+            return true;
+        }
         if (this.viewFields.find(v => v.key === this.orderBy.fieldKey)) {
             return true;
         }
@@ -497,14 +507,14 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     get recalcDone() {
-        return /*!this._recalcEvent && */!this._repaintFlag;
+        return /*!this._recalcEvent && */!this._repaintFlag && this.modalWindow === null;
     }
     private _countColumnWidth() {
         if (!this._recalcEvent) {
             this._recalcEvent = setTimeout(() => {
                 this._countColumnWidthUnsafe();
                 this._recalcEvent = null;
-            }, 100);
+            }, 1);
         }
     }
 

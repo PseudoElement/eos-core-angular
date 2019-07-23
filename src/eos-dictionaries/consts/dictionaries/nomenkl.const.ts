@@ -89,6 +89,11 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         type: 'select',
         options: [],
         dictionaryId: 'USER_CL',
+        dictionaryLink: {
+            pk: 'ISN_LCLASSIF',
+            fk: 'CLOSE_WHO',
+            label: 'SURNAME_PATRON',
+        },
     }, {
         key: 'CLOSE_DATE',
         title: 'Дата закрытия',

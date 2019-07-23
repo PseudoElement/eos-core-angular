@@ -1096,6 +1096,10 @@ export class EosDictService {
         this._bufferNodes = this.getMarkedNodes(false);
     }
 
+    updateVisibleList(): any {
+        this.changePagination(this.paginationConfig);
+    }
+
     private getDictionaryById(id: string): Promise<EosDictionary> {
         const existDict = this._dictionaries.find((dictionary) => dictionary && dictionary.id === id);
         if (existDict) {
@@ -1397,6 +1401,8 @@ export class EosDictService {
             this.updateMarked(true);
         }
     }
+
+
 
     private _openNode(node: EosDictionaryNode) {
         if (this._listNode !== node) {

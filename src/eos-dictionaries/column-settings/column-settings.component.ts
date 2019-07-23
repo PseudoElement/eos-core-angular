@@ -16,6 +16,7 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
     @Input() currentFields: IFieldView[] = [];
     @Input() dictionaryFields: IFieldView[] = [];
     @Output() onChoose: EventEmitter<any> = new EventEmitter<any>();
+    @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
     public haveCustomTitle = false;
 
     selectedDictItem: IFieldView;
@@ -84,6 +85,7 @@ export class ColumnSettingsComponent implements OnDestroy, OnInit {
         }
         this._subscriptionDrop.unsubscribe();
         this._subscriptionDrag.unsubscribe();
+        this.onClose.emit();
     }
 
     /**
