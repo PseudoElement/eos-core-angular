@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { UserParamsService } from '../shared/services/user-params.service';
+import { EosStorageService } from '../../app/services/eos-storage.service';
 import { Router } from '@angular/router';
 @Component({
     selector: 'eos-user-params-header',
@@ -21,6 +22,7 @@ export class UserHeaderComponent {
     constructor(
         private _userServices: UserParamsService,
         private _router: Router,
+        private _storage: EosStorageService,
     ) {
         this.selfLink = this._router.url.split('?')[0];
         this.link = this._userServices.userContextId;
@@ -45,6 +47,7 @@ export class UserHeaderComponent {
         this.editEmit.emit(this.editMode);
     }
     close() {
+        this._storage.setItem('saveQuickSearch', 'true');
         this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 }

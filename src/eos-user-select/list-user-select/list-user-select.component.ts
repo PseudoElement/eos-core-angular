@@ -39,6 +39,7 @@ interface TypeBread {
 })
 export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentChecked {
     @ViewChild('listContent') listContent;
+    @ViewChild('quickSearchOpen') quickSearch;
     currentState: boolean[];
     createUserModal: BsModalRef;
     listUsers: UserSelectNode[];
@@ -57,6 +58,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     // количество выбранных пользователей
     countcheckedField: number;
     shadow: boolean = false;
+    showCloseQuickSearch: boolean = false;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public rtUserService: RtUserSelectService,
@@ -104,7 +106,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 this.flagChecked = null;
                 this.listUsers = data;
                 if (this.listUsers && this.listUsers.length) {
-                    this.selectedNode(this.listUsers[0]);
+                    if (!this._storage.getItem('saveQuickSearch')) {
+                        this.selectedNode(this.listUsers[0]);
+                    } else {
+                        this.selectedNode(this.findSelectedSaveUsers()[0] ? this.findSelectedSaveUsers()[0] : this.listUsers[0]);
+                    }
                 } else {
                     this.selectedNode(null);
                 }
@@ -118,6 +124,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe(r => {
+                this.showCloseQuickSearch = false;
+                this._storage.removeItem('quickSearch');
                 this._storage.removeItem('selected_user_save');
                 this.initView();
             });
@@ -219,18 +227,27 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         this._apiSrv.getUsers(param || '0.')
             .then((data: UserSelectNode[]) => {
                 //  this._pagSrv.UsersList =  this.helpersClass.sort(data, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-                this.listUsers = this._pagSrv.UsersList.slice((this._pagSrv.paginationConfig.start - 1)
+                if (this._storage.getItem('saveQuickSearch') && this._storage.getItem('quickSearch')) {
+                        this._apiSrv.Allcustomer = this._apiSrv._getListUsers(this._storage.getItem('quickSearch')).slice();
+                        this.setListSearch();
+                        this.showCloseQuickSearch = true;
+                } else {
+                    this._storage.removeItem('quickSearch');
+                    this.showCloseQuickSearch = false;
+                    this.listUsers = this._pagSrv.UsersList.slice((this._pagSrv.paginationConfig.start - 1)
                     * this._pagSrv.paginationConfig.length,
                     this._pagSrv.paginationConfig.current
                     * this._pagSrv.paginationConfig.length);
-                if (this.listUsers && this.listUsers.length) {
-                    this.selectedNode(this.findSelectedSaveUsers()[0] ? this.findSelectedSaveUsers()[0] : this.listUsers[0]);
-                    //    this._storage.removeItem('selected_user_save');
-                } else {
-                    this.selectedNode(null);
+                    if (this.listUsers && this.listUsers.length) {
+                        this.selectedNode(this.findSelectedSaveUsers()[0] ? this.findSelectedSaveUsers()[0] : this.listUsers[0]);
+                        //    this._storage.removeItem('selected_user_save');
+                    } else {
+                        this.selectedNode(null);
+                    }
                 }
                 //  this.updateFlafListen();
                 this.isLoading = false;
+                this._storage.removeItem('saveQuickSearch');
                 this.countMaxSize = this._pagSrv.countMaxSize;
 
             }).catch(error => {
@@ -691,10 +708,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             });
         } else {
             this._apiSrv.updatePageList($event, this.shooseP).then((res) => {
+                this._storage.setItem('quickSearch', $event);
                 this._apiSrv.Allcustomer = this._apiSrv._getListUsers(res).slice();
                 this.setListSearch();
             });
         }
+        this.showCloseQuickSearch = true;
     }
     setListSearch() {
         this._pagSrv.UsersList = this._apiSrv.Allcustomer;
@@ -725,6 +744,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                     this.searchUsers(users);
                 });
             }
+    }
+    resetSearch() {
+        const url = this._router.url.split('/');
+        this.showCloseQuickSearch =  false;
+        this.initView(url[url.length - 1]);
+        this.quickSearch.clearQuickForm();
+        this._storage.removeItem('quickSearch');
     }
 
     private cathError(e) {
