@@ -286,7 +286,8 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     isEditEnabled(): boolean {
 
         if (this._eaps.isAccessGrantedForDictionary(this.dictionaryId,
-            this._dictSrv.treeNodeIdByDict(this._dictSrv.currentDictionary.id)) < APS_DICT_GRANT.readwrite) {
+            this._dictSrv.getDueForNode(this.node)
+            /*this._dictSrv.treeNodeIdByDict(this._dictSrv.currentDictionary.id)*/) < APS_DICT_GRANT.readwrite) {
             return false;
         }
 
@@ -312,7 +313,6 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     }
 
     private _getNode() {
-        // console.log('_getNode', this.dictionaryId, this.nodeId);
         return this._dictSrv.getFullNode(this.dictionaryId, this.nodeId)
             .then((node) => {
                 if (node) {
@@ -323,7 +323,6 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                     this._msgSrv.addNewMessage(NAVIGATE_TO_ELEMENT_WARN);
                 }
             });
-        // .catch((err) => console.log('getNode error', err));
     }
 
     private _initNodeData(node: EosDictionaryNode) {

@@ -1,6 +1,6 @@
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { DICTIONARIES_PARAM } from './../shared/consts/dictionaries-consts';
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { BaseParamComponent } from '../shared/base-param.component';
 import { RUBRICATOR_DICT } from 'eos-dictionaries/consts/dictionaries/rubricator.consts';
 
@@ -9,7 +9,7 @@ import { RUBRICATOR_DICT } from 'eos-dictionaries/consts/dictionaries/rubricator
     templateUrl: 'param-dictionaries.component.html'
 })
 export class ParamDictionariesComponent extends BaseParamComponent {
-
+    @Input() btnError;
     constructor( injector: Injector,
         private _eaps: EosAccessPermissionsService,
         ) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 import { USER_PARMS } from 'eos-rest';
@@ -15,8 +15,7 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
   styleUrls: ['./sum-protocol.component.scss']
 })
 
-export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, AfterContentChecked {
-  @ViewChild('someVar') el: ElementRef;
+export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   findUsers: any;
   frontData: any;
   usersAudit: any;
@@ -43,7 +42,10 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
   currentState: boolean[] = [true, true];
   status: string;
   SortUp: string;
-  checkOverflow: boolean;
+  dateCrit: string;
+  eventUser: string;
+  isnUser: string;
+  isnWho: string;
   arrSort = [
     { date: true },
     { event: false },
@@ -53,7 +55,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
   public config: IPaginationConfig;
   private ngUnsubscribe: Subject<any> = new Subject();
 
-  constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private cdr: ChangeDetectorRef,
+  constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices,
     private _msgSrv: EosMessageService, private _user_pagination: UserPaginationService) {
     _user_pagination.paginationConfig$
       .pipe(
@@ -65,6 +67,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
           if (this._user_pagination.totalPages !== undefined && this.resetPage === false) {
             if (this.config.current > this.config.start) {
               this.PaginateData(this.config.length * 2, this.orderByStr);
+            } else if (this.config.current && this.initPage === true && this.clearResult === true) {
+              this.GetSortData();
             } else if (this.config.current && this.initPage === true) {
               this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
             }
@@ -91,6 +95,36 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
         this.logUsers = true;
       }
     });
+  }
+
+  GetSortData() {
+    this._pipeSrv.read({
+      USER_AUDIT:
+        PipRX.criteries({
+          EVENT_KIND: this.eventUser,
+          EVENT_DATE: this.dateCrit,
+          ISN_USER: this.isnUser,
+          ISN_WHO: this.isnWho,
+        }),
+      orderby: this.orderByStr,
+      top: this.config.length,
+      skip: this.config.length * this.config.current - this.config.length,
+      inlinecount: 'allpages'
+    }).then((data: any) => {
+      this.usersAudit = data;
+      if (this.usersAudit.length === 0) {
+        this._msgSrv.addNewMessage({
+          title: 'Ничего не найдено',
+          msg: 'попробуйте изменить поисковую фразу',
+          type: 'warning'
+        });
+      } else {
+        this.ParseDate(this.usersAudit);
+      }
+    })
+      .catch((error) => {
+        this._errorSrv.errorHandler(error);
+      });
   }
 
   PaginateData(length, orderStr, skip?) {
@@ -189,7 +223,11 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
       // });
     } else if (critSearch === 'EVENT_DATE') {
       this.orderByStr = `${critSearch} ${this.SortUp}`;
-      this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+      if (this.clearResult === true) {
+        this.GetSortData();
+      } else {
+        this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+      }
     }
   }
 
@@ -416,23 +454,24 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
     } else {
       dateSearch = undefined;
     }
+    this.dateCrit = dateSearch;
+    this.eventUser = eventUser;
+    this.isnUser = isnUser;
+    this.isnWho = isnWho;
     this._pipeSrv.read({
-      USER_AUDIT: {
-        criteries: {
+      USER_AUDIT:
+        PipRX.criteries({
           EVENT_KIND: eventUser,
           EVENT_DATE: dateSearch,
           ISN_USER: isnUser,
-          ISN_WHO: isnWho
-        },
-        //  orderby: 'ISN_EVENT',
-        orderby: this.orderByStr,
-        top: this._user_pagination.paginationConfig.length,
-        skip: 0,
-        inlinecount: 'allpages'
-      },
+          ISN_WHO: isnWho,
+          orderby: this.orderByStr,
+        }),
+      top: this.config.length,
+      skip: 0,
+      inlinecount: 'allpages'
     })
       .then((data: any) => {
-        console.log(data);
         this.usersAudit = data;
         this.initPage = false;
         if (this.usersAudit.length === 0) {
@@ -442,6 +481,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
             type: 'warning'
           });
           this.frontData = [];
+          this._user_pagination.totalPages = 0;
         } else {
           const parsePosts = data.TotalRecords;
           if (parsePosts !== undefined) {
@@ -449,9 +489,11 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
           } else {
             this._user_pagination.totalPages = this.usersAudit.length;
           }
-          this._user_pagination.changePagination(this.config);
           this.ParseDate(this.usersAudit);
         }
+        this.config.current = 1;
+        this.config.start = 1;
+        this._user_pagination.changePagination(this.config);
         this.clearResult = true;
         this.initPage = true;
       })
@@ -533,22 +575,9 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy, Aft
   resetSearch() {
     this.resetPage = true;
     this._user_pagination.totalPages = undefined;
+    this._user_pagination.paginationConfig.start = 1;
+    this._user_pagination.paginationConfig.current = 1;
     this.PaginateData(this.config.length, this.orderByStr, 0);
     this.clearResult = false;
   }
-
-  ngAfterContentChecked() {
-    this.checkOverflow = true;
-    this.cdr.detectChanges();
-  }
-  get getOverflow() {
-    if (this.checkOverflow === true) {
-      if (this.el.nativeElement.scrollHeight > this.el.nativeElement.clientHeight || this.el.nativeElement.scrollWidth > this.el.nativeElement.clientWidth) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }
-
 }

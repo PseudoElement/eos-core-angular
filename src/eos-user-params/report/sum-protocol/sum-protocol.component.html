@@ -6,7 +6,7 @@
             Протоколирование работы со справочником 'Пользователи'</label>
     </div>
     <div class="sum-report-wrapper">
-        <div class="table-wrapper usual-border">
+        <div class="table-wrapper-head usual-border">
             <div class="sum-report-list">
                 <div class="table-header">
                     <div class="table-sum-wraper">
@@ -48,10 +48,11 @@
                 <div class="table-header">
                     <div class="table-title contain-span-header">
                         <div class="check-sum mar-check">
-                            <label class="checkbox">
-                                <input [checked]="flagChecked" type="checkbox" (change)="toggleAllMarks($event)">
+                            <label class="checkbox" >
+                                <input #checkAllMarkes [checked]="flagChecked" type="checkbox" (change)="toggleAllMarks($event)">
                                 <div>
-                                    <span class="eos-icon small" [ngClass]="getflagChecked"></span>
+                                    <span class="eos-icon small" [ngClass]="getflagChecked" [tooltip]="checkAllMarkes.checked ? 'Снять пометки' : 'Пометить все'"
+                                     placement="bottom" containerClass="tooltip-info fix-pos-check" ></span>
                                 </div>
                             </label>
                         </div>
@@ -67,7 +68,7 @@
                             Редактировал
                             <span *ngIf="status === 'WHO'" class="icon eos-icon small" [ngClass]="{'eos-icon-arrow-blue-top': arrSort[2].who, 'eos-icon-arrow-blue-bottom': !arrSort[2].who}"></span>
                         </span>
-                        <span class=" likeLink-sum width-title3" [ngClass]="getOverflow ? 'mar-edit-span' : 'mar-edit-span-start'" (click)="SortPageList(4)">
+                        <span class=" likeLink-sum width-title3" (click)="SortPageList(4)">
                             Пользователя
                             <span *ngIf="status === 'USER'" class="icon eos-icon small" [ngClass]="{'eos-icon-arrow-blue-top': arrSort[3].isn, 'eos-icon-arrow-blue-bottom': !arrSort[3].isn}"></span>
                         </span>

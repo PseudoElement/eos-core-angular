@@ -64,7 +64,8 @@
     }
     .checkbox-inline {
         line-height: $item-height - 1px;
-        width: $item-width - 2px;
+        width: $item-width;
+        min-width: $item-width;
     }
 }
 

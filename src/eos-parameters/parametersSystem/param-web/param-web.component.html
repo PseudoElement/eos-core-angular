@@ -1,9 +1,9 @@
 <div class="input-param-wrapper input-param-web-wrapper" *ngIf="form">
     <eos-param-header
         [title]="titleHeader"
-        (submitForm)="submit()"
+        (submitForm)="btnDisabled ? cancel() : submit()"
         (cancelForm)="cancel()"
-        [statusBtnSub]="btnDisabled"
+        [statusBtnSub]="btnError"
     ></eos-param-header>
     <div class="param-input-group">
         <span class="l-font">Объект поддержки ЭП и шифрования</span>

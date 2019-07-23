@@ -39,6 +39,11 @@ export const BASE_PARAM_INPUTS: IInputParamControl[] = [
         required: true,
         data: '',
     },
+    {
+        controlType: E_FIELD_TYPE.string,
+        key: 'TECH_DUE_DEP',
+        label: 'Ограничение',
+    },
 ];
 
 export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [

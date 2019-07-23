@@ -6,13 +6,13 @@
     .contain-span{
         display: flex;
         justify-content: space-around;
-        width:81%;
+       // width:81%;
     }
     .contain-span-header{
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        width: 100%;
+     //   width: 100%;
         padding-left: 10px;
     }
     .item-table{
@@ -20,13 +20,13 @@
         cursor: pointer;
     }
     .width-title1{
-        width: 19%;
+        width: 200px;
     }
     .width-title2{
-        width: 30%;
+        width: 400px;
     }
     .width-title3{
-        width: 24%;
+        width: 300px;
     }
     .sum-report-list{
         background-color: white;
@@ -54,7 +54,7 @@
     }
     .item-count-sum {
         align-self: center;
-        height: 100%;
+   //     height: 100%;
         width: fit-content;
         display: inline-block;
         border-left-width: 1px;
@@ -125,20 +125,10 @@
     .mar-edit-span-start {
         margin-right: 0px;
     }
+    .table-wrapper-head{
+        width: 100%;
+        border-width: 1px;
+        border-style: solid;
+        position: relative;
+    }
 }
-
- @media (min-width: 1500px) and (max-width: 1899px) {
-    .mar-edit-span {
-        margin-right: 29px;
-    }
-  }
- @media (min-width: 1900px) {
-    .mar-edit-span {
-        margin-right: 38px;
-    }
-  }
-  @media (min-width: 700px) and (max-width: 1499px) {
-    .mar-edit-span {
-        margin-right: 18px;
-    }
-  }

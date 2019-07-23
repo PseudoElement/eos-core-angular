@@ -18,6 +18,7 @@ import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../shared/services/helper-error.services';
+import { EosStorageService } from '../../app/services/eos-storage.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { NavParamService } from 'app/services/nav-param.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -81,6 +82,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private modalService: BsModalService,
         private _confirmSrv: ConfirmWindowService,
         private apiSrvRx: PipRX,
+        private _storage: EosStorageService,
     ) { }
     ngOnInit() {
         this._userParamSrv.getUserIsn({
@@ -221,6 +223,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             });
             return;
         }
+        this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
         const id = this._userParamSrv.userContextId;
         const newD = {};
         const query = [];
@@ -328,12 +331,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     cancel() {
         //  this.isLoading = true;
         this.editMode = !this.editMode;
-        this.editModeF();
         this.cancelValues(this.inputs, this.form);
         this.cancelValues(this.controls, this.formControls);
         this.cancelValues(this.accessInputs, this.formAccess);
         this.clearMap();
         this._pushState();
+        this.editModeF();
     }
     cancelValues(inputs, form: FormGroup) {
         Object.keys(inputs).forEach((key, val, arr) => {
@@ -404,6 +407,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
     }
     close() {
+        this._storage.setItem('saveQuickSearch', 'true');
         this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 
@@ -433,6 +437,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 return this._userParamSrv.getDepartmentFromUser([dueDep]);
             })
             .then((data: DEPARTMENT[]) => {
+                // при переназначении ДЛ меняем это поле в бд, для ограниченного технолога
+                if (data) {
+                    this.form.get('TECH_DUE_DEP').patchValue(data[0]['DEPARTMENT_DUE']);
+                }
                 this.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
                     this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
                 });
@@ -607,6 +615,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     if (this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value)) {
                         this._confirmSrv.confirm(CONFIRM_UPDATE_USER).then(confirmation => {
                             if (confirmation) {
+                                this.form.get('TECH_DUE_DEP').patchValue('');
                                 this.form.get('DUE_DEP_NAME').patchValue('');
                                 this.form.get('DUE_DEP_NAME').disable();
                                 this.formControls.controls['SELECT_ROLE'].patchValue('');

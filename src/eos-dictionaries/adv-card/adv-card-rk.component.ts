@@ -11,7 +11,7 @@ import { RKBasePage } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_BEEN_DELETED, RK_SELECTED_LIST_CONTAIN_DELETED } from 'app/consts/confirms.const';
+import { RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_BEEN_DELETED, RK_SELECTED_LIST_CONTAIN_DELETED, RK_SELECTED_VALUE_LOGIC_DELETED } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
@@ -168,7 +168,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             for (let i = 0; i < sortable.length; i++) {
                 const el: TDefaultField = sortable[i];
                 if (!el.dict) { continue; }
-                if (el.dict.dictId !== 'USER_LISTS') { continue; }
+                // if (el.dict.dictId !== 'USER_LISTS') { continue; }
 
                 const val = newdata[DEFAULTS_LIST_NAME][el.key];
                 if (val) {
@@ -179,9 +179,9 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                     if (opt && opt.hasDeleted) {
                         confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_CONTAIN_DELETED);
                     }
-                    // if (opt && opt.disabled) {
-                    //     confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_VALUE_LOGIC_DELETED);
-                    // }
+                    if (opt && opt.disabled) {
+                        confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_VALUE_LOGIC_DELETED);
+                    }
                     if (!opt) {
                         const control = this.form.controls[DEFAULTS_LIST_NAME + '.' + el.key];
                         if (control) {

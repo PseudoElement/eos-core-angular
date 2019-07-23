@@ -1,4 +1,4 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { BaseParamComponent } from '../shared/base-param.component';
 import { AUTH_PARAM } from '../shared/consts/auth-consts';
 import { PARM_CANCEL_CHANGE } from '../shared/consts/eos-parameters.const';
@@ -10,6 +10,7 @@ import { AuthenticationCollectionComponent } from './collection/collection.compo
     templateUrl: 'param-authentication.component.html'
 })
 export class ParamAuthenticationComponent extends BaseParamComponent {
+    @Input() btnError;
     modalCollection: BsModalRef;
     readOnlyPassCase: boolean;
     readOnlyPassListSubstr: boolean;

@@ -9,32 +9,35 @@
         height: 48px;
         width: 48px;
     }
-
-    .menu-list {
-        border-top: solid 1px #e6e6e6;
-    }
     .disabled {
         pointer-events: none;
         cursor: not-allowed;
     }
 }
-.activemore,
-.activeShow {
+.activemore{
     background-color: #2196f3!important;
 }
-
+.activeShow {
+    background: #e3f2fd!important;
+}
 .menu-link {
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: #2196f3;
+    border-top: solid 1px #e6e6e6;
     .btn-icon {
         margin-left: 10px;
     }
     .btn-title {
-        font-size: 13px;
+        font-size: 14px;
         margin-left: 10px;
         white-space: normal;
         line-height: normal;
+        text-align: left;
     }
     .not-active-btn{
         width: 252px;

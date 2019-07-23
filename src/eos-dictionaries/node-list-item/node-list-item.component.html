@@ -21,9 +21,9 @@
                             [node]="node"
                             [width]="length[field.key]"
                             (view)="viewNode($event, true)"></eos-node-field><!--
-            --><eos-node-field *ngFor="let field of getSlicedCustomFields();let first=first;"
+            --><eos-node-field *ngFor="let field of customSliced;let first=first;"
                             class="old-pull-left1"
-                            [class.left-shadowed]="first&&(isShifted())"
+                            [class.left-shadowed]="first && (firstColumnIndex !== 0)"
                             [ngStyle]="{'width.px': length[field.key]}"
                             [width]="length[field.key]"
                             [field]="field"

@@ -94,10 +94,10 @@ export const OpenAddressManagementWindow: BtnActionFields = {
 };
 export const OpenStreamScanSystem: BtnActionFields = {
     name: 'OpenStreamScanSystem',
-    title: 'Окно прав пользователя в Поточное сканир...',
+    title: 'Поточное сканирование',
     disabledClass: 'eos-icon eos-icon-Sc-Grey small',
     enableClass: 'eos-icon eos-icon-Sc-Blue small',
-    tooltip: 'Открыть окно настроек прав пользователя в системе Поточное сканирование',
+    tooltip: 'Поточное сканирование',
     disabled: false,
     activeClass: 'eos-icon eos-icon-Sc-Blue small',
     activeBtnClass: '',

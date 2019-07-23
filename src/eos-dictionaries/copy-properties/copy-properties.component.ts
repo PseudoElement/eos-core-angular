@@ -37,9 +37,9 @@ export class CopyPropertiesComponent implements OnDestroy {
     fromParent: boolean;
     title: string;
     saveButtonLabel: string;
+    properties;
     private rec_to;
     private rec_from;
-    private properties;
     private properties_for_request = [];
     private formChanges$: Subscription;
 

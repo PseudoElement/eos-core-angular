@@ -1,5 +1,10 @@
 <div *ngIf="inputs" class="input-param-wrapper input-param-other-wrapper">
-    <eos-param-header [title]="titleHeader" (submitForm)="submit()" (cancelForm)="cancel()" [statusBtnSub]="btnDisabled"></eos-param-header>
+    <eos-param-header 
+        [title]="titleHeader" 
+        (submitForm)="btnDisabled ? cancel() : submit()"
+        (cancelForm)="cancel()" 
+        [statusBtnSub]="btnError"
+    ></eos-param-header>
     <div class="param-input-group">
         <span class="l-font">Подсистемы &laquo;Дело&raquo;</span>
         <hr>

@@ -1,29 +1,5 @@
 <div class="base-param-wrapper" *ngIf="!isLoading">
-    <header>
-        <div class="edit-header" [ngClass]="{'edited': editMode}">
-            <div class="name-wrapper">
-                <span class="edit-title primary-text long-title">{{title}}</span>
-            </div>
-            <div class="buttons-wrapper" *ngIf="editMode">
-                <div>
-                    <button class="btn btn-primary upper" (click)="cancel()">Отменить</button>
-                    <button class="btn btn-primary-full upper" [disabled]="!stateHeaderSubmit || errorPass || !getValidDate" (click)="submit()">Сохранить</button>
-                    <!-- <button class="btn btn-primary-full upper" [disabled]="stateHeaderSubmit || errorPass || !getValidDate" (click)="submit()">Сохранить</button> -->
-                    <!-- <button class="btn btn-primary-full upper" (click)="submit()">Сохранить</button> -->
-                </div>
-            </div>
-            <div class="action-wrapper" *ngIf="!editMode">
-                <div class="pull-right">
-                    <button class="btn btn-primary-light" aria-hidden="true" (click)="edit()" tooltip="Редактировать" placement="bottom" containerClass="tooltip-info"><span class="eos-icon eos-icon-edit-blue small"></span></button>
-                    <a class="btn btn-primary-light" rel="noopener" triggers="hover" routerLink="{{selfLink}}" [queryParams]="{isn_cl: curentUser['ISN_LCLASSIF']}" aria-hidden="true" tooltip="Открыть в новом окне" container="body" placement="bottom" containerClass="tooltip-info" target="_blank"><span class="eos-icon eos-icon-external-link-blue small"></span></a>
-                    <button class="btn btn-primary-light" aria-hidden="true" (click)="close()" tooltip="Закрыть" placement="bottom" containerClass="tooltip-info">
-                        <span class="eos-icon eos-icon-close-blue small"></span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </header>
-
+    <eos-user-params-header [editMode]="editMode" [title]='title' [disableBtn]="errorPass || !getValidDate" (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)'></eos-user-params-header>
     <div class="base-param-main">
         <!-- Логин и Аутентификация с помощью ОС -->
         <div class="wrapper-password">
