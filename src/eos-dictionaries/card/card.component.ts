@@ -27,7 +27,7 @@ import {
     WARN_SAVE_FAILED
 } from '../consts/messages.consts';
 import { NAVIGATE_TO_ELEMENT_WARN } from '../../app/consts/messages.consts';
-import { CONFIRM_SAVE_ON_LEAVE } from '../consts/confirm.consts';
+import { CONFIRM_SAVE_ON_LEAVE, CONFIRM_SAVE_ON_LEAVE2 } from '../consts/confirm.consts';
 import { LS_EDIT_CARD } from '../consts/common';
 
 import { CardEditComponent } from 'eos-dictionaries/card-views/card-edit.component';
@@ -426,10 +426,13 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
     private _askForSaving(): Promise<boolean> {
         if (this.isChanged) {
-            return this._confirmSrv.confirm(Object.assign({}, CONFIRM_SAVE_ON_LEAVE,
-                { confirmDisabled: this.disableSave }))
+            return this._confirmSrv.confirm2(Object.assign({}, CONFIRM_SAVE_ON_LEAVE2,
+                { confirmDisabled: false }))
                 .then((doSave) => {
-                    if (doSave) {
+                    if (doSave === null) {
+                        return false;
+                    }
+                    if (doSave.result === 1) {
                         const _data = this.cardEditRef.getNewData();
                         return this._save(_data)
                             .then((node) => !!node);
@@ -438,13 +441,34 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
                     }
                 })
                 .catch(() => {
-                    // console.log('cancel reason', err);
                     return false;
                 });
         } else {
             return Promise.resolve(true);
         }
     }
+
+    // private _askForSaving(): Promise<boolean> {
+    //     if (this.isChanged) {
+    //         return this._confirmSrv.confirm(Object.assign({}, CONFIRM_SAVE_ON_LEAVE,
+    //             { confirmDisabled: this.disableSave }))
+    //             .then((doSave) => {
+    //                 if (doSave) {
+    //                     const _data = this.cardEditRef.getNewData();
+    //                     return this._save(_data)
+    //                         .then((node) => !!node);
+    //                 } else {
+    //                     return true;
+    //                 }
+    //             })
+    //             .catch(() => {
+    //                 // console.log('cancel reason', err);
+    //                 return false;
+    //             });
+    //     } else {
+    //         return Promise.resolve(true);
+    //     }
+    // }
 
     private _confirmSave(data): Promise<boolean> {
         return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv);
