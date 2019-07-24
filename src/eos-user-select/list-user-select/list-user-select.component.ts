@@ -82,6 +82,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     }
     ngOnInit() {
         this._pagSrv.getSumIteq = false;
+        this._pagSrv.typeConfig = 'users';
+        const confUsers = this._storage.getItem('users');
+        this._pagSrv.paginationConfig = confUsers;
         this.buttons = Allbuttons;
         this.rtUserService.flagDeleteScroll = true;
         this.rtUserService.flagDeleteSelectedUser = true;
@@ -263,6 +266,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         }
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
+        this._storage.setItem('users', this._pagSrv.paginationConfig, true);
+        this._pagSrv.SelectConfig();
     }
 
     selectedNode(user: UserSelectNode, flag?) {
@@ -718,13 +723,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         return newObj;
     }
     quickSearchKey(evn) {
-            const newObj: USERSRCH = {};
-            this.fastSetConfSearch(newObj, evn);
-            if (event) {
-                this.srhSrv.getUsersToGo(newObj).then((users: USER_CL[]) => {
-                    this.searchUsers(users);
-                });
-            }
+        const newObj: USERSRCH = {};
+        this.fastSetConfSearch(newObj, evn);
+        if (event) {
+            this.srhSrv.getUsersToGo(newObj).then((users: USER_CL[]) => {
+                this.searchUsers(users);
+            });
+        }
     }
 
     private cathError(e) {

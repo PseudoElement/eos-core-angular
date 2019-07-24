@@ -28,7 +28,6 @@ export class UserSelectPaginationComponent {
         private _user_pagination: UserPaginationService,
         private _storageSrv: EosStorageService,
     ) {
-        this._user_pagination._initPaginationConfig(true, true);
         _user_pagination.paginationConfig$
             .pipe(
                 takeUntil(this.ngUnsubscribe)
