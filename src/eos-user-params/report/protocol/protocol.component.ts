@@ -83,7 +83,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
       const confUsers = this._storage.getItem('protocol');
       this._user_pagination.paginationConfig = confUsers;
       this._user_pagination._initPaginationConfig();
-      this.PaginateData(this.config.length, this.orderByStr, 0);
+      this.PaginateData(this.config.length, this.orderByStr);
       this._user_pagination.totalPages = undefined;
     })
       .catch((error) => {
@@ -97,7 +97,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
         PipRX.criteries({ ISN_USER: `${this.curentUser}` }),
       orderby: orderStr,
       top: length,
-      skip: skip,
+      skip: skip || this.config.length * this.config.current - this.config.length,
       inlinecount: 'allpages'
     })
       .then((data: any) => {
