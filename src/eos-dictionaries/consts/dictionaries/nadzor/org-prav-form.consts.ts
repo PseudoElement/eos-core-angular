@@ -10,7 +10,7 @@ export const NP_OPF_CL: IDictionaryDescriptor = Object.assign({}, NADZOR_TEMPLAT
     fields: [...NADZOR_TEMPLATE.fields,
         Object.assign({}, COMMON_FIELD_CODE, {
             length: 20,
-            required: true,
+            // required: true,
         }),
         Object.assign({}, COMMON_FIELD_NAME, {
             length: 250,
