@@ -69,7 +69,6 @@ export class CardRightSrv {
             });
     }
     saveChenge$() {
-        console.log('sdad');
         const chl = [];
         this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
             if (card._State) {
@@ -87,7 +86,6 @@ export class CardRightSrv {
                 }
             }
         });
-        console.log(chl);
         return this._pipSrv.batch(chl, '')
             .then((d) => {
                 this._userParamsSetSrv.setChangeState({ isChange: false });
@@ -214,7 +212,6 @@ export class CardRightSrv {
                 // Создаем ентити USER_CARD_DOCGROUP и добовляем в модель
                 let userDG: USER_CARD_DOCGROUP[] = this._createDGEntity(card, dues);
                 card.USER_CARD_DOCGROUP_List.splice(-1, 0, ...userDG);
-                console.log(card);
                 // Создаем и возвращаем массив класса NodeDocsTree
                 const nodeList: NodeDocsTree[] = [];
                 userDG = userDG.concat(userDocGroup);
