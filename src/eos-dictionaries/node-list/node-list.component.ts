@@ -72,12 +72,14 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         private _zone: NgZone,
         private _eiCl: ExportImportClService,
     ) {
+        console.log('NodeListComponent constr'); // TODO:REMOVELOG
         this.firstColumnIndex = 0;
         _dictSrv.visibleList$
         .pipe(
             takeUntil(this.ngUnsubscribe)
         )
             .subscribe((nodes: EosDictionaryNode[]) => {
+                console.log('NodeListComponent _dictSrv.visibleList$'); // TODO:REMOVELOG
                 if (_dictSrv.currentDictionary) {
                     this._repaintFlag = true;
                     if (_dictSrv.currentDictionary.id !== this._dictId) {

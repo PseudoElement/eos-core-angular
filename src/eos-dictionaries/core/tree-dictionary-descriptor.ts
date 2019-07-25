@@ -141,7 +141,7 @@ export class TreeDictionaryDescriptor extends AbstractDictionaryDescriptor {
         const criteries = {
             DUE: record.DUE + '%',
             LAYER: (layer) + ':' + (layer + 1),
-            // IS_NODE: '0'
+            IS_NODE: '0'
         };
         return this.getData(PipRX.criteries(criteries));
         // return this.apiSrv.cache.read<IHierCL>({ [this.apiInstance]: {criteries: criteries}, orderby: 'DUE' });

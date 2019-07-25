@@ -605,15 +605,18 @@ export class EosDictService {
      */
 
     selectTreeNode(nodeId: string): Promise<EosDictionaryNode> {
+        console.log('eos-dict-srv selectTreeNode', nodeId); // TODO:REMOVELOG
         let p = Promise.resolve(this._treeNode);
         if (nodeId) {
             if (!this._treeNode || this._treeNode.id !== nodeId) {
+                console.log('dict serv updatingList true 1'); // TODO:REMOVELOG
                 this.updateViewParameters({updatingList: true});
                 p = this.getTreeNode(nodeId);
             }
         } else {
             const dictionary = this._dictionaries[0];
             if (dictionary && dictionary.root) {
+                console.log('dict serv updatingList true 2'); // TODO:REMOVELOG
                 this.updateViewParameters({updatingList: true});
                 p = this.loadChildren(dictionary, dictionary.root);
             } else {
@@ -622,6 +625,7 @@ export class EosDictService {
         }
         return p
             .then((node) => {
+                console.log('dict serv selectTreeNode p th'); // TODO:REMOVELOG
                 if (node) {
                     let parent = node.parent;
                     while (parent) {
@@ -634,9 +638,11 @@ export class EosDictService {
             }).then((n) => {
                 if (this.dictMode !== 0) {
                     this._reloadList().then(() => {
+                        console.log('dict serv updatingList false 1'); // TODO:REMOVELOG
                         this.updateViewParameters({updatingList: false});
                     });
                 } else {
+                    console.log('dict serv updatingList false 2'); // TODO:REMOVELOG
                     this.updateViewParameters({updatingList: false});
                 }
                 return n;
@@ -1154,9 +1160,14 @@ export class EosDictService {
     }
 
     private loadChildren(dictionary: EosDictionary, node: EosDictionaryNode): Promise<EosDictionaryNode> {
+        console.log('eos-dict-srv loadChildren', node); // TODO:REMOVELOG
         if (dictionary) {
             return dictionary.getChildren(node)
                 .then(() => node)
+                .then (() => {
+                    console.log('eos-dict-srv getChildren then', node); // TODO:REMOVELOG
+                    return node;
+                })
                 .catch((err) => this._errHandler(err));
         } else {
             return Promise.resolve(null);
@@ -1328,6 +1339,7 @@ export class EosDictService {
     }
 
     private getTreeNode(nodeId: string): Promise<EosDictionaryNode> {
+        console.log('eos-dict-srv getTreeNode', nodeId); // TODO:REMOVELOG
         const dictionary = this._dictionaries[0];
         if (dictionary) {
             const _node = dictionary.getNode(nodeId);
@@ -1345,6 +1357,7 @@ export class EosDictService {
     }
 
     private _setCurrentList(dictionary: EosDictionary, nodes: EosDictionaryNode[], update = false) {
+        console.log('dict serv _setCurrentList'); // TODO:REMOVELOG
         this._currentList = nodes || [];
         if (dictionary) {
             // remove duplicates
@@ -1360,6 +1373,7 @@ export class EosDictService {
     }
 
     private _reorderList(dictionary: EosDictionary) {
+        console.log('dict serv _reorderList'); // TODO:REMOVELOG
         if (dictionary) {
             if (/* !this.viewParameters.searchResults && */ this.viewParameters.userOrdered && this._treeNode) {
                 this._currentList = dictionary.reorderList(this._currentList, this.viewParameters.showAllSubnodes, this._treeNode.id);
@@ -1367,11 +1381,13 @@ export class EosDictService {
                 this._currentList = dictionary.reorderList(this._currentList, this.viewParameters.showAllSubnodes);
             }
         }
+        console.log('dict serv _currentList$ emit'); // TODO:REMOVELOG
         this._currentList$.next(this._currentList);
         this._updateVisibleNodes();
     }
 
     private _updateVisibleNodes() {
+        console.log('eos-dict-srv _updateVisibleNodes'); // TODO:REMOVELOG
         this._visibleListNodes = this._currentList;
         if (this._visibleListNodes) {
             if (!this.viewParameters.showDeleted) {
@@ -1397,6 +1413,7 @@ export class EosDictService {
                     this._openNode(pageList[firstMarkedIndex]);
                 }
             }
+            console.log('dict serv _visibleList$ emit'); // TODO:REMOVELOG
             this._visibleList$.next(pageList);
             this.updateMarked(true);
         }
@@ -1412,6 +1429,7 @@ export class EosDictService {
     }
 
     private _reloadList(afterAdd = false): Promise<any> {
+        console.log('eos-dict-srv _reloadList'); // TODO:REMOVELOG
         let pResult = Promise.resolve([]);
         const dictionary = this.currentDictionary;
         if (dictionary) {
@@ -1437,6 +1455,7 @@ export class EosDictService {
     }
 
     private _selectTreeNode(node: EosDictionaryNode) {
+        console.log('eos-dict-srv _selectTreeNode'); // TODO:REMOVELOG
         if (this._treeNode !== node) {
             this._srchCriteries = null;
 
@@ -1541,6 +1560,7 @@ export class EosDictService {
     }
 
     private _emitListDictionary() {
+        console.log('dict serv _emitListDictionary'); // TODO:REMOVELOG
         this._listDictionary$.next(this.currentDictionary);
     }
 
