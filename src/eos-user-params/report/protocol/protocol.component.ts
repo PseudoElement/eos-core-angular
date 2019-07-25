@@ -7,6 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { EosStorageService } from 'app/services/eos-storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'eos-protocol',
@@ -33,12 +34,15 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
     'Удаление Пользователя'
   ];
   critUsers = [];
+  closeTooltip: boolean = true;
   currentState: boolean[] = [false, false];
   status: string;
   SortUp: string;
   checkOverflow: boolean;
   curentUser: number;
   username: string;
+  selfLink: any;
+  link: any;
   arrSort = [
     { date: true },
     { event: false },
@@ -49,7 +53,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private _userpar: UserParamsService,
-    private _user_pagination: UserPaginationService, private _storage: EosStorageService, ) {
+    private _user_pagination: UserPaginationService, private _storage: EosStorageService, private _router: Router) {
     _user_pagination.paginationConfig$
       .pipe(
         takeUntil(this.ngUnsubscribe)
@@ -85,6 +89,8 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
       this._user_pagination._initPaginationConfig();
       this.PaginateData(this.config.length, this.orderByStr);
       this._user_pagination.totalPages = undefined;
+      this.selfLink = this._router.url.split('?')[0];
+      this.link = this._userpar.userContextId;
     })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
@@ -210,6 +216,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   }
 
   SingleUserCheck(user) {
+    this.isnRefFile = undefined;
     user.checked = true;
     if (user.checked) {
       this.frontData.forEach(node => {
@@ -218,11 +225,13 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
       user.checked = true;
     }
     this.lastUser = user;
+    this.GetRefIsn();
   }
 
   ShowData() {
     let eventUser;
     this.frontData = undefined;
+    this.isnRefFile = undefined;
     this.usersAudit.map((user) => {
       const date = this.ConvertDate(user.EVENT_DATE);
       eventUser = this.eventKind[user.EVENT_KIND - 1];
@@ -254,6 +263,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
         });
       }
     });
+    this.GetRefIsn();
   }
 
   ParseDate(data) {
@@ -268,33 +278,31 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
     this.ShowData();
   }
 
-  ShowDataUser() {
-    // if (this.lastUser !== undefined) {
-    //   return this.GetDataUser(this.lastUser.isnEvent);
-    // }
-  }
   CompareWithEvent() {
     // if (this.lastUser !== undefined) {
     //   return this.GetDataUser(this.lastUser.isnEvent);
     // }
   }
 
-  GetDataUser(isnEvent) {
+  GetRefIsn() {
     this._pipeSrv.read({
-      REF_FILE: PipRX.criteries({ 'ISN_REF_DOC': String(isnEvent) })
+      REF_FILE: PipRX.criteries({ 'ISN_REF_DOC': String(this.lastUser.isnEvent) })
     })
       .then((data: any) => {
-        this.isnRefFile = data[0].ISN_REF_FILE;
-        return this.isnRefFile;
-      })
-      .then((data) => {
-        this.openFrame(data);
+        if (data.length !== 0) {
+          this.isnRefFile = data[0].ISN_REF_FILE;
+        }
       })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
       });
-    // this.openFrame(12);
-    // window.open(`/x1807/getfile.aspx/${isnEvent}/3x.html`, 'example', 'width=900,height=700');
+  }
+
+  GetRefFile() {
+    this.closeTooltip = true;
+    setTimeout(() => {
+      window.open(`/x1807/getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900,height=700');
+    }, 0);
   }
   openFrame(isnFile) {
     window.open(`/x1807/getfile.aspx/${isnFile}/3x.html`, 'example', 'width=900,height=700');
@@ -309,6 +317,10 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
     return parseDate;
   }
 
+  close() {
+    this._storage.setItem('saveQuickSearch', 'true');
+    this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
+  }
 
 }
 
