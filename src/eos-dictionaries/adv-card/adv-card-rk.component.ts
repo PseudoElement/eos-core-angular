@@ -11,7 +11,7 @@ import { RKBasePage } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_BEEN_DELETED, RK_SELECTED_LIST_CONTAIN_DELETED, RK_SELECTED_VALUE_LOGIC_DELETED } from 'app/consts/confirms.const';
+import { RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_CONTAIN_DELETED, RK_SELECTED_VALUE_LOGIC_DELETED } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
@@ -123,7 +123,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
     public userListsEdit() {
-
         this._waitClassifSrv.openClassif({classif: 'TECH_LISTS'})
         .then(result => {
             // console.log('result: ', result);
@@ -133,9 +132,8 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             // });
         })
         .catch(err => {
-            console.log('window closed');
+            // console.log('window closed');
             this.dataController.zone.run(() => {
-                // console.log('zone');
                 this.rereadUserLists();
             });
         });
@@ -144,6 +142,27 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     rereadUserLists() {
         this.dataController.markCacheForDirty('USER_LISTS');
         this.dataController.updateDictsOptions('USER_LISTS', null, (event) => {
+        }).then ( () => {
+
+            for (const key in this.inputs) {
+                if (this.inputs.hasOwnProperty(key)) {
+                    const input = this.inputs[key];
+                    const field: TDefaultField = input.descriptor;
+                    if (field && field.dict && field.dict.dictId === 'USER_LISTS') {
+                        const control = this.form.controls[key];
+                        if (control) {
+                            const val = control.value;
+                            if (val) {
+                                const opt = field.options.find ( o => Number(o.value) === Number(val));
+                                if (!opt) {
+                                    control.setValue(null);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            this._updateInputs(this.inputs, this.values);
             this.form.updateValueAndValidity();
         });
 
@@ -183,11 +202,12 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                         confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_VALUE_LOGIC_DELETED);
                     }
                     if (!opt) {
+                        // Bug 105284: Из поля, где использовался удаленный список, просто надо удалить, молча
                         const control = this.form.controls[DEFAULTS_LIST_NAME + '.' + el.key];
                         if (control) {
-                            control.setValue(ValidatorsControl.optionInvalidValue);
+                            control.setValue(null);
                         }
-                        confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_BEEN_DELETED);
+                        // confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_BEEN_DELETED);
                     }
                 }
             }
@@ -301,12 +321,11 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         for (const key in inputs) {
             if (inputs.hasOwnProperty(key)) {
                 const input = inputs[key];
-                if (input.options) {
+                if (input.descriptor && input.descriptor.options) {
                     const val = input.value;
-                    const i_opt = Object.assign(input.options);
+                    const i_opt = Object.assign(input.descriptor.options);
                     input.options = i_opt.filter((o) => (!o.disabled || String(o.value) === String(val)));
                 }
-
             }
         }
     }

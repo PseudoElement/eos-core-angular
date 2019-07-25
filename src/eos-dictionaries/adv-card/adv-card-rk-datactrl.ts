@@ -269,11 +269,15 @@ export class AdvCardRKDataCtrl {
                         event.path = key + '.' + el.key;
                         callback(event);
                     }));
+                    continue;
+                } if (el.type !== E_FIELD_TYPE.select)  {
+                    continue;
+                } else {
+                    reqs.push(this.cashedReadDict(el, callback));
                 }
 
-                if (el.type !== E_FIELD_TYPE.select)  { continue; }
 
-                reqs.push(this.cashedReadDict(el, callback));
+
             }
         });
 
