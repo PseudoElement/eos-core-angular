@@ -167,7 +167,7 @@ export const UsersStats: BtnActionFields = {
 export const Protocol: BtnActionFields = {
     name: 'OpenProtocol',
     title: 'Протокол',
-    disabledClass: 'eos-icon eos-icon-new-doc-blue small',
+    disabledClass: 'eos-icon eos-icon-new-doc-grey small',
     enableClass: 'eos-icon eos-icon-new-doc-blue small',
     tooltip: 'Протокол',
     disabled: false,
