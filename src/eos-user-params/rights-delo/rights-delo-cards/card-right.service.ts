@@ -212,7 +212,6 @@ export class CardRightSrv {
                 // Создаем ентити USER_CARD_DOCGROUP и добовляем в модель
                 let userDG: USER_CARD_DOCGROUP[] = this._createDGEntity(card, dues);
                 card.USER_CARD_DOCGROUP_List.splice(-1, 0, ...userDG);
-
                 // Создаем и возвращаем массив класса NodeDocsTree
                 const nodeList: NodeDocsTree[] = [];
                 userDG = userDG.concat(userDocGroup);
@@ -232,8 +231,13 @@ export class CardRightSrv {
         this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
             card.FUNCLIST = card._orig.FUNCLIST;
             delete card._State;
-            delete card.USER_CARD_DOCGROUP_List;
-            card.USER_CARD_DOCGROUP_List = card._orig.USER_CARD_DOCGROUP_List;
+            // delete card.USER_CARD_DOCGROUP_List;
+            card.USER_CARD_DOCGROUP_List = card.USER_CARD_DOCGROUP_List.filter((erte: USER_CARD_DOCGROUP) => {
+                if (erte._State === 'MERGE') {
+                    erte.ALLOWED = erte.ALLOWED ? 0 : 1;
+                }
+                return erte._State !== 'POST';
+            });
             card.USER_CARD_DOCGROUP_List.forEach((dg: USER_CARD_DOCGROUP) => {
                 delete dg._State;
                 this._pipSrv.entityHelper.prepareForEdit(dg);
@@ -247,7 +251,7 @@ export class CardRightSrv {
             allowed: !!data.userCardDG.ALLOWED,
             data
         },
-        this.selectedFuncNum.label === 'Отправка сообщений СЭВ' ? null : true));
+            this.selectedFuncNum.label === 'Отправка сообщений СЭВ' ? null : true));
     }
     private _checkChenge() {
         let state: boolean = false;

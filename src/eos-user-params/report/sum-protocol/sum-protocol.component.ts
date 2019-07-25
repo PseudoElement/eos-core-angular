@@ -8,6 +8,7 @@ import { UserPaginationService } from 'eos-user-params/shared/services/users-pag
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ALL_ROWS } from 'eos-rest/core/consts';
+import { EosStorageService } from 'app/services/eos-storage.service';
 
 @Component({
   selector: 'eos-sum-protocol',
@@ -55,7 +56,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   public config: IPaginationConfig;
   private ngUnsubscribe: Subject<any> = new Subject();
 
-  constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices,
+  constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private _storageSrv: EosStorageService,
     private _msgSrv: EosMessageService, private _user_pagination: UserPaginationService) {
     _user_pagination.paginationConfig$
       .pipe(
@@ -70,7 +71,12 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
             } else if (this.config.current && this.initPage === true && this.clearResult === true) {
               this.GetSortData();
             } else if (this.config.current && this.initPage === true) {
-              this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+              if (this.config.length !== 10) {
+                this.PaginateData(this.config.length + 1, this.orderByStr, this.config.length * this.config.current - this.config.length);
+              } else {
+                this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+              }
+
             }
           }
         }
@@ -80,13 +86,18 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+    this._storageSrv.setItem('sum-protocol', this.config, true);
+    this._user_pagination.SelectConfig();
   }
 
   ngOnInit() {
     this._pipeSrv.read<USER_PARMS>({
       USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'USER_EDIT_AUDIT' })
     }).then((r: any) => {
-      this._user_pagination._initPaginationConfig(true);
+      this._user_pagination.typeConfig = 'sum-protocol';
+      const confSumPr = this._storageSrv.getItem('sum-protocol');
+      this._user_pagination.paginationConfig = confSumPr;
+      this._user_pagination._initPaginationConfig();
       this.PaginateData(this.config.length, this.orderByStr, 0);
       this._user_pagination.totalPages = undefined;
       if (r[0].PARM_VALUE === 'NO') {

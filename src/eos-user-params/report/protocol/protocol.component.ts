@@ -6,6 +6,7 @@ import { UserPaginationService } from 'eos-user-params/shared/services/users-pag
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
+import { EosStorageService } from 'app/services/eos-storage.service';
 
 @Component({
   selector: 'eos-protocol',
@@ -48,7 +49,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private _userpar: UserParamsService,
-    private _user_pagination: UserPaginationService) {
+    private _user_pagination: UserPaginationService, private _storage: EosStorageService, ) {
     _user_pagination.paginationConfig$
       .pipe(
         takeUntil(this.ngUnsubscribe)
@@ -70,18 +71,21 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+    this._storage.setItem('protocol', this._user_pagination.paginationConfig, true);
+    this._user_pagination.SelectConfig();
   }
 
   ngOnInit() {
     this._userpar.getUserIsn().then(() => {
       this.curentUser = this._userpar.curentUser.ISN_LCLASSIF;
       this.username = this._userpar.curentUser.SURNAME_PATRON;
-      this._user_pagination._initPaginationConfig(true);
-      this.PaginateData(this.config.length, this.orderByStr, 0);
+      this._user_pagination.typeConfig = 'protocol';
+      const confUsers = this._storage.getItem('protocol');
+      this._user_pagination.paginationConfig = confUsers;
+      this._user_pagination._initPaginationConfig();
+      this.PaginateData(this.config.length, this.orderByStr);
       this._user_pagination.totalPages = undefined;
     })
-      .catch((error: boolean) => {
-      })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
       });
@@ -93,7 +97,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
         PipRX.criteries({ ISN_USER: `${this.curentUser}` }),
       orderby: orderStr,
       top: length,
-      skip: skip,
+      skip: skip || this.config.length * this.config.current - this.config.length,
       inlinecount: 'allpages'
     })
       .then((data: any) => {

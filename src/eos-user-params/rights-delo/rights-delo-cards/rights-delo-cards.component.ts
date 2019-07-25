@@ -148,5 +148,6 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this._selectedFuncNum.isSelected = false;
         this._selectedFuncNum = null;
         this._cardSrv.selectedFuncNum = null;
+        this.btnDisabled = true;
     }
 }
