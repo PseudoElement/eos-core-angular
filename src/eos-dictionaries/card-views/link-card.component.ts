@@ -1,11 +1,12 @@
 import {Component, Injector, OnChanges, SimpleChanges} from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
-import {AbstractControl, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, ValidatorFn} from '@angular/forms';
 import {EosUtils} from '../../eos-common/core/utils';
 import {EosDictService} from '../services/eos-dict.service';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 import {LINK_CL, PipRX} from '../../eos-rest';
 import {CONFIRM_LINK_CHECK_CATEGORY} from '../consts/confirm.consts';
+import { ValidatorsControl } from 'eos-dictionaries/validators/validators-control';
 
 @Component({
     selector: 'eos-link-card',
@@ -120,14 +121,41 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
     }
 
     private _setValidators() {
-        this.form.controls['rec.CLASSIF_NAME'].setValidators([this._unicValueValidator('rec.CLASSIF_NAME'),
-            Validators.required]);
-        this.form.controls['PARE_LINK_Ref.CLASSIF_NAME']
-            .setValidators([this._unicValueValidator('PARE_LINK_Ref.CLASSIF_NAME'), Validators.required]);
+        ValidatorsControl.appendValidator(this.form.controls['rec.CLASSIF_NAME'],
+        [
+            this._unicValueValidator('rec.CLASSIF_NAME'),
+            this._pairNameUnique(),
+        ]);
+
+        ValidatorsControl.appendValidator(this.form.controls['PARE_LINK_Ref.CLASSIF_NAME'],
+        [
+            this._unicValueValidator('PARE_LINK_Ref.CLASSIF_NAME'),
+            this._pairNameUnique(),
+        ]);
+
+        // this.form.controls['rec.CLASSIF_NAME'].setValidators([this._unicValueValidator('rec.CLASSIF_NAME'),
+        //     Validators.required]);
+        // this.form.controls['PARE_LINK_Ref.CLASSIF_NAME']
+        //     .setValidators([this._unicValueValidator('PARE_LINK_Ref.CLASSIF_NAME'), Validators.required]);
     }
+
+    private _pairNameUnique(): ValidatorFn {
+        return ValidatorsControl.controlsNonUniq(
+            this.form.controls['PARE_LINK_Ref.CLASSIF_NAME'],
+            this.form.controls['rec.CLASSIF_NAME'],
+            'Наименования прямой и обратной связок не должны совпадать.'
+            );
+    }
+
 
     private _updateForm(formChanges: any) {
         this.unsubscribe();
+
+        if (this._isChanged('rec.CLASSIF_NAME', formChanges)) {
+            this.form.controls['PARE_LINK_Ref.CLASSIF_NAME'].updateValueAndValidity();
+        } else if (this._isChanged('PARE_LINK_Ref.CLASSIF_NAME', formChanges)) {
+            this.form.controls['rec.CLASSIF_NAME'].updateValueAndValidity();
+        }
 
         if (this._isChanged('rec.LINK_TYPE', formChanges)) {
             if (!formChanges['rec.LINK_TYPE'] || formChanges['rec.LINK_TYPE'] === '0') {

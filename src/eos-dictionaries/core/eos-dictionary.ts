@@ -445,7 +445,7 @@ export class EosDictionary {
             });
     }
 
-    getListView(customFields: IFieldView[]) {
+    getListViewWithRelated(customFields: IFieldView[]) {
         const fields = this.descriptor.record.getListView({});
         // TODO: Отключено до оптимизации
         // const infoFields = this.descriptor.record.getInfoView({});

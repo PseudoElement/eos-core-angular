@@ -124,7 +124,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
     updateViewFields(customFields: IFieldView[]) {
         // also customFields for update
-        this.viewFields = this._dictSrv.currentDictionary.getListView(customFields);
+        this.viewFields = this._dictSrv.currentDictionary.getListViewWithRelated(customFields);
     }
 
     ngOnInit() {
