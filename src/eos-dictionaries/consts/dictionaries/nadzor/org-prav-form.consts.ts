@@ -17,5 +17,6 @@ export const NP_OPF_CL: IDictionaryDescriptor = Object.assign({}, NADZOR_TEMPLAT
             required: true,
         }),
         ],
-    editFields: ['CODE', 'CLASSIF_NAME', 'NOTE']
+    editFields: ['CODE', 'CLASSIF_NAME', 'NOTE'],
+    allVisibleFields: ['CODE', 'NOTE'],
  });
