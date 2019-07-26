@@ -447,9 +447,10 @@ export class EosDictionary {
 
     getListView(customFields: IFieldView[]) {
         const fields = this.descriptor.record.getListView({});
-        const infoFields = this.descriptor.record.getInfoView({});
-        const updatefields = fields.concat(customFields).concat(infoFields);
-        this.loadRelatedFieldsOptions(updatefields);
+        // TODO: Отключено до оптимизации
+        // const infoFields = this.descriptor.record.getInfoView({});
+        // const updatefields = fields.concat(customFields).concat(infoFields);
+        // this.loadRelatedFieldsOptions(updatefields);
         return fields;
     }
 

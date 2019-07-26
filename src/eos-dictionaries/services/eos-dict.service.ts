@@ -656,7 +656,9 @@ export class EosDictService {
         const dictionary = this._dictionaries[0];
         if (dictionary && dictionary.root) {
             this.updateViewParameters({updatingList: true});
-            p = this.loadChildren(dictionary, dictionary.root);
+            // p = this.loadChildren(dictionary, dictionary.root);
+            // p = Promise.resolve(null);
+            p = Promise.resolve(dictionary.root);
         } else {
             p = Promise.resolve(null);
         }
@@ -673,6 +675,7 @@ export class EosDictService {
                 this._selectTreeNode(node);
                 return node;
             }).then((n) => {
+                // this._setCurrentList(dictionary, n, true);
                 this._reloadList().then(() => {
                     this.updateViewParameters({updatingList: false});
                 });
