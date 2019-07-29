@@ -24,8 +24,9 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   checkUser: boolean = false;
   flagChecked: boolean = false;
   hideTree: boolean = false;
-  isnRefFile: number;
+  checkAll: string;
   lastUser;
+  isnRefFile: number;
   initPage: boolean = false;
   clearResult: boolean = false;
   resetPage: boolean = false;
@@ -47,6 +48,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   eventUser: string;
   isnUser: string;
   isnWho: string;
+  closeTooltip: boolean = true;
   arrSort = [
     { date: true },
     { event: false },
@@ -98,7 +100,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       const confSumPr = this._storageSrv.getItem('sum-protocol');
       this._user_pagination.paginationConfig = confSumPr;
       this._user_pagination._initPaginationConfig();
-      this.PaginateData(this.config.length, this.orderByStr, 0);
+      this.PaginateData(this.config.length, this.orderByStr);
       this._user_pagination.totalPages = undefined;
       if (r[0].PARM_VALUE === 'NO') {
         this.logUsers = false;
@@ -143,7 +145,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       USER_AUDIT: ALL_ROWS,
       orderby: orderStr,
       top: length,
-      skip: skip,
+      skip: skip || this.config.length * this.config.current - this.config.length,
       inlinecount: 'allpages'
     })
       .then((data: any) => {
@@ -300,12 +302,20 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   checkNotAllUsers() {
     const usersCheck = [];
     const usersNotCheck = [];
-    for (const user of this.frontData) {
+    let count = 0;
+    let indx;
+    this.frontData.forEach((user, i) => {
       if (user.checked === true) {
+        count++;
+        indx = i;
         usersCheck.push(user.checked);
       } else {
         usersNotCheck.push(user.checked);
       }
+    });
+    if (count === 1) {
+      this.lastUser = this.frontData[indx];
+      this.GetRefIsn(this.lastUser.isnEvent);
     }
     if (usersCheck.length > 0 && usersNotCheck.length > 0) {
       return this.flagChecked = false;
@@ -321,19 +331,29 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   get getflagChecked() {
     switch (this.flagChecked) {
       case true:
+        this.checkAll = 'Снять пометки';
         return 'eos-icon-checkbox-square-v-blue';
       case false:
+        this.checkAll = 'Пометить все';
         return 'eos-icon-checkbox-square-minus-blue';
       default:
+        this.isnRefFile = undefined;
+        this.lastUser = undefined;
+        this.checkAll = 'Пометить все';
         return 'eos-icon-checkbox-square-blue';
     }
   }
 
   toggleAllMarks(event) {
+    this.isnRefFile = undefined;
     if (this.frontData !== undefined) {
       this.flagChecked = event.target.checked;
       if (this.flagChecked === false) {
         this.flagChecked = null;
+      }
+      if (this.flagChecked === true) {
+        this.frontData[0] = this.lastUser;
+        this.GetRefIsn(this.frontData[0].isnEvent);
       }
       if (event.target.checked) {
         this.frontData.forEach(node => {
@@ -348,6 +368,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   }
 
   SingleUserCheck(user) {
+    this.isnRefFile = undefined;
     user.checked = true;
     if (user.checked) {
       this.frontData.forEach(node => {
@@ -356,17 +377,34 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       user.checked = true;
     }
     this.lastUser = user;
+    this.GetRefIsn(user.isnEvent);
   }
 
   CheckUser(user) {
+    this.isnRefFile = undefined;
     if (user.checked === false) {
       user.checked = true;
     }
   }
 
+  GetRefIsn(isnEvent) {
+    this._pipeSrv.read({
+      REF_FILE: PipRX.criteries({ 'ISN_REF_DOC': String(isnEvent) })
+    })
+      .then((data: any) => {
+        if (data.length !== 0) {
+          this.isnRefFile = data[0].ISN_REF_FILE;
+        }
+      })
+      .catch((error) => {
+        this._errorSrv.errorHandler(error);
+      });
+  }
+
   ShowData() {
     let eventUser;
     this.frontData = undefined;
+    this.isnRefFile = undefined;
     this.usersAudit.map((user) => {
       const date = this.ConvertDate(user.EVENT_DATE);
       eventUser = this.eventKind[user.EVENT_KIND - 1];
@@ -387,6 +425,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           isnUser: this.getUserName(user.ISN_USER),
           isnEvent: user.ISN_EVENT
         };
+        this.flagChecked = false;
       } else {
         this.frontData.push({
           checked: this.checkUser,
@@ -398,6 +437,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         });
       }
     });
+    this.GetRefIsn(this.lastUser.isnEvent);
   }
   ConvertToFilterDate(date): string {
     const oldDate = new Date(date);
@@ -546,33 +586,13 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-  ShowDataUser() {
-    if (this.lastUser !== undefined) {
-      return this.GetDataUser(this.lastUser.isnEvent);
-    }
+  GetRefFile() {
+    this.closeTooltip = true;
+    setTimeout(() => {
+      window.open(`/x1807/getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900,height=700');
+    }, 0);
   }
 
-  GetDataUser(isnEvent) {
-    this._pipeSrv.read({
-      REF_FILE: PipRX.criteries({ 'ISN_REF_DOC': String(isnEvent) })
-    })
-      .then((data: any) => {
-        this.isnRefFile = data[0].ISN_REF_FILE;
-        return this.isnRefFile;
-      })
-      .then((data) => {
-        this.openFrame(data);
-      })
-      .catch((error) => {
-        this._errorSrv.errorHandler(error);
-      });
-    // this.openFrame(12);
-    // window.open(`/x1807/getfile.aspx/${isnEvent}/3x.html`, 'example', 'width=900,height=700');
-  }
-  openFrame(isnFile) {
-    window.open(`/x1807/getfile.aspx/${isnFile}/3x.html`, 'example', 'width=900,height=700');
-  }
   ConvertDate(convDate) {
     const date = new Date(convDate);
     const curr_date = ('0' + date.getDate()).slice(-2);
