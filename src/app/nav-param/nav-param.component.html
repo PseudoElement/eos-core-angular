@@ -4,7 +4,12 @@
             <span class="icon eos-icon small" [ngClass]="{'eos-icon-menu-white': isWide, 'eos-icon-menu-blue': !isWide}"></span>
         </button>
     </span>
-    <span *ngIf="title" class="nav-text">
+    <span *ngIf="title"
+        tooltip="{{title}}"
+        placement="bottom"
+        container="body"
+        containerClass="tooltip-info word-break" 
+        class="nav-text breadcrumb-item selected-text l-font">
         {{title}}
     </span>
 
