@@ -14,6 +14,7 @@ export class UserParamsService {
     userTechList: any[] = [];
     userRightDocgroupList: any[] = [];
     userEditOrgType: any[] = [];
+    checkedUsers: any[] = [];
     public SubEmail: Subject<any> = new Subject();
     public submitSave;
     private _saveFromAsk$: Subject<void> = new Subject<void>();
