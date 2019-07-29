@@ -5,14 +5,16 @@ import { KEY_RIGHT_TECH, IKeyRightTech } from 'app/consts/permission.consts';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { RestError } from 'eos-rest/core/rest-error';
+import { AppContext } from '../../eos-rest/services/appContext.service';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
     private _userProfile: USER_CL;
-    constructor (
+    constructor(
         private _msgSrv: EosMessageService,
-        private _pipSrv: PipRX,
-    ) {}
+           private _pipSrv: PipRX,
+        private _apCtx: AppContext,
+    ) { }
     canActivate(_route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Promise<boolean> {
         const urlSegment: UrlSegment = _route.url[0];
         const url: string = urlSegment.path;
@@ -39,11 +41,15 @@ export class PermissionsGuard implements CanActivate {
             });
     }
     private _getContext(): Promise<USER_CL[]> {
-        return this._pipSrv.read<USER_CL>({
-            CurrentUser: ALL_ROWS
-        });
+        if (this._apCtx.CurrentUser) {
+            return Promise.resolve([this._apCtx.CurrentUser]);
+        }   else {
+            return this._pipSrv.read<USER_CL>({
+                CurrentUser: ALL_ROWS
+            });
+        }
     }
-    private _getConf (url: string): IKeyRightTech {
+    private _getConf(url: string): IKeyRightTech {
         return KEY_RIGHT_TECH[url];
     }
 }
