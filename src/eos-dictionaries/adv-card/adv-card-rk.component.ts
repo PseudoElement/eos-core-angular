@@ -123,6 +123,9 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
     public userListsEdit() {
+        this.dataController.zone.run(() => {
+            this.rereadUserLists();
+        });
         this._waitClassifSrv.openClassif({classif: 'TECH_LISTS'})
         .then(result => {
             // console.log('result: ', result);
@@ -321,7 +324,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         for (const key in inputs) {
             if (inputs.hasOwnProperty(key)) {
                 const input = inputs[key];
-                if (input.descriptor && input.descriptor.options) {
+                if (input.descriptor && input.descriptor.options && input.descriptor.type === E_FIELD_TYPE.select) {
                     const val = input.value;
                     const i_opt = Object.assign(input.descriptor.options);
                     input.options = i_opt.filter((o) => (!o.disabled || String(o.value) === String(val)));
