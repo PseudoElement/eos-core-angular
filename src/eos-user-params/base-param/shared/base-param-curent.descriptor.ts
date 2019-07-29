@@ -32,7 +32,7 @@ export class BaseParamCurentDescriptor extends BaseParamAbstractDescriptor {
                     }
                     break;
                 case 'USERTYPE':
-                    f['value'] = !!this._userParamSrv.curentUser[f['key']];
+                    f['value'] = this._userParamSrv.curentUser[f['key']] === 1 ? true : false;
                     break;
                 default:
                     f['value'] = this._userParamSrv.curentUser[f['key']];
