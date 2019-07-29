@@ -20,6 +20,7 @@ import { UserSearchComponent } from './user-search/user-search.component';
 import { TreeUserSelectService } from './shered/services/tree-user-select.service';
 import { RtUserSelectService } from './shered/services/rt-user-select.service';
 import {SearchServices} from '../eos-user-select/shered/services/search.service';
+import { EosReportUsersInfoComponent } from 'eos-user-params/report/users-info/users-info.component';
 @NgModule({
     declarations: [
         UserSelectComponent,
@@ -30,6 +31,7 @@ import {SearchServices} from '../eos-user-select/shered/services/search.service'
         UserSystemComponent,
         BtnActionComponent,
         UserSearchComponent,
+        EosReportUsersInfoComponent
     ],
     entryComponents: [
         CreateUserComponent
