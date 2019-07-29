@@ -123,9 +123,9 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
     public userListsEdit() {
-        this.dataController.zone.run(() => {
-            this.rereadUserLists();
-        });
+        // this.dataController.zone.run(() => {
+        //     this.rereadUserLists();
+        // });
         this._waitClassifSrv.openClassif({classif: 'TECH_LISTS'})
         .then(result => {
             // console.log('result: ', result);
@@ -355,13 +355,13 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             return null;
         });
 
-        this.descriptions[DEFAULTS_LIST_NAME].forEach(d => {
-            if (d.dict && d.dict.dictId === 'USER_LISTS') {
-                    ValidatorsControl.appendValidator(controls[DEFAULTS_LIST_NAME + '.' + d.key],
-                    ValidatorsControl.optionCustomValidate('Значение было удалено')
-                );
-            }
-        });
+        // this.descriptions[DEFAULTS_LIST_NAME].forEach(d => {
+        //     if (d.dict && d.dict.dictId === 'USER_LISTS') {
+        //             ValidatorsControl.appendValidator(controls[DEFAULTS_LIST_NAME + '.' + d.key],
+        //             ValidatorsControl.optionCustomValidate('Значение было удалено')
+        //         );
+        //     }
+        // });
 
 
 
