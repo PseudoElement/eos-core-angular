@@ -1,4 +1,5 @@
 const pattrenSearch = /^([а-яА-Яa-zA-Z0-9\s\.-]{0,50})$/;
+const pattrenSearchLogin = /^([_а-яА-Яa-zA-Z0-9\s\.-]{0,50})$/;
 export const USER_SEARCH = {
     id: '',
     title: '',
@@ -10,7 +11,7 @@ export const USER_SEARCH = {
             key: 'LOGIN',
             type: 'string',
             title: 'Логин',
-            pattern: pattrenSearch,
+            pattern: pattrenSearchLogin,
         },
         {
             key: 'DEPARTMENT',
