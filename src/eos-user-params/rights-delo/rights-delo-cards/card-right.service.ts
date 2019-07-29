@@ -307,6 +307,11 @@ export class CardRightSrv {
     private _prepareforEdit(arr) {
         arr.forEach((item) => {
             item = this._pipSrv.entityHelper.prepareForEdit(item);
+            if (item['FUNCLIST']) {
+                if (item['FUNCLIST'].length < 21) {
+                    item['FUNCLIST'] = item['FUNCLIST'].padEnd(21, '0');
+                }
+            }
             for (const key in item) {
                 if (item[key] instanceof Array) {
                     item[key] = this._prepareforEdit(item[key]);
