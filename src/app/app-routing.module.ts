@@ -171,6 +171,10 @@ const routes: Routes = [{
 }, {
     path: 'parameters',
     canActivate: [AuthorizedGuard, PermissionsGuard],
+    data: {
+        title: 'Параметры системы',
+        showInBreadcrumb: false,
+    },
     children: [
         {
             path: ':id',

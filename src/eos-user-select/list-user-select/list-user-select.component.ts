@@ -323,6 +323,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 }
             }
         }
+        this._userParamSrv.checkedUsers = [user];
         this.rtUserService.subjectFlagBtnHeader.next(flagUserSelected);
         this.updateFlafListen();
         this.disabledBtnAction(flagUserSelected);
@@ -494,14 +495,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
 
     }
 
-    // OpenUsersInfo() {
-    //     this._router.navigate(['user-params-set/', 'users-info'],
-    //         {
-    //             queryParams: { isn_cl: this.selectedUser.id }
-    //         }
-    //     );
-    // }
-
     OpenProtocol() {
         this._router.navigate(['user-params-set/', 'protocol'],
             {
@@ -573,6 +566,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 this.rtUserService.flagDeleteSelectedUser = true;
             }
         }
+        this._userParamSrv.checkedUsers = this.getCheckedUsers();
         this.updateFlafListen();
         this.disabledBtnDeleted();
     }
