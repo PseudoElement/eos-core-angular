@@ -34,7 +34,7 @@ export class EosReportUsersInfoComponent implements OnInit {
   }
 
   openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template);
+    this.modalRef = this.modalService.show(template, Object.assign({}, { class: 'modal-info' }));
   }
 
   prev() {

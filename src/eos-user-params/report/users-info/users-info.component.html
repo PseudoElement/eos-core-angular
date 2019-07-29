@@ -5,24 +5,24 @@
         <span class="btn-title not-active-btn">{{btnVal.title}}</span>
     </button> 
 </div>
-<ng-template #usersInfo class="modal-dialog">
-        <div class="full-search-top usual-border">
+<ng-template #usersInfo>
+    <div class="full-search-top usual-border">
             <span class="pull-left title xl-font">Данные по пользователю {{selectUser.name}}</span>
             <div class="pull-right srch-btns">
                 <button class="btn btn-primary s-font upper" (click)="modalRef.hide()">Закрыть</button>
                 <button class="btn btn-primary-full s-font upper"  (click)="PrintData()">Печать</button>
             </div>
         </div>
-        <div class="dir-users usual-border">
-            <div class="arrow-info">
-                <button class="btn btn-primary-light scroll-btn" [disabled]="isFirst" (click)="prev()">
-                    <span class="eos-icon eos-icon-arrow-v-blue-left small" aria-hidden="true"></span>
-                </button>
-                <button class="btn btn-primary-light scroll-btn right" [disabled]="isLast" (click)="next()">
-                    <span class="eos-icon eos-icon-arrow-v-blue-right small" aria-hidden="true"></span>
-                </button>
-            </div>
+    <div class="dir-users usual-border">
+        <div class="arrow-info">
+            <button class="btn btn-primary-light scroll-btn" [disabled]="isFirst" (click)="prev()">
+                <span class="eos-icon eos-icon-arrow-v-blue-left small" aria-hidden="true"></span>
+            </button>
+            <button class="btn btn-primary-light scroll-btn right" [disabled]="isLast" (click)="next()">
+                <span class="eos-icon eos-icon-arrow-v-blue-right small" aria-hidden="true"></span>
+            </button>
         </div>
-        <div class="info-content-wrapper">
-        </div>
+    </div>
+    <div class="info-content-wrapper">
+    </div>
 </ng-template>
