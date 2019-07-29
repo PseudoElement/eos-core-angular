@@ -152,17 +152,17 @@ export const UsersStats: BtnActionFields = {
     isActive: false,
 };
 
-// export const UsersInfo: BtnActionFields = {
-//     name: 'OpenUsersInfo',
-//     title: 'Данные по отмеченным пользователям',
-//     disabledClass: 'eos-icon eos-icon-department-blue small',
-//     enableClass: 'eos-icon eos-icon-department-blue small',
-//     tooltip: 'Данные по отмеченным пользователям',
-//     disabled: false,
-//     activeClass: 'eos-icon eos-icon-department-blue small',
-//     activeBtnClass: '',
-//     isActive: false,
-// };
+export const UsersInfo: BtnActionFields = {
+    name: 'OpenUsersInfo',
+    title: 'Данные по отмеченным пользователям',
+    disabledClass: 'eos-icon eos-icon-department-grey small',
+    enableClass: 'eos-icon eos-icon-department-blue small',
+    tooltip: 'Данные по отмеченным пользователям',
+    disabled: false,
+    activeClass: 'eos-icon eos-icon-department-blue small',
+    activeBtnClass: '',
+    isActive: false,
+};
 
 export const Protocol: BtnActionFields = {
     name: 'OpenProtocol',
@@ -210,10 +210,10 @@ export const Allbuttons: BtnAction = {
         OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
         GeneralLists,
-      //  UsersInfo,
         UsersStats,
         Protocol,
-        SumProtocol
+        SumProtocol,
+        UsersInfo
     ],
     moreButtonCheck: {
         check: false,

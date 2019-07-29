@@ -134,3 +134,22 @@
  .bs-datepicker-body table td {
      color: black !important;
  }
+ 
+ @media (min-width: 768px) {
+    .modal-dialog {
+        width: 800px !important;
+        margin: 30px auto;
+        .modal-content {
+            border: 0;
+            .modal-header {
+                background: $active-field-color-main-theme;
+                color: $white;
+            }
+            .modal-body {
+                eos-dynamic-input {
+                    font-size: 14px;
+                }
+            }
+        }
+    }
+}
