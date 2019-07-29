@@ -149,13 +149,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         _bcSrv: EosBreadcrumbsService,
     ) {
         this.accessDenied = false;
-        // TODO:REMOVELOG
-        console.log('DictionaryComponent constr');
         _route.params.subscribe((params) => {
             if (params) {
-                // TODO:REMOVELOG
-                console.log('DictionaryComponent params income ---------------');
-
                 this.dictionaryId = params.dictionaryId;
                 if (this._eaps.isAccessGrantedForDictionary(this.dictionaryId, null) === APS_DICT_GRANT.denied) {
                     this.accessDenied = true;
@@ -165,12 +160,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 this.accessDenied = false;
                 this._nodeId = params.nodeId;
                 if (this.dictionaryId) {
-                    // TODO:REMOVELOG
-                    console.log('DictionaryComponent openDictionary', this.dictionaryId);
                     this._dictSrv.openDictionary(this.dictionaryId)
                         .then(() => {
-                            // TODO:REMOVELOG
-                            console.log('DictionaryComponent openDictionary then', this._nodeId);
                             this._dictSrv.setMarkAllNone();
                             if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
                                 this.dictionary.root.children = null;
@@ -185,10 +176,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                                 if (this._nodeId === '0.' ) {
                                     this._nodeId = '';
                                 }
-                                console.log('DictionaryComponent selectTreeNode 1', this._nodeId); // TODO:REMOVELOG
                                 this._dictSrv.selectTreeNode(this._nodeId);
                             } else {
-                                console.log('DictionaryComponent selectTreeNode 2', this._nodeId); // TODO:REMOVELOG
                                 this._dictSrv.selectTreeNode(this._nodeId);
                             }
                         });

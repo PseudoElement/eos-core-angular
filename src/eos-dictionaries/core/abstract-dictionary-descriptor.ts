@@ -414,21 +414,17 @@ export abstract class AbstractDictionaryDescriptor {
 
     getRelatedFields(tables: string[]): Promise<any> {
         const reqs = [];
-        console.log('abs dict getRelatedFields', tables.length); // TODO:REMOVELOG
         tables.forEach( t => {
             if (t) {
                 const md = this.metadata.relations.find( rel => t === rel.__type);
                 if (md) {
-                    console.log('abs dict getRelatedFields', t); // TODO:REMOVELOG
                     reqs.push(this.apiSrv
                         .read({[t]: []}));
                 }
             }
         });
-        console.log('abs dict getRelatedFields all', reqs); // TODO:REMOVELOG
         return Promise.all(reqs)
             .then((responses) => {
-                console.log('abs dict getRelatedFields then', responses.length, 'arrays'); // TODO:REMOVELOG
                 return this.associateRelationType(tables, responses);
             });
     }

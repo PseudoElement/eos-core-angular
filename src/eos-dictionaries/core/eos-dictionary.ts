@@ -418,11 +418,9 @@ export class EosDictionary {
 
 
     loadRelatedFieldsOptions(updatefields: IFieldView[]): Promise<any> {
-        console.log('dict loadRelatedFieldsOptions'); // TODO:REMOVELOG
         return this.descriptor.getRelatedFields(updatefields.filter(i => i.dictionaryId)
                                 .map(i => i.dictionaryId ? i.dictionaryId : null))
             .then((related) => {
-                console.log('dict loadRelatedFieldsOptions after getRelatedFields'); // TODO:REMOVELOG
                 updatefields.forEach((field) => {
                     if ((field.dictionaryId !== undefined)) {
                         field.options.splice(0, field.options.length);
