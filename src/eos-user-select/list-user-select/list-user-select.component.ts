@@ -658,12 +658,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 const deletedUsers = [];
                 this.listUsers.forEach((user: UserSelectNode) => {
                     if ((user.isChecked && !user.deleted) || (user.selectedMark)) {
-                        this._userParamSrv.ProtocolService(user.id, 7);
                         let url = this._createUrlForSop(user.id);
                         deletedUsers.push(user.id);
                         arrayRequests.push(
                             this._pipeSrv.read({
                                 [url]: ALL_ROWS,
+                            }).then(() => {
+                                this._userParamSrv.ProtocolService(user.id, 7);
                             })
                         );
                         url = '';
@@ -677,10 +678,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                     });
                 }
             }
-        }).catch(error => {
-            error.message = 'Не удалось удалить пользователя, обратитесь к системному администратору';
-            this.cathError(error);
-        });
+        })
+            .catch(error => {
+                error.message = 'Не удалось удалить пользователя, обратитесь к системному администратору';
+                this.cathError(error);
+            });
 
     }
 
@@ -801,7 +803,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
 
     private _createUrlForSop(isn_user) {
         const url = `EraseUser?isn_user=${isn_user}`;
-        //   this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 8);
         return url;
     }
 
