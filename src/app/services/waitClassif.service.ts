@@ -58,19 +58,18 @@ export class WaitClassifService {
         });
     }
     private stdTextUrl(url, params: IOpenClassifParams) {
-        if (params.id_std !== undefined && params.id_std !== null) {
-            url += `?id=${params.id_std}`;
-        }
-        if (params.name !== undefined && params.name !== null) {
-            url += `&name=${params.name}`;
-        }
-        if (params.form !== undefined && params.form !== null) {
-            url += `&form=${params.form}`;
-        }
+        // if (params.id_std !== undefined && params.id_std !== null) {
+        //     url += `?id=${params.id_std}`;
+        // }
+        // if (params.name !== undefined && params.name !== null) {
+        //     url += `&name=${params.name}`;
+        // }
+        // if (params.form !== undefined && params.form !== null) {
+        //     url += `&form=${params.form}`;
+        // }
         if (params.isn_user !== undefined && params.isn_user !== null) {
-            url += `&isn_user=${params.isn_user}`;
+            url += `?isn_user=${params.isn_user}`;
         }
-
         return url;
     }
     private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {

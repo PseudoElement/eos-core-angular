@@ -469,10 +469,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     GeneralLists() {
         const param: IOpenClassifParams = {
             classif: 'StdText',
-            id_std: '463_DOC_RC_ANNOTAT',
+           // id_std: '463_DOC_RC_ANNOTAT',
             isn_user: -99,
-            form: 'DOC_RC.aspx',
-            name: 'ANNOTAT463'
+           // form: 'DOC_RC.aspx',
+           // name: 'ANNOTAT463'
         };
         this.shadow = true;
         this._waitCl.openClassif(param).then(data => {
