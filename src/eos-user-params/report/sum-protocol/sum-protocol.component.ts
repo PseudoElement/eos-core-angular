@@ -78,7 +78,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
               } else {
                 this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
               }
-
             }
           }
         }
@@ -125,6 +124,13 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       inlinecount: 'allpages'
     }).then((data: any) => {
       this.usersAudit = data;
+      const parsePosts = data.TotalRecords;
+      if (parsePosts !== undefined) {
+        this._user_pagination.totalPages = this.GetCountPosts(parsePosts);
+      } else {
+        this._user_pagination.totalPages = this.usersAudit.length;
+      }
+      // this._user_pagination.changePagination(this.config);
       if (this.usersAudit.length === 0) {
         this._msgSrv.addNewMessage({
           title: 'Ничего не найдено',
@@ -386,6 +392,17 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       user.checked = true;
     }
   }
+  DisabledRemoveAudits() {
+    let deleteAudit;
+    if (this.frontData !== undefined) {
+      this.frontData.forEach(node => {
+        if (node.checked === true) {
+          deleteAudit = true;
+        }
+      });
+    }
+    return deleteAudit === true ? false : true;
+  }
 
   GetRefIsn(isnEvent) {
     this._pipeSrv.read({
@@ -567,7 +584,15 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
 
   DeleteEvent(isnEvent) {
     const query = this.createRequestForDelete(isnEvent);
-    this._pipeSrv.batch(query, '');
+    this._pipeSrv.batch(query, '')
+      .then(() => {
+        this._user_pagination.totalPages = undefined;
+        if (this.clearResult === true) {
+          this.GetSortData();
+        } else {
+          this.PaginateData(this.config.length, this.orderByStr);
+        }
+      });
   }
 
   createRequestForDelete(isnEvent) {
@@ -583,9 +608,13 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         if (user.checked === true) {
           this.DeleteEvent(user.isnEvent);
         }
+        if (this.frontData[this.frontData.length - 1].isnEvent === user.isnEvent) {
+          this.resetPage = true;
+        }
       }
     }
   }
+
   GetRefFile() {
     this.closeTooltip = true;
     setTimeout(() => {
