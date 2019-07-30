@@ -162,9 +162,9 @@ export class UserParamsService {
     getDepartmentFromUser(dueDep: string[]): Promise<DEPARTMENT[]> {
         return this._pipSrv.getData<DEPARTMENT>({ DEPARTMENT: dueDep });
     }
-    ProtocolService(isn: number, kind: number): void {
+    ProtocolService(isn: number, kind: number): Promise<any> {
         const url = `../UserInfo/UserOperations.asmx/WriteUserAudit?uisn=${isn}&event_kind=${kind}`;
-        this._pipRx.read({
+        return this._pipRx.read({
             [url]: ALL_ROWS
             // http://localhost/x1807/UserInfo/UserOperations.asmx/WriteUserAudit?uisn=73337&event_kind=1
         })
@@ -178,6 +178,7 @@ export class UserParamsService {
                     });
                 }
             });
+
     }
 
     ceckOccupationDueDep(dueDep: string, dep: DEPARTMENT, isn?: boolean) {/* проверяем прикреплино ли должностное лицо к пользователю */
