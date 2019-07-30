@@ -54,6 +54,14 @@ export class RestError {
         if (e.statusCode) {
             this.message = message;
         }
+        try {
+            if (e.error['odata.error'].innererror.message) {
+                this.message = e.error['odata.error'].innererror.message;
+                return;
+            }
+        } catch (err) {
+            return;
+        }
     }
 
     private _defaultLogicExceptionHandler(e, data) {
