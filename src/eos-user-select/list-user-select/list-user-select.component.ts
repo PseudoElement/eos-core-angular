@@ -656,6 +656,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             if (confirmation) {
                 let arrayRequests = [];
                 const deletedUsers = [];
+                const arrayProtocol = [];
                 this.listUsers.forEach((user: UserSelectNode) => {
                     if ((user.isChecked && !user.deleted) || (user.selectedMark)) {
                         let url = this._createUrlForSop(user.id);
@@ -663,10 +664,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                         arrayRequests.push(
                             this._pipeSrv.read({
                                 [url]: ALL_ROWS,
-                            }).then(() => {
-                                this._userParamSrv.ProtocolService(user.id, 7);
                             })
                         );
+                        arrayProtocol.push(this._userParamSrv.ProtocolService(user.id, 7));
                         url = '';
                     }
                 });
@@ -675,6 +675,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                     return Promise.all([...arrayRequests]).then(result => {
                         this.initView();
                         arrayRequests = [];
+                        Promise.all([...arrayProtocol]);
                     });
                 }
             }
