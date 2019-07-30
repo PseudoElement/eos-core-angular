@@ -129,7 +129,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                         this.closedModal.emit();
                     }
                     if (e instanceof RestError && e.code === 500) {
-                        m.msg = 'Пользователь с таким логином уже существует';
+                        m.msg = e.message || 'Пользователь с таким логином уже существует';
                     } else {
                         m.msg = e.message ? e.message : e;
                     }
