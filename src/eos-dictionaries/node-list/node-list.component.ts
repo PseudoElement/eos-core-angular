@@ -21,7 +21,6 @@ import {LongTitleHintComponent} from '../long-title-hint/long-title-hint.compone
 import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
 import {ColumnSettingsComponent} from '../column-settings/column-settings.component';
 import {EosUtils} from 'eos-common/core/utils';
-import {PrjDefaultValuesComponent} from '../prj-default-values/prj-default-values.component';
 import { takeUntil } from 'rxjs/operators';
 import {CopyPropertiesComponent} from '../copy-properties/copy-properties.component';
 import { ExportImportClService } from 'app/services/export-import-cl.service';
@@ -224,16 +223,6 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         this._zone.runOutsideAngular(() => {
             window.open(url, 'addFields', 'resizable=1,status=1,top=20,left=20,width=1220,height=900');
         });
-    }
-
-    openPrjDefaultValues(node: EosDictionaryNode) {
-        this.modalWindow = this._modalSrv.show(PrjDefaultValuesComponent, {
-            class: 'prj-default-values-modal moodal-lg'});
-        const content = {
-            nodeDescription: node.title,
-            isnNode: node.data.rec['ISN_NODE'],
-        };
-        this.modalWindow.content.init(content);
     }
 
     openCopyProperties(node: EosDictionaryNode, fromParent: boolean) {

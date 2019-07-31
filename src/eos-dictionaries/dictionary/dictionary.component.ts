@@ -51,6 +51,7 @@ import {
     WARN_SELECT_NODE,
 } from '../consts/messages.consts';
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
+import { PrjDefaultValuesComponent } from 'eos-dictionaries/prj-default-values/prj-default-values.component';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -808,8 +809,23 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         }
     }
 
-    private _openAdvancedCardRK () {
+    private _openPrjDefaultValues() {
+        this.modalWindow = null;
+        const node = this._dictSrv.listNode;
+        if (node) {
+            this.modalWindow = this._modalSrv.show(PrjDefaultValuesComponent, {
+                class: 'prj-default-values-modal moodal-lg'});
+            const content = {
+                nodeDescription: node.title,
+                isnNode: node.data.rec['ISN_NODE'],
+            };
+            this.modalWindow.content.init(content);
+        } else {
+            this._msgSrv.addNewMessage(WARN_SELECT_NODE);
+        }
+    }
 
+    private _openAdvancedCardRK () {
         this.modalWindow = null;
         const node = this._dictSrv.listNode;
         if (node) {
@@ -823,20 +839,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             this._msgSrv.addNewMessage(WARN_EDIT_ERROR);
         }
 
-        if (this.modalWindow) {
-            const subscription = this.modalWindow.content.onChoose.subscribe(() => {
-                subscription.unsubscribe();
-            });
-        }
-    }
-
-    private _openPrjDefaultValues() {
-        const node = this._dictSrv.listNode;
-        if (node) {
-            this.nodeList.openPrjDefaultValues(node);
-        } else {
-            this._msgSrv.addNewMessage(WARN_SELECT_NODE);
-        }
+        // if (this.modalWindow) {
+        //     const subscription = this.modalWindow.content.onChoose.subscribe(() => {
+        //         subscription.unsubscribe();
+        //     });
+        // }
     }
 
     private _openCopyProperties(fromParent = false) {
