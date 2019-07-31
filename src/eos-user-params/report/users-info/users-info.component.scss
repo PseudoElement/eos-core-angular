@@ -38,8 +38,22 @@
     padding: 20px;
     overflow-x: hidden;
     overflow-y: auto;
+    color: black;
     max-height: calc(100vh - 220px);
+    .info-radio-btn {
+        display: inline-flex;
+        margin-top: -6px;
+    }
+    .radio-info-group {
+        display: inline-flex;
+        padding-left: 15px;
+        .info-users-sp {
+            padding-left: 12px;
+            padding-top: 6px;
+        }
+    }
 }
+
 .dir-users {
     background-color: #fafafa;
     border-bottom-width: 1px;
@@ -51,5 +65,8 @@
             height: 48px;
             width: 48px;
         }
+    }
+    .info-print{
+        color: black;
     }
 }
