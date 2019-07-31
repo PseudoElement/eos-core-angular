@@ -231,16 +231,16 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             .then((data: UserSelectNode[]) => {
                 //  this._pagSrv.UsersList =  this.helpersClass.sort(data, this.srtConfig[this.currentSort].upDoun, this.currentSort);
                 if (this._storage.getItem('saveQuickSearch') && this._storage.getItem('quickSearch')) {
-                        this._apiSrv.Allcustomer = this._apiSrv._getListUsers(this._storage.getItem('quickSearch')).slice();
-                        this.setListSearch();
-                        this.showCloseQuickSearch = true;
+                    this._apiSrv.Allcustomer = this._apiSrv._getListUsers(this._storage.getItem('quickSearch')).slice();
+                    this.setListSearch();
+                    this.showCloseQuickSearch = true;
                 } else {
                     this._storage.removeItem('quickSearch');
                     this.showCloseQuickSearch = false;
                     this.listUsers = this._pagSrv.UsersList.slice((this._pagSrv.paginationConfig.start - 1)
-                    * this._pagSrv.paginationConfig.length,
-                    this._pagSrv.paginationConfig.current
-                    * this._pagSrv.paginationConfig.length);
+                        * this._pagSrv.paginationConfig.length,
+                        this._pagSrv.paginationConfig.current
+                        * this._pagSrv.paginationConfig.length);
                     if (this.listUsers && this.listUsers.length) {
                         this.selectedNode(this.findSelectedSaveUsers()[0] ? this.findSelectedSaveUsers()[0] : this.listUsers[0]);
                         //    this._storage.removeItem('selected_user_save');
@@ -469,10 +469,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     GeneralLists() {
         const param: IOpenClassifParams = {
             classif: 'StdText',
-            id_std: '463_DOC_RC_ANNOTAT',
+           // id_std: '463_DOC_RC_ANNOTAT',
             isn_user: -99,
-            form: 'DOC_RC.aspx',
-            name: 'ANNOTAT463'
+           // form: 'DOC_RC.aspx',
+           // name: 'ANNOTAT463'
         };
         this.shadow = true;
         this._waitCl.openClassif(param).then(data => {
@@ -656,6 +656,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             if (confirmation) {
                 let arrayRequests = [];
                 const deletedUsers = [];
+                const arrayProtocol = [];
                 this.listUsers.forEach((user: UserSelectNode) => {
                     if ((user.isChecked && !user.deleted) || (user.selectedMark)) {
                         let url = this._createUrlForSop(user.id);
@@ -665,6 +666,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                                 [url]: ALL_ROWS,
                             })
                         );
+                        arrayProtocol.push(this._userParamSrv.ProtocolService(user.id, 7));
                         url = '';
                     }
                 });
@@ -673,13 +675,15 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                     return Promise.all([...arrayRequests]).then(result => {
                         this.initView();
                         arrayRequests = [];
+                        Promise.all([...arrayProtocol]);
                     });
                 }
             }
-        }).catch(error => {
-            error.message = 'Не удалось удалить пользователя, обратитесь к системному администратору';
-            this.cathError(error);
-        });
+        })
+            .catch(error => {
+                error.message = 'Не удалось удалить пользователя, обратитесь к системному администратору';
+                this.cathError(error);
+            });
 
     }
 
@@ -746,7 +750,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     }
     resetSearch() {
         const url = this._router.url.split('/');
-        this.showCloseQuickSearch =  false;
+        this.showCloseQuickSearch = false;
         this.initView(url[url.length - 1]);
         this.quickSearch.clearQuickForm();
         this._storage.removeItem('quickSearch');
@@ -800,7 +804,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
 
     private _createUrlForSop(isn_user) {
         const url = `EraseUser?isn_user=${isn_user}`;
-        this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 8);
         return url;
     }
 

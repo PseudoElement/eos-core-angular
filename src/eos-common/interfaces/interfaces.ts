@@ -32,9 +32,9 @@ export interface IOpenClassifParams {
 
     // для STDText
     isn_user?: number;
-    name?: string;
-    form?: string;
-    id_std?: string;
+    // name?: string;
+    // form?: string;
+    // id_std?: string;
 }
 
 export interface ICertificateInit {
