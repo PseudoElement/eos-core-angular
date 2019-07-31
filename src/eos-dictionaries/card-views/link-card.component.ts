@@ -138,7 +138,8 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
         return ValidatorsControl.controlsNonUniq(
             this.form.controls['PARE_LINK_Ref.CLASSIF_NAME'],
             this.form.controls['rec.CLASSIF_NAME'],
-            'Наименования прямой и обратной связок не должны совпадать.'
+            'Наименования прямой и обратной связок не должны совпадать.',
+            true
             );
     }
 
