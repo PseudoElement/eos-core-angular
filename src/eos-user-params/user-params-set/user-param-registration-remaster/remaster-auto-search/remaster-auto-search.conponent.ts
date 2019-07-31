@@ -75,6 +75,7 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
         Object.keys(this.form.controls).forEach(inp => {
             this.inputs[inp].value = this.form.controls[inp].value;
         });
+        console.log(this.inputs);
     }
     ngOnInit() {
         this.searchString = this.userData['DEF_SEARCH_CITIZEN'];
@@ -187,7 +188,7 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
 
     cancel() {
         if (this.btnDisabled) {
-            this.pretInputs();
+         //   this.pretInputs();
             Object.keys(this.inputs).forEach(input => {
                 this.form.controls[input].patchValue(this.inputs[input].value);
             });
