@@ -113,9 +113,6 @@ export class EosUtils {
     }
 
     static getControlErrorMessage(control: AbstractControl, params: any): string {
-
-        // {uniqueInDict: !!this.input.uniqueInDict, maxLength: this.input.length }
-
         let msg = '';
         if (control && control.errors) {
             msg = Object.keys(control.errors)
@@ -128,7 +125,7 @@ export class EosUtils {
                         case 'required':
                             return INPUT_ERROR_MESSAGES[key];
                         case 'isUnique':
-                            return INPUT_ERROR_MESSAGES[key][+(params.uniqueInDict)];
+                            return INPUT_ERROR_MESSAGES[key][(params.uniqueInDict ? 1 : 0)];
                         case 'maxlength':
                             return 'Максимальная длина ' + params.maxLength + ' ' + EosUtils.endingByNumber(params.maxLength);
                         case 'valueError':
@@ -142,6 +139,26 @@ export class EosUtils {
                 .join(' ');
         }
         return msg;
+    }
+
+    static getValidateMessages(inputs: any): string[] {
+        const invalid = [];
+        // const inputs = this.cardEditRef.inputs;
+        for (const inputKey of Object.keys(inputs)) {
+            const input = inputs[inputKey];
+            const inputDib = input.dib;
+            if (!inputDib) {
+                continue;
+            }
+            const control = inputDib.control;
+            if (control.invalid) {
+                const title = input.label;
+                control.updateValueAndValidity();
+                const validateMessage = EosUtils.getControlErrorMessage(control, { maxLength: input.length, uniqueInDict: !!input.uniqueInDict });
+                invalid.push(' - ' + title + ' (' + validateMessage + ')');
+            }
+        }
+        return invalid;
     }
 
     static endingByNumber(value: number) {

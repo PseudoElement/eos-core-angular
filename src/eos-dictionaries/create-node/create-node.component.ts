@@ -119,7 +119,10 @@ export class CreateNodeComponent {
 
     private _windowInvalidSave(): Promise<boolean> {
             const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_INVALID);
-            confirmParams.body = confirmParams.body.replace('{{errors}}', this._getValidateMessages().join('\n'));
+
+            confirmParams.body = confirmParams.body.replace('{{errors}}',
+                EosUtils.getValidateMessages(this.cardEditRef.inputs).join('\n'));
+
             return this._confirmSrv.confirm2(confirmParams, )
                 .then((doSave) => {
                     return true;
@@ -128,27 +131,6 @@ export class CreateNodeComponent {
                     return false;
                 });
     }
-
-    private _getValidateMessages(): string[] {
-        const invalid = [];
-        const inputs = this.cardEditRef.inputs;
-        for (const inputKey of Object.keys(this.cardEditRef.inputs)) {
-            const input = inputs[inputKey];
-            const inputDib = input.dib;
-            if (!inputDib) {
-                continue;
-            }
-            const control = inputDib.control;
-            if (control.invalid) {
-                const title = input.label;
-                control.updateValueAndValidity();
-                const validateMessage = EosUtils.getControlErrorMessage(control, { maxLength: input.length });
-                invalid.push(' - ' + title + ' (' + validateMessage + ')');
-            }
-        }
-        return invalid;
-    }
-
 
     private _afterAdding(node: EosDictionaryNode, hide: boolean): void {
         if (node) {
