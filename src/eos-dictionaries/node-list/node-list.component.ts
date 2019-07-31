@@ -87,21 +87,21 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
                     this.customFields = this._dictSrv.customFields;
 
-                    this.updateViewFields(this.customFields);
-
-                    const _customTitles = this._dictSrv.customTitles;
-                    _customTitles.forEach((_title) => {
-                        const vField = this.viewFields.find((_field) => _field.key === _title.key);
-                        if (vField) {
-                            vField.customTitle = _title.customTitle;
-                        }
+                    this.updateViewFields(this.customFields, nodes). then ( () => {
+                        const _customTitles = this._dictSrv.customTitles;
+                        _customTitles.forEach((_title) => {
+                            const vField = this.viewFields.find((_field) => _field.key === _title.key);
+                            if (vField) {
+                                vField.customTitle = _title.customTitle;
+                            }
+                        });
+                        this.nodes = nodes;
+                        setTimeout(() => {
+                            this._countColumnWidth();
+                            this._repaintFlag = false;
+                        }, 10);
                     });
                 }
-                this.nodes = nodes;
-                setTimeout(() => {
-                    this._countColumnWidth();
-                    this._repaintFlag = false;
-                }, 10);
             });
 
         _dictSrv.viewParameters$
@@ -120,9 +120,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             });
     }
 
-    updateViewFields(customFields: IFieldView[]) {
+    updateViewFields(customFields: IFieldView[], nodes: EosDictionaryNode[]): Promise<any> {
         // also customFields for update
-        this.viewFields = this._dictSrv.currentDictionary.getListViewWithRelated(customFields);
+        return this._dictSrv.currentDictionary.getListViewWithRelated(customFields, nodes).then ( (fields) => {
+            this.viewFields = fields;
+        } );
     }
 
     ngOnInit() {
@@ -196,7 +198,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 this.orderBy = this._dictSrv.currentDictionary.orderDefault();
             }
 
-            this.updateViewFields(this.customFields);
+            this.updateViewFields(this.customFields, []);
             this._dictSrv.updateVisibleList();
             this._countColumnWidth();
             subscription.unsubscribe();

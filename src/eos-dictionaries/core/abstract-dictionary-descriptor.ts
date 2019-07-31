@@ -47,6 +47,7 @@ export abstract class AbstractDictionaryDescriptor {
     protected apiSrv: PipRX;
 
     private _defaultOrder: string;
+    private _allMetadata: any;
 
     get defaultOrder(): string {
         return this._defaultOrder || 'CLASSIF_NAME';
@@ -95,11 +96,9 @@ export abstract class AbstractDictionaryDescriptor {
         const et = this.metadata;
         return this.apiInstance + ((et.properties[et.pk] === _T.s) ? ('(\'' + v + '\')') : ('(' + v + ')'));
     }
-
     getMetadata(): any {
         return this.metadata;
     }
-
     addBlob(ext: string, blobData: string): Promise<string | number> {
         const delo_blob = this.apiSrv.entityHelper.prepareAdded<DELO_BLOB>({
             ISN_BLOB: this.apiSrv.sequenceMap.GetTempISN(),
@@ -163,6 +162,7 @@ export abstract class AbstractDictionaryDescriptor {
     }
 
     merge(metadata: any) {
+        this._allMetadata = metadata;
         this.metadata = metadata[this.apiInstance];
     }
 
@@ -412,20 +412,50 @@ export abstract class AbstractDictionaryDescriptor {
     //         });
     // }
 
-    getRelatedFields(tables: string[]): Promise<any> {
+    getRelatedFields2(tables: string[], nodes: EosDictionaryNode[], loadAll: boolean): Promise<any> {
         const reqs = [];
+        const tablesWReq = [];
         tables.forEach( t => {
             if (t) {
-                const md = this.metadata.relations.find( rel => t === rel.__type);
-                if (md) {
-                    reqs.push(this.apiSrv
-                        .read({[t]: []}));
+                if (loadAll) {
+                    const md = this.metadata.relations.find( rel => t === rel.__type);
+                    if (md) {
+                        tablesWReq.push(t);
+                        reqs.push(this.apiSrv
+                            .read({[t]: []}));
+                    }
+                } if (nodes && nodes.length) {
+                    const md = this.metadata.relations.find( rel => t === rel.__type);
+                    if (md) {
+                        const pktype = this._allMetadata[md.__type].properties[md.tf];
+                        const idset = new Set();
+                        nodes.forEach ( node => {
+                            const i = node.data.rec[md.sf];
+                            if (i !== undefined && i !== null) {
+                                if (pktype === 'i') {
+                                    idset.add(Number(node.data.rec[md.sf]));
+                                } else {
+                                    idset.add(String(node.data.rec[md.sf]));
+                                }
+                            }
+                        });
+                        if (idset.size > 0) {
+                            const uniq_ids = Array.from(idset);
+                            tablesWReq.push(t);
+                            reqs.push(this.apiSrv
+                                .read({[t]: uniq_ids}));
+                        }
+                    }
                 }
             }
         });
         return Promise.all(reqs)
             .then((responses) => {
-                return this.associateRelationType(tables, responses);
+                if (tablesWReq.length) {
+                    return this.associateRelationType(tablesWReq, responses);
+                } else {
+                    return [];
+                }
             });
     }
 

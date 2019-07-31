@@ -417,9 +417,9 @@ export class EosDictionary {
     // }
 
 
-    loadRelatedFieldsOptions(updatefields: IFieldView[]): Promise<any> {
-        return this.descriptor.getRelatedFields(updatefields.filter(i => i.dictionaryId)
-                                .map(i => i.dictionaryId ? i.dictionaryId : null))
+    loadRelatedFieldsOptions(updatefields: IFieldView[], nodes: EosDictionaryNode[], loadAll: boolean): Promise<any> {
+        return this.descriptor.getRelatedFields2(updatefields.filter(i => i.dictionaryId)
+                                .map(i => i.dictionaryId ? i.dictionaryId : null), nodes, loadAll)
             .then((related) => {
                 updatefields.forEach((field) => {
                     if ((field.dictionaryId !== undefined)) {
@@ -430,26 +430,45 @@ export class EosDictionary {
                         const fn = (field.dictionaryLink ? field.dictionaryLink.pk : 'ISN_LCLASSIF');
                         const ln = (field.dictionaryLink ? field.dictionaryLink.label : 'CLASSIF_NAME');
 
-                        related[field.dictionaryId].forEach((rel) => {
-                            const el = {value: rel[fn], title: rel[ln], disabled: !!rel['DELETED'] };
-                            if (type_fk === 's') {
-                                el.value = String(el.value);
-                            }
+                        if (related && related[field.dictionaryId]) {
+                            related[field.dictionaryId].forEach((rel) => {
+                                const el = {value: rel[fn], title: rel[ln], disabled: !!rel['DELETED'] };
+                                if (type_fk === 's') {
+                                    el.value = String(el.value);
+                                }
 
-                            field.options.push(el);
-                        });
+                                field.options.push(el);
+                            });
+                        }
                     }
                 });
             });
     }
 
-    getListViewWithRelated(customFields: IFieldView[]) {
+    getListViewWithRelated(customFields: IFieldView[], nodes: EosDictionaryNode[]): Promise<any> {
         const fields = this.descriptor.record.getListView({});
-        // TODO: Отключено до оптимизации
+        // const fields = this.descriptor.record.getFieldSet(E_FIELD_SET.list);
         // const infoFields = this.descriptor.record.getInfoView({});
-        // const updatefields = fields.concat(customFields).concat(infoFields);
-        // this.loadRelatedFieldsOptions(updatefields);
-        return fields;
+        const updatefields = fields.concat(customFields); // .concat(infoFields);
+        return this.loadRelatedFieldsOptions(updatefields, nodes, false).then (() => {
+            return fields;
+        });
+
+        // const descriptor = this.dictSrv.currentDictionary.descriptor;
+        // const list = descriptor.record.getEditView({});
+
+        // this.dictSrv.currentDictionary.loadRelatedFieldsOptions(list.filter(i => i.dictionaryId), [], true).then((d) => {
+        //     for (const key in this.inputs) {
+        //         if (this.inputs.hasOwnProperty(key)) {
+        //             const input = this.inputs[key];
+        //             if (input && input.options && input.controlType === E_FIELD_TYPE.select) {
+        //                 const value = this.getValue(key);
+        //                 input.options = input.options.filter(o => (!o.disabled || String(value) === String(o.value)));
+        //             }
+        //         }
+        //     }
+        // });
+
     }
 
     getEditDescriptor(): {} {

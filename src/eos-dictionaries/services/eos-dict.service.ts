@@ -153,12 +153,14 @@ export class EosDictService {
     }
 
     get customFields(): IFieldView[] {
-        const _storageData = this._storageSrv.getItem('customFields');
+        const _storageData = this._storageSrv.getItem('customFieldsList');
         const dictionary = this.currentDictionary;
         if (_storageData && dictionary) {
             this._customFields = _storageData;
-            if (this._customFields[dictionary.id]) {
-                const fies: IFieldView[] = this._customFields[dictionary.id];
+            const stored: [] = this._customFields[dictionary.id];
+            if (stored && stored.length) {
+                const allList = dictionary.descriptor.record.getCustomListView({});
+                const fies = stored.map( s => allList.find( a => a.key === s));
                 return fies;
             } else {
                 return [];
@@ -196,8 +198,8 @@ export class EosDictService {
         if (!this._customFields) {
             this._customFields = {};
         }
-        this._customFields[dictionary.id] = val;
-        this._storageSrv.setItem('customFields', this._customFields, true);
+        this._customFields[dictionary.id] = val.map((record) => record.key);
+        this._storageSrv.setItem('customFieldsList', this._customFields, true);
     }
 
     set customTitles(val: IFieldView[]) {

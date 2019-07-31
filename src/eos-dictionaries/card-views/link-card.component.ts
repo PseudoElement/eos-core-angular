@@ -132,11 +132,6 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
             this._unicValueValidator('PARE_LINK_Ref.CLASSIF_NAME'),
             this._pairNameUnique(),
         ]);
-
-        // this.form.controls['rec.CLASSIF_NAME'].setValidators([this._unicValueValidator('rec.CLASSIF_NAME'),
-        //     Validators.required]);
-        // this.form.controls['PARE_LINK_Ref.CLASSIF_NAME']
-        //     .setValidators([this._unicValueValidator('PARE_LINK_Ref.CLASSIF_NAME'), Validators.required]);
     }
 
     private _pairNameUnique(): ValidatorFn {
