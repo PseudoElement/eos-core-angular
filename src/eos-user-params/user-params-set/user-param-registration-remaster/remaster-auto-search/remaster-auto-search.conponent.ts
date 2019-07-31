@@ -65,7 +65,9 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
             takeUntil(this.ngUnsub)
         )
         .subscribe(data => {
-            this.form.enable({emitEvent: false});
+            setTimeout(() => {
+                this.form.enable({emitEvent: false});
+            });
         });
 
     }
