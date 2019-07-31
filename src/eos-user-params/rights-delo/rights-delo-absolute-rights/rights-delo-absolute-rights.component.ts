@@ -169,6 +169,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             });
     }
     cancel() {
+        this.queryForSave = [];
         this.selectedNode = null;
         this.editMode = false;
         this.btnDisabled = true;
