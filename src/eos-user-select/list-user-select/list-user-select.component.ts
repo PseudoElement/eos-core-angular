@@ -749,9 +749,15 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         }
     }
     resetSearch() {
+        let urlUpdate;
         const url = this._router.url.split('/');
+        if (url[url.length - 1] === 'user_param') {
+            urlUpdate = '0.';
+        } else {
+            urlUpdate = url[url.length - 1];
+        }
         this.showCloseQuickSearch = false;
-        this.initView(url[url.length - 1]);
+        this.initView(urlUpdate);
         this.quickSearch.clearQuickForm();
         this._storage.removeItem('quickSearch');
     }

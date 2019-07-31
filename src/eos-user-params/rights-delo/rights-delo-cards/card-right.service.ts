@@ -245,10 +245,8 @@ export class CardRightSrv {
         });
     }
     addFunclist(item: any) {
-        if (item['FUNCLIST']) {
-             if (item['FUNCLIST'].length < 21) {
-                item['FUNCLIST'] = item['FUNCLIST'] + '0'.repeat(21 - item['FUNCLIST'].length);
-            }
+        if (item['FUNCLIST'].length < 21) {
+            item['FUNCLIST'] = item['FUNCLIST'] + '0'.repeat(21 - item['FUNCLIST'].length);
         }
     }
     private _createListNode(list: NodeDocsTree[], data): void { // {docGroup, userCardDG}
@@ -314,7 +312,9 @@ export class CardRightSrv {
     private _prepareforEdit(arr) {
         arr.forEach((item) => {
             item = this._pipSrv.entityHelper.prepareForEdit(item);
-            this.addFunclist(item);
+            if (item['FUNCLIST']) {
+                    this.addFunclist(item);
+            }
             for (const key in item) {
                 if (item[key] instanceof Array) {
                     item[key] = this._prepareforEdit(item[key]);
