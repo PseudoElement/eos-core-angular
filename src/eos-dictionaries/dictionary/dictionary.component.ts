@@ -547,7 +547,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             this._msgSrv.addNewMessage(DANGER_DEPART_IS_LDELETED);
         } else {
             this._dictSrv.setDictMode(mode);
-            this.nodeList.updateViewFields([]);
+            this.nodeList.updateViewFields([], []);
         }
     }
 

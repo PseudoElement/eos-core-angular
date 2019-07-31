@@ -35,7 +35,8 @@ export class DictionaryDescriptor extends AbstractDictionaryDescriptor {
     }
 
     getRoot(): Promise<any[]> {
-        return this.getData();
+        return Promise.resolve([]);
+        // return this.getData();
     }
 
     public onPreparePrintInfo(): Promise<any> {

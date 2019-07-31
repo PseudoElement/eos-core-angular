@@ -87,7 +87,7 @@ export class BaseCardEditComponent implements OnDestroy, OnInit, AfterViewInit {
         const descriptor = this.dictSrv.currentDictionary.descriptor;
         const list = descriptor.record.getEditView({});
 
-        this.dictSrv.currentDictionary.loadRelatedFieldsOptions(list.filter(i => i.dictionaryId)).then((d) => {
+        this.dictSrv.currentDictionary.loadRelatedFieldsOptions(list.filter(i => i.dictionaryId), [], true).then((d) => {
             for (const key in this.inputs) {
                 if (this.inputs.hasOwnProperty(key)) {
                     const input = this.inputs[key];

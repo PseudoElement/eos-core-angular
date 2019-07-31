@@ -155,5 +155,5 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     quickViewFields: ['CLASSIF_NAME', 'FULLNAME', 'NOTE', 'DOCGROUP_INDEX', 'RC_TYPE' ],
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: [ICONS_CONTAINER, 'CLASSIF_NAME'],
-    allVisibleFields: ['DOCGROUP_INDEX', 'NOTE', 'FULLNAME'],
+    allVisibleFields: ['RC_TYPE', 'DOCGROUP_INDEX', 'NOTE', 'FULLNAME'],
 };
