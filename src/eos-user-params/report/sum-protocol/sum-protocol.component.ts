@@ -48,6 +48,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   eventUser: string;
   isnUser: string;
   isnWho: string;
+  databaseName: string;
   closeTooltip: boolean = true;
   arrSort = [
     { date: true },
@@ -88,6 +89,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.databaseName = window.location.pathname.slice(1);
+    [this.databaseName] = this.databaseName.split('/');
     this._pipeSrv.read<USER_PARMS>({
       USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'USER_EDIT_AUDIT' })
     }).then((r: any) => {
@@ -621,7 +624,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   GetRefFile() {
     this.closeTooltip = true;
     setTimeout(() => {
-      window.open(`/x1807/getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900,height=700');
+      window.open(`/${this.databaseName}/getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900,height=700');
     }, 0);
   }
 
