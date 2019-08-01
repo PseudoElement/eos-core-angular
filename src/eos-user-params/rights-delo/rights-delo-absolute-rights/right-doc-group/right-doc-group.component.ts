@@ -144,7 +144,13 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
     }
 
     private _init() {
+        let rDocgroupСontains = false;
         this.rDocgroup = this._userParmSrv.userRightDocgroupList;
+        this.rDocgroup.forEach( item => {
+            if (item['DUE'] === '0.') {
+                rDocgroupСontains = true;
+            }
+        });
         this.isLoading = true;
         const str = this.rDocgroup.map(i => i.DUE);
         if (this.selectedNode.isCreate) {
@@ -160,23 +166,25 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
                 });
             });
             if (this.selectedNode.isCreate) {
-                data.forEach(d => {
-                    if (d.DUE === '0.') {
-                        const rightDocGroup = {
-                            ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
-                            FUNC_NUM: +this.selectedNode.key + 1,
-                            DUE: d.DUE,
-                            ALLOWED: 0
-                        };
-                        this.list.push(this._createNode(rightDocGroup, d));
-                        this.selectedNode.pushChange({
-                            method: 'POST',
-                            due: rightDocGroup.DUE,
-                            data: rightDocGroup
-                        });
-                        this.rDocgroup.push(rightDocGroup);
-                    }
-                });
+                if (!rDocgroupСontains) {
+                    data.forEach(d => {
+                        if (d.DUE === '0.') {
+                            const rightDocGroup = {
+                                ISN_LCLASSIF: this.curentUser.ISN_LCLASSIF,
+                                FUNC_NUM: +this.selectedNode.key + 1,
+                                DUE: d.DUE,
+                                ALLOWED: 0
+                            };
+                            this.list.push(this._createNode(rightDocGroup, d));
+                            this.selectedNode.pushChange({
+                                method: 'POST',
+                                due: rightDocGroup.DUE,
+                                data: rightDocGroup
+                            });
+                            this.rDocgroup.push(rightDocGroup);
+                        }
+                    });
+                }
                 this.selectedNode.isCreate = false;
             }
 
