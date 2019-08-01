@@ -73,11 +73,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
             } else if (this.config.current && this.initPage === true && this.clearResult === true) {
               this.GetSortData();
             } else if (this.config.current && this.initPage === true) {
-              if (this.config.length !== 10) {
-                this.PaginateData(this.config.length + 1, this.orderByStr, this.config.length * this.config.current - this.config.length);
-              } else {
-                this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
-              }
+              this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
             }
           }
         }
@@ -130,7 +126,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       } else {
         this._user_pagination.totalPages = this.usersAudit.length;
       }
-      // this._user_pagination.changePagination(this.config);
       if (this.usersAudit.length === 0) {
         this._msgSrv.addNewMessage({
           title: 'Ничего не найдено',
@@ -352,14 +347,11 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
 
   toggleAllMarks(event) {
     this.isnRefFile = undefined;
+    this.lastUser = null;
     if (this.frontData !== undefined) {
       this.flagChecked = event.target.checked;
       if (this.flagChecked === false) {
         this.flagChecked = null;
-      }
-      if (this.flagChecked === true) {
-        this.frontData[0] = this.lastUser;
-        this.GetRefIsn(this.frontData[0].isnEvent);
       }
       if (event.target.checked) {
         this.frontData.forEach(node => {
@@ -454,7 +446,10 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         });
       }
     });
-    this.GetRefIsn(this.lastUser.isnEvent);
+    if (this.lastUser !== undefined) {
+      this.GetRefIsn(this.lastUser.isnEvent);
+    }
+
   }
   ConvertToFilterDate(date): string {
     const oldDate = new Date(date);
@@ -582,17 +577,9 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     this.ShowData();
   }
 
-  DeleteEvent(isnEvent) {
+  DeleteEvent(isnEvent): Promise<any> {
     const query = this.createRequestForDelete(isnEvent);
-    this._pipeSrv.batch(query, '')
-      .then(() => {
-        this._user_pagination.totalPages = undefined;
-        if (this.clearResult === true) {
-          this.GetSortData();
-        } else {
-          this.PaginateData(this.config.length, this.orderByStr);
-        }
-      });
+    return this._pipeSrv.batch(query, '');
   }
 
   createRequestForDelete(isnEvent) {
@@ -603,13 +590,29 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   }
 
   DeleteEventUser() {
+    this.resetPage = true;
+    let usersCheck;
     if (this.frontData !== undefined) {
-      for (const user of this.frontData) {
-        if (user.checked === true) {
+      usersCheck = this.frontData.filter(user => user.checked === true);
+      for (const user of usersCheck) {
+        if (usersCheck[usersCheck.length - 1].isnEvent === user.isnEvent) {
+          this.DeleteEvent(user.isnEvent)
+            .then(() => {
+              this._user_pagination.totalPages = this._user_pagination.totalPages - 1;
+              if (this._user_pagination.totalPages % this.config.length === 0) {
+                this.config.current = this.config.current - 1;
+                this.config.current = this.config.start - 1;
+              }
+              this._user_pagination.totalPages = undefined;
+              if (this.clearResult === true) {
+                this.GetSortData();
+              } else {
+                this.PaginateData(this.config.length, this.orderByStr);
+              }
+            });
+        } else {
           this.DeleteEvent(user.isnEvent);
-        }
-        if (this.frontData[this.frontData.length - 1].isnEvent === user.isnEvent) {
-          this.resetPage = true;
+          this._user_pagination.totalPages = this._user_pagination.totalPages - 1;
         }
       }
     }

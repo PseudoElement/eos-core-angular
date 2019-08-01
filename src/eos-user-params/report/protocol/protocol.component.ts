@@ -263,7 +263,9 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
         });
       }
     });
-    this.GetRefIsn();
+    if (this.lastUser !== undefined) {
+      this.GetRefIsn();
+    }
   }
 
   ParseDate(data) {
