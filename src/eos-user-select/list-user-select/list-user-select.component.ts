@@ -352,13 +352,15 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 return false;
             }
         }
-        if (this.selectedUser && !this.selectedUser.deleted) {
-            this._storage.setItem('selected_user_save', this.selectedUser);
-            this.rtUserService.flagDeleteScroll = false;
-            this._router.navigate(['user-params-set'], {
-                queryParams: { isn_cl: this.selectedUser.id }
-            });
-        }
+        setTimeout(() => {
+            if (this.selectedUser && !this.selectedUser.deleted) {
+                this._storage.setItem('selected_user_save', this.selectedUser);
+                this.rtUserService.flagDeleteScroll = false;
+                this._router.navigate(['user-params-set'], {
+                    queryParams: { isn_cl: this.selectedUser.id }
+                });
+            }
+        }, 0);
     }
 
     checkboxClick(e: Event) {
@@ -443,36 +445,42 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     }
 
     OpenAddressManagementWindow() {
-        if (this.selectedUser) {
-            this._router.navigate(['user-params-set/', 'email-address'], {
-                queryParams: { isn_cl: this.selectedUser.id }
-            });
-        }
+        setTimeout(() => {
+            if (this.selectedUser) {
+                this._router.navigate(['user-params-set/', 'email-address'], {
+                    queryParams: { isn_cl: this.selectedUser.id }
+                });
+            }
+        }, 0);
     }
 
     OpenRightsSystemCaseDelo() {
-        if (this.selectedUser) {
-            this._router.navigate(['user-params-set/', 'card-files'], {
-                queryParams: { isn_cl: this.selectedUser.id }
-            });
-        }
+        setTimeout(() => {
+            if (this.selectedUser) {
+                this._router.navigate(['user-params-set/', 'card-files'], {
+                    queryParams: { isn_cl: this.selectedUser.id }
+                });
+            }
+        }, 0);
     }
 
     OpenStreamScanSystem() {
-        this._router.navigate(['user-params-set/', 'inline-scaning'],
-            {
-                queryParams: { isn_cl: this.selectedUser.id }
-            }
-        );
+        setTimeout(() => {
+            this._router.navigate(['user-params-set/', 'inline-scaning'],
+                {
+                    queryParams: { isn_cl: this.selectedUser.id }
+                }
+            );
+        }, 0);
     }
 
     GeneralLists() {
         const param: IOpenClassifParams = {
             classif: 'StdText',
-           // id_std: '463_DOC_RC_ANNOTAT',
+            // id_std: '463_DOC_RC_ANNOTAT',
             isn_user: -99,
-           // form: 'DOC_RC.aspx',
-           // name: 'ANNOTAT463'
+            // form: 'DOC_RC.aspx',
+            // name: 'ANNOTAT463'
         };
         this.shadow = true;
         this._waitCl.openClassif(param).then(data => {
@@ -492,15 +500,16 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         setTimeout(() => {
             this._router.navigate(['user_param/users-stats']);
         }, 0);
-
     }
 
     OpenProtocol() {
-        this._router.navigate(['user-params-set/', 'protocol'],
-            {
-                queryParams: { isn_cl: this.selectedUser.id }
-            }
-        );
+        setTimeout(() => {
+            this._router.navigate(['user-params-set/', 'protocol'],
+                {
+                    queryParams: { isn_cl: this.selectedUser.id }
+                }
+            );
+        }, 0);
     }
 
     setCheckedAllFlag() {
