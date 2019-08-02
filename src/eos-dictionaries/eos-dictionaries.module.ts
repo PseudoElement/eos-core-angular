@@ -89,6 +89,7 @@ import { DictFormComponent } from './dict-forms/dict-form.component';
 import { EosDatepickerInlineComponent } from './dict-forms/eos-datepicker-inline/eos-datepicker-inline.component';
 import { CalendarFormComponent } from './dict-forms/calendar-form/calendar-form.component';
 import { NomenkNodeInfoComponent } from './node-info/nomenk-node-info.component';
+import { LinkNodeInfoComponent } from './node-info/link-node-info.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -132,6 +133,7 @@ import { NomenkNodeInfoComponent } from './node-info/nomenk-node-info.component'
         DepartmentNodeInfoComponent,
         NomenkNodeInfoComponent,
         CabinetNodeInfoComponent,
+        LinkNodeInfoComponent,
         LongTitleHintComponent,
         SecurityCardEditComponent,
         SecurityNodeInfoComponent,

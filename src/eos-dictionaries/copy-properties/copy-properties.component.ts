@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {WaitClassifService} from '../../app/services/waitClassif.service';
 import {BsModalRef} from 'ngx-bootstrap';
@@ -30,6 +30,7 @@ const CLASSIF_NAME = 'DOCGROUP_CL';
 
 export class CopyPropertiesComponent implements OnDestroy {
     @Input() form: FormGroup;
+    @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
     isUpdating = true;
     inputs: any = {};
@@ -55,6 +56,7 @@ export class CopyPropertiesComponent implements OnDestroy {
         if (this.formChanges$) {
             this.formChanges$.unsubscribe();
         }
+        this.onClose.emit();
     }
 
     public init(rec: any, fromParent: boolean) {
@@ -79,6 +81,7 @@ export class CopyPropertiesComponent implements OnDestroy {
 
     public hideModal() {
         this._bsModalRef.hide();
+        this.onClose.emit();
     }
 
     public save() {

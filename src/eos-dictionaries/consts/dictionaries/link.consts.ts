@@ -70,6 +70,6 @@ export const LINK_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLAT
     editFields: ['LINK_INDEX', 'CLASSIF_NAME', 'TRANSPARENT', 'LINK_TYPE', 'LINK_DIR', 'ISN_LCLASSIF', 'NOTE',
         'PARE_LINK_Ref', 'ISN_PARE_LINK'],
     listFields: ['LINK', 'PAIR_LINK', 'TYPE', ],
-    quickViewFields: ['LINK', 'PAIR_LINK', 'LINK_INDEX', 'TYPE', 'NOTE'],
+    quickViewFields: ['LINK_INDEX', 'LINK', 'TRANSPARENT', 'NOTE', 'TYPE'],
     allVisibleFields: ['LINK_INDEX', 'NOTE'],
 });
