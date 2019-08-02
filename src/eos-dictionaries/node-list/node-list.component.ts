@@ -504,6 +504,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         return /*!this._recalcEvent && */!this._repaintFlag && this.modalWindow === null;
     }
     private _countColumnWidth() {
+        if (!this.viewFields || this.viewFields.length === 0) {
+            return;
+        }
         if (!this._recalcEvent) {
             this._recalcEvent = setTimeout(() => {
                 this._countColumnWidthUnsafe();
@@ -540,7 +543,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         } else {
             const minLength = [];
             const lastField = fields[fields.length - 1];
-            if (lastField.type !== E_FIELD_TYPE.boolean) {
+            if (lastField && lastField.type !== E_FIELD_TYPE.boolean) {
                 minLength[lastField.key] = (this._holder.clientWidth - (fullWidth - this.length[lastField.key])) - 50;
                 this.length[lastField.key] = minLength[lastField.key];
             }
