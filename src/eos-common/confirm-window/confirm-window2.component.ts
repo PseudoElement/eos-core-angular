@@ -31,6 +31,7 @@ export class ConfirmWindow2Component implements IConfirmWindow2Content {
     buttons: IConfirmButton [];
     title: string;
     body: string;
+    bodyList?: string[];
     okTitle: string;
     cancelTitle: string;
     manualCR?: boolean;
