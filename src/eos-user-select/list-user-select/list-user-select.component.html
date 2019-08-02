@@ -62,8 +62,8 @@
                 </span> -->
             </div>
         </div>
-        <div  #listContent class="list-user-sel" (scroll)="savePositionSelectUser($event)">
-           <div *ngIf="!isLoading">
+        <div *ngIf="!isLoading"  #listContent class="list-user-sel" (scroll)="savePositionSelectUser($event)">
+           <div>
             <div *ngIf="listUsers.length; else emptyCert" class="block" [ngStyle]="{'width.px': tableWidth}">
                 <div *ngFor="let user of listUsers;   let last = last" class="user-item" [ngClass]="{'highlighted': user.isSelected || (user.isChecked && !user.selectedMark) || user.selectedMark}" (dblclick)="RedactUser(user)">
                     <div class="table-title user-select-node" [ngClass]="{'disabled': user.deleted, 'delitedDue': user.deletedOffFace}">
@@ -89,6 +89,11 @@
             </div>
         </div>
         </div>
+        <div *ngIf="isLoading" class="list-user-sel">
+            <div class="spiner-wrapper">
+                <eos-spinner size="lg"></eos-spinner>
+            </div>
+        </div>
 
     </div>
 </div>
@@ -101,10 +106,10 @@
 <ng-template #emptyCert>
     <h4 class="user-select-empty-list">Пользователи отсутствуют</h4>
 </ng-template>
-<ng-template #spiner>
+<!-- <ng-template #spiner>
     <div class="spiner-wrapper">
         <eos-spinner size="lg"></eos-spinner>
     </div>
-</ng-template>
+</ng-template> -->
 
 <div class="shadow-wr" *ngIf="shadow"></div>

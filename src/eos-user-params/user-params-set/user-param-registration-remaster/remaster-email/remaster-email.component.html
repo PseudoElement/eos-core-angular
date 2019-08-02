@@ -1,7 +1,7 @@
 <div class="">
         <div class="accordion-position">
                 <accordion *ngIf='templRender' class="accordion-position-main">
-                        <accordion-group *ngFor="let item of listForAccordion" [heading]="item.title">
+                        <accordion-group *ngFor="let item of listForAccordion" [heading]="item.title" [isOpen]="!cancelAccardion">
                             <span class="panel-icon eos-icon eos-icon-arrow-v-blue-bottom small" accordion-heading></span>
                             <div class="accord-wr">
                                 <ng-container *ngTemplateOutlet="treeTmpl; context:{items: item.tree, margin: 0}"></ng-container>
@@ -40,7 +40,7 @@
                     </ng-template>
 
                     <accordion *ngIf="templRenderMailResive" class="accordion-position-main">
-                        <accordion-group [heading]="'Параметры регистрации'" >
+                        <accordion-group [heading]="'Параметры регистрации'" [isOpen]="!cancelAccardion">
                             <span class="panel-icon eos-icon eos-icon-arrow-v-blue-bottom small" accordion-heading></span>
                             <div class="accord-wr" *ngFor="let item of templRenderMailResive">
                                 <ng-container *ngTemplateOutlet="treeNodeTmpl2; context:{items: item, margin: 0}"></ng-container>

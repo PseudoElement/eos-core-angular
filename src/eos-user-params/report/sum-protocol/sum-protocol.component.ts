@@ -59,7 +59,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private _storageSrv: EosStorageService,
-    private _msgSrv: EosMessageService, private _user_pagination: UserPaginationService) {
+    private _msgSrv: EosMessageService, public _user_pagination: UserPaginationService) {
     _user_pagination.paginationConfig$
       .pipe(
         takeUntil(this.ngUnsubscribe)
@@ -95,6 +95,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       const confSumPr = this._storageSrv.getItem('sum-protocol');
       this._user_pagination.paginationConfig = confSumPr;
       this._user_pagination._initPaginationConfig();
+      this._user_pagination.paginationConfig.current = 1;
+      this._user_pagination.paginationConfig.start = 1;
       this.PaginateData(this.config.length, this.orderByStr);
       this._user_pagination.totalPages = undefined;
       if (r[0].PARM_VALUE === 'NO') {
@@ -202,45 +204,47 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     }
   }
   SortPageList(crit: number) {
-    let critSearch;
-    switch (crit) {
-      case 1:
-        critSearch = 'EVENT_DATE';
-        this.arrSort[0].date = !this.arrSort[0].date;
-        this.SortUp = this.arrSort[0].date ? 'asc' : 'desc';
-        this.status = critSearch;
-        break;
-      // case 2:
-      //   critSearch = 'eventUser';
-      //   this.arrSort[1].event = !this.arrSort[1].event;
-      //   this.SortUp = this.arrSort[1].event ? 'asc' : 'desc';
-      //   this.status = critSearch;
-      //   break;
-      // case 3:
-      //   critSearch = 'WHO';
-      //   this.arrSort[2].who = !this.arrSort[2].who;
-      //   this.SortUp = this.arrSort[2].who ? 'asc' : 'desc';
-      //   this.status = critSearch;
-      //   break;
-      // case 4:
-      //   critSearch = 'USER';
-      //   this.arrSort[3].isn = !this.arrSort[3].isn;
-      //   this.SortUp = this.arrSort[3].isn ? 'asc' : 'desc';
-      //   this.status = critSearch;
-      //   break;
-    }
-    if (critSearch === 'WHO' || critSearch === 'USER') {
-      // this.orderByStr = `${critSearch}.SURNAME_PATRON ${this.SortUp}`;
-      // this._pipeSrv.read({
-      //   USER_AUDIT: PipRX.criteries({ orderby: this.orderByStr }),
-      // }).then((data) => {
-      // });
-    } else if (critSearch === 'EVENT_DATE') {
-      this.orderByStr = `${critSearch} ${this.SortUp}`;
-      if (this.clearResult === true) {
-        this.GetSortData();
-      } else {
-        this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+    if (this._user_pagination.totalPages > 1) {
+      let critSearch;
+      switch (crit) {
+        case 1:
+          critSearch = 'EVENT_DATE';
+          this.arrSort[0].date = !this.arrSort[0].date;
+          this.SortUp = this.arrSort[0].date ? 'asc' : 'desc';
+          this.status = critSearch;
+          break;
+        // case 2:
+        //   critSearch = 'eventUser';
+        //   this.arrSort[1].event = !this.arrSort[1].event;
+        //   this.SortUp = this.arrSort[1].event ? 'asc' : 'desc';
+        //   this.status = critSearch;
+        //   break;
+        // case 3:
+        //   critSearch = 'WHO';
+        //   this.arrSort[2].who = !this.arrSort[2].who;
+        //   this.SortUp = this.arrSort[2].who ? 'asc' : 'desc';
+        //   this.status = critSearch;
+        //   break;
+        // case 4:
+        //   critSearch = 'USER';
+        //   this.arrSort[3].isn = !this.arrSort[3].isn;
+        //   this.SortUp = this.arrSort[3].isn ? 'asc' : 'desc';
+        //   this.status = critSearch;
+        //   break;
+      }
+      if (critSearch === 'WHO' || critSearch === 'USER') {
+        // this.orderByStr = `${critSearch}.SURNAME_PATRON ${this.SortUp}`;
+        // this._pipeSrv.read({
+        //   USER_AUDIT: PipRX.criteries({ orderby: this.orderByStr }),
+        // }).then((data) => {
+        // });
+      } else if (critSearch === 'EVENT_DATE') {
+        this.orderByStr = `${critSearch} ${this.SortUp}`;
+        if (this.clearResult === true) {
+          this.GetSortData();
+        } else {
+          this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+        }
       }
     }
   }
@@ -330,6 +334,9 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   }
 
   get getflagChecked() {
+    if (this._user_pagination.totalPages === 0) {
+      this.flagChecked = null;
+    }
     switch (this.flagChecked) {
       case true:
         this.checkAll = 'Снять пометки';
@@ -567,14 +574,19 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
 
   ParseDate(data) {
     this.SelectUsers(data);
-    for (const user of data) {
-      if (this.findUsers === undefined) {
-        this.findUsers = [{ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON }];
-      } else {
-        this.findUsers.push({ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON });
-      }
-    }
-    this.ShowData();
+    this._pipeSrv.read({
+      USER_CL: this.critUsers
+    })
+      .then((users: any) => {
+        for (const user of users) {
+          if (this.findUsers === undefined) {
+            this.findUsers = [{ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON }];
+          } else {
+            this.findUsers.push({ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON });
+          }
+        }
+        this.ShowData();
+      });
   }
 
   DeleteEvent(isnEvent): Promise<any> {
@@ -621,7 +633,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   GetRefFile() {
     this.closeTooltip = true;
     setTimeout(() => {
-      window.open(`/x1807/getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900,height=700');
+      window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900,height=700');
     }, 0);
   }
 
