@@ -12,6 +12,7 @@ export interface IConfirmButton {
 export interface IConfirmWindow2 {
     title: string;
     body: string;
+    bodyList?: string[]; // if set, add <ul>/<li> list with array of string
     buttons: IConfirmButton [];
     confirmDisabled?: boolean;
     manualCR?: boolean;
@@ -30,6 +31,7 @@ export class ConfirmWindow2Component implements IConfirmWindow2Content {
     buttons: IConfirmButton [];
     title: string;
     body: string;
+    bodyList?: string[];
     okTitle: string;
     cancelTitle: string;
     manualCR?: boolean;

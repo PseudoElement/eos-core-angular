@@ -14,6 +14,7 @@ export interface ISelectOption {
     value: string | number;
     title: string;
     disabled?: boolean;
+    data?: any;
 }
 
 export interface IOpenClassifParams {
