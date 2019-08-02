@@ -303,11 +303,8 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   GetRefFile() {
     this.closeTooltip = true;
     setTimeout(() => {
-      window.open(`/x1807/getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900,height=700');
+      window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900,height=700');
     }, 0);
-  }
-  openFrame(isnFile) {
-    window.open(`/x1807/getfile.aspx/${isnFile}/3x.html`, 'example', 'width=900,height=700');
   }
   ConvertDate(convDate) {
     const date = new Date(convDate);

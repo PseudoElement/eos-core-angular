@@ -621,7 +621,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   GetRefFile() {
     this.closeTooltip = true;
     setTimeout(() => {
-      window.open(`/x1807/getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900,height=700');
+      window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900,height=700');
     }, 0);
   }
 
