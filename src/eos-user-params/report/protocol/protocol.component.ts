@@ -43,7 +43,6 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   username: string;
   selfLink: any;
   link: any;
-  databaseName: string;
   arrSort = [
     { date: true },
     { event: false },
@@ -81,8 +80,6 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.databaseName = window.location.pathname.slice(1);
-    [this.databaseName] = this.databaseName.split('/');
     this._userpar.getUserIsn().then(() => {
       this.curentUser = this._userpar.curentUser.ISN_LCLASSIF;
       this.username = this._userpar.curentUser.SURNAME_PATRON;
@@ -306,11 +303,8 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   GetRefFile() {
     this.closeTooltip = true;
     setTimeout(() => {
-      window.open(`/${this.databaseName}/getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900,height=700');
+      window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900,height=700');
     }, 0);
-  }
-  openFrame(isnFile) {
-    window.open(`/x1807/getfile.aspx/${isnFile}/3x.html`, 'example', 'width=900,height=700');
   }
   ConvertDate(convDate) {
     const date = new Date(convDate);
