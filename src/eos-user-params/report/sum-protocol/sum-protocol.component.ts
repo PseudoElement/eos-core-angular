@@ -59,7 +59,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private _storageSrv: EosStorageService,
-    private _msgSrv: EosMessageService, private _user_pagination: UserPaginationService) {
+    private _msgSrv: EosMessageService, public _user_pagination: UserPaginationService) {
     _user_pagination.paginationConfig$
       .pipe(
         takeUntil(this.ngUnsubscribe)
