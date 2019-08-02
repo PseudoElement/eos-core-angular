@@ -330,6 +330,9 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   }
 
   get getflagChecked() {
+    if (this._user_pagination.totalPages === 0) {
+      this.flagChecked = null;
+    }
     switch (this.flagChecked) {
       case true:
         this.checkAll = 'Снять пометки';
