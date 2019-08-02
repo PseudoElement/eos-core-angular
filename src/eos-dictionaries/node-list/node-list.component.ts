@@ -229,13 +229,16 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         this.modalWindow = this._modalSrv.show(CopyPropertiesComponent, {
             class: 'copy-properties-modal moodal-lg'});
         this.modalWindow.content.init(node.data.rec, fromParent);
+        this._closeModalWindowSubscribtion();
     }
 
     openCopyNode(nodes: EosDictionaryNode[]) {
         this.modalWindow = this._modalSrv.show(CopyNodeComponent, {
             class: 'copy-node-modal moodal-lg'});
         this.modalWindow.content.init(nodes);
+        this._closeModalWindowSubscribtion();
     }
+
 
     getMarkedTitles(): string[] {
         return this.nodes
@@ -547,5 +550,12 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         if (!this._cdr['destroyed']) {
             this._cdr.detectChanges();
         }
+    }
+
+    private _closeModalWindowSubscribtion() {
+        const subscriptionClose = this.modalWindow.content.onClose.subscribe(() => {
+            this.modalWindow = null;
+            subscriptionClose.unsubscribe();
+        });
     }
 }
