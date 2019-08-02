@@ -63,9 +63,31 @@ export class UserSearchComponent implements OnInit {
         this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prapareData });
         this.form = this.inpSrv.toFormGroup(this.inputs);
     }
+
+    RemoveQuotes(newObj: any): void {
+        const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
+        for (const key in newObj) {
+            if (newObj.hasOwnProperty(key)) {
+                const list = newObj[key];
+                if (typeof list === 'string') {
+                    newObj[key] = list.replace(SEARCH_INCORRECT_SYMBOLS, '');
+                    this.form.controls[`rec.${key}`].patchValue(newObj[key]);
+                } else {
+                    for (const k in list) {
+                        if (list.hasOwnProperty(k)) {
+                            const fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
+                            list[k] = fixed;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     startSearch() {
         const newObj: USERSRCH = {};
         this.setConfSearch(newObj);
+        this.RemoveQuotes(newObj);
         if (newObj['SURNAME']) {
             this.srhSrv.getUsersToGo(newObj).then(users => {
                 this.search.emit(users);
