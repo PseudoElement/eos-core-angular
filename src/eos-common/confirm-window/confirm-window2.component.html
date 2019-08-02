@@ -10,6 +10,9 @@
 
 <!-- [style]="(true ? 'white-space: pre;': '')" -->
 <p>{{body}}</p>
+<ul *ngIf="bodyList">
+    <li *ngFor="let item of bodyList">{{item}}</li>
+</ul>
 </div>
 <div class="modal-footer">
     <span *ngFor="let button of buttons">

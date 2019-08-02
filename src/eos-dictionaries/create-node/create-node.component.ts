@@ -120,8 +120,10 @@ export class CreateNodeComponent {
     private _windowInvalidSave(): Promise<boolean> {
             const confirmParams: IConfirmWindow2 = Object.assign({}, CONFIRM_SAVE_INVALID);
 
-            confirmParams.body = confirmParams.body.replace('{{errors}}',
-                EosUtils.getValidateMessages(this.cardEditRef.inputs).join('\n'));
+            // confirmParams.body = confirmParams.body.replace('{{errors}}',
+            //     EosUtils.getValidateMessages(this.cardEditRef.inputs).join('\n'));
+            confirmParams.body = '';
+            confirmParams.bodyList = EosUtils.getValidateMessages(this.cardEditRef.inputs);
 
             return this._confirmSrv.confirm2(confirmParams, )
                 .then((doSave) => {
