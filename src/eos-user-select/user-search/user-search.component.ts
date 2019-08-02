@@ -77,6 +77,7 @@ export class UserSearchComponent implements OnInit {
                         if (list.hasOwnProperty(k)) {
                             const fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
                             list[k] = fixed;
+                            this.form.controls[`rec.${key}`].patchValue(newObj[key]);
                         }
                     }
                 }
