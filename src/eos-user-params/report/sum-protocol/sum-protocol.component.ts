@@ -95,6 +95,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       const confSumPr = this._storageSrv.getItem('sum-protocol');
       this._user_pagination.paginationConfig = confSumPr;
       this._user_pagination._initPaginationConfig();
+      this._user_pagination.paginationConfig.current = 1;
+      this._user_pagination.paginationConfig.start = 1;
       this.PaginateData(this.config.length, this.orderByStr);
       this._user_pagination.totalPages = undefined;
       if (r[0].PARM_VALUE === 'NO') {
@@ -202,45 +204,47 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     }
   }
   SortPageList(crit: number) {
-    let critSearch;
-    switch (crit) {
-      case 1:
-        critSearch = 'EVENT_DATE';
-        this.arrSort[0].date = !this.arrSort[0].date;
-        this.SortUp = this.arrSort[0].date ? 'asc' : 'desc';
-        this.status = critSearch;
-        break;
-      // case 2:
-      //   critSearch = 'eventUser';
-      //   this.arrSort[1].event = !this.arrSort[1].event;
-      //   this.SortUp = this.arrSort[1].event ? 'asc' : 'desc';
-      //   this.status = critSearch;
-      //   break;
-      // case 3:
-      //   critSearch = 'WHO';
-      //   this.arrSort[2].who = !this.arrSort[2].who;
-      //   this.SortUp = this.arrSort[2].who ? 'asc' : 'desc';
-      //   this.status = critSearch;
-      //   break;
-      // case 4:
-      //   critSearch = 'USER';
-      //   this.arrSort[3].isn = !this.arrSort[3].isn;
-      //   this.SortUp = this.arrSort[3].isn ? 'asc' : 'desc';
-      //   this.status = critSearch;
-      //   break;
-    }
-    if (critSearch === 'WHO' || critSearch === 'USER') {
-      // this.orderByStr = `${critSearch}.SURNAME_PATRON ${this.SortUp}`;
-      // this._pipeSrv.read({
-      //   USER_AUDIT: PipRX.criteries({ orderby: this.orderByStr }),
-      // }).then((data) => {
-      // });
-    } else if (critSearch === 'EVENT_DATE') {
-      this.orderByStr = `${critSearch} ${this.SortUp}`;
-      if (this.clearResult === true) {
-        this.GetSortData();
-      } else {
-        this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+    if (this._user_pagination.totalPages > 1) {
+      let critSearch;
+      switch (crit) {
+        case 1:
+          critSearch = 'EVENT_DATE';
+          this.arrSort[0].date = !this.arrSort[0].date;
+          this.SortUp = this.arrSort[0].date ? 'asc' : 'desc';
+          this.status = critSearch;
+          break;
+        // case 2:
+        //   critSearch = 'eventUser';
+        //   this.arrSort[1].event = !this.arrSort[1].event;
+        //   this.SortUp = this.arrSort[1].event ? 'asc' : 'desc';
+        //   this.status = critSearch;
+        //   break;
+        // case 3:
+        //   critSearch = 'WHO';
+        //   this.arrSort[2].who = !this.arrSort[2].who;
+        //   this.SortUp = this.arrSort[2].who ? 'asc' : 'desc';
+        //   this.status = critSearch;
+        //   break;
+        // case 4:
+        //   critSearch = 'USER';
+        //   this.arrSort[3].isn = !this.arrSort[3].isn;
+        //   this.SortUp = this.arrSort[3].isn ? 'asc' : 'desc';
+        //   this.status = critSearch;
+        //   break;
+      }
+      if (critSearch === 'WHO' || critSearch === 'USER') {
+        // this.orderByStr = `${critSearch}.SURNAME_PATRON ${this.SortUp}`;
+        // this._pipeSrv.read({
+        //   USER_AUDIT: PipRX.criteries({ orderby: this.orderByStr }),
+        // }).then((data) => {
+        // });
+      } else if (critSearch === 'EVENT_DATE') {
+        this.orderByStr = `${critSearch} ${this.SortUp}`;
+        if (this.clearResult === true) {
+          this.GetSortData();
+        } else {
+          this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+        }
       }
     }
   }

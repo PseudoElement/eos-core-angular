@@ -157,36 +157,38 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
     }
   }
   SortPageList(crit: number) {
-    let critSearch;
-    switch (crit) {
-      case 1:
-        critSearch = 'EVENT_DATE';
-        this.arrSort[0].date = !this.arrSort[0].date;
-        this.SortUp = this.arrSort[0].date ? 'asc' : 'desc';
-        this.status = critSearch;
-        break;
-      // case 2:
-      //   critSearch = 'eventUser';
-      //   this.arrSort[1].event = !this.arrSort[1].event;
-      //   this.SortUp = this.arrSort[1].event ? 'asc' : 'desc';
-      //   this.status = critSearch;
-      //   break;
-      // case 3:
-      //   critSearch = 'WHO';
-      //   this.arrSort[2].who = !this.arrSort[2].who;
-      //   this.SortUp = this.arrSort[2].who ? 'asc' : 'desc';
-      //   this.status = critSearch;
-      //   break;
-    }
-    if (critSearch === 'WHO') {
-      // this.orderByStr = `${critSearch}.SURNAME_PATRON ${this.SortUp}`;
-      // this._pipeSrv.read({
-      //   USER_AUDIT: PipRX.criteries({ orderby: this.orderByStr }),
-      // }).then((data) => {
-      // });
-    } else if (critSearch === 'EVENT_DATE') {
-      this.orderByStr = `${critSearch} ${this.SortUp}`;
-      this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+    if (this._user_pagination.totalPages > 1) {
+      let critSearch;
+      switch (crit) {
+        case 1:
+          critSearch = 'EVENT_DATE';
+          this.arrSort[0].date = !this.arrSort[0].date;
+          this.SortUp = this.arrSort[0].date ? 'asc' : 'desc';
+          this.status = critSearch;
+          break;
+        // case 2:
+        //   critSearch = 'eventUser';
+        //   this.arrSort[1].event = !this.arrSort[1].event;
+        //   this.SortUp = this.arrSort[1].event ? 'asc' : 'desc';
+        //   this.status = critSearch;
+        //   break;
+        // case 3:
+        //   critSearch = 'WHO';
+        //   this.arrSort[2].who = !this.arrSort[2].who;
+        //   this.SortUp = this.arrSort[2].who ? 'asc' : 'desc';
+        //   this.status = critSearch;
+        //   break;
+      }
+      if (critSearch === 'WHO') {
+        // this.orderByStr = `${critSearch}.SURNAME_PATRON ${this.SortUp}`;
+        // this._pipeSrv.read({
+        //   USER_AUDIT: PipRX.criteries({ orderby: this.orderByStr }),
+        // }).then((data) => {
+        // });
+      } else if (critSearch === 'EVENT_DATE') {
+        this.orderByStr = `${critSearch} ${this.SortUp}`;
+        this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+      }
     }
   }
 
