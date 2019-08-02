@@ -95,6 +95,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       const confSumPr = this._storageSrv.getItem('sum-protocol');
       this._user_pagination.paginationConfig = confSumPr;
       this._user_pagination._initPaginationConfig();
+      this._user_pagination.paginationConfig.current = 1;
+      this._user_pagination.paginationConfig.start = 1;
       this.PaginateData(this.config.length, this.orderByStr);
       this._user_pagination.totalPages = undefined;
       if (r[0].PARM_VALUE === 'NO') {
