@@ -567,14 +567,19 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
 
   ParseDate(data) {
     this.SelectUsers(data);
-    for (const user of data) {
-      if (this.findUsers === undefined) {
-        this.findUsers = [{ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON }];
-      } else {
-        this.findUsers.push({ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON });
-      }
-    }
-    this.ShowData();
+    this._pipeSrv.read({
+      USER_CL: this.critUsers
+    })
+      .then((users: any) => {
+        for (const user of users) {
+          if (this.findUsers === undefined) {
+            this.findUsers = [{ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON }];
+          } else {
+            this.findUsers.push({ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON });
+          }
+        }
+        this.ShowData();
+      });
   }
 
   DeleteEvent(isnEvent): Promise<any> {
