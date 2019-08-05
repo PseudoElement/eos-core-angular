@@ -164,7 +164,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
 
     ngAfterContentChecked() {
         if (this._storage.getItem('main_scroll')) {
-            this.listContent.nativeElement.scrollTop = this._storage.getItem('main_scroll');
+            if (this.listContent && this.listContent.nativeElement) {
+                this.listContent.nativeElement.scrollTop = this._storage.getItem('main_scroll');
+            }
         }
     }
     checkFlagTech() {

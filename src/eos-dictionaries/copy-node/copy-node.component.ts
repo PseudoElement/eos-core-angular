@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {AbstractControl, FormGroup, ValidatorFn} from '@angular/forms';
 import {BsModalRef} from 'ngx-bootstrap';
 import {InputControlService} from '../../eos-common/services/input-control.service';
@@ -19,6 +19,8 @@ import {Subscription} from 'rxjs';
 
 export class CopyNodeComponent implements OnDestroy {
     @Input() form: FormGroup;
+    @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
+
 
     inputs: any = {};
     title: string;
@@ -39,6 +41,7 @@ export class CopyNodeComponent implements OnDestroy {
 
     ngOnDestroy(): void {
         this._unsubscribe();
+        this.onClose.emit();
     }
 
     public init(nodes: EosDictionaryNode[]) {
@@ -50,6 +53,7 @@ export class CopyNodeComponent implements OnDestroy {
 
     public hideModal() {
         this._bsModalRef.hide();
+        this.onClose.emit();
     }
 
     public save() {

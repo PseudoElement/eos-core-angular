@@ -11,6 +11,7 @@ export class BaseNodeInfoComponent implements OnChanges {
     nodeDataFull: any;
 
     fieldTypes = E_FIELD_TYPE;
+    values = {};
 
     keys(data: Object): string[] {
         if (data) {
@@ -19,6 +20,7 @@ export class BaseNodeInfoComponent implements OnChanges {
     }
 
     ngOnChanges() {
+        this.values = {};
         if (this.node) {
             this.fieldsDescriptionShort = this.node.getShortViewFieldsDescription();
             this.nodeDataShort = this.node.getShortViewData();
@@ -34,6 +36,7 @@ export class BaseNodeInfoComponent implements OnChanges {
         this.fieldsDescriptionShort = {};
         this.nodeDataFull = {};
         this.nodeDataShort = {};
+
     }
 
 }

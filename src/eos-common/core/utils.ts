@@ -155,7 +155,7 @@ export class EosUtils {
                 const title = input.label;
                 control.updateValueAndValidity();
                 const validateMessage = EosUtils.getControlErrorMessage(control, { maxLength: input.length, uniqueInDict: !!input.uniqueInDict });
-                invalid.push(' - ' + title + ' (' + validateMessage + ')');
+                invalid.push(title + ' (' + validateMessage + ')');
             }
         }
         return invalid;

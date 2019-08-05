@@ -15,6 +15,7 @@ import {EosDictionaryNode} from './eos-dictionary-node';
 import {DictionaryDescriptorService} from 'eos-dictionaries/core/dictionary-descriptor.service';
 import {OrganizationDictionaryDescriptor} from 'eos-dictionaries/core/organization-dictionary-descriptor';
 import {EosUtils} from 'eos-common/core/utils';
+import { ISelectOption } from 'eos-common/interfaces';
 
 // import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 
@@ -210,6 +211,15 @@ export class EosDictionary {
     }
 
     getFullNodeInfo(nodeId: string): Promise<EosDictionaryNode> {
+        // TODO: обьеденить концепции getNodeRelatedData и loadRelatedFieldsOptions
+
+        // const infoFields = this.descriptor.record.getInfoView({});
+        // const updatefields = [].concat(infoFields);
+        // const existNode = this.getNode(nodeId);
+        // return this.loadRelatedFieldsOptions(updatefields, [existNode], false).then (() => {
+        //     return existNode;
+        // });
+
         const existNode = this.getNode(nodeId);
         if (!existNode || !existNode.relatedLoaded) {
             return this.getNodeByNodeId(nodeId)
@@ -221,6 +231,7 @@ export class EosDictionary {
         return this.getNodeByNodeId(nodeId)
             .then((node) => this.getNodeRelatedData(node));
         */
+
     }
 
     getNodeByNodeId(nodeId: string): Promise<EosDictionaryNode> {
@@ -421,10 +432,10 @@ export class EosDictionary {
         return this.descriptor.getRelatedFields2(updatefields.filter(i => i.dictionaryId)
                                 .map(i => i.dictionaryId ? i.dictionaryId : null), nodes, loadAll)
             .then((related) => {
+                const t = this.descriptor.getMetadata();
                 updatefields.forEach((field) => {
                     if ((field.dictionaryId !== undefined)) {
                         field.options.splice(0, field.options.length);
-                        const t = this.descriptor.getMetadata();
                         // Есть таблицы с PK integer и FK string (Nomencl_cl.security)
                         const type_fk = field.dictionaryLink ? t.properties[field.dictionaryLink.fk] : null;
                         const fn = (field.dictionaryLink ? field.dictionaryLink.pk : 'ISN_LCLASSIF');
@@ -432,10 +443,11 @@ export class EosDictionary {
 
                         if (related && related[field.dictionaryId]) {
                             related[field.dictionaryId].forEach((rel) => {
-                                const el = {value: rel[fn], title: rel[ln], disabled: !!rel['DELETED'] };
+                                const el: ISelectOption = {value: rel[fn], title: rel[ln], disabled: !!rel['DELETED'] };
                                 if (type_fk === 's') {
                                     el.value = String(el.value);
                                 }
+                                el.data = related[field.dictionaryId];
 
                                 field.options.push(el);
                             });
@@ -448,8 +460,8 @@ export class EosDictionary {
     getListViewWithRelated(customFields: IFieldView[], nodes: EosDictionaryNode[]): Promise<any> {
         const fields = this.descriptor.record.getListView({});
         // const fields = this.descriptor.record.getFieldSet(E_FIELD_SET.list);
-        // const infoFields = this.descriptor.record.getInfoView({});
-        const updatefields = fields.concat(customFields); // .concat(infoFields);
+        const infoFields = this.descriptor.record.getInfoView({});
+        const updatefields = fields.concat(customFields).concat(infoFields);
         return this.loadRelatedFieldsOptions(updatefields, nodes, false).then (() => {
             return fields;
         });
