@@ -100,6 +100,7 @@ export class UserSearchComponent implements OnInit {
                 this.withOutCard(newObj);
             }
         }
+
         this.fSearchPop.isOpen = false;
         //   this.search.emit(null);
     }
