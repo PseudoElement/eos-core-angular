@@ -51,7 +51,6 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
     public templRenderMailResive;
     public flagEdit: boolean = false;
     public templRender: TreeItem[] = [];
-    public cancelAccardion: boolean = false;
     @Input() userData;
     @Input() defaultValues;
     @Output() pushChenge = new EventEmitter<any>();
@@ -505,13 +504,11 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
                     value: this.form.controls['rec.RECEIP_EMAIL'].value,
                 },
             ]);
-            this.cancelAccardion = false;
         } else {
             this.pushChenge.emit(false);
         }
     }
     CancelForm() {
-        this.cancelAccardion = true;
         Object.keys(this.formMailResuve.controls).forEach(inp => {
             if (this.inputsMailResive[inp].value !== this.formMailResuve.controls[inp].value) {
                 this.formMailResuve.controls[inp].patchValue(this.inputsMailResive[inp].value, { emitEvent: false });
@@ -524,6 +521,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         });
         this.form.disable({ emitEvent: false });
         this.formMailResuve.disable({ emitEvent: false });
+        this.sliceArrayForTemplate();
     }
     cancel() {
         this.CancelForm();
