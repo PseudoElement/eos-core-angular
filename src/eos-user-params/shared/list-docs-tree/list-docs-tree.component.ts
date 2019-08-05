@@ -7,6 +7,7 @@ import { NodeDocsTree } from './node-docs-tree';
 })
 export class ListDocsTreeComponent implements OnChanges {
     @Input() listNode: NodeDocsTree[];
+    @Input() systemTech: number;
     @Output() select = new EventEmitter();
     @Output() checkedNode = new EventEmitter();
     list: NodeDocsTree[] = [];
