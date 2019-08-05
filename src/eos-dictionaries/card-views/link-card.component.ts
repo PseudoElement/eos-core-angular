@@ -196,7 +196,8 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
 
                 valid = records.findIndex((node) => {
                     let name = EosUtils.getValueByPath(node.data, 'rec.CLASSIF_NAME');
-                    let namePair = EosUtils.getValueByPath(node.data, 'PARE_LINK_Ref.CLASSIF_NAME');
+                    let namePair = EosUtils.getValueByPath(node.data, 'PARE_LINK_Ref.CLASSIF_NAME')
+                        || EosUtils.getValueByPath(node.data, 'rec.PAIR_LINK');
 
                     if ('string' === typeof name) {
                         name = name.trim().toLowerCase();
