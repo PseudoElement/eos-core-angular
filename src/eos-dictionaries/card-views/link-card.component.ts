@@ -135,12 +135,19 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
     }
 
     private _pairNameUnique(): ValidatorFn {
-        return ValidatorsControl.controlsNonUniq(
-            this.form.controls['PARE_LINK_Ref.CLASSIF_NAME'],
-            this.form.controls['rec.CLASSIF_NAME'],
-            'Наименования прямой и обратной связок не должны совпадать.',
-            true
-            );
+        return (control: AbstractControl): { [key: string]: any } => {
+            const isn = this.getValue('rec.ISN_LCLASSIF');
+            const isn_pair = this.getValue('rec.ISN_PARE_LINK');
+            if (isn === isn_pair) {
+                return null;
+            }
+            return ValidatorsControl.controlsNonUniq(
+                this.form.controls['PARE_LINK_Ref.CLASSIF_NAME'],
+                this.form.controls['rec.CLASSIF_NAME'],
+                'Наименования прямой и обратной связок не должны совпадать.',
+                true
+                ).call(control);
+        };
     }
 
 
@@ -206,11 +213,12 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
                         namePair = namePair.trim().toLowerCase();
                     }
 
+
                     let res = false;
                     if (EosUtils.getValueByPath(node.data, 'rec.ISN_LCLASSIF') !== isn) {
                         res = (val === name) || (val === namePair);
                     } else {
-                        if (path === 'PARE_LINK_Ref.CLASSIF_NAME') {
+                            if (path === 'PARE_LINK_Ref.CLASSIF_NAME') {
                             res = (name === val) && (isn !== isn_pair);
                         } else {
                             res = (namePair === val) && (isn !== isn_pair);
