@@ -11,6 +11,7 @@ import {DELO_BLOB} from 'eos-rest/interfaces/structures';
 import { RECENT_URL } from 'app/consts/common.consts';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-select';
+import {ErrorHelperServices} from '../../eos-user-params/shared/services/helper-error.services';
 
 @Component({
     selector: 'eos-right-user-select',
@@ -38,6 +39,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         private _selectedUser: RtUserSelectService,
         private _storageSrv: EosStorageService,
         private _router: Router,
+        private _errSrv: ErrorHelperServices,
     ) {
         this.isPhoto = false;
         this.chooseTemplate = 'preview';
@@ -61,7 +63,6 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             .subscribe(currentUser => {
                 this._storageSrv.setItem('selected_user_save', currentUser, false);
                 this.CurrentUser = currentUser;
-                console.log(this.CurrentUser);
                 if (currentUser && this.flagFirstGetInfo) {
                     this.chooseTemplate = 'spinner';
                     this.geyInfo(currentUser);
@@ -109,7 +110,6 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         this._selectedUser.get_cb_print_info(this.CurrentUser.id, isnDue)
         .then(([user_role, cb_print]) => {
             this.getObjectForSystems();
-            console.log(this.CurrentUser);
            if (this.CurrentUser['dataDeep']) {
                this.departmentInfo = this.CurrentUser['dataDeep'];
                 if (cb_print) {
@@ -140,9 +140,9 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             this._selectedUser.getInfoCabinet(this.CurrentUser.id, isn_cabinet)
             .then((res: [USER_CL, DEPARTMENT]) => {
                 this.UserCabinetInfo = res;
-                setTimeout(() => {
-            }, 100);
         });
+        }).catch(error => {
+            this._errSrv.errorHandler(error);
         });
     }
 
