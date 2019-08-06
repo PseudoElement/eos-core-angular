@@ -602,7 +602,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   }
 
   DeleteEventUser() {
-    this.resetPage = true;
     let usersCheck;
     if (this.frontData !== undefined) {
       usersCheck = this.frontData.filter(user => user.checked === true);
@@ -615,12 +614,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
                 this.config.current = this.config.current - 1;
                 this.config.current = this.config.start - 1;
               }
-              this._user_pagination.totalPages = undefined;
-              if (this.clearResult === true) {
-                this.GetSortData();
-              } else {
-                this.PaginateData(this.config.length, this.orderByStr);
-              }
+              this._user_pagination.changePagination(this.config);
             });
         } else {
           this.DeleteEvent(user.isnEvent);

@@ -14,22 +14,22 @@
     let-node="node">
     <div
         [ngClass]="{'highlighted': node.isSelected}"
-        [ngStyle]="{'padding-left.px': node.layer * 27}">
+        [ngStyle]="{'padding-left.px': node.layer * 27 && systemTech!==1}"><!--systemTech-->
 
         <div class="tree-node-due">
             <!-- icon for open -->
             <div class="tree-btn"
                 (click)="onExpand($event, node)">
-                <span *ngIf="node.children.length"
+                <span *ngIf="node.children.length && systemTech!==1"
                     class="eos-icon tringle-size icon"
                     [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded, 'eos-icon-close-folder-blue': !node.isExpanded}"
                 ></span>
             </div>
 
             <!-- checkbox and label -->
-            <label *ngIf="node.isviewAllowed" class="checkbox tree-checkbox" [ngClass]="node.classChecBox" (click)="clickLable($event, node)">
+            <label *ngIf="node.isviewAllowed && systemTech!==1" class="checkbox tree-checkbox" [ngClass]="node.classChecBox" (click)="clickLable($event, node)">
                 <span style="width:60px; display:inline-block;" *ngIf = "node.flagCheckNode">{{node.isAllowed ? '(С вл.)' : '(Без вл.)'}}</span>
-                <input type="checkbox"
+               <input type="checkbox"
                     hide
                     [checked]="node.isAllowed"
                 >
@@ -37,7 +37,7 @@
                 </span>
                 {{node.label}}
             </label>
-            <label *ngIf="!node.isviewAllowed" class="tree-text" (click)="clickLable($event, node)">{{node.label}}</label>
+            <label *ngIf="!node.isviewAllowed || systemTech===1" class="tree-text" (click)="clickLable($event, node)">{{node.label}}</label>
         </div>
 
     </div>

@@ -174,6 +174,11 @@
      left: 0;
      z-index: 2000;
  }
+ .error-focus {
+    border-color: #f44336 !important; 
+    border-width: 2px; 
+    box-shadow: none !important;
+}
 
  .wrapper-password {
      display: flex;
