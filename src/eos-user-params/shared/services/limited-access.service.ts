@@ -86,8 +86,6 @@ export class LimitedAccesseService {
         if (data.length) {
             return this._pipSrv.setData(queryUserCl).then(res => {
         return res;
-        }).catch(error => {
-            console.log(error);
         });
     }
 }
@@ -116,11 +114,7 @@ preAddNewDocument(form) {
 
     edit(data) {
         const queryUserCl = data;
-        return this._pipSrv.setData(queryUserCl).then(res => {
-            return res;
-        }).catch(error => {
-            console.log(error);
-        });
+        return this._pipSrv.setData(queryUserCl);
     }
 
     preEdit(form) {
@@ -145,8 +139,6 @@ preAddNewDocument(form) {
             const queryUserCl = data;
             return this._pipSrv.setData(queryUserCl).then(res => {
                return res;
-            }).catch(error => {
-                console.log(error);
             });
         }
         return Promise.resolve(1);
