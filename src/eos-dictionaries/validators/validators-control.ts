@@ -46,23 +46,23 @@ export class ValidatorsControl {
    }
 
    static controlsNonUniq(control1: any, control2: any, err: string, ignoreCase: boolean): ValidatorFn {
-    return (control: AbstractControl): { [key: string]: any } => {
-        if (control1 && control2) {
-            if (control1.value && control2.value) {
-                if (!ignoreCase) {
-                    if (control1.value === control2.value) {
-                        return { valueError: err};
-                    }
-                } else {
-                    if (String(control1.value).toUpperCase() === String(control2.value).toUpperCase()) {
-                        return { valueError: err};
+        return (control: AbstractControl): { [key: string]: any } => {
+            if (control1 && control2) {
+                if (control1.value && control2.value) {
+                    if (!ignoreCase) {
+                        if (control1.value === control2.value) {
+                            return { valueError: err};
+                        }
+                    } else {
+                        if (String(control1.value).toUpperCase() === String(control2.value).toUpperCase()) {
+                            return { valueError: err};
+                        }
                     }
                 }
             }
-        }
-        return null;
-    };
-}
+            return null;
+        };
+    }
 
    static optionsCorrect(options: any[]) {
         return (control: AbstractControl): { [key: string]: any } => {
