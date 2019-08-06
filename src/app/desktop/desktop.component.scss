@@ -26,8 +26,12 @@
 
             &.disabled {
                 cursor: not-allowed;
-                opacity: 0.65;
+                // opacity: 0.65;
                 box-shadow: none;
+                opacity: 0.4;
+                background-color: #eeeeee;
+                color: #000000;
+
             }
 
             position: relative;
