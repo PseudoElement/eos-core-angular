@@ -47,6 +47,7 @@
                 <eos-list-doc-tree
                     class="tree-classif-node"
                     [listNode]="node.listContent"
+                    [systemTech]="node.key"
                     (select)="node.select($event)"
                     (checkedNode)="node.checkedNode($event)"
                 ></eos-list-doc-tree>
