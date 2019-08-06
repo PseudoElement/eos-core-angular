@@ -302,6 +302,7 @@ export class UserParamApiSrv {
                         user['DEPARTMENT_SURNAME'] = findDepartInfo[0].SURNAME;
                         user['DEPARTMENT_DYTU'] = findDepartInfo[0].DUTY;
                         user['DEPARTMENT_DELETE'] = findDepartInfo[0].DELETED;
+                        user['DEEP_DATA'] = findDepartInfo[0];
                     } else {
                         user['DEPARTMENT_SURNAME'] = '';
                         user['DEPARTMENT_DYTU'] = '';

@@ -1,4 +1,4 @@
-import { USER_CL } from 'eos-rest';
+import { USER_CL, DEPARTMENT } from 'eos-rest';
 
 
 export class UserSelectNode {
@@ -17,6 +17,7 @@ export class UserSelectNode {
     dueDytu: string;
     blockedUser: boolean;
     blockedSystem: boolean;
+    dataDeep: DEPARTMENT;
     readonly id;
     constructor(
         public data: USER_CL,
@@ -35,6 +36,7 @@ export class UserSelectNode {
         this.deletedOffFace = +data['DEPARTMENT_DELETE'] > 0 ? true : false;
         this.blockedUser =  (+data.DELETED > 0) && (+data.LOGIN_ATTEMPTS < +sysParam) ? true : false;
         this.blockedSystem = (+data.DELETED > 0) && (+data.LOGIN_ATTEMPTS >= +sysParam) ? true : false;
+        this.dataDeep = data['DEEP_DATA'] ? data['DEEP_DATA'] : null;
     }
     get fullDueName () {
         let name = '';
