@@ -10,6 +10,7 @@ import { USER_CL, DEPARTMENT, USER_PARMS } from 'eos-rest';
 import {DELO_BLOB} from 'eos-rest/interfaces/structures';
 import { RECENT_URL } from 'app/consts/common.consts';
 import { EosStorageService } from 'app/services/eos-storage.service';
+import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-select';
 
 @Component({
     selector: 'eos-right-user-select',
@@ -19,7 +20,8 @@ import { EosStorageService } from 'app/services/eos-storage.service';
 export class RightUserSelectComponent  implements OnInit, OnDestroy {
     flagRtBlock: boolean;
     showDep: boolean;
-    CurrentUser: USER_CL;
+    CurrentUser: UserSelectNode = null;
+    ctf: UserSelectNode;
     UserCabinetInfo:  any;
     DueInfo: string;
     role: string | boolean;
@@ -31,7 +33,6 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     departmentInfo: DEPARTMENT;
     destroySubsriber: Subject<any> = new Subject();
     flagFirstGetInfo: boolean = true;
-    CurrentUserForShowTemplate: USER_CL = null;
     constructor(
       //  private _sandwichSrv: EosSandwichService,
         private _selectedUser: RtUserSelectService,
@@ -59,31 +60,31 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             )
             .subscribe(currentUser => {
                 this._storageSrv.setItem('selected_user_save', currentUser, false);
-                this.CurrentUserForShowTemplate  = currentUser;
+                this.CurrentUser = currentUser;
+                console.log(this.CurrentUser);
                 if (currentUser && this.flagFirstGetInfo) {
                     this.chooseTemplate = 'spinner';
                     this.geyInfo(currentUser);
-                    this.CurrentUser = currentUser;
+                    this.ctf = currentUser;
                     this.flagFirstGetInfo = false;
                 }
-                if (currentUser &&  this.CurrentUser['id'] !== currentUser.id ) {
+                if (currentUser &&  this.ctf['id'] !== currentUser.id ) {
                     // if (this.flagRtBlock) {
                     //     this.chooseTemplate = 'spinner';
                     //     this.geyInfo();
                     // }
                          this.chooseTemplate = 'spinner';
                          this.geyInfo(currentUser);
-                         this.CurrentUser = currentUser;
+                         this.ctf = currentUser;
                 }
             });
     }
     geyInfo(currentUser) {
-        const isn = currentUser['data']['ISN_LCLASSIF'];
-        if ( currentUser['data']['DUE_DEP'] !== null) {
-            const due =  currentUser['data']['DUE_DEP'];
-                this.getInfo(isn, due);
-            } else {
+        const isn = currentUser['dataDeep'] ? currentUser['dataDeep']['ISN_LCLASSIF'] : false;
+        if (isn) {
                 this.getInfo(isn);
+            } else {
+                this.getInfo();
                 this.showDep = false;
             }
     }
@@ -100,29 +101,30 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
         this._selectedUser.flagDeleteScroll = false;
     }
 
-    getInfo(isn, due?): void {
+    getInfo(isnDue?): void {
         let isn_cabinet = null;
-        if (!due) {
+        if (!isnDue) {
             this.isPhoto = false;
         }
-        this._selectedUser.getUserIsn(isn, due)
-        .then((result: [USER_CL, DEPARTMENT]) => {
-            this.getObjectForSystems(result);
-           if (result[1].toString() !== '5') {
-               this.departmentInfo = result[1][0];
-                if (result[1][1] !== undefined) {
-                    const surname = `${result[1][1]['SURNAME']}`;
-                    const name =  `${result[1][1]['NAME']}`;
-                    const lastName = `${result[1][1]['PATRON']}`;
+        this._selectedUser.get_cb_print_info(this.CurrentUser.id, isnDue)
+        .then(([user_role, cb_print]) => {
+            this.getObjectForSystems();
+            console.log(this.CurrentUser);
+           if (this.CurrentUser['dataDeep']) {
+               this.departmentInfo = this.CurrentUser['dataDeep'];
+                if (cb_print) {
+                    const surname =  `${cb_print[0].SURNAME}`;
+                    const name =  `${cb_print[0].NAME}`;
+                    const lastName = `${cb_print[0].PATRON}`;
                     this.DueInfo = `${String(surname) !== 'null' ? surname : ''} ${String(name) !== 'null' ? name : ''}  ${String(lastName) !== 'null' ? lastName : ''}`;
                     if (this.DueInfo.trim().length === 0) {
-                        this.DueInfo = `${result[1][0]['SURNAME']}`;
+                        this.DueInfo = `${this.CurrentUser['dataDeep']['SURNAME']}`;
                     }
                 }   else {
-                    this.DueInfo = `${result[1][0]['SURNAME']}`;
+                    this.DueInfo = `${this.CurrentUser['dataDeep']['SURNAME']}`;
                 }
-            this.isPhoto =  result[1][0]['ISN_PHOTO'];
-            isn_cabinet =  result[1][0]['ISN_CABINET'];
+            this.isPhoto =  this.CurrentUser['dataDeep']['ISN_PHOTO'];
+            isn_cabinet =  this.CurrentUser['dataDeep']['ISN_CABINET'];
             this.showDep = true;
             if (this.isPhoto) {
                 this._selectedUser.getSVGImage(this.isPhoto).then((res: DELO_BLOB[]) => {
@@ -133,12 +135,12 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             this.DueInfo = null;
             this.showDep = false;
            }
-            this.role = this.getRoleForUser(result[0]['USER_PARMS_List']);
-            this._selectedUser.getInfoCabinet(isn, isn_cabinet)
+            this.role = this.getRoleForUser(user_role);
+            this.chooseTemplate = 'main';
+            this._selectedUser.getInfoCabinet(this.CurrentUser.id, isn_cabinet)
             .then((res: [USER_CL, DEPARTMENT]) => {
                 this.UserCabinetInfo = res;
                 setTimeout(() => {
-                this.chooseTemplate = 'main';
             }, 100);
         });
         });
@@ -150,21 +152,15 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     }
 
     getRoleForUser(array: USER_PARMS[]): string {
-
-        const role = array.filter(el => {
-            if (el.PARM_NAME === 'CATEGORY' ) {
-                return el;
-            }
-        });
-        if (role[0].PARM_VALUE) {
-             return role[0].PARM_VALUE;
+        if (array[0].PARM_VALUE) {
+             return array[0].PARM_VALUE;
         } else {
             return 'Не указана';
         }
     }
 
-    getObjectForSystems(infoUser): void {
-        const split =  this.parseSustemParam(infoUser[0]['AV_SYSTEMS']);
+    getObjectForSystems(): void {
+        const split =  this.parseSustemParam(this.CurrentUser['data']['AV_SYSTEMS']);
         const delo = !!(+split[0] && !+split[1]);
         const delo_deloWeb = !!(+split[0] && +split[1]);
         const deloWeb = !!((+split[1] || +split[27]) && !+split[0]);
