@@ -261,6 +261,7 @@ export class NodeActionsComponent implements OnDestroy {
                             _enabled = this.dictionary.descriptor.editOnlyNodes && this._dictSrv.listNode.isNode;
                         }
                     }
+
                     // _enabled = _enabled && !opts.listHasDeleted;
                     if (this._dictSrv.listNode) {
                         _enabled = _enabled && !this._dictSrv.listNode.isDeleted;

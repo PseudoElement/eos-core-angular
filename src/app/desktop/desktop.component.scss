@@ -17,6 +17,7 @@
         flex-basis: calc((100% - 4*10px) / 1);
         margin-right: 10px;
         margin-bottom: 10px;
+        border: 1px solid #e6e6e6;
         .btn {
             padding: 0;
         }
@@ -54,7 +55,7 @@
             }
             .icon-wrapper {
                 display: inline-block;
-                height: 99px;
+                height: 98px;
                 width: 100px;
                 padding: 26px;
             }
