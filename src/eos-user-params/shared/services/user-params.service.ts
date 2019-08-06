@@ -143,6 +143,7 @@ export class UserParamsService {
         const querySys = {
             USER_PARMS: {
                 criteries: {
+                    ISN_USER_OWNER: '-99',
                     PARM_NAME: 'CHANGE_PASS||CATEGORIES_FOR_USER'
                 }
             }
