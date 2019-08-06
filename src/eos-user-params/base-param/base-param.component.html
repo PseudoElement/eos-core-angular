@@ -33,7 +33,7 @@
                 <div  [formGroup]="formControls" class="dynamic-input-wrapper base-text-input">
                     <label [hidden]="controls['passRepeated'].hideLabel" [attr.for]="controls['passRepeated'].key">{{controls['passRepeated'].label}}</label>
                     <div *ngIf="!form.get('USERTYPE').value" class="vision" [ngClass]="{'disabled': controls['pass'].disabled}">
-                        <input class="form-control m-font" maxlength="30" [formControlName]="controls['passRepeated'].key" [id]="controls['passRepeated'].key" [type]="type1" [readonly]="controls['passRepeated'].readonly" [ngClass]="{'readonly': readonly}" [placeholder]="curentUser.IS_PASSWORD ? '*******' : controls['passRepeated'].label"
+                        <input class="form-control m-font" maxlength="30" [formControlName]="controls['passRepeated'].key" [id]="controls['passRepeated'].key" [type]="type1" [readonly]="controls['passRepeated'].readonly" [ngClass]="{'error-focus': errorPass, 'readonly': readonly}" [placeholder]="curentUser.IS_PASSWORD ? '*******' : controls['passRepeated'].label"
                             [tooltip]="errorPass ? 'Пароли не совпадают' : 'Повторите пароль'" placement="bottom" [containerClass]="errorPass ? 'tooltip-error' : 'tooltip-info'" autocomplete="off">
                         <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-icon small" [ngClass]="editMode ? 'eos-icon-show-blue' : 'eos-icon-show-grey'"></span>
                     </div>
