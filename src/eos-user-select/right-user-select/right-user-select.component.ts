@@ -136,12 +136,13 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             this.showDep = false;
            }
             this.role = this.getRoleForUser(user_role);
-            this.chooseTemplate = 'main';
             this._selectedUser.getInfoCabinet(this.CurrentUser.id, isn_cabinet)
             .then((res: [USER_CL, DEPARTMENT]) => {
                 this.UserCabinetInfo = res;
+                this.chooseTemplate = 'main';
         });
         }).catch(error => {
+            console.log(error);
             this._errSrv.errorHandler(error);
         });
     }
@@ -152,7 +153,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
     }
 
     getRoleForUser(array: USER_PARMS[]): string {
-        if (array[0].PARM_VALUE) {
+        if (array[0]) {
              return array[0].PARM_VALUE;
         } else {
             return 'Не указана';
