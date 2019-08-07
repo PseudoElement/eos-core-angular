@@ -272,7 +272,7 @@ export class EosDeskService {
     private _readReferences() {
         this._appCtx.init()
             .then( () => {
-                this._dictSrv.getDictionariesList()
+                this._dictSrv.getAllDictionariesList()
                     .then((descriptors) => {
                         this._currentReferences = descriptors.map((descr) =>
                             this._deskItemByDescriptor(descr));
