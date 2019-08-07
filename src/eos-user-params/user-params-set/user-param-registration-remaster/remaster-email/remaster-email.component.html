@@ -40,7 +40,7 @@
                     </ng-template>
 
                     <accordion *ngIf="templRenderMailResive" class="accordion-position-main">
-                        <accordion-group [heading]="'Параметры регистрации'">
+                        <accordion-group [heading]="'Параметры регистрации'"  [isOpen]="OpenParamsReg" (isOpenChange)="isOpenChangeReciveAc($event)">
                             <span class="panel-icon eos-icon eos-icon-arrow-v-blue-bottom small" accordion-heading></span>
                             <div class="accord-wr" *ngFor="let item of templRenderMailResive">
                                 <ng-container *ngTemplateOutlet="treeNodeTmpl2; context:{items: item, margin: 0}"></ng-container>
