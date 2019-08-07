@@ -21,6 +21,7 @@ import { UserParamsService } from 'eos-user-params/shared/services/user-params.s
 
 // @Injectable()
 export class AbsoluteRightsClassifComponent implements OnInit {
+    @Input() editMode: boolean = true;
     @Input() selectedNode: NodeAbsoluteRight;
     @Input() curentUser: IParamUserCl;
     @Output() Changed = new EventEmitter();

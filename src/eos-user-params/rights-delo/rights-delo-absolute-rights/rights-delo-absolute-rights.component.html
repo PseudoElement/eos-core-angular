@@ -14,47 +14,49 @@
                 </div>
             </div>
         </div>
-        <div class="right-block-list-absolute-rights" *ngIf="rightContent && selectedNode">
-            <ng-container [ngSwitch]="selectedNode.contentProp">
-                <!-- docGroup -->
-                <ng-container *ngSwitchCase="0">
-                    <ng-container *ngTemplateOutlet="rightDocGroup"></ng-container>
-                </ng-container>
+        <div *ngIf="isLoading; else spiner">
+            <div class="right-block-list-absolute-rights" *ngIf="rightContent && selectedNode">
+                <ng-container [ngSwitch]="selectedNode.contentProp">
+                    <!-- docGroup -->
+                    <ng-container *ngSwitchCase="0">
+                        <ng-container *ngTemplateOutlet="rightDocGroup"></ng-container>
+                    </ng-container>
 
-                <!-- none -->
-                <ng-container *ngSwitchCase="2">
-                    <ng-container *ngTemplateOutlet="none"></ng-container>
-                </ng-container>
+                    <!-- none -->
+                    <ng-container *ngSwitchCase="2">
+                        <ng-container *ngTemplateOutlet="none"></ng-container>
+                    </ng-container>
 
-                <!-- department -->
-                <ng-container *ngSwitchCase="3">
-                    <ng-container *ngTemplateOutlet="department"></ng-container>
-                </ng-container>
+                    <!-- department -->
+                    <ng-container *ngSwitchCase="3">
+                        <ng-container *ngTemplateOutlet="department"></ng-container>
+                    </ng-container>
 
-                <!-- departmentCardAuthor -->
-                <ng-container *ngSwitchCase="4">
-                    <ng-container *ngTemplateOutlet="department"></ng-container>
-                </ng-container>
+                    <!-- departmentCardAuthor -->
+                    <ng-container *ngSwitchCase="4">
+                        <ng-container *ngTemplateOutlet="department"></ng-container>
+                    </ng-container>
 
-                <ng-container *ngSwitchCase="5">
-                    <ng-container *ngTemplateOutlet="editOrganiz"></ng-container>
-                </ng-container>
+                    <ng-container *ngSwitchCase="5">
+                        <ng-container *ngTemplateOutlet="editOrganiz"></ng-container>
+                    </ng-container>
 
-                <!-- classif -->
-                <ng-container *ngSwitchCase="6">
-                    <ng-container *ngTemplateOutlet="classif"></ng-container>
-                </ng-container>
+                    <!-- classif -->
+                    <ng-container *ngSwitchCase="6">
+                        <ng-container *ngTemplateOutlet="classif"></ng-container>
+                    </ng-container>
 
-                <!-- all -->
-                <ng-container *ngSwitchCase="7">
-                    <ng-container *ngTemplateOutlet="all"></ng-container>
-                </ng-container>
+                    <!-- all -->
+                    <ng-container *ngSwitchCase="7">
+                        <ng-container *ngTemplateOutlet="all"></ng-container>
+                    </ng-container>
 
-                <!-- departmentCardAuthorSentProject -->
-                <ng-container *ngSwitchCase="8">
-                    <ng-container *ngTemplateOutlet="department"></ng-container>
+                    <!-- departmentCardAuthorSentProject -->
+                    <ng-container *ngSwitchCase="8">
+                        <ng-container *ngTemplateOutlet="department"></ng-container>
+                    </ng-container>
                 </ng-container>
-            </ng-container>
+            </div>
         </div>
     </div>
 </div>
@@ -68,7 +70,7 @@
 
 <!-- Подраздиления (Ограничить картотекой Автора) -->
 <ng-template #department>
-    <eos-right-absolute-department style="width: 100%;" [selectedNode]="selectedNode" [curentUser]="curentUser"
+    <eos-right-absolute-department style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser"
         (Changed)="checkChange()"></eos-right-absolute-department>
 </ng-template>
 
@@ -80,12 +82,12 @@
 
 <!-- Группы документов -->
 <ng-template #rightDocGroup>
-    <eos-right-absolute-doc-group style="width: 100%;" [selectedNode]="selectedNode" [curentUser]="curentUser"
+    <eos-right-absolute-doc-group style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser"
         (Changed)="checkChange()"></eos-right-absolute-doc-group>
 </ng-template>
 
 <ng-template #classif>
-    <eos-absolute-rights-classif style="width: 100%;" [selectedNode]="selectedNode" [curentUser]="curentUser"
+    <eos-absolute-rights-classif style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser"
         (Changed)="checkChange()"></eos-absolute-rights-classif>
 </ng-template>
 
@@ -93,7 +95,10 @@
 <ng-template #editOrganiz>
     <eos-dynamic-input *ngIf="formGroupAll" class="inline-block" [input]="inputAll['all']" [form]="formGroupAll"
         [readonly]="formGroupAll.get('all').disabled"></eos-dynamic-input>
-    <eos-organiz-edit-type *ngIf="this.selectedNode?.value" style="width: 100%;" [selectedNode]="selectedNode" [curentUser]="curentUser"
+    <eos-organiz-edit-type *ngIf="this.selectedNode?.value" style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser"
         (Changed)="checkChange()">
     </eos-organiz-edit-type>
+</ng-template>
+<ng-template #spiner>
+    <eos-spinner size="lg" class="content-absolute"></eos-spinner>
 </ng-template>

@@ -410,11 +410,19 @@
     &.eos-icon-close-folder-blue {
         background-image: url("../assets/icons/Open-Close-Folder-Blue.svg");
     }
+    &.eos-icon-close-folder-grey {
+        background-image: url("../assets/icons/Open-Close-Folder-Grey.svg");
+    }
     &.eos-icon-close-folder-white {
         background-image: url("../assets/icons/Open-Close-Folder-White.svg");
     }
     &.eos-icon-open-folder-blue {
         background-image: url("../assets/icons/Open-Close-Folder-Blue.svg");
+        transition: 0ms;
+        transform: rotate(90deg);
+    }
+    &.eos-icon-open-folder-grey {
+        background-image: url("../assets/icons/Open-Close-Folder-Grey.svg");
         transition: 0ms;
         transform: rotate(90deg);
     }

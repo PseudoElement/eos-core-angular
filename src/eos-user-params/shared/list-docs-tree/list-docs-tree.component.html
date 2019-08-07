@@ -14,7 +14,7 @@
     let-node="node">
     <div
         [ngClass]="{'highlighted': node.isSelected}"
-        [ngStyle]="{'padding-left.px': node.layer * 27 && systemTech!==1}"><!--systemTech-->
+        [ngStyle]="{'padding-left.px': systemTech!==1 ? node.layer * 27 : 0 }">
 
         <div class="tree-node-due">
             <!-- icon for open -->
@@ -22,7 +22,7 @@
                 (click)="onExpand($event, node)">
                 <span *ngIf="node.children.length && systemTech!==1"
                     class="eos-icon tringle-size icon"
-                    [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded, 'eos-icon-close-folder-blue': !node.isExpanded}"
+                    [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded && editMode, 'eos-icon-close-folder-blue': !node.isExpanded && editMode, 'eos-icon-close-folder-grey': !node.isExpanded && !editMode, 'eos-icon-open-folder-grey': node.isExpanded && !editMode}"
                 ></span>
             </div>
 
@@ -30,6 +30,7 @@
             <label *ngIf="node.isviewAllowed && systemTech!==1" class="checkbox tree-checkbox" [ngClass]="node.classChecBox" (click)="clickLable($event, node)">
                 <span style="width:60px; display:inline-block;" *ngIf = "node.flagCheckNode">{{node.isAllowed ? '(С вл.)' : '(Без вл.)'}}</span>
                <input type="checkbox"
+                    [disabled]="!editMode"
                     hide
                     [checked]="node.isAllowed"
                 >

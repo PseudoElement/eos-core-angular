@@ -16,6 +16,7 @@ import { UserParamsService } from 'eos-user-params/shared/services/user-params.s
     templateUrl: 'right-doc-group.component.html'
 })
 export class RightAbsoluteDocGroupComponent implements OnInit {
+    @Input() editMode: boolean;
     @Input() selectedNode: NodeAbsoluteRight;
     @Input() curentUser: IParamUserCl;
     @Output() Changed = new EventEmitter();
