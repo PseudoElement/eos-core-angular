@@ -50,10 +50,12 @@
             id="title"
             name="title"
             #title
+            type="text"
             class="title-input form-control light xl-font"
             [ngModel]="item.value.title"
-            (focus)="setCursor($event)"
+            (focus)="onFocus($event)"
             (ngModelChange)="changeName($event)"
+            (keydown)="onInputKeyDown($event)"
             required
             autofocus
             [pattern]="notEmptyString.source"

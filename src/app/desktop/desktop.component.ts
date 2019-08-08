@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ElementRef, ViewChild} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {EosDictService} from '../../eos-dictionaries/services/eos-dict.service';
@@ -15,6 +15,9 @@ import {RECENT_URL} from 'app/consts/common.consts';
 })
 
 export class DesktopComponent implements OnInit, OnDestroy {
+
+    @ViewChild('title') title: ElementRef;
+
     referencesList: IDeskItem[];
     deskId: string;
 
@@ -100,6 +103,21 @@ export class DesktopComponent implements OnInit, OnDestroy {
         const index = this.referencesList.indexOf(item);
         const itemDiv = document.getElementsByClassName('sortable-item');
         itemDiv[index]['draggable'] = false;
+        setTimeout(() => {
+            if (this.title) {
+                this.title.nativeElement.focus();
+            }
+        }, 100);
+    }
+
+    onInputKeyDown(evt: KeyboardEvent) {
+        if (evt) {
+            if (evt.keyCode === 27) {
+                this.cancel(event);
+            } else if (evt.keyCode === 13) {
+                this.save(evt);
+            }
+        }
     }
 
     /**
@@ -132,6 +150,11 @@ export class DesktopComponent implements OnInit, OnDestroy {
         event.target.selectionStart = event.target.value.length;
     }
 
+    onFocus(event) {
+        const input = event.target;
+        input.selectionStart = 0;
+        input.selectionEnd = input.value.length;
+    }
     /**
      * Method check is there node and navigate or get message
      * @param link item to navigate
