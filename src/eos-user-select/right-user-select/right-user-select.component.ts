@@ -112,7 +112,7 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             this.getObjectForSystems();
            if (this.CurrentUser['dataDeep']) {
                this.departmentInfo = this.CurrentUser['dataDeep'];
-                if (cb_print) {
+                if (cb_print && cb_print.length !== 0) {
                     const surname =  `${cb_print[0].SURNAME}`;
                     const name =  `${cb_print[0].NAME}`;
                     const lastName = `${cb_print[0].PATRON}`;
