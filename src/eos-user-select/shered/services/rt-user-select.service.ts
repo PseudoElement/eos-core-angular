@@ -3,6 +3,7 @@ import { UserSelectNode } from '../../list-user-select/user-node-select';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { Subject, Observable } from 'rxjs';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { DEPARTMENT } from 'eos-rest';
 
 @Injectable()
 export class RtUserSelectService {
@@ -94,14 +95,17 @@ export class RtUserSelectService {
         this.subject.next(this._ChangeSelectUser);
     }
 
-    get_cb_print_info(isn_user, isnDeep?: number): Promise<any> {
+    getDepartMent(isnDeep): Promise<DEPARTMENT[]> {
         const query = {
-            CB_PRINT_INFO: {
+            DEPARTMENT: {
                 criteries: {
-                    ISN_OWNER: `${isnDeep}`
+                    DUE: `${isnDeep}`
                 }
             }
         };
+        return this.apiSrv.read(query);
+    }
+    get_cb_print_info(isn_user, isnDeep?: number): Promise<any> {
         const queryUserParams = {
             USER_PARMS: {
                 criteries: {
@@ -111,7 +115,18 @@ export class RtUserSelectService {
             }
         };
         if (isnDeep) {
-            return Promise.all([this.apiSrv.read(queryUserParams), this.apiSrv.read(query)]);
+            return this.getDepartMent(isnDeep).then((deep: DEPARTMENT[]) => {
+                if (deep && deep.length) {
+                    const query = {
+                        CB_PRINT_INFO: {
+                            criteries: {
+                                ISN_OWNER: `${deep[0].ISN_NODE}`
+                            }
+                        }
+                    };
+                    return Promise.all([this.apiSrv.read(queryUserParams), Promise.resolve(deep[0]), this.apiSrv.read(query)]);
+                }
+            });
         } else {
             return Promise.all([this.apiSrv.read(queryUserParams), Promise.resolve(null)]);
         }
