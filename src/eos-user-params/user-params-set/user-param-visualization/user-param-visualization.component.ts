@@ -95,8 +95,10 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
     }
     submit(): Promise<any> {
         if (this.mapChanges.size) {
-            const query = this.parseMapForCreate();
-            return this._pipRx.batch(query, '').then(() => {
+            const arrayQuery = [];
+            this.createUrl(arrayQuery);
+            this.mapChanges.clear();
+            return this._userParamsSetSr.BatchData(arrayQuery[0].method, arrayQuery[0].requestUri, arrayQuery[0].data).then(() => {
                 this.prepFormForSave();
                 this.btnDisable = true;
                 this.flagEdit = false;
@@ -118,12 +120,6 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
             const value = this.form.controls[key].value;
             this.inputs[key].value = value;
         });
-    }
-    parseMapForCreate(): Array<any> {
-        const arrayQuery = [];
-        this.createUrl(arrayQuery);
-        this.mapChanges.clear();
-        return arrayQuery;
     }
     createUrl(arrayQuery) {
         this.mapChanges.forEach((value, key, arr) => {
