@@ -319,7 +319,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
 
         }).catch(error => {
-            this._nanParSrv.scanObserver(this.formAccess.get('3').value);
+            this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
             this.cancel();
             this._errorSrv.errorHandler(error);
         });
