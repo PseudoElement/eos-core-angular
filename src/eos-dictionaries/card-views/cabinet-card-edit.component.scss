@@ -2,9 +2,6 @@ $access-first-col-width: 251px;
 .dropdown-menu.owners-menu {
     z-index: 1060;
 }
-bs-dropdown-container {
-    z-index: 10000;
-}
 .owners-menu {
     max-height: 300px;
     overflow-y: auto;
@@ -17,6 +14,9 @@ bs-dropdown-container {
 
 .cabinet-card-edit,
 eos-cabinet-card-edit {
+    bs-dropdown-container {
+        z-index: 10000;
+    }
     display: block;
     .card-content-wrapper {
         min-width: 798px;

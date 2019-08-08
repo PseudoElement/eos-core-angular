@@ -1,4 +1,4 @@
-import {Component, Output, EventEmitter, Input, OnChanges, OnDestroy} from '@angular/core';
+import {Component, Output, EventEmitter, Input, OnChanges, OnDestroy, ViewChild, ElementRef} from '@angular/core';
 import { EosDesk } from '../core/eos-desk';
 import {DEFAULT_DESKS, EosDeskService} from '../services/eos-desk.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -19,6 +19,7 @@ export class DesktopListComponent implements OnChanges, OnDestroy {
     @Input() hideSystem = false;
 
     @Output() onSelectDesk: EventEmitter<EosDesk> = new EventEmitter<EosDesk>();
+    @ViewChild('inputDeskName') inputDeskName: ElementRef;
 
     inputTooltip: any = {
         visible: false,
@@ -38,17 +39,22 @@ export class DesktopListComponent implements OnChanges, OnDestroy {
     maxLength = 80;
     showCheck = true;
     innerClick: boolean;
+    editDeskMenu: EosDesk;
+    editDeskActive: EosDesk;
 
     private list: EosDesk[] = [];
 
     private _desksListSubscription: Subscription;
     private _selectedDeskSubscription: Subscription;
+    private _timerEditEnable: NodeJS.Timer;
+
 
     constructor(
         private _deskSrv: EosDeskService,
         private _msgSrv: EosMessageService,
         private _confirmSrv: ConfirmWindowService,
     ) {
+        this.editDeskMenu = null;
         this.deskList = DEFAULT_DESKS;
         this.selectedDesk = DEFAULT_DESKS[0];
         this._desksListSubscription = this._deskSrv.desksList.subscribe((res) => {
@@ -81,6 +87,12 @@ export class DesktopListComponent implements OnChanges, OnDestroy {
             this.deskName = desk.name;
             this.editing = true;
         }
+
+        setTimeout(() => {
+            if (this.inputDeskName) {
+                this.inputDeskName.nativeElement.focus();
+            }
+        }, 100);
     }
 
     openCreateForm(evt: Event) {
@@ -129,6 +141,13 @@ export class DesktopListComponent implements OnChanges, OnDestroy {
                 this.deskName = '';
             });
         }
+        this.elementMouseLeave(desk);
+    }
+
+    cancelIfEscape(evt: KeyboardEvent) {
+        if (evt && evt.keyCode === 27) {
+            this.cancelEdit(event);
+        }
     }
 
     cancelEdit($evt: Event) {
@@ -136,6 +155,7 @@ export class DesktopListComponent implements OnChanges, OnDestroy {
         const desk = this.deskList.find((d) => d.edited);
         if (desk) {
             desk.edited = false;
+            this.elementMouseLeave(desk);
         }
         this.editing = false;
         this.creating = false;
@@ -169,6 +189,9 @@ export class DesktopListComponent implements OnChanges, OnDestroy {
 
     onFocus() {
         this.inputTooltip.visible = false;
+        const input = this.inputDeskName.nativeElement;
+        input.selectionStart = 0;
+        input.selectionEnd = input.value.length;
     }
 
     onBlur(form: NgForm) {
@@ -176,6 +199,29 @@ export class DesktopListComponent implements OnChanges, OnDestroy {
         if (control) {
             this.inputTooltip.message = EosUtils.getControlErrorMessage(control, { maxLength: 80 });
             this.inputTooltip.visible = control && control.dirty && control.invalid;
+        }
+    }
+
+    elementMouseEnter(desk) {
+        if (this._timerEditEnable) {
+            clearTimeout(this._timerEditEnable);
+            this._timerEditEnable = null;
+        }
+        if (!this.editDeskMenu || !this.editDeskMenu.edited) {
+            this._timerEditEnable = setTimeout(() => {
+                this.editDeskMenu = desk;
+                this._timerEditEnable = null;
+            }, 1000);
+        }
+    }
+
+    elementMouseLeave(desk) {
+        if (this._timerEditEnable) {
+            clearTimeout(this._timerEditEnable);
+            this._timerEditEnable = null;
+        }
+        if (this.editDeskMenu && !this.editDeskMenu.edited) {
+            this.editDeskMenu = null;
         }
     }
 

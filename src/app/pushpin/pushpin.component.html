@@ -1,12 +1,16 @@
 <div class="pin"
     dropdown
+    #dropDown="bs-dropdown"
+    [autoClose]="true"
     container="body"
     placement="bottom right">
-    <button class="btn pushpin"
+    <button
+        class="btn pushpin"
         dropdownToggle
         container="body"
         tooltip="Прикрепить"
         placement="left"
+        [isDisabled]="dropDown.isOpen"
         [ngClass]="{'info-open' : infoOpened, 'info-close' : !infoOpened }"
         containerClass="tooltip-info">
         <span class="eos-icon eos-icon-pin-blue small"></span>
