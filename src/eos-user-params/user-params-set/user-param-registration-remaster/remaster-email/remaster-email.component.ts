@@ -51,6 +51,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
     public templRenderMailResive;
     public flagEdit: boolean = false;
     public templRender: TreeItem[] = [];
+    public OpenParamsReg: boolean;
     @Input() userData;
     @Input() defaultValues;
     @Output() pushChenge = new EventEmitter<any>();
@@ -127,6 +128,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
             RECEIP_EMAIL: this.defaultValues['RECEIP_EMAIL'],
         };
     }
+
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
@@ -522,6 +524,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         this.form.disable({ emitEvent: false });
         this.formMailResuve.disable({ emitEvent: false });
         this.sliceArrayForTemplate();
+        this.OpenParamsReg = false;
     }
     cancel() {
         this.CancelForm();
@@ -532,6 +535,15 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         this.mapNewValue.clear();
         this.mapNewValueMailResive.clear();
     }
+
+    isOpenChangeReciveAc(event: boolean) {
+        if (event) {
+            this.OpenParamsReg = true;
+        } else {
+            this.OpenParamsReg = false;
+        }
+    }
+
     default() {
         this.prepareDefaultForm = this.parse_Create(this.fieldsConst.fields, 'mapDefault', 'RCSEND');
         this.prepareDefaultFormMailREceive = this.parse_Create(this.fieldsConstMailResive.fields, 'mapDefault', 'MAILRECEIVE');
