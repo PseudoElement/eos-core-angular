@@ -257,7 +257,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     delete newD['DUE_DEP_NAME'];
                 });
             }
-            this._nanParSrv.scanObserver(false);
+            // this._nanParSrv.scanObserver(false);
             query.push({
                 method: 'MERGE',
                 requestUri: `USER_CL(${id})`,
@@ -319,6 +319,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
 
         }).catch(error => {
+            this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
             this.cancel();
             this._errorSrv.errorHandler(error);
         });

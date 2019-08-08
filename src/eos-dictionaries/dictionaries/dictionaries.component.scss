@@ -17,6 +17,12 @@
         overflow: hidden;
 
         &.btn {
+            &:disabled {
+                opacity: 0.4;
+                background-color: #eeeeee;
+                color: #000000;
+            }
+
             min-width: 400px;
             max-width: 490px;
             padding: 0;
@@ -32,6 +38,7 @@
                 white-space: normal;
             }
         }
+
 
         .text {
             position: relative;

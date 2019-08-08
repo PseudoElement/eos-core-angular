@@ -1,6 +1,4 @@
-const pattrenSearch = /^("[^]*"|'[^']*'|[ёЁа-яА-Яa-zA-Z0-9\s\.-]{0,50})$/;
-const pattrenSearchLogin = /^("[^]*"|'[^']*'|[ёЁ_а-яА-Яa-zA-Z0-9\s\.-]{0,50})$/;
-const pattrenSearchDepartment = /^("[^]*"|'[^']*'|[ёЁ_а-яА-Яa-zA-Z0-9\s\.)(/\\,-]{0,50})$/;
+const pattrenSearch = /^.{0,}$/;
 export const USER_SEARCH = {
     id: '',
     title: '',
@@ -12,13 +10,13 @@ export const USER_SEARCH = {
             key: 'LOGIN',
             type: 'string',
             title: 'Логин',
-            pattern: pattrenSearchLogin,
+            pattern: pattrenSearch,
         },
         {
             key: 'DEPARTMENT',
             type: 'string',
             title: 'Подразделение',
-            pattern: pattrenSearchDepartment,
+            pattern: pattrenSearch,
         },
         {
             key: 'fullDueName',

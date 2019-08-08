@@ -134,6 +134,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           msg: 'попробуйте изменить поисковую фразу',
           type: 'warning'
         });
+        this.frontData = [];
       } else {
         this.ParseDate(this.usersAudit);
       }
@@ -424,7 +425,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     this.usersAudit.map((user) => {
       const date = this.ConvertDate(user.EVENT_DATE);
       eventUser = this.eventKind[user.EVENT_KIND - 1];
-      if (this.frontData === undefined) {
+      if (this.frontData === undefined && this.usersAudit.length !== 0) {
         this.frontData = [{
           checked: !this.checkUser,
           date: date,
@@ -441,6 +442,9 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           isnUser: this.getUserName(user.ISN_USER),
           isnEvent: user.ISN_EVENT
         };
+        if (this.lastUser !== undefined) {
+          this.GetRefIsn(this.lastUser.isnEvent);
+        }
         this.flagChecked = false;
       } else {
         this.frontData.push({
@@ -453,9 +457,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         });
       }
     });
-    if (this.lastUser !== undefined) {
-      this.GetRefIsn(this.lastUser.isnEvent);
-    }
+
 
   }
   ConvertToFilterDate(date): string {
@@ -606,19 +608,28 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     if (this.frontData !== undefined) {
       usersCheck = this.frontData.filter(user => user.checked === true);
       for (const user of usersCheck) {
-        if (usersCheck[usersCheck.length - 1].isnEvent === user.isnEvent) {
+        if (usersCheck[usersCheck.length - 1] === user) {
           this.DeleteEvent(user.isnEvent)
             .then(() => {
-              this._user_pagination.totalPages = this._user_pagination.totalPages - 1;
+              this._user_pagination.totalPages = this._user_pagination.totalPages === 0 ? 0 : this._user_pagination.totalPages - 1;
               if (this._user_pagination.totalPages % this.config.length === 0) {
-                this.config.current = this.config.current - 1;
-                this.config.current = this.config.start - 1;
+                if (this.config.current !== 1) {
+                  this.config.current = this.config.current - 1;
+                  this.config.start = this.config.start - 1;
+                }
+              }
+              if (this.frontData.length === 0) {
+                this.config.current = 1;
+                this.config.start = 1;
+              }
+              if (this.clearResult === true && this.usersAudit.length === 0) {
+                this.frontData = [];
               }
               this._user_pagination.changePagination(this.config);
             });
         } else {
           this.DeleteEvent(user.isnEvent);
-          this._user_pagination.totalPages = this._user_pagination.totalPages - 1;
+          this._user_pagination.totalPages = this._user_pagination.totalPages === 0 ? 0 : this._user_pagination.totalPages - 1;
         }
       }
     }
