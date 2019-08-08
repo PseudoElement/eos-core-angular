@@ -107,6 +107,11 @@ export class DesktopListComponent implements OnChanges, OnDestroy {
             this.creating = true;
             this.deskName = this._deskSrv.generateNewDeskName();
         }
+        setTimeout(() => {
+            if (this.inputDeskName) {
+                this.inputDeskName.nativeElement.focus();
+            }
+        }, 100);
     }
 
     saveDesk($evt: Event): void {
@@ -207,7 +212,7 @@ export class DesktopListComponent implements OnChanges, OnDestroy {
             clearTimeout(this._timerEditEnable);
             this._timerEditEnable = null;
         }
-        if (!this.editDeskMenu || !this.editDeskMenu.edited) {
+        if (!this.creating && (!this.editDeskMenu || !this.editDeskMenu.edited)) {
             this._timerEditEnable = setTimeout(() => {
                 this.editDeskMenu = desk;
                 this._timerEditEnable = null;
