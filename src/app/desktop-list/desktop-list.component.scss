@@ -14,6 +14,9 @@
                 top: -1px;
                 position: absolute;
                 z-index: 100;
+                .item-title {
+                    width: calc(100% - 116px);
+                }
             }
         }
         .eos-icon-checkbox-black {
@@ -56,6 +59,7 @@
                     background-color: #FFFFFF;
                     min-height: 47px;
                     height: auto;
+                    width: calc(100% - 96px);
                 }
 
             }
@@ -72,12 +76,12 @@
                     vertical-align: middle;
                     &.action1 {
                         position: absolute;
-                        right: 48px;
+                        right: -48px;
                         top: -1px;
                     }
                     &.action2 {
                         position: absolute;
-                        right: 0px;
+                        right: -96px;
                         top: -2px;
                     }
                 }
