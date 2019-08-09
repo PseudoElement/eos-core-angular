@@ -50,8 +50,9 @@ export class RigthsCabinetsServices {
     criterCabinet(depart) {
       return  {
             CABINET: {
-                criteries: {'CABINET.DEPARTMENT.DEPARTMENT_DUE': `${depart.DUE}`} // 0.1R5U.
-            }
+                criteries: {'CABINET.DEPARTMENT.DEPARTMENT_DUE': `${depart.DUE}`},
+            },
+            loadmode: 'Table'
         };
     }
     fillArrayCardsName(department: DEPARTMENT[]): void {
