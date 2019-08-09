@@ -54,8 +54,9 @@
                 <span *ngIf ="_apiSrv.srtConfig.fullDueName.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
                 </span>
                 <div class="pos-depart" >
-                    <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')" [textContent]="shooseP === 0 ? 'Подразделение' : 'Картотека'"></span>
-                    <span *ngIf="_apiSrv.srtConfig.department.checked" class="curs-span-arrow"  [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)" (click)="sortPageList('department')"></span>
+                    <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')" >{{cardName}}
+                         <span *ngIf="_apiSrv.srtConfig.department.checked" class="curs-span-arrow"  [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)"
+                         (click)="sortPageList('department')"></span></span>
                 </div>
                 <!-- <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
                     <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>
@@ -79,7 +80,10 @@
                             <span *ngIf="user.blockedUser && !user.deleted" class="eos-icon eos-icon-Blockeduser-Yellow  small"></span>
                             <span *ngIf="user.blockedSystem && !user.deleted" class="eos-icon eos-icon-Blockeduser-Red  small"></span>
                             </span>
-                            <span class="user-list-two-colomn " tooltip="{{user.fullDueName}}" placement="bottom" [ngClass]="{'last-tooltip' : last }" [containerClass]="getClassTooltip(last)" container="body">{{user.fullDueName}}
+                            <span class="user-list-two-colomn " tooltip="{{user.fullDueName}}" placement="bottom" [ngClass]="{'last-tooltip' : last }" [containerClass]="getClassTooltip(last)" container="body">
+                                <span *ngIf="!user.deep" class="eos-icon eos-icon-Techuser-Grey small icon-user"></span>
+                                <span *ngIf="user.deep" class="eos-icon eos-icon-DeepUser-Blue small icon-user"></span>
+                                {{ user.fullDueName}}
                             </span>
                             <span class="user-list-first-colomn" tooltip="{{user.department}}" placement="auto" containerClass="tooltip-info" container="body">{{user.department}}
                             </span>

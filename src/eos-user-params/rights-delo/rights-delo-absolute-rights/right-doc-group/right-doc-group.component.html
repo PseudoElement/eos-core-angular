@@ -1,5 +1,5 @@
 <div *ngIf="!isLoading">
-    <button
+    <button *ngIf="editMode"
         class="btn"
         triggers="hover"
         tooltip="Добавить"
@@ -9,7 +9,7 @@
     >
         <span class="eos-icon eos-icon-plus-blue small"></span>
     </button>
-    <button
+    <button *ngIf="editMode"
         class="btn"
         #del="bs-tooltip"
         tooltip="Удалить"
@@ -25,6 +25,7 @@
     <eos-list-doc-tree
         [listNode]="list"
         (select)="select($event)"
+        [editMode]="editMode"
         (checkedNode)="checkedNode($event)"
     ></eos-list-doc-tree>
 </div>

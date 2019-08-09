@@ -11,6 +11,7 @@ import { FuncNum } from './funcnum.model';
 import { CardRightSrv } from './card-right.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { USERCARD } from 'eos-rest';
 
 @Component({
     selector: 'eos-rights-delo-cards',
@@ -25,6 +26,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
     public editableUser: IParamUserCl;
     public funcList: FuncNum[];
     public editMode: boolean = false;
+    public selectedList: FuncNum;
     private _selectedFuncNum: FuncNum;
     private _ngUnsubscribe: Subject<any> = new Subject();
     private _flagGrifs: boolean;
@@ -68,6 +70,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
             }
             this.funcList = CARD_FUNC_LIST.map(node => new FuncNum(node));
             this.pageState = 'VIEW';
+            this.selectFuncNum(this.funcList[0]);
         })
         .catch((error: boolean) => {
 
@@ -82,6 +85,11 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         }).then(() => {
             this._cardSrv.prepareforEdit();
             this.editableUser = this._userParamsSetSrv.curentUser;
+            this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
+                card._orig.FUNCLIST = card.FUNCLIST;
+            });
+            this._userParamsSetSrv.checkGrifs(this._userParamsSetSrv.userContextId);
+            this.selectFuncNum(this.selectedList || this.funcList[0]);
         }).catch(error => {
             this._errorSrv.errorHandler(error);
         });
@@ -99,7 +107,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
                 if (!flag) {
                     this.afterSubmit();
                 }
-              //  this.ngOnInit();
+                //  this.ngOnInit();
                 this._clearView();
             }).catch(error => {
                 this._errorSrv.errorHandler(error);
@@ -110,6 +118,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
     cancel() {
         this._clearView();
         this._cardSrv.cancelChanges();
+        this.selectFuncNum(this.selectedList || this.funcList[0]);
     }
     edit() {
         if (!this._flagGrifs) {
@@ -125,12 +134,13 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
             return;
         }
         this.editMode = true;
-        this.selectFuncNum(this.funcList[0]);
+        this.selectFuncNum(this.selectedList || this.funcList[0]);
     }
     selectFuncNum(node: FuncNum) {
-        if (!this.editMode) {
+        /* if (!this.editMode) {
             return;
-        }
+        } */
+        this.selectedList = node;
         if (this._selectedFuncNum === node) {
             return;
         }
@@ -145,9 +155,9 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
     private _clearView (): void {
         this._userParamsSetSrv.setChangeState({ isChange: false });
         this.editMode = false;
-        this._selectedFuncNum.isSelected = false;
+        // this._selectedFuncNum.isSelected = false;
         this._selectedFuncNum = null;
-        this._cardSrv.selectedFuncNum = null;
+        // this._cardSrv.selectedFuncNum = null;
         this.btnDisabled = true;
     }
 }

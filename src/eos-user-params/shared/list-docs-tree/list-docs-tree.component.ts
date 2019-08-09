@@ -6,6 +6,7 @@ import { NodeDocsTree } from './node-docs-tree';
     templateUrl: 'list-docs-tree.component.html',
 })
 export class ListDocsTreeComponent implements OnChanges {
+    @Input() editMode: boolean = true;
     @Input() listNode: NodeDocsTree[];
     @Input() systemTech: number;
     @Output() select = new EventEmitter();
@@ -26,7 +27,7 @@ export class ListDocsTreeComponent implements OnChanges {
         if (event.target.tagName === 'LABEL') { // click to label
             this._selectNode(item);
         }
-        if (event.target.tagName === 'SPAN') { // click to checkbox
+        if (event.target.tagName === 'SPAN' && this.editMode) { // click to checkbox
             if (item.isviewAllowed) {
                 item.isAllowed = !item.isAllowed;
                 this.checkedNode.emit(item);

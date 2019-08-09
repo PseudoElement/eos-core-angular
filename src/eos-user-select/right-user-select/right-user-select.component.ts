@@ -81,7 +81,10 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             });
     }
     geyInfo(currentUser) {
-        const isn = currentUser['dataDeep'] ? currentUser['dataDeep']['ISN_LCLASSIF'] : false;
+        let isn;
+        if (currentUser['deep'] && currentUser['deep'] !== 'null') {
+            isn = currentUser['deep'];
+        }
         if (isn) {
                 this.getInfo(isn);
             } else {
@@ -108,23 +111,23 @@ export class RightUserSelectComponent  implements OnInit, OnDestroy {
             this.isPhoto = false;
         }
         this._selectedUser.get_cb_print_info(this.CurrentUser.id, isnDue)
-        .then(([user_role, cb_print]) => {
+        .then(([user_role, deep = null, cb_print = null]) => {
             this.getObjectForSystems();
-           if (this.CurrentUser['dataDeep']) {
-               this.departmentInfo = this.CurrentUser['dataDeep'];
+           if (this.CurrentUser.deep) {
+               this.departmentInfo = deep;
                 if (cb_print && cb_print.length) {
                     const surname =  `${cb_print[0].SURNAME}`;
                     const name =  `${cb_print[0].NAME}`;
                     const lastName = `${cb_print[0].PATRON}`;
                     this.DueInfo = `${String(surname) !== 'null' ? surname : ''} ${String(name) !== 'null' ? name : ''}  ${String(lastName) !== 'null' ? lastName : ''}`;
                     if (this.DueInfo.trim().length === 0) {
-                        this.DueInfo = `${this.CurrentUser['dataDeep']['SURNAME']}`;
+                        this.DueInfo = `${deep['SURNAME']}`;
                     }
                 }   else {
-                    this.DueInfo = `${this.CurrentUser['dataDeep']['SURNAME']}`;
+                    this.DueInfo = `${deep['SURNAME']}`;
                 }
-            this.isPhoto =  this.CurrentUser['dataDeep']['ISN_PHOTO'];
-            isn_cabinet =  this.CurrentUser['dataDeep']['ISN_CABINET'];
+            this.isPhoto =  deep['ISN_PHOTO'];
+            isn_cabinet =  deep['ISN_CABINET'];
             this.showDep = true;
             if (this.isPhoto) {
                 this._selectedUser.getSVGImage(this.isPhoto).then((res: DELO_BLOB[]) => {

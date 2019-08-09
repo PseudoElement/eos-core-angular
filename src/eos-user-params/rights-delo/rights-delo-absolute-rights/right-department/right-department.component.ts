@@ -15,6 +15,7 @@ import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tr
     templateUrl: 'right-department.component.html'
 })
 export class RightDepertmentComponent implements OnInit {
+    @Input() editMode: boolean;
     @Input() selectedNode: NodeAbsoluteRight;
     @Input() curentUser: IParamUserCl;
     @Output() Changed = new EventEmitter();

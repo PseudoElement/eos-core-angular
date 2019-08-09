@@ -59,6 +59,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     countcheckedField: number;
     shadow: boolean = false;
     showCloseQuickSearch: boolean = false;
+    get cardName() {
+        return this.shooseP === 0 ? 'Подразделение' : 'Картотека';
+    }
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public rtUserService: RtUserSelectService,
