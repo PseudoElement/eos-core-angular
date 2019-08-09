@@ -20,7 +20,6 @@ export class DesktopComponent implements OnInit, OnDestroy {
 
     referencesList: IDeskItem[];
     deskId: string;
-
     notEmptyString = NOT_EMPTY_STRING;
     dragResolve = false;
 
