@@ -89,6 +89,7 @@ export interface IRequest extends IKeyValuePair {
     orderby?: string;
 
     urlParams?: string;
+    loadmode?: string;
 
     //    errHandler?: (e) => any;
 }
