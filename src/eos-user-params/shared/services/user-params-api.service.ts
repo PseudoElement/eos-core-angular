@@ -94,7 +94,7 @@ export class UserParamApiSrv {
     getUsers(dueDep?: string): Promise<any> {
         this.dueDep = dueDep || '0.';
         const q = this.getQueryforDB(dueDep);
-        const query = { USER_CL: q, loadmode: 'USER_CL' };
+        const query = { USER_CL: q, loadmode: 'Table' };
         return this.getData(query)
             .then(data => {
                 const prepData = data.filter(user => user['ISN_LCLASSIF'] !== 0);
