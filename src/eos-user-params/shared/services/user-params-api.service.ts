@@ -82,7 +82,7 @@ export class UserParamApiSrv {
             if (!dueDep || dueDep === '0.') {
                 q = ALL_ROWS;
             } else {
-                q = PipRX.criteries({ DUE_DEP: `${dueDep}%` });
+                q = PipRX.criteries({ DUE_DEP: `${dueDep}%`}, );
             }
         }
         if (this.configList.shooseTab === 1) {
@@ -94,7 +94,7 @@ export class UserParamApiSrv {
     getUsers(dueDep?: string): Promise<any> {
         this.dueDep = dueDep || '0.';
         const q = this.getQueryforDB(dueDep);
-        const query = { USER_CL: q };
+        const query = { USER_CL: q, loadmode: 'USER_CL' };
         return this.getData(query)
             .then(data => {
                 const prepData = data.filter(user => user['ISN_LCLASSIF'] !== 0);
