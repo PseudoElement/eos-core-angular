@@ -22,7 +22,8 @@ export class DesktopComponent implements OnInit, OnDestroy {
     deskId: string;
 
     notEmptyString = NOT_EMPTY_STRING;
-    private dragResolve = false;
+    dragResolve = false;
+
     private _editingItem: IDeskItem;
     private _newTitle: string;
     private _listIsLoaded = false;
@@ -69,6 +70,11 @@ export class DesktopComponent implements OnInit, OnDestroy {
         this._deskListSubscription.unsubscribe();
     }
 
+
+    cancelEvent1(evt) {
+
+    }
+
     removeLink(link: IDeskItem, $evt: Event): void {
         $evt.stopPropagation();
         const _confirm = Object.assign({}, CONFIRM_LINK_DELETE);
@@ -83,7 +89,7 @@ export class DesktopComponent implements OnInit, OnDestroy {
     }
 
     tryMove(evt: Event) {
-        if (!this.dragResolve) {
+        if (this.dragResolve) {
             this.stopDefault(evt);
         }
     }

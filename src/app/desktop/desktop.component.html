@@ -9,6 +9,10 @@
                 placeholderItem="На этом рабочем столе нет ссылок"
                 placeholderClass="placeholderStyle"
                 wrapperClass="sortable-wrapper"
+                force="true"
+                (onItemDragstart)="onItemDragstart()"
+                (dragend)="cancelEvent1($event)"
+
             ></bs-sortable>
         </div>
 
@@ -97,17 +101,27 @@
         <span [hidden]="editing(item.value)" class="text">
             {{ item.value.title }}
         </span>
-        <button
+        <!-- <button
             *ngIf="deskId !== 'system'"
-            (mouseover)="dragResolve = true"
-            (mouseleave)="dragResolve = false"
             class="icon-btn btn leftest"
             tooltip="Переместить"
             placement="bottom"
             containerClass="tooltip-info"
-            container="body">
-            <span class="fa fa-arrows selected-text xl-font " aria-hidden="true"></span>
-        </button>
+            container="body"> -->
+            <div
+                *ngIf="deskId !== 'system'"
+                class="icon-btn leftest"
+                tooltip="Переместить"
+                placement="bottom"
+                containerClass="tooltip-info"
+                container="body"
+                (click)="stopDefault($event)"
+            >
+                <span class="fa fa-arrows selected-text xl-font leftest" aria-hidden="true"></span>
+            </div>
+        <!-- </button> -->
+
+
         <button
             class="icon-btn btn"
             (click)="edit($event, item.value)"
