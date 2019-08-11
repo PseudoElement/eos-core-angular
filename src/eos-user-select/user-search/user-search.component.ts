@@ -63,6 +63,9 @@ export class UserSearchComponent implements OnInit {
         this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prapareData });
         this.form = this.inpSrv.toFormGroup(this.inputs);
     }
+    AddUnderscore(string: string): string {
+        return string.replace(new RegExp('_', 'g'), '[' + '_' + ']');
+    }
 
     RemoveQuotes(newObj: any): void {
         const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
@@ -72,12 +75,14 @@ export class UserSearchComponent implements OnInit {
                 if (typeof list === 'string') {
                     newObj[key] = list.replace(SEARCH_INCORRECT_SYMBOLS, '');
                     this.form.controls[`rec.${key}`].patchValue(newObj[key]);
+                    newObj[key] = this.AddUnderscore(newObj[key]);
                 } else {
                     for (const k in list) {
                         if (list.hasOwnProperty(k)) {
-                            const fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
+                            let fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
                             list[k] = fixed;
                             this.form.controls[`rec.${key}`].patchValue(newObj[key]);
+                            fixed = this.AddUnderscore(fixed);
                         }
                     }
                 }
