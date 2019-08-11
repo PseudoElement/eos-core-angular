@@ -153,7 +153,6 @@ export class RightClassifNode {
             this.isShell = false;
             })
             .catch((error) => {
-                console.log(error);
                 this.isShell = false;
             });
     }
