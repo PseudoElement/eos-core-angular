@@ -56,4 +56,5 @@ export const OPEN_CLASSIF_DOCGR: IOpenClassifParams = {
     classif: 'DOCGROUP_CL',
     selectMulty: true,
     return_due: true,
+    skipDeleted: false,
 };
