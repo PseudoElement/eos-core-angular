@@ -34,6 +34,7 @@ export const OPEN_CLASSIF_RUBRIC_CL_ONLI_NODE: IOpenClassifParams = {
     selectLeafs: false,
     selectNodes: true,
     selectMulty: true,
+    skipDeleted: false,
 };
 export const OPEN_CLASSIF_CARDINDEX: IOpenClassifParams = {
     classif: 'CARDINDEX',
