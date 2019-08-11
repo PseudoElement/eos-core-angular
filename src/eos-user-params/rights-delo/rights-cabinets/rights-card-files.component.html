@@ -50,7 +50,10 @@
             <div class="title-cards">
                 <span>Кабинеты</span>
             </div>
-            <eos-cabinets-folders (sendNewValues)="getChangesFromCabinets($event)" [card]="currentCard" [flagEdit]="flagEdit"></eos-cabinets-folders>
+            <eos-cabinets-folders *ngIf="currentCard && !loadCabinets" (sendNewValues)="getChangesFromCabinets($event)" [card]="currentCard" [flagEdit]="flagEdit"></eos-cabinets-folders>
+            <div class="user-input-group sp" *ngIf="loadCabinets">
+                <eos-spinner size="lg"></eos-spinner>
+            </div>
         </div>
     </div>
     <div class="user-input-group sp" *ngIf="isLoading">
