@@ -118,7 +118,7 @@ export class UserParamsService {
                 if (this._userContext.USER_PARMS_List) {
                     this._createHash();
                 }
-                if (!this._isTechUser) {
+                if (!this._isTechUser && this._router.url.substr(0, 27) === '/user-params-set/base-param') {
                     return this.getDepartmentFromUser([this._userContext['DUE_DEP']]);
                 }
                 return Promise.resolve([]);
