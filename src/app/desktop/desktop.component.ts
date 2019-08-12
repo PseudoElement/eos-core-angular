@@ -9,6 +9,7 @@ import {CONFIRM_LINK_DELETE} from '../consts/confirms.const';
 import {NOT_EMPTY_STRING} from 'eos-common/consts/common.consts';
 import {EosStorageService} from 'app/services/eos-storage.service';
 import {RECENT_URL} from 'app/consts/common.consts';
+import { skip } from 'rxjs/operators';
 
 @Component({
     templateUrl: 'desktop.component.html',
@@ -58,8 +59,9 @@ export class DesktopComponent implements OnInit, OnDestroy {
                 this._deskSrv.setSelectedDesk(this.deskId);
             }
         });
-        this._currentReferencesSubscription = this._deskSrv.currentReferences.subscribe(refs => {
-            this.referencesList = refs;
+
+        this._currentReferencesSubscription = this._deskSrv.currentReferences.pipe(skip(1)).subscribe(refs => {
+                this.referencesList = refs;
         });
     }
 
@@ -70,8 +72,8 @@ export class DesktopComponent implements OnInit, OnDestroy {
     }
 
 
-    cancelEvent1(evt) {
-
+    dragEndEvent(evt) {
+        this._deskSrv.storeOrder(this.referencesList, this.deskId);
     }
 
     removeLink(link: IDeskItem, $evt: Event): void {
