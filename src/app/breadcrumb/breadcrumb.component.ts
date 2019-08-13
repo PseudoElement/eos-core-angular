@@ -117,6 +117,7 @@ export class BreadcrumbsComponent implements OnDestroy {
                 this.showUserInfo = !!data;
                 if (this._breadcrumbsSrv.currentLink && this._breadcrumbsSrv.currentLink.title === 'Пользователи' && this._rtSrv.btnDisabled !== true) {
                     this.isNavigationEnabled = true;
+                    this.isEditGranted =  true;
                 } else {
                     this.isNavigationEnabled = false;
                 }
