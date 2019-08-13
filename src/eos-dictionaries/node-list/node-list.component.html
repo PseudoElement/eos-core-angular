@@ -39,7 +39,7 @@
                      class="item l-font"
                      [class.left-shadowed]="first && (firstColumnIndex > 0)"
                      [attr.id]="'vf_'+field.key"
-                    [ngStyle]="{'min-width.px': min_length[field.key]}">
+                     [ngStyle]="{'min-width.px': min_length[field.key]}">
                     <span class="text selected-text"
                           (click)="orderByField(field.key)">{{untrimmedValue(field.customTitle || field.title)}}</span><span class="order-icon">
                     <span *ngIf="orderBy?.fieldKey === field.key"

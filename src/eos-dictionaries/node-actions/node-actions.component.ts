@@ -64,7 +64,6 @@ export class NodeActionsComponent implements OnDestroy {
     ) {
         this._markedNodes = [];
         this._initButtons();
-
         this._dictSrv = _dictSrv;
         // _dictSrv.listDictionary$
         //     .pipe(
@@ -225,7 +224,7 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.moveUp:
                 case E_RECORD_ACTIONS.moveDown:
-                    _show = this._viewParams.userOrdered && !this._viewParams.searchResults;
+                    _show = _show && this._viewParams.userOrdered && !this._viewParams.searchResults;
                     _enabled = _enabled && this._visibleCount > 1 && opts.listHasItems;
                     break;
                 case E_RECORD_ACTIONS.export:

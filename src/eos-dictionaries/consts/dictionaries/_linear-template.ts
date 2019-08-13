@@ -10,7 +10,8 @@ export const LINEAR_TEMPLATE: IDictionaryDescriptor = {
     title: 'Линейный справочник',
     actions: [
         'add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'restore',
-        'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization', 'removeHard',
+        'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
+        // 'removeHard',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'export', 'import'],
     keyField: 'ISN_LCLASSIF',
     searchConfig: [SEARCH_TYPES.quick],

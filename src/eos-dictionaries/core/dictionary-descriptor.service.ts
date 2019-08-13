@@ -20,6 +20,8 @@ import {SevRulesDictionaryDescriptor} from './sev-rules-dictionary-descriptor';
 import {LinkDictionaryDescriptor} from './link-dictionary-descriptor';
 import {NomenklDictionaryDescriptor} from './nomenkl-dictionary-descriptor';
 import { ReestrtypeDictionaryDescriptor } from './reestrtype-dictionary-descriptor';
+import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
+import { CaCategoryDictionaryDescriptor } from './ca-category-dictionary-descriptor';
 // import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 @Injectable()
@@ -93,6 +95,9 @@ export class DictionaryDescriptorService {
                         break;
                     case 'cabinet':
                         res = new CabinetDictionaryDescriptor(descr, this.apiSrv, /*this._confirmSrv*/);
+                        break;
+                    case CA_CATEGORY_CL.id:
+                        res = new CaCategoryDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case 'docgroup':
                         res = new DocgroupDictionaryDescriptor(descr, this.apiSrv);

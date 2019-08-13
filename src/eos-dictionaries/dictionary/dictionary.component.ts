@@ -52,6 +52,7 @@ import {
 } from '../consts/messages.consts';
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { PrjDefaultValuesComponent } from 'eos-dictionaries/prj-default-values/prj-default-values.component';
+import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -92,7 +93,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     }
 
     get isTitleSliced(): boolean {
-        if (this.title.length >= this.SLICE_LEN) {
+        if (this.title && this.title.length >= this.SLICE_LEN) {
             return true;
         }
         return false;
@@ -467,9 +468,24 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.pasteNodes:
                 this._openCopyNode();
                 break;
+            case E_RECORD_ACTIONS.certifUC:
+                this._navigateToUC();
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
+    }
+
+    _navigateToUC(): any {
+            const url = this._router.url;
+            this._storageSrv.setItem(RECENT_URL, url);
+            const _path = [
+                'spravochniki',
+                CA_CATEGORY_CL.id,
+                '0.'
+            ];
+
+            this._router.navigate(_path);
     }
 
 
