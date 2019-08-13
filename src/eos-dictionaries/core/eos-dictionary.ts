@@ -612,8 +612,8 @@ export class EosDictionary {
         const _orderBy = orderBy || this._orderBy; // DON'T USE THIS IN COMPARE FUNC!!! IT'S OTHER THIS!!!
 
         return nodes.sort((a: EosDictionaryNode, b: EosDictionaryNode) => {
-            let _a = a.getFieldValueByName(_orderBy.fieldKey); // data.rec[_orderBy.fieldKey];
-            let _b = b.getFieldValueByName(_orderBy.fieldKey); // data.rec[_orderBy.fieldKey];
+            let _a = a.getFieldValueByName(_orderBy.fieldKey) || Number(a.id); // data.rec[_orderBy.fieldKey];
+            let _b = b.getFieldValueByName(_orderBy.fieldKey) || Number(b.id); // data.rec[_orderBy.fieldKey];
 
             if (typeof(_a) === 'number' || typeof (_b) === 'number') {
                 if (_a > _b) {

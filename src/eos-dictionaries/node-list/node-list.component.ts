@@ -309,11 +309,33 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         }
     }
 
+    getWeigthForItem(item: EosDictionaryNode, index: number): number {
+        let w = item.data.rec['WEIGHT'];
+        if (!w) {
+            w = Number (item.id);
+        }
+        if (!w) {
+            w = item.data.rec['ISN_LCLASSIF'];
+        }
+        if (!w) {
+            w = index;
+        }
+        return w;
+    }
+
     _nodesSwap(changeList: {}, i1: number, i2: number): any {
         const item1 = this.nodes[i1];
         const item2 = this.nodes[i2];
-        let w1 = item1.data.rec['WEIGHT'];
-        let w2 = item2.data.rec['WEIGHT'];
+        let w1 = this.getWeigthForItem(item1, i1);
+        let w2 = this.getWeigthForItem(item2, i2);
+
+        // ситуация, когда восстанавливаем из id, случай, когда вес и так тот что нужен.
+        if ((i1 > i2 && w1 < w2) || (i1 < i2 && w1 > w2)) {
+            const s = w1;
+            w1 = w2;
+            w2 = s;
+        }
+
         const signedOne = (i1 > i2 ? -1 : 1);
 
         if (w1 === w2) {
