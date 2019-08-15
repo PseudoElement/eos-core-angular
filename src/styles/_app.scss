@@ -22,11 +22,11 @@
     position: relative;
     border-bottom-width: 1px;
     border-bottom-style: solid;
-    box-shadow: 0 10px 5px 0 rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 5px 0 rgba(0, 0, 0, 0.10);
     .menu {
         background-color: $white;
         height: $item-width;
-        border-bottom: 1px solid $border-color-main-theme;
+        // border-bottom: 1px solid $border-color-main-theme;
     }
     .square-img-wrapper {
         display: inline-block;
