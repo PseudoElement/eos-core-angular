@@ -2,7 +2,8 @@ import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { LINEAR_TEMPLATE } from './_linear-template';
 import { EDS_CATEGORY_CL } from './category-eds.consts';
 
-export const CA_CATEGORY_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
+export const CA_CATEGORY_CL: IDictionaryDescriptor =
+    Object.assign({}, LINEAR_TEMPLATE, {
     id: 'ca-category',
     apiInstance: 'CA_CATEGORY',
     title: 'Корневые сертификаты УЦ',
@@ -49,6 +50,7 @@ export const CA_CATEGORY_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TE
                 label: 'CLASSIF_NAME',
             },
             default: null,
+            required: true,
         }
 
     ],

@@ -114,7 +114,7 @@ export interface IDictionaryDescriptor {
     dictType: E_DICT_TYPE;
     apiInstance: string;
     title: string;
-    visible?: boolean;
+    visible?: boolean; // in all-list
     actions: string[];
     fields: IFieldDescriptor[];
     keyField: string;
