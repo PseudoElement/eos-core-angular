@@ -28,7 +28,7 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
     COMMON_FIELD_ICONS,
     Object.assign({}, COMMON_FIELD_CODE, {
         key: 'RUBRIC_CODE',
-        required: true,
+        // required: true,
         length: 248,
         isUnique: true,
         uniqueInDict: true,
@@ -68,5 +68,5 @@ export const RUBRICATOR_DICT: ITreeDictionaryDescriptor = {
     quickViewFields: ['RUBRIC_CODE', 'FULLNAME', 'NOTE', 'sev'],  // CLASSIF_NAME is in shortQuickViewFields
     shortQuickViewFields: ['CLASSIF_NAME'],
     listFields: [ICONS_CONTAINER, 'CLASSIF_NAME'],
-    allVisibleFields: ['NOTE', 'FULLNAME', 'sev'],
+    allVisibleFields: ['NOTE', 'FULLNAME', 'sev', 'RUBRIC_CODE', ],
 };

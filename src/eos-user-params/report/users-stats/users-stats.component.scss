@@ -1,4 +1,5 @@
 .users-stats-wrapper {
+    border-style: solid;
     .table-stats-title {
         display: flex;
         align-items: center;
@@ -7,13 +8,22 @@
         padding-left: 10px;
     }
     .stats-list {
-        background: white;
+        background: #fafafa;
         max-height: calc(100vh - 371px);
     }
     .table-stats-wrapper {
         display: flex;
         justify-content: space-between;
         padding-left: 20px;
+        .selected-stats-title{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 11px 0;
+            align-self: center;
+            grid-column: 2;
+            max-height: 74px;
+        }
     }
     .item-count {
         align-self: center;
@@ -96,6 +106,7 @@
     }
     .mar-items4 {
         padding: 10px 10px 20px 10px;
+        border-bottom: 1px solid #e6e6e6;
     }
     .cont-items {
         display: flex;

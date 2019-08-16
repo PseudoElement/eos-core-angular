@@ -8,7 +8,8 @@
 
     .dictionary {
         height: 100px;
-        flex-basis: calc((100% - 4*10px) / 4);
+        // flex-basis: calc((100% - 4*10px) / 4);
+        flex-basis: calc((100% - 4*10px) / 1);
         margin-right: 10px;
         margin-bottom: 10px;
         border-radius: 0;
@@ -16,10 +17,28 @@
         overflow: hidden;
 
         &.btn {
+            &:disabled {
+                opacity: 0.4;
+                background-color: #eeeeee;
+                color: #000000;
+            }
+
             min-width: 400px;
             max-width: 490px;
             padding: 0;
+            position: relative;
+            .text {
+                max-height: 52px;
+                position: absolute;
+                display: inline-block;
+                top: 38px;
+                left: 112px;
+                width: calc(100% - 120px);
+                overflow: hidden;
+                white-space: normal;
+            }
         }
+
 
         .text {
             position: relative;

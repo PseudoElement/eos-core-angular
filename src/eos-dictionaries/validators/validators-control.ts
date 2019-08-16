@@ -8,8 +8,8 @@ export class ValidatorsControl {
 
     static optionInvalidValue = -0xDEADBEEF;
 
-    static appendValidator(control: AbstractControl, fn: ValidatorFn): any {
-        const v = [fn];
+    static appendValidator(control: AbstractControl, fn: ValidatorFn | ValidatorFn[]): any {
+        const v = Array.isArray(fn) ? fn : [fn];
 
         if (control.validator) {
             v.push(control.validator);
@@ -44,6 +44,25 @@ export class ValidatorsControl {
             return null;
         };
    }
+
+   static controlsNonUniq(control1: any, control2: any, err: string, ignoreCase: boolean): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: any } => {
+            if (control1 && control2) {
+                if (control1.value && control2.value) {
+                    if (!ignoreCase) {
+                        if (control1.value === control2.value) {
+                            return { valueError: err};
+                        }
+                    } else {
+                        if (String(control1.value).toUpperCase() === String(control2.value).toUpperCase()) {
+                            return { valueError: err};
+                        }
+                    }
+                }
+            }
+            return null;
+        };
+    }
 
    static optionsCorrect(options: any[]) {
         return (control: AbstractControl): { [key: string]: any } => {

@@ -410,11 +410,19 @@
     &.eos-icon-close-folder-blue {
         background-image: url("../assets/icons/Open-Close-Folder-Blue.svg");
     }
+    &.eos-icon-close-folder-grey {
+        background-image: url("../assets/icons/Open-Close-Folder-Grey.svg");
+    }
     &.eos-icon-close-folder-white {
         background-image: url("../assets/icons/Open-Close-Folder-White.svg");
     }
     &.eos-icon-open-folder-blue {
         background-image: url("../assets/icons/Open-Close-Folder-Blue.svg");
+        transition: 0ms;
+        transform: rotate(90deg);
+    }
+    &.eos-icon-open-folder-grey {
+        background-image: url("../assets/icons/Open-Close-Folder-Grey.svg");
         transition: 0ms;
         transform: rotate(90deg);
     }
@@ -685,6 +693,9 @@
     &.eos-icon-department-blue {
         background-image: url("../assets/icons/dict/Department-Blue.svg")
     }
+    &.eos-icon-department-grey {
+        background-image: url("../assets/icons/dict/Department-Grey.svg")
+    }
     &.eos-icon-address-category-blue {
         background-image: url("../assets/icons/dict/Address-Category-Blue.svg")
     }
@@ -732,6 +743,9 @@
     }
     &.eos-icon-new-doc-blue {
         background-image: url("../assets/icons/dict/New-Doc-Blue.svg")
+    }
+    &.eos-icon-new-doc-grey {
+        background-image: url("../assets/icons/dict/New-Doc-Grey.svg")
     }
     &.eos-icon-shared-folder-blue {
         background-image: url("../assets/icons/dict/Shared-Folder-Blue.svg")
@@ -885,5 +899,8 @@
     }
     &.eos-icon-share-dark-blue{
         background-image: url("../assets/icons/dict/Share-Dark-Blue.svg")
+    }
+    &.eos-icon-DeepUser-Blue {
+        background-image: url("../assets/icons/User-Blue.svg")
     }
 }

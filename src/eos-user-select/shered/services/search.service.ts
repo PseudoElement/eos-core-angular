@@ -19,11 +19,11 @@ export class SearchServices {
 
     searchPrepareCardAndFullDue(config: USERSRCH, flagTab: boolean): Promise<any> {
         let cardQuery, fullDueQuery;
-        fullDueQuery = { SURNAME: `%${config.fullDueName}%` };
+        fullDueQuery = { SURNAME: `"${config.fullDueName}"` };
         if (flagTab) {
-            cardQuery = { CARD_NAME: `%${config.CARD}%` };
+            cardQuery = { CARD_NAME: `"${config.CARD}"` };
         } else {
-            cardQuery = { CLASSIF_NAME: `%${config.DEPARTMENT}%` };
+            cardQuery = { CLASSIF_NAME: `"${config.DEPARTMENT}"` };
         }
         const queryCard = this.getSearchDepartment(cardQuery);
         const queryFullDuename = this.getSearchDepartment(fullDueQuery);
@@ -55,7 +55,7 @@ export class SearchServices {
     }
 
     searchCardOneParam(config: USERSRCH): Promise<any> {
-        const dueQuery = { SURNAME: `${config.fullDueName}%` };
+        const dueQuery = { SURNAME: `"${config.fullDueName}"` };
         return this.getSearchDepartment(dueQuery).then((data: DEPARTMENT[]) => {
             if (!data.length) {
                 console.log('Поиск не дал результатов');
@@ -73,9 +73,9 @@ export class SearchServices {
     searchCardOneCardParam(config: USERSRCH, flagTab: boolean): Promise<any> {
         let dueQuery;
         if (flagTab) {
-            dueQuery = { CARD_NAME: `%${config.CARD}%` };
+            dueQuery = { CARD_NAME: `"${config.CARD}"` };
         } else {
-            dueQuery = { CLASSIF_NAME: `%${config.DEPARTMENT}%` };
+            dueQuery = { CLASSIF_NAME: `"${config.DEPARTMENT}"` };
         }
         return this.getSearchDepartment(dueQuery).then((deepCard: DEPARTMENT[]) => {
             if (deepCard.length) {
@@ -137,13 +137,13 @@ export class SearchServices {
             }
         };
         if (config.SURNAME) {
-            query.USER_CL.criteries['SURNAME_PATRON'] = `%${config.SURNAME}%`;
+            query.USER_CL.criteries['SURNAME_PATRON'] = `"${config.SURNAME}"`;
         }   else {
             if (due) {
                 query.USER_CL.criteries['DUE_DEP'] = due;
             }
             if (config.LOGIN) {
-                query.USER_CL.criteries['CLASSIF_NAME'] = `%${config.LOGIN}%`;
+                query.USER_CL.criteries['CLASSIF_NAME'] = `"${config.LOGIN}"`;
             }
         }
         return this._pipApisrv.read(query).then((users: USER_CL[]) => {

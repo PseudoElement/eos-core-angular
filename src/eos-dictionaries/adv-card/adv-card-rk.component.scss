@@ -31,6 +31,23 @@
         display: inline-block;
     }
 
+    .span-one-by-one {
+        display: inline-flex;
+        flex-direction: row;
+        align-items: flex-start;
+        .col1 {
+            margin-left: 0px;
+        }
+        .col2 {
+            margin-left: 10px;
+            padding-top: 21px;
+            min-width: 250px;
+        }
+        .col3 {
+            margin-left: 10px;
+            padding-top: 32px;
+        }
+    }
 
     label {
         font-weight: normal;

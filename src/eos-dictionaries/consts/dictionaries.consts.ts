@@ -24,6 +24,7 @@ import {NOMENKL_DICT} from './dictionaries/nomenkl.const';
 import {EDS_CATEGORY_CL} from './dictionaries/category-eds.consts';
 import { CALENDAR_DICT } from './dictionaries/calendar.consts';
 import {Templates} from './dictionaries/templates.consts';
+import { CA_CATEGORY_CL } from './dictionaries/ca-category.consts';
 
 export const DICTIONARIES = [
     /* tree dictionaries */
@@ -43,6 +44,7 @@ export const DICTIONARIES = [
     RESOL_CATEGORY_DICT,
     RESPRJ_PRIORITY_DICT,
     SECURITY_DICT,
+    CA_CATEGORY_CL,
     SIGN_KIND_DICT,
     STATUS_EXEC_DICT,
     STATUS_REPLY_DICT,

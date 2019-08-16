@@ -15,6 +15,7 @@ import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tr
     templateUrl: 'right-department.component.html'
 })
 export class RightDepertmentComponent implements OnInit {
+    @Input() editMode: boolean;
     @Input() selectedNode: NodeAbsoluteRight;
     @Input() curentUser: IParamUserCl;
     @Output() Changed = new EventEmitter();
@@ -39,7 +40,7 @@ export class RightDepertmentComponent implements OnInit {
         this.isLoading = true;
         this.userDep = this.curentUser['USERDEP_List'];
         this.funcNum = +this.selectedNode.key + 1;
-        if (this.selectedNode.isCreate) {
+        if (this.selectedNode.isCreate &&  this.userDep.filter(i => i['FUNC_NUM'] === this.funcNum).length === 0) {
             this.addDep();
             this.isLoading = false;
             return;

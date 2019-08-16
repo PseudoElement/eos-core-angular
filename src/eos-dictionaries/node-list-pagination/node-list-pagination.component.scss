@@ -108,52 +108,18 @@
 }
 
 .prot-dictionary {
-    @media(min-width: 1500px) and  (max-width: 2000px){
+    @media(min-width: 1451px) and  (max-width: 2000px){
         .pagination-option {
-            &.full {
-                left: 430px;
-                right: 430px;
-            }
-            &.info {
-                left: 430px;
-                right: 430px;
-            }
-            &.tree {
-                left: 430px / 2;
-                right: 430px / 2;
-            }
+            display: grid;
+            width: 800px;
+            margin: auto;
         }
     }
-    @media(min-width: 1250px) and  (max-width: 1500px){
+    @media(min-width: 0px) and  (max-width: 1450px){
         .pagination-option {
-            &.full {
-                left: 320px;
-                right: 100px;
-            }
-            &.info {
-                left: 320px;
-                right: 100px;
-            }
-            &.tree {
-                left: 320px / 2;
-                right: 100px / 2;
-            }
-        }
-    }
-    @media(min-width: 0px) and  (max-width: 1250px){
-        .pagination-option {
-            &.full {
-                left: 320px;
-                right: 10px;
-            }
-            &.info {
-                left: 320px;
-                right: 10px;
-            }
-            &.tree {
-                left: 320px / 2;
-                right: 10px / 2;
-            }
+            margin-left: 315px;
+            display: grid;
+            width: 800px;
         }
     }
 }

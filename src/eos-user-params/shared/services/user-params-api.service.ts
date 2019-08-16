@@ -2,9 +2,9 @@ import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { UserPaginationService } from '../services/users-pagination.service';
-import { DEPARTMENT, DOCGROUP_CL } from 'eos-rest';
+import { DEPARTMENT, DOCGROUP_CL, USER_CL } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
-import { Subject ,  Observable } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { IConfig } from 'eos-user-select/shered/interfaces/user-select.interface';
 import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-select';
 import { HelpersSortFunctions } from '../../../eos-user-select/shered/helpers/sort.helper';
@@ -82,7 +82,7 @@ export class UserParamApiSrv {
             if (!dueDep || dueDep === '0.') {
                 q = ALL_ROWS;
             } else {
-                q = PipRX.criteries({ DUE_DEP: `${dueDep}%` });
+                q = PipRX.criteries({ DUE_DEP: `${dueDep}%`}, );
             }
         }
         if (this.configList.shooseTab === 1) {
@@ -94,7 +94,7 @@ export class UserParamApiSrv {
     getUsers(dueDep?: string): Promise<any> {
         this.dueDep = dueDep || '0.';
         const q = this.getQueryforDB(dueDep);
-        const query = { USER_CL: q };
+        const query = { USER_CL: q, loadmode: 'Table' };
         return this.getData(query)
             .then(data => {
                 const prepData = data.filter(user => user['ISN_LCLASSIF'] !== 0);
@@ -145,7 +145,7 @@ export class UserParamApiSrv {
         }
     }
 
-    prepareListUsers(): {techUser: UserSelectNode[], deletedUser: UserSelectNode[], happyUser: UserSelectNode[]} {
+    prepareListUsers(): { techUser: UserSelectNode[], deletedUser: UserSelectNode[], happyUser: UserSelectNode[] } {
         this.users_pagination.UsersList = this.Allcustomer.slice();
         const techUser = this.damnTesterTechUser();
         const deletedUser = this.damnTesterDeletedUser();
@@ -275,61 +275,62 @@ export class UserParamApiSrv {
     }
 
     updateDepartMent(pageList, tabs) {
-        const setQueryResult = new Set();
-        let stringQuery: Array<string> = [];
-        let valueForPadQuery = [];
-        let padQuery;
-        let parseStringUserDue = [];
-        pageList.forEach(user => {
-            if (user.DUE_DEP) {
-                stringQuery.push(user.DUE_DEP);
-            }
+        // const setQueryResult = new Set();
+        // let stringQuery: Array<string> = [];
+        // let valueForPadQuery = [];
+        // let padQuery;
+        // let parseStringUserDue = [];
+        pageList = pageList.map((user: USER_CL) => {
+            user['DEPARTMENT'] = !user.NOTE || user.NOTE === 'null' ? '...' : user.NOTE;
+            return user;
         });
-        stringQuery.length === 0 ? stringQuery = ['0000'] : stringQuery = stringQuery;
-        return this.getDepartment(stringQuery)
-            .then(departments => {
-                departments.forEach(el => {
-                    if (el.ISN_HIGH_NODE >= 0) {
-                        parseStringUserDue = el.DUE.split('.');
-                        setQueryResult.add(parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.');
-                    }
-                });
-                pageList.map(user => {
-                    const findDepartInfo = departments.filter(dapartInfo => {
-                        return user.DUE_DEP === dapartInfo.DUE;
-                    });
-                    if (findDepartInfo.length > 0) {
-                        user['DEPARTMENT_SURNAME'] = findDepartInfo[0].SURNAME;
-                        user['DEPARTMENT_DYTU'] = findDepartInfo[0].DUTY;
-                        user['DEPARTMENT_DELETE'] = findDepartInfo[0].DELETED;
-                    } else {
-                        user['DEPARTMENT_SURNAME'] = '';
-                        user['DEPARTMENT_DYTU'] = '';
-                        user['DEPARTMENT_DELETE'] = 0;
-                    }
-                });
-                valueForPadQuery = Array.from(setQueryResult);
-                valueForPadQuery.length > 0 ? padQuery = valueForPadQuery : padQuery = ['0000'];
-                return this.getDepartment(padQuery)
-                    .then(deepInfo => {
-                        pageList.map(user => {
-                            const findDue = deepInfo.filter(dueDeep => {
-                                if (user.DUE_DEP === null) {
-                                    return false;
-                                } else {
-                                    parseStringUserDue = user.DUE_DEP.split('.');
-                                    return parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.' === dueDeep.DUE;
-                                }
-                            });
-                            if (findDue.length > 0) {
-                                user['DEPARTMENT'] = tabs === 0 ? (findDue[0].DUE === '0.' ? 'Все подраздения' : findDue[0].CLASSIF_NAME) : findDue[0].CARD_NAME;
-                            } else {
-                                user['DEPARTMENT'] = '...';
-                            }
-                        });
-                        return pageList;
-                    });
-            });
+        return Promise.resolve(pageList);
+        //   stringQuery.length === 0 ? stringQuery = ['0000'] : stringQuery = stringQuery;
+        // return this.getDepartment(stringQuery)
+        //     .then(departments => {
+        //         departments.forEach(el => {
+        //             if (el.ISN_HIGH_NODE >= 0) {
+        //                 parseStringUserDue = el.DUE.split('.');
+        //                 setQueryResult.add(parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.');
+        //             }
+        //         });
+        //         pageList.map(user => {
+        //             const findDepartInfo = departments.filter(dapartInfo => {
+        //                 return user.DUE_DEP === dapartInfo.DUE;
+        //             });
+        //             if (findDepartInfo.length > 0) {
+        //                 user['DEPARTMENT_SURNAME'] = findDepartInfo[0].SURNAME;
+        //                 user['DEPARTMENT_DYTU'] = findDepartInfo[0].DUTY;
+        //                 user['DEPARTMENT_DELETE'] = findDepartInfo[0].DELETED;
+        //                 user['DEEP_DATA'] = findDepartInfo[0];
+        //             } else {
+        //                 user['DEPARTMENT_SURNAME'] = '';
+        //                 user['DEPARTMENT_DYTU'] = '';
+        //                 user['DEPARTMENT_DELETE'] = 0;
+        //             }
+        //         });
+        //         valueForPadQuery = Array.from(setQueryResult);
+        //         valueForPadQuery.length > 0 ? padQuery = valueForPadQuery : padQuery = ['0000'];
+        //         return this.getDepartment(padQuery)
+        //             .then(deepInfo => {
+        //                 pageList.map(user => {
+        //                     const findDue = deepInfo.filter(dueDeep => {
+        //                         if (user.DUE_DEP === null) {
+        //                             return false;
+        //                         } else {
+        //                             parseStringUserDue = user.DUE_DEP.split('.');
+        //                             return parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.' === dueDeep.DUE;
+        //                         }
+        //                     });
+        //                     if (findDue.length > 0) {
+        //                         user['DEPARTMENT'] = tabs === 0 ? (findDue[0].DUE === '0.' ? 'Все подраздения' : findDue[0].CLASSIF_NAME) : findDue[0].CARD_NAME;
+        //                     } else {
+        //                         user['DEPARTMENT'] = '...';
+        //                     }
+        //                 });
+        //                 return pageList;
+        //             });
+        //     });
     }
     initConfigTitle(dueDep?: string) {
         if (!this.configList.titleDue || !dueDep) {

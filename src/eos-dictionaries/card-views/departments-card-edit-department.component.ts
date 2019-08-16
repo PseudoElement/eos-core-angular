@@ -114,13 +114,20 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
     }
 
     private updateForm(formChanges: any) {
-        const updates = {};
-        // toggle CARD_NAME
-        this.toggleInput(formChanges['rec.CARD_FLAG'], 'rec.CARD_NAME', formChanges, updates);
+        if (this.previousValues['rec.CARD_FLAG'] !== formChanges['rec.CARD_FLAG']) {
+            this.previousValues['rec.CARD_FLAG'] = formChanges['rec.CARD_FLAG'];
+            if (!formChanges['rec.CARD_FLAG']) {
+                if (!!this.hasOrganization) {
+                    this._zone.run(() => this.unbindOrganization());
+                }
+                this.setValue('rec.CARD_NAME', null);
+                this.form.controls['rec.CARD_NAME'].disable();
+            } else {
+                this.form.controls['rec.CARD_NAME'].enable();
+            }
 
-        if (Object.keys(updates).length) {
-            this.form.patchValue(updates);
         }
+
         if (this.previousValues['rec.NUMCREATION_FLAG'] !== formChanges['rec.NUMCREATION_FLAG']) {
             this.previousValues['rec.NUMCREATION_FLAG'] = formChanges['rec.NUMCREATION_FLAG'];
             this.form.controls['rec.DEPARTMENT_INDEX'].updateValueAndValidity();

@@ -8,7 +8,7 @@ import { BsModalService } from 'ngx-bootstrap';
 @Injectable()
 export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
     @Input() dataController: AdvCardRKDataCtrl;
-    @Input() fieldsDescription: any;
+    // @Input() fieldsDescription: any;
     @Input() data: any;
     @Input() dgStoredValues: any;
     @Input() inputs: any;

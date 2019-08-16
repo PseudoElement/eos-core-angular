@@ -40,35 +40,38 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
         private _RemasterService: RemasterService,
     ) {
         this._RemasterService.cancelEmit
-        .pipe(
-            takeUntil(this.ngUnsub)
-        )
-        .subscribe(() => {
-            this.cancel();
-        });
+            .pipe(
+                takeUntil(this.ngUnsub)
+            )
+            .subscribe(() => {
+                this.cancel();
+            });
         this._RemasterService.defaultEmit
-        .pipe(
-            takeUntil(this.ngUnsub)
-        )
-        .subscribe(() => {
-            this.default();
-        });
+            .pipe(
+                takeUntil(this.ngUnsub)
+            )
+            .subscribe(() => {
+                this.default();
+            });
         this._RemasterService.submitEmit
-        .pipe(
-            takeUntil(this.ngUnsub)
-        )
-        .subscribe(() => {
-            this.setNewValInputs();
-            this.form.disable({ emitEvent: false });
-        });
+            .pipe(
+                takeUntil(this.ngUnsub)
+            )
+            .subscribe(() => {
+                this.setNewValInputs();
+                this.form.disable({ emitEvent: false });
+            });
         this._RemasterService.editEmit
-        .pipe(
-            takeUntil(this.ngUnsub)
-        )
-        .subscribe(data => {
-            this.form.enable({ emitEvent: false });
-            this.checkDisableInputs();
-        });
+            .pipe(
+                takeUntil(this.ngUnsub),
+            )
+            .subscribe(data => {
+                setTimeout(() => {
+                    this.form.enable({ emitEvent: false });
+                    this.checkDisableInputs();
+                });
+
+            });
     }
 
     ngOnInit() {
@@ -93,13 +96,13 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
             return;
         }
         if (+this.accessSustem[3] === 0 && +this.accessSustem[15] === 1) {
-            this.form.controls['rec.LOCKFILE_SSCAN'].disable({onlySelf: true, emitEvent: false});
+            this.form.controls['rec.LOCKFILE_SSCAN'].disable({ onlySelf: true, emitEvent: false });
             return;
         }
         if (+this.accessSustem[3] === 1 && +this.accessSustem[15] === 0) {
-            this.form.controls['rec.SHABLONBARCODE'].disable({onlySelf: true, emitEvent: false});
-            this.form.controls['rec.SHABLONBARCODEL'].disable({onlySelf: true, emitEvent: false});
-            this.form.controls['rec.SAVEFORMAT'].disable({onlySelf: true, emitEvent: false});
+            this.form.controls['rec.SHABLONBARCODE'].disable({ onlySelf: true, emitEvent: false });
+            this.form.controls['rec.SHABLONBARCODEL'].disable({ onlySelf: true, emitEvent: false });
+            this.form.controls['rec.SAVEFORMAT'].disable({ onlySelf: true, emitEvent: false });
             return;
         }
     }
@@ -149,22 +152,22 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
 
     subscribeChange(): void {
         this.form.valueChanges
-        .pipe(
-            takeUntil(this.ngUnsub)
-        )
-        .subscribe(data => {
-            Object.keys(data).forEach(item => {
-                if (!this.checkChanges(data, item)) {
-                    this.countError++;
-                }
+            .pipe(
+                takeUntil(this.ngUnsub)
+            )
+            .subscribe(data => {
+                Object.keys(data).forEach(item => {
+                    if (!this.checkChanges(data, item)) {
+                        this.countError++;
+                    }
+                });
+                this.pushChenge.emit({
+                    btn: this.countError > 0,
+                    data: this.newDataMap
+                });
+                this.countError > 0 ? this.btnDisabled = true : this.btnDisabled = false;
+                this.countError = 0;
             });
-            this.pushChenge.emit({
-                btn: this.countError > 0,
-                data: this.newDataMap
-            });
-            this.countError > 0 ? this.btnDisabled = true : this.btnDisabled = false;
-            this.countError = 0;
-        });
     }
 
     checkChanges(data, item: string): boolean {
@@ -202,7 +205,7 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
     }
     cancel(): void {
         if (this.btnDisabled) {
-            this.pretInputs();
+         //   this.pretInputs();
             Object.keys(this.inputs).forEach(input => {
                 this.form.controls[input].patchValue(this.inputs[input].value);
             });

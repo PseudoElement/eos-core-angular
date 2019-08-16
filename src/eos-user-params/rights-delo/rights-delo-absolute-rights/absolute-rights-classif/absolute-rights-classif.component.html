@@ -5,11 +5,12 @@
         <span *ngIf="node.expandable"
             class="eos-icon icon list-triangle small"
             (click)="expendList(node)"
-            [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded, 'eos-icon-close-folder-blue': !node.isExpanded}"
+            [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded && editMode, 'eos-icon-close-folder-blue': !node.isExpanded && editMode, 'eos-icon-close-folder-grey': !node.isExpanded && !editMode, 'eos-icon-open-folder-grey': node.isExpanded && !editMode}"
         ></span>
 
         <label class="checkbox classif-list-tech-user">
             <input type="checkbox"
+                [disabled]="!editMode"
                 hide
                 [(ngModel)]="node.value"
             >
@@ -27,26 +28,29 @@
                         tooltip="Добавить"
                         placement="bottom"
                         container="body"
+                        [disabled]="!editMode"
                         containerClass="tooltip-info"
                         (click)="[node.addInstance(),  hideToolTip()]"
                     >
-                        <span class="eos-icon eos-icon-plus-blue small"></span>
+                        <span class="eos-icon small" [ngClass]="{'eos-icon-plus-blue': editMode, 'eos-icon-plus-grey': !editMode}"></span>
                     </button>
                     <button
                         class="btn"
                         tooltip="Удалить"
                         placement="bottom"
                         containerClass="tooltip-info"
-                        [disabled]="!node.curentSelectedNode"
+                        [disabled]="!node.curentSelectedNode || !editMode"
                         (click)="[node.DeleteInstance(), hideToolTip()]"
                     >
-                        <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+                        <span class="eos-icon small" [ngClass]="{'eos-icon-bin-forever-blue': editMode, 'eos-icon-bin-forever-grey': !editMode}"></span>
                     </button>
                 </div>
 
                 <eos-list-doc-tree
                     class="tree-classif-node"
                     [listNode]="node.listContent"
+                    [systemTech]="node.key"
+                    [editMode]="editMode"
                     (select)="node.select($event)"
                     (checkedNode)="node.checkedNode($event)"
                 ></eos-list-doc-tree>

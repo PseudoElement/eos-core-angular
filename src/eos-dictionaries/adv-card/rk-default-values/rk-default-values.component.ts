@@ -1,5 +1,6 @@
 import { Component, OnChanges, SimpleChanges, } from '@angular/core';
 import { RKNomenkBasePage } from './rk-nomenk-base-page';
+import { DAYS_TYPE_OPTS_VARIATIONS } from './rk-default-const';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
 @Component({
@@ -13,8 +14,10 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
     flagEn_intAddr: boolean;
     flagEn_doc: boolean;
     flagEn_spinnum: boolean;
+    dayTypeTitle: string;
 
     ngOnChanges(changes: SimpleChanges) {
+        this.dayTypeTitle = DAYS_TYPE_OPTS_VARIATIONS[0].daysLabel;
         this.selOpts.events = {
             select: this.journalNomencClickSel.bind(this),
             remove: this.journalNomencClickRemove.bind(this),
@@ -34,6 +37,9 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
 
             case 'DOC_DEFAULT_VALUE_List.TERM_EXEC': { // Срок исполнения
                 this.form.controls['DOC_DEFAULT_VALUE_List.TERM_EXEC_W'].updateValueAndValidity();
+                const lbls = this._termExecOptsByValue(newValue);
+                this.inputs['DOC_DEFAULT_VALUE_List.TERM_EXEC_TYPE'].options = lbls.options;
+                this.dayTypeTitle = lbls.daysLabel;
                 break;
             }
             // Передача документов
@@ -142,4 +148,32 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
     onTabInit (dgStoredValues: any, values: any[]) {
         super.onTabInit(dgStoredValues, values);
     }
+
+    private _termExecOptsByValue(value: number): any {
+
+        const mod100 = value % 100;
+
+        if (mod100 >= 10 && mod100 <= 20) {
+            return DAYS_TYPE_OPTS_VARIATIONS[0];
+        }
+
+        const mod10 = value % 10;
+        switch (mod10) {
+            case 1:
+                return DAYS_TYPE_OPTS_VARIATIONS[1];
+            case 2:
+            case 3:
+            case 4:
+                return DAYS_TYPE_OPTS_VARIATIONS[2];
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 0:
+            default:
+                return DAYS_TYPE_OPTS_VARIATIONS[0];
+        }
+    }
+
 }

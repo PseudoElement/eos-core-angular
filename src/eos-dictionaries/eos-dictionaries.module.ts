@@ -91,6 +91,7 @@ import { CalendarFormComponent } from './dict-forms/calendar-form/calendar-form.
 import { TemplatesCardComponent } from './card-views/templates-card/templates-card.component';
 
 import { NomenkNodeInfoComponent } from './node-info/nomenk-node-info.component';
+import { LinkNodeInfoComponent } from './node-info/link-node-info.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -134,6 +135,7 @@ import { NomenkNodeInfoComponent } from './node-info/nomenk-node-info.component'
         DepartmentNodeInfoComponent,
         NomenkNodeInfoComponent,
         CabinetNodeInfoComponent,
+        LinkNodeInfoComponent,
         LongTitleHintComponent,
         SecurityCardEditComponent,
         SecurityNodeInfoComponent,

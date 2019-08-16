@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { FormGroup, ValidationErrors } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -18,11 +18,13 @@ import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../shared/services/helper-error.services';
+import { EosStorageService } from '../../app/services/eos-storage.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { NavParamService } from 'app/services/nav-param.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_UPDATE_USER } from '../../eos-user-select/shered/consts/confirm-users.const';
+import { IMessage } from 'eos-common/interfaces';
 
 @Component({
     selector: 'eos-params-base-param',
@@ -71,6 +73,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     constructor(
         private _router: Router,
+        private _snapShot: ActivatedRoute,
         private _msgSrv: EosMessageService,
         private _apiSrv: UserParamApiSrv,
         private _inputCtrlSrv: InputParamControlService,
@@ -81,7 +84,9 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private modalService: BsModalService,
         private _confirmSrv: ConfirmWindowService,
         private apiSrvRx: PipRX,
-    ) { }
+        private _storage: EosStorageService,
+    ) {
+    }
     ngOnInit() {
         this._userParamSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERCARD_List',
@@ -89,12 +94,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }).then(() => {
             this.selfLink = this._router.url.split('?')[0];
             this.init();
+            if (this._snapShot.snapshot.queryParams.is_create && !this.curentUser['IS_PASSWORD']) {
+                this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
+            }
             this.editModeF();
             this._subscribe();
         })
-        .catch(err => {
+            .catch(err => {
 
-        });
+            });
         this._userParamSrv
             .saveData$
             .pipe(
@@ -141,7 +149,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
         this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
-
         this.isLoading = false;
         this.subscribeForms();
         return Promise.resolve();
@@ -250,7 +257,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     delete newD['DUE_DEP_NAME'];
                 });
             }
-            this._nanParSrv.scanObserver(false);
+            // this._nanParSrv.scanObserver(false);
             query.push({
                 method: 'MERGE',
                 requestUri: `USER_CL(${id})`,
@@ -312,6 +319,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
 
         }).catch(error => {
+            this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
             this.cancel();
             this._errorSrv.errorHandler(error);
         });
@@ -405,6 +413,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
     }
     close() {
+        this._storage.setItem('saveQuickSearch', 'true');
         this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 
@@ -633,6 +642,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     this.formControls.controls['SELECT_ROLE'].enable();
                 }
             });
+    }
+    private messageAlert({ title, msg, type }: IMessage) {
+        this._msgSrv.addNewMessage(
+            {
+                type,
+                msg,
+                title,
+            }
+        );
     }
 
 }

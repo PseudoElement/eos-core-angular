@@ -29,11 +29,13 @@ export class GrifsComponent implements OnInit, OnDestroy {
             takeUntil(this.Unsub)
         )
         .subscribe(data => {
-               if (data) {
-                   this.reset();
-               } else {
+            if (data) {
+                if (this.saveOrigin !== undefined) {
+                    this.reset();
+                }
+            } else {
                 this.updateInfo();
-               }
+            }
         });
         this._limitservise.editEmit
         .pipe(

@@ -104,7 +104,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         return res;
     }
 
-    public fillDeclineFields(opt: IToDeclineFields): void {
+    public fillDeclineFields(opt: IToDeclineFields, fio: string = null): void {
         const gender = this.getValue('printInfo.GENDER');
         const field: FieldsDecline = {
             DUTY: this.getValue('rec.DUTY') || '',
@@ -155,18 +155,30 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
         }
 
         if (opt.fio) {
+            if (gender !== null) {
+                field['GENDER'] = gender;
+            }
+
             const data: any = Object.assign(field);
                 // const rn = new RussianName('Петрова Зоя Сергеевна');
             if (data['SURNAME'] + data['NAME'] + data['PATRON'] === '') {
                 const sn = this.getValue('rec.SURNAME');
                 data['SURNAME'] = (sn || '').replace(/\./g, ' ');
             }
-
-            const rn = new RussianName(data['SURNAME'], data['NAME'], data['PATRON'],
-                data['GENDER'] === 0 ? RussianNameProcessor.sexM :
-                data['GENDER'] === 1 ? RussianNameProcessor.sexF :
-                null
-            );
+            let rn = null;
+            if (fio === null) {
+                rn = new RussianName(data['SURNAME'], data['NAME'], data['PATRON'],
+                    data['GENDER'] === 0 ? RussianNameProcessor.sexM :
+                    data['GENDER'] === 1 ? RussianNameProcessor.sexF :
+                    null
+                );
+            } else {
+                rn = new RussianName(fio, '', '',
+                    data['GENDER'] === 0 ? RussianNameProcessor.sexM :
+                    data['GENDER'] === 1 ? RussianNameProcessor.sexF :
+                    null
+                );
+            }
 
             if (opt.gender) {
                 data['GENDER'] = rn.sex === RussianNameProcessor.sexF ? 1 :
@@ -283,11 +295,18 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             this.fillDeclineFields({fio: true});
         }
 
-        this.prevValues = formChanges;
 
         if (setSurname) {
             this.setValue('rec.SURNAME', setSurname);
+        } else if (this.prevValues['rec.SURNAME'] !== formChanges['rec.SURNAME']) {
+            this.prevValues['rec.SURNAME'] = formChanges['rec.SURNAME'];
+            let fio: string = this.prevValues['rec.SURNAME'];
+            if (fio) { fio = fio.replace(/\./g, ' '); }
+
+            this.fillDeclineFields({fio: true}, fio);
         }
+
+        this.prevValues = formChanges;
 
     }
 }

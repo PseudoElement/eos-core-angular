@@ -15,6 +15,7 @@ import {EosDictionaryNode} from './eos-dictionary-node';
 import {DictionaryDescriptorService} from 'eos-dictionaries/core/dictionary-descriptor.service';
 import {OrganizationDictionaryDescriptor} from 'eos-dictionaries/core/organization-dictionary-descriptor';
 import {EosUtils} from 'eos-common/core/utils';
+import { ISelectOption } from 'eos-common/interfaces';
 
 // import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 
@@ -210,6 +211,15 @@ export class EosDictionary {
     }
 
     getFullNodeInfo(nodeId: string): Promise<EosDictionaryNode> {
+        // TODO: обьеденить концепции getNodeRelatedData и loadRelatedFieldsOptions
+
+        // const infoFields = this.descriptor.record.getInfoView({});
+        // const updatefields = [].concat(infoFields);
+        // const existNode = this.getNode(nodeId);
+        // return this.loadRelatedFieldsOptions(updatefields, [existNode], false).then (() => {
+        //     return existNode;
+        // });
+
         const existNode = this.getNode(nodeId);
         if (!existNode || !existNode.relatedLoaded) {
             return this.getNodeByNodeId(nodeId)
@@ -221,6 +231,7 @@ export class EosDictionary {
         return this.getNodeByNodeId(nodeId)
             .then((node) => this.getNodeRelatedData(node));
         */
+
     }
 
     getNodeByNodeId(nodeId: string): Promise<EosDictionaryNode> {
@@ -417,39 +428,59 @@ export class EosDictionary {
     // }
 
 
-    loadRelatedFieldsOptions(updatefields: IFieldView[]): Promise<any> {
-
-        return this.descriptor.getRelatedFields(updatefields.filter(i => i.dictionaryId)
-                                .map(i => i.dictionaryId ? i.dictionaryId : null))
+    loadRelatedFieldsOptions(updatefields: IFieldView[], nodes: EosDictionaryNode[], loadAll: boolean): Promise<any> {
+        return this.descriptor.getRelatedFields2(updatefields.filter(i => i.dictionaryId)
+                                .map(i => i.dictionaryId ? i.dictionaryId : null), nodes, loadAll)
             .then((related) => {
+                const t = this.descriptor.getMetadata();
                 updatefields.forEach((field) => {
                     if ((field.dictionaryId !== undefined)) {
                         field.options.splice(0, field.options.length);
-                        const t = this.descriptor.getMetadata();
                         // Есть таблицы с PK integer и FK string (Nomencl_cl.security)
                         const type_fk = field.dictionaryLink ? t.properties[field.dictionaryLink.fk] : null;
                         const fn = (field.dictionaryLink ? field.dictionaryLink.pk : 'ISN_LCLASSIF');
                         const ln = (field.dictionaryLink ? field.dictionaryLink.label : 'CLASSIF_NAME');
 
-                        related[field.dictionaryId].forEach((rel) => {
-                            const el = {value: rel[fn], title: rel[ln], disabled: !!rel['DELETED'] };
-                            if (type_fk === 's') {
-                                el.value = String(el.value);
-                            }
+                        if (related && related[field.dictionaryId]) {
+                            related[field.dictionaryId].forEach((rel) => {
+                                const el: ISelectOption = {value: rel[fn], title: rel[ln], disabled: !!rel['DELETED'] };
+                                if (type_fk === 's') {
+                                    el.value = String(el.value);
+                                }
+                                el.data = related[field.dictionaryId];
 
-                            field.options.push(el);
-                        });
+                                field.options.push(el);
+                            });
+                        }
                     }
                 });
             });
     }
 
-    getListView(customFields: IFieldView[]) {
+    getListViewWithRelated(customFields: IFieldView[], nodes: EosDictionaryNode[]): Promise<any> {
         const fields = this.descriptor.record.getListView({});
+        // const fields = this.descriptor.record.getFieldSet(E_FIELD_SET.list);
         const infoFields = this.descriptor.record.getInfoView({});
         const updatefields = fields.concat(customFields).concat(infoFields);
-        this.loadRelatedFieldsOptions(updatefields);
-        return fields;
+        return this.loadRelatedFieldsOptions(updatefields, nodes, false).then (() => {
+            return fields;
+        });
+
+        // const descriptor = this.dictSrv.currentDictionary.descriptor;
+        // const list = descriptor.record.getEditView({});
+
+        // this.dictSrv.currentDictionary.loadRelatedFieldsOptions(list.filter(i => i.dictionaryId), [], true).then((d) => {
+        //     for (const key in this.inputs) {
+        //         if (this.inputs.hasOwnProperty(key)) {
+        //             const input = this.inputs[key];
+        //             if (input && input.options && input.controlType === E_FIELD_TYPE.select) {
+        //                 const value = this.getValue(key);
+        //                 input.options = input.options.filter(o => (!o.disabled || String(value) === String(o.value)));
+        //             }
+        //         }
+        //     }
+        // });
+
     }
 
     getEditDescriptor(): {} {
@@ -581,8 +612,8 @@ export class EosDictionary {
         const _orderBy = orderBy || this._orderBy; // DON'T USE THIS IN COMPARE FUNC!!! IT'S OTHER THIS!!!
 
         return nodes.sort((a: EosDictionaryNode, b: EosDictionaryNode) => {
-            let _a = a.getFieldValueByName(_orderBy.fieldKey); // data.rec[_orderBy.fieldKey];
-            let _b = b.getFieldValueByName(_orderBy.fieldKey); // data.rec[_orderBy.fieldKey];
+            let _a = a.getFieldValueByName(_orderBy.fieldKey) || Number(a.id); // data.rec[_orderBy.fieldKey];
+            let _b = b.getFieldValueByName(_orderBy.fieldKey) || Number(b.id); // data.rec[_orderBy.fieldKey];
 
             if (typeof(_a) === 'number' || typeof (_b) === 'number') {
                 if (_a > _b) {

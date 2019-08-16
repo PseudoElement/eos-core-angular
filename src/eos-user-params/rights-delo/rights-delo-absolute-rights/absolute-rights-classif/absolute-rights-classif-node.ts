@@ -98,7 +98,7 @@ export class RightClassifNode {
         this._parentNode = pNode;
         this._component = component;
         const v = +(this._curentUser['TECH_RIGHTS'][item.key - 1]);
-        if ((this.type !== E_TECH_USER_CLASSIF_CONTENT.none) && !this._parentNode.isCreate) {
+        if ((this.type !== E_TECH_USER_CLASSIF_CONTENT.none) && !this._parentNode.isCreate || this._component.userTechList.filter((i) => i['FUNC_NUM'] === this.key).length !== 0) {
             this._listUserTech = this._component.userTechList.filter((i) => i['FUNC_NUM'] === this.key);
         }
         if (this.type !== E_TECH_USER_CLASSIF_CONTENT.none) {
@@ -117,41 +117,42 @@ export class RightClassifNode {
         this._component.addInstance(this._config, this)
             .then(data => {
                 const newList: NodeDocsTree[] = [];
-                data.forEach(entity => {
-                    const newTechRight: USER_TECH = this._component.createEntyti<USER_TECH>({
-                        ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
-                        FUNC_NUM: this.key,
-                        CLASSIF_ID: E_CLASSIF_ID[(this.key.toString())],
-                        DUE: entity['DUE'],
-                        ALLOWED: this.getAllowedParent(entity['DUE']) ? 0 : 1,
-                    }, 'USER_TECH');
-                    const d = {
-                        userTech: newTechRight,
-                        instance: entity
-                    };
-                    const cfg: INodeDocsTreeCfg = {
-                        due: entity['DUE'],
-                        label: entity[this._config.label],
-                        allowed: !!newTechRight['ALLOWED'],
-                        data: d,
-                    };
-                    newList.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true));
+                if (data) {
+                    data.forEach(entity => {
+                        const newTechRight: USER_TECH = this._component.createEntyti<USER_TECH>({
+                            ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
+                            FUNC_NUM: this.key,
+                            CLASSIF_ID: E_CLASSIF_ID[(this.key.toString())],
+                            DUE: entity['DUE'],
+                            ALLOWED: this.getAllowedParent(entity['DUE']) ? 0 : 1,
+                        }, 'USER_TECH');
+                        const d = {
+                            userTech: newTechRight,
+                            instance: entity
+                        };
+                        const cfg: INodeDocsTreeCfg = {
+                            due: entity['DUE'],
+                            label: entity[this._config.label],
+                            allowed: !!newTechRight['ALLOWED'],
+                            data: d,
+                        };
+                        newList.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true));
 
-                    this._parentNode.pushChange({
-                        method: 'POST',
-                        due: entity.DUE,
-                        funcNum: this.key,
-                        data: newTechRight,
+                        this._parentNode.pushChange({
+                            method: 'POST',
+                            due: entity.DUE,
+                            funcNum: this.key,
+                            data: newTechRight,
+                        });
+                        this._listUserTech.push(newTechRight);
+                        this._component.userTechList.push(newTechRight);
                     });
-                    this._listUserTech.push(newTechRight);
-                    this._component.userTechList.push(newTechRight);
-                });
-                this.listContent = this.listContent.concat(newList);
-                this._component.Changed.emit();
-                this.isShell = false;
+            }
+            this.listContent = this.listContent.concat(newList);
+            this._component.Changed.emit();
+            this.isShell = false;
             })
             .catch((error) => {
-                console.log(error);
                 this.isShell = false;
             });
     }

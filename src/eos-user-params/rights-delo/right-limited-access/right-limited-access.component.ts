@@ -281,7 +281,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     }
     checkNewOrOld(doc: DOCGROUP_CL) {
         const arraySet = Array.from(this.delitedSetStore);
-        const find = arraySet.filter((value) => {
+        const find = arraySet.filter((value: any) => {
             return doc.DUE === value.due;
         });
         if (find.length) {

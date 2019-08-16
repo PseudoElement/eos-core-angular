@@ -29,6 +29,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     public newValueMap: Map<any, any> = new Map();
     public flagEdit: boolean = false;
     public flagBacground: boolean = false;
+    public loadCabinets: boolean = false;
     get btnDisabled() {
         return ((this.newValueMap.size === 0) && this.flagChangeCards);
     }
@@ -173,15 +174,31 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     }
 
     selectCurentCard(card: CardsClass) {
+        if (!card.cabinets.length) {
+            this.loadCabinets = true;
+            this._rightsCabinetsSrv.getCabinets(card.cardDue, card.isnClassif).then(infoCabinets => {
+                if (infoCabinets) {
+                    card.createCabinets(infoCabinets);
+                }
+                if (this.currentCard) {
+                    this.currentCard.current = false;
+                }
+                this.currentCard = card;
+                this.currentCard.current = true;
+                this.loadCabinets = false;
+                this._rightsCabinetsSrv.changeCabinets.next(this.currentCard);
+            });
+        } else {
+            if (this.currentCard) {
+                this.currentCard.current = false;
+            }
+            this.currentCard = card;
+            this.currentCard.current = true;
+            this._rightsCabinetsSrv.changeCabinets.next(this.currentCard);
+        }
        /* if (this.currentCard && !this.flagEdit) {
             return;
         }*/
-        if (this.currentCard) {
-            this.currentCard.current = false;
-        }
-        this.currentCard = card;
-        this.currentCard.current = true;
-        this._rightsCabinetsSrv.changeCabinets.next(this.currentCard);
     }
     removeCards() {
         if (!this.currentCard.homeCard) {

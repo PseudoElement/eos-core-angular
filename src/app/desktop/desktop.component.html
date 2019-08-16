@@ -4,11 +4,13 @@
             <bs-sortable
                 [(ngModel)]="referencesList"
                 [itemTemplate]="referenceTemplate"
-                itemClass="sortable-item xl-font"
+                itemClass="sortable-item xl-font edited"
                 itemActiveClass="sortable-item-active"
                 placeholderItem="На этом рабочем столе нет ссылок"
                 placeholderClass="placeholderStyle"
                 wrapperClass="sortable-wrapper"
+                force="true"
+                (dragend)="dragEndEvent($event)"
             ></bs-sortable>
         </div>
 
@@ -50,17 +52,19 @@
             id="title"
             name="title"
             #title
+            type="text"
             class="title-input form-control light xl-font"
             [ngModel]="item.value.title"
-            (focus)="setCursor($event)"
+            (focus)="onFocus($event)"
             (ngModelChange)="changeName($event)"
+            (keydown)="onInputKeyDown($event)"
             required
             autofocus
             [pattern]="notEmptyString.source"
             maxlength="255"
         />
         <button
-            class="icon-btn btn lefter"
+            class="icon-btn btn "
             [disabled]="!title.checkValidity()"
             (click)="save($event)"
             tooltip="Сохранить"
@@ -71,7 +75,7 @@
             <span class="eos-icon eos-icon-checkbox-blue small" aria-hidden="true"></span>
         </button>
         <button
-            class="icon-btn btn"
+            class="icon-btn btn lefter"
             (click)="cancel($event)"
             tooltip="Отмена"
             placement="bottom"
@@ -89,23 +93,33 @@
         [ngClass]="{ disabled: item.value.linkType === 1 }"
         [routerLink]="item.value.linkType === 1 ? null : [item.value.url]"
     >
-        <span class="icon-wrapper">
-            <span class="icon eos-icon {{ item.value.iconName }}"></span>
-        </span>
+            <span class="icon-wrapper">
+                <span class="icon eos-icon {{ item.value.iconName }}"></span>
+            </span>
         <span [hidden]="editing(item.value)" class="text">
             {{ item.value.title }}
         </span>
-        <button
+        <!-- <button
             *ngIf="deskId !== 'system'"
-            (mouseover)="dragResolve = true"
-            (mouseleave)="dragResolve = false"
             class="icon-btn btn leftest"
             tooltip="Переместить"
             placement="bottom"
             containerClass="tooltip-info"
-            container="body">
-            <span class="fa fa-arrows selected-text xl-font " aria-hidden="true"></span>
-        </button>
+            container="body"> -->
+            <div
+                *ngIf="deskId !== 'system'"
+                class="icon-btn leftest"
+                tooltip="Переместить"
+                placement="bottom"
+                containerClass="tooltip-info"
+                container="body"
+                (click)="stopDefault($event)"
+            >
+                <span class="fa fa-arrows selected-text xl-font leftest" aria-hidden="true"></span>
+            </div>
+        <!-- </button> -->
+
+
         <button
             class="icon-btn btn"
             (click)="edit($event, item.value)"

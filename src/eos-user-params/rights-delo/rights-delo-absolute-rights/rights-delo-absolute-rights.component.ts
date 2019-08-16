@@ -27,9 +27,11 @@ import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
 export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     curentUser: IParamUserCl;
     btnDisabled: boolean = true;
+    isLoading: boolean = false;
     arrDeloRight: string[];
     arrNEWDeloRight: string[];
     selectedNode: NodeAbsoluteRight; // текущий выбранный элемент
+    selectListNode: number = 0;
     fields: IInputParamControl[];
     inputs;
     inputAll;
@@ -106,12 +108,12 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 }, 0);
             });
 
-        if (this.editMode) {
-            this.selectNode(this.listRight[0]);
-        }
+        this.selectNode(this.listRight[this.selectListNode]);
         this.inputAll = { all: new RadioInput(CONTROL_ALL_NOTALL) };
+        this.isLoading = true;
     }
     submit(flag?): Promise<any> {
+        this.isLoading = false;
         if (this._checkCreatePRJNotEmptyAllowed()) {
             this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
             return Promise.resolve(true);
@@ -158,9 +160,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     return this._userParamsSetSrv.getUserIsn({
                         expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
                     })
-                        .then(() => {
-                            this.init();
-                        });
+                    .then(() => {
+                        this.init();
+                    });
                 }
             })
             .catch((e) => {
@@ -169,6 +171,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             });
     }
     cancel() {
+        this.queryForSave = [];
         this.selectedNode = null;
         this.editMode = false;
         this.btnDisabled = true;
@@ -176,9 +179,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this._userParamsSetSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
         })
-            .then(() => {
-                this.init();
-            });
+        .then(() => {
+            this.init();
+        });
     }
     edit() {
         const id = this._userParamsSetSrv.curentUser.ISN_LCLASSIF;
@@ -197,19 +200,19 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             });
         }
         // this.setDisableOrEneble();
-
+        this.formAllEditType();
     }
     clickLable(event, item: NodeAbsoluteRight) {
         event.preventDefault();
         event.stopPropagation();
-        if (!this.editMode) {
+        /* if (!this.editMode) {
             return;
-        }
+        } */
         if (event.target.tagName === 'LABEL') { // click to label
             this.selectedNode.ischeckedAll = false;
             this.selectNode(item);
         }
-        if (event.target.tagName === 'SPAN') { // click to checkbox
+        if (event.target.tagName === 'SPAN' && this.editMode) { // click to checkbox
             const value = !(+item.value);
 
             item.value = +value;
@@ -248,6 +251,12 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             this.selectedNode.isSelected = true;
             this._viewContent();
         }
+        for (let index = 0; index < this.listRight.length; index++) {
+            if (node.key === this.listRight[index].key) {
+                this.selectListNode = index;
+                return;
+            }
+        }
     }
     checkChange() {
         let c = false;
@@ -283,7 +292,11 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             all: new FormControl(this.selectedNode.value ? this.arrNEWDeloRight[+this.selectedNode.key] : '0')
         });
         setTimeout(() => {
-            this.selectedNode.value ? this.formGroupAll.enable({ emitEvent: false }) : this.formGroupAll.disable({ emitEvent: false });
+            if (this.editMode) {
+                this.formGroupAll.enable({ emitEvent: false });
+            } else {
+                this.formGroupAll.disable({ emitEvent: false });
+            }
         }, 0);
         this.subs['all'] = this.formGroupAll.valueChanges
             .subscribe(data => {

@@ -1,5 +1,5 @@
 import {USERCARD, USER_CABINET, CABINET} from 'eos-rest/interfaces/structures';
-import {CardInit} from 'eos-user-params/shared/intrfaces/cabinets.interfaces';
+// import {CardInit} from 'eos-user-params/shared/intrfaces/cabinets.interfaces';
 export class Cabinets {
     name: string;
     isnCabinet: number;
@@ -153,22 +153,22 @@ export class CardsClass {
     cabinets: Array<Cabinets> = [];
     data: USERCARD;
     public SetChangedCabinets = new Set();
-    constructor(card: USERCARD, cardsInfo?: CardInit) {
+    constructor(card: USERCARD, flagcreate, /* cardsInfo?: CardInit */) {
         this.data = card;
-        this.initProperties(cardsInfo);
-        this.createCabinets(card, cardsInfo);
+        this.initProperties(flagcreate);
+     //   this.createCabinets(card, cardsInfo);
     }
-    initProperties(cardsInfo: CardInit) {
+    initProperties(cardsInfo) {
         this.data.HOME_CARD !== 1 ? this.homeCard = false : this.homeCard = true;
         this.homeCardOrigin = this.homeCard;
         this.cardDue = this.data.DUE;
         this.isnClassif = this.data.ISN_LCLASSIF;
-        this.newCard = cardsInfo.create;
+        this.newCard = cardsInfo;
     }
-    createCabinets(card: USERCARD, cardsInfo) {
-        if (card['_d'].length) {
-            card['_d'].forEach((cab: CABINET) => {
-                    this.cabinets.push(new Cabinets(this.isnClassif, cab, this, cardsInfo.USER_CABINET_info, ));
+    createCabinets({cabinet, user_cab}) {
+        if (cabinet.length) {
+            cabinet.forEach((cab: CABINET) => {
+                    this.cabinets.push(new Cabinets(this.isnClassif, cab, this, user_cab ));
             });
         }
     }

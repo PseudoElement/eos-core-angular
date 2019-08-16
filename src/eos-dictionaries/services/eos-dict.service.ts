@@ -153,12 +153,14 @@ export class EosDictService {
     }
 
     get customFields(): IFieldView[] {
-        const _storageData = this._storageSrv.getItem('customFields');
+        const _storageData = this._storageSrv.getItem('customFieldsList');
         const dictionary = this.currentDictionary;
         if (_storageData && dictionary) {
             this._customFields = _storageData;
-            if (this._customFields[dictionary.id]) {
-                const fies: IFieldView[] = this._customFields[dictionary.id];
+            const stored: [] = this._customFields[dictionary.id];
+            if (stored && stored.length) {
+                const allList = dictionary.descriptor.record.getCustomListView({});
+                const fies = stored.map( s => allList.find( a => a.key === s));
                 return fies;
             } else {
                 return [];
@@ -196,8 +198,8 @@ export class EosDictService {
         if (!this._customFields) {
             this._customFields = {};
         }
-        this._customFields[dictionary.id] = val;
-        this._storageSrv.setItem('customFields', this._customFields, true);
+        this._customFields[dictionary.id] = val.map((record) => record.key);
+        this._storageSrv.setItem('customFieldsList', this._customFields, true);
     }
 
     set customTitles(val: IFieldView[]) {
@@ -537,6 +539,11 @@ export class EosDictService {
         this._paginationConfig$.next(this.paginationConfig);
     }
 
+    getAllDictionariesList(): Promise<IDictionaryDescriptor[]> {
+        const allDicts = this._descrSrv.visibleDictionaries().concat(this._descrSrv.visibleNadzorDictionaries());
+        return Promise.resolve(allDicts);
+    }
+
     getDictionariesList(): Promise<IDictionaryDescriptor[]> {
         return Promise.resolve(this._descrSrv.visibleDictionaries());
     }
@@ -650,7 +657,9 @@ export class EosDictService {
         const dictionary = this._dictionaries[0];
         if (dictionary && dictionary.root) {
             this.updateViewParameters({updatingList: true});
-            p = this.loadChildren(dictionary, dictionary.root);
+            // p = this.loadChildren(dictionary, dictionary.root);
+            // p = Promise.resolve(null);
+            p = Promise.resolve(dictionary.root);
         } else {
             p = Promise.resolve(null);
         }
@@ -667,6 +676,7 @@ export class EosDictService {
                 this._selectTreeNode(node);
                 return node;
             }).then((n) => {
+                // this._setCurrentList(dictionary, n, true);
                 this._reloadList().then(() => {
                     this.updateViewParameters({updatingList: false});
                 });
@@ -1096,6 +1106,10 @@ export class EosDictService {
         this._bufferNodes = this.getMarkedNodes(false);
     }
 
+    updateVisibleList(): any {
+        this.changePagination(this.paginationConfig);
+    }
+
     private getDictionaryById(id: string): Promise<EosDictionary> {
         const existDict = this._dictionaries.find((dictionary) => dictionary && dictionary.id === id);
         if (existDict) {
@@ -1153,6 +1167,9 @@ export class EosDictService {
         if (dictionary) {
             return dictionary.getChildren(node)
                 .then(() => node)
+                .then (() => {
+                    return node;
+                })
                 .catch((err) => this._errHandler(err));
         } else {
             return Promise.resolve(null);
@@ -1397,6 +1414,8 @@ export class EosDictService {
             this.updateMarked(true);
         }
     }
+
+
 
     private _openNode(node: EosDictionaryNode) {
         if (this._listNode !== node) {

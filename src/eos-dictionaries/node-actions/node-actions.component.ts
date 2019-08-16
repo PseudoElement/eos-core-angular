@@ -64,7 +64,6 @@ export class NodeActionsComponent implements OnDestroy {
     ) {
         this._markedNodes = [];
         this._initButtons();
-
         this._dictSrv = _dictSrv;
         // _dictSrv.listDictionary$
         //     .pipe(
@@ -225,7 +224,7 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.moveUp:
                 case E_RECORD_ACTIONS.moveDown:
-                    _show = this._viewParams.userOrdered && !this._viewParams.searchResults;
+                    _show = _show && this._viewParams.userOrdered && !this._viewParams.searchResults;
                     _enabled = _enabled && this._visibleCount > 1 && opts.listHasItems;
                     break;
                 case E_RECORD_ACTIONS.export:
@@ -261,7 +260,12 @@ export class NodeActionsComponent implements OnDestroy {
                             _enabled = this.dictionary.descriptor.editOnlyNodes && this._dictSrv.listNode.isNode;
                         }
                     }
-                    _enabled = _enabled && !opts.listHasDeleted;
+
+                    // _enabled = _enabled && !opts.listHasDeleted;
+                    if (this._dictSrv.listNode) {
+                        _enabled = _enabled && !this._dictSrv.listNode.isDeleted;
+                    }
+
                     break;
                 case E_RECORD_ACTIONS.showDeleted:
                     _active = this._viewParams.showDeleted;

@@ -126,6 +126,23 @@ export class EosDeskService {
         /*tslint:enable*/
     }
 
+    public storeOrder(referencesList: IDeskItem[], deskId: string): any {
+
+        const view: SRCH_VIEW = this.findView(deskId);
+
+        const list = [];
+        for (let i = 0; i < referencesList.length; i++) {
+            const ref = referencesList[i];
+            const record = view.SRCH_VIEW_DESC_List.find( r => r.BLOCK_ID === ref.blockId);
+            if (record) {
+                list.push(record);
+            }
+        }
+
+        view.SRCH_VIEW_DESC_List = list;
+        this.viewManager.saveView(view);
+    }
+
     /**
      * Update link name on the server
      * @param link editing item
@@ -272,7 +289,7 @@ export class EosDeskService {
     private _readReferences() {
         this._appCtx.init()
             .then( () => {
-                this._dictSrv.getDictionariesList()
+                this._dictSrv.getAllDictionariesList()
                     .then((descriptors) => {
                         this._currentReferences = descriptors.map((descr) =>
                             this._deskItemByDescriptor(descr));
@@ -283,7 +300,10 @@ export class EosDeskService {
                             })
                                 .then(([view]) => {
                                     const references = [];
-                                    view.SRCH_VIEW_DESC_List.forEach((dl) => {
+                                    view.SRCH_VIEW_DESC_List.sort ( (a, b) => {
+                                        return  (a['ORDERNUM'] === b['ORDERNUM'] ? 0 :
+                                                (a['ORDERNUM'] > b['ORDERNUM'] ? 1 : -1));
+                                    }).forEach((dl) => {
                                         references.push(this.mapToDefaultDescItem(dl, this._currentReferences));
                                     });
                                     this._currentReferences = references;

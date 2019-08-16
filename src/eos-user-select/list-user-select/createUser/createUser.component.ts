@@ -109,7 +109,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 .then(data => {
                     this.closedModal.emit();
                     this._router.navigate(['user-params-set'], {
-                        queryParams: { isn_cl: data[0] }
+                        queryParams: { isn_cl: data[0], is_create: true }
                     });
                     this.isn_prot = data[0];
                     this._userParamSrv.ProtocolService(this.isn_prot, 3);
@@ -129,7 +129,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                         this.closedModal.emit();
                     }
                     if (e instanceof RestError && e.code === 500) {
-                        m.msg = 'Пользователь с таким логином уже существует';
+                        m.msg = e.message || 'Пользователь с таким логином уже существует';
                     } else {
                         m.msg = e.message ? e.message : e;
                     }

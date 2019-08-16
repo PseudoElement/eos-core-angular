@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { UserSelectNode } from '../../list-user-select/user-node-select';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { Subject ,  Observable } from 'rxjs';
-import { UserParamApiSrv } from '../../../eos-user-params/shared/services/user-params-api.service';
+import { Subject, Observable } from 'rxjs';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { DEPARTMENT } from 'eos-rest';
 
 @Injectable()
 export class RtUserSelectService {
     subject: Subject<any> = new Subject();
     subjectScan: Subject<any> = new Subject();
     subjectFlagBtnHeader: Subject<any> = new Subject();
-    btnDisabled: boolean =  false;
-     ArraySystemHelper = {
+    btnDisabled: boolean = false;
+    ArraySystemHelper = {
         delo: {
             label: 'Дело',
             checked: false
@@ -75,7 +75,6 @@ export class RtUserSelectService {
     private _ChangeSelectUser: UserSelectNode;
     private UserCabinetInfo: Array<any>;
     constructor(private apiSrv: PipRX,
-        private _pipSrv: UserParamApiSrv,
         private _msgSrv: EosMessageService
     ) {
         this.UserCabinetInfo = [];
@@ -96,47 +95,42 @@ export class RtUserSelectService {
         this.subject.next(this._ChangeSelectUser);
     }
 
-    getDataIsDue(dueDep?: number): Promise<any> {
-        const queryUser = {
+    getDepartMent(isnDeep): Promise<DEPARTMENT[]> {
+        const query = {
             DEPARTMENT: {
                 criteries: {
-                    DUE: dueDep
+                    DUE: `${isnDeep}`
                 }
             }
         };
-        return this.apiSrv.read(queryUser).then(res => {
-            const query = {
-                CB_PRINT_INFO: {
-                    criteries: {
-                        ISN_OWNER:  String(res[0]['ISN_LCLASSIF'])
-                    }
-                }
-            };
-            return this.apiSrv.read(query).then(fullname => {
-                res[1] = fullname[0];
-                return res;
-            });
-        });
+        return this.apiSrv.read(query);
     }
-
-    getUserIsn(isn_cl, due?: number): Promise<any> {
-        const queryUser = {
-            USER_CL: {
+    get_cb_print_info(isn_user, isnDeep?: number): Promise<any> {
+        const queryUserParams = {
+            USER_PARMS: {
                 criteries: {
-                    ISN_LCLASSIF: String(isn_cl)
+                    ISN_USER_OWNER: `${isn_user}`,
+                    PARM_NAME: 'CATEGORY'
                 }
-            },
-            expand: 'USER_PARMS_List'
+            }
         };
-        let DepartmentReq = null;
-        const user = this._pipSrv.getData(queryUser).then(res => {
-            return res[0];
-        });
-
-        if (due) {
-            DepartmentReq = this.getDataIsDue(due);
+        if (isnDeep) {
+            return this.getDepartMent(isnDeep).then((deep: DEPARTMENT[]) => {
+                if (deep && deep.length) {
+                    const query = {
+                        CB_PRINT_INFO: {
+                            criteries: {
+                                ISN_OWNER: `${deep[0].ISN_NODE}`
+                            }
+                        }
+                    };
+                    return Promise.all([this.apiSrv.read(queryUserParams), Promise.resolve(deep[0]), this.apiSrv.read(query)]);
+                }
+            });
+        } else {
+            return Promise.all([this.apiSrv.read(queryUserParams), Promise.resolve(null)]);
         }
-        return Promise.all([user, due ? DepartmentReq : Promise.resolve(5)]);
+
     }
 
     getUserCabinets(isn_cl): Promise<any> {
@@ -148,9 +142,9 @@ export class RtUserSelectService {
             }
         };
         return this.apiSrv.read(queryCabinet)
-        .then(result => {
-            return result;
-        });
+            .then(result => {
+                return result;
+            });
     }
 
     getCabinetName(cabinet): Promise<any> {
@@ -162,9 +156,9 @@ export class RtUserSelectService {
             }
         };
         return this.apiSrv.read(queryCabinet)
-        .then(result => {
-            return result;
-        });
+            .then(result => {
+                return result;
+            });
     }
 
 
@@ -176,7 +170,7 @@ export class RtUserSelectService {
                 const leng = resultCabinet.length;
                 for (let i = 0; i < leng; i += 1) {
                     i === length - 1 ? cab_list += (resultCabinet as any)[i].ISN_CABINET
-                     : cab_list += (resultCabinet as any)[i].ISN_CABINET + '||';
+                        : cab_list += (resultCabinet as any)[i].ISN_CABINET + '||';
                 }
                 return this.getCabinetName(cab_list).then(resultCabName => {
                     const lengt = resultCabinet.length;
@@ -187,17 +181,12 @@ export class RtUserSelectService {
                         if (due) {
                             if (due === resultCabName[i]['ISN_CABINET']) {
                                 this.UserCabinetInfo[i]['CUSTOM_FIELD_MAIN'] = true;
-                            }   else {
+                            } else {
                                 this.UserCabinetInfo[i]['CUSTOM_FIELD_MAIN'] = false;
                             }
                         }
                     }
-
                     return this.UserCabinetInfo;
-                }).catch(error => {
-                    error.message = 'Внутренняя ошибка сервера';
-                    this._errorHandler(error);
-                    return false;
                 });
             }
         }).catch(error => {
@@ -208,7 +197,7 @@ export class RtUserSelectService {
     }
 
     getSVGImage(photo: any): Promise<any> {
-        const query = {DELO_BLOB: photo};
+        const query = { DELO_BLOB: photo };
         return this.apiSrv.read(query);
     }
     private _errorHandler(err): void {

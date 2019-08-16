@@ -21,9 +21,11 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         return this.getValue('rec.PRJ_NUM_FLAG');
     }
 
-    get havesRC(): boolean {
-        return (this.data['DOC_RC_List'] && this.data['DOC_RC_List'].length !== 0);
-    }
+
+    // Убрано для оптимизации
+    // get havesRC(): boolean {
+    //     return (this.data['DOC_RC_List'] && this.data['DOC_RC_List'].length !== 0);
+    // }
 
     get isNode(): boolean {
         return (this.data.rec['IS_NODE'] !== undefined && this.data.rec['IS_NODE'] === 0);

@@ -12,6 +12,7 @@ import { NodeAbsoluteRight } from '../node-absolute';
     styleUrls: ['./organiz-edit-type.component.scss']
 })
 export class OrganizEditTypeComponent implements OnInit {
+    @Input() editMode: boolean;
     @Input() selectedNode: NodeAbsoluteRight;
     @Input() curentUser: IParamUserCl;
     @Output() Changed: EventEmitter<any> = new EventEmitter<any>();

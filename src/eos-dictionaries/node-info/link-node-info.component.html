@@ -1,0 +1,84 @@
+<div class="eos-node-info">
+    <div class="opened-node-wrapper">
+        <div class="content-block">
+            <!-- <div class="full-info usual-border"> -->
+                <div class="short-info l-font">Прямая связка</div>
+                <div *ngFor="let key of ['LINK_INDEX', 'LINK', 'TRANSPARENT', 'NOTE']"
+                    class="field">
+                    <ng-container [ngSwitch]="fieldsDescriptionFull.rec[key].type">
+                            <ng-container *ngSwitchCase="fieldTypes.boolean">
+                                    <label class="checkbox field-title unimportant-text s-font"><input type="checkbox"
+                                        [(ngModel)]="nodeDataFull.rec[key]"
+                                        disabled><span></span>{{fieldsDescriptionFull.rec[key].title}}</label>
+                            </ng-container>
+                            <ng-container *ngSwitchDefault>
+                                    <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec[key].title}}</p>
+                                    <p class="field-value m-font"
+                                        >{{value(key) || '...'}}</p>
+                            </ng-container>
+                        </ng-container>
+                </div>
+            <!-- </div> -->
+            <div class="full-info usual-border">
+                <div class="short-info l-font" style="padding-top: 10px;">Обратная связка</div>
+                <div class="field">
+                    <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec['LINK_INDEX'].title}}</p>
+                    <p class="field-value m-font"
+                        >{{node.data.PARE_LINK_Ref['LINK_INDEX'] || '...'}}</p>
+                </div>
+                <div class="field">
+                    <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec['LINK'].title}}</p>
+                    <p class="field-value m-font"
+                        >{{node.data.PARE_LINK_Ref['CLASSIF_NAME'] || '...'}}</p>
+                </div>
+                <div class="field">
+                    <label class="checkbox field-title unimportant-text s-font"><input type="checkbox"
+                        [(ngModel)]="node.data.PARE_LINK_Ref['TRANSPARENT']"
+                        disabled><span></span>{{fieldsDescriptionFull.rec['TRANSPARENT'].title}}</label>
+                </div>
+                <div class="field">
+                    <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec['NOTE'].title}}</p>
+                    <p class="field-value m-font"
+                        >{{node.data.PARE_LINK_Ref['NOTE'] || '...'}}</p>
+                </div>
+            </div>
+            <div class="full-info usual-border">
+                <div class="field">
+                    <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec['TYPE'].title}}</p>
+                    <p class="field-value m-font"
+                        >{{value('TYPE') || '...'}}</p>
+                </div>
+            </div>
+
+            <!-- <div *ngIf="nodeDataShort"
+                class="short-info l-font">
+                <span *ngFor="let key of keys(fieldsDescriptionShort.rec)">{{nodeDataShort.rec[key]}}</span>
+            </div>
+            <div *ngIf="nodeDataFull"
+                class="full-info usual-border">
+                <div *ngFor="let key of keys(fieldsDescriptionFull.rec)"
+                    class="field">
+
+                    <ng-container [ngSwitch]="fieldsDescriptionFull.rec[key].type">
+                        <ng-container *ngSwitchCase="fieldTypes.boolean">
+                                <label class="checkbox field-title unimportant-text s-font"><input type="checkbox"
+                                    [(ngModel)]="nodeDataFull.rec[key]"
+                                    disabled><span></span>{{fieldsDescriptionFull.rec[key].title}}</label>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="fieldTypes.date">
+                                <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec[key].title}}</p>
+                                <p class="field-value m-font"
+                                    >{{(value(key) | eosDate) || '...'}}</p>
+                        </ng-container>
+                        <ng-container *ngSwitchDefault>
+                                <p class="field-title unimportant-text s-font">{{fieldsDescriptionFull.rec[key].title}}</p>
+                                <p class="field-value m-font"
+                                    >{{value(key) || '...'}}</p>
+                        </ng-container>
+                    </ng-container>
+                </div>
+
+            </div> -->
+        </div>
+    </div>
+</div>

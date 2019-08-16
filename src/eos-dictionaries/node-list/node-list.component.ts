@@ -21,7 +21,6 @@ import {LongTitleHintComponent} from '../long-title-hint/long-title-hint.compone
 import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
 import {ColumnSettingsComponent} from '../column-settings/column-settings.component';
 import {EosUtils} from 'eos-common/core/utils';
-import {PrjDefaultValuesComponent} from '../prj-default-values/prj-default-values.component';
 import { takeUntil } from 'rxjs/operators';
 import {CopyPropertiesComponent} from '../copy-properties/copy-properties.component';
 import { ExportImportClService } from 'app/services/export-import-cl.service';
@@ -45,7 +44,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     customFields: IFieldView[] = [];
     length = {};
     min_length = {};
-    modalWindow: BsModalRef;
+    modalWindow: BsModalRef = null;
     nodes: EosDictionaryNode[] = []; // Elements for one page
     orderBy: IOrderBy;
     params: IDictionaryViewParameters;
@@ -86,21 +85,22 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                     this._dictId = _dictSrv.currentDictionary.id;
 
                     this.customFields = this._dictSrv.customFields;
-                    this.updateViewFields(this.customFields);
 
-                    const _customTitles = this._dictSrv.customTitles;
-                    _customTitles.forEach((_title) => {
-                        const vField = this.viewFields.find((_field) => _field.key === _title.key);
-                        if (vField) {
-                            vField.customTitle = _title.customTitle;
-                        }
+                    this.updateViewFields(this.customFields, nodes). then ( () => {
+                        const _customTitles = this._dictSrv.customTitles;
+                        _customTitles.forEach((_title) => {
+                            const vField = this.viewFields.find((_field) => _field.key === _title.key);
+                            if (vField) {
+                                vField.customTitle = _title.customTitle;
+                            }
+                        });
+                        this.nodes = nodes;
+                        setTimeout(() => {
+                            this._countColumnWidth();
+                            this._repaintFlag = false;
+                        }, 10);
                     });
                 }
-                this.nodes = nodes;
-                setTimeout(() => {
-                    this._countColumnWidth();
-                    this._repaintFlag = false;
-                }, 10);
             });
 
         _dictSrv.viewParameters$
@@ -119,9 +119,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             });
     }
 
-    updateViewFields(customFields: IFieldView[]) {
+    updateViewFields(customFields: IFieldView[], nodes: EosDictionaryNode[]): Promise<any> {
         // also customFields for update
-        this.viewFields = this._dictSrv.currentDictionary.getListView(customFields);
+        return this._dictSrv.currentDictionary.getListViewWithRelated(customFields, nodes).then ( (fields) => {
+            this.viewFields = fields;
+        } );
     }
 
     ngOnInit() {
@@ -177,6 +179,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         this.modalWindow.content.dictionaryFields = EosUtils.deepUpdate([],
             this._dictSrv.currentDictionary.descriptor.record.getFieldSet(E_FIELD_SET.allVisible));
 
+        const subscriptionClose = this.modalWindow.content.onClose.subscribe(() => {
+            this.modalWindow = null;
+            subscriptionClose.unsubscribe();
+        });
+
         const subscription = this.modalWindow.content.onChoose.subscribe(() => {
             this.customFields = this._dictSrv.customFields;
             const _customTitles = this._dictSrv.customTitles;
@@ -190,13 +197,17 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 this.orderBy = this._dictSrv.currentDictionary.orderDefault();
             }
 
-            this._dictSrv.orderBy(this.orderBy, false);
+            this.updateViewFields(this.customFields, []);
+            this._dictSrv.updateVisibleList();
             this._countColumnWidth();
             subscription.unsubscribe();
         });
     }
 
     isCorrectOrderBy(): boolean {
+        if (this.orderBy === null) {
+            return true;
+        }
         if (this.viewFields.find(v => v.key === this.orderBy.fieldKey)) {
             return true;
         }
@@ -214,27 +225,20 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         });
     }
 
-    openPrjDefaultValues(node: EosDictionaryNode) {
-        this.modalWindow = this._modalSrv.show(PrjDefaultValuesComponent, {
-            class: 'prj-default-values-modal moodal-lg'});
-        const content = {
-            nodeDescription: node.title,
-            isnNode: node.data.rec['ISN_NODE'],
-        };
-        this.modalWindow.content.init(content);
-    }
-
     openCopyProperties(node: EosDictionaryNode, fromParent: boolean) {
         this.modalWindow = this._modalSrv.show(CopyPropertiesComponent, {
             class: 'copy-properties-modal moodal-lg'});
         this.modalWindow.content.init(node.data.rec, fromParent);
+        this._closeModalWindowSubscribtion();
     }
 
     openCopyNode(nodes: EosDictionaryNode[]) {
         this.modalWindow = this._modalSrv.show(CopyNodeComponent, {
             class: 'copy-node-modal moodal-lg'});
         this.modalWindow.content.init(nodes);
+        this._closeModalWindowSubscribtion();
     }
+
 
     getMarkedTitles(): string[] {
         return this.nodes
@@ -305,11 +309,33 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         }
     }
 
+    getWeigthForItem(item: EosDictionaryNode, index: number): number {
+        let w = item.data.rec['WEIGHT'];
+        if (!w) {
+            w = Number (item.id);
+        }
+        if (!w) {
+            w = item.data.rec['ISN_LCLASSIF'];
+        }
+        if (!w) {
+            w = index;
+        }
+        return w;
+    }
+
     _nodesSwap(changeList: {}, i1: number, i2: number): any {
         const item1 = this.nodes[i1];
         const item2 = this.nodes[i2];
-        let w1 = item1.data.rec['WEIGHT'];
-        let w2 = item2.data.rec['WEIGHT'];
+        let w1 = this.getWeigthForItem(item1, i1);
+        let w2 = this.getWeigthForItem(item2, i2);
+
+        // ситуация, когда восстанавливаем из id, случай, когда вес и так тот что нужен.
+        if ((i1 > i2 && w1 < w2) || (i1 < i2 && w1 > w2)) {
+            const s = w1;
+            w1 = w2;
+            w2 = s;
+        }
+
         const signedOne = (i1 > i2 ? -1 : 1);
 
         if (w1 === w2) {
@@ -497,14 +523,17 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     get recalcDone() {
-        return /*!this._recalcEvent && */!this._repaintFlag;
+        return /*!this._recalcEvent && */!this._repaintFlag && this.modalWindow === null;
     }
     private _countColumnWidth() {
+        if (!this.viewFields || this.viewFields.length === 0) {
+            return;
+        }
         if (!this._recalcEvent) {
             this._recalcEvent = setTimeout(() => {
                 this._countColumnWidthUnsafe();
                 this._recalcEvent = null;
-            }, 100);
+            }, 1);
         }
     }
 
@@ -536,7 +565,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         } else {
             const minLength = [];
             const lastField = fields[fields.length - 1];
-            if (lastField.type !== E_FIELD_TYPE.boolean) {
+            if (lastField && lastField.type !== E_FIELD_TYPE.boolean) {
                 minLength[lastField.key] = (this._holder.clientWidth - (fullWidth - this.length[lastField.key])) - 50;
                 this.length[lastField.key] = minLength[lastField.key];
             }
@@ -546,5 +575,12 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         if (!this._cdr['destroyed']) {
             this._cdr.detectChanges();
         }
+    }
+
+    private _closeModalWindowSubscribtion() {
+        const subscriptionClose = this.modalWindow.content.onClose.subscribe(() => {
+            this.modalWindow = null;
+            subscriptionClose.unsubscribe();
+        });
     }
 }

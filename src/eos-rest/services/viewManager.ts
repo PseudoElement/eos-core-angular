@@ -47,7 +47,22 @@ export class ViewManager {
         }
     }
 
+    orderRecalc(descList: SRCH_VIEW_DESC[]): any {
+        for (let i = 0; i < descList.length; i++) {
+            const record = descList[i];
+            const order = i + 1;
+            if (record.ORDERNUM !== order) {
+                if (!record._State) {
+                    this.pip.entityHelper.prepareForEdit(record);
+                    record._State = _ES.Modified;
+                }
+                record.ORDERNUM = order;
+            }
+        }
+    }
+
     saveView(view: SRCH_VIEW): Promise<number> {
+        this.orderRecalc(view.SRCH_VIEW_DESC_List);
         let changeUser = Promise.resolve(<USER_CL>null);
         if (view._State === _ES.Added && view.PERSONAL === 1) {
             changeUser = this.pip.read<USER_CL>({

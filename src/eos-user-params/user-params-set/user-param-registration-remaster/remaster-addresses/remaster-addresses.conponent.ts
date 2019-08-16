@@ -172,7 +172,7 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
     }
     cancel() {
         if (this.btnDisabled) {
-            this.pretInputs();
+          //  this.pretInputs();
             Object.keys(this.inputs).forEach(input => {
                 this.form.controls[input].patchValue(this.inputs[input].value);
             });

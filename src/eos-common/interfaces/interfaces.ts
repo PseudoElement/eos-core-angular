@@ -14,6 +14,7 @@ export interface ISelectOption {
     value: string | number;
     title: string;
     disabled?: boolean;
+    data?: any;
 }
 
 export interface IOpenClassifParams {
@@ -32,9 +33,9 @@ export interface IOpenClassifParams {
 
     // для STDText
     isn_user?: number;
-    name?: string;
-    form?: string;
-    id_std?: string;
+    // name?: string;
+    // form?: string;
+    // id_std?: string;
 }
 
 export interface ICertificateInit {

@@ -35,6 +35,7 @@ export enum E_RECORD_ACTIONS {
     copyProperties,
     copyNodes,
     pasteNodes,
+    certifUC,
     // createRepresentative,
     // slantForForms,
     /* to be extended */
@@ -61,9 +62,9 @@ export interface IAction {
 }
 
 export interface IActionButton extends IAction {
-    isActive: boolean;
-    enabled: boolean;
-    show: boolean;
+    isActive: boolean;  // нажата \ отжата
+    enabled: boolean;   // доступна для нажатия
+    show: boolean;      // видимость
 }
 
 export interface IActionUpdateOptions {
