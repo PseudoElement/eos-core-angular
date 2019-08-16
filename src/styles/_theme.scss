@@ -385,6 +385,9 @@
             cursor: not-allowed;
             color: $disabled-color-main-theme;
         }
+        &:hover {
+            background-color: $highlight-color-main-theme;
+        }
     }
     .menuitem {
         line-height: $item-height;

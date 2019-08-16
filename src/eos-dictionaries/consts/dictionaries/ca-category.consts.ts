@@ -12,12 +12,9 @@ export const CA_CATEGORY_CL: IDictionaryDescriptor =
     actions: [
         'add',
         'markRecords',
-        // 'userOrder',
         'tableCustomization',
         'removeHard',
         'edit',
-
-        // 'view',
     ],
     searchConfig: [],
     visible: false,
@@ -38,6 +35,7 @@ export const CA_CATEGORY_CL: IDictionaryDescriptor =
             title: 'Описание',
             type: 'string',
             length: 16,
+            required: true,
         }, {
             key: 'ISN_EDS_CATEGORY',
             title: 'Категория ЭП',
@@ -52,7 +50,6 @@ export const CA_CATEGORY_CL: IDictionaryDescriptor =
             default: null,
             required: true,
         }
-
     ],
     treeFields: ['CA_SERIAL'],
     quickViewFields: ['CA_SERIAL', 'CA_SUBJECT', 'ISN_EDS_CATEGORY'],
