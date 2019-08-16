@@ -50,13 +50,15 @@
                 <span class="user-list-third-colomn likeLink ">Тип
                 <span *ngIf ="_apiSrv.srtConfig.tip.checked"></span>
                 </span>
-                <span class="user-list-first-colomn likeLink " (click)="sortPageList('fullDueName')">Должностное лицо
+                <!-- <span class="user-list-first-colomn likeLink " (click)="sortPageList('fullDueName')">Должностное лицо
                 <span *ngIf ="_apiSrv.srtConfig.fullDueName.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
-                </span>
+                </span> -->
+                <span class="user-list-first-colomn likeLink ">Должностное лицо</span>
                 <div class="pos-depart" >
                     <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')" >{{cardName}}
-                         <span *ngIf="_apiSrv.srtConfig.department.checked" class="curs-span-arrow"  [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)"
-                         (click)="sortPageList('department')"></span></span>
+                         <!-- <span *ngIf="_apiSrv.srtConfig.department.checked" class="curs-span-arrow"  [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)"
+                         (click)="sortPageList('department')"></span> -->
+                        </span>
                 </div>
                 <!-- <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
                     <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>

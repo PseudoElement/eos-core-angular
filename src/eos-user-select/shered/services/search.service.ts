@@ -5,7 +5,7 @@ import { USERSRCH } from '../consts/search-const';
 @Injectable()
 export class SearchServices {
     constructor(
-        private _pipApisrv: PipRX
+        public _pipApisrv: PipRX
     ) {
 
     }
@@ -138,7 +138,7 @@ export class SearchServices {
         };
         if (config.SURNAME) {
             query.USER_CL.criteries['SURNAME_PATRON'] = `"${config.SURNAME}"`;
-        }   else {
+        } else {
             if (due) {
                 query.USER_CL.criteries['DUE_DEP'] = due;
             }
@@ -153,5 +153,32 @@ export class SearchServices {
                 return [];
             }
         });
+    }
+    getQueryForFilter(params: USERSRCH) {
+        const query = {
+            USER_CL: {
+                criteries: {}
+            }
+        };
+        if (params.DEL_USER) {
+            query.USER_CL.criteries['SURNAME_PATRON'] = `"${params.SURNAME}"`;
+            query.USER_CL.criteries['ORACLE_ID'] = `isnull`;
+        }
+        if (!params.DEL_USER) {
+            if (params.LOGIN) {
+                query.USER_CL.criteries['CLASSIF_NAME'] = `"${params.LOGIN}"`;
+            }
+            if (params.fullDueName) {
+                query.USER_CL.criteries['USER_CL.DEP.SURNAME'] = `"${params.fullDueName}"`;
+            }
+            if (params.DEPARTMENT) {
+                //   query.USER_CL.criteries['USER_CL.DEP.CLASSIF_NAME'] = `${params.DEPARTMENT}`;
+                query.USER_CL.criteries['USER_CL.DEP.CARD.CLASSIF_NAME'] = `"${params.DEPARTMENT}"`;
+            }
+            if (params.CARD) {
+                query.USER_CL.criteries['USER_CL.TECH_DEP.CARD.CARD_NAME'] = `"${params.CARD}"`;
+            }
+        }
+        return query;
     }
 }

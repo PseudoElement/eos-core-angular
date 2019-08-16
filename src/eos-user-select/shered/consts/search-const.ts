@@ -50,4 +50,5 @@ export interface USERSRCH {
     LOGIN?: string;
     fullDueName?: string;
     SURNAME?: string;
+    DEL_USER?: boolean;
 }
