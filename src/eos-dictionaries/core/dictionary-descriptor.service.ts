@@ -22,6 +22,8 @@ import {NomenklDictionaryDescriptor} from './nomenkl-dictionary-descriptor';
 import { ReestrtypeDictionaryDescriptor } from './reestrtype-dictionary-descriptor';
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 import { CaCategoryDictionaryDescriptor } from './ca-category-dictionary-descriptor';
+import { CALENDAR_DICT } from 'eos-dictionaries/consts/dictionaries/calendar.consts';
+import { CalendarDictionaryDescriptor } from './calendar-dictionary-descriptor';
 // import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 @Injectable()
@@ -113,6 +115,9 @@ export class DictionaryDescriptorService {
                         break;
                     case 'reestrtype':
                         res = new ReestrtypeDictionaryDescriptor(descr, this.apiSrv);
+                        break;
+                    case CALENDAR_DICT.id:
+                        res = new CalendarDictionaryDescriptor(descr, this.apiSrv);
                         break;
                 }
 

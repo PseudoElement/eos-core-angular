@@ -18,6 +18,7 @@ import { EOS_PARAMETERS_TAB } from 'eos-parameters/parametersSystem/shared/const
 import { E_DICT_TYPE } from 'eos-dictionaries/interfaces';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import {PipRX} from '../../eos-rest';
+import { DictionaryDescriptorService } from 'eos-dictionaries/core/dictionary-descriptor.service';
 
 const DEFAULT_DESKTOP_NAME = 'Мой рабочий стол';
 export const DEFAULT_DESKS: EosDesk[] = [{
@@ -60,6 +61,7 @@ export class EosDeskService {
         private _apiSrv: PipRX,
         private viewManager: ViewManager,
         private _eaps: EosAccessPermissionsService,
+        private _descrSrv: DictionaryDescriptorService,
     ) {
         this._selectedDesk = DEFAULT_DESKS[0];
         this._desksList = [...DEFAULT_DESKS];
@@ -86,18 +88,28 @@ export class EosDeskService {
     public appendDeskItemToView(desk: IDesk) {
         let item: IDeskItem;
         const dictionaryURL = this._router.url.split('/')[2];
-        if (this._router.url.split('/')[1] === 'parameters') {
+        const section = this._router.url.split('/')[1];
+        if (section === 'parameters') {
             const lable = EOS_PARAMETERS_TAB.find((i) => i.url === dictionaryURL);
             item = {
                 title: `Параметры системы (${lable.title})`,
                 url: '/parameters/' + lable.url,
                 blockId: lable.url,
             };
-        } else if (this._router.url.split('/')[1] === 'user_param') {
+        } else if (section === 'user_param') {
             item = {
                 title: 'Пользователи',
                 url: '/user_param',
                 blockId: 'user_param',
+            };
+        } else if (section === 'form') {
+            const list = this._descrSrv.visibleDictionaries();
+            const dict = list.find( i => i.id === dictionaryURL);
+            item = {
+                title: dict.title,
+                url: '/form/' + dictionaryURL,
+                iconName: '',
+                blockId: dictionaryURL,
             };
         } else {
             item = {
@@ -377,8 +389,12 @@ export class EosDeskService {
             };
         }
 
-        const s = '/spravochniki/' + dl.BLOCK_ID;
-        const result = defaults.find(it => it.url === s);
+        let s = '/spravochniki/' + dl.BLOCK_ID;
+        let result = defaults.find(it => it.url === s);
+        if (!result) {
+            s = '/form/' + dl.BLOCK_ID;
+            result = defaults.find(it => it.url === s);
+        }
         return Object.assign({}, result, {
             title: dl.LABEL,
             blockId: dl.BLOCK_ID,
