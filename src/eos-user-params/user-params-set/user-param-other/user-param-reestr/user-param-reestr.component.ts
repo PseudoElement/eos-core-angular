@@ -23,6 +23,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 
 export class UserParamReestrComponent implements OnDestroy, OnInit {
     @Input() defaultValues;
+    @Input() defaultUser: any;
     @Input() errorHidden: boolean;
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     @Output() pushIncrementError: EventEmitter<any> = new EventEmitter<any>();
@@ -33,6 +34,7 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
     private listDocGroup: NodeDocsTree[] = [];
     private _ngUnsebscribe: Subject<any> = new Subject();
     private allData: any;
+    private paramDocDefault: string;
     private prepareData: any;
     private prepareInputs: any;
     private mapChanges = new Map();
@@ -68,16 +70,27 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
         this._ngUnsebscribe.complete();
     }
     ngOnInit() {
-        const paramsDoc = String(this._userSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/g, '||');
-        this.getDocGroupName(paramsDoc, true).then((result) => {
-            if (result.length > 0) {
-                this.getListDoc(result);
-            }
-            this.allData = this._userSrv.hashUserContext;
-            this.inint();
-        }).catch(error => {
-            console.log(error);
-        });
+        if (this.defaultUser) {
+            this.paramDocDefault = String(this.defaultUser['REESTR_RESTRACTION_DOCGROUP']).replace(/,/g, '||');
+            this.getDocGroupName(this.paramDocDefault, true).then((result) => {
+                if (result.length > 0) {
+                    this.getListDoc(result);
+                }
+                this.allData = this.defaultUser;
+                this.inint();
+            });
+        } else {
+            const paramsDoc = String(this._userSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/g, '||');
+            this.getDocGroupName(paramsDoc, true).then((result) => {
+                if (result.length > 0) {
+                    this.getListDoc(result);
+                }
+                this.allData = this._userSrv.hashUserContext;
+                this.inint();
+            }).catch(error => {
+                console.log(error);
+            });
+        }
     }
     inint() {
         this.prepareData = this.formHelp.parse_Create(OTHER_USER_REESTR.fields, this.allData);
@@ -107,10 +120,17 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
             }
         });
         if (countError > 0 || this.mapChanges.size) {
-            this.pushChange.emit({
-                btn:  true,
-                data: this.mapChanges
-            });
+            if (this.defaultUser) {
+                this.pushChange.emit([{
+                    btn: true,
+                    data: this.mapChanges
+                }, this.form.value]);
+            } else {
+                this.pushChange.emit({
+                    btn: true,
+                    data: this.mapChanges
+                });
+            }
         } else {
             this.pushChange.emit(false);
         }
@@ -173,7 +193,12 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
         this.flagEdit = false;
         this.list = [];
         this.listDocGroup = [];
-        const paramsDoc = String(this._userSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/, '||');
+        let paramsDoc;
+        if (this.defaultUser) {
+            paramsDoc = this.paramDocDefault;
+        } else {
+            paramsDoc = String(this._userSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/, '||');
+        }
         this.getDocGroupName(paramsDoc, true).then(result => {
             if (result.length > 0) {
                 this.getListDoc(result);

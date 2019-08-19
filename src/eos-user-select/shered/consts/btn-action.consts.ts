@@ -176,6 +176,18 @@ export const Protocol: BtnActionFields = {
     isActive: false,
 };
 
+export const DefaultSettings: BtnActionFields = {
+    name: 'OpenDefaultSettings',
+    title: 'Настройки по умолчанию',
+    disabledClass: 'eos-icon eos-icon-repair-blue small',
+    enableClass: 'eos-icon eos-icon-repair-blue small',
+    tooltip: 'Настройки по умолчанию',
+    disabled: false,
+    activeClass: 'eos-icon eos-icon-repair-blue small',
+    activeBtnClass: '',
+    isActive: false,
+};
+
 // export const OpenMoreMenu: BtnActionFields = {
 //     name: 'OpenMoreMenu',
 //     title: 'Показать меню',
@@ -213,7 +225,8 @@ export const Allbuttons: BtnAction = {
         UsersStats,
         Protocol,
         SumProtocol,
-        UsersInfo
+        UsersInfo,
+        DefaultSettings
     ],
     moreButtonCheck: {
         check: false,

@@ -115,11 +115,11 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
                 this.countError++;
             }
           });
-
-            this.pushChange.emit({
-             btn: this.countError > 0,
-             data: this.newDataMap
-         });
+          const obj = Object.assign({ 'DEF_SEARCH_CITIZEN': this.newDataMap.get('DEF_SEARCH_CITIZEN')}, this.form.value);
+            this.pushChange.emit([{
+                btn: this.countError > 0,
+                data: this.newDataMap
+            }, obj]);
 
         this.countError > 0 ? this.btnDisabled = true : this.btnDisabled = false;
         this.countError = 0;

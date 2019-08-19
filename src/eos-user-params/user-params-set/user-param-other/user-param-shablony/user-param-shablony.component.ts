@@ -19,6 +19,7 @@ import { RemasterService } from '../../shared-user-param/services/remaster-servi
 
 export class UserParamShablonyComponent implements OnDestroy, OnInit {
     @Input() defaultValues;
+    @Input() defaultUser: any;
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     public initShablony: Array<any>;
     public form: FormGroup;
@@ -82,8 +83,14 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
         this._ngUnsebscribe.complete();
     }
     ngOnInit() {
-        this.allData = this._userSrv.hashUserContext;
-        this.inint();
+        if (this.defaultUser) {
+            this.allData = this.defaultUser;
+            this.inint();
+            this.initShablony = this.getInitShablony(this.defaultUser);
+        } else {
+            this.allData = this._userSrv.hashUserContext;
+            this.inint();
+        }
     }
     getInitShablony(result) {
         const arrayDateMain = [];
@@ -125,10 +132,17 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
             }
         });
         if (countError > 0 || this.mapChanges.size) {
-            this.pushChange.emit({
-                btn: true,
-                data: this.mapChanges
-            });
+            if (this.defaultUser) {
+                this.pushChange.emit([{
+                    btn: true,
+                    data: this.mapChanges
+                }, this.form.value]);
+            } else {
+                this.pushChange.emit({
+                    btn: true,
+                    data: this.mapChanges
+                });
+            }
         } else {
             this.pushChange.emit(false);
         }

@@ -517,6 +517,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         }, 0);
     }
 
+    OpenDefaultSettings() {
+        setTimeout(() => {
+            this._router.navigate(['user_param/default-settings']);
+        }, 0);
+    }
+
     setCheckedAllFlag() {
         const leng = this.filterForFlagChecked().length;
         if (leng === 0) {

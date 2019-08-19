@@ -128,11 +128,11 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
                 this.countError++;
             }
           });
-          this.pushChange.emit({
-            btn: this.countError > 0,
-            data: this.newDataMap
-        });
-        this.countError > 0 ? this.btnDisabled = true : this.btnDisabled = false;
+            this.pushChange.emit([{
+                btn: this.countError > 0,
+                data: this.newDataMap
+            }, this.form.value]);
+            this.countError > 0 ? this.btnDisabled = true : this.btnDisabled = false;
         this.countError = 0;
         });
     }

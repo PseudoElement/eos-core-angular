@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { Subject } from 'rxjs';
@@ -19,6 +19,9 @@ import {ErrorHelperServices} from '../../shared/services/helper-error.services';
 })
 
 export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
+    @Input() defaultTitle: string;
+    @Input() defaultUser: any;
+    @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     prepInputsAttach;
     public titleHeader;
     public form: FormGroup;
@@ -54,23 +57,30 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     }
 
     ngOnInit() {
-        this._userParamsSetSr.getUserIsn({
-            expand: 'USER_PARMS_List'
-        })
-        .then((d) => {
-            this.allData = this._userParamsSetSr.hashUserContext;
-            this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Справочники';
+        if (this.defaultTitle) {
+            this.titleHeader = this.defaultTitle;
+            this.allData = this.defaultUser;
             this.inint();
-        })
-        .catch(err => {
-
-        });
+        } else {
+            this._userParamsSetSr.getUserIsn({
+                expand: 'USER_PARMS_List'
+            })
+                .then((d) => {
+                    this.allData = this._userParamsSetSr.hashUserContext;
+                    this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Справочники';
+                    this.inint();
+                })
+                .catch(err => {
+                });
+        }
     }
     inint() {
         this.prepareData = this.formHelp.parse_Create(DIRECTORIES_USER.fields, this.allData);
         this.prepareInputs = this.formHelp.getObjectInputFields(DIRECTORIES_USER.fields);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
-        this.parseInputs(this.allData['SRCH_CONTACT_FIELDS'], this.inputs);
+        if (this.defaultUser === undefined) {
+            this.parseInputs(this.allData['SRCH_CONTACT_FIELDS'], this.inputs);
+        }
         this.form = this.inpSrv.toFormGroup(this.inputs);
         this.editMode();
         this.formSubscriber();
@@ -130,6 +140,9 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
                 this.flagEdit = false;
                 this._pushState();
                 this.editMode();
+                if (this.defaultTitle) {
+                    this.DefaultSubmitEmit.emit(this.form.value);
+                }
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
             }).catch((error) => {
                 this._errorSrv.errorHandler(error);
@@ -159,7 +172,11 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
         const depart = this.form.controls['rec.SRCH_CONTACT_FIELDS_DEPARTMENT'].value;
         this.mapChanges.forEach((value, key, arr) => {
             if (typeof value !== 'boolean') {
-                arrayQuery.push(this.createReq(key, value));
+                if (this.defaultTitle) {
+                    arrayQuery.push(this.createReqDefault(key, value));
+                } else {
+                    arrayQuery.push(this.createReq(key, value));
+                }
             }
         });
         if (surn) {
@@ -171,7 +188,11 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
         if (depart) {
             arrSrch.push('DEPARTMENT');
         }
-        arrayQuery.push(this.createReq('SRCH_CONTACT_FIELDS', arrSrch.length ? arrSrch.join(',') : ' '));
+        if (this.defaultTitle) {
+            arrayQuery.push(this.createReqDefault('SRCH_CONTACT_FIELDS', arrSrch.length ? arrSrch.join(',') : ' '));
+        } else {
+            arrayQuery.push(this.createReq('SRCH_CONTACT_FIELDS', arrSrch.length ? arrSrch.join(',') : ' '));
+        }
     }
     createReq(name: string, value: any): any {
         return {
@@ -182,6 +203,17 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
             }
         };
     }
+
+    createReqDefault(name: string, value: any): any {
+        return {
+            method: 'MERGE',
+            requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 ${name}')`,
+            data: {
+                PARM_VALUE: `${value}`
+            }
+        };
+    }
+
     default(event?) {
         this.prepareData = {};
         this.prepareInputs = {};

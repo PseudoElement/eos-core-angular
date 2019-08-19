@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { Subject } from 'rxjs';
@@ -21,6 +21,9 @@ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 })
 
 export class UserParamEAComponent implements OnInit, OnDestroy {
+    @Input() defaultTitle: string;
+    @Input() defaultUser: any;
+    @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public btnDisabled: boolean = true;
     public _fieldsType = {};
     public prepInputs;
@@ -32,6 +35,7 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
     public titleHeader: string;
     private newData = new Map();
     private prepDate;
+    private allData;
     private listForQuery: Array<string> = [];
     private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -40,26 +44,32 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
         private _inputCntlSrv: InputControlService,
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
-        private _errorSrv: ErrorHelperServices,
+        private _errorSrv: ErrorHelperServices
     ) {}
     ngOnInit() {
-        this._userParamsSetSrv.saveData$
+        if (this.defaultTitle) {
+            this.titleHeader = this.defaultTitle;
+            this.allData = this.defaultUser;
+            this.init();
+        } else {
+            this._userParamsSetSrv.saveData$
             .pipe(
                 takeUntil(this._ngUnsubscribe)
             )
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit();
             });
-        this._userParamsSetSrv.getUserIsn({
-            expand: 'USER_PARMS_List'
-        })
-        .then(() => {
-            this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
-            this.init();
-        })
-        .catch(err => {
+            this._userParamsSetSrv.getUserIsn({
+                expand: 'USER_PARMS_List'
+            })
+            .then(() => {
+                this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Внешние приложения';
+                this.init();
+            })
+            .catch(err => {
 
-        });
+            });
+        }
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
@@ -68,7 +78,11 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
     init() {
         this.prepInputs = this.getObjectInputFields(this.constUserParam.fields);
         const allData = this._userParamsSetSrv.hashUserContext;
-        this.sortedData = this.linearSearchKeyForData(this.constUserParam.fields, allData);
+        if (this.defaultTitle) {
+            this.sortedData = this.linearSearchKeyForData(this.constUserParam.fields, this.allData);
+        } else {
+            this.sortedData = this.linearSearchKeyForData(this.constUserParam.fields, allData);
+        }
         this.prepDate = this.convData(this.sortedData);
         this.inputs = this.getInputs();
         this.getList(this.prepDate);
@@ -173,13 +187,22 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
         }
     }
     submit(event?): Promise<any> {
-        return this.apiSrv.batch(this.createObjRequest(), '').then(response => {
+        let query;
+        if (this.defaultTitle) {
+            query = this.createReqDefault();
+        } else {
+            query = this.createObjRequest();
+        }
+        return this.apiSrv.batch(query, '').then(response => {
             this.btnDisabled = true;
             this.upStateInputs();
             this.editFlag = false;
             this.disableForEditAllForm(false);
             this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
             this._pushState();
+            if (this.defaultTitle) {
+                this.DefaultSubmitEmit.emit(this.form.value);
+            }
             // return this._userParamsSetSrv.getUserIsn();
         }).catch(error => {
             this._errorSrv.errorHandler(error);
@@ -212,6 +235,27 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
         });
         return req;
     }
+
+    createReqDefault(): any[] {
+        const req = [];
+        Array.from(this.newData).forEach(val => {
+            let parn_Val;
+            if (typeof val[1] === 'boolean') {
+                val[1] === false ? parn_Val = 'NO' : parn_Val = 'YES';
+            } else {
+                String(val[1]) === 'null' ? parn_Val = '' : parn_Val = val[1];
+            }
+            req.push({
+                method: 'MERGE',
+                requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 ${val[0].substr(4)}')`,
+                data: {
+                    PARM_VALUE: `${parn_Val}`
+                }
+            });
+        });
+        return req;
+    }
+
     cancellation(event?) {
         if (!this.btnDisabled) {
             this._msgSrv.addNewMessage(PARM_CANCEL_CHANGE);

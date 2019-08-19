@@ -21,6 +21,7 @@ import {PARM_ERROR_SEND_FROM} from '../../shared-user-param/consts/eos-user-para
 
 export class UserParamAddressesComponent implements OnDestroy, OnInit {
     @Input() defaultValues;
+    @Input() defaultUser: any;
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     public form: FormGroup;
     public inputs: any;
@@ -67,18 +68,31 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
         this._ngUnsebscribe.complete();
     }
     ngOnInit() {
-        const ADDR_EXP = String(this._userSrv.hashUserContext['ADDR_EXPEDITION']);
-        this.allData = this._userSrv.hashUserContext;
-        Promise.all([this.getList(), this.getDepartMentName(ADDR_EXP, true)]).then(result => {
-            const dep = result[1] as DEPARTMENT[];
-            if (dep.length > 0) {
-                this.sendFromOrigin = dep[0].CLASSIF_NAME;
-                this.sendFrom = dep[0].CLASSIF_NAME;
-            }
-            this.updateOptionsForConst(result[0] as DELIVERY_CL[]);
-            this.inint();
-        });
-
+        if (this.defaultUser) {
+            const ADDR_EXP = String(this.defaultUser['ADDR_EXPEDITION']);
+            Promise.all([this.getList(), this.getDepartMentName(ADDR_EXP, true)]).then(result => {
+                const dep = result[1] as DEPARTMENT[];
+                if (dep.length > 0) {
+                    this.sendFromOrigin = dep[0].CLASSIF_NAME;
+                    this.sendFrom = dep[0].CLASSIF_NAME;
+                }
+                this.updateOptionsForConst(result[0] as DELIVERY_CL[]);
+                this.allData = this.defaultUser;
+                this.inint();
+            });
+        } else {
+            const ADDR_EXP = String(this._userSrv.hashUserContext['ADDR_EXPEDITION']);
+            this.allData = this._userSrv.hashUserContext;
+            Promise.all([this.getList(), this.getDepartMentName(ADDR_EXP, true)]).then(result => {
+                const dep = result[1] as DEPARTMENT[];
+                if (dep.length > 0) {
+                    this.sendFromOrigin = dep[0].CLASSIF_NAME;
+                    this.sendFrom = dep[0].CLASSIF_NAME;
+                }
+                this.updateOptionsForConst(result[0] as DELIVERY_CL[]);
+                this.inint();
+            });
+        }
     }
     updateOptionsForConst(data: DELIVERY_CL[]) {
         OTHER_USER_ADDRESSES.fields.map(field => {
@@ -119,10 +133,17 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
             }
         });
         if (countError > 0 || this.mapChanges.size) {
-            this.pushChange.emit({
-                btn: true,
-                data: this.mapChanges
-            });
+            if (this.defaultUser) {
+                this.pushChange.emit([{
+                    btn: true,
+                    data: this.mapChanges
+                }, this.form.value]);
+            } else {
+                this.pushChange.emit({
+                    btn: true,
+                    data: this.mapChanges
+                });
+            }
         } else {
             this.pushChange.emit(false);
         }

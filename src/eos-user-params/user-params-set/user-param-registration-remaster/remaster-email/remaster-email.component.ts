@@ -491,8 +491,13 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
         this.updateStringRcSend(+position[2], bool3, 'stringMailResive');
     }
     emitChange() {
+        const obj =  {
+            'rec.RCSEND': this.stringRCSEND,
+            'rec.MAILRECEIVE': this.stringMailResive,
+            'rec.RECEIP_EMAIL': this.form.controls['rec.RECEIP_EMAIL'].value,
+        };
         if (this.ErrorMailRecive || this.ErrorRcSend) {
-            this.pushChenge.emit([
+            this.pushChenge.emit([[
                 {
                     key: 'RCSEND',
                     value: this.stringRCSEND
@@ -505,7 +510,7 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
                     key: 'RECEIP_EMAIL',
                     value: this.form.controls['rec.RECEIP_EMAIL'].value,
                 },
-            ]);
+            ], obj]);
         } else {
             this.pushChenge.emit(false);
         }
