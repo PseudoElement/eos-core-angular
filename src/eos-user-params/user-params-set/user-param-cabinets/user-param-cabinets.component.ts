@@ -529,9 +529,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value;
                 this.prepFormCancel(this.defoltInputs, true);
                 this.checkDataToDisabled();
-                if (this.defaultTitle) {
-                    this.DefaultSubmitEmit.emit(this.form.value);
-                }
+                this.getControlAuthor().then((author) => {
+                    this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
+                });
             })
             .catch(err => {
                 console.log(err);
