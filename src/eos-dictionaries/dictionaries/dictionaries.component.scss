@@ -7,7 +7,7 @@
     max-height: calc(100vh - 130px);
 
     .dictionary {
-        height: 100px;
+        height: 102px;
         // flex-basis: calc((100% - 4*10px) / 4);
         flex-basis: calc((100% - 4*10px) / 1);
         margin-right: 10px;
@@ -27,27 +27,37 @@
             max-width: 490px;
             padding: 0;
             position: relative;
+            flex-grow: 1;
+            flex-basis: 400px;
+            flex-shrink: 1;
+
             .text {
-                max-height: 52px;
-                position: absolute;
-                display: inline-block;
-                top: 38px;
-                left: 112px;
-                width: calc(100% - 120px);
-                overflow: hidden;
+                display: table-cell;
+                vertical-align: middle;
+                width: 100%;
+                // max-height: 52px;
+                // position: absolute;
+                // display: inline-block;
+                // top: 38px;
+                // left: 112px;
+                // width: calc(100% - 120px);
+                // overflow: hidden;
                 white-space: normal;
             }
         }
 
 
         .text {
-            position: relative;
-            top: -8px;
-            left: -6px;
-            width: calc(100% - 120px);
-            overflow: hidden;
-            display: inline-block;
-            text-overflow: ellipsis;
+            display: table-cell;
+            vertical-align: middle;
+            width: 100%;
+            // position: relative;
+            // top: -8px;
+            // left: -6px;
+            // width: calc(100% - 120px);
+            // overflow: hidden;
+            // display: inline-block;
+            // text-overflow: ellipsis;
         }
 
         .icon {
@@ -56,10 +66,12 @@
         }
 
         .icon-wrapper {
-            display: inline-block;
-            height: 99px;
+            display: table-cell;
+            // height: 98px;
             width: 100px;
+            // padding: 0 26px 0 26px;
             padding: 26px;
+            line-height: 0;
         }
     }
 }

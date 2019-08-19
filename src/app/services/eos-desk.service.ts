@@ -71,7 +71,7 @@ export class EosDeskService {
         this._selectedDesk$ = new BehaviorSubject(this._selectedDesk);
 
         this.selectedDesk.subscribe((desk) => {
-            this._readReferences();
+            this._readReferences(desk ? desk.id : null);
         });
         this._appCtx.ready()
             .then(() => {
@@ -286,10 +286,10 @@ export class EosDeskService {
         return _newName;
     }
 
-    private _readReferences() {
+    private _readReferences(deskId = null) {
         this._appCtx.init()
             .then( () => {
-                this._dictSrv.getAllDictionariesList()
+                this._dictSrv.getAllDictionariesList(deskId)
                     .then((descriptors) => {
                         this._currentReferences = descriptors.map((descr) =>
                             this._deskItemByDescriptor(descr));
