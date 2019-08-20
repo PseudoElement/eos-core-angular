@@ -172,7 +172,7 @@ export const Protocol: BtnActionFields = {
     tooltip: 'Протокол',
     disabled: false,
     activeClass: 'eos-icon eos-icon-new-doc-blue small',
-    activeBtnClass: '',
+    activeBtnClass: 'eos-icon-new-doc-blue',
     isActive: false,
 };
 

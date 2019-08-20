@@ -620,9 +620,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 this.flagChecked = null;
                 this.rtUserService.changeSelectedUser(null);
                 this.buttons.moreButtons[7].disabled = true;
+                this.buttons.moreButtons[11].disabled = true;
             }
             if (this.countcheckedField >= 1) {
                 this.rtUserService.changeSelectedUser(this.selectedUser);
+                this.buttons.moreButtons[11].disabled = false;
             }
         }
     }
