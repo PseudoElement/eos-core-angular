@@ -273,6 +273,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             this.reqCreateUpdateAllowed().then((data) => {
                 Promise.all([this._pipSrv.batch(data, '')]).then(() => {
                     this.UpdateMainArrayAfterSubmit();
+                    this.updateCardforAllowed = [];
                     this._rightsCabinetsSrv.submitRequest.next();
                     this.isLoading = false;
                     this._msgSrv.addNewMessage({
