@@ -238,6 +238,22 @@ export class UserParamsService {
             }
         });
     }
+    BatchData(type: string, requestUri: string, data?: Object): Promise<any[]> {
+        let query;
+        if (data !== undefined) {
+            query = [{
+                method: type,
+                requestUri: requestUri,
+                data: data
+            }];
+        } else {
+            query = [{
+                method: type,
+                requestUri: requestUri,
+            }];
+        }
+        return this._pipRx.batch(query, '');
+    }
     private _errorHandler(err) {
         if (err.code === 434) {
             return;
