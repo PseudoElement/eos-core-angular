@@ -137,7 +137,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     init() {
         this.pretInputs();
         this.parseInputsFromString(this.inputs, this.allData['FOLDERCOLORSTATUS']);
-        this.patchInputFuking();
+        this.patchInputValue();
         this.form = this.inpSrv.toFormGroup(this.inputs);
         this.editMode();
         this.formSubscriber();
@@ -160,7 +160,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     getValueForString(val, folderString): boolean {
         return folderString.charAt(val) === '1' ? true : false;
     }
-    patchInputFuking() {
+    patchInputValue() {
         if (String(this.inputs['rec.HILITE_PRJ_RC'].value).trim() !== '') {
             this.inputs['rec.HILITE_PRJ_RC_BOOLEAN'].value = true;
         } else {
@@ -173,6 +173,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             this.inputs['rec.HILITE_RESOLUTION_BOOLEAN'].value = false;
         }
     }
+
     formSubscriber() {
         this.form.valueChanges.subscribe(data => {
             this.checkTouch(data);
@@ -366,6 +367,10 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                     });
                 } else {
                     this.form.value['rec.FOLDERCOLORSTATUS'] = this.newFolderString;
+                    const val1 = this.form.controls['rec.HILITE_RESOLUTION'].value;
+                    const val2 = this.form.controls['rec.HILITE_PRJ_RC'].value;
+                    this.form.value['rec.HILITE_RESOLUTION'] = String(val1);
+                    this.form.value['rec.HILITE_PRJ_RC'] = String(val2);
                     this.DefaultSubmitEmit.emit(this.form.value);
                 }
             }).catch((error) => {

@@ -148,8 +148,9 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
         return true;
     }
     checkDevSearch(data, key) {
+        const dataVal = this.userData !== null ? this.userData : this.defaultValues;
         const updateString = this.parseDevSearch(data, key);
-        if (this.userData['DEF_SEARCH_CITIZEN'] !== updateString) {
+        if (dataVal['DEF_SEARCH_CITIZEN'] !== updateString) {
             this.newDataMap.set('DEF_SEARCH_CITIZEN', updateString);
         } else {
           this.newDataMap.delete('DEF_SEARCH_CITIZEN');

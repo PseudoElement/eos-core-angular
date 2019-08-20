@@ -358,10 +358,10 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         this.prepareData = {};
         this.prepareInputs = {};
         const prep = this.formHelp.getObjQueryInputsFieldForDefault(this.formHelp.queryparams(RC_USER, 'fieldsDefaultValue'));
-        this._pipRx.read(prep).then(data => {
+        this._pipRx.read(prep).then((data: any) => {
             this.disabledFlagDelite = true;
             this.mapChanges.clear();
-            this.dopRec = null;
+            this.getInfoFroCode(data[1].PARM_VALUE);
             this.creatchesheDefault = this.formHelp.createhash(data);
             this.prepareData = this.formHelp.parse_Create(RC_USER.fields, this.creatchesheDefault);
             this.prepareInputs = this.formHelp.getObjectInputFields(RC_USER.fields);

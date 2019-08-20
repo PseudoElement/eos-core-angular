@@ -388,7 +388,8 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
                     }
                 }
             });
-            if (this.userData['RCSEND'] !== this.stringRCSEND || this.mapNewValue.size > 0) {
+            const dataVal = this.userData !== null ? this.userData : this.defaultValues;
+            if (dataVal['RCSEND'] !== this.stringRCSEND || this.mapNewValue.size > 0) {
                 this.ErrorRcSend = true;
             } else {
                 this.ErrorRcSend = false;
@@ -411,7 +412,8 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
                     }
                 }
             });
-            if (this.userData['MAILRECEIVE'] !== this.stringMailResive) {
+            const dataVal = this.userData !== null ? this.userData : this.defaultValues;
+            if (dataVal['MAILRECEIVE'] !== this.stringMailResive) {
                 this.ErrorMailRecive = true;
             } else {
                 this.ErrorMailRecive = false;

@@ -132,17 +132,10 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
             }
         });
         if (countError > 0 || this.mapChanges.size) {
-            if (this.defaultUser) {
-                this.pushChange.emit([{
-                    btn: true,
-                    data: this.mapChanges
-                }, this.form.value]);
-            } else {
-                this.pushChange.emit({
-                    btn: true,
-                    data: this.mapChanges
-                });
-            }
+            this.pushChange.emit([{
+                btn: true,
+                data: this.mapChanges
+            }, this.form.value]);
         } else {
             this.pushChange.emit(false);
         }
