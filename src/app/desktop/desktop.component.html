@@ -91,7 +91,7 @@
         (mousedown)="tryMove($event)"
         class="item-content xl-font block"
         [ngClass]="{ disabled: item.value.linkType === 1 }"
-        [routerLink]="item.value.linkType === 1 ? null : [item.value.url]"
+        [routerLink]="rttlink(item)"
     >
             <span class="icon-wrapper">
                 <span class="icon eos-icon {{ item.value.iconName }}"></span>

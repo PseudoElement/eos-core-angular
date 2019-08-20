@@ -85,14 +85,14 @@ export class EosBreadcrumbsService {
                         let descr = this.dictDescriptorSrv.getDescriptorClass(_dictId);
                         if (descr) {
                             bc.title = descr.title;
-                        }
 
-                        if (descr.getParentDictionaryId()) {
-                            descr = this.dictDescriptorSrv.getDescriptorClass(descr.getParentDictionaryId());
-                            crumbs.push({
-                                title: descr.title,
-                                url: '/spravochniki/' + descr.id
-                            });
+                            if (descr.getParentDictionaryId()) {
+                                descr = this.dictDescriptorSrv.getDescriptorClass(descr.getParentDictionaryId());
+                                crumbs.push({
+                                    title: descr.title,
+                                    url: '/spravochniki/' + descr.id
+                                });
+                            }
                         }
                     }
                 }

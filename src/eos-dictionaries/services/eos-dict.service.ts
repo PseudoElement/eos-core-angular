@@ -539,8 +539,11 @@ export class EosDictService {
         this._paginationConfig$.next(this.paginationConfig);
     }
 
-    getAllDictionariesList(): Promise<IDictionaryDescriptor[]> {
-        const allDicts = this._descrSrv.visibleDictionaries().concat(this._descrSrv.visibleNadzorDictionaries());
+    getAllDictionariesList(deskId): Promise<IDictionaryDescriptor[]> {
+        let allDicts = this._descrSrv.visibleDictionaries();
+        if (deskId !== 'system') {
+            allDicts = allDicts.concat(this._descrSrv.visibleNadzorDictionaries());
+        }
         return Promise.resolve(allDicts);
     }
 

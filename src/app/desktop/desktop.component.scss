@@ -2,8 +2,8 @@
     .sortable-wrapper {
         display: flex;
         flex-wrap: wrap;
-        //width: calc(100vw - 350px);
-        width: 100vw;
+        width: calc(100vw - 50px);
+        // width: 100vw;
         .icon-btn {
             cursor: pointer;
         }
@@ -17,7 +17,9 @@
         flex-basis: calc((100% - 4*10px) / 1);
         margin-right: 10px;
         margin-bottom: 10px;
-
+        flex-grow: 1;
+        flex-basis: 400px;
+        flex-shrink: 1;
         .btn {
             padding: 0;
         }

@@ -34,6 +34,11 @@ const formDictionariesComponent = [
         canDeactivate: [CanDeactivateGuard],
         component: DictFormComponent,
     },
+    {
+        path: '',
+        redirectTo: '/spravochniki',
+        pathMatch: 'full'
+    }
 ];
 const childrenDictionariesComponent = [{
     path: '',
@@ -118,7 +123,12 @@ const routes: Routes = [{
     children: childrenDictionariesComponent,
 }, {
     path: 'form',
-    data: { title: 'Справочники', showInBreadcrumb: false },
+    data: {
+        title: 'Справочники',
+        showInBreadcrumb: true,
+        showBreadcrumb: true,
+        showPushpin: true,
+    },
     canActivate: [AuthorizedGuard],
     canDeactivate: [CanDeactivateGuard],
     children: formDictionariesComponent,
