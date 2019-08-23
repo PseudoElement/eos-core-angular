@@ -10,19 +10,21 @@ import { DepartmentDictionaryDescriptor } from 'eos-dictionaries/core/department
 import { OrganizationDictionaryDescriptor } from 'eos-dictionaries/core/organization-dictionary-descriptor';
 import { CabinetDictionaryDescriptor } from 'eos-dictionaries/core/cabinet-dictionary-descriptor';
 import { DocgroupDictionaryDescriptor } from 'eos-dictionaries/core/docgroup-dictionary-descriptor';
-import {NADZORDICTIONARIES, NADZORDICTIONARIES_LINEAR, NADZORDICTIONARIES_TREE} from '../consts/dictionaries/nadzor.consts';
-import {BroadcastChanelDictionaryDescriptor} from './broadcast-chanel-dictionary-descriptor';
-import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
-import {SevCollisionsDictionaryDescriptor} from './sev-collisions-dictionary-descriptor';
-import {NadzorLinearDictionaryDescriptor, NadzorTreeDictionaryDescriptor} from './nadzor-dictionary-descriptor';
-import {EosSevRulesService} from '../services/eos-sev-rules.service';
-import {SevRulesDictionaryDescriptor} from './sev-rules-dictionary-descriptor';
-import {LinkDictionaryDescriptor} from './link-dictionary-descriptor';
-import {NomenklDictionaryDescriptor} from './nomenkl-dictionary-descriptor';
+import { NADZORDICTIONARIES, NADZORDICTIONARIES_LINEAR, NADZORDICTIONARIES_TREE } from '../consts/dictionaries/nadzor.consts';
+import { BroadcastChanelDictionaryDescriptor } from './broadcast-chanel-dictionary-descriptor';
+import { EosBroadcastChannelService } from '../services/eos-broadcast-channel.service';
+import { SevCollisionsDictionaryDescriptor } from './sev-collisions-dictionary-descriptor';
+import { NadzorLinearDictionaryDescriptor, NadzorTreeDictionaryDescriptor } from './nadzor-dictionary-descriptor';
+import { EosSevRulesService } from '../services/eos-sev-rules.service';
+import { SevRulesDictionaryDescriptor } from './sev-rules-dictionary-descriptor';
+import { LinkDictionaryDescriptor } from './link-dictionary-descriptor';
+import { NomenklDictionaryDescriptor } from './nomenkl-dictionary-descriptor';
 import { ReestrtypeDictionaryDescriptor } from './reestrtype-dictionary-descriptor';
-import {TemplateDictionaryDescriptor} from './template-dictionary-descriptor';
+import { TemplateDictionaryDescriptor } from './template-dictionary-descriptor';
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 import { CaCategoryDictionaryDescriptor } from './ca-category-dictionary-descriptor';
+import { CALENDAR_DICT } from 'eos-dictionaries/consts/dictionaries/calendar.consts';
+import { CalendarDictionaryDescriptor } from './calendar-dictionary-descriptor';
 // import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 @Injectable()
@@ -95,7 +97,7 @@ export class DictionaryDescriptorService {
                         res = new SevRulesDictionaryDescriptor(descr, this.apiSrv, this._rulesSrv);
                         break;
                     case 'cabinet':
-                        res = new CabinetDictionaryDescriptor(descr, this.apiSrv, /*this._confirmSrv*/);
+                        res = new CabinetDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case CA_CATEGORY_CL.id:
                         res = new CaCategoryDictionaryDescriptor(descr, this.apiSrv);
@@ -115,8 +117,12 @@ export class DictionaryDescriptorService {
                     case 'reestrtype':
                         res = new ReestrtypeDictionaryDescriptor(descr, this.apiSrv);
                         break;
-                        case 'shablony':
-                            res = new TemplateDictionaryDescriptor(descr, this.apiSrv);
+                    case 'shablony':
+                        res = new TemplateDictionaryDescriptor(descr, this.apiSrv);
+                        break;
+                    case CALENDAR_DICT.id:
+                        res = new CalendarDictionaryDescriptor(descr, this.apiSrv);
+                        break;
                 }
 
                 // Added for parent be a Nadzor
