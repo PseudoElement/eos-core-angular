@@ -138,7 +138,7 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
         return (control: AbstractControl): { [key: string]: any } => {
             const isn = this.getValue('rec.ISN_LCLASSIF');
             const isn_pair = this.getValue('rec.ISN_PARE_LINK');
-            if (isn === isn_pair) {
+            if (isn === isn_pair && isn !== null) {
                 return null;
             }
             return ValidatorsControl.controlsNonUniq(
