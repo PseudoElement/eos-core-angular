@@ -40,7 +40,6 @@ export class RightClassifNode {
     set value(v) {
         this._valueLast = this._value;
         this._value = +v;
-
         const right = this._curentUser['TECH_RIGHTS'].split('');
         right[this.key - 1] = this._value.toString();
         const newTechRight = right.join('');
@@ -56,7 +55,9 @@ export class RightClassifNode {
         setTimeout(() => {
             this._component.Changed.emit();
         }, 0);
-
+        if (this.key === 1) {
+            this._item.label = 'Пользователи';
+        }
         if (this.type !== E_TECH_USER_CLASSIF_CONTENT.none) {
             if (!this._valueLast && v && this.type !== E_TECH_USER_CLASSIF_CONTENT.limitation) { // создать корневой елемент
                 const newNode: USER_TECH = this._component.createEntyti<USER_TECH>({
@@ -111,11 +112,19 @@ export class RightClassifNode {
         }
         this._value = v;
         this._valueLast = v;
+        const techListLim = this._component.userTechList.filter((tech) => tech.FUNC_NUM === 1);
+        if (this.key === 1 && techListLim.length === 0) {
+            this._item.label = 'Пользователи';
+        }
+        if (this.key === 1 && techListLim.length > 0) {
+            this._item.label = 'Пользователи (доступ ограничен)';
+        }
     }
     addInstance() {
         this.isShell = true;
         this._component.addInstance(this._config, this)
             .then(data => {
+                this._item.label = 'Пользователи (доступ ограничен)';
                 const newList: NodeDocsTree[] = [];
                 if (data) {
                     data.forEach(entity => {
@@ -199,6 +208,9 @@ export class RightClassifNode {
                 funcNum: this.key,
                 data: this.curentSelectedNode.data['userTech']
             });
+            if (this.listContent.length === 0) {
+                this._item.label =  'Пользователи';
+            }
             const index = this._listUserTech.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
             this._listUserTech.splice(index, 1);
             const index2 = this._component.userTechList.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);

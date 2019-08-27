@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { NodeAbsoluteRight } from '../node-absolute';
 import { IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { IChengeItemAbsolute } from '../right-delo.intefaces';
@@ -12,7 +12,9 @@ import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tr
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EMPTY_ADD_ELEMENT_WARN } from 'app/consts/messages.consts';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
-
+import { PipRX } from 'eos-rest';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { Subject } from 'rxjs';
 
 @Component({
     selector: 'eos-absolute-rights-classif',
@@ -24,16 +26,24 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     @Input() editMode: boolean = true;
     @Input() selectedNode: NodeAbsoluteRight;
     @Input() curentUser: IParamUserCl;
+    @Input() cancelMode: boolean;
+    @ViewChild('newCards') newCards;
     @Output() Changed = new EventEmitter();
     userTechList;
     isLoading: boolean = false;
     isShell: Boolean = false;
+    ParentDue: any = [];
+    ContentNewCard: BsModalRef;
+    strNewCards: any;
     listClassif: RightClassifNode[] = [];
+    private SubmitCards: Subject<any> = new Subject();
     constructor (
         private _apiSrv: UserParamApiSrv,
         private _msgSrv: EosMessageService,
         private _userParmSrv: UserParamsService,
         private _waitClassifSrv: WaitClassifService,
+        private pipRx: PipRX,
+        private _modalSrv: BsModalService,
     ) {
         this.userTechList = this._userParmSrv.userTechList;
     }
@@ -85,6 +95,20 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                 };
         }
     }
+    DueArrayCreate(data): string {
+        let depChildStr = '';
+        const count = this.ParentDue.length;
+        for (const item of data) {
+            if ((item.DUE.split('.').length - 1) === 2 && this.ParentDue.indexOf(item.DUE) === -1 && item.DUE !== '0.') {
+                this.ParentDue.push(item.DUE);
+            }
+        }
+        if (this.ParentDue.length !== count) {
+            depChildStr =  this.ParentDue.join('%.|') + '%.';
+            depChildStr = depChildStr.replace('0.%.', '');
+        }
+        return depChildStr;
+    }
     addInstance(config: IConfigUserTechClassif, node: RightClassifNode): Promise<any> {
         return this._waitClassifSrv.openClassif(config.waitClassif)
         .then((data: string) => {
@@ -93,12 +117,24 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             }
             return Promise.reject('');
         })
-        .then((data: any[]) => {
+        .then((data: any) => {
             if (this._checkRepeat(node, data, config)) {
                 this._msgSrv.addNewMessage(EMPTY_ADD_ELEMENT_WARN);
                 return;
+            } else {
+                const parArr = [];
+                const depStr = this.DueArrayCreate(data);
+                data.forEach((parent) => {
+                    if ((parent.DUE.split('.').length - 1) === 2 && parent.DUE !== '0.') {
+                        parArr.push(parent.DUE);
+                    }
+                });
+                if (depStr !== '' && depStr !== '%.') {
+                    return this.GetCardsChild(depStr, data, parArr);
+                } else {
+                    return data;
+                }
             }
-            return data;
         });
     }
     hideToolTip() {
@@ -106,6 +142,45 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         if (element) {
             element.setAttribute('style', 'display: none');
         }
+    }
+
+    closeCardTech() {
+        this.SubmitCards.next(false);
+    }
+    saveCardTech() {
+        this.SubmitCards.next(true);
+    }
+    GetCardsChild(depStr: string, checkData: any, parArr): Promise<any> {
+        return this.pipRx.read({
+            DEPARTMENT: {
+                criteries: {
+                    DUE: depStr,
+                    ISN_CABINET: `isnull`,
+                    CARD_FLAG: `1`,
+                }
+            }
+        }).then((depData: any) => {
+            const oldCards = this.userTechList.map(item => item.DUE);
+            const NewDepData = depData.filter((dep) => parArr.indexOf(dep.DUE) === -1 && parArr.indexOf(dep.PARENT_DUE) !== -1 &&
+            oldCards.indexOf(dep.DUE) === -1);
+            return this._askForAddCard(NewDepData)
+                .then((addCard) => {
+                    this.ContentNewCard.hide();
+                    if (addCard === true) {
+                        const result = checkData.concat(NewDepData);
+                        return result;
+                    } else {
+                        return checkData;
+                    }
+                })
+                .catch(() => {
+                    this._msgSrv.addNewMessage({
+                        type: 'danger',
+                        title: 'Ошибка добавления картотек:',
+                        msg: 'Ошибка добавление подчиненных картотек'
+                    });
+                });
+        });
     }
     private _init () {
         if (this.selectedNode.isCreate || !this.curentUser['TECH_RIGHTS']) {
@@ -128,7 +203,11 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             });
             this.curentUser['TECH_RIGHTS'] = arr.join('');
         }
+        const techListLim = this.userTechList.filter((tech) => tech.FUNC_NUM === 1);
         TECH_USER_CLASSIF.forEach((item: ITechUserClassifConst) => {
+            if (item.key === 1 && techListLim.length !== 0) {
+                item.label = 'Пользователи (доступ ограничен)';
+            }
             this.listClassif.push(new RightClassifNode(item, this.curentUser, this.selectedNode, this));
         });
         if (this.selectedNode.isCreate) {
@@ -152,5 +231,19 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             return false;
         }
         return true;
+    }
+    private _askForAddCard(data: any): any {
+        this.strNewCards = [{value: 'Включить в перечень подчиненные картотеки:'}];
+        data.forEach((card) => {
+            this.strNewCards.push({value: String(card.CARD_NAME), due: card.DUE});
+        });
+        this.ContentNewCard = this._modalSrv.show(this.newCards);
+        return new Promise((res, _rej) => {
+            this.SubmitCards.subscribe((confirm) => {
+                if (confirm !== undefined) {
+                    res(confirm);
+                }
+            });
+        });
     }
 }
