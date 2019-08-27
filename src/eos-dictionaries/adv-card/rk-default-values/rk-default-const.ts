@@ -243,7 +243,7 @@ export const RKDefaultFields: TDefaultField[] = [
         title: 'от даты регистрации',
         order: 15,
         options: DAYS_TYPE_OPTS_VARIATIONS[0].options,
-        default: 1,
+        default: '1',
         // classif_id: NULL
     }, {
         key: 'SND_M',
