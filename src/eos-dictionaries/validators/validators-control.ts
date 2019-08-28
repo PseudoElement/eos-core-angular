@@ -4,6 +4,10 @@ export enum VALIDATOR_TYPE  {
     EXTENSION_DOT = 0,
 }
 
+export interface ValidatorOptions {
+    ignoreCase?: boolean;
+    ignoreWhiteSpace?: boolean;
+}
 export class ValidatorsControl {
 
     static optionInvalidValue = -0xDEADBEEF;
@@ -45,26 +49,53 @@ export class ValidatorsControl {
         };
    }
 
-   static controlsNonUniq(control1: any, control2: any, err: string, ignoreCase: boolean): ValidatorFn {
+   static controlsNonUniq(control1: any, control2: any, err: string, opts: ValidatorOptions): ValidatorFn {
         return (control: AbstractControl): { [key: string]: any } => {
             if (control1 && control2) {
                 if (control1.value && control2.value) {
-                    if (!ignoreCase) {
-                        if (control1.value === control2.value) {
-                            return { valueError: err};
-                        }
-                    } else {
-                        if (String(control1.value).toUpperCase() === String(control2.value).toUpperCase()) {
-                            return { valueError: err};
-                        }
+                    let v1: string = String(control1.value);
+                    let v2: string = String(control2.value);
+                    if (opts && opts.ignoreCase) {
+                        v1 = v1.toUpperCase();
+                        v2 = v2.toUpperCase();
                     }
-                }
+                    if (opts && opts.ignoreWhiteSpace) {
+                        v1 = v1.trim();
+                        v2 = v2.trim();
+                    }
+                    if (v1 === v2) {
+                        return { valueError: err};
+                    }
+            }
             }
             return null;
         };
     }
 
-   static optionsCorrect(options: any[]) {
+//    static controlsNonUniq(control1: any, control2: any, err: string, ignoreCase: boolean, ignoreWhiteSpace: boolean): ValidatorFn {
+//         return (control: AbstractControl): { [key: string]: any } => {
+//             if (control1 && control2) {
+//                 if (control1.value && control2.value) {
+//                     let v1: string = String(control1.value);
+//                     let v2: string = String(control2.value);
+//                     if (ignoreCase) {
+//                         v1 = v1.toUpperCase();
+//                         v2 = v2.toUpperCase();
+//                     }
+//                     if (ignoreWhiteSpace) {
+//                         v1 = v1.trim();
+//                         v2 = v2.trim();
+//                     }
+//                     if (v1 === v2) {
+//                         return { valueError: err};
+//                     }
+//             }
+//             }
+//             return null;
+//         };
+//     }
+
+    static optionsCorrect(options: any[]) {
         return (control: AbstractControl): { [key: string]: any } => {
             if (!control.value) {
                 return null;

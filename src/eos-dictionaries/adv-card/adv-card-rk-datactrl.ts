@@ -280,9 +280,6 @@ export class AdvCardRKDataCtrl {
                 } else {
                     reqs.push(this.cashedReadDict(el, callback));
                 }
-
-
-
             }
         });
 
