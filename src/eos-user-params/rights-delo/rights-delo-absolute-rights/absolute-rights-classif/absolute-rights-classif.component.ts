@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ViewChild } from '@angular/core';
 import { NodeAbsoluteRight } from '../node-absolute';
 import { IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { IChengeItemAbsolute } from '../right-delo.intefaces';
@@ -12,7 +12,7 @@ import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tr
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EMPTY_ADD_ELEMENT_WARN } from 'app/consts/messages.consts';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
-
+import { PipRX } from 'eos-rest';
 
 @Component({
     selector: 'eos-absolute-rights-classif',
@@ -24,16 +24,20 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     @Input() editMode: boolean = true;
     @Input() selectedNode: NodeAbsoluteRight;
     @Input() curentUser: IParamUserCl;
+    @Input() cancelMode: boolean;
+    @ViewChild('newCards') newCards;
     @Output() Changed = new EventEmitter();
     userTechList;
     isLoading: boolean = false;
     isShell: Boolean = false;
+    strNewCards: any;
     listClassif: RightClassifNode[] = [];
     constructor (
         private _apiSrv: UserParamApiSrv,
         private _msgSrv: EosMessageService,
-        private _userParmSrv: UserParamsService,
+        public _userParmSrv: UserParamsService,
         private _waitClassifSrv: WaitClassifService,
+        private pipRx: PipRX,
     ) {
         this.userTechList = this._userParmSrv.userTechList;
     }
@@ -85,20 +89,75 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                 };
         }
     }
+    DueArrayCreate(data): string {
+        let depChildStr = '';
+        const ParentDue = [];
+        for (const item of data) {
+            if (item.DUE !== '0.') {
+                ParentDue.push(item.DUE);
+            }
+        }
+        depChildStr = ParentDue.join('%.|') + '%.';
+        depChildStr = depChildStr.replace('0.%.', '');
+        return depChildStr;
+    }
+    veryBigEntyti(config: IConfigUserTechClassif, due: string ) {
+        const reqs = [];
+        let str = '';
+        due.split('|').forEach(elem => {
+            if (str.length < 1500) {
+                if (str.length === 0) {
+                    str = str + elem;
+                } else {
+                    str = str + '|' + elem;
+                }
+             } else {
+                reqs.push(this.getEntyti(str, config));
+                str = '';
+             }
+        });
+        if (str !== '') {
+            reqs.push(this.getEntyti(str, config));
+        }
+        return Promise.all(reqs).then((responses) => {
+            let mas = [];
+            responses.forEach(elem => {
+                mas = mas.concat(elem);
+            });
+            return mas;
+        });
+    }
     addInstance(config: IConfigUserTechClassif, node: RightClassifNode): Promise<any> {
         return this._waitClassifSrv.openClassif(config.waitClassif)
         .then((data: string) => {
             if (data.length) {
-                return this.getEntyti(data.split('|').join('||'), config);
+                if (data.split('|').join('|').length > 1500) {
+                    return this.veryBigEntyti(config , data);
+                } else {
+                    return this.getEntyti(data.split('|').join('|'), config);
+                }
             }
             return Promise.reject('');
         })
-        .then((data: any[]) => {
+        .then((data: any) => {
             if (this._checkRepeat(node, data, config)) {
                 this._msgSrv.addNewMessage(EMPTY_ADD_ELEMENT_WARN);
                 return;
+            } else {
+                if (config.rootLabel === 'Центральная картотека') {
+                    const parArr = [];
+                    const depStr = this.DueArrayCreate(data);
+                    data.forEach((parent) => {
+                        if (parent.DUE !== '0.') {
+                            parArr.push(parent.DUE);
+                        }
+                    });
+                    if (depStr !== '' && depStr !== '%.') {
+                        return this.GetCardsChild(depStr, data, parArr);
+                    }
+                }
+                return data;
             }
-            return data;
         });
     }
     hideToolTip() {
@@ -107,6 +166,83 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             element.setAttribute('style', 'display: none');
         }
     }
+
+    closeCardTech() {
+        this._userParmSrv.SubmitCards.next(false);
+    }
+    saveCardTech() {
+        this._userParmSrv.SubmitCards.next(true);
+    }
+    GetCardsChild(depStr: string, checkData: any, parArr): Promise<any> {
+        const reqs = [];
+        let str = '';
+        depStr.split('|').forEach(elem => {
+            if (str.length < 1500) {
+                if (str.length === 0) {
+                    str = str + elem;
+                } else {
+                    str = str + '|' + elem;
+                }
+             } else {
+                reqs.push(this.pipRx.read({ DEPARTMENT: {
+                    criteries: {
+                        DUE: str,
+                        ISN_CABINET: `isnull`,
+                        CARD_FLAG: `1`,
+                    }
+                }}));
+                str = '';
+             }
+        });
+        if (str !== '') {
+            reqs.push(this.pipRx.read({ DEPARTMENT: {
+                criteries: {
+                    DUE: str,
+                    ISN_CABINET: `isnull`,
+                    CARD_FLAG: `1`,
+                }
+            }}));
+        }
+        return Promise.all([...reqs]).then((depData: any) => {
+            const arrDue = [];
+            this.userTechList.forEach(item => {
+                if (item.FUNC_NUM === 1) {
+                    arrDue.push(item.DUE);
+                }
+            });
+            const NewDepData = depData[0].filter((dep) => parArr.indexOf(dep.DUE) === -1 && parArr.indexOf(dep.PARENT_DUE) !== -1 &&
+            arrDue.indexOf(dep.DUE) === -1);
+            if (NewDepData.length !== 0) {
+                return this.askForAddCard(NewDepData)
+                .then((addCard) => {
+                    if (addCard === true) {
+                        const result = checkData.concat(NewDepData);
+                        return result;
+                    } else {
+                        return checkData;
+                    }
+                })
+                .catch(() => {
+                    this._msgSrv.addNewMessage({
+                        type: 'danger',
+                        title: 'Ошибка добавления картотек:',
+                        msg: 'Ошибка добавление подчиненных картотек'
+                    });
+                });
+            } else {
+                return checkData;
+            }
+        });
+    }
+    askForAddCard(data: any): Promise<any> {
+        this.strNewCards = [];
+        this.strNewCards = [{value: 'Включить в перечень подчиненные картотеки:'}];
+        data.forEach((card) => {
+            this.strNewCards.push({value: String(card.CARD_NAME), due: card.DUE});
+        });
+        return this._userParmSrv.confirmCallCard(this.newCards);
+    }
+
     private _init () {
         if (this.selectedNode.isCreate || !this.curentUser['TECH_RIGHTS']) {
             const techRights: string = '1'.repeat(40);
@@ -128,7 +264,11 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             });
             this.curentUser['TECH_RIGHTS'] = arr.join('');
         }
+        const techListLim = this.userTechList.filter((tech) => tech.FUNC_NUM === 1);
         TECH_USER_CLASSIF.forEach((item: ITechUserClassifConst) => {
+            if (item.key === 1 && techListLim.length !== 0) {
+                item.label = 'Пользователи (доступ ограничен)';
+            }
             this.listClassif.push(new RightClassifNode(item, this.curentUser, this.selectedNode, this));
         });
         if (this.selectedNode.isCreate) {

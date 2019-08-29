@@ -8,6 +8,7 @@ import { IMessage } from 'eos-common/interfaces';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { Router } from '@angular/router';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 
 @Injectable()
 export class UserParamsService {
@@ -15,7 +16,9 @@ export class UserParamsService {
     userRightDocgroupList: any[] = [];
     userEditOrgType: any[] = [];
     checkedUsers: any[] = [];
+    cardModal: BsModalRef;
     public SubEmail: Subject<any> = new Subject();
+    public SubmitCards: Subject<any> = new Subject();
     public submitSave;
     private _saveFromAsk$: Subject<void> = new Subject<void>();
     private _updateUser$: Subject<void> = new Subject<void>();
@@ -69,6 +72,7 @@ export class UserParamsService {
         private _pipRx: PipRX,
         private _storageSrv: EosStorageService,
         private _router: Router,
+        private _modalSrv: BsModalService
     ) { }
     getUserIsn(cfg?: IGetUserCfg): Promise<boolean> {
         const defaultExpand: string = 'USER_PARMS_List,USERCARD_List/USER_CABINET_List,USER_RIGHT_DOCGROUP_List,USERDEP_List,USERCARD_List/USER_CARD_DOCGROUP_List,NTFY_USER_EMAIL_List,USER_TECH_List';
@@ -118,7 +122,7 @@ export class UserParamsService {
                 if (this._userContext.USER_PARMS_List) {
                     this._createHash();
                 }
-                if (!this._isTechUser) {
+                if (!this._isTechUser && this._router.url.substr(0, 27) === '/user-params-set/base-param') {
                     return this.getDepartmentFromUser([this._userContext['DUE_DEP']]);
                 }
                 return Promise.resolve([]);
@@ -238,6 +242,39 @@ export class UserParamsService {
             }
         });
     }
+    BatchData(type: string, requestUri: string, data?: Object): Promise<any[]> {
+        let query;
+        if (data !== undefined) {
+            query = [{
+                method: type,
+                requestUri: requestUri,
+                data: data
+            }];
+        } else {
+            query = [{
+                method: type,
+                requestUri: requestUri,
+            }];
+        }
+        return this._pipRx.batch(query, '');
+    }
+    confirmCallCard(card): Promise<any> {
+        this.cardModal = this._modalSrv.show(card);
+        return new Promise((res, _rej) => {
+            this.SubmitCards.subscribe((confirm) => {
+                if (confirm !== undefined) {
+                    res(confirm);
+                    this.cardModal.hide();
+                }
+            });
+            this._modalSrv.onHide.subscribe(reason => {
+                if (reason === 'backdrop-click' || reason === 'esc') {
+                    res(null);
+                }
+            });
+        });
+    }
+
     private _errorHandler(err) {
         if (err.code === 434) {
             return;

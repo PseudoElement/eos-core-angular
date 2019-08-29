@@ -39,4 +39,15 @@
         }
 
     }
+    .shell {
+        z-index: -1;
+    }
 }
+.list-right-abs {
+    list-style-type: none;
+    .add-card-abs {
+        color: black;
+        line-height: 32px;
+    }
+}
+
