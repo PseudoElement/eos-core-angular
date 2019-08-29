@@ -4,6 +4,7 @@ declare function openPopup(url: string, callback?: Function): boolean;
 
 @Injectable()
 export class CertificateService {
+    w: any;
     constructor() {
 
     }
@@ -17,7 +18,9 @@ export class CertificateService {
                 }
                 return reject();
             });
-
+            if (w) {
+                this.w = w;
+            }
             const checkDialClosed = setInterval(function () {
                 try {
                     if (!w || w['closed']) {

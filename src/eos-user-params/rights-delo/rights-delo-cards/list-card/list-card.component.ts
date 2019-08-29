@@ -31,7 +31,7 @@ export class ListCardRightComponent implements OnInit, OnDestroy {
         });
     }
 
-     ngOnInit() {
+    ngOnInit() {
         this._createList();
         this.isLoading = false;
     }
@@ -49,13 +49,13 @@ export class ListCardRightComponent implements OnInit, OnDestroy {
     //     this._cardSrv.test();
     // }
     private _createList() {
-        this.listNodes = [];
-        /* this._cardList = await  */this._cardSrv.getCardList()
+        this._cardSrv.getCardList()
         .then(data => {
-            this._cardList = data;
-            this._cardList.forEach((card: USERCARD) => {
-                this.listNodes.push(new CardRight(this._cardSrv, card));
-            });
+                this.listNodes = [];
+                this._cardList = data;
+                this._cardList.forEach((card: USERCARD) => {
+                    this.listNodes.push(new CardRight(this._cardSrv, card));
+                });
         });
     }
 }

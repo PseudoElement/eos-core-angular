@@ -5,6 +5,7 @@
                 class="btn"
                 tooltip="Добавить должностное лицо/подразделение"
                 placement="bottom"
+                [disabled]="checkFlag"
                 triggers="hover"
                 containerClass="tooltip-info"
                 (click)="addDep()"
@@ -36,8 +37,19 @@
                 Разрешить операцию рассылки проекта резолюции
             </label>
         </div>
+        <div *ngIf="getAllDep">
+            <label class="checkbox" >
+                <input type="checkbox"
+                [disabled]="!editMode"
+                [checked]="checkFlag"
+                hide
+                (change)="checkForAll()">
+                <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                За всех
+            </label>
+        </div>
 
-        <div class="list-tree-dep">
+        <div *ngIf="!checkFlag" class="list-tree-dep">
             <eos-list-doc-tree
                 class="tree-classif-node"
                 [listNode]="listUserDep"

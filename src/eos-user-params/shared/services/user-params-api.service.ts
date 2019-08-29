@@ -16,7 +16,7 @@ import { EosStorageService } from '../../../../src/app/services/eos-storage.serv
 export class UserParamApiSrv {
     flagTehnicalUsers: boolean;
     flagDelitedPermanantly: boolean;
-
+    flagOnlyThisDepart: boolean = true;
     sysParam: any;
     dueDep: any = '0.';
     srtConfig: IUserSort = {};
@@ -30,6 +30,7 @@ export class UserParamApiSrv {
     searchState: boolean = false;
     stateTehUsers: boolean = false;
     stateDeleteUsers: boolean = false;
+    stateOnlyThisDepart: boolean = false;
     public Allcustomer: UserSelectNode[] = [];
    // private helpersClass;
     get _confiList$(): Observable<IConfig> {
@@ -144,7 +145,7 @@ export class UserParamApiSrv {
                 }
                 q['loadmode'] = 'Table';
             } else {
-                const ob = {};
+                let ob = {};
                 ob['DUE_DEP'] = `${dueDep}%`;
                 q = {
                     USER_CL: PipRX.criteries(ob),
@@ -153,6 +154,12 @@ export class UserParamApiSrv {
                     inlinecount: 'allpages',
                     loadmode: 'Table'
                 };
+
+                // отобрение ДЛ из подчененных подразделений
+                if (!this.flagOnlyThisDepart && this.dueDep !== '0.' && this.configList.shooseTab === 0) {
+                    ob = {'USER_CL.DEP.ISN_HIGH_NODE': `${sessionStorage.getItem('isnNodeMy')}`};
+                    q['USER_CL'] = PipRX.criteries(ob);
+                }
                 if (this.currentSort === 'fullDueName') {
                     propOrderBy = 'DEP.CLASSIF_NAME';
                     propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
@@ -160,7 +167,6 @@ export class UserParamApiSrv {
                 }   else {
                     q.orderby = `${propOrderBy}`;
                 }
-                //  PipRX.criteries({ DUE_DEP: `${dueDep}%` });
             }
         }
         if (this.configList.shooseTab === 1) {

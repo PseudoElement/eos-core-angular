@@ -71,7 +71,7 @@
 <!-- Подраздиления (Ограничить картотекой Автора) -->
 <ng-template #department>
     <eos-right-absolute-department style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser"
-        (Changed)="checkChange()"></eos-right-absolute-department>
+        (Changed)="checkChange($event)"></eos-right-absolute-department>
 </ng-template>
 
 <!-- всех/незаполненых -->
