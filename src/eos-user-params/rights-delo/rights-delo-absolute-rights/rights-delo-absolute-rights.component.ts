@@ -129,7 +129,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             USER_CL: {
                 criteries: {
                     DELO_RIGHTS: '[1]%',
-                    PROTECTED: '0'
+                    PROTECTED: '0',
+                    DELETED: '0'
                 },
             },
             expand: 'USER_TECH_List'
@@ -149,7 +150,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 });
             }
             for (const user of data) {
-                if (this.curentUser.ISN_LCLASSIF === user.ISN_LCLASSIF && sysTechBol) {
+                if (this.curentUser.ISN_LCLASSIF === user.ISN_LCLASSIF && sysTechBol && !this.CheckLimitTech(user.USER_TECH_List)) {
                     count++;
                 }
                 if (this.CheckLimitTech(user.USER_TECH_List)) {
