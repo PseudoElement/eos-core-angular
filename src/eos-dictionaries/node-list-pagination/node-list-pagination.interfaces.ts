@@ -3,6 +3,7 @@ export interface IPaginationConfig {
     length: number;
     current: number;
     itemsQty: number;
+    showMore?: boolean;
 }
 
 export interface IPageLength {

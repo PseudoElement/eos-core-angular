@@ -11,6 +11,7 @@ import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-selec
 import { IUserSort } from '../../../eos-user-select/shered/interfaces/user-select.interface';
 import { SortsList } from '../../../eos-user-select/shered/interfaces/user-select.interface';
 import { EosStorageService } from '../../../../src/app/services/eos-storage.service';
+import { IPaginationUserConfig } from 'eos-user-select/shered/consts/pagination-user-select.interfaces';
 // import {EosStorageService} from '../../../../src/app/services/eos-storage.service';
 @Injectable()
 export class UserParamApiSrv {
@@ -32,7 +33,7 @@ export class UserParamApiSrv {
     stateDeleteUsers: boolean = false;
     stateOnlyThisDepart: boolean = false;
     public Allcustomer: UserSelectNode[] = [];
-   // private helpersClass;
+    // private helpersClass;
     get _confiList$(): Observable<IConfig> {
         return this.confiList$.asObservable();
     }
@@ -42,7 +43,7 @@ export class UserParamApiSrv {
         private users_pagination: UserPaginationService,
         private _storageSrv: EosStorageService,
     ) {
-     //   this.helpersClass = new HelpersSortFunctions();
+        //   this.helpersClass = new HelpersSortFunctions();
         this.initConfigTitle();
         this.flagTehnicalUsers = false;
         this.flagDelitedPermanantly = false;
@@ -87,24 +88,33 @@ export class UserParamApiSrv {
     getQueryforDB(dueDep?) {
         let q: any = {};
         let skip, top;
-        const conf = this._storageSrv.getItem('users');
+        const conf: IPaginationUserConfig = this._storageSrv.getItem('users');
         if (conf) {
-            top = conf.length;
-            skip = conf.length * conf.current - conf.length;
+            if (conf.showMore) {
+                if (conf.current !== 2 && conf.start !== 1) {
+                    top = ((conf.current - conf.start) * conf.length) + conf.length;
+                }   else {
+                    top = conf.length * conf.current;
+                }
+                skip = conf.length * conf.start - conf.length;
+            } else {
+                top = conf.length;
+                skip = conf.length * conf.current - conf.length;
+            }
         } else {
             top = 10;
             skip = 0;
         }
         let propOrderBy;
-        if ( this.currentSort === 'login') {
+        if (this.currentSort === 'login') {
             propOrderBy = 'CLASSIF_NAME';
             propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
-        }   else if ( this.currentSort === 'department') {
+        } else if (this.currentSort === 'department') {
             propOrderBy = 'NOTE';
             propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
         }
-       // let propOrderBy = this.currentSort === 'login' ? 'CLASSIF_NAME' : 'NOTE';
-      //  propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+        // let propOrderBy = this.currentSort === 'login' ? 'CLASSIF_NAME' : 'NOTE';
+        //  propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
 
         if (this.stateTehUsers) {
             propOrderBy = 'DUE_DEP asc';
@@ -134,14 +144,14 @@ export class UserParamApiSrv {
                     ob['ORACLE_ID'] = 'isnotnull';
                 }
                 if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
-                  //  q['USER_CL'] = ALL_ROWS;
+                    //  q['USER_CL'] = ALL_ROWS;
                     ob['CLASSIF_NAME'] = '_';
                 }
                 if (this.currentSort === 'fullDueName') {
                     propOrderBy = 'SURNAME_PATRON';
                     propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
                     ob['orderby'] = propOrderBy;
-                }   else {
+                } else {
                     q.orderby = `${propOrderBy}`;
                 }
                 q['loadmode'] = 'Table';
@@ -158,14 +168,14 @@ export class UserParamApiSrv {
 
                 // отобрение ДЛ из подчененных подразделений
                 if (!this.flagOnlyThisDepart && this.dueDep !== '0.' && this.configList.shooseTab === 0) {
-                    ob = {'USER_CL.DEP.ISN_HIGH_NODE': `${sessionStorage.getItem('isnNodeMy')}`};
+                    ob = { 'USER_CL.DEP.ISN_HIGH_NODE': `${sessionStorage.getItem('isnNodeMy')}` };
                     q['USER_CL'] = PipRX.criteries(ob);
                 }
                 if (this.currentSort === 'fullDueName') {
                     propOrderBy = 'SURNAME_PATRON';
                     propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
                     ob['orderby'] = propOrderBy;
-                }   else {
+                } else {
                     q.orderby = `${propOrderBy}`;
                 }
             }
@@ -437,21 +447,21 @@ export class UserParamApiSrv {
     updateDepartMent(pageList, tabs) {
         const setQueryResult = new Set();
         let stringQuery: Array<string> = [];
-       // let valueForPadQuery = [];
-       // let padQuery;
+        // let valueForPadQuery = [];
+        // let padQuery;
         let parseStringUserDue = [];
         // pageList = pageList.map((user: USER_CL) => {
         //     user['DEPARTMENT'] = !user.NOTE || user.NOTE === 'null' ? '...' : user.NOTE;
         //     return user;
         // });
-      //  return Promise.resolve(pageList);
+        //  return Promise.resolve(pageList);
 
-      pageList.forEach(user => {
-        if (user.DUE_DEP) {
-            stringQuery.push(user.DUE_DEP);
-        }
-    });
-          stringQuery.length === 0 ? stringQuery = ['0000'] : stringQuery = stringQuery;
+        pageList.forEach(user => {
+            if (user.DUE_DEP) {
+                stringQuery.push(user.DUE_DEP);
+            }
+        });
+        stringQuery.length === 0 ? stringQuery = ['0000'] : stringQuery = stringQuery;
         return this.getDepartment(stringQuery)
             .then(departments => {
                 departments.forEach(el => {
