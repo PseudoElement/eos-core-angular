@@ -203,14 +203,14 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                 }
             }}));
         }
-        return Promise.all(reqs).then((depData: any) => {
+        return Promise.all([...reqs]).then((depData: any) => {
             const arrDue = [];
             this.userTechList.forEach(item => {
                 if (item.FUNC_NUM === 1) {
                     arrDue.push(item.DUE);
                 }
             });
-            const NewDepData = depData.filter((dep) => parArr.indexOf(dep.DUE) === -1 && parArr.indexOf(dep.PARENT_DUE) !== -1 &&
+            const NewDepData = depData[0].filter((dep) => parArr.indexOf(dep.DUE) === -1 && parArr.indexOf(dep.PARENT_DUE) !== -1 &&
             arrDue.indexOf(dep.DUE) === -1);
             if (NewDepData.length !== 0) {
                 return this.askForAddCard(NewDepData)

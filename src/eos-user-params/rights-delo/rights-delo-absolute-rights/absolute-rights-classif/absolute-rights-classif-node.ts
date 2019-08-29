@@ -223,8 +223,7 @@ export class RightClassifNode {
                         this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode && childDue.indexOf(node.DUE) === -1);
                         this._listUserTech = this._listUserTech.filter(node => childDue.indexOf(node['DUE']) === -1);
                         this._component.userTechList = this._component.userTechList.filter(node => childDue.indexOf(node['DUE']) === -1);
-                    }
-                    if (answer !== true) {
+                    } else {
                         this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode);
                     }
                     this._parentNode.pushChange({
