@@ -60,6 +60,25 @@
         <div *ngIf="node.isShell" class="shell"></div>
     </div>
 </div>
+<ng-template #newCards>
+        <div class="modal-header">
+            <h4 class="modal-title pull-left">Ограничения (добавление подчиненных картотек)</h4>
+            <button type="button" class="close pull-right" aria-label="Close" (click)="closeCardTech()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body new-card-body">
+            <ul class="list-right-abs">
+                <li class="add-card-abs" *ngFor="let str of strNewCards">{{str.value}}</li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <div class="pull-right srch-btns"> 
+                <button class="btn btn-primary s-font upper" (click)="closeCardTech()">Нет</button>
+                <button class="btn btn-primary-full s-font upper" (click)="saveCardTech()">Да</button>
+            </div> 
+        </div>
+</ng-template>
 
 
 <ng-template #spiner>

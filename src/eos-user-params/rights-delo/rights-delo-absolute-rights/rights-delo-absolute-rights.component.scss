@@ -35,3 +35,7 @@
     top: 45%;
     right: 23%;
 }
+.new-card-body {
+    height: calc(100vh - 600px) !important;
+    overflow: auto !important;
+}
