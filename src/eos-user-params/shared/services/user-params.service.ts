@@ -254,6 +254,23 @@ export class UserParamsService {
         }
         return this._pipRx.batch(query, '');
     }
+    confirmCallCard(card): Promise<any> {
+        this.cardModal = this._modalSrv.show(card);
+        return new Promise((res, _rej) => {
+            this.SubmitCards.subscribe((confirm) => {
+                if (confirm !== undefined) {
+                    res(confirm);
+                    this.cardModal.hide();
+                }
+            });
+            this._modalSrv.onHide.subscribe(reason => {
+                if (reason === 'backdrop-click' || reason === 'esc') {
+                    res(null);
+                }
+            });
+        });
+    }
+
     private _errorHandler(err) {
         if (err.code === 434) {
             return;
