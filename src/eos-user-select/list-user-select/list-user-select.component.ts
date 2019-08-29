@@ -55,6 +55,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     countMaxSize: number;
     shooseP: number;
     checkAll: string;
+    onlyView: boolean;
+    currentDue: string;
     // количество выбранных пользователей
     countcheckedField: number;
     shadow: boolean = false;
@@ -89,6 +91,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
 
     }
     ngOnInit() {
+        if (this._storage.getItem('onlyView') !== undefined) {
+            this.onlyView = this._storage.getItem('onlyView');
+        } else {
+            this.onlyView = true;
+        }
         this._pagSrv.getSumIteq = true;
         this._pagSrv.typeConfig = 'users';
         const confUsers = this._storage.getItem('users');
@@ -237,13 +244,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         } else {
             this.titleCurrentDue = this._apiSrv.configList.titleDue;
         }
-        this.flagScan = null;
+        // this.flagScan = null; убираю из-за сканирования
         this.flagChecked = null;
         this.isLoading = true;
         this._apiSrv.getUsers(param || '0.')
             .then((data: UserSelectNode[]) => {
                 //  this._pagSrv.UsersList =  this.helpersClass.sort(data, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-                    this.listUsers = this._pagSrv.UsersList;
+                        this.listUsers = this._pagSrv.UsersList;
                     // this.listUsers = this._pagSrv.UsersList.slice((this._pagSrv.paginationConfig.start - 1)
                     //     * this._pagSrv.paginationConfig.length,
                     //     this._pagSrv.paginationConfig.current
@@ -262,6 +269,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             }).catch(error => {
                 this._errorSrv.errorHandler(error);
             });
+        let due;
+        const url = this._router.url.split('/');
+        if (url[url.length - 1] === 'user_param') {
+            due = '0.';
+        } else {
+            due = url[url.length - 1];
+        }
+        this.currentDue = due;
     }
     checkSortSessionStore() {
         const sort = JSON.parse(sessionStorage.getItem('currentSort'));
@@ -358,7 +373,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 return false;
             }
         }
-        setTimeout(() => {
+       /*  setTimeout(() => { */
             if (this.selectedUser && !this.selectedUser.deleted) {
                 this._storage.setItem('selected_user_save', this.selectedUser);
                 this.rtUserService.flagDeleteScroll = false;
@@ -366,7 +381,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                     queryParams: { isn_cl: this.selectedUser.id }
                 });
             }
-        }, 0);
+       /*  }, 0); */
     }
 
     checkboxClick(e: Event) {
@@ -387,11 +402,22 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             animated: false,
             show: false,
         });
+        this.createUserModal.content.titleNow = this.titleCurrentDue;
         this.createUserModal.content.closedModal.subscribe(() => {
             setTimeout(() => {
                 this.createUserModal.hide();
             });
         });
+    }
+    setChengeOnlyView() {
+        if (this.shooseP === 0) {
+            this.onlyView = !this.onlyView;
+            this._apiSrv.flagOnlyThisDepart = this.onlyView;
+            this._storage.setItem('onlyView', this.onlyView);
+            const id = this._route.params['value'].nodeId;
+            this._pagSrv.resetConfig();
+            this.initView(id ? id : '0.');
+        }
     }
 
     sortPageList(nameSort: string) {
@@ -466,33 +492,33 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     // }
 
     OpenAddressManagementWindow() {
-        setTimeout(() => {
+       /*  setTimeout(() => { */
             if (this.selectedUser) {
                 this._router.navigate(['user-params-set/', 'email-address'], {
                     queryParams: { isn_cl: this.selectedUser.id }
                 });
             }
-        }, 0);
+        /* }, 0); */
     }
 
     OpenRightsSystemCaseDelo() {
-        setTimeout(() => {
+        /* setTimeout(() => { */
             if (this.selectedUser) {
                 this._router.navigate(['user-params-set/', 'card-files'], {
                     queryParams: { isn_cl: this.selectedUser.id }
                 });
             }
-        }, 0);
+        /* }, 0); */
     }
 
     OpenStreamScanSystem() {
-        setTimeout(() => {
+        /* setTimeout(() => { */
             this._router.navigate(['user-params-set/', 'inline-scaning'],
                 {
                     queryParams: { isn_cl: this.selectedUser.id }
                 }
             );
-        }, 0);
+        /* }, 0); */
     }
 
     GeneralLists() {
@@ -512,25 +538,25 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     }
 
     OpenSumProtocol() {
-        setTimeout(() => {
+        /* setTimeout(() => { */
             this._router.navigate(['user_param/sum-protocol']);
-        }, 0);
+        /* }, 0); */
     }
 
     OpenUsersStats() {
-        setTimeout(() => {
+       /*  setTimeout(() => { */
             this._router.navigate(['user_param/users-stats']);
-        }, 0);
+        /* }, 0); */
     }
 
     OpenProtocol() {
-        setTimeout(() => {
+        /* setTimeout(() => { */
             this._router.navigate(['user-params-set/', 'protocol'],
                 {
                     queryParams: { isn_cl: this.selectedUser.id }
                 }
             );
-        }, 0);
+        /* }, 0); */
     }
 
     setCheckedAllFlag() {

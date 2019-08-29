@@ -24,6 +24,22 @@
         <div class="table-header search-wr">
             <!-- header action -->
             <eos-btn-action [buttons]='buttons' (showAction)='showAction($event)'></eos-btn-action>
+            <div class="checkbox only-view" *ngIf="shooseP===0  && currentDue !=='0.'">
+                <label class="user-check-label">
+                <input  [checked]="onlyView"  type="checkbox" (change)="setChengeOnlyView()">
+                    <div>
+                        <span class="eos-icon small"
+                            [ngClass]="{'eos-icon-checkbox-square-v-blue': onlyView, 'eos-icon-checkbox-square-blue': !onlyView}"
+                            tooltip="Показывать вложеные"
+                            containerClass="tooltip-info"
+                            placement="bottom"
+                        ></span>
+                    </div>
+                </label>
+                <div class="only-view-title">
+                    <span >С вложениями</span>
+                </div>
+            </div>
             <eos-user-search  (quickSearchKey)="quickSearchKey($event)" #quickSearchOpen (search)="searchUsers($event)"  [flagDeep]="shooseP"></eos-user-search>
         </div>
         <!--Быстрый поиск-->
@@ -44,21 +60,21 @@
                     </div>
                 </label>
                 </div>
-                <span class="user-list-fourth-colomn likeLink mar-left" (click)="sortPageList('login')">Логин
-                <span *ngIf ="_apiSrv.srtConfig.login.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.login.upDoun)"></span>
-                </span>
-                <span class="user-list-third-colomn likeLink ">Тип
-                <span *ngIf ="_apiSrv.srtConfig.tip.checked"></span>
-                </span>
-                <!-- <span class="user-list-first-colomn likeLink " (click)="sortPageList('fullDueName')">Должностное лицо
-                <span *ngIf ="_apiSrv.srtConfig.fullDueName.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
-                </span> -->
-                <span class="user-list-first-colomn likeLink ">Должностное лицо</span>
-                <div class="pos-depart" >
-                    <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')" >{{cardName}}
-                         <!-- <span *ngIf="_apiSrv.srtConfig.department.checked" class="curs-span-arrow"  [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)"
-                         (click)="sortPageList('department')"></span> -->
-                        </span>
+                <div class="table-title-position list-user-sel">
+                    <span class="user-list-fourth-colomn likeLink mar-left" (click)="sortPageList('login')">Логин
+                    <span *ngIf ="_apiSrv.srtConfig.login.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.login.upDoun)"></span>
+                    </span>
+                    <span class="user-list-third-colomn likeLink ">Тип
+                    <span *ngIf ="_apiSrv.srtConfig.tip.checked"></span>
+                    </span>
+                    <span class="user-list-two-colomn likeLink user-list-two-colomn-title" (click)="sortPageList('fullDueName')">Должностное лицо
+                    <span *ngIf ="_apiSrv.srtConfig.fullDueName.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
+                    </span>
+                    <!-- <div class="pos-depart" > -->
+                        <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')" >{{cardName}}
+                             <span *ngIf="_apiSrv.srtConfig.department.checked" class="curs-span-arrow"  [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)"
+                             (click)="sortPageList('department')"></span></span>
+                    <!-- </div> -->
                 </div>
                 <!-- <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
                     <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>

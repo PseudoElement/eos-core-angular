@@ -16,6 +16,7 @@ import { EosStorageService } from '../../../../src/app/services/eos-storage.serv
 export class UserParamApiSrv {
     flagTehnicalUsers: boolean;
     flagDelitedPermanantly: boolean;
+    flagOnlyThisDepart: boolean = true;
     sysParam: any;
     dueDep: any = '0.';
     srtConfig: IUserSort = {};
@@ -29,6 +30,7 @@ export class UserParamApiSrv {
     searchState: boolean = false;
     stateTehUsers: boolean = false;
     stateDeleteUsers: boolean = false;
+    stateOnlyThisDepart: boolean = false;
     public Allcustomer: UserSelectNode[] = [];
     private helpersClass;
     get _confiList$(): Observable<IConfig> {
@@ -137,8 +139,9 @@ export class UserParamApiSrv {
                     inlinecount: 'allpages',
                     loadmode: 'Table'
                 };
-
-                //  PipRX.criteries({ DUE_DEP: `${dueDep}%` });
+                if (!this.flagOnlyThisDepart && this.dueDep !== '0.' && this.configList.shooseTab === 0) {
+                    q['USER_CL'] = PipRX.criteries({'USER_CL.DEP.ISN_HIGH_NODE': `${sessionStorage.getItem('isnNodeMy')}`});
+                }
             }
         }
         if (this.configList.shooseTab === 1) {

@@ -45,6 +45,7 @@ export class TreeUserSelectComponent implements OnInit {
         .then(() => {
             this.nodes = [this.treeSrv.root];
             this.isLoading = false;
+            this.updateTree();
         });
         this.onResize();
     }
@@ -73,6 +74,26 @@ export class TreeUserSelectComponent implements OnInit {
         window.innerWidth >= BIG_DISPLAY_W ? this.w = BIG_PANEL : this.w = SMALL_PANEL;
     }
 
+    updateTree() {
+            let due;
+            const url = this._router.url.split('/');
+            if (url[url.length - 1] === 'user_param') {
+                due = '0.';
+            } else {
+                due = url[url.length - 1];
+            }
+            let str = '0.';
+            const mas = due.replace('0.', '').split('.');
+            for (let index = 0; index + 2 < mas.length; index++) {
+                this.treeSrv.expandNode(str + mas[index] + '.')
+                .then(dat => {
+                    dat.isExpanded = true;
+                    dat.updating = false;
+                });
+                str = str + mas[index] + '.';
+            }
+    }
+
     onExpand(evt: Event, node: TreeUserNode/*, isDeleted: boolean*/) {
         // console.log('onExpand', arguments);
         evt.stopPropagation();
@@ -96,6 +117,7 @@ export class TreeUserSelectComponent implements OnInit {
         });
         this._store.removeItem('page_number_user_settings');
         localStorage.setItem('lastNodeDue', JSON.stringify(node.id));
+        sessionStorage.setItem('isnNodeMy', node.data['ISN_NODE']);
         this._router.navigate(['user_param', node.id]);
     }
 

@@ -8,9 +8,14 @@
 
 .fullWidth {
     width: 100%;
-    height: 100%;
+    height: 100%;    
+    overflow-y: overlay;
 }
-
+@-moz-document url-prefix() {
+    .fullWidth {
+        overflow-y: scroll;
+    }
+}
 .rt-user {
     width: 100%;
     height: 100%;
