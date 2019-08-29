@@ -4,6 +4,10 @@
     .grifs-content{
         padding: 0 20px;
         background-color: #fafafa;
+        label{
+            margin-bottom: 0 !important;
+        }
+        
     }
     .grifs-list{
         display: flex;
@@ -25,10 +29,9 @@
             }
         }
     }
-    .user-system{
+    /* .user-system{
         //overflow: hidden;
-
-    }
+    } */
     .grifs-wrapper{
         max-height: 370px;
         overflow: auto;

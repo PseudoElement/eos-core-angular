@@ -35,6 +35,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     title: string;
     tehnicUser: boolean = false;
     isn_prot: any;
+    titleNow: string;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public _apiSrv: UserParamApiSrv,
@@ -151,6 +152,15 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     selectDepartment(status) {
         if (status) {
             this._showDepartment();
+        }
+    }
+    delSelectUser($event?) { // удаление от кого копировать
+        if ($event && $event.keyCode === 46 && this.data['ISN_USER_COPY']) {
+            this.data['ISN_USER_COPY'] = undefined;
+            this.form.get('USER_COPY').patchValue('');
+        } else if (!$event) {
+            this.data['ISN_USER_COPY'] = undefined;
+            this.form.get('USER_COPY').patchValue('');
         }
     }
     selectUser() {

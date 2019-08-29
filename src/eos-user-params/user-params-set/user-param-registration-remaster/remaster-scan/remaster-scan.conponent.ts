@@ -161,10 +161,10 @@ export class RemasterScanComponent implements OnInit, OnDestroy {
                         this.countError++;
                     }
                 });
-                this.pushChenge.emit({
+                this.pushChenge.emit([{
                     btn: this.countError > 0,
                     data: this.newDataMap
-                });
+                }, this.form.value]);
                 this.countError > 0 ? this.btnDisabled = true : this.btnDisabled = false;
                 this.countError = 0;
             });

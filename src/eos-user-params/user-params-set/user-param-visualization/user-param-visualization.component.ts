@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { Subject } from 'rxjs';
@@ -20,6 +20,9 @@ import { VISUALIZATION_USER } from '../shared-user-param/consts/visualization.co
 })
 
 export class UserParamVisualizationComponent implements OnDestroy, OnInit {
+    @Input() defaultTitle: string;
+    @Input() defaultUser: any;
+    @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     prepInputsAttach;
     public titleHeader;
     public form: FormGroup;
@@ -54,17 +57,22 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
 
     }
     ngOnInit() {
-        this._userParamsSetSr.getUserIsn({
-            expand: 'USER_PARMS_List'
-        })
-        .then(() => {
-            this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Визуализация';
-            this.allData = this._userParamsSetSr.hashUserContext;
+        if (this.defaultTitle) {
+            this.titleHeader = this.defaultTitle;
+            this.allData = this.defaultUser;
             this.inint();
-        })
-        .catch(err => {
-
-        });
+        } else {
+            this._userParamsSetSr.getUserIsn({
+                expand: 'USER_PARMS_List'
+            })
+            .then(() => {
+                this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Визуализация';
+                this.allData = this._userParamsSetSr.hashUserContext;
+                this.inint();
+            })
+            .catch(err => {
+            });
+        }
     }
     inint() {
         this.prepareData = this.formHelp.parse_Create(VISUALIZATION_USER.fields, this.allData);
@@ -95,14 +103,19 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
     }
     submit(): Promise<any> {
         if (this.mapChanges.size) {
-            const query = this.parseMapForCreate();
-            return this._pipRx.batch(query, '').then(() => {
+            const arrayQuery = [];
+            this.createUrl(arrayQuery);
+            this.mapChanges.clear();
+            return this._userParamsSetSr.BatchData(arrayQuery[0].method, arrayQuery[0].requestUri, arrayQuery[0].data).then(() => {
                 this.prepFormForSave();
                 this.btnDisable = true;
                 this.flagEdit = false;
                 this._pushState();
                 this.editMode();
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
+                if (this.defaultTitle) {
+                    this.DefaultSubmitEmit.emit(this.form.value);
+                }
             }).catch((error) => {
                 this._errorSrv.errorHandler(error);
                 this.cancel();
@@ -112,28 +125,36 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
             return Promise.resolve(false);
         }
     }
-
     prepFormForSave() {
         Object.keys(this.inputs).forEach((key) => {
             const value = this.form.controls[key].value;
             this.inputs[key].value = value;
         });
     }
-    parseMapForCreate(): Array<any> {
-        const arrayQuery = [];
-        this.createUrl(arrayQuery);
-        this.mapChanges.clear();
-        return arrayQuery;
-    }
     createUrl(arrayQuery) {
-        this.mapChanges.forEach((value, key, arr) => {
-            arrayQuery.push(this.createReq(key, value));
-        });
+        if (this.defaultTitle) {
+            this.mapChanges.forEach((value, key, arr) => {
+                arrayQuery.push(this.createReqDefault(key, value));
+            });
+        } else {
+            this.mapChanges.forEach((value, key, arr) => {
+                arrayQuery.push(this.createReq(key, value));
+            });
+        }
     }
     createReq(name: string, value: any): any {
         return {
             method: 'MERGE',
             requestUri: `USER_CL(${this._userParamsSetSr.userContextId})/USER_PARMS_List(\'${this._userParamsSetSr.userContextId} ${name}\')`,
+            data: {
+                PARM_VALUE: `${value}`
+            }
+        };
+    }
+    createReqDefault(name: string, value: any): any {
+        return {
+            method: 'MERGE',
+            requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 ${name}')`,
             data: {
                 PARM_VALUE: `${value}`
             }

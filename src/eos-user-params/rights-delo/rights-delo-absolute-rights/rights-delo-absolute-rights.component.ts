@@ -19,6 +19,7 @@ import { USERDEP, USER_TECH, USER_EDIT_ORG_TYPE, PipRX } from 'eos-rest';
 // import { RestError } from 'eos-rest/core/rest-error';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
+import {EosStorageService} from 'app/services/eos-storage.service';
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
     templateUrl: 'rights-delo-absolute-rights.component.html'
@@ -45,6 +46,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     techRingtOrig: string;
     techUsers: Array<any> = [];
     limitUserTech: boolean;
+    flagDel: boolean = false;
     public editMode: boolean = false;
     private _ngUnsubscribe: Subject<any> = new Subject();
     private flagGrifs: boolean = false;
@@ -57,6 +59,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private _router: Router,
         private pipRx: PipRX,
         private _errorSrv: ErrorHelperServices,
+        private _storageSrv: EosStorageService,
     ) { }
     ngOnInit() {
         this._userParamsSetSrv.saveData$
@@ -171,6 +174,11 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (this.limitUserTech === false) {
                 if (this._checkCreatePRJNotEmptyAllowed()) {
                     this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
+                    this.isLoading = true;
+                    return Promise.resolve(true);
+                }
+                if ( this._checkCreateNotEmpty()) {
+                    this.isLoading = true;
                     return Promise.resolve(true);
                 }
                 this.editMode = false;
@@ -210,6 +218,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         this.selectedNode = null;
                         this.editMode = false;
                         this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+                        this.flagDel = false;
+                        this._storageSrv.removeItem('abs_prav_mas');
                         if (!flag) {
                             return this._userParamsSetSrv.getUserIsn({
                                 expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
@@ -240,6 +250,8 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.selectedNode = null;
         this.editMode = false;
         this.btnDisabled = true;
+        this.flagDel = false;
+        this._storageSrv.removeItem('abs_prav_mas');
         this._pushState();
         this._userParamsSetSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
@@ -323,7 +335,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             }
         }
     }
-    checkChange() {
+    checkChange(event?) {
+        if (event && event === 'del') {
+            this.flagDel = true;
+        }
         let c = false;
         this.listRight.forEach(li => { // проверяем список на изменения
             if (li.touched) {
@@ -335,6 +350,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         // this.btnDisabled = true;
         this.btnDisabled = !c;
+        if (this.flagDel) {
+            this.btnDisabled = false;
+        }
         this._pushState();
     }
     private _writeValue(constanta: IInputParamControl[]): IInputParamControl[] {
@@ -418,13 +436,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     private _deleteAllDep(item: NodeAbsoluteRight) {
         const list: USERDEP[] = [];
-        this.curentUser.USERDEP_List = this.curentUser.USERDEP_List.filter(li => {
-            if (li['FUNC_NUM'] === +item.key + 1) {
-                list.push(li);
-            } else {
-                return true;
-            }
-        });
+            this.curentUser.USERDEP_List = this.curentUser.USERDEP_List.filter(li => {
+                if (li['FUNC_NUM'] === +item.key + 1) {
+                    list.push(li);
+                } else {
+                    return true;
+                }
+            });
 
         list.forEach(li => {
             item.pushChange({
@@ -550,6 +568,33 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         allowed = false;
                     }
                 });
+            }
+        });
+        return allowed;
+    }
+    private _checkKey(node): boolean {
+        return node.key === '4' || node.key === '24' || node.key === '25';
+    }
+    private _checkCreateNotEmpty(): boolean {
+        let allowed = false;
+        this.listRight.forEach((node: NodeAbsoluteRight) => {
+            if (this._checkKey(node) && node.value === 1 ) {
+                let flag = true;
+                this.curentUser.USERDEP_List.filter(li => {
+                    if (li['FUNC_NUM'] === +node.key + 1) {
+                        flag = false;
+                    }
+                });
+                if (flag) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: '',
+                        msg: 'Не заданны подразделения для права ' + node.label
+                    });
+                }
+                if (!allowed) {
+                    allowed = flag;
+                }
             }
         });
         return allowed;

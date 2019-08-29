@@ -7,7 +7,6 @@ import { UserParamsService } from 'eos-user-params/shared/services/user-params.s
 import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import {FormHelperService} from '../shared/services/form-helper.services';
-import { PipRX } from 'eos-rest/services/pipRX.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import {ErrorHelperServices} from '../shared/services/helper-error.services';
@@ -59,7 +58,6 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         private _inputCtrlSrv: InputParamControlService,
         private _userParamSrv: UserParamsService,
         private _formHelper: FormHelperService,
-        private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
         ) {
@@ -101,14 +99,8 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
     }
     submit(event): Promise<any> {
         this.flagShow = false;
-        const query = [];
         this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 6);
-        query.push({
-            method: 'MERGE',
-            requestUri: `USER_CL(${this.curentUser['ISN_LCLASSIF']})`,
-            data: this.newData
-        });
-    return  this.apiSrv.batch(query, '').then((data: any) => {
+        return this._userParamSrv.BatchData('MERGE', `USER_CL(${this.curentUser['ISN_LCLASSIF']})`, this.newData).then((data: any) => {
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                 this.flagShow = true;
                 this.disableBtn = true;

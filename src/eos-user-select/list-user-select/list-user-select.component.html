@@ -12,11 +12,9 @@
                         Выбрано:
                         <span class="counter">{{countcheckedField}}</span>
                         <button *ngIf="showCloseQuickSearch" class="btn btn-primary-light btn-size"
-                            tooltip="Очистить результаты"
-                            placement="bottom"
-                            container="body"
-                            containerClass="tooltip-info"
-                            (click)=resetSearch()><span class="eos-icon eos-icon-close-blue small"></span></button>
+                            tooltip="Очистить результаты" placement="bottom" container="body"
+                            containerClass="tooltip-info" (click)=resetSearch()><span
+                                class="eos-icon eos-icon-close-blue small"></span></button>
                     </span>
                 </div>
             </div>
@@ -24,7 +22,21 @@
         <div class="table-header search-wr">
             <!-- header action -->
             <eos-btn-action [buttons]='buttons' (showAction)='showAction($event)'></eos-btn-action>
-            <eos-user-search  (quickSearchKey)="quickSearchKey($event)" #quickSearchOpen (search)="searchUsers($event)"  [flagDeep]="shooseP"></eos-user-search>
+            <div class="checkbox only-view" *ngIf="shooseP===0  && currentDue !=='0.'">
+                <label class="user-check-label">
+                    <input [checked]="onlyView" type="checkbox" (change)="setChengeOnlyView()">
+                    <div>
+                        <span class="eos-icon small"
+                            [ngClass]="{'eos-icon-checkbox-square-v-blue': onlyView, 'eos-icon-checkbox-square-blue': !onlyView}"
+                            tooltip="Показывать вложеные" containerClass="tooltip-info" placement="bottom"></span>
+                    </div>
+                </label>
+                <div class="only-view-title">
+                    <span>С вложениями</span>
+                </div>
+            </div>
+            <eos-user-search (quickSearchKey)="quickSearchKey($event)" #quickSearchOpen (search)="searchUsers($event)"
+                [flagDeep]="shooseP"></eos-user-search>
         </div>
         <!--Быстрый поиск-->
         <div class="table-header">
@@ -33,65 +45,76 @@
             <div class="table-title">
                 <div class="checkbox">
                     <label class="user-check-label">
-                    <input  [checked]="flagChecked"  type="checkbox" (change)="setCheckedAllFlag()">
-                    <div>
-                        <span class="eos-icon small"
-                            [ngClass]="getflagChecked"
-                            [tooltip]="checkAll"
-                            containerClass="tooltip-info"
-                            placement="bottom"
-                        ></span>
-                    </div>
-                </label>
+                        <input [checked]="flagChecked" type="checkbox" (change)="setCheckedAllFlag()">
+                        <div>
+                            <span class="eos-icon small" [ngClass]="getflagChecked" [tooltip]="checkAll"
+                                containerClass="tooltip-info" placement="bottom"></span>
+                        </div>
+                    </label>
                 </div>
-                <span class="user-list-fourth-colomn likeLink mar-left" (click)="sortPageList('login')">Логин
-                <span *ngIf ="_apiSrv.srtConfig.login.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.login.upDoun)"></span>
-                </span>
-                <span class="user-list-third-colomn likeLink ">Тип
-                <span *ngIf ="_apiSrv.srtConfig.tip.checked"></span>
-                </span>
-                <span class="user-list-first-colomn likeLink " (click)="sortPageList('fullDueName')">Должностное лицо
-                <span *ngIf ="_apiSrv.srtConfig.fullDueName.checked" [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
-                </span>
-                <div class="pos-depart" >
-                    <span class="user-title-name user-list-first-colomn likeLink" (click)="sortPageList('department')" >{{cardName}}
-                         <span *ngIf="_apiSrv.srtConfig.department.checked" class="curs-span-arrow"  [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)"
-                         (click)="sortPageList('department')"></span></span>
+                <div class="table-title-position list-user-sel">
+                    <span class="user-list-fourth-colomn likeLink mar-left" (click)="sortPageList('login')">Логин
+                        <span *ngIf="_apiSrv.srtConfig.login.checked"
+                            [ngClass]="getClassOrder(_apiSrv.srtConfig.login.upDoun)"></span>
+                    </span>
+                    <span class="user-list-third-colomn likeLink ">Тип
+                        <span *ngIf="_apiSrv.srtConfig.tip.checked"></span>
+                    </span>
+                    <span class="user-list-two-colomn likeLink user-list-two-colomn-title"
+                        (click)="sortPageList('fullDueName')">Должностное лицо
+                        <span *ngIf="_apiSrv.srtConfig.fullDueName.checked"
+                            [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
+                    </span>
+                    <span class="user-title-name user-list-first-colomn likeLink"
+                        (click)="sortPageList('department')">{{cardName}}
+                        <span *ngIf="_apiSrv.srtConfig.department.checked" class="curs-span-arrow"
+                            [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)"></span>
+                    </span>
                 </div>
-                <!-- <span class="user-list-third-colomn likeLink"(click)="sortPageList('tip')">Тип
-                    <span *ngIf ="srtConfig.tip.checked" [ngClass]="getClassOrder(srtConfig.tip.upDoun)"></span>
-                </span> -->
             </div>
         </div>
-        <div *ngIf="!isLoading"  #listContent class="list-user-sel" (scroll)="savePositionSelectUser($event)">
-           <div>
-            <div *ngIf="listUsers.length; else emptyCert" class="block" [ngStyle]="{'width.px': tableWidth}">
-                <div *ngFor="let user of listUsers;   let last = last" class="user-item" [ngClass]="{'highlighted': user.isSelected || (user.isChecked && !user.selectedMark) || user.selectedMark}" (dblclick)="RedactUser(user)">
-                    <div class="table-title user-select-node" [ngClass]="{'disabled': user.deleted, 'delitedDue': user.deletedOffFace}">
-                        <span *ngIf='user.deleted' class="deleted-user-border"></span>
-                        <label *ngIf='!user.deleted' class="checkbox">
-                            <input   [checked]="(user.isChecked && !user.selectedMark) || user.selectedMark" [disabled]="user.deleted ? true : false"  type="checkbox" (change)="setFlagChecked($event, user)">
-                            <span class="eos-icon eos-icon-checkbox-black"></span>
-                        </label>
-                        <div class="user-select-node-t" (click)="!user.deleted ? selectedNode(user, rtUserService.flagDeleteSelectedUser) : false">
-                            <span class="user-list-fourth-colomn">{{user.login}}</span>
-                            <span class="user-list-third-colomn">
-                            <span *ngIf="user.deleted" class="eos-icon eos-icon-bin-forever-grey small"></span>
-                            <span *ngIf="user.blockedUser && !user.deleted" class="eos-icon eos-icon-Blockeduser-Yellow  small"></span>
-                            <span *ngIf="user.blockedSystem && !user.deleted" class="eos-icon eos-icon-Blockeduser-Red  small"></span>
-                            </span>
-                            <span class="user-list-two-colomn " tooltip="{{user.fullDueName}}" placement="bottom" [ngClass]="{'last-tooltip' : last }" [containerClass]="getClassTooltip(last)" container="body">
-                                <span *ngIf="!user.deep" class="eos-icon eos-icon-Techuser-Grey small icon-user"></span>
-                                <span *ngIf="user.deep" class="eos-icon eos-icon-DeepUser-Blue small icon-user"></span>
-                                {{ user.fullDueName}}
-                            </span>
-                            <span class="user-list-first-colomn" tooltip="{{user.department}}" placement="auto" containerClass="tooltip-info" container="body">{{user.department}}
-                            </span>
+        <div *ngIf="!isLoading" #listContent class="list-user-sel" (scroll)="savePositionSelectUser($event)">
+            <div>
+                <div *ngIf="listUsers.length; else emptyCert" class="block" [ngStyle]="{'width.px': tableWidth}">
+                    <div *ngFor="let user of listUsers;   let last = last" class="user-item"
+                        [ngClass]="{'highlighted': user.isSelected || (user.isChecked && !user.selectedMark) || user.selectedMark}"
+                        (dblclick)="RedactUser(user)">
+                        <div class="table-title user-select-node"
+                            [ngClass]="{'disabled': user.deleted, 'delitedDue': user.deletedOffFace}">
+                            <span *ngIf='user.deleted' class="deleted-user-border"></span>
+                            <label *ngIf='!user.deleted' class="checkbox">
+                                <input [checked]="(user.isChecked && !user.selectedMark) || user.selectedMark"
+                                    [disabled]="user.deleted ? true : false" type="checkbox"
+                                    (change)="setFlagChecked($event, user)">
+                                <span class="eos-icon eos-icon-checkbox-black"></span>
+                            </label>
+                            <div class="user-select-node-t"
+                                (click)="!user.deleted ? selectedNode(user, rtUserService.flagDeleteSelectedUser) : false">
+                                <span class="user-list-fourth-colomn">{{user.login}}</span>
+                                <span class="user-list-third-colomn">
+                                    <span *ngIf="user.deleted" class="eos-icon eos-icon-bin-forever-grey small"></span>
+                                    <span *ngIf="user.blockedUser && !user.deleted"
+                                        class="eos-icon eos-icon-Blockeduser-Yellow  small"></span>
+                                    <span *ngIf="user.blockedSystem && !user.deleted"
+                                        class="eos-icon eos-icon-Blockeduser-Red  small"></span>
+                                </span>
+                                <span class="user-list-two-colomn " tooltip="{{user.fullDueName}}" placement="bottom"
+                                    [ngClass]="{'last-tooltip' : last }" [containerClass]="getClassTooltip(last)"
+                                    container="body">
+                                    <span *ngIf="!user.deep"
+                                        class="eos-icon eos-icon-Techuser-Grey small icon-user"></span>
+                                    <span *ngIf="user.deep"
+                                        class="eos-icon eos-icon-DeepUser-Blue small icon-user"></span>
+                                    {{ user.fullDueName}}
+                                </span>
+                                <span class="user-list-first-colomn" tooltip="{{user.department}}" placement="auto"
+                                    containerClass="tooltip-info" container="body">{{user.department}}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         </div>
         <div *ngIf="isLoading" class="list-user-sel">
             <div class="spiner-wrapper">

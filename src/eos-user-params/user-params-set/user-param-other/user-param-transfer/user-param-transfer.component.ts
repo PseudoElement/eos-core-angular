@@ -18,6 +18,7 @@ import { RemasterService } from '../../shared-user-param/services/remaster-servi
 
 export class UserParamTransferComponent implements OnDestroy, OnInit {
     @Input() defaultValues;
+    @Input() defaultUser: any;
     @Output() pushChange: EventEmitter<any> = new EventEmitter<any>();
     public form: FormGroup;
     public inputs: any;
@@ -33,8 +34,7 @@ export class UserParamTransferComponent implements OnDestroy, OnInit {
         private formHelp: FormHelperService,
         private dataConv: EosDataConvertService,
         private inpSrv: InputControlService,
-        private remaster: RemasterService
-        // private _pipRx: PipRX,
+        private remaster: RemasterService,
         // private _msg: EosMessageService,
         // private _errorSrv: ErrorHelperServices,
     ) {
@@ -59,8 +59,13 @@ export class UserParamTransferComponent implements OnDestroy, OnInit {
         this._ngUnsebscribe.complete();
     }
     ngOnInit() {
-        this.allData = this._userSrv.hashUserContext;
-        this.inint();
+        if (this.defaultUser) {
+            this.allData = this.defaultUser;
+            this.inint();
+        } else {
+            this.allData = this._userSrv.hashUserContext;
+            this.inint();
+        }
     }
     inint() {
         this.prepareData = this.formHelp.parse_Create(OTHER_USER_TRANSFER.fields, this.allData);
@@ -89,10 +94,10 @@ export class UserParamTransferComponent implements OnDestroy, OnInit {
             }
         });
         if (countError > 0 || this.mapChanges.size) {
-            this.pushChange.emit({
+            this.pushChange.emit([{
                 btn: true,
                 data: this.mapChanges
-            });
+            }, this.form.value]);
         } else {
             this.pushChange.emit(false);
         }

@@ -59,12 +59,9 @@
                 <eos-dynamic-input [input]="inputs['rec.fullDueName']" [form]="form" [readonly]="false">
                 </eos-dynamic-input>
             </div>
-            <div class="search-input-wr" *ngIf="!flagDeep">
+            <div class="search-input-wr">
                 <eos-dynamic-input [input]="inputs['rec.DEPARTMENT']" [form]="form" [readonly]="false">
                 </eos-dynamic-input>
-            </div>
-            <div class="search-input-wr" *ngIf="flagDeep">
-                <eos-dynamic-input [input]="inputs['rec.CARD']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
         </div>
     </div>

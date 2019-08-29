@@ -175,10 +175,10 @@ preAddNewDocument(form) {
         return Promise.all([this.getDataGrifs(), this.getGrifsName()]);
     }
 
-    postGrifs(form) {
+    postGrifs(dataInput) {
         const data = [];
-        const chengedFields = form.value.filter(element => {
-            return element.action === 'create';
+        const chengedFields = dataInput.filter(element => {
+            return !element.value;
         });
         chengedFields.forEach(element => {
             data.push({
@@ -186,22 +186,22 @@ preAddNewDocument(form) {
                 requestUri: `USER_CL(${ this._userServices.userContextId})/USERSECUR_List`,
                 data: {
                     ISN_LCLASSIF: String(this._userServices.userContextId),
-                    SECURLEVEL: String(element.SECURLEVEL)
+                    SECURLEVEL: String(element.key)
                 }
             });
         });
         return   this._pipSrv.setData(data);
     }
 
-    deliteGrifs(form) {
+    deliteGrifs(dataInput) {
         const data = [];
-        const chengedFields = form.value.filter(element => {
-            return element.action === 'delite';
+        const chengedFields = dataInput.filter(element => {
+            return element.value;
         });
         chengedFields.forEach(element => {
             data.push({
                 method: 'DELETE',
-                requestUri: `USER_CL(${ this._userServices.userContextId})/USERSECUR_List(\'${element.SECURLEVEL} ${this._userServices.userContextId}\')`,
+                requestUri: `USER_CL(${ this._userServices.userContextId})/USERSECUR_List(\'${element.key} ${this._userServices.userContextId}\')`,
             });
         });
         return   this._pipSrv.setData(data);

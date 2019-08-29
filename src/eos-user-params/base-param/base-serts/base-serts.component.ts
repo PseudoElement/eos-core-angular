@@ -1,4 +1,4 @@
-import { Component, Output, OnInit, EventEmitter } from '@angular/core';
+import { Component, Output, OnInit, EventEmitter, OnDestroy } from '@angular/core';
 import { SertsBase } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
 import { CarmaHttpService } from 'app/services/carmaHttp.service';
 import { CertificateService } from 'app/services/certificate.service';
@@ -15,7 +15,7 @@ import { catchError } from 'rxjs/operators';
     templateUrl: 'base-serts.component.html',
     styleUrls: ['base-serts.component.scss'],
 })
-export class BaseSertsComponent implements OnInit {
+export class BaseSertsComponent implements OnInit, OnDestroy {
     userSerts: USER_CERTIFICATE;
     public stateSerts: SertsBase = {
         sing_mail: null,
@@ -45,6 +45,11 @@ export class BaseSertsComponent implements OnInit {
         private _msg: EosMessageService,
     ) {
 
+    }
+    ngOnDestroy() {
+        if (this._certService.w) {
+            this._certService.w['close']();
+        }
     }
 
     ngOnInit() {
