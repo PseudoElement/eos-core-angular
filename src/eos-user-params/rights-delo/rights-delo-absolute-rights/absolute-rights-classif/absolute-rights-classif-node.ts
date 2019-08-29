@@ -210,7 +210,7 @@ export class RightClassifNode {
                     this._component.strNewCards.push({value: String(card.label), due: card.DUE});
                 });
                 this._component._userParmSrv.confirmCallCard(this._component.newCards).then((answer) => {
-                    if (answer) {
+                    if (answer === true) {
                         const childDue = this.curentSelectedNode.children.map(item => {
                             this._parentNode.pushChange({
                                 method: 'DELETE',

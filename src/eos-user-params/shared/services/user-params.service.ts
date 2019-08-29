@@ -251,6 +251,11 @@ export class UserParamsService {
                     this.cardModal.hide();
                 }
             });
+            this._modalSrv.onHide.subscribe(reason => {
+                if (reason === 'backdrop-click' || reason === 'esc') {
+                    res(null);
+                }
+            });
         });
     }
 
