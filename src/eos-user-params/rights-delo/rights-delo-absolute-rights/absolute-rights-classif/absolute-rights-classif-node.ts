@@ -224,7 +224,9 @@ export class RightClassifNode {
                         this._listUserTech = this._listUserTech.filter(node => childDue.indexOf(node['DUE']) === -1);
                         this._component.userTechList = this._component.userTechList.filter(node => childDue.indexOf(node['DUE']) === -1);
                     }
-                    this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode);
+                    if (answer !== true) {
+                        this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode);
+                    }
                     this._parentNode.pushChange({
                         method: 'DELETE',
                         due: this.curentSelectedNode.DUE,
