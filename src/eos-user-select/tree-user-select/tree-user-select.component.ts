@@ -34,7 +34,7 @@ export class TreeUserSelectComponent implements OnInit {
     ) {
         this.actRoute.params.subscribe(param => {
             this.id = param['nodeId'];
-    });
+        });
 }
     ngOnInit() {
         this.id = this.actRoute.snapshot.params['nodeId'] || '0.';
@@ -65,8 +65,10 @@ export class TreeUserSelectComponent implements OnInit {
             this.nodes = [this.treeSrv.root];
             this.isLoading = false;
         });
+        if (this.actRoute.snapshot.params['nodeId'] === '0.') {
+            this.treeSrv.changeListUsers.next();
+        }
         this._router.navigate(['user_param', '0.']);
-        this.treeSrv.changeListUsers.next();
     }
 
     @HostListener('window:resize')
