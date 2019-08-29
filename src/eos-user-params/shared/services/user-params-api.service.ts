@@ -134,10 +134,11 @@ export class UserParamApiSrv {
                     ob['ORACLE_ID'] = 'isnotnull';
                 }
                 if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
-                    q['USER_CL'] = ALL_ROWS;
+                  //  q['USER_CL'] = ALL_ROWS;
+                    ob['CLASSIF_NAME'] = '_';
                 }
                 if (this.currentSort === 'fullDueName') {
-                    propOrderBy = 'DEP.CLASSIF_NAME';
+                    propOrderBy = 'SURNAME_PATRON';
                     propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
                     ob['orderby'] = propOrderBy;
                 }   else {
@@ -161,7 +162,7 @@ export class UserParamApiSrv {
                     q['USER_CL'] = PipRX.criteries(ob);
                 }
                 if (this.currentSort === 'fullDueName') {
-                    propOrderBy = 'DEP.CLASSIF_NAME';
+                    propOrderBy = 'SURNAME_PATRON';
                     propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
                     ob['orderby'] = propOrderBy;
                 }   else {
