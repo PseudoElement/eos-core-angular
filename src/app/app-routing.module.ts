@@ -25,6 +25,7 @@ import { EosTemplateComponent } from 'eos-rest/clman/eos-template/eos-template.c
 import { DictFormComponent } from 'eos-dictionaries/dict-forms/dict-form.component';
 import { EosReportUsersStatsComponent } from 'eos-user-params/report/users-stats/users-stats.component';
 import { EosReportSummaryProtocolComponent } from 'eos-user-params/report/sum-protocol/sum-protocol.component';
+import { DefaultSettingsComponent } from 'eos-user-params/default-options/default-settings.component';
 /// import { environment } from 'environments/environment';
 
 const formDictionariesComponent = [
@@ -246,6 +247,30 @@ const routes: Routes = [{
             }
         },
         {
+            path: 'default-settings',
+            canActivate: [AuthorizedGuard],
+            data: {
+                title: 'Настройки по умолчанию',
+                showInBreadcrumb: true,
+            },
+            children: [
+                {
+                    path: ':id',
+                    pathMatch: 'full',
+                    component: DefaultSettingsComponent,
+                    canDeactivate: [CanDeactivateGuard],
+                    data: {
+                        showNav: true
+                    },
+                },
+                {
+                    path: '',
+                    pathMatch: 'full',
+                    redirectTo: 'registration',
+                },
+            ]
+        },
+        {
             path: ':nodeId',
             component: UserSelectComponent,
             data: {
@@ -275,7 +300,8 @@ const routes: Routes = [{
     path: '**',
     redirectTo: '/desk/system',
     pathMatch: 'full',
-}];
+}
+];
 
 @NgModule({
     imports: [RouterModule.forRoot(routes, { useHash: true })],

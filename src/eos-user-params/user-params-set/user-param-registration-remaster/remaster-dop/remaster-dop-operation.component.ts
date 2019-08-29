@@ -98,11 +98,11 @@ export class RemasterDopOperationComponent implements OnInit, OnDestroy {
                 this.countError++;
             }
           });
-          if (this.countError) {
-               this.pushChange.emit({
-                btn: this.countError > 0,
-                data: this.newDataMap
-            });
+            if (this.countError) {
+                this.pushChange.emit([{
+                    btn: this.countError > 0,
+                    data: this.newDataMap
+                }, this.form.value]);
           } else {
             this.pushChange.emit(false);
           }

@@ -533,6 +533,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         }, 0);
     }
 
+    OpenDefaultSettings() {
+        setTimeout(() => {
+            this._router.navigate(['user_param/default-settings']);
+        }, 0);
+    }
+
     setCheckedAllFlag() {
         const leng = this.filterForFlagChecked().length;
         if (leng === 0) {
@@ -630,9 +636,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 this.flagChecked = null;
                 this.rtUserService.changeSelectedUser(null);
                 this.buttons.moreButtons[7].disabled = true;
+                this.buttons.moreButtons[11].disabled = true;
             }
             if (this.countcheckedField >= 1) {
                 this.rtUserService.changeSelectedUser(this.selectedUser);
+                this.buttons.moreButtons[11].disabled = false;
             }
         }
     }

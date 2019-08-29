@@ -101,11 +101,6 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             this.prepareWarnindMessage(dueCards).then(() => {
                 this.selectFromAddedCards();
                 this.checkChangeCards();
-                this.mainArrayCards.forEach((card) => {
-                    if (card.newCard === true) {
-                        this.newCardForAllowed.push(card.cardDue);
-                    }
-                });
             }).catch(error => {
                 this.sendMessage('Предупреждение', 'Потеряно соединение с сервером ');
             });
@@ -255,6 +250,11 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             expand: 'USERCARD_List/USER_CARD_DOCGROUP_List'
         })
         .then(() => {
+            this.mainArrayCards.forEach((card) => {
+                if (card.newCard === true) {
+                    this.newCardForAllowed.push(card.cardDue);
+                }
+            });
             const userCardList = this._userSrv.curentUser.USERCARD_List;
             for (const card of userCardList) {
                 this.updateAllowedCard(card.USER_CARD_DOCGROUP_List);
@@ -273,6 +273,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             this.reqCreateUpdateAllowed().then((data) => {
                 Promise.all([this._pipSrv.batch(data, '')]).then(() => {
                     this.UpdateMainArrayAfterSubmit();
+                    this.updateCardforAllowed = [];
                     this._rightsCabinetsSrv.submitRequest.next();
                     this.isLoading = false;
                     this._msgSrv.addNewMessage({

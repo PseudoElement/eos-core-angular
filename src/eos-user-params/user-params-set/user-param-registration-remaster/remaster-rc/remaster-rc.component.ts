@@ -96,10 +96,10 @@ export class RemasterRcComponent implements OnInit, OnDestroy {
             }
           });
           if (this.countError) {
-               this.pushChange.emit({
+            this.pushChange.emit([{
                 btn: this.countError > 0,
                 data: this.newDataMap
-            });
+            }, this.form.value]);
           } else {
             this.pushChange.emit(false);
           }
