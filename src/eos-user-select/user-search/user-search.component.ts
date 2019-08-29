@@ -45,7 +45,7 @@ export class UserSearchComponent implements OnInit {
     get disableBtn() {
         if (this.form) {
             return this.form.status === 'VALID' && (this.form.value['rec.LOGIN'].length > 0 || this.form.value['rec.DEPARTMENT'].length > 0 ||
-                this.form.value['rec.fullDueName'].length > 0 || this.form.value['rec.CARD'].length > 0 || this.form.value['rec.SURNAME'].length > 0);
+                this.form.value['rec.fullDueName'].length > 0  || this.form.value['rec.SURNAME'].length > 0);
         }
     }
     get showSurnameField() {
@@ -53,10 +53,9 @@ export class UserSearchComponent implements OnInit {
     }
     ngOnInit() {
         this.pretInputs();
-
     }
     pretInputs() {
-        this.prapareData = this._formHelper.parse_Create(USER_SEARCH.fields, { LOGIN: '', DEPARTMENT: '', DUE_DEP: '', CARD: '' });
+        this.prapareData = this._formHelper.parse_Create(USER_SEARCH.fields, { LOGIN: '', DEPARTMENT: '', DUE_DEP: '' });
         this.prepareInputs = this._formHelper.getObjectInputFields(USER_SEARCH.fields);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prapareData });
         this.form = this.inpSrv.toFormGroup(this.inputs);

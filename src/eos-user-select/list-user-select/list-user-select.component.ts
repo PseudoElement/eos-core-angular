@@ -63,7 +63,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         return this._storage.getItem('quickSearch');
     }
     get cardName() {
-        return this.shooseP === 0 ? 'Подразделение' : 'Картотека';
+       // return this.shooseP === 0 ? 'Подразделение' : 'Картотека';
+        return  'Подразделение';
     }
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
