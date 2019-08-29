@@ -555,6 +555,7 @@ export abstract class AbstractDictionaryDescriptor {
         tables.forEach((tab, idx) => {
             related[tab] = responses[idx];
         });
+
         this.relatedData = related;
         return related;
     }

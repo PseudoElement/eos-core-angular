@@ -169,8 +169,9 @@ export class RtUserSelectService {
             if (resultCabinet.length > 0) {
                 const leng = resultCabinet.length;
                 for (let i = 0; i < leng; i += 1) {
-                    i === length - 1 ? cab_list += (resultCabinet as any)[i].ISN_CABINET
-                        : cab_list += (resultCabinet as any)[i].ISN_CABINET + '||';
+                    cab_list += (resultCabinet as any)[i].ISN_CABINET + '|';
+                    // i === length - 1 ? cab_list += (resultCabinet as any)[i].ISN_CABINET
+                    //     : cab_list += (resultCabinet as any)[i].ISN_CABINET + '||';
                 }
                 return this.getCabinetName(cab_list).then(resultCabName => {
                     const lengt = resultCabinet.length;

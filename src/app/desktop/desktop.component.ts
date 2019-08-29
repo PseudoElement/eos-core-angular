@@ -173,4 +173,8 @@ export class DesktopComponent implements OnInit, OnDestroy {
     //             node ? this._router.navigate([link.url]) : this._msgSrv.addNewMessage(NAVIGATE_TO_ELEMENT_WARN);
     //         });
     // }
+
+    rttlink(item) {
+        return item.value.linkType === 1 ? null : [item.value.url];
+    }
 }

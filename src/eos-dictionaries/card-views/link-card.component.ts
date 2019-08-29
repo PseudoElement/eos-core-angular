@@ -6,7 +6,7 @@ import {EosDictService} from '../services/eos-dict.service';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 import {LINK_CL, PipRX} from '../../eos-rest';
 import {CONFIRM_LINK_CHECK_CATEGORY} from '../consts/confirm.consts';
-import { ValidatorsControl } from 'eos-dictionaries/validators/validators-control';
+import { ValidatorsControl, ValidatorOptions } from 'eos-dictionaries/validators/validators-control';
 
 @Component({
     selector: 'eos-link-card',
@@ -138,14 +138,14 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
         return (control: AbstractControl): { [key: string]: any } => {
             const isn = this.getValue('rec.ISN_LCLASSIF');
             const isn_pair = this.getValue('rec.ISN_PARE_LINK');
-            if (isn === isn_pair) {
+            if (isn === isn_pair && isn !== null) {
                 return null;
             }
             return ValidatorsControl.controlsNonUniq(
                 this.form.controls['PARE_LINK_Ref.CLASSIF_NAME'],
                 this.form.controls['rec.CLASSIF_NAME'],
                 'Наименования прямой и обратной связок не должны совпадать.',
-                true
+                <ValidatorOptions>{ ignoreCase: true, ignoreWhiteSpace: true }
                 ).call(control);
         };
     }

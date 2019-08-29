@@ -151,6 +151,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         _bcSrv: EosBreadcrumbsService,
     ) {
         this.accessDenied = false;
+        this._dictSrv.openNode('');
         _route.params.subscribe((params) => {
             if (params) {
                 this.dictionaryId = params.dictionaryId;
