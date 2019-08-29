@@ -417,10 +417,20 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     }
 
     submit(event): Promise<any> {
-        const queryCreate = this.getQueryCreate();
-        const queryDelete = this.getQueryDelete();
-        const requestCreate = this.apiSrv.batch(queryCreate, '');
-        const requestDelete = this.apiSrv.batch(queryDelete, '');
+        let requestCreate, requestDelete;
+        this.listsSertInfo.forEach((sert: SertInfo) => {
+            if (sert.create && !sert.delete) {
+                requestCreate =   this._userSrv.BatchData('POST', 'USER_CERT_PROFILE', {
+                    ISN_USER: this._userSrv.curentUser['ISN_LCLASSIF'],
+                    ID_CERTIFICATE: String(sert.id),
+                });
+            }
+        });
+        this.listsSertInfo.forEach((sert: SertInfo) => {
+            if (!sert.create && sert.delete) {
+                requestDelete = this._userSrv.BatchData('DELETE', `USER_CERT_PROFILE(${sert.key})`);
+            }
+        });
         return Promise.all([requestCreate, requestDelete]).then(data => {
             this.editFlag = false;
             this.listsSertInfo.splice(0, this.listsSertInfo.length);
@@ -453,36 +463,6 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     }
     edit(event) {
         this.editFlag = event;
-    }
-
-    getQueryCreate(): Array<any> {
-        const query = [];
-        this.listsSertInfo.forEach((sert: SertInfo) => {
-            if (sert.create && !sert.delete) {
-                query.push({
-                    method: 'POST',
-                    requestUri: `USER_CERT_PROFILE`,
-                    data: {
-                        ISN_USER: this._userSrv.curentUser['ISN_LCLASSIF'],
-                        ID_CERTIFICATE: String(sert.id),
-                    }
-                });
-            }
-        });
-        return query;
-    }
-
-    getQueryDelete() {
-        const query = [];
-        this.listsSertInfo.forEach((sert: SertInfo) => {
-            if (!sert.create && sert.delete) {
-                query.push({
-                    method: 'DELETE',
-                    requestUri: `USER_CERT_PROFILE(${sert.key})`,
-                });
-            }
-        });
-        return query;
     }
     checkchanges() {
         const check = this.listsSertInfo.some((sert: SertInfo) => {

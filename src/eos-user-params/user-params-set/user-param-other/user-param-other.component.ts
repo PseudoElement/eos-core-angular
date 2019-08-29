@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -17,6 +17,9 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 })
 
 export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
+    @Input() defaultTitle: string;
+    @Input() defaultUser: any;
+    @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public userId: string;
     public disableSave: boolean;
     public isChanged: boolean;
@@ -37,6 +40,10 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     private flagReestr: boolean = false;
     private newValuesShablony: Map<string, any> = new Map();
     private flagShablony: boolean = false;
+    private TransferInputs: any;
+    private AddressesInputs: any;
+    private ReestInputsr: any;
+    private ShablonyInputs: any;
     constructor(
         private _userSrv: UserParamsService,
         private _pipRx: PipRX,
@@ -47,30 +54,33 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
 
     ) {}
     ngOnInit() {
-        this._userSrv.saveData$
-        .pipe(
-            takeUntil(this._ngUnsubscribe)
-        )
-        .subscribe(() => {
-            this._userSrv.submitSave = this.submit(null);
-        });
+        if (this.defaultUser) {
+            this.titleHeader = this.defaultTitle;
+        } else {
+            this._userSrv.saveData$
+                .pipe(
+                    takeUntil(this._ngUnsubscribe)
+                )
+                .subscribe(() => {
+                    this._userSrv.submitSave = this.submit(null);
+                });
 
-        this._userSrv.getUserIsn({
-            expand: 'USER_PARMS_List'
-        })
-        .then(() => {
-            this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Прочее`;
-
-            const prep = this._formHelper.getObjQueryInputsField();
-            this._pipRx.read(prep).then((data) => {
-                this.defaultValues = this._formHelper.createhash(data);
-                this.remaster.emitDefaultFalues.next(this.defaultValues);
-            });
-        })
-        .catch(err => {
-
-        });
+            this._userSrv.getUserIsn({
+                expand: 'USER_PARMS_List'
+            })
+                .then(() => {
+                    this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Прочее`;
+                    const prep = this._formHelper.getObjQueryInputsField();
+                    this._pipRx.read(prep).then((data) => {
+                        this.defaultValues = this._formHelper.createhash(data);
+                        this.remaster.emitDefaultFalues.next(this.defaultValues);
+                    });
+                })
+                .catch(err => {
+                });
+        }
     }
+
     get btnDisabled() {
         if (this.flagAddresses || this.flagReestr || this.flagShablony || this.flagTransfer) {
             return false;
@@ -84,8 +94,11 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     }
     emitChangesTransfer($event) {
         if ($event) {
-            this.flagTransfer = $event.btn;
-            this.newValuesTransfer = $event.data;
+            if (this.defaultUser) {
+                this.TransferInputs = $event[1];
+            }
+            this.flagTransfer = $event[0].btn;
+            this.newValuesTransfer = $event[0].data;
         } else {
             this.flagTransfer = false;
             this.newValuesTransfer.clear();
@@ -93,9 +106,12 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         this._pushState();
     }
     emitChangesAddresses($event) {
+        if (this.defaultUser) {
+            this.AddressesInputs = $event[1];
+        }
         if ($event) {
-            this.flagReestr = $event.btn;
-            this.newValuesReestr = $event.data;
+            this.flagReestr = $event[0].btn;
+            this.newValuesReestr = $event[0].data;
         } else {
             this.flagReestr = false;
             this.newValuesReestr.clear();
@@ -103,9 +119,12 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         this._pushState();
     }
     emitChangesReestr($event) {
+        if (this.defaultUser) {
+            this.ReestInputsr = $event[1];
+        }
         if ($event) {
-            this.flagAddresses = $event.btn;
-            this.newValuesAddresses = $event.data;
+            this.flagAddresses = $event[0].btn;
+            this.newValuesAddresses = $event[0].data;
         } else {
             this.flagAddresses = false;
             this.newValuesAddresses.clear();
@@ -113,13 +132,17 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         this._pushState();
     }
     emitChangesShablony($event) {
+        if (this.defaultUser) {
+            this.ShablonyInputs = $event[1];
+        }
         if ($event) {
-            this.flagShablony = $event.btn;
-            this.newValuesShablony = $event.data;
+            this.flagShablony = $event[0].btn;
+            this.newValuesShablony = $event[0].data;
         } else {
             this.flagShablony = false;
             this.newValuesShablony.clear();
         }
+        //   this.DefaultSubmitEmit.emit()
         this._pushState();
     }
     emitIncrementError($event) {
@@ -133,11 +156,13 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     edit($event?) {
         this.editFlag = $event;
         this.remaster.editEmit.next();
-
     }
     submit($event) {
         return this._pipRx.batch(this.createObjRequest(), '').then(response => {
-            this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
+            if (this.defaultTitle) {
+                this.defaultUserSubmit();
+            }
+           this._msgSrv.addNewMessage(PARM_SUCCESS_SAVE);
             this.resetFlagsBtn();
             this.editFlag = false;
             this.remaster.submitEmit.next();
@@ -150,6 +175,24 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             this.remaster.submitEmit.next();
         });
     }
+
+    defaultUserSubmit() {
+        let obj = {};
+        if (this.TransferInputs !== undefined) {
+            obj = Object.assign(this.TransferInputs, obj);
+        }
+        if (this.AddressesInputs !== undefined) {
+            obj = Object.assign(this.AddressesInputs, obj);
+        }
+        if (this.ReestInputsr !== undefined) {
+            obj = Object.assign(this.ReestInputsr, obj);
+        }
+        if (this.ShablonyInputs !== undefined) {
+            obj = Object.assign(this.ShablonyInputs, obj);
+        }
+        this.DefaultSubmitEmit.emit(obj);
+    }
+
     resetFlagsBtn() {
         this.emitChangesAddresses(false);
         this.emitChangesReestr(false);
@@ -159,18 +202,33 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     }
     createObjRequest(): any[] {
         const req = [];
-        const userId = this._userSrv.userContextId;
-        if (this.newValuesTransfer.size) {
-            req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesTransfer, userId));
-        }
-        if (this.newValuesAddresses.size) {
-            req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesAddresses, userId));
-        }
-        if (this.newValuesReestr.size) {
-            req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesReestr, userId));
-        }
-        if (this.newValuesShablony.size) {
-            req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesShablony, userId, true));
+        if (this.defaultTitle) {
+            if (this.newValuesTransfer.size) {
+                this._formHelper.CreateDefaultRequest(req, this.newValuesTransfer);
+            }
+            if (this.newValuesAddresses.size) {
+                this._formHelper.CreateDefaultRequest(req, this.newValuesAddresses);
+            }
+            if (this.newValuesReestr.size) {
+                this._formHelper.CreateDefaultRequest(req, this.newValuesReestr);
+            }
+            if (this.newValuesShablony.size) {
+                this._formHelper.CreateDefaultRequest(req, this.newValuesShablony, true);
+            }
+        } else {
+            const userId = this._userSrv.userContextId;
+            if (this.newValuesTransfer.size) {
+                req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesTransfer, userId));
+            }
+            if (this.newValuesAddresses.size) {
+                req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesAddresses, userId));
+            }
+            if (this.newValuesReestr.size) {
+                req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesReestr, userId));
+            }
+            if (this.newValuesShablony.size) {
+                req.concat(this._formHelper.pushIntoArrayRequest(req, this.newValuesShablony, userId, true));
+            }
         }
         return req;
     }

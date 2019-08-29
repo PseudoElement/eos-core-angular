@@ -49,6 +49,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   isnUser: string;
   isnWho: string;
   closeTooltip: boolean = true;
+  queryForDelete: any = [];
   arrSort = [
     { date: true },
     { event: false },
@@ -591,25 +592,27 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       });
   }
 
-  DeleteEvent(isnEvent): Promise<any> {
-    const query = this.createRequestForDelete(isnEvent);
-    return this._pipeSrv.batch(query, '');
+  DeleteEvents(): Promise<any> {
+    return this._pipeSrv.batch(this.queryForDelete, '');
   }
 
   createRequestForDelete(isnEvent) {
-    return [{
+    const query = {
       method: 'DELETE',
       requestUri: `USER_AUDIT(${isnEvent})`
-    }];
+    };
+    this.queryForDelete.push(query);
   }
 
   DeleteEventUser() {
+    this.queryForDelete = [];
     let usersCheck;
     if (this.frontData !== undefined) {
       usersCheck = this.frontData.filter(user => user.checked === true);
       for (const user of usersCheck) {
         if (usersCheck[usersCheck.length - 1] === user) {
-          this.DeleteEvent(user.isnEvent)
+          this.createRequestForDelete(user.isnEvent);
+          this.DeleteEvents()
             .then(() => {
               this._user_pagination.totalPages = this._user_pagination.totalPages === 0 ? 0 : this._user_pagination.totalPages - 1;
               if (this._user_pagination.totalPages % this.config.length === 0) {
@@ -628,7 +631,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
               this._user_pagination.changePagination(this.config);
             });
         } else {
-          this.DeleteEvent(user.isnEvent);
+          this.createRequestForDelete(user.isnEvent);
           this._user_pagination.totalPages = this._user_pagination.totalPages === 0 ? 0 : this._user_pagination.totalPages - 1;
         }
       }

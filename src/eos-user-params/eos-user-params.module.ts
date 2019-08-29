@@ -66,6 +66,7 @@ import { EosReportUsersStatsComponent } from './report/users-stats/users-stats.c
 import { EosReportSummaryFilterProtocolComponent } from './report/filter-protocol/filter-protocol.component';
 import { EosReportProtocolComponent } from './report/protocol/protocol.component';
 import { FormHelperService } from './shared/services/form-helper.services';
+import { DefaultSettingsComponent } from './default-options/default-settings.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -116,7 +117,8 @@ import { FormHelperService } from './shared/services/form-helper.services';
         EosReportSummaryProtocolComponent,
         EosReportUsersStatsComponent,
         EosReportSummaryFilterProtocolComponent,
-        EosReportProtocolComponent
+        EosReportProtocolComponent,
+        DefaultSettingsComponent
     ],
     imports: [
         BrowserModule,
