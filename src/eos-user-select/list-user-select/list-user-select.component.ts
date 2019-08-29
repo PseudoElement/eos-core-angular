@@ -9,8 +9,8 @@ import { UserPaginationService } from 'eos-user-params/shared/services/users-pag
 import { UserSelectNode } from './user-node-select';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { CreateUserComponent } from './createUser/createUser.component';
-import { SearchServices } from '../shered/services/search.service';
-import { USERSRCH } from '../../eos-user-select/shered/consts/search-const';
+// import { SearchServices } from '../shered/services/search.service';
+// import { USERSRCH } from '../../eos-user-select/shered/consts/search-const';
 import { RtUserSelectService } from '../shered/services/rt-user-select.service';
 import { EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.service';
 import { HelpersSortFunctions } from '../shered/helpers/sort.helper';
@@ -21,7 +21,7 @@ import { RestError } from 'eos-rest/core/rest-error';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_DELETE } from '../shered/consts/confirm-users.const';
-import { PipRX, USER_TECH, USER_CL } from 'eos-rest';
+import { PipRX, USER_TECH, /* USER_CL */ IRequest } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosStorageService } from '../../app/services/eos-storage.service';
 import { EosBreadcrumbsService } from '../../app/services/eos-breadcrumbs.service';
@@ -58,7 +58,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     // количество выбранных пользователей
     countcheckedField: number;
     shadow: boolean = false;
-    showCloseQuickSearch: boolean = false;
+
+    get showCloseQuickSearch () {
+        return this._storage.getItem('quickSearch');
+    }
     get cardName() {
         return this.shooseP === 0 ? 'Подразделение' : 'Картотека';
     }
@@ -80,13 +83,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         private _appContext: AppContext,
         private _errorSrv: ErrorHelperServices,
         private _waitCl: WaitClassifService,
-        private srhSrv: SearchServices,
+      //  private srhSrv: SearchServices,
         private _userParamSrv: UserParamsService,
     ) {
 
     }
     ngOnInit() {
-        this._pagSrv.getSumIteq = false;
+        this._pagSrv.getSumIteq = true;
         this._pagSrv.typeConfig = 'users';
         const confUsers = this._storage.getItem('users');
         this._pagSrv.paginationConfig = confUsers;
@@ -108,20 +111,25 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe((data) => {
-                this.flagScan = null;
-                this.flagChecked = null;
-                this.listUsers = data;
-                if (this.listUsers && this.listUsers.length) {
-                    if (!this._storage.getItem('saveQuickSearch')) {
-                        this.selectedNode(this.listUsers[0]);
-                    } else {
-                        this.selectedNode(this.findSelectedSaveUsers()[0] ? this.findSelectedSaveUsers()[0] : this.listUsers[0]);
-                    }
-                } else {
-                    this.selectedNode(null);
-                }
+                const id = this._route.params['value'].nodeId;
+                this.initView(id ? id : '0.');
+                // this.flagScan = null;
+                // this.flagChecked = null;
+                // this.listUsers = data;
+                // if (this.listUsers && this.listUsers.length) {
+                //     if (!this._storage.getItem('saveQuickSearch')) {
+                //         this.selectedNode(this.listUsers[0]);
+                //     } else {
+                //         this.selectedNode(this.findSelectedSaveUsers()[0] ? this.findSelectedSaveUsers()[0] : this.listUsers[0]);
+                //     }
+                // } else {
+                //     this.selectedNode(null);
+                // }
                 this._storage.removeItem('main_scroll');
-                this.listContent.nativeElement.scrollTop = 0;
+                if (this.listContent && this.listContent.nativeElement) {
+
+                    this.listContent.nativeElement.scrollTop = 0;
+                }
                 // this.updateFlafListen();
             });
 
@@ -130,8 +138,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe(r => {
-                this.showCloseQuickSearch = false;
-                this._storage.removeItem('quickSearch');
+              //  this.showCloseQuickSearch = false;
+                localStorage.removeItem('quickSearch');
                 this._storage.removeItem('selected_user_save');
                 this.initView();
             });
@@ -235,27 +243,20 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         this._apiSrv.getUsers(param || '0.')
             .then((data: UserSelectNode[]) => {
                 //  this._pagSrv.UsersList =  this.helpersClass.sort(data, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-                if (this._storage.getItem('saveQuickSearch') && this._storage.getItem('quickSearch')) {
-                    this._apiSrv.Allcustomer = this._apiSrv._getListUsers(this._storage.getItem('quickSearch')).slice();
-                    this.setListSearch();
-                    this.showCloseQuickSearch = true;
-                } else {
-                    this._storage.removeItem('quickSearch');
-                    this.showCloseQuickSearch = false;
-                    this.listUsers = this._pagSrv.UsersList.slice((this._pagSrv.paginationConfig.start - 1)
-                        * this._pagSrv.paginationConfig.length,
-                        this._pagSrv.paginationConfig.current
-                        * this._pagSrv.paginationConfig.length);
+                    this.listUsers = this._pagSrv.UsersList;
+                    // this.listUsers = this._pagSrv.UsersList.slice((this._pagSrv.paginationConfig.start - 1)
+                    //     * this._pagSrv.paginationConfig.length,
+                    //     this._pagSrv.paginationConfig.current
+                    //     * this._pagSrv.paginationConfig.length);
                     if (this.listUsers && this.listUsers.length) {
                         this.selectedNode(this.findSelectedSaveUsers()[0] ? this.findSelectedSaveUsers()[0] : this.listUsers[0]);
                         //    this._storage.removeItem('selected_user_save');
                     } else {
                         this.selectedNode(null);
                     }
-                }
                 //  this.updateFlafListen();
                 this.isLoading = false;
-                this._storage.removeItem('saveQuickSearch');
+              //  this._storage.removeItem('saveQuickSearch');
                 this.countMaxSize = this._pagSrv.countMaxSize;
 
             }).catch(error => {
@@ -408,13 +409,18 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 }
             }
         }
-        this.goSortList();
+        this._apiSrv.stateTehUsers = false;
+        this._apiSrv.stateDeleteUsers = false;
+
+        const id = this._route.params['value'].nodeId;
+        this.initView(id ? id : '0.');
+        // this.goSortList();
     }
-    goSortList(pageList?) {
-        this._pagSrv.UsersList = this.helpersClass.sort(this._pagSrv.UsersList, this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun, this._apiSrv.currentSort);
-        this._pagSrv._initPaginationConfig(true);
-        this._pagSrv.changePagination(this._pagSrv.paginationConfig);
-    }
+    // goSortList(pageList?) {
+    //     this._pagSrv.UsersList = this.helpersClass.sort(this._pagSrv.UsersList, this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun, this._apiSrv.currentSort);
+    //     this._pagSrv._initPaginationConfig(true);
+    //     this._pagSrv.changePagination(this._pagSrv.paginationConfig);
+    // }
     getClassOrder(flag) {
         if (flag) {
             return 'icon eos-icon small eos-icon-arrow-blue-bottom';
@@ -435,19 +441,29 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
 
     ActionMode() {
         this._apiSrv.flagDelitedPermanantly = !this._apiSrv.flagDelitedPermanantly;
-        this.preSortForAction();
+        this._apiSrv.stateDeleteUsers = this._apiSrv.flagDelitedPermanantly;
+        const id = this._route.params['value'].nodeId;
+        this._storage.removeItem('users');
+        this._pagSrv.resetConfig();
+        this.initView(id ? id : '0.');
+        //    this.preSortForAction();
     }
 
     ActionTehnicalUser() {
         this._apiSrv.flagTehnicalUsers = !this._apiSrv.flagTehnicalUsers;
-        this.preSortForAction();
+        this._apiSrv.stateTehUsers = this._apiSrv.flagTehnicalUsers;
+        const id = this._route.params['value'].nodeId;
+        this._storage.removeItem('users');
+        this._pagSrv.resetConfig();
+        this.initView(id ? id : '0.');
+        //  this.preSortForAction();
     }
-    preSortForAction() {
-        this._apiSrv.devideUsers();
-        this._pagSrv._initPaginationConfig(true);
-        this._pagSrv.changePagination(this._pagSrv.paginationConfig);
-        this.countMaxSize = this._pagSrv.countMaxSize;
-    }
+    // preSortForAction() {
+    //     this._apiSrv.devideUsers();
+    //     this._pagSrv._initPaginationConfig(true);
+    //     this._pagSrv.changePagination(this._pagSrv.paginationConfig);
+    //     this.countMaxSize = this._pagSrv.countMaxSize;
+    // }
 
     OpenAddressManagementWindow() {
         setTimeout(() => {
@@ -716,30 +732,37 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 return 'eos-icon-checkbox-square-blue';
         }
     }
-    searchUsers($event: USER_CL[]) {
-        if (!$event.length) {
-            this._apiSrv.Allcustomer = [];
-            this.setListSearch();
-            this._msgSrv.addNewMessage({
-                title: 'Ничего не найдено',
-                msg: 'попробуйте изменить поисковую фразу',
-                type: 'warning'
-            });
-        } else {
-            this._apiSrv.updatePageList($event, this.shooseP).then((res) => {
-                this._storage.setItem('quickSearch', $event);
-                this._apiSrv.Allcustomer = this._apiSrv._getListUsers(res).slice();
-                this.setListSearch();
-            });
-        }
-        this.showCloseQuickSearch = true;
+    searchUsers($event: IRequest) {
+        this._apiSrv.searchState = true;
+        this._storage.setItem('quickSearch', $event);
+       setTimeout(() => {
+        this.disabledBtnAction(this.selectedUser);
+       }, 0);
+       // localStorage.setItem('quickSearch', JSON.stringify( $event));
+        this.initView();
+        // if (!$event.length) {
+        //     this._apiSrv.Allcustomer = [];
+        //     this.setListSearch();
+        //     this._msgSrv.addNewMessage({
+        //         title: 'Ничего не найдено',
+        //         msg: 'попробуйте изменить поисковую фразу',
+        //         type: 'warning'
+        //     });
+        // } else {
+        //     this._apiSrv.updatePageList($event, this.shooseP).then((res) => {
+        //         this._storage.setItem('quickSearch', $event);
+        //         this._apiSrv.Allcustomer = this._apiSrv._getListUsers(res).slice();
+        //         this.setListSearch();
+        //     });
+        // }
+       // this.showCloseQuickSearch = true;
     }
-    setListSearch() {
-        this._pagSrv.UsersList = this._apiSrv.Allcustomer;
-        this._pagSrv._initPaginationConfig(true);
-        this._pagSrv.changePagination(this._pagSrv.paginationConfig);
-        this.countMaxSize = this._pagSrv.countMaxSize;
-    }
+    // setListSearch() {
+    //     this._pagSrv.UsersList = this._apiSrv.Allcustomer;
+    //     this._pagSrv._initPaginationConfig(true);
+    //     this._pagSrv.changePagination(this._pagSrv.paginationConfig);
+    //     this.countMaxSize = this._pagSrv.countMaxSize;
+    // }
     savePositionSelectUser($event) {
         this._storage.setItem('main_scroll', $event.target.scrollTop);
     }
@@ -750,19 +773,25 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             return `tooltip-info`;
         }
     }
-    fastSetConfSearch(newObj, evn: string): USERSRCH {
-        newObj['LOGIN'] = evn.replace(/\s/g, '_').trim();
-        newObj['DEL_USER'] = false;
-        return newObj;
-    }
+    // fastSetConfSearch(newObj, evn: string): USERSRCH {
+    //     newObj['LOGIN'] = evn.replace(/\s/g, '_').trim();
+    //     newObj['DEL_USER'] = false;
+    //     return newObj;
+    // }
     quickSearchKey(evn) {
-        const newObj: USERSRCH = {};
-        this.fastSetConfSearch(newObj, evn);
-        if (event) {
-            this.srhSrv.getUsersToGo(newObj).then((users: USER_CL[]) => {
-                this.searchUsers(users);
-            });
-        }
+        this._apiSrv.searchState = true;
+        this._storage.setItem('quickSearch', evn);
+       setTimeout(() => {
+        this.disabledBtnAction(this.selectedUser);
+       }, 0);
+       // localStorage.setItem('quickSearch', JSON.stringify( $event));
+        this.initView();
+        // this.fastSetConfSearch(newObj, evn);
+        // if (event) {
+        //     this.srhSrv.getUsersToGo(newObj).then((users: USER_CL[]) => {
+        //         this.searchUsers(users);
+        //     });
+        // }
     }
     resetSearch() {
         let urlUpdate;
@@ -772,10 +801,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         } else {
             urlUpdate = url[url.length - 1];
         }
-        this.showCloseQuickSearch = false;
-        this.initView(urlUpdate);
-        this.quickSearch.clearQuickForm();
+      //  this.showCloseQuickSearch = false;
         this._storage.removeItem('quickSearch');
+        this._pagSrv.resetConfig();
+        this.disabledBtnAction(this.selectedUser);
+        this.quickSearch.clearQuickForm();
+        this.initView(urlUpdate);
     }
 
     private cathError(e) {
@@ -805,6 +836,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         if (this.flagTachRigth !== null) {
             this.buttons.buttons[0].disabled = this.flagTachRigth;
             this.buttons.moreButtons[0].disabled = this.flagTachRigth;
+        }
+        if (this.showCloseQuickSearch) {
+            this.buttons.moreButtons[3].disabled = true;
+            this.buttons.moreButtons[4].disabled = true;
+        }   else {
+            this.buttons.moreButtons[3].disabled = false;
+            this.buttons.moreButtons[4].disabled = false;
         }
     }
 

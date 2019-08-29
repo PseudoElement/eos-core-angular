@@ -5,13 +5,12 @@ import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-conver
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { FormGroup } from '@angular/forms';
 import { SearchServices } from '../shered/services/search.service';
-import { USER_CL } from 'eos-rest';
 
 @Component({
     selector: 'eos-user-search',
     templateUrl: './user-search.component.html',
     styleUrls: ['./user-search.component.scss'],
-    providers: [FormHelperService]
+    providers: [FormHelperService],
 })
 
 export class UserSearchComponent implements OnInit {
@@ -32,7 +31,6 @@ export class UserSearchComponent implements OnInit {
         private inpSrv: InputControlService,
         private srhSrv: SearchServices,
     ) {
-
     }
     isActiveButton(): boolean {
         return (this.fSearchPop.isOpen);
@@ -93,18 +91,32 @@ export class UserSearchComponent implements OnInit {
     startSearch() {
         const newObj: USERSRCH = {};
         this.setConfSearch(newObj);
-        this.RemoveQuotes(newObj);
-        if (newObj['SURNAME']) {
-            this.srhSrv.getUsersToGo(newObj).then(users => {
-                this.search.emit(users);
-            });
-        } else {
-            if (this.flagDeep) {
-                this.withCard(newObj);
-            } else {
-                this.withOutCard(newObj);
-            }
+        if (newObj.CARD) {
+            delete newObj.DEPARTMENT;
         }
+        if (newObj.DEPARTMENT) {
+            delete newObj.CARD;
+        }
+        this.RemoveQuotes(newObj);
+        const queryF = this.srhSrv.getQueryForFilter(newObj);
+        this.search.emit(queryF);
+        // this.srhSrv._pipApisrv.read(queryF).then(data => {
+        //     console.log(data);
+        // }).catch(error => {
+        //     console.log(error);
+        // })
+
+        // if (newObj['SURNAME']) {
+        //     this.srhSrv.getUsersToGo(newObj).then(users => {
+        //         this.search.emit(users);
+        //     });
+        // } else {
+        //     if (this.flagDeep) {
+        //         this.withCard(newObj);
+        //     } else {
+        //         this.withOutCard(newObj);
+        //     }
+        // }
 
         this.fSearchPop.isOpen = false;
         //   this.search.emit(null);
@@ -129,44 +141,44 @@ export class UserSearchComponent implements OnInit {
         }
         newObj['DEL_USER'] = searchVal['rec.DEL_USER'];
     }
-    withCard(config: USERSRCH) {
-        if (config.CARD && config.fullDueName) {
-            this.srhSrv.searchPrepareCardAndFullDue(config, true).then((users: USER_CL[] | boolean) => {
-                this.search.emit(users);
-            });
-        } else if (config.fullDueName) {
-            this.srhSrv.searchCardOneParam(config).then((users: USER_CL[] | boolean) => {
-                this.search.emit(users);
-            });
-        } else if (config.CARD) {
-            this.srhSrv.searchCardOneCardParam(config, true).then((users: USER_CL[] | boolean) => {
-                this.search.emit(users);
-            });
-        } else if (config.LOGIN) {
-            this.srhSrv.getUsersToGo(config).then((users: USER_CL[]) => {
-                this.search.emit(users);
-            });
-        }
-    }
-    withOutCard(config: USERSRCH) {
-        if (config.fullDueName && config.DEPARTMENT) {
-            this.srhSrv.searchPrepareCardAndFullDue(config, false).then((users: USER_CL[] | boolean) => {
-                this.search.emit(users);
-            });
-        } else if (config.DEPARTMENT) {
-            this.srhSrv.searchCardOneCardParam(config, false).then((users: USER_CL[]) => {
-                this.search.emit(users);
-            });
-        } else if (config.fullDueName) {
-            this.srhSrv.searchCardOneParam(config).then((users: USER_CL[] | boolean) => {
-                this.search.emit(users);
-            });
-        } else if (config.LOGIN) {
-            this.srhSrv.getUsersToGo(config).then((users: USER_CL[]) => {
-                this.search.emit(users);
-            });
-        }
-    }
+    // withCard(config: USERSRCH) {
+    //     if (config.CARD && config.fullDueName) {
+    //         this.srhSrv.searchPrepareCardAndFullDue(config, true).then((users: USER_CL[] | boolean) => {
+    //             this.search.emit(users);
+    //         });
+    //     } else if (config.fullDueName) {
+    //         this.srhSrv.searchCardOneParam(config).then((users: USER_CL[] | boolean) => {
+    //             this.search.emit(users);
+    //         });
+    //     } else if (config.CARD) {
+    //         this.srhSrv.searchCardOneCardParam(config, true).then((users: USER_CL[] | boolean) => {
+    //             this.search.emit(users);
+    //         });
+    //     } else if (config.LOGIN) {
+    //         this.srhSrv.getUsersToGo(config).then((users: USER_CL[]) => {
+    //             this.search.emit(users);
+    //         });
+    //     }
+    // }
+    // withOutCard(config: USERSRCH) {
+    //     if (config.fullDueName && config.DEPARTMENT) {
+    //         this.srhSrv.searchPrepareCardAndFullDue(config, false).then((users: USER_CL[] | boolean) => {
+    //             this.search.emit(users);
+    //         });
+    //     } else if (config.DEPARTMENT) {
+    //         this.srhSrv.searchCardOneCardParam(config, false).then((users: USER_CL[]) => {
+    //             this.search.emit(users);
+    //         });
+    //     } else if (config.fullDueName) {
+    //         this.srhSrv.searchCardOneParam(config).then((users: USER_CL[] | boolean) => {
+    //             this.search.emit(users);
+    //         });
+    //     } else if (config.LOGIN) {
+    //         this.srhSrv.getUsersToGo(config).then((users: USER_CL[]) => {
+    //             this.search.emit(users);
+    //         });
+    //     }
+    // }
     openFastSrch() {
         this.fastSearch = !this.fastSearch;
     }
@@ -178,8 +190,10 @@ export class UserSearchComponent implements OnInit {
             if (this.srchString) {
                 const strSearch = this.srchString.trim();
                 this.srchString = this.srchString.trim();
+                this.srchString = this.srchString.replace(/\s/g, '_').trim();
                 if (strSearch) {
-                    this.quickSearchKey.emit(strSearch);
+                    const queryF = this.srhSrv.getQueryForFilter({ LOGIN: strSearch });
+                    this.quickSearchKey.emit(queryF);
                 }
             }
         }

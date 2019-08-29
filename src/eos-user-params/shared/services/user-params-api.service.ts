@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { UserPaginationService } from '../services/users-pagination.service';
-import { DEPARTMENT, DOCGROUP_CL, USER_CL } from 'eos-rest';
+import { DEPARTMENT, DOCGROUP_CL, /* USER_CL */ } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { Subject, Observable } from 'rxjs';
 import { IConfig } from 'eos-user-select/shered/interfaces/user-select.interface';
@@ -10,13 +10,14 @@ import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-selec
 import { HelpersSortFunctions } from '../../../eos-user-select/shered/helpers/sort.helper';
 import { IUserSort } from '../../../eos-user-select/shered/interfaces/user-select.interface';
 import { SortsList } from '../../../eos-user-select/shered/interfaces/user-select.interface';
+import { EosStorageService } from '../../../../src/app/services/eos-storage.service';
 // import {EosStorageService} from '../../../../src/app/services/eos-storage.service';
 @Injectable()
 export class UserParamApiSrv {
     flagTehnicalUsers: boolean;
     flagDelitedPermanantly: boolean;
     sysParam: any;
-    dueDep: any;
+    dueDep: any = '0.';
     srtConfig: IUserSort = {};
     configList: IConfig = {
         shooseTab: +sessionStorage.getItem('key') ? +sessionStorage.getItem('key') : 0,
@@ -24,6 +25,10 @@ export class UserParamApiSrv {
     };
     confiList$: Subject<IConfig>;
     currentSort: any = SortsList[3];
+    searchRequest = {};
+    searchState: boolean = false;
+    stateTehUsers: boolean = false;
+    stateDeleteUsers: boolean = false;
     public Allcustomer: UserSelectNode[] = [];
     private helpersClass;
     get _confiList$(): Observable<IConfig> {
@@ -33,7 +38,7 @@ export class UserParamApiSrv {
         private apiSrv: PipRX,
         private _router: Router,
         private users_pagination: UserPaginationService,
-        // private _storageSrv: EosStorageService,
+        private _storageSrv: EosStorageService,
     ) {
         this.helpersClass = new HelpersSortFunctions();
         this.initConfigTitle();
@@ -45,6 +50,7 @@ export class UserParamApiSrv {
             sessionStorage.setItem('titleDue', this.configList.titleDue);
         });
         this.getSysParamForBlockedUser();
+
     }
 
     getData<T>(query?: any): Promise<T[]> {
@@ -78,31 +84,147 @@ export class UserParamApiSrv {
     }
     getQueryforDB(dueDep?) {
         let q;
+        let skip, top;
+        const conf = this._storageSrv.getItem('users');
+        if (conf) {
+            top = conf.length;
+            skip = conf.length * conf.current - conf.length;
+        } else {
+            top = 10;
+            skip = 0;
+        }
+        let propOrderBy = this.currentSort === 'login' ? 'CLASSIF_NAME' : 'NOTE';
+        propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+
+        if (this.stateTehUsers) {
+            propOrderBy = 'DUE_DEP asc';
+        }
+
+        if (this.stateTehUsers && this.stateDeleteUsers) {
+            propOrderBy = 'ORACLE_ID asc';
+        }
         if (this.configList.shooseTab === 0) {
             if (!dueDep || dueDep === '0.') {
-                q = ALL_ROWS;
+                const ob = {};
+                q = {
+                    USER_CL: PipRX.criteries(ob),
+                    orderby: `${propOrderBy}`,
+                    top: `${top}`,
+                    skip: `${skip}`,
+                    inlinecount: 'allpages'
+                };
+                if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
+                    ob['DUE_DEP'] = 'isnotnull';
+                }
+                if (this.flagDelitedPermanantly && !this.flagTehnicalUsers) {
+                    // ob['DUE_DEP'] = 'isnotnull';
+                    ob['ORACLE_ID'] = 'isnull';
+                }
+                if (!this.flagDelitedPermanantly && this.flagTehnicalUsers) {
+                    // ob['DUE_DEP'] = 'isnull';
+                    ob['ORACLE_ID'] = 'isnotnull';
+                }
+                if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
+                    q['USER_CL'] = ALL_ROWS;
+                }
+                q['loadmode'] = 'Table';
             } else {
-                q = PipRX.criteries({ DUE_DEP: `${dueDep}%`}, );
+                q = {
+                    USER_CL: PipRX.criteries({ DUE_DEP: `${dueDep}%` }),
+                    orderby: `${propOrderBy}`,
+                    top: `${top}`,
+                    skip: `${skip}`,
+                    inlinecount: 'allpages',
+                    loadmode: 'Table'
+                };
+
+                //  PipRX.criteries({ DUE_DEP: `${dueDep}%` });
             }
         }
         if (this.configList.shooseTab === 1) {
-            q = PipRX.criteries({ 'USERCARD.DUE': `${dueDep ? dueDep : '0.'}` });
+            q = {
+                USER_CL: PipRX.criteries({ 'USERCARD.DUE': `${dueDep ? dueDep : '0.'}` }),
+                orderby: `${propOrderBy}`,
+                top: `${top}`,
+                skip: `${skip}`,
+                inlinecount: 'allpages',
+                loadmode: 'Table'
+            };
+            if (this.flagDelitedPermanantly && !this.flagTehnicalUsers) {
+                // ob['DUE_DEP'] = 'isnotnull';
+                q.USER_CL.criteries['ORACLE_ID'] = 'isnull';
+            }
+            if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
+                q.USER_CL.criteries['DUE_DEP'] = 'isnotnull';
+            }
+            if (!this.flagDelitedPermanantly && this.flagTehnicalUsers) {
+                // ob['DUE_DEP'] = 'isnull';
+                q.USER_CL.criteries['ORACLE_ID'] = 'isnotnull';
+            }
+
+            // PipRX.criteries({ 'USERCARD.DUE': `${dueDep ? dueDep : '0.'}` });
         }
         return q;
     }
 
+    getQueryForSearch() {
+        if (this.searchState) {
+            this.users_pagination.resetConfig();
+        }
+        const dbQuery = Object.assign({}, this._storageSrv.getItem('quickSearch'));
+        const config = this._storageSrv.getItem('users');
+        let propOrderBy = this.currentSort === 'login' ? 'CLASSIF_NAME' : 'NOTE';
+        propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+        dbQuery.orderby = propOrderBy;
+        dbQuery.top = `${config ? config.length : 10}`;
+        dbQuery.skip = `${config ? config.length * config.current - config.length : 0}`;
+        dbQuery.inlinecount = 'allpages';
+        this.searchState = false;
+        return dbQuery;
+    }
+    parseTotalPage(data: string) {
+        const re = /\d+/g;
+        const tAray = data.match(re);
+        if (tAray.length) {
+            return +tAray[tAray.length - 1];
+        }
+    }
+    getSkipTo() {
+
+    }
+    resetConfigPagination(dueDep) {
+        dueDep = dueDep ? dueDep : '0.';
+        if (this.dueDep !== dueDep) {
+            if (this.users_pagination.paginationConfig) {
+                this.users_pagination.resetConfig();
+                this.users_pagination.saveUsersConf();
+            }
+        }
+    }
     getUsers(dueDep?: string): Promise<any> {
+        this.resetConfigPagination(dueDep);
         this.dueDep = dueDep || '0.';
-        const q = this.getQueryforDB(dueDep);
-        const query = { USER_CL: q, loadmode: 'Table' };
-        return this.getData(query)
+        let q;
+        if (this._storageSrv.getItem('quickSearch')) {
+            q = this.getQueryForSearch();
+        } else {
+            q = this.getQueryforDB(dueDep);
+        }
+        return this.getData(q)
             .then(data => {
+                if (data.hasOwnProperty('TotalRecords')) {
+                    this.users_pagination.totalPages = this.parseTotalPage(data['TotalRecords']);
+                } else {
+                    this.users_pagination.totalPages = data.length;
+                }
                 const prepData = data.filter(user => user['ISN_LCLASSIF'] !== 0);
                 return this.updatePageList(prepData, this.configList.shooseTab).then((res) => {
-                    this.Allcustomer = this._getListUsers(res).slice();
-                    this.devideUsers();
+                    this.users_pagination.UsersList = this.Allcustomer = this._getListUsers(res).slice();
+                    //   this.devideUsers();
+
                     this.initConfigTitle(dueDep);
                     this.users_pagination._initPaginationConfig(true);
+                    this.users_pagination.saveUsersConf();
                     return this.users_pagination.UsersList;
                 });
             });
@@ -275,62 +397,68 @@ export class UserParamApiSrv {
     }
 
     updateDepartMent(pageList, tabs) {
-        // const setQueryResult = new Set();
-        // let stringQuery: Array<string> = [];
-        // let valueForPadQuery = [];
-        // let padQuery;
-        // let parseStringUserDue = [];
-        pageList = pageList.map((user: USER_CL) => {
-            user['DEPARTMENT'] = !user.NOTE || user.NOTE === 'null' ? '...' : user.NOTE;
-            return user;
-        });
-        return Promise.resolve(pageList);
-        //   stringQuery.length === 0 ? stringQuery = ['0000'] : stringQuery = stringQuery;
-        // return this.getDepartment(stringQuery)
-        //     .then(departments => {
-        //         departments.forEach(el => {
-        //             if (el.ISN_HIGH_NODE >= 0) {
-        //                 parseStringUserDue = el.DUE.split('.');
-        //                 setQueryResult.add(parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.');
-        //             }
-        //         });
-        //         pageList.map(user => {
-        //             const findDepartInfo = departments.filter(dapartInfo => {
-        //                 return user.DUE_DEP === dapartInfo.DUE;
-        //             });
-        //             if (findDepartInfo.length > 0) {
-        //                 user['DEPARTMENT_SURNAME'] = findDepartInfo[0].SURNAME;
-        //                 user['DEPARTMENT_DYTU'] = findDepartInfo[0].DUTY;
-        //                 user['DEPARTMENT_DELETE'] = findDepartInfo[0].DELETED;
-        //                 user['DEEP_DATA'] = findDepartInfo[0];
-        //             } else {
-        //                 user['DEPARTMENT_SURNAME'] = '';
-        //                 user['DEPARTMENT_DYTU'] = '';
-        //                 user['DEPARTMENT_DELETE'] = 0;
-        //             }
-        //         });
-        //         valueForPadQuery = Array.from(setQueryResult);
-        //         valueForPadQuery.length > 0 ? padQuery = valueForPadQuery : padQuery = ['0000'];
-        //         return this.getDepartment(padQuery)
-        //             .then(deepInfo => {
-        //                 pageList.map(user => {
-        //                     const findDue = deepInfo.filter(dueDeep => {
-        //                         if (user.DUE_DEP === null) {
-        //                             return false;
-        //                         } else {
-        //                             parseStringUserDue = user.DUE_DEP.split('.');
-        //                             return parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.' === dueDeep.DUE;
-        //                         }
-        //                     });
-        //                     if (findDue.length > 0) {
-        //                         user['DEPARTMENT'] = tabs === 0 ? (findDue[0].DUE === '0.' ? 'Все подраздения' : findDue[0].CLASSIF_NAME) : findDue[0].CARD_NAME;
-        //                     } else {
-        //                         user['DEPARTMENT'] = '...';
-        //                     }
-        //                 });
-        //                 return pageList;
-        //             });
-        //     });
+        const setQueryResult = new Set();
+        let stringQuery: Array<string> = [];
+        let valueForPadQuery = [];
+        let padQuery;
+        let parseStringUserDue = [];
+        // pageList = pageList.map((user: USER_CL) => {
+        //     user['DEPARTMENT'] = !user.NOTE || user.NOTE === 'null' ? '...' : user.NOTE;
+        //     return user;
+        // });
+      //  return Promise.resolve(pageList);
+
+      pageList.forEach(user => {
+        if (user.DUE_DEP) {
+            stringQuery.push(user.DUE_DEP);
+        }
+    });
+          stringQuery.length === 0 ? stringQuery = ['0000'] : stringQuery = stringQuery;
+        return this.getDepartment(stringQuery)
+            .then(departments => {
+                departments.forEach(el => {
+                    if (el.ISN_HIGH_NODE >= 0) {
+                        parseStringUserDue = el.DUE.split('.');
+                        setQueryResult.add(parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.');
+                    }
+                });
+                pageList.map(user => {
+                    const findDepartInfo = departments.filter(dapartInfo => {
+                        return user.DUE_DEP === dapartInfo.DUE;
+                    });
+                    if (findDepartInfo.length > 0) {
+                        user['DEPARTMENT_SURNAME'] = findDepartInfo[0].SURNAME;
+                        user['DEPARTMENT_DYTU'] = findDepartInfo[0].DUTY;
+                        user['DEPARTMENT_DELETE'] = findDepartInfo[0].DELETED;
+                        user['DEEP_DATA'] = findDepartInfo[0];
+                    } else {
+                        user['DEPARTMENT_SURNAME'] = '';
+                        user['DEPARTMENT_DYTU'] = '';
+                        user['DEPARTMENT_DELETE'] = 0;
+                    }
+                });
+                valueForPadQuery = Array.from(setQueryResult);
+                valueForPadQuery.length > 0 ? padQuery = valueForPadQuery : padQuery = ['0000'];
+                return this.getDepartment(padQuery)
+                    .then(deepInfo => {
+                        pageList.map(user => {
+                            const findDue = deepInfo.filter(dueDeep => {
+                                if (user.DUE_DEP === null) {
+                                    return false;
+                                } else {
+                                    parseStringUserDue = user.DUE_DEP.split('.');
+                                    return parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.' === dueDeep.DUE;
+                                }
+                            });
+                            if (findDue.length > 0) {
+                                user['DEPARTMENT'] = tabs === 0 ? (findDue[0].DUE === '0.' ? 'Все подраздения' : findDue[0].CLASSIF_NAME) : findDue[0].CARD_NAME;
+                            } else {
+                                user['DEPARTMENT'] = '...';
+                            }
+                        });
+                        return pageList;
+                    });
+            });
     }
     initConfigTitle(dueDep?: string) {
         if (!this.configList.titleDue || !dueDep) {

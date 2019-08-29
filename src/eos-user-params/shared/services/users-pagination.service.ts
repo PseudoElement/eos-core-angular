@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { USER_CL } from 'eos-rest';
+// import { USER_CL } from 'eos-rest';
 import { Subject, Observable } from 'rxjs';
 import { IPaginationConfig } from '../../../eos-dictionaries/node-list-pagination/node-list-pagination.interfaces';
 import { EosStorageService } from '../../../../src/app/services/eos-storage.service';
@@ -14,7 +14,7 @@ export class UserPaginationService {
     getSumIteq: boolean;
     typeConfig: string;
     private _paginationConfig$: Subject<IPaginationConfig>;
-    private _NodeList$: Subject<USER_CL[]>;
+    private _NodeList$: Subject<any>;
 
     get paginationConfig$(): Observable<IPaginationConfig> {
         return this._paginationConfig$.asObservable();
@@ -37,8 +37,20 @@ export class UserPaginationService {
     changePagination(config: IPaginationConfig) {
         Object.assign(this.paginationConfig, config);
         this._updateVisibleNodes();
+        this.saveUsersConf();
         if (this.totalPages === undefined) {
             this._paginationConfig$.next(this.paginationConfig);
+        }
+    }
+    saveUsersConf() {
+        if (this.typeConfig === 'users') {
+            this._storageSrv.setItem('users', this.paginationConfig, true);
+        }
+    }
+    resetConfig() {
+        if (this.paginationConfig) {
+            this.paginationConfig.current = 1;
+            this.paginationConfig.start = 1;
         }
     }
 
@@ -76,6 +88,10 @@ export class UserPaginationService {
             return confProt.length;
         }
     }
+    // getLengthForUsers(isn) {
+    //     const conf = this._storageSrv.getItem(isn);
+    //     console.log(conf);
+    // }
 
     _initPaginationConfig(update?: boolean) {
         this.paginationConfig = Object.assign(this.paginationConfig || { start: 1, current: 1 }, {
@@ -121,8 +137,9 @@ export class UserPaginationService {
     private _updateVisibleNodes() {
         this._fixCurrentPage();
         this.countMaxSize = this.paginationConfig.itemsQty;
-        const pageList = this.UsersList.slice((this.paginationConfig.start - 1) * this.paginationConfig.length, this.paginationConfig.current * this.paginationConfig.length);
-        this._NodeList$.next(pageList);
+        //  const pageList = this.UsersList.slice((this.paginationConfig.start - 1) * this.paginationConfig.length, this.paginationConfig.current * this.paginationConfig.length);
+        // const pageList = this.UsersList.slice((this.paginationConfig.start - 1) * this.paginationConfig.length, this.paginationConfig.current * this.paginationConfig.length);
+        this._NodeList$.next(this.paginationConfig);
         // this.updatePageList(pageList).then(pageLists => {
         //     this._NodeList$.next(pageLists);
         // });

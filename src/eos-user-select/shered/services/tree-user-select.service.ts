@@ -42,7 +42,7 @@ export class TreeUserSelectService {
             this.cardFlag = 0;
             this.root.title = 'Все подразделения';
         }
-
+        query['loadmode'] = 'Table';
         return this.apiSrv.read<DEPARTMENT>(query)
         .then(data => {
             this.updateNodes(data, true);
