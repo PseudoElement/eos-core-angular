@@ -170,6 +170,7 @@ export class UserParamApiSrv {
                 }
             }
         }
+
         if (this.configList.shooseTab === 1) {
             if (this.currentSort === 'fullDueName') {
                 propOrderBy = 'SURNAME_PATRON';
