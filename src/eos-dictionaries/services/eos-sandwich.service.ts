@@ -61,7 +61,7 @@ export class EosSandwichService {
     }
 
     resize() {
-        if (window.innerWidth > 1500) {
+        if (window.innerWidth > 1000) {
             this._currentDictState = [true, true];
         } else {
             this._currentDictState = [false, false];

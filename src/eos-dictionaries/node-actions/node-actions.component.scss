@@ -86,7 +86,7 @@ $drop-menu-width: 300px;
     }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1000px) {
     .action-menu {
         width: $drop-menu-width;
         position: relative;
@@ -120,7 +120,7 @@ $drop-menu-width: 300px;
     }
 }
 
-@media (min-width: 1200px) {
+@media (min-width: 1000px) {
     .action-menu::before {
         content: '';
         top: -8px;
