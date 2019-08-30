@@ -530,12 +530,26 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this.prepareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.creatchesheDefault);
                 this.prepareInputs = this.formHelp.getObjectInputFields(CABINETS_USER.fields);
                 this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
+                if (data[10].PARM_VALUE === null) {
+                    this.defoltInputs['rec.HILITE_PRJ_RC_BOOLEAN'].value = false;
+                } else {
+                    this.defoltInputs['rec.HILITE_PRJ_RC_BOOLEAN'].value = true;
+                }
+                if (data[11].PARM_VALUE === null) {
+                    this.defoltInputs['rec.HILITE_RESOLUTION_BOOLEAN'].value = false;
+                } else {
+                    this.defoltInputs['rec.HILITE_RESOLUTION_BOOLEAN'].value = true;
+                }
                 this.parseInputsFromString(this.defoltInputs, this.creatchesheDefault['FOLDERCOLORSTATUS']);
                 this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value;
                 this.prepFormCancel(this.defoltInputs, true);
                 this.checkDataToDisabled();
                 this.getControlAuthor().then((author) => {
-                    this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
+                    if (author === false) {
+                        this.form.controls['rec.CONTROLL_AUTHOR'].patchValue('', { emitEvent: false });
+                    } else {
+                        this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
+                    }
                 });
             })
             .catch(err => {
