@@ -172,6 +172,14 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
         this.sendFrom = '';
         this.prepareData = {};
         this.prepareInputs = {};
+        const ADDR_EXP = String(this.defaultValues['ADDR_EXPEDITION']);
+        Promise.all([this.getList(), this.getDepartMentName(ADDR_EXP, true)]).then(result => {
+            const dep = result[1] as DEPARTMENT[];
+            if (dep.length > 0) {
+                this.sendFromOrigin = dep[0].CLASSIF_NAME;
+                this.sendFrom = dep[0].CLASSIF_NAME;
+            }
+        });
         this.prepareData = this.formHelp.parse_Create(OTHER_USER_ADDRESSES.fields, this.defaultValues);
         this.prepareInputs = this.formHelp.getObjectInputFields(OTHER_USER_ADDRESSES.fields);
         this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });

@@ -180,6 +180,12 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
         this.prepareData = this.formHelp.parse_Create(OTHER_USER_REESTR.fields, this.defaultValues);
         this.prepareInputs = this.formHelp.getObjectInputFields(OTHER_USER_REESTR.fields);
         this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
+        this.paramDocDefault = String(this.defaultValues['REESTR_RESTRACTION_DOCGROUP']).replace(/,/g, '||');
+        this.getDocGroupName(this.paramDocDefault, true).then((result) => {
+            if (result.length > 0) {
+                this.getListDoc(result);
+            }
+        });
         this.prepFormCancel(this.defoltInputs, true);
     }
     cancel($event?) {

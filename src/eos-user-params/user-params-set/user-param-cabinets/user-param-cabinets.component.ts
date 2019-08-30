@@ -160,17 +160,30 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     getValueForString(val, folderString): boolean {
         return folderString.charAt(val) === '1' ? true : false;
     }
-    patchInputValue() {
-        if (String(this.inputs['rec.HILITE_PRJ_RC'].value).trim() !== '') {
-            this.inputs['rec.HILITE_PRJ_RC_BOOLEAN'].value = true;
+    patchInputValue(Defaultdata?: any, Defaultinp?: any) {
+        if (Defaultinp !== undefined && Defaultdata !== undefined) {
+            if (Defaultdata[10].PARM_VALUE === null) {
+                Defaultinp['rec.HILITE_PRJ_RC_BOOLEAN'].value = false;
+            } else {
+                Defaultinp['rec.HILITE_PRJ_RC_BOOLEAN'].value = true;
+            }
+            if (Defaultdata[11].PARM_VALUE === null) {
+                Defaultinp['rec.HILITE_RESOLUTION_BOOLEAN'].value = false;
+            } else {
+                Defaultinp['rec.HILITE_RESOLUTION_BOOLEAN'].value = true;
+            }
+            return Defaultinp;
         } else {
-            this.inputs['rec.HILITE_PRJ_RC_BOOLEAN'].value = false;
-        }
-
-        if (String(this.inputs['rec.HILITE_RESOLUTION'].value).trim() !== '') {
-            this.inputs['rec.HILITE_RESOLUTION_BOOLEAN'].value = true;
-        } else {
-            this.inputs['rec.HILITE_RESOLUTION_BOOLEAN'].value = false;
+            if (String(this.inputs['rec.HILITE_PRJ_RC'].value).trim() !== '') {
+                this.inputs['rec.HILITE_PRJ_RC_BOOLEAN'].value = true;
+            } else {
+                this.inputs['rec.HILITE_PRJ_RC_BOOLEAN'].value = false;
+            }
+            if (String(this.inputs['rec.HILITE_RESOLUTION'].value).trim() !== '') {
+                this.inputs['rec.HILITE_RESOLUTION_BOOLEAN'].value = true;
+            } else {
+                this.inputs['rec.HILITE_RESOLUTION_BOOLEAN'].value = false;
+            }
         }
     }
 
@@ -530,16 +543,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this.prepareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.creatchesheDefault);
                 this.prepareInputs = this.formHelp.getObjectInputFields(CABINETS_USER.fields);
                 this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
-                if (data[10].PARM_VALUE === null) {
-                    this.defoltInputs['rec.HILITE_PRJ_RC_BOOLEAN'].value = false;
-                } else {
-                    this.defoltInputs['rec.HILITE_PRJ_RC_BOOLEAN'].value = true;
-                }
-                if (data[11].PARM_VALUE === null) {
-                    this.defoltInputs['rec.HILITE_RESOLUTION_BOOLEAN'].value = false;
-                } else {
-                    this.defoltInputs['rec.HILITE_RESOLUTION_BOOLEAN'].value = true;
-                }
+                this.defoltInputs = this.patchInputValue(data, this.defoltInputs);
                 this.parseInputsFromString(this.defoltInputs, this.creatchesheDefault['FOLDERCOLORSTATUS']);
                 this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value;
                 this.prepFormCancel(this.defoltInputs, true);
