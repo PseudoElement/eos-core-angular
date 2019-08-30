@@ -1,4 +1,4 @@
-import { Component, TemplateRef, OnDestroy, OnInit } from '@angular/core';
+import { Component, TemplateRef, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, AbstractControl } from '@angular/forms';
 
@@ -15,6 +15,7 @@ import { PipRX } from 'eos-rest/services/pipRX.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE, PARM_ERROR_DB } from '../shared-user-param/consts/eos-user-params.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { CarmaHttpService, Istore } from 'app/services/carmaHttp.service';
 @Component({
     selector: 'eos-user-param-el-signature',
     // styleUrls: ['user-param-el-signature.component.scss'],
@@ -23,6 +24,9 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 })
 
 export class UserParamElSignatureComponent implements OnInit, OnDestroy {
+    @Input() defaultTitle: string;
+    @Input() defaultUser: any;
+    @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     public titleHeader: string;
     public control: AbstractControl;
     public form: FormGroup;
@@ -33,6 +37,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     public isLoading: boolean = true;
     public editFlag: boolean = false;
     public disablebtnCarma: boolean = false;
+    private allData;
     private inputFieldsDefault;
     // sendFrom: string = '';
     // saveValueSendForm: string = '';
@@ -58,33 +63,46 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
+        public certStoresService: CarmaHttpService,
     ) { }
     ngOnDestroy() {
         this._ngUnsubscribe.next();
         this._ngUnsubscribe.complete();
     }
     ngOnInit() {
-        this._userSrv.saveData$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                this._userSrv.submitSave = this.submit();
-            });
-
-        this._userSrv.getUserIsn({
-            expand: 'USER_PARMS_List'
-        }).then(() => {
-            this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Электронная подпись';
+        if (this.defaultTitle) {
+            this.titleHeader = this.defaultTitle;
+            this.allData = this.defaultUser;
             this.init();
-        })
-        .catch(err => {
-        });
+            const store: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
+            this.certStoresService.init(null, store);
+        } else {
+            this._userSrv.saveData$
+                .pipe(
+                    takeUntil(this._ngUnsubscribe)
+                )
+                .subscribe(() => {
+                    this._userSrv.submitSave = this.submit();
+                });
+
+            this._userSrv.getUserIsn({
+                expand: 'USER_PARMS_List'
+            }).then(() => {
+                this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Электронная подпись';
+                this.init();
+            })
+                .catch(err => {
+                });
+        }
     }
 
     init() {
-        const user_param = this._userSrv.curentUser['USER_PARMS_HASH'];
-        this.inputFields = this._formHelper.fillInputFieldsSetParams(ELECTRONIC_SIGNATURE, user_param);
+        if (this.defaultTitle) {
+            this.inputFields = this._formHelper.fillInputFieldsSetParams(ELECTRONIC_SIGNATURE, this.allData);
+        } else {
+            const user_param = this._userSrv.curentUser['USER_PARMS_HASH'];
+            this.inputFields = this._formHelper.fillInputFieldsSetParams(ELECTRONIC_SIGNATURE, user_param);
+        }
         this.getList(this.inputFields);
         this.inputs = this._inputCtrlSrv.generateInputs(this.inputFields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
@@ -97,6 +115,14 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         listlistForQuery.forEach(list => {
             this.listForQuery.push(list['key']);
         });
+    }
+
+    getQueryList(data) {
+        const arraQlist = [];
+        data.forEach((el) => {
+            arraQlist.push(el.key);
+        });
+        return arraQlist;
     }
 
     subscribeForm() {
@@ -151,8 +177,14 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     }
 
     submit(event?): Promise<any> {
+        let query;
+        if (this.defaultTitle) {
+            query = this._formHelper.CreateDefaultRequest([], this.newDataForSave);
+        } else {
+            query = this.createObjRequest();
+        }
         return this.apiSrv
-            .batch(this.createObjRequest(), '')
+            .batch(query, '')
             .then(data => {
                 this.upStateInputs();
                 this.btnDisabled = false;
@@ -161,6 +193,9 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
                 this.editFlag = false;
                 this.disableForEditAllForm(event);
                 this._pushState();
+                if (this.defaultTitle) {
+                    this.DefaultSubmitEmit.emit([this.form.controls, true]);
+                }
                 this.isLoading = false;
             })
             .catch(error => {
@@ -189,6 +224,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         });
         return req;
     }
+
     upStateInputs() {
         Object.keys(this.inputs).forEach(inp => {
             const value = this.form.controls[inp].value;

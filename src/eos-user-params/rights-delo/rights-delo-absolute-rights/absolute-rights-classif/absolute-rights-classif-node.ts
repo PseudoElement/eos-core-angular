@@ -40,7 +40,6 @@ export class RightClassifNode {
     set value(v) {
         this._valueLast = this._value;
         this._value = +v;
-
         const right = this._curentUser['TECH_RIGHTS'].split('');
         right[this.key - 1] = this._value.toString();
         const newTechRight = right.join('');
@@ -56,7 +55,9 @@ export class RightClassifNode {
         setTimeout(() => {
             this._component.Changed.emit();
         }, 0);
-
+        if (this.key === 1) {
+            this._item.label = 'Пользователи';
+        }
         if (this.type !== E_TECH_USER_CLASSIF_CONTENT.none) {
             if (!this._valueLast && v && this.type !== E_TECH_USER_CLASSIF_CONTENT.limitation) { // создать корневой елемент
                 const newNode: USER_TECH = this._component.createEntyti<USER_TECH>({
@@ -98,7 +99,7 @@ export class RightClassifNode {
         this._parentNode = pNode;
         this._component = component;
         const v = +(this._curentUser['TECH_RIGHTS'][item.key - 1]);
-        if ((this.type !== E_TECH_USER_CLASSIF_CONTENT.none) && !this._parentNode.isCreate) {
+        if ((this.type !== E_TECH_USER_CLASSIF_CONTENT.none) && !this._parentNode.isCreate || this._component.userTechList.filter((i) => i['FUNC_NUM'] === this.key).length !== 0) {
             this._listUserTech = this._component.userTechList.filter((i) => i['FUNC_NUM'] === this.key);
         }
         if (this.type !== E_TECH_USER_CLASSIF_CONTENT.none) {
@@ -111,47 +112,58 @@ export class RightClassifNode {
         }
         this._value = v;
         this._valueLast = v;
+        const techListLim = this._component.userTechList.filter((tech) => tech.FUNC_NUM === 1);
+        if (this.key === 1 && techListLim.length === 0) {
+            this._item.label = 'Пользователи';
+        }
+        if (this.key === 1 && techListLim.length > 0) {
+            this._item.label = 'Пользователи (доступ ограничен)';
+        }
     }
     addInstance() {
         this.isShell = true;
         this._component.addInstance(this._config, this)
             .then(data => {
+                if (this._config.rootLabel === 'Центральная картотека') {
+                    this._item.label = 'Пользователи (доступ ограничен)';
+                }
                 const newList: NodeDocsTree[] = [];
-                data.forEach(entity => {
-                    const newTechRight: USER_TECH = this._component.createEntyti<USER_TECH>({
-                        ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
-                        FUNC_NUM: this.key,
-                        CLASSIF_ID: E_CLASSIF_ID[(this.key.toString())],
-                        DUE: entity['DUE'],
-                        ALLOWED: this.getAllowedParent(entity['DUE']) ? 0 : 1,
-                    }, 'USER_TECH');
-                    const d = {
-                        userTech: newTechRight,
-                        instance: entity
-                    };
-                    const cfg: INodeDocsTreeCfg = {
-                        due: entity['DUE'],
-                        label: entity[this._config.label],
-                        allowed: !!newTechRight['ALLOWED'],
-                        data: d,
-                    };
-                    newList.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true));
+                if (data) {
+                    data.forEach(entity => {
+                        const newTechRight: USER_TECH = this._component.createEntyti<USER_TECH>({
+                            ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
+                            FUNC_NUM: this.key,
+                            CLASSIF_ID: E_CLASSIF_ID[(this.key.toString())],
+                            DUE: entity['DUE'],
+                            ALLOWED: this.getAllowedParent(entity['DUE']) ? 0 : 1,
+                        }, 'USER_TECH');
+                        const d = {
+                            userTech: newTechRight,
+                            instance: entity
+                        };
+                        const cfg: INodeDocsTreeCfg = {
+                            due: entity['DUE'],
+                            label: entity[this._config.label],
+                            allowed: !!newTechRight['ALLOWED'],
+                            data: d,
+                        };
+                        newList.push(new NodeDocsTree(cfg, this.type === 1 ? undefined : true));
 
-                    this._parentNode.pushChange({
-                        method: 'POST',
-                        due: entity.DUE,
-                        funcNum: this.key,
-                        data: newTechRight,
+                        this._parentNode.pushChange({
+                            method: 'POST',
+                            due: entity.DUE,
+                            funcNum: this.key,
+                            data: newTechRight,
+                        });
+                        this._listUserTech.push(newTechRight);
+                        this._component.userTechList.push(newTechRight);
                     });
-                    this._listUserTech.push(newTechRight);
-                    this._component.userTechList.push(newTechRight);
-                });
-                this.listContent = this.listContent.concat(newList);
-                this._component.Changed.emit();
-                this.isShell = false;
+            }
+            this.listContent = this.listContent.concat(newList);
+            this._component.Changed.emit();
+            this.isShell = false;
             })
             .catch((error) => {
-                console.log(error);
                 this.isShell = false;
             });
     }
@@ -191,19 +203,63 @@ export class RightClassifNode {
     }
     DeleteInstance() {
         if (this.curentSelectedNode) {
-            this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode);
-            this._parentNode.pushChange({
-                method: 'DELETE',
-                due: this.curentSelectedNode.DUE,
-                funcNum: this.key,
-                data: this.curentSelectedNode.data['userTech']
-            });
-            const index = this._listUserTech.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
-            this._listUserTech.splice(index, 1);
-            const index2 = this._component.userTechList.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
-            this._component.userTechList.splice(index2, 1);
-            this.curentSelectedNode = null;
-            this._component.Changed.emit();
+            if (this.curentSelectedNode.children.length !== 0 && this.curentSelectedNode.DUE !== '0.' && this._config.rootLabel === 'Центральная картотека') {
+                this._component.strNewCards = [];
+                this._component.strNewCards = [{value: 'Исключить из перечня подчиненные картотеки:'}];
+                this.curentSelectedNode.children.forEach((card) => {
+                    this._component.strNewCards.push({value: String(card.label), due: card.DUE});
+                });
+                this._component._userParmSrv.confirmCallCard(this._component.newCards).then((answer) => {
+                    if (answer === true) {
+                        const childDue = this.curentSelectedNode.children.map(item => {
+                            this._parentNode.pushChange({
+                                method: 'DELETE',
+                                due: item.DUE,
+                                funcNum: 1,
+                                data: item.data['userTech']
+                            });
+                            return item.DUE;
+                        });
+                        this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode && childDue.indexOf(node.DUE) === -1);
+                        this._listUserTech = this._listUserTech.filter(node => childDue.indexOf(node['DUE']) === -1);
+                        this._component.userTechList = this._component.userTechList.filter(node => childDue.indexOf(node['DUE']) === -1);
+                    } else {
+                        this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode);
+                    }
+                    this._parentNode.pushChange({
+                        method: 'DELETE',
+                        due: this.curentSelectedNode.DUE,
+                        funcNum: this.key,
+                        data: this.curentSelectedNode.data['userTech']
+                    });
+                    if (this.listContent.length === 0) {
+                        this._item.label =  'Пользователи';
+                    }
+                    const index = this._listUserTech.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
+                    this._listUserTech.splice(index, 1);
+                    const index2 = this._component.userTechList.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
+                    this._component.userTechList.splice(index2, 1);
+                    this.curentSelectedNode = null;
+                    this._component.Changed.emit();
+                });
+            } else {
+                this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode);
+                this._parentNode.pushChange({
+                    method: 'DELETE',
+                    due: this.curentSelectedNode.DUE,
+                    funcNum: this.key,
+                    data: this.curentSelectedNode.data['userTech']
+                });
+                if (this.listContent.length === 0) {
+                    this._item.label =  'Пользователи';
+                }
+                const index = this._listUserTech.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
+                this._listUserTech.splice(index, 1);
+                const index2 = this._component.userTechList.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
+                this._component.userTechList.splice(index2, 1);
+                this.curentSelectedNode = null;
+                this._component.Changed.emit();
+            }
         }
     }
     select(node: NodeDocsTree) {

@@ -43,8 +43,8 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="currTab === 1">
-            <eos-grifs (changeGrifs)="SubscribtGrifs($event)" [editFlag]="editFlag"></eos-grifs>
+        <div *ngIf="currTab === 1 && grifInput">
+            <eos-grifs (changeGrifs)="SubscribtGrifs($event)" [editFlag]="editFlag" [grifInput]="grifInput" [grifsForm]="grifsForm"></eos-grifs>
         </div>
         <div *ngIf="currTab === 2">
             <eos-links-limited (changeLinks)="SubscribLInks($event)"></eos-links-limited>

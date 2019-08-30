@@ -1,9 +1,10 @@
 <div
     #el
     class="node-field"
-    id="{{ field.foreignKey }}"
     [ngClass]="{ 'no-padding': node.isNode && (field.key === 'CLASSIF_NAME' || field.foreignKey === 'CLASSIF_NAME') }"
 >
+<!-- id="{{ field.foreignKey }}" -->
+
     <ng-container [ngSwitch]="field.type">
         <div *ngSwitchCase="types.boolean" class="node-field-checkbox">
             <span

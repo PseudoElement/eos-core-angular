@@ -134,3 +134,12 @@
  .bs-datepicker-body table td {
      color: black !important;
  }
+ 
+.modal-info {
+    width: 800px;
+}
+.default-settings {
+    .default-btn {
+        display: none;
+    }
+}

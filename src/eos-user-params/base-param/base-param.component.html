@@ -1,5 +1,5 @@
 <div class="base-param-wrapper" *ngIf="!isLoading">
-    <eos-user-params-header [editMode]="editMode" [title]='title' [disableBtn]="errorPass || !getValidDate" (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)'></eos-user-params-header>
+    <eos-user-params-header [editMode]="editMode" [title]='title' [disableBtn]="errorPass || !getValidDate || submitClick" (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)'></eos-user-params-header>
     <div class="base-param-main">
         <!-- Логин и Аутентификация с помощью ОС -->
         <div class="wrapper-password">
@@ -18,23 +18,29 @@
                 <input type="password" style="opacity: 0; width: 0px; height: 0px; border: none">
                 <div [formGroup]="formControls" class="dynamic-input-wrapper base-text-input">
                     <label [hidden]="controls['pass'].hideLabel" [attr.for]="controls['pass'].key">{{controls['pass'].label}}</label>
-                    <div class="vision" [ngClass]="{'disabled': controls['pass'].disabled}">
-                        <input class="form-control m-font" maxlength="30" [formControlName]="controls['pass'].key" [id]="controls['pass'].key" [type]="type" [readonly]="controls['pass'].readonly" [ngClass]="{'readonly': readonly}" [placeholder]="controls['pass'].label" autocomplete="off">
+                    <div *ngIf="!form.get('USERTYPE').value" class="vision" [ngClass]="{'disabled': controls['pass'].disabled}">
+                        <input class="form-control m-font" maxlength="30"
+                        [formControlName]="controls['pass'].key"
+                        [id]="controls['pass'].key" [type]="type"
+                        [readonly]="controls['pass'].readonly"
+                        [ngClass]="{'readonly': readonly}"
+                        [placeholder]="curentUser.IS_PASSWORD ? '*******' : controls['pass'].label"
+                        autocomplete="off">
                         <span (mousedown)='setVision(true)' (mouseup)='resetVision(true)' class="eos-icon small" [ngClass]="editMode ? 'eos-icon-show-blue' : 'eos-icon-show-grey'"></span>
                     </div>
                 </div>
 
-                <div [formGroup]="formControls" class="dynamic-input-wrapper base-text-input">
+                <div  [formGroup]="formControls" class="dynamic-input-wrapper base-text-input">
                     <label [hidden]="controls['passRepeated'].hideLabel" [attr.for]="controls['passRepeated'].key">{{controls['passRepeated'].label}}</label>
-                    <div class="vision" [ngClass]="{'disabled': controls['pass'].disabled}">
-                        <input class="form-control m-font" maxlength="30" [formControlName]="controls['passRepeated'].key" [id]="controls['passRepeated'].key" [type]="type1" [readonly]="controls['passRepeated'].readonly" [ngClass]="{'readonly': readonly}" [placeholder]="controls['passRepeated'].label"
+                    <div *ngIf="!form.get('USERTYPE').value" class="vision" [ngClass]="{'disabled': controls['pass'].disabled}">
+                        <input class="form-control m-font" maxlength="30" [formControlName]="controls['passRepeated'].key" [id]="controls['passRepeated'].key" [type]="type1" [readonly]="controls['passRepeated'].readonly" [ngClass]="{'error-focus': errorPass, 'readonly': readonly}" [placeholder]="curentUser.IS_PASSWORD ? '*******' : controls['passRepeated'].label"
                             [tooltip]="errorPass ? 'Пароли не совпадают' : 'Повторите пароль'" placement="bottom" [containerClass]="errorPass ? 'tooltip-error' : 'tooltip-info'" autocomplete="off">
                         <span (mousedown)='setVision()' (mouseup)='resetVision()' class="eos-icon small" [ngClass]="editMode ? 'eos-icon-show-blue' : 'eos-icon-show-grey'"></span>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- технический пользователь 
+        <!-- технический пользователь
         <div *ngIf="curentUser.isTechUser"> [readonly]="controls['teсhUser'].readonly"-->
             <eos-dynamic-input [input]="controls['teсhUser']" [form]="formControls" tooltip="Технический пользователь" placement="bottom" containerClass="tooltip-info"></eos-dynamic-input>
         <!--</div> -->

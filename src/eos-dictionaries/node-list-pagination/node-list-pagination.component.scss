@@ -108,11 +108,18 @@
 }
 
 .prot-dictionary {
-    @media(min-width: 1000px) and  (max-width: 2000px){
+    @media(min-width: 1451px) and  (max-width: 2000px){
         .pagination-option {
             display: grid;
             width: 800px;
             margin: auto;
+        }
+    }
+    @media(min-width: 0px) and  (max-width: 1450px){
+        .pagination-option {
+            margin-left: 315px;
+            display: grid;
+            width: 800px;
         }
     }
 }
@@ -132,7 +139,7 @@
     }
 }
 
-@media(min-width: 0px) and (max-width: 1499px) {
+@media(min-width: 0px) and (max-width: 999px) {
     .pagination-option {
         &.tree {
             left: $grid-gutter-width / 2;
@@ -149,7 +156,7 @@
     }
 }
 
-@media(min-width: 1500px) and (max-width: 1599px) {
+@media(min-width: 1000px) and (max-width: 1599px) {
     .pagination-option {
         &.tree {
             left: $grid-gutter-width / 2 + $dictionary-block-width;

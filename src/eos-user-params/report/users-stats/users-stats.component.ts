@@ -46,9 +46,9 @@ export class EosReportUsersStatsComponent implements OnInit {
       USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'MAX_LOGIN_ATTEMPTS|USER_EDIT_AUDIT' })
     }).then((r: any) => {
       if (r[1].PARM_VALUE === 'NO') {
-        this.logUsers = 'Не выполнено';
+        this.logUsers = 'Выключено';
       } else {
-        this.logUsers = 'Выполнено';
+        this.logUsers = 'Включено';
       }
       this.paramValue = parseInt(r[0].PARM_VALUE, 10);
     })

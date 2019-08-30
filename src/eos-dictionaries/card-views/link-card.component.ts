@@ -1,11 +1,12 @@
 import {Component, Injector, OnChanges, SimpleChanges} from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
-import {AbstractControl, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, ValidatorFn} from '@angular/forms';
 import {EosUtils} from '../../eos-common/core/utils';
 import {EosDictService} from '../services/eos-dict.service';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 import {LINK_CL, PipRX} from '../../eos-rest';
 import {CONFIRM_LINK_CHECK_CATEGORY} from '../consts/confirm.consts';
+import { ValidatorsControl, ValidatorOptions } from 'eos-dictionaries/validators/validators-control';
 
 @Component({
     selector: 'eos-link-card',
@@ -120,14 +121,44 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
     }
 
     private _setValidators() {
-        this.form.controls['rec.CLASSIF_NAME'].setValidators([this._unicValueValidator('rec.CLASSIF_NAME'),
-            Validators.required]);
-        this.form.controls['PARE_LINK_Ref.CLASSIF_NAME']
-            .setValidators([this._unicValueValidator('PARE_LINK_Ref.CLASSIF_NAME'), Validators.required]);
+        ValidatorsControl.appendValidator(this.form.controls['rec.CLASSIF_NAME'],
+        [
+            this._unicValueValidator('rec.CLASSIF_NAME'),
+            this._pairNameUnique(),
+        ]);
+
+        ValidatorsControl.appendValidator(this.form.controls['PARE_LINK_Ref.CLASSIF_NAME'],
+        [
+            this._unicValueValidator('PARE_LINK_Ref.CLASSIF_NAME'),
+            this._pairNameUnique(),
+        ]);
     }
+
+    private _pairNameUnique(): ValidatorFn {
+        return (control: AbstractControl): { [key: string]: any } => {
+            const isn = this.getValue('rec.ISN_LCLASSIF');
+            const isn_pair = this.getValue('rec.ISN_PARE_LINK');
+            if (isn === isn_pair && isn !== null) {
+                return null;
+            }
+            return ValidatorsControl.controlsNonUniq(
+                this.form.controls['PARE_LINK_Ref.CLASSIF_NAME'],
+                this.form.controls['rec.CLASSIF_NAME'],
+                'Наименования прямой и обратной связок не должны совпадать.',
+                <ValidatorOptions>{ ignoreCase: true, ignoreWhiteSpace: true }
+                ).call(control);
+        };
+    }
+
 
     private _updateForm(formChanges: any) {
         this.unsubscribe();
+
+        if (this._isChanged('rec.CLASSIF_NAME', formChanges)) {
+            this.form.controls['PARE_LINK_Ref.CLASSIF_NAME'].updateValueAndValidity();
+        } else if (this._isChanged('PARE_LINK_Ref.CLASSIF_NAME', formChanges)) {
+            this.form.controls['rec.CLASSIF_NAME'].updateValueAndValidity();
+        }
 
         if (this._isChanged('rec.LINK_TYPE', formChanges)) {
             if (!formChanges['rec.LINK_TYPE'] || formChanges['rec.LINK_TYPE'] === '0') {
@@ -172,7 +203,8 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
 
                 valid = records.findIndex((node) => {
                     let name = EosUtils.getValueByPath(node.data, 'rec.CLASSIF_NAME');
-                    let namePair = EosUtils.getValueByPath(node.data, 'PARE_LINK_Ref.CLASSIF_NAME');
+                    let namePair = EosUtils.getValueByPath(node.data, 'PARE_LINK_Ref.CLASSIF_NAME')
+                        || EosUtils.getValueByPath(node.data, 'rec.PAIR_LINK');
 
                     if ('string' === typeof name) {
                         name = name.trim().toLowerCase();
@@ -181,11 +213,12 @@ export class LinkCardComponent extends BaseCardEditComponent implements OnChange
                         namePair = namePair.trim().toLowerCase();
                     }
 
+
                     let res = false;
                     if (EosUtils.getValueByPath(node.data, 'rec.ISN_LCLASSIF') !== isn) {
                         res = (val === name) || (val === namePair);
                     } else {
-                        if (path === 'PARE_LINK_Ref.CLASSIF_NAME') {
+                            if (path === 'PARE_LINK_Ref.CLASSIF_NAME') {
                             res = (name === val) && (isn !== isn_pair);
                         } else {
                             res = (namePair === val) && (isn !== isn_pair);

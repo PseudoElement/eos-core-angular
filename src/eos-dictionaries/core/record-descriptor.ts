@@ -206,14 +206,16 @@ export class RecordDescriptor {
             }
             if ((field.type === E_FIELD_TYPE.dictionary) && field.dictionaryId && field.dictionaryLink) {
                 if (data['rec'][field.dictionaryLink.fk]) {
-                    const dict = this.dictionary.relatedData[field.dictionaryId];
-                    if (dict) {
-                        const el = dict.find(e => {
-                            return e.DUE === data['rec'][field.dictionaryLink.fk];
-                        });
-                        if (el) {
-                            data.__relfield[field.dictionaryId] = el;
-                            return el[field.dictionaryLink.label];
+                    if (this.dictionary.relatedData) {
+                        const dict = this.dictionary.relatedData[field.dictionaryId];
+                        if (dict) {
+                            const el = dict.find(e => {
+                                return e.DUE === data['rec'][field.dictionaryLink.fk];
+                            });
+                            if (el) {
+                                data.__relfield[field.dictionaryId] = el;
+                                return el[field.dictionaryLink.label];
+                            }
                         }
                     }
                 }

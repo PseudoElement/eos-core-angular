@@ -1,0 +1,12 @@
+.default-settings{
+    width: 800px;
+    max-height: calc(100vh - 172px);
+    margin-left: calc(50vw - 420px);
+    overflow: auto;
+    background: #fff;
+}
+@media (max-width: 1425px) {
+    .default-settings {
+        margin-left: 300px;   
+    }
+}

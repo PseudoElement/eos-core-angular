@@ -3,15 +3,36 @@
         .inline-flex {
             display: inline-flex;
             width: 100%;
-            padding-right: 5px;
+            &.edit-menu {
+                height: 49px;
+                border: 1px solid #2196f3;
+                min-width: calc(100% + 48px);
+                background-color: #FFFFFF;
+                position: absolute;
+                box-shadow: 0px 5px 10px rgba(0,0,0,0.3);
+                left: -1px;
+                top: -1px;
+                position: absolute;
+                z-index: 100;
+                .item-title {
+                    width: calc(100% - 116px);
+                }
+            }
         }
         .eos-icon-checkbox-black {
             min-width: 16px;
         }
+        .eos-icon-checkbox-blue {
+            min-width: 16px;
+        }
+        .desktop-menu-icon {
+            min-width: 48px;
+            min-height: 48px;
+        }
         .menuitem {
             position: relative;
             .item-title {
-                margin-left: 5px;
+                margin-left: 20px;
                 vertical-align: middle;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -20,6 +41,7 @@
                 width: 100%;
             }
             .input-group {
+                z-index: 100;
                 .form-control {
                     height: $item-height;
                     margin-top: 0;
@@ -29,24 +51,54 @@
                 .input-group-btn {
                     .btn {
                         height: $item-height;
+                        width: 48px;
+                    }
+                }
+                input#deskName {
+                    border: 0;
+                    background-color: #FFFFFF;
+                    min-height: 47px;
+                    height: auto;
+                    width: calc(100% - 96px);
+                }
+
+            }
+            .item-actions {
+                display: none;
+                position: relative;
+
+                .action-icon {
+                    display: inline-block;
+                    min-width: 46px;
+                    min-height: 46px;
+                    position: absolute;
+                    text-align: center;
+                    vertical-align: middle;
+                    &.action1 {
+                        position: absolute;
+                        right: -48px;
+                        top: -1px;
+                    }
+                    &.action2 {
+                        position: absolute;
+                        right: -96px;
+                        top: -2px;
                     }
                 }
             }
         }
-        .item-actions {
-            display: none;
-            //position: absolute;
-            //top: 0;
-            //right: 48px;
-            .action-icon {
-                display: inline-block;
+
+
+        .menuitem {
+            .item-actions {
+                &.visible {
+                    display: inline-flex;
+                    z-index: 200;
+                }
             }
         }
         .menuitem:hover {
             background: $modal-block-background-main-theme;
-            .item-actions {
-                display: inline-flex;
-            }
         }
         .li-spiner {
             border: 1px solid #e6e6e6;

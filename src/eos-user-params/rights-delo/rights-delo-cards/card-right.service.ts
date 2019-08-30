@@ -26,6 +26,8 @@ export class CardRightSrv {
     }
     private _selectingNode$: Subject<void>;
     private _chengeState$: Subject<boolean>;
+
+    private _funcNum_skip_deleted: Array<number> = [1, 13, 14, 15, 16];
     constructor(
         private _userParamsSetSrv: UserParamsService,
         private _apiSrv: UserParamApiSrv,
@@ -168,9 +170,19 @@ export class CardRightSrv {
         }
         this._checkChenge();
     }
+    checkNotSkipAdding(func_num) {
+        return this._funcNum_skip_deleted.some((fum) => {
+            return fum === func_num;
+        });
+    }
     addingDocGroup$(card: USERCARD): Promise<NodeDocsTree[]> {
         let dues: string[];
         let msg: string = '';
+        if (this.checkNotSkipAdding(this.selectedFuncNum.funcNum)) {
+            delete OPEN_CLASSIF_DOCGROUP_CL.skipDeleted;
+        } else {
+            OPEN_CLASSIF_DOCGROUP_CL['skipDeleted'] = false;
+        }
         return this._waitClassifSrv.openClassif(OPEN_CLASSIF_DOCGROUP_CL)
             .then((str: string) => { // 0.1K9B.|0.1K9D.
                 if (!str) {
@@ -212,7 +224,6 @@ export class CardRightSrv {
                 // Создаем ентити USER_CARD_DOCGROUP и добовляем в модель
                 let userDG: USER_CARD_DOCGROUP[] = this._createDGEntity(card, dues);
                 card.USER_CARD_DOCGROUP_List.splice(-1, 0, ...userDG);
-
                 // Создаем и возвращаем массив класса NodeDocsTree
                 const nodeList: NodeDocsTree[] = [];
                 userDG = userDG.concat(userDocGroup);
@@ -232,13 +243,23 @@ export class CardRightSrv {
         this._userParamsSetSrv.curentUser.USERCARD_List.forEach((card: USERCARD) => {
             card.FUNCLIST = card._orig.FUNCLIST;
             delete card._State;
-            delete card.USER_CARD_DOCGROUP_List;
-            card.USER_CARD_DOCGROUP_List = card._orig.USER_CARD_DOCGROUP_List;
+            // delete card.USER_CARD_DOCGROUP_List;
+            card.USER_CARD_DOCGROUP_List = card.USER_CARD_DOCGROUP_List.filter((erte: USER_CARD_DOCGROUP) => {
+                if (erte._State === 'MERGE') {
+                    erte.ALLOWED = erte.ALLOWED ? 0 : 1;
+                }
+                return erte._State !== 'POST';
+            });
             card.USER_CARD_DOCGROUP_List.forEach((dg: USER_CARD_DOCGROUP) => {
                 delete dg._State;
                 this._pipSrv.entityHelper.prepareForEdit(dg);
             });
         });
+    }
+    addFunclist(item: any) {
+        if (item['FUNCLIST'].length < 21) {
+            item['FUNCLIST'] = item['FUNCLIST'] + '0'.repeat(21 - item['FUNCLIST'].length);
+        }
     }
     private _createListNode(list: NodeDocsTree[], data): void { // {docGroup, userCardDG}
         list.push(new NodeDocsTree({
@@ -247,7 +268,7 @@ export class CardRightSrv {
             allowed: !!data.userCardDG.ALLOWED,
             data
         },
-        this.selectedFuncNum.label === 'Отправка сообщений СЭВ' ? null : true));
+            this.selectedFuncNum.label === 'Отправка сообщений СЭВ' ? null : true));
     }
     private _checkChenge() {
         let state: boolean = false;
@@ -303,6 +324,9 @@ export class CardRightSrv {
     private _prepareforEdit(arr) {
         arr.forEach((item) => {
             item = this._pipSrv.entityHelper.prepareForEdit(item);
+            if (item['FUNCLIST']) {
+                this.addFunclist(item);
+            }
             for (const key in item) {
                 if (item[key] instanceof Array) {
                     item[key] = this._prepareforEdit(item[key]);

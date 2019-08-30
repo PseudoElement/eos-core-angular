@@ -267,6 +267,10 @@ export class EosDataConvertService {
                                     });
                                     break;
                             }
+                            const i = inputs[_dict + '.' + _key];
+                            if (i) {
+                                i.descriptor = descr[_key];
+                            }
                         });
                         break;
                     case 'sev':

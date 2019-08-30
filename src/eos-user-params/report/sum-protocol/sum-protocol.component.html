@@ -31,13 +31,13 @@
                 <div class="table-header header-pos-sum">
                     <div class="btn-group-sum">
                         <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
-                            <button disabled="true" class="btn btn-primary-light bth-size-sum" tooltip="Просмотреть" (click)="ShowDataUser()"
-                                placement="bottom" container="body" containerClass="tooltip-info">
+                            <button [disabled]="isnRefFile === undefined || _user_pagination.totalPages === 0" class="btn btn-primary-light bth-size-sum" triggers="hover" [tooltip]="closeTooltip === true ? 'Просмотреть' : null"
+                             (click)="GetRefFile()" placement="bottom" container="body" containerClass="tooltip-info">
                                 <span class="eos-icon eos-icon-review-blue small"></span>
                             </button>
                         </div>
                         <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
-                            <button disabled="true" class="btn btn-primary-light bth-size-sum" tooltip="Удалить" (click)="DeleteEventUser()"
+                            <button [disabled]="DisabledRemoveAudits()" class="btn btn-primary-light bth-size-sum" tooltip="Удалить" (click)="DeleteEventUser()"
                                 placement="bottom" container="body" containerClass="tooltip-info">
                                 <span class="eos-icon eos-icon-bin-forever-blue small"></span>
                             </button>
@@ -49,28 +49,32 @@
                     <div class="table-title contain-span-header">
                         <div class="check-sum mar-check">
                             <label class="checkbox" >
-                                <input #checkAllMarkes [checked]="flagChecked" type="checkbox" (change)="toggleAllMarks($event)">
+                                <input [checked]="flagChecked" type="checkbox" (change)="toggleAllMarks($event)">
                                 <div>
-                                    <span class="eos-icon small" [ngClass]="getflagChecked" [tooltip]="checkAllMarkes.checked ? 'Снять пометки' : 'Пометить все'"
+                                    <span class="eos-icon small" [ngClass]="getflagChecked" [tooltip]="checkAll"
                                      placement="bottom" containerClass="tooltip-info fix-pos-check" ></span>
                                 </div>
                             </label>
                         </div>
                         <span class=" width-title1 likeLink-sum" (click)="SortPageList(1)">
                             Дата
-                            <span *ngIf="status === 'EVENT_DATE' || status === undefined" class="icon eos-icon small" [ngClass]="{'eos-icon-arrow-blue-top': arrSort[0].date, 'eos-icon-arrow-blue-bottom': !arrSort[0].date}"></span>
+                            <span *ngIf="status === 'EVENT_DATE' || status === undefined" class="icon eos-icon small"
+                             [ngClass]="{'eos-icon-arrow-blue-top': arrSort[0].date, 'eos-icon-arrow-blue-bottom': !arrSort[0].date}"></span>
                         </span>
                         <span class=" width-title2 likeLink-sum" (click)="SortPageList(2)">
                             Событие
-                            <span *ngIf="status === 'eventUser'" class="icon eos-icon small" [ngClass]="{'eos-icon-arrow-blue-top': arrSort[1].event, 'eos-icon-arrow-blue-bottom': !arrSort[1].event}"></span>
+                            <span *ngIf="status === 'eventUser'" class="icon eos-icon small"
+                             [ngClass]="{'eos-icon-arrow-blue-top': arrSort[1].event, 'eos-icon-arrow-blue-bottom': !arrSort[1].event}"></span>
                         </span>
                         <span class=" width-title3 likeLink-sum" (click)="SortPageList(3)">
                             Редактировал
-                            <span *ngIf="status === 'WHO'" class="icon eos-icon small" [ngClass]="{'eos-icon-arrow-blue-top': arrSort[2].who, 'eos-icon-arrow-blue-bottom': !arrSort[2].who}"></span>
+                            <span *ngIf="status === 'WHO'" class="icon eos-icon small"
+                             [ngClass]="{'eos-icon-arrow-blue-top': arrSort[2].who, 'eos-icon-arrow-blue-bottom': !arrSort[2].who}"></span>
                         </span>
                         <span class=" likeLink-sum width-title3" (click)="SortPageList(4)">
                             Пользователя
-                            <span *ngIf="status === 'USER'" class="icon eos-icon small" [ngClass]="{'eos-icon-arrow-blue-top': arrSort[3].isn, 'eos-icon-arrow-blue-bottom': !arrSort[3].isn}"></span>
+                            <span *ngIf="status === 'USER'" class="icon eos-icon small"
+                             [ngClass]="{'eos-icon-arrow-blue-top': arrSort[3].isn, 'eos-icon-arrow-blue-bottom': !arrSort[3].isn}"></span>
                         </span>
                     </div>
                 </div>
@@ -80,7 +84,8 @@
                             <div class="contain-span-header"  [ngClass]="{'highlighted': user.checked === true}">
                                 <div class="check-sum">
                                     <label class="checkbox minus-checkbox">
-                                        <input type="checkbox" [checked]="user.checked || flagChecked" [ngModel]="user.checked" (ngModelChange)="markNode($event,user)" (click)="CheckUser(user)">
+                                        <input type="checkbox" [checked]="user.checked || flagChecked" [ngModel]="user.checked" 
+                                        (ngModelChange)="markNode($event,user)" (click)="CheckUser(user)">
                                         <span class="eos-icon eos-icon-checkbox-black"></span>
                                     </label>
                                 </div>

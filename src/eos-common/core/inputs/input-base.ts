@@ -25,6 +25,7 @@ export class InputBase<T> {
     minValue?: number;
     maxValue?: number;
     dib?: DynamicInputBase;
+    descriptor?: any;
 
     constructor(options: {
         value?: T,

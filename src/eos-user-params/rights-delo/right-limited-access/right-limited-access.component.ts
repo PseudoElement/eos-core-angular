@@ -33,23 +33,22 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     public flagLinks: boolean;
     public bacgHeader: boolean;
     public grifsForm: FormGroup;
+    public myElem: any[] = [];
     public LinksForm: FormGroup;
     public myForm: FormGroup;
     public tabsForAccessLimited = ['Группы документов', 'Грифы', /* 'Связки' */];
     public currTab = 0;
     titleHeader: string;
     public editFlag: boolean = false;
-
+    grifInput: any[] = [];
     get checkGriffs() {
+        let flag = false;
         if (this.grifsForm) {
-            const checkG = this.grifsForm.value.some(el => {
-                return (el.action === 'unset' && el.checkbox === true) || (el.action === 'create' && el.checkbox === true);
+            Object.keys(this.grifsForm.controls).forEach(element => {
+                if (this.grifsForm.get(element).value) {
+                    flag = true;
+                }
             });
-            if (checkG) {
-                return true;
-            } else {
-                return false;
-            }
         } else {
             if (this.checkGrifs.length) {
                 return true;
@@ -57,6 +56,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                 return false;
             }
         }
+        return flag;
     }
     private checkUserCard;
     private checkGrifs;
@@ -94,14 +94,17 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     }
     ngOnInit() {
         this._userServices.getUserIsn({
-            expand: 'USERCARD_List'
+            expand: 'USERCARD_List,USERSECUR_List'
         })
         .then(() => {
             this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ограничение доступа`;
             this.checkUserCard = this._userServices.curentUser['USERCARD_List'];
             this.isLoading = false;
-            this._limitservise.getInfoGrifs().then(result => {
-                this.checkGrifs = result[0][0]['USERSECUR_List'];
+            this._limitservise.getGrifsName()
+            .then(result => {
+                this.grifInput[1] = result;
+                this.grifInput[0] = this._userServices.curentUser['USERSECUR_List'];
+                this.checkGrifs = this._userServices.curentUser['USERSECUR_List'];
             });
             this._limitservise.getAccessCode()
                 .then((result) => {
@@ -153,8 +156,8 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         sessionStorage.removeItem(String(this._userServices.userContextId));
         sessionStorage.removeItem(String('links'));
         promise_all.push(this._limitservise.preAddNewDocument(this.ArrayForm), this._limitservise.preDelite(this.delitedSetStore), this._limitservise.preEdit(this.ArrayForm));
-        if (this.grifsForm) {
-            promise_all.push(this._limitservise.postGrifs(this.grifsForm), this._limitservise.deliteGrifs(this.grifsForm));
+        if (this.myElem.length > 0) {
+            promise_all.push(this._limitservise.postGrifs(this.myElem), this._limitservise.deliteGrifs(this.myElem));
         }
         // if (this.LinksForm) {
         //     const valueEdit = this.LinksForm.get('links').value;
@@ -163,6 +166,11 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         // }
         return Promise.all([...promise_all])
             .then(result => {
+                this._limitservise.getDataGrifs()
+                .then(res => {
+                    this.grifInput[0] = res[0]['USERSECUR_List'];
+                    this.checkGrifs = res[0]['USERSECUR_List'];
+                });
                 this._limitservise.getAccessCode()
                     .then((params) => {
                         if (params) {
@@ -176,7 +184,17 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
                             this.flagGrifs = true;
                             this.editFlag = false;
                             this.isLoading = true;
+                            if (this.grifsForm) {
+                                const elem: any[] = [];
+                                Object.keys(this.grifsForm.value).forEach(element => {
+                                    if (this.grifsForm.get(element).value) {
+                                        elem.push(element);
+                                    }
+                                });
+                                this.checkGrifs = elem;
+                            }
                             this.grifsForm = null;
+                            this.myElem = [];
                             this.ArrayForm = <FormArray>this.myForm.controls['groupForm'];
                             this.editModeForm();
                             this._pushState();
@@ -198,12 +216,16 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             });
     }
     backForm($event?): void {
-        this._limitservise.getInfoGrifs().then(result => {
-            this.checkGrifs = result[0][0]['USERSECUR_List'];
-        }).then(() => {
+        this.editFlag = $event;
+        this.myElem = [];
+        this._limitservise.getDataGrifs()
+        .then(result => {
+            this.grifInput[0] = result[0]['USERSECUR_List'];
+            this.checkGrifs = result[0]['USERSECUR_List'];
+        })
+        .then(() => {
             this.delitedSetStore.clear();
             this.clearForm();
-            this.editFlag = $event;
             this.editModeForm();
             this._pushState();
             this.grifsForm = null;
@@ -281,7 +303,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     }
     checkNewOrOld(doc: DOCGROUP_CL) {
         const arraySet = Array.from(this.delitedSetStore);
-        const find = arraySet.filter((value) => {
+        const find = arraySet.filter((value: any) => {
             return doc.DUE === value.due;
         });
         if (find.length) {
@@ -376,6 +398,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     SubscribtGrifs(event) {
         this.flagGrifs = event.flag;
         this.grifsForm = event.form;
+        this.myElem = event.data;
         this._pushState();
     }
     // SubscribLInks(event) {

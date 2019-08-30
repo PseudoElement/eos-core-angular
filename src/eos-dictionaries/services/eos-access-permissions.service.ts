@@ -25,6 +25,7 @@ import { REESTRTYPE_DICT } from 'eos-dictionaries/consts/dictionaries/reestrtype
 import { ORG_TYPE_DICT } from 'eos-dictionaries/consts/dictionaries/org-type.consts';
 import { RESOL_CATEGORY_DICT as RESOL_CATEGORY_DICT } from 'eos-dictionaries/consts/dictionaries/resolution-category.consts';
 import { RESPRJ_STATUS_DICT } from 'eos-dictionaries/consts/dictionaries/resprj-status.consts';
+import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 
 
 
@@ -52,6 +53,9 @@ const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean, } []
         listedUT: false },
     // Категории ЭП
     { id: EDS_CATEGORY_CL.id,       tech: E_TECH_RIGHT.EdsCategory,
+        listedUT: false },
+    // Управление сертификатами
+    { id: CA_CATEGORY_CL.id,       tech: E_TECH_RIGHT.EdsCategory, // ManageCertificate,
         listedUT: false },
     // Категории адресатов
     { id: ADDR_CATEGORY_DICT.id,    tech: E_TECH_RIGHT.AdresatCategories,

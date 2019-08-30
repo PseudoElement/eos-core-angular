@@ -51,6 +51,8 @@ import {
     WARN_SELECT_NODE,
 } from '../consts/messages.consts';
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
+import { PrjDefaultValuesComponent } from 'eos-dictionaries/prj-default-values/prj-default-values.component';
+import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -91,7 +93,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     }
 
     get isTitleSliced(): boolean {
-        if (this.title.length >= this.SLICE_LEN) {
+        if (this.title && this.title.length >= this.SLICE_LEN) {
             return true;
         }
         return false;
@@ -149,9 +151,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         _bcSrv: EosBreadcrumbsService,
     ) {
         this.accessDenied = false;
+        this._dictSrv.openNode('');
         _route.params.subscribe((params) => {
             if (params) {
-
                 this.dictionaryId = params.dictionaryId;
                 if (this._eaps.isAccessGrantedForDictionary(this.dictionaryId, null) === APS_DICT_GRANT.denied) {
                     this.accessDenied = true;
@@ -467,9 +469,24 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.pasteNodes:
                 this._openCopyNode();
                 break;
+            case E_RECORD_ACTIONS.certifUC:
+                this._navigateToUC();
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
+    }
+
+    _navigateToUC(): any {
+            const url = this._router.url;
+            this._storageSrv.setItem(RECENT_URL, url);
+            const _path = [
+                'spravochniki',
+                CA_CATEGORY_CL.id,
+                '0.'
+            ];
+
+            this._router.navigate(_path);
     }
 
 
@@ -548,7 +565,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             this._msgSrv.addNewMessage(DANGER_DEPART_IS_LDELETED);
         } else {
             this._dictSrv.setDictMode(mode);
-            this.nodeList.updateViewFields([]);
+            this.nodeList.updateViewFields([], []);
         }
     }
 
@@ -809,8 +826,23 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         }
     }
 
-    private _openAdvancedCardRK () {
+    private _openPrjDefaultValues() {
+        this.modalWindow = null;
+        const node = this._dictSrv.listNode;
+        if (node) {
+            this.modalWindow = this._modalSrv.show(PrjDefaultValuesComponent, {
+                class: 'prj-default-values-modal moodal-lg'});
+            const content = {
+                nodeDescription: node.title,
+                isnNode: node.data.rec['ISN_NODE'],
+            };
+            this.modalWindow.content.init(content);
+        } else {
+            this._msgSrv.addNewMessage(WARN_SELECT_NODE);
+        }
+    }
 
+    private _openAdvancedCardRK () {
         this.modalWindow = null;
         const node = this._dictSrv.listNode;
         if (node) {
@@ -824,20 +856,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             this._msgSrv.addNewMessage(WARN_EDIT_ERROR);
         }
 
-        if (this.modalWindow) {
-            const subscription = this.modalWindow.content.onChoose.subscribe(() => {
-                subscription.unsubscribe();
-            });
-        }
-    }
-
-    private _openPrjDefaultValues() {
-        const node = this._dictSrv.listNode;
-        if (node) {
-            this.nodeList.openPrjDefaultValues(node);
-        } else {
-            this._msgSrv.addNewMessage(WARN_SELECT_NODE);
-        }
+        // if (this.modalWindow) {
+        //     const subscription = this.modalWindow.content.onChoose.subscribe(() => {
+        //         subscription.unsubscribe();
+        //     });
+        // }
     }
 
     private _openCopyProperties(fromParent = false) {

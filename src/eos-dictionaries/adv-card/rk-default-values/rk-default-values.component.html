@@ -14,15 +14,20 @@
         </div>
     </div>
     <div class="clearfix">
-        <span>
-        <div class="col-with-label">
+        <span class="span-one-by-one">
+        <div class="col1 col-with-label">
                 <!-- Срок исполнения -->
                 <label>{{inputs['DOC_DEFAULT_VALUE_List.TERM_EXEC'].label}}</label>
                 <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.TERM_EXEC']"
                                     [form]="form"
                                     [readonly]="!editMode" ></eos-dynamic-input>
         </div>
-            <label>дня (дней) от даты регистрации</label>
+        <eos-dynamic-input class="col2"
+            [input]="inputs['DOC_DEFAULT_VALUE_List.TERM_EXEC_TYPE']"
+            [form]="form"
+            [hideLabel]="true"
+            [readonly]="!editMode" ></eos-dynamic-input>
+        <label class="col3">{{dayTypeTitle + ' от даты регистрации'}}</label>
         </span>
     </div>
     <div class="clearfix">

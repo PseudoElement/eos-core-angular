@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { FormGroup, ValidationErrors } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -24,6 +24,7 @@ import { NavParamService } from 'app/services/nav-param.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_UPDATE_USER } from '../../eos-user-select/shered/consts/confirm-users.const';
+import { IMessage } from 'eos-common/interfaces';
 
 @Component({
     selector: 'eos-params-base-param',
@@ -32,6 +33,7 @@ import { CONFIRM_UPDATE_USER } from '../../eos-user-select/shered/consts/confirm
 
 
 export class ParamsBaseParamComponent implements OnInit, OnDestroy {
+    submitClick = false;
     editMode = false;
     title: string;
     type: string = 'password';
@@ -72,6 +74,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     constructor(
         private _router: Router,
+        private _snapShot: ActivatedRoute,
         private _msgSrv: EosMessageService,
         private _apiSrv: UserParamApiSrv,
         private _inputCtrlSrv: InputParamControlService,
@@ -83,7 +86,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private _confirmSrv: ConfirmWindowService,
         private apiSrvRx: PipRX,
         private _storage: EosStorageService,
-    ) { }
+    ) {
+    }
     ngOnInit() {
         this._userParamSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERCARD_List',
@@ -91,12 +95,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }).then(() => {
             this.selfLink = this._router.url.split('?')[0];
             this.init();
+            if (this._snapShot.snapshot.queryParams.is_create && !this.curentUser['IS_PASSWORD']) {
+                this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
+            }
             this.editModeF();
             this._subscribe();
         })
-        .catch(err => {
+            .catch(err => {
 
-        });
+            });
         this._userParamSrv
             .saveData$
             .pipe(
@@ -143,7 +150,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
         this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
-
         this.isLoading = false;
         this.subscribeForms();
         return Promise.resolve();
@@ -223,6 +229,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             });
             return;
         }
+        this.submitClick = true;
         this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
         const id = this._userParamSrv.userContextId;
         const newD = {};
@@ -252,7 +259,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     delete newD['DUE_DEP_NAME'];
                 });
             }
-            this._nanParSrv.scanObserver(false);
+            // this._nanParSrv.scanObserver(false);
             query.push({
                 method: 'MERGE',
                 requestUri: `USER_CL(${id})`,
@@ -310,10 +317,13 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     this.upform(this.accessInputs, this.formAccess);
                     this.editModeF();
                     this._pushState();
+                    this.submitClick = false;
                 });
             }
-
+            this.submitClick = false;
         }).catch(error => {
+            this.submitClick = false;
+            this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
             this.cancel();
             this._errorSrv.errorHandler(error);
         });
@@ -507,7 +517,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
     getSerts(template: TemplateRef<any>): void {
         if (this.editMode) {
-            this.modalRef = this.modalService.show(template, { class: 'serts' });
+            this.modalRef = this.modalService.show(template, { class: 'serts', ignoreBackdropClick: true });
         }
     }
     closeSerts() {
@@ -636,6 +646,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     this.formControls.controls['SELECT_ROLE'].enable();
                 }
             });
+    }
+    private messageAlert({ title, msg, type }: IMessage) {
+        this._msgSrv.addNewMessage(
+            {
+                type,
+                msg,
+                title,
+            }
+        );
     }
 
 }

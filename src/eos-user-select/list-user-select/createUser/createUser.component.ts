@@ -35,6 +35,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     title: string;
     tehnicUser: boolean = false;
     isn_prot: any;
+    titleNow: string;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public _apiSrv: UserParamApiSrv,
@@ -109,7 +110,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 .then(data => {
                     this.closedModal.emit();
                     this._router.navigate(['user-params-set'], {
-                        queryParams: { isn_cl: data[0] }
+                        queryParams: { isn_cl: data[0], is_create: true }
                     });
                     this.isn_prot = data[0];
                     this._userParamSrv.ProtocolService(this.isn_prot, 3);
@@ -129,7 +130,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                         this.closedModal.emit();
                     }
                     if (e instanceof RestError && e.code === 500) {
-                        m.msg = 'Пользователь с таким логином уже существует';
+                        m.msg = e.message || 'Пользователь с таким логином уже существует';
                     } else {
                         m.msg = e.message ? e.message : e;
                     }
@@ -151,6 +152,15 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     selectDepartment(status) {
         if (status) {
             this._showDepartment();
+        }
+    }
+    delSelectUser($event?) { // удаление от кого копировать
+        if ($event && $event.keyCode === 46 && this.data['ISN_USER_COPY']) {
+            this.data['ISN_USER_COPY'] = undefined;
+            this.form.get('USER_COPY').patchValue('');
+        } else if (!$event) {
+            this.data['ISN_USER_COPY'] = undefined;
+            this.form.get('USER_COPY').patchValue('');
         }
     }
     selectUser() {

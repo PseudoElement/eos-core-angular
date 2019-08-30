@@ -149,7 +149,7 @@ export class DepartmentDictionaryDescriptor extends TreeDictionaryDescriptor {
 
     getChildren(record: IHierCL): Promise<any[]> {
         const _children = {
-            DUE: '0%',
+            // DUE: '0%',
             ISN_HIGH_NODE: record.ISN_NODE + '',
         };
         return this.getData({ criteries: _children }, 'DUE');

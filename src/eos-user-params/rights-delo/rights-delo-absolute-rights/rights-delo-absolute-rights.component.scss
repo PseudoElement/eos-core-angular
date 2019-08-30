@@ -1,32 +1,41 @@
 .input-user-absolute-rights-wrapper {
 
-        .input-user-absolute-rights {
-            position: relative;
+    .input-user-absolute-rights {
+        position: relative;
 
-            .left-block-list-absolute-rights {
-                // display: inline-block;
-                width: 390px;
-                height: calc(100vh - 260px);
-                overflow-y: scroll;
+        .left-block-list-absolute-rights {
+            // display: inline-block;
+            width: 390px;
+            height: calc(100vh - 260px);
+            overflow-y: scroll;
 
-                .list-card-files {
-                    padding-left: 10px;
-                }
+            .list-card-files {
+                padding-left: 10px;
             }
-            .right-block-list-absolute-rights {
-                position: absolute;
-                top: 0;
-                right: 0;
-                width: 404px;
+        }
+        .right-block-list-absolute-rights {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 404px;
 
-                eos-dynamic-input {
-                    font-size: 14px;
+            eos-dynamic-input {
+                font-size: 14px;
 
-                    .elem-input-radio {
-                        display: inline-block;
-                        margin-left: 20px;
-                    }
+                .elem-input-radio {
+                    display: inline-block;
+                    margin-left: 20px;
                 }
             }
         }
+    }
+}
+.content-absolute{
+    position: absolute !important;
+    top: 45%;
+    right: 23%;
+}
+.new-card-body {
+    height: calc(100vh - 600px) !important;
+    overflow: auto !important;
 }

@@ -2,8 +2,8 @@
     .sortable-wrapper {
         display: flex;
         flex-wrap: wrap;
-        //width: calc(100vw - 350px);
-        width: 100vw;
+        width: calc(100vw - 50px);
+        // width: 100vw;
         .icon-btn {
             cursor: pointer;
         }
@@ -17,6 +17,9 @@
         flex-basis: calc((100% - 4*10px) / 1);
         margin-right: 10px;
         margin-bottom: 10px;
+        flex-grow: 1;
+        flex-basis: 400px;
+        flex-shrink: 1;
         .btn {
             padding: 0;
         }
@@ -25,36 +28,47 @@
 
             &.disabled {
                 cursor: not-allowed;
-                opacity: 0.65;
+                // opacity: 0.65;
                 box-shadow: none;
+                opacity: 0.4;
+                background-color: #eeeeee;
+                color: #000000;
+
             }
 
             position: relative;
             cursor: pointer;
+            border: 1px solid #e6e6e6;
+
             &.edited {
-                padding: 32px 96px 32px 0;
+                // padding: 32px 96px 32px 0;
                 flex-direction: column;
                 display: flex;
                 justify-content: space-around;
                 border: 1px $active-field-color-main-theme solid;
             }
             .text {
-                max-height: 52px;
-                position: absolute;
-                display: inline-block;
-                top: 38px;
-                left: 112px;
-                width: calc(100% - 120px);
-                overflow: hidden;
-                white-space: normal;
+                display: table-cell;
+                vertical-align: middle;
+                width: 100%;
+                // max-height: 52px;
+                // position: absolute;
+                // display: inline-block;
+                // top: 38px;
+                // left: 112px;
+                // width: calc(100% - 120px);
+                // overflow: hidden;
+                // white-space: normal;
             }
             .icon {
                 height: 48px;
                 width: 48px;
+                display: block;
             }
             .icon-wrapper {
-                display: inline-block;
-                height: 99px;
+                // display: inline-block;
+                display: table-cell;
+                height: 98px;
                 width: 100px;
                 padding: 26px;
             }
@@ -77,6 +91,10 @@
             }
             &.leftest {
                 right: 96px;
+                vertical-align: middle;
+                line-height: 48px;
+                width: 48px;
+                text-align: center;
             }
         }
         .end-hidder {
@@ -94,7 +112,9 @@
             box-shadow: none;
             position: absolute;
             left: 100px;
+            padding-left: 0;
             width: calc(100% - 196px);
+            top: 32px;
         }
     }
     .right {

@@ -2,7 +2,7 @@
 
 <div class="eos-node-actions">
     <ng-container *ngFor="let item of buttons">
-        <div class="visible-lg-inline-block actions"
+        <div class="actions"
             *ngIf="item.show">
             <ng-container *ngIf="item.type === ADD_ACTION && isTree">
                 <div dropdown
@@ -53,7 +53,8 @@
                         <button [disabled]="!item.enabled"
                             class="btn btn-primary-light {{item.buttonClass}}"
                             [ngClass]="{'active': item.isActive}"
-                            (click)="itemTooltip.hide(); doAction($event, item)"><span [ngClass]="!item.isActive ? item.iconClass : item.activeIconClass"></span></button>
+                            (click)="itemTooltip.hide(); doAction($event, item)">
+                            <span [ngClass]="item.isActive ? item.activeIconClass : (item.enabled ? item.iconClass : item.disabledIconClass)"></span></button>
                     </div>
                 </div>
             </ng-container>

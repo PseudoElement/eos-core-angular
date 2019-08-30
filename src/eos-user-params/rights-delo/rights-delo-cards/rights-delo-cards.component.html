@@ -39,8 +39,8 @@
                 {{item.label}}
             </div>
         </article>
-        <article class="right-block" *ngIf="editMode">
-            <eos-list-card-right></eos-list-card-right>
+        <article class="right-block">
+            <eos-list-card-right [editMode]="editMode"></eos-list-card-right>
         </article>
     </section>
 </ng-template>

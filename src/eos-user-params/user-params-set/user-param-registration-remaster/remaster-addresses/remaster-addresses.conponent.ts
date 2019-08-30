@@ -84,6 +84,19 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
         this.form = this.inpSrv.toFormGroup(this.inputs);
         this.form.disable({emitEvent: false});
         const orgISN = this.form.controls['rec.ORGGROUP'].value;
+        this.getOrgGroupValue(orgISN);
+        this.subscribeChange();
+    }
+    clearField(): void {
+        this.orgName = '';
+        this.form.controls['rec.ORGGROUP'].patchValue('');
+    }
+    setNewValInputs(): void {
+        Object.keys(this.form.controls).forEach(inp => {
+            this.inputs[inp].value = this.form.controls[inp].value;
+        });
+    }
+    getOrgGroupValue(orgISN) {
         this._RemasterService.getOrgGroupName(orgISN || '-00').then(res => {
             if (res.length) {
                 this.orgName = res[0]['CLASSIF_NAME'];
@@ -100,17 +113,8 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
                 dismissOnTimeout: 5000,
             });
         });
-        this.subscribeChange();
     }
-    clearField(): void {
-        this.orgName = '';
-        this.form.controls['rec.ORGGROUP'].patchValue('');
-    }
-    setNewValInputs(): void {
-        Object.keys(this.form.controls).forEach(inp => {
-            this.inputs[inp].value = this.form.controls[inp].value;
-        });
-    }
+
     pretInputs(): void {
         this.prapareData =  this.formHelp.parse_Create(REGISTRATION_ADDRESSES.fields, this.userData);
         this.prepareInputs = this.formHelp.getObjectInputFields(REGISTRATION_ADDRESSES.fields);
@@ -128,11 +132,11 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
                 this.countError++;
             }
           });
-          this.pushChange.emit({
-            btn: this.countError > 0,
-            data: this.newDataMap
-        });
-        this.countError > 0 ? this.btnDisabled = true : this.btnDisabled = false;
+            this.pushChange.emit([{
+                btn: this.countError > 0,
+                data: this.newDataMap
+            }, this.form.value]);
+            this.countError > 0 ? this.btnDisabled = true : this.btnDisabled = false;
         this.countError = 0;
         });
     }
@@ -171,8 +175,10 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
         }
     }
     cancel() {
+        const dataVal = this.userData !== null ? this.userData : this.defaultValues;
+        this.getOrgGroupValue(dataVal['ORGGROUP']);
         if (this.btnDisabled) {
-            this.pretInputs();
+          //  this.pretInputs();
             Object.keys(this.inputs).forEach(input => {
                 this.form.controls[input].patchValue(this.inputs[input].value);
             });
@@ -182,11 +188,11 @@ export class RemasterAddressesComponent implements OnInit, OnDestroy {
         this.flagEdit = false;
     }
     default() {
+        this.getOrgGroupValue(this.defaultValues['ORGGROUP']);
         this.prepareDefaultForm = this.formHelp.parse_Create(REGISTRATION_ADDRESSES.fields, this.defaultValues);
         Object.keys(this.prepareDefaultForm).forEach((item: string) => {
             this.form.controls['rec.' + item].patchValue(this.prepareDefaultForm[item]);
         });
-        this.orgName = '';
     }
     openClassif() {
         const query: IOpenClassifParams = {

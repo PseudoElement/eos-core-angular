@@ -6,6 +6,8 @@ import { UserPaginationService } from 'eos-user-params/shared/services/users-pag
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
+import { EosStorageService } from 'app/services/eos-storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'eos-protocol',
@@ -32,12 +34,15 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
     'Удаление Пользователя'
   ];
   critUsers = [];
+  closeTooltip: boolean = true;
   currentState: boolean[] = [false, false];
   status: string;
   SortUp: string;
   checkOverflow: boolean;
   curentUser: number;
   username: string;
+  selfLink: any;
+  link: any;
   arrSort = [
     { date: true },
     { event: false },
@@ -48,7 +53,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<any> = new Subject();
 
   constructor(private _pipeSrv: PipRX, private _errorSrv: ErrorHelperServices, private _userpar: UserParamsService,
-    private _user_pagination: UserPaginationService) {
+    public _user_pagination: UserPaginationService, private _storage: EosStorageService, private _router: Router) {
     _user_pagination.paginationConfig$
       .pipe(
         takeUntil(this.ngUnsubscribe)
@@ -70,18 +75,23 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
+    this._storage.setItem('protocol', this._user_pagination.paginationConfig, true);
+    this._user_pagination.SelectConfig();
   }
 
   ngOnInit() {
     this._userpar.getUserIsn().then(() => {
       this.curentUser = this._userpar.curentUser.ISN_LCLASSIF;
       this.username = this._userpar.curentUser.SURNAME_PATRON;
-      this._user_pagination._initPaginationConfig(true);
-      this.PaginateData(this.config.length, this.orderByStr, 0);
+      this._user_pagination.typeConfig = 'protocol';
+      const confUsers = this._storage.getItem('protocol');
+      this._user_pagination.paginationConfig = confUsers;
+      this._user_pagination._initPaginationConfig();
+      this.PaginateData(this.config.length, this.orderByStr);
       this._user_pagination.totalPages = undefined;
+      this.selfLink = this._router.url.split('?')[0];
+      this.link = this._userpar.userContextId;
     })
-      .catch((error: boolean) => {
-      })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
       });
@@ -93,7 +103,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
         PipRX.criteries({ ISN_USER: `${this.curentUser}` }),
       orderby: orderStr,
       top: length,
-      skip: skip,
+      skip: skip || this.config.length * this.config.current - this.config.length,
       inlinecount: 'allpages'
     })
       .then((data: any) => {
@@ -147,36 +157,38 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
     }
   }
   SortPageList(crit: number) {
-    let critSearch;
-    switch (crit) {
-      case 1:
-        critSearch = 'EVENT_DATE';
-        this.arrSort[0].date = !this.arrSort[0].date;
-        this.SortUp = this.arrSort[0].date ? 'asc' : 'desc';
-        this.status = critSearch;
-        break;
-      // case 2:
-      //   critSearch = 'eventUser';
-      //   this.arrSort[1].event = !this.arrSort[1].event;
-      //   this.SortUp = this.arrSort[1].event ? 'asc' : 'desc';
-      //   this.status = critSearch;
-      //   break;
-      // case 3:
-      //   critSearch = 'WHO';
-      //   this.arrSort[2].who = !this.arrSort[2].who;
-      //   this.SortUp = this.arrSort[2].who ? 'asc' : 'desc';
-      //   this.status = critSearch;
-      //   break;
-    }
-    if (critSearch === 'WHO') {
-      // this.orderByStr = `${critSearch}.SURNAME_PATRON ${this.SortUp}`;
-      // this._pipeSrv.read({
-      //   USER_AUDIT: PipRX.criteries({ orderby: this.orderByStr }),
-      // }).then((data) => {
-      // });
-    } else if (critSearch === 'EVENT_DATE') {
-      this.orderByStr = `${critSearch} ${this.SortUp}`;
-      this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+    if (this._user_pagination.totalPages > 1) {
+      let critSearch;
+      switch (crit) {
+        case 1:
+          critSearch = 'EVENT_DATE';
+          this.arrSort[0].date = !this.arrSort[0].date;
+          this.SortUp = this.arrSort[0].date ? 'asc' : 'desc';
+          this.status = critSearch;
+          break;
+        // case 2:
+        //   critSearch = 'eventUser';
+        //   this.arrSort[1].event = !this.arrSort[1].event;
+        //   this.SortUp = this.arrSort[1].event ? 'asc' : 'desc';
+        //   this.status = critSearch;
+        //   break;
+        // case 3:
+        //   critSearch = 'WHO';
+        //   this.arrSort[2].who = !this.arrSort[2].who;
+        //   this.SortUp = this.arrSort[2].who ? 'asc' : 'desc';
+        //   this.status = critSearch;
+        //   break;
+      }
+      if (critSearch === 'WHO') {
+        // this.orderByStr = `${critSearch}.SURNAME_PATRON ${this.SortUp}`;
+        // this._pipeSrv.read({
+        //   USER_AUDIT: PipRX.criteries({ orderby: this.orderByStr }),
+        // }).then((data) => {
+        // });
+      } else if (critSearch === 'EVENT_DATE') {
+        this.orderByStr = `${critSearch} ${this.SortUp}`;
+        this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+      }
     }
   }
 
@@ -206,6 +218,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   }
 
   SingleUserCheck(user) {
+    this.isnRefFile = undefined;
     user.checked = true;
     if (user.checked) {
       this.frontData.forEach(node => {
@@ -214,11 +227,13 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
       user.checked = true;
     }
     this.lastUser = user;
+    this.GetRefIsn();
   }
 
   ShowData() {
     let eventUser;
     this.frontData = undefined;
+    this.isnRefFile = undefined;
     this.usersAudit.map((user) => {
       const date = this.ConvertDate(user.EVENT_DATE);
       eventUser = this.eventKind[user.EVENT_KIND - 1];
@@ -250,50 +265,53 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
         });
       }
     });
+    if (this.lastUser !== undefined) {
+      this.GetRefIsn();
+    }
   }
 
   ParseDate(data) {
     this.SelectUsers(data);
-    for (const user of data) {
-      if (this.findUsers === undefined) {
-        this.findUsers = [{ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON }];
-      } else {
-        this.findUsers.push({ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON });
-      }
-    }
-    this.ShowData();
+    this._pipeSrv.read({
+      USER_CL: this.critUsers
+    })
+      .then((users: any) => {
+        for (const user of users) {
+          if (this.findUsers === undefined) {
+            this.findUsers = [{ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON }];
+          } else {
+            this.findUsers.push({ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON });
+          }
+        }
+        this.ShowData();
+      });
   }
 
-  ShowDataUser() {
-    // if (this.lastUser !== undefined) {
-    //   return this.GetDataUser(this.lastUser.isnEvent);
-    // }
-  }
   CompareWithEvent() {
     // if (this.lastUser !== undefined) {
     //   return this.GetDataUser(this.lastUser.isnEvent);
     // }
   }
 
-  GetDataUser(isnEvent) {
+  GetRefIsn() {
     this._pipeSrv.read({
-      REF_FILE: PipRX.criteries({ 'ISN_REF_DOC': String(isnEvent) })
+      REF_FILE: PipRX.criteries({ 'ISN_REF_DOC': String(this.lastUser.isnEvent) })
     })
       .then((data: any) => {
-        this.isnRefFile = data[0].ISN_REF_FILE;
-        return this.isnRefFile;
-      })
-      .then((data) => {
-        this.openFrame(data);
+        if (data.length !== 0) {
+          this.isnRefFile = data[0].ISN_REF_FILE;
+        }
       })
       .catch((error) => {
         this._errorSrv.errorHandler(error);
       });
-    // this.openFrame(12);
-    // window.open(`/x1807/getfile.aspx/${isnEvent}/3x.html`, 'example', 'width=900,height=700');
   }
-  openFrame(isnFile) {
-    window.open(`/x1807/getfile.aspx/${isnFile}/3x.html`, 'example', 'width=900,height=700');
+
+  GetRefFile() {
+    this.closeTooltip = true;
+    setTimeout(() => {
+      window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900,height=700');
+    }, 0);
   }
   ConvertDate(convDate) {
     const date = new Date(convDate);
@@ -305,6 +323,10 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
     return parseDate;
   }
 
+  close() {
+    this._storage.setItem('saveQuickSearch', 'true');
+    this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
+  }
 
 }
 

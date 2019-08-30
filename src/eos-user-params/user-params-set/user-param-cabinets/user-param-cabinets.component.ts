@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -23,6 +23,9 @@ import { EosStorageService } from 'app/services/eos-storage.service';
 })
 
 export class UserParamCabinetsComponent implements OnDestroy, OnInit {
+    @Input() defaultTitle: string;
+    @Input() defaultUser: any;
+    @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     userId: string;
     isChanged: boolean;
     prepInputsAttach;
@@ -74,19 +77,9 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
         });
     }
     ngOnInit() {
-        this._userParamsSetSrv.saveData$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                this._userParamsSetSrv.submitSave = this.submit();
-            });
-
-        this._userParamsSetSrv.getUserIsn({
-            expand: 'USER_PARMS_List'
-        }).then(() => {
-            this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
-            this.allData = this._userParamsSetSrv.hashUserContext;
+        if (this.defaultTitle) {
+            this.titleHeader = this.defaultTitle;
+            this.allData = this.defaultUser;
             this.init();
             Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {
                 CABINETS_USER.fields.map(fields => {
@@ -104,15 +97,47 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                     this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
                 }
             });
-        })
-        .catch(error => {
+        } else {
+            this._userParamsSetSrv.saveData$
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
+            .subscribe(() => {
+                this._userParamsSetSrv.submitSave = this.submit();
+            });
 
-        });
+            this._userParamsSetSrv.getUserIsn({
+                expand: 'USER_PARMS_List'
+            }).then(() => {
+                this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
+                this.allData = this._userParamsSetSrv.hashUserContext;
+                this.init();
+                Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {
+                    CABINETS_USER.fields.map(fields => {
+                        if (fields.key === 'CABSORT_ISN_DOCGROUP_LIST') {
+                            fields.options.splice(0, fields.options.length);
+                            sort.forEach(element => {
+                                fields.options.push({
+                                    value: element.ISN_LIST,
+                                    title: element.NAME
+                                });
+                            });
+                        }
+                    });
+                    if (author) {
+                        this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
+                    }
+                });
+                })
+                .catch(error => {
+            });
+        }
     }
+
     init() {
         this.pretInputs();
         this.parseInputsFromString(this.inputs, this.allData['FOLDERCOLORSTATUS']);
-        this.patchInputFuking();
+        this.patchInputValue();
         this.form = this.inpSrv.toFormGroup(this.inputs);
         this.editMode();
         this.formSubscriber();
@@ -135,19 +160,33 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     getValueForString(val, folderString): boolean {
         return folderString.charAt(val) === '1' ? true : false;
     }
-    patchInputFuking() {
-        if (String(this.inputs['rec.HILITE_PRJ_RC'].value).trim() !== '') {
-            this.inputs['rec.HILITE_PRJ_RC_BOOLEAN'].value = true;
+    patchInputValue(Defaultdata?: any, Defaultinp?: any) {
+        if (Defaultinp !== undefined && Defaultdata !== undefined) {
+            if (Defaultdata[10].PARM_VALUE === null) {
+                Defaultinp['rec.HILITE_PRJ_RC_BOOLEAN'].value = false;
+            } else {
+                Defaultinp['rec.HILITE_PRJ_RC_BOOLEAN'].value = true;
+            }
+            if (Defaultdata[11].PARM_VALUE === null) {
+                Defaultinp['rec.HILITE_RESOLUTION_BOOLEAN'].value = false;
+            } else {
+                Defaultinp['rec.HILITE_RESOLUTION_BOOLEAN'].value = true;
+            }
+            return Defaultinp;
         } else {
-            this.inputs['rec.HILITE_PRJ_RC_BOOLEAN'].value = false;
-        }
-
-        if (String(this.inputs['rec.HILITE_RESOLUTION'].value).trim() !== '') {
-            this.inputs['rec.HILITE_RESOLUTION_BOOLEAN'].value = true;
-        } else {
-            this.inputs['rec.HILITE_RESOLUTION_BOOLEAN'].value = false;
+            if (String(this.inputs['rec.HILITE_PRJ_RC'].value).trim() !== '') {
+                this.inputs['rec.HILITE_PRJ_RC_BOOLEAN'].value = true;
+            } else {
+                this.inputs['rec.HILITE_PRJ_RC_BOOLEAN'].value = false;
+            }
+            if (String(this.inputs['rec.HILITE_RESOLUTION'].value).trim() !== '') {
+                this.inputs['rec.HILITE_RESOLUTION_BOOLEAN'].value = true;
+            } else {
+                this.inputs['rec.HILITE_RESOLUTION_BOOLEAN'].value = false;
+            }
         }
     }
+
     formSubscriber() {
         this.form.valueChanges.subscribe(data => {
             this.checkTouch(data);
@@ -304,7 +343,8 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
 
     getNameSortCabinets(): Promise<any> {
-        const user = this._userParamsSetSrv.userContextId;
+        let user;
+        this.defaultTitle ? user = `-99` : user =  this._userParamsSetSrv.userContextId;
         const query = {
             USER_LISTS: {
                 criteries: {
@@ -334,9 +374,18 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this.editMode();
                 this._pushState();
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
-                this._userParamsSetSrv.getUserIsn({
-                    expand: 'USER_PARMS_List'
-                });
+                if (this.defaultTitle === undefined) {
+                    this._userParamsSetSrv.getUserIsn({
+                        expand: 'USER_PARMS_List'
+                    });
+                } else {
+                    this.form.value['rec.FOLDERCOLORSTATUS'] = this.newFolderString;
+                    const val1 = this.form.controls['rec.HILITE_RESOLUTION'].value;
+                    const val2 = this.form.controls['rec.HILITE_PRJ_RC'].value;
+                    this.form.value['rec.HILITE_RESOLUTION'] = String(val1);
+                    this.form.value['rec.HILITE_PRJ_RC'] = String(val2);
+                    this.DefaultSubmitEmit.emit(this.form.value);
+                }
             }).catch((error) => {
                 this._errorSrv.errorHandler(error);
                 this.cancel();
@@ -371,14 +420,14 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 key === 'CORRECT_CTRL_DATE' ||
                 key === 'PARENT_RESOLUTION_TEXT') {
                 const val = value ? 1 : 0;
-                arrayQuery.push(this.createReq(key, val));
+                this.defaultUser ? arrayQuery.push(this.createReqDefault(key, val)) : arrayQuery.push(this.createReq(key, val));
             } else if (key === 'ADD_ADRESS_REPORGANIZ') {
                 const val = value ? 0 : 1;
-                arrayQuery.push(this.createReq(key, val));
+                this.defaultUser ? arrayQuery.push(this.createReqDefault(key, val)) : arrayQuery.push(this.createReq(key, val));
             } else {
                 if (key !== 'CONTROLL_AUTHOR') {
                     const val = this.checkTypeValue(value);
-                    arrayQuery.push(this.createReq(key, val));
+                    this.defaultUser ? arrayQuery.push(this.createReqDefault(key, val)) : arrayQuery.push(this.createReq(key, val));
                 }
             }
         });
@@ -400,12 +449,12 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             const incr = this.form.controls['rec.HILITE_RESOLUTION'].value;
             if (String(incr).trim() === '') {
                 this.form.controls['rec.HILITE_RESOLUTION'].patchValue(0, { emitEvent: false });
-                arrayQuery.push(this.createReq('HILITE_RESOLUTION', 0));
+                this.defaultUser ? arrayQuery.push(this.createReqDefault('HILITE_RESOLUTION', 0)) : arrayQuery.push(this.createReq('HILITE_RESOLUTION', 0));
             } else {
-                arrayQuery.push(this.createReq('HILITE_RESOLUTION', incr));
+                this.defaultUser ? arrayQuery.push(this.createReqDefault('HILITE_RESOLUTION', incr)) : arrayQuery.push(this.createReq('HILITE_RESOLUTION', incr));
             }
         } else {
-            arrayQuery.push(this.createReq('HILITE_RESOLUTION', ''));
+            this.defaultUser ? arrayQuery.push(this.createReqDefault('HILITE_RESOLUTION', '')) : arrayQuery.push(this.createReq('HILITE_RESOLUTION', ''));
             this.form.controls['rec.HILITE_RESOLUTION'].patchValue('', { emitEvent: false });
         }
         this.mapChanges.delete('HILITE_RESOLUTION_BOOLEAN');
@@ -417,12 +466,12 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             const incr = this.form.controls['rec.HILITE_PRJ_RC'].value;
             if (String(incr).trim() === '') {
                 this.form.controls['rec.HILITE_PRJ_RC'].patchValue(0, { emitEvent: false });
-                arrayQuery.push(this.createReq('HILITE_PRJ_RC', 0));
+                this.defaultUser ?  arrayQuery.push(this.createReqDefault('HILITE_PRJ_RC', 0)) :  arrayQuery.push(this.createReq('HILITE_PRJ_RC', 0));
             } else {
-                arrayQuery.push(this.createReq('HILITE_PRJ_RC', incr));
+                this.defaultUser ?  arrayQuery.push(this.createReqDefault('HILITE_PRJ_RC', incr)) :  arrayQuery.push(this.createReq('HILITE_PRJ_RC', incr));
             }
         } else {
-            arrayQuery.push(this.createReq('HILITE_PRJ_RC', ''));
+            this.defaultUser ?  arrayQuery.push(this.createReqDefault('HILITE_PRJ_RC', '')) :  arrayQuery.push(this.createReq('HILITE_PRJ_RC', ''));
             this.form.controls['rec.HILITE_PRJ_RC'].patchValue('', { emitEvent: false });
         }
         this.mapChanges.delete('HILITE_PRJ_RC_BOOLEAN');
@@ -439,6 +488,16 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             }
         };
     }
+    createReqDefault(name: string, value: any): any {
+        return {
+            method: 'MERGE',
+            requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 ${name}')`,
+            data: {
+                PARM_VALUE: `${value}`
+            }
+        };
+    }
+
     cancel($event?) {
         this.flagEdit = false;
         this.prepFormCancel(this.inputs, true);
@@ -484,10 +543,18 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 this.prepareData = this.formHelp.parse_Create(CABINETS_USER.fields, this.creatchesheDefault);
                 this.prepareInputs = this.formHelp.getObjectInputFields(CABINETS_USER.fields);
                 this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
+                this.defoltInputs = this.patchInputValue(data, this.defoltInputs);
                 this.parseInputsFromString(this.defoltInputs, this.creatchesheDefault['FOLDERCOLORSTATUS']);
                 this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value = !this.defoltInputs['rec.ADD_ADRESS_REPORGANIZ'].value;
                 this.prepFormCancel(this.defoltInputs, true);
                 this.checkDataToDisabled();
+                this.getControlAuthor().then((author) => {
+                    if (author === false) {
+                        this.form.controls['rec.CONTROLL_AUTHOR'].patchValue('', { emitEvent: false });
+                    } else {
+                        this.form.controls['rec.CONTROLL_AUTHOR'].patchValue(String(author[0]['CLASSIF_NAME']), { emitEvent: false });
+                    }
+                });
             })
             .catch(err => {
                 console.log(err);

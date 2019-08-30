@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { RC_USER } from '../shared-user-param/consts/rc.consts';
 import { FormGroup } from '@angular/forms';
@@ -19,6 +19,9 @@ import { takeUntil } from 'rxjs/operators';
     providers: [FormHelperService],
 })
 export class UserParamRCComponent implements OnDestroy, OnInit {
+    @Input() defaultTitle: string;
+    @Input() defaultUser: any;
+    @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     prepInputsAttach;
     flagEdit: boolean;
     public inputs;
@@ -49,21 +52,9 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         private _errorSrv: ErrorHelperServices,
     ) {}
     ngOnInit() {
-        this._userParamsSetSrv.saveData$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                this._userParamsSetSrv.submitSave = this.submit();
-            });
-        this._userParamsSetSrv.getUserIsn({
-            expand: 'USER_PARMS_List'
-        })
-        .then(() => {
-            this.allData = this._userParamsSetSrv.hashUserContext;
-            this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - РК`;
-            this.cutentTab = 0;
-
+        if (this.defaultTitle) {
+            this.titleHeader = this.defaultTitle;
+            this.allData = this.defaultUser;
             this.init();
             this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
                 this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
@@ -76,10 +67,39 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
                     msg: 'Некорркетное значение в базе данных, попробуйте сбросить настройки по умолчанию'
                 });
             });
-        })
-        .catch(err => {
+        } else {
+            this._userParamsSetSrv.saveData$
+            .pipe(
+                takeUntil(this._ngUnsubscribe)
+            )
+            .subscribe(() => {
+                this._userParamsSetSrv.submitSave = this.submit();
+            });
+            this._userParamsSetSrv.getUserIsn({
+                expand: 'USER_PARMS_List'
+            })
+            .then(() => {
+                this.allData = this._userParamsSetSrv.hashUserContext;
+                this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - РК`;
+                this.cutentTab = 0;
 
-        });
+                this.init();
+                this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
+                    this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
+                    this.checRcShowRes();
+                    this.editMode();
+                }).catch(error => {
+                    this._msg.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение',
+                        msg: 'Некорркетное значение в базе данных, попробуйте сбросить настройки по умолчанию'
+                    });
+                });
+            })
+            .catch(err => {
+
+            });
+        }
     }
     setTab(i: number) {
         this.cutentTab = i;
@@ -248,6 +268,9 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
             this._pushState();
             this.editMode();
             this._msg.addNewMessage(PARM_SUCCESS_SAVE);
+            if (this.defaultTitle) {
+                this.DefaultSubmitEmit.emit(this.form.value);
+            }
             // return this._userParamsSetSrv.getUserIsn().then(() => {
 
             // });
@@ -257,27 +280,54 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     }
     createUrl() {
         const arrayQuery = [];
-        this.mapChanges.forEach((value, key, arr) => {
-            let val;
-            switch (typeof value) {
-                case 'string':
-                    val = value;
-                    break;
-                case 'boolean':
-                    value ? val = 'YES' : val = 'NO';
-                    break;
-                default:
-                    val = value;
-                    break;
-            }
-            arrayQuery.push(this.createReq(key, val));
-        });
+        if (this.defaultTitle) {
+            this.mapChanges.forEach((value, key, arr) => {
+                let val;
+                switch (typeof value) {
+                    case 'string':
+                        val = value;
+                        break;
+                    case 'boolean':
+                        value ? val = 'YES' : val = 'NO';
+                        break;
+                    default:
+                        val = value;
+                        break;
+                }
+                arrayQuery.push(this.createReqDefault(key, val));
+            });
+        } else {
+            this.mapChanges.forEach((value, key, arr) => {
+                let val;
+                switch (typeof value) {
+                    case 'string':
+                        val = value;
+                        break;
+                    case 'boolean':
+                        value ? val = 'YES' : val = 'NO';
+                        break;
+                    default:
+                        val = value;
+                        break;
+                }
+                arrayQuery.push(this.createReq(key, val));
+            });
+        }
         return arrayQuery;
     }
     createReq(name: string, value: any): any {
         return {
             method: 'MERGE',
             requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})/USER_PARMS_List(\'${this._userParamsSetSrv.userContextId} ${name}\')`,
+            data: {
+                PARM_VALUE: `${value}`
+            }
+        };
+    }
+    createReqDefault(name: string, value: any): any {
+        return {
+            method: 'MERGE',
+            requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 ${name}')`,
             data: {
                 PARM_VALUE: `${value}`
             }
@@ -308,10 +358,10 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         this.prepareData = {};
         this.prepareInputs = {};
         const prep = this.formHelp.getObjQueryInputsFieldForDefault(this.formHelp.queryparams(RC_USER, 'fieldsDefaultValue'));
-        this._pipRx.read(prep).then(data => {
+        this._pipRx.read(prep).then((data: any) => {
             this.disabledFlagDelite = true;
             this.mapChanges.clear();
-            this.dopRec = null;
+            this.getInfoFroCode(data[1].PARM_VALUE);
             this.creatchesheDefault = this.formHelp.createhash(data);
             this.prepareData = this.formHelp.parse_Create(RC_USER.fields, this.creatchesheDefault);
             this.prepareInputs = this.formHelp.getObjectInputFields(RC_USER.fields);

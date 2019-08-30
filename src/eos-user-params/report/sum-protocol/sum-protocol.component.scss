@@ -1,4 +1,7 @@
 .sum-protocol{
+    .sum-report-wrapper{
+        min-height: 700px;
+    }
     .contain-span{
         display: flex;
         justify-content: space-around;
@@ -6,13 +9,11 @@
     .contain-span{
         display: flex;
         justify-content: space-around;
-       // width:81%;
     }
     .contain-span-header{
         display: flex;
         align-items: center;
         justify-content: flex-start;
-     //   width: 100%;
         padding-left: 10px;
     }
     .item-table{
@@ -30,9 +31,6 @@
     }
     .sum-report-list{
         background-color: white;
-        // max-height: calc(100vh - 371px);
-        // overflow-y: auto;
-        // overflow-x: auto;
     }
     .header-pos-sum{
         display: flex;
@@ -54,7 +52,6 @@
     }
     .item-count-sum {
         align-self: center;
-   //     height: 100%;
         width: fit-content;
         display: inline-block;
         border-left-width: 1px;
@@ -102,7 +99,7 @@
     }
     .sum-list-prot{
         overflow: auto;
-        max-height: calc(100vh - 371px);
+        max-height: calc(100vh - 410px);
     }
     .table-sum-wraper{
         display: flex;

@@ -154,6 +154,9 @@ export class PipRX extends PipeUtils {
         if (r._moreJSON) {
             url += '&_more_json=' + JSON.stringify(r._moreJSON);
         }
+        if (r.loadmode) {
+            url += '&loadmode=' + r.loadmode;
+        }
 
         if (ids !== undefined && ids.length) {
             const idss = PipeUtils.chunkIds(PipeUtils.distinctIDS(ids instanceof Array ? ids : [ids]));

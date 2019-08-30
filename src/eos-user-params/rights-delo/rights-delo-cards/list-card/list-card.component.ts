@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -12,6 +12,7 @@ import { USERCARD } from 'eos-rest';
     templateUrl: 'list-card.component.html'
 })
 export class ListCardRightComponent implements OnInit, OnDestroy {
+    @Input() editMode: boolean;
     public isLoading: boolean = true;
     public isShell: boolean = false;
     public listNodes: CardRight[];
@@ -30,8 +31,7 @@ export class ListCardRightComponent implements OnInit, OnDestroy {
         });
     }
 
-    async ngOnInit() {
-        this._cardList = await this._cardSrv.getCardList();
+    ngOnInit() {
         this._createList();
         this.isLoading = false;
     }
@@ -49,9 +49,13 @@ export class ListCardRightComponent implements OnInit, OnDestroy {
     //     this._cardSrv.test();
     // }
     private _createList() {
-        this.listNodes = [];
-        this._cardList.forEach((card: USERCARD) => {
-            this.listNodes.push(new CardRight(this._cardSrv, card));
+        this._cardSrv.getCardList()
+        .then(data => {
+                this.listNodes = [];
+                this._cardList = data;
+                this._cardList.forEach((card: USERCARD) => {
+                    this.listNodes.push(new CardRight(this._cardSrv, card));
+                });
         });
     }
 }

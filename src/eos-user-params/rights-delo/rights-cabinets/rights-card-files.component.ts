@@ -29,6 +29,9 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     public newValueMap: Map<any, any> = new Map();
     public flagEdit: boolean = false;
     public flagBacground: boolean = false;
+    public loadCabinets: boolean = false;
+    public newCardForAllowed: any[] = [];
+    public updateCardforAllowed: any[] = [];
     get btnDisabled() {
         return ((this.newValueMap.size === 0) && this.flagChangeCards);
     }
@@ -173,15 +176,31 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     }
 
     selectCurentCard(card: CardsClass) {
+        if (!card.cabinets.length) {
+            this.loadCabinets = true;
+            this._rightsCabinetsSrv.getCabinets(card.cardDue, card.isnClassif).then(infoCabinets => {
+                if (infoCabinets) {
+                    card.createCabinets(infoCabinets);
+                }
+                if (this.currentCard) {
+                    this.currentCard.current = false;
+                }
+                this.currentCard = card;
+                this.currentCard.current = true;
+                this.loadCabinets = false;
+                this._rightsCabinetsSrv.changeCabinets.next(this.currentCard);
+            });
+        } else {
+            if (this.currentCard) {
+                this.currentCard.current = false;
+            }
+            this.currentCard = card;
+            this.currentCard.current = true;
+            this._rightsCabinetsSrv.changeCabinets.next(this.currentCard);
+        }
        /* if (this.currentCard && !this.flagEdit) {
             return;
         }*/
-        if (this.currentCard) {
-            this.currentCard.current = false;
-        }
-        this.currentCard = card;
-        this.currentCard.current = true;
-        this._rightsCabinetsSrv.changeCabinets.next(this.currentCard);
     }
     removeCards() {
         if (!this.currentCard.homeCard) {
@@ -211,6 +230,39 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         });
         this.mainArrayCards.splice(indexDel, 1);
     }
+
+    updateAllowedCard(dataDoc: any[]): any[] {
+        dataDoc.forEach((doc) => {
+           if (doc.FUNC_NUM === 14 && doc.ALLOWED === 0 && this.newCardForAllowed.indexOf(doc.DUE_CARD) !== -1) {
+                this.updateCardforAllowed.push({
+                    method: 'MERGE',
+                    requestUri: `USER_CL(${doc.ISN_LCLASSIF})/USERCARD_List('${doc.ISN_LCLASSIF} ${doc.DUE_CARD}')/USER_CARD_DOCGROUP_List('${doc.ISN_LCLASSIF} ${doc.DUE_CARD} ${doc.DUE} ${doc.FUNC_NUM}')`,
+                    data: {
+                        ALLOWED: 1
+                    }
+                });
+           }
+        });
+        return  this.updateCardforAllowed;
+    }
+    reqCreateUpdateAllowed(): Promise<any> {
+        return this._userSrv.getUserIsn({
+            expand: 'USERCARD_List/USER_CARD_DOCGROUP_List'
+        })
+        .then(() => {
+            this.mainArrayCards.forEach((card) => {
+                if (card.newCard === true) {
+                    this.newCardForAllowed.push(card.cardDue);
+                }
+            });
+            const userCardList = this._userSrv.curentUser.USERCARD_List;
+            for (const card of userCardList) {
+                this.updateAllowedCard(card.USER_CARD_DOCGROUP_List);
+            }
+            return  this.updateCardforAllowed;
+        });
+    }
+
     submit(event): Promise<any> {
         this.isLoading = true;
         const q = this.prepUrls();
@@ -218,16 +270,21 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         this.newValueMap.clear();
         this._pushState();
         return this._pipSrv.batch(q, '').then(res => {
-            this.UpdateMainArrayAfterSubmit();
-            this._rightsCabinetsSrv.submitRequest.next();
-            this.isLoading = false;
-            this._msgSrv.addNewMessage({
-                type: 'success',
-                title: '',
-                msg: 'Изменения сохранены',
-                dismissOnTimeout: 6000
+            this.reqCreateUpdateAllowed().then((data) => {
+                Promise.all([this._pipSrv.batch(data, '')]).then(() => {
+                    this.UpdateMainArrayAfterSubmit();
+                    this.updateCardforAllowed = [];
+                    this._rightsCabinetsSrv.submitRequest.next();
+                    this.isLoading = false;
+                    this._msgSrv.addNewMessage({
+                        type: 'success',
+                        title: '',
+                        msg: 'Изменения сохранены',
+                        dismissOnTimeout: 6000
+                    });
+                    this.flagEdit = false;
+                });
             });
-            this.flagEdit = false;
         }).catch(error => {
             this._errorSrv.errorHandler(error);
             this.cancel();

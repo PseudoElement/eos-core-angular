@@ -2,21 +2,24 @@ import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { UserPaginationService } from '../services/users-pagination.service';
-import { DEPARTMENT, DOCGROUP_CL } from 'eos-rest';
+import { DEPARTMENT, DOCGROUP_CL, /* USER_CL */ } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
-import { Subject ,  Observable } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { IConfig } from 'eos-user-select/shered/interfaces/user-select.interface';
 import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-select';
-import { HelpersSortFunctions } from '../../../eos-user-select/shered/helpers/sort.helper';
+// import { HelpersSortFunctions } from '../../../eos-user-select/shered/helpers/sort.helper';
 import { IUserSort } from '../../../eos-user-select/shered/interfaces/user-select.interface';
 import { SortsList } from '../../../eos-user-select/shered/interfaces/user-select.interface';
+import { EosStorageService } from '../../../../src/app/services/eos-storage.service';
+import { IPaginationUserConfig } from 'eos-user-select/shered/consts/pagination-user-select.interfaces';
 // import {EosStorageService} from '../../../../src/app/services/eos-storage.service';
 @Injectable()
 export class UserParamApiSrv {
     flagTehnicalUsers: boolean;
     flagDelitedPermanantly: boolean;
+    flagOnlyThisDepart: boolean = true;
     sysParam: any;
-    dueDep: any;
+    dueDep: any = '0.';
     srtConfig: IUserSort = {};
     configList: IConfig = {
         shooseTab: +sessionStorage.getItem('key') ? +sessionStorage.getItem('key') : 0,
@@ -24,8 +27,13 @@ export class UserParamApiSrv {
     };
     confiList$: Subject<IConfig>;
     currentSort: any = SortsList[3];
+    searchRequest = {};
+    searchState: boolean = false;
+    stateTehUsers: boolean = false;
+    stateDeleteUsers: boolean = false;
+    stateOnlyThisDepart: boolean = false;
     public Allcustomer: UserSelectNode[] = [];
-    private helpersClass;
+    // private helpersClass;
     get _confiList$(): Observable<IConfig> {
         return this.confiList$.asObservable();
     }
@@ -33,9 +41,9 @@ export class UserParamApiSrv {
         private apiSrv: PipRX,
         private _router: Router,
         private users_pagination: UserPaginationService,
-        // private _storageSrv: EosStorageService,
+        private _storageSrv: EosStorageService,
     ) {
-        this.helpersClass = new HelpersSortFunctions();
+        //   this.helpersClass = new HelpersSortFunctions();
         this.initConfigTitle();
         this.flagTehnicalUsers = false;
         this.flagDelitedPermanantly = false;
@@ -45,6 +53,7 @@ export class UserParamApiSrv {
             sessionStorage.setItem('titleDue', this.configList.titleDue);
         });
         this.getSysParamForBlockedUser();
+
     }
 
     getData<T>(query?: any): Promise<T[]> {
@@ -77,32 +86,194 @@ export class UserParamApiSrv {
         });
     }
     getQueryforDB(dueDep?) {
-        let q;
+        let q: any = {};
+        let skip, top;
+        const conf: IPaginationUserConfig = this._storageSrv.getItem('users');
+        if (conf) {
+            if (conf.showMore) {
+                if (conf.current !== 2 && conf.start !== 1) {
+                    top = ((conf.current - conf.start) * conf.length) + conf.length;
+                }   else {
+                    top = conf.length * conf.current;
+                }
+                skip = conf.length * conf.start - conf.length;
+            } else {
+                top = conf.length;
+                skip = conf.length * conf.current - conf.length;
+            }
+        } else {
+            top = 10;
+            skip = 0;
+        }
+        let propOrderBy;
+        if (this.currentSort === 'login') {
+            propOrderBy = 'CLASSIF_NAME';
+            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+        } else if (this.currentSort === 'department') {
+            propOrderBy = 'NOTE';
+            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+        }
+        // let propOrderBy = this.currentSort === 'login' ? 'CLASSIF_NAME' : 'NOTE';
+        //  propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+
+        if (this.stateTehUsers) {
+            propOrderBy = 'DUE_DEP asc';
+        }
+
+        if (this.stateTehUsers && this.stateDeleteUsers) {
+            propOrderBy = 'ORACLE_ID asc';
+        }
         if (this.configList.shooseTab === 0) {
             if (!dueDep || dueDep === '0.') {
-                q = ALL_ROWS;
+                const ob = {};
+                q = {
+                    USER_CL: PipRX.criteries(ob),
+                    top: `${top}`,
+                    skip: `${skip}`,
+                    inlinecount: 'allpages'
+                };
+                if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
+                    ob['DUE_DEP'] = 'isnotnull';
+                }
+                if (this.flagDelitedPermanantly && !this.flagTehnicalUsers) {
+                    // ob['DUE_DEP'] = 'isnotnull';
+                    ob['ORACLE_ID'] = 'isnull';
+                }
+                if (!this.flagDelitedPermanantly && this.flagTehnicalUsers) {
+                    // ob['DUE_DEP'] = 'isnull';
+                    ob['ORACLE_ID'] = 'isnotnull';
+                }
+                if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
+                    //  q['USER_CL'] = ALL_ROWS;
+                    ob['CLASSIF_NAME'] = '_';
+                }
+                if (this.currentSort === 'fullDueName') {
+                    propOrderBy = 'SURNAME_PATRON';
+                    propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+                    ob['orderby'] = propOrderBy;
+                } else {
+                    q.orderby = `${propOrderBy}`;
+                }
+                q['loadmode'] = 'Table';
             } else {
-                q = PipRX.criteries({ DUE_DEP: `${dueDep}%` });
+                let ob = {};
+                ob['DUE_DEP'] = `${dueDep}%`;
+                q = {
+                    USER_CL: PipRX.criteries(ob),
+                    top: `${top}`,
+                    skip: `${skip}`,
+                    inlinecount: 'allpages',
+                    loadmode: 'Table'
+                };
+
+                // отобрение ДЛ из подчененных подразделений
+                if (!this.flagOnlyThisDepart && this.dueDep !== '0.' && this.configList.shooseTab === 0) {
+                    ob = { 'USER_CL.DEP.ISN_HIGH_NODE': `${sessionStorage.getItem('isnNodeMy')}` };
+                    q['USER_CL'] = PipRX.criteries(ob);
+                }
+                if (this.currentSort === 'fullDueName') {
+                    propOrderBy = 'SURNAME_PATRON';
+                    propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+                    ob['orderby'] = propOrderBy;
+                } else {
+                    q.orderby = `${propOrderBy}`;
+                }
             }
         }
+
         if (this.configList.shooseTab === 1) {
-            q = PipRX.criteries({ 'USERCARD.DUE': `${dueDep ? dueDep : '0.'}` });
+            if (this.currentSort === 'fullDueName') {
+                propOrderBy = 'SURNAME_PATRON';
+                propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+                //   q.orderby = `${propOrderBy}`;
+                // propOrderBy = 'DEP.CARD.CLASSIF_NAME';
+                // ob['orderby'] = propOrderBy;
+            }
+            const ob = {};
+            ob['USERCARD.DUE'] = `${dueDep ? dueDep : '0.'}`;
+            q = {
+                USER_CL: PipRX.criteries(ob),
+                orderby: `${propOrderBy}`,
+                top: `${top}`,
+                skip: `${skip}`,
+                inlinecount: 'allpages',
+                loadmode: 'Table'
+            };
+            if (this.flagDelitedPermanantly && !this.flagTehnicalUsers) {
+                // ob['DUE_DEP'] = 'isnotnull';
+                q.USER_CL.criteries['ORACLE_ID'] = 'isnull';
+            }
+            if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
+                q.USER_CL.criteries['DUE_DEP'] = 'isnotnull';
+            }
+            if (!this.flagDelitedPermanantly && this.flagTehnicalUsers) {
+                // ob['DUE_DEP'] = 'isnull';
+                q.USER_CL.criteries['ORACLE_ID'] = 'isnotnull';
+            }
+
+            // PipRX.criteries({ 'USERCARD.DUE': `${dueDep ? dueDep : '0.'}` });
         }
         return q;
     }
 
+    getQueryForSearch() {
+        if (this.searchState) {
+            this.users_pagination.resetConfig();
+        }
+        const dbQuery = Object.assign({}, this._storageSrv.getItem('quickSearch'));
+        const config = this._storageSrv.getItem('users');
+        let propOrderBy = this.currentSort === 'login' ? 'CLASSIF_NAME' : 'NOTE';
+        propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+        dbQuery.orderby = propOrderBy;
+        dbQuery.top = `${config ? config.length : 10}`;
+        dbQuery.skip = `${config ? config.length * config.current - config.length : 0}`;
+        dbQuery.inlinecount = 'allpages';
+        this.searchState = false;
+        return dbQuery;
+    }
+    parseTotalPage(data: string) {
+        const re = /\d+/g;
+        const tAray = data.match(re);
+        if (tAray.length) {
+            return +tAray[tAray.length - 1];
+        }
+    }
+    getSkipTo() {
+
+    }
+    resetConfigPagination(dueDep) {
+        dueDep = dueDep ? dueDep : '0.';
+        if (this.dueDep !== dueDep) {
+            if (this.users_pagination.paginationConfig) {
+                this.users_pagination.resetConfig();
+                this.users_pagination.saveUsersConf();
+            }
+        }
+    }
     getUsers(dueDep?: string): Promise<any> {
+        this.resetConfigPagination(dueDep);
         this.dueDep = dueDep || '0.';
-        const q = this.getQueryforDB(dueDep);
-        const query = { USER_CL: q };
-        return this.getData(query)
+        let q;
+        if (this._storageSrv.getItem('quickSearch')) {
+            q = this.getQueryForSearch();
+        } else {
+            q = this.getQueryforDB(dueDep);
+        }
+        return this.getData(q)
             .then(data => {
+                if (data.hasOwnProperty('TotalRecords')) {
+                    this.users_pagination.totalPages = this.parseTotalPage(data['TotalRecords']);
+                } else {
+                    this.users_pagination.totalPages = data.length;
+                }
                 const prepData = data.filter(user => user['ISN_LCLASSIF'] !== 0);
                 return this.updatePageList(prepData, this.configList.shooseTab).then((res) => {
-                    this.Allcustomer = this._getListUsers(res).slice();
-                    this.devideUsers();
+                    this.users_pagination.UsersList = this.Allcustomer = this._getListUsers(res).slice();
+                    //   this.devideUsers();
+
                     this.initConfigTitle(dueDep);
                     this.users_pagination._initPaginationConfig(true);
+                    this.users_pagination.saveUsersConf();
                     return this.users_pagination.UsersList;
                 });
             });
@@ -126,78 +297,78 @@ export class UserParamApiSrv {
         });
     }
 
-    devideUsers() {
-        const prepareUser = this.prepareListUsers();
-        if (this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
-            this.updateListUsersTech(prepareUser.techUser, prepareUser.happyUser);
-        }
+    // devideUsers() {
+    //     const prepareUser = this.prepareListUsers();
+    //     if (this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
+    //         this.updateListUsersTech(prepareUser.techUser, prepareUser.happyUser);
+    //     }
 
-        if (!this.flagTehnicalUsers && this.flagDelitedPermanantly) {
-            this.updateListUserDeleted(prepareUser.deletedUser, prepareUser.happyUser);
-        }
+    //     if (!this.flagTehnicalUsers && this.flagDelitedPermanantly) {
+    //         this.updateListUserDeleted(prepareUser.deletedUser, prepareUser.happyUser);
+    //     }
 
-        if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
-            this.updateListUserAnyFlags(prepareUser.techUser, prepareUser.deletedUser, prepareUser.happyUser);
-        }
+    //     if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
+    //         this.updateListUserAnyFlags(prepareUser.techUser, prepareUser.deletedUser, prepareUser.happyUser);
+    //     }
 
-        if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
-            this.updateListUserEmptyFlags(prepareUser.happyUser);
-        }
-    }
+    //     if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
+    //         this.updateListUserEmptyFlags(prepareUser.happyUser);
+    //     }
+    // }
 
-    prepareListUsers(): {techUser: UserSelectNode[], deletedUser: UserSelectNode[], happyUser: UserSelectNode[]} {
-        this.users_pagination.UsersList = this.Allcustomer.slice();
-        const techUser = this.damnTesterTechUser();
-        const deletedUser = this.damnTesterDeletedUser();
-        const happyUser = this.damnTesterHappyUsers();
-        return {
-            techUser,
-            deletedUser,
-            happyUser
-        };
-    }
-    findUsers(users) {
-        this.updatePageList(users, this.configList.shooseTab).then((res) => {
-            this.Allcustomer = this._getListUsers(res).slice();
-        });
-    }
+    // prepareListUsers(): { techUser: UserSelectNode[], deletedUser: UserSelectNode[], happyUser: UserSelectNode[] } {
+    //     this.users_pagination.UsersList = this.Allcustomer.slice();
+    //     const techUser = this.damnTesterTechUser();
+    //     const deletedUser = this.damnTesterDeletedUser();
+    //     const happyUser = this.damnTesterHappyUsers();
+    //     return {
+    //         techUser,
+    //         deletedUser,
+    //         happyUser
+    //     };
+    // }
+    // findUsers(users) {
+    //     this.updatePageList(users, this.configList.shooseTab).then((res) => {
+    //         this.Allcustomer = this._getListUsers(res).slice();
+    //     });
+    // }
 
-    updateListUsersTech(userT: UserSelectNode[], userH: UserSelectNode[]) {
-        const sortedT = this.helpersClass.sort(userT, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-        this.users_pagination.UsersList = [].concat(sortedT, sortedH);
-    }
-    updateListUserDeleted(userD: UserSelectNode[], userH: UserSelectNode[]) {
-        const sortedD = this.helpersClass.sort(userD, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-        this.users_pagination.UsersList = [].concat(sortedD, sortedH);
-    }
-    updateListUserAnyFlags(userT, userD, userH) {
-        const sortedT = this.helpersClass.sort(userT, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-        const sortedD = this.helpersClass.sort(userD, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-        this.users_pagination.UsersList = [].concat(sortedD, sortedT, sortedH);
-    }
-    updateListUserEmptyFlags(userH) {
-        const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-        this.users_pagination.UsersList = sortedH;
-    }
+    // updateListUsersTech(userT: UserSelectNode[], userH: UserSelectNode[]) {
+    //     const sortedT = this.helpersClass.sort(userT, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+    //     const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+    //     this.users_pagination.UsersList = [].concat(sortedT, sortedH);
+    // }
+    // updateListUserDeleted(userD: UserSelectNode[], userH: UserSelectNode[]) {
+    //     const sortedD = this.helpersClass.sort(userD, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+    //     const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+    //     this.users_pagination.UsersList = [].concat(sortedD, sortedH);
+    // }
+    // updateListUserAnyFlags(userT, userD, userH) {
+    //     const sortedT = this.helpersClass.sort(userT, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+    //     const sortedD = this.helpersClass.sort(userD, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+    //     const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+    //     this.users_pagination.UsersList = [].concat(sortedD, sortedT, sortedH);
+    // }
+    // updateListUserEmptyFlags(userH) {
+    //     const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
+    //     this.users_pagination.UsersList = sortedH;
+    // }
 
-    damnTesterTechUser(): UserSelectNode[] {
-        return this.users_pagination.UsersList.filter((userInfo: UserSelectNode) => {
-            return userInfo.data.DUE_DEP === null && !userInfo.deleted;
-        });
-    }
-    damnTesterDeletedUser(): UserSelectNode[] {
-        return this.users_pagination.UsersList.filter((userInfo: UserSelectNode) => {
-            return userInfo.deleted;
-        });
-    }
-    damnTesterHappyUsers(): UserSelectNode[] {
-        return this.users_pagination.UsersList.filter((userInfo: UserSelectNode) => {
-            return userInfo.data.DUE_DEP !== null && !userInfo.deleted;
-        });
-    }
+    // damnTesterTechUser(): UserSelectNode[] {
+    //     return this.users_pagination.UsersList.filter((userInfo: UserSelectNode) => {
+    //         return userInfo.data.DUE_DEP === null && !userInfo.deleted;
+    //     });
+    // }
+    // damnTesterDeletedUser(): UserSelectNode[] {
+    //     return this.users_pagination.UsersList.filter((userInfo: UserSelectNode) => {
+    //         return userInfo.deleted;
+    //     });
+    // }
+    // damnTesterHappyUsers(): UserSelectNode[] {
+    //     return this.users_pagination.UsersList.filter((userInfo: UserSelectNode) => {
+    //         return userInfo.data.DUE_DEP !== null && !userInfo.deleted;
+    //     });
+    // }
 
     getDepartment(due?: Array<string>): Promise<DEPARTMENT[]> {
         const query = { DEPARTMENT: due };
@@ -277,9 +448,15 @@ export class UserParamApiSrv {
     updateDepartMent(pageList, tabs) {
         const setQueryResult = new Set();
         let stringQuery: Array<string> = [];
-        let valueForPadQuery = [];
-        let padQuery;
+        // let valueForPadQuery = [];
+        // let padQuery;
         let parseStringUserDue = [];
+        // pageList = pageList.map((user: USER_CL) => {
+        //     user['DEPARTMENT'] = !user.NOTE || user.NOTE === 'null' ? '...' : user.NOTE;
+        //     return user;
+        // });
+        //  return Promise.resolve(pageList);
+
         pageList.forEach(user => {
             if (user.DUE_DEP) {
                 stringQuery.push(user.DUE_DEP);
@@ -295,6 +472,7 @@ export class UserParamApiSrv {
                     }
                 });
                 pageList.map(user => {
+                    user['DEPARTMENT'] = user['NOTE'];
                     const findDepartInfo = departments.filter(dapartInfo => {
                         return user.DUE_DEP === dapartInfo.DUE;
                     });
@@ -302,33 +480,35 @@ export class UserParamApiSrv {
                         user['DEPARTMENT_SURNAME'] = findDepartInfo[0].SURNAME;
                         user['DEPARTMENT_DYTU'] = findDepartInfo[0].DUTY;
                         user['DEPARTMENT_DELETE'] = findDepartInfo[0].DELETED;
+                        user['DEEP_DATA'] = findDepartInfo[0];
                     } else {
                         user['DEPARTMENT_SURNAME'] = '';
                         user['DEPARTMENT_DYTU'] = '';
                         user['DEPARTMENT_DELETE'] = 0;
                     }
                 });
-                valueForPadQuery = Array.from(setQueryResult);
-                valueForPadQuery.length > 0 ? padQuery = valueForPadQuery : padQuery = ['0000'];
-                return this.getDepartment(padQuery)
-                    .then(deepInfo => {
-                        pageList.map(user => {
-                            const findDue = deepInfo.filter(dueDeep => {
-                                if (user.DUE_DEP === null) {
-                                    return false;
-                                } else {
-                                    parseStringUserDue = user.DUE_DEP.split('.');
-                                    return parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.' === dueDeep.DUE;
-                                }
-                            });
-                            if (findDue.length > 0) {
-                                user['DEPARTMENT'] = tabs === 0 ? (findDue[0].DUE === '0.' ? 'Все подраздения' : findDue[0].CLASSIF_NAME) : findDue[0].CARD_NAME;
-                            } else {
-                                user['DEPARTMENT'] = '...';
-                            }
-                        });
-                        return pageList;
-                    });
+                return pageList;
+                // valueForPadQuery = Array.from(setQueryResult);
+                // valueForPadQuery.length > 0 ? padQuery = valueForPadQuery : padQuery = ['0000'];
+                // return this.getDepartment(padQuery)
+                //     .then(deepInfo => {
+                //         pageList.map(user => {
+                //             const findDue = deepInfo.filter(dueDeep => {
+                //                 if (user.DUE_DEP === null) {
+                //                     return false;
+                //                 } else {
+                //                     parseStringUserDue = user.DUE_DEP.split('.');
+                //                     return parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.' === dueDeep.DUE;
+                //                 }
+                //             });
+                //             if (findDue.length > 0) {
+                //                 user['DEPARTMENT'] = tabs === 0 ? (findDue[0].DUE === '0.' ? 'Все подраздения' : findDue[0].CLASSIF_NAME) : findDue[0].CARD_NAME;
+                //             } else {
+                //                 user['DEPARTMENT'] = '...';
+                //             }
+                //         });
+                //         return pageList;
+                //     });
             });
     }
     initConfigTitle(dueDep?: string) {

@@ -135,7 +135,7 @@ export class AdvCardRKDataCtrl {
         return Promise.resolve(null);
     }
 
-    _appendListInfo(dict: TDefaultField, data: any[]) {
+    _appendListInfo(dict: TDefaultField, data: any[]): Promise<any> {
         const listreqs = [];
 
         for (let i = 0; i < data.length; i++) {
@@ -239,13 +239,18 @@ export class AdvCardRKDataCtrl {
                 return opts_ptr;
             }).then((opts_ptr) => {
                 if (el.dict.dictId === 'USER_LISTS') {
-                    this._appendListInfo(el, opts_ptr);
+                    el.options = opts_ptr;
+                    return this._appendListInfo(el, opts_ptr).then (d => {
+                        callback ({ path: el.key, options: opts_ptr, el: el });
+                        return opts_ptr;
+                    });
+                } else {
+                    callback ({ path: el.key, options: opts_ptr, el: el });
+                    el.options = opts_ptr;
+
+                    return opts_ptr;
                 }
 
-                callback ({ path: el.key, options: opts_ptr, el: el });
-                el.options = opts_ptr;
-
-                return opts_ptr;
             });
 
             return cache.promise;
@@ -269,11 +274,12 @@ export class AdvCardRKDataCtrl {
                         event.path = key + '.' + el.key;
                         callback(event);
                     }));
+                    continue;
+                } if (el.type !== E_FIELD_TYPE.select)  {
+                    continue;
+                } else {
+                    reqs.push(this.cashedReadDict(el, callback));
                 }
-
-                if (el.type !== E_FIELD_TYPE.select)  { continue; }
-
-                reqs.push(this.cashedReadDict(el, callback));
             }
         });
 

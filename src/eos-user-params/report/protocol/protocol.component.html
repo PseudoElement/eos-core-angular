@@ -6,26 +6,33 @@
                     <div class="selected-prot-title">
                         <span class="long-title xl-font">Протокол редактирования пользователя {{username}}</span>
                     </div>
-                    <div class="item-count-prot usual-border m-font">
-                        <span class="item-count-content-prot">
-                                Записей:
-                            <span class="counter-prot">{{config?.itemsQty}}</span>
-                        </span>
-                    </div>
+                    <div class="pull-right">
+                        <a class="btn btn-primary-light" rel="noopener" triggers="hover" routerLink="{{selfLink}}" [queryParams]="{isn_cl: link}" aria-hidden="true" tooltip="Открыть в новом окне" placement="bottom" 
+                        container="body" containerClass="tooltip-info" target="_blank"><span class="eos-icon eos-icon-external-link-blue small"></span></a>
+                        <button class="btn btn-primary-light" aria-hidden="true" (click)="close()" tooltip="Закрыть" placement="bottom" containerClass="tooltip-info">
+                            <span class="eos-icon eos-icon-close-blue small"></span>
+                        </button>
+                    </div>    
                 </div>
             </div>
             <div class="table-header header-pos-prot">
                 <div class="btn-group-prot">
                     <div containerClass="view-protocol" placement="bottom" container="body" class="cust-style-mod">
-                        <button disabled="true" class="btn btn-primary-light bth-size-prot" tooltip="Просмотреть" (click)="ShowDataUser()"
-                            placement="bottom" container="body" containerClass="tooltip-info">
-                            <span class="eos-icon eos-icon-review-blue small"></span>
+                        <button  class="btn btn-primary-light bth-size-prot" [disabled]="isnRefFile === undefined || _user_pagination.totalPages === 0"  triggers="hover" [tooltip]="closeTooltip === true ? 'Просмотреть' : null"
+                         (click)="GetRefFile()" placement="bottom" container="body" containerClass="tooltip-info">
+                         <span class="eos-icon eos-icon-review-blue small"></span>
                         </button>
                         <button disabled="true" class="btn btn-primary-light bth-size-prot" tooltip="Сравнить с предыдущей" (click)="CompareWithEvent()"
                             placement="bottom" container="body" containerClass="tooltip-info">
                             <span class="eos-icon eos-icon-folder-group-blue small"></span>
                         </button>
                     </div>
+                </div>
+                <div class="item-count-prot usual-border m-font">
+                    <span class="item-count-content-prot">
+                            Записей:
+                        <span class="counter-prot">{{config?.itemsQty}}</span>
+                    </span>
                 </div>
             </div>
             <div class="table-header header-pad">

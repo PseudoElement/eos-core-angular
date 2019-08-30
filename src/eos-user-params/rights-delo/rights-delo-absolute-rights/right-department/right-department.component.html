@@ -1,17 +1,18 @@
 <div class="right-dep-list">
     <div *ngIf="!isLoading; else spiner" class="right-dep-list-content">
         <div>
-            <button
+            <button *ngIf="editMode"
                 class="btn"
                 tooltip="Добавить должностное лицо/подразделение"
                 placement="bottom"
+                [disabled]="checkFlag"
                 triggers="hover"
                 containerClass="tooltip-info"
                 (click)="addDep()"
             >
                 <span class="eos-icon eos-icon-plus-blue small"></span>
             </button>
-            <button
+            <button *ngIf="editMode"
                 class="btn"
                 tooltip="Удалить должностное лицо/подразделение"
                 #itemTooltip= 'bs-tooltip'
@@ -28,6 +29,7 @@
         <div *ngIf="selectedNode && selectedNode.contentProp === 8">
             <label class="checkbox">
                 <input type="checkbox"
+                [disabled]="!editMode"
                 [checked]="selectedNode.value === 2 ? true : false"
                 hide
                 (change)="markedSendPrj($event)">
@@ -35,11 +37,23 @@
                 Разрешить операцию рассылки проекта резолюции
             </label>
         </div>
+        <div *ngIf="getAllDep">
+            <label class="checkbox" >
+                <input type="checkbox"
+                [disabled]="!editMode"
+                [checked]="checkFlag"
+                hide
+                (change)="checkForAll()">
+                <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                За всех
+            </label>
+        </div>
 
-        <div class="list-tree-dep">
+        <div *ngIf="!checkFlag" class="list-tree-dep">
             <eos-list-doc-tree
                 class="tree-classif-node"
                 [listNode]="listUserDep"
+                [editMode]="editMode"
                 (select)="selectNode($event)"
                 (checkedNode)="checkedNode($event)"
             ></eos-list-doc-tree>

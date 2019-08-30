@@ -1,39 +1,41 @@
 import { Component, OnInit, Output, Input, EventEmitter, OnDestroy } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { IInputParamControl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
+import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+
 import {LimitedAccesseService} from '../../../shared/services/limited-access.service';
-import { UserParamsService } from '../../../shared/services/user-params.service';
 @Component({
     selector: 'eos-grifs',
     styleUrls: ['grifs.component.scss'],
     templateUrl: 'grifs.component.html'
 })
 export class GrifsComponent implements OnInit, OnDestroy {
-    public grifsForm: FormArray = new FormArray([]);
-    public myForm: FormGroup;
-    saveOrigin: any;
-    flagChande: boolean;
     Unsub = new Subject();
     @Input () editFlag;
+    @Input() grifInput;
+    @Input() grifsForm;
     @Output() changeGrifs = new EventEmitter();
+    fieldsGrifs: IInputParamControl[] = [];
+    fields: IInputParamControl[];
+    form: FormGroup;
+    inputs;
+    checkGrifs;
+    listRight: any[] = [];
     constructor(
         private _limitservise: LimitedAccesseService,
-        private _userServices: UserParamsService,
+        private _inputCtrlSrv: InputParamControlService,
     ) {
-        this.flagChande = true;
         this._limitservise.subscribe
         .pipe(
             takeUntil(this.Unsub)
         )
         .subscribe(data => {
-               if (data) {
-                   this.reset();
-               } else {
-                this.updateInfo();
-               }
+            this.ngOnInit('reset');
         });
         this._limitservise.editEmit
         .pipe(
@@ -44,138 +46,79 @@ export class GrifsComponent implements OnInit, OnDestroy {
             this.editModeForm();
         });
     }
-    reset() {
-        const prom = this.saveOrigin.slice();
-        this.saveOrigin.splice(0,  this.saveOrigin.length);
-        this.myForm.removeControl('grifs');
-        this.grifsForm = new FormArray([]);
-        sessionStorage.removeItem(String(this._userServices.userContextId));
-        this.saveOrigin = prom;
-        this.myForm.setControl('grifs', this.createGroup(prom));
-        this.editFlag = false;
-        this.editModeForm();
-        // this.saveOrigin = prom;
-    }
-
-    updateInfo() {
-        this._limitservise.getInfoGrifs()
-        .then(res => {
-            sessionStorage.removeItem(String(this._userServices.userContextId));
-            this.saveOrigin.splice(0,  this.saveOrigin.length);
-            this.myForm.removeControl('grifs');
-            this.grifsForm = new FormArray([]);
-            const newt = this.relaseDate(res);
-            this.saveOrigin = newt.slice();
-            this.myForm.setControl('grifs', this.createGroup(newt));
-            this.saveOrigin = newt.slice();
-            this.editFlag = false;
-            this.editModeForm();
-        });
-    }
-    ngOnInit() {
-        this._limitservise.getInfoGrifs()
-        .then(res => {
-            this.saveOrigin = this.relaseDate(res).slice();
-            this.createGroup(this.saveOrigin);
-            this.creatFrorm();
-            this.editModeForm();
-            this.myForm.valueChanges
-            .subscribe( data => {
-                this.checkChanges(data);
+    // в первом то что неизменно
+    // в нулевом то что меняется
+    ngOnInit(deistvi?) {
+            this.fieldsGrifs = [];
+            const res = this.grifInput;
+            const result = this.grifInput;
+            result[1].forEach(elem => {
+                this.fieldsGrifs.push(this._createElemGrif(elem));
             });
+            this.checkGrifs = res[0];
+            this.fields = this.writeValue(this.fieldsGrifs);
+            this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
+            this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
+            if (this.grifsForm && !deistvi) {
+                Object.keys(this.grifsForm.controls).forEach(key => {
+                    this.form.get(key).setValue(this.grifsForm.get(key).value);
+                });
+            }
+            this.editModeForm();
+    }
+    clickLable(event, item: any) {
+        event.preventDefault();
+        event.stopPropagation();
+      /*   if (event.target.tagName === 'SPAN' && this.editFlag) { // click to checkbox */
+        item.value = !item.value;
+        this.form.get(item.key).setValue(item.value);
+        const data = this.checkChenge(this.form, this.inputs);
+        this.changeGrifs.emit( {flag: !data.length, form:  this.form , data: data, });
+        /* } */
+    }
+    checkChenge(form: FormGroup, input: any[]) {
+        const returnCheng = [];
+        Object.keys(form.controls).forEach(key => {
+            if (form.get(key).value !== input[key].value) {
+                returnCheng.push(input[key]);
+            }
         });
+        return returnCheng;
+    }
+    createGrifs() {
+
     }
     editModeForm() {
         if (this.editFlag) {
-            this.myForm.enable({emitEvent: false});
+            this.form.enable({emitEvent: false});
         }   else {
-            this.myForm.disable({emitEvent: false});
+            this.form.disable({emitEvent: false});
         }
     }
-
-    relaseDate(res: Array<any>) {
-        const arraData = [];
-        let arrObj = {};
-        const arrList = res[0][0].USERSECUR_List;
-        if (res[1].length > 0) {
-            res[1].forEach(el => {
-               const tre = arrList.some( ele => {
-                   return el.SECURLEVEL === ele.SECURLEVEL;
-               });
-               if (tre) {
-                arrObj['checkbox'] = true;
-               } else {
-                     arrObj['checkbox']  = false;
-               }
-                arrObj['SECURLEVEL'] = el.SECURLEVEL;
-                arrObj['GRIF_NAME'] = el.GRIF_NAME;
-                arraData.push(arrObj);
-                arrObj = {};
+    writeValue(constanta: IInputParamControl[]): IInputParamControl[] {
+        const fields = [];
+        constanta.forEach((node: IInputParamControl) => {
+            let flag = false;
+            this.checkGrifs.forEach(element => {
+                if ('' + element.SECURLEVEL === node['key']) {
+                    flag = true;
+                }
             });
-        }
-        return arraData;
-    }
-    creatFrorm() {
-        this.myForm = new FormGroup({'grifs':  this.grifsForm});
-    }
-    createGroup(data) {
-        let dataUpdate = null;
-        if (sessionStorage.getItem(String(this._userServices.userContextId))) {
-             dataUpdate = JSON.parse(sessionStorage.getItem(String(this._userServices.userContextId)));
-        }
-        let endDate = null;
-        if (dataUpdate) {
-            endDate = dataUpdate;
-        } else {
-            endDate = data;
-        }
-        endDate.forEach(el => {
-            this.grifsForm.push(new FormGroup(this.createFormControls(el, false)));
+            const n = Object.assign({ value: flag }, node);
+            fields.push(n);
         });
-        return  this.grifsForm;
+        return fields;
     }
-
-    createFormControls(element, bool1): {[key: string]: FormControl} {
-        const controls = {};
-        controls['SECURLEVEL'] = new FormControl(element.SECURLEVEL);
-        controls['GRIF_NAME'] = new FormControl(element.GRIF_NAME);
-        controls['checkbox'] = new FormControl(element.checkbox);
-        controls['action'] = new FormControl('unset');
-        return controls;
-      }
-
-    checkChanges(data?: {[key: string]: Array<any>}) {
-        let count_error = 0;
-        const storage = [];
-          this.saveOrigin.forEach((element, index) => {
-           const checkedField = data.grifs[index];
-            const checkedData = element;
-            storage.push(checkedField);
-            if (checkedField) {
-                if (Number(checkedField['checkbox']) !== Number(checkedData['checkbox']) && Number(checkedField['checkbox']) > Number(checkedData['checkbox']) ) {
-                    this.grifsForm.get(String(index))
-                    .patchValue({action: 'create'}, {emitEvent: false});
-                    count_error++;
-                } else if (Number(checkedField['checkbox']) !== Number(checkedData['checkbox']) && Number(checkedField['checkbox']) < Number(checkedData['checkbox'])) {
-                    this.grifsForm.get(String(index))
-                    .patchValue({action: 'delite'}, {emitEvent: false});
-                    count_error++;
-                } else if (Number(checkedField['checkbox']) === Number(checkedData['checkbox'])) {
-                    this.grifsForm.get(String(index))
-                    .patchValue({action: 'unset'}, {emitEvent: false});
-                }
-                if (count_error > 0) {
-                    this.flagChande = false;
-                } else {
-                    this.flagChande = true;
-                }
-            }
-           sessionStorage.setItem(String(this._userServices.userContextId), JSON.stringify(storage));
-    });
-    this.changeGrifs.emit( {flag: this.flagChande, form:  this.grifsForm });
-  }
-  ngOnDestroy() {
-    this.Unsub.next();
-    this.Unsub.complete();
-  }
+    ngOnDestroy() {
+        this.Unsub.next();
+        this.Unsub.complete();
+    }
+    private _createElemGrif(elem: any): any {
+        const data = {
+            controlType: E_FIELD_TYPE.boolean,
+            key: '' + elem['ISN_LCLASSIF'],
+            label: elem['CLASSIF_NAME'],
+        };
+        return data;
+    }
 }

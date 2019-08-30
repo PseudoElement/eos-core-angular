@@ -166,7 +166,7 @@
     }
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 1000px) {
     .eos-dictionary {
         .tree-wrapper {
             z-index: 4;
@@ -196,7 +196,7 @@
     }
 }
 
-@media(min-width: 0px) and (max-width: 1499px) {
+@media(min-width: 0px) and (max-width: 999px) {
     .eos-dictionary {
         .tree-wrapper,
         .opened-wrapper {
@@ -271,7 +271,7 @@
     }
 }
 
-@media(min-width: 1500px) and (max-width: 1599px) {
+@media(min-width: 1000px) and (max-width: 1599px) {
     .eos-dictionary {
         .tree-wrapper,
         .opened-wrapper {

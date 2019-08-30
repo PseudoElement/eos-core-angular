@@ -47,8 +47,8 @@ export const NP_RESHEN_CL: ITreeDictionaryDescriptor = {
     },
         Object.assign({}, COMMON_FIELD_NAME, {
             title: 'Наименование',
-            isUnique: true,
-            uniqueInDict: true,
+            // isUnique: true,
+            // uniqueInDict: true,
             length: 248,
         }), {
             key: 'IS_NODE',

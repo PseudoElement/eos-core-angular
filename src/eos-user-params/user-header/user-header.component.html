@@ -5,7 +5,7 @@
         </div>
         <div class="buttons-wrapper" *ngIf="editMode">
             <div>
-                <button *ngIf='defaultBtn' class="btn btn-primary" (click)="default()">ПО УМОЛЧАНИЮ</button>
+                <button *ngIf='defaultBtn' class="btn btn-primary default-btn" (click)="default()">ПО УМОЛЧАНИЮ</button>
                 <button class="btn btn-primary" (click)="cancel()">ОТМЕНИТЬ</button>
                 <button class="btn btn-primary-full" [disabled]="errorSave"  (click)="submit()">СОХРАНИТЬ</button><!---->
             </div>

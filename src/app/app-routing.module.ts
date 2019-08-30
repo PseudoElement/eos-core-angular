@@ -25,6 +25,7 @@ import { EosTemplateComponent } from 'eos-rest/clman/eos-template/eos-template.c
 import { DictFormComponent } from 'eos-dictionaries/dict-forms/dict-form.component';
 import { EosReportUsersStatsComponent } from 'eos-user-params/report/users-stats/users-stats.component';
 import { EosReportSummaryProtocolComponent } from 'eos-user-params/report/sum-protocol/sum-protocol.component';
+import { DefaultSettingsComponent } from 'eos-user-params/default-options/default-settings.component';
 /// import { environment } from 'environments/environment';
 
 const formDictionariesComponent = [
@@ -33,6 +34,11 @@ const formDictionariesComponent = [
         canDeactivate: [CanDeactivateGuard],
         component: DictFormComponent,
     },
+    {
+        path: '',
+        redirectTo: '/spravochniki',
+        pathMatch: 'full'
+    }
 ];
 const childrenDictionariesComponent = [{
     path: '',
@@ -117,7 +123,12 @@ const routes: Routes = [{
     children: childrenDictionariesComponent,
 }, {
     path: 'form',
-    data: { title: 'Справочники', showInBreadcrumb: false },
+    data: {
+        title: 'Справочники',
+        showInBreadcrumb: true,
+        showBreadcrumb: true,
+        showPushpin: true,
+    },
     canActivate: [AuthorizedGuard],
     canDeactivate: [CanDeactivateGuard],
     children: formDictionariesComponent,
@@ -171,6 +182,10 @@ const routes: Routes = [{
 }, {
     path: 'parameters',
     canActivate: [AuthorizedGuard, PermissionsGuard],
+    data: {
+        title: 'Параметры системы',
+        showInBreadcrumb: false,
+    },
     children: [
         {
             path: ':id',
@@ -232,6 +247,30 @@ const routes: Routes = [{
             }
         },
         {
+            path: 'default-settings',
+            canActivate: [AuthorizedGuard],
+            data: {
+                title: 'Настройки по умолчанию',
+                showInBreadcrumb: true,
+            },
+            children: [
+                {
+                    path: ':id',
+                    pathMatch: 'full',
+                    component: DefaultSettingsComponent,
+                    canDeactivate: [CanDeactivateGuard],
+                    data: {
+                        showNav: true
+                    },
+                },
+                {
+                    path: '',
+                    pathMatch: 'full',
+                    redirectTo: 'registration',
+                },
+            ]
+        },
+        {
             path: ':nodeId',
             component: UserSelectComponent,
             data: {
@@ -261,7 +300,8 @@ const routes: Routes = [{
     path: '**',
     redirectTo: '/desk/system',
     pathMatch: 'full',
-}];
+}
+];
 
 @NgModule({
     imports: [RouterModule.forRoot(routes, { useHash: true })],

@@ -43,7 +43,10 @@
         width: 252px;
     }
 }
-
+.dropdown-menu{
+    max-height: calc(100vh - 247px) ;
+    overflow: auto;
+}
 .menu-expand {
     width: 300px;
     white-space: normal;

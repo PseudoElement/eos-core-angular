@@ -111,7 +111,7 @@
 
 .tooltip {
     opacity: 1 !important;
-    z-index: 1045;
+    // z-index: 1045;
     &.word-break {
         word-break: normal;
     }
@@ -384,6 +384,9 @@
         &.disabled {
             cursor: not-allowed;
             color: $disabled-color-main-theme;
+        }
+        &:hover {
+            background-color: $highlight-color-main-theme;
         }
     }
     .menuitem {

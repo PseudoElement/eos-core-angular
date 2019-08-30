@@ -65,7 +65,9 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
             takeUntil(this.ngUnsub)
         )
         .subscribe(data => {
-            this.form.enable({emitEvent: false});
+            setTimeout(() => {
+                this.form.enable({emitEvent: false});
+            });
         });
 
     }
@@ -113,11 +115,11 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
                 this.countError++;
             }
           });
-
-            this.pushChange.emit({
-             btn: this.countError > 0,
-             data: this.newDataMap
-         });
+          const obj = Object.assign({ 'DEF_SEARCH_CITIZEN': this.newDataMap.get('DEF_SEARCH_CITIZEN')}, this.form.value);
+            this.pushChange.emit([{
+                btn: this.countError > 0,
+                data: this.newDataMap
+            }, obj]);
 
         this.countError > 0 ? this.btnDisabled = true : this.btnDisabled = false;
         this.countError = 0;
@@ -146,8 +148,9 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
         return true;
     }
     checkDevSearch(data, key) {
+        const dataVal = this.userData !== null ? this.userData : this.defaultValues;
         const updateString = this.parseDevSearch(data, key);
-        if (this.userData['DEF_SEARCH_CITIZEN'] !== updateString) {
+        if (dataVal['DEF_SEARCH_CITIZEN'] !== updateString) {
             this.newDataMap.set('DEF_SEARCH_CITIZEN', updateString);
         } else {
           this.newDataMap.delete('DEF_SEARCH_CITIZEN');
@@ -185,7 +188,7 @@ export class RemasterAutoSearchComponent implements OnInit, OnDestroy  {
 
     cancel() {
         if (this.btnDisabled) {
-            this.pretInputs();
+         //   this.pretInputs();
             Object.keys(this.inputs).forEach(input => {
                 this.form.controls[input].patchValue(this.inputs[input].value);
             });
