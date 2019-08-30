@@ -324,11 +324,11 @@ export class RightDepertmentComponent implements OnInit {
             }, 'USERDEP');
             if (elem) {
                 this.curentUser.USERDEP_List.push(elem);
-                this.selectedNode.pushChange({
+                /* this.selectedNode.pushChange({
                     method: 'POST',
                     due: '0.',
                     data: elem
-                });
+                }); */
             } else {
                 this.curentUser.USERDEP_List.push(newUserDep);
                 this.selectedNode.pushChange({
