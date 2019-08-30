@@ -43,16 +43,20 @@ export class UserSelectPaginationComponent {
     public setPageLength(length: number): void {
         this._storageSrv.setItem(LS_PAGE_LENGTH, length, true);
         this.config.length = length;
+        this.config.current = 1;
+        this.config.start = 1;
         this._user_pagination.changePagination(this.config);
     }
 
     public showMore() {
+        this.config.showMore = true;
         this.config.current++;
         this._user_pagination.changePagination(this.config);
     }
 
     public showPage(page: number): void {
         if (page !== this.config.current) {
+            this.config.showMore = false;
             this._storageSrv.setItem('page_number_user_settings', page, false);
             this.config.current = page;
             this.config.start = page;
