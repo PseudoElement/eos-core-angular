@@ -393,22 +393,35 @@ export class CounterNpEditComponent {
     private _fillDocGroup(): Promise<any> {
         this.docGroupOptions = [];
         if (this._decl.isCounterRK) {
-            const criteries = {
+            const prj_criteries = {
                 DOCNUMBER_FLAG: String(1),
                 PRJ_SHABLON: '%{E}%',
             };
 
+            const criteries = {
+                DOCNUMBER_FLAG: String(1),
+                SHABLON: '%{E}%',
+            };
+
             if (this._decl.type === E_COUNTER_TYPE.counterDepartmentRKPD) {
-                Object.assign(criteries, {PRJ_NUM_FLAG: String(1)});
+                Object.assign(prj_criteries, {PRJ_NUM_FLAG: String(1)});
             }
 
-            return this.apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries(criteries)})
+            return this.apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries(prj_criteries)})
                 .then((records) => {
                     records.forEach((rec) => {
                         this.docGroupOptions.push({title: rec.CLASSIF_NAME, value: String(rec.ISN_NODE)});
                         if (this.currentDocgroup === undefined) {
                             this.currentDocgroup = String(rec.ISN_NODE);
                         }
+                    });
+                    this.apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries(criteries)}).then ((recs) => {
+                        recs.forEach((rec) => {
+                            this.docGroupOptions.push({title: rec.CLASSIF_NAME, value: String(rec.ISN_NODE)});
+                            if (this.currentDocgroup === undefined) {
+                                this.currentDocgroup = String(rec.ISN_NODE);
+                            }
+                        });
                     });
                 });
         }
