@@ -12,22 +12,22 @@
     <div class="user-param-other-content-wrapper scrollWrapper">
         <div [hidden]="currTab !==0" class="clearfix">
             <!--------------------------0--------------------------------------------->
-            <eos-user-param-transfer (pushChange)="emitChangesTransfer($event)" [defaultValues]=" defaultValues "></eos-user-param-transfer>
+            <eos-user-param-transfer (pushChange)="emitChangesTransfer($event)" [defaultValues]=" defaultValues " [defaultUser]="defaultUser"></eos-user-param-transfer>
         </div>
         <!--------------------------0--------------------------------------------->
         <!--------------------------1--------------------------------------------->
         <div [hidden]="currTab !==1" class="clearfix ">
-            <eos-user-param-addresses (pushChange)="emitChangesAddresses($event)" [defaultValues]=" defaultValues"></eos-user-param-addresses>
+            <eos-user-param-addresses (pushChange)="emitChangesAddresses($event)" [defaultValues]=" defaultValues" [defaultUser]="defaultUser"></eos-user-param-addresses>
         </div>
         <!--------------------------1--------------------------------------------->
         <!--------------------------2--------------------------------------------->
         <div [hidden]="currTab !==2" class="clearfix ">
-            <eos-user-param-reestr (pushChange)="emitChangesReestr($event)" (pushIncrementError)="emitIncrementError($event)" [errorHidden]='currTab===2' [defaultValues]=" defaultValues " #paramReestrErr></eos-user-param-reestr>
+            <eos-user-param-reestr (pushChange)="emitChangesReestr($event)" (pushIncrementError)="emitIncrementError($event)" [defaultUser]="defaultUser" [errorHidden]='currTab===2' [defaultValues]=" defaultValues " #paramReestrErr></eos-user-param-reestr>
         </div>
         <!--------------------------2--------------------------------------------->
         <!--------------------------3--------------------------------------------->
         <div [hidden]="currTab !==3" class="clearfix last ">
-            <eos-user-param-shablony (pushChange)="emitChangesShablony($event)" [defaultValues]=" defaultValues "></eos-user-param-shablony>
+            <eos-user-param-shablony (pushChange)="emitChangesShablony($event)" [defaultValues]=" defaultValues " [defaultUser]="defaultUser"></eos-user-param-shablony>
         </div>
         <!--------------------------3--------------------------------------------->
     </div>

@@ -15,10 +15,11 @@ import { RadioInput } from 'eos-common/core/inputs/radio-input';
 import { NodeAbsoluteRight } from './node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
-import { USERDEP, USER_TECH, USER_EDIT_ORG_TYPE } from 'eos-rest';
+import { USERDEP, USER_TECH, USER_EDIT_ORG_TYPE, PipRX } from 'eos-rest';
 // import { RestError } from 'eos-rest/core/rest-error';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
+import {EosStorageService} from 'app/services/eos-storage.service';
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
     templateUrl: 'rights-delo-absolute-rights.component.html'
@@ -43,6 +44,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     listRight: NodeAbsoluteRight[] = [];
     titleHeader: string;
     techRingtOrig: string;
+    techUsers: Array<any> = [];
+    limitUserTech: boolean;
+    flagDel: boolean = false;
     public editMode: boolean = false;
     private _ngUnsubscribe: Subject<any> = new Subject();
     private flagGrifs: boolean = false;
@@ -53,7 +57,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private apiSrv: UserParamApiSrv,
         private _inputCtrlSrv: InputParamControlService,
         private _router: Router,
+        private pipRx: PipRX,
         private _errorSrv: ErrorHelperServices,
+        private _storageSrv: EosStorageService,
     ) { }
     ngOnInit() {
         this._userParamsSetSrv.saveData$
@@ -63,7 +69,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             .subscribe(() => {
                 this._userParamsSetSrv.submitSave = this.submit(true);
             });
-
         this._userParamsSetSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
         })
@@ -112,69 +117,141 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.inputAll = { all: new RadioInput(CONTROL_ALL_NOTALL) };
         this.isLoading = true;
     }
-    submit(flag?): Promise<any> {
-        this.isLoading = false;
-        if (this._checkCreatePRJNotEmptyAllowed()) {
-            this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
-            return Promise.resolve(true);
-        }
-        // this.selectedNode = null;
-        this.editMode = false;
-        this.btnDisabled = true;
-        this._pushState();
-        let qUserCl;
-        const strNewDeloRight = this.arrNEWDeloRight.join('');
-        const strDeloRight = this.arrDeloRight.join('');
-        this._userParamsSetSrv.ProtocolService(this.curentUser.ISN_LCLASSIF, 5);
-        if (strNewDeloRight !== strDeloRight) {
-            const q = {
-                method: 'MERGE',
-                requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})`,
-                data: {
-                    DELO_RIGHTS: strNewDeloRight
-                }
-            };
-            qUserCl = q;
-            this.queryForSave.push(q);
-            this.arrDeloRight = strNewDeloRight.split('');
-        }
-        this.listRight.forEach((node: NodeAbsoluteRight) => {
-            if (node.touched) {
-                node.change.forEach(ch => {
-                    const batch = this._createBatch(ch, node, qUserCl);
-                    if (batch) {
-                        this.queryForSave.push(batch);
-                    }
-                });
-                node.deleteChange();
+    CheckLimitTech(techList): boolean {
+        let limitUser = false;
+        techList.forEach((item) => {
+            if (item.FUNC_NUM === 1) {
+                limitUser = true;
             }
         });
-        return this.apiSrv.setData(this.queryForSave)
-            .then(() => {
-                this.queryForSave = [];
-                this.listRight = [];
-                this.selectedNode = null;
-                this.editMode = false;
-                this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-                if (!flag) {
-                    return this._userParamsSetSrv.getUserIsn({
-                        expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
-                    })
-                    .then(() => {
-                        this.init();
-                    });
+        return limitUser;
+    }
+
+    GetSysTechUser(): Promise<any> {
+        return this.pipRx.read({
+            USER_CL: {
+                criteries: {
+                    DELO_RIGHTS: '[1]%',
+                    PROTECTED: '0',
+                    DELETED: '0'
+                },
+            },
+            expand: 'USER_TECH_List'
+        }).then((data: any) => {
+            let count = 0;
+            let sysTechBol = false;
+            const arr = this.listRight[0].change;
+            if (this.listRight[0].change.length !== 0) {
+                arr.map((val) => {
+                    if (val.hasOwnProperty('funcNum')) {
+                        sysTechBol = true;
+                    } else {
+                        if (val.data.TECH_RIGHTS.charAt(0) === '0') {
+                            sysTechBol = true;
+                        }
+                    }
+                });
+            }
+            for (const user of data) {
+                if (this.curentUser.ISN_LCLASSIF === user.ISN_LCLASSIF && sysTechBol && !this.CheckLimitTech(user.USER_TECH_List)) {
+                    count++;
                 }
-            })
-            .catch((e) => {
-                this._errorSrv.errorHandler(e);
+                if (this.CheckLimitTech(user.USER_TECH_List)) {
+                    count++;
+                }
+            }
+            if (data.length > count) {
+                this.limitUserTech = false;
+            } else {
+                this.limitUserTech = true;
+            }
+        });
+    }
+
+    submit(flag?): Promise<any> {
+        this.isLoading = false;
+        return this.GetSysTechUser().then(() => {
+            if (this.limitUserTech === false) {
+                if (this._checkCreatePRJNotEmptyAllowed()) {
+                    this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
+                    this.isLoading = true;
+                    return Promise.resolve(true);
+                }
+                if ( this._checkCreateNotEmpty()) {
+                    this.isLoading = true;
+                    return Promise.resolve(true);
+                }
+                this.editMode = false;
+                this.btnDisabled = true;
+                this._pushState();
+                let qUserCl;
+                const strNewDeloRight = this.arrNEWDeloRight.join('');
+                const strDeloRight = this.arrDeloRight.join('');
+                this._userParamsSetSrv.ProtocolService(this.curentUser.ISN_LCLASSIF, 5);
+                if (strNewDeloRight !== strDeloRight) {
+                    const q = {
+                        method: 'MERGE',
+                        requestUri: `USER_CL(${this._userParamsSetSrv.userContextId})`,
+                        data: {
+                            DELO_RIGHTS: strNewDeloRight
+                        }
+                    };
+                    qUserCl = q;
+                    this.queryForSave.push(q);
+                    this.arrDeloRight = strNewDeloRight.split('');
+                }
+                this.listRight.forEach((node: NodeAbsoluteRight) => {
+                    if (node.touched) {
+                        node.change.forEach(ch => {
+                            const batch = this._createBatch(ch, node, qUserCl);
+                            if (batch) {
+                                this.queryForSave.push(batch);
+                            }
+                        });
+                        node.deleteChange();
+                    }
+                });
+                this.apiSrv.setData(this.queryForSave)
+                    .then(() => {
+                        this.queryForSave = [];
+                        this.listRight = [];
+                        this.selectedNode = null;
+                        this.editMode = false;
+                        this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+                        this.flagDel = false;
+                        this._storageSrv.removeItem('abs_prav_mas');
+                        if (!flag) {
+                            return this._userParamsSetSrv.getUserIsn({
+                                expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
+                            })
+                            .then(() => {
+                                this.init();
+                            });
+                        }
+                    }).catch((e) => {
+                        this._errorSrv.errorHandler(e);
+                        this.cancel();
+                    });
+            } else {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение',
+                    msg: 'Ни один из незаблокированных пользователей не имеет права "Системный технолог" с доступом к модулю "Пользователи" без ограничений.',
+                    dismissOnTimeout: 5000
+                });
                 this.cancel();
-            });
+            }
+        }
+        );
+        // this.selectedNode = null;
     }
     cancel() {
         this.queryForSave = [];
         this.selectedNode = null;
         this.editMode = false;
         this.btnDisabled = true;
+        this.flagDel = false;
+        this._storageSrv.removeItem('abs_prav_mas');
         this._pushState();
         this._userParamsSetSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
@@ -258,7 +335,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             }
         }
     }
-    checkChange() {
+    checkChange(event?) {
+        if (event && event === 'del') {
+            this.flagDel = true;
+        }
         let c = false;
         this.listRight.forEach(li => { // проверяем список на изменения
             if (li.touched) {
@@ -270,6 +350,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         // this.btnDisabled = true;
         this.btnDisabled = !c;
+        if (this.flagDel) {
+            this.btnDisabled = false;
+        }
         this._pushState();
     }
     private _writeValue(constanta: IInputParamControl[]): IInputParamControl[] {
@@ -353,13 +436,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     private _deleteAllDep(item: NodeAbsoluteRight) {
         const list: USERDEP[] = [];
-        this.curentUser.USERDEP_List = this.curentUser.USERDEP_List.filter(li => {
-            if (li['FUNC_NUM'] === +item.key + 1) {
-                list.push(li);
-            } else {
-                return true;
-            }
-        });
+            this.curentUser.USERDEP_List = this.curentUser.USERDEP_List.filter(li => {
+                if (li['FUNC_NUM'] === +item.key + 1) {
+                    list.push(li);
+                } else {
+                    return true;
+                }
+            });
 
         list.forEach(li => {
             item.pushChange({
@@ -485,6 +568,33 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         allowed = false;
                     }
                 });
+            }
+        });
+        return allowed;
+    }
+    private _checkKey(node): boolean {
+        return node.key === '4' || node.key === '24' || node.key === '25';
+    }
+    private _checkCreateNotEmpty(): boolean {
+        let allowed = false;
+        this.listRight.forEach((node: NodeAbsoluteRight) => {
+            if (this._checkKey(node) && node.value === 1 ) {
+                let flag = true;
+                this.curentUser.USERDEP_List.filter(li => {
+                    if (li['FUNC_NUM'] === +node.key + 1) {
+                        flag = false;
+                    }
+                });
+                if (flag) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: '',
+                        msg: 'Не заданны подразделения для права ' + node.label
+                    });
+                }
+                if (!allowed) {
+                    allowed = flag;
+                }
             }
         });
         return allowed;

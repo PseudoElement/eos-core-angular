@@ -14,13 +14,13 @@
     let-node="node">
     <div
         [ngClass]="{'highlighted': node.isSelected}"
-        [ngStyle]="{'padding-left.px': systemTech!==1 ? node.layer * 27 : 0 }">
+        [ngStyle]="{'padding-left.px': node.layer * 27 }">
 
         <div class="tree-node-due">
             <!-- icon for open -->
             <div class="tree-btn"
                 (click)="onExpand($event, node)">
-                <span *ngIf="node.children.length && systemTech!==1"
+                <span *ngIf="node.children.length"
                     class="eos-icon tringle-size icon"
                     [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded && editMode, 'eos-icon-close-folder-blue': !node.isExpanded && editMode, 'eos-icon-close-folder-grey': !node.isExpanded && !editMode, 'eos-icon-open-folder-grey': node.isExpanded && !editMode}"
                 ></span>

@@ -18,7 +18,10 @@ export class BtnActionComponent implements OnInit {
     }
     ngOnInit() {
     }
-    doAction(event) {
+    doAction(event, dropdown) {
+        if (dropdown) {
+            dropdown.hide();
+        }
         this.changeButtons(event);
         this.showAction.emit(event);
     }

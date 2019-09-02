@@ -172,6 +172,18 @@ export const Protocol: BtnActionFields = {
     tooltip: 'Протокол',
     disabled: false,
     activeClass: 'eos-icon eos-icon-new-doc-blue small',
+    activeBtnClass: 'eos-icon-new-doc-blue',
+    isActive: false,
+};
+
+export const DefaultSettings: BtnActionFields = {
+    name: 'OpenDefaultSettings',
+    title: 'Настройки по умолчанию',
+    disabledClass: 'eos-icon eos-icon-repair-blue small',
+    enableClass: 'eos-icon eos-icon-repair-blue small',
+    tooltip: 'Настройки по умолчанию',
+    disabled: false,
+    activeClass: 'eos-icon eos-icon-repair-blue small',
     activeBtnClass: '',
     isActive: false,
 };
@@ -213,7 +225,8 @@ export const Allbuttons: BtnAction = {
         UsersStats,
         Protocol,
         SumProtocol,
-        UsersInfo
+        UsersInfo,
+        DefaultSettings
     ],
     moreButtonCheck: {
         check: false,

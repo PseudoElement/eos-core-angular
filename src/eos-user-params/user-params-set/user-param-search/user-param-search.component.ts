@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 import { Subject } from 'rxjs';
@@ -19,6 +19,9 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 })
 
 export class UserParamSearchComponent implements OnDestroy, OnInit {
+    @Input() defaultTitle: string;
+    @Input() defaultUser: any;
+    @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     prepInputsAttach;
     public titleHeader;
     public form: FormGroup;
@@ -53,17 +56,22 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
 
     }
     ngOnInit() {
-        this._userParamsSetSr.getUserIsn({
-            expand: 'USER_PARMS_List'
-        })
-        .then(() => {
-            this.allData = this._userParamsSetSr.hashUserContext;
-            this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Поиск';
+        if (this.defaultTitle) {
+            this.titleHeader = this.defaultTitle;
+            this.allData = this.defaultUser;
             this.inint();
-        })
-        .catch(err => {
-
-        });
+        } else {
+            this._userParamsSetSr.getUserIsn({
+                expand: 'USER_PARMS_List'
+            })
+            .then(() => {
+                this.allData = this._userParamsSetSr.hashUserContext;
+                this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Поиск';
+                this.inint();
+            })
+            .catch(err => {
+            });
+        }
     }
     inint() {
         this.prepareData = this.formHelp.parse_Create(SEARCH_USER.fields, this.allData);
@@ -101,6 +109,9 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
                 this.flagEdit = false;
                 this._pushState();
                 this.editMode();
+                if (this.defaultTitle) {
+                    this.DefaultSubmitEmit.emit(this.form.value);
+                }
                 this._msg.addNewMessage(this.createMessage('success', '', 'Изменения сохранены'));
             }).catch((error) => {
                 this._errorSrv.errorHandler(error);
@@ -124,15 +135,33 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
         this.mapChanges.clear();
         return arrayQuery;
     }
+
     createUrl(arrayQuery) {
-        this.mapChanges.forEach((value, key, arr) => {
-            arrayQuery.push(this.createReq(key, value));
-        });
+        if (this.defaultTitle) {
+            this.mapChanges.forEach((value, key, arr) => {
+                arrayQuery.push(this.createReqDefault(key, value));
+            });
+        } else {
+            this.mapChanges.forEach((value, key, arr) => {
+                arrayQuery.push(this.createReq(key, value));
+            });
+        }
     }
+
     createReq(name: string, value: any): any {
         return {
             method: 'MERGE',
             requestUri: `USER_CL(${this._userParamsSetSr.userContextId})/USER_PARMS_List(\'${this._userParamsSetSr.userContextId} ${name}\')`,
+            data: {
+                PARM_VALUE: `${value}`
+            }
+        };
+    }
+
+    createReqDefault(name: string, value: any): any {
+        return {
+            method: 'MERGE',
+            requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 ${name}')`,
             data: {
                 PARM_VALUE: `${value}`
             }

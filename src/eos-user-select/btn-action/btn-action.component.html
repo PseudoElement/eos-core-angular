@@ -26,7 +26,7 @@
                 <ng-container *ngFor='let moreBtn of buttons.moreButtons'>
                     <li role="menuitem" placement="right" container="body" dropdown triggers="mouseclick" class="">
                         <button class="dropdown-item menu-link" *ngIf="moreBtn.name !== 'OpenUsersInfo'; else info"
-                            (click)="doAction(moreBtn.name)" [disabled]='moreBtn.disabled' [ngClass]="[moreBtn.isActive ? moreBtn.activeBtnClass : '', moreBtn.disabled ? 'disabled' : '']">
+                            (click)="doAction(moreBtn.name, dropdown)" [disabled]='moreBtn.disabled' [ngClass]="[moreBtn.isActive && !moreBtn.disabled ? moreBtn.activeBtnClass : '', moreBtn.disabled ? 'disabled' : '']">
                             <span class="btn-icon" *ngIf='!moreBtn.isActive' [ngClass]="!moreBtn.disabled ? moreBtn.enableClass : moreBtn.disabledClass"></span>
                             <span class="btn-title" *ngIf='moreBtn.isActive' [ngClass]="moreBtn.activeClass"></span>
                             <span class="btn-title not-active-btn">{{moreBtn.title}}</span>

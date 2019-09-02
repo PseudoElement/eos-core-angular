@@ -33,6 +33,7 @@ import { IMessage } from 'eos-common/interfaces';
 
 
 export class ParamsBaseParamComponent implements OnInit, OnDestroy {
+    submitClick = false;
     editMode = false;
     title: string;
     type: string = 'password';
@@ -228,6 +229,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             });
             return;
         }
+        this.submitClick = true;
         this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
         const id = this._userParamSrv.userContextId;
         const newD = {};
@@ -315,10 +317,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     this.upform(this.accessInputs, this.formAccess);
                     this.editModeF();
                     this._pushState();
+                    this.submitClick = false;
                 });
             }
-
+            this.submitClick = false;
         }).catch(error => {
+            this.submitClick = false;
             this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
             this.cancel();
             this._errorSrv.errorHandler(error);
@@ -513,7 +517,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
     getSerts(template: TemplateRef<any>): void {
         if (this.editMode) {
-            this.modalRef = this.modalService.show(template, { class: 'serts' });
+            this.modalRef = this.modalService.show(template, { class: 'serts', ignoreBackdropClick: true });
         }
     }
     closeSerts() {
