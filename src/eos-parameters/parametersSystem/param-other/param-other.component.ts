@@ -15,6 +15,7 @@ import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 })
 export class ParamOtherComponent extends BaseParamComponent implements OnInit {
     @Input() btnError;
+    masDisable: any[] = [];
     inputServer = {
         controlType: E_FIELD_TYPE.string,
         key: 'server',
@@ -49,12 +50,31 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
                         field.options = opsh;
                     }
                 });
-                return this.init();
+                return this.init()
+                .then(() => {
+                    this.cancelEdit();
+                });
             })
             .catch(err => {
                 if (err.code !== 434) {
                     console.log(err);
                 }
             });
+    }
+    edit() {
+        Object.keys(this.form.controls).forEach(key => {
+            if (this.masDisable.includes(key)) {
+                this.form.controls[key].enable({ emitEvent: false });
+            }
+        });
+    }
+    cancelEdit() {
+        this.masDisable = [];
+        Object.keys(this.form.controls).forEach(key => {
+            if (!this.form.controls[key].disabled) {
+                this.masDisable.push(key);
+            }
+        });
+        this.form.disable({ emitEvent: false });
     }
 }

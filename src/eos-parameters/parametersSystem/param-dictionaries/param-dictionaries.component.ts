@@ -10,11 +10,15 @@ import { RUBRICATOR_DICT } from 'eos-dictionaries/consts/dictionaries/rubricator
 })
 export class ParamDictionariesComponent extends BaseParamComponent {
     @Input() btnError;
+    public masDisable: any[] = [];
     constructor( injector: Injector,
         private _eaps: EosAccessPermissionsService,
         ) {
         super( injector, DICTIONARIES_PARAM);
         this.init()
+        .then(() => {
+            this.cancelEdit();
+        })
         .catch(err => {
             if (err.code !== 434) {
                 console.log(err);
@@ -24,5 +28,22 @@ export class ParamDictionariesComponent extends BaseParamComponent {
 
     getRightsRubric() {
         return this._eaps.isAccessGrantedForDictionary(RUBRICATOR_DICT.id, null) !== APS_DICT_GRANT.denied;
+    }
+
+    edit() {
+        Object.keys(this.form.controls).forEach(key => {
+            if (this.masDisable.includes(key)) {
+                this.form.controls[key].enable({ emitEvent: false });
+            }
+        });
+    }
+    cancelEdit() {
+        this.masDisable = [];
+        Object.keys(this.form.controls).forEach(key => {
+            if (!this.form.controls[key].disabled) {
+                this.masDisable.push(key);
+            }
+        });
+        this.form.disable({ emitEvent: false });
     }
 }

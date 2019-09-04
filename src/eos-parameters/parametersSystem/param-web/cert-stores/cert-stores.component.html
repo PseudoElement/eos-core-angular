@@ -7,10 +7,11 @@
             class="btn"
             tooltip="Добавить хранилище"
             placement="bottom"
+            [disabled] = "!editMode"
             containerClass="tooltip-info"
             (click)="addStores()"
         >
-                <span class="eos-icon eos-icon-plus-blue small"></span>
+                <span class="eos-icon small" [ngClass]="{'eos-icon-plus-blue': editMode, 'eos-icon-plus-grey': !editMode}"></span>
         </button>
         <button
             class="btn"
@@ -19,9 +20,9 @@
             placement="bottom"
             containerClass="tooltip-info"
             (click)="dTolltip.hide(); deleteStores()"
-            [disabled]="!this.certStoresService.isMarkNode"
+            [disabled]="!this.certStoresService.isMarkNode || !editMode"
         >
-                <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+                <span class="eos-icon eos-icon-bin-forever-blue small"  [ngClass]="{'eos-icon-bin-forever-blue': editMode, 'eos-icon-bin-forever-grey': !editMode}"></span>
         </button>
         <button
             class="btn"
@@ -29,9 +30,9 @@
             placement="bottom"
             containerClass="tooltip-info"
             (click)="showCert()"
-            [disabled]="!CurrentSelect"
+            [disabled]="!CurrentSelect || !editMode"
         >
-                <span class="eos-icon eos-icon-show-blue small"></span>
+                <span class="eos-icon eos-icon-show-blue small"  [ngClass]="{'eos-icon-show-blue': editMode, 'eos-icon-show-grey': !editMode}"></span>
         </button>
     </div>
     <div class="cert-param">
@@ -43,7 +44,7 @@
                 container="body"
                 containerClass="tooltip-info"
             >
-                <input #checkAllMarkes type="checkbox" (change)="toggleAllMarks($event)">
+                <input #checkAllMarkes type="checkbox" [disabled] = "!editMode" (change)="toggleAllMarks($event)">
                 <span></span>
             </label>
         </div>
@@ -56,13 +57,14 @@
                 placement="bottom"
                 container="body"
                 containerClass="tooltip-info"
+                [ngClass]="{'text': editMode, 'text-dis': !editMode}"
             >
                 Хранилища
             </span>
             <span class="order-icon">
                 <span
                 class="icon eos-icon small"
-                [ngClass]="{'eos-icon-arrow-blue-top': orderBy, 'eos-icon-arrow-blue-bottom': !orderBy}"
+                [ngClass]="{'eos-icon-arrow-blue-top': orderBy && editMode, 'eos-icon-arrow-blue-bottom': !orderBy && editMode, 'eos-icon-arrow-grey-top': orderBy && !editMode, 'eos-icon-arrow-grey-bottom': !orderBy && !editMode}"
                 >
                 </span>
             </span>
@@ -91,6 +93,7 @@
                     >
                         <input
                             type="checkbox"
+                            [disabled]="!editMode"
                             [(ngModel)]="list.marked || list.selectedMark"
                             (ngModelChange)="markNode($event, list)"
                         >
