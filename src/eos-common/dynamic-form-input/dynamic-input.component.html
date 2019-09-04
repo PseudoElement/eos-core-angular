@@ -7,7 +7,7 @@
      [isOpen]="tooltip.visible"
      triggers="">
     <ng-container [ngSwitch]="input.controlType">
-        <eos-dynamic-input-string *ngSwitchCase="types.string"
+        <eos-dynamic-input-string *ngSwitchCase="types.string" #inString
                                   [form]="form"
                                   [input]="input"
                                   [readonly]="readonly"

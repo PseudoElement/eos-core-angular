@@ -46,12 +46,12 @@
         </div>
     </div>
     <div class="full-search-settings-container usual-border">
-        <div *ngIf="dictId!=='cabinet'">
+        <div *ngIf="dictId!=='cabinet' && dictId!=='templates'">
             <label class="radio-inline"><input type="radio" name="full-space" [value]="0" [(ngModel)]="mode"><span></span><span class="m-font">Во всём справочнике</span></label>
             <label class="radio-inline"><input type="radio" name="full-space" [value]="1" [(ngModel)]="mode"><span></span><span class="m-font">В текущей ветке</span></label>
             <label class="radio-inline"><input type="radio" name="full-space" [value]="2" [(ngModel)]="mode"><span></span><span class="m-font">Текущая и подчиненные</span></label>
         </div>
-        <div class="line">
+        <div class="line" *ngIf="dictId !== 'templates'">
             <label class="checkbox-inline"><input type="checkbox" name="seeDelete" [(ngModel)]="settings.deleted"><span></span><span class="m-font">Учитывать логически удаленные</span></label>
         </div>
     </div>
@@ -671,4 +671,64 @@
             </div> -->
         </form>
     </div>
+     <!--FOR Templates-->
+    <div [hidden]="dictId !== 'templates'"
+    *ngIf="searchModel"
+    class="row full-search-form">
+    <form id="docgroup">
+        <button [disabled]="noSearchData"
+            type="submit"
+            (click)="fullSearch()"
+            class="hidden-submit">Найти</button>
+
+            <div class="form-group unimportant-text">
+                <label class="s-font"
+                    for="tempName">{{fieldsDescription.rec['NAME_TEMPLATE']?.title}}</label>
+                <div class="search-fld">
+                    <input id="tempName"
+                        name="tempName"
+                        type="text"
+                        class="form-control light"
+                        [(ngModel)]="searchModel['NAME_TEMPLATE']"
+                        placeholder="..."
+                        maxlength="{{fieldsDescription.rec['NAME_TEMPLATE']?.length}}">
+                    <a class="clear-btn"
+                        [ngClass]="{'hide': !searchModel['NAME_TEMPLATE']}"
+                        (click)="searchModel['NAME_TEMPLATE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                </div>
+            </div>
+            <div class="form-group unimportant-text">
+                <label class="s-font"
+                    for="desc">{{fieldsDescription.rec['DESCRIPTION']?.title}}</label>
+                <div class="search-fld">
+                    <input id="desc"
+                        name="desc"
+                        type="text"
+                        class="form-control light"
+                        [(ngModel)]="searchModel['DESCRIPTION']"
+                        placeholder="..."
+                        maxlength="{{fieldsDescription.rec['DESCRIPTION']?.length}}">
+                    <a class="clear-btn"
+                        [ngClass]="{'hide': !searchModel['DESCRIPTION']}"
+                        (click)="searchModel['DESCRIPTION'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                </div>
+            </div>
+            <div class="form-group unimportant-text">
+                <label class="s-font"
+                    for="catName">{{fieldsDescription.rec['CATEGORY']?.title}}</label>
+                <div class="search-fld">
+                    <input id="catName"
+                        name="catName"
+                        type="text"
+                        class="form-control light"
+                        [(ngModel)]="searchModel['CATEGORY']"
+                        placeholder="..."
+                        maxlength="{{fieldsDescription.rec['CATEGORY']?.length}}">
+                    <a class="clear-btn"
+                        [ngClass]="{'hide': !searchModel['CATEGORY']}"
+                        (click)="searchModel['CATEGORY'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+                </div>
+            </div>
+    </form>
+</div>
 </ng-template>

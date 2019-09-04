@@ -1,14 +1,33 @@
 <div class="doc_card_wrapper">
-    <div class="">
+    <div class="addFile">
+       <div class="">
+        <p>Выберите файл</p>
+        <button class="btn btn-primary-full" [disabled]="newFile || !editMode" (click)="addFileDocTemplates()">файл</button>
+       </div>
+        <div class="upload-file" *ngIf="newFile">
+            <span><span class="eos-icon small eos-icon-checkbox-blue "></span>Файл успешно загружен</span>
+            <button class="btn btn-primary-full" (click)="deleteFile()">удалить файл</button>
+        </div>
+    </div>
+    <div class="" #dom>
         <label *ngIf="isNewRecord">
-            <input type="file">
         </label>
-        <eos-dynamic-input [input]="inputs['rec.NAME_TEMPLATE']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input id="inputName" #inp [input]="inputs['rec.NAME_TEMPLATE']" [form]="form" [readonly]="!editMode">
+        </eos-dynamic-input>
     </div>
     <div class="">
         <eos-dynamic-input [input]="inputs['rec.CATEGORY']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
     </div>
     <div class="">
         <eos-dynamic-input [input]="inputs['rec.DESCRIPTION']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+    </div>
+</div>
+
+<div class="divlock" *ngIf="upload">
+    <!-- <div id="lockfade"></div>
+    <div id="lockcover"></div> -->
+    <div id="waitmessage">
+        <eos-spinner size="lg"></eos-spinner>
+        <div id="waitmessagetext">Загрузка...</div>
     </div>
 </div>

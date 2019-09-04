@@ -65,6 +65,7 @@ import { CreateNodeBroadcastChannelComponent } from './create-node-broadcast-cha
 import { LinkCardComponent } from './card-views/link-card.component';
 import { NadzorCardEditComponent } from './card-views/nadzor-card-edit.component';
 import { PrjDefaultValuesComponent } from './prj-default-values/prj-default-values.component';
+import { TemplateTreeComponent } from './treeTemplate/template-tree.component';
 /* services */
 import { DictionaryDescriptorService } from './core/dictionary-descriptor.service';
 import { EosDataConvertService } from './services/eos-data-convert.service';
@@ -154,6 +155,7 @@ import { LinkNodeInfoComponent } from './node-info/link-node-info.component';
         CopyPropertiesComponent,
         CopyNodeComponent,
         TemplatesCardComponent,
+        TemplateTreeComponent,
     ],
     entryComponents: [
         ColumnSettingsComponent,

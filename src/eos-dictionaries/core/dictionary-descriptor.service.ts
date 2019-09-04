@@ -117,7 +117,7 @@ export class DictionaryDescriptorService {
                     case 'reestrtype':
                         res = new ReestrtypeDictionaryDescriptor(descr, this.apiSrv);
                         break;
-                    case 'shablony':
+                    case 'templates':
                         res = new TemplateDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case CALENDAR_DICT.id:

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { InputBase } from '../core/inputs/input-base';
 import { FormGroup } from '@angular/forms';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
@@ -39,7 +39,7 @@ export class DynamicInputComponent {
     @Input() isGroup: boolean;
     @Input() hideLabel: boolean;
     @Input() viewOpts: IDynamicInputOptions;
-
+    @ViewChild('inString') inpstring;
     types = E_FIELD_TYPE;
     tooltip: ErrorTooltip = new ErrorTooltip;
 

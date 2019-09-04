@@ -327,6 +327,11 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.pasteNodes:
                     _enabled = (this._dictSrv.bufferNodes) && (!!this._dictSrv.bufferNodes.length);
                     break;
+                case E_RECORD_ACTIONS.downloadFile: {
+                    _enabled = _enabled && opts.listHasItems;
+                    _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
+                    break;
+                }
             }
         }
 

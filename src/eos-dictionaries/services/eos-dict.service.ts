@@ -688,6 +688,15 @@ export class EosDictService {
             .catch(err => this._errHandler(err));
     }
 
+    selectTemplateNode() {
+        const dictionary = this._dictionaries[0];
+            this._selectTreeNode(dictionary.root);
+        this._reloadList().then(() => {
+            this.updateViewParameters({updatingList: false});
+        });
+        return Promise.resolve();
+    }
+
     openNode(nodeId: string): Promise<EosDictionaryNode> {
         const dictionary = this.currentDictionary;
         if (dictionary) {

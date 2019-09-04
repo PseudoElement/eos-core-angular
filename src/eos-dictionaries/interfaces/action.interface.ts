@@ -36,6 +36,7 @@ export enum E_RECORD_ACTIONS {
     copyNodes,
     pasteNodes,
     certifUC,
+    downloadFile,
     // createRepresentative,
     // slantForForms,
     /* to be extended */

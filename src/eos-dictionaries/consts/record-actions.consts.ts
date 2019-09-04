@@ -411,6 +411,19 @@ const RECORD_GOTO_CERTIFICATES: IAction = {
     accessNeed: APS_DICT_GRANT.read,
 };
 
+export const RECORD_ACTIONS_DOWNLOAD_FILE: IAction = {
+    type: E_RECORD_ACTIONS.downloadFile,
+    group: E_ACTION_GROUPS.item,
+    title: 'Выгрузить файл',
+    hint: 'Выгрузить файл',
+    iconClass: 'eos-icon eos-icon-download small',
+    disabledIconClass: 'eos-icon eos-icon-download-grey small',
+    hoverIconClass: 'eos-icon eos-icon-download-dark-blue small',
+    activeIconClass: null,
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
+
 export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_CREATE,
     RECORD_ACTIONS_EDIT,
@@ -436,6 +449,7 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_COPY_PROPERTIES_FROM_PARRENT,
     RECORD_COPY_PROPERTIES,
     RECORD_GOTO_CERTIFICATES,
+    RECORD_ACTIONS_DOWNLOAD_FILE,
     // RECORD_ACTION_EXPORT_DIRECTORY,
     // RECORD_ACTION_IMPORT_DIRECTORY,
 ];
@@ -462,6 +476,7 @@ export const MORE_RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_SHOW_SETTINGS,
     RECORD_COPY_NODES,
     RECORD_PASTE_NODES,
+    RECORD_ACTIONS_DOWNLOAD_FILE,
 ];
 
 export const COMMON_ADD_MENU = [{
