@@ -3,7 +3,7 @@ import { Subscription } from 'rxjs';
 
 import { EosDictService } from '../services/eos-dict.service';
 import { E_DICT_TYPE, E_FIELD_SET, IRecordModeDescription, ISearchSettings, SEARCH_MODES } from 'eos-dictionaries/interfaces';
-import { EosMessageService } from '../../eos-common/services/eos-message.service';
+import { EosMessageService, TOOLTIP_DELAY_VALUE } from '../../eos-common/services/eos-message.service';
 import { SEARCH_NOT_DONE } from '../consts/messages.consts';
 import { EosDictionary } from '../core/eos-dictionary';
 import { SEARCH_TYPES } from 'eos-dictionaries/consts/search-types';
@@ -24,6 +24,8 @@ export class DictionarySearchComponent implements OnDestroy {
 
     @ViewChild('full') fSearchPop;
     @ViewChild('quick') qSearchPop;
+
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
 
     quickSrchObj: IQuickSrchObj  = {
         isOpenQuick: false,

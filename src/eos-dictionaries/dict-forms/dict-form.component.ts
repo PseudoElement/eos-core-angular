@@ -8,6 +8,7 @@ import { CONFIRM_SAVE_ON_LEAVE2 } from '../consts/confirm.consts';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { IDictFormBase } from './dict-form-base.interface';
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
 @Component({
     selector: 'eos-dict-form',
     templateUrl: 'dict-form.component.html',
@@ -16,7 +17,7 @@ import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 export class DictFormComponent implements CanDeactivateGuard, OnDestroy {
 
     @ViewChild('formElement') formElement: IDictFormBase;
-
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
     dictionaryId: string;
     editMode: boolean;
     title: string;

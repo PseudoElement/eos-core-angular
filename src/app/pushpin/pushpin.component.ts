@@ -2,7 +2,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 
 import { EosDeskService } from '../services/eos-desk.service';
 import { EosDesk } from '../core/eos-desk';
-import { EosMessageService } from '../../eos-common/services/eos-message.service';
+import { EosMessageService, TOOLTIP_DELAY_VALUE } from '../../eos-common/services/eos-message.service';
 import { WARN_LINK_PIN } from '../consts/messages.consts';
 import { BsDropdownDirective } from 'ngx-bootstrap';
 
@@ -15,7 +15,7 @@ export class PushpinComponent {
 
     hideSystem = true;
     showSelected = false;
-
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
     @ViewChild('dropDown') private _dropDown: BsDropdownDirective;
 
     constructor(private _deskSrv: EosDeskService, private _msgSrv: EosMessageService) { }

@@ -15,7 +15,7 @@ import { EosDictService } from '../services/eos-dict.service';
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
 
 import { EosDeskService } from '../../app/services/eos-desk.service';
-import { EosMessageService } from '../../eos-common/services/eos-message.service';
+import { EosMessageService, TOOLTIP_DELAY_VALUE } from '../../eos-common/services/eos-message.service';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 
 import { RECENT_URL } from '../../app/consts/common.consts';
@@ -56,6 +56,8 @@ export class EditedCard {
     templateUrl: 'card.component.html',
 })
 export class CardComponent implements CanDeactivateGuard, OnDestroy {
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
+
     node: EosDictionaryNode;
     nodes: EosDictionaryNode[];
 

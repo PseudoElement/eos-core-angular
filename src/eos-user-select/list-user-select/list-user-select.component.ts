@@ -18,7 +18,7 @@ import { Allbuttons } from '../shered/consts/btn-action.consts';
 import { BtnAction, BtnActionFields } from '../shered/interfaces/btn-action.interfase';
 import { TreeUserSelectService } from '../shered/services/tree-user-select.service';
 import { RestError } from 'eos-rest/core/rest-error';
-import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { EosMessageService, TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_DELETE } from '../shered/consts/confirm-users.const';
 import { PipRX, USER_TECH, /* USER_CL */ IRequest } from 'eos-rest';
@@ -40,6 +40,7 @@ interface TypeBread {
 export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentChecked {
     @ViewChild('listContent') listContent;
     @ViewChild('quickSearchOpen') quickSearch;
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
     currentState: boolean[];
     createUserModal: BsModalRef;
     listUsers: UserSelectNode[];

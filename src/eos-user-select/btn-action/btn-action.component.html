@@ -2,7 +2,7 @@
     <div class="btn-action-flex" *ngIf='buttons'>
         <div class="buttons-list" *ngFor='let button of buttons.buttons'>
             <div class="btn-group">
-                <div [tooltip]="button.tooltip" #itemTooltip="bs-tooltip" placement="bottom" containerClass="tooltip-info" trigger="hover">
+                <div [tooltip]="button.tooltip" #itemTooltip="bs-tooltip" placement="bottom" containerClass="tooltip-info" trigger="hover" [delay]="tooltipDelay">
                     <button [disabled]='button.disabled' class="btn btn-primary-light" (click)="doAction(button.name)" [ngClass]="button.isActive ? button.activeBtnClass : ''">
                     <span *ngIf='!button.isActive' [ngClass]="!button.disabled ? button.enableClass : button.disabledClass"></span>
                     <span *ngIf='button.isActive' [ngClass]="button.activeClass"></span>
