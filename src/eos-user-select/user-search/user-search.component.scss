@@ -28,7 +28,18 @@
     }
     .search-input-wr {
         width: 70%;
-        margin-left: 20px;
+        margin: 20px;
+    }
+    .search-input-wr-av {
+        margin: 0 20px;
+        .av-container{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            .av-pos {
+                margin-right: 12px;
+            }
+        }
     }
     .search-btn-wraper {
         margin-left: 10px;
