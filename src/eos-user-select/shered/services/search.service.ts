@@ -160,21 +160,25 @@ export class SearchServices {
                 criteries: {}
             }
         };
-        if (params.DEL_USER) {
-            query.USER_CL.criteries['SURNAME_PATRON'] = `"${params.SURNAME}"`;
-            query.USER_CL.criteries['ORACLE_ID'] = `isnull`;
-        }
-        if (!params.DEL_USER) {
-            if (params.LOGIN) {
-                query.USER_CL.criteries['CLASSIF_NAME'] = `"${params.LOGIN}"`;
+        if (params.AV_SYSTEMS) {
+            query.USER_CL.criteries['AV_SYSTEMS'] = `${params.AV_SYSTEMS}%`;
+        } else {
+            if (params.DEL_USER) {
+                query.USER_CL.criteries['SURNAME_PATRON'] = `"${params.SURNAME}"`;
+                query.USER_CL.criteries['ORACLE_ID'] = `isnull`;
             }
-            if (params.fullDueName) {
-                query.USER_CL.criteries['USER_CL.DEP.SURNAME'] = `"${params.fullDueName}"`;
-            }
-            if (params.DEPARTMENT) {
-                //   query.USER_CL.criteries['USER_CL.DEP.CLASSIF_NAME'] = `${params.DEPARTMENT}`;
-                query.USER_CL.criteries['NOTE'] = `"${params.DEPARTMENT}"`;
-                //  query.USER_CL.criteries['USER_CL.DEP.CARD.CLASSIF_NAME'] = `"${params.DEPARTMENT}"`;
+            if (!params.DEL_USER) {
+                if (params.LOGIN) {
+                    query.USER_CL.criteries['CLASSIF_NAME'] = `"${params.LOGIN}"`;
+                }
+                if (params.fullDueName) {
+                    query.USER_CL.criteries['USER_CL.DEP.SURNAME'] = `"${params.fullDueName}"`;
+                }
+                if (params.DEPARTMENT) {
+                    //   query.USER_CL.criteries['USER_CL.DEP.CLASSIF_NAME'] = `${params.DEPARTMENT}`;
+                    query.USER_CL.criteries['NOTE'] = `"${params.DEPARTMENT}"`;
+                    //  query.USER_CL.criteries['USER_CL.DEP.CARD.CLASSIF_NAME'] = `"${params.DEPARTMENT}"`;
+                }
             }
         }
         return query;
