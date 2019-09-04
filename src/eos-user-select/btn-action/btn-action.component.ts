@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 import {BtnAction, BtnActionFields} from '../shered/interfaces/btn-action.interfase';
-import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 @Component({
     selector: 'eos-btn-action',
     templateUrl: 'btn-action.component.html',

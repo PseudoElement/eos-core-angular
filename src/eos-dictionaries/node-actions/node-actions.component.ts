@@ -24,7 +24,7 @@ import {
 import {APS_DICT_GRANT, EosAccessPermissionsService} from 'eos-dictionaries/services/eos-access-permissions.service';
 import {takeUntil} from 'rxjs/operators';
 import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
-import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 
 @Component({
     selector: 'eos-node-actions',

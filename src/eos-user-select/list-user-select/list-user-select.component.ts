@@ -18,7 +18,7 @@ import { Allbuttons } from '../shered/consts/btn-action.consts';
 import { BtnAction, BtnActionFields } from '../shered/interfaces/btn-action.interfase';
 import { TreeUserSelectService } from '../shered/services/tree-user-select.service';
 import { RestError } from 'eos-rest/core/rest-error';
-import { EosMessageService, TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_DELETE } from '../shered/consts/confirm-users.const';
 import { PipRX, USER_TECH, /* USER_CL */ IRequest } from 'eos-rest';
@@ -30,6 +30,7 @@ import { ErrorHelperServices } from '../../eos-user-params/shared/services/helpe
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { IOpenClassifParams } from 'eos-common/interfaces';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 interface TypeBread {
     action: number;
 }

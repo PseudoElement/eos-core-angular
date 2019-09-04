@@ -45,6 +45,7 @@ import { DynamicInputLinkButtonComponent } from './dynamic-form-input/dynamic-in
 import { UserSelectPaginationComponent } from './pagination-user-select/pagination-user-select.component';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
+import { EosTooltipService } from './services/eos-tooltip.service';
 
 @NgModule({
     declarations: [
@@ -101,6 +102,7 @@ import { UserPaginationService } from 'eos-user-params/shared/services/users-pag
     providers: [
         ConfirmWindowService,
         EosMessageService,
+        EosTooltipService,
         InputControlService,
         UserPaginationService
     ]

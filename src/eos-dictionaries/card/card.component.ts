@@ -15,7 +15,7 @@ import { EosDictService } from '../services/eos-dict.service';
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
 
 import { EosDeskService } from '../../app/services/eos-desk.service';
-import { EosMessageService, TOOLTIP_DELAY_VALUE } from '../../eos-common/services/eos-message.service';
+import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 
 import { RECENT_URL } from '../../app/consts/common.consts';
@@ -36,6 +36,7 @@ import {EosUtils} from '../../eos-common/core/utils';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import { CONFIRM_SAVE_INVALID } from 'app/consts/confirms.const';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 // import { UUID } from 'angular2-uuid';
 
 export enum EDIT_CARD_MODES {

@@ -2,9 +2,10 @@ import { Component, Input, ViewChild } from '@angular/core';
 
 import { EosDeskService } from '../services/eos-desk.service';
 import { EosDesk } from '../core/eos-desk';
-import { EosMessageService, TOOLTIP_DELAY_VALUE } from '../../eos-common/services/eos-message.service';
+import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { WARN_LINK_PIN } from '../consts/messages.consts';
 import { BsDropdownDirective } from 'ngx-bootstrap';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 
 @Component({
     selector: 'eos-pushpin',

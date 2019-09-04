@@ -3,11 +3,12 @@ import { Subscription } from 'rxjs';
 
 import { EosDictService } from '../services/eos-dict.service';
 import { E_DICT_TYPE, E_FIELD_SET, IRecordModeDescription, ISearchSettings, SEARCH_MODES } from 'eos-dictionaries/interfaces';
-import { EosMessageService, TOOLTIP_DELAY_VALUE } from '../../eos-common/services/eos-message.service';
+import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { SEARCH_NOT_DONE } from '../consts/messages.consts';
 import { EosDictionary } from '../core/eos-dictionary';
 import { SEARCH_TYPES } from 'eos-dictionaries/consts/search-types';
 import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 
 export interface IQuickSrchObj {
     isOpenQuick: boolean;

@@ -15,7 +15,7 @@ import {
 import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import { RtUserSelectService } from '../../eos-user-select/shered/services/rt-user-select.service';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
-import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 
 @Component({
     selector: 'eos-breadcrumb',
