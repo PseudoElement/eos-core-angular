@@ -405,6 +405,7 @@ export class CounterNpEditComponent {
 
             if (this._decl.type === E_COUNTER_TYPE.counterDepartmentRKPD) {
                 Object.assign(prj_criteries, {PRJ_NUM_FLAG: String(1)});
+                Object.assign(criteries, {PRJ_NUM_FLAG: String(1)});
             }
 
             return this.apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries(prj_criteries)})
