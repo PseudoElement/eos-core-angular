@@ -14,6 +14,8 @@ import { CertStoresService } from './cert-stores.service';
 export class ParamWebComponent extends BaseParamComponent {
     @ViewChild('certStores') certStores: CertStoresComponent;
     @Input() btnError;
+    editMode: boolean;
+    public masDisable: any [] = [];
     constructor(
         injector: Injector,
         private certStoresService: CertStoresService
@@ -23,6 +25,7 @@ export class ParamWebComponent extends BaseParamComponent {
         .then(() => {
             this.certStoresService.formControl = this.form.controls['rec.CERT_APPSRV_STORES'];
             this.certStoresService.formControlInit = this.form.controls['rec.APPSRV_CRYPTO_INITSTR'];
+            this.cancelEdit();
         })
         .catch(err => {
             if (err.code !== 434) {
@@ -38,10 +41,30 @@ export class ParamWebComponent extends BaseParamComponent {
             this.ngOnDestroy();
             this.init()
             .then(() => {
-            this.certStoresService.formControl = this.form.controls['rec.CERT_APPSRV_STORES'];
-            this.certStoresService.formControlInit = this.form.controls['rec.APPSRV_CRYPTO_INITSTR'];
+                this.certStoresService.formControl = this.form.controls['rec.CERT_APPSRV_STORES'];
+                this.certStoresService.formControlInit = this.form.controls['rec.APPSRV_CRYPTO_INITSTR'];
+                this.cancelEdit();
                 this.certStores.ngOnInit();
             });
         }
+        this.cancelEdit();
+    }
+    edit() {
+        Object.keys(this.form.controls).forEach(key => {
+            if (this.masDisable.includes(key)) {
+                this.form.controls[key].enable({ emitEvent: false });
+            }
+        });
+        this.editMode = true;
+    }
+    cancelEdit() {
+        this.masDisable = [];
+        Object.keys(this.form.controls).forEach(key => {
+            if (!this.form.controls[key].disabled) {
+                this.masDisable.push(key);
+            }
+        });
+        this.editMode = false;
+        this.form.disable({ emitEvent: false });
     }
 }

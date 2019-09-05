@@ -11,10 +11,19 @@ export class ParamPrjRcComponent extends BaseParamComponent {
     constructor( injector: Injector ) {
         super( injector, PRJ_RC_PARAM);
         this.init()
+        .then(() => {
+            this.cancelEdit();
+        })
         .catch(err => {
             if (err.code !== 434) {
                 console.log(err);
             }
         });
+    }
+    edit() {
+        this.form.enable({ emitEvent: false });
+    }
+    cancelEdit() {
+        this.form.disable({ emitEvent: false });
     }
 }

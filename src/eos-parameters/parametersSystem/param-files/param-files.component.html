@@ -1,14 +1,16 @@
 <div class="input-param-wrapper input-param-files-wrapper" *ngIf="inputs">
     <eos-param-header 
-        (submitForm)="btnDisabled ? cancel() : submit()"
-        (cancelForm)="cancel()" 
+        (submitForm)="btnDisabled ? cancel() : submit();cancelEdit()"
+        (cancelForm)="cancel();cancelEdit()" 
         [statusBtnSub]="btnError"
+        [editBtn]="true"
+        (editForm)="edit()"
         [title]="titleHeader"
     ></eos-param-header>
     <div class="param-input-group">
         <span class="l-font">Параметры хранения прикрепленных файлов</span>
         <div class="info-icon-wrap" (click)="showInfoAttachFiles()">
-            <span class="info-icon eos-icon eos-icon-info-blue x-small"></span>
+            <span class="info-icon eos-icon eos-icon-info-blue x-small" [ngClass]="{'eos-icon-info-blue': editMode, 'eos-icon-info-grey': !editMode}"></span>
         </div>
     </div>
     <hr>
