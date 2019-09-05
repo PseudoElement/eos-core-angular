@@ -172,6 +172,15 @@
                                       [data]="data"
                                       [isNewRecord]="isNewRecord"
                                       [editMode]="editMode"></eos-nadzor-card-edit>
+                <eos-templates-card *ngSwitchCase="'templates'"
+                                      #cardEditEl
+                                      class="simple-card-edit"
+                                      [form]="form"
+                                      [inputs]="inputs"
+                                      [data]="data"
+                                      [isNewRecord]="isNewRecord"
+                                      [editMode]="editMode"
+                ></eos-templates-card>
                 <eos-simple-card-edit *ngSwitchDefault
                                       #cardEditEl
                                       class="simple-card-edit"

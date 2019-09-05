@@ -210,6 +210,27 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
             }
         }
     }
+    returnClass(node, form: FormGroup): string {
+        let str = '';
+        let key = 'rec.' + node.key;
+        if (key === 'rec.RCSEND_REGISTRATION_NUMBER') {
+            key = 'rec.RCSEND_DOCUMENT_AUTHOR';
+        }
+        if (node.isOpen) {
+            if (!form.controls[key].disabled) {
+                str = 'eos-icon-open-folder-blue';
+            } else {
+                str = 'eos-icon-open-folder-grey';
+            }
+        } else {
+            if (!form.controls[key].disabled) {
+                str = 'eos-icon-close-folder-blue';
+            } else {
+                str = 'eos-icon-close-folder-grey';
+            }
+        }
+        return str;
+    }
     createTree(fields) {
         const TreeObj: TreeItem[] = [];
         let tree;

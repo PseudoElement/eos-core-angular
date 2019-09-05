@@ -22,7 +22,7 @@
                                 <span *ngIf="node.children.length"
                                     class="eos-icon icon list-triangle"
                                     (click)="triggerNode(node)"
-                                    [ngClass]="node.isOpen ? 'eos-icon-open-folder-blue' : 'eos-icon-close-folder-blue'"
+                                    [ngClass]="returnClass(node, form)"
                                 ></span>
                                 <eos-dynamic-input
                                     [input]="inputs['rec.' + node.key]"
@@ -60,7 +60,7 @@
                             <span *ngIf="node.children.length"
                                 class="eos-icon icon list-triangle"
                                 (click)="triggerNode(node)"
-                                [ngClass]="node.isOpen ? 'eos-icon-open-folder-blue' : 'eos-icon-close-folder-blue'"
+                                [ngClass]="returnClass(node, formMailResuve)"
                             ></span>
                             <eos-dynamic-input
                                 [input]="inputsMailResive['rec.' + node.key]"

@@ -11,6 +11,7 @@ import { BaseParamComponent } from './../shared/base-param.component';
 })
 export class ParamSearchComponent extends BaseParamComponent {
     @Input() btnError;
+    public masDisable: any[] = [];
     constructor(injector: Injector) {
         super(injector, SEARCH_PARAM);
         this.init()
@@ -26,6 +27,7 @@ export class ParamSearchComponent extends BaseParamComponent {
             this.ngOnDestroy();
             this.init()
                 .then(() => {
+                    this.cancelEdit();
                     this.afterInitRC();
                 })
                 .catch(err => {
@@ -34,6 +36,7 @@ export class ParamSearchComponent extends BaseParamComponent {
                     }
                 });
         }
+        this.cancelEdit();
     }
     afterInitRC() {
         this.subscriptions.push(
@@ -44,8 +47,27 @@ export class ParamSearchComponent extends BaseParamComponent {
             .subscribe(value => {
                 if (this.changeByPath('rec.FULLTEXT_EXTENSIONS', value)) {
                     this.form.controls['rec.FULLTEXT_EXTENSIONS'].patchValue(value.toUpperCase());
+                } else {
+                    this.formChanged.emit(false);
                 }
             })
         );
+        this.cancelEdit();
+    }
+    edit() {
+        Object.keys(this.form.controls).forEach(key => {
+            if (this.masDisable.includes(key)) {
+                this.form.controls[key].enable({ emitEvent: false });
+            }
+        });
+    }
+    cancelEdit() {
+        this.masDisable = [];
+        Object.keys(this.form.controls).forEach(key => {
+            if (!this.form.controls[key].disabled) {
+                this.masDisable.push(key);
+            }
+        });
+        this.form.disable({ emitEvent: false });
     }
 }

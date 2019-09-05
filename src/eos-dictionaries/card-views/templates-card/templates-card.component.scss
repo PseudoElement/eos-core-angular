@@ -1,0 +1,70 @@
+.doc_card_wrapper {
+    padding:  0 20px;
+    .addFile {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+    }
+    .btn{
+        min-width: 88px;
+    }
+    .upload-file {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        > span {
+            line-height: 29px;
+            margin-right: 10px;
+            > span {
+                position: relative;
+                top: 6px;
+            }
+        }
+    }
+    .doc-wr {
+        margin-bottom: 50px;
+        .doc-list{
+            .doc-item {
+                display: flex;
+                align-items: center;
+                font-size: 16px;
+                text-decoration: underline;
+                cursor: pointer;
+            }
+        }
+        ul{
+            padding-left: 17px;
+        }
+        .sort-name{
+            display: flex;
+            align-items: center;
+            width: 80%;
+            border-bottom: 1px solid #ededed;
+            cursor: pointer;
+        }
+    }
+}
+.divlock {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -48px;
+    bottom: -49px;
+    background-color: #000;
+    opacity: 0.3;
+   // opacity: .8;
+    z-index: 1000;
+    #waitmessage {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 19px;
+    }
+}

@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, TemplateRef } from '@angular/core';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'eos-users-info',
@@ -15,10 +16,11 @@ export class EosReportUsersInfoComponent implements OnInit {
   selectUser: any;
   isFirst: boolean;
   isLast: boolean;
+  src;
   CheckAllUsers: boolean = false;
   printUsers: any[] = [{ data: 'Текущем пользователе', value: false }, { data: 'Всех отмеченных пользователях', value: true }];
   private nodeIndex: number = 0;
-  constructor(private _userParamSrv: UserParamsService, private modalService: BsModalService) { }
+  constructor(private _userParamSrv: UserParamsService, private modalService: BsModalService, public sanitizer: DomSanitizer) { }
 
   ngOnInit() {
     this.init();
@@ -32,18 +34,22 @@ export class EosReportUsersInfoComponent implements OnInit {
       this.selectUser = this.users[this.nodeIndex];
       this.activeBtn = true;
     }
+    this.src = this.getHtmlStr(this.selectUser.id);
     this._updateBorders();
   }
 
   openModal(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template, Object.assign({}, { class: 'modal-info' }));
   }
-
+  getHtmlStr(id: number): any {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(`../UserInfo/UserRights.ashx?uisn=${id}`);
+  }
   prev() {
     if (this.nodeIndex > 0) {
       this.nodeIndex--;
     }
     this.selectUser = this.users[this.nodeIndex];
+    this.src = this.getHtmlStr(this.selectUser.id);
     this._updateBorders();
   }
 
@@ -52,6 +58,7 @@ export class EosReportUsersInfoComponent implements OnInit {
       this.nodeIndex++;
     }
     this.selectUser = this.users[this.nodeIndex];
+    this.src = this.getHtmlStr(this.selectUser.id);
     this._updateBorders();
   }
 

@@ -1,22 +1,30 @@
-import { Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, OnDestroy} from '@angular/core';
 import {BtnAction, BtnActionFields} from '../shered/interfaces/btn-action.interfase';
-import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 @Component({
     selector: 'eos-btn-action',
     templateUrl: 'btn-action.component.html',
     styleUrls: ['btn-action.component.scss'],
 })
 
-export class BtnActionComponent implements OnInit {
+export class BtnActionComponent implements OnInit, OnDestroy {
 
     @Input() buttons: BtnAction;
     @Output() showAction: EventEmitter<any> = new EventEmitter<any>();
-
+    public dropdownMy;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
 
     constructor() {
     }
     ngOnInit() {
+    }
+    ngOnDestroy() {
+        if (this.dropdownMy) {
+            this.dropdownMy.autoClose = false;
+        }
+    }
+    add(dropdown) {
+        this.dropdownMy = dropdown;
     }
     doAction(event, dropdown) {
         if (dropdown) {

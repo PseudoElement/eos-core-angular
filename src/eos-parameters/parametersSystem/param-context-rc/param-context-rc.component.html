@@ -1,9 +1,11 @@
 <div *ngIf="inputs" class="input-param-wrapper input-param-context-wrapper">
     <eos-param-header
         [title]="titleHeader"
-        (submitForm)="btnDisabled ? cancel() : submit()"
+        (submitForm)="btnDisabled ? cancel(): submit(); cancelEdit()"
         (cancelForm)="cancel()"
         [statusBtnSub]="btnError"
+        [editBtn]="true"
+        (editForm)="edit()"
     ></eos-param-header>
     <div class="param-input-group">
         <div [formGroup]="formContextChoice">

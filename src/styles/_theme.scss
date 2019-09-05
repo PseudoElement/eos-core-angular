@@ -458,3 +458,41 @@
         }
     }
 }
+.ui-widget-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background-color: #000;
+    opacity: 0.3;
+    z-index: 10001;
+}
+.ui-dialog {
+    background-color: $white;
+    z-index: 10001;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    .ui-dialog-titlebar {
+        display: flex;
+        justify-content: space-between;
+        padding: 11px 15px;
+        border-bottom: 1px solid $border-color-main-theme;
+    }
+    .alert_main {
+        padding: 15px;
+        text-align: center;
+        border-bottom: 1px solid $border-color-main-theme;
+    }
+    .ui-dialog-buttonpane {
+        padding: 15px;
+    }
+    .ui-button {
+        border-color: #2196f3;
+        background-color: #2196f3;
+        color: white;
+        min-width: 88px;
+        height: 28px;
+        outline: none;
+        border: none;
+    }
+}

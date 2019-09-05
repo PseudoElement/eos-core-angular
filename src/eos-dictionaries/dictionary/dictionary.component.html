@@ -12,13 +12,14 @@
         [hidden]="this.dictionary?.descriptor.type === dictTypes.linear || accessDenied" >
         <eos-spinner *ngIf="((hasCustomTree && !customTreeData) || !treeNodes.length) && !accessDenied" size="lg">
         </eos-spinner>
-        <eos-tree *ngIf="treeNodes.length && !hasCustomTree && !accessDenied"
+        <eos-tree *ngIf="treeNodes.length && !hasCustomTree && !accessDenied && !hasTemplateTree"
             [nodes]="treeNodes"
             [showDeleted]="params.showDeleted"></eos-tree>
         <eos-custom-tree *ngIf="hasCustomTree && customTreeData"
                          [data]="customTreeData"
                          (onSetActiveNode)="onSetActiveNode($event)"
                          [showDeleted]="params.showDeleted"></eos-custom-tree>
+        <eos-template-tree *ngIf="hasTemplateTree && treeNodes" [data]='treeNodes'></eos-template-tree>
         <div class="fon highlighted"
             [style.width]="fonConf.width"
             [style.height]="fonConf.height"

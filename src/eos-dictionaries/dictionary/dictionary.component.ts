@@ -1,5 +1,4 @@
 import {IQuickSrchObj} from './../dictionary-search/dictionary-search.component';
-import {TOOLTIP_DELAY_VALUE} from './../../eos-common/services/eos-message.service';
 import {DEPARTMENTS_DICT} from './../consts/dictionaries/department.consts';
 import {AdvCardRKEditComponent} from './../adv-card/adv-card-rk.component';
 import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild} from '@angular/core';
@@ -42,6 +41,8 @@ import {
     DANGER_EDIT_ROOT_ERROR,
     DANGER_HAVE_NO_ELEMENTS,
     DANGER_LOGICALY_RESTORE_ELEMENT,
+    DANGER_EMPTY_FILE,
+    DANGER_ERROR_FILE,
     WARN_EDIT_ERROR,
     WARN_ELEMENT_DELETED,
     WARN_ELEMENT_PROTECTED,
@@ -53,6 +54,7 @@ import {
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { PrjDefaultValuesComponent } from 'eos-dictionaries/prj-default-values/prj-default-values.component';
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
+import { TOOLTIP_DELAY_VALUE, EosTooltipService } from 'eos-common/services/eos-tooltip.service';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -120,6 +122,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
     hasCustomTable: boolean;
     hasCustomTree: boolean;
+    hasTemplateTree: boolean;
 
     accessDenied: boolean;
 
@@ -149,6 +152,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         private _eaps: EosAccessPermissionsService,
         private _sandwichSrv: EosSandwichService,
         _bcSrv: EosBreadcrumbsService,
+        _tltp: EosTooltipService,
     ) {
         this.accessDenied = false;
         this._dictSrv.openNode('');
@@ -173,8 +177,13 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                                     this.title = n.title;
                                 }
                                 this._dictSrv.setCustomNodeId(this._nodeId);
-                                this._dictSrv.selectCustomTreeNode().then ((data) => {
-                                });
+                                if (this.dictionaryId === 'templates') {
+                                    this.dictionary.descriptor['top'] = this._nodeId;
+                                    this._dictSrv.selectTemplateNode().then(() => { });
+                                } else {
+                                    this._dictSrv.selectCustomTreeNode().then ((data) => {
+                                    });
+                                }
                             } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
                                 if (this._nodeId === '0.' ) {
                                     this._nodeId = '';
@@ -189,15 +198,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         });
 
         _sandwichSrv.currentDictState$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((state: boolean[]) => this.currentState = state);
 
         _dictSrv.dictionary$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((dictionary: EosDictionary) => {
                 if (dictionary) {
                     if (this.params !== undefined) {
@@ -217,15 +226,21 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                             this.customTreeData = d;
                         });
                     }
+                    this.hasTemplateTree = dictionary.descriptor.hasTemplateTree();
+                    if (this.hasTemplateTree) {
+                        dictionary.descriptor.getTemplateTree('').then((d) => {
+                            this.treeNodes = d;
+                        });
+                    }
                 } else {
                     this.treeNodes = [];
                 }
             });
 
         _dictSrv.listDictionary$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((dictionary: EosDictionary) => {
                 if (dictionary) {
                     this.dictMode = this._dictSrv.dictMode;
@@ -240,9 +255,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             });
 
         _dictSrv.treeNode$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((node: EosDictionaryNode) => {
                 if (node) {
                     this.title = node.getTreeView().map((fld) => fld.value).join(' ');
@@ -256,9 +271,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             });
 
         _dictSrv.paginationConfig$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((config: IPaginationConfig) => {
                 if (config) {
                     this.paginationConfig = config;
@@ -266,19 +281,19 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             });
 
         _dictSrv.viewParameters$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((viewParameters: IDictionaryViewParameters) => {
                 this.params = viewParameters;
                 if (this.params.searchResults) {
                     if ((this._dictSrv.currentDictionary.isTreeType() || this._dictSrv.currentDictionary.id === CABINET_DICT.id)
                         && this._dictSrv.isSearchEnabled()) {
-                            if (this._dictSrv.isSearchFullDictionary() || this._dictSrv.currentDictionary.id === CABINET_DICT.id) {
-                                this.title = 'Поиск во всем справочнике';
-                                this.hasParent = false;
-                                return;
-                            }
+                        if (this._dictSrv.isSearchFullDictionary() || this._dictSrv.currentDictionary.id === CABINET_DICT.id) {
+                            this.title = 'Поиск во всем справочнике';
+                            this.hasParent = false;
+                            return;
+                        }
                     }
                 }
 
@@ -295,9 +310,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             });
 
         _dictSrv.openedNode$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
             .subscribe((node) => {
                 // if (this._dictSrv.currentDictionary.isTreeType() && this._dictSrv.isSearchEnabled()) {
                 //     if (this._dictSrv.isSearchFullDictionary()) {
@@ -326,7 +341,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 //         this.title = node.parent.title;
                 //     }
                 // }
-        });
+            });
 
         _bcSrv._eventFromBc$
             .pipe(
@@ -472,21 +487,34 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.certifUC:
                 this._navigateToUC();
                 break;
+            case E_RECORD_ACTIONS.downloadFile:
+                this._downloadDocTemplates();
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
     }
-
+    _downloadDocTemplates() {
+        this.dictionary.descriptor.downloadFile(this._dictSrv.listNode)
+            .then(info => {
+                if (!info) {
+                    this._msgSrv.addNewMessage(DANGER_EMPTY_FILE);
+                }
+            })
+            .catch(error => {
+                this._msgSrv.addNewMessage(DANGER_ERROR_FILE);
+            });
+    }
     _navigateToUC(): any {
-            const url = this._router.url;
-            this._storageSrv.setItem(RECENT_URL, url);
-            const _path = [
-                'spravochniki',
-                CA_CATEGORY_CL.id,
-                '0.'
-            ];
+        const url = this._router.url;
+        this._storageSrv.setItem(RECENT_URL, url);
+        const _path = [
+            'spravochniki',
+            CA_CATEGORY_CL.id,
+            '0.'
+        ];
 
-            this._router.navigate(_path);
+        this._router.navigate(_path);
     }
 
 
@@ -583,8 +611,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     hasFilter() {
         if (this.dictionaryId === DID_NOMENKL_CL ||
             (this.dictionaryId === DEPARTMENTS_DICT.id && this.dictMode === 0) ) {
-                return true;
-            }
+            return true;
+        }
         return false;
     }
 
@@ -639,7 +667,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         if (dictionary.descriptor.id === 'broadcast-channel') {
             this.modalWindow = this._modalSrv.show(CreateNodeBroadcastChannelComponent, {class: 'creating-modal'});
         } else {
-            this.modalWindow = this._modalSrv.show(CreateNodeComponent, {class: 'creating-modal'});
+            let config = { class: 'creating-modal' };
+            if (dictionary.id === 'templates') {
+                config = Object.assign(config, { ignoreBackdropClick: true });
+            }
+            this.modalWindow = this._modalSrv.show(CreateNodeComponent, config);
         }
 
         this._dictSrv.clearCurrentNode();
@@ -749,7 +781,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 if (node.data.PROTECTED) {
                     this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
                 } else if (type === E_COUNTER_TYPE.counterDepartment && node.data.rec['NUMCREATION_FLAG'] !== 1) {
-                        this._msgSrv.addNewMessage(DANGER_DEPART_NO_NUMCREATION);
+                    this._msgSrv.addNewMessage(DANGER_DEPART_NO_NUMCREATION);
                 } else {
                     this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg'});
                     this.modalWindow.content.initByNodeData(type, node.data.rec);

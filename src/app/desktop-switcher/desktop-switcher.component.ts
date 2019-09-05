@@ -4,8 +4,8 @@ import { BsDropdownDirective } from 'ngx-bootstrap/dropdown';
 
 import { EosDeskService } from '../services/eos-desk.service';
 import { EosDesk } from '../core/eos-desk';
-import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
 import {Subscription} from 'rxjs';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 
 @Component({
     selector: 'eos-desktop-switcher',

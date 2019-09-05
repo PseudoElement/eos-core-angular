@@ -88,6 +88,12 @@ export abstract class AbstractDictionaryDescriptor {
 
     abstract onPreparePrintInfo(dec: FieldsDecline): Promise<any[]>;
 
+    deleteTempRc() {
+        throw new Error('Method not implemented.');
+    }
+    downloadFile(node: any): Promise<any> {
+        return Promise.resolve();
+    }
     getParentFor(arg0: any): any {
         return null;
     }
@@ -466,8 +472,14 @@ export abstract class AbstractDictionaryDescriptor {
     hasCustomTree() {
         return false;
     }
+    hasTemplateTree() {
+        return false;
+    }
 
     getCustomTreeData(): Promise<CustomTreeNode[]> {
+        return Promise.resolve(null);
+    }
+    getTemplateTree(data) {
         return Promise.resolve(null);
     }
     getActive(): CustomTreeNode {

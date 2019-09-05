@@ -24,8 +24,8 @@ import {EosUtils} from 'eos-common/core/utils';
 import { takeUntil } from 'rxjs/operators';
 import {CopyPropertiesComponent} from '../copy-properties/copy-properties.component';
 import { ExportImportClService } from 'app/services/export-import-cl.service';
-import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
 import {CopyNodeComponent} from '../copy-node/copy-node.component';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 
 const ITEM_WIDTH_FOR_NAN = 100;
 @Component({

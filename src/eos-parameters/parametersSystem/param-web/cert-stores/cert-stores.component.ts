@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterContentInit, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, AfterContentInit, ElementRef, Input } from '@angular/core';
 import { CertStoresService, IListCertStotes } from '../cert-stores.service';
 import { Observable ,  Subject } from 'rxjs';
 import { AbstractControl } from '@angular/forms';
@@ -16,6 +16,7 @@ export class CertStoresComponent implements OnInit, OnDestroy, AfterContentInit 
     @ViewChild('InfoCertModal') InfoCertModal: ModalDirective;
     @ViewChild('addCertStoresModal') addCertStoresModal: ModalDirective;
     @ViewChild('wrapper') wrapper: ElementRef;
+    @Input() editMode;
     offsetLeftModal: number;
     formControlStores: AbstractControl;
     CurrentSelect: IListCertStotes;
@@ -72,22 +73,28 @@ export class CertStoresComponent implements OnInit, OnDestroy, AfterContentInit 
         this.certStoresService.toggleAllMarks(e);
     }
     orderByField() {
-        this.certStoresService.orderByField();
-        this.orderBy = !this.orderBy;
+        if (this.editMode) {
+            this.certStoresService.orderByField();
+            this.orderBy = !this.orderBy;
+        }
     }
     markNode(e, list: IListCertStotes) {
         this.certStoresService.markNode(e, list);
     }
     selectedNode(list: IListCertStotes) {
-        this.certStoresService.selectedNode(list);
+        if (this.editMode) {
+            this.certStoresService.selectedNode(list);
+        }
     }
     checkboxClick(e: Event) {
         e.stopPropagation();
     }
     showCert() {
+        if (this.editMode) {
             this.listCertNode$ = this.certStoresService.showListCertNode();
-        if (this.listCertNode$) {
-            this.InfoCertModal.show();
+            if (this.listCertNode$) {
+                this.InfoCertModal.show();
+            }
         }
     }
     showCertInfo(certId: string) {

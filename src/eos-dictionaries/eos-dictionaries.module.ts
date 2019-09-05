@@ -65,6 +65,7 @@ import { CreateNodeBroadcastChannelComponent } from './create-node-broadcast-cha
 import { LinkCardComponent } from './card-views/link-card.component';
 import { NadzorCardEditComponent } from './card-views/nadzor-card-edit.component';
 import { PrjDefaultValuesComponent } from './prj-default-values/prj-default-values.component';
+import { TemplateTreeComponent } from './treeTemplate/template-tree.component';
 /* services */
 import { DictionaryDescriptorService } from './core/dictionary-descriptor.service';
 import { EosDataConvertService } from './services/eos-data-convert.service';
@@ -88,6 +89,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { DictFormComponent } from './dict-forms/dict-form.component';
 import { EosDatepickerInlineComponent } from './dict-forms/eos-datepicker-inline/eos-datepicker-inline.component';
 import { CalendarFormComponent } from './dict-forms/calendar-form/calendar-form.component';
+import { TemplatesCardComponent } from './card-views/templates-card/templates-card.component';
+
 import { NomenkNodeInfoComponent } from './node-info/nomenk-node-info.component';
 import { LinkNodeInfoComponent } from './node-info/link-node-info.component';
 @NgModule({
@@ -151,6 +154,8 @@ import { LinkNodeInfoComponent } from './node-info/link-node-info.component';
         EosDatepickerInlineComponent,
         CopyPropertiesComponent,
         CopyNodeComponent,
+        TemplatesCardComponent,
+        TemplateTreeComponent,
     ],
     entryComponents: [
         ColumnSettingsComponent,

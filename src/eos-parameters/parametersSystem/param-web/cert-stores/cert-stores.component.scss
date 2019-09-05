@@ -1,7 +1,7 @@
 .cert-wrapper {
-    .cert-header {
+    /* .cert-header {
 
-    }
+    } */
     .cert-action {
         background: $light-grey-1;
         border: 1px solid $border-color-main-theme;
@@ -30,6 +30,12 @@
             .text {
                 cursor: pointer;
                 color: $button-color-main-theme;
+                position: relative;
+                top: 3px;
+            }
+            .text-dis {
+                cursor: pointer;
+                color: #646464;
                 position: relative;
                 top: 3px;
             }

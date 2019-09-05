@@ -25,6 +25,7 @@ export class ParamRcComponent extends BaseParamComponent {
                 setTimeout(() => {
                     this._updateValidators(this.form.controls);
                 });
+                this.cancelEdit();
             })
             .catch(err => {
                 if (err.code !== 434) {
@@ -73,12 +74,20 @@ export class ParamRcComponent extends BaseParamComponent {
             this.init()
                 .then(() => {
                     this.afterInitRC();
+                    this.cancelEdit();
                 }).catch(err => {
                     if (err.code !== 434) {
                         console.log(err);
                     }
                 });
         }
+        this.cancelEdit();
+    }
+    cancelEdit() {
+        this.form.disable({ emitEvent: false });
+    }
+    edit() {
+        this.form.enable({ emitEvent: false });
     }
     afterInitRC() {
         this.checkDataToDisabled('RC_CTRL', '1');

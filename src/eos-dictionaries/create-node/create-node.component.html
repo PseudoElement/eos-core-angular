@@ -21,8 +21,8 @@
 </div>
 <div class="modal-footer">
     <button class="btn btn-primary"
-        (click)="cancelCreate()">Отмена</button>
-    <button class="btn btn-primary-full"
+         (click)="cancelCreate()">Отмена</button>
+    <button class="btn btn-primary-full" *ngIf="dictionaryId !== 'templates'"
         [disabled]="this.upadating"
         (click)="create(false)">Добавить ещё</button>
     <button class="btn btn-primary-full"

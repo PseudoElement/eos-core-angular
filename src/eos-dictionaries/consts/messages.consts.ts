@@ -211,3 +211,13 @@ export const INFO_REESTR_NOT_UNIQUE: IMessage = {
     title: 'Внимание:',
     msg: 'Значение реестра не уникально. Существует {{exists}}'
 };
+export const DANGER_EMPTY_FILE: IMessage = {
+    type: 'warning',
+    title: 'Предупреждение',
+    msg: 'Шаблон в базе отсутствует',
+};
+export const DANGER_ERROR_FILE: IMessage = {
+    type: 'warning',
+    title: 'Предупреждение',
+    msg: 'Ошибка чтения файла',
+};

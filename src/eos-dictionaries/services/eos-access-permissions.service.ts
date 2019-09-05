@@ -25,6 +25,7 @@ import { REESTRTYPE_DICT } from 'eos-dictionaries/consts/dictionaries/reestrtype
 import { ORG_TYPE_DICT } from 'eos-dictionaries/consts/dictionaries/org-type.consts';
 import { RESOL_CATEGORY_DICT as RESOL_CATEGORY_DICT } from 'eos-dictionaries/consts/dictionaries/resolution-category.consts';
 import { RESPRJ_STATUS_DICT } from 'eos-dictionaries/consts/dictionaries/resprj-status.consts';
+import { Templates } from 'eos-dictionaries/consts/dictionaries/templates.consts';
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 
 
@@ -104,7 +105,10 @@ const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean, } []
         listedUT: false },
     // Ведение календаря
     { id: CALENDAR_DICT.id,         tech: E_TECH_RIGHT.CalendarSettings,
-        listedUT: false}
+        listedUT: false},
+    // Шаблоны
+    { id: Templates.id,    tech: E_TECH_RIGHT.Templates,
+        listedUT: false },
 ];
 
 

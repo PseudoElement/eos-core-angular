@@ -688,6 +688,15 @@ export class EosDictService {
             .catch(err => this._errHandler(err));
     }
 
+    selectTemplateNode() {
+        const dictionary = this._dictionaries[0];
+            this._selectTreeNode(dictionary.root);
+        this._reloadList().then(() => {
+            this.updateViewParameters({updatingList: false});
+        });
+        return Promise.resolve();
+    }
+
     openNode(nodeId: string): Promise<EosDictionaryNode> {
         const dictionary = this.currentDictionary;
         if (dictionary) {
@@ -702,6 +711,9 @@ export class EosDictService {
                         this._openNode(node);
                     }
                     return Promise.resolve(node);
+                }).catch(error => {
+                    this._errHandler(error);
+                    return Promise.resolve(this._listNode);
                 });
             } else {
                 return Promise.resolve(this._listNode);
