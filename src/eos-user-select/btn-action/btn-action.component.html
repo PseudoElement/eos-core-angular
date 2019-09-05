@@ -18,6 +18,7 @@
                 containerClass="tooltip-info"
                 trigger="hover:click"
                 [delay]="tooltipDelay"
+                (click)="add(dropdown)"
                 class="btn btn-primary-light" dropdownToggle [ngClass]=" dropdown.isOpen ? 'activemore' : ''">
                 <span
                     [ngClass]="dropdown.isOpen ? 'eos-icon eos-icon-fab-white small': 'eos-icon eos-icon-fab-blue small'"></span>
