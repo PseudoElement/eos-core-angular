@@ -2,7 +2,7 @@ import { Input, Component, OnDestroy, OnInit, ChangeDetectorRef, ViewChild, Elem
 import { FormGroup, /* AsyncValidatorFn, AbstractControl, ValidationErrors */ } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { EosDictService } from 'eos-dictionaries/services/eos-dict.service';
-import { REF_FILE, /* PipRX */ } from 'eos-rest';
+import { REF_FILE, PipRX, DOCGROUP_CL } from 'eos-rest';
 // import { EosMessageService } from 'eos-common/services/eos-message.service';
 // import { Subject } from 'rxjs';
 // import { takeUntil } from 'rxjs/operators';
@@ -20,21 +20,36 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
     @Input() isNewRecord: boolean;
     @Input() dutysList: string[];
     @Input() fullNamesList: string[];
-    upload = false;
-    newFile: REF_FILE;
-    frDatas;
+    public upload = false;
+    public newFile: REF_FILE;
+    public showDocGrList: boolean;
     public prevValues: any[];
+    public showDoc: boolean;
+    public docGroupList: DOCGROUP_CL[] = [];
+    public flagSort: boolean = false;
     @ViewChild('inp') inp;
     @ViewChild('dom') dom: ElementRef<any>;
     protected formChanges$: Subscription;
-   // private originName: string;
+    // private originName: string;
+    private frDatas;
     // private _ngUnsubscribe: Subject<any> = new Subject();
+    get showClass() {
+        return this.showDoc ? 'eos-icon-open-folder-blue' : 'eos-icon-close-folder-blue';
+    }
+    get classSort() {
+        return this.flagSort ? 'eos-icon-arrow-blue-top' : 'eos-icon-arrow-blue-bottom';
+    }
     constructor(
         protected _dictSrv: EosDictService,
         private _ref: ChangeDetectorRef,
-       /*  private _pipRx: PipRX, */
+        private _pipRx: PipRX,
         //    private _mess: EosMessageService,
     ) {
+        this.showDoc = false;
+    }
+    ngOnInit() {
+        this.initFiles();
+        this.getGocGroupForTemplates();
     }
     getCardTitle(): any {
         return null;
@@ -82,8 +97,27 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         this.setNameFile(null, { stopPropagation: () => { } });
         this._ref.detectChanges();
     }
-    ngOnInit() {
-        this.initFiles();
+    getGocGroupForTemplates() {
+        this.showDocGrList = false;
+        if (this.inputs && this.inputs['rec.CATEGORY'].value === 'Файлы документов') {
+            this._pipRx.read({
+                DOCGROUP_CL: {
+                    criteries: {
+                        'DOC_DEFAULT_VALUE.DEFAULT_ID': 'FILE',
+                        'DOC_DEFAULT_VALUE.VALUE': `${this.data['rec']['ISN_TEMPLATE']}`
+                    }
+                }
+            }).then((data: DOCGROUP_CL[]) => {
+                if (data.length) {
+                    this.showDocGrList = true;
+                    this.docGroupList = data;
+                }
+                return;
+            }).catch(error => {
+                this.showDocGrList = false;
+                this._dictSrv.errHandler(error);
+            });
+        }
     }
     ngOnDestroy() {
         if (this._dictSrv.currentDictionary.descriptor['dataNewFile']) {
@@ -91,7 +125,13 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         }
         this._ref.detach();
     }
-    initFiles() {
+    public sortDoc() {
+        this.flagSort = !this.flagSort;
+        this.docGroupList = this.docGroupList.sort((a: DOCGROUP_CL, b: DOCGROUP_CL) => {
+            return (this.flagSort ? 1 : -1) * a.CLASSIF_NAME.localeCompare(b.CLASSIF_NAME);
+        });
+    }
+    private initFiles() {
         window['_metadata'].merge({
             TEMP_RC: {
                 pk: 'ISN_TEMP_RC',
@@ -119,32 +159,5 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         ds.pipe = new window['D']['Pipe']('../OData.svc/');
         window['ds'] = ds;
     }
-    updateForm(data?) {
-      //  this.form.controls['rec.NAME_TEMPLATE'].setAsyncValidators(this.asyncNameValidate());
-    }
-
-    // asyncNameValidate(): AsyncValidatorFn {
-    //     return (control: AbstractControl): Promise<ValidationErrors | null> => {
-    //         return this.getNameTemplate(control.value).then(
-    //             name => {
-    //               if   (name && name.length > 0 && this.inputs['rec.NAME_TEMPLATE'].value !== control.value) {
-    //                  return   { 'isUnique': true };
-    //                 } else {
-    //                       return null;
-    //                 }
-    //             }
-    //         );
-    //     };
-    // }
-
-    // getNameTemplate(value) {
-    //     return this._pipRx.read({
-    //         DOC_TEMPLATES: {
-    //             criteries: {
-    //                 NAME_TEMPLATE: `${value}`
-    //             }
-    //         }
-    //     });
-    // }
 
 }

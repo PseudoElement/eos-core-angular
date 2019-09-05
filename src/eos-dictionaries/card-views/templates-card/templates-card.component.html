@@ -1,9 +1,10 @@
 <div class="doc_card_wrapper">
     <div class="addFile">
-       <div class="">
-        <p>Выберите файл</p>
-        <button class="btn btn-primary-full" [disabled]="newFile || !editMode" (click)="addFileDocTemplates()">файл</button>
-       </div>
+        <div class="">
+            <p>Выберите файл</p>
+            <button class="btn btn-primary-full" [disabled]="newFile || !editMode"
+                (click)="addFileDocTemplates()">файл</button>
+        </div>
         <div class="upload-file" *ngIf="newFile">
             <span><span class="eos-icon small eos-icon-checkbox-blue "></span>Файл успешно загружен</span>
             <button class="btn btn-primary-full" (click)="deleteFile()">удалить файл</button>
@@ -12,7 +13,8 @@
     <div class="" #dom>
         <label *ngIf="isNewRecord">
         </label>
-        <eos-dynamic-input id="inputName" #inp [input]="inputs['rec.NAME_TEMPLATE']" [form]="form" [readonly]="!editMode">
+        <eos-dynamic-input id="inputName" #inp [input]="inputs['rec.NAME_TEMPLATE']" [form]="form"
+            [readonly]="!editMode">
         </eos-dynamic-input>
     </div>
     <div class="">
@@ -20,6 +22,18 @@
     </div>
     <div class="">
         <eos-dynamic-input [input]="inputs['rec.DESCRIPTION']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+    </div>
+    <div *ngIf="showDocGrList" class="doc-wr">
+        <div class="doc-list">
+            <span class="doc-item" (click)="(showDoc = !showDoc)">Используется в группах документов<span
+                    class="eos-icon small" [ngClass]="showClass"></span></span>
+        </div>
+        <div *ngIf="showDoc">
+            <ul>
+                <span class="sort-name" (click)="sortDoc()">Название<span class="eos-icon small" [ngClass]="classSort"></span></span>
+                <li *ngFor="let doc of docGroupList">{{doc.CLASSIF_NAME}}</li>
+            </ul>
+        </div>
     </div>
 </div>
 

@@ -36,6 +36,7 @@ export const Templates: IDictionaryDescriptor = {
         type: 'select',
         options: [
             { value: '', title: '' },
+            { value: 'Информация о системе', title: 'Информация о системе' },
             { value: 'Файлы документов', title: 'Файлы документов' },
             { value: 'Печать списка РК', title: 'Печать списка РК' },
             { value: 'Печать штрих-кода (альбомная)', title: 'Печать штрих-кода (альбомная)' },

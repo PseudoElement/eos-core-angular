@@ -711,6 +711,9 @@ export class EosDictService {
                         this._openNode(node);
                     }
                     return Promise.resolve(node);
+                }).catch(error => {
+                    this._errHandler(error);
+                    return Promise.resolve(this._listNode);
                 });
             } else {
                 return Promise.resolve(this._listNode);

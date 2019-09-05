@@ -2,7 +2,7 @@ import { RecordDescriptor } from './record-descriptor';
 import { REF_FILE } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { AbstractDictionaryDescriptor } from './abstract-dictionary-descriptor';
-import { ITreeDictionaryDescriptor} from 'eos-dictionaries/interfaces';
+import { ITreeDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 export class TemplateDescriptor extends RecordDescriptor {
     dictionary: TemplateDictionaryDescriptor;
     fullSearchFields: any;
@@ -19,53 +19,58 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     dataNewFile?: REF_FILE;
     top?;
     hashTree: Map<string, string> = new Map()
-        .set('0.', '%_%')
-        .set('0.1', 'Файлы документов')
-        .set('0.2', 'Печать списка РК')
-        .set('0.3', '%альбомная%')
-        .set('0.4', '%книжная%')
-        .set('0.5', 'Печать списка РКПД')
-        .set('0.6', 'Печать списка поручений')
-        .set('0.7', 'Реестры внеш. отправки')
-        .set('0.8', 'Печать РК')
-        .set('0.9', '%opis_arh.exe%');
+        .set('0.', '%_%|isnull')
+        .set('0.1', 'Информация о системе')
+        .set('0.2', 'Файлы документов')
+        .set('0.3', 'Печать списка РК')
+        .set('0.4', '%альбомная%')
+        .set('0.5', '%книжная%')
+        .set('0.6', 'Печать списка РКПД')
+        .set('0.7', 'Печать списка поручений')
+        .set('0.8', 'Реестры внеш. отправки')
+        .set('0.9', 'Печать РК')
+        .set('1', '%opis_arh.exe%');
 
     staticDataForTree = [
         {
             id: '0.1', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Файлы документов', path: 'spravochniki/templates/0.1'
+            isExpanded: false, level: 1, title: 'Информация о системе', path: 'spravochniki/templates/0.1'
         },
         {
             id: '0.2', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать списка РК', path: 'spravochniki/templates/0.2'
+            isExpanded: false, level: 1, title: 'Файлы документов', path: 'spravochniki/templates/0.2'
         },
         {
             id: '0.3', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать штрих-кода (альбомная)', path: 'spravochniki/templates/0.3'
+            isExpanded: false, level: 1, title: 'Печать списка РК', path: 'spravochniki/templates/0.3'
         },
         {
             id: '0.4', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать штрих-кода (книжная)', path: 'spravochniki/templates/0.4'
+            isExpanded: false, level: 1, title: 'Печать штрих-кода (альбомная)', path: 'spravochniki/templates/0.4'
         },
         {
             id: '0.5', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать списка РКПД', path: 'spravochniki/templates/0.5'
+            isExpanded: false, level: 1, title: 'Печать штрих-кода (книжная)', path: 'spravochniki/templates/0.5'
         },
         {
             id: '0.6', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать списка поручений', path: 'spravochniki/templates/0.6'
+            isExpanded: false, level: 1, title: 'Печать списка РКПД', path: 'spravochniki/templates/0.6'
         },
         {
             id: '0.7', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Реестры внеш. отправки', path: 'spravochniki/templates/0.7'
+            isExpanded: false, level: 1, title: 'Печать списка поручений', path: 'spravochniki/templates/0.7'
         },
         {
             id: '0.8', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать РК', path: 'spravochniki/templates/0.8'
+            isExpanded: false, level: 1, title: 'Реестры внеш. отправки', path: 'spravochniki/templates/0.8'
         },
         {
             id: '0.9', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'opis_arh.exe', path: 'spravochniki/templates/0.9'
+            isExpanded: false, level: 1, title: 'Печать РК', path: 'spravochniki/templates/0.9'
+        },
+        {
+            id: '1', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
+            isExpanded: false, level: 1, title: 'opis_arh.exe', path: 'spravochniki/templates/1'
         },
     ];
 
@@ -140,7 +145,6 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     public extendCritery(critery, { mode, deleted }, selectedNode) {
         if (mode && mode === 2 && this.top) {
             critery['CATEGORY'] = `${this.hash().get(this.top)}`;
-        } else if (mode && mode === 0) {
             if (critery['NAME_TEMPLATE']) {
                 critery['NAME_TEMPLATE'] = critery['NAME_TEMPLATE'].replace(/"/g, '%').replace(/(\(|\)|\s)/g, '_');
             }
@@ -189,7 +193,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         });
     }
     public downloadFile(node: any) {
-        return fetch(`http://localhost/X1807/getdoctemplate.ashx/${node.id}`).then(resp => {
+        return fetch(`../getdoctemplate.ashx/${node.id}`).then(resp => {
             return resp.text().then((data) => {
                 if (data.length > 0 && data !== 'empty_mss_blob') {
                     this.createLink(node);
@@ -211,7 +215,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     }
     private createLink(node: any): void {
         const link = document.createElement('a');
-        link.href = `http://localhost/X1807/getdoctemplate.ashx/${node.id}`;
+        link.href = `../getdoctemplate.ashx/${node.id}`;
         link.setAttribute('download', node.title);
         link.click();
     }
