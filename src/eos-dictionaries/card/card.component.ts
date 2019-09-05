@@ -36,6 +36,7 @@ import {EosUtils} from '../../eos-common/core/utils';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import { CONFIRM_SAVE_INVALID } from 'app/consts/confirms.const';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 // import { UUID } from 'angular2-uuid';
 
 export enum EDIT_CARD_MODES {
@@ -56,6 +57,8 @@ export class EditedCard {
     templateUrl: 'card.component.html',
 })
 export class CardComponent implements CanDeactivateGuard, OnDestroy {
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
+
     node: EosDictionaryNode;
     nodes: EosDictionaryNode[];
 

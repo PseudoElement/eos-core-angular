@@ -1,5 +1,4 @@
 import {IQuickSrchObj} from './../dictionary-search/dictionary-search.component';
-import {TOOLTIP_DELAY_VALUE} from './../../eos-common/services/eos-message.service';
 import {DEPARTMENTS_DICT} from './../consts/dictionaries/department.consts';
 import {AdvCardRKEditComponent} from './../adv-card/adv-card-rk.component';
 import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild} from '@angular/core';
@@ -55,6 +54,7 @@ import {
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { PrjDefaultValuesComponent } from 'eos-dictionaries/prj-default-values/prj-default-values.component';
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
+import { TOOLTIP_DELAY_VALUE, EosTooltipService } from 'eos-common/services/eos-tooltip.service';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -152,6 +152,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         private _eaps: EosAccessPermissionsService,
         private _sandwichSrv: EosSandwichService,
         _bcSrv: EosBreadcrumbsService,
+        _tltp: EosTooltipService,
     ) {
         this.accessDenied = false;
         this._dictSrv.openNode('');

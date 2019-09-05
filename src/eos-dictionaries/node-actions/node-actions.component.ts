@@ -24,6 +24,7 @@ import {
 import {APS_DICT_GRANT, EosAccessPermissionsService} from 'eos-dictionaries/services/eos-access-permissions.service';
 import {takeUntil} from 'rxjs/operators';
 import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 
 @Component({
     selector: 'eos-node-actions',
@@ -34,7 +35,7 @@ export class NodeActionsComponent implements OnDestroy {
     // @Input('params') params: INodeListParams;
     @Output('action') action: EventEmitter<IActionEvent> = new EventEmitter<IActionEvent>();
 
-    tooltipDelay = ''; // TOOLTIP_DELAY_VALUE;
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
     buttons: IActionButton[];
     moreButtons: IActionButton[];
 

@@ -12,6 +12,7 @@
                             aria-hidden="true"
                             (click)="prev()"
                             tooltip="Предыдущая"
+                            [delay]="tooltipDelay"
                             placement="bottom"
                             containerClass="tooltip-info"><span class="eos-icon eos-icon-arrow-v-blue-left small"></span></button>
                         <button *ngIf="node && !editMode"
@@ -21,6 +22,7 @@
                             aria-hidden="true"
                             (click)="next()"
                             tooltip="Следующая"
+                            [delay]="tooltipDelay"
                             placement="bottom"
                             containerClass="tooltip-info"><span class="eos-icon eos-icon-arrow-v-blue-right small"></span></button>
                     </div>
@@ -48,12 +50,14 @@
                             [disabled]="!isEditEnabled()"
                             (click)="edit()"
                             tooltip="Редактировать"
+                            [delay]="tooltipDelay"
                             placement="bottom"
                             containerClass="tooltip-info"><span class="eos-icon eos-icon-edit-blue small"></span></button>
                         <a class="btn btn-primary-light"
                             routerLink="{{selfLink}}"
                             aria-hidden="true"
                             tooltip="Открыть в новом окне"
+                            [delay]="tooltipDelay"
                             placement="bottom"
                             containerClass="tooltip-info"
                             target="_blank"><span class="eos-icon eos-icon-external-link-blue small"></span></a>
@@ -62,6 +66,7 @@
                             [disabled]="!node || node.updating"
                             (click)="close()"
                             tooltip="Закрыть"
+                            [delay]="tooltipDelay"
                             placement="bottom"
                             containerClass="tooltip-info">
                     <span class="eos-icon eos-icon-close-blue small"></span>

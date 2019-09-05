@@ -98,7 +98,7 @@
                                     <span *ngIf="user.blockedSystem && !user.deleted"
                                         class="eos-icon eos-icon-Blockeduser-Red  small"></span>
                                 </span>
-                                <span class="user-list-two-colomn " tooltip="{{user.fullDueName}}" placement="bottom"
+                                <span class="user-list-two-colomn " tooltip="{{user.fullDueName}}" [delay]="tooltipDelay" placement="bottom"
                                     [ngClass]="{'last-tooltip' : last }" [containerClass]="getClassTooltip(last)"
                                     container="body">
                                     <span *ngIf="!user.deep"
@@ -107,7 +107,7 @@
                                         class="eos-icon eos-icon-DeepUser-Blue small icon-user"></span>
                                     {{ user.fullDueName}}
                                 </span>
-                                <span class="user-list-first-colomn" tooltip="{{user.department}}" placement="auto"
+                                <span class="user-list-first-colomn" tooltip="{{user.department}}" placement="auto" [delay]="tooltipDelay"
                                     containerClass="tooltip-info" container="body">{{user.department}}
                                 </span>
                             </div>

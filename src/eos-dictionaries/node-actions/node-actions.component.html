@@ -53,7 +53,7 @@
                         <button [disabled]="!item.enabled"
                             class="btn btn-primary-light {{item.buttonClass}}"
                             [ngClass]="{'active': item.isActive}"
-                            (click)="itemTooltip.hide(); doAction($event, item)">
+                            (click)="itemTooltip.hide();doAction($event, item)">
                             <span [ngClass]="item.isActive ? item.activeIconClass : (item.enabled ? item.iconClass : item.disabledIconClass)"></span></button>
                     </div>
                 </div>

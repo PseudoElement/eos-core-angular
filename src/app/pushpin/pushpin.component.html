@@ -9,6 +9,7 @@
         dropdownToggle
         container="body"
         tooltip="Прикрепить"
+        [delay]="tooltipDelay"
         placement="left"
         [isDisabled]="dropDown.isOpen"
         [ngClass]="{'info-open' : infoOpened, 'info-close' : !infoOpened }"

@@ -2,8 +2,7 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { IFieldView, E_FIELD_TYPE } from '../interfaces';
 import { HintConfiguration } from '../long-title-hint/hint-configuration.interface';
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
-import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-message.service';
-
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 
 interface ISpecialIcon {
     class: string;

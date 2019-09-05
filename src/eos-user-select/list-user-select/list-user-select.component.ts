@@ -30,6 +30,7 @@ import { ErrorHelperServices } from '../../eos-user-params/shared/services/helpe
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { IOpenClassifParams } from 'eos-common/interfaces';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
+import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 interface TypeBread {
     action: number;
 }
@@ -40,6 +41,7 @@ interface TypeBread {
 export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentChecked {
     @ViewChild('listContent') listContent;
     @ViewChild('quickSearchOpen') quickSearch;
+    tooltipDelay = TOOLTIP_DELAY_VALUE;
     currentState: boolean[];
     createUserModal: BsModalRef;
     listUsers: UserSelectNode[];

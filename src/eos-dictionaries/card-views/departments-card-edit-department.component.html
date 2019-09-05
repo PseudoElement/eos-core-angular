@@ -75,7 +75,7 @@
             <div class="card-flag">
                 <eos-dynamic-input [input]="inputs['rec.CARD_FLAG']"
                                    [form]="form"
-                                   [readonly]="!(this.isNewRecord && this.editMode)"></eos-dynamic-input>
+                                   [readonly]="!(this.editMode)"></eos-dynamic-input>
                 <eos-dynamic-input [input]="inputs['rec.EXPEDITION_FLAG']"
                                    [form]="form"
                                    (click)="this.clickNumcreation()"
