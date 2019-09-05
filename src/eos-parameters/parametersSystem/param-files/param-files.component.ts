@@ -27,6 +27,7 @@ export class ParamFielsComponent extends BaseParamComponent {
     prepInputsAttach;
     isChangeFormAttach = false;
     newDataAttach;
+    editMode: boolean;
     readonly arrSetValidation = ['DOC_RC_EXTENSIONS', 'PRJ_VISA_SIGN_EXTENSIONS', 'REPLY_EXTENSIONS', 'RESOLUTION_EXTENSIONS', 'PRJ_RC_EXTENSIONS'];
     formAttachfields = [
         {
@@ -133,6 +134,7 @@ export class ParamFielsComponent extends BaseParamComponent {
                         this._currentFormAttachStatus = status;
                     })
                 );
+                this.cancelEdit();
             })
             .catch(err => {
                 throw err;
@@ -200,6 +202,18 @@ export class ParamFielsComponent extends BaseParamComponent {
         });
         return inputs;
     }
+    edit() {
+        this.form.enable({ emitEvent: false });
+        this.formAttach.enable({ emitEvent: false });
+        this.formAttachChoice.enable({ emitEvent: false });
+        this.editMode = true;
+    }
+    cancelEdit() {
+        this.form.disable({ emitEvent: false });
+        this.formAttach.disable({ emitEvent: false });
+        this.formAttachChoice.disable({ emitEvent: false });
+        this.editMode = false;
+    }
     changeByPathAttach(path: string, value: any) {
         const key = path.split('_').pop();
         let _value = null;
@@ -221,7 +235,9 @@ export class ParamFielsComponent extends BaseParamComponent {
         return _value !== oldValue;
     }
     showInfoAttachFiles() {
-        this.infoAttachFilesModal.show();
+        if (this.editMode) {
+            this.infoAttachFilesModal.show();
+        }
     }
     hideInfoAttachFiles() {
         this.infoAttachFilesModal.hide();

@@ -15,6 +15,8 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
     readOnlyPassCase: boolean;
     readOnlyPassListSubstr: boolean;
     collectionVisible = true;
+    public masDisable: any[] = [];
+    editMode: boolean;
     constructor(
         private _modalSrv: BsModalService,
         injector: Injector
@@ -39,6 +41,7 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
             this.init()
                 .then(() => {
                     this.afterInitRC();
+                    this.cancelEdit();
                 })
                 .catch(err => {
                     if (err.code !== 434) {
@@ -46,6 +49,7 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
                     }
                 });
         }
+        this.cancelEdit();
     }
     afterInitRC() {
         this.subscriptions.push(
@@ -88,7 +92,26 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
                 })
         );
         this.form.controls['rec.PASS_LIST'].updateValueAndValidity();
+        this.cancelEdit();
 
+    }
+    edit() {
+        Object.keys(this.form.controls).forEach(key => {
+            if (this.masDisable.includes(key)) {
+                this.form.controls[key].enable({ emitEvent: false });
+            }
+        });
+        this.editMode = false;
+    }
+    cancelEdit() {
+        this.masDisable = [];
+        Object.keys(this.form.controls).forEach(key => {
+            if (!this.form.controls[key].disabled) {
+                this.masDisable.push(key);
+            }
+        });
+        this.form.disable({ emitEvent: false });
+        this.editMode = true;
     }
     openCollection() {
         // this.collectionVisible = value;

@@ -3,7 +3,9 @@
     *ngIf="inputs">
     <eos-param-header
         [title]="titleHeader"
-        (submitForm)="btnDisabled ? cancel() : submit()"
+        (submitForm)="btnDisabled ? cancel() : submit(); cancelEdit()"
+        [editBtn]="true"
+        (editForm)="edit()"
         (cancelForm)="cancel()"
         [statusBtnSub]="btnError"
     ></eos-param-header>

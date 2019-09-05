@@ -1,7 +1,9 @@
 <div class="input-param-wrapper input-param-auth-wrapper" *ngIf="inputs">
     <eos-param-header
         [title]="titleHeader"
-        (submitForm)="btnDisabled ? cancel() : submit()"
+        (submitForm)="btnDisabled ? cancel(): submit(); cancelEdit()"
+        [editBtn]="true"
+        (editForm)="edit()"
         (cancelForm)="cancel()"
         [statusBtnSub]="btnError"
     ></eos-param-header>
@@ -72,9 +74,10 @@
             ></eos-dynamic-input>
             <div class="parm-auth-btn-wrap">
                 <button
-                    class="btn btn-primary"
-                    [disabled]="disabledField"
+                    class="btn"
+                    [disabled]="disabledField || editMode"
                     (click)="openCollection()"
+                    [ngClass]="{'btn-primary': !editMode && !disabledField, 'btn-light': editMode && disabledField}"
                 >Словарь</button>
             </div>
         </div>

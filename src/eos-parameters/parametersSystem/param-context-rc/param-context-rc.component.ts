@@ -13,6 +13,8 @@ import { takeUntil, debounceTime } from 'rxjs/operators';
 })
 export class ParamContextRcComponent extends BaseParamComponent implements OnInit, OnDestroy {
     @Input() btnError;
+    masDisable: any[] = [];
+    masDisableContextChoice: any[] = [];
     formContextChoice: FormGroup;
     formReadonli: boolean;
     hiddenFilesContext = false;
@@ -82,6 +84,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
                 if (!data) {
                     this.formContextChoice.controls.contextFile.patchValue(false);
                 }
+                this.cancelEdit();
             })
             .catch(err => {
                 if (err.code !== 434) {
@@ -124,6 +127,7 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
             this.ngOnDestroy();
             this.initContext();
         }
+        this.cancelEdit();
     }
     submit() {
         if (this.newData) {
@@ -203,6 +207,18 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
                 this._currentFormStatus = status;
             })
         );
+    }
+    edit() {
+        if (this.formContextChoice.controls.contextFile.value) {
+            this.form.enable({ emitEvent: false });
+            this.formContextChoice.enable({ emitEvent: false });
+        } else {
+            this.formContextChoice.controls.contextFile.enable({ emitEvent: false });
+        }
+    }
+    cancelEdit() {
+        this.form.disable({ emitEvent: false });
+        this.formContextChoice.disable({ emitEvent: false });
     }
     subscribeChoiceForm() {
         this.subscriptions.push(

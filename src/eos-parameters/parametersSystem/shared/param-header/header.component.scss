@@ -1,5 +1,5 @@
 .paaram-header-wrapp {
-    padding: 15px;
+    padding: 10px 15px;
     position: relative;
     border-bottom: solid 1px $border-color-main-theme;
     background: $light-grey-1;
@@ -12,10 +12,15 @@
     }
     .header__button-wrap {
         position: absolute;
-        top: 13px;
+        top: 10px;
         right: 12px;
         .header__button {
             margin-right: 10px;
         }
+    }
+    .header__button-edit{
+        position: absolute;
+        top: 5px;
+        right: 12px;
     }
 }
