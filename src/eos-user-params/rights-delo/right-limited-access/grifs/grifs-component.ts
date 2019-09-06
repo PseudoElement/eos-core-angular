@@ -69,12 +69,12 @@ export class GrifsComponent implements OnInit, OnDestroy {
     clickLable(event, item: any) {
         event.preventDefault();
         event.stopPropagation();
-      /*   if (event.target.tagName === 'SPAN' && this.editFlag) { // click to checkbox */
+        if (this.editFlag) { // click to checkbox
         item.value = !item.value;
         this.form.get(item.key).setValue(item.value);
         const data = this.checkChenge(this.form, this.inputs);
         this.changeGrifs.emit( {flag: !data.length, form:  this.form , data: data, });
-        /* } */
+        }
     }
     checkChenge(form: FormGroup, input: any[]) {
         const returnCheng = [];
