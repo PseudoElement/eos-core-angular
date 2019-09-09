@@ -600,7 +600,8 @@ const commonMeta = {
             UPD_WHO: _t.i,
             ACCESS_MODE: _t.i,
             INITIATIVE_RESOLUTION: _t.i,
-            ACCESS_MODE_FIXED: _t.i
+            ACCESS_MODE_FIXED: _t.i,
+            REG_DATE_PROTECTED: _t.i
         },
         readonly: [
 

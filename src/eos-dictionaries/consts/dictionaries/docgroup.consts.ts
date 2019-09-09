@@ -140,6 +140,10 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         title: 'Без редактирования',
         type: 'boolean',
     }, {
+        key: 'REG_DATE_PROTECTED',
+        title: 'Запрещено редактировать рег. дату',
+        type: 'boolean',
+    }, {
         key: 'INITIATIVE_RESOLUTION',
         title: 'Инициативные поручения',
         type: 'boolean',
@@ -149,7 +153,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     editFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME', 'NOTE', 'IS_COPYCOUNT', 'ACCESS_MODE_FIXED', 'E_DOCUMENT', 'PRJ_TEST_UNIQ_FLAG',
         'PRJ_DEL_AFTER_REG', 'PRJ_APPLY_EXEC_EDS', 'PRJ_APPLY2_EDS', 'PRJ_APPLY_EDS', 'PRJ_AUTO_REG', 'PRJ_SHABLON', 'PRJ_NUM_FLAG',
         'TEST_UNIQ_FLAG', 'ENCRYPT_FLAG', 'EDS_FLAG', 'SHABLON', 'DOCNUMBER_FLAG', 'DOCGROUP_INDEX', 'RC_TYPE', 'INITIATIVE_RESOLUTION',
-        'ACCESS_MODE'],
+        'ACCESS_MODE', 'REG_DATE_PROTECTED'],
     searchFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME'],
     fullSearchFields: ['CLASSIF_NAME', 'FULLNAME', 'DOCGROUP_INDEX', 'NOTE'],
     quickViewFields: ['CLASSIF_NAME', 'FULLNAME', 'NOTE', 'DOCGROUP_INDEX', 'RC_TYPE' ],
