@@ -7,5 +7,5 @@ export const HTTP_OPTIONS = {
 export const URL_LIMIT = 1000;
 // контсанты внутренние для pip
 export const BATCH_BOUNDARY = 'batch__lima';
-export const CHANGESET_BOUNDARY = 'changeSet__lima'; // createBoundary('changeset_');
+export const CHANGESET_BOUNDARY = 'changeset__lima'; // createBoundary('changeset_');
 
