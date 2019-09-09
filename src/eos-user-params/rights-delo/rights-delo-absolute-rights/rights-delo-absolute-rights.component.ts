@@ -132,12 +132,12 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             USER_CL: {
                 criteries: {
                     DELO_RIGHTS: '[1]%',
-                    PROTECTED: '0',
                     DELETED: '0'
                 },
             },
             expand: 'USER_TECH_List'
         }).then((data: any) => {
+            const users = data.filter((tech) => tech.SURNAME_PATRON !== 'Администратор');
             let count = 0;
             let sysTechBol = false;
             const arr = this.listRight[0].change;
@@ -152,7 +152,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     }
                 });
             }
-            for (const user of data) {
+            for (const user of users) {
                 if (this.curentUser.ISN_LCLASSIF === user.ISN_LCLASSIF && sysTechBol && !this.CheckLimitTech(user.USER_TECH_List)) {
                     count++;
                 }
@@ -160,7 +160,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     count++;
                 }
             }
-            if (data.length > count) {
+            if (users.length > count) {
                 this.limitUserTech = false;
             } else {
                 this.limitUserTech = true;
