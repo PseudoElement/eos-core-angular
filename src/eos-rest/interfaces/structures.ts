@@ -1032,6 +1032,10 @@ export interface DOCGROUP_CL extends IHierCL, IStamp {
     /**
      * Вид РК
      */
+    REG_DATE_PROTECTED: string;
+     /**
+     * Запрещение на редактирование рег. даты
+     */
     RC_TYPE: number;
     /**
      * Индекс группы
