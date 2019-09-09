@@ -1270,9 +1270,16 @@ export class EosDictService {
                             } else {
                                 return null;
                             }
+                        }).then((val: any) => {
+                            if (val !== null) {
+                                return this._PreSaveConfirmRegData(data, val[0]);
+                            } else {
+                                return this._PreSaveConfirmRegData(data);
+                            }
                         });
+                    } else {
+                        return this._PreSaveConfirmRegData(data);
                     }
-                    return Promise.resolve(null);
                 }).catch(err => {
                     this._msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка РК'});
                 });
@@ -1353,6 +1360,52 @@ export class EosDictService {
             }
         }
         return Promise.resolve(null);
+    }
+
+    private _PreSaveConfirmRegData(data: any, valOrig?: any): Promise<any> {
+       return this._apiSrv.read({
+            DOCGROUP_CL: {
+                criteries: {
+                    DUE: `${data.rec['DUE']}%`
+                }
+            }
+        }).then((doc: any) => {
+            if (doc[0].REG_DATE_PROTECTED !== data.rec.REG_DATE_PROTECTED && doc.length > 1) {
+                const confirmObjReg: IConfirmWindow = {
+                    title: 'Ведение справочников:',
+                    body: 'Обновить значение флага "Запрещено редактировать Рег. дату" у подчиненных записей?',
+                    okTitle: 'Да',
+                    cancelTitle: 'Нет'
+                };
+                return this.confirmSrv.confirm(confirmObjReg)
+                .then((confirmReg: boolean) => {
+                    if (confirmReg) {
+                        const arrDocGr = [];
+                        doc.map((item) => {
+                            if (item.DUE !== data.rec.DUE) {
+                                arrDocGr.push({
+                                    method: 'MERGE',
+                                    requestUri: `DOCGROUP_CL('${item.DUE}')`,
+                                    data: {
+                                        REG_DATE_PROTECTED: data.rec.REG_DATE_PROTECTED
+                                    }
+                                });
+                            }
+                        });
+                        if (valOrig) {
+                            arrDocGr.push(valOrig);
+                        }
+                        return arrDocGr;
+                    } else {
+                        if (valOrig) {
+                            return valOrig;
+                        }
+                        return null;
+                    }
+                });
+            }
+            return Promise.resolve(null);
+        });
     }
 
     private getTreeNode(nodeId: string): Promise<EosDictionaryNode> {

@@ -84,6 +84,10 @@
                            [input]="inputs['rec.INITIATIVE_RESOLUTION']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input class="pull-right"
+                           [input]="inputs['rec.REG_DATE_PROTECTED']"
+                           [form]="form"
+                           [readonly]="!editMode"></eos-dynamic-input>
     </div>
     <ng-container *ngIf="isPrjFlag&&!isNode">
         <eos-dynamic-input [input]="inputs['rec.PRJ_DEL_AFTER_REG']"
