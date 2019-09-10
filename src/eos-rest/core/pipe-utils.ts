@@ -72,7 +72,7 @@ export class PipeUtils {
         const md = data['odata.metadata'];
         const tn = md.split('#')[1].split('/')[0];
         const items = data.value || [data];
-        if (tn !== 'Collection(Edm.Int32)' && tn !== 'Edm.String') { // костыль для ответа от сопа по созданию пользователя
+        if (tn !== 'Collection(Edm.Int32)' && tn !== 'Edm.String' && tn !== 'Int32') { // костыль для ответа от сопа по созданию пользователя
             this.parseEntity(items, tn);
         }
         if (data['odata.nextLink']) { // TODO распарсить строку со значением вида: USER_CL?$orderby=ISN_LCLASSIF&$skiptoken=4,2,54
