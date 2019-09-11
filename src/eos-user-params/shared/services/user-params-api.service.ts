@@ -108,13 +108,13 @@ export class UserParamApiSrv {
         let propOrderBy;
         if (this.currentSort === 'login') {
             propOrderBy = 'CLASSIF_NAME';
-            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
         } else if (this.currentSort === 'department') {
             propOrderBy = 'NOTE';
-            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
         }
         // let propOrderBy = this.currentSort === 'login' ? 'CLASSIF_NAME' : 'NOTE';
-        //  propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+        //  propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
 
         if (this.stateTehUsers) {
             propOrderBy = 'DUE_DEP asc';
@@ -149,7 +149,7 @@ export class UserParamApiSrv {
                 }
                 if (this.currentSort === 'fullDueName') {
                     propOrderBy = 'SURNAME_PATRON';
-                    propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+                    propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
                     ob['orderby'] = propOrderBy;
                 } else {
                     q.orderby = `${propOrderBy}`;
@@ -173,7 +173,7 @@ export class UserParamApiSrv {
                 }
                 if (this.currentSort === 'fullDueName') {
                     propOrderBy = 'SURNAME_PATRON';
-                    propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+                    propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
                     ob['orderby'] = propOrderBy;
                 } else {
                     q.orderby = `${propOrderBy}`;
@@ -184,7 +184,7 @@ export class UserParamApiSrv {
         if (this.configList.shooseTab === 1) {
             if (this.currentSort === 'fullDueName') {
                 propOrderBy = 'SURNAME_PATRON';
-                propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+                propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
                 //   q.orderby = `${propOrderBy}`;
                 // propOrderBy = 'DEP.CARD.CLASSIF_NAME';
                 // ob['orderby'] = propOrderBy;
@@ -223,7 +223,7 @@ export class UserParamApiSrv {
         const dbQuery = Object.assign({}, this._storageSrv.getItem('quickSearch'));
         const config = this._storageSrv.getItem('users');
         let propOrderBy = this.currentSort === 'login' ? 'CLASSIF_NAME' : 'NOTE';
-        propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' asc' : ' desc';
+        propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
         dbQuery.orderby = propOrderBy;
         dbQuery.top = `${config ? config.length : 10}`;
         dbQuery.skip = `${config ? config.length * config.current - config.length : 0}`;

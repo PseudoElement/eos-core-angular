@@ -41,6 +41,7 @@ export class EosStorageService {
             this.removeItem('sum-protocol');
             this.removeItem('users');
             this.removeItem('pageLength');
+            sessionStorage.removeItem('currentSort');
         }
     }
 
