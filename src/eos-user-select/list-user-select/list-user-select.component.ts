@@ -284,7 +284,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         this.currentDue = due;
     }
     checkSortSessionStore() {
-        const sort = JSON.parse(sessionStorage.getItem('currentSort'));
+        const sort = this._storage.currentSort;
         if (sort) {
             this._apiSrv.srtConfig['login'].checked = false;
             this._apiSrv.currentSort = sort['sort'];
@@ -428,7 +428,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     sortPageList(nameSort: string) {
         this._apiSrv.currentSort = nameSort;
         this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun = !this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun;
-        sessionStorage.setItem('currentSort', JSON.stringify({ 'sort': nameSort, 'upDoun': this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun }));
+        this._storage.currentSort = { 'sort': nameSort, 'upDoun': this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun };
         if (!this._apiSrv.srtConfig[this._apiSrv.currentSort].checked) {
             for (const key in this._apiSrv.srtConfig) {
                 if (this._apiSrv.srtConfig.hasOwnProperty(key)) {
