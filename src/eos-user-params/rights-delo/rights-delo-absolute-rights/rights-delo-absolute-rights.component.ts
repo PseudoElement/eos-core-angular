@@ -15,7 +15,7 @@ import { RadioInput } from 'eos-common/core/inputs/radio-input';
 import { NodeAbsoluteRight } from './node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
-import { USERDEP, USER_TECH, USER_EDIT_ORG_TYPE, PipRX } from 'eos-rest';
+import { USERDEP, USER_TECH, PipRX } from 'eos-rest';
 // import { RestError } from 'eos-rest/core/rest-error';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
@@ -70,7 +70,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this._userParamsSetSrv.submitSave = this.submit(true);
             });
         this._userParamsSetSrv.getUserIsn({
-            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
+            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List'
         })
             .then(() => {
                 const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
@@ -222,7 +222,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         this._storageSrv.removeItem('abs_prav_mas');
                         if (!flag) {
                             return this._userParamsSetSrv.getUserIsn({
-                                expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
+                                expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List'
                             })
                             .then(() => {
                                 this.init();
@@ -254,7 +254,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this._storageSrv.removeItem('abs_prav_mas');
         this._pushState();
         this._userParamsSetSrv.getUserIsn({
-            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_EDIT_ORG_TYPE_List'
+            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List'
         })
         .then(() => {
             this.init();
@@ -308,9 +308,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.classif)) {
                 this._deleteAllClassif(item);
             }
-            if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.editOrganiz)) {
-                this._deleteAllOrgType(item);
-            }
+            // if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.editOrganiz)) {
+            //     this._deleteAllOrgType(item);
+            // }
             if (item !== this.selectedNode && item.isCreate) {
                 this.selectNode(item);
             }
@@ -488,21 +488,21 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.checkChange();
     }
 
-    private _deleteAllOrgType(node: NodeAbsoluteRight) {
-        node.deleteChange();
-        const list = this.curentUser.USER_EDIT_ORG_TYPE_List;
-        if (list.length) {
-            list.forEach((item: USER_EDIT_ORG_TYPE) => {
-                node.pushChange({
-                    method: 'DELETE',
-                    isn_org: item.ISN_ORG_TYPE,
-                    data: item
-                });
-            });
-            //   this._userParamsSetSrv.userEditOrgType.splice(0,  this._userParamsSetSrv.userEditOrgType.length);
-            this.checkChange();
-        }
-    }
+    // private _deleteAllOrgType(node: NodeAbsoluteRight) {
+    //     node.deleteChange();
+    //     const list = this.curentUser.USER_EDIT_ORG_TYPE_List;
+    //     if (list.length) {
+    //         list.forEach((item: USER_EDIT_ORG_TYPE) => {
+    //             node.pushChange({
+    //                 method: 'DELETE',
+    //                 isn_org: item.ISN_ORG_TYPE,
+    //                 data: item
+    //             });
+    //         });
+    //         //   this._userParamsSetSrv.userEditOrgType.splice(0,  this._userParamsSetSrv.userEditOrgType.length);
+    //         this.checkChange();
+    //     }
+    // }
 
     private _createBatch(chenge: IChengeItemAbsolute, node: NodeAbsoluteRight, qUserCl) {
         const uId = this._userParamsSetSrv.userContextId;
@@ -529,9 +529,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 break;
         }
         let batch = {};
-        if (node.contentProp === 5) {
-            batch = this._batchEditOrgType(chenge, uId);
-        } else {
+        // if (node.contentProp === 5) {
+        //     batch = this._batchEditOrgType(chenge, uId);
+        // } else {
             batch = {
                 method: chenge.method,
                 requestUri: `USER_CL(${uId})${url}`,
@@ -541,23 +541,22 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 delete chenge.data['__metadata'];
                 batch['data'] = chenge.data;
             }
-        }
         return batch;
     }
-    private _batchEditOrgType(chenge: IChengeItemAbsolute, uId) {
-        const batch = {};
-        batch['method'] = chenge.method;
-        if (chenge.method === 'POST') {
-            batch['requestUri'] = `USER_CL(${uId})/USER_EDIT_ORG_TYPE_List`;
-            delete chenge.data['CompositePrimaryKey'];
-            delete chenge.data['__metadata'];
-            batch['data'] = chenge.data;
-        }
-        if (chenge.method === 'DELETE') {
-            batch['requestUri'] = `USER_CL(${uId})/USER_EDIT_ORG_TYPE_List(\'${uId} ${chenge.isn_org}\')`;
-        }
-        return batch;
-    }
+    // private _batchEditOrgType(chenge: IChengeItemAbsolute, uId) {
+    //     const batch = {};
+    //     batch['method'] = chenge.method;
+    //     if (chenge.method === 'POST') {
+    //         batch['requestUri'] = `USER_CL(${uId})/USER_EDIT_ORG_TYPE_List`;
+    //         delete chenge.data['CompositePrimaryKey'];
+    //         delete chenge.data['__metadata'];
+    //         batch['data'] = chenge.data;
+    //     }
+    //     if (chenge.method === 'DELETE') {
+    //         batch['requestUri'] = `USER_CL(${uId})/USER_EDIT_ORG_TYPE_List(\'${uId} ${chenge.isn_org}\')`;
+    //     }
+    //     return batch;
+    // }
     private _checkCreatePRJNotEmptyAllowed(): boolean {
         let allowed = false;
         this.listRight.forEach((node: NodeAbsoluteRight) => {

@@ -112,9 +112,9 @@ export class UserParamsService {
                 if (this._userContext.USER_RIGHT_DOCGROUP_List) {
                     this._userContext.USER_RIGHT_DOCGROUP_List.forEach(item => this.userRightDocgroupList.push(Object.assign({}, item)));
                 }
-                if (this._userContext.USER_EDIT_ORG_TYPE_List) {
-                    this._userContext.USER_EDIT_ORG_TYPE_List.forEach(item => this.userEditOrgType.push(Object.assign({}, item)));
-                }
+                // if (this._userContext.USER_EDIT_ORG_TYPE_List) {
+                //     this._userContext.USER_EDIT_ORG_TYPE_List.forEach(item => this.userEditOrgType.push(Object.assign({}, item)));
+                // }
                 if (this._userContext.USERCARD_List) {
                     this._userContext['isAccessDelo'] = !!this._userContext.USERCARD_List.length;
                 }
