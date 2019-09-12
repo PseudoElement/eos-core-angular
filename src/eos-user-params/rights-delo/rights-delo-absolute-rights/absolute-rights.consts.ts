@@ -102,15 +102,15 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
-    {
-        controlType: E_FIELD_TYPE.boolean, // 12
-        key: '8',
-        label: 'Редактирование организаций',
-        data: {
-            isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.editOrganiz
-        }
-    },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean, // 12
+    //     key: '8',
+    //     label: 'Редактирование организаций',
+    //     data: {
+    //         isSelected: false,
+    //         rightContent: E_RIGHT_DELO_ACCESS_CONTENT.editOrganiz
+    //     }
+    // },
     {
         controlType: E_FIELD_TYPE.boolean,
         key: '20',
