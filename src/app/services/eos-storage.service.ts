@@ -11,7 +11,6 @@ export class EosStorageService {
      * Service for keep any runtime data
      * Can keep data in localStorage for using in cases when App reboots
      */
-    public currentSort: any;
     private _data: any;
     private _userId: string;
     constructor() {
