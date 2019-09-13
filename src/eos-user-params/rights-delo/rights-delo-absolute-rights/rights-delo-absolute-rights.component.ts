@@ -131,7 +131,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         return this.pipRx.read({
             USER_CL: {
                 criteries: {
-                    DELO_RIGHTS: '[1]%',
+                    DELO_RIGHTS: '1%',
                     DELETED: '0'
                 },
             },

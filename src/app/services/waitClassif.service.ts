@@ -70,6 +70,9 @@ export class WaitClassifService {
         if (params.isn_user !== undefined && params.isn_user !== null) {
             url += `?isn_user=${params.isn_user}`;
         }
+        if (params.clUser !== undefined && params.clUser !== null) {
+            url += `&clUser=${params.clUser}`;
+        }
         return url;
     }
     private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
