@@ -30,7 +30,7 @@ export interface IOpenClassifParams {
     criteriesSearch?: boolean;
     criteriesName?: string;
     user_id?: number;
-
+    clUser?: boolean;
     // для STDText
     isn_user?: number;
     // name?: string;

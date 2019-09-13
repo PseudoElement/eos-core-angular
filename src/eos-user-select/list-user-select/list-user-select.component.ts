@@ -532,6 +532,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         const param: IOpenClassifParams = {
             classif: 'StdText',
             // id_std: '463_DOC_RC_ANNOTAT',
+            clUser: true,
             isn_user: -99,
             // form: 'DOC_RC.aspx',
             // name: 'ANNOTAT463'
