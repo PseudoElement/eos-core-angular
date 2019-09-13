@@ -243,6 +243,35 @@ export class AbsoluteRightsClassifComponent implements OnInit {
         return this._userParmSrv.confirmCallCard(this.newCards);
     }
 
+    DeleteChildCards(str: string): Promise<any> {
+        return this.pipRx.read({
+            DEPARTMENT: {
+                criteries: {
+                    DUE: `${str}%`,
+                    ISN_CABINET: `isnull`,
+                    CARD_FLAG: `1`,
+                }
+        }}).then((data: any) => {
+            this.strNewCards = [{value: 'Исключить из перечня подчиненные картотеки:'}];
+            const arrDueOld = [];
+            const newCards = [];
+            this.userTechList.forEach((item) => {
+                if (item.FUNC_NUM === 1) {
+                    arrDueOld.push(item.DUE);
+                }
+            });
+            data.forEach((card) => {
+                if (arrDueOld.indexOf(card.DUE) !== -1) {
+                    newCards.push(card);
+                    if (card.DUE !== str) {
+                        this.strNewCards.push({value: String(card.CARD_NAME), due: card.DUE});
+                    }
+                }
+            });
+            return newCards;
+        });
+    }
+
     private _init () {
         if (this.selectedNode.isCreate || !this.curentUser['TECH_RIGHTS']) {
             const techRights: string = '1'.repeat(40);

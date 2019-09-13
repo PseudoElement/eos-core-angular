@@ -204,43 +204,50 @@ export class RightClassifNode {
     DeleteInstance() {
         if (this.curentSelectedNode) {
             if (this.curentSelectedNode.children.length !== 0 && this.curentSelectedNode.DUE !== '0.' && this._config.rootLabel === 'Центральная картотека') {
-                this._component.strNewCards = [];
-                this._component.strNewCards = [{value: 'Исключить из перечня подчиненные картотеки:'}];
-                this.curentSelectedNode.children.forEach((card) => {
-                    this._component.strNewCards.push({value: String(card.label), due: card.DUE});
-                });
-                this._component._userParmSrv.confirmCallCard(this._component.newCards).then((answer) => {
-                    if (answer === true) {
-                        const childDue = this.curentSelectedNode.children.map(item => {
+                this._component.DeleteChildCards(this.curentSelectedNode.DUE).then((data: any) => {
+                    const newData = data.map((item) => {
+                        const cardTech = this._component.createEntyti<USER_TECH>({
+                            ISN_LCLASSIF: this._curentUser.ISN_LCLASSIF,
+                            FUNC_NUM: this.key,
+                            CLASSIF_ID: E_CLASSIF_ID[(this.key.toString())],
+                            DUE: item.DUE,
+                            ALLOWED: this.getAllowedParent(item.DUE) ? 0 : 1,
+                        }, 'USER_TECH');
+                        return Object.assign(item, {cardTech: cardTech});
+                    });
+                    this._component._userParmSrv.confirmCallCard(this._component.newCards).then((answer) => {
+                        if (answer === true) {
+                            const childDue = newData.map(item => {
+                                this._parentNode.pushChange({
+                                    method: 'DELETE',
+                                    due: item.DUE,
+                                    funcNum: 1,
+                                    data: item.cardTech
+                                });
+                                return item.DUE;
+                            });
+                            this.listContent = this.listContent.filter(node => childDue.indexOf(node.DUE) === -1);
+                            this._listUserTech = this._listUserTech.filter(node => childDue.indexOf(node['DUE']) === -1);
+                            this._component.userTechList = this._component.userTechList.filter(node => childDue.indexOf(node['DUE']) === -1);
+                        } else {
+                            this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode);
                             this._parentNode.pushChange({
                                 method: 'DELETE',
-                                due: item.DUE,
-                                funcNum: 1,
-                                data: item.data['userTech']
+                                due: this.curentSelectedNode.DUE,
+                                funcNum: this.key,
+                                data: this.curentSelectedNode.data['userTech']
                             });
-                            return item.DUE;
-                        });
-                        this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode && childDue.indexOf(node.DUE) === -1);
-                        this._listUserTech = this._listUserTech.filter(node => childDue.indexOf(node['DUE']) === -1);
-                        this._component.userTechList = this._component.userTechList.filter(node => childDue.indexOf(node['DUE']) === -1);
-                    } else {
-                        this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode);
-                    }
-                    this._parentNode.pushChange({
-                        method: 'DELETE',
-                        due: this.curentSelectedNode.DUE,
-                        funcNum: this.key,
-                        data: this.curentSelectedNode.data['userTech']
+                            const index = this._listUserTech.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
+                            this._listUserTech.splice(index, 1);
+                            const index2 = this._component.userTechList.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
+                            this._component.userTechList.splice(index2, 1);
+                        }
+                        if (this.listContent.length === 0) {
+                            this._item.label =  'Пользователи';
+                        }
+                        this.curentSelectedNode = null;
+                        this._component.Changed.emit();
                     });
-                    if (this.listContent.length === 0) {
-                        this._item.label =  'Пользователи';
-                    }
-                    const index = this._listUserTech.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
-                    this._listUserTech.splice(index, 1);
-                    const index2 = this._component.userTechList.findIndex(node => this.curentSelectedNode.DUE === node['DUE']);
-                    this._component.userTechList.splice(index2, 1);
-                    this.curentSelectedNode = null;
-                    this._component.Changed.emit();
                 });
             } else {
                 this.listContent = this.listContent.filter(node => node !== this.curentSelectedNode);
