@@ -13,7 +13,6 @@ export class EosStorageService {
      */
     private _data: any;
     private _userId: string;
-
     constructor() {
         this.init('nobody');
     }
@@ -41,7 +40,6 @@ export class EosStorageService {
             this.removeItem('sum-protocol');
             this.removeItem('users');
             this.removeItem('pageLength');
-            sessionStorage.removeItem('currentSort');
         }
     }
 
