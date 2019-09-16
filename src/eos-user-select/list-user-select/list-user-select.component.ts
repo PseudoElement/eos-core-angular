@@ -882,9 +882,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         if (this.showCloseQuickSearch) {
             this.buttons.moreButtons[3].disabled = true;
             this.buttons.moreButtons[4].disabled = true;
+            this.buttons.moreButtons[11].disabled = true;
+            this.buttons.moreButtons[13].disabled = true;
         }   else {
             this.buttons.moreButtons[3].disabled = false;
             this.buttons.moreButtons[4].disabled = false;
+            this.buttons.moreButtons[11].disabled = false;
+            this.buttons.moreButtons[13].disabled = false;
         }
     }
 
