@@ -32,9 +32,13 @@ export class EosReportUsersInfoComponent implements OnInit {
       this.activeBtn = false;
     } else {
       this.selectUser = this.users[this.nodeIndex];
-      this.activeBtn = true;
+      if (this.selectUser !== null) {
+        this.src = this.getHtmlStr(this.selectUser.id);
+        this.activeBtn = true;
+      } else {
+        this.activeBtn = false;
+      }
     }
-    this.src = this.getHtmlStr(this.selectUser.id);
     this._updateBorders();
   }
 
