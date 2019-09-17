@@ -179,6 +179,9 @@ export class SearchServices {
                     query.USER_CL.criteries['NOTE'] = `"${params.DEPARTMENT}"`;
                     //  query.USER_CL.criteries['USER_CL.DEP.CARD.CLASSIF_NAME'] = `"${params.DEPARTMENT}"`;
                 }
+                if (params.BLOCK_USER) {
+                    query.USER_CL.criteries['DELETED'] = `${params.BLOCK_USER}`;
+                }
             }
         }
         return query;

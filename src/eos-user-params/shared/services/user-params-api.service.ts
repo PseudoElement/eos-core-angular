@@ -113,6 +113,10 @@ export class UserParamApiSrv {
             propOrderBy = 'NOTE';
             propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
         }
+        if (this.currentSort === 'tip') {
+            propOrderBy = 'DELETED';
+            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
+        }
         // let propOrderBy = this.currentSort === 'login' ? 'CLASSIF_NAME' : 'NOTE';
         //  propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
 

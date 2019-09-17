@@ -45,7 +45,8 @@ export class UserSearchComponent implements OnInit {
     get disableBtn() {
         if (this.form) {
             return this.form.status === 'VALID' && (this.form.value['rec.LOGIN'].length > 0 || this.form.value['rec.DEPARTMENT'].length > 0 ||
-                this.form.value['rec.fullDueName'].length > 0  || this.form.value['rec.SURNAME'].length > 0 || this.form.value['rec.AV_SYSTEMS']);
+                this.form.value['rec.fullDueName'].length > 0  || this.form.value['rec.SURNAME'].length > 0 || this.form.value['rec.AV_SYSTEMS']
+                || this.form.value['rec.BLOCK_USER'] !== '');
         }
     }
     get showSurnameField() {
@@ -72,18 +73,22 @@ export class UserSearchComponent implements OnInit {
         const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
         for (const key in newObj) {
             if (newObj.hasOwnProperty(key) && key !== 'AV_SYSTEMS') {
-                const list = newObj[key];
-                if (typeof list === 'string') {
-                    newObj[key] = list.replace(SEARCH_INCORRECT_SYMBOLS, '');
-                    this.form.controls[`rec.${key}`].patchValue(newObj[key]);
-                    newObj[key] = this.AddUnderscore(newObj[key]);
+                if (key === 'BLOCK_USER') {
+                    this.form.controls[`rec.${key}`].patchValue('');
                 } else {
-                    for (const k in list) {
-                        if (list.hasOwnProperty(k)) {
-                            let fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
-                            list[k] = fixed;
-                            this.form.controls[`rec.${key}`].patchValue(newObj[key]);
-                            fixed = this.AddUnderscore(fixed);
+                    const list = newObj[key];
+                    if (typeof list === 'string') {
+                        newObj[key] = list.replace(SEARCH_INCORRECT_SYMBOLS, '');
+                        this.form.controls[`rec.${key}`].patchValue(newObj[key]);
+                        newObj[key] = this.AddUnderscore(newObj[key]);
+                    } else {
+                        for (const k in list) {
+                            if (list.hasOwnProperty(k)) {
+                                let fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
+                                list[k] = fixed;
+                                this.form.controls[`rec.${key}`].patchValue(newObj[key]);
+                                fixed = this.AddUnderscore(fixed);
+                            }
                         }
                     }
                 }
@@ -146,6 +151,14 @@ export class UserSearchComponent implements OnInit {
             newObj['AV_SYSTEMS'] = this.GetStrAvSystems();
         }
         newObj['DEL_USER'] = searchVal['rec.DEL_USER'];
+        switch (searchVal['rec.BLOCK_USER']) {
+            case '1':
+                newObj['BLOCK_USER'] = '0';
+                break;
+            case '2':
+                newObj['BLOCK_USER'] = '1';
+                break;
+        }
     }
 
     GetStrAvSystems(): string {
