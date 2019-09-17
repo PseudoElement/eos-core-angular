@@ -36,6 +36,17 @@ export const USER_SEARCH = {
             title: 'Поиск удаленных пользователей',
         },
         {
+            key: 'BLOCK_USER',
+            type: 'radio',
+            title: '',
+            readonly: false,
+            options: [
+                {value: '0', title: 'С блокированными'},
+                {value: '1', title: 'Без блокированных'},
+                {value: '2', title: 'Блокированные'}
+            ]
+        },
+        {
             key: 'SURNAME',
             type: 'string',
             title: 'Фамилия',
@@ -129,4 +140,5 @@ export interface USERSRCH {
     SURNAME?: string;
     DEL_USER?: boolean;
     AV_SYSTEMS?: string;
+    BLOCK_USER?: string;
 }

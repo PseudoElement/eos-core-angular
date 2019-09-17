@@ -55,6 +55,9 @@
         </div>
         <div class="" *ngIf="!showSurnameField && !showAvSystemsField">
             <div class="search-input-wr">
+                <eos-dynamic-input [input]="inputs['rec.BLOCK_USER']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            </div>
+            <div class="search-input-wr">
                 <eos-dynamic-input [input]="inputs['rec.LOGIN']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
             <div class="search-input-wr">
