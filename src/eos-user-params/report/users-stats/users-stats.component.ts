@@ -35,7 +35,8 @@ export class EosReportUsersStatsComponent implements OnInit {
 
   getData() {
     const a = this.pip.read<USER_CL>({
-      USER_CL: PipRX.criteries({ 'DELETED': '0', 'PROTECTED': '0' })
+      USER_CL: PipRX.criteries({ 'DELETED': '0', 'PROTECTED': '0' }),
+      loadmode: 'Table'
     }).then((r: any) => {
       this.items = r;
     })
@@ -57,7 +58,8 @@ export class EosReportUsersStatsComponent implements OnInit {
       });
 
     const c = this.pip.read<USER_CL>({
-      USER_CL: PipRX.criteries({ 'DELETED': '1' })
+      USER_CL: PipRX.criteries({ 'DELETED': '1' }),
+      loadmode: 'Table'
     })
       .then((r: any) => {
         this.deletedUsers = r;

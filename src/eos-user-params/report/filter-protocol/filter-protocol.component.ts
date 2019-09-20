@@ -89,7 +89,7 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
       .then(data => {
         this.data['ISN_USER_COPY'] = data;
-        return this._getUserCl(data);
+        return this._getUserCl(data.split('|').map(Number));
       })
       .then(data => {
         this.isShell = false;
@@ -115,7 +115,7 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
       .then(data => {
         this.data['ISN_USER_COPY'] = data;
-        return this._getUserCl(data);
+        return this._getUserCl(data.split('|').map(Number));
       })
       .then(data => {
         this.isShell = false;
@@ -147,11 +147,8 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
 
   private _getUserCl(isn) {
     const queryUser = {
-      USER_CL: {
-        criteries: {
-          ISN_LCLASSIF: isn
-        }
-      }
+      USER_CL: isn,
+      loadmode: 'Table'
     };
     return this._pipeSrv.read<USER_CL>(queryUser);
   }
