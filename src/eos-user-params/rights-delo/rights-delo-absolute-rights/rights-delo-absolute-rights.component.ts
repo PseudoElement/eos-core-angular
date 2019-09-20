@@ -135,6 +135,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     DELETED: '0'
                 },
             },
+            loadmode: 'Table',
             expand: 'USER_TECH_List'
         }).then((data: any) => {
             const users = data.filter((tech) => tech.SURNAME_PATRON !== 'Администратор');
