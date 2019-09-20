@@ -281,11 +281,6 @@ export class UserParamApiSrv {
                     return this.users_pagination.UsersList;
                 });
             });
-        // перенес в list-user-select.component что бы включить сортировку в выборку
-        // .slice((this.users_pagination.paginationConfig.start - 1)
-        //         * this.users_pagination.paginationConfig.length,
-        //          this.users_pagination.paginationConfig.current
-        //         * this.users_pagination.paginationConfig.length);
     }
     getSysParamForBlockedUser() {
         const QUERY = {
@@ -300,79 +295,6 @@ export class UserParamApiSrv {
             this.sysParam = value[0]['PARM_VALUE'];
         });
     }
-
-    // devideUsers() {
-    //     const prepareUser = this.prepareListUsers();
-    //     if (this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
-    //         this.updateListUsersTech(prepareUser.techUser, prepareUser.happyUser);
-    //     }
-
-    //     if (!this.flagTehnicalUsers && this.flagDelitedPermanantly) {
-    //         this.updateListUserDeleted(prepareUser.deletedUser, prepareUser.happyUser);
-    //     }
-
-    //     if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
-    //         this.updateListUserAnyFlags(prepareUser.techUser, prepareUser.deletedUser, prepareUser.happyUser);
-    //     }
-
-    //     if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
-    //         this.updateListUserEmptyFlags(prepareUser.happyUser);
-    //     }
-    // }
-
-    // prepareListUsers(): { techUser: UserSelectNode[], deletedUser: UserSelectNode[], happyUser: UserSelectNode[] } {
-    //     this.users_pagination.UsersList = this.Allcustomer.slice();
-    //     const techUser = this.damnTesterTechUser();
-    //     const deletedUser = this.damnTesterDeletedUser();
-    //     const happyUser = this.damnTesterHappyUsers();
-    //     return {
-    //         techUser,
-    //         deletedUser,
-    //         happyUser
-    //     };
-    // }
-    // findUsers(users) {
-    //     this.updatePageList(users, this.configList.shooseTab).then((res) => {
-    //         this.Allcustomer = this._getListUsers(res).slice();
-    //     });
-    // }
-
-    // updateListUsersTech(userT: UserSelectNode[], userH: UserSelectNode[]) {
-    //     const sortedT = this.helpersClass.sort(userT, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-    //     const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-    //     this.users_pagination.UsersList = [].concat(sortedT, sortedH);
-    // }
-    // updateListUserDeleted(userD: UserSelectNode[], userH: UserSelectNode[]) {
-    //     const sortedD = this.helpersClass.sort(userD, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-    //     const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-    //     this.users_pagination.UsersList = [].concat(sortedD, sortedH);
-    // }
-    // updateListUserAnyFlags(userT, userD, userH) {
-    //     const sortedT = this.helpersClass.sort(userT, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-    //     const sortedD = this.helpersClass.sort(userD, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-    //     const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-    //     this.users_pagination.UsersList = [].concat(sortedD, sortedT, sortedH);
-    // }
-    // updateListUserEmptyFlags(userH) {
-    //     const sortedH = this.helpersClass.sort(userH, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-    //     this.users_pagination.UsersList = sortedH;
-    // }
-
-    // damnTesterTechUser(): UserSelectNode[] {
-    //     return this.users_pagination.UsersList.filter((userInfo: UserSelectNode) => {
-    //         return userInfo.data.DUE_DEP === null && !userInfo.deleted;
-    //     });
-    // }
-    // damnTesterDeletedUser(): UserSelectNode[] {
-    //     return this.users_pagination.UsersList.filter((userInfo: UserSelectNode) => {
-    //         return userInfo.deleted;
-    //     });
-    // }
-    // damnTesterHappyUsers(): UserSelectNode[] {
-    //     return this.users_pagination.UsersList.filter((userInfo: UserSelectNode) => {
-    //         return userInfo.data.DUE_DEP !== null && !userInfo.deleted;
-    //     });
-    // }
 
     getDepartment(due?: Array<string>): Promise<DEPARTMENT[]> {
         const query = { DEPARTMENT: due };
@@ -548,8 +470,4 @@ export class UserParamApiSrv {
         data.forEach(user => list.push(new UserSelectNode(user, this.sysParam)));
         return list;
     }
-
-    // protected prepareForEdit(records: any[]): any[] {
-    //     return records.map((record) => this.apiSrv.entityHelper.prepareForEdit(record));
-    // }
 }

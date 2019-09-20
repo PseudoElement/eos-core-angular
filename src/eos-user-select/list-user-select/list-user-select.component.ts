@@ -476,28 +476,27 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         this._apiSrv.flagDelitedPermanantly = !this._apiSrv.flagDelitedPermanantly;
         this._apiSrv.stateDeleteUsers = this._apiSrv.flagDelitedPermanantly;
         const id = this._route.params['value'].nodeId;
-        this._storage.removeItem('users');
+        this.upsavePagConfig();
         this._pagSrv.resetConfig();
         this.initView(id ? id : '0.');
-        //    this.preSortForAction();
     }
 
     ActionTehnicalUser() {
         this._apiSrv.flagTehnicalUsers = !this._apiSrv.flagTehnicalUsers;
         this._apiSrv.stateTehUsers = this._apiSrv.flagTehnicalUsers;
         const id = this._route.params['value'].nodeId;
-        this._storage.removeItem('users');
+        this.upsavePagConfig();
         this._pagSrv.resetConfig();
         this.initView(id ? id : '0.');
-        //  this.preSortForAction();
     }
-    // preSortForAction() {
-    //     this._apiSrv.devideUsers();
-    //     this._pagSrv._initPaginationConfig(true);
-    //     this._pagSrv.changePagination(this._pagSrv.paginationConfig);
-    //     this.countMaxSize = this._pagSrv.countMaxSize;
-    // }
-
+    upsavePagConfig() {
+        const conf = this._storage.getItem('users');
+        if (conf) {
+            conf.start = 1;
+            conf.curent = 1;
+            this._storage.setItem('users', conf);
+        }
+    }
     OpenAddressManagementWindow() {
        /*  setTimeout(() => { */
             if (this.selectedUser) {
