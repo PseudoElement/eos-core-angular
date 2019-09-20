@@ -579,7 +579,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   ParseDate(data) {
     this.SelectUsers(data);
     this._pipeSrv.read({
-      USER_CL: this.critUsers
+      USER_CL: this.critUsers,
+      loadmode: 'Table'
     })
       .then((users: any) => {
         for (const user of users) {
