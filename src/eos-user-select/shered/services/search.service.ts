@@ -158,7 +158,8 @@ export class SearchServices {
         const query = {
             USER_CL: {
                 criteries: {}
-            }
+            },
+            loadmode: 'Table'
         };
         if (params.AV_SYSTEMS) {
             query.USER_CL.criteries['AV_SYSTEMS'] = `${params.AV_SYSTEMS}%`;
