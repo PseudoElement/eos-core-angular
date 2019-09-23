@@ -1,7 +1,7 @@
 <div class="input-param-wrapper input-param-files-wrapper" *ngIf="inputs">
-    <eos-param-header 
+    <eos-param-header
         (submitForm)="btnDisabled ? cancel() : submit();cancelEdit()"
-        (cancelForm)="cancel();cancelEdit()" 
+        (cancelForm)="cancel();cancelEdit()"
         [statusBtnSub]="btnError"
         [editBtn]="true"
         (editForm)="edit()"
@@ -10,7 +10,8 @@
     <div class="param-input-group">
         <span class="l-font">Параметры хранения прикрепленных файлов</span>
         <div class="info-icon-wrap" (click)="showInfoAttachFiles()">
-            <span class="info-icon eos-icon eos-icon-info-blue x-small" [ngClass]="{'eos-icon-info-blue': editMode, 'eos-icon-info-grey': !editMode}"></span>
+            <!-- <span class="info-icon eos-icon eos-icon-info-blue x-small" [ngClass]="{'eos-icon-info-blue': editMode, 'eos-icon-info-grey': !editMode}"></span> -->
+            <span class="info-icon eos-icon eos-icon-info-blue x-small"></span>
         </div>
     </div>
     <hr>
@@ -35,11 +36,11 @@
                     <span class="mar-right">{{inputAttach['rec.DOC_RC_MAX_SIZE'].label}}</span>
                     <eos-dynamic-input class="inline-block mar-right" [input]="inputAttach['rec.DOC_RC_MAX_SIZE']" [form]="formAttach" [readonly]="inputAttach['rec.DOC_RC_MAX_SIZE'].readonly"></eos-dynamic-input>
                     <span>Мбайт</span>
-                    <div>                
+                    <div>
                     <eos-dynamic-input class="inline-block attach-checkbox" [input]="inputAttach['rec.DOC_RC_ONE_FILE']" [form]="formAttach" [readonly]="inputAttach['rec.DOC_RC_ONE_FILE'].readonly"></eos-dynamic-input>
                     </div>
                     <span>С расширением</span>
-                    <div>               
+                    <div>
                     <eos-dynamic-input class="inline-block wer pad-left" [input]="inputAttach['rec.DOC_RC_EXTENSIONS']" [form]="formAttach" [readonly]="inputAttach['rec.DOC_RC_EXTENSIONS'].readonly"></eos-dynamic-input>
                     </div>
                 </div>
@@ -51,7 +52,7 @@
                     <span class="mar-right">{{inputAttach['rec.RESOLUTION_MAX_SIZE'].label}}</span>
                     <eos-dynamic-input class="inline-block mar-right" [input]="inputAttach['rec.RESOLUTION_MAX_SIZE']" [form]="formAttach" [readonly]="inputAttach['rec.RESOLUTION_MAX_SIZE'].readonly"></eos-dynamic-input>
                     <span>Мбайт</span>
-                    <div> 
+                    <div>
                     <eos-dynamic-input class="inline-block attach-checkbox" [input]="inputAttach['rec.RESOLUTION_ONE_FILE']" [form]="formAttach" [readonly]="inputAttach['rec.RESOLUTION_ONE_FILE'].readonly"></eos-dynamic-input>
                     </div>
                     <span>С расширением</span>
@@ -66,14 +67,14 @@
                         <span class="mar-right">{{inputAttach['rec.REPLY_MAX_SIZE'].label}}</span>
                         <eos-dynamic-input class="inline-block mar-right" [input]="inputAttach['rec.REPLY_MAX_SIZE']" [form]="formAttach" [readonly]="inputAttach['rec.REPLY_MAX_SIZE'].readonly"></eos-dynamic-input>
                         <span>Мбайт</span>
-                        <div>            
+                        <div>
                         <eos-dynamic-input class="inline-block attach-checkbox" [input]="inputAttach['rec.REPLY_ONE_FILE']" [form]="formAttach" [readonly]="inputAttach['rec.REPLY_ONE_FILE'].readonly"></eos-dynamic-input>
                         </div>
                         <span>С расширением</span>
-                        <div>                   
+                        <div>
                         <eos-dynamic-input class="inline-block wer pad-left" [input]="inputAttach['rec.REPLY_EXTENSIONS']" [form]="formAttach" [readonly]="inputAttach['rec.REPLY_EXTENSIONS'].readonly"></eos-dynamic-input>
                         </div>
-                    </div>                
+                    </div>
                 </div>
             </div>
             <div class="formAttach" [hidden]="!hiddenFieldAttach">

@@ -235,9 +235,10 @@ export class ParamFielsComponent extends BaseParamComponent {
         return _value !== oldValue;
     }
     showInfoAttachFiles() {
-        if (this.editMode) {
-            this.infoAttachFilesModal.show();
-        }
+        // if (this.editMode) {
+        //     this.infoAttachFilesModal.show();
+        // }
+        this.infoAttachFilesModal.show();
     }
     hideInfoAttachFiles() {
         this.infoAttachFilesModal.hide();
