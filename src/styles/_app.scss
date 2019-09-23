@@ -86,12 +86,17 @@
     }
 }
 
+$eos-alert-max-width: 800px;
 .messages-wrapper {
-    position: fixed;
+    position: absolute;
     top: $grid-gutter-width / 2;
-    right: $grid-gutter-width / 2;
-    width: 522px;
+    width: $eos-alert-max-width;
     z-index: 1052;
+    margin-left: - $eos-alert-max-width / 2;
+    left:50%;
+    // position: fixed;
+    // top: $grid-gutter-width / 2;
+    // right: $grid-gutter-width / 2;
 }
 
 .version-number {

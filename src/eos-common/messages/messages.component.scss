@@ -1,33 +1,27 @@
+
+
 .eos-alert {
     .alert {
         background-color: $white;
         border-radius: 0;
         position: relative;
-        margin-left: 48px;
+        display: table;
         min-height: 48px;
-        padding: 20px;
+        padding: 0px;
+        margin: 0 auto 10px;
+        border-color: #e6e6e6;
+        box-shadow: 5px 10px 5px 0 rgba(0, 0, 0, 0.1);
     }
     .alert-dismissable .close,
     .alert-dismissible .close {
-        top: -18px;
-        right: -14px;
+        display: none;
     }
     .alert-icon {
-        position: absolute;
-        top: -1px;
-        bottom: -1px;
-        left: -48px;
+        display: table-cell;
         width: 48px;
         text-align: center;
-        font-size: 20px;
+        vertical-align: middle;
         color: $white;
-        .fa {
-            width: 100%;
-            position: absolute;
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
-        }
     }
     .alert-info {
         .alert-icon {
@@ -44,9 +38,12 @@
         background-color: $brand-danger;
     }
     .alert-body {
-        span {
-            white-space: pre-wrap;
-        }
+        height: 46px;
+        display: table-cell;
+        vertical-align: middle;
+        padding-left: 20px;
+        padding-right: 20px;
+        color: #000000;
         .cabinet-warning {
             display: flex;
             flex-direction: column;
