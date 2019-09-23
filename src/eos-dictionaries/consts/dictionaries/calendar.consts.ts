@@ -5,7 +5,7 @@ export const CALENDAR_DICT: IFormDictionaryDescriptor = {
     apiInstance: 'CALENDAR_CL',
     title: 'Ведение календаря',
     visible: true,
-    iconName: 'eos-icon-building-blue',
+    iconName: 'eos-icon-calendar-blue',
     defaultOrder: '',
     actions: [],
     // keyField: 'DUE',
