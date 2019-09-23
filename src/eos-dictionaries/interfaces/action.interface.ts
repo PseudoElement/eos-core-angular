@@ -59,6 +59,7 @@ export interface IAction {
     activeIconClass: string;
     buttonClass: string;
     accessNeed: APS_DICT_GRANT;
+    iconText?: string; // Дополнительный текст к иконке (часть кнопки)
 
 }
 

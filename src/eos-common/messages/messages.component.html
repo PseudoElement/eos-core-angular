@@ -2,17 +2,20 @@
     class="eos-alert"
     [type]="message.type"
     [dismissible]="true"
-    (onClose)="onClose(message)"
+    (click)="onClose(message)"
     [dismissOnTimeout]="message.dismissOnTimeout">
     <div class="alert-icon">
-        <i class="fa"
-            [ngClass]="{'fa-info-circle': message.type==='info',
-            'fa-check-circle': message.type==='success',
-            'fa-warning': message.type==='warning',
-            'fa-exclamation-circle': message.type==='danger'}"></i>
+        <!-- <span [ngClass]="'eos-icon eos-icon-close-white'"></span> -->
+        <span class="eos-icon small"
+            [ngClass]="{
+            'eos-icon-checkbox-white': message.type==='success',
+            'eos-icon-close-white': message.type==='danger',
+            'eos-icon-alert-white': message.type==='info' || message.type==='warning'}"></span>
     </div>
     <div class="alert-body">
-        <p *ngIf="message.title"><strong>{{message.title}}</strong></p>
-        <span [innerHtml]="message.msg"></span>
+        <span>
+                {{message.title}}.<br>
+                {{message.msg}}
+        </span>
     </div>
 </alert>

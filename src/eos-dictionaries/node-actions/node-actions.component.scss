@@ -7,7 +7,49 @@ $drop-menu-width: 300px;
     }
     .btn {
         height: $item-height;
-        width: $item-width;
+        min-width: $item-width;
+        border-width: 0px;
+        padding-left: 12px;
+        padding-right: 12px;
+        .icon-text {
+            display: inline-block;
+            vertical-align: middle;
+            white-space: normal;
+            line-height: normal;
+            color: $button-color-main-theme;
+            padding-left: 4px;
+            // padding-right: 12px;
+
+            &.hover,
+            &[hover],
+            fieldset[hover] & {
+                color: $button-color-main-theme;
+            }
+
+
+            &.disabled,
+            &[disabled],
+            fieldset[disabled] & {
+                color: $disabled-color-main-theme;
+            }
+
+            // .m-font {
+            //     line-height: 20px;
+            // }
+            font-size: 16px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        // .icon-text:disabled {
+        //     color: $disabled-color-main-theme;
+        // }
+
+        // &.disabled {
+        //     .icon-text {
+        //         color: $disabled-color-main-theme;
+        //     }
+
+        // }
     }
 }
 

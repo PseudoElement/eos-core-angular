@@ -44,19 +44,22 @@
 
             <ng-container *ngIf="item.type !== ADD_ACTION || !isTree">
                 <!--Icons button for other-->
-                <div class="btn-group">
-                    <div [tooltip]="item.hint"
+                <div class="btn-group"
+                      [tooltip]="item.hint"
                         #itemTooltip="bs-tooltip"
                         placement="bottom"
                         [delay]="tooltipDelay"
+                        container="body"
                         containerClass="tooltip-info">
                         <button [disabled]="!item.enabled"
                             class="btn btn-primary-light {{item.buttonClass}}"
                             [ngClass]="{'active': item.isActive}"
-                            (click)="itemTooltip.hide();doAction($event, item)">
-                            <span [ngClass]="item.isActive ? item.activeIconClass : (item.enabled ? item.iconClass : item.disabledIconClass)"></span></button>
-                    </div>
+                            (click)="doAction($event, item)">
+                            <span [ngClass]="item.isActive ? item.activeIconClass : (item.enabled ? item.iconClass : item.disabledIconClass)"></span>
+                            <span class="icon-text m-font" [ngClass]="{'disabled':!item.enabled}" *ngIf="item.iconText">{{item.iconText}}</span>
+                        </button>
                 </div>
+
             </ng-container>
         </div>
     </ng-container>
@@ -67,9 +70,11 @@
         #dropdown="bs-dropdown">
         <button class="btn btn-primary-light"
             [ngClass]="{'active': dropdown.isOpen}"
-            [tooltip]="showMenuTooltip"
+            [tooltip]="dropdown.isOpen ? null : showMenuTooltip"
             #itemTooltip="bs-tooltip"
             placement="bottom"
+            trigger="hover:click"
+            onclick=this.blur()
             [delay]="tooltipDelay"
             containerClass="tooltip-info"
             dropdownToggle

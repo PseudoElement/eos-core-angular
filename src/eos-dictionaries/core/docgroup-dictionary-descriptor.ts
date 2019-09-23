@@ -3,11 +3,10 @@ import { EosDictionaryNode } from './eos-dictionary-node';
 import { EosUtils } from 'eos-common/core/utils';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 import {CONFIRM_DOCGROUP_CHECK_DUPLINDEXES} from '../consts/confirm.consts';
-import {PipRX} from '../../eos-rest';
 
 const RC_TYPE = 'RC_TYPE';
 const DOCGROUP_INDEX = 'DOCGROUP_INDEX';
-const ISN_NODE = 'ISN_NODE';
+// const ISN_NODE = 'ISN_NODE';
 const inheritFiields = [RC_TYPE, DOCGROUP_INDEX, 'ACCESS_MODE', 'ACCESS_MODE_FIXED', 'SHABLON', 'PRJ_SHABLON'];
 
 export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
@@ -27,23 +26,26 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
             });
     }
 
+
+
     confirmSave(nodeData: any, confirmSrv: ConfirmWindowService): Promise<boolean> {
         const index = this._getRecField(nodeData, DOCGROUP_INDEX);
-        const isn_node = this._getRecField(nodeData, ISN_NODE);
+        const due = this._getRecField(nodeData, 'DUE');
         if (index) {
-            return this.apiSrv.read({DOCGROUP_CL: PipRX.criteries({DOCGROUP_INDEX: index})})
-                .then((records) => {
-                    if (records.length) {
-                        const fNode = records.find((r) => r[ISN_NODE] !== isn_node && r[DOCGROUP_INDEX] === index);
-                        // const fNode = records.find((r) => r[ISN_NODE] === isn_node);
-                        if (fNode) {
-                            return this._confimDuplindex(index, confirmSrv);
-                        }
-                    }
-                    return true;
-                });
+            return this._checkIndexDublicates(due, index).then ( result => {
+                if (result === 'NOT_UNIQUE') {
+                    return this._confimDuplindex(index, confirmSrv);
+                }
+                return true;
+            });
         }
         return Promise.resolve(true);
+    }
+
+    private _checkIndexDublicates(due, index): Promise<any> {
+        const query = { args: { type: 'DOCGROUP_CL', oper: 'DOCGROUP_INDEX_UNIQUE', id: String(due), data: String(index) } };
+        const req = { CanChangeClassif: query};
+        return this.apiSrv.read(req);
     }
 
     private _confimDuplindex(index: string, confirmSrv: ConfirmWindowService): Promise<boolean> {

@@ -118,15 +118,20 @@ export class NodeActionsComponent implements OnDestroy {
     }
 
     doAction(e: MouseEvent, item: IActionButton, params?: any) {
-        const tooltip_fix = e.currentTarget['disabled'];
-        e.currentTarget['disabled'] = true;
+        // запоминаем состояние
+        // const tooltip_fix = e.currentTarget['disabled'];
+        // принудительно disable для эвента тултипу
+        // e.currentTarget['disabled'] = true;
+
+        // делаем то что надо
         if (item.enabled) {
             this.action.emit({action: item.type, params: params});
             this._update();
         } else {
             e.stopPropagation();
         }
-        e.currentTarget['disabled'] = tooltip_fix;
+        // восстанавливаем состояние
+        // e.currentTarget['disabled'] = tooltip_fix;
     }
 
     menuMng(e: MouseEvent, enabled: boolean, menu: any) {

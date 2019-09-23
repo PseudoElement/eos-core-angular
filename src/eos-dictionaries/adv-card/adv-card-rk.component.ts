@@ -107,6 +107,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             } else {
                 event.options[0].title = rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
             }
+            event.options[0].rec = rec;
         }
     }
 
