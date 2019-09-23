@@ -405,7 +405,6 @@ export class CounterNpEditComponent {
 
             if (this._decl.type === E_COUNTER_TYPE.counterDepartmentRKPD) {
                 Object.assign(prj_criteries, {PRJ_NUM_FLAG: String(1)});
-                Object.assign(criteries, {PRJ_NUM_FLAG: String(1)});
             }
 
             return this.apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries(prj_criteries)})
@@ -418,9 +417,12 @@ export class CounterNpEditComponent {
                     });
                     this.apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries(criteries)}).then ((recs) => {
                         recs.forEach((rec) => {
-                            this.docGroupOptions.push({title: rec.CLASSIF_NAME, value: String(rec.ISN_NODE)});
-                            if (this.currentDocgroup === undefined) {
-                                this.currentDocgroup = String(rec.ISN_NODE);
+                            const exists = this.docGroupOptions.find((r) => r.value === String(rec.ISN_NODE));
+                            if (!exists) {
+                                this.docGroupOptions.push({title: rec.CLASSIF_NAME, value: String(rec.ISN_NODE)});
+                                if (this.currentDocgroup === undefined) {
+                                    this.currentDocgroup = String(rec.ISN_NODE);
+                                }
                             }
                         });
                     });
