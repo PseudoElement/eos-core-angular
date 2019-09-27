@@ -23,15 +23,22 @@
                                [form]="form"></eos-dynamic-input>
             <!-- Срок исполнения -->
             <div class="clearfix">
-                <div>
-                    <div class="term-exec">
+                <span class="span-one-by-one">
+                <div class="col1 col-with-label">
+                        <!-- Срок исполнения -->
                         <label>Срок исп. (План. дата)</label>
                         <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.TERM_EXEC']"
                                            [form]="form"></eos-dynamic-input>
-                    </div>
-                    <label>дня (дней) от даты регистрации</label>
                 </div>
+                <eos-dynamic-input class="col2"
+                    [input]="inputs['PRJ_DEFAULT_VALUE_List.TERM_EXEC_TYPE']"
+                    [form]="form"
+                    [hideLabel]="true"
+                    ></eos-dynamic-input>
+                <label class="col3">{{dayTypeTitle + ' от даты регистрации'}}</label>
+                </span>
             </div>
+
 
             <div class="clear-both">
                 <eos-dynamic-input [input]="inputs['PRJ_DEFAULT_VALUE_List.SECURLEVEL']"

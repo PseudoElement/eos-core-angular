@@ -20,6 +20,9 @@ import {RK_SELECTED_LIST_CONTAIN_DELETED, RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED
 import {IConfirmWindow2} from '../../eos-common/confirm-window/confirm-window2.component';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 import {WaitClassifService} from '../../app/services/waitClassif.service';
+import { DAYS_TYPE_OPTS_VARIATIONS } from 'eos-dictionaries/adv-card/rk-default-values/rk-default-const';
+import { ButtonsInput } from 'eos-common/core/inputs/buttons-input';
+import { RKDefaultValuesCardComponent } from 'eos-dictionaries/adv-card/rk-default-values/rk-default-values.component';
 
 const PRJ_DEFAULT_NAME = 'PRJ_DEFAULT_VALUE_List';
 const FILE_CONSTRAINT_NAME = 'DG_FILE_CONSTRAINT_List';
@@ -37,9 +40,10 @@ class PrjDefaultItem {
     defaultValue: any;
     tableName: string;
     category: string;
-    pattern: string;
+    pattern: RegExp;
     length?: number;
     order?: number;
+    options?: any[];
 
     constructor(rec) {
         if (rec) {
@@ -55,6 +59,7 @@ class PrjDefaultItem {
             this.tableName = rec.TABLE_NAME ? rec.TABLE_NAME : 'PRJ_DEFAULT_VALUE_List';
             this.length = rec.LENGTH;
             this.order = rec.order;
+            this.options = rec.options;
         }
     }
 }
@@ -228,7 +233,9 @@ class PrjDefaultFactory {
             order: 190,
         }, {
             DEFAULT_ID: 'TERM_EXEC_TYPE',
-            DEFAULT_TYPE: 'D',
+            DEFAULT_TYPE: E_FIELD_TYPE.buttons,
+            DEFAULT_VALUE: '1',
+            options: DAYS_TYPE_OPTS_VARIATIONS[0].options,
             DESCRIPTION: ' Срок исполнения РК в каких днях',
         }, {
             DEFAULT_ID: 'PRJ_RC.MAX_SIZE',
@@ -425,10 +432,12 @@ export class PrjDefaultValuesComponent implements OnDestroy {
     newData = {};
     isUpdating = true;
     isPrjExecFull = false;
+    prevValues = {};
     requiredItems = PrjDefaultFactory.requiredItems;
 
     prjDefaults = new PrjDefaultFactory();
     _currentFormStatus: any;
+    dayTypeTitle: string;
 
     private $valueChanges: Subscription;
     private $statusChanges: Subscription;
@@ -441,6 +450,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         private _zone: NgZone,
         private _waitClassifSrv: WaitClassifService,
         private _confirmSrv: ConfirmWindowService) {
+            this.dayTypeTitle = DAYS_TYPE_OPTS_VARIATIONS[0].daysLabel;
     }
 
     private static _getFieldKey(id, tableName) {
@@ -689,7 +699,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
             this.$valueChanges.unsubscribe();
         }
 
-        const ctrl = this.form.controls['PRJ_DEFAULT_VALUE_List.PRJ_EXEC_LIST'];
+        let ctrl = this.form.controls['PRJ_DEFAULT_VALUE_List.PRJ_EXEC_LIST'];
         if (ctrl) {
             this.isPrjExecFull = !!ctrl.value;
             if (!ctrl.value) {
@@ -697,6 +707,16 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                 this.form.controls['PRJ_DEFAULT_VALUE_List.CAN_WORK_WITH_FILES'].setValue(0);
                 this.form.controls['PRJ_DEFAULT_VALUE_List.CAN_WORK_WITH_PRJ'].setValue(0);
                 this.form.controls['PRJ_DEFAULT_VALUE_List.CAN_MANAGE_EXEC'].setValue(0);
+            }
+        }
+
+        ctrl = this.form.controls['PRJ_DEFAULT_VALUE_List.TERM_EXEC'];
+        if (ctrl) {
+            if (this.prevValues['TERM_EXEC'] !== ctrl.value && ctrl.value) {
+                this.prevValues['TERM_EXEC'] = ctrl.value;
+                const lbls = RKDefaultValuesCardComponent.termExecOptsByValue(Number(ctrl.value));
+                this.inputs['PRJ_DEFAULT_VALUE_List.TERM_EXEC_TYPE'].options = lbls.options;
+                this.dayTypeTitle = lbls.daysLabel;
             }
         }
 
@@ -744,6 +764,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                         dict: prjDefault.tableName,
                         pattern: prjDefault.pattern,
                         length: prjDefault.length,
+                        options: prjDefault.options,
                     };
 
                     switch (prjDefault.type) {
@@ -759,6 +780,10 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                         case E_FIELD_TYPE.text:
                             this.inputs[key] = new TextInput(commonParams);
                             break;
+                        case E_FIELD_TYPE.buttons: {
+                            this.inputs[key] = new ButtonsInput(commonParams);
+                            break;
+                        }
                         case E_FIELD_TYPE.boolean:
                             this.inputs[key] = new CheckboxInput(commonParams);
                             break;
