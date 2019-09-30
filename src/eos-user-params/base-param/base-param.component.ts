@@ -230,11 +230,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             return;
         }
         this.submitClick = true;
-        this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
         const id = this._userParamSrv.userContextId;
         const newD = {};
         const query = [];
+        const queryLog = [];
         let accessStr = '';
+        let allQueries: Promise<any>;
         let qPass: Promise<any>;
         if (this._newDataformAccess.size || this._newData.size) {
             if (this._newDataformAccess.size) {
@@ -266,6 +267,42 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 data: newD
             });
         }
+        const pass = this._newDataformControls.get('pass');
+        if (this.inputs.CLASSIF_NAME.value !== this.form.value.CLASSIF_NAME) {
+            if (this.curentUser['IS_PASSWORD'] === 0) {
+                this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.inputs.CLASSIF_NAME.value} не задан пароль.`, type: 'warning' });
+                this.form.controls.CLASSIF_NAME.patchValue(this.inputs.CLASSIF_NAME.value);
+                this.submitClick = false;
+                this.cancel();
+                return;
+            } else {
+                this.title = `${this.curentUser['SURNAME_PATRON']} (${this.form.value.CLASSIF_NAME})`;
+                const url = `DropLogin?pass='${encodeURI(pass)}'&isn_user=${id}`;
+                const queryPas = [{
+                    method: 'MERGE',
+                    requestUri: `USER_CL(${id})`,
+                    data: {
+                        IS_PASSWORD: 0
+                    }
+                }];
+                if (pass) {
+                    queryLog.push(this.apiSrvRx.read({ [url]: ALL_ROWS }).then(() => {
+                        return this.apiSrvRx.batch(queryPas, '').then(() => {
+                            const urlLog = `CreateLogin?pass='${encodeURI(pass)}'&isn_user=${id}`;
+                            return this.apiSrvRx.read({ [urlLog]: ALL_ROWS }).then(() => {
+                                const url1 = `ChangePassword?isn_user=${id}&pass='${encodeURI(pass)}'`;
+                                return this.apiSrvRx.read({ [url1]: ALL_ROWS });
+                            });
+                        });
+                }));
+                } else {
+                    queryLog.push(this.apiSrvRx.read({ [url]: ALL_ROWS }).then(() => {
+                        return this.apiSrvRx.batch(queryPas, '');
+                    }));
+                    this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
+                }
+            }
+        }
         if (this._newDataformControls.size) {
             if (this._newDataformControls.has('SELECT_ROLE')) {
                 query.push({
@@ -276,12 +313,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     }
                 });
             }
-            if (this._newDataformControls.has('pass')) {
-                const pass = this._newDataformControls.get('pass');
+            if (pass) {
                 if (this.curentUser['IS_PASSWORD'] === 0) {
                     const url = `CreateLogin?pass='${encodeURI(pass)}'&isn_user=${id}`;
                     qPass = this._apiSrv.getData({ [url]: ALL_ROWS });
-                } else {
+                } else if (this.inputs.CLASSIF_NAME.value === this.form.value.CLASSIF_NAME) {
                     const url = `ChangePassword?isn_user=${id}&pass='${encodeURI(pass)}'`;
                     qPass = this._apiSrv.getData({ [url]: ALL_ROWS });
                 }
@@ -290,43 +326,58 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
         }
         const form = this._apiSrv.setData(query);
-        return Promise.all([form, qPass]).then(data => {
-            if (accessStr.length > 1) {
-                const number = accessStr.charAt(3);
-                this._nanParSrv.scanObserver(number === '1' ? false : true);
-            }
-            if (this._newDataformControls.has('pass')) {
-                this.formControls.get('pass').reset('');
-                this.formControls.get('passRepeated').reset('');
-            }
-            this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
-            this.clearMap();
-            if (meta && meta === 'not') {
-                this.editMode = false;
-                this.editModeF();
-                this._pushState();
-            } else {
-                this._userParamSrv.getUserIsn({
-                    expand: 'USER_PARMS_List,USERCARD_List',
-                    shortSys: true
-                }).then(() => {
-                    this.editMode = false;
-                    this.curentUser = this._userParamSrv.curentUser;
-                    this.upform(this.inputs, this.form);
-                    this.upform(this.controls, this.formControls);
-                    this.upform(this.accessInputs, this.formAccess);
-                    this.editModeF();
-                    this._pushState();
-                    this.submitClick = false;
+        if (queryLog.length !== 0) {
+            allQueries = Promise.all([queryLog[0]]);
+        } else {
+            allQueries = Promise.all([qPass, form]);
+        }
+        return allQueries.then(data => {
+            if (queryLog.length !== 0) {
+                return Promise.all([qPass, form]).then(() => {
+                    this.SubForm(accessStr, meta);
                 });
+            } else {
+                this.SubForm(accessStr, meta);
             }
-            this.submitClick = false;
         }).catch(error => {
             this.submitClick = false;
             this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
             this.cancel();
             this._errorSrv.errorHandler(error);
         });
+    }
+    SubForm(accessStr: string, meta: string): void {
+        this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
+        if (accessStr.length > 1) {
+            const number = accessStr.charAt(3);
+            this._nanParSrv.scanObserver(number === '1' ? false : true);
+        }
+        if (this._newDataformControls.has('pass')) {
+            this.formControls.get('pass').reset('');
+            this.formControls.get('passRepeated').reset('');
+        }
+        this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
+        this.clearMap();
+        if (meta && meta === 'not') {
+            this.editMode = false;
+            this.editModeF();
+            this._pushState();
+        } else {
+            this._userParamSrv.getUserIsn({
+                expand: 'USER_PARMS_List,USERCARD_List',
+                shortSys: true
+            }).then(() => {
+                this.editMode = false;
+                this.curentUser = this._userParamSrv.curentUser;
+                this.upform(this.inputs, this.form);
+                this.upform(this.controls, this.formControls);
+                this.upform(this.accessInputs, this.formAccess);
+                this.editModeF();
+                this._pushState();
+                this.submitClick = false;
+            });
+        }
+        this.submitClick = false;
     }
     clearMap() {
         this._newData.clear();

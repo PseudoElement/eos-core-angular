@@ -475,6 +475,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     ActionMode() {
         this._apiSrv.flagDelitedPermanantly = !this._apiSrv.flagDelitedPermanantly;
         this._apiSrv.stateDeleteUsers = this._apiSrv.flagDelitedPermanantly;
+        if (this._apiSrv.stateDeleteUsers === true) {
+            this.buttons.moreButtons[4].isActive = false;
+            this._apiSrv.stateTehUsers =  false;
+            this._apiSrv.flagTehnicalUsers = false;
+        }
         const id = this._route.params['value'].nodeId;
         this.upsavePagConfig();
         this._pagSrv.resetConfig();
@@ -484,6 +489,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     ActionTehnicalUser() {
         this._apiSrv.flagTehnicalUsers = !this._apiSrv.flagTehnicalUsers;
         this._apiSrv.stateTehUsers = this._apiSrv.flagTehnicalUsers;
+        if (this._apiSrv.stateTehUsers === true) {
+            this.buttons.moreButtons[3].isActive = false;
+            this._apiSrv.stateDeleteUsers = false;
+            this._apiSrv.flagDelitedPermanantly = false;
+        }
         const id = this._route.params['value'].nodeId;
         this.upsavePagConfig();
         this._pagSrv.resetConfig();

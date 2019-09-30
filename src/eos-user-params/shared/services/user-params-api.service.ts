@@ -88,6 +88,7 @@ export class UserParamApiSrv {
     getQueryforDB(dueDep?) {
         let q: any = {};
         let skip, top;
+        const ob1 = {};
         const conf: IPaginationUserConfig = this._storageSrv.getItem('users');
         if (conf) {
             if (conf.showMore) {
@@ -113,48 +114,49 @@ export class UserParamApiSrv {
             propOrderBy = 'NOTE';
             propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
         }
+        // let propOrderBy = this.currentSort === 'login' ? 'CLASSIF_NAME' : 'NOTE';
+        //  propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
         if (this.currentSort === 'tip') {
             propOrderBy = 'DELETED';
             propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
         }
-        // let propOrderBy = this.currentSort === 'login' ? 'CLASSIF_NAME' : 'NOTE';
-        //  propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
-
         if (this.stateTehUsers) {
             propOrderBy = 'DUE_DEP asc';
+            ob1['DUE_DEP'] = 'isnull';
         }
 
-        if (this.stateTehUsers && this.stateDeleteUsers) {
-            propOrderBy = 'ORACLE_ID asc';
-        }
+        // if (this.stateTehUsers && this.stateDeleteUsers) {
+        //     propOrderBy = 'ORACLE_ID asc';
+        // }
         if (this.configList.shooseTab === 0) {
             if (!dueDep || dueDep === '0.') {
-                const ob = {};
                 q = {
-                    USER_CL: PipRX.criteries(ob),
+                    USER_CL: PipRX.criteries(ob1),
                     top: `${top}`,
                     skip: `${skip}`,
                     inlinecount: 'allpages'
                 };
                 if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
-                    ob['DUE_DEP'] = 'isnotnull';
+                    ob1['DUE_DEP'] = 'isnotnull';
                 }
                 if (this.flagDelitedPermanantly && !this.flagTehnicalUsers) {
                     // ob['DUE_DEP'] = 'isnotnull';
-                    ob['ORACLE_ID'] = 'isnull';
+                    ob1['ORACLE_ID'] = 'isnull';
                 }
                 if (!this.flagDelitedPermanantly && this.flagTehnicalUsers) {
                     // ob['DUE_DEP'] = 'isnull';
-                    ob['ORACLE_ID'] = 'isnotnull';
+                    ob1['DUE_DEP'] = 'isnull';
+                    ob1['ORACLE_ID'] = 'isnotnull';
                 }
                 if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
                     //  q['USER_CL'] = ALL_ROWS;
-                    ob['CLASSIF_NAME'] = '_';
+                    ob1['CLASSIF_NAME'] = '_';
                 }
                 if (this.currentSort === 'fullDueName') {
                     propOrderBy = 'SURNAME_PATRON';
                     propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
-                    ob['orderby'] = propOrderBy;
+                    // ob1['orderby'] = propOrderBy;
+                    q.orderby = `${propOrderBy}`;
                 } else {
                     q.orderby = `${propOrderBy}`;
                 }
@@ -210,10 +212,10 @@ export class UserParamApiSrv {
             if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
                 q.USER_CL.criteries['DUE_DEP'] = 'isnotnull';
             }
-            if (!this.flagDelitedPermanantly && this.flagTehnicalUsers) {
-                // ob['DUE_DEP'] = 'isnull';
-                q.USER_CL.criteries['ORACLE_ID'] = 'isnotnull';
-            }
+            // if (!this.flagDelitedPermanantly && this.flagTehnicalUsers) {
+            //     // ob['DUE_DEP'] = 'isnull';
+            //     q.USER_CL.criteries['ORACLE_ID'] = 'isnotnull';
+            // }
 
             // PipRX.criteries({ 'USERCARD.DUE': `${dueDep ? dueDep : '0.'}` });
         }

@@ -143,11 +143,11 @@ export const SumProtocol: BtnActionFields = {
 export const UsersStats: BtnActionFields = {
     name: 'OpenUsersStats',
     title: 'Статистика по пользователям и опциям',
-    disabledClass: 'eos-icon eos-icon eos-icon-folder-group-blue small',
-    enableClass: 'eos-icon eos-icon eos-icon-folder-group-blue small',
+    disabledClass: 'eos-icon eos-icon eos-icon-statistic-grey small',
+    enableClass: 'eos-icon eos-icon eos-icon-statistic-blue small',
     tooltip: 'Статистика по пользователям и опциям',
     disabled: false,
-    activeClass: 'eos-icon eos-icon eos-icon-folder-group-blue small',
+    activeClass: 'eos-icon eos-icon eos-icon-statistic-blue small',
     activeBtnClass: '',
     isActive: false,
 };
@@ -179,11 +179,11 @@ export const Protocol: BtnActionFields = {
 export const DefaultSettings: BtnActionFields = {
     name: 'OpenDefaultSettings',
     title: 'Настройки по умолчанию',
-    disabledClass: 'eos-icon eos-icon-repair-blue small',
-    enableClass: 'eos-icon eos-icon-repair-blue small',
+    disabledClass: 'eos-icon eos-icon-repair-grey small',
+    enableClass: 'eos-icon eos-icon-settings-blue small',
     tooltip: 'Настройки по умолчанию',
     disabled: false,
-    activeClass: 'eos-icon eos-icon-repair-blue small',
+    activeClass: 'eos-icon eos-icon-settings-blue small',
     activeBtnClass: '',
     isActive: false,
 };

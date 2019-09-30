@@ -125,7 +125,7 @@ export class RightDepertmentComponent implements OnInit {
                 if (this._checkRepeat(data)) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
-                        title: '',
+                        title: 'Предупреждение:',
                         msg: 'Нет элементов для добавления'
                     });
                     this.isShell = false;
@@ -173,14 +173,14 @@ export class RightDepertmentComponent implements OnInit {
                     this.selectedNode.value = 0;
                     this._msgSrv.addNewMessage({
                         type: 'warning',
-                        title: '',
+                        title: 'Предупреждение:',
                         msg: 'Необходимо выбрать элемент'
                     });
                 } else if (this.checkAllDep && this.listUserDep.length === 0) {
                     this.checkFlag = true;
                     this._msgSrv.addNewMessage({
                         type: 'warning',
-                        title: '',
+                        title: 'Предупреждение:',
                         msg: 'Необходимо выбрать элемент'
                     });
                     return Promise.reject('cancel');
@@ -409,7 +409,7 @@ export class RightDepertmentComponent implements OnInit {
             if (index !== -1) {
                 this._msgSrv.addNewMessage({
                     type: 'warning',
-                    title: '',
+                    title: 'Предупреждение:',
                     msg: `Элемент \'${arrDep[index].CLASSIF_NAME}\' не будет добавлен\nтак как он уже существует`
                 });
                 arrDep.splice(index, 1);
