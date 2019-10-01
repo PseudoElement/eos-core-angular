@@ -121,7 +121,7 @@ export class UserParamApiSrv {
             propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
         }
         if (this.stateTehUsers) {
-            propOrderBy = 'DUE_DEP asc';
+            propOrderBy = 'CLASSIF_NAME asc';
             ob1['DUE_DEP'] = 'isnull';
         }
 
