@@ -475,6 +475,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     ActionMode() {
         this._apiSrv.flagDelitedPermanantly = !this._apiSrv.flagDelitedPermanantly;
         this._apiSrv.stateDeleteUsers = this._apiSrv.flagDelitedPermanantly;
+        this.flagScan = true;
         if (this._apiSrv.stateDeleteUsers === true) {
             this.buttons.moreButtons[4].isActive = false;
             this._apiSrv.stateTehUsers =  false;
