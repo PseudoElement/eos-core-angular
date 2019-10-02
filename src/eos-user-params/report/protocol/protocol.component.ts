@@ -80,7 +80,9 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._userpar.getUserIsn().then(() => {
+    this._userpar.getUserIsn({
+      expand: 'NTFY_USER_EMAIL_List'
+    }).then(() => {
       this.curentUser = this._userpar.curentUser.ISN_LCLASSIF;
       this.username = this._userpar.curentUser.SURNAME_PATRON;
       this._user_pagination.typeConfig = 'protocol';
@@ -269,30 +271,6 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
     if (this.lastUser !== undefined) {
       this.GetRefIsn();
     }
-  }
-
-  ParseDate(data) {
-    this.SelectUsers(data);
-    this._pipeSrv.read({
-      USER_CL: this.critUsers,
-      loadmode: 'Table'
-    })
-      .then((users: any) => {
-        for (const user of users) {
-          if (this.findUsers === undefined) {
-            this.findUsers = [{ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON }];
-          } else {
-            this.findUsers.push({ isn: user.ISN_LCLASSIF, name: user.SURNAME_PATRON });
-          }
-        }
-        this.ShowData();
-      });
-  }
-
-  CompareWithEvent() {
-    // if (this.lastUser !== undefined) {
-    //   return this.GetDataUser(this.lastUser.isnEvent);
-    // }
   }
 
   GetRefIsn() {

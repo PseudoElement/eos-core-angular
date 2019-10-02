@@ -212,7 +212,7 @@ export class CardRightSrv {
                 if (msg.length) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
-                        title: '',
+                        title: 'Предупреждение',
                         msg: `Элемент ${msg} не будет добавлен\nтак как он уже существует`
                     });
                 }

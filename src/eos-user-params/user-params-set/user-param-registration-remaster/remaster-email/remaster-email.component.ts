@@ -208,6 +208,9 @@ export class RemasterEmailComponent implements OnInit, OnDestroy {
             if (mapValue.get(parseKeyPositionRadio[0]) === '0' && mapValue.get(parseKeyPositionRadio[1]) === '0') {
                 obj[field.key] = String('');
             }
+            if (mapValue.get(parseKeyPositionRadio[0]) === '1' && mapValue.get(parseKeyPositionRadio[1]) === '1') {
+                obj[field.key] = String(1);
+            }
         }
     }
     returnClass(node, form: FormGroup): string {

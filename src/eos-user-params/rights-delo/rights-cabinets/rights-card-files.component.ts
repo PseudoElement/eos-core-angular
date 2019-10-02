@@ -70,6 +70,8 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             });
         })
         .catch(err => {
+            console.log(err);
+            this.sendMessage('Предупреждение', `${err}`);
         });
     }
     ngOnDestroy() {
@@ -278,8 +280,8 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                     this.isLoading = false;
                     this._msgSrv.addNewMessage({
                         type: 'success',
-                        title: '',
-                        msg: 'Изменения сохранены',
+                        title: 'Изменения сохранены',
+                        msg: '',
                         dismissOnTimeout: 6000
                     });
                     this.flagEdit = false;

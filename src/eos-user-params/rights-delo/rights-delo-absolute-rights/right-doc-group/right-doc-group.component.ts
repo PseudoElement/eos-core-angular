@@ -62,7 +62,7 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
             if (this._checkRepeat(data)) {
                 this._msgSrv.addNewMessage({
                     type: 'warning',
-                    title: '',
+                    title: 'Предупреждение:',
                     msg: 'Нет елементов для добавления'
                 });
                 this.isShell = false;
@@ -223,7 +223,7 @@ export class RightAbsoluteDocGroupComponent implements OnInit {
             if (index !== -1) {
                 this._msgSrv.addNewMessage({
                     type: 'warning',
-                    title: '',
+                    title: 'Предупреждение:',
                     msg: `Элемент \'${arrDoc[index].CLASSIF_NAME}\' не будет добавлен\nтак как он уже существует`
                 });
                 arrDoc.splice(index, 1);

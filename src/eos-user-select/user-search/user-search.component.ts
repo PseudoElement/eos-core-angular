@@ -46,7 +46,7 @@ export class UserSearchComponent implements OnInit {
         if (this.form) {
             return this.form.status === 'VALID' && (this.form.value['rec.LOGIN'].length > 0 || this.form.value['rec.DEPARTMENT'].length > 0 ||
                 this.form.value['rec.fullDueName'].length > 0  || this.form.value['rec.SURNAME'].length > 0 || this.form.value['rec.AV_SYSTEMS']
-                || this.form.value['rec.BLOCK_USER'] !== '');
+                || (this.form.value['rec.BLOCK_USER'] !== null && this.form.value['rec.BLOCK_USER'] !== ''));
         }
     }
     get showSurnameField() {

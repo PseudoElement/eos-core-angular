@@ -475,6 +475,18 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     ActionMode() {
         this._apiSrv.flagDelitedPermanantly = !this._apiSrv.flagDelitedPermanantly;
         this._apiSrv.stateDeleteUsers = this._apiSrv.flagDelitedPermanantly;
+        this.flagScan = true;
+        if (this._apiSrv.flagDelitedPermanantly === true) {
+            this._storage.setItem('SortPageList', { 'sort': 'fullDueName', 'upDoun': false });
+        } else {
+            this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false });
+        }
+        this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = false;
+        if (this._apiSrv.stateDeleteUsers === true) {
+            this.buttons.moreButtons[4].isActive = false;
+            this._apiSrv.stateTehUsers =  false;
+            this._apiSrv.flagTehnicalUsers = false;
+        }
         const id = this._route.params['value'].nodeId;
         this.upsavePagConfig();
         this._pagSrv.resetConfig();
@@ -484,6 +496,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     ActionTehnicalUser() {
         this._apiSrv.flagTehnicalUsers = !this._apiSrv.flagTehnicalUsers;
         this._apiSrv.stateTehUsers = this._apiSrv.flagTehnicalUsers;
+        this.flagScan = true;
+        this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false });
+        this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = false;
+        if (this._apiSrv.stateTehUsers === true) {
+            this.buttons.moreButtons[3].isActive = false;
+            this._apiSrv.stateDeleteUsers = false;
+            this._apiSrv.flagDelitedPermanantly = false;
+        }
         const id = this._route.params['value'].nodeId;
         this.upsavePagConfig();
         this._pagSrv.resetConfig();

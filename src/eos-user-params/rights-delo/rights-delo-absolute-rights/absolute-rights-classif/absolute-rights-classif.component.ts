@@ -201,7 +201,8 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                     ISN_CABINET: `isnull`,
                     CARD_FLAG: `1`,
                 }
-            }}));
+            }, orderby: 'CARD_NAME asc'
+            }));
         }
         return Promise.all([...reqs]).then((depData: any) => {
             const arrDue = [];
@@ -311,7 +312,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             if (index !== -1) {
                 this._msgSrv.addNewMessage({
                     type: 'warning',
-                    title: '',
+                    title: 'Предупреждение:',
                     msg: `Элемент \'${entity[index][config.label]}\' не будет добавлен\nтак как он уже существует`
                 });
                 entity.splice(index, 1);
