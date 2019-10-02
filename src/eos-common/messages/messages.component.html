@@ -15,12 +15,9 @@
     <div class="alert-body">
         <span>
                 <ng-container *ngIf="message.title && message.title.length">
-                    {{message.title}}.<br>
-                    {{message.msg}}
+                    {{message.title}}<br>
                 </ng-container>
-                <ng-container *ngIf="!(message.title && message.title.length)">
                     {{message.msg}}
-                </ng-container>
         </span>
     </div>
 </alert>
