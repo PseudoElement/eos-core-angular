@@ -53,24 +53,35 @@
                     </label>
                 </div>
                 <div class="table-title-position list-user-sel">
-                    <span class="user-list-fourth-colomn likeLink mar-left" (click)="sortPageList('login')">Логин
-                        <span *ngIf="_apiSrv.srtConfig.login.checked"
-                            [ngClass]="getClassOrder(_apiSrv.srtConfig.login.upDoun)"></span>
-                    </span>
-                    <span class="user-list-third-colomn likeLink " (click)="sortPageList('tip')">Тип
-                        <span *ngIf="_apiSrv.srtConfig.tip.checked"
-                        [ngClass]="getClassOrder(_apiSrv.srtConfig.tip.upDoun)"></span>
-                    </span>
-                    <span class="user-list-two-colomn likeLink user-list-two-colomn-title"
-                        (click)="sortPageList('fullDueName')">Должностное лицо
-                        <span *ngIf="_apiSrv.srtConfig.fullDueName.checked"
-                            [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
-                    </span>
-                    <span class="user-title-name user-list-first-colomn likeLink"
-                        (click)="sortPageList('department')">{{cardName}}
-                        <span *ngIf="_apiSrv.srtConfig.department.checked" class="curs-span-arrow"
-                            [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)"></span>
-                    </span>
+                    <div class="table-title-position list-user-sel">
+                        <span *ngIf="this._apiSrv.flagDelitedPermanantly === true; else logSort" class="user-list-fourth-colomn likeLink mar-left">Логин</span>
+                        <ng-template #logSort>
+                            <span class="user-list-fourth-colomn likeLink mar-left" (click)="sortPageList('login')">Логин
+                                <span *ngIf="_apiSrv.srtConfig.login.checked"
+                                [ngClass]="getClassOrder(_apiSrv.srtConfig.login.upDoun)"></span>
+                            </span>
+                        </ng-template>
+                        <span class="user-list-third-colomn likeLink " (click)="sortPageList('tip')">Тип
+                            <span *ngIf="_apiSrv.srtConfig.tip.checked"
+                            [ngClass]="getClassOrder(_apiSrv.srtConfig.tip.upDoun)"></span>
+                        </span>
+                        <span *ngIf="this._apiSrv.flagTehnicalUsers === true || showCloseQuickSearch; else dueSort" class="user-list-two-colomn likeLink user-list-two-colomn-title">Должностное лицо</span>
+                        <ng-template #dueSort>
+                            <span class="user-list-two-colomn likeLink user-list-two-colomn-title"
+                            (click)="sortPageList('fullDueName')">Должностное лицо
+                            <span *ngIf="_apiSrv.srtConfig.fullDueName.checked"
+                                [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
+                            </span>
+                        </ng-template>
+                        <span *ngIf="this._apiSrv.flagTehnicalUsers === true || showCloseQuickSearch; else depSort" class="user-title-name user-list-first-colomn likeLink">{{cardName}}</span>
+                        <ng-template #depSort>
+                            <span class="user-title-name user-list-first-colomn likeLink"
+                            (click)="sortPageList('department')">{{cardName}}
+                                <span *ngIf="_apiSrv.srtConfig.department.checked" class="curs-span-arrow"
+                                [ngClass]="getClassOrder(_apiSrv.srtConfig.department.upDoun)"></span>
+                            </span>
+                        </ng-template>
+                    </div>
                 </div>
             </div>
         </div>
@@ -108,9 +119,16 @@
                                         class="eos-icon eos-icon-DeepUser-Blue small icon-user"></span>
                                     {{ user.fullDueName}}
                                 </span>
-                                <span class="user-list-first-colomn" tooltip="{{user.department}}" placement="auto" [delay]="tooltipDelay"
+                                <span *ngIf="user.department === 'null' || user.department === '...'; else depUser" class="user-list-first-colomn"
+                                tooltip="..." placement="auto" containerClass="tooltip-info" container="body">  
+                                    <span
+                                    class="eos-icon eos-icon-department-grey small icon-user"></span>...
+                                </span> 
+                                <ng-template #depUser>
+                                    <span class="user-list-first-colomn" tooltip="{{user.department}}" placement="auto"
                                     containerClass="tooltip-info" container="body">{{user.department}}
-                                </span>
+                                    </span> 
+                                </ng-template>
                             </div>
                         </div>
                     </div>

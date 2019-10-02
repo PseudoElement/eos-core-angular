@@ -482,13 +482,13 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     if (evnt['rec.USEREDITISN'] === '' || evnt['rec.USEREDITISN'] === null) {
       isnUser = undefined;
     } else {
-      isnUser = evnt['rec.USEREDITISN'];
+      isnUser = evnt['rec.USEREDITISN'].replace(/,/g , '|');
     }
-
+  //  console.log(evnt['rec.USERWHOISN'], evnt['rec.USEREDITISN']);
     if (evnt['rec.USERWHOISN'] === '' || evnt['rec.USERWHOISN'] === null) {
       isnWho = undefined;
     } else {
-      isnWho = evnt['rec.USERWHOISN'];
+      isnWho = evnt['rec.USERWHOISN'].replace(/,/g , '|');
     }
 
     if (evnt['rec.USEREVENTS'] === '' || evnt['rec.USEREVENTS'] === null) {

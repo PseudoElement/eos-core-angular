@@ -243,7 +243,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this.cancel();
             }
         }
-        );
+        ).catch((e) => {
+            this._errorSrv.errorHandler(e);
+            this.cancel();
+        });
         // this.selectedNode = null;
     }
     cancel() {
@@ -588,7 +591,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 if (flag) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
-                        title: '',
+                        title: 'Предупреждение',
                         msg: 'Не заданны подразделения для права ' + node.label
                     });
                 }
