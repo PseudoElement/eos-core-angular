@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 
 import { Subject } from 'rxjs';
@@ -18,11 +18,17 @@ import { EosStorageService } from 'app/services/eos-storage.service';
 })
 
 export class UserParamsComponent implements OnDestroy, OnInit {
+    @ViewChild('emailChenge') emailChenge;
+    email = '';
     accordionList: IParamAccordionList[] = USER_PARAMS_LIST_NAV;
     isShowAccordion: boolean;
+    isShowRightAccordion: boolean = false;
     isLoading: boolean;
     isNewUser: boolean = false;
     pageId: string;
+    codeList: any[];
+    closeRight: boolean = false;
+    flagEdit: boolean;
     private ngUnsubscribe: Subject<any> = new Subject();
     private _isChanged: boolean;
     private _disableSave: boolean;
@@ -41,6 +47,10 @@ export class UserParamsComponent implements OnDestroy, OnInit {
             )
             .subscribe(param => {
                 this.pageId = param['field-id'];
+                this.codeList = undefined;
+                this.flagEdit = false;
+                this._navSrv.showRightSandwich(false);
+                this._navSrv.blockChangeStateRightSandwich(false);
             });
         this._route.queryParams
             .pipe(
@@ -80,6 +90,14 @@ export class UserParamsComponent implements OnDestroy, OnInit {
             .subscribe((state: boolean) => {
                 this.isShowAccordion = state;
             });
+        this._navSrv.StateSandwichRight$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe((state: boolean) => {
+            this.isShowRightAccordion = state;
+            this.closeRight = this.isShowRightAccordion;
+        });
         this._navSrv.StateScanDelo
             .pipe(
                 takeUntil(this.ngUnsubscribe)
@@ -91,13 +109,46 @@ export class UserParamsComponent implements OnDestroy, OnInit {
 
     ngOnInit() {
         this._openAccordion(this.accordionList);
+        if (document.documentElement.clientWidth < 1050) {
+            this._navSrv.changeStateSandwich(false);
+        }
+        this._navSrv.blockChangeStateRightSandwich(false);
     }
     ngOnDestroy(): void {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
         localStorage.removeItem('lastNodeDue');
     }
-
+    myFuntion($event) {
+        if (this.emailChenge.umailsInfo[this.emailChenge.currentIndex]) {
+            this.email = this.emailChenge.umailsInfo[this.emailChenge.currentIndex].EMAIL;
+        } else {
+            this.email = '';
+        }
+        if (!this.codeList || this.codeList.length === 0) {
+            this.closeRight = true;
+        }
+        const heightWithoutScrollbar = document.documentElement.clientWidth;
+        this.codeList = $event;
+        if (this.codeList.length > 0) {
+                this._navSrv.showRightSandwich(true);
+                if (this.closeRight && heightWithoutScrollbar > 1440) {
+                    this._navSrv.changeStateRightSandwich(true);
+                }
+        } else {
+            this._navSrv.showRightSandwich(false);
+            this._navSrv.changeStateRightSandwich(false);
+        }
+    }
+    redactEmailAddres($event) {
+        this.flagEdit = $event;
+        if (!this.codeList || this.codeList.length === 0) {
+            this._navSrv.changeStateRightSandwich(false);
+        } else {
+            this._navSrv.changeStateRightSandwich(true);
+        }
+        this._navSrv.blockChangeStateRightSandwich(this.flagEdit);
+    }
     canDeactivate (nextState?: RouterStateSnapshot): Promise<boolean> | boolean {
         if (this._isChanged) {
             return this._confirmSrv

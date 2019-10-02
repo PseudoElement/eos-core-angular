@@ -12,7 +12,7 @@
     background: $white;
     position: absolute;
     top: 97px;
-    left: -$dictionary-block-width;
+    left: -$dictionary-block-width-big-display;
     border-right: 1px solid $border-color-main-theme;
     transition: .3s;
     z-index: 5;
@@ -113,6 +113,36 @@
     .user-params-set{
         margin-left: 315px;
     }
+    .user-show-right{
+        max-width: calc(100vw - 650px);
+        transition: .3s;
+    }
+}
+@media(max-width: 1170px) {
+    .user-params-set{
+        margin-left: calc(50vw - 520px);
+    }
+    .user-show-right{
+        max-width: calc(100vw - 400px);
+        transition: .3s;
+    }
+}
+@media(max-width: 1050px) {
+    .nav-accordion {
+        min-width: 310px;
+        left: -$dictionary-block-width-big-display;
+        &.show-accordion {
+            left: 0;
+        }
+    }
+    .user-params-set{
+        margin-left: calc(50vw - 420px);
+    }
+    
+    .user-show-right{
+        max-width: calc(100vw - 400px);
+        transition: .3s;
+    }
 }
 .head-protocol{
     height: 500px;
@@ -141,5 +171,62 @@
 .default-settings {
     .default-btn {
         display: none;
+    }
+}
+.right-email-stage{
+    padding: 0 10px 10px 10px;
+    height: calc(100vh - 96px);
+    max-width: 400px;
+    overflow-y: auto;
+    .code-list{
+        border-top: 1px solid #e6e6e6;
+    }
+}
+.right-accordion-email {
+    min-width: $dictionary-block-width;
+    height: 100vh;
+    background: $white;
+    position: absolute;
+    top: 97px;
+    right: -400px;
+    border-right: 1px solid $border-color-main-theme;
+    transition: .3s;
+    z-index: 5;
+    &.show-accordion {
+        right: 0;
+    }
+}
+.modal-title-cust-right{
+    .modal-title-cust{
+        font-family: Roboto, sans-serif;
+        background-color: #fafafa;
+        width: 383px;
+        margin-left: -31px;
+        padding: 10px 0px 0 30px;
+    }
+}
+@media (max-width: 1599px) {
+    .right-accordion-email { 
+        right: -300px;
+    }
+    .right-email-stage{
+        max-width: 300px;
+    }
+    .modal-title-cust-right{
+        .modal-title-cust{
+            width: 283px;
+            margin-left: -31px;
+        }
+    }
+}
+@media (max-width: 1099px) {
+    .right-accordion-email { 
+        right: -300px;
+    }
+    .modal-title-cust-right{
+        .modal-title-cust{
+            width: 283px;
+            margin-left: -31px;
+        }
     }
 }

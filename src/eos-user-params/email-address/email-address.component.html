@@ -1,4 +1,4 @@
-<div class="email-window">
+<div class="email-window" [ngClass]="{'email-show-right': showRigth}">
     <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [disableBtn]="statusBtnSub" [defaultBtn]='false'
         (submitEmit)='saveAllForm($event)' (cancelEmit)='backForm($event)' (editEmit)='edit($event)'
         (defaultEmit)='default($event)'></eos-user-params-header>
@@ -7,7 +7,7 @@
             tooltip="Добавить E-MAIL" placement="top" containerClass="tooltip-info">
             <span class="eos-icon small" [ngClass]="flagEdit ? 'eos-icon-plus-blue' : 'eos-icon-plus-grey'"></span>
         </button>
-        <div class="btn-group">
+        <!-- <div class="btn-group">
             <div tooltip="Ограничение рассылки" placement="top" #itemTooltip="bs-tooltip" containerClass="tooltip-info">
                 <button [disabled]="getaccess || !flagEdit" type="button" class=" email-edit btn btn-primary "
                     (click)="itemTooltip.hide(); openModal(template, true)">
@@ -15,7 +15,7 @@
                         [ngClass]="getaccess || !flagEdit ? 'eos-icon eos-icon-edit-grey small' : 'eos-icon eos-icon-edit-blue small'"></span>
                 </button>
             </div>
-        </div>
+        </div> -->
         <div class="btn-group">
             <div tooltip="Удалить E-MAIL" #itemTooltip="bs-tooltip" placement="top" containerClass="tooltip-info">
                 <button [disabled]="getaccess || !flagEdit" class="email-delite  btn btn-primary"
@@ -48,7 +48,7 @@
         <div class="email-header">
             <span class="first">Е-mail пользователя: {{username}}</span>
             <span class="seconds">Вкл. в рассылку</span>
-            <span class="last">Искл. из рассылки</span>
+            <!-- <span class="last">Искл. из рассылки</span> -->
         </div>
         <!-- [ngClass]="{current: currentFueld.EMAIL === email_item.EMAIL}" -->
         <div class="email-content" *ngIf="umailsInfo.length > 0 && myForm">
@@ -67,11 +67,11 @@
                                     <span class="eos-icon eos-icon-checkbox-black"></span>
                                 </label>
                             </span>
-                            <span [tooltip]="group.controls['params'].value ? 'Имеются ограничения': ''"
+                            <!-- <span [tooltip]="group.controls['params'].value ? 'Имеются ограничения': ''"
                                 triggers="hover" placement="auto" containerClass="tooltip-info"
                                 [ngClass]="{current: currentIndex === i}" class="emali-list-last">
                                 <input formControlName="params" type="text" readonly="readonly" class="readonly">
-                            </span>
+                            </span> -->
                         </div>
                     </div>
                 </div>

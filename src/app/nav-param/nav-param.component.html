@@ -16,4 +16,9 @@
     <!--<span class="pull-right">
         <eos-pushpin [infoOpened]="false"></eos-pushpin>
     </span>-->
+    <span *ngIf="emeilUrl === 'email-address' && showRigth" class="eos-sandwich pull-right">
+        <button class="btn sandwich" [disabled]="this.disableRight" (click)="righSendwich()" [ngClass]="{'active': isRighSendwich }">
+            <span class="icon eos-icon small button-sandwich" [ngClass]="{'eos-icon-menu-white': isRighSendwich, 'eos-icon-menu-blue': !isRighSendwich, 'button-sandwich': disableRight}"></span>
+        </button>
+    </span>
 </div>

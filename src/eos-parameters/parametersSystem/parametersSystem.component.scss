@@ -91,3 +91,8 @@
         margin-left: 300px;
     }
 }
+@media (max-width: 1050px) {
+    .param-system {
+        margin-left: calc(50vw - 420px);
+    }
+}
