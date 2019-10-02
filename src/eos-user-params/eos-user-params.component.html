@@ -1,7 +1,7 @@
-<div *ngIf="!isLoading" class="user-params-set">
+<div *ngIf="!isLoading" class="user-params-set" [ngClass]="{'user-show-right': isShowRightAccordion}">
     <ng-container [ngSwitch]="pageId">
         <ng-container *ngSwitchCase="'email-address'">
-            <eos-params-email-address></eos-params-email-address>
+            <eos-params-email-address (emailAddres)="myFuntion($event)" (redactEmail)="redactEmailAddres($event)" #emailChenge></eos-params-email-address>
         </ng-container>
         <ng-container *ngSwitchCase="'base-param'">
             <eos-params-base-param></eos-params-base-param>
@@ -121,3 +121,23 @@
         </accordion-group>
     </accordion>
 </ng-template>
+<nav
+    class="right-accordion-email"
+    [ngClass]="{'show-accordion': isShowRightAccordion}"
+>   
+    <div class="right-email-stage">
+            <div class="modal-r">
+                <div class="modal-title-cust-right">
+                    <div class="modal-title-cust">События, включённые в рассылку <br> ({{email}})</div>
+                    <div class="code-list" *ngFor="let list of codeList">
+                        <label class="checkbox  minus-checkbox">
+                                <!-- group.controls.checkbox ? 1 : 0 -->
+                            <input  [checked]="list.check" [disabled]="!flagEdit"  type="checkbox" readonly="readonly" class="readonly" (change)="emailChenge.saveParamsCode($event, list.name)"><!--emailChenge.saveParamsCode($event, list.name);  -->
+                            <span class="eos-icon eos-icon-checkbox-black"></span>
+                            <span>  {{list.name}}</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+    </div>
+</nav>
