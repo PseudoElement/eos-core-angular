@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IOpenClassifParams } from 'eos-common/interfaces';
+import { PipRX } from 'eos-rest';
 
 declare function openPopup(url: string, callback?: Function): boolean;
 
@@ -16,13 +17,23 @@ const StdText: string = '../Pages/Common/StdText.aspx';
 
 @Injectable()
 export class WaitClassifService {
-    constructor() {
+    constructor(private _apiSrv: PipRX) {
         window['Rootpath'] = function () {
             return 'classif';
         };
     }
 
+    // 'DOCGROUP_CL', 'DOCGROUP_INDEX_UNIQUE'
+    // NOMENKL_CL, CHANGE_E_DOCUMENT - returns DELO_EXISTS, USE_IN_DEFAULTS
+    canChangeClassifRequest(type: string, oper: string, args: any): Promise<any> {
+        const qargs = Object.assign({ type: type, oper: oper}, args);
+        const query = { args: qargs };
+        const req = { CanChangeClassif: query};
+        return this._apiSrv.read(req);
+    }
+
     openClassif(params: IOpenClassifParams, flag?: boolean): Promise<String> {
+
         let url: string = '';
         if (params.classif === 'USER_LISTS') {
             url = USER_LISTS;
@@ -110,4 +121,6 @@ export class WaitClassifService {
         // }
         return url;
     }
+
+
 }

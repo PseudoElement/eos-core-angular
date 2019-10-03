@@ -43,6 +43,7 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
     }
 
     private _checkIndexDublicates(due, index): Promise<any> {
+        // return canChangeClassifRequest('DOCGROUP_CL', 'DOCGROUP_INDEX_UNIQUE', { id: String(due), data: String(index) });
         const query = { args: { type: 'DOCGROUP_CL', oper: 'DOCGROUP_INDEX_UNIQUE', id: String(due), data: String(index) } };
         const req = { CanChangeClassif: query};
         return this.apiSrv.read(req);

@@ -1,9 +1,16 @@
 <div class="card-content-wrapper">
     <div class="clearfix">
-        <eos-dynamic-input *ngIf="inputs['rec.E_DOCUMENT']"
-                           [input]="inputs['rec.E_DOCUMENT']"
-                           [form]="form"
-                           [readonly]="!editMode"></eos-dynamic-input>
+        <div [ngClass]="{disabled: true}">
+        <eos-dynamic-input style="width: 300px;" *ngIf="inputs['rec.E_DOCUMENT']"
+                            [input]="inputs['rec.E_DOCUMENT']"
+                            [form]="form"
+                            [tooltip]="eDocTooltip"
+                            placement="bottom"
+                            container="body"
+                            containerClass="tooltip-info"
+                            [disabled]="!(editMode && eDocEditable)"
+                            [readonly]="!(editMode && eDocEditable)"></eos-dynamic-input>
+        </div>
         <eos-dynamic-input *ngIf="inputs['rec.CLASSIF_NAME']"
                            [input]="inputs['rec.CLASSIF_NAME']"
                            [form]="form"

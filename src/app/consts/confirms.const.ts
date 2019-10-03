@@ -52,16 +52,9 @@ export const CONFIRM_REESTRTYPE_DELIVERY_CHANGE: IConfirmWindow = {
     cancelTitle: 'Нет'
 };
 
-export const CONFIRM_CABINET_NON_EMPTY: IConfirmWindow = {
+export const CONFIRM_CABINET_NON_EMPTY: IConfirmWindow2 = {
     title: 'Подтверждение удаления',
-    body: 'Для владельца кабинета существуют записи в папках. Удалить их?',
-    okTitle: 'Да',
-    cancelTitle: 'Нет'
-};
-
-export const CONFIRM_CABINET_NON_EMPTY1: IConfirmWindow2 = {
-    title: 'Подтверждение удаления',
-    body: 'Для владельца кабинета существуют записи в папках. Удалить их?',
+    body: 'Для владельца кабинета "{{XXX}}" существуют записи в папках. Удалить их?',
     buttons: [
         {title: 'Да', result: 1, isDefault: true},
         {title: 'Нет', result: 2, },

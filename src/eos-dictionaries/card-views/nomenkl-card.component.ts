@@ -1,6 +1,7 @@
 import {Component, Injector, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import {AbstractControl, ValidatorFn} from '@angular/forms';
+import { WaitClassifService } from 'app/services/waitClassif.service';
 
 @Component({
     selector: 'eos-nomenkl-card',
@@ -10,13 +11,17 @@ import {AbstractControl, ValidatorFn} from '@angular/forms';
 
 export class NomenklCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
 
+    eDocEditable: boolean;
+    eDocTooltip: string = '';
     private previousValues: SimpleChanges;
+    private _classifSrv: WaitClassifService;
 
     constructor(
         injector: Injector,
-        // private _apiSrv: PipRX,
     ) {
         super(injector);
+        this._classifSrv = injector.get(WaitClassifService);
+
     }
     ngOnInit(): void {
         super.ngOnInit();
@@ -31,6 +36,27 @@ export class NomenklCardComponent extends BaseCardEditComponent implements OnCha
         setTimeout(() => {
             this._updateButtons();
         });
+
+        if (!this.isNewRecord && this.editMode) {
+            // доступность смены флага "Для электронных документов"
+            this.eDocEditable = false;
+            const isn = this.data['rec']['ISN_LCLASSIF'];
+            this._classifSrv.canChangeClassifRequest('NOMENKL_CL', 'CHANGE_E_DOCUMENT', {id: String(isn)}).then (
+                (data) => {
+                    if (data === 'DELO_EXISTS') {
+                        this.eDocTooltip = 'В данном деле есть списанные документы';
+                    } else if (data === 'USE_IN_DEFAULTS') {
+                        this.eDocTooltip = 'Данное дело используется в правилах регистрации';
+                    } else {
+                        this.eDocEditable = true;
+                    }
+                }).catch(() => {
+                    // на случай старой базы
+                    this.eDocEditable = true;
+                });
+        } else {
+            this.eDocEditable = true;
+        }
 
     }
 

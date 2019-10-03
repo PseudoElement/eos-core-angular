@@ -5,8 +5,10 @@ import { CABINET_FOLDERS } from 'eos-dictionaries/consts/dictionaries/cabinet.co
 import { DEPARTMENT, PipRX } from 'eos-rest';
 import { IOrderBy } from '../interfaces';
 import { AbstractControl, FormControl } from '@angular/forms';
-import { CONFIRM_CABINET_NON_EMPTY1 } from 'app/consts/confirms.const';
+import { CONFIRM_CABINET_NON_EMPTY } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { WaitClassifService } from 'app/services/waitClassif.service';
+import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 
 interface ICabinetOwner {
     index: number;
@@ -44,7 +46,7 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
 
     @ViewChild('tableEl') tableEl;
 
-    private _apiSrv: PipRX;
+    // private _apiSrv: PipRX;
     // private folderList: any[];
 
     /* tslint:disable:no-bitwise */
@@ -88,13 +90,14 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
 
     constructor(injector: Injector,
         private _confirmSrv: ConfirmWindowService,
+        private _classifSrv: WaitClassifService,
         ) {
         super(injector);
         this.foldersMap = new Map<number, any>();
         CABINET_FOLDERS.forEach((folder) => {
             this.foldersMap.set(folder.key, folder);
         });
-        this._apiSrv = injector.get(PipRX);
+        // this._apiSrv = injector.get(PipRX);
         // this.folderList = [];
     }
 
@@ -160,9 +163,7 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
 
 
     _checkDeletion(due): Promise<any> {
-        const query = { args: { type: 'DEPARTMENT', oper: 'DELETE_FROM_CABINET', id: String(due) } };
-        const req = { CanChangeClassif: query};
-        return this._apiSrv.read(req);
+        return this._classifSrv.canChangeClassifRequest('DEPARTMENT', 'DELETE_FROM_CABINET', {id: String(due)} );
     }
 
     remove() {
@@ -171,8 +172,13 @@ export class CabinetCardEditComponent extends BaseCardEditComponent implements O
                 let canceled = false;
                 this._checkDeletion(owner.data['DUE']).then(result => {
                     if (result === 'DOC_FOLDER_NOT_EMPTY_BY_RESOLUTION' ||
-                        result === 'DOC_FOLDER_NOT_EMPTY_BY_REPLY') {
-                        return this._confirmSrv.confirm2(CONFIRM_CABINET_NON_EMPTY1).then(button => {
+                        result === 'DOC_FOLDER_NOT_EMPTY_BY_REPLY' ||
+                        result === 'NP_FOLDER_NOT_EMPTY_BY_NP_ACL') {
+                        const testc: IConfirmWindow2 = Object.assign({}, CONFIRM_CABINET_NON_EMPTY);
+                        testc.body = testc.body.replace('{{XXX}}', (owner.data.CLASSIF_NAME));
+
+                        return this._confirmSrv.confirm2(testc).then(button => {
+
                             if (!button || button.result === 3) {
                                 canceled = true;
 
