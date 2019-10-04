@@ -9,6 +9,24 @@ declare function openPopup(url: string, callback?: Function): boolean;
 @Injectable()
 export abstract class RKNomenkBasePage extends RKBasePage {
 
+
+    protected doCardSelectView(path: string) {
+        const config = this.dataController.getApiConfig();
+        // const url = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?Classif=NOMENKL_CL&select_multy=False';
+        const pageUrl = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?';
+        const params = 'Classif=CARDINDEX&value_id=__ClassifIds&skip_deleted=True&select_nodes=True&select_leaf=True&return_due=False';
+        // const params = 'Classif=CONTACT&value_id=__ClassifIds&app=nadzor&skip_deleted=True&select_multy=False&select_nodes=False&select_leaf=True&return_due=True&search-filter={"CONT.NOT_LINK_DEPARTMENT":"Null"}"';
+        const url = pageUrl + params;
+
+        // this.setDictLinkValue(path, '3620');
+        openPopup(url, ((event, str) => {
+            this.dataController.zone.run(() => {
+                this.setDictLinkValue(path, str);
+            });
+            return Promise.resolve(str);
+        }).bind(this));
+    }
+
     protected doNomenklSelectView(path: string) {
         const currentValue = this.getValue(path, null);
         if (currentValue) {
@@ -24,7 +42,6 @@ export abstract class RKNomenkBasePage extends RKBasePage {
 
         } else {
             const config = this.dataController.getApiConfig();
-
             const url = config.webBaseUrl + '/Pages/Classif/ChooseClassif.aspx?Classif=NOMENKL_CL&select_multy=False';
             openPopup(url, ((event, str) => {
                 this.dataController.zone.run(() => {
@@ -41,7 +58,6 @@ export abstract class RKNomenkBasePage extends RKBasePage {
             return rec['NOM_NUMBER'] + ' (' + rec['YEAR_NUMBER'] + ') ' + rec['CLASSIF_NAME'];
         }
         return '...';
-
     }
 
     protected nomencChildControlAvial(deloKey: string, childControlKey: string) {

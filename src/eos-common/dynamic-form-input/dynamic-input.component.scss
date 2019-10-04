@@ -50,6 +50,12 @@ eos-dynamic-input {
 
         &.link-input {
             background-color: #fafafa;
+            cursor: default;
+
+            &[disabled] {
+                cursor: default;
+            }
+
         }
 
         &.light {
@@ -209,9 +215,6 @@ eos-dynamic-input {
         //    right: 2px;
         //    top: 5px;
         // }
-        input {
-            // background-color: lightgrey;
-        }
     }
 }
 

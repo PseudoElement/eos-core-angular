@@ -109,7 +109,7 @@ export const RKFictControls: TDefaultField[] = [
         ]
     }, {
         key: 'ISN_CARD_REG_W_1',
-        type: E_FIELD_TYPE.select,
+        type: E_FIELD_TYPE.dictLink,
         title: '',
         default: null,
         dict: {
@@ -120,7 +120,7 @@ export const RKFictControls: TDefaultField[] = [
         }
     }, {
         key: 'ISN_CARD_REG_W_2',
-        type: E_FIELD_TYPE.select,
+        type: E_FIELD_TYPE.dictLink,
         title: '',
         default: null,
         dict: {
@@ -1110,7 +1110,8 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         key: 'CARD_ISN_W',
         // Default type:  'W',
-        type: E_FIELD_TYPE.select,
+        // type: E_FIELD_TYPE.select,
+        type: E_FIELD_TYPE.dictLink,
         // kind_doc '1,2,3',
         // title: 'Фиксированная картотека',
         title: '',

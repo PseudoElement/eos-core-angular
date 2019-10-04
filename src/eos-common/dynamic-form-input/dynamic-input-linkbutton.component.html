@@ -1,22 +1,25 @@
-<div [formGroup]="form"
-     class="dynamic-input-wrapper">
+<div [formGroup]="form">
     <label [hidden]="(input.hideLabel || hideLabel)"
            [attr.for]="input.key">{{label}}</label>
-    <div [ngClass]="{'required': isRequired, 'disabled': disabled}">
+    <div class="eos-select" *ngIf="!readonly"
+           [ngClass]="{'required': isRequired, 'disabled': disabled}">
         <div class="input-button-container">
             <input class="form-control m-font link-input"
                [readonly]="true"
-               [ngClass]="{'readonly': readonly}"
+               [ngClass]="{'readonly': readonly, 'disabled': disabled}"
                [value]="getDisplayValue()"
                (keydown)="ignoreKeyDown($event)"
                placeholder="..."
                (focus)="onFocus()"
                (blur)="onBlur()"
                autocomplete="off">
-                <div class="inbutton">
+                <div class="inbutton"
+                [ngClass]="{'readonly': readonly, 'disabled': disabled}"
+                [attr.for]="input.key"
+                >
                     <span>
-                        <a (click)="onButtonClick1()"><span class="eos-icon eos-icon-arrow-v-blue-bottom small"></span></a>
-                        <a (click)="onButtonClick2()" *ngIf="enRemoveButton()" ><span class="eos-icon eos-icon-close-blue small"></span></a>
+                        <a [ngClass]="{'readonly': readonly, 'disabled': disabled}" (click)="onButtonClick1()" *ngIf="!readonly"><span class="eos-icon eos-icon-arrow-v-blue-bottom small"></span></a>
+                        <a [ngClass]="{'readonly': readonly, 'disabled': disabled}" (click)="onButtonClick2()" *ngIf="enRemoveButton() && !readonly" ><span class="eos-icon eos-icon-close-blue small"></span></a>
                     </span>
                 </div>
         </div>

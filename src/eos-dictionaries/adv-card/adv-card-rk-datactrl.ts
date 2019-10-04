@@ -101,6 +101,9 @@ export class AdvCardRKDataCtrl {
 
     public readDictLinkValue(el: TDefaultField, value: any, callback: (event: IUpdateDictEvent) => void = null): Promise<any> {
         const dict = el.dict;
+        if (!value) {
+            return Promise.resolve(null);
+        }
         if (dict) {
             let query: any;
             if (el.dict.criteries) {
@@ -116,7 +119,7 @@ export class AdvCardRKDataCtrl {
                 const opts: TDFSelectOption[] = [];
                 for (let index = 0; index < data.length; index++) {
                     const element = data[index];
-                    opts.push ({value: element[el.dict.dictKey], title: element[el.dict.dictKeyTitle]});
+                    opts.push ({value: element[el.dict.dictKey], title: element[el.dict.dictKeyTitle], rec: element });
                 }
 
                 if (callback) {

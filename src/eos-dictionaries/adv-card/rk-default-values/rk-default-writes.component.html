@@ -156,7 +156,7 @@
                 class="radio-position-1"
                 [form]="form"
                 [disabled]="enKart1Select!=='1'"
-                [viewOpts]="selOpts"
+                [viewOpts]="selOptsCARDINDEX"
                 [hideLabel]="true"
                 [readonly]="!editMode"> </eos-dynamic-input>
         </div>
@@ -171,7 +171,7 @@
                 class="radio-position-2"
                 [form]="form"
                 [disabled]="enKart1Select!=='2' || enKart2Select!=='1'"
-                [viewOpts]="selOpts"
+                [viewOpts]="selOptsCARDINDEX"
                 [hideLabel]="true"
                 [readonly]="!editMode"> </eos-dynamic-input>
         </div>
@@ -193,10 +193,11 @@
     <div class="items-group">
 
     <!-- Доп. картотеки РК -->
+
     <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.CARD_ISN_W']"
         [form]="form"
         [hideLabel]="true"
-        [viewOpts]="selOpts"
+        [viewOpts]="selOptsCARDINDEX"
         [readonly]="!editMode"> </eos-dynamic-input>
 
     <!-- по значению реквизита "Кому (адресован) -->

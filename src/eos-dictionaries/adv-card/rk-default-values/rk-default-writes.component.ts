@@ -1,5 +1,7 @@
 import { Component, OnChanges, SimpleChanges } from '@angular/core';
 import { RKNomenkBasePage } from './rk-nomenk-base-page';
+import { IDynamicInputOptions } from 'eos-common/dynamic-form-input/dynamic-input.component';
+import { DynamicInputLinkButtonComponent } from 'eos-common/dynamic-form-input/dynamic-input-linkbutton.component';
 
 @Component({
     selector: 'eos-rk-writes',
@@ -15,7 +17,16 @@ export class RKWritesCardComponent extends RKNomenkBasePage implements OnChanges
     en_journal_param_w: boolean;
     flagEn_spinnum: boolean;
 
+    selOptsCARDINDEX: IDynamicInputOptions;
+
     ngOnChanges(changes: SimpleChanges) {
+        this.selOptsCARDINDEX = Object.assign({}, this.selOpts);
+        this.selOptsCARDINDEX.events = {
+            select: ((sender) => this.doCardSelectView(sender.input.key)).bind(this),
+            remove: ((sender) => this.setDictLinkValue(sender.input.key, null)).bind(this),
+            getTitle: ((sender) => this.cardClickGetTitle(sender)).bind(this),
+        };
+
         this.selOpts.events = {
             select: this.journalNomencClick_W.bind(this),
             remove: this.journalNomencClickRemove_W.bind(this),
@@ -193,6 +204,14 @@ export class RKWritesCardComponent extends RKNomenkBasePage implements OnChanges
             this.setEnabledOptions(this.inputs['DOC_DEFAULT_VALUE_List.JOURNAL_PARM'].options, null, false);
         } else {
         }
+    }
+
+    cardClickGetTitle(sender: DynamicInputLinkButtonComponent) {
+        const title = sender.input.options[0] && sender.input.options[0].rec && sender.input.options[0].rec['CARD_NAME'];
+        if (title) {
+            return title;
+        }
+        return '...';
     }
 
     journalNomencClick_W () {

@@ -44,6 +44,9 @@ export class DynamicInputLinkButtonComponent extends DynamicInputBase {
     }
 
     setExtValue(value: any, data: any) {
+        if (!this.input.options || !this.input.options.length) {
+            this.input.options = [{value: value }];
+        }
         this.input.options[0].rec = data;
         this.control.setValue(value);
     }
