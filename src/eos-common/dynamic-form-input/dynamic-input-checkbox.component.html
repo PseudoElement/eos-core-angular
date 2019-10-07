@@ -4,6 +4,8 @@
     <input type="checkbox" *ngIf="disabled"
         [readonly]="readonly"
         [ngClass]="{'readonly': readonly}"
+        [formControlName]="input.key"
+        [id]="input.key"
         disabled>
     <input type="checkbox" *ngIf="!disabled"
         [formControlName]="input.key"
