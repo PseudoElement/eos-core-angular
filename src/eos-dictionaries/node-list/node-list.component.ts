@@ -443,7 +443,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     import(dictionaryId: string, nodeId: string): void {
-        this._eiCl.openImport(dictionaryId, nodeId).then().catch(err => { });
+        this._eiCl.openImport(dictionaryId, nodeId)
+            .then(r => {
+                this._dictSrv.resetSearch().then().catch(err => { });
+            })
+            .catch(err => { });
     }
 
     userOrdered(nodes: EosDictionaryNode[]) {
