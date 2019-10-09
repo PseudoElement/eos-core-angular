@@ -447,7 +447,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             .then(r => {
                 this._dictSrv.resetSearch().then().catch(err => { });
             })
-            .catch(err => { });
+            .catch(err => {
+                this._dictSrv.resetSearch().then().catch(e => { console.log(e); });
+             });
     }
 
     userOrdered(nodes: EosDictionaryNode[]) {
