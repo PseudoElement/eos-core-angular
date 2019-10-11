@@ -204,17 +204,16 @@ export const Allbuttons: BtnAction = {
     buttons: [
         CreateUser,
         RedactUser,
-        DeliteLogicalUser,
         // ActionMode,
         LocSelectedUser,
         OpenAddressManagementWindow,
         OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
+        DeliteLogicalUser,
     ],
     moreButtons: [
         CreateUser,
         RedactUser,
-        DeliteLogicalUser,
         ActionModeMore,
         ActionTehnicalUser,
         LocSelectedUser,
@@ -226,7 +225,8 @@ export const Allbuttons: BtnAction = {
         Protocol,
         SumProtocol,
         UsersInfo,
-        DefaultSettings
+        DefaultSettings,
+        DeliteLogicalUser,
     ],
     moreButtonCheck: {
         check: false,

@@ -168,8 +168,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             )
             .subscribe(flagBtnScan => {
                 this.flagScan = !flagBtnScan;
-                this.buttons.buttons[5].disabled = this.flagScan;
-                this.buttons.moreButtons[7].disabled = this.flagScan;
+                this.buttons.buttons[4].disabled = this.flagScan;
+                this.buttons.moreButtons[6].disabled = this.flagScan;
             });
         this._breadSrv._eventFromBc$
             .pipe(
@@ -743,8 +743,21 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             this.cathError(error);
         });
     }
-
+    getLoginDeleted(): string {
+        let names  = '';
+        this.listUsers.forEach((list: UserSelectNode) => {
+            console.log(list);
+            if (list.isChecked || list.isSelected || list.selectedMark) {
+                names += `${list.name}, `;
+            }
+        });
+        return names;
+    }
     DeliteLogicalUser() {
+        const names = this.getLoginDeleted();
+        if (names) {
+            CONFIRM_DELETE.body = 'Удаленных пользователей невозможно восстановить: ' + '\n\r' + names;
+        }
         this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
             if (confirmation) {
                 let arrayRequests = [];
@@ -891,23 +904,27 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             return button;
         });
         if (this.flagScan !== null) {
-            this.buttons.buttons[5].disabled = this.flagScan;
-            this.buttons.moreButtons[7].disabled = this.flagScan;
+            this.buttons.buttons[4].disabled = this.flagScan;
+            this.buttons.moreButtons[6].disabled = this.flagScan;
         }
         if (this.flagTachRigth !== null) {
             this.buttons.buttons[0].disabled = this.flagTachRigth;
             this.buttons.moreButtons[0].disabled = this.flagTachRigth;
         }
         if (this.showCloseQuickSearch) {
+            this.buttons.moreButtons[2].disabled = true;
             this.buttons.moreButtons[3].disabled = true;
-            this.buttons.moreButtons[4].disabled = true;
-            this.buttons.moreButtons[11].disabled = true;
-            this.buttons.moreButtons[13].disabled = true;
+            this.buttons.moreButtons[10].disabled = true;
+            this.buttons.moreButtons[12].disabled = true;
         }   else {
+            this.buttons.moreButtons[2].disabled = false;
             this.buttons.moreButtons[3].disabled = false;
-            this.buttons.moreButtons[4].disabled = false;
-            this.buttons.moreButtons[11].disabled = false;
-            this.buttons.moreButtons[13].disabled = false;
+            this.buttons.moreButtons[10].disabled = false;
+            this.buttons.moreButtons[12].disabled = false;
+        }
+        if (this._apiSrv.flagDelitedPermanantly === true) {
+            this.buttons.moreButtons[10].disabled = true;
+            this.buttons.moreButtons[12].disabled = true;
         }
     }
 
@@ -918,14 +935,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             this.buttons.buttons[3].disabled = true;
             this.buttons.buttons[4].disabled = true;
             this.buttons.buttons[6].disabled = true;
-            this.buttons.moreButtons[11].disabled = true;
+            this.buttons.moreButtons[10].disabled = true;
         } else {
             this.buttons.buttons[1].disabled = false;
             this.buttons.buttons[2].disabled = false;
             this.buttons.buttons[3].disabled = false;
             this.buttons.buttons[4].disabled = false;
             this.buttons.buttons[6].disabled = false;
-            this.buttons.moreButtons[11].disabled = false;
+            this.buttons.moreButtons[10].disabled = false;
         }
     }
 
