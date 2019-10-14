@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, HostListener } from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { APP_MODULES, APP_MODULES_DROPDOWN } from '../consts/app-modules.const';
 import { Subject } from 'rxjs';
@@ -16,6 +16,7 @@ export class EosHeaderComponent implements OnDestroy {
     breadcrumbView = true;
     navParamView = false;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
+    width = 0;
     private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
@@ -23,6 +24,7 @@ export class EosHeaderComponent implements OnDestroy {
         private _route: ActivatedRoute,
         private _eiCl: ExportImportClService,
     ) {
+        this.width = window.innerWidth;
         this.update();
         _router.events
             .pipe(
@@ -30,6 +32,11 @@ export class EosHeaderComponent implements OnDestroy {
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe(() => this.update());
+    }
+    @HostListener('window:resize')
+    resize($event) {
+        this.width = window.innerWidth;
+       // console.log(window.innerWidth);
     }
 
     ngOnDestroy() {
