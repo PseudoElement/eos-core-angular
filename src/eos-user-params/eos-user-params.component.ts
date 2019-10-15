@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, HostListener, ViewChild } from '@angular/core';
 import { ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 
 import { Subject } from 'rxjs';
@@ -8,8 +8,8 @@ import { UserParamsService } from './shared/services/user-params.service';
 import { NavParamService } from 'app/services/nav-param.service';
 import { USER_PARAMS_LIST_NAV } from './shared/consts/user-param.consts';
 import { IParamAccordionList } from './shared/intrfaces/user-params.interfaces';
-import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
+// import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+// import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 import { IUserSetChanges } from './shared/intrfaces/user-parm.intterfaces';
 import { EosStorageService } from 'app/services/eos-storage.service';
 @Component({
@@ -31,13 +31,13 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     flagEdit: boolean;
     private ngUnsubscribe: Subject<any> = new Subject();
     private _isChanged: boolean;
-    private _disableSave: boolean;
-    constructor (
+    //   private _disableSave: boolean;
+    constructor(
         private _navSrv: NavParamService,
         // private _router: Router,
         private _route: ActivatedRoute,
         private _userParamService: UserParamsService,
-        private _confirmSrv: ConfirmWindowService,
+        //    private _confirmSrv: ConfirmWindowService,
         private _storageSrv: EosStorageService,
 
     ) {
@@ -79,9 +79,9 @@ export class UserParamsComponent implements OnDestroy, OnInit {
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
-            .subscribe(({isChange, disableSave}: IUserSetChanges) => {
+            .subscribe(({ isChange, disableSave }: IUserSetChanges) => {
                 this._isChanged = isChange;
-                this._disableSave = disableSave;
+                //    this._disableSave = disableSave;
             });
         this._navSrv.StateSandwich$
             .pipe(
@@ -149,28 +149,44 @@ export class UserParamsComponent implements OnDestroy, OnInit {
         }
         this._navSrv.blockChangeStateRightSandwich(this.flagEdit);
     }
-    canDeactivate (nextState?: RouterStateSnapshot): Promise<boolean> | boolean {
+
+    @HostListener('window:beforeunload', ['$event'])
+    canWndUnload(evt: BeforeUnloadEvent): any {
         if (this._isChanged) {
-            return this._confirmSrv
-                .confirm(Object.assign({}, CONFIRM_SAVE_ON_LEAVE, { confirmDisabled: this._disableSave }))
-                .then(doSave => {
-                    if (doSave) {
-                        this._userParamService.saveChenges();
-                     return   this._userParamService.submitSave.then(() => {
-                            this._isChanged = false;
-                            return true;
-                        }).catch((error) => {
-                            console.log(error);
-                            return false;
-                        });
-                    } else {
-                        this._isChanged = false;
-                        return true;
-                    }
-                })
-                .catch((err) => {
-                    return false;
-                });
+            evt.returnValue = '';
+            return false;
+        }
+    }
+    canDeactivate(nextState?: RouterStateSnapshot): Promise<boolean> | boolean {
+        if (this._isChanged) {
+            return new Promise((res, rej) => {
+                if (confirm('Возможно, внесенные изменения не сохранятся.')) {
+                    this._isChanged = false;
+                    return res(true);
+                } else {
+                    return res(false);
+                }
+            });
+            // return this._confirmSrv
+            //     .confirm(Object.assign({}, CONFIRM_SAVE_ON_LEAVE, { confirmDisabled: this._disableSave }))
+            //     .then(doSave => {
+            //         if (doSave) {
+            //             this._userParamService.saveChenges();
+            //             return this._userParamService.submitSave.then(() => {
+            //                 this._isChanged = false;
+            //                 return true;
+            //             }).catch((error) => {
+            //                 console.log(error);
+            //                 return false;
+            //             });
+            //         } else {
+            //             this._isChanged = false;
+            //             return true;
+            //         }
+            //     })
+            //     .catch((err) => {
+            //         return false;
+            //     });
         } else {
             return Promise.resolve(true);
         }
@@ -179,7 +195,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     private checkTabScan(): void {
         if (this._userParamService.curentUser['ACCESS_SYSTEMS'][3] === '1') {
             this.accordionList[4].disabled = false;
-        }   else {
+        } else {
             this.accordionList[4].disabled = true;
         }
     }
