@@ -319,35 +319,36 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             this.rtUserService.changeSelectedUser(null);
             flagUserSelected = false;
         } else {
-            if (!user.deleted) {
-                this.resetFlags();
-                this.selectedNodeSetFlags(user);
-                if (flag) {
-                    flag = false;
-                }
-                this.rtUserService.changeSelectedUser(user);
-            } else {
-                this.resetFlags();
-                const searchSelected = this.listUsers.filter(userList => {
-                    return userList.deleted === false;
-                });
-                if (searchSelected.length > 0) {
-                    this.selectedNodeSetFlags(searchSelected[0]);
-                    this.rtUserService.changeSelectedUser(searchSelected[0]);
-                    if (flag) {
-                        flag = false;
-                    }
-                } else {
-                    flagUserSelected = false;
-                    if (this.selectedUser && this.selectedUser.hasOwnProperty('isSelected')) {
-                        this.selectedUser.isSelected = false;
-                    }
-                    this.rtUserService.changeSelectedUser(null);
-                    if (flag) {
-                        flag = true;
-                    }
-                }
+            // if (!user.deleted) {
+            this.resetFlags();
+            this.selectedNodeSetFlags(user);
+            if (flag) {
+                flag = false;
             }
+            this.rtUserService.changeSelectedUser(user);
+
+            // } else {
+            //     this.resetFlags();
+            //     const searchSelected = this.listUsers.filter(userList => {
+            //         return userList.deleted === false;
+            //     });
+            //     if (searchSelected.length > 0) {
+            //         this.selectedNodeSetFlags(searchSelected[0]);
+            //         this.rtUserService.changeSelectedUser(searchSelected[0]);
+            //         if (flag) {
+            //             flag = false;
+            //         }
+            //     } else {
+            //         flagUserSelected = false;
+            //         if (this.selectedUser && this.selectedUser.hasOwnProperty('isSelected')) {
+            //             this.selectedUser.isSelected = false;
+            //         }
+            //         this.rtUserService.changeSelectedUser(null);
+            //         if (flag) {
+            //             flag = true;
+            //         }
+            //     }
+            // }
         }
         this._userParamSrv.checkedUsers = [user];
         this.rtUserService.subjectFlagBtnHeader.next(flagUserSelected);
@@ -429,6 +430,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         this._apiSrv.currentSort = nameSort;
         this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun = !this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun;
         this._storage.setItem('SortPageList', { 'sort': nameSort, 'upDoun': this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun });
+        //    sessionStorage.setItem('currentSort', JSON.stringify({ 'sort': nameSort, 'upDoun': this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun }));
         if (!this._apiSrv.srtConfig[this._apiSrv.currentSort].checked) {
             for (const key in this._apiSrv.srtConfig) {
                 if (this._apiSrv.srtConfig.hasOwnProperty(key)) {
@@ -746,7 +748,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     getLoginDeleted(): string {
         let names  = '';
         this.listUsers.forEach((list: UserSelectNode) => {
-            console.log(list);
             if (list.isChecked || list.isSelected || list.selectedMark) {
                 names += `${list.name}, `;
             }
@@ -779,6 +780,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
 
                 if (arrayRequests.length > 0) {
                     return Promise.all([...arrayRequests]).then(result => {
+                        this._msgSrv.addNewMessage({
+                            title: 'Сообщение',
+                            msg: `Пользователи: ${names} \n\r удалены`,
+                            type: 'success'
+                        });
                         this.initView();
                         arrayRequests = [];
                         Promise.all([...arrayProtocol]);
