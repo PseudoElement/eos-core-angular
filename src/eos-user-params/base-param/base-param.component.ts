@@ -252,7 +252,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     if (key === 'DUE_DEP_NAME') {
                         if (this.curentUser.isTechUser) {
                             this.inputs['DUE_DEP_NAME'].data = '';
-                            this.form.get('NOTE').patchValue(null);
+                            this.form.get('NOTE').patchValue('');
                         }
                         newD['NOTE'] = '' + this.form.get('NOTE').value;
                         newD['DUE_DEP'] = this.inputs['DUE_DEP_NAME'].data;
