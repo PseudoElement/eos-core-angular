@@ -223,8 +223,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         if (!this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value) && !this.curentUser.isTechUser) {
             this._msgSrv.addNewMessage({
                 type: 'warning',
-                title: 'Предупреждение',
-                msg: 'Нельзя сохранить не указано должностное лицо',
+                title: 'Предупреждение:',
+                msg: 'Укажите пользователя техническим или добавьте должностное лицо',
                 dismissOnTimeout: 6000,
             });
             return;
@@ -347,7 +347,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         });
     }
     SubForm(accessStr: string, meta: string): void {
-        this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
         if (accessStr.length > 1) {
             const number = accessStr.charAt(3);
             this._nanParSrv.scanObserver(number === '1' ? false : true);
@@ -375,6 +374,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this.editModeF();
                 this._pushState();
                 this.submitClick = false;
+                this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
             });
         }
         this.submitClick = false;

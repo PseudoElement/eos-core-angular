@@ -24,6 +24,7 @@ export class TreeUserSelectComponent implements OnInit {
     showDeleted: boolean;
     isLoading: boolean = true;
     id: any;
+    typeUsers: string;
     private w: number;
     constructor(
         private _router: Router,
@@ -49,7 +50,19 @@ export class TreeUserSelectComponent implements OnInit {
         });
         this.onResize();
     }
-     setTab(key) {
+    GetTypeUsers(): string {
+        if (this._apiSrv.flagDelitedPermanantly === true) {
+            this.typeUsers = 'del';
+        }
+        if (this._apiSrv.flagTehnicalUsers === true) {
+            this.typeUsers = 'tech';
+        }
+        if (this._apiSrv.flagTehnicalUsers !== true && this._apiSrv.flagDelitedPermanantly !== true) {
+            this.typeUsers = 'users';
+        }
+        return this.typeUsers;
+    }
+    setTab(key) {
         sessionStorage.setItem('key', key);
         sessionStorage.setItem('titleDue', '');
         this.currMode = key;

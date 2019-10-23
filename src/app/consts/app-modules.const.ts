@@ -27,5 +27,10 @@ export const APP_MODULES_DROPDOWN = [
         id: 'import',
         flag: 'ei',
         title: 'Импорт'
+    },
+    {
+        title: 'Протоколирование',
+        flag: 'ei',
+        id: 'prot',
     }
 ];

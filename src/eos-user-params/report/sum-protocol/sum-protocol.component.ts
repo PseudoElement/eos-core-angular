@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
-import { USER_PARMS } from 'eos-rest';
 import { IPaginationConfig } from 'eos-dictionaries/node-list-pagination/node-list-pagination.interfaces';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
@@ -20,7 +19,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   findUsers: any;
   frontData: any;
   usersAudit: any;
-  logUsers: boolean;
   checkUser: boolean = false;
   flagChecked: boolean = false;
   hideTree: boolean = false;
@@ -30,15 +28,15 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   initPage: boolean = false;
   clearResult: boolean = false;
   resetPage: boolean = false;
-  orderByStr: string = 'EVENT_DATE asc';
+  orderByStr: string = 'EVENT_DATE desc';
   eventKind = [
-    'Блокирование Пользователя',
-    'Разблокирование Пользователя',
+    'Блокирование пользователя',
+    'Разблокирование пользователя',
     'Создание пользователя',
     'Редактирование пользователя БД',
     'Редактирование прав ДЕЛА',
-    'Редактирование прав поточного сканирования',
-    'Удаление Пользователя'
+    'Редактирование прав Поточного сканирования',
+    'Удаление пользователя'
   ];
   critUsers = [];
   currentState: boolean[] = [true, true];
@@ -51,7 +49,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   closeTooltip: boolean = true;
   queryForDelete: any = [];
   arrSort = [
-    { date: true },
+    { date: false },
     { event: false },
     { who: false },
     { isn: false }
@@ -89,9 +87,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this._pipeSrv.read<USER_PARMS>({
-      USER_PARMS: PipRX.criteries({ 'PARM_NAME': 'USER_EDIT_AUDIT' })
-    }).then((r: any) => {
       this._user_pagination.typeConfig = 'sum-protocol';
       const confSumPr = this._storageSrv.getItem('sum-protocol');
       this._user_pagination.paginationConfig = confSumPr;
@@ -100,12 +95,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       this._user_pagination.paginationConfig.start = 1;
       this.PaginateData(this.config.length, this.orderByStr);
       this._user_pagination.totalPages = undefined;
-      if (r[0].PARM_VALUE === 'NO') {
-        this.logUsers = false;
-      } else {
-        this.logUsers = true;
-      }
-    });
   }
 
   GetSortData() {
@@ -252,28 +241,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     }
   }
 
-  MergeProtocol(): any {
-    let parValCheck;
-    if (this.logUsers === false) {
-      parValCheck = 'NO';
-    } else {
-      parValCheck = 'YES';
-    }
-    return [{
-      method: 'MERGE',
-      requestUri: `SYS_PARMS(-99)/USER_PARMS_List('-99 USER_EDIT_AUDIT')`,
-      data: {
-        PARM_VALUE: parValCheck
-      }
-    }];
-  }
-
-  CheckProtocol() {
-    this.logUsers = !this.logUsers;
-    const query = this.MergeProtocol();
-    this._pipeSrv.batch(query, '');
-  }
-
   SelectUsers(data) {
     let isnUser,
       isnWho;
@@ -300,7 +267,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   }
 
   markNode(marked: boolean, user) {
-    user.checked = marked;
+    this.isnRefFile = undefined;
+    user.checked = !user.checked;
     if (marked === true) {
       this.lastUser = user;
     }
@@ -382,18 +350,13 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       this.frontData.forEach(node => {
         node.checked = false;
       });
+
       user.checked = true;
     }
     this.lastUser = user;
     this.GetRefIsn(user.isnEvent);
   }
 
-  CheckUser(user) {
-    this.isnRefFile = undefined;
-    if (user.checked === false) {
-      user.checked = true;
-    }
-  }
   DisabledRemoveAudits() {
     let deleteAudit;
     if (this.frontData !== undefined) {
@@ -479,25 +442,21 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
 
   filterProtocol(evnt: any) {
     let isnWho, isnUser, eventUser, dateTo, dateFrom, dateSearch;
+
     if (evnt['rec.USEREDITISN'] === '' || evnt['rec.USEREDITISN'] === null) {
       isnUser = undefined;
     } else {
       isnUser = evnt['rec.USEREDITISN'].replace(/,/g , '|');
     }
-  //  console.log(evnt['rec.USERWHOISN'], evnt['rec.USEREDITISN']);
+
     if (evnt['rec.USERWHOISN'] === '' || evnt['rec.USERWHOISN'] === null) {
       isnWho = undefined;
     } else {
       isnWho = evnt['rec.USERWHOISN'].replace(/,/g , '|');
     }
 
-    if (evnt['rec.USEREVENTS'] === '' || evnt['rec.USEREVENTS'] === null) {
-      eventUser = undefined;
-    } else {
-      eventUser = evnt['rec.USEREVENTS'];
-    }
 
-    if (evnt['rec.USEREVENTS'] === '' || evnt['rec.USEREVENTS'] === null) {
+    if (evnt['rec.USEREVENTS'] === '' || evnt['rec.USEREVENTS'] === null || evnt['rec.USEREVENTS'] === '0') {
       eventUser = undefined;
     } else {
       eventUser = evnt['rec.USEREVENTS'];
@@ -539,8 +498,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           EVENT_DATE: dateSearch,
           ISN_USER: isnUser,
           ISN_WHO: isnWho,
-          orderby: this.orderByStr,
         }),
+      orderby: this.orderByStr,
       top: this.config.length,
       skip: 0,
       inlinecount: 'allpages'
@@ -643,7 +602,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   GetRefFile() {
     this.closeTooltip = true;
     setTimeout(() => {
-      window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900,height=700');
+      window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900, height=700, scrollbars=1');
     }, 0);
   }
 

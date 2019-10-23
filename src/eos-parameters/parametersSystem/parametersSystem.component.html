@@ -1,13 +1,5 @@
 <div class="param-system">
     <ng-container [ngSwitch]="paramId">
-        <ng-container *ngSwitchCase="'web'">
-            <eos-param-web
-                (formChanged)="recordChanged($event)"
-                (formInvalid)="turnOffSave($event)"
-                [btnDisabled]="!isChanged"
-                [btnError] = "disableSave"
-                ></eos-param-web>
-            </ng-container>
             <ng-container *ngSwitchCase="'authentication'">
                 <eos-param-authentication
                 (formChanged)="recordChanged($event)"
@@ -71,6 +63,22 @@
                 [btnDisabled]="!isChanged"
                 [btnError] = "disableSave"
             ></eos-param-rc>
+        </ng-container>
+        <ng-container *ngSwitchCase="'web'">
+                <eos-param-web
+                    (formChanged)="recordChanged($event)"
+                    (formInvalid)="turnOffSave($event)"
+                    [btnDisabled]="!isChanged"
+                    [btnError] = "disableSave"
+                    ></eos-param-web>
+                </ng-container>
+        <ng-container *ngSwitchCase="'logging'">
+            <eos-param-logging
+                (formChanged)="recordChanged($event)"
+                (formInvalid)="turnOffSave($event)"
+                [btnDisabled]="!isChanged"
+                [btnError] = "disableSave"
+            ></eos-param-logging>
         </ng-container>
     </ng-container>
 </div>

@@ -166,7 +166,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         }
     }
     showWarnMessage(stringMatches: string) {
-        const msg = '<p>Выбранные картотеки:</p><div class="cabinet-warning">' + stringMatches.replace(/(\d.*,)/g, '<p>$1</p>') + '<p><b>уже существуют и не могут быть добавлены снова!</b></p></div>';
+        const msg = 'Выбранные картотеки: ' + stringMatches + 'уже существуют и не могут быть добавлены снова!';
         this.sendMessage('Предупреждение', msg);
     }
 
@@ -274,6 +274,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         return this._pipSrv.batch(q, '').then(res => {
             this.reqCreateUpdateAllowed().then((data) => {
                 Promise.all([this._pipSrv.batch(data, '')]).then(() => {
+                    this._userSrv.ProtocolService(this.userId, 5);
                     this.UpdateMainArrayAfterSubmit();
                     this.updateCardforAllowed = [];
                     this._rightsCabinetsSrv.submitRequest.next();
@@ -288,6 +289,12 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 });
             });
         }).catch(error => {
+            if (error.code === 2000) {
+                this._rightsCabinetsSrv.cardsArray = [];
+                this._rightsCabinetsSrv.getUserCard(this._userSrv.curentUser.USERCARD_List, this.userId).then((user_cards: USERCARD[]) => {
+                    this.mainArrayCards = this._rightsCabinetsSrv.cardsArray;
+                });
+            }
             this._errorSrv.errorHandler(error);
             this.cancel();
             this.isLoading = false;

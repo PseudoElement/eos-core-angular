@@ -99,8 +99,8 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
     }
     submit(event): Promise<any> {
         this.flagShow = false;
-        this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 6);
         return this._userParamSrv.BatchData('MERGE', `USER_CL(${this.curentUser['ISN_LCLASSIF']})`, this.newData).then((data: any) => {
+            this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 6);
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                 this.flagShow = true;
                 this.disableBtn = true;

@@ -1,7 +1,7 @@
 <div class="right-dep-list">
     <div *ngIf="!isLoading; else spiner" class="right-dep-list-content">
         <div>
-            <button *ngIf="editMode"
+            <button *ngIf="editMode && !selectedNode.control.disabled"
                 class="btn"
                 tooltip="Добавить должностное лицо/подразделение"
                 placement="bottom"
@@ -12,7 +12,7 @@
             >
                 <span class="eos-icon eos-icon-plus-blue small"></span>
             </button>
-            <button *ngIf="editMode"
+            <button *ngIf="editMode && !selectedNode.control.disabled"
                 class="btn"
                 tooltip="Удалить должностное лицо/подразделение"
                 #itemTooltip= 'bs-tooltip'
@@ -29,7 +29,7 @@
         <div *ngIf="selectedNode && selectedNode.contentProp === 8">
             <label class="checkbox">
                 <input type="checkbox"
-                [disabled]="!editMode"
+                [disabled]="!editMode || selectedNode.control.disabled"
                 [checked]="selectedNode.value === 2 ? true : false"
                 hide
                 (change)="markedSendPrj($event)">
@@ -40,7 +40,7 @@
         <div *ngIf="getAllDep">
             <label class="checkbox" >
                 <input type="checkbox"
-                [disabled]="!editMode"
+                [disabled]="!editMode || selectedNode.control.disabled"
                 [checked]="checkFlag"
                 hide
                 (change)="checkForAll()">

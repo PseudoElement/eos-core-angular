@@ -5,12 +5,12 @@
         <span *ngIf="node.expandable"
             class="eos-icon icon list-triangle small"
             (click)="expendList(node)"
-            [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded && editMode, 'eos-icon-close-folder-blue': !node.isExpanded && editMode, 'eos-icon-close-folder-grey': !node.isExpanded && !editMode, 'eos-icon-open-folder-grey': node.isExpanded && !editMode}"
+            [ngClass]="{'eos-icon-open-folder-blue': node.isExpanded && editMode, 'eos-icon-close-folder-blue': !node.isExpanded && editMode, 'eos-icon-close-folder-grey': !node.isExpanded && (!editMode || selectedNode.control.disabled), 'eos-icon-open-folder-grey': node.isExpanded && (!editMode || selectedNode.control.disabled)}"
         ></span>
 
         <label class="checkbox classif-list-tech-user">
             <input type="checkbox"
-                [disabled]="!editMode"
+                [disabled]="!editMode || selectedNode.control.disabled"
                 hide
                 [(ngModel)]="node.value"
             >
@@ -28,21 +28,21 @@
                         tooltip="Добавить"
                         placement="bottom"
                         container="body"
-                        [disabled]="!editMode"
+                        [disabled]="!editMode || selectedNode.control.disabled"
                         containerClass="tooltip-info"
                         (click)="[node.addInstance(),  hideToolTip()]"
                     >
-                        <span class="eos-icon small" [ngClass]="{'eos-icon-plus-blue': editMode, 'eos-icon-plus-grey': !editMode}"></span>
+                        <span class="eos-icon small" [ngClass]="{'eos-icon-plus-blue': editMode, 'eos-icon-plus-grey': !editMode || selectedNode.control.disabled}"></span>
                     </button>
                     <button
                         class="btn"
                         tooltip="Удалить"
                         placement="bottom"
                         containerClass="tooltip-info"
-                        [disabled]="!node.curentSelectedNode || !editMode"
+                        [disabled]="!node.curentSelectedNode || !editMode || selectedNode.control.disabled"
                         (click)="[node.DeleteInstance(), hideToolTip()]"
                     >
-                        <span class="eos-icon small" [ngClass]="{'eos-icon-bin-forever-blue': editMode, 'eos-icon-bin-forever-grey': !editMode}"></span>
+                        <span class="eos-icon small" [ngClass]="{'eos-icon-bin-forever-blue': editMode, 'eos-icon-bin-forever-grey': !editMode || selectedNode.control.disabled}"></span>
                     </button>
                 </div>
 

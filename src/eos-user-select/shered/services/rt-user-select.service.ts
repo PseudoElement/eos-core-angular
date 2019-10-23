@@ -205,7 +205,7 @@ export class RtUserSelectService {
         const errMessage = err.message ? err.message : err;
         this._msgSrv.addNewMessage({
             type: 'danger',
-            title: '',
+            title: 'Ошибка приложения',
             msg: errMessage
         });
     }

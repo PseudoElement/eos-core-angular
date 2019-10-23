@@ -1,10 +1,4 @@
 <div class="sum-protocol">
-    <div>
-        <label class="checkbox minus-checkbox">
-            <input type="checkbox" [checked]="logUsers" (click)="CheckProtocol()">
-            <span class="eos-icon eos-icon-checkbox-black"></span>
-            Протоколирование работы со справочником 'Пользователи'</label>
-    </div>
     <div class="sum-report-wrapper">
         <div class="table-wrapper-head usual-border">
             <div class="sum-report-list">
@@ -85,7 +79,7 @@
                                 <div class="check-sum">
                                     <label class="checkbox minus-checkbox">
                                         <input type="checkbox" [checked]="user.checked || flagChecked" [ngModel]="user.checked" 
-                                        (ngModelChange)="markNode($event,user)" (click)="CheckUser(user)">
+                                        (ngModelChange)="markNode($event,user)">
                                         <span class="eos-icon eos-icon-checkbox-black"></span>
                                     </label>
                                 </div>

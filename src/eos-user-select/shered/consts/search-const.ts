@@ -11,24 +11,28 @@ export const USER_SEARCH = {
             type: 'string',
             title: 'Логин',
             pattern: pattrenSearch,
+            length: 255
         },
         {
             key: 'DEPARTMENT',
             type: 'string',
             title: 'Подразделение',
             pattern: pattrenSearch,
+            length: 255
         },
         {
             key: 'fullDueName',
             type: 'string',
             title: 'Должностное лицо',
             pattern: pattrenSearch,
+            length: 255
         },
         {
             key: 'CARD',
             type: 'string',
             title: 'Картотека',
             pattern: pattrenSearch,
+            length: 255
         },
         {
             key: 'DEL_USER',
@@ -51,6 +55,7 @@ export const USER_SEARCH = {
             type: 'string',
             title: 'Фамилия',
             pattern: pattrenSearch,
+            length: 255
         },
         {
             key: 'AV_SYSTEMS',
