@@ -804,7 +804,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                             msg: `Пользователи: ${names} \n\r удалены`,
                             type: 'success'
                         });
-                        this.initView();
+                        this.initView(this.currentDue);
                         arrayRequests = [];
                         Promise.all([...arrayProtocol]);
                     });
