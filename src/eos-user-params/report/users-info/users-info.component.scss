@@ -48,7 +48,6 @@
         display: inline-flex;
         padding-left: 15px;
         .info-users-sp {
-            padding-left: 12px;
             padding-top: 6px;
         }
     }
@@ -59,12 +58,18 @@
     border-bottom-width: 1px;
     border-bottom-style: solid;
     height: 48px;
+    display: flex;
+    justify-content: space-between;;
     .arrow-info {
         display: flex;
         .btn{
             height: 48px;
             width: 48px;
         }
+    }
+    .short-info {
+        padding-right: 20px;
+        padding-top: 7px;
     }
     .info-print{
         color: black;

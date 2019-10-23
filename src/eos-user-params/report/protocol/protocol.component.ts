@@ -23,15 +23,15 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   lastUser;
   initPage: boolean = false;
   checkUser: boolean = false;
-  orderByStr: string = 'EVENT_DATE asc';
+  orderByStr: string = 'EVENT_DATE desc';
   eventKind = [
-    'Блокирование Пользователя',
-    'Разблокирование Пользователя',
+    'Блокирование пользователя',
+    'Разблокирование пользователя',
     'Создание пользователя',
     'Редактирование пользователя БД',
     'Редактирование прав ДЕЛА',
-    'Редактирование прав поточного сканирования',
-    'Удаление Пользователя'
+    'Редактирование прав Поточного сканирования',
+    'Удаление пользователя'
   ];
   critUsers = [];
   closeTooltip: boolean = true;
@@ -44,7 +44,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   selfLink: any;
   link: any;
   arrSort = [
-    { date: true },
+    { date: false },
     { event: false },
     { who: false },
     { isn: false }
@@ -290,7 +290,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   GetRefFile() {
     this.closeTooltip = true;
     setTimeout(() => {
-      window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900,height=700');
+      window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900, height=700, scrollbars=1');
     }, 0);
   }
   ConvertDate(convDate) {

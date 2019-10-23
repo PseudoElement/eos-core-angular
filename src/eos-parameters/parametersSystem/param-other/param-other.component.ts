@@ -63,7 +63,7 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
     }
     edit() {
         Object.keys(this.form.controls).forEach(key => {
-            if (this.masDisable.includes(key)) {
+            if (this.masDisable.indexOf(key) >= 0) {
                 this.form.controls[key].enable({ emitEvent: false });
             }
         });

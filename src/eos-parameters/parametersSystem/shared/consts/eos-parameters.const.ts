@@ -27,7 +27,11 @@ export const EOS_PARAMETERS_TAB = [{
 }, {
     title: 'WEB',
     url: 'web'
+}, {
+    title: 'Протоколирование',
+    url: 'logging'
 }];
+
 
 export const PARM_SUCCESS_SAVE: IMessage = {
     type: 'success',

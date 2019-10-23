@@ -77,7 +77,6 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
             )
             .subscribe((state: boolean) => {
                 this.showRigth = state;
-                console.log('проверка', state);
             });
         this._userServices.getUserIsn({
             expand: 'NTFY_USER_EMAIL_List'
@@ -297,6 +296,7 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                 this.storeParams.add(el.trim());
         });
         }
+
         return this.storeParams;
     }
     ArrayCh() {
@@ -316,7 +316,6 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         });
         this.inputsInfo = newArr;
     }
-
     createOrEdit(flag: boolean, email: string) {
         if (flag) {
             this.editEmail();
@@ -364,8 +363,8 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
                 } else {
                     const m: IMessage = {
                         type: 'warning',
-                        title: 'Такая почта уже существует',
-                        msg: '',
+                        title: 'Предупреждение',
+                        msg: 'Такая почта уже существует',
                     };
                     this._msgSrv.addNewMessage(m);
                 }

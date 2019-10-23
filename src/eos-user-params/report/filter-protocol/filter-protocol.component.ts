@@ -59,7 +59,7 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
     this.filterForm = this.inpSrv.toFormGroup(this.inputs);
   }
   get disableBtn() {
-      return Object.keys(this.filterForm.value).findIndex((prop) => this.filterForm.value[prop] ) === -1;
+    return (Object.keys(this.filterForm.value).findIndex((prop) => this.filterForm.value[prop] ) === -1 || this.filterForm.invalid);
   }
 
   pretInputs(): void {
@@ -85,16 +85,17 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
   selectUserEdit() {
     OPEN_CLASSIF_USER_CL['criteriesName'] = this._apiSrv.configList.titleDue;
     OPEN_CLASSIF_USER_CL['selectMulty'] = true;
+    OPEN_CLASSIF_USER_CL['skipDeleted'] = false;
     this.isShell = true;
     this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
       .then(data => {
         this.data['ISN_USER_COPY'] = data;
         return this._getUserCl(data.split('|').map(Number));
       })
-      .then(data => {
+      .then(users => {
         this.isShell = false;
         const valueEdit = [];
-        data.map((user) => {
+        users.map((user) => {
           valueEdit.push({name: user.SURNAME_PATRON, isn: user.ISN_LCLASSIF});
         });
         this.allData.USEREDIT = valueEdit.map((obj) => obj.name).toString();
@@ -105,22 +106,22 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
       .catch(() => {
         this.isShell = false;
       });
-
   }
 
   selectUserWho() {
     OPEN_CLASSIF_USER_CL['criteriesName'] = this._apiSrv.configList.titleDue;
-    OPEN_CLASSIF_USER_CL['selectMulty'] = true;
+   OPEN_CLASSIF_USER_CL['selectMulty'] = true;
+   OPEN_CLASSIF_USER_CL['skipDeleted'] = false;
     this.isShell = true;
     this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
       .then(data => {
         this.data['ISN_USER_COPY'] = data;
         return this._getUserCl(data.split('|').map(Number));
       })
-      .then(data => {
+      .then(users => {
         this.isShell = false;
         const valueWho = [];
-        data.map((user) => {
+        users.map((user) => {
           valueWho.push({name: user.SURNAME_PATRON, isn: user.ISN_LCLASSIF});
         });
         this.allData.USERWHO = valueWho.map((obj) => obj.name).toString();
@@ -131,7 +132,6 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
       .catch(() => {
         this.isShell = false;
       });
-
   }
 
   ClearForm() {
@@ -147,8 +147,7 @@ export class EosReportSummaryFilterProtocolComponent implements OnInit {
 
   private _getUserCl(isn) {
     const queryUser = {
-      USER_CL: isn,
-      loadmode: 'Table'
+      USER_CL: isn
     };
     return this._pipeSrv.read<USER_CL>(queryUser);
   }

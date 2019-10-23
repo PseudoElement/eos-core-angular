@@ -9,7 +9,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { RestError } from 'eos-rest/core/rest-error';
 import { OPEN_CLASSIF_DEPARTMENT_FULL } from 'app/consts/query-classif.consts';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
-import {EosStorageService} from 'app/services/eos-storage.service';
+import { EosStorageService } from 'app/services/eos-storage.service';
 
 @Component({
     selector: 'eos-right-absolute-department',
@@ -18,8 +18,11 @@ import {EosStorageService} from 'app/services/eos-storage.service';
 export class RightDepertmentComponent implements OnInit {
     @Input() editMode: boolean;
     @Input() selectedNode: NodeAbsoluteRight;
+    @Input() listRigth: NodeAbsoluteRight[];
     @Input() curentUser: IParamUserCl;
     @Output() Changed = new EventEmitter();
+    @Output() createRcpdD = new EventEmitter();
+    @Output() emitDeletedRc = new EventEmitter();
 
     isLoading: boolean = false;
     massMy: USERDEP[] = [];
@@ -31,7 +34,6 @@ export class RightDepertmentComponent implements OnInit {
     isShell: Boolean = false;
     selectedDep: NodeDocsTree;
     checkFlag: boolean = false;
-
     constructor(
         private _msgSrv: EosMessageService,
         private _userParmSrv: UserParamsService,
@@ -39,7 +41,7 @@ export class RightDepertmentComponent implements OnInit {
         private apiSrv: UserParamApiSrv,
         private _storageSrv: EosStorageService,
     ) {
-     }
+    }
     ngOnInit() {
         this.listUserDep = [];
         if (this._storageSrv.getItem('abs_prav_mas')) {
@@ -48,7 +50,7 @@ export class RightDepertmentComponent implements OnInit {
         this.isLoading = true;
         this.userDep = this.curentUser['USERDEP_List'];
         this.funcNum = +this.selectedNode.key + 1;
-        if (this.selectedNode.isCreate &&  this.userDep.filter(i => i['FUNC_NUM'] === this.funcNum).length === 0) {
+        if (this.selectedNode.isCreate && this.userDep.filter(i => i['FUNC_NUM'] === this.funcNum).length === 0) {
             this.addDep();
             this.isLoading = false;
             return;
@@ -91,9 +93,9 @@ export class RightDepertmentComponent implements OnInit {
                         return null;
                     }
                 });
-            } else {
-                this.isLoading = false;
-            }
+        } else {
+            this.isLoading = false;
+        }
     }
     addFieldChwckProp(node: INodeDocsTreeCfg, is_node: number, deep: number) {
         if (this.selectedNode['_constData'].data.flagcheck) {
@@ -101,11 +103,11 @@ export class RightDepertmentComponent implements OnInit {
                 node['flagCheckNode'] = {
                     deepValue: deep,
                 };
-                node.viewAllowed =  true;
-            }   else {
+                node.viewAllowed = true;
+            } else {
                 node.viewAllowed = false;
             }
-        }   else {
+        } else {
             node.viewAllowed = false;
         }
     }
@@ -125,7 +127,7 @@ export class RightDepertmentComponent implements OnInit {
                 if (this._checkRepeat(data)) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
-                        title: 'Предупреждение:',
+                        title: 'Предупреждение',
                         msg: 'Нет элементов для добавления'
                     });
                     this.isShell = false;
@@ -161,7 +163,7 @@ export class RightDepertmentComponent implements OnInit {
                     });
                     newNodes.push(newNode);
                 });
-
+                this.confirmPkpd();
                 this.listUserDep = this.listUserDep.concat(newNodes);
                 this.selectedNode.isCreate = false;
                 this.isShell = false;
@@ -173,19 +175,35 @@ export class RightDepertmentComponent implements OnInit {
                     this.selectedNode.value = 0;
                     this._msgSrv.addNewMessage({
                         type: 'warning',
-                        title: 'Предупреждение:',
+                        title: 'Предупреждение',
                         msg: 'Необходимо выбрать элемент'
                     });
                 } else if (this.checkAllDep && this.listUserDep.length === 0) {
                     this.checkFlag = true;
                     this._msgSrv.addNewMessage({
                         type: 'warning',
-                        title: 'Предупреждение:',
+                        title: 'Предупреждение',
                         msg: 'Необходимо выбрать элемент'
                     });
                     return Promise.reject('cancel');
                 }
             });
+    }
+    // только для исполнения поручений, спрашиваем на создание права ркпд
+    confirmPkpd() {
+        if (this.selectedNode.key === '5' && this.selectedNode.isCreate && !this.listRigth[8].control.value) {
+            return new Promise((res, rej) => {
+                if (confirm('У пользователя нет права \'создание РКПД\', создать его?')) {
+                    res(true);
+                } else {
+                    res(false);
+                }
+            }).then(f => {
+                if (f) {
+                    this.createRcpdD.emit();
+                }
+            });
+        }
     }
     DeleteDep() {
         this.curentUser['USERDEP_List'] = this.curentUser['USERDEP_List'].filter(i => {
@@ -211,8 +229,14 @@ export class RightDepertmentComponent implements OnInit {
             due: this.selectedDep.DUE,
             data: this.selectedDep.data.userDep
         });
+        this.emitDeleteRcpd();
         this.selectedDep = null;
         this.Changed.emit('del');
+    }
+    emitDeleteRcpd() {
+        if (this.selectedNode.key === '5' && this.selectedNode.value === 0 && this.listRigth[8].control.value) {
+            this.emitDeletedRc.emit();
+        }
     }
     markedSendPrj(event) {
         this.selectedNode.value = event.target.checked ? 2 : 1;
@@ -239,7 +263,7 @@ export class RightDepertmentComponent implements OnInit {
     updateDell() {
         const changeList = this.querySaveDell();
         changeList.forEach(date => {
-            if (date['FUNC_NUM'] === this.funcNum &&  date.DUE !== '0.') {
+            if (date['FUNC_NUM'] === this.funcNum && date.DUE !== '0.') {
                 this.selectedNode.pushChange({
                     method: 'DELETE',
                     due: date.DUE,
@@ -265,13 +289,13 @@ export class RightDepertmentComponent implements OnInit {
                 this.deletForAll();
             } else {
                 this.addDep()
-                .then(() => {
-                    // this.selectedNode.value = 1;
-                    this.delDepMy();
-                    this.ngOnInit();
-                })
-                .catch( el => {
-                });
+                    .then(() => {
+                        // this.selectedNode.value = 1;
+                        this.delDepMy();
+                        this.ngOnInit();
+                    }).catch((error) => {
+
+                    });
             }
         }
     }
@@ -282,13 +306,13 @@ export class RightDepertmentComponent implements OnInit {
             str.push(data.DUE);
         });
         this.apiSrv.getDepartment(str)
-        .then(el => {
-            this.selectedNode.deleteChange();
-            this.delDepMy();
-            this.addDepMy(el);
-            this.updateDell();
-            this.ngOnInit();
-        });
+            .then(el => {
+                this.selectedNode.deleteChange();
+                this.delDepMy();
+                this.addDepMy(el);
+                this.updateDell();
+                this.ngOnInit();
+            });
     }
     deleteAllDep() {
         this.massMy = [];
@@ -308,39 +332,39 @@ export class RightDepertmentComponent implements OnInit {
                 return true;
             }
         });
-            let elem: USERDEP;
-            this.curentUser._orig['USERDEP_List'].forEach(i => {
-                if (i['FUNC_NUM'] === this.funcNum && i['DUE'] === '0.' && i['CompositePrimaryKey']) {
-                    elem = i;
-                }
-            });
-            const newUserDep: USERDEP = this._userParmSrv.createEntyti<USERDEP>({
-                ISN_LCLASSIF: this._userParmSrv.userContextId,
-                DUE: '0.',
-                FUNC_NUM: this.funcNum,
-                WEIGHT: null,
-                DEEP: 1,
-                ALLOWED: null,
-            }, 'USERDEP');
-            if (elem) {
-                this.curentUser.USERDEP_List.push(elem);
-                /* this.selectedNode.pushChange({
-                    method: 'POST',
-                    due: '0.',
-                    data: elem
-                }); */
-            } else {
-                this.curentUser.USERDEP_List.push(newUserDep);
-                this.selectedNode.pushChange({
-                    method: 'POST',
-                    due: '0.',
-                    data: newUserDep
-                });
+        let elem: USERDEP;
+        this.curentUser._orig['USERDEP_List'].forEach(i => {
+            if (i['FUNC_NUM'] === this.funcNum && i['DUE'] === '0.' && i['CompositePrimaryKey']) {
+                elem = i;
             }
-            this.selectedDep = null;
-            this._storageSrv.setItem('abs_prav_mas', this.massMy);
-            this.ngOnInit();
-            this.Changed.emit();
+        });
+        const newUserDep: USERDEP = this._userParmSrv.createEntyti<USERDEP>({
+            ISN_LCLASSIF: this._userParmSrv.userContextId,
+            DUE: '0.',
+            FUNC_NUM: this.funcNum,
+            WEIGHT: null,
+            DEEP: 1,
+            ALLOWED: null,
+        }, 'USERDEP');
+        if (elem) {
+            this.curentUser.USERDEP_List.push(elem);
+            /* this.selectedNode.pushChange({
+                method: 'POST',
+                due: '0.',
+                data: elem
+            }); */
+        } else {
+            this.curentUser.USERDEP_List.push(newUserDep);
+            this.selectedNode.pushChange({
+                method: 'POST',
+                due: '0.',
+                data: newUserDep
+            });
+        }
+        this.selectedDep = null;
+        this._storageSrv.setItem('abs_prav_mas', this.massMy);
+        this.ngOnInit();
+        this.Changed.emit();
     }
     delDepMy() {
         let flag = false;
@@ -409,7 +433,7 @@ export class RightDepertmentComponent implements OnInit {
             if (index !== -1) {
                 this._msgSrv.addNewMessage({
                     type: 'warning',
-                    title: 'Предупреждение:',
+                    title: 'Предупреждение',
                     msg: `Элемент \'${arrDep[index].CLASSIF_NAME}\' не будет добавлен\nтак как он уже существует`
                 });
                 arrDep.splice(index, 1);

@@ -16,8 +16,10 @@ export class EosReportUsersInfoComponent implements OnInit {
   selectUser: any;
   isFirst: boolean;
   isLast: boolean;
-  src;
+  src: any;
+  shortRep: boolean = false;
   CheckAllUsers: boolean = false;
+  titleDownload: string;
   printUsers: any[] = [{ data: 'Текущем пользователе', value: false }, { data: 'Всех отмеченных пользователях', value: true }];
   private nodeIndex: number = 0;
   constructor(private _userParamSrv: UserParamsService, private modalService: BsModalService, public sanitizer: DomSanitizer) { }
@@ -38,6 +40,12 @@ export class EosReportUsersInfoComponent implements OnInit {
       } else {
         this.activeBtn = false;
       }
+    }
+    if (this.btnVal.disabled === true) {
+      this.activeBtn = false;
+    }
+    if (this.btnVal.disabled === true) {
+      this.activeBtn = false;
     }
     this._updateBorders();
   }
@@ -85,19 +93,34 @@ export class EosReportUsersInfoComponent implements OnInit {
   }
 
   InformationSelectedUsers(selectUser: any): void {
-    let NumberLine: number = 1;
-    let informationContent: String = '';
-    const encoding = '\uFEFF';
-    const header = '№; Подразделение;;;;;;; Фамилия;;; Имя;;;\r\n';
-    this.CheckAllUsers === true ?
+      let NumberLine: number = 1;
+      let informationContent: String = '';
+      const encoding = '\uFEFF';
+      const time = new Date().toLocaleString();
+      const header = `Краткие сведения о выбранных пользователях\r\n ${time}\r\n №; Подразделение; Фамилия; Имя;\r\n`;
+      this.CheckAllUsers === true ?
+        this.users.forEach(user => {
+          informationContent = informationContent + `${NumberLine}; ${user.department === '...' ? '' : user.department}; ${user.name}; ${user.oracle_id === null ? 'УДАЛЕН' : user.login};\r\n`;
+          NumberLine++;
+        })
+        : informationContent = `${NumberLine}; ${selectUser.department === '...' ? '' : selectUser.department}; ${selectUser.name}; ${selectUser.oracle_id === null ? 'УДАЛЕН' : selectUser.login};`;
+      const sourceHTML = encoding + header + informationContent;
+      const info = this.CheckAllUsers ? `Краткие сведения по всем пользователям.csv` : `Краткие сведения ${selectUser.login}.csv`;
+      this.download(info, sourceHTML);
+  }
+
+  getHrefPrint(): string {
+    if (this.CheckAllUsers) {
+      let strId = '';
       this.users.forEach(user => {
-        informationContent = informationContent + `${NumberLine}; ${user.department};;;;;;; ${user.name};;; ${user.login};;;\r\n`;
-        NumberLine++;
-      })
-      : informationContent = `${NumberLine}; ${selectUser.department};;;;;;; ${selectUser.name};;; ${selectUser.login};;;`;
-    const sourceHTML = encoding + header + informationContent;
-    const info = this.CheckAllUsers ? `Краткие сведенья по всем пользователям.csv` : `Краткие сведенья ${selectUser.login}.csv`;
-    this.download(info, sourceHTML);
+        strId += user.id + ';';
+      });
+      this.titleDownload = 'Полные сведения по всем пользователям';
+      return `../UserInfo/UserRights.ashx?uisn=${strId}`;
+    } else {
+      this.titleDownload = `Полные сведения ${this.selectUser.login}`;
+      return `../UserInfo/UserRights.ashx?uisn=${this.selectUser.id}`;
+    }
   }
 
   private _updateBorders() {

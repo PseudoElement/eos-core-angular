@@ -76,6 +76,15 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         }
     },
     {
+        controlType: E_FIELD_TYPE.boolean, // 16
+        key: '28',
+        label: 'Создание РКПД',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroup
+        }
+    },
+    {
         controlType: E_FIELD_TYPE.boolean, // 9
         key: '6',
         label: 'Контроль исполнения поручений',
@@ -136,15 +145,6 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
-    },
-    {
-        controlType: E_FIELD_TYPE.boolean, // 16
-        key: '28',
-        label: 'Создание РКПД',
-        data: {
-            isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.docGroup
         }
     },
     {

@@ -211,8 +211,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
                     arrDue.push(item.DUE);
                 }
             });
-            const NewDepData = depData[0].filter((dep) => parArr.indexOf(dep.DUE) === -1 && parArr.indexOf(dep.PARENT_DUE) !== -1 &&
-            arrDue.indexOf(dep.DUE) === -1);
+            const NewDepData = depData[0].filter((dep) => parArr.indexOf(dep.DUE) === -1 && arrDue.indexOf(dep.DUE) === -1);
             if (NewDepData.length !== 0) {
                 return this.askForAddCard(NewDepData)
                 .then((addCard) => {
@@ -312,7 +311,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             if (index !== -1) {
                 this._msgSrv.addNewMessage({
                     type: 'warning',
-                    title: 'Предупреждение:',
+                    title: 'Предупреждение',
                     msg: `Элемент \'${entity[index][config.label]}\' не будет добавлен\nтак как он уже существует`
                 });
                 entity.splice(index, 1);

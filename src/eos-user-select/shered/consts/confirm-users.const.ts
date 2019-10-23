@@ -1,7 +1,7 @@
 import { IConfirmWindow } from 'eos-common/core/confirm-window.interface';
 
 export const CONFIRM_DELETE: IConfirmWindow = {
-    title: 'Подтвердите удаление выбранных пользователей',
+    title: 'Подтверждиние удаления',
     body: 'Удаленных пользователей невозможно восстановить',
     okTitle: 'Удалить',
     cancelTitle: 'Отмена'

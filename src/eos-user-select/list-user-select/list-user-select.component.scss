@@ -64,6 +64,12 @@
             color: $white;
         }
     }
+    .button-user{
+        background: none;
+        border: none;
+        outline: none;
+        text-align: left;
+    }
     .user-list-first-colomn {
         width: 383px;
         display: inline-block;
@@ -87,7 +93,7 @@
         padding-right: 2px;
     }
     .user-list-third-colomn {
-        width: 60px;
+        width: 40px;
         display: inline-block;
     }
     .user-list-fourth-colomn {

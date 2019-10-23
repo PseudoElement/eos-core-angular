@@ -51,7 +51,7 @@ export class ParamWebComponent extends BaseParamComponent {
     }
     edit() {
         Object.keys(this.form.controls).forEach(key => {
-            if (this.masDisable.includes(key)) {
+            if (this.masDisable.indexOf(key) >= 0) {
                 this.form.controls[key].enable({ emitEvent: false });
             }
         });

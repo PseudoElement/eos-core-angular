@@ -87,7 +87,7 @@
         >
             <div accordion-heading>
                 {{item.title}}
-                <span
+                <span *ngIf="!hideIcon" 
                     class="icon eos-icon small float-right pull-right"
                     [ngClass]="{'eos-icon-arrow-v-blue-bottom': !item.isOpen, 'eos-icon-arrow-v-blue-top': item.isOpen}"
                 ></span>
