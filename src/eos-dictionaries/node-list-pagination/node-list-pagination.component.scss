@@ -139,7 +139,13 @@
     }
 }
 
-@media(min-width: 0px) and (max-width: 999px) {
+.open-tree {
+    .pagination-option {
+        bottom: 50px;
+    }
+}
+
+@media(min-width: 0px) and (max-width: 1499px) {
     .pagination-option {
         &.tree {
             left: $grid-gutter-width / 2;

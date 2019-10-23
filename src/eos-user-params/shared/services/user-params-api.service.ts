@@ -237,11 +237,20 @@ export class UserParamApiSrv {
         }
         const dbQuery = Object.assign({}, this._storageSrv.getItem('quickSearch'));
         const config = this._storageSrv.getItem('users');
+        if (config.showMore) {
+            if (config.current !== 2 && config.start !== 1) {
+                dbQuery.top = ((config.current - config.start) * config.length) + config.length;
+            } else {
+                dbQuery.top = config.length * config.current;
+            }
+            dbQuery.skip = config.length * config.start - config.length;
+        } else {
+            dbQuery.top = config.length;
+            dbQuery.skip = config.length * config.current - config.length;
+        }
         let propOrderBy = this.currentSort === 'login' ? 'CLASSIF_NAME' : 'NOTE';
         propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
         dbQuery.orderby = propOrderBy;
-        dbQuery.top = `${config ? config.length : 10}`;
-        dbQuery.skip = `${config ? config.length * config.current - config.length : 0}`;
         dbQuery.inlinecount = 'allpages';
         this.searchState = false;
         return dbQuery;
