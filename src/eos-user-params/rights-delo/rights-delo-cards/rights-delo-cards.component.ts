@@ -44,13 +44,6 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
             .subscribe((state: boolean) => {
                 this.btnDisabled = !state;
             });
-        this._userParamsSetSrv.saveData$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                this._userParamsSetSrv.submitSave = this.submit(true);
-            });
     }
     ngOnInit() {
         this._userParamsSetSrv.getUserIsn({
@@ -102,6 +95,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         this.pageState = 'LOADING';
      return  this._cardSrv.saveChenge$()
             .then(() => {
+                this._userParamsSetSrv.ProtocolService(this._userParamsSetSrv.userContextId, 5);
                 this.pageState = 'VIEW';
                 this.btnDisabled = true;
                 if (!flag) {

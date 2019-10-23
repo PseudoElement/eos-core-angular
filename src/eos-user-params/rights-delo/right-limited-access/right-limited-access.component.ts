@@ -75,13 +75,6 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         this.flagGrifs = true;
         this.flagLinks = true;
         this.bacgHeader = false;
-        this._userServices.saveData$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                this._userServices.submitSave = this.saveAllForm();
-            });
         this._snap.queryParams
         .pipe(
             takeUntil(this._ngUnsubscribe)
@@ -159,13 +152,9 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         if (this.myElem.length > 0) {
             promise_all.push(this._limitservise.postGrifs(this.myElem), this._limitservise.deliteGrifs(this.myElem));
         }
-        // if (this.LinksForm) {
-        //     const valueEdit = this.LinksForm.get('links').value;
-        //     // this._limitservise.createLinksNpUserLInk(valueEdit),
-        //     promise_all.push(this._limitservise.deliteLinksFromNpUserLink(valueEdit), this._limitservise.createLinksNpUserLInk(valueEdit));
-        // }
         return Promise.all([...promise_all])
             .then(result => {
+                this._userServices.ProtocolService(this._userServices.userContextId, 5);
                 this._limitservise.getDataGrifs()
                 .then(res => {
                     this.grifInput[0] = res[0]['USERSECUR_List'];
