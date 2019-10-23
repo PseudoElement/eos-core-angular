@@ -12,6 +12,10 @@ export class AppContext {
     public CurrentUser: USER_CL;
     public SysParms: SYS_PARMS;
     /**
+    * Ограничения картотеками пользователя
+    */
+    public limitCardsUser: any[];
+    /**
      * Настройки отображения
      */
     public UserViews: SRCH_VIEW[];
@@ -51,6 +55,8 @@ export class AppContext {
         })
             .then(([d]) => {
                 const isnViews = d.USER_VIEW_List.map((view) => view.ISN_VIEW);
+                this.limitCardsUser = d.USER_TECH_List.filter(card => card.FUNC_NUM === 1);
+                this.limitCardsUser = this.limitCardsUser.map(card => card.DUE);
                 let res = Promise.resolve({user: d, views: []});
                 if (isnViews.length) {
                     res = p.read<SRCH_VIEW>({SRCH_VIEW: isnViews, expand: 'SRCH_VIEW_DESC_List'})

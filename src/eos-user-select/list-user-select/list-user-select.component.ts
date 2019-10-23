@@ -61,15 +61,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     currentDue: string;
     // количество выбранных пользователей
     countcheckedField: number;
-    titleDue: string;
     shadow: boolean = false;
 
-    get showCloseQuickSearch () {
+    get showCloseQuickSearch() {
         return this._storage.getItem('quickSearch');
     }
     get cardName() {
-       // return this.shooseP === 0 ? 'Подразделение' : 'Картотека';
-        return  'Подразделение';
+        // return this.shooseP === 0 ? 'Подразделение' : 'Картотека';
+        return 'Подразделение';
     }
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -89,7 +88,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         private _appContext: AppContext,
         private _errorSrv: ErrorHelperServices,
         private _waitCl: WaitClassifService,
-      //  private srhSrv: SearchServices,
+        //  private srhSrv: SearchServices,
         private _userParamSrv: UserParamsService,
     ) {
 
@@ -124,24 +123,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             .subscribe((data) => {
                 const id = this._route.params['value'].nodeId;
                 this.initView(id ? id : '0.');
-                // this.flagScan = null;
-                // this.flagChecked = null;
-                // this.listUsers = data;
-                // if (this.listUsers && this.listUsers.length) {
-                //     if (!this._storage.getItem('saveQuickSearch')) {
-                //         this.selectedNode(this.listUsers[0]);
-                //     } else {
-                //         this.selectedNode(this.findSelectedSaveUsers()[0] ? this.findSelectedSaveUsers()[0] : this.listUsers[0]);
-                //     }
-                // } else {
-                //     this.selectedNode(null);
-                // }
                 this._storage.removeItem('main_scroll');
                 if (this.listContent && this.listContent.nativeElement) {
 
                     this.listContent.nativeElement.scrollTop = 0;
                 }
-                // this.updateFlafListen();
             });
 
         this._treeSrv.changeListUsers$
@@ -149,7 +135,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe(r => {
-              //  this.showCloseQuickSearch = false;
                 localStorage.removeItem('quickSearch');
                 this._storage.removeItem('selected_user_save');
                 this.initView();
@@ -168,8 +153,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             )
             .subscribe(flagBtnScan => {
                 this.flagScan = !flagBtnScan;
-                this.buttons.buttons[4].disabled = this.flagScan;
-                this.buttons.moreButtons[6].disabled = this.flagScan;
+                if (this._appContext.limitCardsUser.indexOf(this.selectedUser.data.TECH_DUE_DEP) === -1 && this._appContext.limitCardsUser.length > 0) {
+                    this.buttons.buttons[4].disabled = true;
+                    this.buttons.moreButtons[6].disabled = true;
+                } else {
+                    this.buttons.buttons[4].disabled = this.flagScan;
+                    this.buttons.moreButtons[6].disabled = this.flagScan;
+                }
             });
         this._breadSrv._eventFromBc$
             .pipe(
@@ -191,6 +181,30 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             }
         }
     }
+
+    CheckToLimitUser(): void {
+        this.buttons.buttons[1].disabled = true;
+        this.buttons.buttons[2].disabled = true;
+        this.buttons.buttons[4].disabled = true;
+        this.buttons.buttons[5].disabled = true;
+        this.buttons.moreButtons[5].disabled = true;
+        this.buttons.moreButtons[11].disabled = true;
+        this.buttons.moreButtons[13].disabled = true;
+        this.buttons.moreButtons[14].disabled = true;
+        const checkDep = this._userParamSrv.checkedUsers.filter(user => this._appContext.limitCardsUser.indexOf(user.data.TECH_DUE_DEP) === -1);
+        if (this.selectedUser) {
+            if (this._appContext.limitCardsUser.indexOf(this.selectedUser.data.TECH_DUE_DEP) !== -1) {
+                this.buttons.buttons[1].disabled = false;
+                this.buttons.buttons[2].disabled = false;
+                this.buttons.buttons[3].disabled = false;
+                this.buttons.buttons[5].disabled = false;
+            }
+        }
+        if (checkDep.length > 0) {
+                this.buttons.moreButtons[4].disabled = true;
+        }
+    }
+
     checkFlagTech() {
         const arrThech = this._appContext.CurrentUser.USER_TECH_List;
         const flag = arrThech.some((el: USER_TECH) => {
@@ -243,32 +257,33 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         this.checkSortSessionStore();
         this.countcheckedField = 0;
         this.shooseP = this._apiSrv.configList.shooseTab;
-        this.titleDue = this.shooseP === 0 ? 'Подразделение' : 'Картотека';
         if (!param || param === '0.') {
-            this._apiSrv.configList.shooseTab === 0 ? this.titleCurrentDue = 'Все подразделения' : this.titleCurrentDue = 'Центральная картотека';
+            if (this._apiSrv.flagDelitedPermanantly && this._apiSrv.configList.shooseTab === 1) {
+                this.titleCurrentDue = '';
+            } else {
+                this._apiSrv.configList.shooseTab === 0 ? this.titleCurrentDue = 'Все подразделения' : this.titleCurrentDue = 'Центральная картотека';
+            }
         } else {
             this.titleCurrentDue = this._apiSrv.configList.titleDue;
+        }
+        if ((this._apiSrv.flagDelitedPermanantly === true || this._apiSrv.flagTehnicalUsers === true) && this._apiSrv.configList.shooseTab === 0) {
+            this.titleCurrentDue = 'Все подразделения';
+        }
+        if (this._apiSrv.flagDelitedPermanantly === true && this._apiSrv.configList.shooseTab === 1) {
+            this.titleCurrentDue = '';
         }
         // this.flagScan = null; убираю из-за сканирования
         this.flagChecked = null;
         this.isLoading = true;
         this._apiSrv.getUsers(param || '0.')
             .then((data: UserSelectNode[]) => {
-                //  this._pagSrv.UsersList =  this.helpersClass.sort(data, this.srtConfig[this.currentSort].upDoun, this.currentSort);
-                        this.listUsers = this._pagSrv.UsersList;
-                    // this.listUsers = this._pagSrv.UsersList.slice((this._pagSrv.paginationConfig.start - 1)
-                    //     * this._pagSrv.paginationConfig.length,
-                    //     this._pagSrv.paginationConfig.current
-                    //     * this._pagSrv.paginationConfig.length);
-                    if (this.listUsers && this.listUsers.length) {
-                        this.selectedNode(this.findSelectedSaveUsers()[0] ? this.findSelectedSaveUsers()[0] : this.listUsers[0]);
-                        //    this._storage.removeItem('selected_user_save');
-                    } else {
-                        this.selectedNode(null);
-                    }
-                //  this.updateFlafListen();
+                this.listUsers = this._pagSrv.UsersList;
+                if (this.listUsers && this.listUsers.length) {
+                    this.selectedNode(this.findSelectedSaveUsers()[0] ? this.findSelectedSaveUsers()[0] : this.listUsers[0]);
+                } else {
+                    this.selectedNode(null);
+                }
                 this.isLoading = false;
-              //  this._storage.removeItem('saveQuickSearch');
                 this.countMaxSize = this._pagSrv.countMaxSize;
 
             }).catch(error => {
@@ -319,41 +334,38 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             this.rtUserService.changeSelectedUser(null);
             flagUserSelected = false;
         } else {
-            // if (!user.deleted) {
             this.resetFlags();
             this.selectedNodeSetFlags(user);
             if (flag) {
                 flag = false;
             }
             this.rtUserService.changeSelectedUser(user);
-
-            // } else {
-            //     this.resetFlags();
-            //     const searchSelected = this.listUsers.filter(userList => {
-            //         return userList.deleted === false;
-            //     });
-            //     if (searchSelected.length > 0) {
-            //         this.selectedNodeSetFlags(searchSelected[0]);
-            //         this.rtUserService.changeSelectedUser(searchSelected[0]);
-            //         if (flag) {
-            //             flag = false;
-            //         }
-            //     } else {
-            //         flagUserSelected = false;
-            //         if (this.selectedUser && this.selectedUser.hasOwnProperty('isSelected')) {
-            //             this.selectedUser.isSelected = false;
-            //         }
-            //         this.rtUserService.changeSelectedUser(null);
-            //         if (flag) {
-            //             flag = true;
-            //         }
-            //     }
-            // }
         }
         this._userParamSrv.checkedUsers = [user];
         this.rtUserService.subjectFlagBtnHeader.next(flagUserSelected);
         this.updateFlafListen();
         this.disabledBtnAction(flagUserSelected);
+        if (this._apiSrv.flagDelitedPermanantly === true) {
+            this.SetDisabledDeletedUsers();
+        }
+        if (this.showCloseQuickSearch) {
+            this.disableBtnQuickSearch();
+        }
+        if (this._appContext.limitCardsUser.length > 0) {
+            this.CheckToLimitUser();
+        }
+    }
+    SetDisabledDeletedUsers() {
+        this.buttons.buttons[1].disabled = true;
+        this.buttons.buttons[2].disabled = true;
+        this.buttons.buttons[3].disabled = true;
+        this.buttons.buttons[4].disabled = true;
+        this.buttons.buttons[5].disabled = true;
+        if (this._apiSrv.configList.shooseTab === 1 && !this.showCloseQuickSearch) {
+            this.buttons.moreButtons[10].disabled = true;
+            this.buttons.moreButtons[10].isActive = false;
+            this._userParamSrv.checkedUsers = [];
+        }
     }
     resetFlags() {
         this.listUsers.forEach(user => {
@@ -379,15 +391,15 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 return false;
             }
         }
-       /*  setTimeout(() => { */
-            if (this.selectedUser && !this.selectedUser.deleted) {
-                this._storage.setItem('selected_user_save', this.selectedUser);
-                this.rtUserService.flagDeleteScroll = false;
-                this._router.navigate(['user-params-set'], {
-                    queryParams: { isn_cl: this.selectedUser.id }
-                });
-            }
-       /*  }, 0); */
+        /*  setTimeout(() => { */
+        if (this.selectedUser && !this.selectedUser.deleted) {
+            this._storage.setItem('selected_user_save', this.selectedUser);
+            this.rtUserService.flagDeleteScroll = false;
+            this._router.navigate(['user-params-set'], {
+                queryParams: { isn_cl: this.selectedUser.id }
+            });
+        }
+        /*  }, 0); */
     }
 
     checkboxClick(e: Event) {
@@ -430,14 +442,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         this._apiSrv.currentSort = nameSort;
         this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun = !this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun;
         this._storage.setItem('SortPageList', { 'sort': nameSort, 'upDoun': this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun });
-        //    sessionStorage.setItem('currentSort', JSON.stringify({ 'sort': nameSort, 'upDoun': this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun }));
         if (!this._apiSrv.srtConfig[this._apiSrv.currentSort].checked) {
             for (const key in this._apiSrv.srtConfig) {
                 if (this._apiSrv.srtConfig.hasOwnProperty(key)) {
                     if (key === this._apiSrv.currentSort) {
                         this._apiSrv.srtConfig[key].checked = true;
-                        console.log(this._apiSrv.srtConfig[key]);
-                        console.log(key);
                     } else {
                         this._apiSrv.srtConfig[key].checked = false;
                     }
@@ -446,16 +455,9 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         }
         this._apiSrv.stateTehUsers = false;
         this._apiSrv.stateDeleteUsers = false;
-
         const id = this._route.params['value'].nodeId;
         this.initView(id ? id : '0.');
-        // this.goSortList();
     }
-    // goSortList(pageList?) {
-    //     this._pagSrv.UsersList = this.helpersClass.sort(this._pagSrv.UsersList, this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun, this._apiSrv.currentSort);
-    //     this._pagSrv._initPaginationConfig(true);
-    //     this._pagSrv.changePagination(this._pagSrv.paginationConfig);
-    // }
     getClassOrder(flag) {
         if (flag) {
             return 'icon eos-icon small eos-icon-arrow-blue-bottom';
@@ -484,31 +486,42 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false });
         }
         this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = false;
+        const id = this._route.params['value'].nodeId;
         if (this._apiSrv.stateDeleteUsers === true) {
-            this.buttons.moreButtons[4].isActive = false;
-            this._apiSrv.stateTehUsers =  false;
+            this.buttons.moreButtons[3].isActive = false;
+            this._apiSrv.stateTehUsers = false;
             this._apiSrv.flagTehnicalUsers = false;
         }
-        const id = this._route.params['value'].nodeId;
         this.upsavePagConfig();
         this._pagSrv.resetConfig();
+        if (this._apiSrv.configList.shooseTab === 0) {
+            if (this._apiSrv.flagDelitedPermanantly === true) {
+                localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
+            }
+            this._router.navigate(['user_param/0.']);
+        }
         this.initView(id ? id : '0.');
     }
 
     ActionTehnicalUser() {
         this._apiSrv.flagTehnicalUsers = !this._apiSrv.flagTehnicalUsers;
         this._apiSrv.stateTehUsers = this._apiSrv.flagTehnicalUsers;
-        this.flagScan = true;
+        if (this._apiSrv.flagTehnicalUsers === true && this._apiSrv.configList.shooseTab === 0) {
+            localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
+        }
         this._storage.setItem('SortPageList', { 'sort': 'login', 'upDoun': false });
         this._apiSrv.srtConfig[this._apiSrv.currentSort].checked = false;
         if (this._apiSrv.stateTehUsers === true) {
-            this.buttons.moreButtons[3].isActive = false;
+            this.buttons.moreButtons[2].isActive = false;
             this._apiSrv.stateDeleteUsers = false;
             this._apiSrv.flagDelitedPermanantly = false;
         }
         const id = this._route.params['value'].nodeId;
         this.upsavePagConfig();
         this._pagSrv.resetConfig();
+        if (this._apiSrv.configList.shooseTab === 0) {
+            this._router.navigate(['user_param/0.']);
+        }
         this.initView(id ? id : '0.');
     }
     upsavePagConfig() {
@@ -520,32 +533,32 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         }
     }
     OpenAddressManagementWindow() {
-       /*  setTimeout(() => { */
-            if (this.selectedUser) {
-                this._router.navigate(['user-params-set/', 'email-address'], {
-                    queryParams: { isn_cl: this.selectedUser.id }
-                });
-            }
+        /*  setTimeout(() => { */
+        if (this.selectedUser) {
+            this._router.navigate(['user-params-set/', 'email-address'], {
+                queryParams: { isn_cl: this.selectedUser.id }
+            });
+        }
         /* }, 0); */
     }
 
     OpenRightsSystemCaseDelo() {
         /* setTimeout(() => { */
-            if (this.selectedUser) {
-                this._router.navigate(['user-params-set/', 'card-files'], {
-                    queryParams: { isn_cl: this.selectedUser.id }
-                });
-            }
+        if (this.selectedUser) {
+            this._router.navigate(['user-params-set/', 'card-files'], {
+                queryParams: { isn_cl: this.selectedUser.id }
+            });
+        }
         /* }, 0); */
     }
 
     OpenStreamScanSystem() {
         /* setTimeout(() => { */
-            this._router.navigate(['user-params-set/', 'inline-scaning'],
-                {
-                    queryParams: { isn_cl: this.selectedUser.id }
-                }
-            );
+        this._router.navigate(['user-params-set/', 'inline-scaning'],
+            {
+                queryParams: { isn_cl: this.selectedUser.id }
+            }
+        );
         /* }, 0); */
     }
 
@@ -568,23 +581,23 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
 
     OpenSumProtocol() {
         /* setTimeout(() => { */
-            this._router.navigate(['user_param/sum-protocol']);
+        this._router.navigate(['user_param/sum-protocol']);
         /* }, 0); */
     }
 
     OpenUsersStats() {
-       /*  setTimeout(() => { */
-            this._router.navigate(['user_param/users-stats']);
+        /*  setTimeout(() => { */
+        this._router.navigate(['user_param/users-stats']);
         /* }, 0); */
     }
 
     OpenProtocol() {
         /* setTimeout(() => { */
-            this._router.navigate(['user-params-set/', 'protocol'],
-                {
-                    queryParams: { isn_cl: this.selectedUser.id }
-                }
-            );
+        this._router.navigate(['user-params-set/', 'protocol'],
+            {
+                queryParams: { isn_cl: this.selectedUser.id }
+            }
+        );
         /* }, 0); */
     }
 
@@ -595,7 +608,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     }
 
     setCheckedAllFlag() {
-        const leng = this.filterForFlagChecked().length;
+        const leng = this.listUsers.length;
         if (leng === 0) {
             this.flagChecked = null;
         } else {
@@ -607,7 +620,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         }
         this.listUsers.forEach(user => {
             user.selectedMark = false;
-            if (this.flagChecked && !user.deleted) {
+            if (this.flagChecked) {
                 user.isChecked = true;
             } else {
                 user.isChecked = false;
@@ -631,7 +644,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             this.rtUserService.changeSelectedUser(this.selectedUser);
             this.rtUserService.flagDeleteSelectedUser = true;
         }
-        this.disabledBtnDeleted();
+        if (this._apiSrv.flagDelitedPermanantly !== true) {
+            this.disabledBtnDeleted();
+        }
+        if (this._appContext.limitCardsUser.length > 0) {
+            this.CheckToLimitUser();
+        }
     }
 
     setFlagChecked(event, user: UserSelectNode) {
@@ -661,7 +679,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         }
         this._userParamSrv.checkedUsers = this.getCheckedUsers();
         this.updateFlafListen();
-        this.disabledBtnDeleted();
+        if (this._apiSrv.flagDelitedPermanantly !== true) {
+            this.disabledBtnDeleted();
+        }
+        if (this._appContext.limitCardsUser.length > 0) {
+            this.CheckToLimitUser();
+        }
     }
     getCheckedUsers() {
         return this.listUsers.filter((user: UserSelectNode) => {
@@ -671,7 +694,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
 
     updateFlafListen() {
         this.countCheckedField();
-        const leng = this.filterForFlagChecked().length;
+        const leng = this.listUsers.length;
         if (leng === 0) {
             this.flagChecked = null;
         } else {
@@ -691,18 +714,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 this.flagChecked = null;
                 this.rtUserService.changeSelectedUser(null);
                 this.buttons.moreButtons[7].disabled = true;
-                this.buttons.moreButtons[11].disabled = true;
+                this.buttons.moreButtons[10].disabled = true;
+                this._userParamSrv.checkedUsers = [];
             }
             if (this.countcheckedField >= 1) {
                 this.rtUserService.changeSelectedUser(this.selectedUser);
-                this.buttons.moreButtons[11].disabled = false;
+                this.buttons.moreButtons[10].disabled = false;
             }
         }
-    }
-    filterForFlagChecked() {
-        return this.listUsers.filter((user: UserSelectNode) => {
-            return !user.deleted;
-        });
     }
 
     countCheckedField() {
@@ -746,7 +765,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         });
     }
     getLoginDeleted(): string {
-        let names  = '';
+        let names = '';
         this.listUsers.forEach((list: UserSelectNode) => {
             if (list.isChecked || list.isSelected || list.selectedMark) {
                 names += `${list.name}, `;
@@ -757,7 +776,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     DeliteLogicalUser() {
         const names = this.getLoginDeleted();
         if (names) {
-            CONFIRM_DELETE.body = 'Удаленных пользователей невозможно восстановить: ' + '\n\r' + names;
+            CONFIRM_DELETE.body = 'Удаленных пользователей невозможно будет восстановить. Вы действительно хотите удалить пользователей: ' + '\n\r' + names + '?';
         }
         this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
             if (confirmation) {
@@ -815,34 +834,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
     searchUsers($event: IRequest) {
         this._apiSrv.searchState = true;
         this._storage.setItem('quickSearch', $event);
-       setTimeout(() => {
-        this.disabledBtnAction(this.selectedUser);
-       }, 0);
-       // localStorage.setItem('quickSearch', JSON.stringify( $event));
+        this._apiSrv.flagDelitedPermanantly = false;
+        this.buttons.moreButtons[2].isActive = false;
         this.initView();
-        // if (!$event.length) {
-        //     this._apiSrv.Allcustomer = [];
-        //     this.setListSearch();
-        //     this._msgSrv.addNewMessage({
-        //         title: 'Ничего не найдено',
-        //         msg: 'попробуйте изменить поисковую фразу',
-        //         type: 'warning'
-        //     });
-        // } else {
-        //     this._apiSrv.updatePageList($event, this.shooseP).then((res) => {
-        //         this._storage.setItem('quickSearch', $event);
-        //         this._apiSrv.Allcustomer = this._apiSrv._getListUsers(res).slice();
-        //         this.setListSearch();
-        //     });
-        // }
-       // this.showCloseQuickSearch = true;
     }
-    // setListSearch() {
-    //     this._pagSrv.UsersList = this._apiSrv.Allcustomer;
-    //     this._pagSrv._initPaginationConfig(true);
-    //     this._pagSrv.changePagination(this._pagSrv.paginationConfig);
-    //     this.countMaxSize = this._pagSrv.countMaxSize;
-    // }
     savePositionSelectUser($event) {
         this._storage.setItem('main_scroll', $event.target.scrollTop);
     }
@@ -853,25 +848,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             return `tooltip-info`;
         }
     }
-    // fastSetConfSearch(newObj, evn: string): USERSRCH {
-    //     newObj['LOGIN'] = evn.replace(/\s/g, '_').trim();
-    //     newObj['DEL_USER'] = false;
-    //     return newObj;
-    // }
     quickSearchKey(evn) {
         this._apiSrv.searchState = true;
         this._storage.setItem('quickSearch', evn);
-       setTimeout(() => {
-        this.disabledBtnAction(this.selectedUser);
-       }, 0);
-       // localStorage.setItem('quickSearch', JSON.stringify( $event));
+        setTimeout(() => {
+            this.disabledBtnAction(this.selectedUser);
+        }, 0);
         this.initView();
-        // this.fastSetConfSearch(newObj, evn);
-        // if (event) {
-        //     this.srhSrv.getUsersToGo(newObj).then((users: USER_CL[]) => {
-        //         this.searchUsers(users);
-        //     });
-        // }
     }
     resetSearch() {
         let urlUpdate;
@@ -881,7 +864,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         } else {
             urlUpdate = url[url.length - 1];
         }
-      //  this.showCloseQuickSearch = false;
         this._storage.removeItem('quickSearch');
         this._pagSrv.resetConfig();
         this.disabledBtnAction(this.selectedUser);
@@ -909,6 +891,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             }
             return button;
         });
+        flagUserSelected && !this._apiSrv.flagDelitedPermanantly ? this.buttons.moreButtons[14].disabled = false : this.buttons.moreButtons[14].disabled = true;
         if (this.flagScan !== null) {
             this.buttons.buttons[4].disabled = this.flagScan;
             this.buttons.moreButtons[6].disabled = this.flagScan;
@@ -920,17 +903,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         if (this.showCloseQuickSearch) {
             this.buttons.moreButtons[2].disabled = true;
             this.buttons.moreButtons[3].disabled = true;
-            this.buttons.moreButtons[10].disabled = true;
-            this.buttons.moreButtons[12].disabled = true;
-        }   else {
+        } else {
             this.buttons.moreButtons[2].disabled = false;
             this.buttons.moreButtons[3].disabled = false;
-            this.buttons.moreButtons[10].disabled = false;
-            this.buttons.moreButtons[12].disabled = false;
         }
-        if (this._apiSrv.flagDelitedPermanantly === true) {
+        if (this.countcheckedField === 0) {
             this.buttons.moreButtons[10].disabled = true;
-            this.buttons.moreButtons[12].disabled = true;
+            this._userParamSrv.checkedUsers = [];
         }
     }
 
@@ -940,15 +919,42 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
             this.buttons.buttons[2].disabled = true;
             this.buttons.buttons[3].disabled = true;
             this.buttons.buttons[4].disabled = true;
-            this.buttons.buttons[6].disabled = true;
+            this.buttons.buttons[5].disabled = true;
+            //    this.buttons.buttons[6].disabled = true;
             this.buttons.moreButtons[10].disabled = true;
+            this.buttons.moreButtons[14].disabled = true;
         } else {
             this.buttons.buttons[1].disabled = false;
             this.buttons.buttons[2].disabled = false;
             this.buttons.buttons[3].disabled = false;
-            this.buttons.buttons[4].disabled = false;
-            this.buttons.buttons[6].disabled = false;
+            this.buttons.buttons[5].disabled = false;
+            if (this.flagScan !== null) {
+                this.buttons.buttons[4].disabled = this.flagScan;
+                this.buttons.moreButtons[6].disabled = this.flagScan;
+            }
+            //    this.buttons.buttons[6].disabled = false;
             this.buttons.moreButtons[10].disabled = false;
+            this.buttons.moreButtons[14].disabled = false;
+        }
+    }
+    private disableBtnQuickSearch() {
+        const f = this.listUsers.every((list: UserSelectNode) => {
+            return list.deleted;
+        });
+        if (f) {
+            this.buttons.buttons[1].disabled = true;
+            this.buttons.buttons[2].disabled = true;
+            this.buttons.buttons[3].disabled = true;
+            this.buttons.buttons[4].disabled = true;
+            this.buttons.buttons[5].disabled = true;
+
+            this.buttons.moreButtons[10].disabled = false;
+            this.buttons.moreButtons[7].disabled = true;
+            this.buttons.moreButtons[14].disabled = true;
+        }
+        if (this.countcheckedField === 0) {
+            this.buttons.moreButtons[10].disabled = true;
+            this._userParamSrv.checkedUsers = [];
         }
     }
 

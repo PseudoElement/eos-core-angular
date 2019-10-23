@@ -22,7 +22,7 @@
                 autofocus
                 class="form-control quick-search-form"
                 [(ngModel)]="srchString"
-                (keyup)="clickKey($event)" #quickSearchField>
+                (keyup)="clickKey($event)" #quickSearchField maxlength="255" minlength="1">
             <a class="btn clear-btn"
                 tooltip="Закрыть"
                 placement="bottom"

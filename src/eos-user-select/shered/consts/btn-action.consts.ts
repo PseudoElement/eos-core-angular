@@ -2,7 +2,7 @@ import {BtnAction, BtnActionFields} from '../interfaces/btn-action.interfase';
 export const CreateUser: BtnActionFields = {
     name: 'CreateUser',
     title: 'Добавить пользователя',
-    disabledClass: 'eos-icon eos-icon-plus-blue small',
+    disabledClass: 'eos-icon eos-icon-plus-grey small',
     enableClass: 'eos-icon eos-icon-plus-blue small',
     tooltip: 'Добавить нового пользователя',
     disabled: false,
@@ -131,7 +131,7 @@ export const GeneralLists: BtnActionFields = {
 export const SumProtocol: BtnActionFields = {
     name: 'OpenSumProtocol',
     title: 'Сводный протокол',
-    disabledClass: 'eos-icon eos-icon-new-doc-blue small',
+    disabledClass: 'eos-icon eos-icon-new-doc-grey small',
     enableClass: 'eos-icon eos-icon-new-doc-blue small',
     tooltip: 'Сводный протокол',
     disabled: false,
@@ -209,7 +209,7 @@ export const Allbuttons: BtnAction = {
         OpenAddressManagementWindow,
         OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
-        DeliteLogicalUser,
+     //   DeliteLogicalUser,
     ],
     moreButtons: [
         CreateUser,

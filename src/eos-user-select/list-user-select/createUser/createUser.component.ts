@@ -34,6 +34,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     initLogin: string;
     title: string;
     tehnicUser: boolean = false;
+    isn_prot: any;
     titleNow: string;
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -106,12 +107,13 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             this._pipeSrv.read({
                 [url]: ALL_ROWS,
             })
-                .then((data: any) => {
+                .then(data => {
                     this.closedModal.emit();
                     this._router.navigate(['user-params-set'], {
-                        queryParams: { isn_cl: data, is_create: true }
+                        queryParams: { isn_cl: data[0], is_create: true }
                     });
-                    this._userParamSrv.ProtocolService(data, 3);
+                    this.isn_prot = data[0];
+                    this._userParamSrv.ProtocolService(this.isn_prot, 3);
                 })
                 .catch(e => {
                     const m: IMessage = {
@@ -138,7 +140,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             const m: IMessage = {
                 type: 'warning',
                 title: 'Предупреждение',
-                msg: 'Укажите пользователя техническим, либо добавьте должностное лицо',
+                msg: 'Укажите пользователя техническим или добавьте должностное лицо',
             };
             this._msgSrv.addNewMessage(m);
         }
@@ -163,6 +165,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     }
     selectUser() {
         OPEN_CLASSIF_USER_CL['criteriesName'] = this._apiSrv.configList.titleDue;
+        OPEN_CLASSIF_USER_CL['selectMulty'] = false;
+        OPEN_CLASSIF_USER_CL['skipDeleted'] = null;
         this.isShell = true;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_USER_CL)
             .then(data => {

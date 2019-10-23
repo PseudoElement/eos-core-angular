@@ -52,6 +52,10 @@ export class EosHeaderComponent implements OnDestroy {
         }
     }
 
+    getProtocol(protocol: string): void {
+        window.open(`../Protocol/Pages/ProtocolView.html?type=${protocol}`, '_blank', 'width=900,height=700');
+    }
+
     private update() {
         let _actRoute = this._route.snapshot;
         while (_actRoute.firstChild) { _actRoute = _actRoute.firstChild; }

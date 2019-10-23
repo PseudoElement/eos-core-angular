@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, HostListener, ViewChild } from '@angular/core';
-import { ActivatedRoute, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRoute, RouterStateSnapshot, Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -12,6 +12,7 @@ import { IParamAccordionList } from './shared/intrfaces/user-params.interfaces';
 // import { CONFIRM_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 import { IUserSetChanges } from './shared/intrfaces/user-parm.intterfaces';
 import { EosStorageService } from 'app/services/eos-storage.service';
+import { AppContext } from 'eos-rest/services/appContext.service';
 @Component({
     selector: 'eos-user-params',
     templateUrl: 'eos-user-params.component.html'
@@ -29,17 +30,18 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     codeList: any[];
     closeRight: boolean = false;
     flagEdit: boolean;
+    hideIcon: boolean;
     private ngUnsubscribe: Subject<any> = new Subject();
     private _isChanged: boolean;
     //   private _disableSave: boolean;
     constructor(
         private _navSrv: NavParamService,
-        // private _router: Router,
+        private _router: Router,
         private _route: ActivatedRoute,
         private _userParamService: UserParamsService,
         //    private _confirmSrv: ConfirmWindowService,
         private _storageSrv: EosStorageService,
-
+        private _appContext: AppContext
     ) {
         this._route.params
             .pipe(
@@ -49,6 +51,9 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 this.pageId = param['field-id'];
                 this.codeList = undefined;
                 this.flagEdit = false;
+                if (this.accordionList[4].disabled === true && this.pageId === 'inline-scaning') {
+                    this._router.navigate(['user_param']);
+                }
                 this._navSrv.showRightSandwich(false);
                 this._navSrv.blockChangeStateRightSandwich(false);
             });
@@ -141,6 +146,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
         }
     }
     redactEmailAddres($event) {
+        /* this._navSrv.changeStateRightSandwich(true); */
         this.flagEdit = $event;
         if (!this.codeList || this.codeList.length === 0) {
             this._navSrv.changeStateRightSandwich(false);
@@ -193,10 +199,54 @@ export class UserParamsComponent implements OnDestroy, OnInit {
     }
 
     private checkTabScan(): void {
-        if (this._userParamService.curentUser['ACCESS_SYSTEMS'][3] === '1') {
-            this.accordionList[4].disabled = false;
+        if (this._appContext.limitCardsUser.length > 0) {
+            if (this._appContext.limitCardsUser.indexOf(this._userParamService.curentUser['TECH_DUE_DEP']) === -1) {
+                this.accordionList[0].disabled = true;
+                this.accordionList[1].disabled = true;
+                this.accordionList[2].disabled = true;
+                this.accordionList[3].disabled = true;
+                this.accordionList[4].disabled = true;
+                this.accordionList[1].isOpen = false;
+                this.accordionList[2].isOpen = false;
+                this.hideIcon = true;
+            } else {
+                this.accordionList[0].disabled = false;
+                this.accordionList[1].disabled = false;
+                this.accordionList[2].disabled = false;
+                this.accordionList[3].disabled = false;
+                this.hideIcon = false;
+                if (this._userParamService.curentUser['ACCESS_SYSTEMS'][3] === '1') {
+                    this.accordionList[4].disabled = false;
+                } else {
+                    this.accordionList[4].disabled = true;
+                }
+            }
         } else {
-            this.accordionList[4].disabled = true;
+            if (this._userParamService.curentUser['ACCESS_SYSTEMS'][3] === '1') {
+                this.accordionList[4].disabled = false;
+            } else {
+                this.accordionList[4].disabled = true;
+            }
+            if (this._userParamService.curentUser['ORACLE_ID'] === null) {
+                this.accordionList[0].disabled = true;
+                this.accordionList[1].disabled = true;
+                this.accordionList[2].disabled = true;
+                this.accordionList[3].disabled = true;
+                this.accordionList[1].isOpen = false;
+                this.accordionList[2].isOpen = false;
+                this.hideIcon = true;
+            } else {
+                this.accordionList[0].disabled = false;
+                this.accordionList[1].disabled = false;
+                this.accordionList[2].disabled = false;
+                this.accordionList[3].disabled = false;
+                this.hideIcon = false;
+            }
+        }
+        if (this._appContext.limitCardsUser.length > 0 && this._userParamService.curentUser) {
+            if (this.pageId !== 'protocol' && this._appContext.limitCardsUser.indexOf(this._userParamService.curentUser['TECH_DUE_DEP']) === -1) {
+                this._router.navigate(['user_param']);
+            }
         }
     }
 

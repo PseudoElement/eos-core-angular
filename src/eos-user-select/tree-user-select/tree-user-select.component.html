@@ -17,13 +17,43 @@
         </ul>
     </div>
     <div *ngIf="!isLoading; else spiner" class="tree-wrapper-overflow">
-        <ng-container *ngTemplateOutlet="treeTmpl; context: {items: nodes, level: 0}"></ng-container>
+        <ng-container [ngSwitch]="GetTypeUsers()">
+            <ng-container *ngSwitchCase="'users'">
+                <ng-container *ngTemplateOutlet="treeTmpl; context: {items: nodes, level: 0}"></ng-container>
+            </ng-container>
+            <ng-container *ngSwitchCase="'del'">
+                <div class="eos-tree-node" *ngIf="nodes[0].title === 'Все подразделения'">
+                    <div [ngClass]="{'highlighted' : true, 'node': true, 'activeTree': true}"
+                        [ngStyle]="{'padding-left.px': getPadding(1)}">
+                        <div class="title"
+                            [ngClass]="{'deleted': false, 'select': false}"
+                            [style.width.px]="getNodeWidth(0)">
+                            <span class="title-item">{{nodes[0].title}}</span>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="'tech'">
+                <div *ngIf="nodes[0].title === 'Все подразделения'; else centCard">
+                    <div class="eos-tree-node">
+                        <div [ngClass]="{'highlighted' : true, 'node': true, 'activeTree': true}"
+                        [ngStyle]="{'padding-left.px': getPadding(1)}">
+                            <div class="title"
+                                [ngClass]="{'deleted': false, 'select': false}"
+                                [style.width.px]="getNodeWidth(0)">
+                                <span class="title-item">{{nodes[0].title}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+                <ng-template #centCard>
+                    <ng-container *ngTemplateOutlet="treeTmpl; context: {items: nodes, level: 0}"></ng-container>
+                </ng-template>    
+            </ng-container>
+        </ng-container>
+       
     </div>
 </div>
-
-
-
-
 
 <ng-template #treeTmpl
     let-items="items"

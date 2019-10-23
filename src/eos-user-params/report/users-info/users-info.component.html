@@ -7,10 +7,15 @@
 </div>
 <ng-template #usersInfo>
     <div class="full-search-top usual-border">
-            <span class="pull-left title xl-font">Данные по пользователю {{selectUser.login}}</span> 
+            <span class="pull-left title xl-font">Данные по пользователю {{selectUser?.name}}</span> 
             <div class="pull-right srch-btns"> 
                 <button class="btn btn-primary s-font upper" (click)="modalRef.hide()">Закрыть</button>
-                <button class="btn btn-primary-full s-font upper"  (click)="PrintData()">Печать</button>
+                <a *ngIf="shortRep === false; else fullReport" [href]="getHrefPrint()" download="{{titleDownload}}">
+                    <button class="btn btn-primary-full s-font upper">Печать</button>
+                </a>
+                <ng-template #fullReport>
+                    <button class="btn btn-primary-full s-font upper" (click)="PrintData()">Печать</button>
+                </ng-template>
             </div>
         </div>
     <div class="dir-users usual-border">
@@ -22,6 +27,13 @@
                 <span class="eos-icon eos-icon-arrow-v-blue-right small" aria-hidden="true"></span>
             </button>
         </div>
+        <div class="short-info">
+            <label class="checkbox">
+                <input type="checkbox" [checked]="shortRep" (change)="shortRep = !shortRep">
+                <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                Печатать краткий отчет
+            </label>
+        </div>
     </div>
     <iframe class="frame-info" [src]="src" height="600" width="800" frameborder="0"></iframe>
     <div class="info-content-wrapper">
@@ -29,7 +41,8 @@
         <div class="info-radio-btn" *ngFor="let type of printUsers">
             <div class="radio-info-group">
                 <label class="radio">
-                    <input type="radio" class="ng-untouched ng-pristine ng-valid" [value]="type.value" [(ngModel)]="CheckAllUsers" />
+                    <input type="radio" class="ng-untouched ng-pristine ng-valid" [value]="type.value" [(ngModel)]="CheckAllUsers"
+                    [disabled]="users.length === 1 && type.data === printUsers[1].data" />
                     <span></span>  
                 </label>
                 <span class="info-users-sp">{{type.data}}</span>

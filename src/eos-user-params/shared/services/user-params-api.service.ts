@@ -130,6 +130,7 @@ export class UserParamApiSrv {
         // }
         if (this.configList.shooseTab === 0) {
             if (!dueDep || dueDep === '0.') {
+                ob1['ISN_LCLASSIF'] = '1:null';
                 q = {
                     USER_CL: PipRX.criteries(ob1),
                     top: `${top}`,
@@ -219,6 +220,14 @@ export class UserParamApiSrv {
 
             // PipRX.criteries({ 'USERCARD.DUE': `${dueDep ? dueDep : '0.'}` });
         }
+        // constq = {
+        //     USER_CL: PipRX.criteries(ob),
+        //     orderby: `${propOrderBy}`,
+        //     top: `${top}`,
+        //     skip: `${skip}`,
+        //     inlinecount: 'allpages',
+        //     loadmode: 'Table'
+        // };
         return q;
     }
 
