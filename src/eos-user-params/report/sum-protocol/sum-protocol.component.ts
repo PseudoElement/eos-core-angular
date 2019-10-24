@@ -602,7 +602,14 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   GetRefFile() {
     this.closeTooltip = true;
     setTimeout(() => {
-      window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900, height=700, scrollbars=1');
+      if (this.lastUser.eventUser === 'Удаление пользователя') {
+        const isnSelect = this.findUsers.find(user => {
+          return this.lastUser.isnUser === user.name;
+        });
+        window.open(`../UserInfo/UserRights.ashx?uisn=${isnSelect.isn}`, '_blank', 'width=900, height=700, scrollbars=1');
+      } else {
+        window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, '_blank', 'width=900, height=700, scrollbars=1');
+      }
     }, 0);
   }
 

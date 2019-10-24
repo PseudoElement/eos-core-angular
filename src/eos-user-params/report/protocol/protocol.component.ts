@@ -290,7 +290,11 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   GetRefFile() {
     this.closeTooltip = true;
     setTimeout(() => {
-      window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, 'example', 'width=900, height=700, scrollbars=1');
+      if (this.lastUser.eventUser === 'Удаление пользователя') {
+        window.open(`../UserInfo/UserRights.ashx?uisn=${this.curentUser}`, '_blank', 'width=900, height=700, scrollbars=1');
+      } else {
+        window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, '_blank', 'width=900, height=700, scrollbars=1');
+      }
     }, 0);
   }
   ConvertDate(convDate) {
