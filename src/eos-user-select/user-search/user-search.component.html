@@ -45,10 +45,10 @@
     <div *ngIf=form>
         <div class="search-bool" *ngIf="!showAvSystemsField">
             <!-- <eos-dynamic-input [input]="inputs['rec.TEH']" [form]="form" [readonly]="false"></eos-dynamic-input> -->
-            <eos-dynamic-input [input]="inputs['rec.DEL_USER']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.DEL_USER']" [form]="form" [readonly]="false" (click)="resetForm(true)"></eos-dynamic-input>
         </div>
         <div class="search-bool" *ngIf="!showSurnameField">
-            <eos-dynamic-input [input]="inputs['rec.AV_SYSTEMS']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input [input]="inputs['rec.AV_SYSTEMS']" [form]="form" [readonly]="false" (click)="resetForm(true)"></eos-dynamic-input>
         </div>
         <div class="search-input-wr" *ngIf="!showAvSystemsField && showSurnameField">
             <eos-dynamic-input [input]="inputs['rec.SURNAME']" [form]="form" [readonly]="false"></eos-dynamic-input>
