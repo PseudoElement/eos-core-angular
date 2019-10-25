@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
-import { FormGroup, ValidationErrors } from '@angular/forms';
+import { FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { Subject } from 'rxjs';
@@ -7,7 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { PipRX } from 'eos-rest/services/pipRX.service';
-import { DEPARTMENT, USER_CERTIFICATE } from 'eos-rest';
+import { DEPARTMENT, USER_CERTIFICATE, USER_CL } from 'eos-rest';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { BASE_PARAM_INPUTS, BASE_PARAM_CONTROL_INPUT, BASE_PARAM_ACCESS_INPUT } from 'eos-user-params/shared/consts/base-param.consts';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
@@ -65,6 +65,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     private _newDataformAccess: Map<string, any> = new Map();
     private modalRef: BsModalRef;
 
+    get newInfo() {
+        if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size) {
+            return false;
+        }
+        return true;
+    }
     private _ngUnsubscribe: Subject<void> = new Subject<void>();
     get sysParams() {
         return this._sysParams;
@@ -104,14 +110,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             .catch(err => {
 
             });
-        this._userParamSrv
-            .saveData$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                this._userParamSrv.submitSave = this.submit('not');
-            });
         if (localStorage.getItem('lastNodeDue') == null) {
             localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
         }
@@ -125,6 +123,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         if (val !== null) {
             if (val.required) {
                 return 'Поле логин не может быть пустым';
+            } else if (val.isUnique) {
+                return 'Поле логин должно быть уникальныи';
             } else {
                 return 'не коректное значение';
             }
@@ -151,6 +151,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
         this.isLoading = false;
+        this.setValidators();
         this.subscribeForms();
         return Promise.resolve();
     }
@@ -218,8 +219,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         return true;
     }
-
-    submit(meta?: string): Promise<any> {
+    cheackCtech(): boolean {
         if (!this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value) && !this.curentUser.isTechUser) {
             this._msgSrv.addNewMessage({
                 type: 'warning',
@@ -227,16 +227,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 msg: 'Укажите пользователя техническим или добавьте должностное лицо',
                 dismissOnTimeout: 6000,
             });
-            return;
+            return true;
         }
-        this.submitClick = true;
+        return false;
+    }
+    setQueryNewData(accessStr, newD, query): void {
         const id = this._userParamSrv.userContextId;
-        const newD = {};
-        const query = [];
-        const queryLog = [];
-        let accessStr = '';
-        let allQueries: Promise<any>;
-        let qPass: Promise<any>;
         if (this._newDataformAccess.size || this._newData.size) {
             if (this._newDataformAccess.size) {
                 accessStr = this._createAccessSystemsString(this.formAccess.controls);
@@ -260,49 +256,14 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     delete newD['DUE_DEP_NAME'];
                 });
             }
-            // this._nanParSrv.scanObserver(false);
             query.push({
                 method: 'MERGE',
                 requestUri: `USER_CL(${id})`,
                 data: newD
             });
         }
-        const pass = this._newDataformControls.get('pass');
-        if (this.inputs.CLASSIF_NAME.value !== this.form.value.CLASSIF_NAME) {
-            if (this.curentUser['IS_PASSWORD'] === 0) {
-                this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.inputs.CLASSIF_NAME.value} не задан пароль.`, type: 'warning' });
-                this.form.controls.CLASSIF_NAME.patchValue(this.inputs.CLASSIF_NAME.value);
-                this.submitClick = false;
-                this.cancel();
-                return;
-            } else {
-                this.title = `${this.curentUser['SURNAME_PATRON']} (${this.form.value.CLASSIF_NAME})`;
-                const url = `DropLogin?pass='${encodeURI(pass)}'&isn_user=${id}`;
-                const queryPas = [{
-                    method: 'MERGE',
-                    requestUri: `USER_CL(${id})`,
-                    data: {
-                        IS_PASSWORD: 0
-                    }
-                }];
-                if (pass) {
-                    queryLog.push(this.apiSrvRx.read({ [url]: ALL_ROWS }).then(() => {
-                        return this.apiSrvRx.batch(queryPas, '').then(() => {
-                            const urlLog = `CreateLogin?pass='${encodeURI(pass)}'&isn_user=${id}`;
-                            return this.apiSrvRx.read({ [urlLog]: ALL_ROWS }).then(() => {
-                                const url1 = `ChangePassword?isn_user=${id}&pass='${encodeURI(pass)}'`;
-                                return this.apiSrvRx.read({ [url1]: ALL_ROWS });
-                            });
-                        });
-                }));
-                } else {
-                    queryLog.push(this.apiSrvRx.read({ [url]: ALL_ROWS }).then(() => {
-                        return this.apiSrvRx.batch(queryPas, '');
-                    }));
-                    this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
-                }
-            }
-        }
+    }
+    setNewDataFormControl(query, id) {
         if (this._newDataformControls.size) {
             if (this._newDataformControls.has('SELECT_ROLE')) {
                 query.push({
@@ -313,40 +274,100 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     }
                 });
             }
+        }
+    }
+
+    submit(meta?: string): Promise<any> {
+        if (this.cheackCtech()) {
+            return;
+        }
+        this.isLoading = true;
+        const id = this._userParamSrv.userContextId;
+        const newD = {};
+        const query = [];
+        const accessStr = '';
+        this.setQueryNewData(accessStr, newD, query);
+        this.setNewDataFormControl(query, id);
+        const pass = this._newDataformControls.get('pass');
+        if (this.inputs.CLASSIF_NAME.value !== this.form.value.CLASSIF_NAME) {
+            if (this.curentUser['IS_PASSWORD'] === 0) {
+                this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.inputs.CLASSIF_NAME.value} не задан пароль.`, type: 'warning' });
+                this.form.controls.CLASSIF_NAME.patchValue(this.inputs.CLASSIF_NAME.value);
+                this.cancel();
+                return;
+            } else {
+                this.title = `${this.curentUser['SURNAME_PATRON']} (${this.form.value.CLASSIF_NAME})`;
+                const queryPas = [{
+                    method: 'MERGE',
+                    requestUri: `USER_CL(${id})`,
+                    data: {
+                        IS_PASSWORD: 0
+                    }
+                }];
+                if (pass) {
+                    this.dropLogin(id).then(() => {
+                        return this.apiSrvRx.batch(queryPas, '').then(() => {
+                            this.sendData(query).then(() => {
+                                this.createLogin(pass, id).then(() => {
+                                    this.changePassword(pass, id).then(() => {
+                                        this.AfterSubmit(accessStr);
+                                    });
+                                });
+                            });
+                        });
+
+                    }).catch(error => {
+                        this._errorSrv.errorHandler(error);
+                    });
+                } else {
+                    this.dropLogin(id).then(() => {
+                        this.apiSrvRx.batch(queryPas, '').then(() => {
+                            this.sendData(query).then(() => {
+                                this.AfterSubmit(accessStr);
+                            });
+                        });
+                        this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
+                    }).catch(error => {
+                        this._errorSrv.errorHandler(error);
+                    });
+                }
+            }
+        } else {
             if (pass) {
                 if (this.curentUser['IS_PASSWORD'] === 0) {
-                    const url = `CreateLogin?pass='${encodeURI(pass)}'&isn_user=${id}`;
-                    qPass = this._apiSrv.getData({ [url]: ALL_ROWS });
-                } else if (this.inputs.CLASSIF_NAME.value === this.form.value.CLASSIF_NAME) {
-                    const url = `ChangePassword?isn_user=${id}&pass='${encodeURI(pass)}'`;
-                    qPass = this._apiSrv.getData({ [url]: ALL_ROWS });
+                    this.createLogin(pass, id).then(() => {
+                        this.sendData(query).then(() => {
+                            this.AfterSubmit(accessStr);
+                        });
+                    }).catch(error => {
+                        this._errorSrv.errorHandler(error);
+                    });
+                } else {
+                    this.changePassword(pass, id).then(() => {
+                        this.sendData(query).then(() => {
+                            this.AfterSubmit(accessStr);
+                        });
+                    }).catch(error => {
+                        this._errorSrv.errorHandler(error);
+                    });
                 }
             } else {
-                qPass = Promise.resolve();
-            }
-        }
-        const form = this._apiSrv.setData(query);
-        if (queryLog.length !== 0) {
-            allQueries = Promise.all([queryLog[0]]);
-        } else {
-            allQueries = Promise.all([qPass, form]);
-        }
-        return allQueries.then(data => {
-            if (queryLog.length !== 0) {
-                return Promise.all([qPass, form]).then(() => {
-                    this.SubForm(accessStr, meta);
+                this.sendData(query).then(() => {
+                    this.AfterSubmit(accessStr);
                 });
-            } else {
-                this.SubForm(accessStr, meta);
             }
+        }
+    }
+    sendData(query): Promise<any> {
+        return this._apiSrv.setData(query).then(() => {
+            return;
         }).catch(error => {
-            this.submitClick = false;
             this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
             this.cancel();
             this._errorSrv.errorHandler(error);
         });
     }
-    SubForm(accessStr: string, meta: string): void {
+    AfterSubmit(accessStr: string): void {
         if (accessStr.length > 1) {
             const number = accessStr.charAt(3);
             this._nanParSrv.scanObserver(number === '1' ? false : true);
@@ -357,27 +378,20 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
         this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
         this.clearMap();
-        if (meta && meta === 'not') {
+        this._userParamSrv.getUserIsn({
+            expand: 'USER_PARMS_List,USERCARD_List',
+            shortSys: true
+        }).then(() => {
             this.editMode = false;
+            this.curentUser = this._userParamSrv.curentUser;
+            this.upform(this.inputs, this.form);
+            this.upform(this.controls, this.formControls);
+            this.upform(this.accessInputs, this.formAccess);
+            this.isLoading = false;
             this.editModeF();
             this._pushState();
-        } else {
-            this._userParamSrv.getUserIsn({
-                expand: 'USER_PARMS_List,USERCARD_List',
-                shortSys: true
-            }).then(() => {
-                this.editMode = false;
-                this.curentUser = this._userParamSrv.curentUser;
-                this.upform(this.inputs, this.form);
-                this.upform(this.controls, this.formControls);
-                this.upform(this.accessInputs, this.formAccess);
-                this.editModeF();
-                this._pushState();
-                this.submitClick = false;
-                this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
-            });
-        }
-        this.submitClick = false;
+            this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
+        });
     }
     clearMap() {
         this._newData.clear();
@@ -390,7 +404,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         });
     }
     cancel() {
-        //  this.isLoading = true;
+        this.isLoading = false;
         this.editMode = !this.editMode;
         this.cancelValues(this.inputs, this.form);
         this.cancelValues(this.controls, this.formControls);
@@ -641,10 +655,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         });
         return newArr.join('');
     }
-    // private _checkForChenge(state: boolean = false) {
-    //     this.stateHeaderSubmit = false;
-    //     this._pushState();
-    // }
+
 
     private checkchangPass(pass, passrepeat) {
         if (pass !== '' && passrepeat !== '') {
@@ -706,6 +717,41 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 title,
             }
         );
+    }
+    private createLogin(pass, id): Promise<any> {
+        const url = `CreateLogin?pass='${encodeURI(pass)}'&isn_user=${id}`;
+        return this.apiSrvRx.read({ [url]: ALL_ROWS });
+    }
+    private changePassword(pass, id): Promise<any> {
+        const url = `ChangePassword?isn_user=${id}&pass='${encodeURI(pass)}'`;
+        return this.apiSrvRx.read({ [url]: ALL_ROWS });
+    }
+
+    private dropLogin(id): Promise<any> {
+        const url = `DropLogin?isn_user=${id}`;
+        return this.apiSrvRx.read({ [url]: ALL_ROWS });
+    }
+    private setValidators() {
+        this.form.controls['CLASSIF_NAME'].setAsyncValidators((control: AbstractControl) => {
+            if (control.value === this.inputs['CLASSIF_NAME'].value) {
+                return Promise.resolve(null);
+            } else if ((control.value).trim() !== '') {
+                return this._apiSrv.getData<USER_CL[]>({
+                    USER_CL: {
+                        criteries: {
+                            CLASSIF_NAME: `${(control.value).trim()}`,
+                        }
+                    }
+                }).then(data => {
+                    if (data.length) {
+                        return { isUnique: true };
+                    }
+                    return null;
+                });
+            } else {
+                return Promise.resolve(null);
+            }
+        });
     }
 
 }
