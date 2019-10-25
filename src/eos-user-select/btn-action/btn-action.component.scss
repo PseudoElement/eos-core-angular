@@ -47,11 +47,13 @@
 .dropdown-menu{
     max-height: calc(100vh - 247px) ;
     overflow: auto;
+    z-index: 100;
 }
 
 @-moz-document url-prefix() {
     .dropdown-menu{
         overflow: scroll !important;
+        z-index: 100;
     }
   }
 
