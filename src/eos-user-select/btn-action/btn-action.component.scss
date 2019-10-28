@@ -52,7 +52,7 @@
 
 @-moz-document url-prefix() {
     .dropdown-menu{
-        overflow: scroll !important;
+        min-width: 315px;
         z-index: 100;
     }
   }
