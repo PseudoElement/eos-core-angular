@@ -17,6 +17,7 @@ export class EosHeaderComponent implements OnDestroy {
     navParamView = false;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     width = 0;
+    openProtocols: Array<any> = [];
     private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
@@ -53,8 +54,15 @@ export class EosHeaderComponent implements OnDestroy {
     }
 
     getProtocol(protocol: string): void {
-        window.open(`../Protocol/Pages/ProtocolView.html?type=${protocol}`, '_blank', 'width=900,height=700');
+        if (this.openProtocols.indexOf(protocol) === -1) {
+            const newWindow = window.open(`../Protocol/Pages/ProtocolView.html?type=${protocol}`, '_blank', 'width=900,height=700');
+            this.openProtocols.push(protocol);
+            newWindow.onbeforeunload  = () => {
+                this.openProtocols = this.openProtocols.filter(prot => prot !== protocol);
+            };
+        }
     }
+
 
     private update() {
         let _actRoute = this._route.snapshot;
