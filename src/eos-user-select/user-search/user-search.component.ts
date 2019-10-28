@@ -45,8 +45,8 @@ export class UserSearchComponent implements OnInit {
     get disableBtn() {
         if (this.form) {
             return this.form.status === 'VALID' && (this.form.value['rec.LOGIN'].length > 0 || this.form.value['rec.DEPARTMENT'].length > 0 ||
-                this.form.value['rec.fullDueName'].length > 0  || this.form.value['rec.SURNAME'].length > 0 || this.form.value['rec.AV_SYSTEMS']
-                || this.form.value['rec.BLOCK_USER'] !== '');
+                this.form.value['rec.fullDueName'].length > 0  || this.form.value['rec.SURNAME'].length > 0 || this.form.value['rec.AV_SYSTEMS'] ||
+                this.form.controls['rec.BLOCK_USER'].dirty);
         }
     }
     get showSurnameField() {
@@ -60,7 +60,7 @@ export class UserSearchComponent implements OnInit {
         this.pretInputs();
     }
     pretInputs() {
-        this.prapareData = this._formHelper.parse_Create(USER_SEARCH.fields, { LOGIN: '', DEPARTMENT: '', DUE_DEP: '', BLOCK_USER: ''});
+        this.prapareData = this._formHelper.parse_Create(USER_SEARCH.fields, { LOGIN: '', DEPARTMENT: '', DUE_DEP: '', BLOCK_USER: '0'});
         this.prepareInputs = this._formHelper.getObjectInputFields(USER_SEARCH.fields);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prapareData });
         this.form = this.inpSrv.toFormGroup(this.inputs);
@@ -72,23 +72,19 @@ export class UserSearchComponent implements OnInit {
     RemoveQuotes(newObj: any): void {
         const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
         for (const key in newObj) {
-            if (newObj.hasOwnProperty(key) && key !== 'AV_SYSTEMS') {
-                if (key === 'BLOCK_USER') {
-                    this.form.controls[`rec.${key}`].patchValue('');
+            if (newObj.hasOwnProperty(key) && key !== 'AV_SYSTEMS' && key !== 'BLOCK_USER') {
+                const list = newObj[key];
+                if (typeof list === 'string') {
+                    newObj[key] = list.replace(SEARCH_INCORRECT_SYMBOLS, '');
+                    this.form.controls[`rec.${key}`].patchValue(newObj[key]);
+                    newObj[key] = this.AddUnderscore(newObj[key]);
                 } else {
-                    const list = newObj[key];
-                    if (typeof list === 'string') {
-                        newObj[key] = list.replace(SEARCH_INCORRECT_SYMBOLS, '');
-                        this.form.controls[`rec.${key}`].patchValue(newObj[key]);
-                        newObj[key] = this.AddUnderscore(newObj[key]);
-                    } else {
-                        for (const k in list) {
-                            if (list.hasOwnProperty(k)) {
-                                let fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
-                                list[k] = fixed;
-                                this.form.controls[`rec.${key}`].patchValue(newObj[key]);
-                                fixed = this.AddUnderscore(fixed);
-                            }
+                    for (const k in list) {
+                        if (list.hasOwnProperty(k)) {
+                            let fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
+                            list[k] = fixed;
+                            this.form.controls[`rec.${key}`].patchValue(newObj[key]);
+                            fixed = this.AddUnderscore(fixed);
                         }
                     }
                 }
@@ -291,14 +287,17 @@ export class UserSearchComponent implements OnInit {
         this.srchString = '';
     }
 
-    resetForm() {
+    resetForm(flag?: boolean) {
         Object.keys(this.form.value).forEach(key => {
-            if (typeof key === 'boolean') {
-                this.form.controls[key].patchValue(false);
+            if (key === 'rec.BLOCK_USER') {
+                this.form.controls[key].patchValue('0');
             } else {
-                this.form.controls[key].patchValue('');
+                if ((flag && key !== 'rec.DEL_USER' && key !== 'rec.AV_SYSTEMS') || !flag) {
+                    this.form.controls[key].patchValue('');
+                }
             }
         });
+        this.form.controls['rec.BLOCK_USER'].markAsPristine();
     }
 
 }

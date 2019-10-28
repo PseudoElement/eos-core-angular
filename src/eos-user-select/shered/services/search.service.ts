@@ -182,6 +182,7 @@ export class SearchServices {
                 }
                 if (params.BLOCK_USER) {
                     query.USER_CL.criteries['DELETED'] = `${params.BLOCK_USER}`;
+                    query.USER_CL.criteries['ORACLE_ID'] = `isnotnull`;
                 }
             }
         }
