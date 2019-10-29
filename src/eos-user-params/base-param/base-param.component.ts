@@ -307,28 +307,29 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 if (pass) {
                     this.dropLogin(id).then(() => {
                         return this.apiSrvRx.batch(queryPas, '').then(() => {
-                            this.sendData(query).then(() => {
-                                this.createLogin(pass, id).then(() => {
-                                    this.changePassword(pass, id).then(() => {
+                            return this.sendData(query).then(() => {
+                                return this.createLogin(pass, id).then(() => {
+                                    return this.changePassword(pass, id).then(() => {
                                         this.AfterSubmit(accessStr);
                                     });
                                 });
                             });
                         });
-
                     }).catch(error => {
                         this._errorSrv.errorHandler(error);
+                        this.cancel();
                     });
                 } else {
                     this.dropLogin(id).then(() => {
-                        this.apiSrvRx.batch(queryPas, '').then(() => {
-                            this.sendData(query).then(() => {
+                        this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
+                        return this.apiSrvRx.batch(queryPas, '').then(() => {
+                            return this.sendData(query).then(() => {
                                 this.AfterSubmit(accessStr);
                             });
                         });
-                        this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
                     }).catch(error => {
                         this._errorSrv.errorHandler(error);
+                        this.cancel();
                     });
                 }
             }
@@ -336,19 +337,21 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             if (pass) {
                 if (this.curentUser['IS_PASSWORD'] === 0) {
                     this.createLogin(pass, id).then(() => {
-                        this.sendData(query).then(() => {
+                        return this.sendData(query).then(() => {
                             this.AfterSubmit(accessStr);
                         });
                     }).catch(error => {
                         this._errorSrv.errorHandler(error);
+                        this.cancel();
                     });
                 } else {
                     this.changePassword(pass, id).then(() => {
-                        this.sendData(query).then(() => {
+                        return this.sendData(query).then(() => {
                             this.AfterSubmit(accessStr);
                         });
                     }).catch(error => {
                         this._errorSrv.errorHandler(error);
+                        this.cancel();
                     });
                 }
             } else {
@@ -739,7 +742,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 return this._apiSrv.getData<USER_CL[]>({
                     USER_CL: {
                         criteries: {
-                            CLASSIF_NAME: `${(control.value).trim()}`,
+                            CLASSIF_NAME: `=${(control.value).trim().replace(/[!@$&^=]/g, '')}`,
                         }
                     }
                 }).then(data => {
