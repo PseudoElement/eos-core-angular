@@ -278,11 +278,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
         this._apiSrv.getUsers(param || '0.')
             .then((data: UserSelectNode[]) => {
                 this.listUsers = this._pagSrv.UsersList;
-                if (this.listUsers && this.listUsers.length) {
-                    this.selectedNode(this.findSelectedSaveUsers()[0] ? this.findSelectedSaveUsers()[0] : this.listUsers[0]);
-                } else {
-                    this.selectedNode(null);
-                }
+                // if (this.listUsers && this.listUsers.length) {
+                //     this.selectedNode(this.findSelectedSaveUsers()[0] ? this.findSelectedSaveUsers()[0] : this.listUsers[0]);
+                // } else {
+                //     this.selectedNode(null);
+                // }
+            //    this.updateFlafListen();
+                this.disabledBtnAction(false);
                 this.isLoading = false;
                 this.countMaxSize = this._pagSrv.countMaxSize;
 

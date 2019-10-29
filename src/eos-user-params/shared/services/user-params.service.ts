@@ -192,7 +192,7 @@ export class UserParamsService {
             msg: '',
             type: 'warning'
         };
-        return this._pipSrv.getData<USER_CL>({ USER_CL: PipRX.criteries({ DUE_DEP: dueDep }) })
+        return this._pipSrv.getData<USER_CL>({ USER_CL: PipRX.criteries({ SURNAME_PATRON: `"${dep.SURNAME}"` }) })
             .then((u: USER_CL[]) => {
                 if (!u.length) {
                     return dep;

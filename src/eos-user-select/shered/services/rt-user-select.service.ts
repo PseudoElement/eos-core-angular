@@ -11,6 +11,7 @@ export class RtUserSelectService {
     subjectScan: Subject<any> = new Subject();
     subjectFlagBtnHeader: Subject<any> = new Subject();
     btnDisabled: boolean = false;
+    hashUsers: Array<any> = [];
     ArraySystemHelper = {
         delo: {
             label: 'Дело',
@@ -91,8 +92,13 @@ export class RtUserSelectService {
         return this.subjectFlagBtnHeader.asObservable();
     }
     changeSelectedUser(user: UserSelectNode) {
-        this._ChangeSelectUser = user;
-        this.subject.next(this._ChangeSelectUser);
+        if (user === null) {
+            this._ChangeSelectUser = user;
+            this.subject.next(this._ChangeSelectUser);
+        } else if (user.oracle_id !== null) {
+            this._ChangeSelectUser = user;
+            this.subject.next(this._ChangeSelectUser);
+        }
     }
 
     getDepartMent(isnDeep): Promise<DEPARTMENT[]> {
