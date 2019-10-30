@@ -8,7 +8,6 @@ import { EosCommonModule } from 'eos-common/eos-common.module';
 
 import { UserParamsComponent } from './eos-user-params.component';
 import { UserParamApiSrv } from './shared/services/user-params-api.service';
-import { UserParamsDescriptorSrv } from './shared/services/user-params-descriptor.service';
 import { UserParamHeaderComponent } from './shared/user-param-header/user-header.component';
 import { UserParamRegistrationRemasterComponent } from './user-params-set/user-param-registration-remaster/user-param-registration-remaster.component';
 import { UserParamCabinetsComponent } from './user-params-set/user-param-cabinets/user-param-cabinets.component';
@@ -135,7 +134,6 @@ import { DefaultSettingsComponent } from './default-options/default-settings.com
     ],
     providers: [
         UserParamApiSrv,
-        UserParamsDescriptorSrv,
         UserParamsService,
         InputParamControlService,
         EmailAddressService,

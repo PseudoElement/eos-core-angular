@@ -98,14 +98,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
                 }
             });
         } else {
-            this._userParamsSetSrv.saveData$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                this._userParamsSetSrv.submitSave = this.submit();
-            });
-
             this._userParamsSetSrv.getUserIsn({
                 expand: 'USER_PARMS_List'
             }).then(() => {

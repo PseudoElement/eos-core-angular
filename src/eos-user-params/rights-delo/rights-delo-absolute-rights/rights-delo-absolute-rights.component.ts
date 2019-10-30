@@ -87,10 +87,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             .catch(el => {
             });
     }
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
+    ngOnDestroy() {}
 
     init() {
         this.curentUser = this._userParamsSetSrv.curentUser;

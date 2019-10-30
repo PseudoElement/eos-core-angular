@@ -1,7 +1,5 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { IInputParamControl, IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
@@ -52,7 +50,6 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
     private inputFields: any;
     private form: FormGroup;
     private newData = {};
-    private _ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
         private _inputCtrlSrv: InputParamControlService,
@@ -63,10 +60,7 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
         ) {
             this.countChecnged = 0;
     }
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
+    ngOnDestroy() {}
     ngOnInit() {
         this._userParamSrv.getUserIsn({
             expand: 'USER_PARMS_List'
@@ -77,17 +71,8 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
             this.init();
             this.flagShow = true;
         })
-        .catch((error: boolean) => {
-        })
         .catch(error => {
             this._errorSrv.errorHandler(error);
-        });
-        this._userParamSrv.saveData$
-        .pipe(
-            takeUntil(this._ngUnsubscribe)
-        )
-        .subscribe(() => {
-            this._userParamSrv.submitSave =  this.submit(null);
         });
     }
 

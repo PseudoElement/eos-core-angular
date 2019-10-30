@@ -1,8 +1,4 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
-
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { PipRX } from 'eos-rest';
 import { RemasterService } from '../shared-user-param/services/remaster-service';
@@ -31,7 +27,6 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     public titleHeader;
     readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов', 'Шаблоны'];
     readonly fieldTemplates: string[] = ['Имя шаблона', 'Значение по умолчанию', 'Текущее значение'];
-    private _ngUnsubscribe: Subject<any> = new Subject();
     private newValuesTransfer: Map<string, any> = new Map();
     private flagTransfer: boolean = false;
     private newValuesAddresses: Map<string, any> = new Map();
@@ -57,14 +52,6 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         if (this.defaultUser) {
             this.titleHeader = this.defaultTitle;
         } else {
-            this._userSrv.saveData$
-                .pipe(
-                    takeUntil(this._ngUnsubscribe)
-                )
-                .subscribe(() => {
-                    this._userSrv.submitSave = this.submit(null);
-                });
-
             this._userSrv.getUserIsn({
                 expand: 'USER_PARMS_List'
             })
@@ -149,10 +136,8 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         this.flagIncrementError = $event;
     }
 
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
+    ngOnDestroy() {}
+
     edit($event?) {
         this.editFlag = $event;
         this.remaster.editEmit.next();

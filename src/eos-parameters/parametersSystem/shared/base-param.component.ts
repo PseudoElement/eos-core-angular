@@ -7,7 +7,6 @@ import { debounceTime } from 'rxjs/operators';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { ParamApiSrv } from './service/parameters-api.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
-import { ParamDescriptorSrv } from './service/param-descriptor.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { EosUtils } from 'eos-common/core/utils';
 import { IBaseParameters } from './interfaces/parameters.interfaces';
@@ -18,7 +17,6 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     @Input() btnDisabled;
     @Output() formChanged = new EventEmitter();
     @Output() formInvalid = new EventEmitter();
-    descriptorSrv: ParamDescriptorSrv;
     constParam: IBaseParameters;
     paramApiSrv: ParamApiSrv;
     dataSrv: EosDataConvertService;
@@ -45,19 +43,13 @@ export class BaseParamComponent implements OnDestroy, OnInit {
         this.paramApiSrv = injector.get(ParamApiSrv);
         this.dataSrv = injector.get(EosDataConvertService);
         this.inputCtrlSrv = injector.get(InputControlService);
-        this.descriptorSrv = injector.get(ParamDescriptorSrv);
         this.msgSrv = injector.get(EosMessageService);
     }
     ngOnDestroy() {
         this.unsubscribe();
     }
-    ngOnInit() {
-        this.subscriptions.push(
-            this.descriptorSrv.saveData$.subscribe(() => {
-                this.submit();
-            })
-        );
-    }
+    ngOnInit() {}
+
     init() {
         this.prepareDataParam();
         return this.getData(this.queryObj)

@@ -5,7 +5,7 @@ import { CONTEXT_RC_PARAM } from './../shared/consts/context-rc-consts';
 import { BaseParamComponent } from './../shared/base-param.component';
 import { Component, Injector, OnInit, OnDestroy, Input } from '@angular/core';
 import { Subject } from 'rxjs';
-import { takeUntil, debounceTime } from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
     selector: 'eos-param-context-rc',
@@ -40,18 +40,8 @@ export class ParamContextRcComponent extends BaseParamComponent implements OnIni
     ];
     constructor(injector: Injector) {
         super(injector, CONTEXT_RC_PARAM);
-        this.descriptorSrv.saveData$
-        .pipe(
-            takeUntil(this._unsubsCribe)
-        )
-        .subscribe(() => {
-            this.submit();
-        });
     }
-    ngOnDestroy() {
-        this._unsubsCribe.next();
-        this._unsubsCribe.complete();
-    }
+    ngOnDestroy() {}
 
     ngOnInit() {
         this.queryObj = this.getObjQueryInputsField(['CONTEXT_SECTIONS_ENABLED']);
