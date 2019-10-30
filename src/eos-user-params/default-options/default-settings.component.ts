@@ -1,11 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Subject } from 'rxjs';
 import { NavParamService } from 'app/services/nav-param.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterStateSnapshot } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { SUB_PARAMS_LIST_NAV } from 'eos-user-params/shared/consts/user-param.consts';
 import { FormHelperService } from 'eos-user-params/shared/services/form-helper.services';
 import { PipRX, USER_PARMS } from 'eos-rest';
+import { IUserSetChanges } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 
 @Component({
     selector: 'eos-default-settings',
@@ -19,6 +21,7 @@ export class DefaultSettingsComponent implements OnInit, OnDestroy {
     disableSave: boolean;
     paramId: string;
     isWide: boolean = true;
+    private _isChanged: boolean;
     private ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
@@ -26,6 +29,7 @@ export class DefaultSettingsComponent implements OnInit, OnDestroy {
         private _route: ActivatedRoute,
         private formHelp: FormHelperService,
         private _pipRx: PipRX,
+        private _userParamService: UserParamsService,
     ) {
         this._route.params.subscribe(params => (this.paramId = params['id']));
         this._navSrv.StateSandwich$
@@ -35,6 +39,14 @@ export class DefaultSettingsComponent implements OnInit, OnDestroy {
             .subscribe((state: boolean) => {
                 this.isWide = state;
             });
+        this._userParamService.hasChanges$
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+        .subscribe(({ isChange }: IUserSetChanges) => {
+            this._isChanged = isChange;
+            //    this._disableSave = disableSave;
+        });
     }
     ngOnInit() {
         const prep = this.formHelp.getObjQueryInputsField();
@@ -46,6 +58,28 @@ export class DefaultSettingsComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
+    }
+    @HostListener('window:beforeunload', ['$event'])
+    canWndUnload(evt: BeforeUnloadEvent): any {
+        if (this._isChanged) {
+            evt.returnValue = '';
+            return false;
+        }
+    }
+
+    canDeactivate(nextState?: RouterStateSnapshot): Promise<boolean> | boolean {
+        if (this._isChanged) {
+            return new Promise((res, rej) => {
+                if (confirm('Возможно, внесенные изменения не сохранятся.')) {
+                    this._isChanged = false;
+                    return res(true);
+                } else {
+                    return res(false);
+                }
+            });
+        } else {
+            return Promise.resolve(true);
+        }
     }
 
     DefaultSubmitEmit(updateUser: USER_PARMS[]): any {

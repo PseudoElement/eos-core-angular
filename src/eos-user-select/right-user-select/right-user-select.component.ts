@@ -115,7 +115,17 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         if (!isnDue) {
             this.isPhoto = false;
         }
-        this._selectedUser.get_cb_print_info(this.CurrentUser.id, isnDue)
+        const savedUser = this._selectedUser.hashUsers.filter(cur => cur.CurrentUser.id === this.CurrentUser.id);
+        if (savedUser.length > 0) {
+            this.DueInfo = savedUser[0].DueInfo;
+            this.departmentInfo = savedUser[0].departmentInfo;
+            this.UserCabinetInfo = savedUser[0].UserCabinetInfo;
+            this.role = savedUser[0].role;
+            this.CurrentUser = savedUser[0].CurrentUser;
+            this.chooseTemplate = 'main';
+            this.getObjectForSystems();
+        } else {
+            this._selectedUser.get_cb_print_info(this.CurrentUser.id, isnDue)
             .then(([user_role, deep = null, cb_print = null]) => {
                 this.getObjectForSystems();
                 if (this.CurrentUser.deep) {
@@ -148,11 +158,27 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
                     .then((res: [USER_CL, DEPARTMENT]) => {
                         this.UserCabinetInfo = res;
                         this.chooseTemplate = 'main';
+                        this.hashUsers();
                     });
             }).catch(error => {
                 console.log(error);
                 this._errSrv.errorHandler(error);
             });
+        }
+    }
+
+    hashUsers() {
+        const user = {
+            CurrentUser: this.CurrentUser,
+            DueInfo: this.DueInfo,
+            departmentInfo: this.departmentInfo,
+            UserCabinetInfo: this.UserCabinetInfo,
+            role: this.role
+        };
+        const hashUser = this._selectedUser.hashUsers.filter(cur => cur.CurrentUser.id === this.CurrentUser.id);
+        if (hashUser.length === 0) {
+            this._selectedUser.hashUsers.push(user);
+        }
     }
 
     createUrlRoot(blob: DELO_BLOB) {

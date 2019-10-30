@@ -385,33 +385,33 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
 
   ShowData() {
     let eventUser;
-    this.frontData = undefined;
+    this.frontData = [];
     this.isnRefFile = undefined;
     this.usersAudit.map((user) => {
       const date = this.ConvertDate(user.EVENT_DATE);
       eventUser = this.eventKind[user.EVENT_KIND - 1];
-      if (this.frontData === undefined && this.usersAudit.length !== 0) {
-        this.frontData = [{
-          checked: !this.checkUser,
-          date: date,
-          eventUser: eventUser,
-          isnWho: this.getUserName(user.ISN_WHO),
-          isnUser: this.getUserName(user.ISN_USER),
-          isnEvent: user.ISN_EVENT
-        }];
-        this.lastUser = {
-          checked: !this.checkUser,
-          date: date,
-          eventUser: eventUser,
-          isnWho: this.getUserName(user.ISN_WHO),
-          isnUser: this.getUserName(user.ISN_USER),
-          isnEvent: user.ISN_EVENT
-        };
-        if (this.lastUser !== undefined) {
-          this.GetRefIsn(this.lastUser.isnEvent);
-        }
-        this.flagChecked = false;
-      } else {
+      // if (this.frontData === undefined && this.usersAudit.length !== 0) {
+      //   this.frontData = [{
+      //     checked: !this.checkUser,
+      //     date: date,
+      //     eventUser: eventUser,
+      //     isnWho: this.getUserName(user.ISN_WHO),
+      //     isnUser: this.getUserName(user.ISN_USER),
+      //     isnEvent: user.ISN_EVENT
+      //   }];
+      //   this.lastUser = {
+      //     checked: !this.checkUser,
+      //     date: date,
+      //     eventUser: eventUser,
+      //     isnWho: this.getUserName(user.ISN_WHO),
+      //     isnUser: this.getUserName(user.ISN_USER),
+      //     isnEvent: user.ISN_EVENT
+      //   };
+      //   if (this.lastUser !== undefined) {
+      //     this.GetRefIsn(this.lastUser.isnEvent);
+      //   }
+      //   this.flagChecked = false;
+      // } else {
         this.frontData.push({
           checked: this.checkUser,
           date: date,
@@ -420,7 +420,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           isnUser: this.getUserName(user.ISN_USER),
           isnEvent: user.ISN_EVENT
         });
-      }
+   //   }
     });
 
 

@@ -24,7 +24,7 @@
                 <span
                     [ngClass]="dropdown.isOpen ? 'eos-icon eos-icon-fab-white small': 'eos-icon eos-icon-fab-blue small'"></span>
             </button>
-            <ul *dropdownMenu class="dropdown-menu action-menu" role="menu">
+            <ul *dropdownMenu class="dropdown-menu action-menu-users" role="menu">
                 <ng-container *ngFor='let moreBtn of buttons.moreButtons'>
                     <li role="menuitem" placement="right" container="body" dropdown triggers="mouseclick" class="">
                         <button class="dropdown-item menu-link" *ngIf="moreBtn.name !== 'OpenUsersInfo'; else info"
