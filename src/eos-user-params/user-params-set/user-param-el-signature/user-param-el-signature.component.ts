@@ -1,12 +1,7 @@
 import { Component, TemplateRef, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, AbstractControl } from '@angular/forms';
-
 import { BsModalService } from 'ngx-bootstrap/modal';
-
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { ELECTRONIC_SIGNATURE } from '../shared-user-param/consts/electronic-signature';
 import { InputParamControlService } from 'eos-user-params/shared/services/input-param-control.service';
@@ -53,7 +48,6 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     private readonly first = ['CRYPTO_ACTIVEX', 'CRYPTO_INITSTR', 'SIGN_BASE64', 'PKI_ACTIVEX', 'PKI_INITSTR'];
     private readonly second = ['WEB_CRYPTO_ACTIVEX', 'WEB_CRYPTO_INITSTR', 'WEB_PKI_ACTIVEX', 'WEB_PKI_INITSTR'];
     private listForQuery: Array<string> = [];
-    private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         private _userSrv: UserParamsService,
         private _router: Router,
@@ -65,10 +59,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         private _errorSrv: ErrorHelperServices,
         public certStoresService: CarmaHttpService,
     ) { }
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
+    ngOnDestroy() {}
     ngOnInit() {
         if (this.defaultTitle) {
             this.titleHeader = this.defaultTitle;
@@ -77,14 +68,6 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
             const store: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
             this.certStoresService.init(null, store);
         } else {
-            this._userSrv.saveData$
-                .pipe(
-                    takeUntil(this._ngUnsubscribe)
-                )
-                .subscribe(() => {
-                    this._userSrv.submitSave = this.submit();
-                });
-
             this._userSrv.getUserIsn({
                 expand: 'USER_PARMS_List'
             }).then(() => {

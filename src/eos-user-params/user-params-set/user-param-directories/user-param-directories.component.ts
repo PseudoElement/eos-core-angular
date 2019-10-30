@@ -1,9 +1,5 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
 import { DIRECTORIES_USER } from '../../user-params-set/shared-user-param/consts/directories.consts';
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { FormHelperService } from '../../shared/services/form-helper.services';
@@ -28,8 +24,6 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     public inputs;
     public btnDisable;
     public flagEdit;
-    _ngUnsubscribe: Subject<any> = new Subject();
-
     private allData;
     private prepareData;
     private prepareInputs;
@@ -47,13 +41,6 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     ) {
         this.flagEdit = false;
         this.btnDisable = true;
-        this._userParamsSetSr.saveData$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                this._userParamsSetSr.submitSave = this.submit();
-            });
     }
 
     ngOnInit() {
@@ -268,10 +255,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
             this.form.disable({ emitEvent: false });
         }
     }
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
+    ngOnDestroy() {}
     formSubscriber() {
         this.form.valueChanges.subscribe(data => {
             this.checkTouch(data);

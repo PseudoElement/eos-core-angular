@@ -1,9 +1,5 @@
 import { Component, OnDestroy, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { FormHelperService } from '../../shared/services/form-helper.services';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
@@ -29,7 +25,6 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
     public inputs;
     public btnDisable;
     public flagEdit;
-    _ngUnsubscribe: Subject<any> = new Subject();
     private allData;
     private prepareData;
     private prepareInputs;
@@ -47,14 +42,6 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
     ) {
         this.flagEdit = false;
         this.btnDisable = true;
-        this._userParamsSetSr.saveData$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                this._userParamsSetSr.submitSave = this.submit();
-            });
-
     }
     ngOnInit() {
         if (this.defaultTitle) {
@@ -188,10 +175,7 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
             this.form.disable({ emitEvent: false });
         }
     }
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
+    ngOnDestroy() {}
     formSubscriber() {
         this.form.valueChanges.subscribe(data => {
             this.checkTouch(data);

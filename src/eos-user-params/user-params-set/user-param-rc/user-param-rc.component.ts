@@ -5,14 +5,12 @@ import { FormGroup } from '@angular/forms';
 import { IOpenClassifParams } from '../../../eos-common/interfaces/interfaces';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE } from '../shared-user-param/consts/eos-user-params.const';
 import { FormHelperService } from '../../shared/services/form-helper.services';
-import { Subject } from 'rxjs';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { PipRX } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
-import { takeUntil } from 'rxjs/operators';
 @Component({
     selector: 'eos-user-param-rc',
     templateUrl: 'user-param-rc.component.html',
@@ -36,7 +34,6 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     private originDocRc;
     private prepareData;
     private prepareInputs;
-    private _ngUnsubscribe: Subject<any> = new Subject();
     private mapChanges = new Map();
     private creatchesheDefault: any;
     private defoltInputs: any;
@@ -68,13 +65,6 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
                 });
             });
         } else {
-            this._userParamsSetSrv.saveData$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                this._userParamsSetSrv.submitSave = this.submit();
-            });
             this._userParamsSetSrv.getUserIsn({
                 expand: 'USER_PARMS_List'
             })
@@ -82,7 +72,6 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
                 this.allData = this._userParamsSetSrv.hashUserContext;
                 this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - РК`;
                 this.cutentTab = 0;
-
                 this.init();
                 this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
                     this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
@@ -333,10 +322,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
             }
         };
     }
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
+    ngOnDestroy() {}
     cancel($event?) {
         if (!this.btnDisabled) {
             this._msg.addNewMessage(PARM_CANCEL_CHANGE);

@@ -57,9 +57,6 @@ export class UserParamsService {
     get isUserContexst() {
         return !!this._userContext;
     }
-    get saveData$(): Observable<void> {
-        return this._saveFromAsk$.asObservable();
-    }
     get updateUser$(): Observable<void> {
         return this._updateUser$.asObservable();
     }

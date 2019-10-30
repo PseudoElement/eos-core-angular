@@ -19,11 +19,6 @@ export class ParamLoggingComponent extends BaseParamComponent implements OnInit 
     }
     ngOnInit() {
        this.initProt();
-       this.subscriptions.push(
-        this.descriptorSrv.saveData$.subscribe(() => {
-            this.submit();
-        })
-    );
     }
 
     initProt(): Promise<any> {

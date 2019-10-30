@@ -1,9 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
 import { PipRX } from 'eos-rest';
 import { RigthsCabinetsServices } from 'eos-user-params/shared/services/rigths-cabinets.services';
 import { UserParamsService } from '../../shared/services/user-params.service';
@@ -35,7 +31,6 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     get btnDisabled() {
         return ((this.newValueMap.size === 0) && this.flagChangeCards);
     }
-    private _ngUnsubscribe: Subject<any> = new Subject();
     private flagGrifs: boolean;
     private userId: number;
     constructor(
@@ -55,14 +50,6 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Картотеки и Кабинеты';
             this.flagChangeCards = true;
             this.userId = this._userSrv.userContextId;
-
-            this._userSrv.saveData$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                this._userSrv.submitSave = this.submit(event);
-            });
             this._userSrv.checkGrifs(this.userId).then(elem => {
 
                 this.flagGrifs = elem;
@@ -74,10 +61,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             this.sendMessage('Предупреждение', `${err}`);
         });
     }
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
+    ngOnDestroy() {}
 
     init(): Promise<any> {
         return this._rightsCabinetsSrv.getUserCard(this._userSrv.curentUser.USERCARD_List, this.userId).then((user_cards: USERCARD[]) => {

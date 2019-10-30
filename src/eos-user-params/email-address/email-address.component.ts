@@ -64,13 +64,6 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     ) { }
 
      ngOnInit() {
-        this._userServices.saveData$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                this._userServices.submitSave = this.saveAllForm(null);
-            });
         this._navSrv.StateSandwichRight$
             .pipe(
                 takeUntil(this._ngUnsubscribe)

@@ -28,7 +28,6 @@ import { AddCertStoresComponent } from './parametersSystem/param-web/cert-stores
 /*  Service  */
 import { ParamApiSrv } from './parametersSystem/shared/service/parameters-api.service';
 import { EosCommonModule } from 'eos-common/eos-common.module';
-import { ParamDescriptorSrv } from './parametersSystem/shared/service/param-descriptor.service';
 import { CollectionService } from './parametersSystem/param-authentication/collection/collection.service';
 import { ParamDictionariesComponent } from './parametersSystem/param-dictionaries/param-dictionaries.component';
 import { ParamLoggingComponent } from './parametersSystem/param-logging/param-logging.component';
@@ -66,7 +65,6 @@ import { ParamLoggingComponent } from './parametersSystem/param-logging/param-lo
     ],
     providers: [
         ParamApiSrv,
-        ParamDescriptorSrv,
         CollectionService
     ],
     exports: [

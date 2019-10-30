@@ -2,8 +2,8 @@ import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
-import { Subject, of } from 'rxjs';
-import { takeUntil, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { CarmaHttpService } from 'app/services/carmaHttp.service';
@@ -51,7 +51,6 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     public flagHideBtn: boolean = false;
     private DBserts: USER_CERT_PROFILE[] = [];
     private isCarma: boolean = true;
-    private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public certStoresService: CarmaHttpService,
         private _userSrv: UserParamsService,
@@ -60,19 +59,8 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices
     ) {}
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
+    ngOnDestroy() {}
     ngOnInit() {
-        this._userSrv.saveData$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                this._userSrv.submitSave = this.submit(null);
-            });
-
         this._userSrv.getUserIsn({
             expand: 'USER_PARMS_List'
         })

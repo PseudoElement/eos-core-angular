@@ -1,8 +1,4 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from '../../../eos-user-params/user-params-set/shared-user-param/consts/eos-user-params.const';
@@ -50,7 +46,6 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     private newValuesAutoSearch: Map<string, any> = new Map();
     private newValuesSab: Map<string, any> = new Map();
     private newValuesRc: Map<string, any> = new Map();
-    private _ngUnsubscribe: Subject<any> = new Subject();
 
     constructor(
         private _userSrv: UserParamsService,
@@ -68,13 +63,6 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             this.accessSustem = `1111111111111111111111111111111111111111`.split('');
             this.isLoading = true;
         } else {
-            this._userSrv.saveData$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                this._userSrv.submitSave = this.submit(null);
-            });
             this._userSrv.getUserIsn({
                 expand: 'USER_PARMS_List'
             })
@@ -93,10 +81,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             });
         }
     }
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
+    ngOnDestroy() {}
     get btnDisabled(): boolean {
         if (this.EmailChangeFlag
             || this.DopOperationChangeFlag
