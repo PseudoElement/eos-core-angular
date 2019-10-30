@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-
-import { Subject } from 'rxjs';
-import { takeUntil, debounceTime } from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 
 import { EXTERNAL_APPLICATION_USER } from '../../user-params-set/shared-user-param/consts/external-application.consts';
 import { InputControlService } from 'eos-common/services/input-control.service';
@@ -37,7 +35,6 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
     private prepDate;
     private allData;
     private listForQuery: Array<string> = [];
-    private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         private dataSrv: EosDataConvertService,
         private _userParamsSetSrv: UserParamsService,
@@ -52,13 +49,6 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
             this.allData = this.defaultUser;
             this.init();
         } else {
-            this._userParamsSetSrv.saveData$
-            .pipe(
-                takeUntil(this._ngUnsubscribe)
-            )
-            .subscribe(() => {
-                this._userParamsSetSrv.submitSave = this.submit();
-            });
             this._userParamsSetSrv.getUserIsn({
                 expand: 'USER_PARMS_List'
             })
@@ -71,10 +61,7 @@ export class UserParamEAComponent implements OnInit, OnDestroy {
             });
         }
     }
-    ngOnDestroy() {
-        this._ngUnsubscribe.next();
-        this._ngUnsubscribe.complete();
-    }
+    ngOnDestroy() {}
     init() {
         this.prepInputs = this.getObjectInputFields(this.constUserParam.fields);
         const allData = this._userParamsSetSrv.hashUserContext;
