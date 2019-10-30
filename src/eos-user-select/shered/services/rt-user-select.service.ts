@@ -92,7 +92,7 @@ export class RtUserSelectService {
         return this.subjectFlagBtnHeader.asObservable();
     }
     changeSelectedUser(user: UserSelectNode) {
-        if (user === null) {
+        if (user === null || user !== undefined) {
             this._ChangeSelectUser = user;
             this.subject.next(this._ChangeSelectUser);
         } else if (user.oracle_id !== null) {

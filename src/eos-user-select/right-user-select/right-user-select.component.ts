@@ -117,13 +117,13 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         }
         const savedUser = this._selectedUser.hashUsers.filter(cur => cur.CurrentUser.id === this.CurrentUser.id);
         if (savedUser.length > 0) {
-            this._selectedUser.ArraySystemHelper = savedUser[0].ArraySystemHelper;
             this.DueInfo = savedUser[0].DueInfo;
-            this.departmentInfo = this.departmentInfo;
+            this.departmentInfo = savedUser[0].departmentInfo;
             this.UserCabinetInfo = savedUser[0].UserCabinetInfo;
             this.role = savedUser[0].role;
             this.CurrentUser = savedUser[0].CurrentUser;
             this.chooseTemplate = 'main';
+            this.getObjectForSystems();
         } else {
             this._selectedUser.get_cb_print_info(this.CurrentUser.id, isnDue)
             .then(([user_role, deep = null, cb_print = null]) => {
@@ -169,7 +169,6 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
 
     hashUsers() {
         const user = {
-            ArraySystemHelper: this._selectedUser.ArraySystemHelper,
             CurrentUser: this.CurrentUser,
             DueInfo: this.DueInfo,
             departmentInfo: this.departmentInfo,
