@@ -284,6 +284,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 //     this.selectedNode(null);
                 // }
             //    this.updateFlafListen();
+                this.flagScan = null;
                 this.disabledBtnAction(false);
                 this.isLoading = false;
                 this.countMaxSize = this._pagSrv.countMaxSize;
