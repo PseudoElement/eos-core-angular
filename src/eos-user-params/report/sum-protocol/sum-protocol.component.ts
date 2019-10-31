@@ -619,7 +619,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     const curr_month = ('0' + (date.getMonth() + 1)).slice(-2);
     const curr_year = date.getFullYear();
     const hms = new Date(date.getTime() - (date.getTimezoneOffset() * 60000)).toISOString().substr(11, 8);
-    const parseDate = `${curr_year}.${curr_month}.${curr_date} ${hms}`;
+    const parseDate = `${curr_date}.${curr_month}.${curr_year} ${hms}`;
     return parseDate;
   }
 
