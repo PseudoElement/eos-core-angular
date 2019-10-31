@@ -9,6 +9,7 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Injectable()
 export class UserParamsService {
@@ -69,7 +70,9 @@ export class UserParamsService {
         private _pipRx: PipRX,
         private _storageSrv: EosStorageService,
         private _router: Router,
-        private _modalSrv: BsModalService
+        private _modalSrv: BsModalService,
+        private _appContext: AppContext
+
     ) { }
     getUserIsn(cfg?: IGetUserCfg): Promise<boolean> {
         const defaultExpand: string = 'USER_PARMS_List,USERCARD_List/USER_CABINET_List,USER_RIGHT_DOCGROUP_List,USERDEP_List,USERCARD_List/USER_CARD_DOCGROUP_List,NTFY_USER_EMAIL_List,USER_TECH_List';
@@ -190,7 +193,18 @@ export class UserParamsService {
             type: 'warning'
         };
         return this._pipSrv.getData<USER_CL>({ USER_CL: PipRX.criteries({ SURNAME_PATRON: `"${dep.SURNAME}"` }) })
-            .then((u: USER_CL[]) => {
+        .then((u: USER_CL[]) => {
+            if (this._appContext.limitCardsUser.length > 0) {
+                if (this._appContext.limitCardsUser.indexOf(dep.DEPARTMENT_DUE) !== -1) { // проверку написать на существующего пользователя
+                    if (!u.length) {
+                        return dep;
+                    } else {
+                        mess.msg = `Пользователь "${u[0].SURNAME_PATRON}" уже ассоциирован с выбранным ДЛ "${dep.CLASSIF_NAME}".`;
+                    }
+                } else {
+                    mess.msg = `Выбранное ДЛ ${dep.CLASSIF_NAME} не принадлежит разрешенным Вам подразделениям.`;
+                }
+            } else {
                 if (!u.length) {
                     return dep;
                 }
@@ -198,9 +212,10 @@ export class UserParamsService {
                 if (isn && u[0]['ISN_LCLASSIF'] === this.userContextId) {
                     mess.msg = `Пользователь ${this.curentUser.SURNAME_PATRON} уже ассоциирован с выбранным ДЛ`;
                 }
-                this._msgSrv.addNewMessage(mess);
-                throw new Error();
-            });
+            }
+            this._msgSrv.addNewMessage(mess);
+            throw new Error();
+        });
     }
     createEntyti<T extends IEnt>(ent: any, typeName: string): T {
         ent.__metadata = { __type: typeName };
