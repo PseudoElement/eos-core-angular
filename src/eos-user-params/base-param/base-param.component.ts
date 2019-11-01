@@ -516,13 +516,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             })
             .then((data: DEPARTMENT[]) => {
                 // при переназначении ДЛ меняем это поле в бд, для ограниченного технолога
-                if (data) {
-                    this.form.get('TECH_DUE_DEP').patchValue(data[0]['DEPARTMENT_DUE']);
-                }
-                this.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
-                    this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
+                return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
+                    if (data) {
+                        this.form.get('TECH_DUE_DEP').patchValue(data[0]['DEPARTMENT_DUE']);
+                    }
+                    this.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
+                        this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
+                    });
+                    return val;
                 });
-                return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true);
             })
             .then((dep: DEPARTMENT) => {
                 this.isShell = false;
