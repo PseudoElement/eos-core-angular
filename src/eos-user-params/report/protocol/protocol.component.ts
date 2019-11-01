@@ -63,7 +63,8 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
           this.config = config;
           if (this._user_pagination.totalPages !== undefined) {
             if (this.config.current > this.config.start) {
-              this.PaginateData(this.config.length * 2, this.orderByStr);
+              this.PaginateData(this.config.length * (this.config.current - this.config.start + 1), this.orderByStr,
+              (this.config.length * this.config.start - this.config.length).toString());
             } else if (this.config.current && this.initPage === true) {
               this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
             }
@@ -190,7 +191,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
         // });
       } else if (critSearch === 'EVENT_DATE') {
         this.orderByStr = `${critSearch} ${this.SortUp}`;
-        this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+        this.PaginateData(this.config.length, this.orderByStr, (this.config.length * this.config.current - this.config.length).toString());
       }
     }
   }
