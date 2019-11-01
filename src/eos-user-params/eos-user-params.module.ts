@@ -66,6 +66,8 @@ import { EosReportSummaryFilterProtocolComponent } from './report/filter-protoco
 import { EosReportProtocolComponent } from './report/protocol/protocol.component';
 import { FormHelperService } from './shared/services/form-helper.services';
 import { DefaultSettingsComponent } from './default-options/default-settings.component';
+import { RightDepertOrganizComponent } from './rights-delo/rights-delo-absolute-rights/right-organiz/right-organiz.component';
+import { RightOrganizDepertComponent } from './rights-delo/rights-delo-absolute-rights/right-dep-org/right-dep-org.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -117,7 +119,9 @@ import { DefaultSettingsComponent } from './default-options/default-settings.com
         EosReportUsersStatsComponent,
         EosReportSummaryFilterProtocolComponent,
         EosReportProtocolComponent,
-        DefaultSettingsComponent
+        DefaultSettingsComponent,
+        RightDepertOrganizComponent,
+        RightOrganizDepertComponent,
     ],
     imports: [
         BrowserModule,

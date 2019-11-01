@@ -15,7 +15,7 @@ import { RadioInput } from 'eos-common/core/inputs/radio-input';
 import { NodeAbsoluteRight } from './node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
-import { USER_TECH, PipRX } from 'eos-rest';
+import { USER_TECH, PipRX, USERDEP, ORGANIZ_CL } from 'eos-rest';
 // import { RestError } from 'eos-rest/core/rest-error';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
@@ -74,7 +74,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         //         this._userParamsSetSrv.submitSave = this.submit(true);
         //     });
         this._userParamsSetSrv.getUserIsn({
-            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List'
+            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_ORGANIZ_List'
         })
             .then(() => {
                 const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
@@ -192,6 +192,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     this.isLoading = true;
                     return Promise.resolve(true);
                 }
+                if (this._checkCreateNotEmptyOrgan()) {
+                    this.isLoading = true;
+                    return Promise.resolve(true);
+                }
                 this.editMode = false;
                 this.btnDisabled = true;
                 this._pushState();
@@ -233,7 +237,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         this._storageSrv.removeItem('abs_prav_mas');
                         if (!flag) {
                             return this._userParamsSetSrv.getUserIsn({
-                                expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List'
+                                expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_ORGANIZ_List'
                             })
                                 .then(() => {
                                     this.init();
@@ -268,7 +272,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this._storageSrv.removeItem('abs_prav_mas');
         this._pushState();
         this._userParamsSetSrv.getUserIsn({
-            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List'
+            expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_ORGANIZ_List'
         })
             .then(() => {
                 this.init();
@@ -311,10 +315,14 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (
                 !value &&
                 (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.department ||
+                    item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz ||
                     item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthor ||
                     item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject)
             ) {
-            //    this._deleteAllDep(item);
+                this._deleteAllDep(item);
+                if (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz) {
+                    this._deleteAllOrg(item);
+                }
             }
             if (!value && (item.contentProp === E_RIGHT_DELO_ACCESS_CONTENT.docGroup)) {
                 this._deleteAllDocGroup(item);
@@ -487,6 +495,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             case E_RIGHT_DELO_ACCESS_CONTENT.classif:
             case E_RIGHT_DELO_ACCESS_CONTENT.docGroup:
             case E_RIGHT_DELO_ACCESS_CONTENT.department:
+            case E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz:
             case E_RIGHT_DELO_ACCESS_CONTENT.departmentCardAuthorSentProject:
                 if (this.selectedNode.value) {
                     setTimeout(() => {
@@ -509,25 +518,42 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         return fields;
     }
-    // private _deleteAllDep(item: NodeAbsoluteRight) {
-    //     const list: USERDEP[] = [];
-    //     this.curentUser.USERDEP_List = this.curentUser.USERDEP_List.filter(li => {
-    //         if (li['FUNC_NUM'] === +item.key + 1) {
-    //             list.push(li);
-    //         } else {
-    //             return true;
-    //         }
-    //     });
-
-    //     list.forEach(li => {
-    //         item.pushChange({
-    //             method: 'DELETE',
-    //             due: li.DUE,
-    //             data: li
-    //         });
-    //     });
-    //     this.checkChange();
-    // }
+    private _deleteAllDep(item: NodeAbsoluteRight) {
+        const list: USERDEP[] = [];
+        this.curentUser.USERDEP_List = this.curentUser.USERDEP_List.filter(li => {
+            if (li['FUNC_NUM'] === +item.key + 1) {
+                list.push(li);
+            } else {
+            return true;
+            }
+        });
+        list.forEach(li => {
+            item.pushChange({
+                method: 'DELETE',
+                due: li.DUE,
+                data: li
+            });
+        });
+        this.checkChange();
+    }
+    private _deleteAllOrg(item: NodeAbsoluteRight) {
+        const list: ORGANIZ_CL[] = [];
+        this.curentUser['USER_ORGANIZ_List'] = this.curentUser['USER_ORGANIZ_List'].filter(li => {
+            if (li['FUNC_NUM'] === +item.key + 1) {
+                list.push(li);
+            } else {
+            return true;
+            }
+        });
+        list.forEach(li => {
+            item.pushChange({
+                method: 'DELETE',
+                due: li.DUE,
+                data: li
+            });
+        });
+        this.checkChange();
+    }
     private _deleteAllDocGroup(item: NodeAbsoluteRight) {
         item.deleteChange();
         this.curentUser.USER_RIGHT_DOCGROUP_List.forEach(li => {
@@ -602,6 +628,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 }
                 url = `/USER_TECH_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.data['FUNC_NUM']} ${chenge.due}')`}`;
                 break;
+            case E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz:
+                if (chenge.data['DEEP']) {
+                    url = `/USERDEP_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.due} ${chenge.data['FUNC_NUM']}')`}`;
+                } else {
+                    url = `/USER_ORGANIZ_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.due} ${chenge.data['FUNC_NUM']}')`}`;
+                }
+                break;
         }
         let batch = {};
         // if (node.contentProp === 5) {
@@ -668,6 +701,39 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 }
                 if (!allowed) {
                     allowed = flag;
+                }
+            }
+        });
+        return allowed;
+    }
+    private _checkKeyOrgan(node): boolean {
+        return node.key === '4' || node.key === '5' || node.key === '10' || node.key === '11';
+    }
+    private _checkCreateNotEmptyOrgan(): boolean {
+        let allowed = false;
+        this.listRight.forEach((node: NodeAbsoluteRight) => {
+            if (this._checkKeyOrgan(node) && node.value === 1) {
+                let flag = true;
+                let flag_org = true;
+                this.curentUser.USERDEP_List.filter(li => {
+                    if (li['FUNC_NUM'] === +node.key + 1) {
+                        flag = false;
+                    }
+                });
+                this.curentUser['USER_ORGANIZ_List'].forEach(li => {
+                    if (li['FUNC_NUM'] === +node.key + 1) {
+                        flag_org = false;
+                    }
+                });
+                if (flag && flag_org) {
+                    this._msgSrv.addNewMessage({
+                        type: 'warning',
+                        title: 'Предупреждение',
+                        msg: 'Не заданны подразделения или организации для права ' + node.label
+                    });
+                }
+                if (!allowed) {
+                    allowed = flag && flag_org;
                 }
             }
         });

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserParamApiSrv } from './user-params-api.service';
-import { USER_CL, DEPARTMENT, PipRX, IEnt } from 'eos-rest';
+import { USER_CL, DEPARTMENT, PipRX, IEnt, ORGANIZ_CL } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IParamUserCl, IUserSetChanges, IGetUserCfg } from '../intrfaces/user-parm.intterfaces';
 import { Subject, Observable } from 'rxjs';
@@ -166,6 +166,9 @@ export class UserParamsService {
 
     getDepartmentFromUser(dueDep: string[]): Promise<DEPARTMENT[]> {
         return this._pipSrv.getData<DEPARTMENT>({ DEPARTMENT: dueDep });
+    }
+    getOrganizFromUser(due: string[]): Promise<ORGANIZ_CL[]> {
+        return this._pipSrv.getData<ORGANIZ_CL>({ ORGANIZ_CL: due });
     }
     ProtocolService(isn: number, kind: number): Promise<any> {
         const url = `../UserInfo/UserOperations.asmx/WriteUserAudit?uisn=${isn}&event_kind=${kind}`;

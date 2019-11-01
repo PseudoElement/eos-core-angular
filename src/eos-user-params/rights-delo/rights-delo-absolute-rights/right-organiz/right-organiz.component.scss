@@ -1,0 +1,37 @@
+.item-tree-org{
+    padding-left: 30px;
+}
+.over-tree-dep{
+    position: absolute;
+    height: 100%;
+    overflow-y: auto;
+    width: 100%;
+}
+.redact-tree{
+    top: 77px;
+    height: calc(100% - 77px);
+}
+.redact-tree-org{
+    height: calc(100% - 70px);
+}
+.right-dep-list {
+
+    .right-dep-org-list-content {
+        max-height: 50%;
+        display: flex;
+        overflow-y: auto;
+        flex-direction: column;
+        .list-tree-dep {
+            flex: 1 1 auto;
+            overflow-y: auto;
+        }
+    }
+
+    .spiner-wrapper {
+        margin-top: 50px;
+        display: flex;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+    }
+}
