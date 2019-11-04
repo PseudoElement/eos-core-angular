@@ -103,6 +103,7 @@ export class UserSearchComponent implements OnInit {
         }
         this.RemoveQuotes(newObj);
         const queryF = this.srhSrv.getQueryForFilter(newObj);
+        this.srhSrv.submitSearch$.next(true);
         this.search.emit(queryF);
         // this.srhSrv._pipApisrv.read(queryF).then(data => {
         //     console.log(data);
