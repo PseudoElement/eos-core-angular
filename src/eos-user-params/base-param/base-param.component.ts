@@ -307,7 +307,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 if (pass) {
                     this.dropLogin(id).then(() => {
                         return this.apiSrvRx.batch(queryPas, '').then(() => {
-                            return this.sendData(query).then(() => {
+                            return this.sendData(query, accessStr).then(() => {
                                 return this.createLogin(pass, id).then(() => {
                                     return this.changePassword(pass, id).then(() => {
                                         this.AfterSubmit(accessStr);
@@ -323,9 +323,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     this.dropLogin(id).then(() => {
                         this.messageAlert({ title: 'Предупреждение', msg: `Изменён логин, нужно задать пароль`, type: 'warning' });
                         return this.apiSrvRx.batch(queryPas, '').then(() => {
-                            return this.sendData(query).then(() => {
-                                this.AfterSubmit(accessStr);
-                            });
+                            return this.sendData(query, accessStr);
                         });
                     }).catch(error => {
                         this._errorSrv.errorHandler(error);
@@ -337,32 +335,27 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             if (pass) {
                 if (this.curentUser['IS_PASSWORD'] === 0) {
                     this.createLogin(pass, id).then(() => {
-                        return this.sendData(query).then(() => {
-                            this.AfterSubmit(accessStr);
-                        });
+                        return this.sendData(query, accessStr);
                     }).catch(error => {
                         this._errorSrv.errorHandler(error);
                         this.cancel();
                     });
                 } else {
                     this.changePassword(pass, id).then(() => {
-                        return this.sendData(query).then(() => {
-                            this.AfterSubmit(accessStr);
-                        });
+                        return this.sendData(query, accessStr);
                     }).catch(error => {
                         this._errorSrv.errorHandler(error);
                         this.cancel();
                     });
                 }
             } else {
-                this.sendData(query).then(() => {
-                    this.AfterSubmit(accessStr);
-                });
+                this.sendData(query, accessStr);
             }
         }
     }
-    sendData(query): Promise<any> {
+    sendData(query, accessStr): Promise<any> {
         return this._apiSrv.setData(query).then(() => {
+            this.AfterSubmit(accessStr);
             return;
         }).catch(error => {
             this._nanParSrv.scanObserver(!this.accessInputs['3'].value);
@@ -527,6 +520,12 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 });
             })
             .then((dep: DEPARTMENT) => {
+                if (dep) {
+                    this.form.get('TECH_DUE_DEP').patchValue(dep['DEPARTMENT_DUE']);
+                }
+                this.getUserDepartment(dep.ISN_HIGH_NODE).then(result => {
+                    this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
+                });
                 this.isShell = false;
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE'];

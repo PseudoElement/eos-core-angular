@@ -288,7 +288,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 this.disabledBtnAction(false);
                 this.isLoading = false;
                 this.countMaxSize = this._pagSrv.countMaxSize;
-
+                this.rtUserService.changeSelectedUser(null);
             }).catch(error => {
                 this._errorSrv.errorHandler(error);
             });
@@ -827,10 +827,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit, AfterContentC
                 this.checkAll = 'Снять пометки';
                 return 'eos-icon-checkbox-square-v-blue';
             case false:
-                this.checkAll = 'Пометить все';
+                this.checkAll = 'Отметить все на странице';
                 return 'eos-icon-checkbox-square-minus-blue';
             default:
-                this.checkAll = 'Пометить все';
+                this.checkAll = 'Отметить все на странице';
                 return 'eos-icon-checkbox-square-blue';
         }
     }
