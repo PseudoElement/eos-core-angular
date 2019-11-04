@@ -20,7 +20,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   frontData: any;
   usersAudit: any;
   checkUser: boolean = false;
-  flagChecked: boolean = false;
+  flagChecked: boolean;
   hideTree: boolean = false;
   checkAll: string;
   lastUser;
@@ -68,7 +68,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           this.config = config;
           if (this._user_pagination.totalPages !== undefined && this.resetPage === false) {
             if (this.config.current > this.config.start) {
-              this.PaginateData(this.config.length * 2, this.orderByStr);
+              this.PaginateData(this.config.length * (this.config.current - this.config.start + 1), this.orderByStr,
+              (this.config.length * this.config.start - this.config.length).toString());
             } else if (this.config.current && this.initPage === true && this.clearResult === true) {
               this.GetSortData();
             } else if (this.config.current && this.initPage === true) {
@@ -235,7 +236,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         if (this.clearResult === true) {
           this.GetSortData();
         } else {
-          this.PaginateData(this.config.length, this.orderByStr, this.config.length * this.config.current - this.config.length);
+          this.PaginateData(this.config.length, this.orderByStr, (this.config.length * this.config.current - this.config.length).toString());
         }
       }
     }
@@ -276,31 +277,20 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   }
 
   checkNotAllUsers() {
-    const usersCheck = [];
-    const usersNotCheck = [];
-    let count = 0;
-    let indx;
-    this.frontData.forEach((user, i) => {
-      if (user.checked === true) {
-        count++;
-        indx = i;
-        usersCheck.push(user.checked);
-      } else {
-        usersNotCheck.push(user.checked);
-      }
-    });
-    if (count === 1) {
-      this.lastUser = this.frontData[indx];
+    const usersCheck = this.frontData.filter(item => item.checked === true);
+    if (usersCheck.length > 0) {
+      this.lastUser = this.frontData[0];
       this.GetRefIsn(this.lastUser.isnEvent);
+      this.flagChecked = false;
     }
-    if (usersCheck.length > 0 && usersNotCheck.length > 0) {
-      return this.flagChecked = false;
+    if (usersCheck.length > 0) {
+      this.flagChecked = false;
     }
     if (usersCheck.length === 0) {
-      return this.flagChecked = null;
+      this.flagChecked = null;
     }
-    if (usersNotCheck.length === 0) {
-      return this.flagChecked = true;
+    if (usersCheck.length === this.config.length) {
+     this.flagChecked = true;
     }
   }
 
@@ -350,11 +340,11 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       this.frontData.forEach(node => {
         node.checked = false;
       });
-
       user.checked = true;
     }
     this.lastUser = user;
     this.GetRefIsn(user.isnEvent);
+    this.checkNotAllUsers();
   }
 
   DisabledRemoveAudits() {
@@ -628,7 +618,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     this._user_pagination.totalPages = undefined;
     this._user_pagination.paginationConfig.start = 1;
     this._user_pagination.paginationConfig.current = 1;
-    this.PaginateData(this.config.length, this.orderByStr, 0);
+    this.PaginateData(this.config.length, this.orderByStr, '0');
     this.clearResult = false;
   }
 }
