@@ -12,6 +12,7 @@ import { IUserSort } from '../../../eos-user-select/shered/interfaces/user-selec
 import { SortsList } from '../../../eos-user-select/shered/interfaces/user-select.interface';
 import { EosStorageService } from '../../../../src/app/services/eos-storage.service';
 import { IPaginationUserConfig } from 'eos-user-select/shered/consts/pagination-user-select.interfaces';
+import { SearchServices } from 'eos-user-select/shered/services/search.service';
 // import {EosStorageService} from '../../../../src/app/services/eos-storage.service';
 @Injectable()
 export class UserParamApiSrv {
@@ -42,6 +43,7 @@ export class UserParamApiSrv {
         private _router: Router,
         private users_pagination: UserPaginationService,
         private _storageSrv: EosStorageService,
+        private srhSrv: SearchServices,
     ) {
         //   this.helpersClass = new HelpersSortFunctions();
         this.initConfigTitle();
@@ -269,8 +271,11 @@ export class UserParamApiSrv {
         dueDep = dueDep ? dueDep : '0.';
         if (this.dueDep !== dueDep) {
             if (this.users_pagination.paginationConfig) {
-                this.users_pagination.resetConfig();
+                if (this.srhSrv.submitSearch$.getValue() === true) {
+                    this.users_pagination.resetConfig();
+                }
                 this.users_pagination.saveUsersConf();
+                this.srhSrv.submitSearch$.next(false);
             }
         }
     }
