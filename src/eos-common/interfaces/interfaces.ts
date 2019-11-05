@@ -33,6 +33,7 @@ export interface IOpenClassifParams {
     clUser?: boolean;
     // для STDText
     isn_user?: number;
+    curdue?: string;
     // name?: string;
     // form?: string;
     // id_std?: string;

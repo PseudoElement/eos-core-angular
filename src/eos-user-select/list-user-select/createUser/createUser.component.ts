@@ -185,6 +185,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     private _showDepartment() {
         this.isShell = true;
         let dueDep = '';
+        OPEN_CLASSIF_DEPARTMENT.curdue = this._apiSrv.configList.due;
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
             .then((data: string) => {
                 if (data === '') {

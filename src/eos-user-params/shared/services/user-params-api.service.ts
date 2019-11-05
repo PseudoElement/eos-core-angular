@@ -25,6 +25,7 @@ export class UserParamApiSrv {
     configList: IConfig = {
         shooseTab: +sessionStorage.getItem('key') ? +sessionStorage.getItem('key') : 0,
         titleDue: '',
+        due: '',
     };
     confiList$: Subject<IConfig>;
     currentSort: any = SortsList[3];

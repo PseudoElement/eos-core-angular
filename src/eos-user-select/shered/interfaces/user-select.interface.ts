@@ -11,6 +11,7 @@ export enum E_MODES_USER_SELECT {
 export interface IConfig {
     shooseTab: number;
     titleDue: string;
+    due: string;
 }
 export interface IUserSort {
     department?: IUserCheckSort;

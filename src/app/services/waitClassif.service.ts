@@ -115,6 +115,9 @@ export class WaitClassifService {
         if (params.user_id !== undefined && params.user_id !== null) {
             url += `&user_id=${params.user_id}`;
         }
+        if (params.curdue !== undefined && params.curdue !== null) {
+            url += `&curdue=${params.curdue}`;
+        }
         url += params.classif === 'CONTACT' || params.classif === 'ORGANIZ_CL' ? '&app=nadzor' : '';
         // if (params.criteriesSearch) {
         //     url += '&criteries=note:' +  encodeURIComponent('Руководство');
