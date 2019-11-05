@@ -1,0 +1,52 @@
+<div class="eds-wr">
+    <div class="eds-header">
+        <span>Загрузка списка сертификатов</span>
+    </div>
+    <div class="eds-content">
+        <div class="eds-h">
+            <div class="eds-load">
+                <label>Импорт из файла:
+                    <input [disabled]="load" class="btn btn-primary have-margin fixed-width" type="file"
+                        accept=".xml" [(ngModel)]="value" (change)="readFile($event)">
+                </label>
+            </div>
+            <div class="btn-load">
+                <!-- <button class="btn btn-primary-full" (click) = "pause()">пауза</button> -->
+                <div class="load-cnt" *ngIf="upload">
+                    <span>Загружено</span>
+                    <span>{{countLoad}}</span>
+                    <span>из</span>
+                    <span>{{fromLoad}}</span>
+                </div>
+                <button [disabled]="saveDisable" class="btn btn-primary-full upper fixed-width"
+                    (click)="!load ? save() : stop()"><span>{{btnValue}}</span></button>
+            </div>
+        </div>
+        <span class="eds-title">Протокол импорта:</span>
+        <div class="eds-text">
+            <div class="" *ngIf="fatalError.length">
+                <div class="eds-errors" *ngFor="let error of fatalError">
+                    <span>{{error.title}}</span>
+                    <span>{{error.message}}</span>
+                </div>
+            </div>
+            <div class="" *ngIf="!fatalError.length && logs.length">
+                <div class="eds-logs" *ngFor="let log of logs">
+                    <div class="" *ngIf="!log.message">
+                        <span><b>{{log.title}}</b></span>
+                        <span> {{log.serial}}, {{log.issused}} </span>
+                    </div>
+                    <div *ngIf="log.message">
+                        <span><b>{{log.title}}</b></span>
+                        <span><b>{{log.message}}</b></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="eds-bottom">
+            <button [disabled]="!fatalError.length && !logs.length" class="btn btn-primary-full upper fixed-width"
+                (click)="saveLogs()">Сохранить в файл</button>
+            <button class="btn btn-primary-full upper fixed-width" (click)="close()">Закрыть</button>
+        </div>
+    </div>
+</div>

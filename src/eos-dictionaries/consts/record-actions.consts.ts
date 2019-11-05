@@ -429,6 +429,18 @@ export const RECORD_ACTIONS_DOWNLOAD_FILE: IAction = {
     buttonClass: null,
     accessNeed: APS_DICT_GRANT.readwrite,
 };
+export const RECORD_ACTIONS_IMPORT_EDS: IAction = {
+    type: E_RECORD_ACTIONS.importEDS,
+    group: E_ACTION_GROUPS.common,
+    title: 'Загрузка списка сертификатов в категорию ЭП',
+    hint: 'Загрузка списка сертификатов в категорию ЭП',
+    iconClass: 'eos-icon eos-icon-download small',
+    disabledIconClass: 'eos-icon eos-icon-download-grey small',
+    hoverIconClass: 'eos-icon eos-icon-download-dark-blue small',
+    activeIconClass: null,
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
 
 export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_CREATE,
@@ -456,6 +468,7 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_COPY_PROPERTIES,
     RECORD_GOTO_CERTIFICATES,
     RECORD_ACTIONS_DOWNLOAD_FILE,
+    RECORD_ACTIONS_IMPORT_EDS,
     // RECORD_ACTION_EXPORT_DIRECTORY,
     // RECORD_ACTION_IMPORT_DIRECTORY,
 ];

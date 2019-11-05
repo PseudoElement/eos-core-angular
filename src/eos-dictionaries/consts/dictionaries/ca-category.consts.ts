@@ -28,13 +28,13 @@ export const CA_CATEGORY_CL: IDictionaryDescriptor =
             key: 'CA_SERIAL',
             title: 'Серийный номер',
             type: 'string',
-            length: 16,
+            length: 255,
             required: true,
         }, {
             key: 'CA_SUBJECT',
             title: 'Описание',
             type: 'string',
-            length: 16,
+            length: 500,
             required: true,
         }, {
             key: 'ISN_EDS_CATEGORY',

@@ -55,6 +55,7 @@ import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.const
 import { PrjDefaultValuesComponent } from 'eos-dictionaries/prj-default-values/prj-default-values.component';
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 import { TOOLTIP_DELAY_VALUE, EosTooltipService } from 'eos-common/services/eos-tooltip.service';
+import { EdsImportComponent } from 'eos-dictionaries/eds-import/eds-import.component';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -490,6 +491,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.downloadFile:
                 this._downloadDocTemplates();
                 break;
+            case E_RECORD_ACTIONS.importEDS:
+                this._openModalWindow();
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -901,6 +905,19 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             this.nodeList.openCopyProperties(node, fromParent);
         } else {
             this._msgSrv.addNewMessage(WARN_SELECT_NODE);
+        }
+    }
+
+    private _openModalWindow() {
+        this.modalWindow = null;
+        const node = this._dictSrv.listNode;
+        if (node) {
+            if (node.data.PROTECTED) {
+              //  this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
+            } else {
+                this.modalWindow = this._modalSrv.show(EdsImportComponent, {class: 'adv-card-rk-modal modal-lg'});
+                this.modalWindow.content.node = node;
+            }
         }
     }
 

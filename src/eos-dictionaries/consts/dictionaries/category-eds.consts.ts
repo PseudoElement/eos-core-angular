@@ -5,7 +5,7 @@ import { COMMON_FIELD_NAME } from './_common';
 export const EDS_CATEGORY_CL: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMPLATE, {
     id: 'eds-category',
     apiInstance: 'EDS_CATEGORY_CL',
-    actions: [... LINEAR_TEMPLATE.actions, 'certifUC', ],
+    actions: [... LINEAR_TEMPLATE.actions, 'certifUC', 'importEDS'],
     title: 'Категории ЭП',
     visible: true,
     iconName: 'eos-icon-electronic-signature-blue',

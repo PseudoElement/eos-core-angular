@@ -93,6 +93,7 @@ import { TemplatesCardComponent } from './card-views/templates-card/templates-ca
 
 import { NomenkNodeInfoComponent } from './node-info/nomenk-node-info.component';
 import { LinkNodeInfoComponent } from './node-info/link-node-info.component';
+import { EdsImportComponent } from './eds-import/eds-import.component';
 @NgModule({
     declarations: [
         CardComponent,
@@ -156,6 +157,7 @@ import { LinkNodeInfoComponent } from './node-info/link-node-info.component';
         CopyNodeComponent,
         TemplatesCardComponent,
         TemplateTreeComponent,
+        EdsImportComponent,
     ],
     entryComponents: [
         ColumnSettingsComponent,
@@ -172,6 +174,7 @@ import { LinkNodeInfoComponent } from './node-info/link-node-info.component';
         EosDatepickerInlineComponent,
         CopyPropertiesComponent,
         CopyNodeComponent,
+        EdsImportComponent,
     ],
     imports: [
         BrowserModule,
