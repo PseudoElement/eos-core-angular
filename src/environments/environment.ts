@@ -5,6 +5,6 @@
 
 import { VERSION } from './version';
 export const environment = {
-    production: true,
+    production: false,
     version: VERSION.timestamp
 };
