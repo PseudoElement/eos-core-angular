@@ -13,7 +13,7 @@ import {CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_RESTO
 
 import {EosDictService} from '../services/eos-dict.service';
 import {EosDictionary} from '../core/eos-dictionary';
-import {E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters} from 'eos-dictionaries/interfaces';
+import {E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters, IRecordOperationResult} from 'eos-dictionaries/interfaces';
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
 import {EosMessageService} from 'eos-common/services/eos-message.service';
 import {EosStorageService} from 'app/services/eos-storage.service';
@@ -755,16 +755,18 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
         const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_HARDDELETE);
 
-        this._confirmMarkedItems(selectedNodes, confirmDelete).then ((button: IConfirmButton) => {
+        this._confirmMarkedItems(selectedNodes, confirmDelete)
+        .then ((button: IConfirmButton) => {
             if (button && button.result === 2) {
-                const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
-                message.msg = message.msg
-                    .replace('{{RECS}}', confirmDelete.bodyList.join(', '))
-                    .replace('{{OPERATION}}', 'удалены навсегда.');
+                return this._dictSrv.deleteMarked().then((results: IRecordOperationResult[]) => {
+                    const deletedList = results.filter(r => !r.error)
+                        .map ( r => r.record['CLASSIF_NAME']) ;
+                    if (deletedList) {
+                        const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
+                        message.msg = message.msg
+                            .replace('{{RECS}}', deletedList.join(', '))
+                            .replace('{{OPERATION}}', 'удалены навсегда.');
 
-
-                return this._dictSrv.deleteMarked().then((succesfull) => {
-                    if (succesfull) {
                         this._msgSrv.addNewMessage(message);
                     }
                 });

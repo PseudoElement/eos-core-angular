@@ -879,12 +879,12 @@ export class EosDictService {
     /**
      * @description Delete marked nodes from dictionary
      */
-    deleteMarked(): Promise<boolean> {
+    deleteMarked(): Promise<IRecordOperationResult[]> {
         if (this.currentDictionary) {
             this.updateViewParameters({updatingList: true});
             return this.currentDictionary.deleteMarked()
                 .then((results) => {
-                    let success = true;
+                    // let success = true;
                     results.forEach((result) => {
                         if (result.error) {
                             if (result.error.code !== 434) {
@@ -893,7 +893,7 @@ export class EosDictService {
                                     title: 'Ошибка удаления "' + result.record['CLASSIF_NAME'] + '"',
                                     msg: result.error.message
                                 });
-                                success = false;
+                                // success = false;
                             } else {
                                 throw result.error;
                             }
@@ -902,12 +902,12 @@ export class EosDictService {
                     return this._reloadList()
                         .then(() => {
                             this.updateViewParameters({updatingList: false});
-                            return success;
+                            return results;
                         });
                 })
                 .catch((err) => this._errHandler(err));
         } else {
-            return Promise.resolve(false);
+            return Promise.resolve(null);
         }
     }
 
