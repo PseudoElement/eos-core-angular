@@ -762,7 +762,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 return this._dictSrv.deleteMarked().then((results: IRecordOperationResult[]) => {
                     const deletedList = results.filter(r => !r.error)
                         .map ( r => r.record['CLASSIF_NAME']) ;
-                    if (deletedList) {
+                    if (deletedList && deletedList.length) {
                         const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
                         message.msg = message.msg
                             .replace('{{RECS}}', deletedList.join(', '))
