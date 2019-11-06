@@ -685,8 +685,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         let hasFolding = false;
 
         const selectedNodes = this._dictSrv.getMarkedNodes().filter( n => n.isDeleted);
-        selectedNodes.forEach((node) => {
 
+        for (let i = 0; i < selectedNodes.length; i++) {
+            const node = selectedNodes[i];
             if (node.parent && node.parent.isDeleted) {
                 this._msgSrv.addNewMessage(DANGER_LOGICALY_RESTORE_ELEMENT);
                 node.isMarked = false;
@@ -696,7 +697,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                     hasFolding = true;
                 }
             }
-        });
+        }
 
         const confirmRestore: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_RESTORE);
 

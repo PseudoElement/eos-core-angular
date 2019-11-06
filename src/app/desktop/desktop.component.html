@@ -9,6 +9,7 @@
                 placeholderItem="На этом рабочем столе нет ссылок"
                 placeholderClass="placeholderStyle"
                 wrapperClass="sortable-wrapper"
+                [itemStyle]="{'max-width.px': itemWidth()}"
                 force="true"
                 (dragstart)="dragStartEvent($event)"
                 (dragend)="dragEndEvent($event)"
@@ -91,7 +92,7 @@
         *ngIf="!editing(item.value)"
         (mousedown)="tryMove($event)"
         class="item-content xl-font block"
-        [ngStyle]="{'max-width.px': itemWidth()}"
+
         [ngClass]="{ disabled: item.value.linkType === 1 }"
         [routerLink]="rttlink(item)"
     >

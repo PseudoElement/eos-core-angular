@@ -50,11 +50,11 @@ export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
 export class MarkedInformation {
     get anyMarked(): boolean { return (this.nodes && this.nodes.length > 0); }
     get allUnMarked(): boolean { return (this.nodes && this.nodes.length === 0); }
-    allMarked: boolean = false;
+    // allOnPageMarked: boolean = false;
     nodes: EosDictionaryNode[] = [];
     clear(): any {
         this.nodes = [];
-        this.allMarked = false;
+        // this.allOnPageMarked = false;
     }
 }
 
@@ -452,9 +452,8 @@ export class EosDictService {
         }
     }
 
-    setMarkAll(emit: boolean = true): void {
+    setMarkAllVisible(emit: boolean = true): void {
         this._currentMarkInfo.nodes = this._visibleListNodes;
-        this._currentMarkInfo.allMarked = true;
         this._currentMarkInfo.nodes.forEach( n => n.isMarked = true);
         if (emit) {
             this.updateMarked(false);
@@ -467,7 +466,6 @@ export class EosDictService {
         }
         this._currentMarkInfo.nodes.forEach( n => n.isMarked = false);
         this._currentMarkInfo.nodes = [];
-        this._currentMarkInfo.allMarked = false;
 
         if (emit) {
             this.updateMarked(false);
@@ -481,9 +479,6 @@ export class EosDictService {
         }
 
         item.isMarked = isMarked;
-        if (!isMarked) {
-            this._currentMarkInfo.allMarked = false;
-        }
 
         this._currentMarkInfo.nodes = this.getMarkedNodes(false);
 
@@ -1440,7 +1435,6 @@ export class EosDictService {
             // this._currentList
             //     .filter((listNode) => listNode.isMarked && pageList.findIndex((pageNode) => pageNode.id === listNode.id) === -1)
             //     .forEach((listNode) => listNode.isMarked = false);
-
             if (this._listNode && pageList.findIndex((node) => node.id === this._listNode.id) < 0) {
                 const firstMarkedIndex = pageList.findIndex((node) => node.isMarked);
                 if (firstMarkedIndex < 0) {
@@ -1449,6 +1443,7 @@ export class EosDictService {
                     this._openNode(pageList[firstMarkedIndex]);
                 }
             }
+            this._visibleListNodes = pageList;
             this._visibleList$.next(pageList);
             this.updateMarked(true);
         }

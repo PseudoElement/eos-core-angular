@@ -37,10 +37,6 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     @ViewChild(LongTitleHintComponent) hint: LongTitleHintComponent;
     @ViewChild('eosNodeList') eosNodeList;
 
-
-    // allMarked: boolean;
-    // anyMarked: boolean;
-    // anyUnmarked: boolean;
     customFields: IFieldView[] = [];
     length = {};
     min_length = {};
@@ -52,6 +48,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     viewFields: IFieldView[] = [];
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     markedInfo: MarkedInformation;
+    allMarked: boolean;
 
     public hasOverflowedColumns: boolean;
     public firstColumnIndex: number;
@@ -121,15 +118,11 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
             });
         _dictSrv.markInfo$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((markedInfo) => {
             this.markedInfo = markedInfo;
-            // if (markedlist.length) {
-            //     this.anyMarked = true;
-            //     this.anyUnmarked = true;
-            // } else {
-            //     this.anyUnmarked = true;
-            //     this.anyMarked = false;
-            //     this.allMarked = false;
-            // }
-
+            if (this.nodes.length && this.nodes.length === markedInfo.nodes.length) {
+                this.allMarked = true;
+            } else {
+                this.allMarked = false;
+            }
         });
 
     }
@@ -302,15 +295,25 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         }
     }
 
-    /**
+    get getflagChecked() {
+        if (this.allMarked) {
+            return 'eos-icon-checkbox-square-v-blue';
+        } else if (this.markedInfo.anyMarked) {
+            return 'eos-icon-checkbox-square-minus-blue';
+        } else {
+            return 'eos-icon-checkbox-square-blue';
+        }
+      }
+
+      /**
      * Toggle checkbox checked all
      */
     toggleAllMarks(): void {
-        this.markedInfo.allMarked = !this.markedInfo.anyMarked;
-        if (!this.markedInfo.allMarked) {
-            this._dictSrv.setMarkAllNone();
+
+        if (this.allMarked) {
+            this._dictSrv.setMarkAllVisible();
         } else {
-            this._dictSrv.setMarkAll();
+            this._dictSrv.setMarkAllNone();
         }
 
         // TODO: move to info?

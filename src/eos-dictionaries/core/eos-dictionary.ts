@@ -429,8 +429,11 @@ export class EosDictionary {
 
 
     loadRelatedFieldsOptions(updatefields: IFieldView[], nodes: EosDictionaryNode[], loadAll: boolean): Promise<any> {
-        return this.descriptor.getRelatedFields2(updatefields.filter(i => i.dictionaryId)
-                                .map(i => i.dictionaryId ? i.dictionaryId : null), nodes, loadAll)
+        const tablelist = updatefields.filter(i => i.dictionaryId)
+            .map(i => i.dictionaryId ? i.dictionaryId : null);
+        const tablesUniq = Array.from(new Set(tablelist));
+
+        return this.descriptor.getRelatedFields2(tablesUniq, nodes, loadAll)
             .then((related) => {
                 const t = this.descriptor.getMetadata();
                 updatefields.forEach((field) => {

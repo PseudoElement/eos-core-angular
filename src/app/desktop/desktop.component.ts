@@ -69,6 +69,7 @@ export class DesktopComponent implements OnInit, OnDestroy, OnChanges {
 
         this._currentReferencesSubscription = this._deskSrv.currentReferences.pipe(skip(1)).subscribe(refs => {
                 this.referencesList = refs;
+                this._lastWrapperWidth = 0;
         });
     }
 
@@ -92,7 +93,7 @@ export class DesktopComponent implements OnInit, OnDestroy, OnChanges {
 
     itemWidth() {
         const w = this.linkContainer.nativeElement.clientWidth;
-        if (w === this._lastWrapperWidth) {
+        if (!this.referencesList || w === this._lastWrapperWidth) {
             return this._calcItemWidth;
         }
         this._lastWrapperWidth = w;

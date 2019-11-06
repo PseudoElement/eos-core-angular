@@ -5,15 +5,22 @@
              [ngStyle]="{'width.%': 100, 'left.px': headerOffset}">
             <div *ngIf="params.markItems"
                  class="checkbox-inline">
-                <label [ngClass]="{'group-checkbox': !markedInfo.allMarked && markedInfo.anyMarked}"
+
+                 <label
                        [tooltip]="markAllTooltip"
                        placement="bottom"
                        container="body"
                        [delay]="tooltipDelay"
                        containerClass="tooltip-info">
-                       <input type="checkbox" [checked]="markedInfo.anyMarked" (change)="toggleAllMarks()">
-                    <span></span>
+                       <input type="checkbox"
+                            [(ngModel)]="allMarked"
+                            [disabled]="!(nodes && nodes.length)"
+                            (change)="toggleAllMarks()">
+                    <div>
+                    <span class="eos-icon small" [ngClass]="getflagChecked"></span>
+                    </div>
                 </label>
+                <!-- [checked]="allMarked || markedInfo.anyMarked" -->
             </div>
             <div *ngIf="!params.markItems"
                  class="node-left">
@@ -80,7 +87,7 @@
     </div>
 </div>
 <ng-template #markAllTooltip>
-    {{markedInfo.anyMarked ? 'Снять' : 'Пометить'}}<br/>{{markedInfo.anyMarked ? 'пометки': 'все'}}
+    {{allMarked ? 'Снять' : 'Пометить все'}}<br/>{{allMarked ? 'пометки': 'на странице'}}
 </ng-template>
 
 <ng-template #childTemplate

@@ -159,7 +159,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                             if (val) {
                                 const opt = field.options.find ( o => Number(o.value) === Number(val));
                                 if (!opt) {
-                                    control.setValue(null);
+                                    // control.setValue(null);
                                 }
                             }
                         }
