@@ -101,8 +101,8 @@ export class NodeActionsComponent implements OnDestroy {
             this._visibleCount = list.length;
             this._update();
         });
-        _dictSrv.markedChanges$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((markedlist) => {
-            this._markedNodes = markedlist;
+        _dictSrv.markInfo$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((markInfo) => {
+            this._markedNodes = markInfo.nodes;
             this._update();
         });
 

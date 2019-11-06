@@ -5,13 +5,13 @@
              [ngStyle]="{'width.%': 100, 'left.px': headerOffset}">
             <div *ngIf="params.markItems"
                  class="checkbox-inline">
-                <label [ngClass]="{'group-checkbox': anyUnmarked && anyMarked}"
+                <label [ngClass]="{'group-checkbox': !markedInfo.allMarked && markedInfo.anyMarked}"
                        [tooltip]="markAllTooltip"
                        placement="bottom"
                        container="body"
                        [delay]="tooltipDelay"
                        containerClass="tooltip-info">
-                    <input type="checkbox" [(ngModel)]="allMarked" (change)="toggleAllMarks()">
+                    <input type="checkbox" [(ngModel)]="markedInfo.anyMarked" (change)="toggleAllMarks()">
                     <span></span>
                 </label>
             </div>
@@ -92,7 +92,7 @@
     </div>
 </div>
 <ng-template #markAllTooltip>
-    {{anyMarked ? 'Снять' : 'Пометить'}}<br/>{{anyMarked ? 'пометки': 'все'}}
+    {{markedInfo.anyMarked ? 'Снять' : 'Пометить'}}<br/>{{markedInfo.anyMarked ? 'пометки': 'все'}}
 </ng-template>
 
 <ng-template #childTemplate

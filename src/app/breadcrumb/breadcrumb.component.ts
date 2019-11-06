@@ -94,10 +94,10 @@ export class BreadcrumbsComponent implements OnDestroy {
                 }
             });
 
-        this._dictSrv.markedChanges$
+        this._dictSrv.markInfo$
             .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe((n) => {
-                    this.isNavigationEnabled = (n && n.length > 1);
+            .subscribe((info) => {
+                    this.isNavigationEnabled = (info && info.nodes.length > 1);
             });
 
         this._rtSrv.setFlagBtnHeader

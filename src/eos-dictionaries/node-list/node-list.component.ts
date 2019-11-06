@@ -15,7 +15,7 @@ import {Subject} from 'rxjs';
 
 
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
-import {EosDictService} from '../services/eos-dict.service';
+import {EosDictService, MarkedInformation} from '../services/eos-dict.service';
 import {IDictionaryViewParameters, IFieldView, IOrderBy, E_FIELD_SET, E_FIELD_TYPE} from 'eos-dictionaries/interfaces';
 import {LongTitleHintComponent} from '../long-title-hint/long-title-hint.component';
 import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
@@ -38,9 +38,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     @ViewChild('eosNodeList') eosNodeList;
 
 
-    allMarked: boolean;
-    anyMarked: boolean;
-    anyUnmarked: boolean;
+    // allMarked: boolean;
+    // anyMarked: boolean;
+    // anyUnmarked: boolean;
     customFields: IFieldView[] = [];
     length = {};
     min_length = {};
@@ -51,6 +51,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     headerOffset = 0;
     viewFields: IFieldView[] = [];
     tooltipDelay = TOOLTIP_DELAY_VALUE;
+    markedInfo: MarkedInformation;
 
     public hasOverflowedColumns: boolean;
     public firstColumnIndex: number;
@@ -61,6 +62,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     private _recalcEvent: any;
     private _dictId: string;
     private _repaintFlag: any;
+
 
 
     constructor(
@@ -117,6 +119,19 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                     }
                 }
             });
+        _dictSrv.markInfo$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((markedInfo) => {
+            this.markedInfo = markedInfo;
+            // if (markedlist.length) {
+            //     this.anyMarked = true;
+            //     this.anyUnmarked = true;
+            // } else {
+            //     this.anyUnmarked = true;
+            //     this.anyMarked = false;
+            //     this.allMarked = false;
+            // }
+
+        });
+
     }
 
     updateViewFields(customFields: IFieldView[], nodes: EosDictionaryNode[]): Promise<any> {
@@ -285,9 +300,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
      * Toggle checkbox checked all
      */
     toggleAllMarks(): void {
-        this.anyMarked = this.allMarked;
-        this.anyUnmarked = !this.allMarked;
-        if (!this.allMarked) {
+        this.markedInfo.allMarked = !this.markedInfo.anyMarked;
+        if (!this.markedInfo.allMarked) {
             this._dictSrv.setMarkAllNone();
         } else {
             this._dictSrv.setMarkAll();
