@@ -48,10 +48,19 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
     public storeParams = new Set();
     public inputsInfo: any;
     public showRigth: boolean = false;
-    titleHeader: string;
     selfLink;
     link;
     flagEdit: boolean = false;
+    currentUser;
+    get titleHeader() {
+        if (this.currentUser) {
+            if (this.currentUser.isTechUser) {
+                return this.currentUser.CLASSIF_NAME + '- Ведение адресов электронной почты';
+            }
+            return `${this.currentUser['DUE_DEP_SURNAME']} - Ведение адресов электронной почты`;
+        }
+        return '';
+    }
     private ArrayForm: FormArray;
     private _ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -74,8 +83,8 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
         this._userServices.getUserIsn({
             expand: 'NTFY_USER_EMAIL_List'
         }).then(() => {
-            this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ведение адресов электронной почты`;
             this.currentParams = '';
+            this.currentUser = this._userServices.curentUser;
             this.CODE = null;
             this.editFalg = false;
             this.username = this._userServices.curentUser['SURNAME_PATRON'];
@@ -90,12 +99,12 @@ export class ParamEmailAddressComponent implements OnInit, OnDestroy {
             this.umailsInfo.length > 0 ? this.newEmail = this.umailsInfo[0].EMAIL : this.newEmail = '';
             this.init();
         })
-        .catch((err: boolean) => {
+            .catch((err: boolean) => {
 
-        })
-        .catch(error => {
-            this.cathError(error);
-        });
+            })
+            .catch(error => {
+                this.cathError(error);
+            });
 
 
     }

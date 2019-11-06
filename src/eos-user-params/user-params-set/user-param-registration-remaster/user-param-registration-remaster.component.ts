@@ -19,7 +19,6 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     readonly fieldGroupsForRegistration: string[] = ['Доп. операции', 'Корр./адресаты', 'Эл. почта', 'Сканирование', 'Автопоиск', 'СЭВ', 'РКПД'];
     public currTab = 0;
-    public titleHeader;
     public hash: Map<any, string>;
     public defaultValues: any;
     public isLoading: boolean = false;
@@ -32,6 +31,16 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     public RcChangeflag: boolean = false;
     public editFlag: boolean = false;
     public accessSustem: Array<string>;
+    public currentUser;
+    get titleHeader() {
+        if (this.currentUser) {
+            if (this.currentUser.isTechUser) {
+                return this.defaultTitle ? 'Регистрация по умолчанию' : this.currentUser.CLASSIF_NAME + '- Регистрация';
+            }
+            return this.defaultTitle ? 'Регистрация по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Регистрация`;
+        }
+        return '';
+    }
     private EmailChangeValue: any;
     private DopOperationChangeValue: any;
     private AddressesChengeValue: any;
@@ -57,7 +66,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
     ) {}
     ngOnInit() {
         if (this.defaultTitle) {
-            this.titleHeader = this.defaultTitle;
+            this.currentUser = this.defaultTitle;
             this.defaultValues = this.defaultUser;
             this.hash = this.defaultUser;
             this.accessSustem = `1111111111111111111111111111111111111111`.split('');
@@ -69,7 +78,7 @@ export class UserParamRegistrationRemasterComponent implements OnInit, OnDestroy
             .then(() => {
                 this.accessSustem = this._userSrv.curentUser.ACCESS_SYSTEMS;
                 this.hash = this._userSrv.hashUserContext;
-                this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Регистрация`;
+                this.currentUser = this._userSrv.curentUser;
                 this._apiSrv.read(this._formHelper.getObjQueryInputsField()).then(data => {
                     this.defaultValues = this._formHelper.createhash(data);
                     this.isLoading = true;

@@ -19,11 +19,20 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
     @Input() defaultUser: any;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     prepInputsAttach;
-    public titleHeader;
     public form: FormGroup;
     public inputs;
     public btnDisable;
     public flagEdit;
+    public currentUser;
+    get titleHeader() {
+        if (this.currentUser) {
+            if (this.currentUser.isTechUser) {
+                return this.defaultTitle ? 'Поиск по умолчанию' : this.currentUser.CLASSIF_NAME + '- Поиск';
+            }
+            return this.defaultTitle ? 'Поиск подпись по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Поиск`;
+        }
+        return '';
+    }
     private allData;
     private prepareData;
     private prepareInputs;
@@ -44,7 +53,7 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
     }
     ngOnInit() {
         if (this.defaultTitle) {
-            this.titleHeader = this.defaultTitle;
+            this.currentUser = this.defaultTitle;
             this.allData = this.defaultUser;
             this.inint();
         } else {
@@ -53,7 +62,7 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
             })
             .then(() => {
                 this.allData = this._userParamsSetSr.hashUserContext;
-                this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Поиск';
+                this.currentUser = this._userParamsSetSr.curentUser;
                 this.inint();
             })
             .catch(err => {

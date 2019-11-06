@@ -85,7 +85,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
       expand: 'NTFY_USER_EMAIL_List'
     }).then(() => {
       this.curentUser = this._userpar.curentUser.ISN_LCLASSIF;
-      this.username = this._userpar.curentUser.SURNAME_PATRON;
+      this.username = this._userpar.curentUser.CLASSIF_NAME;
       this._user_pagination.typeConfig = 'protocol';
       const confUsers = this._storage.getItem('protocol');
       this._user_pagination.paginationConfig = confUsers;

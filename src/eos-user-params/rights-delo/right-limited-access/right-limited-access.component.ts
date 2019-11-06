@@ -38,7 +38,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
     public myForm: FormGroup;
     public tabsForAccessLimited = ['Группы документов', 'Грифы', /* 'Связки' */];
     public currTab = 0;
-    titleHeader: string;
+    public currentUser;
     public editFlag: boolean = false;
     grifInput: any[] = [];
     get checkGriffs() {
@@ -57,6 +57,16 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             }
         }
         return flag;
+    }
+
+    get title() {
+        if (this.currentUser) {
+            if (this.currentUser.isTechUser) {
+                return this.currentUser.CLASSIF_NAME + '- Ограничение доступа';
+            }
+            return `${this.currentUser['DUE_DEP_SURNAME']} - Ограничение доступа`;
+        }
+        return '';
     }
     private checkUserCard;
     private checkGrifs;
@@ -90,14 +100,14 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
             expand: 'USERCARD_List,USERSECUR_List'
         })
         .then(() => {
-            this.titleHeader = `${this._userServices.curentUser.SURNAME_PATRON} - Ограничение доступа`;
-            this.checkUserCard = this._userServices.curentUser['USERCARD_List'];
+            this.currentUser = this._userServices.curentUser;
+            this.checkUserCard = this.currentUser['USERCARD_List'];
             this.isLoading = false;
             this._limitservise.getGrifsName()
             .then(result => {
                 this.grifInput[1] = result;
-                this.grifInput[0] = this._userServices.curentUser['USERSECUR_List'];
-                this.checkGrifs = this._userServices.curentUser['USERSECUR_List'];
+                this.grifInput[0] = this.currentUser['USERSECUR_List'];
+                this.checkGrifs = this.currentUser['USERSECUR_List'];
             });
             this._limitservise.getAccessCode()
                 .then((result) => {
@@ -236,7 +246,7 @@ export class RightLimitedAccessComponent implements OnInit, OnDestroy {
         const delitedField = this.ArrayForm.get(String(this.currentIndex));
         if (delitedField) {
             if (delitedField.value.newField !== true) {
-                //  в map добавлены только поля для удаления без флага true в форме, в свойсттве newField
+                //  в map добавлены только поля для удаления без флага true в форме, в свойстве newField
                 this.delitedSetStore.add(delitedField.value);
             }
         }

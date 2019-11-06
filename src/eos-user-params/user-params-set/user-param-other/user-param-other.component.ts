@@ -24,7 +24,16 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     public defaultValues: any;
     public editFlag: boolean = false;
     public flagIncrementError: boolean = true;
-    public titleHeader;
+    public currentUser;
+    get titleHeader() {
+        if (this.currentUser) {
+            if (this.currentUser.isTechUser) {
+                return this.defaultTitle ? 'Прочее по умолчанию' : this.currentUser.CLASSIF_NAME + '- Прочее';
+            }
+            return this.defaultTitle ? 'Прочее по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Прочее`;
+        }
+        return '';
+    }
     readonly fieldGroups: string[] = ['Пересылка РК', 'Адресаты документа', 'Реестр передачи документов', 'Шаблоны'];
     readonly fieldTemplates: string[] = ['Имя шаблона', 'Значение по умолчанию', 'Текущее значение'];
     private newValuesTransfer: Map<string, any> = new Map();
@@ -50,13 +59,13 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     ) {}
     ngOnInit() {
         if (this.defaultUser) {
-            this.titleHeader = this.defaultTitle;
+            this.currentUser = this.defaultTitle;
         } else {
             this._userSrv.getUserIsn({
                 expand: 'USER_PARMS_List'
             })
                 .then(() => {
-                    this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Прочее`;
+                    this.currentUser = this._userSrv.curentUser;
                     const prep = this._formHelper.getObjQueryInputsField();
                     this._pipRx.read(prep).then((data) => {
                         this.defaultValues = this._formHelper.createhash(data);

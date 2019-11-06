@@ -18,7 +18,6 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 
 export class RightsCardFilesComponent implements OnInit, OnDestroy {
     public isLoading = true;
-    public titleHeader;
     public flagChangeCards;
     public mainArrayCards = [];
     public currentCard: CardsClass;
@@ -30,6 +29,15 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     public updateCardforAllowed: any[] = [];
     get btnDisabled() {
         return ((this.newValueMap.size === 0) && this.flagChangeCards);
+    }
+    get titleHeader() {
+        if (this._userSrv.curentUser) {
+            if (this._userSrv.curentUser.isTechUser) {
+                return this._userSrv.curentUser.CLASSIF_NAME + '- Картотеки и Кабинеты';
+            }
+            return `${this._userSrv.curentUser['DUE_DEP_SURNAME']} - Картотеки и Кабинеты`;
+        }
+        return '';
     }
     private flagGrifs: boolean;
     private userId: number;
@@ -47,7 +55,6 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             expand: 'USERCARD_List'
         })
         .then(() => {
-            this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Картотеки и Кабинеты';
             this.flagChangeCards = true;
             this.userId = this._userSrv.userContextId;
             this._userSrv.checkGrifs(this.userId).then(elem => {

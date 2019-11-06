@@ -7,7 +7,7 @@ import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-conver
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { PipRX, USER_PARMS } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import {ErrorHelperServices} from '../../shared/services/helper-error.services';
+import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 @Component({
     selector: 'eos-user-param-directories',
     templateUrl: 'user-param-directories.component.html',
@@ -19,17 +19,26 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
     @Input() defaultUser: any;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     prepInputsAttach;
-    public titleHeader;
     public form: FormGroup;
     public inputs;
     public btnDisable;
     public flagEdit;
+    public currentUser;
     private allData;
     private prepareData;
     private prepareInputs;
     private mapChanges = new Map();
     private defoltInputs;
     private hashDefolt;
+    get titleHeader() {
+        if (this.currentUser) {
+            if (this.currentUser.isTechUser) {
+                return this.defaultTitle ? 'Справочники по умолчанию' : this.currentUser.CLASSIF_NAME + '- Справочники';
+            }
+            return this.defaultTitle ? 'Справочники по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Справочники`;
+        }
+        return '';
+    }
     constructor(
         public _userParamsSetSr: UserParamsService,
         private formHelp: FormHelperService,
@@ -45,7 +54,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
 
     ngOnInit() {
         if (this.defaultTitle) {
-            this.titleHeader = this.defaultTitle;
+            this.currentUser = this.defaultTitle;
             this.allData = this.defaultUser;
             this.inint();
         } else {
@@ -54,7 +63,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
             })
                 .then((d) => {
                     this.allData = this._userParamsSetSr.hashUserContext;
-                    this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Справочники';
+                    this.currentUser = this._userParamsSetSr.curentUser;
                     this.inint();
                 })
                 .catch(err => {
@@ -255,7 +264,7 @@ export class UserParamDirectoriesComponent implements OnDestroy, OnInit {
             this.form.disable({ emitEvent: false });
         }
     }
-    ngOnDestroy() {}
+    ngOnDestroy() { }
     formSubscriber() {
         this.form.valueChanges.subscribe(data => {
             this.checkTouch(data);

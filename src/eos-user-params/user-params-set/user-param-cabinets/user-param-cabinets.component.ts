@@ -33,7 +33,6 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     public dueForLink: string;
     public controller: boolean;
     public flagEdit: boolean = false;
-    public titleHeader;
     public prepareData;
     public prepareInputs;
     public defoltInputs;
@@ -46,6 +45,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     public FOLDERCOLORSTATUS = '';
     public newFolderString = '';
     public creatchesheDefault;
+    public currentUser;
     readonly fieldsKeys: Map<string, number> = new Map([['FOLDERCOLORSTATUS_RECEIVED', 0],
     ['FOLDERCOLORSTATUS_FOR_EXECUTION', 1], ['FOLDERCOLORSTATUS_UNDER_CONTROL', 2], ['FOLDERCOLORSTATUS_HAVE_LEADERSHIP', 3],
     ['FOLDERCOLORSTATUS_FOR_CONSIDERATION', 4], ['FOLDERCOLORSTATUS_INTO_THE_BUSINESS', 5], ['FOLDERCOLORSTATUS_PROJECT_MANAGEMENT', 6],
@@ -53,6 +53,15 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     _ngUnsubscribe: Subject<any> = new Subject();
 
     private btnDisable: boolean = true;
+    get titleHeader() {
+        if (this.currentUser) {
+            if (this.currentUser.isTechUser) {
+                return this.defaultTitle ? 'Кабинеты по умолчанию' : this.currentUser.CLASSIF_NAME + '- Кабинеты';
+            }
+            return this.defaultTitle ? 'Кабинеты по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Кабинеты`;
+        }
+        return '';
+    }
     constructor(
         private _userParamsSetSrv: UserParamsService,
         private formHelp: FormHelperService,
@@ -78,7 +87,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
     }
     ngOnInit() {
         if (this.defaultTitle) {
-            this.titleHeader = this.defaultTitle;
+            this.currentUser = this.defaultUser;
             this.allData = this.defaultUser;
             this.init();
             Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {
@@ -101,7 +110,7 @@ export class UserParamCabinetsComponent implements OnDestroy, OnInit {
             this._userParamsSetSrv.getUserIsn({
                 expand: 'USER_PARMS_List'
             }).then(() => {
-                this.titleHeader = this._userParamsSetSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Кабинеты';
+                this.currentUser = this._userParamsSetSrv.curentUser;
                 this.allData = this._userParamsSetSrv.hashUserContext;
                 this.init();
                 Promise.all([this.getControlAuthor(), this.getNameSortCabinets()]).then(([author, sort]) => {

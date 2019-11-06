@@ -43,12 +43,20 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     queryForSave = [];
     rightContent: boolean;
     listRight: NodeAbsoluteRight[] = [];
-    titleHeader: string;
     techRingtOrig: string;
     techUsers: Array<any> = [];
     limitUserTech: boolean;
     flagDel: boolean = false;
     public editMode: boolean = false;
+    get titleHeader() {
+        if (this.curentUser) {
+            if (this.curentUser.isTechUser) {
+                return this.curentUser.CLASSIF_NAME + '- Абсолютные права';
+            }
+            return `${this.curentUser['DUE_DEP_SURNAME']} - Абсолютные права`;
+        }
+        return '';
+    }
     private _ngUnsubscribe: Subject<any> = new Subject();
     private flagGrifs: boolean = false;
     private DELETE_RCPD = 'У пользователя назначенно право \'Содзание РКПД\'.Без права \'Исполнение поручений\' оно не работает. Снять это право?';
@@ -78,7 +86,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         })
             .then(() => {
                 const id = this._userParamsSetSrv.curentUser['ISN_LCLASSIF'];
-                this.curentUser = this._userParamsSetSrv.curentUser;
                 this._userParamsSetSrv.checkGrifs(id).then(el => {
                     this.flagGrifs = el;
                     this.init();
@@ -92,7 +99,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     init() {
         this.curentUser = this._userParamsSetSrv.curentUser;
         this.techRingtOrig = this.curentUser.TECH_RIGHTS;
-        this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - Абсолютные права`;
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
         this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split('');
         this.arrNEWDeloRight = this.curentUser['DELO_RIGHTS'].split('');

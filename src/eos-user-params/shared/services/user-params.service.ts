@@ -122,7 +122,7 @@ export class UserParamsService {
                 if (this._userContext.USER_PARMS_List) {
                     this._createHash();
                 }
-                if (!this._isTechUser && this._router.url.substr(0, 27) === '/user-params-set/base-param') {
+                if (!this._isTechUser) {
                     return this.getDepartmentFromUser([this._userContext['DUE_DEP']]);
                 }
                 return Promise.resolve([]);
@@ -131,6 +131,7 @@ export class UserParamsService {
                 if (data.length) {
                     this._userContextDeparnment = data[0];
                     this._userContext['DUE_DEP_NAME'] = this._userContextDeparnment['CLASSIF_NAME'];
+                    this._userContext['DUE_DEP_SURNAME'] = this._userContextDeparnment['SURNAME'];
                 }
                 this._userContext = this._pipRx.entityHelper.prepareForEdit(this._userContext);
                 // console.log(this._userContext.USERCARD_List);

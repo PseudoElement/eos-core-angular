@@ -19,7 +19,6 @@ import { USERCARD } from 'eos-rest';
 })
 
 export class RightsDeloCardsComponent implements OnInit, OnDestroy {
-    public titleHeader: string;
     public isLoading: boolean;
     public btnDisabled: boolean = true;
     public pageState: 'LOADING' | 'EMPTY' | 'VIEW' = 'LOADING';
@@ -30,6 +29,15 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
     private _selectedFuncNum: FuncNum;
     private _ngUnsubscribe: Subject<any> = new Subject();
     private _flagGrifs: boolean;
+    get titleHeader() {
+        if (this.editableUser) {
+            if (this.editableUser.isTechUser) {
+                return this.editableUser.CLASSIF_NAME + '- Права в картотеках';
+            }
+            return `${this.editableUser['DUE_DEP_SURNAME']} - Права в картотеках`;
+        }
+        return '';
+    }
     constructor(
         private _userParamsSetSrv: UserParamsService,
         private _router: Router,
@@ -56,7 +64,6 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
             this._flagGrifs = flagG;
             this._cardSrv.prepareforEdit();
             this.editableUser = this._userParamsSetSrv.curentUser;
-            this.titleHeader = `${this.editableUser.SURNAME_PATRON} - Права в картотеках`;
             if (!this.editableUser.USERCARD_List || !this.editableUser.USERCARD_List.length) {
                 this.pageState = 'EMPTY';
                 return;

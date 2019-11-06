@@ -11,7 +11,7 @@ import { PipRX } from 'eos-rest/services/pipRX.service';
 import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, PARM_ERROR_DB, PARM_ERROR_CARMA } from '../shared-user-param/consts/eos-user-params.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { USER_CERT_PROFILE } from 'eos-rest/interfaces/structures';
-import {ErrorHelperServices} from '../../shared/services/helper-error.services';
+import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 export interface Istore {
     Location: string;
     Address?: string;
@@ -47,7 +47,16 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     public editFlag = false;
     public btnDisabled: boolean = false;
     public modalRef: BsModalRef;
-    public titleHeader: string;
+    public currentUser;
+    get titleHeader() {
+        if (this.currentUser) {
+            if (this.currentUser.isTechUser) {
+                return this.currentUser.CLASSIF_NAME + '- Профиль сертификатов';
+            }
+            return `${this.currentUser['DUE_DEP_SURNAME']} - Профиль сертификатов`;
+        }
+        return '';
+    }
     public flagHideBtn: boolean = false;
     private DBserts: USER_CERT_PROFILE[] = [];
     private isCarma: boolean = true;
@@ -58,40 +67,40 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices
-    ) {}
-    ngOnDestroy() {}
+    ) { }
+    ngOnDestroy() { }
     ngOnInit() {
         this._userSrv.getUserIsn({
             expand: 'USER_PARMS_List'
         })
-        .then(() => {
-            this.titleHeader = `${this._userSrv.curentUser.SURNAME_PATRON} - Профиль сертификатов`;
-            this.selectedSertificatePopup = null;
+            .then(() => {
+                this.currentUser = this._userSrv.curentUser;
+                this.selectedSertificatePopup = null;
 
-            const store: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
-            this.certStoresService.init(null, store)
-                .subscribe(
-                    (data) => {
-                        this.isCarma = true;
-                        this.certStoresService.EnumCertificates('', '', '').subscribe(infoSert => {
-                            this.getSerts();
-                            if (this.checkVersion()) {
-                                this.waitSerts(infoSert);
-                            } else {
-                                this.oldWaitSerts(infoSert);
-                            }
-                        });
-                    },
-                    (error) => {
-                        this.isCarma = false;
-                        this.getSertNotCarma();
-                        // this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
-                    }
-                );
-        })
-        .catch(err => {
+                const store: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
+                this.certStoresService.init(null, store)
+                    .subscribe(
+                        (data) => {
+                            this.isCarma = true;
+                            this.certStoresService.EnumCertificates('', '', '').subscribe(infoSert => {
+                                this.getSerts();
+                                if (this.checkVersion()) {
+                                    this.waitSerts(infoSert);
+                                } else {
+                                    this.oldWaitSerts(infoSert);
+                                }
+                            });
+                        },
+                        (error) => {
+                            this.isCarma = false;
+                            this.getSertNotCarma();
+                            // this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
+                        }
+                    );
+            })
+            .catch(err => {
 
-        });
+            });
     }
     checkVersion(): boolean {
         const arrVersion = this.certStoresService.ServiceInfo.carmaVersion.split('.');
@@ -111,8 +120,8 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         Promise.all(arrPromise).then(arrayInfo => {
             arrayInfo.forEach((infoSert, index) => {
                 if (infoSert.errorMessage === 'DONE') {
-                      const ob = this.objectForSertInfo(infoSert, data[index], false, false, false);
-                        this.alllistSertInfo.push(ob);
+                    const ob = this.objectForSertInfo(infoSert, data[index], false, false, false);
+                    this.alllistSertInfo.push(ob);
                 }
             });
         });
@@ -313,13 +322,13 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
 
     openCarmWindow(idSert) {
         this.certStoresService.ShowCert(String(idSert))
-        .pipe(
-            catchError(e => {
-                this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
-                return of(null);
-            })
-        )
-        .subscribe(() => { });
+            .pipe(
+                catchError(e => {
+                    this._msgSrv.addNewMessage(PARM_ERROR_CARMA);
+                    return of(null);
+                })
+            )
+            .subscribe(() => { });
     }
 
 
@@ -408,7 +417,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         let requestCreate, requestDelete;
         this.listsSertInfo.forEach((sert: SertInfo) => {
             if (sert.create && !sert.delete) {
-                requestCreate =   this._userSrv.BatchData('POST', 'USER_CERT_PROFILE', {
+                requestCreate = this._userSrv.BatchData('POST', 'USER_CERT_PROFILE', {
                     ISN_USER: this._userSrv.curentUser['ISN_LCLASSIF'],
                     ID_CERTIFICATE: String(sert.id),
                 });

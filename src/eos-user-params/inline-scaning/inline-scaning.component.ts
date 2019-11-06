@@ -41,8 +41,7 @@ const BASE_PARAM_INPUTS: IInputParamControl[] = [
 
 export class InlineScaningComponent implements OnInit, OnDestroy {
     public editMode = false;
-    public curentUser: IParamUserCl;
-    public title: string = 'Miko Tamako';
+    public currentUser: IParamUserCl;
     public inputs;
     public disableBtn: boolean = true;
     public countChecnged: number = 0;
@@ -50,6 +49,15 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
     private inputFields: any;
     private form: FormGroup;
     private newData = {};
+    get title() {
+        if (this.currentUser) {
+            if (this.currentUser.isTechUser) {
+                return this.currentUser.CLASSIF_NAME + '- Поточное сканирование';
+            }
+            return `${this.currentUser['DUE_DEP_SURNAME']} - Поточное сканирование`;
+        }
+        return '';
+    }
 
     constructor(
         private _inputCtrlSrv: InputParamControlService,
@@ -66,8 +74,7 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
             expand: 'USER_PARMS_List'
         })
         .then(() => {
-            this.curentUser = this._userParamSrv.curentUser;
-            this.title = `${this.curentUser['SURNAME_PATRON']} (${this.curentUser['CLASSIF_NAME']}) Поточное сканирование`;
+            this.currentUser = this._userParamSrv.curentUser;
             this.init();
             this.flagShow = true;
         })
@@ -84,7 +91,7 @@ export class InlineScaningComponent implements OnInit, OnDestroy {
     }
     submit(event): Promise<any> {
         this.flagShow = false;
-        return this._userParamSrv.BatchData('MERGE', `USER_CL(${this.curentUser['ISN_LCLASSIF']})`, this.newData).then((data: any) => {
+        return this._userParamSrv.BatchData('MERGE', `USER_CL(${this.currentUser['ISN_LCLASSIF']})`, this.newData).then((data: any) => {
             this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 6);
             this._msgSrv.addNewMessage(SUCCESS_SAVE_MESSAGE_SUCCESS);
                 this.flagShow = true;

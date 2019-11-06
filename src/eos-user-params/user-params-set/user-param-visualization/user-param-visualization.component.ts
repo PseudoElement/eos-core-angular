@@ -20,11 +20,20 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
     @Input() defaultUser: any;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
     prepInputsAttach;
-    public titleHeader;
     public form: FormGroup;
     public inputs;
     public btnDisable;
     public flagEdit;
+    public currentUser;
+    get titleHeader() {
+        if (this.currentUser) {
+            if (this.currentUser.isTechUser) {
+                return this.defaultTitle ? 'Визуализация по умолчанию' : this.currentUser.CLASSIF_NAME + '- Визуализация';
+            }
+            return this.defaultTitle ? 'Визуализация по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Визуализация`;
+        }
+        return '';
+    }
     private allData;
     private prepareData;
     private prepareInputs;
@@ -45,7 +54,7 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
     }
     ngOnInit() {
         if (this.defaultTitle) {
-            this.titleHeader = this.defaultTitle;
+            this.currentUser = this.defaultTitle;
             this.allData = this.defaultUser;
             this.inint();
         } else {
@@ -53,7 +62,7 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
                 expand: 'USER_PARMS_List'
             })
             .then(() => {
-                this.titleHeader = this._userParamsSetSr.curentUser['SURNAME_PATRON'] + ' - ' + 'Визуализация';
+                this.currentUser = this._userParamsSetSr.curentUser;
                 this.allData = this._userParamsSetSr.hashUserContext;
                 this.inint();
             })

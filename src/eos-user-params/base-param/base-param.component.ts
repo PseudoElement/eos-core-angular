@@ -35,7 +35,6 @@ import { IMessage } from 'eos-common/interfaces';
 export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     submitClick = false;
     editMode = false;
-    title: string;
     type: string = 'password';
     type1: string = 'password';
     curentUser: IParamUserCl;
@@ -77,6 +76,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     get stateHeaderSubmit() {
         return this._newData.size > 0 || this._newDataformAccess.size > 0 || this._newDataformControls.size > 0;
+    }
+    get title() {
+        if (this.curentUser) {
+            if (this.curentUser.isTechUser) {
+                return this.curentUser.CLASSIF_NAME;
+            }
+            return `${this.curentUser['DUE_DEP_SURNAME']} (${this.curentUser['CLASSIF_NAME']})`;
+        }
+        return '';
     }
     constructor(
         private _router: Router,
@@ -138,7 +146,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     init() {
         this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
         this.curentUser = this._userParamSrv.curentUser;
-        this.title = `${this.curentUser['SURNAME_PATRON']} (${this.curentUser['CLASSIF_NAME']})`;
         this.inputFields = this._descSrv.fillValueInputField(BASE_PARAM_INPUTS, !this.editMode);
         this.controlField = this._descSrv.fillValueControlField(BASE_PARAM_CONTROL_INPUT, !this.editMode);
         this.accessField = this._descSrv.fillValueAccessField(BASE_PARAM_ACCESS_INPUT, !this.editMode);
@@ -296,7 +303,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this.cancel();
                 return;
             } else {
-                this.title = `${this.curentUser['SURNAME_PATRON']} (${this.form.value.CLASSIF_NAME})`;
                 const queryPas = [{
                     method: 'MERGE',
                     requestUri: `USER_CL(${id})`,
@@ -520,12 +526,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 });
             })
             .then((dep: DEPARTMENT) => {
-                if (dep) {
-                    this.form.get('TECH_DUE_DEP').patchValue(dep['DEPARTMENT_DUE']);
-                }
-                this.getUserDepartment(dep.ISN_HIGH_NODE).then(result => {
-                    this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
-                });
                 this.isShell = false;
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE'];

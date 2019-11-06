@@ -22,7 +22,6 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     @Input() defaultTitle: string;
     @Input() defaultUser: any;
     @Output() DefaultSubmitEmit: EventEmitter<any> = new EventEmitter();
-    public titleHeader: string;
     public control: AbstractControl;
     public form: FormGroup;
     public inputs: any;
@@ -32,6 +31,16 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     public isLoading: boolean = true;
     public editFlag: boolean = false;
     public disablebtnCarma: boolean = false;
+    public currentUser;
+    get titleHeader() {
+        if (this.currentUser) {
+            if (this.currentUser.isTechUser) {
+                return this.defaultTitle ? 'Электронная подпись по умолчанию' : this.currentUser.CLASSIF_NAME + '- Электронная подпись';
+            }
+            return this.defaultTitle ? 'Электронная подпись по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Электронная подпись`;
+        }
+        return '';
+    }
     private allData;
     private inputFieldsDefault;
     // sendFrom: string = '';
@@ -62,7 +71,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     ngOnDestroy() {}
     ngOnInit() {
         if (this.defaultTitle) {
-            this.titleHeader = this.defaultTitle;
+            this.currentUser = this.defaultTitle;
             this.allData = this.defaultUser;
             this.init();
             const store: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
@@ -71,7 +80,7 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
             this._userSrv.getUserIsn({
                 expand: 'USER_PARMS_List'
             }).then(() => {
-                this.titleHeader = this._userSrv.curentUser['SURNAME_PATRON'] + ' - ' + 'Электронная подпись';
+                this.currentUser = this._userSrv.curentUser;
                 this.init();
             })
                 .catch(err => {

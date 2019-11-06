@@ -30,7 +30,16 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     public flagBacground;
     public cutentTab: number;
     public btnDisabled: boolean = true;
-    public titleHeader;
+    public currentUser;
+    get titleHeader() {
+        if (this.currentUser) {
+            if (this.currentUser.isTechUser) {
+                return this.defaultTitle ? 'РК по умолчанию' : this.currentUser.CLASSIF_NAME + '- РК';
+            }
+            return this.defaultTitle ? 'РК по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - РК`;
+        }
+        return '';
+    }
     private originDocRc;
     private prepareData;
     private prepareInputs;
@@ -50,7 +59,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     ) {}
     ngOnInit() {
         if (this.defaultTitle) {
-            this.titleHeader = this.defaultTitle;
+            this.currentUser = this.defaultTitle;
             this.allData = this.defaultUser;
             this.init();
             this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
@@ -70,7 +79,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
             })
             .then(() => {
                 this.allData = this._userParamsSetSrv.hashUserContext;
-                this.titleHeader = `${this._userParamsSetSrv.curentUser.SURNAME_PATRON} - РК`;
+                this.currentUser = this._userParamsSetSrv.curentUser;
                 this.cutentTab = 0;
                 this.init();
                 this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
