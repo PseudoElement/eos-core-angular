@@ -302,6 +302,7 @@
                             type="text"
                             class="form-control light"
                             [(ngModel)]="searchModel['CABINET_NAME']"
+                            maxlength="{{fieldsDescription.rec['titleRoom']?.length}}"
                             placeholder="...">
                         <a class="clear-btn"
                             [ngClass]="{'hide': !searchModel['CABINET_NAME']}"
