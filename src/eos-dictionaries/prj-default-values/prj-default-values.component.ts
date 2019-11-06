@@ -16,7 +16,7 @@ import {VALIDATOR_TYPE, ValidatorsControl} from '../validators/validators-contro
 import {Subscription} from 'rxjs';
 import {IDynamicInputOptions} from '../../eos-common/dynamic-form-input/dynamic-input.component';
 import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
-import {RK_SELECTED_LIST_CONTAIN_DELETED, RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_BEEN_DELETED, RK_SELECTED_VALUE_LOGIC_DELETED} from '../../app/consts/confirms.const';
+import {RK_SELECTED_VALUE_INCORRECT} from '../../app/consts/confirms.const';
 import {IConfirmWindow2} from '../../eos-common/confirm-window/confirm-window2.component';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 import {WaitClassifService} from '../../app/services/waitClassif.service';
@@ -647,7 +647,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
     public userListsEdit() {
         this._waitClassifSrv.openClassif({classif: 'TECH_LISTS'})
             .then()
-            .catch(err => {
+            .catch(() => {
                 console.log('window closed');
                 this._zone.run(() => {
                     this._rereadUserLists();
@@ -656,7 +656,6 @@ export class PrjDefaultValuesComponent implements OnDestroy {
     }
 
     private _preSaveCheck(): Promise<any> {
-        let confirmationsChain = Promise.resolve(false);
         // проверить списки на предмет наличия логически удаленных записей.
         const fields1 = this.prjDefaults.items;
 
@@ -665,44 +664,57 @@ export class PrjDefaultValuesComponent implements OnDestroy {
             (a.order === undefined ?  1 :
             (b.order === undefined ? -1 : 0) ));
 
-        const logicDeleted: PrjDefaultItem[] = [];
+
+        const listLD = [];
+        const listHasDeleted = [];
+        const listIsEmpty = [];
+        const listBeenDeleted = [];
+
         for (let i = 0; i < sortable.length; i++) {
             const el = sortable[i];
             if (!el.dictId) { continue; }
-            // const currentDict = PrjDefaultFactory.dictionaries.find(d => d.name === el.dictId);
-            // if (!currentDict.isUserList) { continue; }
 
             const val = this.form.controls[PrjDefaultValuesComponent._getFieldKey(el.id, el.tableName)].value;
             if (val) {
                 const opt = this.prjDefaults.options[el.dictId].find(o => Number(o.value) === Number(val));
                 if (opt) {
                     if (opt.isEmpty) {
-                        confirmationsChain = this._presaveConfirmAppend(confirmationsChain, el, RK_SELECTED_LIST_IS_EMPTY);
+                        listIsEmpty.push(el);
                     } else if (opt.hasDeleted) {
-                        confirmationsChain = this._presaveConfirmAppend(confirmationsChain, el, RK_SELECTED_LIST_CONTAIN_DELETED);
+                        listHasDeleted.push(el);
                     }
                     if (opt && opt.disabled) {
-                        logicDeleted.push (el);
+                        listLD.push (el);
                     }
                 } else {
-                    confirmationsChain = this._presaveConfirmAppend(confirmationsChain, el, RK_SELECTED_LIST_BEEN_DELETED);
+                    listBeenDeleted.push(el);
                 }
             }
         }
+        const listLDText = this._elListToText(listLD);
+        const listHasDeletedText = this._elListToText(listHasDeleted);
+        const listIsEmptyText = this._elListToText(listIsEmpty);
+        const listBeenDeletedText = this._elListToText(listBeenDeleted);
 
-        if (logicDeleted.length) {
+        let confirmationsChain = Promise.resolve(false);
+        if (listLDText || listHasDeletedText || listIsEmptyText || listBeenDeletedText) {
+            const confirmLD: IConfirmWindow2 = Object.assign({}, RK_SELECTED_VALUE_INCORRECT);
+
+            confirmLD.bodyList = [];
+            if (listLDText) {
+                confirmLD.bodyList.push('В настройках реквизитов используются логически удаленные элементы справочников: ' + listLDText);
+            }
+            if (listBeenDeletedText) {
+                confirmLD.bodyList.push('Выбран список, который был удален. Значение очищено. Реквизиты: ' + listBeenDeletedText);
+            }
+            if (listIsEmptyText) {
+                confirmLD.bodyList.push('В следующих реквизитах выбран пустой список: ' + listIsEmptyText);
+            }
+            if (listHasDeletedText) {
+                confirmLD.bodyList.push('Выбран список, в котором некоторые элементы логически удалены. Реквизиты: ' + listHasDeletedText);
+            }
+
             confirmationsChain = confirmationsChain.then( (res) => {
-                const confirmLD: IConfirmWindow2 = Object.assign({}, RK_SELECTED_VALUE_LOGIC_DELETED);
-
-                let list: string = '';
-                for (let i = 0; i < logicDeleted.length; i++) {
-                    const el: PrjDefaultItem = logicDeleted[i];
-                    list += (el.fullDescr || el.descr);
-                    list += (i === logicDeleted.length - 1 ? '.' : ', ' );
-                }
-                confirmLD.body = confirmLD.body.replace('{{REK}}', 'РКПД');
-                confirmLD.body = confirmLD.body.replace('{{LIST}}', list);
-
                 if (res) {
                     return res;
                 } else {
@@ -716,18 +728,17 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         return confirmationsChain;
     }
 
-    private _presaveConfirmAppend(confPromise: Promise<boolean>, el: PrjDefaultItem, win: IConfirmWindow2): Promise<boolean> {
-        return confPromise.then ((res) => {
-            const testc: IConfirmWindow2 = Object.assign({}, win);
-            testc.body = testc.body.replace('{{REK}}', (el.fullDescr || el.descr));
-            if (res) {
-                return res;
-            } else {
-                return this._confirmSrv.confirm2(testc).then((button) => {
-                    return (!button || button.result === 2);
-                });
-            }
-        });
+    private _elListToText(list: any[]): string {
+        if (!list || list.length === 0) {
+            return null;
+        }
+        let res = '';
+        for (let i = 0; i < list.length; i++) {
+            const el = list[i];
+            res += (el.longTitle || el.fullDescr || el.title || el.descr);
+            res += (i === list.length - 1 ? '.' : ', ');
+        }
+        return res;
     }
 
     private _prjExecListOnChange() {

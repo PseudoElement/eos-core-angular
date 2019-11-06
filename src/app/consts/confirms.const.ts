@@ -97,6 +97,17 @@ export const RK_SELECTED_VALUE_LOGIC_DELETED: IConfirmWindow2 = {
     ],
 };
 
+export const RK_SELECTED_VALUE_INCORRECT: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: '',
+    bodyAfterList: 'Продолжить?',
+    buttons: [
+        {title: 'Да', result: 1, isDefault: true, },
+        {title: 'Нет', result: 2, },
+    ],
+};
+
 export const CONFIRM_SAVE_INVALID: IConfirmWindow2 = {
     title: 'Не удалось сохранить',
     body: '{{errors}}',

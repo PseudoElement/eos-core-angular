@@ -11,7 +11,7 @@ import { RKBasePage } from './rk-default-values/rk-base-page';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { ValidatorsControl, VALIDATOR_TYPE } from 'eos-dictionaries/validators/validators-control';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_CONTAIN_DELETED, RK_SELECTED_VALUE_LOGIC_DELETED } from 'app/consts/confirms.const';
+import { RK_SELECTED_VALUE_INCORRECT } from 'app/consts/confirms.const';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
 import { WaitClassifService } from 'app/services/waitClassif.service';
@@ -114,9 +114,9 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     save(): void {
         this.preSaveCheck(this.newData).then(isCancel => {
             if (!isCancel) {
-                this.dataController.save(this.isn_node, this.inputs, this.newData).then (r => {
+                this.dataController.save(this.isn_node, this.inputs, this.newData).then (() => {
                     this.bsModalRef.hide();
-                }).catch (err => {
+                }).catch (() => {
 
                 });
             }
@@ -128,14 +128,14 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         //     this.rereadUserLists();
         // });
         this._waitClassifSrv.openClassif({classif: 'TECH_LISTS'})
-        .then(result => {
+        .then(() => {
             // console.log('result: ', result);
             // this.dataController.zone.run(() => {
             //     console.log('zone');
             //     this.rereadUserLists();
             // });
         })
-        .catch(err => {
+        .catch(() => {
             // console.log('window closed');
             this.dataController.zone.run(() => {
                 this.rereadUserLists();
@@ -145,7 +145,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     rereadUserLists() {
         this.dataController.markCacheForDirty('USER_LISTS');
-        this.dataController.updateDictsOptions('USER_LISTS', null, (event) => {
+        this.dataController.updateDictsOptions('USER_LISTS', null, () => {
         }).then ( () => {
 
             for (const key in this.inputs) {
@@ -166,7 +166,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                     }
                 }
             }
-            this._updateInputs(this.inputs, this.values);
+            this._updateInputs(this.inputs);
             this.form.updateValueAndValidity();
         });
 
@@ -174,11 +174,10 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     preSaveCheck(newdata: any): Promise<any> {
         this.dataController.markCacheForDirty('USER_LISTS');
-        return this.dataController.updateDictsOptions('USER_LISTS', null, (event) => {
+        return this.dataController.updateDictsOptions('USER_LISTS', null, () => {
             // console.log(event);
         }).then (() => {
             this.form.updateValueAndValidity();
-            let confirmationsChain = Promise.resolve(false);
 
             // проверить списки на предмет наличия логически удаленных записей.
             const fields_ = this.descriptions[DEFAULTS_LIST_NAME];
@@ -188,7 +187,10 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 (a.order === undefined ?  1 :
                 (b.order === undefined ? -1 : 0) ));
 
-            const logicDeleted = [];
+            const listLD = [];
+            const listHasDeleted = [];
+            const listIsEmpty = [];
+            const listBeenDeleted = [];
             for (let i = 0; i < sortable.length; i++) {
                 const el: TDefaultField = sortable[i];
                 if (!el.dict) { continue; }
@@ -198,13 +200,15 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 if (val) {
                     const opt = el.options.find ( o => Number(o.value) === Number(val));
                     if (opt && opt.isEmpty) {
-                        confirmationsChain = this._presaveConfirmAppend(confirmationsChain, el, RK_SELECTED_LIST_IS_EMPTY);
+                        listIsEmpty.push(el);
+                        // confirmationsChain = this._presaveConfirmAppend(confirmationsChain, el, RK_SELECTED_LIST_IS_EMPTY);
                     }
                     if (opt && opt.hasDeleted) {
-                        confirmationsChain = this._presaveConfirmAppend(confirmationsChain, el, RK_SELECTED_LIST_CONTAIN_DELETED);
+                        listHasDeleted.push(el);
+                        // confirmationsChain = this._presaveConfirmAppend(confirmationsChain, el, RK_SELECTED_LIST_CONTAIN_DELETED);
                     }
                     if (opt && opt.disabled) {
-                        logicDeleted.push (el);
+                        listLD.push (el);
                         // confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_VALUE_LOGIC_DELETED);
                     }
                     if (!opt) {
@@ -213,24 +217,36 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                         if (control) {
                             control.setValue(null);
                         }
+                        listBeenDeleted.push(el);
                         // confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_BEEN_DELETED);
                     }
                 }
             }
 
-            if (logicDeleted.length) {
+            const listLDText = this._elListToText(listLD);
+            const listHasDeletedText = this._elListToText(listHasDeleted);
+            const listIsEmptyText = this._elListToText(listIsEmpty);
+            const listBeenDeletedText = this._elListToText(listBeenDeleted);
+
+            let confirmationsChain = Promise.resolve(false);
+            if (listLDText || listHasDeletedText || listIsEmptyText || listBeenDeletedText) {
+                const confirmLD: IConfirmWindow2 = Object.assign({}, RK_SELECTED_VALUE_INCORRECT);
+
+                confirmLD.bodyList = [];
+                if (listLDText) {
+                    confirmLD.bodyList.push('В настройках реквизитов используются логически удаленные элементы справочников: ' + listLDText);
+                }
+                if (listBeenDeletedText) {
+                    confirmLD.bodyList.push('Выбран список, который был удален. Значение очищено. Реквизиты: ' + listBeenDeletedText);
+                }
+                if (listIsEmptyText) {
+                    confirmLD.bodyList.push('В следующих реквизитах выбран пустой список: ' + listIsEmptyText);
+                }
+                if (listHasDeletedText) {
+                    confirmLD.bodyList.push('Выбран список, в котором некоторые элементы логически удалены. Реквизиты: ' + listHasDeletedText);
+                }
+
                 confirmationsChain = confirmationsChain.then( (res) => {
-                    const confirmLD: IConfirmWindow2 = Object.assign({}, RK_SELECTED_VALUE_LOGIC_DELETED);
-
-                    let list: string = '';
-                    for (let i = 0; i < logicDeleted.length; i++) {
-                        const el: TDefaultField = logicDeleted[i];
-                        list += (el.longTitle || el.title);
-                        list += (i === logicDeleted.length - 1 ? '.' : ', ' );
-                    }
-                    confirmLD.body = confirmLD.body.replace('{{REK}}', 'РК');
-                    confirmLD.body = confirmLD.body.replace('{{LIST}}', list);
-
                     if (res) {
                         return res;
                     } else {
@@ -240,8 +256,22 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                     }
                 });
             }
+
             return confirmationsChain;
         });
+    }
+
+    _elListToText(list: any[]): string {
+        if (!list || list.length === 0) {
+            return null;
+        }
+        let res = '';
+        for (let i = 0; i < list.length; i++) {
+            const el = list[i];
+            res += (el.longTitle || el.title);
+            res += (i === list.length - 1 ? '.' : ', ');
+        }
+        return res;
     }
 
 
@@ -301,7 +331,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
             this.dataController.updateDictsOptions(null, this.values, this.updateLinks2).then (() => {
                 this.inputs = this._getInputs();
-                this._updateInputs(this.inputs, this.values);
+                this._updateInputs(this.inputs);
                 this._updateOptions(this.inputs);
                 const isNode = false;
                 this.form = this._inputCtrlSrv.toFormGroup(this.inputs, isNode);
@@ -323,20 +353,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     }
 
-    private _presaveConfirmAppend(confPromise: Promise<boolean>, el: TDefaultField, win: IConfirmWindow2): Promise<boolean> {
-        return confPromise.then ((res) => {
-            const testc: IConfirmWindow2 = Object.assign({}, win);
-            testc.body = testc.body.replace('{{REK}}', (el.longTitle || el.title));
-            if (res) {
-                return res;
-            } else {
-                return this._confirmSrv.confirm2(testc).then((button) => {
-                    return (!button || button.result === 2);
-                });
-            }
-        });
-    }
-    private _updateInputs(inputs: any, values: any): any {
+    private _updateInputs(inputs: any): any {
         if (!this.isEDoc) {
             inputs['DOC_DEFAULT_VALUE_List.SPECIMEN'].required = true;
         }
@@ -379,16 +396,6 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             }
             return null;
         });
-
-        // this.descriptions[DEFAULTS_LIST_NAME].forEach(d => {
-        //     if (d.dict && d.dict.dictId === 'USER_LISTS') {
-        //             ValidatorsControl.appendValidator(controls[DEFAULTS_LIST_NAME + '.' + d.key],
-        //             ValidatorsControl.optionCustomValidate('Значение было удалено')
-        //         );
-        //     }
-        // });
-
-
 
         const controlSrok1 = controls['DOC_DEFAULT_VALUE_List.TERM_EXEC'];
         const controlSrok2 = controls['DOC_DEFAULT_VALUE_List.TERM_EXEC_W'];
