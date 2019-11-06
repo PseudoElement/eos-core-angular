@@ -262,19 +262,8 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
     }
 
     _elListToText(list: any[]): string {
-        if (!list || list.length === 0) {
-            return null;
-        }
-        let res = '';
-        for (let i = 0; i < list.length; i++) {
-            const el = list[i];
-            res += (el.longTitle || el.title);
-            res += (i === list.length - 1 ? '.' : ', ');
-        }
-        return res;
+        return EosDataConvertService.listToCommaList(list.map( (el) => (el.longTitle || el.title)));
     }
-
-
 
     cancel(): void {
         this.bsModalRef.hide();

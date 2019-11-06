@@ -23,6 +23,7 @@ import {WaitClassifService} from '../../app/services/waitClassif.service';
 import { DAYS_TYPE_OPTS_VARIATIONS } from 'eos-dictionaries/adv-card/rk-default-values/rk-default-const';
 import { ButtonsInput } from 'eos-common/core/inputs/buttons-input';
 import { RKDefaultValuesCardComponent } from 'eos-dictionaries/adv-card/rk-default-values/rk-default-values.component';
+import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
 const PRJ_DEFAULT_NAME = 'PRJ_DEFAULT_VALUE_List';
 const FILE_CONSTRAINT_NAME = 'DG_FILE_CONSTRAINT_List';
@@ -729,16 +730,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
     }
 
     private _elListToText(list: any[]): string {
-        if (!list || list.length === 0) {
-            return null;
-        }
-        let res = '';
-        for (let i = 0; i < list.length; i++) {
-            const el = list[i];
-            res += (el.longTitle || el.fullDescr || el.title || el.descr);
-            res += (i === list.length - 1 ? '.' : ', ');
-        }
-        return res;
+        return EosDataConvertService.listToCommaList(list.map( (el) => (el.longTitle || el.fullDescr || el.title || el.descr)));
     }
 
     private _prjExecListOnChange() {

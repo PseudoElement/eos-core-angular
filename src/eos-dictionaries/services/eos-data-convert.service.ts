@@ -19,6 +19,15 @@ import { RadioInput } from 'eos-common/core/inputs/radio-input';
 
 @Injectable()
 export class EosDataConvertService {
+
+    static listToCommaList(list: string[]): string {
+        if (!list || list.length === 0) {
+            return null;
+        }
+        return list.join(', ') + '.';
+    }
+
+
     // Todo: get from a remote source of question metadata
     // Todo: make asynchronous
     // todo: refactor, remove hardcode, move into record description class

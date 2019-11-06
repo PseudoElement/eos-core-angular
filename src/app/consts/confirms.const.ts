@@ -1,6 +1,7 @@
 import { IConfirmWindow } from '../../eos-common/core/confirm-window.interface';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 
+export const WARNING_LIST_MAXCOUNT = 10;
 export const CONFIRM_DESK_DELETE: IConfirmWindow = {
     title: 'Подтверждение удаления',
     body: 'Вы действительно хотите удалить рабочий стол "{{name}}"?',
@@ -13,27 +14,6 @@ export const CONFIRM_LINK_DELETE: IConfirmWindow = {
     body: 'Вы действительно хотите удалить ссылку "{{link}}"?',
     okTitle: 'Удалить',
     cancelTitle: 'Отмена'
-};
-
-export const CONFIRM_NODE_DELETE: IConfirmWindow = {
-    title: 'Подтверждение удаления',
-    body: 'Вы действительно хотите удалить запись {{name}} ?',
-    okTitle: 'Удалить',
-    cancelTitle: 'Отмена'
-};
-
-export const CONFIRM_NODES_DELETE: IConfirmWindow = {
-    title: 'Подтверждение удаления',
-    body: 'Вы действительно хотите удалить записи {{name}} ?',
-    okTitle: 'Удалить',
-    cancelTitle: 'Отмена'
-};
-
-export const CONFIRM_SUBNODES_RESTORE: IConfirmWindow = {
-    title: 'Подтверждение восстановления',
-    body: 'Восстановить дочерние элементы для {{name}}',
-    okTitle: 'Восстановить дочерние',
-    cancelTitle: 'Не восстанавливать дочерние'
 };
 
 export const CONFIRM_NUMCREATION_CHANGE: IConfirmWindow = {
@@ -115,4 +95,46 @@ export const CONFIRM_SAVE_INVALID: IConfirmWindow2 = {
         {title: 'Ок', result: 1, isDefault: true}
     ],
     manualCR: true
+};
+
+export const CONFIRM_OPERATION_LOGICDELETE: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Вы действительно хотите логически удалить записи:',
+    bodyAfterList: 'Продолжить?',
+    buttons: [
+        {title: 'Отменить', result: 1, isDefault: true, },
+        {title: 'Удалить',  result: 2, },
+    ],
+};
+
+export const CONFIRM_OPERATION_HARDDELETE: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Вы действительно хотите навсегда удалить записи:',
+    bodyAfterList: 'Продолжить?',
+    buttons: [
+        {title: 'Отменить', result: 1, isDefault: true, },
+        {title: 'Удалить',  result: 2, },
+    ],
+};
+
+export const CONFIRM_OPERATION_RESTORE: IConfirmWindow2 = {
+    title: 'Внимание',
+    bodyList: [],
+    body: 'Вы действительно хотите восстановить записи:',
+    bodyAfterList: 'Продолжить?',
+    buttons: [
+        {title: 'Отменить', result: 1, isDefault: true, },
+        {title: 'Восстановить',  result: 2, },
+    ],
+};
+
+export const CONFIRM_SUBNODES_RESTORE: IConfirmWindow2 = {
+    title: 'Подтверждение восстановления',
+    body: 'Восстановить дочерние элементы для {{name}}',
+    buttons: [
+        {title: 'Не восстанавливать дочерние',  result: 1, },
+        {title: 'Восстановить дочерние', result: 2, isDefault: true, },
+    ],
 };
