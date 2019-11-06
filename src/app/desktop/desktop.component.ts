@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit, ElementRef, ViewChild} from '@angular/core
 import {Router, ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {EosDictService} from '../../eos-dictionaries/services/eos-dict.service';
-import {EosDeskService} from '../services/eos-desk.service';
+import {EosDeskService, DEFAULT_DESKTOP} from '../services/eos-desk.service';
 import {IDeskItem} from '../core/desk-item.interface';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 import {CONFIRM_LINK_DELETE} from '../consts/confirms.const';
@@ -71,6 +71,12 @@ export class DesktopComponent implements OnInit, OnDestroy {
         this._deskListSubscription.unsubscribe();
     }
 
+    dragStartEvent(event) {
+        if (this.deskId === DEFAULT_DESKTOP.id) {
+            event.stopPropagation();
+            event.preventDefault();
+        }
+    }
 
     dragEndEvent(evt) {
         this._deskSrv.storeOrder(this.referencesList, this.deskId);

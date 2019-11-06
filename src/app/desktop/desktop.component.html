@@ -10,6 +10,7 @@
                 placeholderClass="placeholderStyle"
                 wrapperClass="sortable-wrapper"
                 force="true"
+                (dragstart)="dragStartEvent($event)"
                 (dragend)="dragEndEvent($event)"
             ></bs-sortable>
         </div>

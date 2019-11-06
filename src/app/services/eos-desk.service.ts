@@ -21,12 +21,13 @@ import {PipRX} from '../../eos-rest';
 import { DictionaryDescriptorService } from 'eos-dictionaries/core/dictionary-descriptor.service';
 
 const DEFAULT_DESKTOP_NAME = 'Мой рабочий стол';
-export const DEFAULT_DESKS: EosDesk[] = [{
+export const DEFAULT_DESKTOP = {
     id: 'system',
     name: 'Стандартный рабочий стол',
     references: [],
     edited: false,
-}];
+};
+export const DEFAULT_DESKS: EosDesk[] = [DEFAULT_DESKTOP];
 
 @Injectable()
 export class EosDeskService {
