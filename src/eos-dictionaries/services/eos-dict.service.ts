@@ -286,13 +286,15 @@ export class EosDictService {
 
         const changes = [];
 
+        const weightField = /* dict.id === CABINET_DICT.id ? 'ORDER_NUM' :*/ 'WEIGHT';
+
         for (const id in changeList) {
             if (changeList.hasOwnProperty(id)) {
                 const value = changeList[id];
                 const key = dict.descriptor.PKForEntity(id);
                 changes.push ({
                         method: 'MERGE',
-                        data: { WEIGHT: String(value) },
+                        data: { [weightField]: String(value) },
                         requestUri: key,
                 });
             }
@@ -1029,8 +1031,10 @@ export class EosDictService {
     }
 
     setDictMode(mode: number): boolean {
-        const dict = this._dictionaries[0].getDictionaryIdByMode(mode).id;
-        const access = this._eaps.isAccessGrantedForDictionary(dict, null) !== APS_DICT_GRANT.denied;
+        const dictId = this._dictionaries[0].getDictionaryIdByMode(mode).id;
+
+        const access = this._eaps.isAccessGrantedForDictionary(dictId, null) !== APS_DICT_GRANT.denied;
+
         if (access) {
             this._dictMode = mode;
             this._srchCriteries = null;
@@ -1039,6 +1043,7 @@ export class EosDictService {
             }
             this._dictMode$.next(this._dictMode);
             this._reloadList();
+            this.toggleWeightOrder(this._weightOrdered);
         }
         return access;
     }
