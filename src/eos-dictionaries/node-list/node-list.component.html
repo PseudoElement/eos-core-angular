@@ -62,20 +62,8 @@
             </p>
             <p *ngIf="!nodes?.length && !params.updatingList"
                class="text-center text-info node-list-info">Нет записей.</p>
-            <!--Sortable list-->
-            <ng-container *ngIf="params.userOrdered && nodes?.length && !params.searchResults && !params.updatingList && recalcDone">
-                <bs-sortable [(ngModel)]="nodes"
-                             [itemTemplate]="childTemplate"
-                             itemClass="{'highlighted': node.isSelected}"
-                             itemActiveClass="sortable-item-active"
-                             placeholderItem="Drag here"
-                             (drop)="toggleItem()"
-                             placeholderClass="placeholderStyle"
-                             wrapperClass="sortable-wrapper">
-                </bs-sortable>
-            </ng-container>
             <!--Simple list-->
-            <ng-container *ngIf="!params.userOrdered && nodes?.length && !params.updatingList && recalcDone || params.searchResults && !params.updatingList && recalcDone">
+            <ng-container *ngIf="nodes?.length && !params.updatingList && recalcDone || params.searchResults && !params.updatingList && recalcDone">
                 <eos-node-list-item *ngFor="let item of nodes"
                                     [ngStyle]="{'width.%': 100}"
                                     [length]="length"
