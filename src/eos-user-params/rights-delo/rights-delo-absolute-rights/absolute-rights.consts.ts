@@ -36,7 +36,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         label: 'Ввод резолюций',
         data: {
             isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
         }
     },
     {
@@ -72,7 +72,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         label: 'Исполнение поручений',
         data: {
             isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
         }
     },
     {
@@ -153,7 +153,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         label: 'Визирование проектов',
         data: {
             isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
         }
     },
     {
@@ -162,7 +162,7 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
         label: 'Подписание проектов',
         data: {
             isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz
         }
     },
     {

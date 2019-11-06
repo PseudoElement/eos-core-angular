@@ -8,6 +8,7 @@ export enum E_RIGHT_DELO_ACCESS_CONTENT {
     classif,
     all,
     departmentCardAuthorSentProject,
+    departOrganiz,
 }
 export enum E_RIGHT_SIDE_DOC_GROUP_IN_FILE_CARD_ACCESS_CONTENT {
     docGroup,
@@ -19,6 +20,7 @@ export enum E_RIGHT_SIDE_DOC_GROUP_IN_FILE_CARD_ACCESS_CONTENT {
     classif,
     all,
     departmentCardAuthorSentProject,
+    departOrganiz,
 }
 export interface IChengeItemAbsolute {
     method: 'POST'|'DELETE'|'MERGE';
