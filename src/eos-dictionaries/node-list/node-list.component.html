@@ -11,7 +11,7 @@
                        container="body"
                        [delay]="tooltipDelay"
                        containerClass="tooltip-info">
-                    <input type="checkbox" [(ngModel)]="markedInfo.anyMarked" (change)="toggleAllMarks()">
+                       <input type="checkbox" [checked]="markedInfo.anyMarked" (change)="toggleAllMarks()">
                     <span></span>
                 </label>
             </div>
