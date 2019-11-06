@@ -65,7 +65,7 @@ class CopyPropWarningPage {
         if (this.list.hasDeletedList.length) {
             let text = '';
             text += '\n' + this.suffixText + '\n списки, содержащие пустые элементы: ';
-            text += EosDataConvertService.listToCommaList(this.list.emptyListValues);
+            text += EosDataConvertService.listToCommaList(this.list.hasDeletedList);
             result.push(text);
         }
         return result;
