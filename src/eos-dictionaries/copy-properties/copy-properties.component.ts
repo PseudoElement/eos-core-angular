@@ -348,8 +348,11 @@ export class CopyPropertiesComponent implements OnDestroy {
             if (this.controlChecked('a_default_rek')) {
                 list.push(... RKfields.filter( f => f.page === 'D'));
             }
-            if (this.controlChecked('a_default_rek')) {
-                list.push(... RKfields.filter( f => f.page === 'D'));
+            if (this.controlChecked('a_write_rek')) {
+                list.push(... RKfields.filter( f => f.page === 'W'));
+            }
+            if (this.controlChecked('a_fc') || this.controlChecked('a_fc_rc')) {
+                list.push(... RKfields.filter( f => f.page === 'F'));
             }
 
             fields = Object.assign(fields, {[DEFAULTS_LIST_NAME]: list });
