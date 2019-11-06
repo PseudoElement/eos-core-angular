@@ -303,7 +303,7 @@ export class CopyPropertiesComponent implements OnDestroy {
 
             let query: any;
             if (el.dict.criteries) {
-                query = { criteries: el.dict.criteries};
+                query = { criteries: Object.assign({}, el.dict.criteries) };
             } else {
                 query = { criteries: {}};
             }
