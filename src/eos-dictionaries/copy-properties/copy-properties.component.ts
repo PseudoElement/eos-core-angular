@@ -76,7 +76,7 @@ class CopyPropWarning  {
         RK_D: new CopyPropWarningPage('В настройках реквизитов РК по умолчанию используются '),
         RK_W: new CopyPropWarningPage('В Правилах заполнения реквизитов РК при записи используются '),
         RK_F: new CopyPropWarningPage('В Правила для файлов РК используются '),
-        RKPD: new CopyPropWarningPage('РКПД: '),
+        RKPD_D: new CopyPropWarningPage('РКПД: '),
     };
 
     isEmpty(): boolean {
@@ -241,6 +241,14 @@ export class CopyPropertiesComponent implements OnDestroy {
 
 
     // }
+    isEmptyObj(object: any) {
+        for (const key in object) {
+            if (object.hasOwnProperty(key)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public hideModal() {
         this._bsModalRef.hide();
@@ -283,7 +291,6 @@ export class CopyPropertiesComponent implements OnDestroy {
     protected controlChecked(name: string): boolean {
         return this.form.controls[name] && this.form.controls[name].value;
     }
-
     private _warningsCheckDefaults(docGroup: any, fieldsForCheck: TDefaultField[], listName: string): Promise<any[]> {
         const reqs = [];
         const ldeleted_errors = [];
@@ -326,22 +333,39 @@ export class CopyPropertiesComponent implements OnDestroy {
         });
     }
 
-    private _validateData(): Promise<boolean> {
-        const dataControllerRK = new AdvCardRKDataCtrl(this.injector);
-        const due = this.fromParent ? this._recTo.DUE : this._dgFrom.DUE;
+    private _userListWarningsCheck(warnings: CopyPropWarning, docGroup: any): any {
+        let fields = {};
 
-        return dataControllerRK.readDGValuesDUE(due).then(([docGroup]) => {
-            const warnings: CopyPropWarning = new CopyPropWarning();
-            const checks = [];
+        if (this.controlChecked('a_default_rek_prj') /*|| this.controlChecked('a_prj_rek') || this.controlChecked('a_fc_prj')*/) {
+            fields = Object.assign(fields, this._dataControllerRK.getDescriptionsRKPD());
+        }
+
+        if (this.controlChecked('a_default_rek') ||
+            this.controlChecked('a_write_rek') ||
+            this.controlChecked('a_fc') || this.controlChecked('a_fc_rc')) {
+            const list = [];
+            const RKfields = this._dataControllerRK.getDescriptionsRK()[DEFAULTS_LIST_NAME];
+            if (this.controlChecked('a_default_rek')) {
+                list.push(... RKfields.filter( f => f.page === 'D'));
+            }
+            if (this.controlChecked('a_default_rek')) {
+                list.push(... RKfields.filter( f => f.page === 'D'));
+            }
+
+            fields = Object.assign(fields, {[DEFAULTS_LIST_NAME]: list });
+        }
+
+
+        if ( !this.isEmptyObj(fields)
+        ) {
             this._dataControllerRK.markCacheForDirty('USER_LISTS');
-            const fields = Object.assign({}, this._dataControllerRK.getDescriptionsRK(), this._dataControllerRK.getDescriptionsRKPD());
             return this._dataControllerRK.updateDictsOptions(fields, 'USER_LISTS', this._dgFrom, (event: IUpdateDictEvent) => {
                 const el = event.el;
                 const savedData = docGroup[event.key].find (f => f.DEFAULT_ID === el.key);
                 if (savedData) {
                     const selectedOpt = event.options.find( o => String(o.value) === String(savedData.VALUE));
                     if (selectedOpt) {
-                        const page: CopyPropWarningPage = event.key === PRJ_DEFAULTS_LIST_NAME ? warnings.lists.RKPD :
+                        const page: CopyPropWarningPage = event.key === PRJ_DEFAULTS_LIST_NAME ? warnings.lists.RKPD_D :
                                                           el.page === 'F' ? warnings.lists.RK_F :
                                                           el.page === 'W' ? warnings.lists.RK_W : warnings.lists.RK_D;
 
@@ -353,86 +377,82 @@ export class CopyPropertiesComponent implements OnDestroy {
                         }
                     }
                 }
-            }).then ( (values) => {
-                if (this.controlChecked('a_default_rek')) {
-                    const fieldsForCheck = RKDefaultFields.filter((field: TDefaultField) => field.type === E_FIELD_TYPE.select && field.page === 'D');
-                    checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, DEFAULTS_LIST_NAME).then( (result: any[]) => {
-                        // warnings.lists.RK_D.list.logicDeleted = result;
-                        warnings.lists.RK_D.list.logicDeleted.push(...result.map(r => (r.field.longTitle || r.field.title)));
-                        return Promise.resolve(result);
-                    }));
-                }
+            });
 
-                if (this.controlChecked('a_write_rek')) {
-                    const fieldsForCheck = RKDefaultFields.filter((field: TDefaultField) => field.type === E_FIELD_TYPE.select && field.page === 'W');
-                    checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, DEFAULTS_LIST_NAME).then( (result: any[]) => {
-                        warnings.lists.RK_W.list.logicDeleted = result;
-                        return Promise.resolve(result);
-                    }));
-                }
+        } else {
+            return Promise.resolve(null);
+        }
+    }
 
-                if (this.controlChecked('a_fc') || this.controlChecked('a_fc_rc')) {
-                    const fieldsForCheck = RKDefaultFields.filter((field: TDefaultField) => field.type === E_FIELD_TYPE.select && field.page === 'F');
-                    checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, DEFAULTS_LIST_NAME).then( (result: any[]) => {
-                        warnings.lists.RK_F.list.logicDeleted = result;
-                        return Promise.resolve(result);
-                    }));
-                }
+    private _validateData(): Promise<boolean> {
+        const dataControllerRK = new AdvCardRKDataCtrl(this.injector);
+        const due = this.fromParent ? this._recTo.DUE : this._dgFrom.DUE;
 
-                if (this.controlChecked('a_prj_rek') || this.controlChecked('a_default_rek_prj') || this.controlChecked('a_fc_prj')) {
-                    const list = RKPDDefaultFields.filter ( l => l.DEFAULT_TYPE === E_FIELD_TYPE.select);
-                    const fieldsForCheck = list.map( v => {
-                        const dict = RKPDdictionaries.find( d => d.name === v.CLASSIF_ID);
-                        let table = '';
-                        for (const key in dict.req) {
-                            if (dict.req.hasOwnProperty(key)) {
-                                table = key;
-                                break;
-                            }
+        return dataControllerRK.readDGValuesDUE(due).then(([docGroup]) => {
+            const warnings: CopyPropWarning = new CopyPropWarning();
+            const checks = [];
+
+
+            checks.push(this._userListWarningsCheck(warnings, docGroup));
+
+            if (this.controlChecked('a_default_rek')) {
+                const fieldsForCheck = RKDefaultFields.filter((field: TDefaultField) => field.type === E_FIELD_TYPE.select && field.page === 'D');
+                checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, DEFAULTS_LIST_NAME).then( (result: any[]) => {
+                    // warnings.lists.RK_D.list.logicDeleted = result;
+                    warnings.lists.RK_D.list.logicDeleted.push(...result.map(r => (r.field.longTitle || r.field.title)));
+                    return Promise.resolve(result);
+                }));
+            }
+
+            if (this.controlChecked('a_write_rek')) {
+                const fieldsForCheck = RKDefaultFields.filter((field: TDefaultField) => field.type === E_FIELD_TYPE.select && field.page === 'W');
+                checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, DEFAULTS_LIST_NAME).then( (result: any[]) => {
+                    warnings.lists.RK_W.list.logicDeleted = result;
+                    return Promise.resolve(result);
+                }));
+            }
+
+            if (this.controlChecked('a_fc') || this.controlChecked('a_fc_rc')) {
+                const fieldsForCheck = RKDefaultFields.filter((field: TDefaultField) => field.type === E_FIELD_TYPE.select && field.page === 'F');
+                checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, DEFAULTS_LIST_NAME).then( (result: any[]) => {
+                    warnings.lists.RK_F.list.logicDeleted = result;
+                    return Promise.resolve(result);
+                }));
+            }
+
+            if (this.controlChecked('a_prj_rek') || this.controlChecked('a_default_rek_prj') || this.controlChecked('a_fc_prj')) {
+                const list = RKPDDefaultFields.filter ( l => l.DEFAULT_TYPE === E_FIELD_TYPE.select);
+                const fieldsForCheck = list.map( v => {
+                    const dict = RKPDdictionaries.find( d => d.name === v.CLASSIF_ID);
+                    let table = '';
+                    for (const key in dict.req) {
+                        if (dict.req.hasOwnProperty(key)) {
+                            table = key;
+                            break;
                         }
+                    }
 
-                        const field: TDefaultField = {
-                            key: v.DEFAULT_ID,
-                            title: v.DESCRIPTION,
-                            type: v.DEFAULT_TYPE,
-                            dict: <TDFSelect> {
-                                dictId: table,
-                                dictKey: dict.isnFieldName,
-                                dictKeyTitle: dict.titleFieldName,
-                            }
-                        };
-                        return field;
-                    });
-                    checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, PRJ_DEFAULTS_LIST_NAME).then( (result: any[]) => {
-                        warnings.lists.RKPD.list.logicDeleted = result;
-                        return Promise.resolve(result);
-                    }));
-                }
-
-                return Promise.all(checks).then ( (r) => {
-                    // console.log("TCL: warnings", warnings);
-                    return this._confirmWarnings(warnings);
+                    const field: TDefaultField = {
+                        key: v.DEFAULT_ID,
+                        title: v.DESCRIPTION,
+                        type: v.DEFAULT_TYPE,
+                        dict: <TDFSelect> {
+                            dictId: table,
+                            dictKey: dict.isnFieldName,
+                            dictKeyTitle: dict.titleFieldName,
+                        }
+                    };
+                    return field;
                 });
-                // for (const key in this.inputs) {
-                //     if (this.inputs.hasOwnProperty(key)) {
-                //         const input = this.inputs[key];
-                //         const field: TDefaultField = input.descriptor;
-                //         if (field && field.dict && field.dict.dictId === 'USER_LISTS') {
-                //             const control = this.form.controls[key];
-                //             if (control) {
-                //                 const val = control.value;
-                //                 if (val) {
-                //                     const opt = field.options.find ( o => Number(o.value) === Number(val));
-                //                     if (!opt) {
-                //                         control.setValue(null);
-                //                     }
-                //                 }
-                //             }
-                //         }
-                //     }
-                // }
-                // this._updateInputs(this.inputs);
-                // this.form.updateValueAndValidity();
+
+                checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, PRJ_DEFAULTS_LIST_NAME).then( (result: any[]) => {
+                    warnings.lists.RKPD_D.list.logicDeleted = result;
+                    return Promise.resolve(result);
+                }));
+            }
+
+            return Promise.all(checks).then ( (r) => {
+                return this._confirmWarnings(warnings);
             });
         });
     }
@@ -455,70 +475,9 @@ export class CopyPropertiesComponent implements OnDestroy {
             confirmLD.bodyList.push(...warning.lists.RK_D.asTextlist());
             confirmLD.bodyList.push(...warning.lists.RK_W.asTextlist());
             confirmLD.bodyList.push(...warning.lists.RK_F.asTextlist());
-            confirmLD.bodyList.push(...warning.lists.RKPD.asTextlist());
+            confirmLD.bodyList.push(...warning.lists.RKPD_D.asTextlist());
             confirmLD.bodyList = confirmLD.bodyList.filter(v => v !== '');
 
-            // confirmLD.manualCR = true;
-            // let confirmbodyRKPD = '';
-            // let confirmbodyRK = '';
-
-            // confirmbodyRK += warning.lists.RK_D.asText();
-
-
-
-            // if (warning.rk_defaults.length) {
-            //     confirmbodyRK += '\nПо умолчанию: ';
-            //     for (let i = 0; i < warning.rk_defaults.length; i++) {
-            //         const element = warning.rk_defaults[i];
-            //         confirmbodyRK += element.field.longTitle || element.field.title;
-            //         confirmbodyRK += (i < warning.rk_defaults.length - 1) ? ', ' : '.';
-            //     }
-            // }
-
-            // if (warning.a_write_rek.length) {
-            //     confirmbodyRK += '\nПри записи: ';
-
-            //     for (let i = 0; i < warning.a_write_rek.length; i++) {
-            //         const element = warning.a_write_rek[i];
-            //         confirmbodyRK += element.field.longTitle || element.field.title;
-            //         confirmbodyRK += (i < warning.a_write_rek.length - 1) ? ', ' : '.';
-            //     }
-            // }
-
-            // if (warning.a_fc_rc.length) {
-            //     confirmbodyRK += '\nФайлы: ';
-
-            //     for (let i = 0; i < warning.a_fc_rc.length; i++) {
-            //         const element = warning.a_fc_rc[i];
-            //         confirmbodyRK += element.field.longTitle || element.field.title;
-            //         confirmbodyRK += (i < warning.a_fc_rc.length - 1) ? ', ' : '.';
-            //     }
-            // }
-
-            // if (warning.a_prj_rek.length) {
-            //     confirmbodyRKPD += '\nРКПД: ';
-
-            //     for (let i = 0; i < warning.a_prj_rek.length; i++) {
-            //         const element = warning.a_prj_rek[i];
-            //         confirmbodyRKPD += element.field.longTitle || element.field.title;
-            //         confirmbodyRKPD += (i < warning.a_prj_rek.length - 1) ? ', ' : '.';
-            //     }
-            // }
-
-            // if (warning.RKemptyListValues.D.length) {
-
-            // }
-
-            // confirmLD.bodyList = [];
-            // if (confirmbodyRK !== '') {
-            //     confirmbodyRK = 'В настройках реквизитов РК используются логически удаленные элементы справочников:\n' + confirmbodyRK;
-            //     confirmLD.bodyList.push (confirmbodyRK);
-            // }
-            // if (confirmbodyRKPD !== '') {
-            //     confirmbodyRKPD = 'В настройках реквизитов РКПД используются логически удаленные элементы справочников:\n' + confirmbodyRKPD;
-            //     confirmLD.bodyList.push (confirmbodyRKPD);
-            // }
-            // confirmLD.body = '';
             confirmLD.bodyAfterList = 'Продолжить?';
 
             return this._confirmSrv.confirm2(confirmLD).then((button) => {

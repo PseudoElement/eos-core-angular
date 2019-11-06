@@ -248,47 +248,56 @@ export const RKPDDefaultFields: TDefaultField[] = [
             title: 'Содержание',
             length: 2000,
             order: 100,
+            page: 'D',
         }, {
             key: 'ANNOTAT_M',
             type: E_FIELD_TYPE.boolean,
             title: 'Содержание',
             length: 2000,
+            page: 'M',
         }, {
             key: 'CONSISTS_M',
             type: E_FIELD_TYPE.boolean,
             title: 'Состав',
             length: 255,
+            page: 'M',
         }, {
             key: 'DOC_DATE_M',
             type: E_FIELD_TYPE.boolean,
             title: 'Дата регистрации',
             readonly: true,
             value: true,
+            page: 'M',
         }, {
             key: 'FREE_NUM_M',
             type: E_FIELD_TYPE.boolean,
             title: 'Рег.№',
             readonly: true,
             value: true,
+            page: 'M',
         }, {
             key: 'ISN_PERSON_EXE_M',
             type: E_FIELD_TYPE.boolean,
             title: 'Исполнитель',
             readonly: true,
             value: true,
+            page: 'M',
         }, {
             key: 'PRUB_M',
             type: E_FIELD_TYPE.boolean,
             title: 'Рубрики',
+            page: 'M',
         }, {
             key: 'PSND_M',
             type: E_FIELD_TYPE.boolean,
             title: 'Адресаты',
+            page: 'M',
         }, {
             key: 'SECURLEVEL',
             type: E_FIELD_TYPE.select,
             title: 'Доступ',
             value: 1,
+            page: 'D',
             dict: {
                 dictId: 'SECURITY_CL',
                 dictKey: 'SECURLEVEL',
@@ -299,16 +308,19 @@ export const RKPDDefaultFields: TDefaultField[] = [
             key: 'SECURLEVEL_M',
             type: E_FIELD_TYPE.boolean,
             title: 'Доступ',
+            page: 'M',
             readonly: true,
         }, {
             key: 'SEND_DEP_PARM',
             type: E_FIELD_TYPE.boolean,
             title: 'Параметр копирования оригинал/копия',
+            page: 'D',
         }, {
             key: 'SEND_ISN_LIST_DEP',
             type: E_FIELD_TYPE.select,
             title: 'Внутренние',
             longTitle: 'Внутренние адресаты',
+            page: 'D',
             dict: {
                 dictId: 'USER_LISTS',
                 dictKey: 'ISN_LIST',
@@ -322,6 +334,7 @@ export const RKPDDefaultFields: TDefaultField[] = [
             type: E_FIELD_TYPE.select,
             title: 'Внешние',
             longTitle: 'Внешние адресаты',
+            page: 'D',
             dict: {
                 dictId: 'USER_LISTS',
                 dictKey: 'ISN_LIST',
@@ -335,6 +348,7 @@ export const RKPDDefaultFields: TDefaultField[] = [
             type: E_FIELD_TYPE.select,
             title: 'Внутренние',
             longTitle: 'Внутренние подписи',
+            page: 'D',
             dict: {
                 dictId: 'USER_LISTS',
                 dictKey: 'ISN_LIST',
@@ -347,20 +361,24 @@ export const RKPDDefaultFields: TDefaultField[] = [
             key: 'SIGN_ISN_LIST_M',
             type: E_FIELD_TYPE.boolean,
             title: 'Подписи',
+            page: 'M',
         }, {
             key: 'TERM_EXEC',
             type: E_FIELD_TYPE.numberIncrement,
             title: 'Срок исп. (План. дата), от даты регистрации',
             order: 20,
+            page: 'D',
         }, {
             key: 'TERM_EXEC_M',
             type: E_FIELD_TYPE.boolean,
             title: 'Срок исп. (План. дата)',
+            page: 'M',
         }, {
             key: 'VISA_ISN_LIST',
             type: E_FIELD_TYPE.select,
             title: 'Внутренние',
             longTitle: 'Внутренние визы',
+            page: 'D',
             dict: {
                 dictId: 'USER_LISTS',
                 dictKey: 'ISN_LIST',
@@ -373,10 +391,12 @@ export const RKPDDefaultFields: TDefaultField[] = [
             key: 'VISA_ISN_LIST_M',
             type: E_FIELD_TYPE.boolean,
             title: 'Визы',
+            page: 'M',
         }, {
             key: 'FILE',
             type: E_FIELD_TYPE.select,
             title: 'Файлы',
+            page: 'D',
             dict: {
                 dictId: 'DOC_TEMPLATES',
                 dictKey: 'ISN_TEMPLATE',
@@ -390,11 +410,13 @@ export const RKPDDefaultFields: TDefaultField[] = [
             key: 'FILE_M',
             type: E_FIELD_TYPE.boolean,
             title: 'Файлы',
+            page: 'M',
         }, {
             key: 'SIGN_OUTER_ISN_LIST',
             type: E_FIELD_TYPE.select,
             title: 'Внешние',
             longTitle: 'Внешние подписи',
+            page: 'D',
             dict: {
                 dictId: 'USER_LISTS',
                 dictKey: 'ISN_LIST',
@@ -408,6 +430,7 @@ export const RKPDDefaultFields: TDefaultField[] = [
             type: E_FIELD_TYPE.select,
             title: 'Внешние',
             longTitle: 'Внешние визы',
+            page: 'D',
             dict: {
                 dictId: 'USER_LISTS',
                 dictKey: 'ISN_LIST',
@@ -420,6 +443,7 @@ export const RKPDDefaultFields: TDefaultField[] = [
             key: 'PRJ_EXEC_LIST',
             type: E_FIELD_TYPE.select,
             title: 'Доп. исполнители',
+            page: 'D',
             dict: {
                 dictId: 'USER_LISTS',
                 dictKey: 'ISN_LIST',
@@ -434,16 +458,19 @@ export const RKPDDefaultFields: TDefaultField[] = [
             title: 'Состав',
             length: 255,
             order: 10,
+            page: 'D',
         }, {
             key: 'NOTE',
             type: E_FIELD_TYPE.text,
             title: 'Примечание',
             length: 2000,
             order: 180,
+            page: 'D',
         }, {
             key: 'RUBRIC_LIST',
             type: E_FIELD_TYPE.select,
             title: 'Рубрики',
+            page: 'D',
             dict: {
                 dictId: 'USER_LISTS',
                 dictKey: 'ISN_LIST',
@@ -456,6 +483,7 @@ export const RKPDDefaultFields: TDefaultField[] = [
             key: 'TERM_EXEC_TYPE',
             type: E_FIELD_TYPE.buttons,
             value: '1',
+            page: 'D',
             options: DAYS_TYPE_OPTS_VARIATIONS[0].options,
             title: ' Срок исполнения РК в каких днях',
         }, {
@@ -509,21 +537,25 @@ export const RKPDDefaultFields: TDefaultField[] = [
             type: E_FIELD_TYPE.boolean,
             title: 'Управление Исполнителями',
             order: 50,
+            page: 'D',
         }, {
             key: 'CAN_WORK_WITH_FILES',
             type: E_FIELD_TYPE.boolean,
             title: 'Работа с файлами РКПД',
             order: 70,
+            page: 'D',
         }, {
             key: 'CAN_WORK_WITH_PRJ',
             type: E_FIELD_TYPE.boolean,
             title: 'Работа с РКПД',
             order: 60,
+            page: 'D',
         }, {
             key: 'CAN_MANAGE_APPROVAL',
             type: E_FIELD_TYPE.boolean,
             title: 'Организация согл-я и утв-я',
             order: 80,
+            page: 'D',
         }];
 
 
