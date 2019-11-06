@@ -4,11 +4,10 @@ import { CanDeactivateGuard } from '../../app/guards/can-deactivate.guard';
 import { EosStorageService } from '../../app/services/eos-storage.service';
 import { EosDictService } from '../services/eos-dict.service';
 import { RECENT_URL } from '../../app/consts/common.consts';
-import { CONFIRM_SAVE_ON_LEAVE2 } from '../consts/confirm.consts';
-import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { IDictFormBase } from './dict-form-base.interface';
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
+import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 @Component({
     selector: 'eos-dict-form',
     templateUrl: 'dict-form.component.html',
@@ -30,10 +29,8 @@ export class DictFormComponent implements CanDeactivateGuard, OnDestroy {
         private _dictSrv: EosDictService,
         private _route: ActivatedRoute,
         private _router: Router,
-        private _confirmSrv: ConfirmWindowService,
     ) {
         this._route.params.subscribe((params) => {
-            // console.log(this._route);
             this.dictionaryId = params.dictionaryId;
             this._dictDescr = this._dictSrv.getDescr(params.dictionaryId);
             this.title = this._dictDescr ? this._dictDescr.title : '';
@@ -51,7 +48,7 @@ export class DictFormComponent implements CanDeactivateGuard, OnDestroy {
             // this._clearEditingCardLink();
         }
         if (this.formElement.hasChanges()) {
-            evt.returnValue = CONFIRM_SAVE_ON_LEAVE2.body;
+            evt.returnValue = MESSAGE_SAVE_ON_LEAVE;
             return false;
         }
     }
@@ -87,25 +84,38 @@ export class DictFormComponent implements CanDeactivateGuard, OnDestroy {
 
     private _askForSaving(): Promise<boolean> {
         if (this.formElement.hasChanges()) {
-            return this._confirmSrv.confirm2(Object.assign({}, CONFIRM_SAVE_ON_LEAVE2,
-                { confirmDisabled: false }))
-                .then((doSave) => {
-                    if (doSave === null) {
-                        return false;
-                    }
-                    if (doSave.result === 1) {
-                        return this.formElement.doSave();
-                    } else {
-                        return true;
-                    }
-                })
-                .catch(() => {
-                    return false;
-                });
+            return new Promise((res, rej) => {
+                if (confirm(MESSAGE_SAVE_ON_LEAVE)) {
+                    return res(true);
+                } else {
+                    return res(false);
+                }
+            });
         } else {
             return Promise.resolve(true);
         }
     }
+    // private _askForSaving(): Promise<boolean> {
+    //     if (this.formElement.hasChanges()) {
+    //         return this._confirmSrv.confirm2(Object.assign({}, CONFIRM_SAVE_ON_LEAVE2,
+    //             { confirmDisabled: false }))
+    //             .then((doSave) => {
+    //                 if (doSave === null) {
+    //                     return false;
+    //                 }
+    //                 if (doSave.result === 1) {
+    //                     return this.formElement.doSave();
+    //                 } else {
+    //                     return true;
+    //                 }
+    //             })
+    //             .catch(() => {
+    //                 return false;
+    //             });
+    //     } else {
+    //         return Promise.resolve(true);
+    //     }
+    // }
 
 
 }
