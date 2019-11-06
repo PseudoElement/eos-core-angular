@@ -11,10 +11,14 @@
     .icon {
         cursor: pointer;
     }
+    .fict {
+        cursor: auto;
+        max-height: 1px;
+    }
+
     .sortable-item {
         max-width: 490px;
         min-width: 400px;
-        flex-basis: calc((100% - 4*10px) / 1);
         margin-right: 10px;
         margin-bottom: 10px;
         flex-grow: 1;

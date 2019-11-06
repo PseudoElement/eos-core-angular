@@ -1,6 +1,6 @@
 <div class="eos-desktop">
     <div class="desktop-wrapper">
-        <div class="links-container">
+        <div class="links-container" #linkContainer>
             <bs-sortable
                 [(ngModel)]="referencesList"
                 [itemTemplate]="referenceTemplate"
@@ -91,6 +91,7 @@
         *ngIf="!editing(item.value)"
         (mousedown)="tryMove($event)"
         class="item-content xl-font block"
+        [ngStyle]="{'max-width.px': itemWidth()}"
         [ngClass]="{ disabled: item.value.linkType === 1 }"
         [routerLink]="rttlink(item)"
     >

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ElementRef, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ElementRef, ViewChild, OnChanges} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {EosDictService} from '../../eos-dictionaries/services/eos-dict.service';
@@ -15,9 +15,10 @@ import { skip } from 'rxjs/operators';
     templateUrl: 'desktop.component.html',
 })
 
-export class DesktopComponent implements OnInit, OnDestroy {
+export class DesktopComponent implements OnInit, OnDestroy, OnChanges {
 
     @ViewChild('title') title: ElementRef;
+    @ViewChild('linkContainer') linkContainer: ElementRef;
 
     referencesList: IDeskItem[];
     deskId: string;
@@ -31,6 +32,8 @@ export class DesktopComponent implements OnInit, OnDestroy {
     private _currentReferencesSubscription: Subscription;
     private _deskListSubscription: Subscription;
     private _routeSubscription: Subscription;
+    private _lastWrapperWidth: number;
+    private _calcItemWidth: number;
 
     constructor(
         private _dictSrv: EosDictService,
@@ -42,6 +45,10 @@ export class DesktopComponent implements OnInit, OnDestroy {
     ) {
         this._storageSrv.setItem(RECENT_URL, this._router.url);
         this._dictSrv.closeDictionary();
+    }
+
+    ngOnChanges () {
+        this._lastWrapperWidth = 0;
     }
 
     ngOnInit() {
@@ -80,6 +87,33 @@ export class DesktopComponent implements OnInit, OnDestroy {
 
     dragEndEvent(evt) {
         this._deskSrv.storeOrder(this.referencesList, this.deskId);
+    }
+
+
+    itemWidth() {
+        const w = this.linkContainer.nativeElement.clientWidth;
+        if (w === this._lastWrapperWidth) {
+            return this._calcItemWidth;
+        }
+        this._lastWrapperWidth = w;
+
+        const padsPerElem = 10;
+        const maxW: number = 490 + padsPerElem;
+        const minW: number = 400 + padsPerElem;
+
+        const dmin =  w / minW ;
+        const dmax =  w / maxW ;
+        const dmin_f = Math.floor(dmin);
+        const dmax_f = Math.floor(dmax);
+
+        if (dmax_f >= this.referencesList.length) {
+            this._calcItemWidth = maxW - padsPerElem;
+        } else if (dmin_f === dmax_f) {
+            this._calcItemWidth =  maxW - padsPerElem;
+        } else {
+            this._calcItemWidth = (w / dmin_f) - padsPerElem;
+        }
+        return this._calcItemWidth;
     }
 
     removeLink(link: IDeskItem, $evt: Event): void {
