@@ -118,14 +118,14 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         type: 'boolean',
         required: true,
         default: 0,
-    }, {
-        key: 'buttPer',
-        type: 'buttons',
-        title: '',
-        length: 100,
-        options: [{value: 0, title: 'Текущее'}, {value: 1, title: 'Переходящее'}],
-        default: null,
-        // isNoDBInput: true,
+    // }, {
+    //     key: 'buttPer',
+    //     type: 'buttons',
+    //     title: '',
+    //     length: 100,
+    //     options: [{value: 0, title: 'Текущее'}, {value: 1, title: 'Переходящее'}],
+    //     default: null,
+    //     // isNoDBInput: true,
     },
         Object.assign({}, COMMON_FIELD_NAME, {
             title: 'Заголовок',
