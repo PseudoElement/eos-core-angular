@@ -971,7 +971,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 if (fromParent) {
                     return node.parentId;
                 } else {
-                    return '0.2EZ9N.';
+                    // return '0.2EZ9N.';
                     return this._waitClassif.chooseDocGroup();
                 }
             }).then( (from_due) => {
