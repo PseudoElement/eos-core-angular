@@ -55,7 +55,6 @@ import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category
 import { TOOLTIP_DELAY_VALUE, EosTooltipService } from 'eos-common/services/eos-tooltip.service';
 import { IConfirmWindow2, IConfirmButton } from 'eos-common/confirm-window/confirm-window2.component';
 import { IMessage } from 'eos-common/interfaces';
-import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 
 @Component({
@@ -718,7 +717,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                                 .then(() => {
                                     const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
                                     message.msg = message.msg
-                                        .replace('{{RECS}}', EosDataConvertService.listToCommaList(confirmRestore.bodyList))
+                                        .replace('{{RECS}}', confirmRestore.bodyList.join(', '))
                                         .replace('{{OPERATION}}', 'восстановлены.');
                                     this._msgSrv.addNewMessage(message);
                                 });
@@ -760,11 +759,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             if (button && button.result === 2) {
                 const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
                 message.msg = message.msg
-                    .replace('{{RECS}}', EosDataConvertService.listToCommaList(confirmDelete.bodyList))
+                    .replace('{{RECS}}', confirmDelete.bodyList.join(', '))
                     .replace('{{OPERATION}}', 'удалены навсегда.');
 
-                return this._dictSrv.deleteMarked().then(() => {
-                    this._msgSrv.addNewMessage(message);
+
+                return this._dictSrv.deleteMarked().then((succesfull) => {
+                    if (succesfull) {
+                        this._msgSrv.addNewMessage(message);
+                    }
                 });
             }
             return Promise.resolve(null);
@@ -802,7 +804,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             if (button && button.result === 2) {
                 const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
                 message.msg = message.msg
-                    .replace('{{RECS}}', EosDataConvertService.listToCommaList(confirmDelete.bodyList))
+                    .replace('{{RECS}}', confirmDelete.bodyList.join(', '))
                     .replace('{{OPERATION}}', 'удалены логически.');
 
                 return this._dictSrv.setFlagForMarked('DELETED', true, true).then(() => {
