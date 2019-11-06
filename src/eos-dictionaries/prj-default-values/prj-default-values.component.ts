@@ -16,7 +16,7 @@ import {VALIDATOR_TYPE, ValidatorsControl} from '../validators/validators-contro
 import {Subscription} from 'rxjs';
 import {IDynamicInputOptions} from '../../eos-common/dynamic-form-input/dynamic-input.component';
 import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
-import {RK_SELECTED_LIST_CONTAIN_DELETED, RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_BEEN_DELETED} from '../../app/consts/confirms.const';
+import {RK_SELECTED_LIST_CONTAIN_DELETED, RK_SELECTED_LIST_IS_EMPTY, RK_SELECTED_LIST_BEEN_DELETED, RK_SELECTED_VALUE_LOGIC_DELETED} from '../../app/consts/confirms.const';
 import {IConfirmWindow2} from '../../eos-common/confirm-window/confirm-window2.component';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 import {WaitClassifService} from '../../app/services/waitClassif.service';
@@ -30,6 +30,266 @@ const PRJ_KEY_SHABLON = '{{tableName}}.{{id}}';
 const FILE_FIELDS = ['EXTENSIONS', 'MAX_SIZE', 'ONE_FILE'];
 const REG_MAX_SIZE: RegExp = /^\d{0,8}$/;
 
+export const RKPDdictionaries = [
+    {
+        name: 'security',
+        req: {SECURITY_CL: {}},
+        titleFieldName: 'GRIF_NAME',
+        isnFieldName: 'SECURLEVEL',
+    }, {
+        name: 'user_list_104',
+        req: {USER_LISTS: PipRX.criteries({ISN_LCLASSIF: '-99', CLASSIF_ID: '104'}), orderby: 'WEIGHT'},
+        titleFieldName: 'NAME',
+        isnFieldName: 'ISN_LIST',
+        isUserList: true,
+        isEmpty: false,
+    }, {
+        name: 'user_list_630',
+        req: {USER_LISTS: PipRX.criteries({ISN_LCLASSIF: '-99', CLASSIF_ID: '630'}), orderby: 'WEIGHT'},
+        titleFieldName: 'NAME',
+        isnFieldName: 'ISN_LIST',
+        isUserList: true,
+        isEmpty: false,
+    }, {
+        name: 'doc_templates',
+        req: {DOC_TEMPLATES: PipRX.criteries({CATEGORY: 'ФАЙЛЫ ДОКУМЕНТОВ'}), orderby: 'WEIGHT'},
+        titleFieldName: 'DESCRIPTION',
+        isnFieldName: 'ISN_TEMPLATE',
+    }, {
+        name: 'user_list_107',
+        req: {USER_LISTS: PipRX.criteries({ISN_LCLASSIF: '-99', CLASSIF_ID: '107'}), orderby: 'WEIGHT'},
+        titleFieldName: 'NAME',
+        isnFieldName: 'REF_ISN_LIST',
+        isUserList: true,
+        isEmpty: false,
+    }
+];
+
+export const RKPDDefaultFields: any[] = [
+{
+    DEFAULT_ID: 'ANNOTAT',
+    DEFAULT_TYPE: E_FIELD_TYPE.text,
+    DESCRIPTION: 'Содержание',
+    LENGTH: 2000,
+    order: 100,
+}, {
+    DEFAULT_ID: 'ANNOTAT_M',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Содержание',
+    LENGTH: 2000,
+}, {
+    DEFAULT_ID: 'CONSISTS_M',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Состав',
+    LENGTH: 255,
+}, {
+    DEFAULT_ID: 'DOC_DATE_M',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Дата регистрации',
+    READONLY: true,
+    DEFAULT_VALUE: true,
+}, {
+    DEFAULT_ID: 'FREE_NUM_M',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Рег.№',
+    READONLY: true,
+    DEFAULT_VALUE: true,
+}, {
+    DEFAULT_ID: 'ISN_PERSON_EXE_M',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Исполнитель',
+    READONLY: true,
+    DEFAULT_VALUE: true,
+}, {
+    DEFAULT_ID: 'PRUB_M',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Рубрики',
+}, {
+    DEFAULT_ID: 'PSND_M',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Адресаты',
+}, {
+    DEFAULT_ID: 'SECURLEVEL',
+    DEFAULT_TYPE: E_FIELD_TYPE.select,
+    DESCRIPTION: 'Доступ',
+    DEFAULT_VALUE: 1,
+    CLASSIF_ID: 'security',
+    order: 30,
+}, {
+    DEFAULT_ID: 'SECURLEVEL_M',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Доступ',
+    READONLY: true,
+}, {
+    DEFAULT_ID: 'SEND_DEP_PARM',
+    DEFAULT_TYPE: 'D',
+    DESCRIPTION: 'Параметр копирования оригинал/копия',
+}, {
+    DEFAULT_ID: 'SEND_ISN_LIST_DEP',
+    DEFAULT_TYPE: E_FIELD_TYPE.select,
+    DESCRIPTION: 'Внутренние',
+    FULL_DESCRIPTION: 'Внутренние адресаты',
+    CLASSIF_ID: 'user_list_104',
+    order: 160,
+}, {
+    DEFAULT_ID: 'SEND_ISN_LIST_ORGANIZ',
+    DEFAULT_TYPE: E_FIELD_TYPE.select,
+    DESCRIPTION: 'Внешние',
+    FULL_DESCRIPTION: 'Внешние адресаты',
+    CLASSIF_ID: 'user_list_630',
+    order: 170,
+}, {
+    DEFAULT_ID: 'SIGN_ISN_LIST',
+    DEFAULT_TYPE: E_FIELD_TYPE.select,
+    DESCRIPTION: 'Внутренние',
+    FULL_DESCRIPTION: 'Внутренние подписи',
+    CLASSIF_ID: 'user_list_104',
+    order: 130,
+}, {
+    DEFAULT_ID: 'SIGN_ISN_LIST_M',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Подписи',
+}, {
+    DEFAULT_ID: 'TERM_EXEC',
+    DEFAULT_TYPE: E_FIELD_TYPE.numberIncrement,
+    DESCRIPTION: 'Срок исп. (План. дата), от даты регистрации',
+    order: 20,
+}, {
+    DEFAULT_ID: 'TERM_EXEC_M',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Срок исп. (План. дата)',
+}, {
+    DEFAULT_ID: 'VISA_ISN_LIST',
+    DEFAULT_TYPE: E_FIELD_TYPE.select,
+    DESCRIPTION: 'Внутренние',
+    FULL_DESCRIPTION: 'Внутренние визы',
+    CLASSIF_ID: 'user_list_104',
+    order: 110,
+}, {
+    DEFAULT_ID: 'VISA_ISN_LIST_M',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Визы',
+}, {
+    DEFAULT_ID: 'FILE',
+    DEFAULT_TYPE: E_FIELD_TYPE.select,
+    DESCRIPTION: 'Файлы',
+    CLASSIF_ID: 'doc_templates',
+    order: 150,
+}, {
+    DEFAULT_ID: 'FILE_M',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Файлы',
+}, {
+    DEFAULT_ID: 'SIGN_OUTER_ISN_LIST',
+    DEFAULT_TYPE: E_FIELD_TYPE.select,
+    DESCRIPTION: 'Внешние',
+    FULL_DESCRIPTION: 'Внешние подписи',
+    CLASSIF_ID: 'user_list_630',
+    order: 140,
+}, {
+    DEFAULT_ID: 'VISA_OUTER_ISN_LIST',
+    DEFAULT_TYPE: E_FIELD_TYPE.select,
+    DESCRIPTION: 'Внешние',
+    FULL_DESCRIPTION: 'Внешние визы',
+    CLASSIF_ID: 'user_list_630',
+    order: 120,
+}, {
+    DEFAULT_ID: 'PRJ_EXEC_LIST',
+    DEFAULT_TYPE: E_FIELD_TYPE.select,
+    DESCRIPTION: 'Доп. исполнители',
+    CLASSIF_ID: 'user_list_104',
+    order: 40,
+}, {
+    DEFAULT_ID: 'CONSISTS',
+    DEFAULT_TYPE: E_FIELD_TYPE.string,
+    DESCRIPTION: 'Состав',
+    LENGTH: 255,
+    order: 10,
+}, {
+    DEFAULT_ID: 'NOTE',
+    DEFAULT_TYPE: E_FIELD_TYPE.text,
+    DESCRIPTION: 'Примечание',
+    LENGTH: 2000,
+    order: 180,
+}, {
+    DEFAULT_ID: 'RUBRIC_LIST',
+    DEFAULT_TYPE: E_FIELD_TYPE.select,
+    DESCRIPTION: 'Рубрики',
+    CLASSIF_ID: 'user_list_107',
+    order: 190,
+}, {
+    DEFAULT_ID: 'TERM_EXEC_TYPE',
+    DEFAULT_TYPE: E_FIELD_TYPE.buttons,
+    DEFAULT_VALUE: '1',
+    options: DAYS_TYPE_OPTS_VARIATIONS[0].options,
+    DESCRIPTION: ' Срок исполнения РК в каких днях',
+}, {
+    DEFAULT_ID: 'PRJ_RC.MAX_SIZE',
+    DEFAULT_TYPE: E_FIELD_TYPE.number,
+    DESCRIPTION: 'Max размер',
+    CATEGORY: 'PRJ_RC',
+    PATTERN: REG_MAX_SIZE,
+    TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+    order: 1000,
+}, {
+    DEFAULT_ID: 'PRJ_RC.ONE_FILE',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Один файл',
+    CATEGORY: 'PRJ_RC',
+    TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+    order: 1010,
+}, {
+    DEFAULT_ID: 'PRJ_RC.EXTENSIONS',
+    DEFAULT_TYPE: E_FIELD_TYPE.string,
+    DESCRIPTION: 'С расширением',
+    CATEGORY: 'PRJ_RC',
+    TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+    LENGTH: 255,
+    order: 1020,
+}, {
+    DEFAULT_ID: 'PRJ_VISA_SIGN.MAX_SIZE',
+    DEFAULT_TYPE: E_FIELD_TYPE.number,
+    DESCRIPTION: 'Max размер',
+    CATEGORY: 'PRJ_VISA_SIGN',
+    PATTERN: REG_MAX_SIZE,
+    TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+    order: 1030,
+}, {
+    DEFAULT_ID: 'PRJ_VISA_SIGN.ONE_FILE',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Один файл',
+    CATEGORY: 'PRJ_VISA_SIGN',
+    TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+    order: 1040,
+}, {
+    DEFAULT_ID: 'PRJ_VISA_SIGN.EXTENSIONS',
+    DEFAULT_TYPE: E_FIELD_TYPE.string,
+    DESCRIPTION: 'С расширением',
+    CATEGORY: 'PRJ_VISA_SIGN',
+    TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+    LENGTH: 255,
+    order: 1050,
+}, {
+    DEFAULT_ID: 'CAN_MANAGE_EXEC',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Управление Исполнителями',
+    order: 50,
+}, {
+    DEFAULT_ID: 'CAN_WORK_WITH_FILES',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Работа с файлами РКПД',
+    order: 70,
+}, {
+    DEFAULT_ID: 'CAN_WORK_WITH_PRJ',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Работа с РКПД',
+    order: 60,
+}, {
+    DEFAULT_ID: 'CAN_MANAGE_APPROVAL',
+    DEFAULT_TYPE: E_FIELD_TYPE.boolean,
+    DESCRIPTION: 'Организация согл-я и утв-я',
+    order: 80,
+}];
 class PrjDefaultItem {
     id: string;
     type: E_FIELD_TYPE;
@@ -64,13 +324,14 @@ class PrjDefaultItem {
     }
 }
 
+
 class PrjDefaultFactory {
     options = new Map<string, any[]>();
 
     private readonly _items = Array<PrjDefaultItem>();
 
     constructor() {
-        PrjDefaultFactory._getPrjDefaults().forEach((recs) => {
+        PrjDefaultFactory.getPrjDefaults().forEach((recs) => {
             this._items.push(new PrjDefaultItem(recs));
         });
     }
@@ -79,231 +340,8 @@ class PrjDefaultFactory {
         return this._items;
     }
 
-    private static _getPrjDefaults(): any[] {
-        return [{
-            DEFAULT_ID: 'ANNOTAT',
-            DEFAULT_TYPE: E_FIELD_TYPE.text,
-            DESCRIPTION: 'Содержание',
-            LENGTH: 2000,
-            order: 100,
-        }, {
-            DEFAULT_ID: 'ANNOTAT_M',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Содержание',
-            LENGTH: 2000,
-        }, {
-            DEFAULT_ID: 'CONSISTS_M',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Состав',
-            LENGTH: 255,
-        }, {
-            DEFAULT_ID: 'DOC_DATE_M',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Дата регистрации',
-            READONLY: true,
-            DEFAULT_VALUE: true,
-        }, {
-            DEFAULT_ID: 'FREE_NUM_M',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Рег.№',
-            READONLY: true,
-            DEFAULT_VALUE: true,
-        }, {
-            DEFAULT_ID: 'ISN_PERSON_EXE_M',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Исполнитель',
-            READONLY: true,
-            DEFAULT_VALUE: true,
-        }, {
-            DEFAULT_ID: 'PRUB_M',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Рубрики',
-        }, {
-            DEFAULT_ID: 'PSND_M',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Адресаты',
-        }, {
-            DEFAULT_ID: 'SECURLEVEL',
-            DEFAULT_TYPE: E_FIELD_TYPE.select,
-            DESCRIPTION: 'Доступ',
-            DEFAULT_VALUE: 1,
-            CLASSIF_ID: 'security',
-            order: 30,
-        }, {
-            DEFAULT_ID: 'SECURLEVEL_M',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Доступ',
-            READONLY: true,
-        }, {
-            DEFAULT_ID: 'SEND_DEP_PARM',
-            DEFAULT_TYPE: 'D',
-            DESCRIPTION: 'Параметр копирования оригинал/копия',
-        }, {
-            DEFAULT_ID: 'SEND_ISN_LIST_DEP',
-            DEFAULT_TYPE: E_FIELD_TYPE.select,
-            DESCRIPTION: 'Внутренние',
-            FULL_DESCRIPTION: 'Внутренние адресаты',
-            CLASSIF_ID: 'user_list_104',
-            order: 160,
-        }, {
-            DEFAULT_ID: 'SEND_ISN_LIST_ORGANIZ',
-            DEFAULT_TYPE: E_FIELD_TYPE.select,
-            DESCRIPTION: 'Внешние',
-            FULL_DESCRIPTION: 'Внешние адресаты',
-            CLASSIF_ID: 'user_list_630',
-            order: 170,
-        }, {
-            DEFAULT_ID: 'SIGN_ISN_LIST',
-            DEFAULT_TYPE: E_FIELD_TYPE.select,
-            DESCRIPTION: 'Внутренние',
-            FULL_DESCRIPTION: 'Внутренние подписи',
-            CLASSIF_ID: 'user_list_104',
-            order: 130,
-        }, {
-            DEFAULT_ID: 'SIGN_ISN_LIST_M',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Подписи',
-        }, {
-            DEFAULT_ID: 'TERM_EXEC',
-            DEFAULT_TYPE: E_FIELD_TYPE.numberIncrement,
-            DESCRIPTION: 'Срок исп. (План. дата), от даты регистрации',
-            order: 20,
-        }, {
-            DEFAULT_ID: 'TERM_EXEC_M',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Срок исп. (План. дата)',
-        }, {
-            DEFAULT_ID: 'VISA_ISN_LIST',
-            DEFAULT_TYPE: E_FIELD_TYPE.select,
-            DESCRIPTION: 'Внутренние',
-            FULL_DESCRIPTION: 'Внутренние визы',
-            CLASSIF_ID: 'user_list_104',
-            order: 110,
-        }, {
-            DEFAULT_ID: 'VISA_ISN_LIST_M',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Визы',
-        }, {
-            DEFAULT_ID: 'FILE',
-            DEFAULT_TYPE: E_FIELD_TYPE.select,
-            DESCRIPTION: 'Файлы',
-            CLASSIF_ID: 'doc_templates',
-            order: 150,
-        }, {
-            DEFAULT_ID: 'FILE_M',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Файлы',
-        }, {
-            DEFAULT_ID: 'SIGN_OUTER_ISN_LIST',
-            DEFAULT_TYPE: E_FIELD_TYPE.select,
-            DESCRIPTION: 'Внешние',
-            FULL_DESCRIPTION: 'Внешние подписи',
-            CLASSIF_ID: 'user_list_630',
-            order: 140,
-        }, {
-            DEFAULT_ID: 'VISA_OUTER_ISN_LIST',
-            DEFAULT_TYPE: E_FIELD_TYPE.select,
-            DESCRIPTION: 'Внешние',
-            FULL_DESCRIPTION: 'Внешние визы',
-            CLASSIF_ID: 'user_list_630',
-            order: 120,
-        }, {
-            DEFAULT_ID: 'PRJ_EXEC_LIST',
-            DEFAULT_TYPE: E_FIELD_TYPE.select,
-            DESCRIPTION: 'Доп. исполнители',
-            CLASSIF_ID: 'user_list_104',
-            order: 40,
-        }, {
-            DEFAULT_ID: 'CONSISTS',
-            DEFAULT_TYPE: E_FIELD_TYPE.string,
-            DESCRIPTION: 'Состав',
-            LENGTH: 255,
-            order: 10,
-        }, {
-            DEFAULT_ID: 'NOTE',
-            DEFAULT_TYPE: E_FIELD_TYPE.text,
-            DESCRIPTION: 'Примечание',
-            LENGTH: 2000,
-            order: 180,
-        }, {
-            DEFAULT_ID: 'RUBRIC_LIST',
-            DEFAULT_TYPE: E_FIELD_TYPE.select,
-            DESCRIPTION: 'Рубрики',
-            CLASSIF_ID: 'user_list_107',
-            order: 190,
-        }, {
-            DEFAULT_ID: 'TERM_EXEC_TYPE',
-            DEFAULT_TYPE: E_FIELD_TYPE.buttons,
-            DEFAULT_VALUE: '1',
-            options: DAYS_TYPE_OPTS_VARIATIONS[0].options,
-            DESCRIPTION: ' Срок исполнения РК в каких днях',
-        }, {
-            DEFAULT_ID: 'PRJ_RC.MAX_SIZE',
-            DEFAULT_TYPE: E_FIELD_TYPE.number,
-            DESCRIPTION: 'Max размер',
-            CATEGORY: 'PRJ_RC',
-            PATTERN: REG_MAX_SIZE,
-            TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
-            order: 1000,
-        }, {
-            DEFAULT_ID: 'PRJ_RC.ONE_FILE',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Один файл',
-            CATEGORY: 'PRJ_RC',
-            TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
-            order: 1010,
-        }, {
-            DEFAULT_ID: 'PRJ_RC.EXTENSIONS',
-            DEFAULT_TYPE: E_FIELD_TYPE.string,
-            DESCRIPTION: 'С расширением',
-            CATEGORY: 'PRJ_RC',
-            TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
-            LENGTH: 255,
-            order: 1020,
-        }, {
-            DEFAULT_ID: 'PRJ_VISA_SIGN.MAX_SIZE',
-            DEFAULT_TYPE: E_FIELD_TYPE.number,
-            DESCRIPTION: 'Max размер',
-            CATEGORY: 'PRJ_VISA_SIGN',
-            PATTERN: REG_MAX_SIZE,
-            TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
-            order: 1030,
-        }, {
-            DEFAULT_ID: 'PRJ_VISA_SIGN.ONE_FILE',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Один файл',
-            CATEGORY: 'PRJ_VISA_SIGN',
-            TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
-            order: 1040,
-        }, {
-            DEFAULT_ID: 'PRJ_VISA_SIGN.EXTENSIONS',
-            DEFAULT_TYPE: E_FIELD_TYPE.string,
-            DESCRIPTION: 'С расширением',
-            CATEGORY: 'PRJ_VISA_SIGN',
-            TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
-            LENGTH: 255,
-            order: 1050,
-        }, {
-            DEFAULT_ID: 'CAN_MANAGE_EXEC',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Управление Исполнителями',
-            order: 50,
-        }, {
-            DEFAULT_ID: 'CAN_WORK_WITH_FILES',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Работа с файлами РКПД',
-            order: 70,
-        }, {
-            DEFAULT_ID: 'CAN_WORK_WITH_PRJ',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Работа с РКПД',
-            order: 60,
-        }, {
-            DEFAULT_ID: 'CAN_MANAGE_APPROVAL',
-            DEFAULT_TYPE: E_FIELD_TYPE.boolean,
-            DESCRIPTION: 'Организация согл-я и утв-я',
-            order: 80,
-        }];
+    public static getPrjDefaults(): any[] {
+        return RKPDDefaultFields;
     }
 
     static get requiredItems() {
@@ -324,47 +362,15 @@ class PrjDefaultFactory {
     }
 
     static get dictionaries() {
-        return [
-            {
-                name: 'security',
-                req: {SECURITY_CL: {}},
-                titleFieldName: 'GRIF_NAME',
-                isnFieldName: 'SECURLEVEL',
-            }, {
-                name: 'user_list_104',
-                req: {USER_LISTS: PipRX.criteries({ISN_LCLASSIF: '-99', CLASSIF_ID: '104'}), orderby: 'WEIGHT'},
-                titleFieldName: 'NAME',
-                isnFieldName: 'ISN_LIST',
-                isUserList: true,
-                isEmpty: false,
-            }, {
-                name: 'user_list_630',
-                req: {USER_LISTS: PipRX.criteries({ISN_LCLASSIF: '-99', CLASSIF_ID: '630'}), orderby: 'WEIGHT'},
-                titleFieldName: 'NAME',
-                isnFieldName: 'ISN_LIST',
-                isUserList: true,
-                isEmpty: false,
-            }, {
-                name: 'doc_templates',
-                req: {DOC_TEMPLATES: PipRX.criteries({CATEGORY: 'ФАЙЛЫ ДОКУМЕНТОВ'}), orderby: 'WEIGHT'},
-                titleFieldName: 'DESCRIPTION',
-                isnFieldName: 'ISN_TEMPLATE',
-            }, {
-                name: 'user_list_107',
-                req: {USER_LISTS: PipRX.criteries({ISN_LCLASSIF: '-99', CLASSIF_ID: '107'}), orderby: 'WEIGHT'},
-                titleFieldName: 'NAME',
-                isnFieldName: 'REF_ISN_LIST',
-                isUserList: true,
-                isEmpty: false,
-            }
-        ];
+        return RKPDdictionaries;
     }
 
     fillDictionariesLists(apiSrv: PipRX): Promise<any[]> {
         const reads = [];
         this.options = new Map<string, any[]>();
         PrjDefaultFactory.dictionaries.forEach((dict) => {
-            reads.push(new Promise<any>((resolve) => apiSrv.read(dict.req)
+            const req = Object.assign({}, dict.req);
+            reads.push(new Promise<any>((resolve) => apiSrv.read(req)
                 .then(records => {
                     if (!this.options[dict.name]) {
                         this.options[dict.name] = [];
@@ -390,6 +396,7 @@ class PrjDefaultFactory {
         });
         return Promise.all(reads);
     }
+
     private _appendListInfo(options: [any], apiSrv: PipRX) {
         const listreqs = [];
 
@@ -489,6 +496,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                     .then((data) => {
                         this.data = data[0];
                         this._fillInputsValues();
+                        this._updateInputsOptions();
                         this.isUpdating = false;
                         this._prjExecListOnChange();
                         BaseCardEditComponent.autoFocusOnFirstStringElement('eos-prj-default-values');
@@ -648,7 +656,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
     }
 
     private _preSaveCheck(): Promise<any> {
-        let confPromise = Promise.resolve(false);
+        let confirmationsChain = Promise.resolve(false);
         // проверить списки на предмет наличия логически удаленных записей.
         const fields1 = this.prjDefaults.items;
 
@@ -657,27 +665,55 @@ export class PrjDefaultValuesComponent implements OnDestroy {
             (a.order === undefined ?  1 :
             (b.order === undefined ? -1 : 0) ));
 
+        const logicDeleted: PrjDefaultItem[] = [];
         for (let i = 0; i < sortable.length; i++) {
             const el = sortable[i];
             if (!el.dictId) { continue; }
-            const currentDict = PrjDefaultFactory.dictionaries.find(d => d.name === el.dictId);
-            if (!currentDict.isUserList) { continue; }
+            // const currentDict = PrjDefaultFactory.dictionaries.find(d => d.name === el.dictId);
+            // if (!currentDict.isUserList) { continue; }
 
             const val = this.form.controls[PrjDefaultValuesComponent._getFieldKey(el.id, el.tableName)].value;
             if (val) {
                 const opt = this.prjDefaults.options[el.dictId].find(o => Number(o.value) === Number(val));
                 if (opt) {
                     if (opt.isEmpty) {
-                        confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_IS_EMPTY);
+                        confirmationsChain = this._presaveConfirmAppend(confirmationsChain, el, RK_SELECTED_LIST_IS_EMPTY);
                     } else if (opt.hasDeleted) {
-                        confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_CONTAIN_DELETED);
+                        confirmationsChain = this._presaveConfirmAppend(confirmationsChain, el, RK_SELECTED_LIST_CONTAIN_DELETED);
+                    }
+                    if (opt && opt.disabled) {
+                        logicDeleted.push (el);
                     }
                 } else {
-                    confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_BEEN_DELETED);
+                    confirmationsChain = this._presaveConfirmAppend(confirmationsChain, el, RK_SELECTED_LIST_BEEN_DELETED);
                 }
             }
         }
-        return confPromise;
+
+        if (logicDeleted.length) {
+            confirmationsChain = confirmationsChain.then( (res) => {
+                const confirmLD: IConfirmWindow2 = Object.assign({}, RK_SELECTED_VALUE_LOGIC_DELETED);
+
+                let list: string = '';
+                for (let i = 0; i < logicDeleted.length; i++) {
+                    const el: PrjDefaultItem = logicDeleted[i];
+                    list += (el.fullDescr || el.descr);
+                    list += (i === logicDeleted.length - 1 ? '.' : ', ' );
+                }
+                confirmLD.body = confirmLD.body.replace('{{REK}}', 'РКПД');
+                confirmLD.body = confirmLD.body.replace('{{LIST}}', list);
+
+                if (res) {
+                    return res;
+                } else {
+                    return this._confirmSrv.confirm2(confirmLD).then((button) => {
+                        return (!button || button.result === 2);
+                    });
+                }
+            });
+        }
+
+        return confirmationsChain;
     }
 
     private _presaveConfirmAppend(confPromise: Promise<boolean>, el: PrjDefaultItem, win: IConfirmWindow2): Promise<boolean> {
@@ -774,7 +810,6 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                         case E_FIELD_TYPE.select:
                             this.inputs[key] = new DropdownInput(Object.assign({}, commonParams, {
                                 options: this.prjDefaults.options[prjDefault.dictId],
-
                             }));
                             break;
                         case E_FIELD_TYPE.text:
@@ -829,6 +864,19 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         this.data[FILE_CONSTRAINT_NAME].forEach(value => {
             this._setFileValue(value);
         });
+    }
+
+    private _updateInputsOptions() {
+        for (const key in this.inputs) {
+            if (this.inputs.hasOwnProperty(key)) {
+                const input = this.inputs[key];
+                if (input.controlType === E_FIELD_TYPE.select) {
+                    const control = this.form.controls[input.key];
+                    const filteredOptions = input.options.filter( o => !o.disabled || String(o.value) === String(control.value));
+                    input.options = filteredOptions;
+                }
+            }
+        }
     }
 
     private _rereadUserLists() {

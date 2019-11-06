@@ -90,9 +90,9 @@ export const RK_SELECTED_LIST_BEEN_DELETED: IConfirmWindow2 = {
 
 export const RK_SELECTED_VALUE_LOGIC_DELETED: IConfirmWindow2 = {
     title: 'Внимание',
-    body: 'В реквизите "{{REK}}" выбрано логически удаленное значение. Продолжить?',
+    body: 'В настройках реквизитов {{REK}} используются логически удаленные элементы справочников: {{LIST}} Продолжить?',
     buttons: [
-        {title: 'Да', result: 1, },
+        {title: 'Да', result: 1, isDefault: true, },
         {title: 'Нет', result: 2, },
     ],
 };

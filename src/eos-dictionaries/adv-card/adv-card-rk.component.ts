@@ -178,7 +178,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             // console.log(event);
         }).then (() => {
             this.form.updateValueAndValidity();
-            let confPromise = Promise.resolve(false);
+            let confirmationsChain = Promise.resolve(false);
 
             // проверить списки на предмет наличия логически удаленных записей.
             const fields_ = this.descriptions[DEFAULTS_LIST_NAME];
@@ -188,6 +188,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 (a.order === undefined ?  1 :
                 (b.order === undefined ? -1 : 0) ));
 
+            const logicDeleted = [];
             for (let i = 0; i < sortable.length; i++) {
                 const el: TDefaultField = sortable[i];
                 if (!el.dict) { continue; }
@@ -197,13 +198,14 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 if (val) {
                     const opt = el.options.find ( o => Number(o.value) === Number(val));
                     if (opt && opt.isEmpty) {
-                        confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_IS_EMPTY);
+                        confirmationsChain = this._presaveConfirmAppend(confirmationsChain, el, RK_SELECTED_LIST_IS_EMPTY);
                     }
                     if (opt && opt.hasDeleted) {
-                        confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_LIST_CONTAIN_DELETED);
+                        confirmationsChain = this._presaveConfirmAppend(confirmationsChain, el, RK_SELECTED_LIST_CONTAIN_DELETED);
                     }
                     if (opt && opt.disabled) {
-                        confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_VALUE_LOGIC_DELETED);
+                        logicDeleted.push (el);
+                        // confPromise = this._presaveConfirmAppend(confPromise, el, RK_SELECTED_VALUE_LOGIC_DELETED);
                     }
                     if (!opt) {
                         // Bug 105284: Из поля, где использовался удаленный список, просто надо удалить, молча
@@ -216,7 +218,29 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
                 }
             }
 
-            return confPromise;
+            if (logicDeleted.length) {
+                confirmationsChain = confirmationsChain.then( (res) => {
+                    const confirmLD: IConfirmWindow2 = Object.assign({}, RK_SELECTED_VALUE_LOGIC_DELETED);
+
+                    let list: string = '';
+                    for (let i = 0; i < logicDeleted.length; i++) {
+                        const el: TDefaultField = logicDeleted[i];
+                        list += (el.longTitle || el.title);
+                        list += (i === logicDeleted.length - 1 ? '.' : ', ' );
+                    }
+                    confirmLD.body = confirmLD.body.replace('{{REK}}', 'РК');
+                    confirmLD.body = confirmLD.body.replace('{{LIST}}', list);
+
+                    if (res) {
+                        return res;
+                    } else {
+                        return this._confirmSrv.confirm2(confirmLD).then((button) => {
+                            return (!button || button.result === 2);
+                        });
+                    }
+                });
+            }
+            return confirmationsChain;
         });
     }
 

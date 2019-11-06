@@ -9,6 +9,7 @@ import { NgZone, Injector } from '@angular/core';
 const DOCGROUP_TABLE = 'DOCGROUP_CL';
 const DOCGROUP_UID_NAME = 'ISN_NODE';
 export const DEFAULTS_LIST_NAME = 'DOC_DEFAULT_VALUE_List';
+export const PRJ_DEFAULTS_LIST_NAME = 'PRJ_DEFAULT_VALUE_List';
 export const FILE_CONSTRAINT_LIST_NAME = 'DG_FILE_CONSTRAINT_List';
 export const FICT_CONTROLS_LIST_NAME = 'fict';
 
@@ -59,6 +60,23 @@ export class AdvCardRKDataCtrl {
         return this._descr;
     }
 
+
+    readDGValuesDUE(due: string): Promise<any> {
+
+        const query = {
+            criteries: { DUE: String(due) },
+        };
+
+        const req: any = {
+            [DOCGROUP_TABLE]: query,
+            expand: DEFAULTS_LIST_NAME + ',' + FILE_CONSTRAINT_LIST_NAME + ',' + PRJ_DEFAULTS_LIST_NAME,
+            foredit: true,
+        };
+
+        return this._apiSrv.read<DOCGROUP_CL>(req).then((data) => {
+            return data;
+        });
+    }
 
     readDGValues(uid: number): Promise<any> {
 
@@ -273,7 +291,7 @@ export class AdvCardRKDataCtrl {
                 if (filter && el.dict.dictId !== filter) { continue; }
 
                 if (el.type === E_FIELD_TYPE.dictLink) {
-                    reqs.push(this.readDictLinkValue(el, linkValues[key][el.key], (event: IUpdateDictEvent) => {
+                    reqs.push(this.readDictLinkValue(el, linkValues[key] ? linkValues[key][el.key] : null, (event: IUpdateDictEvent) => {
                         event.path = key + '.' + el.key;
                         callback(event);
                     }));

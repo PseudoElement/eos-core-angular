@@ -55,6 +55,7 @@ export class TDFSelectOption {
 export class TDefaultField {
     key: string;
     type: E_FIELD_TYPE;
+    page?: 'D' | 'M' | 'W' | 'Fict' | 'F';
     title: string;
     longTitle?: string; // Расширеное поле текстовое для случаев когда title один и тот же у разных полей
     dict?: TDFSelect;
@@ -73,6 +74,7 @@ export const RKFieldsFict: TDefaultField[] = [
         key: 'helper1',
         type: E_FIELD_TYPE.boolean,
         title: '',
+        page: 'Fict',
     },
 ];
 
@@ -82,6 +84,7 @@ export const RKFictControls: TDefaultField[] = [
         key: 'KR_CURRENT',
         type: E_FIELD_TYPE.radio,
         title: 'Картотека Регистрации',
+        page: 'Fict',
         options: [
             {
                 value: '0',
@@ -98,6 +101,7 @@ export const RKFictControls: TDefaultField[] = [
         key: 'KR_CURRENT_IF',
         type: E_FIELD_TYPE.radio,
         title: 'Если журнал пересылки РК пуст, то',
+        page: 'Fict',
         options: [
             {
                 value: '0',
@@ -112,6 +116,7 @@ export const RKFictControls: TDefaultField[] = [
         type: E_FIELD_TYPE.dictLink,
         title: '',
         default: null,
+        page: 'Fict',
         dict: {
             dictId: 'DEPARTMENT',
             dictKey: 'ISN_NODE',
@@ -123,6 +128,7 @@ export const RKFictControls: TDefaultField[] = [
         type: E_FIELD_TYPE.dictLink,
         title: '',
         default: null,
+        page: 'Fict',
         dict: {
             dictId: 'DEPARTMENT',
             dictKey: 'ISN_NODE',
@@ -236,7 +242,7 @@ export const RKFilesConstraints: TDefaultField[] = [
 export const RKDefaultFields: TDefaultField[] = [
     {
         key: 'TERM_EXEC_TYPE',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.buttons,
         // kind_doc '1,2,3',
         // title: ' Срок исполнения РК в каких днях',
@@ -247,7 +253,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'SND_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Адресаты',
@@ -256,7 +262,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         // Внешние адресаты - вид отправки
         key: 'SEND_ISN_DELIVERY',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         // title: 'Вид доставки',
@@ -270,7 +276,7 @@ export const RKDefaultFields: TDefaultField[] = [
         }
     }, {
         key: 'SECURLEVEL_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         // title: 'Гриф доступа',
@@ -280,7 +286,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         // Доступ
         key: 'SECURLEVEL',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         // title: 'Гриф доступа РК',
@@ -295,10 +301,11 @@ export const RKDefaultFields: TDefaultField[] = [
         // справочник.
     }, {
         key: 'SECURLEVEL_FILE',
-        // Default type:  'D',
+        page: 'F',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         // title: 'Гриф доступа файла РК',
+        longTitle: 'Доступ (Файлы)',
         title: 'Доступ',
         dict: {
             dictId: 'SECURITY_CL',
@@ -311,7 +318,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id:  111
     }, {
         key: 'DOC_DATE_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Дата регистрации',
@@ -319,7 +326,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'JOURNAL_ISN_NOMENC',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.dictLink,
         // kind_doc '1,2,3',
         // title: 'Дело для записи в ЖПД',
@@ -334,7 +341,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id:  119
     }, {
         key: 'ISN_DELIVERY_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2',
         title: 'Доставка',
@@ -342,7 +349,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'ISN_DELIVERY',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2',
         // title: 'Доставка РК',
@@ -356,7 +363,7 @@ export const RKDefaultFields: TDefaultField[] = [
         order: 50,
     }, {
         key: 'JOURNAL_FROM_FORWARD_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         // title: 'Заполнение ЖПД по журналу пересылок РК',
@@ -366,7 +373,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'JOURNAL_FROM_WHO_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2',
         // title: 'Заполнение ЖПД по значению реквизита Кому',
@@ -375,7 +382,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'JOURNAL_ISN_NOMENC_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.dictLink,
         // kind_doc '1,2,3',
         // title: 'Значение для записи для дела ЖПД',
@@ -391,7 +398,7 @@ export const RKDefaultFields: TDefaultField[] = [
 
     }, {
         key: 'TERM_EXEC_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.numberIncrement,
         // kind_doc '1,2,3',
         // title: 'Значение при записи для срока исполнения РК',
@@ -403,7 +410,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'EXE_ISN_LIST',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '3',
         title: 'Исполнитель',
@@ -419,7 +426,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id:  545
     }, {
         key: 'ISN_PERSON_EXE_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
         title: 'Исполнитель',
@@ -427,7 +434,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'ISN_CABINET_REG_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Кабинет регистрации',
@@ -435,7 +442,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'CARD_VISA_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
         // title: 'Картотека визажиста РК',
@@ -444,14 +451,14 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'ISN_CARD_REG_FORWARD_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.string,
         // kind_doc '1,2,3',
         title: 'Картотека ДЛ первой пересылки РК вкачестве картотеки регистрации',
         // classif_id: NULL
     }, {
         key: 'CARD_WHO_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2',
         // title: 'Картотека ДЛ получателя РК',
@@ -460,7 +467,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'CARD_SIGN_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
         title: 'По значению реквизита "Подписал"',
@@ -469,7 +476,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'CARD_EXEC_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
         // title: 'Картотека исполнителя РК',
@@ -478,7 +485,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'ISN_CARD_REG_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Картотека регистрации',
@@ -486,7 +493,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'DOCWHO_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         order: 1090,
         // kind_doc '1,2',
@@ -495,14 +502,14 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'CONTROL_STATE',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.numberIncrement,
         // kind_doc '1,2,3',
         title: 'Контрольность РК',
         // classif_id: NULL
     }, {
         key: 'CORRESP_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2',
         title: 'Корреспондент',
@@ -511,7 +518,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         // с отметкой об отправке
         key: 'SEND_MARKSEND',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         // title: 'Отметить отправку',
@@ -521,7 +528,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         // Внешние адресаты - с отметкой об отправке
         key: 'SEND_OUTER_MARKSEND',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         // title: 'Отметить отправку',
@@ -530,28 +537,28 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'SEND_CB_SENDING_TYPE',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.numberIncrement,
         // kind_doc '1,2,3',
         title: 'Отправка Цб через',
         // classif_id: NULL
     }, {
         key: 'SEND_DEP_DOC_PARM',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.numberIncrement,
         // kind_doc '1,2,3',
         title: 'Параметр заполнения адресатов для всех док-тов/только с бум.оригиналом',
         // classif_id: NULL
     }, {
         key: 'JOURNAL_DOC_PARM',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.numberIncrement,
         // kind_doc '1,2,3',
         title: 'Параметр заполнения жпд для всех док-тов/только с бум.оригиналом',
         // classif_id: NULL
     }, {
         key: 'JOURNAL_DOC_PARM_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.string,
         // kind_doc '1,2,3',
         title: 'Параметр заполнения жпд для всех док-тов/только с бум.оригиналом',
@@ -559,7 +566,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         // Списать в дело радиобуттоны
         key: 'JOURNAL_NOMENC_PARM',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.buttons,
         // kind_doc '1,2,3',
         title: 'Параметр копирования оригинал/копия',
@@ -579,7 +586,7 @@ export const RKDefaultFields: TDefaultField[] = [
         ]
     }, {
         key: 'JOURNAL_NOMENC_PARM_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.buttons,
         // kind_doc '1,2,3',
         title: 'Параметр копирования оригинал/копия',
@@ -599,7 +606,7 @@ export const RKDefaultFields: TDefaultField[] = [
         order: 2190,
     }, {
         key: 'JOURNAL_PARM',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.buttons,
         // kind_doc '1,2,3',
         order: 120,
@@ -622,7 +629,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'JOURNAL_PARM_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.buttons,
         // kind_doc '1,2,3',
         title: 'Параметр копирования оригинал/копия',
@@ -646,7 +653,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         // Внутренние адресаты - радиобуттоны
         key: 'SEND_DEP_PARM',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.buttons,
         // kind_doc '1,2,3',
         order: 170,
@@ -669,21 +676,21 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'JOURNAL_NOMENC_DOC_PARM',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.numberIncrement,
         // kind_doc '1,2,3',
         title: 'Параметр списания в дело всех док-тов/только с бум.оригиналом/только без бум.оригинала',
         // classif_id: NULL
     }, {
         key: 'JOURNAL_NOMENC_DOC_PARM_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.string,
         // kind_doc '1,2,3',
         title: 'Параметр списания в дело всех док-тов/только с бум.оригиналом/только без бум.оригинала',
         // classif_id: NULL
     }, {
         key: 'FORWARD_EXEC_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
         title: 'По значению реквизита "Исполнитель"',
@@ -692,7 +699,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'FORWARD_SIGN_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
         title: 'По значению реквизита "Подписал"',
@@ -701,7 +708,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'FORWARD_WHO_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2',
         // title: 'Пересылка ДЛ получателю РК',
@@ -710,7 +717,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'TERM_EXEC_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         // title: 'Плановая дата',
@@ -719,7 +726,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'DOCSIGN_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '3',
         title: 'Подписал',
@@ -727,7 +734,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'FOLDER6_DEST_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         // title: 'Положить в 6 папку текущего кабинета',
@@ -736,7 +743,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'FOLDER2_DEST_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         // title: 'Положить во 2 папку текущего кабинета',
@@ -746,7 +753,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         // Примечание
         key: 'NOTE',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.text,
         // kind_doc '1,2,3',
         title: 'Примечание',
@@ -755,7 +762,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'FREE_NUM_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Рег. №',
@@ -763,7 +770,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'RUB_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Рубрики',
@@ -771,7 +778,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'ANNOTAT_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Содержание',
@@ -779,7 +786,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'ANNOTAT',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.text,
         // kind_doc '1,2,3',
         // title: 'Содержание РК',
@@ -789,7 +796,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'CONSISTS_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Состав',
@@ -797,7 +804,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'CONSISTS',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.string,
         // kind_doc '1,2,3',
         title: 'Состав',
@@ -808,7 +815,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         // Внутренние адресаты - Адресаты
         key: 'SEND_ISN_LIST_DEP',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         // title: 'Список адресатов ДЛ',
@@ -826,7 +833,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         // Внешние адресаты - Адресаты
         key: 'SEND_ISN_LIST_ORGANIZ',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         // title: 'Список адресатов организаций',
@@ -843,7 +850,7 @@ export const RKDefaultFields: TDefaultField[] = [
         }
     }, {
         key: 'JOURNAL_WHERE_REDIRECTION_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ  по которому будет производиться переадресация  в ЖПД',
@@ -859,7 +866,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'FORWARD_WHERE_REDIRECTION_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ  по которому будетпроизводиться переадресация  при пересылке',
@@ -874,7 +881,7 @@ export const RKDefaultFields: TDefaultField[] = [
         order: 2050,
     }, {
         key: 'REF_FILE_ACCESS_LIST',
-        // Default type:  'D',
+        page: 'F',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ для доступа к файлу РК',
@@ -889,7 +896,7 @@ export const RKDefaultFields: TDefaultField[] = [
         order: 3310,
     }, {
         key: 'JOURNAL_WHO_EMPTY_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ для ЖПД если поле "Кому" пусто',
@@ -904,7 +911,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id:  545
     }, {
         key: 'JOURNAL_ISN_LIST',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         // title: 'Список ДЛ для записи в ЖПД',
@@ -921,7 +928,7 @@ export const RKDefaultFields: TDefaultField[] = [
 
     }, {
         key: 'JOURNAL_ISN_LIST_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ для записи в ЖПД при записи',
@@ -936,7 +943,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id:  545
     }, {
         key: 'JOURNAL_WHO_REDIRECTION_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ для которых должна быть применена переадресация в ЖПД',
@@ -951,7 +958,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id:  545
     }, {
         key: 'FORWARD_WHO_REDIRECTION_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ для которых должна быть применена переадресация при пересылке',
@@ -966,7 +973,7 @@ export const RKDefaultFields: TDefaultField[] = [
         order: 2040,
     }, {
         key: 'FORWARD_ISN_LIST_DEP_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         // title: 'Список ДЛ для пересылок',
@@ -983,7 +990,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id:  545
     }, {
         key: 'FORWARD_WHO_EMPTY_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Список ДЛ для пересылок если поле "Кому" пусто',
@@ -998,7 +1005,7 @@ export const RKDefaultFields: TDefaultField[] = [
         order: 2030,
     }, {
         key: 'SIGN_ISN_LIST',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.select,
         title: 'Подписал',
         dict: {
@@ -1016,7 +1023,7 @@ export const RKDefaultFields: TDefaultField[] = [
         /* кому адресован */
         // select isn_list, name, all_flag, WEIGHT FROM user_lists where classif_id = 104 and isn_lclassif = -99 Order by user_lists.weight asc
         key: 'WHO_ISN_LIST',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2',
         // title: 'Список получателей РК',
@@ -1033,7 +1040,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         // Рубрики
         key: 'RUBRIC_LIST',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         // title: 'Список рубрик',
@@ -1049,7 +1056,7 @@ export const RKDefaultFields: TDefaultField[] = [
         }
     }, {
         key: 'TERM_EXEC',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.numberIncrement,
         // kind_doc '1,2,3',
         title: 'Срок исполнения',
@@ -1060,14 +1067,14 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'ISN_CARD_REG_CURR_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.string,
         // kind_doc '1,2,3',
         title: 'Текущая картотека в качестве картотеки регистрации',
         // classif_id: NULL
     }, {
         key: 'ISN_CABINET_REG_CURR_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.buttons,
         // kind_doc '1,2,3',
         // title: 'Текущий  кабинет в качестве кабинета регистрации',
@@ -1087,7 +1094,7 @@ export const RKDefaultFields: TDefaultField[] = [
     }, {
         // Select ISN_TEMPLATE ISN, DESCRIPTION NAME, DELETED, WEIGHT From DOC_TEMPLATES Where LOWER(CATEGORY) LIKE 'файлы документов' Order By WEIGHT
         key: 'FILE',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Файлы',
@@ -1101,7 +1108,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'FILE_M',
-        // Default type:  'M',
+        page: 'M',
         type: E_FIELD_TYPE.boolean,
         // kind_doc '1,2,3',
         title: 'Файлы',
@@ -1109,8 +1116,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id: NULL
     }, {
         key: 'CARD_ISN_W',
-        // Default type:  'W',
-        // type: E_FIELD_TYPE.select,
+        page: 'W',
         type: E_FIELD_TYPE.dictLink,
         // kind_doc '1,2,3',
         // title: 'Фиксированная картотека',
@@ -1125,7 +1131,7 @@ export const RKDefaultFields: TDefaultField[] = [
         order: 2210,
     }, {
         key: 'ISN_CARD_REG_W',
-        // Default type:  'W',
+        page: 'W',
         type: E_FIELD_TYPE.select,
         // kind_doc '1,2,3',
         title: 'Фиксированная картотека для записи в качестве картотеки регистрации',
@@ -1138,7 +1144,7 @@ export const RKDefaultFields: TDefaultField[] = [
         // classif_id:  104
     }, {
         key: 'SPECIMEN',
-        // Default type:  'D',
+        page: 'D',
         type: E_FIELD_TYPE.string,
         // kind_doc '1,2,3',
         title: 'Экз №',
