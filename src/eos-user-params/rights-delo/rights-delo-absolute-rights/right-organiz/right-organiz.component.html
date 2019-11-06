@@ -1,0 +1,56 @@
+<div class="right-dep-list">
+    <div *ngIf="!isLoading; else spiner" class="right-dep-org-list-content">
+        <label *ngIf="editMode" style="text-align: center;">Организация</label>
+        <div>
+            <button *ngIf="editMode && !selectedNode.control.disabled"
+                class="btn"
+                tooltip="Добавить организацию"
+                placement="right"
+                [disabled]="checkFlag"
+                triggers="hover"
+                containerClass="tooltip-info"
+                (click)="addOrganiz()"
+            >
+                <span class="eos-icon eos-icon-plus-blue small"></span>
+            </button>
+            <button *ngIf="editMode && !selectedNode.control.disabled"
+                class="btn"
+                tooltip="Удалить организацию"
+                #itemTooltip= 'bs-tooltip'
+                placement="right"
+                triggers="hover"
+                containerClass="tooltip-info"
+                [disabled]="!selectedDep"
+                (click)="itemTooltip.hide(); DeleteDep()"
+            >
+                <span class="eos-icon eos-icon-bin-forever-blue small"></span>
+            </button>
+        </div>
+        <div>
+            <div *ngIf="!checkFlag" class="over-tree-dep" [ngClass]="{'redact-tree-org': editMode}">
+                <div *ngFor="let node of listUserDep">
+                    <div class="item-tree-org" [ngClass]="{'highlighted': node.isSelected}">
+                        <label (click)="selectNode(node)">{{node.label}}</label>
+                    </div>
+                </div>
+                <!-- <eos-list-doc-tree
+                    class="tree-classif-node"
+                    [listNode]="listUserDep"
+                    [editMode]="editMode"
+                    (select)="selectNode($event)"
+                    (checkedNode)="checkedNode($event)"
+                ></eos-list-doc-tree> если понадобиться вернуть дерево нужно просто раскоментировать -->
+            </div>
+        </div>
+        
+
+    </div>
+</div>
+
+<div *ngIf="isShell" class="shell"></div>
+
+<ng-template #spiner>
+    <div class="spiner-wrapper">
+            <eos-spinner size="lg"></eos-spinner>
+    </div>
+</ng-template>

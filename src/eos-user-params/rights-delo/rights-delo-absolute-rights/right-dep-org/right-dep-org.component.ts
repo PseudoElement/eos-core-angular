@@ -12,10 +12,10 @@ import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tr
 import { EosStorageService } from 'app/services/eos-storage.service';
 
 @Component({
-    selector: 'eos-right-absolute-department',
-    templateUrl: 'right-department.component.html'
+    selector: 'eos-right-absolute-depart-organiz',
+    templateUrl: 'right-dep-org.component.html'
 })
-export class RightDepertmentComponent implements OnInit {
+export class RightOrganizDepertComponent implements OnInit {
     @Input() editMode: boolean;
     @Input() selectedNode: NodeAbsoluteRight;
     @Input() listRigth: NodeAbsoluteRight[];
@@ -51,7 +51,7 @@ export class RightDepertmentComponent implements OnInit {
         this.userDep = this.curentUser['USERDEP_List'];
         this.funcNum = +this.selectedNode.key + 1;
         if (this.selectedNode.isCreate && this.userDep.filter(i => i['FUNC_NUM'] === this.funcNum).length === 0) {
-            this.addDep();
+            // this.addDep();
             this.isLoading = false;
             return;
         }
@@ -156,11 +156,11 @@ export class RightDepertmentComponent implements OnInit {
                     this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
                     const newNode = new NodeDocsTree(cfg);
                     this.curentUser.USERDEP_List.push(newUserDep);
-                        this.selectedNode.pushChange({
-                            method: 'POST',
-                            due: newUserDep.DUE,
-                            data: newUserDep
-                        });
+                    this.selectedNode.pushChange({
+                        method: 'POST',
+                        due: newUserDep.DUE,
+                        data: newUserDep
+                    });
                     newNodes.push(newNode);
                 });
                 this.confirmPkpd();
@@ -221,9 +221,6 @@ export class RightDepertmentComponent implements OnInit {
             });
         }
         this.listUserDep = this.listUserDep.filter(n => n !== this.selectedDep);
-        if (!this.listUserDep.length && !this.getAllDep) {
-            this.selectedNode.value = 0;
-        }
         this.selectedNode.pushChange({
             method: 'DELETE',
             due: this.selectedDep.DUE,
@@ -254,11 +251,8 @@ export class RightDepertmentComponent implements OnInit {
         this.Changed.emit();
     }
     querySaveDell(): any[] {
-        /* if (this.curentUser.USERDEP_List.length < this.curentUser._orig.USERDEP_List.length) { */
-            const intersection = this.curentUser._orig.USERDEP_List.filter(element => !(this.curentUser.USERDEP_List.indexOf(element) !== -1));
-            return intersection;
-        /* }
-        return []; */
+        const intersection = this.curentUser._orig.USERDEP_List.filter(element => !(this.curentUser.USERDEP_List.indexOf(element) !== -1));
+        return intersection;
     }
     updateDell() {
         const changeList = this.querySaveDell();
@@ -278,14 +272,31 @@ export class RightDepertmentComponent implements OnInit {
     checkAllDep() {
         return this.getAllDep && this.selectedNode.value === 2 ? true : false;
     }
+    returnOrgan(): any[] {
+        const arr = [];
+        this.selectedNode.change.forEach(elem => {
+            if (elem.data['DEEP'] === undefined) {
+                arr.push(elem);
+            }
+        });
+        return arr;
+    }
     checkForAll(event) {
         this.checkFlag = !this.checkFlag;
         if (this.checkFlag) {
+            const arr = this.returnOrgan();
             this.selectedNode.deleteChange();
+            arr.forEach(elem => {
+                this.selectedNode.pushChange(elem);
+            });
             this.deleteAllDep();
         } else {
+            const arr = this.returnOrgan();
             this.selectedNode.deleteChange();
             this.updateDell();
+            arr.forEach(elem => {
+                this.selectedNode.pushChange(elem);
+            });
             if (this.massMy.length > 0) {
                 this.deletForAll();
             } else {
@@ -308,7 +319,11 @@ export class RightDepertmentComponent implements OnInit {
         });
         this.apiSrv.getDepartment(str)
             .then(el => {
+                const arr = this.returnOrgan();
                 this.selectedNode.deleteChange();
+                arr.forEach(elem => {
+                    this.selectedNode.pushChange(elem);
+                });
                 this.delDepMy();
                 this.addDepMy(el);
                 this.updateDell();

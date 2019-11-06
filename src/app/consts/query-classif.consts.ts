@@ -1,5 +1,10 @@
 import { IOpenClassifParams } from 'eos-common/interfaces';
 
+export const OPEN_CLASSIF_ORGANIZ_FULL: IOpenClassifParams = {
+    classif: 'ORGANIZ_CL',
+    return_due: true,
+    skipDeleted: false,
+};
 export const OPEN_CLASSIF_DEPARTMENT_FULL: IOpenClassifParams = {
     classif: 'DEPARTMENT',
     return_due: true,

@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { UserPaginationService } from '../services/users-pagination.service';
-import { DEPARTMENT, DOCGROUP_CL, /* USER_CL */ } from 'eos-rest';
+import { DEPARTMENT, DOCGROUP_CL, ORGANIZ_CL, /* USER_CL */ } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { Subject, Observable } from 'rxjs';
 import { IConfig } from 'eos-user-select/shered/interfaces/user-select.interface';
@@ -325,6 +325,10 @@ export class UserParamApiSrv {
     getDepartment(due?: Array<string>): Promise<DEPARTMENT[]> {
         const query = { DEPARTMENT: due };
         return this.getData<DEPARTMENT>(query);
+    }
+    getOrganization(due?: Array<string>): Promise<ORGANIZ_CL[]> {
+        const query = { ORGANIZ_CL: due };
+        return this.getData<ORGANIZ_CL>(query);
     }
     getDocGroup(due?: string[]): Promise<DOCGROUP_CL[]> {
         let q;
