@@ -183,6 +183,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           }
         }
         this.ShowData();
+        this.checkNotAllUsers();
       });
   }
 
@@ -540,6 +541,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           }
         }
         this.ShowData();
+        this.checkNotAllUsers();
       });
   }
 
