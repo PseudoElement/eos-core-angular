@@ -379,6 +379,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         // this._countColumnWidth();
     }
 
+    isPaginationVisible(): boolean {
+        return this._dictSrv.isPaginationVisible();
+    }
+
     doAction(evt: IActionEvent) {
         switch (evt.action) {
             case E_RECORD_ACTIONS.navigateDown:
@@ -716,6 +720,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                             const needInclude = confirmed.result === 2;
                             this._dictSrv.setFlagForMarked('DELETED', needInclude, false)
                                 .then(() => {
+                                    this._dictSrv.setMarkAllNone();
                                     const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
                                     message.msg = message.msg
                                         .replace('{{RECS}}', confirmRestore.bodyList.join(', '))
@@ -811,6 +816,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                     .replace('{{OPERATION}}', 'удалены логически.');
 
                 return this._dictSrv.setFlagForMarked('DELETED', true, true).then(() => {
+                    this._dictSrv.setMarkAllNone();
                     this._msgSrv.addNewMessage(message);
                 });
             }

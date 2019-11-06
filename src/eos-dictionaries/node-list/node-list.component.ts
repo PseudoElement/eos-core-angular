@@ -261,6 +261,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     orderByField(fieldKey: string) {
+        this._dictSrv.setMarkAllNone();
         if (!this.orderBy || this.orderBy.fieldKey !== fieldKey) {
             this.orderBy = {
                 fieldKey: fieldKey,

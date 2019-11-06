@@ -1003,7 +1003,7 @@ export class EosDictService {
     }
 
     toggleWeightOrder(value?: boolean) {
-
+        this.setMarkAllNone();
 
         this.updateViewParameters({
             userOrdered: (value === undefined) ? !this.viewParameters.userOrdered : value
@@ -1064,6 +1064,8 @@ export class EosDictService {
     }
 
     toggleDeleted() {
+        this.setMarkAllNone();
+
         this.viewParameters.showDeleted = !this.viewParameters.showDeleted;
 
         if (this.currentDictionary) {
@@ -1142,6 +1144,10 @@ export class EosDictService {
 
     updateVisibleList(): any {
         this.changePagination(this.paginationConfig);
+    }
+
+    isPaginationVisible(): boolean {
+        return this.paginationConfig && this.paginationConfig.itemsQty > 10;
     }
 
     private getDictionaryById(id: string): Promise<EosDictionary> {
@@ -1414,6 +1420,7 @@ export class EosDictService {
                 this._currentList = dictionary.reorderList(this._currentList, this.viewParameters.showAllSubnodes);
             }
         }
+        this.setMarkAllNone();
         this._currentList$.next(this._currentList);
         this._updateVisibleNodes();
     }

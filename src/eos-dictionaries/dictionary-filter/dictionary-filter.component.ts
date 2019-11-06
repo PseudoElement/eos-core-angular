@@ -86,6 +86,7 @@ export class DictionaryFilterComponent implements OnDestroy {
         const cb1Filter = this.searchForm.controls['filter.CB1'];
 
         this.searchForm.valueChanges.subscribe((data) => {
+            this._dictSrv.setMarkAllNone();
             if (this.dictId === NOMENKL_DICT.id) {
                 const nomenklFilt = {};
                 if (yearFilter.valid) {

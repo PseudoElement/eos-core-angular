@@ -130,7 +130,7 @@
             class="node-list-container"
             [ngClass]="{'list-heigth-1': nlHeightType() === 1, 'list-heigth-2': nlHeightType() === 2, 'list-heigth-3': nlHeightType() === 3}"
         ></eos-node-list>
-        <eos-node-list-pagination [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-node-list-pagination>
+        <eos-node-list-pagination *ngIf="isPaginationVisible()" [currentState]="[currentState[0] && !hideTree, currentState[1]]"></eos-node-list-pagination>
     </div>
     <div class="opened-wrapper block"
         [ngClass]="{'open-info': currentState[1]}">
