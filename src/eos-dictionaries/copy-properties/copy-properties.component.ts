@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, OnDestroy, Output, Injector} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {WaitClassifService} from '../../app/services/waitClassif.service';
+// import {WaitClassifService} from '../../app/services/waitClassif.service';
 import {BsModalRef} from 'ngx-bootstrap';
-import {DOCGROUP_CL, PipRX} from '../../eos-rest';
+import {PipRX} from '../../eos-rest';
 import {EosMessageService} from '../../eos-common/services/eos-message.service';
-import {IMessage} from '../../eos-common/core/message.interface';
+// import {IMessage} from '../../eos-common/core/message.interface';
 import {SUCCESS_SAVE, WARN_SAVE_FAILED} from '../consts/messages.consts';
 import {InputControlService} from '../../eos-common/services/input-control.service';
 import {CheckboxInput} from '../../eos-common/core/inputs/checkbox-input';
@@ -12,23 +12,100 @@ import {StringInput} from '../../eos-common/core/inputs/string-input';
 import {Subscription} from 'rxjs';
 import { RKDefaultFields, TDefaultField, TDFSelect } from 'eos-dictionaries/adv-card/rk-default-values/rk-default-const';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
-import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, PRJ_DEFAULTS_LIST_NAME } from 'eos-dictionaries/adv-card/adv-card-rk-datactrl';
+import { AdvCardRKDataCtrl, DEFAULTS_LIST_NAME, PRJ_DEFAULTS_LIST_NAME, FILE_CONSTRAINT_LIST_NAME, AR_DOCGROUP_LIST_NAME, IUpdateDictEvent } from 'eos-dictionaries/adv-card/adv-card-rk-datactrl';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import { RK_SELECTED_VALUE_LOGIC_DELETED } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { RKPDDefaultFields, RKPDdictionaries } from 'eos-dictionaries/prj-default-values/prj-default-values.component';
+import { IMessage } from 'eos-common/interfaces';
+import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
 const RC_TYPE_IS_DIFFERENT_WARNING_MESSAGE: IMessage = {
     type: 'warning',
     title: 'Внимание',
     msg: 'Копирование свойств возможно только для групп документов с одинаковым видом РК',
 };
+
 const THE_SAME_GROUP_WARNING_MESSAGE: IMessage = {
     type: 'warning',
     title: 'Внимание',
     msg: 'Невозможно копирование свойств группы самой себе',
 };
-const CLASSIF_NAME = 'DOCGROUP_CL';
+// const CLASSIF_NAME = 'DOCGROUP_CL';
+
+class CopyPropWarningList {
+    logicDeleted = new Array<string>();
+    emptyListValues = new Array<string>();
+    hasDeletedList = new Array<string>();
+}
+
+
+class CopyPropWarningPage {
+    list = new CopyPropWarningList();
+    suffixText: string;
+
+    constructor (suffix: string) {
+        this.suffixText = suffix;
+    }
+
+    public asTextlist(): string[] {
+        const result = [];
+        if (this.list.logicDeleted.length) {
+            let text = '';
+            text += '\n' + this.suffixText + '\n логически удаленные элементы справочников: ';
+            text += EosDataConvertService.listToCommaList(this.list.logicDeleted);
+            result.push(text);
+        }
+        if (this.list.emptyListValues.length) {
+            let text = '';
+            text += '\n' + this.suffixText + '\n пустые списки: ';
+            text += EosDataConvertService.listToCommaList(this.list.emptyListValues);
+            result.push(text);
+        }
+        if (this.list.hasDeletedList.length) {
+            let text = '';
+            text += '\n' + this.suffixText + '\n списки, содержащие пустые элементы: ';
+            text += EosDataConvertService.listToCommaList(this.list.emptyListValues);
+            result.push(text);
+        }
+        return result;
+    }
+}
+class CopyPropWarning  {
+    lists = {
+        RK_D: new CopyPropWarningPage('В настройках реквизитов РК по умолчанию используются '),
+        RK_W: new CopyPropWarningPage('В Правилах заполнения реквизитов РК при записи используются '),
+        RK_F: new CopyPropWarningPage('В Правила для файлов РК используются '),
+        RKPD: new CopyPropWarningPage('РКПД: '),
+    };
+
+    isEmpty(): boolean {
+        for (const key in this.lists) {
+            if (this.lists.hasOwnProperty(key)) {
+                const list: CopyPropWarningPage = this.lists[key];
+                if (list.list.hasDeletedList.length || list.list.emptyListValues.length || list.list.logicDeleted.length) {
+                    return false;
+                }
+            }
+        }
+        return true;
+        // return !(this.rk_defaults.length
+        //     || this.a_write_rek.length
+        //     || this.a_fc_rc.length
+        //     || this.a_prj_rek.length
+        //     || this.RKemptyListValues['D'].length
+        //     || this.RKemptyListValues['W'].length
+        //     || this.RKemptyListValues['F'].length
+        //     || this.RKhasDeletedList['D'].length
+        //     || this.RKhasDeletedList['W'].length
+        //     || this.RKhasDeletedList['F'].length
+        //     );
+    }
+
+    allAsMessagesArr() {
+
+    }
+}
 
 @Component({
     selector: 'eos-update-properties',
@@ -39,26 +116,34 @@ export class CopyPropertiesComponent implements OnDestroy {
     @Input() form: FormGroup;
     @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
+
+    get fromParent (): boolean {
+        return this._fromDue === this._recTo['PARENT_DUE'];
+    }
     isUpdating = true;
     inputs: any = {};
     formValid: boolean;
-    fromParent: boolean;
+    // fromParent: boolean;
     title: string;
     saveButtonLabel: string;
     properties;
-    private rec_to;
-    private rec_from;
+
+    private _dataControllerRK: AdvCardRKDataCtrl;
+    private _recTo: any;
+    private _fromDue: string;
+    private _dgFrom: any;
     private properties_for_request = [];
     private formChanges$: Subscription;
 
     constructor(
         public injector: Injector,
-        private _waitClassif: WaitClassifService,
         private _bsModalRef: BsModalRef,
         private _msgSrv: EosMessageService,
         private _apiSrv: PipRX,
         private _confirmSrv: ConfirmWindowService,
+
         private _inputCtrlSrv: InputControlService) {
+            this._dataControllerRK = new AdvCardRKDataCtrl(this.injector);
     }
 
     ngOnDestroy(): void {
@@ -68,25 +153,94 @@ export class CopyPropertiesComponent implements OnDestroy {
         this.onClose.emit();
     }
 
-    public init(rec: any, fromParent: boolean) {
-        this.isUpdating = true;
-        this.rec_to = rec;
-        this.fromParent = fromParent;
 
-        if (this.fromParent) {
-            this.title = 'Обновить свойства подчиненных групп документов';
-            this.saveButtonLabel = 'Обновить';
-            this._initPropertiesFromParent();
-            this._initInputs();
-            this.isUpdating = false;
-        } else {
-            this.title = 'Копирование свойств группы документов';
-            this.saveButtonLabel = 'Копировать';
-            this._initProperties();
-            this._initInputs();
-            this._chooseDocGroup();
+    public init(toNodeRec: any, fromdue: string) {
+        this.isUpdating = true;
+        this._recTo = toNodeRec;
+        this._fromDue = fromdue;
+
+        if (toNodeRec.DUE.toString() === fromdue) {
+            setTimeout(() => {
+                this._msgSrv.addNewMessage(THE_SAME_GROUP_WARNING_MESSAGE);
+                this.hideModal();
+            }, 300);
+            return null;
         }
+
+        return this._dataControllerRK.readDGValuesDUE(fromdue).then(([docGroup]) => {
+
+            this._dgFrom = Object.assign({}, docGroup);
+
+            if (docGroup.RC_TYPE.toString() !== this._recTo.RC_TYPE.toString()) {
+                setTimeout(() => {
+                    this._msgSrv.addNewMessage(RC_TYPE_IS_DIFFERENT_WARNING_MESSAGE);
+                    this.hideModal();
+                }, 300);
+                return;
+            }
+
+
+            if (this.fromParent) {
+                this.title = 'Обновить свойства подчиненных групп документов';
+                this.saveButtonLabel = 'Обновить';
+                this._initPropertiesFromParent();
+                this._initInputs();
+            } else {
+                this.title = 'Копирование свойств группы документов';
+                this.saveButtonLabel = 'Копировать';
+                this._initProperties();
+                this._initInputs();
+            }
+
+            this.form.controls.NODE_TO_COPY.setValue(docGroup.CLASSIF_NAME);
+
+            this.isUpdating = false;
+            // this.hideModal();
+
+        }).catch(() => {
+            this.hideModal();
+        });
     }
+
+    // public init(rec: any, fromParent: boolean) {
+
+    //     // this.rec_to = rec;
+    //     // this.fromParent = fromParent;
+
+    //     Promise.resolve(null).then (() => {
+    //         if (this.fromParent) {
+    //             return this.rec_to.PARENT_DUE;
+    //         } else {
+    //             return this._waitClassif.chooseDocGroup();
+    //         }
+    //     }).then((due) => {
+    //         console.log("TCL: CopyPropertiesComponent -> init -> due", due)
+    //         // const due = this.fromParent ? this.rec_to.DUE : this.rec_from.DUE;
+    //         return this._dataControllerRK.readDGValuesDUE(due).then(([docGroup]) => {
+    //             console.log("TCL: CopyPropertiesComponent -> init -> docGroup", docGroup)
+    //             if (this.fromParent) {
+    //                 this.title = 'Обновить свойства подчиненных групп документов';
+    //                 this.saveButtonLabel = 'Обновить';
+    //                 this._initPropertiesFromParent();
+    //                 this._initInputs();
+    //             } else {
+    //                 this.title = 'Копирование свойств группы документов';
+    //                 this.saveButtonLabel = 'Копировать';
+    //                 this._initProperties();
+    //                 this._initInputs();
+    //             }
+    //             this.isUpdating = false;
+    //             this.hideModal();
+
+    //         });
+    //     }).catch(() => {
+    //         this.hideModal();
+    //     });
+
+
+
+
+    // }
 
     public hideModal() {
         this._bsModalRef.hide();
@@ -106,8 +260,8 @@ export class CopyPropertiesComponent implements OnDestroy {
 
         this._validateData().then( (result) => {
             if (result) {
-                Object.assign(args, this.fromParent ? {due: this.rec_to.DUE} : {due_from: this.rec_from.DUE,
-                    due_to: this.rec_to.DUE});
+                Object.assign(args, this.fromParent ? {due: this._recTo.DUE} : {due_from: this._dgFrom.DUE,
+                    due_to: this._recTo.DUE});
 
                 Object.assign(args, {flags: flagStr});
 
@@ -165,7 +319,6 @@ export class CopyPropertiesComponent implements OnDestroy {
             });
 
             reqs.push (request);
-
         }
 
         return Promise.all(reqs).then ( (r) => {
@@ -175,83 +328,116 @@ export class CopyPropertiesComponent implements OnDestroy {
 
     private _validateData(): Promise<boolean> {
         const dataControllerRK = new AdvCardRKDataCtrl(this.injector);
-        const due = this.fromParent ? this.rec_to.DUE : this.rec_from.DUE;
+        const due = this.fromParent ? this._recTo.DUE : this._dgFrom.DUE;
 
         return dataControllerRK.readDGValuesDUE(due).then(([docGroup]) => {
+            const warnings: CopyPropWarning = new CopyPropWarning();
             const checks = [];
-            const warnings = {
-                rk_defaults: [],
-                a_write_rek: [],
-                a_fc_rc: [],
-                a_prj_rek: [],
-                isEmpty(): boolean {
-                    return !(this.rk_defaults.length || this.a_write_rek.length || this.a_fc_rc.length || this.a_prj_rek.length);
-                }
-            };
+            this._dataControllerRK.markCacheForDirty('USER_LISTS');
+            const fields = Object.assign({}, this._dataControllerRK.getDescriptionsRK(), this._dataControllerRK.getDescriptionsRKPD());
+            return this._dataControllerRK.updateDictsOptions(fields, 'USER_LISTS', this._dgFrom, (event: IUpdateDictEvent) => {
+                const el = event.el;
+                const savedData = docGroup[event.key].find (f => f.DEFAULT_ID === el.key);
+                if (savedData) {
+                    const selectedOpt = event.options.find( o => String(o.value) === String(savedData.VALUE));
+                    if (selectedOpt) {
+                        const page: CopyPropWarningPage = event.key === PRJ_DEFAULTS_LIST_NAME ? warnings.lists.RKPD :
+                                                          el.page === 'F' ? warnings.lists.RK_F :
+                                                          el.page === 'W' ? warnings.lists.RK_W : warnings.lists.RK_D;
 
-            if (this.controlChecked('a_default_rek')) {
-                const fieldsForCheck = RKDefaultFields.filter((field: TDefaultField) => field.type === E_FIELD_TYPE.select && field.page === 'D');
-                checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, DEFAULTS_LIST_NAME).then( (result: any[]) => {
-                    warnings.rk_defaults = result;
-                    return Promise.resolve(result);
-                }));
-            }
-
-            if (this.controlChecked('a_write_rek')) {
-                const fieldsForCheck = RKDefaultFields.filter((field: TDefaultField) => field.type === E_FIELD_TYPE.select && field.page === 'W');
-                checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, DEFAULTS_LIST_NAME).then( (result: any[]) => {
-                    warnings.a_write_rek = result;
-                    return Promise.resolve(result);
-                }));
-            }
-
-            if (this.controlChecked('a_fc') || this.controlChecked('a_fc_rc')) {
-                const fieldsForCheck = RKDefaultFields.filter((field: TDefaultField) => field.type === E_FIELD_TYPE.select && field.page === 'F');
-                checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, DEFAULTS_LIST_NAME).then( (result: any[]) => {
-                    warnings.a_write_rek = result;
-                    return Promise.resolve(result);
-                }));
-            }
-
-            if (this.controlChecked('a_prj_rek') || this.controlChecked('a_default_rek_prj') || this.controlChecked('a_fc_prj')) {
-                const list = RKPDDefaultFields.filter ( l => l.DEFAULT_TYPE === E_FIELD_TYPE.select);
-                const fieldsForCheck = list.map( v => {
-                    const dict = RKPDdictionaries.find( d => d.name === v.CLASSIF_ID);
-                    let table = '';
-                    for (const key in dict.req) {
-                        if (dict.req.hasOwnProperty(key)) {
-                            table = key;
-                            break;
+                        if (selectedOpt.isEmpty) {
+                            page.list.emptyListValues.push(el.longTitle || el.title);
+                        }
+                        if (selectedOpt.hasDeleted) {
+                            page.list.hasDeletedList.push(el.longTitle || el.title);
                         }
                     }
+                }
+            }).then ( (values) => {
+                if (this.controlChecked('a_default_rek')) {
+                    const fieldsForCheck = RKDefaultFields.filter((field: TDefaultField) => field.type === E_FIELD_TYPE.select && field.page === 'D');
+                    checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, DEFAULTS_LIST_NAME).then( (result: any[]) => {
+                        // warnings.lists.RK_D.list.logicDeleted = result;
+                        warnings.lists.RK_D.list.logicDeleted.push(...result.map(r => (r.field.longTitle || r.field.title)));
+                        return Promise.resolve(result);
+                    }));
+                }
 
-                    const field: TDefaultField = {
-                        key: v.DEFAULT_ID,
-                        title: v.DESCRIPTION,
-                        type: v.DEFAULT_TYPE,
-                        dict: <TDFSelect> {
-                            dictId: table,
-                            dictKey: dict.isnFieldName,
-                            dictKeyTitle: dict.titleFieldName,
+                if (this.controlChecked('a_write_rek')) {
+                    const fieldsForCheck = RKDefaultFields.filter((field: TDefaultField) => field.type === E_FIELD_TYPE.select && field.page === 'W');
+                    checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, DEFAULTS_LIST_NAME).then( (result: any[]) => {
+                        warnings.lists.RK_W.list.logicDeleted = result;
+                        return Promise.resolve(result);
+                    }));
+                }
+
+                if (this.controlChecked('a_fc') || this.controlChecked('a_fc_rc')) {
+                    const fieldsForCheck = RKDefaultFields.filter((field: TDefaultField) => field.type === E_FIELD_TYPE.select && field.page === 'F');
+                    checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, DEFAULTS_LIST_NAME).then( (result: any[]) => {
+                        warnings.lists.RK_F.list.logicDeleted = result;
+                        return Promise.resolve(result);
+                    }));
+                }
+
+                if (this.controlChecked('a_prj_rek') || this.controlChecked('a_default_rek_prj') || this.controlChecked('a_fc_prj')) {
+                    const list = RKPDDefaultFields.filter ( l => l.DEFAULT_TYPE === E_FIELD_TYPE.select);
+                    const fieldsForCheck = list.map( v => {
+                        const dict = RKPDdictionaries.find( d => d.name === v.CLASSIF_ID);
+                        let table = '';
+                        for (const key in dict.req) {
+                            if (dict.req.hasOwnProperty(key)) {
+                                table = key;
+                                break;
+                            }
                         }
-                    };
-                    return field;
+
+                        const field: TDefaultField = {
+                            key: v.DEFAULT_ID,
+                            title: v.DESCRIPTION,
+                            type: v.DEFAULT_TYPE,
+                            dict: <TDFSelect> {
+                                dictId: table,
+                                dictKey: dict.isnFieldName,
+                                dictKeyTitle: dict.titleFieldName,
+                            }
+                        };
+                        return field;
+                    });
+                    checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, PRJ_DEFAULTS_LIST_NAME).then( (result: any[]) => {
+                        warnings.lists.RKPD.list.logicDeleted = result;
+                        return Promise.resolve(result);
+                    }));
+                }
+
+                return Promise.all(checks).then ( (r) => {
+                    // console.log("TCL: warnings", warnings);
+                    return this._confirmWarnings(warnings);
                 });
-                checks.push(this._warningsCheckDefaults(docGroup, fieldsForCheck, PRJ_DEFAULTS_LIST_NAME).then( (result: any[]) => {
-                    warnings.a_prj_rek = result;
-                    return Promise.resolve(result);
-                }));
-            }
-
-            return Promise.all(checks).then ( (r) => {
-                // console.log("TCL: warnings", warnings);
-                return this._confirmWarnings(warnings);
+                // for (const key in this.inputs) {
+                //     if (this.inputs.hasOwnProperty(key)) {
+                //         const input = this.inputs[key];
+                //         const field: TDefaultField = input.descriptor;
+                //         if (field && field.dict && field.dict.dictId === 'USER_LISTS') {
+                //             const control = this.form.controls[key];
+                //             if (control) {
+                //                 const val = control.value;
+                //                 if (val) {
+                //                     const opt = field.options.find ( o => Number(o.value) === Number(val));
+                //                     if (!opt) {
+                //                         control.setValue(null);
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }
+                // this._updateInputs(this.inputs);
+                // this.form.updateValueAndValidity();
             });
-
         });
     }
 
-    private _confirmWarnings(warning: any): Promise<boolean> {
+    private _confirmWarnings(warning: CopyPropWarning): Promise<boolean> {
         if (warning.isEmpty()) {
             return Promise.resolve(true);
         }
@@ -264,59 +450,75 @@ export class CopyPropertiesComponent implements OnDestroy {
             }
 
             const confirmLD: IConfirmWindow2 = Object.assign({}, RK_SELECTED_VALUE_LOGIC_DELETED);
-            // confirmLD.manualCR = true;
-            let confirmbodyRKPD = '';
-            let confirmbodyRK = '';
-
-            if (warning.rk_defaults.length) {
-                confirmbodyRK += '\nПо умолчанию: ';
-                for (let i = 0; i < warning.rk_defaults.length; i++) {
-                    const element = warning.rk_defaults[i];
-                    confirmbodyRK += element.field.longTitle || element.field.title;
-                    confirmbodyRK += (i < warning.rk_defaults.length - 1) ? ', ' : '.';
-                }
-            }
-
-            if (warning.a_write_rek.length) {
-                confirmbodyRK += '\nПри записи: ';
-
-                for (let i = 0; i < warning.a_write_rek.length; i++) {
-                    const element = warning.a_write_rek[i];
-                    confirmbodyRK += element.field.longTitle || element.field.title;
-                    confirmbodyRK += (i < warning.a_write_rek.length - 1) ? ', ' : '.';
-                }
-            }
-
-            if (warning.a_fc_rc.length) {
-                confirmbodyRK += '\nФайлы: ';
-
-                for (let i = 0; i < warning.a_fc_rc.length; i++) {
-                    const element = warning.a_fc_rc[i];
-                    confirmbodyRK += element.field.longTitle || element.field.title;
-                    confirmbodyRK += (i < warning.a_fc_rc.length - 1) ? ', ' : '.';
-                }
-            }
-
-            if (warning.a_prj_rek.length) {
-                confirmbodyRKPD += '\nРКПД: ';
-
-                for (let i = 0; i < warning.a_prj_rek.length; i++) {
-                    const element = warning.a_prj_rek[i];
-                    confirmbodyRKPD += element.field.longTitle || element.field.title;
-                    confirmbodyRKPD += (i < warning.a_prj_rek.length - 1) ? ', ' : '.';
-                }
-            }
-
-            confirmLD.bodyList = [];
-            if (confirmbodyRK !== '') {
-                confirmbodyRK = 'В настройках реквизитов РК используются логически удаленные элементы справочников:\n' + confirmbodyRK;
-                confirmLD.bodyList.push (confirmbodyRK);
-            }
-            if (confirmbodyRKPD !== '') {
-                confirmbodyRKPD = 'В настройках реквизитов РКПД используются логически удаленные элементы справочников:\n' + confirmbodyRKPD;
-                confirmLD.bodyList.push (confirmbodyRKPD);
-            }
             confirmLD.body = '';
+            confirmLD.bodyList = [];
+            confirmLD.bodyList.push(...warning.lists.RK_D.asTextlist());
+            confirmLD.bodyList.push(...warning.lists.RK_W.asTextlist());
+            confirmLD.bodyList.push(...warning.lists.RK_F.asTextlist());
+            confirmLD.bodyList.push(...warning.lists.RKPD.asTextlist());
+            confirmLD.bodyList = confirmLD.bodyList.filter(v => v !== '');
+
+            // confirmLD.manualCR = true;
+            // let confirmbodyRKPD = '';
+            // let confirmbodyRK = '';
+
+            // confirmbodyRK += warning.lists.RK_D.asText();
+
+
+
+            // if (warning.rk_defaults.length) {
+            //     confirmbodyRK += '\nПо умолчанию: ';
+            //     for (let i = 0; i < warning.rk_defaults.length; i++) {
+            //         const element = warning.rk_defaults[i];
+            //         confirmbodyRK += element.field.longTitle || element.field.title;
+            //         confirmbodyRK += (i < warning.rk_defaults.length - 1) ? ', ' : '.';
+            //     }
+            // }
+
+            // if (warning.a_write_rek.length) {
+            //     confirmbodyRK += '\nПри записи: ';
+
+            //     for (let i = 0; i < warning.a_write_rek.length; i++) {
+            //         const element = warning.a_write_rek[i];
+            //         confirmbodyRK += element.field.longTitle || element.field.title;
+            //         confirmbodyRK += (i < warning.a_write_rek.length - 1) ? ', ' : '.';
+            //     }
+            // }
+
+            // if (warning.a_fc_rc.length) {
+            //     confirmbodyRK += '\nФайлы: ';
+
+            //     for (let i = 0; i < warning.a_fc_rc.length; i++) {
+            //         const element = warning.a_fc_rc[i];
+            //         confirmbodyRK += element.field.longTitle || element.field.title;
+            //         confirmbodyRK += (i < warning.a_fc_rc.length - 1) ? ', ' : '.';
+            //     }
+            // }
+
+            // if (warning.a_prj_rek.length) {
+            //     confirmbodyRKPD += '\nРКПД: ';
+
+            //     for (let i = 0; i < warning.a_prj_rek.length; i++) {
+            //         const element = warning.a_prj_rek[i];
+            //         confirmbodyRKPD += element.field.longTitle || element.field.title;
+            //         confirmbodyRKPD += (i < warning.a_prj_rek.length - 1) ? ', ' : '.';
+            //     }
+            // }
+
+            // if (warning.RKemptyListValues.D.length) {
+
+            // }
+
+            // confirmLD.bodyList = [];
+            // if (confirmbodyRK !== '') {
+            //     confirmbodyRK = 'В настройках реквизитов РК используются логически удаленные элементы справочников:\n' + confirmbodyRK;
+            //     confirmLD.bodyList.push (confirmbodyRK);
+            // }
+            // if (confirmbodyRKPD !== '') {
+            //     confirmbodyRKPD = 'В настройках реквизитов РКПД используются логически удаленные элементы справочников:\n' + confirmbodyRKPD;
+            //     confirmLD.bodyList.push (confirmbodyRKPD);
+            // }
+            // confirmLD.body = '';
             confirmLD.bodyAfterList = 'Продолжить?';
 
             return this._confirmSrv.confirm2(confirmLD).then((button) => {
@@ -333,42 +535,47 @@ export class CopyPropertiesComponent implements OnDestroy {
             {
                 key: 'a_shablon',
                 label: 'Шаблон рег.№ РК',
+                disabled: !(this._dgFrom.SHABLON && this._dgFrom.SHABLON !== ''),
             }, {
                 key: 'a_default_rek',
                 label: 'Правила заполнения реквизитов РК по умолчанию',
+                disabled: !(this._dgFrom[DEFAULTS_LIST_NAME] && this._dgFrom[DEFAULTS_LIST_NAME].length),
             }, {
                 key: 'a_mand_rek',
                 label: 'Перечень реквизитов РК, обязательных для заполнения',
+                disabled: !(this._dgFrom[DEFAULTS_LIST_NAME] && this._dgFrom[DEFAULTS_LIST_NAME].length),
             }, {
                 key: 'a_write_rek',
                 label: 'Правила заполнения реквизитов РК при записи',
+                disabled: !(this._dgFrom[DEFAULTS_LIST_NAME] && this._dgFrom[DEFAULTS_LIST_NAME].length),
             }, {
                 key: 'a_fc_rc',
                 label: 'Правила для файлов РК',
+                disabled: !(this._dgFrom[FILE_CONSTRAINT_LIST_NAME] && this._dgFrom[FILE_CONSTRAINT_LIST_NAME].length),
             }, {
                 key: 'a_prj_shablon',
                 label: 'Свойства РКПД (наличие проектов и шаблон рег.№)',
-                disabled: !this.rec_to.PRJ_NUM_FLAG,
+                disabled: !(this._dgFrom.PRJ_NUM_FLAG && this._dgFrom.PRJ_SHABLON),
             }, {
                 key: 'a_default_rek_prj',
                 label: 'Правила заполнения реквизитов РКПД по умолчанию',
-                disabled: !this.rec_to.PRJ_NUM_FLAG,
+                disabled: !(this._dgFrom.PRJ_NUM_FLAG && this._dgFrom[PRJ_DEFAULTS_LIST_NAME] && this._dgFrom[PRJ_DEFAULTS_LIST_NAME].length),
             }, {
                 key: 'a_mand_rek_prj',
                 label: 'Перечень реквизитов РКПД, обязательных для заполнения',
-                disabled: !this.rec_to.PRJ_NUM_FLAG,
+                disabled: !(this._dgFrom.PRJ_NUM_FLAG && this._dgFrom[PRJ_DEFAULTS_LIST_NAME] && this._dgFrom[PRJ_DEFAULTS_LIST_NAME].length),
             }, {
                 key: 'a_fc_prj',
                 label: 'Ограничения файлов для РКПД',
-                disabled: !this.rec_to.PRJ_NUM_FLAG,
+                disabled: !(this._dgFrom.PRJ_NUM_FLAG && this._dgFrom[FILE_CONSTRAINT_LIST_NAME] && this._dgFrom[FILE_CONSTRAINT_LIST_NAME].length),
             }, {
                 key: 'a_add_rek',
                 label: 'Дополнительные реквизиты и правила их заполнения',
-                disabled: !this.rec_to.PRJ_NUM_FLAG,
+                disabled: !(this._dgFrom[AR_DOCGROUP_LIST_NAME] && this._dgFrom[AR_DOCGROUP_LIST_NAME].length),
             }, {
                 key: 'a_add_rub',
                 label: 'Дополнительные реквизиты рубрик',
-                disabled: !this.rec_to.PRJ_NUM_FLAG,
+                disabled: !(this._dgFrom[AR_DOCGROUP_LIST_NAME] && this._dgFrom[AR_DOCGROUP_LIST_NAME].length),
             }];
         this.properties_for_request = ['a_shablon', 'a_default_rek', 'a_mand_rek', 'a_write_rek', 'a_prj_shablon',
             'a_default_rek_prj', 'a_mand_rek_prj', 'a_add_rek', 'a_add_rub', 'a_fc_rc', 'a_fc_prj'];
@@ -397,7 +604,7 @@ export class CopyPropertiesComponent implements OnDestroy {
             }, {
                 key: 'a_prj_rek',
                 label: 'Свойства проектов документов',
-                disabled: !this.rec_to.PRJ_NUM_FLAG,
+                // disabled: !this._recTo.PRJ_NUM_FLAG,
             }];
         this.properties_for_request = ['a_shablon', 'a_add_rek', 'a_default_rek', 'a_mand_rek', 'a_write_rek',
             'a_prj_rek', 'a_fc'];
@@ -424,38 +631,71 @@ export class CopyPropertiesComponent implements OnDestroy {
         this.formChanges$ = this.form.valueChanges.subscribe(() => this._validateForm());
     }
 
-    private _chooseDocGroup() {
-        this._waitClassif.openClassif({
-            classif: CLASSIF_NAME,
-            selectMulty: false,
-            skipDeleted: false,
-        }, true)
-            .then((isn) => {
-                if (isn) {
-                    if (this.rec_to.ISN_NODE.toString() === isn) {
-                        this.hideModal();
-                        this._msgSrv.addNewMessage(THE_SAME_GROUP_WARNING_MESSAGE);
-                    } else {
-                        this._apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries({ISN_NODE: isn})})
-                            .then(([docGroup]) => {
-                                this.rec_from = {};
-                                Object.assign(this.rec_from, docGroup);
-                                if (docGroup.RC_TYPE.toString() !== this.rec_to.RC_TYPE.toString()) {
-                                    this.hideModal();
-                                    this._msgSrv.addNewMessage(RC_TYPE_IS_DIFFERENT_WARNING_MESSAGE);
-                                }
-                                this.form.controls.NODE_TO_COPY.setValue(docGroup.CLASSIF_NAME);
-                            });
-                    }
-                } else {
-                    this.hideModal();
-                }
-                this.isUpdating = false;
-            })
-            .catch(() => {
-                this.hideModal();
-            });
-    }
+    // private _chooseDocGroup_old() {
+    //     this._waitClassif.openClassif({
+    //         classif: CLASSIF_NAME,
+    //         selectMulty: false,
+    //         skipDeleted: false,
+    //     }, true)
+    //         .then((isn) => {
+    //             if (isn) {
+    //                 if (this.rec_to.ISN_NODE.toString() === isn) {
+    //                     this.hideModal();
+    //                     this._msgSrv.addNewMessage(THE_SAME_GROUP_WARNING_MESSAGE);
+    //                 } else {
+    //                     this._apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries({ISN_NODE: isn})})
+    //                         .then(([docGroup]) => {
+    //                             this.rec_from = {};
+    //                             Object.assign(this.rec_from, docGroup);
+    //                             if (docGroup.RC_TYPE.toString() !== this.rec_to.RC_TYPE.toString()) {
+    //                                 this.hideModal();
+    //                                 this._msgSrv.addNewMessage(RC_TYPE_IS_DIFFERENT_WARNING_MESSAGE);
+    //                             }
+    //                             this.form.controls.NODE_TO_COPY.setValue(docGroup.CLASSIF_NAME);
+    //                         });
+    //                 }
+    //             } else {
+    //                 this.hideModal();
+    //             }
+    //             this.isUpdating = false;
+    //         })
+    //         .catch(() => {
+    //             this.hideModal();
+    //         });
+    // }
+
+    // private _chooseDocGroup(): Promise<string | void> {
+    //     return this._waitClassif.openClassif({
+    //         classif: CLASSIF_NAME,
+    //         selectMulty: false,
+    //         skipDeleted: false,
+    //         return_due: true,
+    //     }, true)
+    //         .then((due: string) => {
+    //             return due;
+    //             // if (isn) {
+    //             //     if (this.rec_to.ISN_NODE.toString() === isn) {
+    //             //         this.hideModal();
+    //             //         this._msgSrv.addNewMessage(THE_SAME_GROUP_WARNING_MESSAGE);
+    //             //         return null;
+    //             //     } else {
+    //             //         this._apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries({ISN_NODE: isn})})
+    //             //             .then(([docGroup]) => {
+    //             //                 this.rec_from = {};
+    //             //                 Object.assign(this.rec_from, docGroup);
+    //             //                 if (docGroup.RC_TYPE.toString() !== this.rec_to.RC_TYPE.toString()) {
+    //             //                     this.hideModal();
+    //             //                     this._msgSrv.addNewMessage(RC_TYPE_IS_DIFFERENT_WARNING_MESSAGE);
+    //             //                 }
+    //             //                 this.form.controls.NODE_TO_COPY.setValue(docGroup.CLASSIF_NAME);
+    //             //             });
+    //             //     }
+    //             // } else {
+    //             //     this.hideModal();
+    //             // }
+    //             // this.isUpdating = false;
+    //         });
+    // }
 
     private _validateForm() {
         this.formValid = false;

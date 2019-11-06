@@ -26,7 +26,7 @@ import { RKDefaultValuesCardComponent } from 'eos-dictionaries/adv-card/rk-defau
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { PRJ_DEFAULTS_LIST_NAME } from 'eos-dictionaries/adv-card/adv-card-rk-datactrl';
 
-const PRJ_DEFAULT_NAME = 'PRJ_DEFAULT_VALUE_List';
+// const PRJ_DEFAULT_NAME = 'PRJ_DEFAULT_VALUE_List';
 const FILE_CONSTRAINT_NAME = 'DG_FILE_CONSTRAINT_List';
 const PRJ_KEY_SHABLON = '{{tableName}}.{{id}}';
 const FILE_FIELDS = ['EXTENSIONS', 'MAX_SIZE', 'ONE_FILE'];
@@ -530,7 +530,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                 this._apiSrv
                     .read<DOCGROUP_CL>({
                         DOCGROUP_CL: PipRX.criteries({'ISN_NODE': this.data['ISN_NODE'].toString()}),
-                        expand: PRJ_DEFAULT_NAME + ',' + FILE_CONSTRAINT_NAME,
+                        expand: PRJ_DEFAULTS_LIST_NAME + ',' + FILE_CONSTRAINT_NAME,
                         foredit: true,
                     })
                     .then(([docGroup]) => {
@@ -546,7 +546,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                                         value = value ? '1' : false;
                                     }
 
-                                    if (item.tableName === PRJ_DEFAULT_NAME) {
+                                    if (item.tableName === PRJ_DEFAULTS_LIST_NAME) {
                                         const prj = docGroup.PRJ_DEFAULT_VALUE_List
                                             .find((f) => f.DEFAULT_ID === item.id);
                                         if (prj) {
@@ -786,7 +786,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         return this._apiSrv
             .read<DOCGROUP_CL>({
                 DOCGROUP_CL: PipRX.criteries({ISN_NODE: this.isnNode.toString()}),
-                expand: PRJ_DEFAULT_NAME + ',' + FILE_CONSTRAINT_NAME,
+                expand: PRJ_DEFAULTS_LIST_NAME + ',' + FILE_CONSTRAINT_NAME,
             });
     }
 
@@ -866,8 +866,8 @@ export class PrjDefaultValuesComponent implements OnDestroy {
     }
 
     private _fillInputsValues() {
-        this.data[PRJ_DEFAULT_NAME].forEach(value => {
-                this._setValue(value, PRJ_DEFAULT_NAME);
+        this.data[PRJ_DEFAULTS_LIST_NAME].forEach(value => {
+                this._setValue(value, PRJ_DEFAULTS_LIST_NAME);
         });
         this.data[FILE_CONSTRAINT_NAME].forEach(value => {
             this._setFileValue(value);

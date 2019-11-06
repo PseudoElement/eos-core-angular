@@ -145,7 +145,7 @@ export abstract class RKBasePage implements OnChanges, OnInit, OnDestroy {
         }
 
         const p = key.split('.');
-        const descr = this.dataController.getDescriptions()[p[0]].find( i => i.key === p[1]);
+        const descr = this.dataController.getDescriptionsRK()[p[0]].find( i => i.key === p[1]);
 
         this.dataController.readDictLinkValue(descr, value).then(data => {
             dib.setExtValue(value, data[0]);

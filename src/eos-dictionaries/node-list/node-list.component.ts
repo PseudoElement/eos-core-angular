@@ -240,12 +240,18 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         });
     }
 
-    openCopyProperties(node: EosDictionaryNode, fromParent: boolean) {
+    openCopyProperties(node: EosDictionaryNode, fromdue: string) {
         this.modalWindow = this._modalSrv.show(CopyPropertiesComponent, {
             class: 'copy-properties-modal moodal-lg'});
-        this.modalWindow.content.init(node.data.rec, fromParent);
+        this.modalWindow.content.init(node.data.rec, fromdue);
         this._closeModalWindowSubscribtion();
     }
+    // openCopyProperties(node: EosDictionaryNode, fromParent: boolean) {
+    //     this.modalWindow = this._modalSrv.show(CopyPropertiesComponent, {
+    //         class: 'copy-properties-modal moodal-lg'});
+    //     this.modalWindow.content.init(node.data.rec, fromParent);
+    //     this._closeModalWindowSubscribtion();
+    // }
 
     openCopyNode(nodes: EosDictionaryNode[]) {
         this.modalWindow = this._modalSrv.show(CopyNodeComponent, {
@@ -465,7 +471,6 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 this._dictSrv.resetSearch().then().catch(e => { console.log(e); });
              });
     }
-
     userOrdered(nodes: EosDictionaryNode[]) {
         this._dictSrv.setUserOrder(nodes);
     }

@@ -67,6 +67,7 @@ export class TDefaultField {
     maxValue?: number;
     default?: any;
     order?: number;
+    readonly?: boolean;
 }
 
 export const RKFieldsFict: TDefaultField[] = [
@@ -77,6 +78,7 @@ export const RKFieldsFict: TDefaultField[] = [
         page: 'Fict',
     },
 ];
+
 
 
 export const RKFictControls: TDefaultField[] = [
@@ -238,6 +240,292 @@ export const RKFilesConstraints: TDefaultField[] = [
         order: 3110,
     },
 ];
+
+export const RKPDDefaultFields: TDefaultField[] = [
+        {
+            key: 'ANNOTAT',
+            type: E_FIELD_TYPE.text,
+            title: 'Содержание',
+            length: 2000,
+            order: 100,
+        }, {
+            key: 'ANNOTAT_M',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Содержание',
+            length: 2000,
+        }, {
+            key: 'CONSISTS_M',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Состав',
+            length: 255,
+        }, {
+            key: 'DOC_DATE_M',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Дата регистрации',
+            readonly: true,
+            value: true,
+        }, {
+            key: 'FREE_NUM_M',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Рег.№',
+            readonly: true,
+            value: true,
+        }, {
+            key: 'ISN_PERSON_EXE_M',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Исполнитель',
+            readonly: true,
+            value: true,
+        }, {
+            key: 'PRUB_M',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Рубрики',
+        }, {
+            key: 'PSND_M',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Адресаты',
+        }, {
+            key: 'SECURLEVEL',
+            type: E_FIELD_TYPE.select,
+            title: 'Доступ',
+            value: 1,
+            dict: {
+                dictId: 'SECURITY_CL',
+                dictKey: 'SECURLEVEL',
+                dictKeyTitle: 'GRIF_NAME',
+            },
+            order: 30,
+        }, {
+            key: 'SECURLEVEL_M',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Доступ',
+            readonly: true,
+        }, {
+            key: 'SEND_DEP_PARM',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Параметр копирования оригинал/копия',
+        }, {
+            key: 'SEND_ISN_LIST_DEP',
+            type: E_FIELD_TYPE.select,
+            title: 'Внутренние',
+            longTitle: 'Внутренние адресаты',
+            dict: {
+                dictId: 'USER_LISTS',
+                dictKey: 'ISN_LIST',
+                dictKeyTitle: 'NAME',
+                criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+                orderby: USER_LIST_ORDERBY,
+            },
+            order: 160,
+        }, {
+            key: 'SEND_ISN_LIST_ORGANIZ',
+            type: E_FIELD_TYPE.select,
+            title: 'Внешние',
+            longTitle: 'Внешние адресаты',
+            dict: {
+                dictId: 'USER_LISTS',
+                dictKey: 'ISN_LIST',
+                dictKeyTitle: 'NAME',
+                criteries: { CLASSIF_ID: '630', ISN_LCLASSIF: '-99', },
+                orderby: USER_LIST_ORDERBY,
+            },
+            order: 170,
+        }, {
+            key: 'SIGN_ISN_LIST',
+            type: E_FIELD_TYPE.select,
+            title: 'Внутренние',
+            longTitle: 'Внутренние подписи',
+            dict: {
+                dictId: 'USER_LISTS',
+                dictKey: 'ISN_LIST',
+                dictKeyTitle: 'NAME',
+                criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+                orderby: USER_LIST_ORDERBY,
+            },
+            order: 130,
+        }, {
+            key: 'SIGN_ISN_LIST_M',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Подписи',
+        }, {
+            key: 'TERM_EXEC',
+            type: E_FIELD_TYPE.numberIncrement,
+            title: 'Срок исп. (План. дата), от даты регистрации',
+            order: 20,
+        }, {
+            key: 'TERM_EXEC_M',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Срок исп. (План. дата)',
+        }, {
+            key: 'VISA_ISN_LIST',
+            type: E_FIELD_TYPE.select,
+            title: 'Внутренние',
+            longTitle: 'Внутренние визы',
+            dict: {
+                dictId: 'USER_LISTS',
+                dictKey: 'ISN_LIST',
+                dictKeyTitle: 'NAME',
+                criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+                orderby: USER_LIST_ORDERBY,
+            },
+            order: 110,
+        }, {
+            key: 'VISA_ISN_LIST_M',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Визы',
+        }, {
+            key: 'FILE',
+            type: E_FIELD_TYPE.select,
+            title: 'Файлы',
+            dict: {
+                dictId: 'DOC_TEMPLATES',
+                dictKey: 'ISN_TEMPLATE',
+                dictKeyTitle: 'DESCRIPTION',
+                criteries: { CATEGORY: 'ФАЙЛЫ ДОКУМЕНТОВ', },
+                orderby: USER_LIST_ORDERBY,
+            },
+            order: 150,
+
+        }, {
+            key: 'FILE_M',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Файлы',
+        }, {
+            key: 'SIGN_OUTER_ISN_LIST',
+            type: E_FIELD_TYPE.select,
+            title: 'Внешние',
+            longTitle: 'Внешние подписи',
+            dict: {
+                dictId: 'USER_LISTS',
+                dictKey: 'ISN_LIST',
+                dictKeyTitle: 'NAME',
+                criteries: { CLASSIF_ID: '630', ISN_LCLASSIF: '-99', },
+                orderby: USER_LIST_ORDERBY,
+            },
+            order: 140,
+        }, {
+            key: 'VISA_OUTER_ISN_LIST',
+            type: E_FIELD_TYPE.select,
+            title: 'Внешние',
+            longTitle: 'Внешние визы',
+            dict: {
+                dictId: 'USER_LISTS',
+                dictKey: 'ISN_LIST',
+                dictKeyTitle: 'NAME',
+                criteries: { CLASSIF_ID: '630', ISN_LCLASSIF: '-99', },
+                orderby: USER_LIST_ORDERBY,
+            },
+            order: 120,
+        }, {
+            key: 'PRJ_EXEC_LIST',
+            type: E_FIELD_TYPE.select,
+            title: 'Доп. исполнители',
+            dict: {
+                dictId: 'USER_LISTS',
+                dictKey: 'ISN_LIST',
+                dictKeyTitle: 'NAME',
+                criteries: { CLASSIF_ID: '104', ISN_LCLASSIF: '-99', },
+                orderby: USER_LIST_ORDERBY,
+            },
+            order: 40,
+        }, {
+            key: 'CONSISTS',
+            type: E_FIELD_TYPE.string,
+            title: 'Состав',
+            length: 255,
+            order: 10,
+        }, {
+            key: 'NOTE',
+            type: E_FIELD_TYPE.text,
+            title: 'Примечание',
+            length: 2000,
+            order: 180,
+        }, {
+            key: 'RUBRIC_LIST',
+            type: E_FIELD_TYPE.select,
+            title: 'Рубрики',
+            dict: {
+                dictId: 'USER_LISTS',
+                dictKey: 'ISN_LIST',
+                dictKeyTitle: 'NAME',
+                criteries: { CLASSIF_ID: '107', ISN_LCLASSIF: '-99', },
+                orderby: USER_LIST_ORDERBY,
+            },
+            order: 190,
+        }, {
+            key: 'TERM_EXEC_TYPE',
+            type: E_FIELD_TYPE.buttons,
+            value: '1',
+            options: DAYS_TYPE_OPTS_VARIATIONS[0].options,
+            title: ' Срок исполнения РК в каких днях',
+        }, {
+        //     key: 'PRJ_RC.MAX_SIZE',
+        //     type: E_FIELD_TYPE.number,
+        //     title: 'Max размер',
+        //     CATEGORY: 'PRJ_RC',
+        //     pattern: REG_MAX_SIZE,
+        //     TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+        //     order: 1000,
+        // }, {
+        //     key: 'PRJ_RC.ONE_FILE',
+        //     type: E_FIELD_TYPE.boolean,
+        //     title: 'Один файл',
+        //     CATEGORY: 'PRJ_RC',
+        //     TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+        //     order: 1010,
+        // }, {
+        //     key: 'PRJ_RC.EXTENSIONS',
+        //     type: E_FIELD_TYPE.string,
+        //     title: 'С расширением',
+        //     CATEGORY: 'PRJ_RC',
+        //     TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+        //     length: 255,
+        //     order: 1020,
+        // }, {
+        //     key: 'PRJ_VISA_SIGN.MAX_SIZE',
+        //     type: E_FIELD_TYPE.number,
+        //     title: 'Max размер',
+        //     CATEGORY: 'PRJ_VISA_SIGN',
+        //     pattern: REG_MAX_SIZE,
+        //     TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+        //     order: 1030,
+        // }, {
+        //     key: 'PRJ_VISA_SIGN.ONE_FILE',
+        //     type: E_FIELD_TYPE.boolean,
+        //     title: 'Один файл',
+        //     CATEGORY: 'PRJ_VISA_SIGN',
+        //     TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+        //     order: 1040,
+        // }, {
+        //     key: 'PRJ_VISA_SIGN.EXTENSIONS',
+        //     type: E_FIELD_TYPE.string,
+        //     title: 'С расширением',
+        //     CATEGORY: 'PRJ_VISA_SIGN',
+        //     TABLE_NAME: 'DG_FILE_CONSTRAINT_List',
+        //     length: 255,
+        //     order: 1050,
+        // }, {
+            key: 'CAN_MANAGE_EXEC',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Управление Исполнителями',
+            order: 50,
+        }, {
+            key: 'CAN_WORK_WITH_FILES',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Работа с файлами РКПД',
+            order: 70,
+        }, {
+            key: 'CAN_WORK_WITH_PRJ',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Работа с РКПД',
+            order: 60,
+        }, {
+            key: 'CAN_MANAGE_APPROVAL',
+            type: E_FIELD_TYPE.boolean,
+            title: 'Организация согл-я и утв-я',
+            order: 80,
+        }];
+
 
 export const RKDefaultFields: TDefaultField[] = [
     {

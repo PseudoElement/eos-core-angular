@@ -32,6 +32,39 @@ export class WaitClassifService {
         return this._apiSrv.read(req);
     }
 
+     chooseDocGroup(): Promise<string | void> {
+        return this.openClassif({
+            classif: 'DOCGROUP_CL',
+            selectMulty: false,
+            skipDeleted: false,
+            return_due: true,
+        }, true)
+            .then((due: string) => {
+                return due;
+                // if (isn) {
+                //     if (this.rec_to.ISN_NODE.toString() === isn) {
+                //         this.hideModal();
+                //         this._msgSrv.addNewMessage(THE_SAME_GROUP_WARNING_MESSAGE);
+                //         return null;
+                //     } else {
+                //         this._apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries({ISN_NODE: isn})})
+                //             .then(([docGroup]) => {
+                //                 this.rec_from = {};
+                //                 Object.assign(this.rec_from, docGroup);
+                //                 if (docGroup.RC_TYPE.toString() !== this.rec_to.RC_TYPE.toString()) {
+                //                     this.hideModal();
+                //                     this._msgSrv.addNewMessage(RC_TYPE_IS_DIFFERENT_WARNING_MESSAGE);
+                //                 }
+                //                 this.form.controls.NODE_TO_COPY.setValue(docGroup.CLASSIF_NAME);
+                //             });
+                //     }
+                // } else {
+                //     this.hideModal();
+                // }
+                // this.isUpdating = false;
+            });
+    }
+
     openClassif(params: IOpenClassifParams, flag?: boolean): Promise<String> {
 
         let url: string = '';
@@ -114,9 +147,6 @@ export class WaitClassifService {
         }
         if (params.user_id !== undefined && params.user_id !== null) {
             url += `&user_id=${params.user_id}`;
-        }
-        if (params.curdue !== undefined && params.curdue !== null) {
-            url += `&curdue=${params.curdue}`;
         }
         url += params.classif === 'CONTACT' || params.classif === 'ORGANIZ_CL' ? '&app=nadzor' : '';
         // if (params.criteriesSearch) {

@@ -56,6 +56,7 @@ import { TOOLTIP_DELAY_VALUE, EosTooltipService } from 'eos-common/services/eos-
 import { IConfirmWindow2, IConfirmButton } from 'eos-common/confirm-window/confirm-window2.component';
 import { IMessage } from 'eos-common/interfaces';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
+import { WaitClassifService } from 'app/services/waitClassif.service';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -152,6 +153,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         private _confirmSrv: ConfirmWindowService,
         private _eaps: EosAccessPermissionsService,
         private _sandwichSrv: EosSandwichService,
+        private _waitClassif: WaitClassifService,
         _bcSrv: EosBreadcrumbsService,
         _tltp: EosTooltipService,
     ) {
@@ -475,7 +477,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 this._openPrjDefaultValues();
                 break;
             case E_RECORD_ACTIONS.copyProperties:
-                this._openCopyProperties();
+                this._openCopyProperties(false);
                 break;
             case E_RECORD_ACTIONS.copyPropertiesFromParent:
                 this._openCopyProperties(true);
@@ -704,7 +706,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
                     let p: Promise<any> = Promise.resolve(CONFIRM_SUBNODES_RESTORE.buttons.find(b => b.result === 1));
 
-                    if (confirmRestore.bodyList.length || hasFolding) {
+                    if (hasFolding) {
                         const _confrm = Object.assign({}, CONFIRM_SUBNODES_RESTORE);
                         _confrm.body = _confrm.body.replace('{{name}}', confirmRestore.bodyList.join(', '));
                         p = this._confirmSrv.confirm2(_confrm);
@@ -965,7 +967,20 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     private _openCopyProperties(fromParent = false) {
         const node = this._dictSrv.listNode;
         if (node) {
-            this.nodeList.openCopyProperties(node, fromParent);
+            Promise.resolve(null).then (() => {
+                if (fromParent) {
+                    return node.parentId;
+                } else {
+                    return '0.2EZ9N.';
+                    return this._waitClassif.chooseDocGroup();
+                }
+            }).then( (from_due) => {
+                if (from_due) {
+                    this.nodeList.openCopyProperties(node, from_due);
+                } else {
+                    this._msgSrv.addNewMessage(WARN_SELECT_NODE);
+                }
+            });
         } else {
             this._msgSrv.addNewMessage(WARN_SELECT_NODE);
         }

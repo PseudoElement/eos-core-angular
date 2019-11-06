@@ -145,7 +145,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     rereadUserLists() {
         this.dataController.markCacheForDirty('USER_LISTS');
-        this.dataController.updateDictsOptions('USER_LISTS', null, () => {
+        this.dataController.updateDictsOptions(this.dataController.getDescriptionsRK(), 'USER_LISTS', null, () => {
         }).then ( () => {
 
             for (const key in this.inputs) {
@@ -174,7 +174,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
 
     preSaveCheck(newdata: any): Promise<any> {
         this.dataController.markCacheForDirty('USER_LISTS');
-        return this.dataController.updateDictsOptions('USER_LISTS', null, () => {
+        return this.dataController.updateDictsOptions(this.dataController.getDescriptionsRK(), 'USER_LISTS', null, () => {
             // console.log(event);
         }).then (() => {
             this.form.updateValueAndValidity();
@@ -294,7 +294,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
         this.activeTab = tabs[0];
 
         this.dataController = new AdvCardRKDataCtrl(this.injector/*, this._zone, this._apiSrv, this._msgSrv, this._dictSrv*/);
-        this.descriptions = this.dataController.getDescriptions();
+        this.descriptions = this.dataController.getDescriptionsRK();
 
         this.dataController.readDGValues(this.isn_node).then (values => {
             this.storedValuesDG = values[0];
@@ -318,7 +318,7 @@ export class AdvCardRKEditComponent implements OnDestroy, OnInit, OnChanges {
             this._checkCorrectValuesLogic(this.values /*, this.descriptions*/);
             this.editValues = this._makePrevValues(this.values);
 
-            this.dataController.updateDictsOptions(null, this.values, this.updateLinks2).then (() => {
+            this.dataController.updateDictsOptions(this.dataController.getDescriptionsRK(), null, this.values, this.updateLinks2).then (() => {
                 this.inputs = this._getInputs();
                 this._updateInputs(this.inputs);
                 this._updateOptions(this.inputs);
