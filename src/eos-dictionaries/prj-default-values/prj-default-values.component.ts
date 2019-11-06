@@ -24,6 +24,7 @@ import { DAYS_TYPE_OPTS_VARIATIONS } from 'eos-dictionaries/adv-card/rk-default-
 import { ButtonsInput } from 'eos-common/core/inputs/buttons-input';
 import { RKDefaultValuesCardComponent } from 'eos-dictionaries/adv-card/rk-default-values/rk-default-values.component';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
+import { PRJ_DEFAULTS_LIST_NAME } from 'eos-dictionaries/adv-card/adv-card-rk-datactrl';
 
 const PRJ_DEFAULT_NAME = 'PRJ_DEFAULT_VALUE_List';
 const FILE_CONSTRAINT_NAME = 'DG_FILE_CONSTRAINT_List';
@@ -688,6 +689,10 @@ export class PrjDefaultValuesComponent implements OnDestroy {
                         listLD.push (el);
                     }
                 } else {
+                    const control = this.form.controls[PRJ_DEFAULTS_LIST_NAME + '.' + el.id];
+                        if (control) {
+                            control.setValue(null);
+                        }
                     listBeenDeleted.push(el);
                 }
             }
