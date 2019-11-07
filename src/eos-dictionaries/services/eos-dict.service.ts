@@ -1420,7 +1420,6 @@ export class EosDictService {
                 this._currentList = dictionary.reorderList(this._currentList, this.viewParameters.showAllSubnodes);
             }
         }
-        this.setMarkAllNone();
         this._currentList$.next(this._currentList);
         this._updateVisibleNodes();
     }

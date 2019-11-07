@@ -635,6 +635,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         editDescr = dictionary.getEditDescriptor();
         data = dictionary.getNewNode({rec: recParams}, this.treeNode);
 
+        this._dictSrv.setMarkAllNone();
         const createWarning = dictionary.descriptor.preCreateCheck(this);
         if (createWarning) {
             this._msgSrv.addNewMessage(createWarning);
