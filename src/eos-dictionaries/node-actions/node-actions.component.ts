@@ -50,6 +50,7 @@ export class NodeActionsComponent implements OnDestroy {
     private _dictSrv: EosDictService;
     private _visibleCount: number;
     private _markedNodes: EosDictionaryNode[];
+    private _selectedTreeNode: EosDictionaryNode;
 
     get haveMoreButtons(): boolean {
         let have = false;
@@ -103,6 +104,10 @@ export class NodeActionsComponent implements OnDestroy {
         });
         _dictSrv.markInfo$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((markInfo) => {
             this._markedNodes = markInfo.nodes;
+            this._update();
+        });
+        _dictSrv.treeNode$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((treenode) => {
+            this._selectedTreeNode = treenode;
             this._update();
         });
 
@@ -219,6 +224,7 @@ export class NodeActionsComponent implements OnDestroy {
         let _active = false;
         let _show = false;
         let _isWriteAction = true;
+        const _isLDSubTree = (this.isTree && this._selectedTreeNode && this._selectedTreeNode.isDeleted);
 
         if (this.dictionary && this._viewParams && this._dictSrv) {
 
@@ -226,7 +232,7 @@ export class NodeActionsComponent implements OnDestroy {
             _show = this.dictionary.canDo(button.type);
             switch (button.type) {
                 case E_RECORD_ACTIONS.add:
-                    _enabled = !this._viewParams.updatingList;
+                    _enabled = !_isLDSubTree && !this._viewParams.updatingList;
                     break;
                 case E_RECORD_ACTIONS.moveUp:
                 case E_RECORD_ACTIONS.moveDown:
@@ -247,6 +253,7 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 }
                 case E_RECORD_ACTIONS.restore: {
+                    _enabled = !_isLDSubTree && !this._viewParams.updatingList;
                     _enabled = _enabled && opts.listHasDeleted;
                     break;
                 }
@@ -260,6 +267,7 @@ export class NodeActionsComponent implements OnDestroy {
                     _enabled = _enabled && opts.listHasItems;
                     break;
                 case E_RECORD_ACTIONS.edit:
+                    _enabled = !_isLDSubTree && !this._viewParams.updatingList;
                     _enabled = _enabled && this._markedNodes.length > 0; /* && (this._dictSrv.listNode.isNode);*/
                     if (this.dictionary.descriptor.editOnlyNodes !== undefined) {
                         if (this._dictSrv && this._dictSrv.listNode) {
