@@ -305,6 +305,9 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.counterDocgroupRKPD:
                     _enabled = _enabled && opts.listHasSelected;
+                    // RK_TYPE_OPTIONS /* 1 = 'Входящие', 2 title: 'Письма граждан' */
+                    const rc_type = this._dictSrv.listNode && this._dictSrv.listNode.data['rec'].RC_TYPE;
+                    _enabled = _enabled && !(rc_type === 2 || rc_type === 1);
                     break;
                 case E_RECORD_ACTIONS.counterDepartmentMain:
                     break;
