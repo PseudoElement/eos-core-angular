@@ -90,6 +90,8 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
       const confUsers = this._storage.getItem('protocol');
       this._user_pagination.paginationConfig = confUsers;
       this._user_pagination._initPaginationConfig();
+      this._user_pagination.paginationConfig.current = 1;
+      this._user_pagination.paginationConfig.start = 1;
       this.PaginateData(this.config.length, this.orderByStr);
       this._user_pagination.totalPages = undefined;
       this.selfLink = this._router.url.split('?')[0];

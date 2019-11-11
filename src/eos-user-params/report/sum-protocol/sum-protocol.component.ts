@@ -67,7 +67,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         if (config) {
           this.config = config;
           if (this._user_pagination.totalPages !== undefined && this.resetPage === false) {
-            if (this.config.current > this.config.start) {
+            if (this.config.current > this.config.start && this.clearResult !== true) {
               this.PaginateData(this.config.length * (this.config.current - this.config.start + 1), this.orderByStr,
               (this.config.length * this.config.start - this.config.length).toString());
             } else if (this.config.current && this.initPage === true && this.clearResult === true) {
@@ -108,8 +108,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           ISN_WHO: this.isnWho,
         }),
       orderby: this.orderByStr,
-      top: this.config.length,
-      skip: this.config.length * this.config.current - this.config.length,
+      top: this.config.current > this.config.start ? this.config.length * (this.config.current - this.config.start + 1) : this.config.length,
+      skip: this.config.length * this.config.start - this.config.length,
       inlinecount: 'allpages'
     }).then((data: any) => {
       this.usersAudit = data;
