@@ -13,8 +13,9 @@ export const CABINET_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
     iconName: 'eos-icon-department-blue',
     defaultOrder: 'CABINET_NAME',
     searchConfig: [SEARCH_TYPES.quick, SEARCH_TYPES.full],
-    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'edit',
-        'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'remove', 'removeHard',
+    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order',
+        // 'userOrder', 'moveUp', 'moveDown',
+        'edit', 'navigateUp', 'navigateDown', 'showDeleted', 'remove', 'removeHard',
         'restore', 'tableCustomization'],
     fields: [{
         key: 'ISN_CABINET',

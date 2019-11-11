@@ -10,6 +10,12 @@ export class TitleComponent {
     /* todo: define it or remove. Mocked now*/
     title = 'Администрирование системы';
     openDelo() {
-        document.location.assign('../main.aspx');
+        try {
+            document.location.assign('../main.aspx');
+        } catch (e) {
+            // IE fix if user click 'stay in page'
+            console.error('openDelo failed', e);
+        }
+
     }
 }

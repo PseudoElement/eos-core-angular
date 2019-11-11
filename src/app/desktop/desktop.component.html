@@ -1,6 +1,6 @@
 <div class="eos-desktop">
     <div class="desktop-wrapper">
-        <div class="links-container">
+        <div class="links-container" #linkContainer>
             <bs-sortable
                 [(ngModel)]="referencesList"
                 [itemTemplate]="referenceTemplate"
@@ -9,7 +9,9 @@
                 placeholderItem="На этом рабочем столе нет ссылок"
                 placeholderClass="placeholderStyle"
                 wrapperClass="sortable-wrapper"
+                [itemStyle]="{'max-width.px': itemWidth()}"
                 force="true"
+                (dragstart)="dragStartEvent($event)"
                 (dragend)="dragEndEvent($event)"
             ></bs-sortable>
         </div>
@@ -90,6 +92,7 @@
         *ngIf="!editing(item.value)"
         (mousedown)="tryMove($event)"
         class="item-content xl-font block"
+
         [ngClass]="{ disabled: item.value.linkType === 1 }"
         [routerLink]="rttlink(item)"
     >

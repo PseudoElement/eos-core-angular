@@ -9,12 +9,11 @@ import {Subject} from 'rxjs';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 
 import {ConfirmWindowService} from 'eos-common/confirm-window/confirm-window.service';
-import {CONFIRM_NODE_DELETE, CONFIRM_NODES_DELETE, CONFIRM_SUBNODES_RESTORE} from 'app/consts/confirms.const';
-import {IConfirmWindow} from 'eos-common/core/confirm-window.interface';
+import {CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE, CONFIRM_OPERATION_LOGICDELETE} from 'app/consts/confirms.const';
 
 import {EosDictService} from '../services/eos-dict.service';
 import {EosDictionary} from '../core/eos-dictionary';
-import {E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters} from 'eos-dictionaries/interfaces';
+import {E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters, IRecordOperationResult} from 'eos-dictionaries/interfaces';
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
 import {EosMessageService} from 'eos-common/services/eos-message.service';
 import {EosStorageService} from 'app/services/eos-storage.service';
@@ -39,7 +38,6 @@ import {
     DANGER_EDIT_DELETED_ERROR,
     DANGER_EDIT_DICT_NOTALLOWED,
     DANGER_EDIT_ROOT_ERROR,
-    DANGER_HAVE_NO_ELEMENTS,
     DANGER_LOGICALY_RESTORE_ELEMENT,
     DANGER_EMPTY_FILE,
     DANGER_ERROR_FILE,
@@ -47,15 +45,18 @@ import {
     WARN_ELEMENT_DELETED,
     WARN_ELEMENT_PROTECTED,
     WARN_LOGIC_CLOSE,
-    WARN_LOGIC_DELETE,
     WARN_LOGIC_OPEN,
     WARN_SELECT_NODE,
+    INFO_OPERATION_COMPLETE,
 } from '../consts/messages.consts';
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { PrjDefaultValuesComponent } from 'eos-dictionaries/prj-default-values/prj-default-values.component';
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 import { TOOLTIP_DELAY_VALUE, EosTooltipService } from 'eos-common/services/eos-tooltip.service';
 import { EdsImportComponent } from 'eos-dictionaries/eds-import/eds-import.component';
+import { IConfirmWindow2, IConfirmButton } from 'eos-common/confirm-window/confirm-window2.component';
+import { IMessage } from 'eos-common/interfaces';
+import { WaitClassifService } from 'app/services/waitClassif.service';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -152,6 +153,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         private _confirmSrv: ConfirmWindowService,
         private _eaps: EosAccessPermissionsService,
         private _sandwichSrv: EosSandwichService,
+        private _waitClassif: WaitClassifService,
         _bcSrv: EosBreadcrumbsService,
         _tltp: EosTooltipService,
     ) {
@@ -178,11 +180,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                                     this.title = n.title;
                                 }
                                 this._dictSrv.setCustomNodeId(this._nodeId);
+                                this._dictSrv.setCustomNodeId(this._nodeId);
                                 if (this.dictionaryId === 'templates') {
                                     this.dictionary.descriptor['top'] = this._nodeId;
                                     this._dictSrv.selectTemplateNode().then(() => { });
                                 } else {
-                                    this._dictSrv.selectCustomTreeNode().then ((data) => {
+                                    this._dictSrv.selectCustomTreeNode().then (() => {
                                     });
                                 }
                             } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
@@ -199,15 +202,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         });
 
         _sandwichSrv.currentDictState$
-            .pipe(
-                takeUntil(this.ngUnsubscribe)
-            )
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((state: boolean[]) => this.currentState = state);
 
         _dictSrv.dictionary$
-            .pipe(
-                takeUntil(this.ngUnsubscribe)
-            )
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((dictionary: EosDictionary) => {
                 if (dictionary) {
                     if (this.params !== undefined) {
@@ -239,9 +242,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             });
 
         _dictSrv.listDictionary$
-            .pipe(
-                takeUntil(this.ngUnsubscribe)
-            )
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((dictionary: EosDictionary) => {
                 if (dictionary) {
                     this.dictMode = this._dictSrv.dictMode;
@@ -256,9 +259,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             });
 
         _dictSrv.treeNode$
-            .pipe(
-                takeUntil(this.ngUnsubscribe)
-            )
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((node: EosDictionaryNode) => {
                 if (node) {
                     this.title = node.getTreeView().map((fld) => fld.value).join(' ');
@@ -272,9 +275,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             });
 
         _dictSrv.paginationConfig$
-            .pipe(
-                takeUntil(this.ngUnsubscribe)
-            )
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((config: IPaginationConfig) => {
                 if (config) {
                     this.paginationConfig = config;
@@ -282,19 +285,19 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             });
 
         _dictSrv.viewParameters$
-            .pipe(
-                takeUntil(this.ngUnsubscribe)
-            )
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
             .subscribe((viewParameters: IDictionaryViewParameters) => {
                 this.params = viewParameters;
                 if (this.params.searchResults) {
                     if ((this._dictSrv.currentDictionary.isTreeType() || this._dictSrv.currentDictionary.id === CABINET_DICT.id)
                         && this._dictSrv.isSearchEnabled()) {
-                        if (this._dictSrv.isSearchFullDictionary() || this._dictSrv.currentDictionary.id === CABINET_DICT.id) {
-                            this.title = 'Поиск во всем справочнике';
-                            this.hasParent = false;
-                            return;
-                        }
+                            if (this._dictSrv.isSearchFullDictionary() || this._dictSrv.currentDictionary.id === CABINET_DICT.id) {
+                                this.title = 'Поиск во всем справочнике';
+                                this.hasParent = false;
+                                return;
+                            }
                     }
                 }
 
@@ -311,10 +314,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             });
 
         _dictSrv.openedNode$
-            .pipe(
-                takeUntil(this.ngUnsubscribe)
-            )
-            .subscribe((node) => {
+        .pipe(
+            takeUntil(this.ngUnsubscribe)
+        )
+            .subscribe(() => {
                 // if (this._dictSrv.currentDictionary.isTreeType() && this._dictSrv.isSearchEnabled()) {
                 //     if (this._dictSrv.isSearchFullDictionary()) {
                 //         this.title = 'Поиск во всем справочнике';
@@ -342,7 +345,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 //         this.title = node.parent.title;
                 //     }
                 // }
-            });
+        });
 
         _bcSrv._eventFromBc$
             .pipe(
@@ -357,7 +360,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         this.ngUnsubscribe.complete();
     }
 
-    onSetActiveNode(n) {
+    onSetActiveNode() {
         // this.treeNode = n;
         // if (n) {
         //     this.title = 'onSetActiveNode';
@@ -375,6 +378,10 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
     transitionEnd() {
         // this._countColumnWidth();
+    }
+
+    isPaginationVisible(): boolean {
+        return this._dictSrv.isPaginationVisible();
     }
 
     doAction(evt: IActionEvent) {
@@ -420,7 +427,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 break;
 
             case E_RECORD_ACTIONS.removeHard:
-                this.physicallyDelete();
+                this._physicallyDelete();
                 break;
 
             case E_RECORD_ACTIONS.add:
@@ -474,7 +481,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 this._openPrjDefaultValues();
                 break;
             case E_RECORD_ACTIONS.copyProperties:
-                this._openCopyProperties();
+                this._openCopyProperties(false);
                 break;
             case E_RECORD_ACTIONS.copyPropertiesFromParent:
                 this._openCopyProperties(true);
@@ -505,20 +512,20 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                     this._msgSrv.addNewMessage(DANGER_EMPTY_FILE);
                 }
             })
-            .catch(error => {
+            .catch(() => {
                 this._msgSrv.addNewMessage(DANGER_ERROR_FILE);
             });
     }
     _navigateToUC(): any {
-        const url = this._router.url;
-        this._storageSrv.setItem(RECENT_URL, url);
-        const _path = [
-            'spravochniki',
-            CA_CATEGORY_CL.id,
-            '0.'
-        ];
+            const url = this._router.url;
+            this._storageSrv.setItem(RECENT_URL, url);
+            const _path = [
+                'spravochniki',
+                CA_CATEGORY_CL.id,
+                '0.'
+            ];
 
-        this._router.navigate(_path);
+            this._router.navigate(_path);
     }
 
 
@@ -549,7 +556,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         }
     }
 
-    onCloseFastSrch(event) {
+    onCloseFastSrch() {
         this.forcedCloseFastSrch();
     }
 
@@ -559,27 +566,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         } else {
             val.isOpenQuick = !val.isOpenQuick;
             this.fastSearch = val.isOpenQuick;
-        }
-    }
-
-    /**
-     * Physical delete marked elements on page
-     */
-    physicallyDelete(): void {
-        const titles = this.nodeList.getMarkedTitles();
-
-        if (titles.length < 1) {
-            this._msgSrv.addNewMessage(DANGER_HAVE_NO_ELEMENTS);
-            return;
-        } else {
-            let message;
-            if (titles.length === 1) {
-                message = Object.assign({}, CONFIRM_NODE_DELETE);
-            } else {
-                message = Object.assign({}, CONFIRM_NODES_DELETE);
-            }
-            message.body = message.body.replace('{{name}}', titles.join(', '));
-            this._callDelWindow(message);
         }
     }
 
@@ -615,8 +601,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     hasFilter() {
         if (this.dictionaryId === DID_NOMENKL_CL ||
             (this.dictionaryId === DEPARTMENTS_DICT.id && this.dictMode === 0) ) {
-            return true;
-        }
+                return true;
+            }
         return false;
     }
 
@@ -642,15 +628,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         }
     }
 
-    private _callDelWindow(_confrm: IConfirmWindow): void {
-        this._confirmSrv.confirm(_confrm)
-            .then((confirmed: boolean) => {
-                if (confirmed) {
-                    return this._dictSrv.deleteMarked();
-                }
-            });
-    }
-
     /**
      * @description Open modal with CreateNodeComponent, fullfill CreateNodeComponent data
      */
@@ -662,6 +639,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         editDescr = dictionary.getEditDescriptor();
         data = dictionary.getNewNode({rec: recParams}, this.treeNode);
 
+        this._dictSrv.setMarkAllNone();
         const createWarning = dictionary.descriptor.preCreateCheck(this);
         if (createWarning) {
             this._msgSrv.addNewMessage(createWarning);
@@ -693,29 +671,162 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         });
     }
 
+    private _confirmMarkedItems(selectedNodes: any[], confirm: IConfirmWindow2): Promise<IConfirmButton> {
+        const list = [];
+        // const selectedNodes = this._dictSrv.getMarkedNodes();
+        selectedNodes.forEach((node) => {
+            if (list.length < WARNING_LIST_MAXCOUNT) {
+                if (list.length === WARNING_LIST_MAXCOUNT - 1) {
+                    list.push('... всего ' + selectedNodes.length + ' записей');
+                } else {
+                    list.push(node.title);
+                }
+            }
+        });
+
+        confirm.bodyList = list;
+        return this._confirmSrv.confirm2(confirm).then((button) => {
+            return button;
+        });
+    }
+
+    private _restoreItems(): void {
+        let hasFolding = false;
+
+        const selectedNodes = this._dictSrv.getMarkedNodes().filter( n => n.isDeleted);
+
+        for (let i = 0; i < selectedNodes.length; i++) {
+            const node = selectedNodes[i];
+            if (node.parent && node.parent.isDeleted) {
+                this._msgSrv.addNewMessage(DANGER_LOGICALY_RESTORE_ELEMENT);
+                node.isMarked = false;
+                return;
+            } else {
+                if (node.isNode) {
+                    hasFolding = true;
+                }
+            }
+        }
+
+        const confirmRestore: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_RESTORE);
+
+        this._confirmMarkedItems(selectedNodes, confirmRestore).then ((button: IConfirmButton) => {
+            if (button && button.result === 2) {
+
+                    let p: Promise<any> = Promise.resolve(CONFIRM_SUBNODES_RESTORE.buttons.find(b => b.result === 1));
+
+                    if (hasFolding) {
+                        const _confrm = Object.assign({}, CONFIRM_SUBNODES_RESTORE);
+                        _confrm.body = _confrm.body.replace('{{name}}', confirmRestore.bodyList.join(', '));
+                        p = this._confirmSrv.confirm2(_confrm);
+                    }
+                    return p.then((confirmed: IConfirmButton) => {
+                        if (confirmed) {
+                            const needInclude = confirmed.result === 2;
+                            this._dictSrv.setFlagForMarked('DELETED', needInclude, false)
+                                .then(() => {
+                                    this._dictSrv.setMarkAllNone();
+                                    const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
+                                    message.msg = message.msg
+                                        .replace('{{RECS}}', confirmRestore.bodyList.join(', '))
+                                        .replace('{{OPERATION}}', 'восстановлены.');
+                                    this._msgSrv.addNewMessage(message);
+                                });
+                        }
+                    });
+            }
+            return Promise.resolve(null);
+        });
+
+    }
+
     /**
-     * Logic delete marked elements on page
+     * Physical delete marked elements on page
      */
-    private _deleteItems(): void {
-        let delCount = 0, allCount = 0;
-        this._dictSrv.getMarkedNodes().forEach((node) => {
-            if (node.isMarked) {
-                allCount++;
-            }
-            if (node.isMarked && node.isDeleted) {
-                delCount++;
-            }
-            if (node.isMarked && node.isProtected) {
+    private _physicallyDelete(): void {
+
+        const selectedNodes = this._dictSrv.getMarkedNodes();
+
+        if (selectedNodes.length === 0) {
+            // this._msgSrv.addNewMessage(DANGER_HAVE_NO_ELEMENTS);
+            return;
+        }
+
+        for (let i = 0; i < selectedNodes.length; i++) {
+            const node = selectedNodes[i];
+
+            if (node.isProtected) {
                 node.isMarked = false;
                 const warn = Object.assign({}, WARN_ELEMENT_PROTECTED);
                 warn.msg = warn.msg.replace('{{elem}}', node.title);
                 this._msgSrv.addNewMessage(warn);
+                return;
             }
-        });
-        if (delCount === allCount) {
-            this._msgSrv.addNewMessage(WARN_LOGIC_DELETE);
         }
-        this._dictSrv.setFlagForMarked('DELETED', true, true);
+
+        const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_HARDDELETE);
+
+        this._confirmMarkedItems(selectedNodes, confirmDelete)
+        .then ((button: IConfirmButton) => {
+            if (button && button.result === 2) {
+                return this._dictSrv.deleteMarked().then((results: IRecordOperationResult[]) => {
+                    const deletedList = results.filter(r => !r.error)
+                        .map ( r => r.record['CLASSIF_NAME']) ;
+                    if (deletedList && deletedList.length) {
+                        const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
+                        message.msg = message.msg
+                            .replace('{{RECS}}', deletedList.join(', '))
+                            .replace('{{OPERATION}}', 'удалены навсегда.');
+
+                        this._msgSrv.addNewMessage(message);
+                    }
+                });
+            }
+            return Promise.resolve(null);
+        });
+    }
+
+    /**
+     * Logic delete marked elements on page
+     */
+    private _deleteItems(): void {
+
+        // let delCount = 0, allCount = 0;
+        const selectedNodes = this._dictSrv.getMarkedNodes().filter( n => !n.isDeleted);
+
+        if (selectedNodes.length === 0) {
+            // this._msgSrv.addNewMessage(WARN_LOGIC_DELETE);
+            return;
+        }
+
+        for (let i = 0; i < selectedNodes.length; i++) {
+            const node = selectedNodes[i];
+
+            if (node.isProtected) {
+                node.isMarked = false;
+                const warn = Object.assign({}, WARN_ELEMENT_PROTECTED);
+                warn.msg = warn.msg.replace('{{elem}}', node.title);
+                this._msgSrv.addNewMessage(warn);
+                return;
+            }
+        }
+
+        const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_LOGICDELETE);
+
+        this._confirmMarkedItems(selectedNodes, confirmDelete).then ((button: IConfirmButton) => {
+            if (button && button.result === 2) {
+                const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
+                message.msg = message.msg
+                    .replace('{{RECS}}', confirmDelete.bodyList.join(', '))
+                    .replace('{{OPERATION}}', 'удалены логически.');
+
+                return this._dictSrv.setFlagForMarked('DELETED', true, true).then(() => {
+                    this._dictSrv.setMarkAllNone();
+                    this._msgSrv.addNewMessage(message);
+                });
+            }
+            return Promise.resolve(null);
+        });
     }
 
     /**
@@ -785,7 +896,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 if (node.data.PROTECTED) {
                     this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
                 } else if (type === E_COUNTER_TYPE.counterDepartment && node.data.rec['NUMCREATION_FLAG'] !== 1) {
-                    this._msgSrv.addNewMessage(DANGER_DEPART_NO_NUMCREATION);
+                        this._msgSrv.addNewMessage(DANGER_DEPART_NO_NUMCREATION);
                 } else {
                     this.modalWindow = this._modalSrv.show(CounterNpEditComponent, {class: 'counter-np-modal modal-lg'});
                     this.modalWindow.content.initByNodeData(type, node.data.rec);
@@ -821,36 +932,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         } else {
             this._msgSrv.addNewMessage(WARN_EDIT_ERROR);
         }
-    }
-
-    private _restoreItems(): void {
-        const childrenTitles: string[] = [];
-        let hasFolding = false;
-        let p: Promise<any> = Promise.resolve(false);
-
-        this._dictSrv.getMarkedNodes(false).forEach((node) => {
-            if (node.parent && node.parent.isDeleted) {
-                this._msgSrv.addNewMessage(DANGER_LOGICALY_RESTORE_ELEMENT);
-                node.isMarked = false;
-            } else {
-                if (node.isNode) {
-                    hasFolding = true;
-                    childrenTitles.push(node.title);
-                }
-                // if (node.children && node.children.length) {
-                //     childrenTitles.push(node.title);
-                // }
-            }
-        });
-
-        if (childrenTitles.length || hasFolding) {
-            const _confrm = Object.assign({}, CONFIRM_SUBNODES_RESTORE);
-            _confrm.body = _confrm.body.replace('{{name}}', childrenTitles.join(', '));
-
-            p = this._confirmSrv
-                .confirm(_confrm);
-        }
-        p.then((confirmed: boolean) => this._dictSrv.setFlagForMarked('DELETED', confirmed, false));
     }
 
     private _openAdditionalFields() {
@@ -902,7 +983,20 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     private _openCopyProperties(fromParent = false) {
         const node = this._dictSrv.listNode;
         if (node) {
-            this.nodeList.openCopyProperties(node, fromParent);
+            Promise.resolve(null).then (() => {
+                if (fromParent) {
+                    return node.parentId;
+                } else {
+                    // return '0.2EZ9N.';
+                    return this._waitClassif.chooseDocGroup();
+                }
+            }).then( (from_due) => {
+                if (from_due) {
+                    this.nodeList.openCopyProperties(node, from_due);
+                } else {
+                    this._msgSrv.addNewMessage(WARN_SELECT_NODE);
+                }
+            });
         } else {
             this._msgSrv.addNewMessage(WARN_SELECT_NODE);
         }

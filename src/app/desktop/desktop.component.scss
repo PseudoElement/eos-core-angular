@@ -11,15 +11,21 @@
     .icon {
         cursor: pointer;
     }
+    .fict {
+        cursor: auto;
+        max-height: 1px;
+    }
+
     .sortable-item {
         max-width: 490px;
         min-width: 400px;
-        flex-basis: calc((100% - 4*10px) / 1);
         margin-right: 10px;
         margin-bottom: 10px;
         flex-grow: 1;
         flex-basis: 400px;
         flex-shrink: 1;
+        transition: 100ms;
+        // transition-delay: 100ms;
         .btn {
             padding: 0;
         }
@@ -175,7 +181,7 @@
     .desktop-wrapper {
         display: -ms-grid;
         display: grid; // sass-lint:disable-line no-duplicate-properties
-        -ms-grid-columns: 1fr (2 * ($desktop-link-size + $desktop-link-margin));
+        // -ms-grid-columns: 1fr (2 * ($desktop-link-size + $desktop-link-margin));
         grid-template-columns: 1fr (2 * ($desktop-link-size + $desktop-link-margin));
         overflow-y: auto;
         max-height: calc(100vh - 150px);

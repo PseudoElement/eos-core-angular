@@ -11,8 +11,11 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 
 export class NomenklCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
 
+
+    buttons = [{value: 0, title: 'Текущее'}, {value: 1, title: 'Переходящее'}];
     eDocEditable: boolean;
     eDocTooltip: string = '';
+    buttPerValue: number;
     private previousValues: SimpleChanges;
     private _classifSrv: WaitClassifService;
 
@@ -72,9 +75,9 @@ export class NomenklCardComponent extends BaseCardEditComponent implements OnCha
         };
     }
 
-
-    onChangeButtPer($event) {
-        if (this.form.controls['rec.buttPer'].value === 0) {
+    onChangeButtPer(butt) {
+        this.buttPerValue = butt.value;
+        if (this.buttPerValue === 0) {
             this.form.controls['rec.END_YEAR'].setValue(this.form.controls['rec.YEAR_NUMBER'].value);
         } else {
             this.form.controls['rec.END_YEAR'].setValue(null);
@@ -128,6 +131,7 @@ export class NomenklCardComponent extends BaseCardEditComponent implements OnCha
         if (ye1 !== ys) {
             p = false;
         }
-        this.form.controls['rec.buttPer'].setValue(p ? 0 : 1, {onlySelf: true, emitEvent: false });
+        this.buttPerValue = p ? 0 : 1;
+        // this.form.controls['rec.buttPer'].setValue(p ? 0 : 1, {onlySelf: true, emitEvent: false });
     }
 }

@@ -1,4 +1,4 @@
-import {Component, Output, Input, EventEmitter, ViewChild, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
+import {Component, Output, Input, EventEmitter, ViewChild, OnChanges, OnDestroy, SimpleChanges, HostListener} from '@angular/core';
 import { BaseCardEditComponent } from './base-card-edit.component';
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -10,6 +10,7 @@ import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.serv
 import {EosSevRulesService} from '../services/eos-sev-rules.service';
 import { RUBRICATOR_DICT } from 'eos-dictionaries/consts/dictionaries/rubricator.consts';
 import { PipRX } from 'eos-rest';
+import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 
 @Component({
     selector: 'eos-card-edit',
@@ -31,6 +32,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
     form: FormGroup;
     inputs: any;
     newData: any = {};
+    isChanged: boolean;
 
     private _currentFormStatus;
     private subscriptions: Subscription[];
@@ -68,6 +70,14 @@ export class CardEditComponent implements OnChanges, OnDestroy {
         return newData;
     }
 
+    @HostListener('window:beforeunload', ['$event'])
+    canWndUnload(evt: BeforeUnloadEvent): any {
+        if (this.isChanged) {
+            evt.returnValue = MESSAGE_SAVE_ON_LEAVE;
+            return false;
+        }
+    }
+
     ngOnChanges(changes: SimpleChanges) {
         if ((changes.fieldsDescription || changes.data) && this.fieldsDescription && this.data) {
             this.unsubscribe();
@@ -84,6 +94,7 @@ export class CardEditComponent implements OnChanges, OnDestroy {
                         if (this.changeByPath(path, newVal[path])) {
                             // console.warn('changed by', path);
                             changed = true;
+                            this.isChanged = true;
                         }
                     });
                     this.formChanged.emit(changed);

@@ -41,11 +41,20 @@
                                [input]="inputs['rec.CLOSED']"
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
-            <eos-dynamic-input class="per-current"
-                               [input]="inputs['rec.buttPer']"
-                               [form]="form"
-                               (click)="onChangeButtPer($event)"
-                               [readonly]="!editMode"></eos-dynamic-input>
+
+            <div class="per-current">
+                <div class="form-group">
+                    <div class="btn-group  eos-switch">
+                        <a *ngFor="let item of buttons"
+                                    class="tab-button btn btn-primary switch-item text-uppercase"
+                                    [ngClass]="{'btn-primary-full':item.value === buttPerValue}"
+                                    (click)="onChangeButtPer(item)">{{item.title}}</a>
+                    </div>
+                </div>
+            </div>
+
+
+
         </div>
 
         <div class="row-wrapper space-between">

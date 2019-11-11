@@ -15,8 +15,11 @@
         border-radius: 0;
         text-align: left;
         overflow: hidden;
-
         &.btn {
+            &.fict {
+                cursor: auto;
+                max-height: 1px;
+            }
             &:disabled {
                 opacity: 0.4;
                 background-color: #eeeeee;

@@ -2,7 +2,6 @@ import { Component, HostListener, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ModalDirective } from 'ngx-bootstrap/modal';
-// import {toNumber} from 'ngx-bootstrap/timepicker/timepicker.utils';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -27,7 +26,6 @@ import {
     WARN_SAVE_FAILED
 } from '../consts/messages.consts';
 import { NAVIGATE_TO_ELEMENT_WARN } from '../../app/consts/messages.consts';
-import { CONFIRM_SAVE_ON_LEAVE, CONFIRM_SAVE_ON_LEAVE2 } from '../consts/confirm.consts';
 import { LS_EDIT_CARD } from '../consts/common';
 
 import { CardEditComponent } from 'eos-dictionaries/card-views/card-edit.component';
@@ -37,6 +35,7 @@ import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/se
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 import { CONFIRM_SAVE_INVALID } from 'app/consts/confirms.const';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
+import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
 // import { UUID } from 'angular2-uuid';
 
 export enum EDIT_CARD_MODES {
@@ -84,12 +83,6 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
     @ViewChild('onlyEdit') modalOnlyRef: ModalDirective;
     @ViewChild('cardEditEl') cardEditRef: CardEditComponent;
-    /* todo: check tasks for reson
-    @HostListener('document:blur')
-    private _blur(): boolean {
-        return this.canDeactivate();
-    }
-    */
 
     get nodeName() {
         let _nodeName = '';
@@ -102,9 +95,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         return _nodeName;
     }
 
-    /* private _originalData: any = {}; */
     private nodeId: string;
-    // private _uuid: string;
 
     private _urlSegments: string[];
     private nodeIndex: number = -1;
@@ -155,7 +146,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             this._clearEditingCardLink();
         }
         if (this.isChanged) {
-            evt.returnValue = CONFIRM_SAVE_ON_LEAVE.body;
+            evt.returnValue = MESSAGE_SAVE_ON_LEAVE;
             return false;
         }
     }
@@ -282,10 +273,6 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         }
     }
 
-    canDeactivate(_nextState?: any): boolean | Promise<boolean> {
-        return this._askForSaving();
-    }
-
     isEditEnabled(): boolean {
 
         if (this._eaps.isAccessGrantedForDictionary(this.dictionaryId,
@@ -307,6 +294,49 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
     isSaveDisabled(): boolean {
         return /*!this.isChanged ||*/ this.disableSave;
     }
+
+    canDeactivate(_nextState?: any): boolean | Promise<boolean> {
+        return this._askForSaving();
+    }
+
+    private _askForSaving(): Promise<boolean> {
+        if (this.isChanged) {
+            return new Promise((res, rej) => {
+                if (confirm(MESSAGE_SAVE_ON_LEAVE)) {
+                    this.isChanged = false;
+                    return res(true);
+                } else {
+                    return res(false);
+                }
+            });
+        } else {
+            return Promise.resolve(true);
+        }
+    }
+
+    // private _askForSaving(): Promise<boolean> {
+    //     if (this.isChanged) {
+    //         return this._confirmSrv.confirm2(Object.assign({}, CONFIRM_SAVE_ON_LEAVE2,
+    //             { confirmDisabled: false }))
+    //             .then((doSave) => {
+    //                 if (doSave === null) {
+    //                     return false;
+    //                 }
+    //                 if (doSave.result === 1) {
+    //                     const _data = this.cardEditRef.getNewData();
+    //                     return this._save(_data)
+    //                         .then((node) => !!node);
+    //                 } else {
+    //                     return true;
+    //                 }
+    //             })
+    //             .catch(() => {
+    //                 return false;
+    //             });
+    //     } else {
+    //         return Promise.resolve(true);
+    //     }
+    // }
 
     private _init() {
         this.nextRoute = this._router.url;
@@ -427,51 +457,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
         return _url.join('/');
     }
 
-    private _askForSaving(): Promise<boolean> {
-        if (this.isChanged) {
-            return this._confirmSrv.confirm2(Object.assign({}, CONFIRM_SAVE_ON_LEAVE2,
-                { confirmDisabled: false }))
-                .then((doSave) => {
-                    if (doSave === null) {
-                        return false;
-                    }
-                    if (doSave.result === 1) {
-                        const _data = this.cardEditRef.getNewData();
-                        return this._save(_data)
-                            .then((node) => !!node);
-                    } else {
-                        return true;
-                    }
-                })
-                .catch(() => {
-                    return false;
-                });
-        } else {
-            return Promise.resolve(true);
-        }
-    }
 
-    // private _askForSaving(): Promise<boolean> {
-    //     if (this.isChanged) {
-    //         return this._confirmSrv.confirm(Object.assign({}, CONFIRM_SAVE_ON_LEAVE,
-    //             { confirmDisabled: this.disableSave }))
-    //             .then((doSave) => {
-    //                 if (doSave) {
-    //                     const _data = this.cardEditRef.getNewData();
-    //                     return this._save(_data)
-    //                         .then((node) => !!node);
-    //                 } else {
-    //                     return true;
-    //                 }
-    //             })
-    //             .catch(() => {
-    //                 // console.log('cancel reason', err);
-    //                 return false;
-    //             });
-    //     } else {
-    //         return Promise.resolve(true);
-    //     }
-    // }
 
     private _confirmSave(data): Promise<boolean> {
         return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv);

@@ -41,7 +41,7 @@ export class EosDictionaryNode {
      */
     private _marked: boolean;
 
-    private _autoMarked: boolean;
+    // private _autoMarked: boolean;
 
     private _dictionary: EosDictionary;
     private _children?: EosDictionaryNode[];
@@ -125,17 +125,21 @@ export class EosDictionaryNode {
     }
 
     get isMarked(): boolean {
-        return this._marked || this._autoMarked;
+        return this._marked;
     }
 
     set isMarked(marked: boolean) {
         this._marked = marked;
-        this._autoMarked = marked;
+        // this._autoMarked = isAuto;
     }
 
-    set autoMarked(marked: boolean) {
-        this._autoMarked = marked;
-    }
+    // get autoMarked () {
+    //     return this._autoMarked;
+    // }
+
+    // set autoMarked(marked: boolean) {
+    //     this._autoMarked = marked;
+    // }
 
     constructor(dictionary: EosDictionary, data: any) {
         if (data) {

@@ -1,4 +1,4 @@
-import { RKDefaultFields, TDefaultField, TDFSelectOption, RKFilesConstraints, RKFictControls, RKFilesConstraintsFields } from './rk-default-values/rk-default-const';
+import { RKDefaultFields, TDefaultField, TDFSelectOption, RKFilesConstraints, RKFictControls, RKFilesConstraintsFields, RKPDDefaultFields } from './rk-default-values/rk-default-const';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { PipRX, DOCGROUP_CL } from 'eos-rest';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
@@ -9,12 +9,16 @@ import { NgZone, Injector } from '@angular/core';
 const DOCGROUP_TABLE = 'DOCGROUP_CL';
 const DOCGROUP_UID_NAME = 'ISN_NODE';
 export const DEFAULTS_LIST_NAME = 'DOC_DEFAULT_VALUE_List';
+export const PRJ_DEFAULTS_LIST_NAME = 'PRJ_DEFAULT_VALUE_List';
 export const FILE_CONSTRAINT_LIST_NAME = 'DG_FILE_CONSTRAINT_List';
+export const AR_DOCGROUP_LIST_NAME = 'AR_DOCGROUP_List';
+
 export const FICT_CONTROLS_LIST_NAME = 'fict';
 
 
 export class IUpdateDictEvent {
     path: string;
+    key: string;
     options: TDFSelectOption[];
     el: TDefaultField;
     data?: any;
@@ -37,6 +41,10 @@ export class AdvCardRKDataCtrl {
         [DEFAULTS_LIST_NAME]:  RKDefaultFields,
         [FILE_CONSTRAINT_LIST_NAME]: RKFilesConstraints,
         [FICT_CONTROLS_LIST_NAME]: RKFictControls,
+        // [PRJ_DEFAULTS_LIST_NAME]: RKPDDefaultFields,
+    };
+    private _descrRKPD = {
+        [PRJ_DEFAULTS_LIST_NAME]: RKPDDefaultFields,
     };
 
     private _apiSrv: PipRX;
@@ -55,10 +63,31 @@ export class AdvCardRKDataCtrl {
         return this._apiSrv.getConfig();
     }
 
-    getDescriptions(): any {
+    getDescriptionsRK(): any {
         return this._descr;
     }
 
+    getDescriptionsRKPD(): any {
+        return this._descrRKPD;
+    }
+
+
+    readDGValuesDUE(due: string): Promise<any> {
+
+        const query = {
+            criteries: { DUE: String(due) },
+        };
+
+        const req: any = {
+            [DOCGROUP_TABLE]: query,
+            expand: DEFAULTS_LIST_NAME + ',' + FILE_CONSTRAINT_LIST_NAME + ',' + PRJ_DEFAULTS_LIST_NAME + ',' + AR_DOCGROUP_LIST_NAME,
+            foredit: true,
+        };
+
+        return this._apiSrv.read<DOCGROUP_CL>(req).then((data) => {
+            return data;
+        });
+    }
 
     readDGValues(uid: number): Promise<any> {
 
@@ -125,6 +154,7 @@ export class AdvCardRKDataCtrl {
                 if (callback) {
                     callback ({
                         path: el.key,
+                        key: '',
                         options: opts,
                         el: el,
                         data: data,
@@ -171,7 +201,7 @@ export class AdvCardRKDataCtrl {
     }
 
     public markCacheForDirty(filter: string) {
-        const fields = this.getDescriptions();
+        const fields = this.getDescriptionsRK();
         Object.keys(fields).forEach ((key) => {
             for (let i = 0; i < fields[key].length; i++) {
                 const el: TDefaultField = fields[key][i];
@@ -196,7 +226,7 @@ export class AdvCardRKDataCtrl {
         if (cache && !cache.forceReload) {
             el.options = cache.dict;
             return cache.promise.then( () => {
-                callback ({ path: el.key, options: el.options, el: el });
+                callback ({ path: el.key, key: '', options: el.options, el: el });
                 return el.options;
             });
         } else {
@@ -244,11 +274,11 @@ export class AdvCardRKDataCtrl {
                 if (el.dict.dictId === 'USER_LISTS') {
                     el.options = opts_ptr;
                     return this._appendListInfo(el, opts_ptr).then (d => {
-                        callback ({ path: el.key, options: opts_ptr, el: el });
+                        callback ({ key: '', path: el.key, options: opts_ptr, el: el });
                         return opts_ptr;
                     });
                 } else {
-                    callback ({ path: el.key, options: opts_ptr, el: el });
+                    callback ({ key: '', path: el.key, options: opts_ptr, el: el });
                     el.options = opts_ptr;
 
                     return opts_ptr;
@@ -260,9 +290,9 @@ export class AdvCardRKDataCtrl {
         }
     }
 
-    public updateDictsOptions(filter: string, linkValues: any, callback: (event: IUpdateDictEvent) => void = null): Promise<any> {
+    public updateDictsOptions(fields: any, filter: string, linkValues: any, callback: (event: IUpdateDictEvent) => void = null): Promise<any> {
         const reqs = [];
-        const fields = this.getDescriptions();
+        // const fields = this.getDescriptions();
 
         Object.keys(fields).forEach ((key) => {
             for (let i = 0; i < fields[key].length; i++) {
@@ -273,15 +303,20 @@ export class AdvCardRKDataCtrl {
                 if (filter && el.dict.dictId !== filter) { continue; }
 
                 if (el.type === E_FIELD_TYPE.dictLink) {
-                    reqs.push(this.readDictLinkValue(el, linkValues[key][el.key], (event: IUpdateDictEvent) => {
+                    reqs.push(this.readDictLinkValue(el, linkValues[key] ? linkValues[key][el.key] : null, (event: IUpdateDictEvent) => {
                         event.path = key + '.' + el.key;
+                        event.key = key;
                         callback(event);
                     }));
                     continue;
                 } if (el.type !== E_FIELD_TYPE.select)  {
                     continue;
                 } else {
-                    reqs.push(this.cashedReadDict(el, callback));
+                    reqs.push(this.cashedReadDict(el, (event: IUpdateDictEvent) => {
+                        event.path = key + '.' + el.key;
+                        event.key = key;
+                        callback(event);
+                    }));
                 }
             }
         });
@@ -406,7 +441,7 @@ export class AdvCardRKDataCtrl {
     }
 
     private _calcChangesFor(docGroup: any, newData: any ): any {
-        const fields = this.getDescriptions();
+        const fields = this.getDescriptionsRK();
         const changes = [];
         if (!newData) {
             return null;

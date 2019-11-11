@@ -104,6 +104,12 @@ $drop-menu-width: 300px;
 }
 
 .action-menu {
+    &.dropdown-menu{
+        max-height: calc(100vh - 247px) ;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
     width: $drop-menu-width;
     position: relative;
     left: -134px;

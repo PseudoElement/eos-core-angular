@@ -15,7 +15,7 @@ import {Subject} from 'rxjs';
 
 
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
-import {EosDictService} from '../services/eos-dict.service';
+import {EosDictService, MarkedInformation} from '../services/eos-dict.service';
 import {IDictionaryViewParameters, IFieldView, IOrderBy, E_FIELD_SET, E_FIELD_TYPE} from 'eos-dictionaries/interfaces';
 import {LongTitleHintComponent} from '../long-title-hint/long-title-hint.component';
 import {HintConfiguration} from '../long-title-hint/hint-configuration.interface';
@@ -37,10 +37,6 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     @ViewChild(LongTitleHintComponent) hint: LongTitleHintComponent;
     @ViewChild('eosNodeList') eosNodeList;
 
-
-    allMarked: boolean;
-    anyMarked: boolean;
-    anyUnmarked: boolean;
     customFields: IFieldView[] = [];
     length = {};
     min_length = {};
@@ -51,6 +47,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     headerOffset = 0;
     viewFields: IFieldView[] = [];
     tooltipDelay = TOOLTIP_DELAY_VALUE;
+    markedInfo: MarkedInformation;
+    allMarked: boolean;
 
     public hasOverflowedColumns: boolean;
     public firstColumnIndex: number;
@@ -61,6 +59,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     private _recalcEvent: any;
     private _dictId: string;
     private _repaintFlag: any;
+
 
 
     constructor(
@@ -117,6 +116,15 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                     }
                 }
             });
+        _dictSrv.markInfo$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((markedInfo) => {
+            this.markedInfo = markedInfo;
+            if (this.nodes.length && this.nodes.length === markedInfo.nodes.length) {
+                this.allMarked = true;
+            } else {
+                this.allMarked = false;
+            }
+        });
+
     }
 
     updateViewFields(customFields: IFieldView[], nodes: EosDictionaryNode[]): Promise<any> {
@@ -225,12 +233,18 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         });
     }
 
-    openCopyProperties(node: EosDictionaryNode, fromParent: boolean) {
+    openCopyProperties(node: EosDictionaryNode, fromdue: string) {
         this.modalWindow = this._modalSrv.show(CopyPropertiesComponent, {
             class: 'copy-properties-modal moodal-lg'});
-        this.modalWindow.content.init(node.data.rec, fromParent);
+        this.modalWindow.content.init(node.data.rec, fromdue);
         this._closeModalWindowSubscribtion();
     }
+    // openCopyProperties(node: EosDictionaryNode, fromParent: boolean) {
+    //     this.modalWindow = this._modalSrv.show(CopyPropertiesComponent, {
+    //         class: 'copy-properties-modal moodal-lg'});
+    //     this.modalWindow.content.init(node.data.rec, fromParent);
+    //     this._closeModalWindowSubscribtion();
+    // }
 
     openCopyNode(nodes: EosDictionaryNode[]) {
         this.modalWindow = this._modalSrv.show(CopyNodeComponent, {
@@ -247,6 +261,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     orderByField(fieldKey: string) {
+        this._dictSrv.setMarkAllNone();
         if (!this.orderBy || this.orderBy.fieldKey !== fieldKey) {
             this.orderBy = {
                 fieldKey: fieldKey,
@@ -281,16 +296,25 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         }
     }
 
-    /**
+    get getflagChecked() {
+        if (this.allMarked) {
+            return 'eos-icon-checkbox-square-v-blue';
+        } else if (this.markedInfo.anyMarked) {
+            return 'eos-icon-checkbox-square-minus-blue';
+        } else {
+            return 'eos-icon-checkbox-square-blue';
+        }
+      }
+
+      /**
      * Toggle checkbox checked all
      */
     toggleAllMarks(): void {
-        this.anyMarked = this.allMarked;
-        this.anyUnmarked = !this.allMarked;
-        if (!this.allMarked) {
-            this._dictSrv.setMarkAllNone();
+
+        if (this.allMarked) {
+            this._dictSrv.setMarkAllVisible();
         } else {
-            this._dictSrv.setMarkAll();
+            this._dictSrv.setMarkAllNone();
         }
 
         // TODO: move to info?
@@ -451,7 +475,6 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                 this._dictSrv.resetSearch().then().catch(e => { console.log(e); });
              });
     }
-
     userOrdered(nodes: EosDictionaryNode[]) {
         this._dictSrv.setUserOrder(nodes);
     }

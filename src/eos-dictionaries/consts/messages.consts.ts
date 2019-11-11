@@ -50,12 +50,6 @@ export const DANGER_NAVIGATE_TO_DELETED_ERROR: IMessage = {
     /* tslint:enable:max-line-length */
 };
 
-export const DANGER_HAVE_NO_ELEMENTS: IMessage = {
-    type: 'warning',
-    title: 'Элементы не выбраны!',
-    msg: 'Удалять нечего.'
-};
-
 export const INFO_NOTHING_CHANGES: IMessage = {
     type: 'info',
     title: 'Информация о сохранении изменений: ',
@@ -72,12 +66,6 @@ export const WARN_SAVE_FAILED: IMessage = {
     type: 'warning',
     title: 'Предупреждение:',
     msg: 'изменения не сохранены!'
-};
-
-export const WARN_LOGIC_DELETE: IMessage = {
-    type: 'warning',
-    title: 'Предупреждение:',
-    msg: 'отмеченные элементы уже были логически удалены!'
 };
 
 export const WARN_LOGIC_CLOSE: IMessage = {
@@ -210,6 +198,12 @@ export const INFO_REESTR_NOT_UNIQUE: IMessage = {
     type: 'info',
     title: 'Внимание:',
     msg: 'Значение реестра не уникально. Существует {{exists}}'
+};
+
+export const INFO_OPERATION_COMPLETE: IMessage = {
+    type: 'info',
+    title: 'Внимание:',
+    msg: 'Записи: {{RECS}} {{OPERATION}}',
 };
 export const DANGER_EMPTY_FILE: IMessage = {
     type: 'warning',
