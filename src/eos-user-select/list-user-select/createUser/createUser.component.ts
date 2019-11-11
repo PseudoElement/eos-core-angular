@@ -213,7 +213,7 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                     this._msgSrv.addNewMessage({
                             type: 'warning',
                             title: 'Предупреждение',
-                            msg: 'Должностное лицо не соответствует текущему подразделению',
+                            msg: 'Должностное лицо не принадлежит текущей картотеке',
                             dismissOnTimeout: 6000,
                         });
                     throw new Error();
