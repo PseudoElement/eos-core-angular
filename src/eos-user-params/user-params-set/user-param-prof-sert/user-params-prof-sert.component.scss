@@ -13,6 +13,8 @@
 
 .sert-table-body {
     padding: 7px 0px;
+    max-height: 700px;
+    overflow: auto;
     .colorValid {
         color: #fdc309;
     }
