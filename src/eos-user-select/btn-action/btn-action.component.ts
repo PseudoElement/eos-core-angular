@@ -196,7 +196,19 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         this.checkWithLimitedUser(OpenRightsSystemCaseDelo);
     }
     checkBtnProtocol() {
-        this.checkWithLimitedUser(Protocol);
+        if (!this.selectUser) {
+            Protocol.disabled = true;
+        } else {
+            if (this.flagTachRigth) {
+                if (this.checkUresForLimited()) {
+                    Protocol.disabled = true;
+                } else {
+                    Protocol.disabled = false;
+                }
+            } else {
+                Protocol.disabled = false;
+            }
+        }
     }
     checkBtnOpenStreamSystem() {
         if (!this.selectUser || this.selectUser.deleted) {
