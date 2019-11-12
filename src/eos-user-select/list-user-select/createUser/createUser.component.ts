@@ -191,26 +191,33 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 if (data === '') {
                     throw new Error();
                 }
-                if (this.privateParseDue(data)) {
-                    dueDep = data;
-                } else {
-                    let msg;
-                    if (this._apiSrv.configList.shooseTab === 0) {
-                        msg = 'Должностное лицо не соответствует текущему подразделению';
+                if (this._apiSrv.configList.shooseTab === 0) {
+                    if (this.privateParseDue(data)) {
+                        dueDep = data;
                     } else {
-                        msg = 'Должностное лицо не принадлежит текущей картотеке';
+                        this._msgSrv.addNewMessage({
+                            type: 'warning',
+                            title: 'Предупреждение',
+                            msg: 'Должностное лицо не соответствует текущему подразделению',
+                            dismissOnTimeout: 6000,
+                        });
+                        throw new Error();
                     }
-                    this._msgSrv.addNewMessage({
-                        type: 'warning',
-                        title: 'Предупреждение',
-                        msg: msg,
-                        dismissOnTimeout: 6000,
-                    });
-                    throw new Error();
+                } else {
+                    dueDep = data;
                 }
                 return this._userParamSrv.getDepartmentFromUser([dueDep]);
             })
             .then((data: DEPARTMENT[]) => {
+                if (this._apiSrv.configList.shooseTab === 1 && data[0].DEPARTMENT_DUE !== this._apiSrv.dueDep && this._apiSrv.dueDep !== '0.') {
+                    this._msgSrv.addNewMessage({
+                            type: 'warning',
+                            title: 'Предупреждение',
+                            msg: 'Должностное лицо не принадлежит текущей картотеке',
+                            dismissOnTimeout: 6000,
+                        });
+                    throw new Error();
+                }
                 return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0]);
             })
             .then((dep: DEPARTMENT) => {
