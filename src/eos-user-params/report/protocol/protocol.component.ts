@@ -31,6 +31,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
     'Редактирование пользователя БД',
     'Редактирование прав ДЕЛА',
     'Редактирование прав Поточного сканирования',
+    '',
     'Удаление пользователя'
   ];
   critUsers = [];
@@ -293,11 +294,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   GetRefFile() {
     this.closeTooltip = true;
     setTimeout(() => {
-      if (this.lastUser.eventUser === 'Удаление пользователя') {
-        window.open(`../UserInfo/UserRights.ashx?uisn=${this.curentUser}`, '_blank', 'width=900, height=700, scrollbars=1');
-      } else {
         window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, '_blank', 'width=900, height=700, scrollbars=1');
-      }
     }, 0);
   }
   ConvertDate(convDate) {
