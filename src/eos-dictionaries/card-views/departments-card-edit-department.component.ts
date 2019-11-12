@@ -84,7 +84,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
         this.dictSrv.bindOrganization(dues[0])
             .then((org) => {
                 if (org) {
-                    if (this.isNewRecord) {
+                    if (this.isNewRecord || !this.data.__relfield) {
                         this.data.__relfield = {};
                     }
                     this.data.__relfield['ORGANIZ_CL'] = org;
