@@ -8,10 +8,10 @@ import { DEPARTMENT } from 'eos-rest';
 @Injectable()
 export class RtUserSelectService {
     subject: Subject<any> = new Subject();
-    subjectScan: Subject<any> = new Subject();
+    _updateBtn: Subject<any> = new Subject();
     subjectFlagBtnHeader: Subject<any> = new Subject();
     btnDisabled: boolean = false;
-    hashUsers: Array<any> = [];
+    hashUsers = new Map();
     ArraySystemHelper = {
         delo: {
             label: 'Дело',
@@ -80,8 +80,8 @@ export class RtUserSelectService {
     ) {
         this.UserCabinetInfo = [];
     }
-    get checkScanBtn() {
-        return this.subjectScan.asObservable();
+    get updateBtn() {
+        return this._updateBtn.asObservable();
     }
 
     get changerUser(): Observable<any> {
@@ -206,6 +206,9 @@ export class RtUserSelectService {
     getSVGImage(photo: any): Promise<any> {
         const query = { DELO_BLOB: photo };
         return this.apiSrv.read(query);
+    }
+    clearHash() {
+        this.hashUsers.clear();
     }
     private _errorHandler(err): void {
         const errMessage = err.message ? err.message : err;

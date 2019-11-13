@@ -46,16 +46,6 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         this.flagSustem = false;
         this.opened = false;
         this.showDep = false;
-        // this._sandwichSrv.currentDictState$
-        //     .takeUntil(this.destroySubsriber)
-        //     .subscribe(result => {
-        //     this.flagRtBlock = result[1];
-        //     if (this.flagRtBlock && this.CurrentUser) {
-        //         this.chooseTemplate = 'spinner';
-        //             this.geyInfo();
-        //         }
-        //     });
-
         this._selectedUser.changerUser
             .pipe(
                 takeUntil(this.destroySubsriber)
@@ -115,72 +105,69 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         if (!isnDue) {
             this.isPhoto = false;
         }
-        const savedUser = this._selectedUser.hashUsers.filter(cur => cur.CurrentUser.id === this.CurrentUser.id);
-        if (savedUser.length > 0) {
-            this.DueInfo = savedUser[0].DueInfo;
-            this.departmentInfo = savedUser[0].departmentInfo;
-            this.UserCabinetInfo = savedUser[0].UserCabinetInfo;
-            this.role = savedUser[0].role;
-            this.CurrentUser = savedUser[0].CurrentUser;
+        const savedUser = this._selectedUser.hashUsers.get(this.CurrentUser.id);
+        if (savedUser) {
+            this.DueInfo = savedUser.DueInfo;
+            this.departmentInfo = savedUser.departmentInfo;
+            this.UserCabinetInfo = savedUser.UserCabinetInfo;
+            this.role = savedUser.role;
+            this.CurrentUser = savedUser.CurrentUser;
             this.chooseTemplate = 'main';
             this.getObjectForSystems();
         } else {
             this._selectedUser.get_cb_print_info(this.CurrentUser.id, isnDue)
-            .then(([user_role, deep = null, cb_print = null]) => {
-                this.getObjectForSystems();
-                if (this.CurrentUser.deep) {
-                    this.departmentInfo = deep;
-                    if (cb_print && cb_print.length) {
-                        const surname = `${cb_print[0].SURNAME}`;
-                        const name = `${cb_print[0].NAME}`;
-                        const lastName = `${cb_print[0].PATRON}`;
-                        this.DueInfo = `${String(surname) !== 'null' ? surname : ''} ${String(name) !== 'null' ? name : ''}  ${String(lastName) !== 'null' ? lastName : ''}`;
-                        if (this.DueInfo.trim().length === 0) {
+                .then(([user_role, deep = null, cb_print = null]) => {
+                    this.getObjectForSystems();
+                    if (this.CurrentUser.deep) {
+                        this.departmentInfo = deep;
+                        if (cb_print && cb_print.length) {
+                            const surname = `${cb_print[0].SURNAME}`;
+                            const name = `${cb_print[0].NAME}`;
+                            const lastName = `${cb_print[0].PATRON}`;
+                            this.DueInfo = `${String(surname) !== 'null' ? surname : ''} ${String(name) !== 'null' ? name : ''}  ${String(lastName) !== 'null' ? lastName : ''}`;
+                            if (this.DueInfo.trim().length === 0) {
+                                this.DueInfo = `${deep['SURNAME']}`;
+                            }
+                        } else {
                             this.DueInfo = `${deep['SURNAME']}`;
                         }
+                        this.isPhoto = deep['ISN_PHOTO'];
+                        isn_cabinet = deep['ISN_CABINET'];
+                        this.showDep = true;
+                        if (this.isPhoto) {
+                            this._selectedUser.getSVGImage(this.isPhoto).then((res: DELO_BLOB[]) => {
+                                this.urlPhoto = this.createUrlRoot(res[0]);
+                            });
+                        }
                     } else {
-                        this.DueInfo = `${deep['SURNAME']}`;
+                        this.DueInfo = null;
+                        this.showDep = false;
                     }
-                    this.isPhoto = deep['ISN_PHOTO'];
-                    isn_cabinet = deep['ISN_CABINET'];
-                    this.showDep = true;
-                    if (this.isPhoto) {
-                        this._selectedUser.getSVGImage(this.isPhoto).then((res: DELO_BLOB[]) => {
-                            this.urlPhoto = this.createUrlRoot(res[0]);
+                    this.role = this.getRoleForUser(user_role);
+                    this._selectedUser.getInfoCabinet(this.CurrentUser.id, isn_cabinet)
+                        .then((res: [USER_CL, DEPARTMENT]) => {
+                            this.UserCabinetInfo = res;
+                            this.chooseTemplate = 'main';
+                            this.hashUsers();
                         });
-                    }
-                } else {
-                    this.DueInfo = null;
-                    this.showDep = false;
-                }
-                this.role = this.getRoleForUser(user_role);
-                this._selectedUser.getInfoCabinet(this.CurrentUser.id, isn_cabinet)
-                    .then((res: [USER_CL, DEPARTMENT]) => {
-                        this.UserCabinetInfo = res;
-                        this.chooseTemplate = 'main';
-                        this.hashUsers();
-                    });
-            }).catch(error => {
-                console.log(error);
-                this._errSrv.errorHandler(error);
-            });
+                }).catch(error => {
+                    this._errSrv.errorHandler(error);
+                });
         }
     }
 
     hashUsers() {
-        const user = {
-            CurrentUser: this.CurrentUser,
-            DueInfo: this.DueInfo,
-            departmentInfo: this.departmentInfo,
-            UserCabinetInfo: this.UserCabinetInfo,
-            role: this.role
-        };
-        const hashUser = this._selectedUser.hashUsers.filter(cur => cur.CurrentUser.id === this.CurrentUser.id);
-        if (hashUser.length === 0) {
-            this._selectedUser.hashUsers.push(user);
+        if (!this._selectedUser.hashUsers.has(this.CurrentUser.id)) {
+            const user = {
+                CurrentUser: this.CurrentUser,
+                DueInfo: this.DueInfo,
+                departmentInfo: this.departmentInfo,
+                UserCabinetInfo: this.UserCabinetInfo,
+                role: this.role
+            };
+            this._selectedUser.hashUsers.set(this.CurrentUser.id, user);
         }
     }
-
     createUrlRoot(blob: DELO_BLOB) {
         const url = `url(data:image/${blob.EXTENSION};base64,${blob.CONTENTS})`;
         return url;
@@ -226,7 +213,6 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         split[23] === '1' ? this._selectedUser.ArraySystemHelper.MobNet.checked = true : this._selectedUser.ArraySystemHelper.MobNet.checked = false;
         split[26] === '1' ? this._selectedUser.ArraySystemHelper.Informer.checked = true : this._selectedUser.ArraySystemHelper.Informer.checked = false;
         this.flagSustem = true;
-        this._selectedUser.subjectScan.next(this._selectedUser.ArraySystemHelper.Pscan.checked);
     }
     fillDeloField(delo: boolean, delo_deloweb: boolean, delowebLGO: boolean, delowebKL: boolean): void {
         this._selectedUser.ArraySystemHelper.delo.checked = delo;

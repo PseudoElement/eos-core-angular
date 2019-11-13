@@ -23,8 +23,8 @@ export const RedactUser: BtnActionFields = {
     isActive: false,
 };
 
-export const DeliteLogicalUser: BtnActionFields = {
-    name: 'DeliteLogicalUser',
+export const DeliteUser: BtnActionFields = {
+    name: 'DeliteUser',
     title: 'Удалить навсегда',
     disabledClass: 'eos-icon eos-icon-bin-forever-grey small',
     enableClass: 'eos-icon eos-icon-bin-forever-blue small',
@@ -47,8 +47,8 @@ export const ActionMode: BtnActionFields = {
     isActive: false,
 };
 
-export const ActionModeMore: BtnActionFields = {
-    name: 'ActionMode',
+export const ViewDeletedUsers: BtnActionFields = {
+    name: 'ViewDeletedUsers',
     title: 'Отображение удаленных пользователей',
     disabledClass: 'eos-icon eos-icon-Eraseduser-Grey small',
     enableClass: 'eos-icon eos-icon-Eraseduser-Blue small',
@@ -59,8 +59,8 @@ export const ActionModeMore: BtnActionFields = {
     isActive: false,
 };
 
-export const ActionTehnicalUser: BtnActionFields = {
-    name: 'ActionTehnicalUser',
+export const ViewTechicalUsers: BtnActionFields = {
+    name: 'ViewTechicalUsers',
     title: 'Отображение технических пользователей',
     disabledClass: 'eos-icon eos-icon-Techuser-Grey small',
     enableClass: 'eos-icon eos-icon-Techuser-Blue small',
@@ -70,8 +70,8 @@ export const ActionTehnicalUser: BtnActionFields = {
     activeBtnClass: 'activeShow',
     isActive: false,
 };
-export const LocSelectedUser: BtnActionFields = {
-    name: 'LocSelectedUser',
+export const BlockUser: BtnActionFields = {
+    name: 'BlockUser',
     title: 'Заблокировать пользователей',
     disabledClass: 'eos-icon eos-icon-Blockeduser-Grey small',
     enableClass: 'eos-icon eos-icon-Blockeduser-Blue small',
@@ -119,11 +119,11 @@ export const OpenRightsSystemCaseDelo: BtnActionFields = {
 export const GeneralLists: BtnActionFields = {
     name: 'GeneralLists',
     title: 'Ведение общих списков стандартных текстов',
-    disabledClass: 'eos-icon eos-icon-H-Grey small',
-    enableClass: 'eos-icon eos-icon-H-Blue small',
+    disabledClass: 'eos-icon eos-icon-signature-gray small',
+    enableClass: 'eos-icon eos-icon-signature-blue small',
     tooltip: 'Ведение общих списков стандартных текстов',
     disabled: false,
-    activeClass: 'eos-icon eos-icon-H-Blue small',
+    activeClass: 'eos-icon eos-icon-signature-blue small',
     activeBtnClass: '',
     isActive: false,
 };
@@ -141,7 +141,7 @@ export const SumProtocol: BtnActionFields = {
 };
 
 export const UsersStats: BtnActionFields = {
-    name: 'OpenUsersStats',
+    name: 'UsersStats',
     title: 'Статистика по пользователям и опциям',
     disabledClass: 'eos-icon eos-icon eos-icon-statistic-grey small',
     enableClass: 'eos-icon eos-icon eos-icon-statistic-blue small',
@@ -165,7 +165,7 @@ export const UsersInfo: BtnActionFields = {
 };
 
 export const Protocol: BtnActionFields = {
-    name: 'OpenProtocol',
+    name: 'Protocol',
     title: 'Протокол',
     disabledClass: 'eos-icon eos-icon-new-doc-grey small',
     enableClass: 'eos-icon eos-icon-new-doc-blue small',
@@ -177,7 +177,7 @@ export const Protocol: BtnActionFields = {
 };
 
 export const DefaultSettings: BtnActionFields = {
-    name: 'OpenDefaultSettings',
+    name: 'DefaultSettings',
     title: 'Настройки по умолчанию',
     disabledClass: 'eos-icon eos-icon-repair-grey small',
     enableClass: 'eos-icon eos-icon-settings-blue small',
@@ -205,7 +205,7 @@ export const Allbuttons: BtnAction = {
         CreateUser,
         RedactUser,
         // ActionMode,
-        LocSelectedUser,
+        BlockUser,
         OpenAddressManagementWindow,
         OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
@@ -214,9 +214,9 @@ export const Allbuttons: BtnAction = {
     moreButtons: [
         CreateUser,
         RedactUser,
-        ActionModeMore,
-        ActionTehnicalUser,
-        LocSelectedUser,
+        ViewDeletedUsers,
+        ViewTechicalUsers,
+        BlockUser,
         OpenAddressManagementWindow,
         OpenStreamScanSystem,
         OpenRightsSystemCaseDelo,
@@ -226,7 +226,7 @@ export const Allbuttons: BtnAction = {
         SumProtocol,
         UsersInfo,
         DefaultSettings,
-        DeliteLogicalUser,
+        DeliteUser,
     ],
     moreButtonCheck: {
         check: false,

@@ -82,7 +82,7 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="!isLoading" #listContent class="list-user-sel" (scroll)="savePositionSelectUser($event)">
+        <div *ngIf="!isLoading" #listContent class="list-user-sel">
             <div>
                 <div *ngIf="listUsers.length; else emptyCert" class="block" [ngStyle]="{'width.px': tableWidth}">
                     <div *ngFor="let user of listUsers;   let last = last" class="user-item"
