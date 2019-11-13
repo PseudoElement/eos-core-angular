@@ -5,6 +5,7 @@ import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-conver
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { FormGroup } from '@angular/forms';
 import { SearchServices } from '../shered/services/search.service';
+import { EosStorageService } from 'app/services/eos-storage.service';
 import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
 
 @Component({
@@ -14,28 +15,34 @@ import { UserPaginationService } from 'eos-user-params/shared/services/users-pag
     providers: [FormHelperService],
 })
 
-export class UserSearchComponent implements OnInit {
+export class UserSearchComponent implements OnInit  {
     @Output() search = new EventEmitter<any>();
     @Output() quickSearchKey = new EventEmitter<any>();
     @ViewChild('full') fSearchPop;
     @Input() quickSearchOpen;
     @Input() flagDeep;
+    readonly fieldGroupsForSearch: string[] = ['Общий поиск', 'Поиск удаленных', 'Поиск по системам'];
     public srchString: string;
     public fastSearch: boolean = false;
+    public fullSearch: boolean = false;
+    public currTab: number = 0;
     private prapareData: any;
     private prepareInputs: any;
     private inputs: any;
     private form: FormGroup;
+    private _submitFullFormValue: any;
+    private _submitQuickFormValue: string;
     constructor(
         private _formHelper: FormHelperService,
         private dataConv: EosDataConvertService,
         private inpSrv: InputControlService,
         private srhSrv: SearchServices,
+        private _storage: EosStorageService,
         private users_pagination: UserPaginationService,
     ) {
     }
     isActiveButton(): boolean {
-        return (this.fSearchPop.isOpen);
+        return (this.fullSearch || this.fSearchPop.isOpen);
     }
     isActiveButtonQuick() {
         return (this.fastSearch);
@@ -44,22 +51,37 @@ export class UserSearchComponent implements OnInit {
         this.fastSearch = false;
     }
 
+    setTab(i: number) {
+        this.currTab = i;
+        this.resetForm();
+    }
+    onShown() {
+        const fullSearch = this._storage.getItem('fullForm');
+        this.currTab = this._storage.getItem('currTab');
+        if (!this.currTab) {
+            this.currTab = 0;
+        }
+        if (this.fSearchPop.isOpen === true && fullSearch) {
+            this.form.patchValue(fullSearch);
+        }
+    }
+
     get disableBtn() {
         if (this.form) {
             return this.form.status === 'VALID' && (this.form.value['rec.LOGIN'].length > 0 || this.form.value['rec.DEPARTMENT'].length > 0 ||
-                this.form.value['rec.fullDueName'].length > 0  || this.form.value['rec.SURNAME'].length > 0 || this.form.value['rec.AV_SYSTEMS'] ||
-                this.form.controls['rec.BLOCK_USER'].dirty);
+                this.form.value['rec.fullDueName'].length > 0  || this.form.value['rec.SURNAME'].length > 0 ||
+                this.form.controls['rec.BLOCK_USER'].value === '2' || this.currTab === 2);
         }
-    }
-    get showSurnameField() {
-        return this.form.controls['rec.DEL_USER'].value;
-    }
-
-    get showAvSystemsField() {
-        return this.form.controls['rec.AV_SYSTEMS'].value;
     }
     ngOnInit() {
         this.pretInputs();
+        this._submitFullFormValue = this._storage.getItem('fullForm');
+        this._submitQuickFormValue = this._storage.getItem('quickForm');
+        if (this._submitFullFormValue) {
+            this.fullSearch = true;
+        } else if (this._submitQuickFormValue) {
+            this.openFastSrch();
+        }
     }
     pretInputs() {
         this.prapareData = this._formHelper.parse_Create(USER_SEARCH.fields, { LOGIN: '', DEPARTMENT: '', DUE_DEP: '', BLOCK_USER: '0'});
@@ -72,7 +94,7 @@ export class UserSearchComponent implements OnInit {
     }
 
     RemoveQuotes(newObj: any): void {
-        const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
+       const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
         for (const key in newObj) {
             if (newObj.hasOwnProperty(key) && key !== 'AV_SYSTEMS' && key !== 'BLOCK_USER') {
                 const list = newObj[key];
@@ -83,8 +105,8 @@ export class UserSearchComponent implements OnInit {
                 } else {
                     for (const k in list) {
                         if (list.hasOwnProperty(k)) {
-                            let fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
-                            list[k] = fixed;
+                             let fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
+                             list[k] = fixed;
                             this.form.controls[`rec.${key}`].patchValue(newObj[key]);
                             fixed = this.AddUnderscore(fixed);
                         }
@@ -104,33 +126,37 @@ export class UserSearchComponent implements OnInit {
             delete newObj.CARD;
         }
         this.RemoveQuotes(newObj);
-        const queryF = this.srhSrv.getQueryForFilter(newObj);
+        const queryF = this.srhSrv.getQueryForFilter(newObj, this.currTab);
+        this._storage.setItem('fullForm', this.form.value);
+        this._storage.setItem('quickForm', null);
+        this._storage.setItem('currTab', this.currTab);
         this.users_pagination.resetConfig();
         this.search.emit(queryF);
+        this.clearQuickForm();
+        this.fullSearch = true;
         this.fSearchPop.isOpen = false;
     }
     setConfSearch(newObj) {
         const searchVal = this.form.value;
         if (this.form.controls['rec.CARD'].valid && this.form.controls['rec.CARD'].value !== '') {
-            newObj['CARD'] = searchVal['rec.CARD'].replace(/\s/g, '_').trim();
+            newObj['CARD'] = searchVal['rec.CARD'].trim();
         }
         if (this.form.controls['rec.DEPARTMENT'].valid && this.form.controls['rec.DEPARTMENT'].value !== '') {
-            newObj['DEPARTMENT'] = searchVal['rec.DEPARTMENT'].replace(/\s/g, '_').trim();
+            newObj['DEPARTMENT'] = searchVal['rec.DEPARTMENT'].trim();
 
         }
         if (this.form.controls['rec.fullDueName'].valid && this.form.controls['rec.fullDueName'].value !== '') {
-            newObj['fullDueName'] = searchVal['rec.fullDueName'].replace(/\s/g, '_').trim();
+            newObj['fullDueName'] = searchVal['rec.fullDueName'].trim();
         }
         if (this.form.controls['rec.LOGIN'].valid && this.form.controls['rec.LOGIN'].value !== '') {
-            newObj['LOGIN'] = searchVal['rec.LOGIN'].replace(/\s/g, '_').trim();
+            newObj['LOGIN'] = searchVal['rec.LOGIN'].trim();
         }
         if (this.form.controls['rec.SURNAME'].valid && this.form.controls['rec.SURNAME'].value !== '') {
-            newObj['SURNAME'] = searchVal['rec.SURNAME'].replace(/\s/g, '_').trim();
+            newObj['SURNAME'] = searchVal['rec.SURNAME'].trim();
         }
-        if (this.form.controls['rec.AV_SYSTEMS'].value) {
-            newObj['AV_SYSTEMS'] = this.GetStrAvSystems();
-        }
-        newObj['DEL_USER'] = searchVal['rec.DEL_USER'];
+
+        newObj['AV_SYSTEMS'] = this.GetStrAvSystems();
+
         switch (searchVal['rec.BLOCK_USER']) {
             case '1':
                 newObj['BLOCK_USER'] = '0';
@@ -203,6 +229,9 @@ export class UserSearchComponent implements OnInit {
         } else {
             avSystemsStr = this.SetAvSytemValue(avSystemsStr, 26, '_');
         }
+        if (avSystemsStr.indexOf('1') === -1) {
+            avSystemsStr = '0000_0_________000___0_0_00';
+        }
         return avSystemsStr;
     }
 
@@ -210,7 +239,11 @@ export class UserSearchComponent implements OnInit {
         return str.substr(0, index) + val + str.substr(index + val.length);
     }
     openFastSrch() {
+        const quickForm = this._storage.getItem('quickForm');
         this.fastSearch = !this.fastSearch;
+        if (this.fastSearch === true && quickForm) {
+            this.srchString = quickForm;
+        }
     }
     clickKey($event) {
         if ($event.keyCode === 27) {
@@ -218,6 +251,8 @@ export class UserSearchComponent implements OnInit {
         }
         if ($event.keyCode === 13) {
             if (this.srchString) {
+                this.fullSearch = false;
+                this.fastSearch = true;
                 const strSearch = this.srchString.trim();
                 this.srchString = this.srchString.trim();
                 this.srchString = this.srchString.replace(/\s/g, '_').trim();
@@ -225,6 +260,10 @@ export class UserSearchComponent implements OnInit {
                     const queryF = this.srhSrv.getQueryForFilter({ LOGIN: strSearch });
                     this.users_pagination.resetConfig();
                     this.quickSearchKey.emit(queryF);
+                    this._storage.setItem('fullForm', null);
+                    this._storage.setItem('quickForm', this.srchString);
+                    this._storage.setItem('currTab', 0);
+                    this.resetForm();
                 }
             }
         }
@@ -239,12 +278,15 @@ export class UserSearchComponent implements OnInit {
             if (key === 'rec.BLOCK_USER') {
                 this.form.controls[key].patchValue('0');
             } else {
-                if ((flag && key !== 'rec.DEL_USER' && key !== 'rec.AV_SYSTEMS') || !flag) {
-                    this.form.controls[key].patchValue('');
-                }
+                this.form.controls[key].patchValue('');
             }
         });
-        this.form.controls['rec.BLOCK_USER'].markAsPristine();
+        if (flag) {
+            this.fullSearch = false;
+            this._storage.setItem('fullForm', null);
+            this._storage.setItem('quickForm', '');
+            this._storage.setItem('currTab', 0);
+        }
     }
 
 }
