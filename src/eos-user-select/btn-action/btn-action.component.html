@@ -2,45 +2,38 @@
     <div class="btn-action-flex" *ngIf='buttons'>
         <div class="buttons-list" *ngFor='let button of buttons.buttons'>
             <div class="btn-group">
-                <div [tooltip]="button.tooltip" #itemTooltip="bs-tooltip" placement="bottom" containerClass="tooltip-info" onclick=this.blur() [delay]="tooltipDelay">
-                    <button [disabled]='button.disabled' class="btn btn-primary-light" onclick="this.blur()" (click)="doAction(button.name)" [ngClass]="button.isActive ? button.activeBtnClass : ''">
-                    <span *ngIf='!button.isActive' [ngClass]="!button.disabled ? button.enableClass : button.disabledClass"></span>
-                    <span *ngIf='button.isActive' [ngClass]="button.activeClass"></span>
+                <div [tooltip]="button.tooltip" #itemTooltip="bs-tooltip" placement="bottom"
+                    containerClass="tooltip-info" onclick=this.blur() [delay]="tooltipDelay">
+                    <button [disabled]='button.disabled' class="btn btn-primary-light" onclick="this.blur()"
+                        (click)="doAction(button.name)" [ngClass]="button.isActive ? button.activeBtnClass : ''">
+                        <span *ngIf='!button.isActive'
+                            [ngClass]="!button.disabled ? button.enableClass : button.disabledClass"></span>
+                        <span *ngIf='button.isActive' [ngClass]="button.activeClass"></span>
                     </button>
                 </div>
             </div>
         </div>
         <!-- кнопка еще -->
-        <div class="btn-group" dropdown container="body" #dropdown="bs-dropdown">
-            <button [tooltip]="!dropdown.isOpen ? 'Показать меню' : null"
-                #itemTooltip="bs-tooltip"
-                placement="bottom"
-                onclick=this.blur()
-                containerClass="tooltip-info"
-                trigger="hover:click"
-                [delay]="tooltipDelay"
-                (click)="add(dropdown)"
-                class="btn btn-primary-light" dropdownToggle [ngClass]=" dropdown.isOpen ? 'activemore' : ''">
+        <div class="btn-group" dropdown #dropdown="bs-dropdown">
+            <button id="button-custom-html" dropdownToggle type="button" class="btn btn-primary-light"
+                aria-controls="dropdown-custom-html" [ngClass]="{'activemore': dropdown.isOpen}">
                 <span
                     [ngClass]="dropdown.isOpen ? 'eos-icon eos-icon-fab-white small': 'eos-icon eos-icon-fab-blue small'"></span>
             </button>
-            <ul *dropdownMenu class="dropdown-menu action-menu-users" role="menu">
-                <ng-container *ngFor='let moreBtn of buttons.moreButtons'>
-                    <li role="menuitem" placement="right" container="body" dropdown triggers="mouseclick" class="">
-                        <button class="dropdown-item menu-link" *ngIf="moreBtn.name !== 'OpenUsersInfo'; else info"
-                            (click)="doAction(moreBtn.name, dropdown)" [disabled]='moreBtn.disabled' [ngClass]="[moreBtn.isActive && !moreBtn.disabled ? moreBtn.activeBtnClass : '', moreBtn.disabled ? 'disabled' : '']">
-                            <span class="btn-icon" *ngIf='!moreBtn.isActive' [ngClass]="!moreBtn.disabled ? moreBtn.enableClass : moreBtn.disabledClass"></span>
-                            <span class="btn-title" *ngIf='moreBtn.isActive' [ngClass]="moreBtn.activeClass"></span>
-                            <span class="btn-title not-active-btn">{{moreBtn.title}}</span>
-                        </button>
-                        <ng-template #info>
-                            <eos-users-info [btnVal]="moreBtn"></eos-users-info>
-                        </ng-template>
-                    </li>
-                </ng-container>
+            <ul id="dropdown-custom-html" *dropdownMenu class="dropdown-menu" role="menu"
+                aria-labelledby="button-custom-html">
+                <li *ngFor='let moreBtn of buttons.moreButtons' role="menuitem">
+                    <a class="dropdown-item menu-link" href="#" *ngIf="moreBtn.name !== 'OpenUsersInfo'; else info"
+                        [ngClass]="[moreBtn.isActive && !moreBtn.disabled ? moreBtn.activeBtnClass : '', moreBtn.disabled ? 'disabled' : '']">
+                        <span class="btn-icon" *ngIf='!moreBtn.isActive'
+                            [ngClass]="!moreBtn.disabled ? moreBtn.enableClass : moreBtn.disabledClass"></span>
+                        <span class="btn-title" *ngIf='moreBtn.isActive' [ngClass]="moreBtn.activeClass"></span>
+                        <span class="btn-title not-active-btn">{{moreBtn.title}}</span></a>
+                    <ng-template #info>
+                        <eos-users-info [btnVal]="moreBtn"></eos-users-info>
+                    </ng-template>
+                </li>
             </ul>
         </div>
     </div>
 </div>
-
-
