@@ -662,6 +662,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
         this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
             if (confirmation) {
+                this.isLoading = true;
                 let arrayRequests = [];
                 const deletedUsers = [];
                 const arrayProtocol = [];
@@ -674,7 +675,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                                 [url]: ALL_ROWS,
                             })
                         );
-                        arrayProtocol.push(this._userParamSrv.ProtocolService(user.id, 7));
                         url = '';
                     }
                 });
@@ -688,7 +688,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                         });
                         this.initView(this.currentDue);
                         arrayRequests = [];
-                        Promise.all([...arrayProtocol]);
+                        deletedUsers.forEach(el => {
+                            arrayProtocol.push(this._userParamSrv.ProtocolService(el, 8));
+                        });
+                        return Promise.all([...arrayProtocol]).then(() => {
+                            this.isLoading = false;
+                        });
                     });
                 }
             }

@@ -36,6 +36,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     'Редактирование пользователя БД',
     'Редактирование прав ДЕЛА',
     'Редактирование прав Поточного сканирования',
+    '',
     'Удаление пользователя'
   ];
   critUsers = [];
@@ -67,7 +68,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
         if (config) {
           this.config = config;
           if (this._user_pagination.totalPages !== undefined && this.resetPage === false) {
-            if (this.config.current > this.config.start) {
+            if (this.config.current > this.config.start && this.clearResult !== true) {
               this.PaginateData(this.config.length * (this.config.current - this.config.start + 1), this.orderByStr,
               (this.config.length * this.config.start - this.config.length).toString());
             } else if (this.config.current && this.initPage === true && this.clearResult === true) {
@@ -108,8 +109,8 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
           ISN_WHO: this.isnWho,
         }),
       orderby: this.orderByStr,
-      top: this.config.length,
-      skip: this.config.length * this.config.current - this.config.length,
+      top: this.config.current > this.config.start ? this.config.length * (this.config.current - this.config.start + 1) : this.config.length,
+      skip: this.config.length * this.config.start - this.config.length,
       inlinecount: 'allpages'
     }).then((data: any) => {
       this.usersAudit = data;
@@ -272,15 +273,20 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
     this.isnRefFile = undefined;
     user.checked = !user.checked;
     if (marked === true) {
-      this.lastUser = user;
+      this.checkNotAllUsers(user);
+    } else {
+      this.checkNotAllUsers();
     }
-    this.checkNotAllUsers();
   }
 
-  checkNotAllUsers() {
+  checkNotAllUsers(user?) {
     const usersCheck = this.frontData.filter(item => item.checked === true);
+    if (user) {
+      this.lastUser = user;
+    } else {
+      this.lastUser = usersCheck[0];
+    }
     if (usersCheck.length > 0) {
-      this.lastUser = this.frontData[0];
       this.GetRefIsn(this.lastUser.isnEvent);
       this.flagChecked = false;
     }
@@ -343,9 +349,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
       });
       user.checked = true;
     }
-    this.lastUser = user;
-    this.GetRefIsn(user.isnEvent);
-    this.checkNotAllUsers();
+    this.checkNotAllUsers(user);
   }
 
   DisabledRemoveAudits() {
@@ -594,14 +598,7 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   GetRefFile() {
     this.closeTooltip = true;
     setTimeout(() => {
-      if (this.lastUser.eventUser === 'Удаление пользователя') {
-        const isnSelect = this.findUsers.find(user => {
-          return this.lastUser.isnUser === user.name;
-        });
-        window.open(`../UserInfo/UserRights.ashx?uisn=${isnSelect.isn}`, '_blank', 'width=900, height=700, scrollbars=1');
-      } else {
         window.open(`../getfile.aspx/${this.isnRefFile}/3x.html`, '_blank', 'width=900, height=700, scrollbars=1');
-      }
     }, 0);
   }
 
