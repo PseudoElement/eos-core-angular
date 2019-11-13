@@ -12,7 +12,6 @@ import { IUserSort } from '../../../eos-user-select/shered/interfaces/user-selec
 import { SortsList } from '../../../eos-user-select/shered/interfaces/user-select.interface';
 import { EosStorageService } from '../../../../src/app/services/eos-storage.service';
 import { IPaginationUserConfig } from 'eos-user-select/shered/consts/pagination-user-select.interfaces';
-import { SearchServices } from 'eos-user-select/shered/services/search.service';
 // import {EosStorageService} from '../../../../src/app/services/eos-storage.service';
 @Injectable()
 export class UserParamApiSrv {
@@ -44,9 +43,7 @@ export class UserParamApiSrv {
         private _router: Router,
         private users_pagination: UserPaginationService,
         private _storageSrv: EosStorageService,
-        private srhSrv: SearchServices,
     ) {
-        //   this.helpersClass = new HelpersSortFunctions();
         this.initConfigTitle();
         this.flagTehnicalUsers = false;
         this.flagDelitedPermanantly = false;
@@ -54,6 +51,7 @@ export class UserParamApiSrv {
         this._confiList$.subscribe((data: IConfig) => {
             this.configList = data;
             sessionStorage.setItem('titleDue', this.configList.titleDue);
+            this.resetConfigPagination();
         });
         this.getSysParamForBlockedUser();
 
@@ -64,9 +62,6 @@ export class UserParamApiSrv {
             .read<T>(query)
             .then((data: T[]) => {
                 return data;
-                /*  return new Promise<T[]>(function() {
-                      setTimeout(() => { console.log(data); }, 3000);
-                  });*/
             })
             .catch(err => {
                 if (err.code === 434) {
@@ -97,7 +92,7 @@ export class UserParamApiSrv {
             if (conf.showMore) {
                 if (conf.current !== 2 && conf.start !== 1) {
                     top = ((conf.current - conf.start) * conf.length) + conf.length;
-                }   else {
+                } else {
                     top = conf.length * conf.current;
                 }
                 skip = conf.length * conf.start - conf.length;
@@ -117,20 +112,11 @@ export class UserParamApiSrv {
             propOrderBy = 'NOTE';
             propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
         }
-        // let propOrderBy = this.currentSort === 'login' ? 'CLASSIF_NAME' : 'NOTE';
-        //  propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
-        if (this.currentSort === 'tip') {
-            propOrderBy = 'DELETED';
-            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
-        }
         if (this.stateTehUsers) {
             propOrderBy = 'CLASSIF_NAME asc';
             ob1['DUE_DEP'] = 'isnull';
         }
 
-        // if (this.stateTehUsers && this.stateDeleteUsers) {
-        //     propOrderBy = 'ORACLE_ID asc';
-        // }
         if (this.configList.shooseTab === 0) {
             if (!dueDep || dueDep === '0.') {
                 ob1['ISN_LCLASSIF'] = '1:null';
@@ -144,26 +130,20 @@ export class UserParamApiSrv {
                     ob1['DUE_DEP'] = 'isnotnull';
                 }
                 if (this.flagDelitedPermanantly && !this.flagTehnicalUsers) {
-                    // ob['DUE_DEP'] = 'isnotnull';
                     ob1['ORACLE_ID'] = 'isnull';
                 }
                 if (!this.flagDelitedPermanantly && this.flagTehnicalUsers) {
-                    // ob['DUE_DEP'] = 'isnull';
                     ob1['DUE_DEP'] = 'isnull';
                     ob1['ORACLE_ID'] = 'isnotnull';
                 }
                 if (this.flagTehnicalUsers && this.flagDelitedPermanantly) {
-                    //  q['USER_CL'] = ALL_ROWS;
                     ob1['CLASSIF_NAME'] = '_';
                 }
                 if (this.currentSort === 'fullDueName') {
                     propOrderBy = 'SURNAME_PATRON';
                     propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
-                    // ob1['orderby'] = propOrderBy;
-                    q.orderby = `${propOrderBy}`;
-                } else {
-                    q.orderby = `${propOrderBy}`;
                 }
+                q.orderby = `${propOrderBy}`;
                 q['loadmode'] = 'Table';
             } else {
                 let ob = {};
@@ -176,7 +156,7 @@ export class UserParamApiSrv {
                     loadmode: 'Table'
                 };
 
-                // отобрение ДЛ из подчененных подразделений
+                // отображение ДЛ из подчененных подразделений
                 if (!this.flagOnlyThisDepart && this.dueDep !== '0.' && this.configList.shooseTab === 0) {
                     ob = { 'USER_CL.DEP.ISN_HIGH_NODE': `${sessionStorage.getItem('isnNodeMy')}` };
                     q['USER_CL'] = PipRX.criteries(ob);
@@ -216,12 +196,6 @@ export class UserParamApiSrv {
             if (!this.flagTehnicalUsers && !this.flagDelitedPermanantly) {
                 q.USER_CL.criteries['DUE_DEP'] = 'isnotnull';
             }
-            // if (!this.flagDelitedPermanantly && this.flagTehnicalUsers) {
-            //     // ob['DUE_DEP'] = 'isnull';
-            //     q.USER_CL.criteries['ORACLE_ID'] = 'isnotnull';
-            // }
-
-            // PipRX.criteries({ 'USERCARD.DUE': `${dueDep ? dueDep : '0.'}` });
         }
         // constq = {
         //     USER_CL: PipRX.criteries(ob),
@@ -235,9 +209,6 @@ export class UserParamApiSrv {
     }
 
     getQueryForSearch() {
-        if (this.searchState) {
-            this.users_pagination.resetConfig();
-        }
         const dbQuery = Object.assign({}, this._storageSrv.getItem('quickSearch'));
         const config = this._storageSrv.getItem('users');
         if (config.showMore) {
@@ -255,7 +226,6 @@ export class UserParamApiSrv {
         propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
         dbQuery.orderby = propOrderBy;
         dbQuery.inlinecount = 'allpages';
-        this.searchState = false;
         return dbQuery;
     }
     parseTotalPage(data: string) {
@@ -268,20 +238,17 @@ export class UserParamApiSrv {
     getSkipTo() {
 
     }
-    resetConfigPagination(dueDep) {
-        dueDep = dueDep ? dueDep : '0.';
-        if (this.dueDep !== dueDep) {
-            if (this.users_pagination.paginationConfig) {
-                if (this.srhSrv.submitSearch$.getValue() === true) {
-                    this.users_pagination.resetConfig();
-                }
-                this.users_pagination.saveUsersConf();
-                this.srhSrv.submitSearch$.next(false);
-            }
+    resetConfigPagination() {
+        if (this.users_pagination.paginationConfig) {
+            this.users_pagination.resetConfig();
+            this.users_pagination.saveUsersConf();
         }
+        // dueDep = dueDep ? dueDep : '0.';
+        // if (this.dueDep !== dueDep) {
+
+        // }
     }
     getUsers(dueDep?: string): Promise<any> {
-        this.resetConfigPagination(dueDep);
         this.dueDep = dueDep || '0.';
         let q;
         if (this._storageSrv.getItem('quickSearch')) {
@@ -299,8 +266,6 @@ export class UserParamApiSrv {
                 const prepData = data.filter(user => user['ISN_LCLASSIF'] !== 0);
                 return this.updatePageList(prepData, this.configList.shooseTab).then((res) => {
                     this.users_pagination.UsersList = this.Allcustomer = this._getListUsers(res).slice();
-                    //   this.devideUsers();
-
                     this.initConfigTitle(dueDep);
                     this.users_pagination._initPaginationConfig(true);
                     this.users_pagination.saveUsersConf();
@@ -404,15 +369,7 @@ export class UserParamApiSrv {
     updateDepartMent(pageList, tabs) {
         const setQueryResult = new Set();
         let stringQuery: Array<string> = [];
-        // let valueForPadQuery = [];
-        // let padQuery;
         let parseStringUserDue = [];
-        // pageList = pageList.map((user: USER_CL) => {
-        //     user['DEPARTMENT'] = !user.NOTE || user.NOTE === 'null' ? '...' : user.NOTE;
-        //     return user;
-        // });
-        //  return Promise.resolve(pageList);
-
         pageList.forEach(user => {
             if (user.DUE_DEP) {
                 stringQuery.push(user.DUE_DEP);
@@ -444,27 +401,6 @@ export class UserParamApiSrv {
                     }
                 });
                 return pageList;
-                // valueForPadQuery = Array.from(setQueryResult);
-                // valueForPadQuery.length > 0 ? padQuery = valueForPadQuery : padQuery = ['0000'];
-                // return this.getDepartment(padQuery)
-                //     .then(deepInfo => {
-                //         pageList.map(user => {
-                //             const findDue = deepInfo.filter(dueDeep => {
-                //                 if (user.DUE_DEP === null) {
-                //                     return false;
-                //                 } else {
-                //                     parseStringUserDue = user.DUE_DEP.split('.');
-                //                     return parseStringUserDue.slice(0, parseStringUserDue.length - 2).join('.') + '.' === dueDeep.DUE;
-                //                 }
-                //             });
-                //             if (findDue.length > 0) {
-                //                 user['DEPARTMENT'] = tabs === 0 ? (findDue[0].DUE === '0.' ? 'Все подраздения' : findDue[0].CLASSIF_NAME) : findDue[0].CARD_NAME;
-                //             } else {
-                //                 user['DEPARTMENT'] = '...';
-                //             }
-                //         });
-                //         return pageList;
-                //     });
             });
     }
     initConfigTitle(dueDep?: string) {
