@@ -60,8 +60,14 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     // количество выбранных пользователей
     countcheckedField: number;
     shadow: boolean = false;
+    sortDelUsers: boolean;
 
     get showCloseQuickSearch() {
+        if (this._storage.getItem('quickSearch') !== undefined && this._storage.getItem('quickSearch').USER_CL.criteries.ORACLE_ID === 'isnull') {
+            this.sortDelUsers = true;
+        } else {
+            this.sortDelUsers = false;
+        }
         return this._storage.getItem('quickSearch');
     }
     get cardName() {
@@ -747,6 +753,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._storage.removeItem('quickSearch');
         this._pagSrv.resetConfig();
         this.quickSearch.clearQuickForm();
+        this.quickSearch.resetForm(true);
         this.initView(urlUpdate);
     }
 

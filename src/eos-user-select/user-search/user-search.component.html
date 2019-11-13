@@ -1,5 +1,5 @@
 <div class="search-container" [ngClass]="{'user-srch-heigth' : fastSearch}">
-    <div [popover]="searchModal" containerClass="full-search-popover" class="search-btn-wraper" placement="bottom"
+    <div [popover]="searchModal" (onShown)="onShown()" containerClass="full-search-popover" class="search-btn-wraper" placement="bottom"
         #full="bs-popover" [outsideClick]="true">
         <button [ngClass]="{'opened': isActiveButton()}" class="btn btn-primary-light search-btn" tooltip="Расширенный поиск" placement="bottom"
             container="body" containerClass="tooltip-info">
@@ -43,18 +43,18 @@
         </div>
     </div>
     <div *ngIf=form>
-        <div class="search-bool" *ngIf="!showAvSystemsField">
-            <!-- <eos-dynamic-input [input]="inputs['rec.TEH']" [form]="form" [readonly]="false"></eos-dynamic-input> -->
-            <eos-dynamic-input [input]="inputs['rec.DEL_USER']" [form]="form" [readonly]="false" (click)="resetForm(true)"></eos-dynamic-input>
+        <div class="search-users-wrapper usual-border border-bottom">
+            <ul class="tabs">
+                <li class="tab-item" *ngFor="let tab of fieldGroupsForSearch; let i = index" [ngClass]="{'active': i === currTab}" (click)="setTab(i)">
+                    <span class="tab-title">{{tab}}</span>
+                </li>
+            </ul>
         </div>
-        <div class="search-bool" *ngIf="!showSurnameField">
-            <eos-dynamic-input [input]="inputs['rec.AV_SYSTEMS']" [form]="form" [readonly]="false" (click)="resetForm(true)"></eos-dynamic-input>
-        </div>
-        <div class="search-input-wr" *ngIf="!showAvSystemsField && showSurnameField">
+        <div class="search-input-wr" *ngIf="currTab === 1">
             <eos-dynamic-input [input]="inputs['rec.SURNAME']" [form]="form" [readonly]="false"></eos-dynamic-input>
         </div>
-        <div class="" *ngIf="!showSurnameField && !showAvSystemsField">
-            <div class="search-input-wr">
+        <div class="" *ngIf="currTab === 0">
+            <div class="search-input-wr block-user">
                 <eos-dynamic-input [input]="inputs['rec.BLOCK_USER']" [form]="form" [readonly]="false"></eos-dynamic-input>
             </div>
             <div class="search-input-wr">
@@ -69,7 +69,7 @@
                 </eos-dynamic-input>
             </div>
         </div>
-        <div  class="search-input-wr-av" *ngIf="showAvSystemsField">
+        <div  class="search-input-wr-av" *ngIf="currTab === 2">
             <div class="av-container">
                 <div class="av-pos">
                     <eos-dynamic-input [input]="inputs['rec.0']" [form]="form" [readonly]="false"></eos-dynamic-input>

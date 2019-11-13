@@ -154,21 +154,15 @@ export class SearchServices {
     //         }
     //     });
     // }
-    getQueryForFilter(params: USERSRCH) {
+    getQueryForFilter(params: USERSRCH, tab?: number) { // передавать curtab в зависимости от этого выполнять поиск
         const query = {
             USER_CL: {
                 criteries: {}
             },
             loadmode: 'Table'
         };
-        if (params.AV_SYSTEMS) {
-            query.USER_CL.criteries['AV_SYSTEMS'] = `${params.AV_SYSTEMS}%`;
-        } else {
-            if (params.DEL_USER) {
-                query.USER_CL.criteries['SURNAME_PATRON'] = `"${params.SURNAME}"`;
-                query.USER_CL.criteries['ORACLE_ID'] = `isnull`;
-            }
-            if (!params.DEL_USER) {
+        switch (tab) {
+            case 0:
                 if (params.LOGIN) {
                     query.USER_CL.criteries['CLASSIF_NAME'] = `"${params.LOGIN}"`;
                 }
@@ -178,13 +172,27 @@ export class SearchServices {
                 if (params.DEPARTMENT) {
                     //   query.USER_CL.criteries['USER_CL.DEP.CLASSIF_NAME'] = `${params.DEPARTMENT}`;
                     query.USER_CL.criteries['NOTE'] = `"${params.DEPARTMENT}"`;
+                    query.USER_CL.criteries['ORACLE_ID'] = `isnotnull`;
                     //  query.USER_CL.criteries['USER_CL.DEP.CARD.CLASSIF_NAME'] = `"${params.DEPARTMENT}"`;
                 }
                 if (params.BLOCK_USER) {
                     query.USER_CL.criteries['DELETED'] = `${params.BLOCK_USER}`;
                     query.USER_CL.criteries['ORACLE_ID'] = `isnotnull`;
                 }
-            }
+                break;
+            case 1:
+                query.USER_CL.criteries['SURNAME_PATRON'] = `"${params.SURNAME}"`;
+                query.USER_CL.criteries['ORACLE_ID'] = `isnull`;
+                break;
+            case 2:
+                query.USER_CL.criteries['AV_SYSTEMS'] = `${params.AV_SYSTEMS}%`;
+                query.USER_CL.criteries['ORACLE_ID'] = `isnotnull`;
+                break;
+            default:
+                if (params.LOGIN) {
+                    query.USER_CL.criteries['CLASSIF_NAME'] = `"${params.LOGIN}"`;
+                }
+                break;
         }
         return query;
     }

@@ -53,7 +53,7 @@
                     </label>
                 </div>
                 <div class="table-title-position list-user-sel">
-                    <span *ngIf="this._apiSrv.flagDelitedPermanantly === true; else logSort" class="user-list-fourth-colomn likeLink mar-left">Логин</span>
+                    <span *ngIf="this._apiSrv.flagDelitedPermanantly === true || sortDelUsers === true; else logSort" class="user-list-fourth-colomn likeLink mar-left">Логин</span>
                     <ng-template #logSort>
                         <span class="user-list-fourth-colomn likeLink mar-left" (click)="sortPageList('login')">Логин
                             <span *ngIf="_apiSrv.srtConfig.login.checked"
@@ -63,7 +63,7 @@
                     <span class="user-list-third-colomn likeLink ">Тип
                         <span *ngIf="_apiSrv.srtConfig.tip.checked"></span>
                     </span>
-                    <span *ngIf="this._apiSrv.flagTehnicalUsers === true || showCloseQuickSearch; else dueSort" class="user-list-two-colomn likeLink user-list-two-colomn-title">Должностное лицо</span>
+                    <span *ngIf="this._apiSrv.flagTehnicalUsers === true || (showCloseQuickSearch  && sortDelUsers !== true); else dueSort" class="user-list-two-colomn likeLink user-list-two-colomn-title">Должностное лицо</span>
                     <ng-template #dueSort>
                         <span class="user-list-two-colomn likeLink user-list-two-colomn-title"
                         (click)="sortPageList('fullDueName')">Должностное лицо
@@ -71,7 +71,7 @@
                             [ngClass]="getClassOrder(_apiSrv.srtConfig.fullDueName.upDoun)"></span>
                         </span>
                     </ng-template>
-                    <span *ngIf="this._apiSrv.flagTehnicalUsers === true || showCloseQuickSearch; else depSort" class="user-title-name user-list-first-colomn likeLink">{{cardName}}</span>
+                    <span *ngIf="this._apiSrv.flagTehnicalUsers === true || (showCloseQuickSearch  && sortDelUsers !== true); else depSort" class="user-title-name user-list-first-colomn likeLink">{{cardName}}</span>
                     <ng-template #depSort>
                         <span class="user-title-name user-list-first-colomn likeLink"
                         (click)="sortPageList('department')">{{cardName}}

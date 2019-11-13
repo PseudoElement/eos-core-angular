@@ -11,21 +11,21 @@ export const USER_SEARCH = {
             type: 'string',
             title: 'Логин',
             pattern: pattrenSearch,
-            length: 255
+            length: 12
         },
         {
             key: 'DEPARTMENT',
             type: 'string',
             title: 'Подразделение',
             pattern: pattrenSearch,
-            length: 255
+            length: 150
         },
         {
             key: 'fullDueName',
             type: 'string',
             title: 'Должностное лицо',
             pattern: pattrenSearch,
-            length: 255
+            length: 150
         },
         {
             key: 'CARD',
@@ -33,11 +33,6 @@ export const USER_SEARCH = {
             title: 'Картотека',
             pattern: pattrenSearch,
             length: 255
-        },
-        {
-            key: 'DEL_USER',
-            type: 'boolean',
-            title: 'Поиск удаленных пользователей',
         },
         {
             key: 'BLOCK_USER',
@@ -55,12 +50,7 @@ export const USER_SEARCH = {
             type: 'string',
             title: 'Фамилия',
             pattern: pattrenSearch,
-            length: 255
-        },
-        {
-            key: 'AV_SYSTEMS',
-            type: 'boolean',
-            title: 'Поиск по системам',
+            length: 64
         },
         {
             type: 'boolean',
@@ -143,7 +133,6 @@ export interface USERSRCH {
     LOGIN?: string;
     fullDueName?: string;
     SURNAME?: string;
-    DEL_USER?: boolean;
     AV_SYSTEMS?: string;
     BLOCK_USER?: string;
 }

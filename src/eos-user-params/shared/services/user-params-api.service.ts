@@ -209,6 +209,7 @@ export class UserParamApiSrv {
     }
 
     getQueryForSearch() {
+        let propOrderBy;
         const dbQuery = Object.assign({}, this._storageSrv.getItem('quickSearch'));
         const config = this._storageSrv.getItem('users');
         if (config.showMore) {
@@ -222,8 +223,18 @@ export class UserParamApiSrv {
             dbQuery.top = config.length;
             dbQuery.skip = config.length * config.current - config.length;
         }
-        let propOrderBy = this.currentSort === 'login' ? 'CLASSIF_NAME' : 'NOTE';
-        propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
+        if (this.currentSort === 'login') {
+            propOrderBy = 'CLASSIF_NAME';
+            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
+        }
+        if (this.currentSort === 'fullDueName') {
+            propOrderBy = 'SURNAME_PATRON';
+            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
+        }
+        if (this.currentSort === 'department') {
+            propOrderBy = 'NOTE';
+            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
+        }
         dbQuery.orderby = propOrderBy;
         dbQuery.inlinecount = 'allpages';
         return dbQuery;
