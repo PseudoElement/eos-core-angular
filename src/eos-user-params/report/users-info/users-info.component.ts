@@ -30,8 +30,10 @@ export class EosReportUsersInfoComponent implements OnInit {
 
   init() {
     this.users = this._userParamSrv.checkedUsers;
-    this.selectUser = this.users[0];
-    this.src = this.getHtmlStr(this.selectUser.id);
+    if (this.users.length > 0) {
+      this.selectUser = this.users[0];
+      this.src = this.getHtmlStr(this.selectUser.id);
+    }
     this.shortRep = false;
     this.CheckAllUsers = false;
     this.nodeIndex = 0;
