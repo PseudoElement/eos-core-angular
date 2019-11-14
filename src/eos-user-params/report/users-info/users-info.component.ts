@@ -30,16 +30,16 @@ export class EosReportUsersInfoComponent implements OnInit {
 
   init() {
     this.users = this._userParamSrv.checkedUsers;
-    if (this.users.length !== 0) {
-      this.selectUser = this.users[this.nodeIndex];
-      if (this.selectUser !== null) {
-        this.src = this.getHtmlStr(this.selectUser.id);
-      }
-    }
+    this.selectUser = this.users[0];
+    this.src = this.getHtmlStr(this.selectUser.id);
+    this.shortRep = false;
+    this.CheckAllUsers = false;
+    this.nodeIndex = 0;
     this._updateBorders();
   }
 
   openModal(template: TemplateRef<any>) {
+    this.init();
     this.modalRef = this.modalService.show(template, Object.assign({}, { class: 'modal-info' }));
   }
   getHtmlStr(id: number): any {
