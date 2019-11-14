@@ -1,14 +1,29 @@
 .users-info{
+    height: 48px;
+    .btn-action-flex {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .btn {
+        height: 48px;
+        width: 48px;
+    }
+    .disabled {
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+    .action-menu-users {
+        width: 300px;
+        position: relative;
+        font-size: 0;
+    }
     .dropdown-item{
         font-size: 0;
         padding: 0;
         text-decoration: none;
         line-height: 48px;
         height: 48px;
-    }
-    .disabled{
-        cursor: not-allowed;
-        color: #bababa !important;
     }
     .menu-link {
         display: flex;
@@ -31,6 +46,10 @@
         }
         .not-active-btn{
             width: 252px;
+        }
+        &.disabled {
+            cursor: not-allowed;
+            color: #bababa;
         }
     }
 }
