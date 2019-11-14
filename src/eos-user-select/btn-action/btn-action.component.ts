@@ -85,7 +85,10 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     add(dropdown) {
         this.dropdownMy = dropdown;
     }
-    doAction(event, dropdown) {
+    doAction(event, dropdown, $event?) {
+        if ($event) {
+            $event.preventDefault();
+        }
         if (dropdown) {
             dropdown.hide();
         }

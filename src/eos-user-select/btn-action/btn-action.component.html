@@ -23,8 +23,9 @@
             <ul id="dropdown-custom-html" *dropdownMenu class="dropdown-menu" role="menu"
                 aria-labelledby="button-custom-html">
                 <li *ngFor='let moreBtn of buttons.moreButtons' role="menuitem">
-                    <a class="dropdown-item menu-link" href="#" *ngIf="moreBtn.name !== 'OpenUsersInfo'; else info"
-                        [ngClass]="[moreBtn.isActive && !moreBtn.disabled ? moreBtn.activeBtnClass : '', moreBtn.disabled ? 'disabled' : '']">
+                    <a class="dropdown-item menu-link" *ngIf="moreBtn.name !== 'OpenUsersInfo'; else info"
+                        [ngClass]="[moreBtn.isActive && !moreBtn.disabled ? moreBtn.activeBtnClass : '', moreBtn.disabled ? 'disabled' : '']"
+                        (click)="doAction(moreBtn.name, dropdown, $event)">
                         <span class="btn-icon" *ngIf='!moreBtn.isActive'
                             [ngClass]="!moreBtn.disabled ? moreBtn.enableClass : moreBtn.disabledClass"></span>
                         <span class="btn-title" *ngIf='moreBtn.isActive' [ngClass]="moreBtn.activeClass"></span>
