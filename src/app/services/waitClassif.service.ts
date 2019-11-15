@@ -26,13 +26,13 @@ export class WaitClassifService {
     // 'DOCGROUP_CL', 'DOCGROUP_INDEX_UNIQUE'
     // NOMENKL_CL, CHANGE_E_DOCUMENT - returns DELO_EXISTS, USE_IN_DEFAULTS
     canChangeClassifRequest(type: string, oper: string, args: any): Promise<any> {
-        const qargs = Object.assign({ type: type, oper: oper}, args);
+        const qargs = Object.assign({ type: type, oper: oper }, args);
         const query = { args: qargs };
-        const req = { CanChangeClassif: query};
+        const req = { CanChangeClassif: query };
         return this._apiSrv.read(req);
     }
 
-     chooseDocGroup(): Promise<string | void> {
+    chooseDocGroup(): Promise<string | void> {
         return this.openClassif({
             classif: 'DOCGROUP_CL',
             selectMulty: false,
@@ -80,7 +80,6 @@ export class WaitClassifService {
         } else {
             url = this._prepareUrl(params, flag);
         }
-
         return new Promise((resolve, reject) => {
             const w = openPopup(url, function (event, str) {
                 if (str !== '') {
@@ -122,7 +121,7 @@ export class WaitClassifService {
     private _prepareUrl(params: IOpenClassifParams, flag?: boolean): string {
         let url = '../';
         if (flag) {
-            url +=  OLD_VIEW_URL;
+            url += OLD_VIEW_URL;
         } else {
             url += (LIST_OLD_PAGES.indexOf(params.classif) !== -1) ? OLD_VIEW_URL : NEW_VIEW_URL;
         }

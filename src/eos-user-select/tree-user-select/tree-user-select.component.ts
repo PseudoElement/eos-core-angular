@@ -69,7 +69,6 @@ export class TreeUserSelectComponent implements OnInit {
         this._apiSrv.confiList$.next({
             shooseTab: this.currMode,
             titleDue: this.currMode === 0 ? 'Все подразделения' : this.currMode === 1 ? 'Центральная картотека' : 'Все организации',
-            due: this.id,
         });
         // this.ngOnInit();
         this.id = this.actRoute.snapshot.params['nodeId'] || '0.';
@@ -130,7 +129,6 @@ export class TreeUserSelectComponent implements OnInit {
         this._apiSrv.confiList$.next({
             shooseTab: this.currMode,
             titleDue: node.title,
-            due: this.id,
         });
         this._store.removeItem('page_number_user_settings');
         localStorage.setItem('lastNodeDue', JSON.stringify(node.id));

@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, UrlSegment } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -181,11 +181,17 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 this.isShell = false;
             });
     }
-
+    private _urlSegment(): string {
+        const segment: UrlSegment[] = this._router.parseUrl(this._router.url).root.children.primary.segments;
+        if (!segment[1]) {
+            return '0.';
+        }
+        return segment[1].path;
+    }
     private _showDepartment() {
         this.isShell = true;
         let dueDep = '';
-        OPEN_CLASSIF_DEPARTMENT.curdue = this._apiSrv.configList.due;
+        OPEN_CLASSIF_DEPARTMENT.curdue = this._urlSegment();
         this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT, true)
             .then((data: string) => {
                 if (data === '') {
@@ -211,11 +217,11 @@ export class CreateUserComponent implements OnInit, OnDestroy {
             .then((data: DEPARTMENT[]) => {
                 if (this._apiSrv.configList.shooseTab === 1 && data[0].DEPARTMENT_DUE !== this._apiSrv.dueDep && this._apiSrv.dueDep !== '0.') {
                     this._msgSrv.addNewMessage({
-                            type: 'warning',
-                            title: 'Предупреждение',
-                            msg: 'Должностное лицо не принадлежит текущей картотеке',
-                            dismissOnTimeout: 6000,
-                        });
+                        type: 'warning',
+                        title: 'Предупреждение',
+                        msg: 'Должностное лицо не принадлежит текущей картотеке',
+                        dismissOnTimeout: 6000,
+                    });
                     throw new Error();
                 }
                 return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0]);
