@@ -4,8 +4,37 @@ import { CONTACT, ORGANIZ_CL, SEV_ASSOCIATION } from 'eos-rest';
 import { SevIndexHelper } from 'eos-rest/services/sevIndex-helper';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { TreeDictionaryDescriptor } from './tree-dictionary-descriptor';
+import { ALL_ROWS } from 'eos-rest/core/consts';
 
 export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
+    getRoot(): Promise<any[]> {
+        return this.getData({ criteries: {IS_NODE: '0', DUE: '0%', LAYER: '0:2' } }, 'WEIGHT');
+    }
+
+    getData(query?: any, order?: string, limit?: number): Promise<any[]> {
+        if (!query) {
+            query = ALL_ROWS;
+        }
+
+        const req = {[this.apiInstance]: query};
+
+        if (limit) {
+            req.top = limit;
+        }
+
+        if (order) {
+            req.orderby = order;
+        }
+        // if (this.id === 'organization') {
+        // req.expand = 'CONTACT_List';
+        // }
+        return this.apiSrv
+            .read(req)
+            .then((data: any[]) => {
+                this.prepareForEdit(data);
+                return data;
+            });
+    }
 
     addContacts(newContacts: any[], orgDUE: string): Promise<IRecordOperationResult[]> {
         return this.apiSrv.read<ORGANIZ_CL>({ ORGANIZ_CL: orgDUE, expand: 'CONTACT_List' })

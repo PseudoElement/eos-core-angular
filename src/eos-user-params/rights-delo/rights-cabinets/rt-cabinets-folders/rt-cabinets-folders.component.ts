@@ -6,22 +6,40 @@ import { takeUntil } from 'rxjs/operators';
 import { CardsClass, Cabinets} from '../helpers/cards-class';
 import {RigthsCabinetsServices} from '../../../shared/services/rigths-cabinets.services';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { DropdownInput } from 'eos-common/core/inputs/select-input';
+import { FormGroup } from '@angular/forms';
+import { InputControlService } from 'eos-common/services/input-control.service';
 @Component({
     selector: 'eos-cabinets-folders',
     templateUrl: 'rt-cabinets-folders.component.html',
     styleUrls: ['rt-cabinets-folders.component.scss']
 })
 export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy {
+
     @Input() card: CardsClass;
     @Input() flagEdit: boolean;
     @Output() sendNewValues: EventEmitter<any> = new EventEmitter<any>();
     public Cabinet: Cabinets;
+
+    form: FormGroup;
+    selectCabinetInput: DropdownInput = new DropdownInput({
+        key: 'selectedCabinet',
+        options: [],
+        hideLabel: true,
+    });
+
     private unSubscribe: Subject<any> = new Subject();
     private changedValuesMap = new Map();
     constructor(
         private _rtCabintsSrv: RigthsCabinetsServices,
         private _msgSrv: EosMessageService,
+        private inputCtrlSrv: InputControlService,
     ) {
+        this.form = this.inputCtrlSrv.toFormGroup([this.selectCabinetInput], false);
+        this.form.valueChanges.subscribe((data) => {
+            this.Cabinet = this.card.cabinets[this.form.controls['selectedCabinet'].value];
+        });
+
         this._rtCabintsSrv.changeCabinets
         .pipe(
             takeUntil(this.unSubscribe)
@@ -29,6 +47,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         .subscribe((newCabinets: CardsClass) => {
             this.card = newCabinets;
             this.setFolders(this.card.cabinets[0]);
+            this._updateSelect();
         });
         this._rtCabintsSrv.submitRequest
         .pipe(
@@ -40,6 +59,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
     }
     ngOnInit() {
         this.setFolders(this.card.cabinets[0]);
+        this._updateSelect();
     }
     ngOnChanges() {}
 
@@ -164,5 +184,12 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
     ngOnDestroy() {
         this.unSubscribe.next();
         this.unSubscribe.complete();
+    }
+    private _updateSelect(): void {
+        const opts = this.card.cabinets.map( (c, i) => ({ value: i, title: c.name, cabinet: c,
+            style: {color: c.homeCabinet ? 'red' : 'black'}
+        }));
+        this.selectCabinetInput.options = opts;
+        this.form.controls['selectedCabinet'].setValue(opts[0].value);
     }
 }

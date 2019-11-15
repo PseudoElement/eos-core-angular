@@ -47,7 +47,7 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
         options: [],
         dictionaryId: SECURITY_DICT.apiInstance,
         dictionaryLink: {
-            pk: 'SECURLEVEL',
+            pk: 'GRIF_NAME',
             fk: 'SECURITY',
             label: 'GRIF_NAME',
         },

@@ -186,12 +186,22 @@ export class NomenklDictionaryDescriptor extends DictionaryDescriptor {
 
     defaultTreePath(data: CustomTreeNode[]): any {
         if (data && data[0].id === NP_NOM_ROOT_DUE && this._filterDUE === NP_NOM_ROOT_DUE) {
-            return data[0].children[0].path;
+            return data[0].children && data[0].children.length ? data[0].children[0].path : null;
         }
 
         return null;
     }
 
+    getRelatedFields2 (tables: string[], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
+        const ignoreMeta = loadAll || ignoreMetadata;
+        return super.getRelatedFields2(tables, nodes, loadAll, ignoreMeta).then( (r) => {
+            // if (loadAll) {
+            // console.log("TCL: loadAll", loadAll)
+
+            // }
+            return r;
+        });
+    }
     protected _initRecord(data: IDictionaryDescriptor) {
         this.record = new NomenklRecordDescriptor(this, <ITreeDictionaryDescriptor>data);
     }

@@ -52,6 +52,7 @@
         <eos-dynamic-input class="rc-type"
                            [input]="inputs['rec.RC_TYPE']"
                            [form]="form"
+                           [dropup]="true"
                            [readonly]="!editMode"></eos-dynamic-input>
         <div class="dg-require">
             <div><label>Требуется:</label></div>
@@ -82,10 +83,6 @@
         <eos-dynamic-input class="pull-right"
                            [hidden]="!(rcType == 3)"
                            [input]="inputs['rec.INITIATIVE_RESOLUTION']"
-                           [form]="form"
-                           [readonly]="!editMode"></eos-dynamic-input>
-        <eos-dynamic-input class="pull-right"
-                           [input]="inputs['rec.REG_DATE_PROTECTED']"
                            [form]="form"
                            [readonly]="!editMode"></eos-dynamic-input>
     </div>

@@ -1,5 +1,5 @@
 <div class="filter-comp">
-    <div [popover]="searchModal" containerClass="head-protocol" placement="bottom" container="body"
+    <div [popover]="searchModal" containerClass="head-protocol filter" placement="bottom" container="body"
         class="cust-style-mod" #full="bs-popover">
         <button [ngClass]="{'opened': formBol}" class="btn btn-primary-light search-btn" tooltip="Расширенный поиск"
             placement="bottom" container="body" (click)="isActiveButton()" containerClass="tooltip-info">
@@ -16,26 +16,26 @@
             <button class="btn btn-primary-full s-font upper" [disabled]="disableBtn" (click)="FilterUsers()">Найти</button>
         </div>
     </div>
-    <div class="full-search-form-prot">
+    <div class="full-search-form-prot edit-content">
         <form id="reshen">
             <div class="cont-datepick">
-                <eos-dynamic-input class="s-font upper" [input]="inputs['rec.DATEFROM']" [form]="filterForm"
+                <eos-dynamic-input class="s-font" [input]="inputs['rec.DATEFROM']" [form]="filterForm"
                     [readonly]="false"></eos-dynamic-input>
-                <eos-dynamic-input class="s-font upper" [input]="inputs['rec.DATETO']" [form]="filterForm"
+                <eos-dynamic-input class="s-font" [input]="inputs['rec.DATETO']" [form]="filterForm"
                     [readonly]="false"></eos-dynamic-input>
             </div>
-            <eos-dynamic-input class="s-font upper" [input]="inputs['rec.USEREVENTS']" [form]="filterForm"
+            <eos-dynamic-input class="s-font" [input]="inputs['rec.USEREVENTS']" [form]="filterForm"
                 [readonly]="false"></eos-dynamic-input>
             <div class="del-mar">
-                <eos-dynamic-input class="s-font upper" [input]="inputs['rec.USERWHO']" [form]="filterForm"
+                <eos-dynamic-input class="s-font" [input]="inputs['rec.USERWHO']" [form]="filterForm"
                 [readonly]="false"></eos-dynamic-input>
             <a class="clear-btn pos-icon"><span class="icon eos-icon eos-icon-avatar-blue small icon-add-department"
                     (click)="selectUserWho()"></span></a>
-            </div>    
-            <eos-dynamic-input class="s-font upper" [input]="inputs['rec.USEREDIT']" class="s-font" [form]="filterForm"
+            </div>
+            <eos-dynamic-input class="s-font" [input]="inputs['rec.USEREDIT']" class="s-font" [form]="filterForm"
                 [readonly]="false"></eos-dynamic-input>
             <a class="clear-btn pos-icon"><span class="icon eos-icon eos-icon-avatar-blue small icon-add-department"
-                    (click)="selectUserEdit()"></span></a> 
+                    (click)="selectUserEdit()"></span></a>
         </form>
     </div>
 </ng-template>

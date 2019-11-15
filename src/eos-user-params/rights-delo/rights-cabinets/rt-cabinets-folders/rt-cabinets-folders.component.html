@@ -1,29 +1,43 @@
 <div class="input-user-wrapper input-user-card-files-wrapper" *ngIf="card">
-    <div *ngIf="card.cabinets.length">
-        <div class="cabinets-wrapper">
+    <div class="cabinets-wrapper" *ngIf="card.cabinets.length">
+        <div class="cabinets-fixed">
             <div class="eos-select">
-                 <form>
-                    <select class="select-cabinet" [style.color]="Cabinet.homeCabinet ? 'red' : 'black'" name="Cabinet" [(ngModel)]="Cabinet">
-                        <option [style.color]="cabinet.homeCabinet ? 'red' : 'black'"  *ngFor="let cabinet of card.cabinets; let i = index" [ngValue] ="cabinet">{{cabinet.name}}</option>
-                    </select>
-                </form>
+                <eos-dynamic-input
+                    class="select-cabinet2 no-margin"
+                    [input]="selectCabinetInput"
+                    [style.color]="Cabinet.homeCabinet ? 'red' : 'black'"
+                    [container]="'body'"
+                    [form]="form"
+                    [readonly]="false"
+                >
+                </eos-dynamic-input>
             </div>
-        </div>
-        <div class="cabinet-main">
+            <div class="cabinet-main">
                 <label class="checkbox">
-                    <input [disabled]="Cabinet.isEmpty || !flagEdit" (change)="changeMainCabinet()" type="checkbox" [checked]='Cabinet.homeCabinet'>
+                    <input
+                        [disabled]="Cabinet.isEmpty || !flagEdit"
+                        (change)="changeMainCabinet()"
+                        type="checkbox"
+                        [checked]="Cabinet.homeCabinet"
+                    />
                     <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
                     главный
                 </label>
             </div>
+        </div>
         <div class="cabinets-folders" *ngIf="Cabinet">
-            <div class="folders-item" *ngFor="let folder of Cabinet['folders']">
-                <label class="checkbox">
-                    <input type="checkbox" [disabled]="folder.disabled || !flagEdit" [checked]= "folder.selected" (change)="changeFolders(Cabinet, folder)">
-                    <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
-                </label>
-                <span class="folders-title">{{folder.name}}</span>
-            </div>
+                <div class="folders-item" *ngFor="let folder of Cabinet['folders']">
+                    <label class="checkbox">
+                        <input
+                            type="checkbox"
+                            [disabled]="folder.disabled || !flagEdit"
+                            [checked]="folder.selected"
+                            (change)="changeFolders(Cabinet, folder)"
+                        />
+                        <span class="eos-icon eos-icon-checkbox-square-blue x-small"></span>
+                    </label>
+                    <span class="folders-title">{{ folder.name }}</span>
+                </div>
         </div>
     </div>
     <div class="cabinets-empty" *ngIf="!card.cabinets.length">
