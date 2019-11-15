@@ -46,6 +46,7 @@ import { UserSelectPaginationComponent } from './pagination-user-select/paginati
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { UserPaginationService } from 'eos-user-params/shared/services/users-pagination.service';
 import { EosTooltipService } from './services/eos-tooltip.service';
+import { DynamicInputSelect2Component } from './dynamic-form-input/dynamic-input-select2.component';
 
 @NgModule({
     declarations: [
@@ -68,6 +69,7 @@ import { EosTooltipService } from './services/eos-tooltip.service';
         DynamicInputNumberIncrementComponent,
         DynamicInputRadioComponent,
         DynamicInputLinkButtonComponent,
+        DynamicInputSelect2Component,
         EosDateMaskDirective,
         EosDatePipe,
         UserSelectPaginationComponent

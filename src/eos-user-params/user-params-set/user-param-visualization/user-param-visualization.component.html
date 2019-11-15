@@ -4,7 +4,13 @@
         <span class="l-font">Режим отображения основного файла документа</span>
         <hr>
         <div>
-            <eos-dynamic-input class="inline-block" [input]="inputs['rec.COLLAGE_SHOW_MODE']" [form]="form" [readonly]="false"></eos-dynamic-input>
+            <eos-dynamic-input
+                class="inline-block"
+                [input]="inputs['rec.COLLAGE_SHOW_MODE']"
+                [form]="form"
+                [readonly]="false"
+                container="body"
+            ></eos-dynamic-input>
             <span></span>
         </div>
     </div>

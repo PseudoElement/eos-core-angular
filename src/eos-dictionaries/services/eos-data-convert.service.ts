@@ -56,7 +56,26 @@ export class EosDataConvertService {
                         descr = fieldsDescription[_dict];
                         Object.keys(descr).forEach((_key) => {
                             switch (descr[_key].type) {
-
+                                case E_FIELD_TYPE.select2:
+                                    inputs[_dict + '.' + _key] = new DropdownInput({
+                                        key: _dict + '.' + descr[_key].foreignKey,
+                                        label: descr[_key].title,
+                                        required: descr[_key].required,
+                                        pattern: descr[_key].pattern,
+                                        isUnique: descr[_key].isUnique,
+                                        uniqueInDict: descr[_key].uniqueInDict,
+                                        forNode: descr[_key].forNode,
+                                        value: data[_dict][descr[_key].foreignKey]
+                                            || descr[_key].default,
+                                        length: descr[_key].length,
+                                        readonly: descr[_key].readonly,
+                                        disabled: descr[_key].readonly || !editMode,
+                                        // password: descr[_key].password,
+                                        options: descr[_key].options,
+                                        groupLabel: descr[_key].groupLabel
+                                    });
+                                    inputs[_dict + '.' + _key].controlType = E_FIELD_TYPE.select2;
+                                break;
                                 case E_FIELD_TYPE.dictLink:
                                     inputs[_dict + '.' + _key] = new DropdownInput({
                                         key: _dict + '.' + descr[_key].foreignKey,
@@ -244,6 +263,7 @@ export class EosDataConvertService {
                                         label: descr[_key].title,
                                         options: descr[_key].options,
                                         hideLabel: !(descr[_key].title),
+                                        length: descr[_key].length,
                                         required: descr[_key].required,
                                         forNode: descr[_key].forNode,
                                         value: data[_dict] && data[_dict][descr[_key].foreignKey] !== undefined ?

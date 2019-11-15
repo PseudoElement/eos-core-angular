@@ -42,13 +42,14 @@ export enum E_FIELD_TYPE {
     boolean,
     buttons,
     dictionary,
-    select,
+    select, // Generic select
     array,
     xml,
     toggle,
     numberIncrement,
     radio,
     dictLink,
+    select2, // Select by angular component
 }
 
 export interface IDictionaryLink {

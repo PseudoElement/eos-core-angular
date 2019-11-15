@@ -7,7 +7,7 @@
      [isOpen]="tooltip.visible"
      triggers="">
     <ng-container [ngSwitch]="input.controlType">
-        <eos-dynamic-input-string *ngSwitchCase="types.string" #inString
+        <eos-dynamic-input-string *ngSwitchCase="types.string"
                                   [form]="form"
                                   [input]="input"
                                   [readonly]="readonly"
@@ -22,14 +22,26 @@
                                 [disabled]="disabled"
                                 [hideLabel]="hideLabel"
                                 [inputTooltip]="tooltip"></eos-dynamic-input-text>
-        <eos-dynamic-input-select *ngSwitchCase="types.select"
+            <eos-dynamic-input-select2 *ngSwitchCase="types.select"
+              [form]="form"
+              [input]="input"
+              [readonly]="readonly"
+              [container]="container"
+              [dropup]="dropup"
+              [disabled]="disabled"
+              [hideLabel]="hideLabel"
+              [viewOpts]="viewOpts"
+              [inputTooltip]="tooltip"></eos-dynamic-input-select2>
+
+        <eos-dynamic-input-select2 *ngSwitchCase="types.select2"
                                   [form]="form"
                                   [input]="input"
+                                  [viewOpts]="viewOpts"
                                   [readonly]="readonly"
                                   [disabled]="disabled"
                                   [hideLabel]="hideLabel"
-                                  [viewOpts]="viewOpts"
-                                  [inputTooltip]="tooltip"></eos-dynamic-input-select>
+                                  [inputTooltip]="tooltip"></eos-dynamic-input-select2>
+
         <eos-dynamic-input-checkbox *ngSwitchCase="types.boolean"
                                     [form]="form"
                                     [input]="input"

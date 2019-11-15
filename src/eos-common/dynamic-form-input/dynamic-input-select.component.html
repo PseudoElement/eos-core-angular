@@ -5,26 +5,26 @@
     <p *ngIf="readonly"
        class="form-control-static m-font"
        [ngClass]="{'placeholder': !hasValue()}">{{currentValue}}</p>
-        <div class="eos-select" *ngIf="!readonly"
-             [ngClass]="{'required': isRequired, 'disabled': disabled}">
-            <select class="form-control m-font"
-                    [ngClass]="{'readonly': readonly, 'placeholder': !hasValue()}"
-                    [id]="input.key"
-                    onmousedown="this.focus();"
-                    [formControlName]="input.key"
-                    (focus)="onFocus()"
-                    (blur)="onBlur()">
+    <div class="eos-select" *ngIf="!readonly"
+            [ngClass]="{'required': isRequired, 'disabled': disabled}">
+        <select class="form-control m-font"
+                [ngClass]="{'readonly': readonly, 'placeholder': !hasValue()}"
+                [id]="input.key"
+                onmousedown="this.focus();"
+                [formControlName]="input.key"
+                (focus)="onFocus()"
+                (blur)="onBlur()">
 
-            <option *ngIf="viewOpts.defaultValue"
-                [disabled]="viewOpts.defaultValue.disabled"
-                [value]="viewOpts.defaultValue.value"
-                [selected]="!hasValue()"
-                >{{viewOpts.defaultValue.title}}</option>
+        <option *ngIf="viewOpts.defaultValue"
+            [disabled]="viewOpts.defaultValue.disabled"
+            [value]="viewOpts.defaultValue.value"
+            [selected]="!hasValue()"
+            >{{viewOpts.defaultValue.title}}</option>
 
-            <option *ngFor="let opt of input.options"
-                [value]="opt.value"
-                [disabled]="!!opt.disabled"
-                >{{opt.title}}</option>
-            </select>
-        </div>
+        <option *ngFor="let opt of input.options"
+            [value]="opt.value"
+            [disabled]="!!opt.disabled"
+            >{{opt.title}}</option>
+        </select>
+    </div>
 </div>

@@ -138,12 +138,12 @@
     .user-params-set{
         margin-left: calc(50vw - 420px);
     }
-    
     .user-show-right{
         max-width: calc(100vw - 400px);
         transition: .3s;
     }
 }
+
 .head-protocol{
     height: 500px;
     min-width: 600px;
@@ -208,8 +208,9 @@
         padding: 10px 0px 0 30px;
     }
 }
+
 @media (max-width: 1599px) {
-    .right-accordion-email { 
+    .right-accordion-email {
         right: -300px;
     }
     .right-email-stage{
@@ -223,7 +224,7 @@
     }
 }
 @media (max-width: 1099px) {
-    .right-accordion-email { 
+    .right-accordion-email {
         right: -300px;
     }
     .modal-title-cust-right{

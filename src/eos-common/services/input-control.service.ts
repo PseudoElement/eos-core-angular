@@ -43,6 +43,12 @@ export class InputControlService {
                 case E_FIELD_TYPE.buttons:
                     set.push(new ButtonsInput(<ISelectInput>input));
                     break;
+                case E_FIELD_TYPE.select2:
+                    const i = new DropdownInput(<ISelectInput>input);
+                    i.controlType = E_FIELD_TYPE.select2;
+                    set.push(i);
+
+                    break;
                 default:
                     set.push(new StringInput(input));
                     break;

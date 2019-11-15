@@ -69,8 +69,8 @@ export abstract class AbstractDictionaryDescriptor {
             this._defaultOrder = descriptor.defaultOrder;
             this.hideTopMenu = descriptor.hideTopMenu;
             this.editOnlyNodes = descriptor.editOnlyNodes;
-
             this.apiSrv = apiSrv;
+
             commonMergeMeta(this);
             this._initRecord(descriptor);
         } else {
@@ -418,14 +418,14 @@ export abstract class AbstractDictionaryDescriptor {
     //         });
     // }
 
-    getRelatedFields2(tables: string[], nodes: EosDictionaryNode[], loadAll: boolean): Promise<any> {
+    getRelatedFields2(tables: string[], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
         const reqs = [];
         const tablesWReq = [];
         tables.forEach( t => {
             if (t) {
                 if (loadAll) {
                     const md = this.metadata.relations.find( rel => t === rel.__type);
-                    if (md) {
+                if (md || ignoreMetadata) {
                         tablesWReq.push(t);
                         reqs.push(this.apiSrv
                             .read({[t]: []}));

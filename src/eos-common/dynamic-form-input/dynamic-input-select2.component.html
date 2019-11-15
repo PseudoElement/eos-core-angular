@@ -1,0 +1,80 @@
+<div [formGroup]="form">
+    <label [hidden]="input.hideLabel || hideLabel" [attr.for]="input.key">{{ input.label }}</label>
+    <p *ngIf="readonly || form.disabled" class="form-control-static m-font" [ngClass]="{ placeholder: !hasValue() }">
+        {{ currentValue }}
+    </p>
+
+    <div class="eos-select" *ngIf="!readonly || form.disabled" [ngClass]="{ required: isRequired, disabled: disabled }">
+        <div
+            *ngIf="!readonly && !disabled && !form.disabled"
+            dropdownToggle
+            class="input-button-container eos-select2"
+            [container]="container"
+            [dropup]="dropup"
+            dropdown
+            #dropdown="bs-dropdown"
+            aria-controls="dropdown-container"
+            [ngClass]="{ required: isRequired, disabled: disabled }"
+            [ngClass]="{ readonly: readonly }"
+            [autoClose]="true"
+        >
+            <input
+                #textInputSelect
+                class="form-control m-font text-input-select2"
+                [readonly]="!(this.viewOpts?.selectionEditable)"
+                [ngClass]="{ placeholder: !hasValue(), editable: this.viewOpts?.selectionEditable }"
+                [value]="currentValue"
+                [type]="textType"
+                (keydown)="ignoreKeyDown($event)"
+                placeholder="..."
+                (focus)="onFocus()"
+                (blur)="onBlur()"
+                (input)="onInput($event)"
+                autocomplete="off"
+            />
+
+            <div class="textareacounter" *ngIf="viewOpts.selectionEditable && isFocused">
+                <span>{{ getCounterLabel() }}</span>
+            </div>
+
+            <div class="inbutton" *ngIf="!form.disabled">
+                <span class="eos-icon eos-icon-arrow-v-blue-bottom small"></span>
+            </div>
+
+            <ul
+                *dropdownMenu
+                class="dropdown-menu eos-select2"
+                role="menu"
+                aria-labelledby="button-container"
+                [ngStyle]="{ 'min-width.px': getMenuWidth() }"
+            >
+                <li
+                    role="menuitem"
+                    *ngIf="viewOpts.defaultValue"
+                    [value]="viewOpts.defaultValue.value"
+                    [ngClass]="{ 'eos-icon-checkbox-blue': !hasValue() }"
+                >
+                    <a class="dropdown-item eos-select2" (click)="selectAction($event, viewOpts.defaultValue)">
+                        <span class="eos-icon x-small" [ngClass]="{ 'eos-icon-checkbox-blue': !hasValue() }"></span>
+                        {{ viewOpts.defaultValue.title }}</a
+                    >
+                </li>
+
+                <li role="menuitem" *ngFor="let item of input.options">
+                    <a
+                        class="dropdown-item eos-select2"
+                        [ngClass]="{ disabled: item.disabled }"
+                        [ngStyle]="item.style"
+                        (click)="!item.disabled ? selectAction($event, item) : null"
+                    >
+                        <span
+                            class="eos-icon x-small"
+                            [ngClass]="{ 'eos-icon-checkbox-blue': isItemSelected(item), disabled: item.disabled }"
+                        ></span>
+                        {{ item.title }}</a
+                    >
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { InputBase } from '../core/inputs/input-base';
 import { FormGroup } from '@angular/forms';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
@@ -21,6 +21,8 @@ export class IDynamicInputOptions {
     hideLabel?: boolean; // default: false;
     hidePicker?: boolean; // default: false;
     selEmptyEn?: boolean; // default: false;
+    selectionEditable?: boolean; // default: false; Allow edit text value for select-2
+    // dropdownContainer?: string ; // контейнер для dropdown select. 'body' или не указано для локального положения
     defaultValue?: { value: string, title: string , disabled?: boolean };
     enRemoveButton?: boolean; // for dictlink second button
     events?: IDynamicInputEvents;
@@ -39,7 +41,9 @@ export class DynamicInputComponent {
     @Input() isGroup: boolean;
     @Input() hideLabel: boolean;
     @Input() viewOpts: IDynamicInputOptions;
-    @ViewChild('inString') inpstring;
+    @Input() container: string; // контейнер для dropdown select. 'body' или не указано для локального положения
+    @Input() dropup: boolean; // выкидывать меню селекта вверх, а не вниз
+
     types = E_FIELD_TYPE;
     tooltip: ErrorTooltip = new ErrorTooltip;
 
@@ -48,6 +52,5 @@ export class DynamicInputComponent {
             this.viewOpts = <IDynamicInputOptions> {};
         }
     }
-
 
 }

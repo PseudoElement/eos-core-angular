@@ -8,6 +8,96 @@ eos-dynamic-input {
         bottom: 0;
         right: 7px;
     }
+
+
+}
+
+
+.eos-select2 {
+    input {
+        cursor: default;
+        &.editable {
+            cursor: text;
+        }
+        &[disabled],
+        &.readonly {
+
+            background-image: none;
+            background-color: inherit;
+            box-shadow: none;
+            border: 0 none transparent;
+        }
+        &.placeholder {
+            color: $placeholder-color;
+            option {
+                color: black;
+            }
+        }
+    }
+    .text-input-select2 {
+        &.form-control {
+            color: inherit;
+            background-color: #fafafa;
+        }
+        padding-right: 24px !important;
+        color: inherit;
+        // input[type=text]::-ms-clear {
+        //     display: none;
+        // }
+        input {
+            color: inherit;
+            background-color: inherit;
+            &[disabled] {
+                &[readonly] {
+                    cursor: default;
+                    background-image: none;
+                    background-color: inherit;
+                    box-shadow: none;
+                    border: 0 none transparent;
+                }
+            }
+            &.placeholder {
+                color: $placeholder-color;
+                option {
+                    color: black;
+                }
+            }
+        }
+    }
+    &.dropdown-menu {
+        // width: 100%;
+        position: absolute;
+        overflow-y: auto;
+        overflow-x: hidden;
+        max-height: 500px;
+        .dropdown-item {
+            width: 100%;
+            font-size: 14px;
+            padding: 0 12px 0 0;
+            line-height: 20px;
+            height: 20px;
+            vertical-align: middle;
+            color: inherit;
+            // padding-right: 10px;
+        }
+    }
+    .input-button-container {
+        width: 100%;
+        input {
+            padding-right: 24px;
+            cursor: default;
+        }
+
+    }
+    .inbutton {
+        cursor: default;
+    }
+
+    .eos-icon-checkbox-blue {
+        &.disabled {
+            background-image: url("../assets/icons/Checkbox-Grey.svg");
+        }
+    }
 }
 
 .form-group {
@@ -111,7 +201,11 @@ eos-dynamic-input {
         pointer-events: none;
         opacity: 0.65;
     }
+
     .eos-select {
+
+
+
         select {
             -webkit-appearance: none;
             -moz-appearance: none;
