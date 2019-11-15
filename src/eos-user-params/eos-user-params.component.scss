@@ -152,6 +152,9 @@
     .popover-content{
         padding: 0 !important;
     }
+    &.filter {
+        height: 400px;
+    }
  }
  .theme-green .bs-datepicker-head,
  .theme-green .bs-datepicker-body table td span.selected,
@@ -160,11 +163,11 @@
  .theme-green .bs-datepicker-body table td[class*='select-'] span:after {
      background-color: #2196f3 !important;
  }
- 
+
  .bs-datepicker-body table td {
      color: black !important;
  }
- 
+
 .modal-info {
     width: 800px;
 }
