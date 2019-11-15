@@ -73,12 +73,15 @@ eos-dynamic-input {
         .dropdown-item {
             width: 100%;
             font-size: 14px;
-            padding: 0 12px 0 0;
+            // padding: 0 12px 0 0;
             line-height: 20px;
             height: 20px;
             vertical-align: middle;
             color: inherit;
-            // padding-right: 10px;
+
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
         }
     }
     .input-button-container {

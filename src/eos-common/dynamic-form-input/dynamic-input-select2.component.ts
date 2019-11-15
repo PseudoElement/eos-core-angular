@@ -72,6 +72,10 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
             this.control.setValue(event.target.value);
         }
     }
+    getMenuWidthStyle(): any {
+        const w = this.getMenuWidth();
+        return { 'min-width.px': w, 'max-width.px': w };
+    }
 
     getMenuWidth(): number {
         const w = this.textInputSelect.nativeElement.clientWidth;

@@ -181,8 +181,6 @@ export abstract class AbstractDictionaryDescriptor {
             query = ALL_ROWS;
         }
 
-        // console.warn('getData', query, order, limit);
-
         const req = {[this.apiInstance]: query};
 
         if (limit) {
@@ -192,9 +190,7 @@ export abstract class AbstractDictionaryDescriptor {
         if (order) {
             req.orderby = order;
         }
-        if (this.id === 'organization') {
-            req.expand = 'CONTACT_List';
-        }
+
         return this.apiSrv
             .read(req)
             .then((data: any[]) => {
