@@ -1,9 +1,12 @@
 <div class="users-info">
-    <button class="dropdown-item menu-link" (click)="openModal(usersInfo)" [disabled]='!activeBtn ? true : false' [ngClass]="[!activeBtn ? 'disabled' : '']">
-        <span class="btn-icon" *ngIf='!activeBtn' [ngClass]="activeBtn ? btnVal.enableClass : btnVal.disabledClass"></span>
-        <span class="btn-title" *ngIf='activeBtn' [ngClass]="btnVal.activeClass"></span>
-        <span class="btn-title not-active-btn">{{btnVal.title}}</span>
-    </button> 
+    <a class="dropdown-item menu-link" (click)="openModal(usersInfo)"
+    [ngClass]="[_rtSrv.usersInfo.isActive && !_rtSrv.usersInfo.disabled ? _rtSrv.usersInfo.activeBtnClass : '',
+     _rtSrv.usersInfo.disabled ? 'disabled' : '']">
+        <span class="btn-icon" *ngIf='!_rtSrv.usersInfo.isActive'
+        [ngClass]="!_rtSrv.usersInfo.disabled ? _rtSrv.usersInfo.enableClass : _rtSrv.usersInfo.disabledClass"></span>
+        <span class="btn-title" *ngIf='_rtSrv.usersInfo.isActive' [ngClass]="_rtSrv.usersInfo.activeClass"></span>
+        <span class="btn-title not-active-btn">{{_rtSrv.usersInfo.title}}</span>
+    </a> 
 </div>
 <ng-template #usersInfo>
     <div class="full-search-top usual-border">

@@ -12,6 +12,7 @@ import {
     BlockUser,
     DeliteUser,
     Protocol,
+    UsersInfo,
     DefaultSettings,
 } from '../shered/consts/btn-action.consts';
 import { AppContext } from 'eos-rest/services/appContext.service';
@@ -42,6 +43,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         'OpenStreamScanSystem',
         'OpenRightsSystemCaseDelo',
         'Protocol',
+        'UsersInfo',
         'DefaultSettings',
         'DeliteUser'];
     get techUser() {
@@ -153,6 +155,9 @@ export class BtnActionComponent implements OnInit, OnDestroy {
             case 'OpenSumProtocol':
                 this.checkBtnOpenSumProtocol();
                 break;
+            case 'UsersInfo':
+                this.checkBtnUserInfo();
+                break;
             case 'DefaultSettings':
                 this.checkBtnDefaultSettings();
                 break;
@@ -212,6 +217,22 @@ export class BtnActionComponent implements OnInit, OnDestroy {
                 Protocol.disabled = false;
             }
         }
+    }
+    checkBtnUserInfo() {
+        if (!this.selectUser) {
+            UsersInfo.disabled = true;
+        } else {
+            if (this.flagTachRigth) {
+                if (this.checkUresForLimited()) {
+                    UsersInfo.disabled = true;
+                } else {
+                    UsersInfo.disabled = false;
+                }
+            } else {
+                UsersInfo.disabled = false;
+            }
+        }
+        this._rtSrv.usersInfo = UsersInfo;
     }
     checkBtnOpenStreamSystem() {
         if (!this.selectUser || this.selectUser.deleted) {

@@ -254,8 +254,6 @@ export class UserSearchComponent implements OnInit  {
                 this.fullSearch = false;
                 this.fastSearch = true;
                 const strSearch = this.srchString.trim();
-                this.srchString = this.srchString.trim();
-                this.srchString = this.srchString.replace(/\s/g, '_').trim();
                 if (strSearch) {
                     const queryF = this.srhSrv.getQueryForFilter({ LOGIN: strSearch });
                     this.users_pagination.resetConfig();

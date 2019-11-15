@@ -1,7 +1,8 @@
-import { Component, OnInit, Input, TemplateRef } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DomSanitizer } from '@angular/platform-browser';
+import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 
 @Component({
   selector: 'eos-users-info',
@@ -9,9 +10,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./users-info.component.scss']
 })
 export class EosReportUsersInfoComponent implements OnInit {
-  @Input() btnVal: any;
   users: any[];
-  activeBtn: boolean;
   modalRef: BsModalRef;
   selectUser: any;
   isFirst: boolean;
@@ -22,7 +21,8 @@ export class EosReportUsersInfoComponent implements OnInit {
   titleDownload: string;
   printUsers: any[] = [{ data: 'Текущем пользователе', value: false }, { data: 'Всех отмеченных пользователях', value: true }];
   private nodeIndex: number = 0;
-  constructor(private _userParamSrv: UserParamsService, private modalService: BsModalService, public sanitizer: DomSanitizer) { }
+  constructor(private _userParamSrv: UserParamsService, private modalService: BsModalService,
+     public sanitizer: DomSanitizer, public _rtSrv: RtUserSelectService) { }
 
   ngOnInit() {
     this.init();
@@ -30,27 +30,18 @@ export class EosReportUsersInfoComponent implements OnInit {
 
   init() {
     this.users = this._userParamSrv.checkedUsers;
-    if (this.users.length === 0) {
-      this.activeBtn = false;
-    } else {
-      this.selectUser = this.users[this.nodeIndex];
-      if (this.selectUser !== null) {
-        this.src = this.getHtmlStr(this.selectUser.id);
-        this.activeBtn = true;
-      } else {
-        this.activeBtn = false;
-      }
+    if (this.users.length > 0) {
+      this.selectUser = this.users[0];
+      this.src = this.getHtmlStr(this.selectUser.id);
     }
-    if (this.btnVal.disabled === true) {
-      this.activeBtn = false;
-    }
-    if (this.btnVal.disabled === true) {
-      this.activeBtn = false;
-    }
+    this.shortRep = false;
+    this.CheckAllUsers = false;
+    this.nodeIndex = 0;
     this._updateBorders();
   }
 
   openModal(template: TemplateRef<any>) {
+    this.init();
     this.modalRef = this.modalService.show(template, Object.assign({}, { class: 'modal-info' }));
   }
   getHtmlStr(id: number): any {

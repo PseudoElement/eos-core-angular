@@ -4,6 +4,7 @@ import { PipRX } from 'eos-rest/services/pipRX.service';
 import { Subject, Observable } from 'rxjs';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { DEPARTMENT } from 'eos-rest';
+import { BtnActionFields } from '../interfaces/btn-action.interfase';
 
 @Injectable()
 export class RtUserSelectService {
@@ -12,6 +13,7 @@ export class RtUserSelectService {
     subjectFlagBtnHeader: Subject<any> = new Subject();
     btnDisabled: boolean = false;
     hashUsers = new Map();
+    usersInfo: BtnActionFields;
     ArraySystemHelper = {
         delo: {
             label: 'Дело',

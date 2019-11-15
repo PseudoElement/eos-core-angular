@@ -157,7 +157,9 @@ export class SearchServices {
     getQueryForFilter(params: USERSRCH, tab?: number) { // передавать curtab в зависимости от этого выполнять поиск
         const query = {
             USER_CL: {
-                criteries: {}
+                criteries: {
+                    ISN_LCLASSIF: '1:null'
+                }
             },
             loadmode: 'Table'
         };
