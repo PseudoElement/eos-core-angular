@@ -25,6 +25,10 @@ export class UserParamApiSrv {
         shooseTab: +sessionStorage.getItem('key') ? +sessionStorage.getItem('key') : 0,
         titleDue: '',
     };
+    hashSorting = new Map()
+        .set('fullDueName', 'SURNAME_PATRON')
+        .set('login', 'CLASSIF_NAME')
+        .set('department', 'NOTE');
     confiList$: Subject<IConfig>;
     currentSort: any = SortsList[3];
     searchRequest = {};
@@ -33,6 +37,7 @@ export class UserParamApiSrv {
     stateDeleteUsers: boolean = false;
     stateOnlyThisDepart: boolean = false;
     public Allcustomer: UserSelectNode[] = [];
+    public sortDelUsers = false;
     // private helpersClass;
     get _confiList$(): Observable<IConfig> {
         return this.confiList$.asObservable();
@@ -208,7 +213,6 @@ export class UserParamApiSrv {
     }
 
     getQueryForSearch() {
-        let propOrderBy;
         const dbQuery = Object.assign({}, this._storageSrv.getItem('quickSearch'));
         const config = this._storageSrv.getItem('users');
         if (config.showMore) {
@@ -222,18 +226,9 @@ export class UserParamApiSrv {
             dbQuery.top = config.length;
             dbQuery.skip = config.length * config.current - config.length;
         }
-        if (this.currentSort === 'login') {
-            propOrderBy = 'CLASSIF_NAME';
-            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
-        }
-        if (this.currentSort === 'fullDueName') {
-            propOrderBy = 'SURNAME_PATRON';
-            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
-        }
-        if (this.currentSort === 'department') {
-            propOrderBy = 'NOTE';
-            propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
-        }
+
+        let propOrderBy = this.hashSorting.get(this.currentSort);
+        propOrderBy += this.srtConfig[this.currentSort].upDoun ? ' desc' : ' asc';
         dbQuery.orderby = propOrderBy;
         dbQuery.inlinecount = 'allpages';
         return dbQuery;

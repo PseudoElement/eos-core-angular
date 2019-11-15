@@ -60,13 +60,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     // количество выбранных пользователей
     countcheckedField: number;
     shadow: boolean = false;
-    sortDelUsers: boolean;
 
     get showCloseQuickSearch() {
         if (this._storage.getItem('quickSearch') !== undefined && this._storage.getItem('quickSearch').USER_CL.criteries.ORACLE_ID === 'isnull') {
-            this.sortDelUsers = true;
+            this._apiSrv.sortDelUsers = true;
         } else {
-            this.sortDelUsers = false;
+            this._apiSrv.sortDelUsers = false;
         }
         return this._storage.getItem('quickSearch');
     }
@@ -728,7 +727,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._apiSrv.searchState = true;
         this._storage.setItem('quickSearch', $event);
         this._apiSrv.flagDelitedPermanantly = false;
-        this.initView();
+        this.sortPageList('login');
     }
     getClassTooltip(lust: boolean): string {
         if (lust === true) {
@@ -740,7 +739,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     quickSearchKey(evn) {
         this._apiSrv.searchState = true;
         this._storage.setItem('quickSearch', evn);
-        this.initView();
+        this.sortPageList('login');
     }
     resetSearch() {
         let urlUpdate;
