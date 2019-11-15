@@ -38,7 +38,7 @@ export class EosStorageService {
             this.removeItem(LS_EDIT_CARD);
             this.removeItem('protocol');
             this.removeItem('sum-protocol');
-            this.removeItem('users');
+        //    this.removeItem('users');
             // this.removeItem('pageLength');
         }
     }
