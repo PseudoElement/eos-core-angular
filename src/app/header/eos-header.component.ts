@@ -20,6 +20,10 @@ export class EosHeaderComponent implements OnDestroy {
     openProtocols: Array<any> = [];
     openWindows: Array<any> = [];
     private ngUnsubscribe: Subject<any> = new Subject();
+    private windowRemove: Window;
+    private windowChange: Window;
+    private windowView: Window;
+    private windowScan: Window;
 
     constructor(
         _router: Router,
@@ -38,7 +42,7 @@ export class EosHeaderComponent implements OnDestroy {
     @HostListener('window:resize')
     resize($event) {
         this.width = window.innerWidth;
-       // console.log(window.innerWidth);
+        // console.log(window.innerWidth);
     }
 
     ngOnDestroy() {
@@ -55,21 +59,81 @@ export class EosHeaderComponent implements OnDestroy {
     }
 
     getProtocol(protocol: string): void {
-        if (this.openProtocols.indexOf(protocol) === -1) {
-            const newWindow = window.open(`../Protocol/Pages/ProtocolView.html?type=${protocol}`, '_blank', 'width=900,height=700');
-            this.openWindows.push(newWindow);
-            this.openProtocols.push(protocol);
-            newWindow.blur();
-            newWindow.onbeforeunload = () => {
-                this.openProtocols = this.openProtocols.filter(prot => prot !== protocol);
-                this.openWindows = this.openWindows.filter(win => win.location.search !== newWindow.location.search);
-            };
+        switch (protocol) {
+            case 'scan':
+                this.openProtocolScan(protocol);
+                break;
+            case 'remove':
+                this.openProtocolRemove(protocol);
+                break;
+            case 'change':
+                this.openProtocolChange(protocol);
+                break;
+            case 'view':
+                this.openProtocolView(protocol);
+                break;
+        }
+        // if (this.openProtocols.indexOf(protocol) === -1) {
+        //     try {
+        //         const newWindow = window.open(`../Protocol/Pages/ProtocolView.html?type=${protocol}`, '_blank', 'width=900,height=700');
+        //         this.hashWindow.set(protocol, newWindow);
+        //         this.openWindows.push(newWindow);
+        //         this.openProtocols.push(protocol);
+        //         newWindow.blur();
+        //         newWindow.addEventListener('beforeunload', () => {
+        //             this.openProtocols = this.openProtocols.filter(prot => prot !== protocol);
+        //             if (this.hashWindow.has(protocol)) {
+        //                 this.hashWindow.delete(protocol);
+        //             }
+        //         });
+        //     } catch (e) {
+        //         console.log(e);
+        //         console.log('1');
+        //     }
+
+        // } else {
+        //     try {
+        //         const selectWin = this.hashWindow.get(protocol);
+        //         console.log(selectWin);
+        //         selectWin.focus();
+        //     } catch (e) {
+        //         console.log(e);
+        //         console.log('2');
+        //     }
+        // }
+    }
+    openProtocolScan(protocol) {
+        if (this.windowScan && !this.windowScan.closed) {
+            this.windowScan.focus();
         } else {
-            const selectWin = this.openWindows.filter(win => win.location.search.split('=')[1] === protocol);
-            selectWin[0].focus();
+            this.windowScan = window.open(`../Protocol/Pages/ProtocolView.html?type=${protocol}`, '_blank', 'width=900,height=700');
+            this.windowScan.blur();
         }
     }
-
+    openProtocolRemove(protocol) {
+        if (this.windowRemove && !this.windowRemove.closed) {
+            this.windowRemove.focus();
+        } else {
+            this.windowRemove = window.open(`../Protocol/Pages/ProtocolView.html?type=${protocol}`, '_blank', 'width=900,height=700');
+            this.windowRemove.blur();
+        }
+    }
+    openProtocolChange(protocol) {
+        if (this.windowChange && !this.windowChange.closed) {
+            this.windowChange.focus();
+        } else {
+            this.windowChange = window.open(`../Protocol/Pages/ProtocolView.html?type=${protocol}`, '_blank', 'width=900,height=700');
+            this.windowChange.blur();
+        }
+    }
+    openProtocolView(protocol) {
+        if (this.windowView && !this.windowView.closed) {
+            this.windowView.focus();
+        } else {
+            this.windowView = window.open(`../Protocol/Pages/ProtocolView.html?type=${protocol}`, '_blank', 'width=900,height=700');
+            this.windowView.blur();
+        }
+    }
     private update() {
         let _actRoute = this._route.snapshot;
         while (_actRoute.firstChild) { _actRoute = _actRoute.firstChild; }
