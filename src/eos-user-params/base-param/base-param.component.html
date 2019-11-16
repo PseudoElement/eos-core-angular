@@ -53,7 +53,12 @@
                     <span class="icon eos-icon small icon-add-department span-avatar-icon" [ngClass]="{'eos-icon-avatar-blue': !curentUser.isTechUser && editMode, 'eos-icon-avatar-grey': curentUser.isTechUser || !editMode}" (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"></span>
                 </div>
             </div>
-            <eos-dynamic-input class="base-text-input base-input-role" [input]="controls['SELECT_ROLE']" [form]="formControls" [readonly]="curentUser.isTechUser" [disabled] = "curentUser.isTechUser"></eos-dynamic-input>
+            <eos-dynamic-input class="base-text-input base-input-role"
+                [input]="controls['SELECT_ROLE']"
+                [form]="formControls"
+                container="body"
+                [readonly]="curentUser.isTechUser || !editMode"
+                [disabled] = "curentUser.isTechUser"></eos-dynamic-input>
         </div>
         <!-- Примечания -->
         <div>

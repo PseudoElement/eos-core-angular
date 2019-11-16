@@ -1,4 +1,4 @@
-import { Component, OnChanges } from '@angular/core';
+import { Component, OnChanges, SimpleChanges } from '@angular/core';
 import { DynamicInputBase } from './dynamic-input-base';
 import { Validators } from '@angular/forms';
 
@@ -29,8 +29,8 @@ export class DynamicInputNumberIncrementComponent extends DynamicInputBase  impl
         }
     }
 
-    ngOnChanges() {
-        super.ngOnChanges();
+    ngOnChanges(changes: SimpleChanges) {
+        super.ngOnChanges(changes);
         if (!this.input.pattern) {
             this.control.setValidators(Validators.pattern(/^\d{0,5}$/));
         }

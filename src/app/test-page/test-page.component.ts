@@ -14,28 +14,44 @@ import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.s
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 
 const TEST_INPUTS = <IBaseInput[]>[{
-    controlType: 'string',
-    key: 'data.string',
-    label: 'string',
-    required: true,
-    pattern: /\S+/,
-    forNode: false,
-    value: 'no data!!!',
-}, {
-    controlType: 'text',
-    key: 'data.text',
-    label: 'TEXT',
-    required: true,
-    height: '100'
-}, {
-    controlType: 'checkbox',
-    key: 'data.checkbox',
-    label: 'check me',
-    // value: true
-}, {
-    controlType: 'select',
-    key: 'data.select',
-    label: 'select value',
+//     controlType: 'string',
+//     key: 'data.string',
+//     label: 'string',
+//     required: true,
+//     pattern: /\S+/,
+//     forNode: false,
+//     value: 'no data!!!',
+// }, {
+//     controlType: 'text',
+//     key: 'data.text',
+//     label: 'TEXT',
+//     required: true,
+//     height: '100'
+// }, {
+//     controlType: 'checkbox',
+//     key: 'data.checkbox',
+//     label: 'check me',
+//     // value: true
+// }, {
+//     controlType: 'select',
+//     key: 'data.select',
+//     label: 'select value',
+//     disabled: false,
+//     required: false,
+//     options: [{
+//         value: 1,
+//         title: 'one'
+//     }, {
+//         value: 2,
+//         title: 'two'
+//     }, {
+//         value: 3,
+//         title: 'three'
+//     }]
+// }, {
+    controlType: 'select2',
+    key: 'data.select2',
+    label: 'select2 value',
     disabled: false,
     required: false,
     options: [{
@@ -48,26 +64,26 @@ const TEST_INPUTS = <IBaseInput[]>[{
         value: 3,
         title: 'three'
     }]
-}, {
-    controlType: 'date',
-    key: 'data.date',
-    value: new Date(),
-    label: 'date'
-}, {
-    controlType: 'buttons',
-    key: 'data.switch',
-    label: 'buttons',
-    options: [{
-        value: 1,
-        title: 'one',
-    }, {
-        value: 2,
-        title: 'two'
-    }, {
-        value: 3,
-        title: 'three'
-    }],
-    value: 1
+// }, {
+//     controlType: 'date',
+//     key: 'data.date',
+//     value: new Date(),
+//     label: 'date'
+// }, {
+//     controlType: 'buttons',
+//     key: 'data.switch',
+//     label: 'buttons',
+//     options: [{
+//         value: 1,
+//         title: 'one',
+//     }, {
+//         value: 2,
+//         title: 'two'
+//     }, {
+//         value: 3,
+//         title: 'three'
+//     }],
+//     value: 1
 }];
 
 @Component({

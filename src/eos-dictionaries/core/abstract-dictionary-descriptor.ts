@@ -69,8 +69,8 @@ export abstract class AbstractDictionaryDescriptor {
             this._defaultOrder = descriptor.defaultOrder;
             this.hideTopMenu = descriptor.hideTopMenu;
             this.editOnlyNodes = descriptor.editOnlyNodes;
-
             this.apiSrv = apiSrv;
+
             commonMergeMeta(this);
             this._initRecord(descriptor);
         } else {
@@ -181,8 +181,6 @@ export abstract class AbstractDictionaryDescriptor {
             query = ALL_ROWS;
         }
 
-        // console.warn('getData', query, order, limit);
-
         const req = {[this.apiInstance]: query};
 
         if (limit) {
@@ -192,9 +190,7 @@ export abstract class AbstractDictionaryDescriptor {
         if (order) {
             req.orderby = order;
         }
-        if (this.id === 'organization') {
-            req.expand = 'CONTACT_List';
-        }
+
         return this.apiSrv
             .read(req)
             .then((data: any[]) => {
@@ -418,14 +414,14 @@ export abstract class AbstractDictionaryDescriptor {
     //         });
     // }
 
-    getRelatedFields2(tables: string[], nodes: EosDictionaryNode[], loadAll: boolean): Promise<any> {
+    getRelatedFields2(tables: string[], nodes: EosDictionaryNode[], loadAll: boolean, ignoreMetadata = false): Promise<any> {
         const reqs = [];
         const tablesWReq = [];
         tables.forEach( t => {
             if (t) {
                 if (loadAll) {
                     const md = this.metadata.relations.find( rel => t === rel.__type);
-                    if (md) {
+                if (md || ignoreMetadata) {
                         tablesWReq.push(t);
                         reqs.push(this.apiSrv
                             .read({[t]: []}));

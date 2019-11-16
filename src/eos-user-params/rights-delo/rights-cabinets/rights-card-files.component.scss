@@ -3,6 +3,7 @@
 
     > .user-input-group {
         display: flex;
+        height: calc(100vh - 290px);
         .card-left{
             position: relative;
             .card-wrr{
@@ -35,7 +36,7 @@
             }
         }
         .card-rigth {
-            overflow: auto;
+            overflow: hidden;
             max-height: calc(100vh - 235px);
             margin-top: 20px;
             flex-basis: 50%;

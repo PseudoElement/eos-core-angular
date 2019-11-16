@@ -1,5 +1,5 @@
 import { ErrorTooltip, IDynamicInputOptions } from './dynamic-input.component';
-import { Input, OnChanges, OnDestroy } from '@angular/core';
+import { Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { InputBase } from '../core/inputs/input-base';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -52,6 +52,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
         this._updateMessage();
         this.toggleTooltip();
     }
+
     onInput(event) {
         event.stopPropagation();
         this._delayedTooltip();
@@ -73,7 +74,7 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
         this.inputTooltip.force = true;
     }
 
-    ngOnChanges() {
+    ngOnChanges(changes: SimpleChanges) {
         const control = this.control;
         this.input.dib = this;
         if (control) {

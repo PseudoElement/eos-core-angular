@@ -16,6 +16,7 @@ export class NomenklCardComponent extends BaseCardEditComponent implements OnCha
     eDocEditable: boolean;
     eDocTooltip: string = '';
     buttPerValue: number;
+        selOptsEditable = Object.assign({selectionEditable: true }, this.selOpts);
     private previousValues: SimpleChanges;
     private _classifSrv: WaitClassifService;
 

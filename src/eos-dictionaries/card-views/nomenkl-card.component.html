@@ -24,10 +24,11 @@
                                [input]="inputs['rec.SHELF_LIFE']"
                                [form]="form"
                                [readonly]="!editMode"></eos-dynamic-input>
-            <eos-dynamic-input *ngIf="inputs['rec.SECURITY']"
+            <eos-dynamic-input style="width: 70%"
+                               *ngIf="inputs['rec.SECURITY']"
                                [input]="inputs['rec.SECURITY']"
                                [form]="form"
-                               [viewOpts]="selOpts"
+                               [viewOpts]="selOptsEditable"
                                [readonly]="!editMode"></eos-dynamic-input>
         </div>
 
