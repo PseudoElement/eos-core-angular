@@ -84,7 +84,6 @@ export class EosReportSummaryProtocolComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-    this._storageSrv.setItem('sum-protocol', this.config, true);
     this._user_pagination.SelectConfig();
   }
 

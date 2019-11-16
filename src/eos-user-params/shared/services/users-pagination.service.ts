@@ -46,6 +46,12 @@ export class UserPaginationService {
         if (this.typeConfig === 'users') {
             this._storageSrv.setItem('users', this.paginationConfig, true);
         }
+        if (this.typeConfig === 'sum-protocol') {
+            this._storageSrv.setItem('sum-protocol', this.paginationConfig, true);
+        }
+        if (this.typeConfig === 'protocol') {
+            this._storageSrv.setItem('protocol', this.paginationConfig, true);
+        }
     }
     resetConfig() {
         if (this.paginationConfig) {

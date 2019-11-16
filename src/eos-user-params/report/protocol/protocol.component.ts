@@ -77,7 +77,6 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
-    this._storage.setItem('protocol', this._user_pagination.paginationConfig, true);
     this._user_pagination.SelectConfig();
   }
 
