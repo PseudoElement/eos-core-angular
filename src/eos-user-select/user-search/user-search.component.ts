@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild, Input } from '@angular/core';
-import { USER_SEARCH, USERSRCH } from '../../eos-user-select/shered/consts/search-const';
+import { USER_SEARCH, USERSRCH, USERSRCHFORM } from '../../eos-user-select/shered/consts/search-const';
 import { FormHelperService } from '../../eos-user-params/shared/services/form-helper.services';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { InputControlService } from 'eos-common/services/input-control.service';
@@ -30,8 +30,6 @@ export class UserSearchComponent implements OnInit  {
     private prepareInputs: any;
     private inputs: any;
     private form: FormGroup;
-    private _submitFullFormValue: any;
-    private _submitQuickFormValue: string;
     constructor(
         private _formHelper: FormHelperService,
         private dataConv: EosDataConvertService,
@@ -56,13 +54,14 @@ export class UserSearchComponent implements OnInit  {
         this.resetForm();
     }
     onShown() {
-        const fullSearch = this._storage.getItem('fullForm');
-        this.currTab = this._storage.getItem('currTab');
-        if (!this.currTab) {
+        const objSearch = this._getItemsSearchUsers();
+        if (objSearch) {
+            this.currTab = objSearch.currTab;
+            if (this.fSearchPop.isOpen === true && objSearch.fullForm) {
+                this.form.patchValue(objSearch.fullForm);
+            }
+        } else {
             this.currTab = 0;
-        }
-        if (this.fSearchPop.isOpen === true && fullSearch) {
-            this.form.patchValue(fullSearch);
         }
     }
 
@@ -74,13 +73,14 @@ export class UserSearchComponent implements OnInit  {
         }
     }
     ngOnInit() {
+        const objSearch = this._getItemsSearchUsers();
         this.pretInputs();
-        this._submitFullFormValue = this._storage.getItem('fullForm');
-        this._submitQuickFormValue = this._storage.getItem('quickForm');
-        if (this._submitFullFormValue) {
-            this.fullSearch = true;
-        } else if (this._submitQuickFormValue) {
-            this.openFastSrch();
+        if (objSearch) {
+            if (objSearch.fullForm) {
+                this.fullSearch = true;
+            } else if (objSearch.quickForm) {
+                this.openFastSrch();
+            }
         }
     }
     pretInputs() {
@@ -127,9 +127,7 @@ export class UserSearchComponent implements OnInit  {
         }
         this.RemoveQuotes(newObj);
         const queryF = this.srhSrv.getQueryForFilter(newObj, this.currTab);
-        this._storage.setItem('fullForm', this.form.value);
-        this._storage.setItem('quickForm', null);
-        this._storage.setItem('currTab', this.currTab);
+        this._setItemsSearchUsers(this.form.value, null, this.currTab);
         this.users_pagination.resetConfig();
         this.search.emit(queryF);
         this.clearQuickForm();
@@ -239,10 +237,12 @@ export class UserSearchComponent implements OnInit  {
         return str.substr(0, index) + val + str.substr(index + val.length);
     }
     openFastSrch() {
-        const quickForm = this._storage.getItem('quickForm');
+        const objSearch = this._getItemsSearchUsers();
         this.fastSearch = !this.fastSearch;
-        if (this.fastSearch === true && quickForm) {
-            this.srchString = quickForm;
+        if (objSearch) {
+            if (this.fastSearch === true && objSearch.quickForm) {
+                this.srchString = objSearch.quickForm;
+            }
         }
     }
     clickKey($event) {
@@ -258,9 +258,7 @@ export class UserSearchComponent implements OnInit  {
                     const queryF = this.srhSrv.getQueryForFilter({ LOGIN: strSearch });
                     this.users_pagination.resetConfig();
                     this.quickSearchKey.emit(queryF);
-                    this._storage.setItem('fullForm', null);
-                    this._storage.setItem('quickForm', this.srchString);
-                    this._storage.setItem('currTab', 0);
+                    this._setItemsSearchUsers(null, this.srchString, 0);
                     this.resetForm();
                 }
             }
@@ -281,10 +279,17 @@ export class UserSearchComponent implements OnInit  {
         });
         if (flag) {
             this.fullSearch = false;
-            this._storage.setItem('fullForm', null);
-            this._storage.setItem('quickForm', '');
-            this._storage.setItem('currTab', 0);
+            this._setItemsSearchUsers(null, '', 0);
         }
     }
+    private _setItemsSearchUsers(full: any, quick: string, tab: number): void {
+        const serchUsers: USERSRCHFORM = {fullForm: full, quickForm: quick, currTab: tab};
+        this._storage.setItem('serchUsers', serchUsers);
+    }
+
+    private _getItemsSearchUsers(): USERSRCHFORM {
+        return this._storage.getItem('serchUsers');
+    }
+
 
 }

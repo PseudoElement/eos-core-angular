@@ -136,3 +136,9 @@ export interface USERSRCH {
     AV_SYSTEMS?: string;
     BLOCK_USER?: string;
 }
+
+export interface USERSRCHFORM {
+    fullForm?: any;
+    quickForm?: string;
+    currTab?: number;
+}
