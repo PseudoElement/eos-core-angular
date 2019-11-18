@@ -13,7 +13,6 @@ import { CreateUserComponent } from './createUser/createUser.component';
 // import { USERSRCH } from '../../eos-user-select/shered/consts/search-const';
 import { RtUserSelectService } from '../shered/services/rt-user-select.service';
 import { EosSandwichService } from 'eos-dictionaries/services/eos-sandwich.service';
-import { HelpersSortFunctions } from '../shered/helpers/sort.helper';
 import { Allbuttons } from '../shered/consts/btn-action.consts';
 import { BtnAction } from '../shered/interfaces/btn-action.interfase';
 import { TreeUserSelectService } from '../shered/services/tree-user-select.service';
@@ -48,7 +47,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     isLoading: boolean;
     isMarkNode: Boolean;
     titleCurrentDue: string = '';
-    helpersClass: any;
+    // helpersClass: any;
     buttons: BtnAction;
     flagChecked: boolean;
     flagScan: boolean = null;
@@ -78,6 +77,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             selectedUser: this.selectedUser,
             listUsers: this.listUsers,
         };
+    }
+    get curentTabSearch() {
+        if (this._storage.getItem('serchUsers')) {
+            return this._storage.getItem('serchUsers').currTab;
+        }
+        return 0;
     }
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
@@ -115,7 +120,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this.buttons = Allbuttons;
         this.rtUserService.flagDeleteScroll = true;
         this.rtUserService.flagDeleteSelectedUser = true;
-        this.helpersClass = new HelpersSortFunctions();
+        //  this.helpersClass = new HelpersSortFunctions();
         this._apiSrv.initSort();
         this._route.params
             .pipe(
@@ -350,21 +355,19 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         }
     }
 
-    sortPageList(nameSort: string) {
+    sortPageList(nameSort: string, sortSearch?: string): void {
         this._apiSrv.currentSort = nameSort;
-        this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun = !this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun;
-        this._storage.setItem('SortPageList', { 'sort': nameSort, 'upDoun': this._apiSrv.srtConfig[this._apiSrv.currentSort].upDoun });
-        if (!this._apiSrv.srtConfig[this._apiSrv.currentSort].checked) {
-            for (const key in this._apiSrv.srtConfig) {
-                if (this._apiSrv.srtConfig.hasOwnProperty(key)) {
-                    if (key === this._apiSrv.currentSort) {
-                        this._apiSrv.srtConfig[key].checked = true;
-                    } else {
-                        this._apiSrv.srtConfig[key].checked = false;
-                    }
-                }
+        for (const key in this._apiSrv.srtConfig) {
+            if (this._apiSrv.srtConfig.hasOwnProperty(key)) {
+                this._apiSrv.srtConfig[key].checked = false;
             }
         }
+        if (sortSearch && sortSearch === 'sortSearch') {
+            this._apiSrv.srtConfig[nameSort].upDoun =  false;
+        } else {
+            this._apiSrv.srtConfig[nameSort].upDoun = !this._apiSrv.srtConfig[nameSort].upDoun;
+        }
+        this._storage.setItem('SortPageList', {'sort': nameSort, 'upDoun': this._apiSrv.srtConfig[nameSort].upDoun });
         this._apiSrv.stateTehUsers = false;
         this._apiSrv.stateDeleteUsers = false;
         const id = this._route.params['value'].nodeId;
@@ -723,11 +726,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 return 'eos-icon-checkbox-square-blue';
         }
     }
-    searchUsers($event: IRequest) {
+    searchUsers($event: IRequest): void {
         this._apiSrv.searchState = true;
         this._storage.setItem('quickSearch', $event);
         this._apiSrv.flagDelitedPermanantly = false;
-        this.sortPageList('login');
+        const sort = this.curentTabSearch === 1 ? 'fullDueName' : 'login';
+        this.sortPageList(sort, 'sortSearch');
     }
     getClassTooltip(lust: boolean): string {
         if (lust === true) {
@@ -739,7 +743,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     quickSearchKey(evn) {
         this._apiSrv.searchState = true;
         this._storage.setItem('quickSearch', evn);
-        this.sortPageList('login');
+        this.sortPageList('login', 'sortSearch');
     }
     resetSearch() {
         let urlUpdate;
