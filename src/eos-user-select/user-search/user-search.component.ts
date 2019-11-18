@@ -68,8 +68,8 @@ export class UserSearchComponent implements OnInit  {
 
     get disableBtn() {
         if (this.form) {
-            return this.form.status === 'VALID' && (this.form.value['rec.LOGIN'].length > 0 || this.form.value['rec.DEPARTMENT'].length > 0 ||
-                this.form.value['rec.fullDueName'].length > 0  || this.form.value['rec.SURNAME'].length > 0 ||
+            return this.form.status === 'VALID' && (this.form.controls['rec.LOGIN'].value.trim().length > 0 || this.form.controls['rec.DEPARTMENT'].value.trim().length > 0 ||
+            this.form.controls['rec.fullDueName'].value.trim().length > 0  || this.form.controls['rec.SURNAME'].value.trim().length > 0 ||
                 this.form.controls['rec.BLOCK_USER'].value === '2' || this.currTab === 2);
         }
     }
