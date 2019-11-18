@@ -4,3 +4,12 @@
 .tooltip-pos-l{
     top: 40px !important;
 }
+.block-user {
+    span {
+        margin-right: 5px !important; 
+    }
+    eos-dynamic-input > div > eos-dynamic-input-radio > div {
+        display: flex;
+        justify-content: space-between;
+    }
+ }
