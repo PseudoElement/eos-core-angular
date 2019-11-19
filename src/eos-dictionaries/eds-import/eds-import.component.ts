@@ -49,7 +49,6 @@ export class EdsImportComponent implements OnInit {
     };
     logs = [];
     fatalError = [];
-    value = '';
     get btnValue() {
         if (!this.load) {
             return 'Загрузить';
@@ -78,6 +77,7 @@ export class EdsImportComponent implements OnInit {
         this._setIteralbleSave(this.iter.next());
     }
     stop() {
+        this.countLoad++;
         this.load = false;
     }
     // pause() {
@@ -88,24 +88,37 @@ export class EdsImportComponent implements OnInit {
     // }
     readFile(evt) {
         this.reset();
-        this.upload = false;
         const files = evt.target.files;
         const file = files[0];
         if (file) {
+            this.upload = true;
             const reader = new FileReader();
             reader.onload = (fileLoaded) => {
-                const parseDoc = new DOMParser().parseFromString(fileLoaded.target['result'] as string, 'application/xml');
+                let parseDoc = null;
+                try {
+                    parseDoc = new DOMParser().parseFromString(fileLoaded.target['result'] as string, 'application/xml');
+                } catch (e) {
+                    this.setErrors(e);
+                    this.upload = false;
+                    return;
+                }
                 this.checkDom(parseDoc, this.domModel);
                 if (!this.fatalError.length) {
-                    this.getCaCategory();
-                    this.upload = true;
-                    this.fromLoad = this.DataForDb.length;
+                    this.getCaCategory().then(() => {
+                        this.fromLoad = this.DataForDb.length;
+                        this.upload = false;
+                    });
                 }
+            };
+            reader.onerror = (e) => {
+                this.setErrors(e);
+                this.upload = false;
             };
             reader.readAsText(file);
         }
     }
     checkDom(dom: Document, srcTag: Dm) {
+        //   debugger;
         const tag = srcTag.tag;
         if (!srcTag.children) {
             if (tag === 'ДанныеСертификата') {
@@ -113,10 +126,12 @@ export class EdsImportComponent implements OnInit {
             }
             return;
         }
+
         const collection = Array.prototype.slice.call(dom.querySelectorAll(tag));
         if (!collection.length) {
             if (tag !== 'ПрограммноАппаратныйКомплекс') {
                 this.setErrors(tag);
+                this.upload = false;
             }
             return;
         }
@@ -126,7 +141,7 @@ export class EdsImportComponent implements OnInit {
     }
     searchElements(dom: Document | Element, tag) {
         // поиск по 'ДанныеСертификата' нужной инф. о сертах
-        const nodeList = dom.querySelectorAll(tag);
+        const nodeList = Array.prototype.slice.call(dom.querySelectorAll(tag));
         nodeList.forEach(sertNode => {
             this.getSertsInfo(sertNode);
         });
@@ -157,8 +172,8 @@ export class EdsImportComponent implements OnInit {
         }
     }
 
-    getCaCategory() {
-        this.node.dictionary.dictDescrSrv.apiSrv.read({
+    getCaCategory(): Promise<any> {
+        return this.node.dictionary.dictDescrSrv.apiSrv.read({
             CA_CATEGORY: {
                 criteries: {
                     ISN_EDS_CATEGORY: this.node.id,
@@ -169,6 +184,7 @@ export class EdsImportComponent implements OnInit {
                 this._caCategory = data;
                 this.checkDuplicateEntries();
             }
+            return Promise.resolve();
         }).catch(error => {
             this.setErrors(error.message);
         });
@@ -257,7 +273,6 @@ export class EdsImportComponent implements OnInit {
                         ISN_EDS_CATEGORY: self.node.id
                     }
                 }]);
-                self.countLoad++;
                 i++;
             }
         };
@@ -268,26 +283,24 @@ export class EdsImportComponent implements OnInit {
     private _setIteralbleSave(iterable) {
         if (this.load) {
             if (iterable.done) {
-                this.value = '';
                 this.iter = null;
                 this.load = false;
                 this.DataForDb.splice(0);
                 return;
             }
             iterable.value.then(() => {
+                this.countLoad++;
                 this._setIteralbleSave(this.iter.next());
             }).catch(error => {
+                console.log(error + '- error');
                 this.countLoad--;
                 this.setErrorsHasWrityer(null, null, error.message);
                 this._setIteralbleSave(this.iter.next());
             });
         } else {
-            this.value = '';
             this.iter = null;
-            this.load = false;
             this.DataForDb.splice(0);
             return;
         }
     }
-
 }

@@ -327,8 +327,8 @@ const RECORD_DETAILS_RKPD: IAction = {
 };
 
 const RECORD_ACTION_IMPORT_DIRECTORY: IAction = {
-    type: E_RECORD_ACTIONS.import ,
-    group: E_ACTION_GROUPS.common ,
+    type: E_RECORD_ACTIONS.import,
+    group: E_ACTION_GROUPS.common,
     title: 'Импорт справочника',
     hint: 'Импорт справочника',
     iconClass: 'eos-icon eos-icon-download small',
@@ -340,8 +340,8 @@ const RECORD_ACTION_IMPORT_DIRECTORY: IAction = {
 };
 
 const RECORD_ACTION_EXPORT_DIRECTORY: IAction = {
-    type: E_RECORD_ACTIONS.export ,
-    group: E_ACTION_GROUPS.common ,
+    type: E_RECORD_ACTIONS.export,
+    group: E_ACTION_GROUPS.common,
     title: 'Экспорт справочника',
     hint: 'Экспорт справочника',
     iconClass: 'eos-icon eos-icon-share-blue small',
@@ -409,10 +409,10 @@ const RECORD_GOTO_CERTIFICATES: IAction = {
     group: E_ACTION_GROUPS.item,
     title: 'Перечень корневых сертификатов УЦ по категориям ЭП',
     hint: 'Перечень корневых сертификатов УЦ по категориям ЭП',
-    iconClass: 'eos-icon eos-icon-clip-blue small',
-    disabledIconClass: 'eos-icon eos-icon-clip-grey small',
+    iconClass: 'eos-icon eos-icon-el-signature-uc-blue small',
+    disabledIconClass: 'eos-icon eos-icon-el-signature-uc-grey small',
     activeIconClass: '',
-    hoverIconClass: 'eos-icon eos-icon-repair-clip-blue small',
+    hoverIconClass: 'eos-icon eos-icon-el-signature-uc-blue small',
     buttonClass: null,
     accessNeed: APS_DICT_GRANT.read,
 };
@@ -434,9 +434,9 @@ export const RECORD_ACTIONS_IMPORT_EDS: IAction = {
     group: E_ACTION_GROUPS.common,
     title: 'Загрузка списка сертификатов в категорию ЭП',
     hint: 'Загрузка списка сертификатов в категорию ЭП',
-    iconClass: 'eos-icon eos-icon-download small',
-    disabledIconClass: 'eos-icon eos-icon-download-grey small',
-    hoverIconClass: 'eos-icon eos-icon-download-dark-blue small',
+    iconClass: 'eos-icon eos-icon-el-signature-add-blue small',
+    disabledIconClass: 'eos-icon eos-icon-el-signature-add-grey small',
+    hoverIconClass: 'eos-icon eos-icon-el-signature-add-blue small',
     activeIconClass: null,
     buttonClass: null,
     accessNeed: APS_DICT_GRANT.readwrite,
@@ -448,9 +448,9 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_LOGIC_DELETE,
     RECORD_ACTION_SHOW_DELETE,
     RECORD_ACTION_RESTORE,
-    RECORD_ACTION_USER_SORT ,
-    RECORD_ACTION_TO_UP ,
-    RECORD_ACTION_TO_DOWN ,
+    RECORD_ACTION_USER_SORT,
+    RECORD_ACTION_TO_UP,
+    RECORD_ACTION_TO_DOWN,
     RECORD_ACTION_SHOW_ALL_RECORDS,
     // RECORD_ACTION_CREATE_ORGANISATION_AGENT,
     RECORD_ACTION_SHOW_SETTINGS,

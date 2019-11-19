@@ -9,6 +9,8 @@
             .card-wrr{
                 padding-top: 0px;
                 margin-top: 40px;
+                overflow: auto;
+                max-height: calc(100vh - 400px);
                 .cards-wrd{
                     text-align: center;
                     font-size: 20px;
@@ -22,7 +24,6 @@
             border-top: none;
             margin-top: 20px;
             flex-basis: 50%;
-            overflow: auto;
             .title-cards{
                 border: 1px solid;
                 border-color: #e6e6e6;

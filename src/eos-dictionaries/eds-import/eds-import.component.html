@@ -6,13 +6,13 @@
         <div class="eds-h">
             <div class="eds-load">
                 <label>Импорт из файла:
-                    <input [disabled]="load" class="btn btn-primary have-margin fixed-width" type="file"
-                        accept=".xml" [(ngModel)]="value" (change)="readFile($event)">
+                    <input [disabled]="load" class="btn btn-primary have-margin fixed-width" type="file" accept=".xml"
+                         (change)="readFile($event)">
                 </label>
             </div>
             <div class="btn-load">
                 <!-- <button class="btn btn-primary-full" (click) = "pause()">пауза</button> -->
-                <div class="load-cnt" *ngIf="upload">
+                <div class="load-cnt" *ngIf="!upload">
                     <span>Загружено</span>
                     <span>{{countLoad}}</span>
                     <span>из</span>
@@ -47,6 +47,11 @@
             <button [disabled]="!fatalError.length && !logs.length" class="btn btn-primary-full upper fixed-width"
                 (click)="saveLogs()">Сохранить в файл</button>
             <button class="btn btn-primary-full upper fixed-width" (click)="close()">Закрыть</button>
+        </div>
+    </div>
+    <div class="spinner-wrapper" *ngIf="upload">
+        <div class="spinner-holder">
+            <eos-spinner size="md"></eos-spinner>
         </div>
     </div>
 </div>
