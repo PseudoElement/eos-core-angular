@@ -307,7 +307,6 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
   }
 
   close() {
-    this._storage.setItem('saveQuickSearch', 'true');
     this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
   }
 

@@ -18,7 +18,6 @@ import { UserParamApiSrv } from 'eos-user-params/shared/services/user-params-api
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../shared/services/helper-error.services';
-import { EosStorageService } from '../../app/services/eos-storage.service';
 import { SUCCESS_SAVE_MESSAGE_SUCCESS } from 'eos-common/consts/common.consts';
 import { NavParamService } from 'app/services/nav-param.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
@@ -99,7 +98,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private modalService: BsModalService,
         private _confirmSrv: ConfirmWindowService,
         private apiSrvRx: PipRX,
-        private _storage: EosStorageService,
     ) {
     }
     ngOnInit() {
@@ -484,7 +482,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
     }
     close() {
-        this._storage.setItem('saveQuickSearch', 'true');
         this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 

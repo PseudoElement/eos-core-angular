@@ -1,5 +1,4 @@
 import { Component, TemplateRef, OnDestroy, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { UserParamsService } from '../../shared/services/user-params.service';
@@ -59,7 +58,6 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
     private listForQuery: Array<string> = [];
     constructor(
         private _userSrv: UserParamsService,
-        private _router: Router,
         private _inputCtrlSrv: InputParamControlService,
         private _formHelper: FormHelperService,
         private _modalService: BsModalService,
@@ -247,9 +245,6 @@ export class UserParamElSignatureComponent implements OnInit, OnDestroy {
         this.editFlag = event;
         this.disableForEditAllForm(event);
         this.disableOrEnabel();
-    }
-    close(event) {
-        this._router.navigate(['user_param', JSON.parse(localStorage.getItem('lastNodeDue'))]);
     }
 
     default(event) {
