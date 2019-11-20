@@ -1,4 +1,4 @@
-<div class="card-content-wrapper">
+<div class="card-content-wrapper" [ngStyle]="styleModeEdit">
     <eos-dynamic-input *ngFor="let key of keys(inputs)"
         [input]="inputs[key]"
         [form]="form"
