@@ -13,3 +13,14 @@
         justify-content: space-between;
     }
  }
+ .search-container {
+    eos-dynamic-input {
+        .textareacounter {
+            display: none;
+        }
+        .form-control {
+            padding-right: 31px;
+        }
+     } 
+ } 
+  

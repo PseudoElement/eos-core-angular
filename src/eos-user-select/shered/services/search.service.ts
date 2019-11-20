@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { PipRX, DEPARTMENT, /* USER_CL */ } from 'eos-rest';
 import { USERSRCH } from '../consts/search-const';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class SearchServices {
+    public closeSearch = new Subject<boolean>();
     constructor(
         public _pipApisrv: PipRX
     ) {

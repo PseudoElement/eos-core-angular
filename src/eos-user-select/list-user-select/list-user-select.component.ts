@@ -29,6 +29,7 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { IOpenClassifParams } from 'eos-common/interfaces';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
+import { SearchServices } from 'eos-user-select/shered/services/search.service';
 interface TypeBread {
     action: number;
 }
@@ -38,7 +39,6 @@ interface TypeBread {
 })
 export class ListUserSelectComponent implements OnDestroy, OnInit {
     @ViewChild('listContent') listContent;
-    @ViewChild('quickSearchOpen') quickSearch;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     currentState: boolean[];
     createUserModal: BsModalRef;
@@ -127,8 +127,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private _breadSrv: EosBreadcrumbsService,
         private _errorSrv: ErrorHelperServices,
         private _waitCl: WaitClassifService,
-        //  private srhSrv: SearchServices,
         private _userParamSrv: UserParamsService,
+        private _srhSrv: SearchServices
     ) {
 
     }
@@ -163,13 +163,11 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 const id = this._route.params['value'].nodeId;
                 this.initView(id ? id : '0.');
             });
-
         this._treeSrv.changeListUsers$
             .pipe(
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe(r => {
-                localStorage.removeItem('quickSearch');
                 this._storage.removeItem('selected_user_save');
                 this.initView();
             });
@@ -299,21 +297,19 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._pagSrv.SelectConfig();
     }
 
-    selectedNode(user: UserSelectNode, flag?) {
+    selectedNode(user: UserSelectNode) {
         let flagUserSelected: boolean = true;
         if (!user) {
+            this.updateFlafListen();
             this.rtUserService.changeSelectedUser(null);
             flagUserSelected = false;
         } else {
             this.resetFlags();
             this.selectedNodeSetFlags(user);
-            if (flag) {
-                flag = false;
-            }
+            this.updateFlafListen();
             this.rtUserService.changeSelectedUser(user);
         }
         this._userParamSrv.checkedUsers = [user];
-        this.updateFlafListen();
         this.rtUserService._updateBtn.next(this.optionsBtn);
         this.rtUserService.subjectFlagBtnHeader.next(flagUserSelected);
     }
@@ -594,6 +590,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         if (this.selectedUser) {
             this.selectedUser.isSelected = false;
         }
+        this.updateFlafListen();
         if (event.target.checked) {
             this.rtUserService.changeSelectedUser(user);
             this.selectedUser = user;
@@ -611,7 +608,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
         }
         this._userParamSrv.checkedUsers = this.getCheckedUsers();
-        this.updateFlafListen();
         this.rtUserService._updateBtn.next(this.optionsBtn);
     }
     getCheckedUsers() {
@@ -634,8 +630,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             } else {
                 this.rtUserService.btnDisabled = false;
             }
-            if (this.countcheckedField >= 0 && this.countcheckedField < leng) {
+            if (this.countcheckedField > 0 && this.countcheckedField < leng) {
                 this.flagChecked = false;
+            }
+            if (this.countcheckedField === 0) {
+                this.flagChecked = null;
+            } else {
+                this.rtUserService.subjectFlagBtnHeader.next(true);
             }
         }
     }
@@ -755,7 +756,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     searchUsers($event: IRequest): void {
         this._apiSrv.searchState = true;
         this._storage.setItem('quickSearch', $event);
-        this._apiSrv.flagDelitedPermanantly = false;
         const sort = this.curentTabSearch === 1 ? 'fullDueName' : 'login';
         this.sortPageList(sort, 'sortSearch');
     }
@@ -779,10 +779,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         } else {
             urlUpdate = url[url.length - 1];
         }
-        this._storage.removeItem('quickSearch');
+        if (this._storage.getItem('quickSearch')) {
+            this._srhSrv.closeSearch.next(true);
+        }
         this._pagSrv.resetConfig();
-        this.quickSearch.clearQuickForm();
-        this.quickSearch.resetForm(true);
         this.initView(urlUpdate);
     }
 

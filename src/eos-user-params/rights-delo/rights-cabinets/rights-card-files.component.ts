@@ -11,7 +11,6 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 @Component({
     selector: 'eos-card-files',
-    styleUrls: ['./rights-card-style.component.scss'],
     templateUrl: 'rights-card-files.component.html',
     providers: [RigthsCabinetsServices]
 })
