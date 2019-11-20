@@ -79,10 +79,36 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         };
     }
     get curentTabSearch() {
-        if (this._storage.getItem('serchUsers')) {
-            return this._storage.getItem('serchUsers').currTab;
+        if (this._storage.getItem('searchUsers')) {
+            return this._storage.getItem('searchUsers').currTab;
         }
         return 0;
+    }
+    get DisableSearch() {
+        if (this._storage.getItem('quickSearch')) {
+            if (this._apiSrv.sortDelUsers === true) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            if (this._apiSrv.flagTehnicalUsers) {
+                return true;
+            }
+            return false;
+        }
+    }
+    get disableLoginSearch() {
+        if (this._storage.getItem('quickSearch')) {
+            if (this._apiSrv.sortDelUsers) {
+                return true;
+            }
+            return false;
+        } else if (this._apiSrv.flagDelitedPermanantly) {
+            return true;
+        } else {
+            return false;
+        }
     }
     private ngUnsubscribe: Subject<any> = new Subject();
     constructor(

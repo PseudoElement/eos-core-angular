@@ -53,7 +53,8 @@
                     </label>
                 </div>
                 <div class="table-title-position list-user-sel">
-                    <span *ngIf="this._apiSrv.flagDelitedPermanantly === true || _apiSrv.sortDelUsers === true; else logSort" class="user-list-fourth-colomn likeLink mar-left">Логин</span>
+                    <span *ngIf="disableLoginSearch;else logSort"
+                     class="user-list-fourth-colomn likeLink mar-left">Логин</span>
                     <ng-template #logSort>
                         <span class="user-list-fourth-colomn likeLink mar-left" (click)="sortPageList('login')">Логин
                             <span *ngIf="_apiSrv.srtConfig.login.checked"
@@ -116,14 +117,14 @@
                                     {{ user.fullDueName}}
                                 </button>
                                 <span *ngIf="user.department === 'null' || user.department === '...'; else depUser" class="user-list-first-colomn"
-                                tooltip="..." placement="auto" containerClass="tooltip-info" container="body">  
+                                tooltip="..." placement="auto" containerClass="tooltip-info" container="body">
                                     <span
                                     class="eos-icon eos-icon-department-grey small icon-user"></span>...
-                                </span> 
+                                </span>
                                 <ng-template #depUser>
                                     <span class="user-list-first-colomn" tooltip="{{user.department}}" placement="auto"
                                     containerClass="tooltip-info" container="body">{{user.department}}
-                                    </span> 
+                                    </span>
                                 </ng-template>
                             </div>
                         </div>
