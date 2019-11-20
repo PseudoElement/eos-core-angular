@@ -297,21 +297,19 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._pagSrv.SelectConfig();
     }
 
-    selectedNode(user: UserSelectNode, flag?) {
+    selectedNode(user: UserSelectNode) {
         let flagUserSelected: boolean = true;
         if (!user) {
+            this.updateFlafListen();
             this.rtUserService.changeSelectedUser(null);
             flagUserSelected = false;
         } else {
             this.resetFlags();
             this.selectedNodeSetFlags(user);
-            if (flag) {
-                flag = false;
-            }
+            this.updateFlafListen();
             this.rtUserService.changeSelectedUser(user);
         }
         this._userParamSrv.checkedUsers = [user];
-        this.updateFlafListen();
         this.rtUserService._updateBtn.next(this.optionsBtn);
         this.rtUserService.subjectFlagBtnHeader.next(flagUserSelected);
     }
@@ -592,6 +590,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         if (this.selectedUser) {
             this.selectedUser.isSelected = false;
         }
+        this.updateFlafListen();
         if (event.target.checked) {
             this.rtUserService.changeSelectedUser(user);
             this.selectedUser = user;
@@ -609,7 +608,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             }
         }
         this._userParamSrv.checkedUsers = this.getCheckedUsers();
-        this.updateFlafListen();
         this.rtUserService._updateBtn.next(this.optionsBtn);
     }
     getCheckedUsers() {
@@ -632,8 +630,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             } else {
                 this.rtUserService.btnDisabled = false;
             }
-            if (this.countcheckedField >= 0 && this.countcheckedField < leng) {
+            if (this.countcheckedField > 0 && this.countcheckedField < leng) {
                 this.flagChecked = false;
+            }
+            if (this.countcheckedField === 0) {
+                this.flagChecked = null;
+            } else {
+                this.rtUserService.subjectFlagBtnHeader.next(true);
             }
         }
     }

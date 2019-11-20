@@ -97,17 +97,16 @@
                                     (change)="setFlagChecked($event, user)">
                                 <span class="eos-icon eos-icon-checkbox-black"></span>
                             </label>
-                            <div class="user-select-node-t"
-                                (click)="selectedNode(user, rtUserService.flagDeleteSelectedUser)">
-                                <button class="user-list-fourth-colomn button-user">{{user.login}}</button>
-                                <button class="user-list-third-colomn button-user">
+                            <div class="user-select-node-t" (click)="selectedNode(user)">
+                                <span class="user-list-fourth-colomn">{{user.login}}</span>
+                                <span class="user-list-third-colomn">
                                     <span *ngIf="user.deleted" class="eos-icon eos-icon-bin-forever-grey small"></span>
                                     <span *ngIf="user.blockedUser && !user.deleted"
                                         class="eos-icon eos-icon-Blockeduser-Yellow  small"></span>
                                     <span *ngIf="user.blockedSystem && !user.deleted"
                                         class="eos-icon eos-icon-Blockeduser-Red  small"></span>
-                                </button>
-                                <button class="user-list-two-colomn button-user" onclick=this.blur() tooltip="{{user.fullDueName}}" [delay]="tooltipDelay" placement="bottom"
+                                </span>
+                                <span class="user-list-two-colomn" tooltip="{{user.fullDueName}}" [delay]="tooltipDelay" placement="bottom"
                                     [ngClass]="{'last-tooltip' : last }" [containerClass]="getClassTooltip(last)"
                                     container="body">
                                     <span *ngIf="!user.deep"
@@ -115,7 +114,7 @@
                                     <span *ngIf="user.deep"
                                         class="eos-icon eos-icon-DeepUser-Blue small icon-user"></span>
                                     {{ user.fullDueName}}
-                                </button>
+                                </span>
                                 <span *ngIf="user.department === 'null' || user.department === '...'; else depUser" class="user-list-first-colomn"
                                 tooltip="..." placement="auto" containerClass="tooltip-info" container="body">
                                     <span
