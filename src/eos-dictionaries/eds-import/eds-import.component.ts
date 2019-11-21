@@ -232,13 +232,18 @@ export class EdsImportComponent implements OnInit {
         this.fromLoad = 0;
     }
     saveLogs() {
-        const name = 'error.txt';
+        const date = new Date();
+        const name = `error_${date.toLocaleDateString()}.txt`;
         const type = 'text/plain';
-        const a = document.createElement('a');
-        const file = new Blob([this.createText()], { type: type });
-        a.href = URL.createObjectURL(file);
-        a.download = name;
-        a.click();
+        const blob = new Blob([this.createText()], { type: type });
+        if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+            window.navigator.msSaveOrOpenBlob(blob, name);
+        } else {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = name;
+            a.click();
+        }
     }
     createText(): string {
         let text = ``;
