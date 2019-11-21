@@ -57,6 +57,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         return '';
     }
+    private _limCardDisable = [0, 1, 2, 18, 19, 22, 29];
     private _ngUnsubscribe: Subject<any> = new Subject();
     private flagGrifs: boolean = false;
     private DELETE_RCPD = 'У пользователя назначенно право \'Содзание РКПД\'.Без права \'Исполнение поручений\' оно не работает. Снять это право?';
@@ -74,13 +75,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         private _appContext: AppContext
     ) { }
     ngOnInit() {
-        // this._userParamsSetSrv.saveData$
-        //     .pipe(
-        //         takeUntil(this._ngUnsubscribe)
-        //     )
-        //     .subscribe(() => {
-        //         this._userParamsSetSrv.submitSave = this.submit(true);
-        //     });
         this._userParamsSetSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERDEP_List,USER_RIGHT_DOCGROUP_List,USER_TECH_List,USER_ORGANIZ_List'
         })
@@ -94,7 +88,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             .catch(el => {
             });
     }
-    ngOnDestroy() {}
+    ngOnDestroy() { }
 
     init() {
         this.curentUser = this._userParamsSetSrv.curentUser;
@@ -124,13 +118,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.inputAll = { all: new RadioInput(CONTROL_ALL_NOTALL) };
         this.isLoading = true;
         if (this._appContext.limitCardsUser.length > 0) {
-            this.listRight[0].control.disable();
-            this.listRight[1].control.disable();
-            this.listRight[2].control.disable();
-            this.listRight[18].control.disable();
-            this.listRight[19].control.disable();
-            this.listRight[22].control.disable();
-            this.listRight[29].control.disable();
+            this._limCardDisable.forEach(i => this.listRight[i].control.disable());
         }
     }
     CheckLimitTech(techList): boolean {
@@ -530,7 +518,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (li['FUNC_NUM'] === +item.key + 1) {
                 list.push(li);
             } else {
-            return true;
+                return true;
             }
         });
         list.forEach(li => {
@@ -548,7 +536,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             if (li['FUNC_NUM'] === +item.key + 1) {
                 list.push(li);
             } else {
-            return true;
+                return true;
             }
         });
         list.forEach(li => {
@@ -635,7 +623,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 url = `/USER_TECH_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.data['FUNC_NUM']} ${chenge.due}')`}`;
                 break;
             case E_RIGHT_DELO_ACCESS_CONTENT.departOrganiz:
-                if (chenge.data['DEEP']) {
+                if (chenge.data.hasOwnProperty('DEEP')) {
                     url = `/USERDEP_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.due} ${chenge.data['FUNC_NUM']}')`}`;
                 } else {
                     url = `/USER_ORGANIZ_List${chenge.method === 'POST' ? '' : `('${uId} ${chenge.due} ${chenge.data['FUNC_NUM']}')`}`;

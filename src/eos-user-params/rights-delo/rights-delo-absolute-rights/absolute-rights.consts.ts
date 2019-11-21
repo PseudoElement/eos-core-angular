@@ -105,10 +105,19 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean, // 11
         key: '7',
-        label: 'Добавление организаций',
+        label: 'Добавление организаций и граждан',
         data: {
             isSelected: false,
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+        }
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: '8',
+        label: 'Редактирование организаций и граждан',
+        data: {
+            isSelected: false,
+            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.all
         }
     },
     // {
@@ -120,24 +129,24 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
     //         rightContent: E_RIGHT_DELO_ACCESS_CONTENT.editOrganiz
     //     }
     // },
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: '20',
-        label: 'Добавление граждан',
-        data: {
-            isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
-    },
-    {
-        controlType: E_FIELD_TYPE.boolean, // 14
-        key: '21',
-        label: 'Редактирование граждан',
-        data: {
-            isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.all
-        }
-    },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean,
+    //     key: '20',
+    //     label: 'Добавление граждан',
+    //     data: {
+    //         isSelected: false,
+    //         rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+    //     }
+    // },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean, // 14
+    //     key: '21',
+    //     label: 'Редактирование граждан',
+    //     data: {
+    //         isSelected: false,
+    //         rightContent: E_RIGHT_DELO_ACCESS_CONTENT.all
+    //     }
+    // },
     {
         controlType: E_FIELD_TYPE.boolean, // 15
         key: '15',
@@ -239,42 +248,42 @@ export const ABSOLUTE_RIGHTS: IInputParamControl[] = [
             rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
         }
     },
-    {
-        controlType: E_FIELD_TYPE.boolean,
-        key: '12',
-        label: 'Создание НП',
-        data: {
-            isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
-        }
-    },
-    {
-        controlType: E_FIELD_TYPE.boolean, // 28
-        key: '13',
-        label: 'Работа с НП',
-        data: {
-            isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
-        }
-    },
-    {
-        controlType: E_FIELD_TYPE.boolean, // 29
-        key: '16',
-        label: 'Добавление обстоятельств дел',
-        data: {
-            isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
-    },
-    {
-        controlType: E_FIELD_TYPE.boolean, // 30
-        key: '17',
-        label: 'Редактирование обстоятельств дел',
-        data: {
-            isSelected: false,
-            rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
-        }
-    },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean,
+    //     key: '12',
+    //     label: 'Создание НП',
+    //     data: {
+    //         isSelected: false,
+    //         rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+    //     }
+    // },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean, // 28
+    //     key: '13',
+    //     label: 'Работа с НП',
+    //     data: {
+    //         isSelected: false,
+    //         rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+    //     }
+    // },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean, // 29
+    //     key: '16',
+    //     label: 'Добавление обстоятельств дел',
+    //     data: {
+    //         isSelected: false,
+    //         rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+    //     }
+    // },
+    // {
+    //     controlType: E_FIELD_TYPE.boolean, // 30
+    //     key: '17',
+    //     label: 'Редактирование обстоятельств дел',
+    //     data: {
+    //         isSelected: false,
+    //         rightContent: E_RIGHT_DELO_ACCESS_CONTENT.none
+    //     }
+    // },
     {
         controlType: E_FIELD_TYPE.boolean, // 31
         key: '29',
