@@ -72,7 +72,7 @@ export const USER_PARAMS_LIST_NAV: IParamAccordionList[] = [
         disabled: false,
     },
     {
-        title: 'Права в системе АИК «Надзор»',
+        title: 'Права в системе АИК «Дело»',
         url: 'rights-delo',
         subList: SUB_PARAMS_LIST_NAV_FOR_RIGHTS_DELO,
         isOpen: false,
