@@ -28,18 +28,18 @@
         </div>
         <div>
             <div *ngIf="!checkFlag" class="over-tree-dep" [ngClass]="{'redact-tree-org': editMode}">
-                <div *ngFor="let node of listUserDep">
+                <!-- <div *ngFor="let node of listUserDep">
                     <div class="item-tree-org" [ngClass]="{'highlighted': node.isSelected}">
                         <label (click)="selectNode(node)">{{node.label}}</label>
                     </div>
-                </div>
-                <!-- <eos-list-doc-tree
+                </div> -->
+                <eos-list-doc-tree
                     class="tree-classif-node"
                     [listNode]="listUserDep"
                     [editMode]="editMode"
                     (select)="selectNode($event)"
                     (checkedNode)="checkedNode($event)"
-                ></eos-list-doc-tree> если понадобиться вернуть дерево нужно просто раскоментировать -->
+                ></eos-list-doc-tree> <!-- если понадобиться вернуть дерево нужно просто раскоментировать -->
             </div>
         </div>
         

@@ -1,9 +1,12 @@
 import { IOpenClassifParams } from 'eos-common/interfaces';
 
 export const OPEN_CLASSIF_ORGANIZ_FULL: IOpenClassifParams = {
-    classif: 'ORGANIZ_CL',
+    classif: 'CONTACT',
     return_due: true,
     skipDeleted: false,
+    selectNodes: true,
+    selectLeafs: true,
+    selected: '',
 };
 export const OPEN_CLASSIF_DEPARTMENT_FULL: IOpenClassifParams = {
     classif: 'DEPARTMENT',
