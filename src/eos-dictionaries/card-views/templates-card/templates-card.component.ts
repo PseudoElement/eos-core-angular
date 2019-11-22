@@ -64,18 +64,22 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
             this.upload = true;
             this._ref.detectChanges();
             this.frDatas.promise.always((data: REF_FILE[]) => {
-                if (data.length) {
-                    this._dictSrv.currentDictionary.descriptor['dataNewFile'] = data[0];
-                    this.newFile = data[0];
-                    this.setNameFile(this.newFile.DESCRIPTION, $event);
-                } else {
-                    delete this._dictSrv.currentDictionary.descriptor['dataNewFile'];
-                    this.newFile = null;
+                try {
+                    if (data.length) {
+                        this._dictSrv.currentDictionary.descriptor['dataNewFile'] = data[0];
+                        this.newFile = data[0];
+                        this.setNameFile(this.newFile.DESCRIPTION, $event);
+                    } else {
+                        delete this._dictSrv.currentDictionary.descriptor['dataNewFile'];
+                        this.newFile = null;
+                    }
+                    this.frDatas.promise = new window['$']['Deferred']();
+                    this.upload = false;
+                    this._ref.detectChanges();
+                } catch (e) {
+                    this._dictSrv.errHandler(e);
                 }
-                this.frDatas.promise = new window['$']['Deferred']();
-                this.upload = false;
 
-                this._ref.detectChanges();
             });
         });
     }
@@ -83,10 +87,14 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         this.form.controls['rec.NAME_TEMPLATE'].patchValue(name);
         if ($event) {
             // после выбора файла и записи в TEMPLATE_NAME не меняется туллтип (например если значение не уникальное)
-            this.inp.inpstring.onInput($event);
-            setTimeout(() => {
-                this.dom.nativeElement.lastElementChild.click();
-            }, 500);
+            try {
+                this.inp.inpstring.onInput($event);
+                setTimeout(() => {
+                    this.dom.nativeElement.lastElementChild.click();
+                }, 500);
+            } catch (e) {
+                this._dictSrv.errHandler(e);
+            }
         }
     }
     deleteFile() {

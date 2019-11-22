@@ -3,6 +3,18 @@ import { REF_FILE } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
 import { AbstractDictionaryDescriptor } from './abstract-dictionary-descriptor';
 import { ITreeDictionaryDescriptor } from 'eos-dictionaries/interfaces';
+interface TreeTempl {
+    id: string;
+    parentId: string;
+    children: [];
+    expandable: boolean;
+    isActive: boolean;
+    isOpened: boolean;
+    isExpanded: boolean;
+    level: number;
+    title: string;
+    path: string;
+}
 export class TemplateDescriptor extends RecordDescriptor {
     dictionary: TemplateDictionaryDescriptor;
     fullSearchFields: any;
@@ -29,9 +41,10 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         .set('0.7', 'Печать списка поручений')
         .set('0.8', 'Реестры внеш. отправки')
         .set('0.9', 'Печать РК')
-        .set('1', '%opis_arh.exe%');
+        .set('1', '%opis_arh.exe%')
+        .set('2', 'Печать перечня поручений');
 
-    staticDataForTree = [
+    staticDataForTree: TreeTempl[] = [
         {
             id: '0.1', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
             isExpanded: false, level: 1, title: 'Информация о системе', path: 'spravochniki/templates/0.1'
@@ -71,6 +84,10 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         {
             id: '1', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
             isExpanded: false, level: 1, title: 'opis_arh.exe', path: 'spravochniki/templates/1'
+        },
+        {
+            id: '2', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
+            isExpanded: false, level: 1, title: 'Печать перечня поручений', path: 'spravochniki/templates/2'
         },
     ];
 
@@ -169,7 +186,9 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
                 path: 'spravochniki/templates/0.', level: 0, title: 'Шаблоны'
             }
         ];
-        this.staticDataForTree.forEach((element) => {
+        this.staticDataForTree.sort((el1: TreeTempl, el2: TreeTempl) => {
+            return el1.title.localeCompare(el2.title);
+        }).forEach((element) => {
             head[0].children.push(element);
         });
         return Promise.resolve(head);

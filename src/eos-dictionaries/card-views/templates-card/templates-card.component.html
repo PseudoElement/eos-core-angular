@@ -18,7 +18,7 @@
         </eos-dynamic-input>
     </div>
     <div class="">
-        <eos-dynamic-input [input]="inputs['rec.CATEGORY']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input [container]="'body'" [input]="inputs['rec.CATEGORY']" [form]="form"></eos-dynamic-input>
     </div>
     <div class="">
         <eos-dynamic-input [input]="inputs['rec.DESCRIPTION']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
@@ -30,7 +30,8 @@
         </div>
         <div *ngIf="showDoc">
             <ul>
-                <span class="sort-name" (click)="sortDoc()">Название<span class="eos-icon small" [ngClass]="classSort"></span></span>
+                <span class="sort-name" (click)="sortDoc()">Название<span class="eos-icon small"
+                        [ngClass]="classSort"></span></span>
                 <li *ngFor="let doc of docGroupList">{{doc.CLASSIF_NAME}}</li>
             </ul>
         </div>

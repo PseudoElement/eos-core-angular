@@ -5,9 +5,9 @@ export const Templates: IDictionaryDescriptor = {
     apiInstance: 'DOC_TEMPLATES',
     dictType: E_DICT_TYPE.custom,
     defaultOrder: 'NAME_TEMPLATE',
-    title: 'Шаблоны',
+    title: 'Настройка шаблонов',
     visible: true,
-    iconName: 'eos-icon-template-blue',
+    iconName: 'eos-icon-templates-settings',
     actions: ['add', 'markRecords', 'edit', 'removeHard', 'downloadFile'],
     fields: [{
         key: 'NAME_TEMPLATE',
