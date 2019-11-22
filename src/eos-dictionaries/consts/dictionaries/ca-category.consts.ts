@@ -33,7 +33,7 @@ export const CA_CATEGORY_CL: IDictionaryDescriptor =
         }, {
             key: 'CA_SUBJECT',
             title: 'Описание',
-            type: 'string',
+            type: 'text',
             length: 500,
             required: true,
         }, {
