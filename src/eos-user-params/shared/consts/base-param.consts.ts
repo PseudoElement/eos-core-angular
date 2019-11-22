@@ -1,5 +1,5 @@
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
-import { IInputParamControl } from '../intrfaces/user-parm.intterfaces';
+import { IInputParamControl, IPassRegExp } from '../intrfaces/user-parm.intterfaces';
 
 export const BASE_PARAM_INPUTS: IInputParamControl[] = [
     {
@@ -214,4 +214,10 @@ export const BASE_PARAM_ACCESS_INPUT: IInputParamControl[] = [
         key: '21',
         label: 'EOS Desktop Service',
     },
+];
+
+export const BASE_PARAM_REG_EXP: IPassRegExp[] = [
+    {passNums: /\D+/g},
+    {passAlph:  /[\A-Z\a-z\А-Я\a-я]/g},
+    {otherSymb: /[^\d\sA-Z\d\sa-я]/gi}
 ];

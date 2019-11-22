@@ -23,7 +23,10 @@
                         [formControlName]="controls['pass'].key"
                         [id]="controls['pass'].key" [type]="type"
                         [readonly]="controls['pass'].readonly"
-                        [ngClass]="{'readonly': readonly}"
+                        [ngClass]="{'error-focus': checkPass !== '', 'readonly': readonly}"
+                        [tooltip]="checkPass !== '' ? checkPass : null"
+                        placement="bottom"
+                        [containerClass]="checkPass !== '' ? 'tooltip-error' : 'tooltip-info'"
                         [placeholder]="curentUser.IS_PASSWORD ? '*******' : controls['pass'].label"
                         autocomplete="off">
                         <span (mousedown)='setVision(true)' (mouseup)='resetVision(true)' class="eos-icon small" [ngClass]="editMode ? 'eos-icon-show-blue' : 'eos-icon-show-grey'"></span>

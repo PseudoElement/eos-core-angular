@@ -49,6 +49,7 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
                     }
                 });
         }
+        this.masDisable = [];
         this.cancelEdit();
     }
     afterInitRC() {
@@ -92,6 +93,7 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
                 })
         );
         this.form.controls['rec.PASS_LIST'].updateValueAndValidity();
+        this.masDisable = [];
         this.cancelEdit();
 
     }
@@ -104,7 +106,6 @@ export class ParamAuthenticationComponent extends BaseParamComponent {
         this.editMode = false;
     }
     cancelEdit() {
-        this.masDisable = [];
         Object.keys(this.form.controls).forEach(key => {
             if (!this.form.controls[key].disabled) {
                 this.masDisable.push(key);
