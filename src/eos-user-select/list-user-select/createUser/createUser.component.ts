@@ -108,11 +108,12 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                 [url]: ALL_ROWS,
             })
                 .then(data => {
+                    const isnUser = Array.isArray(data) ? data[0] : data;
                     this.closedModal.emit();
                     this._router.navigate(['user-params-set'], {
-                        queryParams: { isn_cl: data[0], is_create: true }
+                        queryParams: { isn_cl: isnUser, is_create: true }
                     });
-                    this.isn_prot = data[0];
+                    this.isn_prot = isnUser;
                     this._userParamSrv.ProtocolService(this.isn_prot, 3);
                 })
                 .catch(e => {

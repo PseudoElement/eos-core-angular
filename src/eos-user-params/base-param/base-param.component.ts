@@ -32,7 +32,6 @@ import { IMessage } from 'eos-common/interfaces';
 
 
 export class ParamsBaseParamComponent implements OnInit, OnDestroy {
-    submitClick = false;
     editMode = false;
     type: string = 'password';
     type1: string = 'password';
@@ -104,21 +103,20 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this._userParamSrv.getUserIsn({
             expand: 'USER_PARMS_List,USERCARD_List',
             shortSys: true
-        }).then(() => {
-            this.selfLink = this._router.url.split('?')[0];
-            this.init();
-            if (this._snapShot.snapshot.queryParams.is_create && !this.curentUser['IS_PASSWORD']) {
-                this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
+        }).then((data) => {
+            if (data) {
+                this.selfLink = this._router.url.split('?')[0];
+                this.init();
+                if (this._snapShot.snapshot.queryParams.is_create && !this.curentUser['IS_PASSWORD']) {
+                    this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
+                }
+                this.editModeF();
+                this._subscribe();
             }
-            this.editModeF();
-            this._subscribe();
-        })
-            .catch(err => {
-
-            });
-        if (localStorage.getItem('lastNodeDue') == null) {
-            localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
-        }
+        });
+        // if (localStorage.getItem('lastNodeDue') == null) {
+        //     localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
+        // }
     }
     ngOnDestroy() {
         this._ngUnsubscribe.next();

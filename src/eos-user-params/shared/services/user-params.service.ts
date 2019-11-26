@@ -10,6 +10,7 @@ import { EosStorageService } from 'app/services/eos-storage.service';
 import { Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { ErrorHelperServices } from './helper-error.services';
 
 @Injectable()
 export class UserParamsService {
@@ -71,7 +72,8 @@ export class UserParamsService {
         private _storageSrv: EosStorageService,
         private _router: Router,
         private _modalSrv: BsModalService,
-        private _appContext: AppContext
+        private _appContext: AppContext,
+        private _errorSrv: ErrorHelperServices,
 
     ) { }
     getUserIsn(cfg?: IGetUserCfg): Promise<boolean> {
@@ -139,8 +141,8 @@ export class UserParamsService {
                 return true;
             })
             .catch(err => {
-                console.log(err);
-                this._errorHandler(err);
+                this._errorSrv.errorHandler(err);
+                this._router.navigate(['user_param']);
                 return false;
             });
     }
@@ -288,18 +290,6 @@ export class UserParamsService {
                     res(null);
                 }
             });
-        });
-    }
-
-    private _errorHandler(err) {
-        if (err.code === 434) {
-            return;
-        }
-        const errMessage = err.message ? err.message : err;
-        this._msgSrv.addNewMessage({
-            type: 'danger',
-            title: '',
-            msg: errMessage
         });
     }
     private _createHash() {
