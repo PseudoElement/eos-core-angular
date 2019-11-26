@@ -179,11 +179,11 @@ export class RightOrganizDepertComponent implements OnInit {
                         msg: 'Необходимо выбрать элемент'
                     });
                 } else if (this.checkAllDep && this.listUserDep.length === 0) {
-                    this.checkFlag = true;
+                    // this.checkFlag = true;
                     this._msgSrv.addNewMessage({
                         type: 'warning',
                         title: 'Предупреждение',
-                        msg: 'Необходимо выбрать элемент'
+                        msg: 'Элемент не был выбран'
                     });
                     return Promise.reject('cancel');
                 }
@@ -306,7 +306,9 @@ export class RightOrganizDepertComponent implements OnInit {
                         this.delDepMy();
                         this.ngOnInit();
                     }).catch((error) => {
-
+                        // добавил чтобы тут могло быть пустое За всех и без записей
+                        this.delDepMy();
+                        this.ngOnInit();
                     });
             }
         }
