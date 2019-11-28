@@ -80,7 +80,7 @@
                                    [form]="form"
                                    (click)="this.clickNumcreation()"
                                    [readonly]="!editMode"></eos-dynamic-input>
-                <eos-dynamic-input class ="pull-left"
+                <eos-dynamic-input class ="pull-left" *ngIf="featuresDep.numcreation"
                                    [input]="inputs['rec.NUMCREATION_FLAG']"
                                    [form]="form"
                                    (click)="this.clickNumcreation()"

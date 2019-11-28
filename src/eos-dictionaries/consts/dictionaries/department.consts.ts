@@ -3,6 +3,7 @@ import {NOT_EMPTY_STRING} from '../input-validation';
 import {SEARCH_TYPES} from '../search-types';
 import {ISelectOption} from 'eos-common/interfaces';
 import { COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_CODE, COMMON_FIELDS, COMMON_FIELD_NOTE, ICONS_CONTAINER, COMMON_FIELD_ICONS } from './_common';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 export const ROLES_IN_WORKFLOW: ISelectOption[] = [
     {value: 0, title: 'Не указана'},
@@ -26,7 +27,10 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     iconName: 'eos-icon-department-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'moveUp', 'moveDown', 'import', 'export', 'importPhotos',
         'createRepresentative', 'tableCustomization', 'showAllSubnodes', 'edit', 'view', 'slantForForms', 'restore', 'remove', 'removeHard',
-        'showDeleted', 'tuneFields', 'counterDepartmentMain', 'counterDepartment', 'counterDepartmentRK', 'counterDepartmentRKPD',
+        'showDeleted', 'tuneFields', ...
+        Features.cfg.dictionaries.departments.numcreation ? ['counterDepartmentMain', 'counterDepartment', ] : [],
+        'counterDepartmentRK', 'counterDepartmentRKPD',
+
         'export', 'import'],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
