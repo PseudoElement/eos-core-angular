@@ -13,7 +13,7 @@ import { Features } from 'eos-dictionaries/features/features-current.const';
 })
 export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponent implements OnChanges, OnInit {
 
-    featuresDep = Features.cfg.dictionaries.departments;
+    featuresDep = Features.cfg.departments;
 
     private _orgName = '';
     private previousValues: SimpleChanges;

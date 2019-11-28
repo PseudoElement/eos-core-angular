@@ -1,10 +1,16 @@
 import { IOESDictsFeatures } from './features.interface';
 
-export const FeaturesBase: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatures>{
+export const FeaturesBase = Object.assign({}, <IOESDictsFeatures>{
     version: 'Base',
-    dictionaries: {
-        departments: {
-            numcreation: false,
-        },
+    departments: {
+        numcreation: false,
     },
+    docgroups: {
+        templates: {
+            N: false,
+            E: false,
+            F: false,
+        },
+    }
+
 });

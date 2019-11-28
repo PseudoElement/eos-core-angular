@@ -1,3 +1,5 @@
+import { Features } from 'eos-dictionaries/features/features-current.const';
+
 export class DGTplElement {
     key: string;
     title: string;
@@ -45,7 +47,7 @@ export const DOC_TEMPLATE_ELEMENTS = [
     DG_TPL_LINKED_DOC_REG_NUMBER,
     DG_TPL_LINKED_DOC_NUMBER,
     DG_TPL_RK_NUMBER,
-    DG_TPL_NUM_NP,
+    ... Features.cfg.docgroups.templates.N ? [DG_TPL_NUM_NP] : [],
     DG_TPL_SEPARATOR1,
     DG_TPL_SEPARATOR2,
     DG_TPL_MANUAL_NUMBER,
@@ -53,8 +55,8 @@ export const DOC_TEMPLATE_ELEMENTS = [
     DG_TPL_COMB2,
     DG_TPL_COMB3,
     DG_TPL_COMB4,
-    DG_TPL_NUM_ORG,
-    DG_TPL_INDEX
+    ... Features.cfg.docgroups.templates.E ? [DG_TPL_NUM_ORG] : [],
+    ... Features.cfg.docgroups.templates.F ? [DG_TPL_INDEX] : [],
 ];
 
 export const PRJ_TEMPLATE_ELEMENTS = [

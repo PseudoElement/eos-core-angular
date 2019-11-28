@@ -1,8 +1,14 @@
 export interface IOESDictsFeatures {
     version: string;
-    dictionaries: {
-        departments: {
-            numcreation: boolean;
-        }
+    departments: {
+        numcreation: boolean;
     };
+    docgroups: {
+        templates: {
+            N: boolean,
+            E: boolean,
+            F: boolean,
+        },
+    };
+
 }
