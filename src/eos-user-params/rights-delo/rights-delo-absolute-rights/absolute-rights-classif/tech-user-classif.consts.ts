@@ -133,12 +133,12 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
     },
     {
         key: 27,
-        label: 'Cтатус исполнения (поручение)',
+        label: 'Состояние исполнения (поручение)',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     },
     {
         key: 28,
-        label: 'Cтатус исполнения (исполнитель)',
+        label: 'Состояние исполнения (исполнитель)',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     },
     {
@@ -158,7 +158,7 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
     },
     {
         key: 32,
-        label: 'Настройка подсистемы оповещения ',
+        label: 'Настройка подсистемы оповещения и уведомления',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     },
     {

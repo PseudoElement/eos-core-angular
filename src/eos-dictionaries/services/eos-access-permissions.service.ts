@@ -70,10 +70,10 @@ const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean, } []
     // Регионы
     { id: REGION_DICT.id,           tech: E_TECH_RIGHT.Regions,
         listedUT: false },
-    // Cтатус исполнения (исполнитель)
+    // Состояние исполнения (исполнитель)
     { id: STATUS_REPLY_DICT.id,     tech: E_TECH_RIGHT.ReplyStatuses,
         listedUT: false },
-    // Cтатус исполнения (поручение)
+    // Состояние исполнения (поручение)
     { id: STATUS_EXEC_DICT.id,      tech: E_TECH_RIGHT.ExecStatuses,
         listedUT: false },
     // Статус заявителя

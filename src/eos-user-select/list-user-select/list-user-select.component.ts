@@ -688,12 +688,12 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 names += `${list.name}, `;
             }
         });
-        return names;
+        return names.substr(0, names.length - 2);
     }
     DeliteUser() {
         const names = this.getLoginDeleted();
         if (names) {
-            CONFIRM_DELETE.body = 'Удаленных пользователей невозможно будет восстановить. Вы действительно хотите удалить пользователей: ' + '\n\r' + names + '?';
+            CONFIRM_DELETE.body = 'Удаленных пользователей невозможно будет восстановить. Вы действительно хотите удалить пользователей: ' + '\n\r' + names + ' ?';
         }
         this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
             if (confirmation) {
