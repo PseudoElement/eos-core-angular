@@ -25,12 +25,12 @@ export enum E_TECH_RIGHT {
     SignTypes = 24, // Виды подписей
     ResCategories = 25, // Категории поручений
     SystemParms = 26, // Параметры системы
-    ExecStatuses = 27, // Cтатус исполнения (поручение)
-    ReplyStatuses = 28, // Cтатус исполнения (исполнитель)
+    ExecStatuses = 27, // Состояние исполнения (поручение)
+    ReplyStatuses = 28, // Состояние исполнения (исполнитель)
     ProcPeredachiDocs = 29, // Процедура передачи документов
     ViewProtSettings = 30, // Настройка протокола просмотра
     ProtVigruz = 31, // Зачистка протоколов
-    NotificationManage = 32, // Настройка подсистемы оповещения
+    NotificationManage = 32, // Настройка подсистемы оповещения и уведомления
     PartionPostSettings = 33, // Настройка партионной почты
     SevCL = 34, // Справочники СЭВ
     BufCL = 35, // Буфер электронных сообщений

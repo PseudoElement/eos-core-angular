@@ -190,6 +190,8 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
             style: {color: c.homeCabinet ? 'red' : 'black'}
         }));
         this.selectCabinetInput.options = opts;
-        this.form.controls['selectedCabinet'].setValue(opts[0].value);
+        if (opts.length) {
+            this.form.controls['selectedCabinet'].setValue(opts[0].value);
+        }
     }
 }
