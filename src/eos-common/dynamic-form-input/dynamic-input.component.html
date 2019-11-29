@@ -1,94 +1,140 @@
-<div class="form-group"
-     *ngIf="form && input && form.controls[input.key]"
-     [tooltip]="tooltip.message"
-     [placement]="tooltip.placement"
-     [containerClass]="tooltip.class"
-     [container]="tooltip.container"
-     [isOpen]="tooltip.visible"
-     triggers="">
+<div
+    class="form-group"
+    *ngIf="form && input && form.controls[input.key]"
+    [tooltip]="tooltip.message"
+    [placement]="tooltip.placement"
+    [containerClass]="tooltip.class"
+    [container]="tooltip.container"
+    [isOpen]="tooltip.visible"
+    triggers=""
+>
     <ng-container [ngSwitch]="input.controlType">
-        <eos-dynamic-input-string *ngSwitchCase="types.string"
-                                  [form]="form"
-                                  [input]="input"
-                                  [readonly]="readonly"
-                                  [disabled]="disabled"
-                                  [inputTooltip]="tooltip"
-                                  [hideLabel]="hideLabel"
-                                  [isGroup]="isGroup"></eos-dynamic-input-string>
-        <eos-dynamic-input-text *ngSwitchCase="types.text"
-                                [form]="form"
-                                [input]="input"
-                                [readonly]="readonly"
-                                [disabled]="disabled"
-                                [hideLabel]="hideLabel"
-                                [inputTooltip]="tooltip"></eos-dynamic-input-text>
-            <eos-dynamic-input-select2 *ngSwitchCase="types.select"
-              [form]="form"
-              [input]="input"
-              [readonly]="readonly"
-              [container]="container"
-              [dropup]="dropup"
-              [disabled]="disabled"
-              [hideLabel]="hideLabel"
-              [viewOpts]="viewOpts"
-              [inputTooltip]="tooltip"></eos-dynamic-input-select2>
+        <eos-dynamic-input-string
+            *ngSwitchCase="types.string"
+            [form]="form"
+            [input]="input"
+            [readonly]="readonly"
+            [disabled]="disabled"
+            [inputTooltip]="tooltip"
+            [hideLabel]="hideLabel"
+            (onControlBlur)="onControlBlur.emit($event)"
+            (onControlFocus)="onControlFocus.emit($event)"
+            [isGroup]="isGroup"
+        ></eos-dynamic-input-string>
+        <eos-dynamic-input-text
+            *ngSwitchCase="types.text"
+            [form]="form"
+            [input]="input"
+            [readonly]="readonly"
+            [disabled]="disabled"
+            [hideLabel]="hideLabel"
+            (onControlBlur)="onControlBlur.emit($event)"
+            (onControlFocus)="onControlFocus.emit($event)"
+            [inputTooltip]="tooltip"
+        ></eos-dynamic-input-text>
+        <eos-dynamic-input-select2
+            *ngSwitchCase="types.select"
+            [form]="form"
+            [input]="input"
+            [readonly]="readonly"
+            [container]="container"
+            [dropup]="dropup"
+            [disabled]="disabled"
+            [hideLabel]="hideLabel"
+            [viewOpts]="viewOpts"
+            (onControlBlur)="onControlBlur.emit($event)"
+            (onControlFocus)="onControlFocus.emit($event)"
+            [inputTooltip]="tooltip"
+        ></eos-dynamic-input-select2>
 
-        <eos-dynamic-input-select2 *ngSwitchCase="types.select2"
-                                  [form]="form"
-                                  [input]="input"
-                                  [viewOpts]="viewOpts"
-                                  [readonly]="readonly"
-                                  [disabled]="disabled"
-                                  [hideLabel]="hideLabel"
-                                  [inputTooltip]="tooltip"></eos-dynamic-input-select2>
+        <eos-dynamic-input-select2
+            *ngSwitchCase="types.select2"
+            [form]="form"
+            [input]="input"
+            [viewOpts]="viewOpts"
+            [readonly]="readonly"
+            [disabled]="disabled"
+            [hideLabel]="hideLabel"
+            (onControlBlur)="onControlBlur.emit($event)"
+            (onControlFocus)="onControlFocus.emit($event)"
+            [inputTooltip]="tooltip"
+        ></eos-dynamic-input-select2>
 
-        <eos-dynamic-input-checkbox *ngSwitchCase="types.boolean"
-                                    [form]="form"
-                                    [input]="input"
-                                    [readonly]="readonly"
-                                    [disabled]="disabled"
-                                    [hideLabel]="hideLabel"
-                                    [inputTooltip]="tooltip"></eos-dynamic-input-checkbox>
-        <eos-dynamic-input-date *ngSwitchCase="types.date"
-                                [form]="form"
-                                [input]="input"
-                                [readonly]="readonly"
-                                [disabled]="disabled"
-                                [viewOpts]="viewOpts"
-                                [hideLabel]="hideLabel"
-                                [inputTooltip]="tooltip"></eos-dynamic-input-date>
-        <eos-dynamic-input-buttons *ngSwitchCase="types.buttons"
+        <eos-dynamic-input-checkbox
+            *ngSwitchCase="types.boolean"
+            [form]="form"
+            [input]="input"
+            [readonly]="readonly"
+            [disabled]="disabled"
+            [hideLabel]="hideLabel"
+            (onControlBlur)="onControlBlur.emit($event)"
+            (onControlFocus)="onControlFocus.emit($event)"
+            [inputTooltip]="tooltip"
+        ></eos-dynamic-input-checkbox>
+        <eos-dynamic-input-date
+            *ngSwitchCase="types.date"
+            [form]="form"
+            [input]="input"
+            [readonly]="readonly"
+            [disabled]="disabled"
+            [viewOpts]="viewOpts"
+            [hideLabel]="hideLabel"
+            (onControlBlur)="onControlBlur.emit($event)"
+            (onControlFocus)="onControlFocus.emit($event)"
+            [inputTooltip]="tooltip"
+        ></eos-dynamic-input-date>
+        <eos-dynamic-input-buttons
+            *ngSwitchCase="types.buttons"
             [form]="form"
             [input]="input"
             [disabled]="disabled"
             [readonly]="readonly"
             [hideLabel]="hideLabel"
-            [inputTooltip]="tooltip"></eos-dynamic-input-buttons>
-        <eos-dynamic-input-toggle *ngSwitchCase="types.toggle"
+            (onControlBlur)="onControlBlur.emit($event)"
+            (onControlFocus)="onControlFocus.emit($event)"
+            [inputTooltip]="tooltip"
+        ></eos-dynamic-input-buttons>
+        <eos-dynamic-input-toggle
+            *ngSwitchCase="types.toggle"
             [form]="form"
             [input]="input"
             [readonly]="readonly"
             [hideLabel]="hideLabel"
-            [inputTooltip]="tooltip"></eos-dynamic-input-toggle>
-        <eos-dynamic-input-increment-number *ngSwitchCase="types.numberIncrement"
+            (onControlBlur)="onControlBlur.emit($event)"
+            (onControlFocus)="onControlFocus.emit($event)"
+            [inputTooltip]="tooltip"
+        ></eos-dynamic-input-toggle>
+        <eos-dynamic-input-increment-number
+            *ngSwitchCase="types.numberIncrement"
             [form]="form"
             [input]="input"
             [readonly]="readonly"
             [hideLabel]="hideLabel"
-            [inputTooltip]="tooltip"></eos-dynamic-input-increment-number>
-        <eos-dynamic-input-radio *ngSwitchCase="types.radio"
+            (onControlBlur)="onControlBlur.emit($event)"
+            (onControlFocus)="onControlFocus.emit($event)"
+            [inputTooltip]="tooltip"
+        ></eos-dynamic-input-increment-number>
+        <eos-dynamic-input-radio
+            *ngSwitchCase="types.radio"
             [form]="form"
             [input]="input"
             [readonly]="readonly"
             [hideLabel]="hideLabel"
-            [inputTooltip]="tooltip"></eos-dynamic-input-radio>
-        <eos-dynamic-input-linkbutton *ngSwitchCase="types.dictLink"
+            (onControlBlur)="onControlBlur.emit($event)"
+            (onControlFocus)="onControlFocus.emit($event)"
+            [inputTooltip]="tooltip"
+        ></eos-dynamic-input-radio>
+        <eos-dynamic-input-linkbutton
+            *ngSwitchCase="types.dictLink"
             [form]="form"
             [input]="input"
             [viewOpts]="viewOpts"
             [disabled]="disabled"
             [readonly]="readonly"
+            (onControlBlur)="onControlBlur.emit($event)"
+            (onControlFocus)="onControlFocus.emit($event)"
             [hideLabel]="hideLabel"
-            [inputTooltip]="tooltip"></eos-dynamic-input-linkbutton>
+            [inputTooltip]="tooltip"
+        ></eos-dynamic-input-linkbutton>
     </ng-container>
 </div>

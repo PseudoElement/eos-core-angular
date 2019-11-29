@@ -18,7 +18,12 @@
         </eos-dynamic-input>
     </div>
     <div class="">
-        <eos-dynamic-input [input]="inputs['rec.CATEGORY']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
+        <eos-dynamic-input
+            [input]="inputs['rec.CATEGORY']"
+            [form]="form"
+            [container]="'body'"
+            [readonly]="!editMode">
+        </eos-dynamic-input>
     </div>
     <div class="">
         <eos-dynamic-input [input]="inputs['rec.DESCRIPTION']" [form]="form" [readonly]="!editMode"></eos-dynamic-input>
