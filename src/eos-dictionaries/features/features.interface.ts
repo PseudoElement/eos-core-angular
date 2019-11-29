@@ -3,6 +3,7 @@ export interface IOESDictsFeatures {
     departments: {
         numcreation: boolean; /* галка Номерообразование */
         reestr_send: boolean; /* галка Отправлять документы по реестрам */
+        gas_ps: boolean; /* ГАС ПС */
     };
     docgroups: {
         templates: {

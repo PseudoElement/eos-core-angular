@@ -5,6 +5,7 @@ export const FeaturesBase: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatu
     departments: {
         numcreation: false,
         reestr_send: false,
+        gas_ps: false,
     },
     docgroups: {
         templates: {

@@ -42,7 +42,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
     }
 
     ngOnInit () {
-        const v = [this.validatorNumcreationFlag()];
+        const v = this.featuresDep.numcreation ? [this.validatorNumcreationFlag()] : [];
         if (this.form.controls['rec.DEPARTMENT_INDEX'].validator) {
             v.push(this.form.controls['rec.DEPARTMENT_INDEX'].validator);
         }

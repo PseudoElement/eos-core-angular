@@ -307,24 +307,32 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             type: 'string',
             pattern: NOT_EMPTY_STRING,
             foreignKey: 'FULLNAME',
-        }, {
+        },
+        ... !Features.cfg.departments.gas_ps ? [] : [
+        {
             key: 'ID_GAS_PS',
             title: 'Код ГАС ПС',
             type: 'string',
             length: 10,
-        }, {
+        }, ],
+        ... !Features.cfg.departments.numcreation ? [] : [
+        {
             key: 'NUMCREATION_FLAG',
             title: 'Номерообразование НП',
             type: 'boolean',
-        }, {
+        } ],
+        ... !Features.cfg.departments.reestr_send ? [] : [
+        {
             key: 'EXPEDITION_FLAG',
             title: 'Отправка документов по реестрам',
             type: 'boolean',
-        }, {
+        }, ],
+        {
             key: 'photo',
             type: 'dictionary',
             title: 'Фото'
-        }]),
+        }]
+        ),
     treeFields: ['nametitle'],
     searchFields: [/* 'RUBRIC_CODE', */'nametitle'/*, 'NOTE'*/],
     listFields: [ICONS_CONTAINER, /*'CODE',*/ 'nametitle', /*'DUTY',*/    ],
