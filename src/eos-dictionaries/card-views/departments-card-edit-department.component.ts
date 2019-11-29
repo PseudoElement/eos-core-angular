@@ -5,12 +5,16 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { WARN_NO_BINDED_ORGANIZATION } from '../consts/messages.consts';
 import {AbstractControl, ValidatorFn} from '@angular/forms';
 import { DynamicInputBase } from 'eos-common/dynamic-form-input/dynamic-input-base';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 @Component({
     selector: 'eos-departments-card-edit-department',
     templateUrl: 'departments-card-edit-department.component.html',
 })
 export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponent implements OnChanges, OnInit {
+
+    featuresDep = Features.cfg.departments;
+
     private _orgName = '';
     private previousValues: SimpleChanges;
 
@@ -38,7 +42,7 @@ export class DepartmentsCardEditDepartmentComponent extends BaseCardEditComponen
     }
 
     ngOnInit () {
-        const v = [this.validatorNumcreationFlag()];
+        const v = this.featuresDep.numcreation ? [this.validatorNumcreationFlag()] : [];
         if (this.form.controls['rec.DEPARTMENT_INDEX'].validator) {
             v.push(this.form.controls['rec.DEPARTMENT_INDEX'].validator);
         }

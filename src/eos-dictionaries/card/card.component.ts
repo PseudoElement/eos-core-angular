@@ -57,7 +57,6 @@ export class EditedCard {
 })
 export class CardComponent implements CanDeactivateGuard, OnDestroy {
     tooltipDelay = TOOLTIP_DELAY_VALUE;
-
     node: EosDictionaryNode;
     nodes: EosDictionaryNode[];
 
@@ -237,7 +236,7 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
             return;
         }
         const _data = this.cardEditRef.getNewData();
-        this._confirmSave(_data)
+        this._confirmSave(_data, false)
             .then((res: boolean) => {
                 if (res) {
                     this.disableSave = true;
@@ -459,8 +458,8 @@ export class CardComponent implements CanDeactivateGuard, OnDestroy {
 
 
 
-    private _confirmSave(data): Promise<boolean> {
-        return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv);
+    private _confirmSave(data, isNewRecord): Promise<boolean> {
+        return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv, isNewRecord);
     }
 
     private _save(data: any): Promise<any> {

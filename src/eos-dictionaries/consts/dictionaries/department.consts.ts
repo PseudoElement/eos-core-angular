@@ -3,6 +3,7 @@ import {NOT_EMPTY_STRING} from '../input-validation';
 import {SEARCH_TYPES} from '../search-types';
 import {ISelectOption} from 'eos-common/interfaces';
 import { COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_CODE, COMMON_FIELDS, COMMON_FIELD_NOTE, ICONS_CONTAINER, COMMON_FIELD_ICONS } from './_common';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 export const ROLES_IN_WORKFLOW: ISelectOption[] = [
     {value: 0, title: 'Не указана'},
@@ -26,7 +27,10 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     iconName: 'eos-icon-department-blue',
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'moveUp', 'moveDown', 'import', 'export', 'importPhotos',
         'createRepresentative', 'tableCustomization', 'showAllSubnodes', 'edit', 'view', 'slantForForms', 'restore', 'remove', 'removeHard',
-        'showDeleted', 'tuneFields', 'counterDepartmentMain', 'counterDepartment', 'counterDepartmentRK', 'counterDepartmentRKPD',
+        'showDeleted', 'tuneFields', ...
+        Features.cfg.departments.numcreation ? ['counterDepartmentMain', 'counterDepartment', ] : [],
+        'counterDepartmentRK', 'counterDepartmentRKPD',
+
         'export', 'import'],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',
@@ -303,24 +307,32 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             type: 'string',
             pattern: NOT_EMPTY_STRING,
             foreignKey: 'FULLNAME',
-        }, {
+        },
+        ... !Features.cfg.departments.gas_ps ? [] : [
+        {
             key: 'ID_GAS_PS',
             title: 'Код ГАС ПС',
             type: 'string',
             length: 10,
-        }, {
+        }, ],
+        ... !Features.cfg.departments.numcreation ? [] : [
+        {
             key: 'NUMCREATION_FLAG',
             title: 'Номерообразование НП',
             type: 'boolean',
-        }, {
+        } ],
+        ... !Features.cfg.departments.reestr_send ? [] : [
+        {
             key: 'EXPEDITION_FLAG',
             title: 'Отправка документов по реестрам',
             type: 'boolean',
-        }, {
+        }, ],
+        {
             key: 'photo',
             type: 'dictionary',
             title: 'Фото'
-        }]),
+        }]
+        ),
     treeFields: ['nametitle'],
     searchFields: [/* 'RUBRIC_CODE', */'nametitle'/*, 'NOTE'*/],
     listFields: [ICONS_CONTAINER, /*'CODE',*/ 'nametitle', /*'DUTY',*/    ],

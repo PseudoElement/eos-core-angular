@@ -17,7 +17,6 @@ import {SevIndexHelper} from 'eos-rest/services/sevIndex-helper';
 import {PrintInfoHelper} from 'eos-rest/services/printInfo-helper';
 import {SEV_ASSOCIATION} from 'eos-rest/interfaces/structures';
 import {IAppCfg, IMessage} from 'eos-common/interfaces';
-// import { RestError } from 'eos-rest/core/rest-error';
 import {EosUtils} from 'eos-common/core/utils';
 import {ContactHelper} from '../../eos-rest/services/contact-helper';
 import {CustomTreeNode} from '../tree2/custom-tree.component';
@@ -49,6 +48,7 @@ export abstract class AbstractDictionaryDescriptor {
     private _defaultOrder: string;
     private _allMetadata: any;
 
+
     get defaultOrder(): string {
         return this._defaultOrder || 'CLASSIF_NAME';
     }
@@ -70,7 +70,6 @@ export abstract class AbstractDictionaryDescriptor {
             this.hideTopMenu = descriptor.hideTopMenu;
             this.editOnlyNodes = descriptor.editOnlyNodes;
             this.apiSrv = apiSrv;
-
             commonMergeMeta(this);
             this._initRecord(descriptor);
         } else {
@@ -398,7 +397,7 @@ export abstract class AbstractDictionaryDescriptor {
             });
     }
 
-    confirmSave(nodeData: EosDictionaryNode, confirmSrv): Promise<boolean> {
+    confirmSave(nodeData: EosDictionaryNode, confirmSrv, isNewRecord: boolean): Promise<boolean> {
         return Promise.resolve(true);
     }
 

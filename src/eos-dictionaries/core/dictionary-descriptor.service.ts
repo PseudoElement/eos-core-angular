@@ -1,5 +1,5 @@
 import { NOMENKL_DICT } from './../consts/dictionaries/nomenkl.const';
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { IDictionaryDescriptor, E_DICT_TYPE } from 'eos-dictionaries/interfaces';
 import { AbstractDictionaryDescriptor } from 'eos-dictionaries/core/abstract-dictionary-descriptor';
 import { DICTIONARIES } from 'eos-dictionaries/consts/dictionaries.consts';
@@ -10,21 +10,21 @@ import { DepartmentDictionaryDescriptor } from 'eos-dictionaries/core/department
 import { OrganizationDictionaryDescriptor } from 'eos-dictionaries/core/organization-dictionary-descriptor';
 import { CabinetDictionaryDescriptor } from 'eos-dictionaries/core/cabinet-dictionary-descriptor';
 import { DocgroupDictionaryDescriptor } from 'eos-dictionaries/core/docgroup-dictionary-descriptor';
-import { NADZORDICTIONARIES, NADZORDICTIONARIES_LINEAR, NADZORDICTIONARIES_TREE } from '../consts/dictionaries/nadzor.consts';
-import { BroadcastChanelDictionaryDescriptor } from './broadcast-chanel-dictionary-descriptor';
-import { EosBroadcastChannelService } from '../services/eos-broadcast-channel.service';
-import { SevCollisionsDictionaryDescriptor } from './sev-collisions-dictionary-descriptor';
-import { NadzorLinearDictionaryDescriptor, NadzorTreeDictionaryDescriptor } from './nadzor-dictionary-descriptor';
-import { EosSevRulesService } from '../services/eos-sev-rules.service';
-import { SevRulesDictionaryDescriptor } from './sev-rules-dictionary-descriptor';
-import { LinkDictionaryDescriptor } from './link-dictionary-descriptor';
-import { NomenklDictionaryDescriptor } from './nomenkl-dictionary-descriptor';
+import {NADZORDICTIONARIES, NADZORDICTIONARIES_LINEAR, NADZORDICTIONARIES_TREE} from '../consts/dictionaries/nadzor.consts';
+import {BroadcastChanelDictionaryDescriptor} from './broadcast-chanel-dictionary-descriptor';
+import {EosBroadcastChannelService} from '../services/eos-broadcast-channel.service';
+import {SevCollisionsDictionaryDescriptor} from './sev-collisions-dictionary-descriptor';
+import {NadzorLinearDictionaryDescriptor, NadzorTreeDictionaryDescriptor} from './nadzor-dictionary-descriptor';
+import {EosSevRulesService} from '../services/eos-sev-rules.service';
+import {SevRulesDictionaryDescriptor} from './sev-rules-dictionary-descriptor';
+import {LinkDictionaryDescriptor} from './link-dictionary-descriptor';
+import {NomenklDictionaryDescriptor} from './nomenkl-dictionary-descriptor';
 import { ReestrtypeDictionaryDescriptor } from './reestrtype-dictionary-descriptor';
-import { TemplateDictionaryDescriptor } from './template-dictionary-descriptor';
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 import { CaCategoryDictionaryDescriptor } from './ca-category-dictionary-descriptor';
 import { CALENDAR_DICT } from 'eos-dictionaries/consts/dictionaries/calendar.consts';
 import { CalendarDictionaryDescriptor } from './calendar-dictionary-descriptor';
+import { TemplateDictionaryDescriptor } from './template-dictionary-descriptor';
 // import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 @Injectable()
@@ -36,6 +36,7 @@ export class DictionaryDescriptorService {
         private apiSrv: PipRX,
         private _channelSrv: EosBroadcastChannelService,
         private _rulesSrv: EosSevRulesService,
+        private _injector: Injector,
         // private _confirmSrv: ConfirmWindowService,
 
 
@@ -97,13 +98,13 @@ export class DictionaryDescriptorService {
                         res = new SevRulesDictionaryDescriptor(descr, this.apiSrv, this._rulesSrv);
                         break;
                     case 'cabinet':
-                        res = new CabinetDictionaryDescriptor(descr, this.apiSrv);
+                        res = new CabinetDictionaryDescriptor(descr, this.apiSrv, /*this._confirmSrv*/);
                         break;
                     case CA_CATEGORY_CL.id:
                         res = new CaCategoryDictionaryDescriptor(descr, this.apiSrv);
                         break;
                     case 'docgroup':
-                        res = new DocgroupDictionaryDescriptor(descr, this.apiSrv);
+                        res = new DocgroupDictionaryDescriptor(descr, this.apiSrv, this._injector);
                         break;
                     case 'sev-collisions':
                         res = new SevCollisionsDictionaryDescriptor(descr, this.apiSrv);
