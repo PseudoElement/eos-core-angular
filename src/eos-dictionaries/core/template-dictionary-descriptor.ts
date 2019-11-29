@@ -18,7 +18,7 @@ interface TreeTempl {
 export class TemplateDescriptor extends RecordDescriptor {
     dictionary: TemplateDictionaryDescriptor;
     fullSearchFields: any;
-    constructor(dictionary: TemplateDictionaryDescriptor, descriptor: ITreeDictionaryDescriptor, ) {
+    constructor(dictionary: TemplateDictionaryDescriptor, descriptor: ITreeDictionaryDescriptor) {
         super(dictionary, descriptor);
         this.dictionary = dictionary;
         this._initFieldSets([
@@ -31,65 +31,66 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     dataNewFile?: REF_FILE;
     top?;
     hashTree: Map<string, string> = new Map()
-        .set('0.', '%_%|isnull')
-        .set('0.1', 'Информация о системе')
-        .set('0.2', 'Файлы документов')
-        .set('0.3', 'Печать списка РК')
-        .set('0.4', '%альбомная%')
-        .set('0.5', '%книжная%')
-        .set('0.6', 'Печать списка РКПД')
-        .set('0.7', 'Печать списка поручений')
-        .set('0.8', 'Реестры внеш. отправки')
-        .set('0.9', 'Печать РК')
-        .set('1', '%opis_arh.exe%')
-        .set('2', 'Печать перечня поручений');
+    .set('0.', '%_%|isnull')
+    .set('0.1', 'Информация о системе')
+    .set('0.2', 'Файлы документов')
+    .set('0.3', 'Печать списка РК')
+    .set('0.4', '%альбомная%')
+    .set('0.5', '%книжная%')
+    .set('0.6', 'Печать списка РКПД')
+    .set('0.7', 'Печать списка поручений')
+    .set('0.8', 'Реестры внеш. отправки')
+    .set('0.9', 'Печать РК')
+    .set('1', '%opis_arh.exe%')
+    .set('2', 'Печать перечня поручений');
 
-    staticDataForTree: TreeTempl[] = [
-        {
-            id: '0.1', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Информация о системе', path: 'spravochniki/templates/0.1'
-        },
-        {
-            id: '0.2', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Файлы документов', path: 'spravochniki/templates/0.2'
-        },
-        {
-            id: '0.3', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать списка РК', path: 'spravochniki/templates/0.3'
-        },
-        {
-            id: '0.4', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать штрих-кода (альбомная)', path: 'spravochniki/templates/0.4'
-        },
-        {
-            id: '0.5', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать штрих-кода (книжная)', path: 'spravochniki/templates/0.5'
-        },
-        {
-            id: '0.6', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать списка РКПД', path: 'spravochniki/templates/0.6'
-        },
-        {
-            id: '0.7', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать списка поручений', path: 'spravochniki/templates/0.7'
-        },
-        {
-            id: '0.8', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Реестры внеш. отправки', path: 'spravochniki/templates/0.8'
-        },
-        {
-            id: '0.9', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать РК', path: 'spravochniki/templates/0.9'
-        },
-        {
-            id: '1', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'opis_arh.exe', path: 'spravochniki/templates/1'
-        },
-        {
-            id: '2', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
-            isExpanded: false, level: 1, title: 'Печать перечня поручений', path: 'spravochniki/templates/2'
-        },
-    ];
+
+        staticDataForTree: TreeTempl[] = [
+            {
+                id: '0.1', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
+                isExpanded: false, level: 1, title: 'Информация о системе', path: 'spravochniki/templates/0.1'
+            },
+            {
+                id: '0.2', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
+                isExpanded: false, level: 1, title: 'Файлы документов', path: 'spravochniki/templates/0.2'
+            },
+            {
+                id: '0.3', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
+                isExpanded: false, level: 1, title: 'Печать списка РК', path: 'spravochniki/templates/0.3'
+            },
+            {
+                id: '0.4', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
+                isExpanded: false, level: 1, title: 'Печать штрих-кода (альбомная)', path: 'spravochniki/templates/0.4'
+            },
+            {
+                id: '0.5', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
+                isExpanded: false, level: 1, title: 'Печать штрих-кода (книжная)', path: 'spravochniki/templates/0.5'
+            },
+            {
+                id: '0.6', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
+                isExpanded: false, level: 1, title: 'Печать списка РКПД', path: 'spravochniki/templates/0.6'
+            },
+            {
+                id: '0.7', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
+                isExpanded: false, level: 1, title: 'Печать списка поручений', path: 'spravochniki/templates/0.7'
+            },
+            {
+                id: '0.8', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
+                isExpanded: false, level: 1, title: 'Реестры внеш. отправки', path: 'spravochniki/templates/0.8'
+            },
+            {
+                id: '0.9', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
+                isExpanded: false, level: 1, title: 'Печать РК', path: 'spravochniki/templates/0.9'
+            },
+            {
+                id: '1', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
+                isExpanded: false, level: 1, title: 'opis_arh.exe', path: 'spravochniki/templates/1'
+            },
+            {
+                id: '2', parentId: '0.', children: [], expandable: false, isActive: false, isOpened: false,
+                isExpanded: false, level: 1, title: 'Печать перечня поручений', path: 'spravochniki/templates/2'
+            },
+        ];
 
     addRecord(data: any, _useless: any, isProtected = false, isDeleted = false): Promise<any> {
         let _newRec = {};
@@ -162,6 +163,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     public extendCritery(critery, { mode, deleted }, selectedNode) {
         if (mode && mode === 2 && this.top) {
             critery['CATEGORY'] = `${this.hash().get(this.top)}`;
+        } else if (mode && mode === 0) {
             if (critery['NAME_TEMPLATE']) {
                 critery['NAME_TEMPLATE'] = critery['NAME_TEMPLATE'].replace(/"/g, '%').replace(/(\(|\)|\s)/g, '_');
             }
@@ -195,9 +197,10 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     }
 
     public getChildren(params?: string): Promise<any[]> {
+
         let crit = this.hash().get(this.top);
         if (crit) {
-            crit = crit;
+            crit = this.top === '0.' ? `${crit}|isnull` : crit;
         } else {
             crit = '****';
         }
@@ -212,16 +215,17 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         });
     }
     public downloadFile(node: any) {
-        return fetch(`../getdoctemplate.ashx/${node.id}`).then(resp => {
-            return resp.text().then((data) => {
-                if (data.length > 0 && data !== 'empty_mss_blob') {
-                    this.createLink(node);
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-        });
+        return ft(node, this);
+        // return fetch(`http://localhost/X1807/getdoctemplate.ashx/${node.id}`).then(resp => {
+        //     return resp.text().then((data) => {
+        //         if (data.length > 0 && data !== 'empty_mss_blob') {
+        //             this.createLink(node);
+        //             return true;
+        //         } else {
+        //             return false;
+        //         }
+        //     });
+        // });
     }
     public getSubtree(): Promise<any[]> {
         return Promise.resolve([]);
@@ -232,14 +236,33 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     protected _initRecord(data: ITreeDictionaryDescriptor) {
         this.record = new TemplateDescriptor(this, data);
     }
-    private createLink(node: any): void {
-        const link = document.createElement('a');
-        link.href = `../getdoctemplate.ashx/${node.id}`;
-        link.setAttribute('download', node.title);
-        link.click();
-    }
     private hash(): Map<string, string> {
         return this.hashTree;
     }
 
+}
+
+function ft(node: any, param): Promise<any> {
+    return param.apiSrv.getHttp_client().get(`http://localhost/X1807/getdoctemplate.ashx/${node.id}`, { responseType: 'blob' }).toPromise().then((data: Blob) => {
+        if (data.size) {
+            createLink(node, data);
+            return true;
+        }
+        return false;
+    }).catch(error => {
+        return (error);
+    });
+}
+
+function createLink(node: any, data: Blob): void {
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveBlob(data, node.title);
+    } else {
+        const elem = window.document.createElement('a');
+        elem.href = `http://localhost/X1807/getdoctemplate.ashx/${node.id}`;
+        elem.download = node.title;
+        document.body.appendChild(elem);
+        elem.click();
+        document.body.removeChild(elem);
+    }
 }
