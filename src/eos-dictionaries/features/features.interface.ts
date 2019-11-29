@@ -10,6 +10,7 @@ export interface IOESDictsFeatures {
             N: boolean,
             E: boolean,
             F: boolean,
+            D: boolean,
         },
     };
 

@@ -17,6 +17,7 @@ export const DG_TPL_LINK_IDX: DGTplElement = { key: '{9}', title: 'Индекс 
 export const DG_TPL_LINKED_DOC_REG_NUMBER: DGTplElement = { key: '{A}', title: 'Рег. № связанного документа' };
 export const DG_TPL_LINKED_DOC_NUMBER: DGTplElement = { key: '{B}', title: 'Порядковый номер связанного документа' };
 export const DG_TPL_RK_NUMBER: DGTplElement = { key: '{C}', title: 'Порядковый номер в пределах связанной РК' };
+export const DG_TPL_D: DGTplElement = { key: '{D}', title: 'Исх. № корреспондента' };
 export const DG_TPL_NUM_NP: DGTplElement = { key: '{N}', title: 'Номер НП' };
 export const DG_TPL_SEPARATOR1: DGTplElement = { key: '-', title: 'Разделитель', isNotUnique: true };
 export const DG_TPL_SEPARATOR2: DGTplElement = { key: '/', title: 'Разделитель', isNotUnique: true };
@@ -47,6 +48,7 @@ export const DOC_TEMPLATE_ELEMENTS = [
     DG_TPL_LINKED_DOC_REG_NUMBER,
     DG_TPL_LINKED_DOC_NUMBER,
     DG_TPL_RK_NUMBER,
+    ... Features.cfg.docgroups.templates.D ? [DG_TPL_D] : [],
     ... Features.cfg.docgroups.templates.N ? [DG_TPL_NUM_NP] : [],
     DG_TPL_SEPARATOR1,
     DG_TPL_SEPARATOR2,

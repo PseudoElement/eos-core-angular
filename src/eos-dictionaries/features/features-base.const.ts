@@ -12,6 +12,7 @@ export const FeaturesBase: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatu
             N: false,
             E: false,
             F: false,
+            D: true,
         },
     }
 
