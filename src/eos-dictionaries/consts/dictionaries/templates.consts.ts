@@ -47,7 +47,7 @@ export const Templates: IDictionaryDescriptor = {
             { value: 'Печать РК', title: 'Печать РК' },
             { value: 'opis_arh.exe', title: 'opis_arh.exe' }
         ],
-        required: true,
+        // required: true,
         // length: 64,
         // isUnique: true,
     },
