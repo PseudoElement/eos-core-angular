@@ -3,6 +3,12 @@ import { EosDictionaryNode } from './eos-dictionary-node';
 import { EosUtils } from 'eos-common/core/utils';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 import {CONFIRM_DOCGROUP_CHECK_DUPLINDEXES} from '../consts/confirm.consts';
+import { AdvCardRKDataCtrl } from 'eos-dictionaries/adv-card/adv-card-rk-datactrl';
+import { Injector } from '@angular/core';
+import { CONFIRM_DG_FIXE, BUTTON_RESULT_YES } from 'app/consts/confirms.const';
+import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
+import { PipRX } from 'eos-rest';
 
 const RC_TYPE = 'RC_TYPE';
 const DOCGROUP_INDEX = 'DOCGROUP_INDEX';
@@ -10,6 +16,17 @@ const DOCGROUP_INDEX = 'DOCGROUP_INDEX';
 const inheritFiields = [RC_TYPE, DOCGROUP_INDEX, 'ACCESS_MODE', 'ACCESS_MODE_FIXED', 'SHABLON', 'PRJ_SHABLON'];
 
 export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
+
+
+
+    constructor(
+        descriptor: IDictionaryDescriptor,
+        apiSrv: PipRX,
+        private _injector: Injector
+    ) {
+        super (descriptor, apiSrv);
+    }
+
     getNewRecord(preSetData: {}, parentNode: EosDictionaryNode): {} {
         const newPreset = {};
         EosUtils.deepUpdate(newPreset, preSetData);
@@ -28,18 +45,46 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
 
 
 
-    confirmSave(nodeData: any, confirmSrv: ConfirmWindowService): Promise<boolean> {
+    confirmSave(nodeData: any, confirmSrv: ConfirmWindowService, isNewRecord: boolean): Promise<boolean> {
+        let result = Promise.resolve(true);
+
         const index = this._getRecField(nodeData, DOCGROUP_INDEX);
         const due = this._getRecField(nodeData, 'DUE');
         if (index) {
-            return this._checkIndexDublicates(due, index).then ( result => {
-                if (result === 'NOT_UNIQUE') {
-                    return this._confimDuplindex(index, confirmSrv);
-                }
-                return true;
+            result = result.then( () => {
+                return this._checkIndexDublicates(due, index).then ( res => {
+                    if (res === 'NOT_UNIQUE') {
+                        return this._confimDuplindex(index, confirmSrv);
+                    }
+                    return true;
+                });
             });
         }
-        return Promise.resolve(true);
+
+        if (!isNewRecord) {
+            result = result.then( () => {
+                const ctrl = new AdvCardRKDataCtrl(this._injector);
+                return ctrl.doCorrectsRKToDG(nodeData).then(changes => {
+                    if (!EosUtils.isObjEmpty(changes.fixE)) {
+                        return confirmSrv.confirm2(CONFIRM_DG_FIXE)
+                        .then((button) => {
+                            if (button && button.result === BUTTON_RESULT_YES) {
+                                nodeData['_appendChanges'] = changes.fixE;
+                                return changes.fixE;
+                            } else {
+                                return false;
+                            }
+                        });
+                    }
+                    return Promise.resolve(true);
+                }).catch(err => {
+                    const _msgSrv = this._injector.get(EosMessageService);
+                    _msgSrv.addNewMessage({msg: err.message, type: 'danger', title: 'Ошибка РК'});
+                });
+            });
+        }
+
+        return result;
     }
 
     private _checkIndexDublicates(due, index): Promise<any> {
@@ -67,4 +112,5 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
     private _getRecField(data: any, fieldName: string): any {
         return data['rec'] ? data['rec'][fieldName] : null;
      }
+
 }

@@ -196,4 +196,15 @@ export class EosUtils {
         return (d1.getDate() === d2.getDate()) && (d1.getFullYear () === d2.getFullYear()) && (d1.getMonth () === d2.getMonth());
     }
 
+    static isObjEmpty(v): boolean {
+        if (!v) { return true; }
+        for (const key in v) {
+            if (v.hasOwnProperty(key)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 }
