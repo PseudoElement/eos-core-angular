@@ -22,7 +22,7 @@
                 #textInputSelect
                 class="form-control m-font text-input-select2"
                 [readonly]="!(this.viewOpts?.selectionEditable)"
-                [ngClass]="{ placeholder: !hasValue(), editable: this.viewOpts?.selectionEditable }"
+                [ngClass]="{ placeholder: !hasValue(), editable: this.viewOpts?.selectionEditable, 'ng-invalid': !controlIsValid()}"
                 [value]="currentValue"
                 [type]="textType"
                 (keydown)="ignoreKeyDown($event)"

@@ -29,8 +29,7 @@ export const DG_TPL_COMB4: DGTplElement = { key: '{3#}', title: 'Специал�
 export const DG_TPL_NUM_ORG: DGTplElement = { key: '{E}', title: 'Порядковый номер организации - регистратора' };
 export const DG_TPL_INDEX: DGTplElement = { key: '{F}', title: 'Индекс организации - регистратора' };
 
-
-export const VALID_TEMPLATE_EXPR = /\{2|A|B|C|D|E|2#|3#|@}|@2\}/;
+export const VALID_TEMPLATE_EXPR = Features.cfg.docgroups.templates.validMask || /\{2|A|B|C|D|E|2#|3#|@}|@2\}/;
 export const VALID_PRJ_TEMPLATE_EXPR = /\{2|@}|@2|E\}/;
 export const SINGLE_TEMPLATE_ITEM_EXPR = /\{@}|2#|3#\}/;
 export const ORDER_NUM_TEMPLATE_ITEM_EXPR = /\{2|@2|E\}/;

@@ -28,9 +28,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
     actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'moveUp', 'moveDown', 'import', 'export', 'importPhotos',
         'createRepresentative', 'tableCustomization', 'showAllSubnodes', 'edit', 'view', 'slantForForms', 'restore', 'remove', 'removeHard',
         'showDeleted', 'tuneFields', ...
-        Features.cfg.departments.numcreation ? ['counterDepartmentMain', 'counterDepartment', ] : [],
-        'counterDepartmentRK', 'counterDepartmentRKPD',
-
+        Features.cfg.departments.numcreation ? ['counterDepartmentMain', 'counterDepartment', 'counterDepartmentRK', 'counterDepartmentRKPD', ] : [] ,
         'export', 'import'],
     keyField: 'DUE',
     parentField: 'PARENT_DUE',

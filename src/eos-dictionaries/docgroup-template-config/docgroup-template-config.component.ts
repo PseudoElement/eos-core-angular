@@ -12,6 +12,7 @@ import {
     ORDER_NUM_TEMPLATE_ITEM_EXPR,
     DGTplElement,
 } from './docgroup-template-config.consts';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 @Component({
     selector: 'eos-docgroup-template-config',
@@ -99,6 +100,10 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
         this.subscriptions.forEach((s) => s.unsubscribe());
     }
 
+    tooltipSave (): string {
+        return this.isTemplateValid() ? null : Features.cfg.docgroups.templates.invalidText;
+    }
+
     init(content: any) {
         this.selected = [null, null];
         if (content) {
@@ -171,6 +176,9 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
      * @description emit custom fields and hide modal
      */
     save() {
+        if (!this.isTemplateValid()) {
+            return;
+        }
         this.onSave.emit(this.dgTemplate);
         this.hideModal();
     }

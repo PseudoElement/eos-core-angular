@@ -12,7 +12,13 @@ eos-dynamic-input {
 
 }
 
-
+.form-group {
+    .eos-select2 {
+        &.required:after {
+            right: 26px;
+        }
+    }
+}
 .eos-select2 {
     input {
         cursor: default;
