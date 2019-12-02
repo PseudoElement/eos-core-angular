@@ -1229,6 +1229,12 @@ export interface ORGANIZ_CL extends IHierCL, IStamp {
      * ОГРН
      */
     OGRN: string;
+    /**
+     * срок исполнения
+     */
+    TERM_EXEC: number;
+
+    TERM_EXEC_TYPE: string;
 
     /**
      * список используемых для справочника организаций значений доп. реквизитов

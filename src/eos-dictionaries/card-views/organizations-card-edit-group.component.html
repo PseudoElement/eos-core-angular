@@ -4,7 +4,21 @@
                            [form]="form"
                            [readonly]="!editMode"
                            [isGroup]="true"></eos-dynamic-input>
-
+    <div class="card-time-perfom">
+       <label class="card-label">Срок исполнения:
+        <eos-dynamic-input  [input]="inputs['rec.TERM_EXEC']"
+            [form]="form"
+            [readonly]="!editMode"
+            [isGroup]="true">
+        </eos-dynamic-input>
+       </label>
+        <eos-dynamic-input  [input]="inputs['rec.TERM_EXEC_TYPE']"
+                            [form]="form"
+                            [readonly]="!editMode"
+                            [isGroup]="true">
+        </eos-dynamic-input>
+        <span>дня (дней) от даты регистрации</span>
+    </div>
 
         <eos-dynamic-input [input]="inputs['rec.ISN_ADDR_CATEGORY']"
                            [form]="form"
