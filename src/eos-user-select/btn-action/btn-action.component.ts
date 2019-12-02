@@ -119,6 +119,9 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         this.buttonName.forEach(name => {
             this.upBtn(name);
         });
+        if (this._appContext.cbBase) {
+            this.adminDisabledBtn(this._appContext.CurrentUser.IS_SECUR_ADM);
+        }
     }
     upBtn(btnName: string) {
         switch (btnName) {
@@ -288,6 +291,24 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     }
     checkUresForLimited(): boolean {
         return this.limitCards.indexOf(this.selectUser.data.TECH_DUE_DEP) === -1;
+    }
+
+    adminDisabledBtn(admNum: number): void {
+        if (admNum === 0) {
+            CreateUser.disabled = true;
+            DeliteUser.disabled = true;
+        } else {
+            this.buttons.buttons.map((button: BtnActionFields) => {
+                if (button.name !== 'CreateUser' && button.name !== 'DeliteUser') { // button.name !== 'ViewDeletedUsers' || button.name !== 'ViewTechicalUsers'
+                    button.disabled = true;
+                }
+            });
+            this.buttons.moreButtons.map((button: BtnActionFields) => {
+                if (button.name !== 'CreateUser' && button.name !== 'ViewTechicalUsers' && button.name !== 'ViewDeletedUsers' && button.name !== 'DeliteUser') { // button.name !== 'ViewDeletedUsers' || button.name !== 'ViewTechicalUsers'
+                    button.disabled = true;
+                }
+            });
+        }
     }
 
 }
