@@ -22,7 +22,7 @@ export class PermissionsGuard implements CanActivate {
         return this._getContext()
             .then((user: USER_CL[]) => {
                 this._userProfile = user[0];
-                const access: boolean = !!(+this._userProfile.TECH_RIGHTS[(conf.key - 1)]);
+                const access: boolean = this._userProfile.IS_SECUR_ADM === 1 || !!(+this._userProfile.TECH_RIGHTS[(conf.key - 1)]);
                 if (!access) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',

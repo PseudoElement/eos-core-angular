@@ -356,7 +356,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
     }
     sendData(query, accessStr): Promise<any> {
-        console.log(query);
         return this._apiSrv.setData(query).then(() => {
             this.AfterSubmit(accessStr);
             return;
