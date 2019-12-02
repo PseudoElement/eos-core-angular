@@ -1,3 +1,5 @@
+import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
+
 export interface IOESDictsFeatures {
     version: string;
     departments: {
@@ -14,6 +16,10 @@ export interface IOESDictsFeatures {
             validMask?: RegExp,
             invalidText?: string,
         },
+    };
+    rkdefaults: {
+        calendarControl: E_FIELD_TYPE;
+        calendarValues: any[];
     };
 
 }
