@@ -4,7 +4,7 @@
         {{ currentValue }}
     </p>
 
-    <div *ngIf="!readonly || form.disabled" [ngClass]="{ required: isRequired, disabled: disabled }">
+    <div class="eos-select" *ngIf="!readonly || form.disabled" [ngClass]="{ required: isRequired, disabled: disabled }">
         <div
             *ngIf="!readonly && !disabled && !form.disabled"
             dropdownToggle
