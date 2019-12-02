@@ -60,6 +60,10 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
         return value;
     }
 
+    controlIsValid() {
+        return this.control.valid;
+    }
+
     // foo () {
     //     const res = (this.viewOpts && this.viewOpts.selectionEditable) ? this.input.key : undefined;
     //     return res;
