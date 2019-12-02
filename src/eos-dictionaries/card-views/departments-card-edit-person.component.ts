@@ -218,7 +218,7 @@ export class DepartmentsCardEditPersonComponent extends BaseCardEditComponent im
             delete data.NAME;
             delete data.PATRON;
 
-            console.log(data);
+            // console.log(data);
 
             if (data) {
                 Object.keys(data).forEach((key) => {
