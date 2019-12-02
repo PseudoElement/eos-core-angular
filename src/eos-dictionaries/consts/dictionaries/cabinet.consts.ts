@@ -113,9 +113,5 @@ export const CABINET_FOLDERS = [{
     key: 9,
     charKey: '9',
     title: 'На подписи'
-}, {
-    key: 10,
-    charKey: 'A',
-    title: 'Надзорные производства'
 }];
 

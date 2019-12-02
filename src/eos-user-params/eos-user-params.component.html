@@ -4,7 +4,12 @@
             <eos-params-email-address (emailAddres)="myFuntion($event)" (redactEmail)="redactEmailAddres($event)" #emailChenge></eos-params-email-address>
         </ng-container>
         <ng-container *ngSwitchCase="'base-param'">
-            <eos-params-base-param></eos-params-base-param>
+            <ng-container *ngIf="this._appContext.cbBase; else baseP">
+                <eos-params-base-param-cb></eos-params-base-param-cb>
+            </ng-container>
+            <ng-template #baseP>
+                <eos-params-base-param></eos-params-base-param>
+            </ng-template>
         </ng-container>
         <ng-container *ngSwitchCase="'inline-scaning'">
             <eos-inline-scaning></eos-inline-scaning>

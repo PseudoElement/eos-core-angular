@@ -24,6 +24,8 @@ export class AppContext {
      * рабочие столы
      */
     public workBanches: any[];
+
+    public cbBase: boolean;
     private _ready = new Deferred<any>();
 
     constructor(private pip: PipRX) { }
@@ -68,6 +70,9 @@ export class AppContext {
         return Promise.all([oSysParams, oCurrentUser])
             .then(([sysParms, userWithViews]) => {
                 this.SysParms = sysParms[0];
+                if (this.SysParms._more_json.ParamsDic['CB_FUNCTIONS'] === 'YES') {
+                    this.cbBase = true;
+                }
                 this.CurrentUser = userWithViews.user;
                 this.UserViews = userWithViews.views.map((userView) => this.pip.entityHelper.prepareForEdit(userView));
                 this._ready.resolve('ready');
