@@ -11,6 +11,8 @@ export interface IOESDictsFeatures {
             E: boolean,
             F: boolean,
             D: boolean,
+            validMask?: RegExp,
+            invalidText?: string,
         },
     };
 

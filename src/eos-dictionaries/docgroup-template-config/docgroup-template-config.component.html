@@ -2,7 +2,9 @@
     <div class="xl-font primary-text pull-left">Настройка шаблона регистрационного номера <span *ngIf="forProject">проекта </span>документа</div>
     <span class="pull-right">
         <button type="button" class="btn btn-primary have-margin fixed-width upper" (click)="hideModal()">Отменить</button>
-        <button type="button" class="btn btn-primary-full upper fixed-width" (click)="save()" [disabled]="!isTemplateValid()">Сохранить</button>
+        <button type="button" class="btn btn-primary-full upper fixed-width" (click)="save()"
+        tooltip="{{tooltipSave()}}" placement="bottom" containerClass="tooltip-info" container="body"
+        >Сохранить</button>
     </span>
 </div>
 <div class="modal-body">
