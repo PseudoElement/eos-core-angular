@@ -83,6 +83,56 @@ export const BASE_PARAM_CONTROL_INPUT: IInputParamControl[] = [
     },
 ];
 
+export const BASE_PARAM_INPUTS_CB: IInputParamControl[] = [
+    {
+        controlType: E_FIELD_TYPE.string,
+        key: 'CLASSIF_NAME',
+        label: 'ЛОГИН',
+        required: true,
+    },
+    {
+        controlType: E_FIELD_TYPE.date,
+        key: 'PASSWORD_DATE',
+        label: 'ДАТА СМЕНЫ ПАРОЛЯ',
+        readonly: true,
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: 'USERTYPE',
+        label: 'Аутентификация с помощью ОС',
+    },
+    {
+        controlType: E_FIELD_TYPE.text,
+        key: 'NOTE2',
+        label: 'ПРИМЕЧАНИЕ',
+        length: 2000
+    },
+    {
+        controlType: E_FIELD_TYPE.text,
+        key: 'NOTE',
+        label: 'Департамент',
+        length: 2000
+    },
+
+    {
+        controlType: E_FIELD_TYPE.string,
+        key: 'DUE_DEP_NAME',
+        label: 'ДОЛЖНОСТНОЕ ЛИЦО',
+        required: true,
+        data: '',
+    },
+    {
+        controlType: E_FIELD_TYPE.string,
+        key: 'TECH_DUE_DEP',
+        label: 'Ограничение',
+    },
+    {
+        controlType: E_FIELD_TYPE.boolean,
+        key: 'IS_SECUR_ADM',
+        label: 'Администратор системы',
+    },
+];
+
 export const BASE_PARAM_ACCESS_INPUT: IInputParamControl[] = [
     {
         controlType: E_FIELD_TYPE.boolean,
