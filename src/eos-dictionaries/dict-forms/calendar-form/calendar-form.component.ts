@@ -1,8 +1,8 @@
 import { DATE_INPUT_PATERN } from '../../../eos-common/consts/common.consts';
 import { FormGroup } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { Component, OnInit, OnChanges, Injector, ViewChild } from '@angular/core';
-import { BsLocaleService } from 'ngx-bootstrap';
+import { Component, OnInit, OnChanges, Injector, ViewChild, Input, EventEmitter, Output } from '@angular/core';
+// import { BsLocaleService } from 'ngx-bootstrap';
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { InputBase } from 'eos-common/core/inputs/input-base';
 import { IBaseInput } from 'eos-common/interfaces';
@@ -12,7 +12,7 @@ import { SUCCESS_SAVE } from 'eos-dictionaries/consts/messages.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IDictFormBase } from '../dict-form-base.interface';
 import { EosUtils } from 'eos-common/core/utils';
-
+import { CalendarHelper, CALENDAR_CL_BY_DEP } from 'eos-dictionaries/helpers/calendars.helper';
 
 enum dayType {
     holiday = 1,
@@ -55,8 +55,9 @@ interface CalendarRecord extends CALENDAR_CL {
 })
 
 export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
-
     @ViewChild('datepicker') datepicker: EosDatepickerInlineComponent;
+    @Output() onSaveChanges: EventEmitter<any> = new EventEmitter<any>();
+    @Input() due = null;
 
     form: FormGroup;
     inputs: InputBase<any>[];
@@ -81,7 +82,7 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
     private _formHasChanges: boolean = false;
 
     constructor(
-        private localeService: BsLocaleService,
+        // private localeService: BsLocaleService,
         private inputCtrlSrv: InputControlService,
         injector: Injector,
     ) {
@@ -90,6 +91,7 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
         this._msgSrv = injector.get(EosMessageService);
 
         this.form = this.inputCtrlSrv.toFormGroup(this.inputs, false);
+        this.form.controls['dateString'].setValue(this.selectedDate);
         this.form.valueChanges.subscribe((ch) => {
             if (this._manualUpdating) {
                 return;
@@ -108,8 +110,12 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
     }
 
     ngOnInit() {
-        this.localeService.use('ru');
+        // this.localeService.use('ru');
+
         this.form.valueChanges.subscribe((data) => {
+            if (this.form.controls['dateString'].invalid) {
+                return;
+            }
             if (this.selectedDate !== data.dateString && EosUtils.isValidDate(data.dateString)) {
                 this.datepicker.value = data.dateString;
             }
@@ -134,6 +140,9 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
     }
 
     onDateChange(date) {
+        if (this.form.controls['dateString'].invalid) {
+            return;
+        }
         if (!this.dbDates) {
             this._refreshDB();
         } else {
@@ -143,7 +152,6 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
     }
 
     onDataMouseMove($event) {
-        // this._updateCalendar();
     }
 
     onClear() {
@@ -151,8 +159,18 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
         this._formHasChanges = false;
     }
 
+    onBlurDate(obj) {
+        if (obj) {
+            if (obj.control.invalid) {
+                this._updateControlsFor(this.selectedDate);
+            }
+        }
+    }
+
     onSave() {
-        Promise.resolve(this._save());
+        this._save().then( () => {
+            this.onSaveChanges.emit();
+        });
     }
 
     setToday() {
@@ -206,6 +224,14 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
 
     private _refreshDB() {
         this._readDBSaved().then((data) => {
+            if (this.due) {
+                data.forEach( (rec) => {
+                    if (this.due !== rec.OWNER_ID) {
+                        rec.OWNER_ID = this.due;
+                        rec.isChanged = true;
+                    }
+                });
+            }
             this.dbDates = data;
             this._updateControlsFor(this.selectedDate);
             this.datepicker._repaint();
@@ -213,7 +239,7 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
         });
     }
 
-    private _calcChanges(storedData: CALENDAR_CL[], toSaveList: CalendarRecord[]): any[] {
+    private _calcChanges(storedData: CALENDAR_CL_BY_DEP[], toSaveList: CalendarRecord[]): any[] {
         const changes = [];
 
         for (let i = 0; i < toSaveList.length; i++) {
@@ -226,7 +252,7 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
             if ((isWeekend && type === dayType.weekend) ||
                 (!isWeekend && type === dayType.workday)
             ) {
-                // ненужная запись - описывает то что и так ясно из календаря
+                // ненужная запись - описывает то что и так ясно из календаря (выходной\будний совпадает)
                 if (rec.ISN_CALENDAR === -1) {
                     // ненужная запись - просто натыкали, игнорируем, в БД отсутствует
                     continue;
@@ -240,21 +266,32 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
                 }
             } else {
                 // Нужная запись
-                const saved_rec = storedData.find(r => r.ISN_CALENDAR === rec.ISN_CALENDAR);
+                let saved_rec = null;
+
+
+                const data = { DATE_CALENDAR: rec.DATE_CALENDAR, DATE_TYPE: rec.DATE_TYPE };
+                if (this.due) {
+                    data['OWNER_ID'] = this.due;
+                    saved_rec = storedData.find(r => r.ISN_CALENDAR === rec.ISN_CALENDAR && r.OWNER_ID === this.due);
+                } else {
+                    saved_rec = storedData.find(r => r.ISN_CALENDAR === rec.ISN_CALENDAR);
+                }
+
+
                 if (saved_rec) {
                     if (saved_rec.DATE_TYPE === rec.DATE_TYPE) {
                         continue;
                     } else {
                         changes.push({
                             method: 'MERGE',
-                            data: { DATE_CALENDAR: rec.DATE_CALENDAR, DATE_TYPE: rec.DATE_TYPE },
+                            data: data,
                             requestUri: 'CALENDAR_CL(' + rec.ISN_CALENDAR + ')',
                         });
                     }
                 } else {
                     changes.push({
                         method: 'POST',
-                        data: { DATE_CALENDAR: rec.DATE_CALENDAR, DATE_TYPE: rec.DATE_TYPE },
+                        data: data,
                         requestUri: 'CALENDAR_CL',
                     });
                 }
@@ -295,17 +332,7 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
     }
 
     private _readDBSaved(): Promise<any> {
-        const query = {
-        };
-
-        const req: any = {
-            ['CALENDAR_CL']: query,
-            orderby: 'DATE_CALENDAR',
-            foredit: true,
-        };
-
-        return this._apiSrv.read<CALENDAR_CL>(req);
+        return CalendarHelper.readDB(this._apiSrv, this.due);
     }
-
 
 }

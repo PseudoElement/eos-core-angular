@@ -141,7 +141,7 @@ export class EosDatepickerInlineComponent implements OnInit {
         let currentDate = new Date(year, month - 1, 1);
         const lastDayOfPreviousMonth = new Date(year, month - 1, 0).getDate();
         if (currentDate.getDay() !== 1 /* пон */) {
-            currentDate = new Date(year, month - 2, lastDayOfPreviousMonth - currentDate.getDay() + 2);
+            currentDate = new Date(year, month - 2, lastDayOfPreviousMonth - (currentDate.getDay() || 7) + 2);
         }
 
         const previousMonth = new Date(year, month - 2, 1).getMonth();

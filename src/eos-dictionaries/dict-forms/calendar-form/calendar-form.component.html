@@ -31,6 +31,7 @@
                 [form]="form"
                 [hideLabel]="true"
                 [viewOpts]="{ hidePicker: true }"
+                (onControlBlur)="onBlurDate($event)"
                 [readonly]="false"></eos-dynamic-input>
 
                 <button class="date-field-btn abutton btn btn-primary-full" (click)="setToday()">Сегодня</button>
