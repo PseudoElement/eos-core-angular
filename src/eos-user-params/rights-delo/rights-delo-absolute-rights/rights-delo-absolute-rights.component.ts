@@ -21,6 +21,7 @@ import { ErrorHelperServices } from '../../shared/services/helper-error.services
 import { ENPTY_ALLOWED_CREATE_PRJ } from 'app/consts/messages.consts';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
+import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 @Component({
     selector: 'eos-rights-delo-absolute-rights',
     templateUrl: 'rights-delo-absolute-rights.component.html'
@@ -90,16 +91,41 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     }
     ngOnDestroy() { }
 
+    absoluteRightReturn() {
+        const arrayFirst = ABSOLUTE_RIGHTS.filter(elem => {
+            if (elem.key === '2' || elem.key === '30') {
+                return false;
+            }
+            return true;
+        });
+        const array = [];
+        arrayFirst.forEach((elem, index) => {
+            array.push(elem);
+            if (index === 1) {
+                array.push({
+                    controlType: E_FIELD_TYPE.boolean,
+                    key: '2',
+                    label: 'Централизованная отправка документов',
+                    data: {
+                        isSelected: false,
+                        rightContent: E_RIGHT_DELO_ACCESS_CONTENT.department
+                    }
+                });
+            }
+        });
+        return array;
+    }
     init() {
+        const ABS = this._appContext.cbBase ? this.absoluteRightReturn() : ABSOLUTE_RIGHTS;
         this.curentUser = this._userParamsSetSrv.curentUser;
         this.techRingtOrig = this.curentUser.TECH_RIGHTS;
         this.curentUser['DELO_RIGHTS'] = this.curentUser['DELO_RIGHTS'] || '0'.repeat(37);
         this.arrDeloRight = this.curentUser['DELO_RIGHTS'].split('');
         this.arrNEWDeloRight = this.curentUser['DELO_RIGHTS'].split('');
-        this.fields = this._writeValue(ABSOLUTE_RIGHTS);
+        this.fields = this._writeValue(ABS);
         this.inputs = this._inputCtrlSrv.generateInputs(this.fields);
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs);
-        this.listRight = this._createList(ABSOLUTE_RIGHTS);
+        this.listRight = this._createList(ABS);
         this.form.valueChanges
             .pipe(
                 takeUntil(this._ngUnsubscribe)
