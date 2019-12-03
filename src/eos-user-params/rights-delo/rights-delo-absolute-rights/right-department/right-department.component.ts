@@ -7,9 +7,10 @@ import { UserParamsService } from 'eos-user-params/shared/services/user-params.s
 import { NodeAbsoluteRight } from '../node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { RestError } from 'eos-rest/core/rest-error';
-import { OPEN_CLASSIF_DEPARTMENT_FULL } from 'app/consts/query-classif.consts';
+import { OPEN_CLASSIF_DEPARTMENT_FULL, OPEN_CLASSIF_DEPARTMENT_SEND_CB } from 'app/consts/query-classif.consts';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { EosStorageService } from 'app/services/eos-storage.service';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     selector: 'eos-right-absolute-department',
@@ -40,7 +41,17 @@ export class RightDepertmentComponent implements OnInit {
         private _waitClassifSrv: WaitClassifService,
         private apiSrv: UserParamApiSrv,
         private _storageSrv: EosStorageService,
+        private _appContext: AppContext,
     ) {
+    }
+    desc(a: DEPARTMENT, b: DEPARTMENT) {
+        if (a.WEIGHT > b.WEIGHT) {
+            return 1;
+        }
+        if (a.WEIGHT < b.WEIGHT) {
+            return -1;
+        }
+        return 0;
     }
     ngOnInit() {
         this.listUserDep = [];
@@ -51,7 +62,11 @@ export class RightDepertmentComponent implements OnInit {
         this.userDep = this.curentUser['USERDEP_List'];
         this.funcNum = +this.selectedNode.key + 1;
         if (this.selectedNode.isCreate && this.userDep.filter(i => i['FUNC_NUM'] === this.funcNum).length === 0) {
-            this.addDep();
+            if (this.funcNum === 3 && this._appContext.cbBase) {
+                this.addNewDepAll();
+            } else {
+                this.addDep();
+            }
             this.isLoading = false;
             return;
         }
@@ -60,6 +75,9 @@ export class RightDepertmentComponent implements OnInit {
             const str: string[] = this.userDepFuncNumber.map(i => i.DUE);
             this.apiSrv.getDepartment(str)
                 .then((data: DEPARTMENT[]) => {
+                    if (this.funcNum === 3 && this._appContext.cbBase) {
+                        data.sort((a, b) => this.desc(a, b));
+                    }
                     data.forEach((dep: DEPARTMENT) => {
                         const userDep: USERDEP = this.userDepFuncNumber.find((ud: USERDEP) => dep.DUE === ud.DUE);
                         const cfg: INodeDocsTreeCfg = {
@@ -71,9 +89,19 @@ export class RightDepertmentComponent implements OnInit {
                                 userDep: userDep,
                             },
                         };
+                        let flag;
                         this.addFieldChwckProp(cfg, dep.IS_NODE, userDep.DEEP);
+                        if (this.funcNum === 3 && this._appContext.cbBase) {
+                            cfg.allowed = !!userDep.ALLOWED;
+                            cfg.viewAllowed = true;
+                            if (cfg.label === ' ') {
+                                cfg.label = 'Все подразделения';
+                            }
+                            flag = true;
+                        }
                         if (!(this.getAllDep && cfg.due === '0.')) {
-                            this.listUserDep.push(new NodeDocsTree(cfg));
+                            const elem = new NodeDocsTree(cfg, flag);
+                            this.listUserDep.push(elem);
                         } else {
                             this.checkFlag = true;
                         }
@@ -111,12 +139,82 @@ export class RightDepertmentComponent implements OnInit {
             node.viewAllowed = false;
         }
     }
+    selectNoAllDep() {
+        if (this.funcNum === 3 && this._appContext.cbBase && this.selectedDep && this.selectedDep.DUE === '0.') {
+            return false;
+        }
+        return true;
+    }
     selectNode(dep: NodeDocsTree) {
         this.selectedDep = dep;
     }
+    addNewDepAll(): Promise<any> {
+        return this._userParmSrv.getDepartmentFromUser(['0.'])
+        .then((data: DEPARTMENT[]) => {
+            const newNodes: NodeDocsTree[] = [];
+            data.forEach((dep: DEPARTMENT) => {
+                const newUserDep: USERDEP = this._userParmSrv.createEntyti<USERDEP>({
+                    ISN_LCLASSIF: this._userParmSrv.userContextId,
+                    DUE: dep.DUE,
+                    FUNC_NUM: this.funcNum,
+                    WEIGHT: null,
+                    DEEP: 1,
+                    ALLOWED: null,
+                }, 'USERDEP');
+                const cfg: INodeDocsTreeCfg = {
+                    due: newUserDep.DUE,
+                    label: '',
+                    allowed: !!newUserDep.DEEP,
+                    data: {
+                        dep: dep,
+                        userDep: newUserDep,
+                    },
+                };
+                this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
+                if (this.funcNum === 3 && this._appContext.cbBase) {
+                    cfg.label = 'Все подразделения';
+                    newUserDep.ALLOWED = 1;
+                    cfg.allowed = true;
+                    cfg.viewAllowed = true;
+                }
+                const newNode = new NodeDocsTree(cfg);
+                this.curentUser.USERDEP_List.push(newUserDep);
+                    this.selectedNode.pushChange({
+                        method: 'POST',
+                        due: newUserDep.DUE,
+                        data: newUserDep
+                    });
+                newNodes.push(newNode);
+            });
+            this.confirmPkpd();
+            this.listUserDep = this.listUserDep.concat(newNodes);
+            this.selectedNode.isCreate = false;
+            this.isShell = false;
+            this.Changed.emit();
+        });
+    }
+    findParent(due: string) {
+        const n = due.split('.');
+        n.pop();
+        const d = due + '.';
+        if (d !== '0.') {
+            const findElement = this.listUserDep.filter((element: NodeDocsTree) => {
+                return element.DUE === d;
+            });
+            if (findElement[0]) {
+                return findElement[0].isAllowed ? true : false;
+            } else {
+                return this.findParent(n.join('.'));
+            }
+        } else {
+            return this.listUserDep[0].isAllowed ? true : false;
+        }
+    }
     addDep(): Promise<any> {
         this.isShell = true;
-        return this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT_FULL)
+        const DEPART = (this.funcNum === 3 && this._appContext.cbBase) ? OPEN_CLASSIF_DEPARTMENT_SEND_CB : OPEN_CLASSIF_DEPARTMENT_FULL;
+
+        return this._waitClassifSrv.openClassif(DEPART)
             .then((data: string) => {
                 if (data === '') {
                     throw new Error();
@@ -140,7 +238,7 @@ export class RightDepertmentComponent implements OnInit {
                         ISN_LCLASSIF: this._userParmSrv.userContextId,
                         DUE: dep.DUE,
                         FUNC_NUM: this.funcNum,
-                        WEIGHT: this._getMaxWeight(),
+                        WEIGHT: (this.funcNum === 3 && this._appContext.cbBase) ? null : this._getMaxWeight(),
                         DEEP: 1,
                         ALLOWED: null,
                     }, 'USERDEP');
@@ -154,7 +252,14 @@ export class RightDepertmentComponent implements OnInit {
                         },
                     };
                     this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
-                    const newNode = new NodeDocsTree(cfg);
+                    let flag;
+                    if (this.funcNum === 3 && this._appContext.cbBase) {
+                        newUserDep.ALLOWED = this.findParent(newUserDep.DUE) ? 0 : 1;
+                        cfg.allowed = this.findParent(newUserDep.DUE) ? false : true;
+                        cfg.viewAllowed = true;
+                        flag = true;
+                    }
+                    const newNode = new NodeDocsTree(cfg, flag);
                     this.curentUser.USERDEP_List.push(newUserDep);
                         this.selectedNode.pushChange({
                             method: 'POST',
@@ -229,6 +334,21 @@ export class RightDepertmentComponent implements OnInit {
             due: this.selectedDep.DUE,
             data: this.selectedDep.data.userDep
         });
+        if (this.funcNum === 3 && this._appContext.cbBase && this.selectedDep.data.userDep['CompositePrimaryKey']) {
+            let flag = true;
+            this.selectedNode.change.forEach(elem => {
+                if (elem.method === 'DELETE' && this.selectedDep.DUE === elem.due) {
+                    flag = false;
+                }
+            });
+            if (flag) {
+                this.selectedNode.pushChange({
+                    method: 'DELETE',
+                    due: this.selectedDep.DUE,
+                    data: this.selectedDep.data.userDep
+                });
+            }
+        }
         this.emitDeleteRcpd();
         this.selectedDep = null;
         this.Changed.emit('del');
@@ -242,16 +362,30 @@ export class RightDepertmentComponent implements OnInit {
         this.selectedNode.value = event.target.checked ? 2 : 1;
     }
     checkedNode($event: NodeDocsTree) {
-        $event.flagCheckNode.deepValue = Number($event.isAllowed);
-        const a = Object.assign({}, $event.data.userDep, { DEEP: Number($event.isAllowed) });
-        delete a['CompositePrimaryKey'];
-        this.selectedNode.pushChange({
-            method: 'MERGE',
-            due: $event.DUE,
-            user_cl: true,
-            data: a
-        });
-        this.Changed.emit();
+        if (this.funcNum === 3 && this._appContext.cbBase) {
+            /* $event.flagCheckNode.deepValue = Number($event.isAllowed); */
+            const a = Object.assign({}, $event.data.userDep, { DEEP: Number($event.isAllowed) });
+            a['ALLOWED'] = Number($event.isAllowed);
+            /* delete a['CompositePrimaryKey']; */
+            this.selectedNode.pushChange({
+                method: 'MERGE',
+                due: $event.DUE,
+                user_cl: true,
+                data: a
+            });
+            this.Changed.emit();
+        } else {
+            $event.flagCheckNode.deepValue = Number($event.isAllowed);
+            const a = Object.assign({}, $event.data.userDep, { DEEP: Number($event.isAllowed) });
+            delete a['CompositePrimaryKey'];
+            this.selectedNode.pushChange({
+                method: 'MERGE',
+                due: $event.DUE,
+                user_cl: true,
+                data: a
+            });
+            this.Changed.emit();
+        }
     }
     querySaveDell(): any[] {
         /* if (this.curentUser.USERDEP_List.length < this.curentUser._orig.USERDEP_List.length) { */
