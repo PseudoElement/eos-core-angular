@@ -29,8 +29,9 @@ export const DG_TPL_COMB4: DGTplElement = { key: '{3#}', title: 'Специал�
 export const DG_TPL_NUM_ORG: DGTplElement = { key: '{E}', title: 'Порядковый номер организации - регистратора' };
 export const DG_TPL_INDEX: DGTplElement = { key: '{F}', title: 'Индекс организации - регистратора' };
 
-export const VALID_TEMPLATE_EXPR = Features.cfg.docgroups.templates.validMask || /\{2|A|B|C|D|E|2#|3#|@}|@2\}/;
-export const VALID_PRJ_TEMPLATE_EXPR = /\{2|@}|@2|E\}/;
+const FTemplates = Features.cfg.docgroups.templates;
+export const VALID_TEMPLATE_EXPR = FTemplates.VALID_TEMPLATE_EXPR || /\{2|A|B|C|D|E|2#|3#|@}|@2\}/;
+export const VALID_PRJ_TEMPLATE_EXPR = FTemplates.VALID_PRJ_TEMPLATE_EXPR || /\{2|@}|@2|E\}/;
 export const SINGLE_TEMPLATE_ITEM_EXPR = /\{@}|2#|3#\}/;
 export const ORDER_NUM_TEMPLATE_ITEM_EXPR = /\{2|@2|E\}/;
 
@@ -47,8 +48,8 @@ export const DOC_TEMPLATE_ELEMENTS = [
     DG_TPL_LINKED_DOC_REG_NUMBER,
     DG_TPL_LINKED_DOC_NUMBER,
     DG_TPL_RK_NUMBER,
-    ... Features.cfg.docgroups.templates.D ? [DG_TPL_D] : [],
-    ... Features.cfg.docgroups.templates.N ? [DG_TPL_NUM_NP] : [],
+    ... FTemplates.D ? [DG_TPL_D] : [],
+    ... FTemplates.N ? [DG_TPL_NUM_NP] : [],
     DG_TPL_SEPARATOR1,
     DG_TPL_SEPARATOR2,
     DG_TPL_MANUAL_NUMBER,
@@ -56,8 +57,8 @@ export const DOC_TEMPLATE_ELEMENTS = [
     DG_TPL_COMB2,
     DG_TPL_COMB3,
     DG_TPL_COMB4,
-    ... Features.cfg.docgroups.templates.E ? [DG_TPL_NUM_ORG] : [],
-    ... Features.cfg.docgroups.templates.F ? [DG_TPL_INDEX] : [],
+    ... FTemplates.E ? [DG_TPL_NUM_ORG] : [],
+    ... FTemplates.F ? [DG_TPL_INDEX] : [],
 ];
 
 export const PRJ_TEMPLATE_ELEMENTS = [
