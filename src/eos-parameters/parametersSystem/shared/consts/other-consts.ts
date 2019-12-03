@@ -34,5 +34,29 @@ export const OTHER_PARAM: IBaseParameters = {
             title: '',
             options: []
         },
+        {
+            key: 'ASPSD_ISN_DELIVERY',
+            type: 'select',
+            title: '',
+            options: []
+        },
+        {
+            key: 'SDS_ISN_DELIVERY',
+            type: 'select',
+            title: '',
+            options: []
+        },
+        {
+            key: 'LK_ISN_DELIVERY',
+            type: 'select',
+            title: '',
+            options: []
+        },
+        {
+            key: 'EPVV_ISN_DELIVERY',
+            type: 'select',
+            title: '',
+            options: []
+        },
     ]
 };
