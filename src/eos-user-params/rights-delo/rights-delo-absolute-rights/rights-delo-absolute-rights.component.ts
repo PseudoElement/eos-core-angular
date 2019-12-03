@@ -100,6 +100,9 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         });
         const array = [];
         arrayFirst.forEach((elem, index) => {
+            if (elem.key === '9') {
+                elem.label = 'Редактирование рег. данных РК';
+            }
             array.push(elem);
             if (index === 1) {
                 array.push({
