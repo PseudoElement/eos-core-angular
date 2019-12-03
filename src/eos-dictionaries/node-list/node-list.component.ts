@@ -153,7 +153,10 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
-        this._cdr.detach();
+        if (!this._cdr['destroyed']) {
+            this._cdr.detach();
+        }
+
     }
 
     markedNodes() {
