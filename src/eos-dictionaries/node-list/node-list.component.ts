@@ -94,6 +94,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                             }
                         });
                         this.nodes = nodes;
+
                         setTimeout(() => {
                             this._countColumnWidth();
                             this._repaintFlag = false;

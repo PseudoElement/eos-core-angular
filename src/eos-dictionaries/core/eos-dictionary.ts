@@ -615,34 +615,30 @@ export class EosDictionary {
         const _orderBy = orderBy || this._orderBy; // DON'T USE THIS IN COMPARE FUNC!!! IT'S OTHER THIS!!!
 
         return nodes.sort((a: EosDictionaryNode, b: EosDictionaryNode) => {
-            let _a = a.getFieldValueByName(_orderBy.fieldKey) || Number(a.id); // data.rec[_orderBy.fieldKey];
-            let _b = b.getFieldValueByName(_orderBy.fieldKey) || Number(b.id); // data.rec[_orderBy.fieldKey];
+            const _a = a.getFieldValueByName(_orderBy.fieldKey) || Number(a.id) || '';
+            const _b = b.getFieldValueByName(_orderBy.fieldKey) || Number(b.id) || '';
 
-            if (typeof(_a) === 'number' || typeof (_b) === 'number') {
-                if (_a > _b) {
-                    return _orderBy.ascend ? 1 : -1;
-                }
-                if (_a < _b) {
-                    return _orderBy.ascend ? -1 : 1;
-                }
-                if (_a === _b) {
-                    return 0;
-                }
+            let res = 0;
+            switch (typeof _a) {
+                case 'number':
+                    res = _a < 0 ?
+                        ((_a < _b && 1) || (_a > _b && -1) || 0) :
+                        ((a < b && -1) || (a > b && 1) || 0);
+                    break;
+                case 'string':
+                    if (!_a && !_b) {
+                        res = 0;
+                    } else if (!_a) {
+                        res = 1;
+                    } else if (!_b) {
+                        res = -1;
+                    } else {
+                        res = _a.localeCompare(_b); // (_a < _b && -1) || (_a > _b && 1) || 0;
+                    }
+                    break;
             }
 
-            if (_a !== null && _a !== undefined) {
-                _a = (_a + '').trim().toLowerCase();
-            } else {
-                _a = '';
-            }
-
-            if (_b !== null && _b !== undefined) {
-                _b = (_b + '').trim().toLowerCase();
-            } else {
-                _b = '';
-            }
-
-            return (_orderBy.ascend ? 1 : -1) * _a.toString().localeCompare(_b.toString());
+            return res * (_orderBy.ascend ? 1 : -1);
         });
     }
 
