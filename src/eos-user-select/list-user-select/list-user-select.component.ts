@@ -735,7 +735,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         })
             .catch(error => {
                 this.isLoading = false;
-                error.message = 'Не удалось удалить пользователя, обратитесь к системному администратору';
+                error.message = error.message ? error.message : 'Не удалось удалить пользователя, обратитесь к системному администратору';
                 this.cathError(error);
             });
 
