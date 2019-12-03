@@ -12,6 +12,7 @@ import { EosUtils } from 'eos-common/core/utils';
 import { IBaseParameters } from './interfaces/parameters.interfaces';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 import { PARM_SUCCESS_SAVE, PARM_CANCEL_CHANGE } from './consts/eos-parameters.const';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 export class BaseParamComponent implements OnDestroy, OnInit {
     @Input() btnDisabled;
@@ -22,6 +23,7 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     dataSrv: EosDataConvertService;
     inputCtrlSrv: InputControlService;
     msgSrv: EosMessageService;
+    _appContext: AppContext;
     titleHeader;
     disabledField = false;
     isChangeForm = false;
@@ -36,9 +38,10 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     private _fieldsType = {};
     constructor(
         injector: Injector,
-        paramModel
+        paramModel,
     ) {
-        this.constParam = paramModel;
+        this._appContext = injector.get(AppContext);
+        this.constParam = this._appContext.cbBase ? this.paramModelCB(paramModel) : paramModel;
         this.titleHeader = this.constParam.title;
         this.paramApiSrv = injector.get(ParamApiSrv);
         this.dataSrv = injector.get(EosDataConvertService);
@@ -50,6 +53,14 @@ export class BaseParamComponent implements OnDestroy, OnInit {
     }
     ngOnInit() {}
 
+    paramModelCB(paramModel) {
+        paramModel['fields'].forEach(elem => {
+          if (elem.key === 'VIEWPROT3') {
+            elem.title = 'Просмотр и печать файла';
+          }
+        });
+        return paramModel;
+    }
     init() {
         this.prepareDataParam();
         return this.getData(this.queryObj)
