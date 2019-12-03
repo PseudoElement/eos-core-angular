@@ -7,7 +7,7 @@ import { UserParamsService } from 'eos-user-params/shared/services/user-params.s
 import { NodeAbsoluteRight } from '../node-absolute';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { RestError } from 'eos-rest/core/rest-error';
-import { OPEN_CLASSIF_DEPARTMENT_FULL } from 'app/consts/query-classif.consts';
+import { OPEN_CLASSIF_DEPARTMENT_FULL, OPEN_CLASSIF_DEPARTMENT_SEND_CB } from 'app/consts/query-classif.consts';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { AppContext } from 'eos-rest/services/appContext.service';
@@ -77,6 +77,7 @@ export class RightDepertmentComponent implements OnInit {
                                 userDep: userDep,
                             },
                         };
+                        let flag;
                         this.addFieldChwckProp(cfg, dep.IS_NODE, userDep.DEEP);
                         if (this.funcNum === 3 && this._appContext.cbBase) {
                             cfg.allowed = !!userDep.ALLOWED;
@@ -84,9 +85,10 @@ export class RightDepertmentComponent implements OnInit {
                             if (cfg.label === ' ') {
                                 cfg.label = 'Все подразделения';
                             }
+                            flag = true;
                         }
                         if (!(this.getAllDep && cfg.due === '0.')) {
-                            const elem = new NodeDocsTree(cfg);
+                            const elem = new NodeDocsTree(cfg, flag);
                             this.listUserDep.push(elem);
                         } else {
                             this.checkFlag = true;
@@ -179,9 +181,28 @@ export class RightDepertmentComponent implements OnInit {
             this.Changed.emit();
         });
     }
+    findParent(due: string) {
+        const n = due.split('.');
+        n.pop();
+        const d = due + '.';
+        if (d !== '0.') {
+            const findElement = this.listUserDep.filter((element: NodeDocsTree) => {
+                return element.DUE === d;
+            });
+            if (findElement[0]) {
+                return findElement[0].isAllowed ? true : false;
+            } else {
+                return this.findParent(n.join('.'));
+            }
+        } else {
+            return this.listUserDep[0].isAllowed ? true : false;
+        }
+    }
     addDep(): Promise<any> {
         this.isShell = true;
-        return this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT_FULL)
+        const DEPART = (this.funcNum === 3 && this._appContext.cbBase) ? OPEN_CLASSIF_DEPARTMENT_SEND_CB : OPEN_CLASSIF_DEPARTMENT_FULL;
+
+        return this._waitClassifSrv.openClassif(DEPART)
             .then((data: string) => {
                 if (data === '') {
                     throw new Error();
@@ -219,12 +240,15 @@ export class RightDepertmentComponent implements OnInit {
                         },
                     };
                     this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
+                    let flag;
+                    console.log('флаг', this.findParent(newUserDep.DUE));
                     if (this.funcNum === 3 && this._appContext.cbBase) {
-                        newUserDep.ALLOWED = 0;
-                        cfg.allowed = false;
+                        newUserDep.ALLOWED = this.findParent(newUserDep.DUE) ? 0 : 1;
+                        cfg.allowed = this.findParent(newUserDep.DUE) ? false : true;
                         cfg.viewAllowed = true;
+                        flag = true;
                     }
-                    const newNode = new NodeDocsTree(cfg);
+                    const newNode = new NodeDocsTree(cfg, flag);
                     this.curentUser.USERDEP_List.push(newUserDep);
                         this.selectedNode.pushChange({
                             method: 'POST',
