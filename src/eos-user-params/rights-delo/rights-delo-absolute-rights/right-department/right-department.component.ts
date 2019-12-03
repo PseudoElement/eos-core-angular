@@ -44,6 +44,15 @@ export class RightDepertmentComponent implements OnInit {
         private _appContext: AppContext,
     ) {
     }
+    desc(a: DEPARTMENT, b: DEPARTMENT) {
+        if (a.WEIGHT > b.WEIGHT) {
+            return 1;
+        }
+        if (a.WEIGHT < b.WEIGHT) {
+            return -1;
+        }
+        return 0;
+    }
     ngOnInit() {
         this.listUserDep = [];
         if (this._storageSrv.getItem('abs_prav_mas')) {
@@ -66,6 +75,9 @@ export class RightDepertmentComponent implements OnInit {
             const str: string[] = this.userDepFuncNumber.map(i => i.DUE);
             this.apiSrv.getDepartment(str)
                 .then((data: DEPARTMENT[]) => {
+                    if (this.funcNum === 3 && this._appContext.cbBase) {
+                        data.sort((a, b) => this.desc(a, b));
+                    }
                     data.forEach((dep: DEPARTMENT) => {
                         const userDep: USERDEP = this.userDepFuncNumber.find((ud: USERDEP) => dep.DUE === ud.DUE);
                         const cfg: INodeDocsTreeCfg = {
@@ -145,7 +157,7 @@ export class RightDepertmentComponent implements OnInit {
                     ISN_LCLASSIF: this._userParmSrv.userContextId,
                     DUE: dep.DUE,
                     FUNC_NUM: this.funcNum,
-                    WEIGHT: this._getMaxWeight(),
+                    WEIGHT: null,
                     DEEP: 1,
                     ALLOWED: null,
                 }, 'USERDEP');
@@ -226,7 +238,7 @@ export class RightDepertmentComponent implements OnInit {
                         ISN_LCLASSIF: this._userParmSrv.userContextId,
                         DUE: dep.DUE,
                         FUNC_NUM: this.funcNum,
-                        WEIGHT: this._getMaxWeight(),
+                        WEIGHT: (this.funcNum === 3 && this._appContext.cbBase) ? null : this._getMaxWeight(),
                         DEEP: 1,
                         ALLOWED: null,
                     }, 'USERDEP');
@@ -241,7 +253,6 @@ export class RightDepertmentComponent implements OnInit {
                     };
                     this.addFieldChwckProp(cfg, dep.IS_NODE, newUserDep.DEEP);
                     let flag;
-                    console.log('флаг', this.findParent(newUserDep.DUE));
                     if (this.funcNum === 3 && this._appContext.cbBase) {
                         newUserDep.ALLOWED = this.findParent(newUserDep.DUE) ? 0 : 1;
                         cfg.allowed = this.findParent(newUserDep.DUE) ? false : true;
