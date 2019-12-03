@@ -186,21 +186,11 @@ export const TECH_USER_CLASSIF: ITechUserClassifConst[] = [
         label: 'Категории ЭП',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
     },
-    {
-        key: 38,
-        label: 'Справочники Надзора',
-        expandable: E_TECH_USER_CLASSIF_CONTENT.none
-    },
-    {
-        key: 39,
-        label: 'Обстоятельства дел',
-        expandable: E_TECH_USER_CLASSIF_CONTENT.none
-    },
-    {
+    /* {
         key: 40,
         label: 'Статусы проекта поручения',
         expandable: E_TECH_USER_CLASSIF_CONTENT.none
-    },
+    }, */
 ];
 
 export const E_CLASSIF_ID = {
