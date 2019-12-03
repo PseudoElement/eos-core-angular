@@ -20,17 +20,19 @@ import {RK_SELECTED_VALUE_INCORRECT} from '../../app/consts/confirms.const';
 import {IConfirmWindow2} from '../../eos-common/confirm-window/confirm-window2.component';
 import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-window.service';
 import {WaitClassifService} from '../../app/services/waitClassif.service';
-import { DAYS_TYPE_OPTS_VARIATIONS } from 'eos-dictionaries/adv-card/rk-default-values/rk-default-const';
 import { ButtonsInput } from 'eos-common/core/inputs/buttons-input';
 import { RKDefaultValuesCardComponent } from 'eos-dictionaries/adv-card/rk-default-values/rk-default-values.component';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 import { PRJ_DEFAULTS_LIST_NAME } from 'eos-dictionaries/adv-card/adv-card-rk-datactrl';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 // const PRJ_DEFAULT_NAME = 'PRJ_DEFAULT_VALUE_List';
 const FILE_CONSTRAINT_NAME = 'DG_FILE_CONSTRAINT_List';
 const PRJ_KEY_SHABLON = '{{tableName}}.{{id}}';
 const FILE_FIELDS = ['EXTENSIONS', 'MAX_SIZE', 'ONE_FILE'];
 const REG_MAX_SIZE: RegExp = /^\d{0,8}$/;
+
+const FeaturesRK = Features.cfg.rkdefaults;
 
 export const RKPDdictionaries = [
     {
@@ -221,9 +223,9 @@ export const RKPDDefaultFields: any[] = [
     order: 190,
 }, {
     DEFAULT_ID: 'TERM_EXEC_TYPE',
-    DEFAULT_TYPE: E_FIELD_TYPE.buttons,
+    DEFAULT_TYPE: FeaturesRK.calendarControl,
     DEFAULT_VALUE: '1',
-    options: DAYS_TYPE_OPTS_VARIATIONS[0].options,
+    options: FeaturesRK.calendarValues,
     DESCRIPTION: ' Срок исполнения РК в каких днях',
 }, {
     DEFAULT_ID: 'PRJ_RC.MAX_SIZE',
@@ -459,7 +461,7 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         private _zone: NgZone,
         private _waitClassifSrv: WaitClassifService,
         private _confirmSrv: ConfirmWindowService) {
-            this.dayTypeTitle = DAYS_TYPE_OPTS_VARIATIONS[0].daysLabel;
+            this.dayTypeTitle = 'дней';
     }
 
     private static _getFieldKey(id, tableName) {
@@ -758,10 +760,10 @@ export class PrjDefaultValuesComponent implements OnDestroy {
         if (ctrl) {
             if (this.prevValues['TERM_EXEC'] !== ctrl.value && ctrl.value) {
                 this.prevValues['TERM_EXEC'] = ctrl.value;
-                const lbls = RKDefaultValuesCardComponent.termExecOptsByValue(Number(ctrl.value));
-                this.inputs['PRJ_DEFAULT_VALUE_List.TERM_EXEC_TYPE'].options = lbls.options;
-                this.dayTypeTitle = lbls.daysLabel;
             }
+            const lbls = RKDefaultValuesCardComponent.termExecOptsByValue(Number(ctrl.value || 0));
+            this.inputs['PRJ_DEFAULT_VALUE_List.TERM_EXEC_TYPE'].options = lbls.options;
+            this.dayTypeTitle = lbls.daysLabel;
         }
 
         this.$valueChanges = this.form.valueChanges.subscribe(() => {

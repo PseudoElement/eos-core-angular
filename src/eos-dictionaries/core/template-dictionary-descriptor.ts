@@ -18,7 +18,7 @@ interface TreeTempl {
 export class TemplateDescriptor extends RecordDescriptor {
     dictionary: TemplateDictionaryDescriptor;
     fullSearchFields: any;
-    constructor(dictionary: TemplateDictionaryDescriptor, descriptor: ITreeDictionaryDescriptor, ) {
+    constructor(dictionary: TemplateDictionaryDescriptor, descriptor: ITreeDictionaryDescriptor) {
         super(dictionary, descriptor);
         this.dictionary = dictionary;
         this._initFieldSets([
@@ -43,6 +43,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         .set('0.9', 'Печать РК')
         .set('1', '%opis_arh.exe%')
         .set('2', 'Печать перечня поручений');
+
 
     staticDataForTree: TreeTempl[] = [
         {
@@ -162,6 +163,7 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     public extendCritery(critery, { mode, deleted }, selectedNode) {
         if (mode && mode === 2 && this.top) {
             critery['CATEGORY'] = `${this.hash().get(this.top)}`;
+        } else if (mode && mode === 0) {
             if (critery['NAME_TEMPLATE']) {
                 critery['NAME_TEMPLATE'] = critery['NAME_TEMPLATE'].replace(/"/g, '%').replace(/(\(|\)|\s)/g, '_');
             }
@@ -195,9 +197,10 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     }
 
     public getChildren(params?: string): Promise<any[]> {
+
         let crit = this.hash().get(this.top);
         if (crit) {
-            crit = crit;
+            crit = this.top === '0.' ? `${crit}|isnull` : crit;
         } else {
             crit = '****';
         }
@@ -212,16 +215,17 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
         });
     }
     public downloadFile(node: any) {
-        return fetch(`../getdoctemplate.ashx/${node.id}`).then(resp => {
-            return resp.text().then((data) => {
-                if (data.length > 0 && data !== 'empty_mss_blob') {
-                    this.createLink(node);
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-        });
+        return ft(node, this);
+        // return fetch(`http://localhost/X1807/getdoctemplate.ashx/${node.id}`).then(resp => {
+        //     return resp.text().then((data) => {
+        //         if (data.length > 0 && data !== 'empty_mss_blob') {
+        //             this.createLink(node);
+        //             return true;
+        //         } else {
+        //             return false;
+        //         }
+        //     });
+        // });
     }
     public getSubtree(): Promise<any[]> {
         return Promise.resolve([]);
@@ -232,14 +236,33 @@ export class TemplateDictionaryDescriptor extends AbstractDictionaryDescriptor {
     protected _initRecord(data: ITreeDictionaryDescriptor) {
         this.record = new TemplateDescriptor(this, data);
     }
-    private createLink(node: any): void {
-        const link = document.createElement('a');
-        link.href = `../getdoctemplate.ashx/${node.id}`;
-        link.setAttribute('download', node.title);
-        link.click();
-    }
     private hash(): Map<string, string> {
         return this.hashTree;
     }
 
+}
+
+function ft(node: any, param): Promise<any> {
+    return param.apiSrv.getHttp_client().get(`../getdoctemplate.ashx/${node.id}`, { responseType: 'blob' }).toPromise().then((data: Blob) => {
+        if (data.size) {
+            createLink(node, data);
+            return true;
+        }
+        return false;
+    }).catch(error => {
+        return (error);
+    });
+}
+
+function createLink(node: any, data: Blob): void {
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveBlob(data, node.title);
+    } else {
+        const elem = window.document.createElement('a');
+        elem.href = `../getdoctemplate.ashx/${node.id}`;
+        elem.download = node.title;
+        document.body.appendChild(elem);
+        elem.click();
+        document.body.removeChild(elem);
+    }
 }

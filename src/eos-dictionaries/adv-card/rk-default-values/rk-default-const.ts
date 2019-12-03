@@ -1,40 +1,11 @@
 import { E_FIELD_TYPE } from './../../interfaces/dictionary.interfaces';
 import { DIGIT3_PATTERN, DIGIT4_WITH_PERIOD_LIST_SEPARATED } from 'eos-common/consts/common.consts';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 export const USER_LIST_ORDERBY = 'WEIGHT';
-export const DAYS_TYPE_OPTS_VARIATIONS = [
-    {
-        daysLabel: 'дней',
-        options: [{
-                value: '1',
-                title: 'календарных',
-            }, {
-                value: '2',
-                title: 'рабочих',
-            },
-        ]
-    }, {
-        daysLabel: 'день',
-        options: [{
-                value: '1',
-                title: 'календарный',
-            }, {
-                value: '2',
-                title: 'рабочий',
-            },
-        ]
-    }, {
-        daysLabel: 'дня',
-        options: [{
-                value: '1',
-                title: 'календарных',
-            }, {
-                value: '2',
-                title: 'рабочих',
-            },
-        ]
-    },
-];
+
+const FeaturesRK = Features.cfg.rkdefaults;
+
 export class TDFSelect {
     dictId: string;
     dictKey: string;
@@ -481,10 +452,10 @@ export const RKPDDefaultFields: TDefaultField[] = [
             order: 190,
         }, {
             key: 'TERM_EXEC_TYPE',
-            type: E_FIELD_TYPE.buttons,
+            type: FeaturesRK.calendarControl,
             value: '1',
             page: 'D',
-            options: DAYS_TYPE_OPTS_VARIATIONS[0].options,
+            options: FeaturesRK.calendarValues,
             title: ' Срок исполнения РК в каких днях',
         }, {
         //     key: 'PRJ_RC.MAX_SIZE',
@@ -563,12 +534,12 @@ export const RKDefaultFields: TDefaultField[] = [
     {
         key: 'TERM_EXEC_TYPE',
         page: 'D',
-        type: E_FIELD_TYPE.buttons,
+        type: FeaturesRK.calendarControl,
         // kind_doc '1,2,3',
         // title: ' Срок исполнения РК в каких днях',
         title: 'от даты регистрации',
         order: 15,
-        options: DAYS_TYPE_OPTS_VARIATIONS[0].options,
+        options: FeaturesRK.calendarValues,
         default: '1',
         // classif_id: NULL
     }, {

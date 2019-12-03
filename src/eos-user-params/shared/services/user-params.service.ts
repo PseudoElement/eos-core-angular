@@ -198,7 +198,7 @@ export class UserParamsService {
             msg: '',
             type: 'warning'
         };
-        return this._pipSrv.getData<USER_CL>({ USER_CL: PipRX.criteries({ DUE_DEP: `"${dep.DUE}"` }) })
+        return this._pipSrv.getData<USER_CL>({ USER_CL: PipRX.criteries({ DUE_DEP: `${dep.DUE}` }) })
         .then((u: USER_CL[]) => {
             if (this._appContext.limitCardsUser.length > 0) {
                 if (this._appContext.limitCardsUser.indexOf(dep.DEPARTMENT_DUE) !== -1) { // проверку написать на существующего пользователя

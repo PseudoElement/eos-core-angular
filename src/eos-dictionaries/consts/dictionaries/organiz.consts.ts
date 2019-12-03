@@ -8,7 +8,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     id: 'organization',
     apiInstance: 'ORGANIZ_CL',
     // dictType: E_DICT_TYPE.tree,
-    title: 'Структура организаций',
+    title: 'Организации',
     visible: true,
     iconName: 'eos-icon-building-blue',
     defaultOrder: 'CLASSIF_NAME',
@@ -51,6 +51,24 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         pattern: NOT_EMPTY_STRING,
         length: 248,
     },
+    {
+        key: 'TERM_EXEC',
+        title: 'Срок исполнения',
+        length: 30,
+        type: 'numberIncrement',
+    },
+    {
+        key: 'TERM_EXEC_TYPE',
+        type: 'select',
+        title: '',
+        options: [
+            {value: '', title: ''},
+            {value: 1, title: 'кален .'},
+            {value: 2, title: 'рабоч .', },
+            {value: 3, title: 'кален +'},
+            {value: 4, title:  'кален -'}
+    ],
+},
     Object.assign({}, COMMON_FIELD_NAME, {
         title: 'Наименование организации',
         groupLabel: 'Наименование группы',
@@ -182,7 +200,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     // editFields: ['PARENT_DUE', 'CLASSIF_NAME', 'CLASSIF_NAME_SEARCH', 'FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS',
     //     'MAIL_FOR_ALL', 'NOTE', 'OKPO', 'INN', 'ISN_REGION', 'OKONH', 'LAW_ADRESS', 'ISN_ORGANIZ_TYPE', 'SERTIFICAT',
     //     'ISN_ADDR_CATEGORY', 'CODE', 'OGRN', 'contact', 'bank-recvisit', 'ar-organiz-value', 'sev'],
-    editFields: ['CLASSIF_NAME', 'NOTE', ],
+    editFields: ['CLASSIF_NAME', 'NOTE', 'TERM_EXEC', 'TERM_EXEC_TYPE'],
     searchFields: ['CLASSIF_NAME'],
     fullSearchFields: [],
     // quickViewFields: ['FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS', 'OKPO', 'INN', 'OKONH', 'LAW_ADRESS',

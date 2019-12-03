@@ -871,6 +871,8 @@ const commonMeta = {
             ISN_ADDR_CATEGORY: _t.i,
             CODE: _t.s,
             OGRN: _t.s,
+            TERM_EXEC: _t.i,
+            TERM_EXEC_TYPE: _t.s,
             // DUE_REGION: _t.s,
             INS_DATE: _t.d,
             UPD_DATE: _t.d,

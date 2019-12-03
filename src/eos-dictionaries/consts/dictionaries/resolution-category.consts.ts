@@ -12,5 +12,7 @@ export const RESOL_CATEGORY_DICT: IDictionaryDescriptor = Object.assign({}, LINE
     fields: [...LINEAR_TEMPLATE.fields,
         Object.assign({}, COMMON_FIELD_NAME, {
             length: 64,
+            isUnique: true,
+            uniqueInDict: true,
         })]
 });

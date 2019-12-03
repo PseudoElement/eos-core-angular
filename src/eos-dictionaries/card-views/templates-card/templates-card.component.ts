@@ -60,7 +60,7 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         const fileDiv = frameDoc.getElementById('UpFile');
         frame.contentWindow['fire'].apply(null, [false, [], false, false, false, true, '',
             -10000, 701, 1, 1]);
-        fileDiv.addEventListener('change', ($event) => {
+        fileDiv.addEventListener('input', ($event) => {
             this.upload = true;
             this._ref.detectChanges();
             this.frDatas.promise.always((data: REF_FILE[]) => {
@@ -88,7 +88,7 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         if ($event) {
             // после выбора файла и записи в TEMPLATE_NAME не меняется туллтип (например если значение не уникальное)
             try {
-                this.inp.inpstring.onInput($event);
+               // this.inp.inpstring.onInput($event);
                 setTimeout(() => {
                     this.dom.nativeElement.lastElementChild.click();
                 }, 500);

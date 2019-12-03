@@ -88,7 +88,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                     this.updateViewFields(this.customFields, nodes). then ( () => {
                         const _customTitles = this._dictSrv.customTitles;
                         _customTitles.forEach((_title) => {
-                            const vField = this.viewFields.find((_field) => _field.key === _title.key);
+                            const vField = this.viewFields.concat(this.customFields).find((_field) => _field.key === _title.key);
                             if (vField) {
                                 vField.customTitle = _title.customTitle;
                             }
@@ -195,7 +195,8 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         const subscription = this.modalWindow.content.onChoose.subscribe(() => {
             this.customFields = this._dictSrv.customFields;
             const _customTitles = this._dictSrv.customTitles;
-            this.viewFields.forEach((vField) => {
+
+            this.viewFields.concat(this.customFields).forEach((vField) => {
                 const _title = _customTitles.find((_f) => _f.key === vField.key);
                 vField.customTitle = _title ? _title.customTitle : null;
             });

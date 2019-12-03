@@ -87,6 +87,9 @@ export class PipRX extends PipeUtils {
     getConfig(): ApiCfg {
         return this._cfg;
     }
+    getHttp_client(): HttpClient {
+        return this.http;
+    }
 
     read<T>(req: IRequest): Promise<T[]> {
         return this._read<T>(req).toPromise();

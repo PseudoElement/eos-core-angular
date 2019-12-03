@@ -1,5 +1,5 @@
 import { ErrorTooltip, IDynamicInputOptions } from './dynamic-input.component';
-import { Input, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
+import { Input, OnChanges, OnDestroy, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { InputBase } from '../core/inputs/input-base';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -14,6 +14,9 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     @Input() isGroup: boolean;
     @Input() hideLabel: boolean;
     @Input() viewOpts: IDynamicInputOptions;
+    @Output() onControlBlur: EventEmitter<any> = new EventEmitter<any>();
+    @Output() onControlFocus: EventEmitter<any> = new EventEmitter<any>();
+
 
     public isFocused: boolean;
     protected subscriptions: Subscription[] = [];
@@ -45,12 +48,14 @@ export class DynamicInputBase implements OnChanges, OnDestroy {
     onFocus() {
         this.isFocused = true;
         this.toggleTooltip();
+        this.onControlFocus.emit(this);
     }
 
     onBlur() {
         this.isFocused = false;
         this._updateMessage();
         this.toggleTooltip();
+        this.onControlBlur.emit(this);
     }
 
     onInput(event) {

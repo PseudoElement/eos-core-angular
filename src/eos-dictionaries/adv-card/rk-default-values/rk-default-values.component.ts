@@ -1,7 +1,9 @@
 import { Component, OnChanges, SimpleChanges, } from '@angular/core';
 import { RKNomenkBasePage } from './rk-nomenk-base-page';
-import { DAYS_TYPE_OPTS_VARIATIONS } from './rk-default-const';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
+
+const FeaturesRK = Features.cfg.rkdefaults;
 
 @Component({
     selector: 'eos-rk-default-values',
@@ -9,6 +11,7 @@ import { DAYS_TYPE_OPTS_VARIATIONS } from './rk-default-const';
 })
 
 export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements OnChanges {
+    static rkDaysVariations = [];
 
     flagEn_extAddr: boolean;
     flagEn_intAddr: boolean;
@@ -16,22 +19,41 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
     flagEn_spinnum: boolean;
     dayTypeTitle: string;
 
+
+
     static termExecOptsByValue(value: number): any {
+        if (RKDefaultValuesCardComponent.rkDaysVariations.length === 0) {
+            const opts = FeaturesRK.calendarValues;
+
+            let v = { daysLabel: 'дней', options: Array.from(opts, o => Object.assign({}, o)) } ;
+            v.options.forEach( o => { o.title = o.title.replace('н.', 'ных').replace('ч.', 'чих'); });
+            RKDefaultValuesCardComponent.rkDaysVariations.push(v);
+
+            v = { daysLabel: 'день', options: Array.from(opts, o => Object.assign({}, o)) };
+            v.options.forEach( o => { o.title = o.title.replace('н.', 'ный').replace('ч.', 'чий'); });
+            RKDefaultValuesCardComponent.rkDaysVariations.push(v);
+
+            v = { daysLabel: 'дня', options: Array.from(opts, o => Object.assign({}, o)) };
+            v.options.forEach( o => { o.title = o.title.replace('н.', 'ных').replace('ч.', 'чих'); });
+            RKDefaultValuesCardComponent.rkDaysVariations.push(v);
+        }
+
+        const variations = RKDefaultValuesCardComponent.rkDaysVariations;
 
         const mod100 = value % 100;
 
         if (mod100 >= 10 && mod100 <= 20) {
-            return DAYS_TYPE_OPTS_VARIATIONS[0];
+            return variations[0];
         }
 
         const mod10 = value % 10;
         switch (mod10) {
             case 1:
-                return DAYS_TYPE_OPTS_VARIATIONS[1];
+                return variations[1];
             case 2:
             case 3:
             case 4:
-                return DAYS_TYPE_OPTS_VARIATIONS[2];
+                return variations[2];
             case 5:
             case 6:
             case 7:
@@ -39,12 +61,12 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
             case 9:
             case 0:
             default:
-                return DAYS_TYPE_OPTS_VARIATIONS[0];
+                return variations[0];
         }
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        this.dayTypeTitle = DAYS_TYPE_OPTS_VARIATIONS[0].daysLabel;
+        // this.dayTypeTitle = DAYS_TYPE_OPTS_VARIATIONS[0].daysLabel;
         this.selOpts.events = {
             select: this.journalNomencClickSel.bind(this),
             remove: this.journalNomencClickRemove.bind(this),

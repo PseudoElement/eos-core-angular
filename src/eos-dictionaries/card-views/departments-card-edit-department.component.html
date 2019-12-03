@@ -76,11 +76,12 @@
                 <eos-dynamic-input [input]="inputs['rec.CARD_FLAG']"
                                    [form]="form"
                                    [readonly]="!(this.editMode)"></eos-dynamic-input>
-                <eos-dynamic-input [input]="inputs['rec.EXPEDITION_FLAG']"
+                <eos-dynamic-input *ngIf="featuresDep.reestr_send"
+                                   [input]="inputs['rec.EXPEDITION_FLAG']"
                                    [form]="form"
                                    (click)="this.clickNumcreation()"
                                    [readonly]="!editMode"></eos-dynamic-input>
-                <eos-dynamic-input class ="pull-left"
+                <eos-dynamic-input class ="pull-left" *ngIf="featuresDep.numcreation"
                                    [input]="inputs['rec.NUMCREATION_FLAG']"
                                    [form]="form"
                                    (click)="this.clickNumcreation()"

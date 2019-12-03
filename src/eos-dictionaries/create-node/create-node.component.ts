@@ -82,7 +82,7 @@ export class CreateNodeComponent {
         const data = this.cardEditRef.getNewData();
         Object.assign(data.rec, this.nodeData.rec); // update with predefined data
 
-        this._confirmSave(data)
+        this._confirmSave(data, true)
             .then((res: boolean) => {
                 if (res) {
                     this.upadating = true;
@@ -150,8 +150,8 @@ export class CreateNodeComponent {
         BaseCardEditComponent.autoFocusOnFirstStringElement('eos-card-edit');
     }
 
-    private _confirmSave(data): Promise<boolean> {
-        return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv);
+    private _confirmSave(data, isNewRecord: boolean): Promise<boolean> {
+        return this._dictSrv.currentDictionary.descriptor.confirmSave(data, this._confirmSrv, isNewRecord);
     }
 
     /**

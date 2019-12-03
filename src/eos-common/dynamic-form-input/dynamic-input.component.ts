@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { InputBase } from '../core/inputs/input-base';
 import { FormGroup } from '@angular/forms';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
@@ -43,6 +43,8 @@ export class DynamicInputComponent {
     @Input() viewOpts: IDynamicInputOptions;
     @Input() container: string; // контейнер для dropdown select. 'body' или не указано для локального положения
     @Input() dropup: boolean; // выкидывать меню селекта вверх, а не вниз
+    @Output() onControlBlur: EventEmitter<any> = new EventEmitter<any>();
+    @Output() onControlFocus: EventEmitter<any> = new EventEmitter<any>();
 
     types = E_FIELD_TYPE;
     tooltip: ErrorTooltip = new ErrorTooltip;
@@ -52,5 +54,4 @@ export class DynamicInputComponent {
             this.viewOpts = <IDynamicInputOptions> {};
         }
     }
-
 }

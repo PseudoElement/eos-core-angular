@@ -48,6 +48,9 @@ export class ViewManager {
     }
 
     orderRecalc(descList: SRCH_VIEW_DESC[]): any {
+        if (!descList) {
+            return;
+        }
         for (let i = 0; i < descList.length; i++) {
             const record = descList[i];
             const order = i + 1;

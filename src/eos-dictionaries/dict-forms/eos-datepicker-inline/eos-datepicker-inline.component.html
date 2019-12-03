@@ -4,17 +4,20 @@
             <div class="bs-media-container theme-dark-blue">
                 <div>
                     <div class="bs-datepicker-head">
-                        <div style="display: contents;">
-                            <button class="previous" style="visibility: visible;" (click)="onLeftClick()">
+                        <div style="display: flex">
+                            <button class="previous" style="flex: 1; max-width: 30px; visibility: visible;" (click)="onLeftClick()">
                                 <span>‹</span></button
-                            >​
-                            <button class="current" (click)="onMonthClick()" *ngIf="displayMode === 0">
+                            >
+                            <!-- <span>&#8203;</span> -->
+                            <button class="current" (click)="onMonthClick()" style="flex: 2; max-width: 200px;" *ngIf="displayMode === 0">
                                 <span>{{ rumonths[displayMonth] }}</span></button
-                            >​
-                            <button class="current" (click)="onYearClick()">
+                            >
+                            <!-- &#8203; -->
+                            <button class="current" (click)="onYearClick()" style="flex: 2; max-width: 200px;">
                                 <span>{{ (displayMode === 2 ? ((displayYear - 7) + ' - ' + (displayYear + 8)) : displayYear) }}</span></button
-                            >​
-                            <button class="next" style="visibility: visible;" (click)="onRightClick()">
+                            >
+                            <!-- &#8203; -->
+                            <button class="next" style="flex: 1; max-width: 30px; visibility: visible;" (click)="onRightClick()">
                                 <span>›</span>
                             </button>
                         </div>
