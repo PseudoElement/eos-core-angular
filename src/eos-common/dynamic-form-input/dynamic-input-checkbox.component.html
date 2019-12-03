@@ -1,13 +1,13 @@
 <div [formGroup]="form">
     <label class="checkbox"
         [ngClass]="{'disabled': disabled || readonly}">
-    <input type="checkbox" *ngIf="disabled"
+    <input type="checkbox" *ngIf="disabled || readonly"
         [readonly]="readonly"
         [ngClass]="{'readonly': readonly}"
         [formControlName]="input.key"
         [id]="input.key"
         disabled>
-    <input type="checkbox" *ngIf="!disabled"
+    <input type="checkbox" *ngIf="!(disabled || readonly)"
         [formControlName]="input.key"
         [id]="input.key"
         [readonly]="readonly"
