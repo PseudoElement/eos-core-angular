@@ -48,7 +48,7 @@ export const LOGGINGS_PARAM: IBaseParameters = {
         {
             key: 'VIEWPROT7',
             type: 'boolean',
-            title: `Печать ЭП`
+            title: `Печать РК`
         },
         {
             key: 'VIEWPROT8',
