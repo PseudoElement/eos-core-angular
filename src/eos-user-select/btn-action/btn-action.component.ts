@@ -71,7 +71,8 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     }
     ngOnInit() {
         this.checkFlagTech();
-        this._rtSrv.updateBtn.pipe(takeUntil(this._unSubscribe)).subscribe(({ listUsers, selectedUser }) => {
+        this._rtSrv.updateBtn.pipe(takeUntil(this._unSubscribe))
+        .subscribe(({ listUsers, selectedUser }) => {
             this.listUsers = listUsers;
             this.selectUser = selectedUser;
             if (this.listUsers) {
@@ -80,6 +81,8 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         });
     }
     ngOnDestroy() {
+        this._unSubscribe.next();
+        this._unSubscribe.complete();
         if (this.dropdownMy) {
             this.dropdownMy.autoClose = false;
         }
@@ -209,6 +212,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     checkBtnProtocol() {
         if (!this.selectUser) {
             Protocol.disabled = true;
+            Protocol.isActive = false;
         } else {
             if (this.flagTachRigth) {
                 if (this.checkUresForLimited()) {
@@ -277,6 +281,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     checkWithLimitedUser(button: BtnActionFields): void {
         if (!this.selectUser || this.selectUser.deleted) {
             button.disabled = true;
+            button.isActive = false;
         } else {
             if (this.flagTachRigth) {
                 if (this.checkUresForLimited()) {
