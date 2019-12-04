@@ -1,4 +1,4 @@
-import {E_DICT_TYPE, ITreeDictionaryDescriptor} from 'eos-dictionaries/interfaces/index';
+import {E_DICT_TYPE, ITreeDictionaryDescriptor, IFieldPreferences} from 'eos-dictionaries/interfaces/index';
 import {COMMON_FIELD_NAME, COMMON_FIELDS} from '../_common';
 import {SEARCH_TYPES} from '../../search-types';
 
@@ -42,6 +42,9 @@ export const NP_SUD_RESHEN_TYPE_CL: ITreeDictionaryDescriptor = /*Object.assign(
     },
     Object.assign({}, COMMON_FIELD_NAME, {
         length: 248,
+        isUnique: true,
+        uniqueInDict: true,
+        preferences: <IFieldPreferences> { hasIcon: true, },
     }),
 
     {

@@ -573,6 +573,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
 
     private _countColumnWidthUnsafe() {
         const calcLength = [];
+        const presetLength = [];
         let fullWidth = 0;
 
         const fields: IFieldView[] = this.viewFields.concat(this.customFields);
@@ -580,7 +581,14 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         fields.forEach((_f) => {
             const element = document.getElementById('vf_' + _f.key);
             if (element) {
-                const itemWidth = element.clientWidth ? element.clientWidth : ITEM_WIDTH_FOR_NAN;
+                let itemWidth;
+                if (_f.preferences && _f.preferences.columnWidth) {
+                    itemWidth = _f.preferences.columnWidth;
+                    presetLength[_f.key] = itemWidth;
+                } else {
+                    itemWidth = element.clientWidth ? element.clientWidth : ITEM_WIDTH_FOR_NAN;
+                }
+
                 calcLength[_f.key] = itemWidth;
                 fullWidth += itemWidth;
             }
@@ -595,9 +603,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         }
 
         if (this.isOverflowed()) {
-            this.min_length = [];
+            this.min_length = presetLength;
         } else {
-            const minLength = [];
+            const minLength = presetLength;
             const lastField = fields[fields.length - 1];
             if (lastField && lastField.type !== E_FIELD_TYPE.boolean) {
                 minLength[lastField.key] = (this._holder.clientWidth - (fullWidth - this.length[lastField.key])) - 50;
