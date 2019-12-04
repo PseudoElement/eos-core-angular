@@ -1,5 +1,5 @@
 
-import { E_DICT_TYPE, ITreeDictionaryDescriptor } from 'eos-dictionaries/interfaces';
+import { E_DICT_TYPE, ITreeDictionaryDescriptor, IFieldPreferences } from 'eos-dictionaries/interfaces';
 import { SEARCH_TYPES } from '../search-types';
 import {COMMON_FIELDS, COMMON_FIELD_CODE, COMMON_FIELD_NAME, COMMON_FIELD_FULLNAME, COMMON_FIELD_NOTE, COMMON_FIELD_ICONS, ICONS_CONTAINER} from './_common';
 import { ISelectOption } from 'eos-common/interfaces';
@@ -46,7 +46,12 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     COMMON_FIELD_ICONS,
     Object.assign({}, COMMON_FIELD_CODE, {length: 10}),
     Object.assign({}, COMMON_FIELD_NOTE, {length: 100}),
-    Object.assign({}, COMMON_FIELD_NAME, {length: 64, uniqueInDict: true, isUnique: true}),
+    Object.assign({}, COMMON_FIELD_NAME, {
+        length: 64,
+        uniqueInDict: true,
+        isUnique: true,
+        preferences: <IFieldPreferences> { hasIcon: true, },
+    }),
     Object.assign({}, COMMON_FIELD_FULLNAME, {length: 100}),
     {
         key: 'IS_COPYCOUNT',

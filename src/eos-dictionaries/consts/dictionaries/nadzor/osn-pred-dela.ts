@@ -1,4 +1,4 @@
-import {E_DICT_TYPE, ITreeDictionaryDescriptor} from 'eos-dictionaries/interfaces/index';
+import {E_DICT_TYPE, ITreeDictionaryDescriptor, IFieldPreferences} from 'eos-dictionaries/interfaces/index';
 import {COMMON_FIELD_NAME, COMMON_FIELDS} from '../_common';
 import {SEARCH_TYPES} from '../../search-types';
 
@@ -45,6 +45,7 @@ export const NP_OSN_PRED_DELA_CL: ITreeDictionaryDescriptor = /*Object.assign({}
             isUnique: true,
             uniqueInDict: true,
             length: 100,
+            preferences: <IFieldPreferences> { hasIcon: true, },
         }),
 
         {

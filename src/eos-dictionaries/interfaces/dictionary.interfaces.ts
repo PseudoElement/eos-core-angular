@@ -57,6 +57,11 @@ export interface IDictionaryLink {
     fk: string;
     label: string;
 }
+
+export interface IFieldPreferences {
+    columnWidth?: number; /* node-list style: min-width.px */
+    hasIcon?: boolean; /* flag for enable icon (department, docgroups) */
+}
 export interface IFieldDescriptor {
     key: string;
     title: string;
@@ -81,6 +86,7 @@ export interface IFieldDescriptor {
     maxValue?: number;
     parent?: any;
     keyPosition?: number| string;
+    preferences?: IFieldPreferences;
 }
 
 export interface IFieldDescriptorBase {
@@ -104,6 +110,7 @@ export interface IFieldDescriptorBase {
     readonly password?: boolean;
     readonly groupLabel?: string;
     readonly dictionaryLink?: IDictionaryLink;
+    readonly preferences: IFieldPreferences;
 }
 
 export interface IFieldView extends IFieldDescriptorBase {
