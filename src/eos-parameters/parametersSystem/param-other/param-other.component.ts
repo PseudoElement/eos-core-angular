@@ -1,4 +1,4 @@
-import { OTHER_PARAM } from './../shared/consts/other-consts';
+import { OTHER_PARAM, OTHER_PARAM_CB } from './../shared/consts/other-consts';
 import { BaseParamComponent } from './../shared/base-param.component';
 import { Component, Injector, OnInit, Input } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -29,7 +29,7 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
         injector: Injector,
         private context: AppContext
         ) {
-        super(injector, OTHER_PARAM);
+        super(injector, context.cbBase ? OTHER_PARAM_CB : OTHER_PARAM);
     }
     ngOnInit() {
         this.formServer = new FormGroup({
