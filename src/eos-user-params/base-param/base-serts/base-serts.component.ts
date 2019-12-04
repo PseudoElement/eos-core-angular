@@ -117,11 +117,11 @@ export class BaseSertsComponent implements OnInit, OnDestroy {
             // FilterBlockVisible: 1,
             // cert_id: '2C1C653E145FE1B94E8955E597B133A5loc, mr, MNSDC1-CA'
         };
-        this._certService.openCerts(openSerts).then(data => {
-            let newSert = null;
+        this._certService.openCerts(openSerts).then((data: string) => {
+            // let newSert = null;
             if (data) {
-                newSert = data['certId'];
-                this.carmaSrv.GetCertInfo2(newSert).then(result => {
+                // newSert = data['certId'];
+                this.carmaSrv.GetCertInfo2(data).then(result => {
                     this.stateSerts[paramSert] = result['certInfo']['Description'];
                     this.stateSerts[id_sert] = result['certInfo']['Serial'] + result['certInfo']['Issuer'];
                 });

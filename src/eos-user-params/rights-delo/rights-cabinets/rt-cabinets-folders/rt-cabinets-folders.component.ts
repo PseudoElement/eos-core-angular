@@ -112,17 +112,17 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         const str1 = changedCabinets.checkDisabled(newStringAvalable, true);
         const str2 = changedCabinets.checkDisabled(newStringAvalable, false);
         if (!str1) {
+            changedCabinets.folders[9].selected = false;
+            changedCabinets.folders[9].disabled = true;
+        }   else {
+            changedCabinets.folders[9].disabled = false;
+        }
+
+        if (!str2) {
             changedCabinets.folders[10].selected = false;
             changedCabinets.folders[10].disabled = true;
         }   else {
             changedCabinets.folders[10].disabled = false;
-        }
-
-        if (!str2) {
-            changedCabinets.folders[11].selected = false;
-            changedCabinets.folders[11].disabled = true;
-        }   else {
-            changedCabinets.folders[11].disabled = false;
         }
         if (!str1 && !str2 && !changedCabinets.folders[6].selected) {
             this.checkDeletedCabinet(changedCabinets);
