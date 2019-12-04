@@ -6,12 +6,14 @@ import { takeUntil } from 'rxjs/operators';
 
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { IParamUserCl } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
-import { CARD_FUNC_LIST } from './card-func-list.consts';
+import { CARD_FUNC_LIST, E_CARD_TYPE } from './card-func-list.consts';
 import { FuncNum } from './funcnum.model';
 import { CardRightSrv } from './card-right.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
 import { USERCARD } from 'eos-rest';
+import { AppContext } from 'eos-rest/services/appContext.service';
+import { E_CARD_RIGHT } from 'eos-rest/interfaces/rightName';
 
 @Component({
     selector: 'eos-rights-delo-cards',
@@ -44,6 +46,7 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
         private _cardSrv: CardRightSrv,
         private _msgSrv: EosMessageService,
         private _errorSrv: ErrorHelperServices,
+        private _appContext: AppContext,
     ) {
         this._cardSrv.chengeState$
             .pipe(
@@ -67,6 +70,18 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
             if (!this.editableUser.USERCARD_List || !this.editableUser.USERCARD_List.length) {
                 this.pageState = 'EMPTY';
                 return;
+            }
+            if (this._appContext.cbBase) {
+                CARD_FUNC_LIST.forEach(elem => {
+                    if (elem.label === 'Отметка отправки документов') {
+                        elem.label = 'Отправка документов в Департаментах';
+                    }
+                });
+                CARD_FUNC_LIST.push({
+                    funcNum: E_CARD_RIGHT.SEND_FOR_SDS, //// 22 - Отправка по СДС
+                    label: 'Отправка по СДС',
+                    type: E_CARD_TYPE.none,
+                });
             }
             this.funcList = CARD_FUNC_LIST.map(node => new FuncNum(node));
             this.pageState = 'VIEW';

@@ -36,7 +36,7 @@ export class NodeFieldComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this._hasFolderIcon = this.node.dictionary.isTreeType() && (this.field.key === 'CLASSIF_NAME' || this.field.foreignKey === 'CLASSIF_NAME');
+        this._hasFolderIcon = this.field.preferences && this.field.preferences.hasIcon;
 
         if (this.field.type === E_FIELD_TYPE.icon) {
             if (this.node.data.rec['CARD_FLAG']) {

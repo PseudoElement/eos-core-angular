@@ -1,4 +1,4 @@
-import { E_DICT_TYPE, ITreeDictionaryDescriptor } from 'eos-dictionaries/interfaces';
+import { E_DICT_TYPE, ITreeDictionaryDescriptor, IFieldPreferences } from 'eos-dictionaries/interfaces';
 import { NOT_EMPTY_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
 import { COMMON_FIELDS } from './_common';
@@ -49,6 +49,7 @@ export const REGION_DICT: ITreeDictionaryDescriptor = {
         uniqueInDict: true,
         required: true,
         pattern: NOT_EMPTY_STRING,
+        preferences: <IFieldPreferences> { hasIcon: true, },
     }, {
         key: 'CODE',
         title: 'Код региона',

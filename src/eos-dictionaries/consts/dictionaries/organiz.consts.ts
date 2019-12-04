@@ -1,4 +1,4 @@
-import { ITreeDictionaryDescriptor, E_DICT_TYPE } from 'eos-dictionaries/interfaces';
+import { ITreeDictionaryDescriptor, E_DICT_TYPE, IFieldPreferences } from 'eos-dictionaries/interfaces';
 import { NOT_EMPTY_STRING } from '../input-validation';
 import { SEARCH_TYPES } from '../search-types';
 import { COMMON_FIELDS, COMMON_FIELD_NAME, } from './_common';
@@ -73,6 +73,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
         title: 'Наименование организации',
         groupLabel: 'Наименование группы',
         length: 255,
+        preferences: <IFieldPreferences> { hasIcon: true, },
     }), /* {
         key: 'CLASSIF_NAME_SEARCH',
         title: 'Поиск наименование организации',

@@ -1,4 +1,4 @@
-import {E_DICT_TYPE, IDictionaryDescriptor} from 'eos-dictionaries/interfaces';
+import {E_DICT_TYPE, IDictionaryDescriptor, IFieldPreferences} from 'eos-dictionaries/interfaces';
 import {LINEAR_TEMPLATE} from './_linear-template';
 import {COMMON_FIELD_NAME} from './_common';
 import {YEAR_PATTERN} from 'eos-common/consts/common.consts';
@@ -131,6 +131,9 @@ export const NOMENKL_DICT: IDictionaryDescriptor = Object.assign({}, LINEAR_TEMP
             title: 'Заголовок',
             length: 2000,
             type: 'text',
+            preferences: <IFieldPreferences>{
+                columnWidth: 250,
+            }
         }),
     ]),
 

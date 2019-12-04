@@ -1,4 +1,4 @@
-import {E_DICT_TYPE, E_VISIBLE_TIPE, IDepartmentDictionaryDescriptor} from 'eos-dictionaries/interfaces';
+import {E_DICT_TYPE, E_VISIBLE_TIPE, IDepartmentDictionaryDescriptor, IFieldPreferences} from 'eos-dictionaries/interfaces';
 import {NOT_EMPTY_STRING} from '../input-validation';
 import {SEARCH_TYPES} from '../search-types';
 import {ISelectOption} from 'eos-common/interfaces';
@@ -81,6 +81,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             length: 255,
             required: true,
             forNode: false,
+            preferences: <IFieldPreferences> { hasIcon: true, },
         }),
 
         Object.assign({}, COMMON_FIELD_NAME, {
@@ -90,6 +91,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             length: 255,
             required: true,
             forNode: false,
+            preferences: <IFieldPreferences> { hasIcon: true, },
         }),
         Object.assign({}, COMMON_FIELD_NAME, {
             key: 'nametitlePosition',
@@ -98,6 +100,7 @@ export const DEPARTMENTS_DICT: IDepartmentDictionaryDescriptor = {
             length: 255,
             required: true,
             forNode: false,
+            preferences: <IFieldPreferences> { hasIcon: true, },
         }),
         // Object.assign({}, COMMON_FIELD_NAME, {
         //     key: 'shorttitle',

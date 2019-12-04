@@ -1,4 +1,4 @@
-import { E_DICT_TYPE, ITreeDictionaryDescriptor } from 'eos-dictionaries/interfaces';
+import { E_DICT_TYPE, ITreeDictionaryDescriptor, IFieldPreferences } from 'eos-dictionaries/interfaces';
 import { SEARCH_TYPES } from '../search-types';
 import { COMMON_FIELD_NAME, COMMON_FIELDS, COMMON_FIELD_CODE } from './_common';
 
@@ -46,6 +46,7 @@ export const CITSTATUS_DICT: ITreeDictionaryDescriptor = {
         isUnique: true,
         uniqueInDict: true,
         length: 64,
+        preferences: <IFieldPreferences> { hasIcon: true, },
     }), {
         key: 'IS_NODE',
         title: 'IS_NODE',
