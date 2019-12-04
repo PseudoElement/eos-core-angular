@@ -19,14 +19,47 @@
     <div class="param-input-group">
         <span class="l-font">Виды отправки/доставки</span>
         <hr>
-        <div>
-            <span>E-mail</span>
+        <div class="param-other">
+            <div class="param-elem">
+                <span>E-mail</span>
+            </div>
             <eos-dynamic-input class="inline-block" [input]="inputs['rec.EMAIL_ISN_DELIVERY']" [form]="form" [readonly]="false" [dropup]="true"></eos-dynamic-input>
             <span></span>
         </div>
         <div class="param-other">
-            <span>СЭВ</span>
+            <div class="param-elem">
+                <span>СЭВ</span>
+            </div>
             <eos-dynamic-input class="inline-block" [input]="inputs['rec.SEV_ISN_DELIVERY']" [form]="form" [readonly]="false" [dropup]="true"></eos-dynamic-input>
+            <span></span>
+        </div>
+        <div class="param-other">
+            <div class="param-elem">
+                <span>АС ПСД</span>
+            </div>
+            
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.ASPSD_ISN_DELIVERY']" [form]="form" [readonly]="false" [dropup]="true"></eos-dynamic-input>
+            <span></span>
+        </div>
+        <div class="param-other">
+            <div class="param-elem">
+                <span>СДС</span>
+            </div>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.SDS_ISN_DELIVERY']" [form]="form" [readonly]="false" [dropup]="true"></eos-dynamic-input>
+            <span></span>
+        </div>
+        <div class="param-other">
+            <div class="param-elem">
+                <span>ЛК</span>
+            </div>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.LK_ISN_DELIVERY']" [form]="form" [readonly]="false" [dropup]="true"></eos-dynamic-input>
+            <span></span>
+        </div>
+        <div class="param-other">
+            <div class="param-elem">
+                <span>ЕПВВ</span>
+            </div>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.EPVV_ISN_DELIVERY']" [form]="form" [readonly]="false" [dropup]="true"></eos-dynamic-input>
             <span></span>
         </div>
     </div>

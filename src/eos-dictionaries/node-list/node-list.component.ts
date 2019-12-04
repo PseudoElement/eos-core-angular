@@ -94,6 +94,7 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
                             }
                         });
                         this.nodes = nodes;
+
                         setTimeout(() => {
                             this._countColumnWidth();
                             this._repaintFlag = false;
@@ -153,7 +154,10 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     ngOnDestroy() {
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
-        this._cdr.detach();
+        if (!this._cdr['destroyed']) {
+            this._cdr.detach();
+        }
+
     }
 
     markedNodes() {

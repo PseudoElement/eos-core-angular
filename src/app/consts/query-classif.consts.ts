@@ -13,6 +13,12 @@ export const OPEN_CLASSIF_DEPARTMENT_FULL: IOpenClassifParams = {
     return_due: true,
     skipDeleted: false,
 };
+export const OPEN_CLASSIF_DEPARTMENT_SEND_CB: IOpenClassifParams = {
+    classif: 'DEPARTMENT',
+    return_due: true,
+    skipDeleted: false,
+    selectLeafs: false,
+};
 export const OPEN_CLASSIF_DOCGROUP_CL: IOpenClassifParams = {
     classif: 'DOCGROUP_CL',
     return_due: true,

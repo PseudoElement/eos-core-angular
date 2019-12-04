@@ -14,6 +14,7 @@ import {
 } from './docgroup-template-config.consts';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 
+const FTemplates = Features.cfg.docgroups.templates;
 @Component({
     selector: 'eos-docgroup-template-config',
     templateUrl: 'docgroup-template-config.component.html',
@@ -101,7 +102,8 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
     }
 
     tooltipSave (): string {
-        return this.isTemplateValid() ? null : Features.cfg.docgroups.templates.invalidText;
+        return this.isTemplateValid() ? null :
+            (this.forProject ? FTemplates.INVALID_PRJ_TEMPLATE_TEXT : FTemplates.INVALID_TEMPLATE_TEXT);
     }
 
     init(content: any) {

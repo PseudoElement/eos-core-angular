@@ -19,7 +19,7 @@
                 placement="bottom"
                 triggers="hover"
                 containerClass="tooltip-info"
-                [disabled]="!selectedDep"
+                [disabled]="!selectedDep || !selectNoAllDep()"
                 (click)="itemTooltip.hide(); DeleteDep()"
             >
                 <span class="eos-icon eos-icon-bin-forever-blue small"></span>

@@ -46,7 +46,14 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
             })
             .then(opsh => {
                 this.constParam.fields.forEach(field => {
-                    if (field.key === 'EMAIL_ISN_DELIVERY' || field.key === 'SEV_ISN_DELIVERY') {
+                    if (
+                        field.key === 'EMAIL_ISN_DELIVERY' ||
+                        field.key === 'SEV_ISN_DELIVERY' ||
+                        field.key === 'ASPSD_ISN_DELIVERY' ||
+                        field.key === 'SDS_ISN_DELIVERY' ||
+                        field.key === 'LK_ISN_DELIVERY' ||
+                        field.key === 'EPVV_ISN_DELIVERY'
+                    ) {
                         field.options = opsh;
                     }
                 });
