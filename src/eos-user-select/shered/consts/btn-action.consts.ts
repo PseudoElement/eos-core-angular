@@ -109,7 +109,7 @@ export const OpenRightsSystemCaseDelo: BtnActionFields = {
     title: 'Окно прав пользователя в системе Дело',
     disabledClass: 'eos-icon eos-icon-D-Grey small',
     enableClass: 'eos-icon eos-icon-D-Blue small',
-    tooltip: 'Открыть окно настроек прав пользователя в системе Надзор',
+    tooltip: 'Открыть окно настроек прав пользователя в системе Дело',
     disabled: false,
     activeClass: 'eos-icon eos-icon-D-Blue small',
     activeBtnClass: '',
