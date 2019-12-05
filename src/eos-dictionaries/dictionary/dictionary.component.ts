@@ -51,8 +51,6 @@ import { TOOLTIP_DELAY_VALUE, EosTooltipService } from 'eos-common/services/eos-
 import { IConfirmWindow2, IConfirmButton } from 'eos-common/confirm-window/confirm-window2.component';
 import { IMessage } from 'eos-common/interfaces';
 import { WaitClassifService } from 'app/services/waitClassif.service';
-import { DepartmentCalendarComponent } from 'eos-dictionaries/department-calendar/department-calendar.component';
-import { COMMON_FIELD_NAME } from 'eos-dictionaries/consts/dictionaries/_common';
 import { EdsImportComponent } from 'eos-dictionaries/eds-import/eds-import.component';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 
@@ -493,9 +491,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             case E_RECORD_ACTIONS.downloadFile:
                 this._downloadDocTemplates();
                 break;
-            case E_RECORD_ACTIONS.departmentCalendar:
-                this._openDepartmentCalendar();
-                break;
             case E_RECORD_ACTIONS.importEDS:
                 this._openModalWindow();
                 break;
@@ -915,33 +910,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this._msgSrv.addNewMessage(WARN_LOGIC_OPEN);
         }
         this._dictSrv.setFlagForMarked(fieldName, false, false);
-    }
-
-    private _openDepartmentCalendar() {
-        if (this.dictionaryId !== DEPARTMENTS_DICT.id) {
-            this._msgSrv.addNewMessage(DANGER_EDIT_DICT_NOTALLOWED);
-            return;
-        }
-        this.modalWindow = null;
-
-        const node = this._dictSrv.listNode;
-        if (node) {
-            if (node.data.PROTECTED) {
-                this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
-            } else {
-                this.modalWindow = this._modalSrv.show(DepartmentCalendarComponent, {class: 'department-calendar-modal'});
-                (<DepartmentCalendarComponent>this.modalWindow.content).init(node.id, node.data.rec[COMMON_FIELD_NAME.key]);
-            }
-        } else {
-            this._msgSrv.addNewMessage(WARN_EDIT_ERROR);
-        }
-
-        if (this.modalWindow) {
-            const subscription = this.modalWindow.content.onChoose.subscribe(() => {
-                subscription.unsubscribe();
-            });
-        }
-
     }
 
     private _editCounter(type: E_COUNTER_TYPE) {
