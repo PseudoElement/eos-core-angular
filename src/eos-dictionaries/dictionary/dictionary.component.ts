@@ -33,6 +33,8 @@ import {
     DANGER_EDIT_DICT_NOTALLOWED,
     DANGER_EDIT_ROOT_ERROR,
     DANGER_LOGICALY_RESTORE_ELEMENT,
+    DANGER_EMPTY_FILE,
+    DANGER_ERROR_FILE,
     WARN_EDIT_ERROR,
     WARN_ELEMENT_DELETED,
     WARN_ELEMENT_PROTECTED,
@@ -46,10 +48,13 @@ import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.const
 import { PrjDefaultValuesComponent } from 'eos-dictionaries/prj-default-values/prj-default-values.component';
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 import { TOOLTIP_DELAY_VALUE, EosTooltipService } from 'eos-common/services/eos-tooltip.service';
-import { EdsImportComponent } from 'eos-dictionaries/eds-import/eds-import.component';
 import { IConfirmWindow2, IConfirmButton } from 'eos-common/confirm-window/confirm-window2.component';
 import { IMessage } from 'eos-common/interfaces';
 import { WaitClassifService } from 'app/services/waitClassif.service';
+import { DepartmentCalendarComponent } from 'eos-dictionaries/department-calendar/department-calendar.component';
+import { COMMON_FIELD_NAME } from 'eos-dictionaries/consts/dictionaries/_common';
+import { EdsImportComponent } from 'eos-dictionaries/eds-import/eds-import.component';
+import { Features } from 'eos-dictionaries/features/features-current.const';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -67,6 +72,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     dictionary: EosDictionary;
     listDictionary: EosDictionary;
+
+    featuresDep = Features.cfg.departments;
 
     dictionaryName: string;
     dictionaryId: string;
@@ -120,6 +127,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     hasCustomTable: boolean;
     hasCustomTree: boolean;
+    hasTemplateTree: boolean;
 
     accessDenied: boolean;
 
@@ -161,6 +169,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         _route.params.subscribe((params) => {
             if (params) {
                 this.dictionaryId = params.dictionaryId;
+
 
                 if (this._eaps.isAccessGrantedForDictionary(this.dictionaryId, null) === APS_DICT_GRANT.denied) {
                     this.accessDenied = true;
@@ -233,6 +242,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                             const n = this.dictionary.descriptor.getActive();
                             if (n) { this.title = n.title; }
                             this.customTreeData = d;
+                        });
+                    }
+                    this.hasTemplateTree = dictionary.descriptor.hasTemplateTree();
+                    if (this.hasTemplateTree) {
+                        dictionary.descriptor.getTemplateTree('').then((d) => {
+                            this.treeNodes = d;
                         });
                     }
                 } else {
@@ -432,7 +447,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 this._openAdvancedCardRK();
                 break;
             case E_RECORD_ACTIONS.counterDepartmentMain:
-                this._editCounter(E_COUNTER_TYPE.counterDepartmentMain);
+                if (this.featuresDep.numcreation) {
+                   this._editCounter(E_COUNTER_TYPE.counterDepartmentMain);
+                }
                 break;
             case E_RECORD_ACTIONS.counterDepartment:
                 this._editCounter(E_COUNTER_TYPE.counterDepartment);
@@ -473,6 +490,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             case E_RECORD_ACTIONS.certifUC:
                 this._navigateToUC();
                 break;
+            case E_RECORD_ACTIONS.downloadFile:
+                this._downloadDocTemplates();
+                break;
+            case E_RECORD_ACTIONS.departmentCalendar:
+                this._openDepartmentCalendar();
+                break;
             case E_RECORD_ACTIONS.importEDS:
                 this._openModalWindow();
                 break;
@@ -480,7 +503,17 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
     }
-
+    _downloadDocTemplates() {
+        this.dictionary.descriptor.downloadFile(this._dictSrv.listNode)
+            .then(info => {
+                if (!info) {
+                    this._msgSrv.addNewMessage(DANGER_EMPTY_FILE);
+                }
+            })
+            .catch(() => {
+                this._msgSrv.addNewMessage(DANGER_ERROR_FILE);
+            });
+    }
     _navigateToUC(): any {
             const url = this._router.url;
             this._storageSrv.setItem(RECENT_URL, url);
@@ -652,7 +685,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         if (dictionary.descriptor.id === 'broadcast-channel') {
             this.modalWindow = this._modalSrv.show(CreateNodeBroadcastChannelComponent, {class: 'creating-modal'});
         } else {
-            this.modalWindow = this._modalSrv.show(CreateNodeComponent, {class: 'creating-modal'});
+            let config = { class: 'creating-modal' };
+            if (dictionary.id === 'templates') {
+                config = Object.assign(config, { ignoreBackdropClick: true });
+            }
+            this.modalWindow = this._modalSrv.show(CreateNodeComponent, config);
         }
 
         this._dictSrv.clearCurrentNode();
@@ -878,6 +915,33 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this._msgSrv.addNewMessage(WARN_LOGIC_OPEN);
         }
         this._dictSrv.setFlagForMarked(fieldName, false, false);
+    }
+
+    private _openDepartmentCalendar() {
+        if (this.dictionaryId !== DEPARTMENTS_DICT.id) {
+            this._msgSrv.addNewMessage(DANGER_EDIT_DICT_NOTALLOWED);
+            return;
+        }
+        this.modalWindow = null;
+
+        const node = this._dictSrv.listNode;
+        if (node) {
+            if (node.data.PROTECTED) {
+                this._msgSrv.addNewMessage(DANGER_EDIT_ROOT_ERROR);
+            } else {
+                this.modalWindow = this._modalSrv.show(DepartmentCalendarComponent, {class: 'department-calendar-modal'});
+                (<DepartmentCalendarComponent>this.modalWindow.content).init(node.id, node.data.rec[COMMON_FIELD_NAME.key]);
+            }
+        } else {
+            this._msgSrv.addNewMessage(WARN_EDIT_ERROR);
+        }
+
+        if (this.modalWindow) {
+            const subscription = this.modalWindow.content.onChoose.subscribe(() => {
+                subscription.unsubscribe();
+            });
+        }
+
     }
 
     private _editCounter(type: E_COUNTER_TYPE) {
