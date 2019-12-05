@@ -623,7 +623,7 @@ export class EosDictionary {
                 case 'number':
                     res = _a < 0 ?
                         ((_a < _b && 1) || (_a > _b && -1) || 0) :
-                        ((a < b && -1) || (a > b && 1) || 0);
+                        ((_a < _b && -1) || (_a > _b && 1) || 0);
                     break;
                 case 'string':
                     if (!_a && !_b) {
