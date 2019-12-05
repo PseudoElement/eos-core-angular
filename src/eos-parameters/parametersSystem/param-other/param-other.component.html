@@ -33,7 +33,7 @@
             <eos-dynamic-input class="inline-block" [input]="inputs['rec.SEV_ISN_DELIVERY']" [form]="form" [readonly]="false" [dropup]="true"></eos-dynamic-input>
             <span></span>
         </div>
-        <div class="param-other">
+        <div *ngIf="context.cbBase" class="param-other">
             <div class="param-elem">
                 <span>АС ПСД</span>
             </div>
@@ -41,21 +41,21 @@
             <eos-dynamic-input class="inline-block" [input]="inputs['rec.ASPSD_ISN_DELIVERY']" [form]="form" [readonly]="false" [dropup]="true"></eos-dynamic-input>
             <span></span>
         </div>
-        <div class="param-other">
+        <div *ngIf="context.cbBase" class="param-other">
             <div class="param-elem">
                 <span>СДС</span>
             </div>
             <eos-dynamic-input class="inline-block" [input]="inputs['rec.SDS_ISN_DELIVERY']" [form]="form" [readonly]="false" [dropup]="true"></eos-dynamic-input>
             <span></span>
         </div>
-        <div class="param-other">
+        <div *ngIf="context.cbBase" class="param-other">
             <div class="param-elem">
                 <span>ЛК</span>
             </div>
             <eos-dynamic-input class="inline-block" [input]="inputs['rec.LK_ISN_DELIVERY']" [form]="form" [readonly]="false" [dropup]="true"></eos-dynamic-input>
             <span></span>
         </div>
-        <div class="param-other">
+        <div *ngIf="context.cbBase" class="param-other">
             <div class="param-elem">
                 <span>ЕПВВ</span>
             </div>
