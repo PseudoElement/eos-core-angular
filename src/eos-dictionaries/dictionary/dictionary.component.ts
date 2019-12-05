@@ -1,25 +1,19 @@
-import {IQuickSrchObj} from './../dictionary-search/dictionary-search.component';
 import {DEPARTMENTS_DICT} from './../consts/dictionaries/department.consts';
 import {AdvCardRKEditComponent} from './../adv-card/adv-card-rk.component';
-import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, DoCheck, HostListener, OnDestroy, ViewChild, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subject} from 'rxjs';
-
-
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
-
 import {ConfirmWindowService} from 'eos-common/confirm-window/confirm-window.service';
-import {CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE, CONFIRM_OPERATION_LOGICDELETE} from 'app/consts/confirms.const';
-
+import {CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE, CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE} from 'app/consts/confirms.const';
 import {EosDictService} from '../services/eos-dict.service';
 import {EosDictionary} from '../core/eos-dictionary';
-import {E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters, IRecordOperationResult} from 'eos-dictionaries/interfaces';
+import {E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters, IRecordOperationResult, SearchFormSettings, SEARCHTYPE} from 'eos-dictionaries/interfaces';
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
 import {EosMessageService} from 'eos-common/services/eos-message.service';
 import {EosStorageService} from 'app/services/eos-storage.service';
 import {EosSandwichService} from '../services/eos-sandwich.service';
 import {EosBreadcrumbsService} from '../../app/services/eos-breadcrumbs.service';
-
 import {RECENT_URL} from 'app/consts/common.consts';
 import {NodeListComponent} from '../node-list/node-list.component';
 import {CreateNodeComponent} from '../create-node/create-node.component';
@@ -39,8 +33,6 @@ import {
     DANGER_EDIT_DICT_NOTALLOWED,
     DANGER_EDIT_ROOT_ERROR,
     DANGER_LOGICALY_RESTORE_ELEMENT,
-    DANGER_EMPTY_FILE,
-    DANGER_ERROR_FILE,
     WARN_EDIT_ERROR,
     WARN_ELEMENT_DELETED,
     WARN_ELEMENT_PROTECTED,
@@ -48,6 +40,7 @@ import {
     WARN_LOGIC_OPEN,
     WARN_SELECT_NODE,
     INFO_OPERATION_COMPLETE,
+    SEARCH_NOT_DONE,
 } from '../consts/messages.consts';
 import { CABINET_DICT } from 'eos-dictionaries/consts/dictionaries/cabinet.consts';
 import { PrjDefaultValuesComponent } from 'eos-dictionaries/prj-default-values/prj-default-values.component';
@@ -61,7 +54,9 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 @Component({
     templateUrl: 'dictionary.component.html',
 })
-export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
+
+
+export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, OnInit {
     @ViewChild('nodeList') nodeList: NodeListComponent;
     @ViewChild('tree') treeEl;
     @ViewChild('custom-tree') customTreeEl;
@@ -119,12 +114,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
     dictMode = 1;
 
-    searchStartFlag = false; // flag begin search
+    searchInProgress = false; // flag begin search
     fastSearch = false;
+    searchSettings: SearchFormSettings;
 
     hasCustomTable: boolean;
     hasCustomTree: boolean;
-    hasTemplateTree: boolean;
 
     accessDenied: boolean;
 
@@ -158,10 +153,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         _tltp: EosTooltipService,
     ) {
         this.accessDenied = false;
+
+        this.searchSettings = this._dictSrv.getStoredSearchSettings();
+        this.fastSearch = this.searchSettings.lastSearch === SEARCHTYPE.quick;
+
         this._dictSrv.openNode('');
         _route.params.subscribe((params) => {
             if (params) {
                 this.dictionaryId = params.dictionaryId;
+
                 if (this._eaps.isAccessGrantedForDictionary(this.dictionaryId, null) === APS_DICT_GRANT.denied) {
                     this.accessDenied = true;
                     this._msgSrv.addNewMessage(DANGER_ACCESS_DENIED_DICT);
@@ -172,6 +172,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 if (this.dictionaryId) {
                     this._dictSrv.openDictionary(this.dictionaryId)
                         .then(() => {
+
+                            if (this.searchSettings.entity_dict !== this._dictSrv.currentDictionary.id) {
+                                this.clearFindSettings();
+                            }
+
                             this._dictSrv.setMarkAllNone();
                             if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.custom) {
                                 this.dictionary.root.children = null;
@@ -179,13 +184,13 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                                 if (n) {
                                     this.title = n.title;
                                 }
-                                this._dictSrv.setCustomNodeId(this._nodeId);
+
                                 this._dictSrv.setCustomNodeId(this._nodeId);
                                 if (this.dictionaryId === 'templates') {
                                     this.dictionary.descriptor['top'] = this._nodeId;
                                     this._dictSrv.selectTemplateNode().then(() => { });
                                 } else {
-                                    this._dictSrv.selectCustomTreeNode().then (() => {
+                                    this._dictSrv.selectCustomTreeNode(this._nodeId).then (() => {
                                     });
                                 }
                             } else if (this._dictSrv.currentDictionary.descriptor.dictionaryType === E_DICT_TYPE.linear) {
@@ -228,12 +233,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                             const n = this.dictionary.descriptor.getActive();
                             if (n) { this.title = n.title; }
                             this.customTreeData = d;
-                        });
-                    }
-                    this.hasTemplateTree = dictionary.descriptor.hasTemplateTree();
-                    if (this.hasTemplateTree) {
-                        dictionary.descriptor.getTemplateTree('').then((d) => {
-                            this.treeNodes = d;
                         });
                     }
                 } else {
@@ -318,33 +317,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             takeUntil(this.ngUnsubscribe)
         )
             .subscribe(() => {
-                // if (this._dictSrv.currentDictionary.isTreeType() && this._dictSrv.isSearchEnabled()) {
-                //     if (this._dictSrv.isSearchFullDictionary()) {
-                //         this.title = 'Поиск во всем справочнике';
-                //     }
-                // }
-
-                // Может пригодится - вывод принадлежности ноды в режиме поиска
-                // if (this._dictSrv.currentDictionary.isTreeType() && this._dictSrv.isSearchEnabled()) {
-                //     if (!node) {
-                //         this.title = '';
-                //         this._titleId = null;
-                //         return;
-                //     }
-                //     if (this.dictionaryId === NOMENKL_DICT.id) {
-                //         if (this._titleId !== node.data.rec.DUE) {
-                //             this._titleId = node.data.rec.DUE;
-                //             const parentNode: CustomTreeNode = CustomTreeComponent.findTreeParent(this.customTreeData, node.data.rec.DUE);
-                //             if (parentNode) {
-                //                 this.title = parentNode.title;
-                //             }
-                //         }
-                //     } else if (node.dictionaryId === CABINET_DICT.id) {
-                //         this.title = node.data.department['CLASSIF_NAME'];
-                //     } else {
-                //         this.title = node.parent.title;
-                //     }
-                // }
         });
 
         _bcSrv._eventFromBc$
@@ -354,6 +326,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             .subscribe((action: IActionEvent) => this.doAction(action));
     }
 
+    ngOnInit(): void {
+    }
+
     ngOnDestroy() {
         this._sandwichSrv.treeScrollTop = this._treeScrollTop;
         this.ngUnsubscribe.next();
@@ -361,11 +336,14 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
     }
 
     onSetActiveNode() {
-        // this.treeNode = n;
-        // if (n) {
-        //     this.title = 'onSetActiveNode';
-        // }
     }
+
+    clearFindSettings() {
+        this.searchSettings = new SearchFormSettings;
+        this.fastSearch = false;
+        this._dictSrv.setStoredSearchSettings(this.searchSettings);
+    }
+
     ngAfterViewInit() {
         this._treeScrollTop = this._sandwichSrv.treeScrollTop;
         this.treeEl.nativeElement.scrollTop = this._treeScrollTop;
@@ -495,9 +473,6 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             case E_RECORD_ACTIONS.certifUC:
                 this._navigateToUC();
                 break;
-            case E_RECORD_ACTIONS.downloadFile:
-                this._downloadDocTemplates();
-                break;
             case E_RECORD_ACTIONS.importEDS:
                 this._openModalWindow();
                 break;
@@ -505,17 +480,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
     }
-    _downloadDocTemplates() {
-        this.dictionary.descriptor.downloadFile(this._dictSrv.listNode)
-            .then(info => {
-                if (!info) {
-                    this._msgSrv.addNewMessage(DANGER_EMPTY_FILE);
-                }
-            })
-            .catch(() => {
-                this._msgSrv.addNewMessage(DANGER_ERROR_FILE);
-            });
-    }
+
     _navigateToUC(): any {
             const url = this._router.url;
             this._storageSrv.setItem(RECENT_URL, url);
@@ -530,6 +495,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
 
 
     resetSearch() {
+        this.clearFindSettings();
         this._dictSrv.resetSearch();
         this._dictSrv.updateViewParameters({searchResults: false });
         this.forcedCloseFastSrch();
@@ -552,20 +518,57 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             if (this.searchCtl) {
                 this.searchCtl.close();
             }
-            this.fastSearch = false;
+            this.clearFindSettings();
         }
     }
 
     onCloseFastSrch() {
-        this.forcedCloseFastSrch();
+        this.fastSearch = false;
+        // this.forcedCloseFastSrch();
     }
 
-    switchFastSearch(val: IQuickSrchObj) {
-        if (this.quickSearchCtl && this.quickSearchCtl.srchString && this.quickSearchCtl.srchString !== '') {
+    onRunFullSrch(search: SearchFormSettings) {
+        if (!this.searchInProgress) {
+            this.searchInProgress = true;
+            this._dictSrv.fullSearch(search.full.data, search.opts)
+                .then(() => {
+                    this.searchInProgress = false;
+                }).catch(() => {
+                    this.searchInProgress = false;
+                });
+        } else {
+            this._msgSrv.addNewMessage(SEARCH_NOT_DONE);
+        }
+    }
+
+    onRunFastSrch(search: SearchFormSettings) {
+        if (!this.searchInProgress) {
+            search.quick.data = (search.quick.data) ? search.quick.data.trim() : '';
+            if (search.quick) {
+                this.searchInProgress = true;
+                this._dictSrv.setMarkAllNone();
+                search.lastSearch = SEARCHTYPE.quick;
+                search.opts.deleted = this._dictSrv.viewParameters.showDeleted;
+                this.searchSettings = search;
+                this.searchSettings.entity_dict = this._dictSrv.currentDictionary.id;
+                this._dictSrv.setStoredSearchSettings(this.searchSettings);
+                this._dictSrv.quickSearch(this.searchSettings)
+                    .then(() => {
+                        this.searchInProgress = false;
+                    }).catch(() => {
+                        this.searchInProgress = false;
+                    });
+            }
+        } else {
+            this._msgSrv.addNewMessage(SEARCH_NOT_DONE);
+        }
+    }
+
+    switchFastSearch(val: boolean) {
+        if (this.quickSearchCtl && this.searchSettings.quick.data) {
             this.quickSearchCtl.quickSearch({ keyCode: 13 });
         } else {
-            val.isOpenQuick = !val.isOpenQuick;
-            this.fastSearch = val.isOpenQuick;
+            this.fastSearch = !this.fastSearch;
         }
     }
 
@@ -649,11 +652,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
         if (dictionary.descriptor.id === 'broadcast-channel') {
             this.modalWindow = this._modalSrv.show(CreateNodeBroadcastChannelComponent, {class: 'creating-modal'});
         } else {
-            let config = { class: 'creating-modal' };
-            if (dictionary.id === 'templates') {
-                config = Object.assign(config, { ignoreBackdropClick: true });
-            }
-            this.modalWindow = this._modalSrv.show(CreateNodeComponent, config);
+            this.modalWindow = this._modalSrv.show(CreateNodeComponent, {class: 'creating-modal'});
         }
 
         this._dictSrv.clearCurrentNode();
@@ -933,6 +932,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit {
             this._msgSrv.addNewMessage(WARN_EDIT_ERROR);
         }
     }
+
+
 
     private _openAdditionalFields() {
         const node = this._dictSrv.listNode;
