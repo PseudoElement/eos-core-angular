@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
 
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+/* import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal'; */
 
 import { of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -12,6 +12,9 @@ import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, PARM_ERROR_DB, PARM_ERROR_CARMA 
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { USER_CERT_PROFILE } from 'eos-rest/interfaces/structures';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { SertsBase } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { CertificateService } from 'app/services/certificate.service';
+import { ICertificateInit } from 'eos-common/interfaces';
 export interface Istore {
     Location: string;
     Address?: string;
@@ -39,6 +42,17 @@ interface SertInfo {
 
 
 export class UserParamsProfSertComponent implements OnInit, OnDestroy {
+
+    public stateSerts: SertsBase = {
+        sing_mail: null,
+        enc_mail: null,
+        id_sing: null,
+        id_enc: null,
+        id_enc_origin: null,
+        id_sing_origin: null,
+        sing_mail_origin: null,
+        enc_mail_origin: null,
+    };
     public selectedSertificatePopup: SertInfo;
     public listsSertInfo: Array<SertInfo> = [];
     public alllistSertInfo: Array<SertInfo> = [];
@@ -46,7 +60,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     public selectedFromAllList: SertInfo;
     public editFlag = false;
     public btnDisabled: boolean = false;
-    public modalRef: BsModalRef;
+    /* public modalRef: BsModalRef; */
     public currentUser;
     get titleHeader() {
         if (this.currentUser) {
@@ -63,10 +77,12 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     constructor(
         public certStoresService: CarmaHttpService,
         private _userSrv: UserParamsService,
-        private _modalService: BsModalService,
+        /* private _modalService: BsModalService, */
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
-        private _errorSrv: ErrorHelperServices
+        private _errorSrv: ErrorHelperServices,
+        private _certService: CertificateService,
+        private carmaSrv: CarmaHttpService,
     ) { }
     ngOnDestroy() { }
     ngOnInit() {
@@ -332,8 +348,23 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     }
 
 
+    openSertService(paramSert: string, id_sert: string): void {
+        const openSerts: ICertificateInit = {
+        };
+        this._certService.openCerts(openSerts).then((data: string) => {
+            if (data) {
+                this.carmaSrv.GetCertInfo2(data).then(result => {
+                    this.selectedSertificatePopup = this.objectForSertInfo(result, data, false, false, false);
+                    this.addSert();
+                });
+            }
+        }).catch(error => {
+            console.log('error', error);
+        });
+    }
     chooseSertificate(template: TemplateRef<any>): void {
-        this.modalRef = this._modalService.show(template);
+        this.openSertService('sing_mail', 'id_sing');
+        // this.modalRef = this._modalService.show(template);
     }
     selectCurentListAll(item: SertInfo): void {
         if (this.selectedSertificatePopup) {
