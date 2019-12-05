@@ -119,6 +119,7 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
                 if (data.length) {
                     this.showDocGrList = true;
                     this.docGroupList = data;
+                    this.sortDoc(false);
                 }
                 return;
             }).catch(error => {
@@ -133,8 +134,7 @@ export class TemplatesCardComponent implements OnInit, OnDestroy {
         }
         this._ref.detach();
     }
-    public sortDoc() {
-        this.flagSort = !this.flagSort;
+    public sortDoc(flag) {
         this.docGroupList = this.docGroupList.sort((a: DOCGROUP_CL, b: DOCGROUP_CL) => {
             return (this.flagSort ? 1 : -1) * a.CLASSIF_NAME.localeCompare(b.CLASSIF_NAME);
         });

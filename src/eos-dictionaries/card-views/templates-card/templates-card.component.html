@@ -35,7 +35,7 @@
         </div>
         <div *ngIf="showDoc">
             <ul>
-                <span class="sort-name" (click)="sortDoc()">Название<span class="eos-icon small"
+                <span class="sort-name" (click)="sortDoc( flagSort = !flagSort)">Название<span class="eos-icon small"
                         [ngClass]="classSort"></span></span>
                 <li *ngFor="let doc of docGroupList">{{doc.CLASSIF_NAME}}</li>
             </ul>
