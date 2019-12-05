@@ -57,6 +57,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     public isShell: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
     public errorPass: boolean = false;
+    public checkPass: string = '';
     private _sysParams;
     private _descSrv;
     private _newData: Map<string, any> = new Map();
@@ -99,6 +100,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             shortSys: true
         }).then((data) => {
             if (data) {
+                this._userParamSrv.getPasswordСonditions();
                 this.selfLink = this._router.url.split('?')[0];
                 this.init();
                 if (this.curentUser.isTechUser) {
@@ -683,6 +685,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
 
 
     private checkchangPass(pass, passrepeat) {
+        this.checkPass = pass !== '' ? this._userParamSrv.checkPasswordСonditions(pass) : '';
+        if (this.checkPass !== '') {
+            this.formControls.get('pass').setErrors({ repeat: true });
+        }
         if (pass !== '' && passrepeat !== '') {
             this.errorPass = pass !== passrepeat;
             if (this.errorPass) {
