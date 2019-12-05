@@ -71,12 +71,36 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
         }
     }
     inint() {
-        this.prepareData = this.formHelp.parse_Create(VISUALIZATION_USER.fields, this.allData);
-        this.prepareInputs = this.formHelp.getObjectInputFields(VISUALIZATION_USER.fields);
-        this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
-        this.form = this.inpSrv.toFormGroup(this.inputs);
-        this.editMode();
-        this.formSubscriber();
+        const query = {
+            EDS_CATEGORY_CL: {
+                criteries: {
+                    DELETED: 0
+                }
+            }
+        };
+        this._pipRx.read(query)
+        .then((data: any[]) => {
+            data.forEach(elem => {
+                let flag = true;
+                VISUALIZATION_USER.fields[0].options.forEach(opt => {
+                    if (opt.value === elem['ISN_LCLASSIF']) {
+                        flag = false;
+                    }
+                });
+                if (flag) {
+                    VISUALIZATION_USER.fields[0].options.push({value: elem['ISN_LCLASSIF'], title: elem['CLASSIF_NAME']});
+                }
+            });
+            this.prepareData = this.formHelp.parse_Create(VISUALIZATION_USER.fields, this.allData);
+            this.prepareInputs = this.formHelp.getObjectInputFields(VISUALIZATION_USER.fields);
+            this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
+            this.form = this.inpSrv.toFormGroup(this.inputs);
+            this.editMode();
+            this.formSubscriber();
+        })
+        .catch(er => {
+            console.log('error', er);
+        });
     }
     checkTouch(data) {
         let countError = 0;
