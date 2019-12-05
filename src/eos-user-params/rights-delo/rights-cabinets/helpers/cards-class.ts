@@ -29,7 +29,7 @@ export class Cabinets {
         return str + t;
     }
     get hideAccess() {
-        if (this.folders[10].selected) {
+        if (this.folders[9].selected) {
             return 1;
         } else {
             return 0;
@@ -37,7 +37,7 @@ export class Cabinets {
     }
 
     get hideAccessPR() {
-        if (this.folders[11].selected) {
+        if (this.folders[10].selected) {
             return 1;
         } else {
             return 0;

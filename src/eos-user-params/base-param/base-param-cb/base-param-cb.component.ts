@@ -24,6 +24,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ConfirmWindowService } from '../../../eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_UPDATE_USER } from '../../../eos-user-select/shered/consts/confirm-users.const';
 import { IMessage } from 'eos-common/interfaces';
+import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 
 @Component({
     selector: 'eos-params-base-param-cb',
@@ -39,6 +40,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     inputFields: IInputParamControl[];
     controlField: IInputParamControl[];
     accessField: IInputParamControl[];
+    title: string;
     /* инпуты */
     inputs;
     controls;
@@ -75,15 +77,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     get stateHeaderSubmit() {
         return this._newData.size > 0 || this._newDataformAccess.size > 0 || this._newDataformControls.size > 0;
     }
-    get title() {
-        if (this.curentUser) {
-            if (this.curentUser.isTechUser) {
-                return this.curentUser.CLASSIF_NAME;
-            }
-            return `${this.curentUser['DUE_DEP_SURNAME']} (${this.curentUser['CLASSIF_NAME']})`;
-        }
-        return '';
-    }
     constructor(
         private _router: Router,
         private _snapShot: ActivatedRoute,
@@ -97,6 +90,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         private modalService: BsModalService,
         private _confirmSrv: ConfirmWindowService,
         private apiSrvRx: PipRX,
+        private _rtUserSel: RtUserSelectService
     ) {
     }
     ngOnInit() {
@@ -107,6 +101,11 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             if (data) {
                 this.selfLink = this._router.url.split('?')[0];
                 this.init();
+                if (this.curentUser.isTechUser) {
+                    this.title = this.curentUser.CLASSIF_NAME;
+                } else {
+                    this.title = `${this.curentUser['DUE_DEP_SURNAME']} (${this.curentUser['CLASSIF_NAME']})`;
+                }
                 if (this._snapShot.snapshot.queryParams.is_create && !this.curentUser['IS_PASSWORD']) {
                     this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
                 }
@@ -279,18 +278,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             }
         }
     }
-
-    submit(meta?: string): Promise<any> {
-        if (this.cheackCtech()) {
-            return;
-        }
-        this.isLoading = true;
-        const id = this._userParamSrv.userContextId;
-        const newD = {};
-        const query = [];
-        const accessStr = '';
-        this.setQueryNewData(accessStr, newD, query);
-        this.setNewDataFormControl(query, id);
+    saveData(newD: any, accessStr: string, id: number, query: any): Promise<any> {
         const pass = this._newDataformControls.get('pass');
         if (this.inputs.CLASSIF_NAME.value !== this.form.value.CLASSIF_NAME) {
             if (this.curentUser['IS_PASSWORD'] === 0) {
@@ -355,6 +343,39 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             }
         }
     }
+
+    submit(meta?: string): Promise<any> {
+        if (this.cheackCtech()) {
+            return;
+        }
+        this.isLoading = true;
+        const id = this._userParamSrv.userContextId;
+        const newD = {};
+        const query = [];
+        const accessStr = '';
+        this.setQueryNewData(accessStr, newD, query);
+        this.setNewDataFormControl(query, id);
+        if (newD.hasOwnProperty('DUE_DEP') && this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
+            return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
+                if (cab) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }).then(data => {
+                if (!data) {
+                    this.clearMap();
+                    this.messageAlert({ title: 'Предупреждение', msg: `Невозможно присвоить пользователю выбранную роль`, type: 'warning' });
+                    this.isLoading = false;
+                    return;
+                } else {
+                    return this.saveData(newD, accessStr, id, query);
+                }
+            });
+        } else {
+            return this.saveData(newD, accessStr, id, query);
+        }
+    }
     sendData(query, accessStr): Promise<any> {
         return this._apiSrv.setData(query).then(() => {
             this.AfterSubmit(accessStr);
@@ -382,6 +403,11 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }).then(() => {
             this.editMode = false;
             this.curentUser = this._userParamSrv.curentUser;
+            if (this.curentUser.isTechUser) {
+                this.title = this.curentUser.CLASSIF_NAME;
+            } else {
+                this.title = `${this.curentUser['DUE_DEP_SURNAME']} (${this.curentUser['CLASSIF_NAME']})`;
+            }
             this.upform(this.inputs, this.form);
             this.upform(this.controls, this.formControls);
             this.upform(this.accessInputs, this.formAccess);
@@ -703,6 +729,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     this.formControls.controls['SELECT_ROLE'].disable();
                 } else {
                     this.curentUser.isTechUser = data;
+                    this.form.controls['DUE_DEP_NAME'].patchValue(this.inputs.DUE_DEP_NAME.value);
                     this.formControls.controls['SELECT_ROLE'].patchValue('...');
                     this.formControls.controls['SELECT_ROLE'].enable();
                 }

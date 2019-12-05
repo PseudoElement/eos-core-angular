@@ -16,6 +16,7 @@ import { EosDictionaryNode } from 'eos-dictionaries/core/eos-dictionary-node';
 import { RtUserSelectService } from '../../eos-user-select/shered/services/rt-user-select.service';
 import { EosAccessPermissionsService, APS_DICT_GRANT } from 'eos-dictionaries/services/eos-access-permissions.service';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     selector: 'eos-breadcrumb',
@@ -51,6 +52,7 @@ export class BreadcrumbsComponent implements OnDestroy {
         private _dictSrv: EosDictService,
         private _rtSrv: RtUserSelectService,
         private _eaps: EosAccessPermissionsService,
+        private _appContext: AppContext,
     ) {
         _breadcrumbsSrv.breadcrumbs$
             .pipe(
@@ -115,7 +117,8 @@ export class BreadcrumbsComponent implements OnDestroy {
             )
             .subscribe(data => {
                 this.showUserInfo = !!data;
-                if (this._breadcrumbsSrv.currentLink && this._breadcrumbsSrv.currentLink.title === 'Пользователи' && this._rtSrv.btnDisabled !== true) {
+                if (this._breadcrumbsSrv.currentLink && this._breadcrumbsSrv.currentLink.title === 'Пользователи' && this._rtSrv.btnDisabled !== true &&
+                (this._appContext.cbBase && this._appContext.CurrentUser.IS_SECUR_ADM === 0)) {
                     this.isNavigationEnabled = true;
                     this.isEditGranted =  true;
                 } else {
