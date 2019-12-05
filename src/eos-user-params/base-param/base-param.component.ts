@@ -39,6 +39,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     inputFields: IInputParamControl[];
     controlField: IInputParamControl[];
     accessField: IInputParamControl[];
+    title: string;
     /* инпуты */
     inputs;
     controls;
@@ -75,15 +76,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     get stateHeaderSubmit() {
         return this._newData.size > 0 || this._newDataformAccess.size > 0 || this._newDataformControls.size > 0;
     }
-    get title() {
-        if (this.curentUser) {
-            if (this.curentUser.isTechUser) {
-                return this.curentUser.CLASSIF_NAME;
-            }
-            return `${this.curentUser['DUE_DEP_SURNAME']} (${this.curentUser['CLASSIF_NAME']})`;
-        }
-        return '';
-    }
     constructor(
         private _router: Router,
         private _snapShot: ActivatedRoute,
@@ -107,6 +99,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             if (data) {
                 this.selfLink = this._router.url.split('?')[0];
                 this.init();
+                if (this.curentUser.isTechUser) {
+                    this.title = this.curentUser.CLASSIF_NAME;
+                } else {
+                    this.title = `${this.curentUser['DUE_DEP_SURNAME']} (${this.curentUser['CLASSIF_NAME']})`;
+                }
                 if (this._snapShot.snapshot.queryParams.is_create && !this.curentUser['IS_PASSWORD']) {
                     this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
                 }
@@ -382,6 +379,11 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }).then(() => {
             this.editMode = false;
             this.curentUser = this._userParamSrv.curentUser;
+            if (this.curentUser.isTechUser) {
+                this.title = this.curentUser.CLASSIF_NAME;
+            } else {
+                this.title = `${this.curentUser['DUE_DEP_SURNAME']} (${this.curentUser['CLASSIF_NAME']})`;
+            }
             this.upform(this.inputs, this.form);
             this.upform(this.controls, this.formControls);
             this.upform(this.accessInputs, this.formAccess);
@@ -703,6 +705,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     this.formControls.controls['SELECT_ROLE'].disable();
                 } else {
                     this.curentUser.isTechUser = data;
+                    this.form.controls['DUE_DEP_NAME'].patchValue(this.inputs.DUE_DEP_NAME.value);
                     this.formControls.controls['SELECT_ROLE'].patchValue('...');
                     this.formControls.controls['SELECT_ROLE'].enable();
                 }
