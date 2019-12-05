@@ -358,7 +358,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         const accessStr = '';
         this.setQueryNewData(accessStr, newD, query);
         this.setNewDataFormControl(query, id);
-        if (newD.hasOwnProperty('DUE_DEP') && this.formControls.controls['SELECT_ROLE'].value) {
+        if (newD.hasOwnProperty('DUE_DEP') && this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
             return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
                 if (cab) {
                     return true;
