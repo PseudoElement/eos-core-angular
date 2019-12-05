@@ -72,16 +72,22 @@ export class RightsDeloCardsComponent implements OnInit, OnDestroy {
                 return;
             }
             if (this._appContext.cbBase) {
+                let flag = true;
                 CARD_FUNC_LIST.forEach(elem => {
                     if (elem.label === 'Отметка отправки документов') {
                         elem.label = 'Отправка документов в Департаментах';
                     }
+                    if (elem.label === 'Отправка по СДС') {
+                        flag = false;
+                    }
                 });
-                CARD_FUNC_LIST.push({
-                    funcNum: E_CARD_RIGHT.SEND_FOR_SDS, //// 22 - Отправка по СДС
-                    label: 'Отправка по СДС',
-                    type: E_CARD_TYPE.none,
-                });
+                if (flag) {
+                    CARD_FUNC_LIST.push({
+                        funcNum: E_CARD_RIGHT.SEND_FOR_SDS, //// 22 - Отправка по СДС
+                        label: 'Отправка по СДС',
+                        type: E_CARD_TYPE.none,
+                    });
+                }
             }
             this.funcList = CARD_FUNC_LIST.map(node => new FuncNum(node));
             this.pageState = 'VIEW';
