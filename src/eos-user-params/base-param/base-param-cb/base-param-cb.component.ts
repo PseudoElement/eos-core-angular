@@ -24,6 +24,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ConfirmWindowService } from '../../../eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_UPDATE_USER } from '../../../eos-user-select/shered/consts/confirm-users.const';
 import { IMessage } from 'eos-common/interfaces';
+import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
 
 @Component({
     selector: 'eos-params-base-param-cb',
@@ -97,6 +98,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         private modalService: BsModalService,
         private _confirmSrv: ConfirmWindowService,
         private apiSrvRx: PipRX,
+        private _rtUserSel: RtUserSelectService
     ) {
     }
     ngOnInit() {
@@ -279,18 +281,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             }
         }
     }
-
-    submit(meta?: string): Promise<any> {
-        if (this.cheackCtech()) {
-            return;
-        }
-        this.isLoading = true;
-        const id = this._userParamSrv.userContextId;
-        const newD = {};
-        const query = [];
-        const accessStr = '';
-        this.setQueryNewData(accessStr, newD, query);
-        this.setNewDataFormControl(query, id);
+    saveData(newD: any, accessStr: string, id: number, query: any): Promise<any> {
         const pass = this._newDataformControls.get('pass');
         if (this.inputs.CLASSIF_NAME.value !== this.form.value.CLASSIF_NAME) {
             if (this.curentUser['IS_PASSWORD'] === 0) {
@@ -353,6 +344,39 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             } else {
                 this.sendData(query, accessStr);
             }
+        }
+    }
+
+    submit(meta?: string): Promise<any> {
+        if (this.cheackCtech()) {
+            return;
+        }
+        this.isLoading = true;
+        const id = this._userParamSrv.userContextId;
+        const newD = {};
+        const query = [];
+        const accessStr = '';
+        this.setQueryNewData(accessStr, newD, query);
+        this.setNewDataFormControl(query, id);
+        if (newD.hasOwnProperty('DUE_DEP') && this.formControls.controls['SELECT_ROLE'].value) {
+            return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
+                if (cab) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }).then(data => {
+                if (!data) {
+                    this.clearMap();
+                    this.messageAlert({ title: 'Предупреждение', msg: `Невозможно присвоить пользователю выбранную роль`, type: 'warning' });
+                    this.isLoading = false;
+                    return;
+                } else {
+                    return this.saveData(newD, accessStr, id, query);
+                }
+            });
+        } else {
+            return this.saveData(newD, accessStr, id, query);
         }
     }
     sendData(query, accessStr): Promise<any> {
