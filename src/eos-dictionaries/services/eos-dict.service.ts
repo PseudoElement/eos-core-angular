@@ -14,8 +14,10 @@ import {
     IFieldView,
     IOrderBy,
     IRecordOperationResult,
+    // ISearchSettings,
+    SEARCH_MODES,
+    SearchFormSettings,
     ISearchSettings,
-    SEARCH_MODES
 } from 'eos-dictionaries/interfaces';
 import {EosUtils} from 'eos-common/core/utils';
 import {FieldsDecline} from 'eos-dictionaries/interfaces/fields-decline.inerface';
@@ -94,6 +96,7 @@ export class EosDictService {
     private _currentScrollTop = 0;
     private _weightOrdered: boolean;
     private _currentMarkInfo: MarkedInformation = new MarkedInformation();
+    private _treeNodeId: string;
 
 
     /* Observable dictionary for subscribing on updates in components */
@@ -671,19 +674,22 @@ export class EosDictService {
     }
 
     // temporary fix
-    selectCustomTreeNode(): Promise<EosDictionaryNode> {
-        let p; // = Promise.resolve(this._treeNode);
+    selectCustomTreeNode(nodeId: string): Promise<EosDictionaryNode> {
+        let p;
         const dictionary = this._dictionaries[0];
         if (dictionary && dictionary.root) {
             this.updateViewParameters({updatingList: true});
-            // p = this.loadChildren(dictionary, dictionary.root);
-            // p = Promise.resolve(null);
             p = Promise.resolve(dictionary.root);
         } else {
             p = Promise.resolve(null);
         }
         return p
             .then((node) => {
+                if (this._treeNodeId !== nodeId) {
+                    // this.resetSearch();
+                    this._srchCriteries = null;
+                    this._treeNodeId = nodeId;
+                }
                 if (node) {
                     let parent = node.parent;
                     while (parent) {
@@ -691,7 +697,8 @@ export class EosDictService {
                         parent = parent.parent;
                     }
                 }
-                this._srchCriteries = null;
+
+
                 this._selectTreeNode(node);
                 return node;
             }).then((n) => {
@@ -920,13 +927,13 @@ export class EosDictService {
         return this._srchParams ? this._srchParams.mode === SEARCH_MODES.totalDictionary : false;
     }
 
-    search(searchString: string, params: ISearchSettings): Promise<EosDictionaryNode[]> {
+    quickSearch (settings: SearchFormSettings): Promise<EosDictionaryNode[]> {
         const dictionary = this.currentDictionary;
-        const fixedString = searchString.replace(SEARCH_INCORRECT_SYMBOLS, '');
+        const fixedString = settings.quick.data.replace(SEARCH_INCORRECT_SYMBOLS, '');
         if (fixedString !== '') {
-            this._srchCriteries = dictionary.getSearchCriteries(fixedString, params, this._treeNode);
-            this._srchParams = params;
-            return this._search(params.deleted);
+            this._srchCriteries = dictionary.getSearchCriteries(fixedString, settings.opts, this._treeNode);
+            this._srchParams = settings.opts;
+            return this._search(settings.opts.deleted);
         } else {
             return Promise.resolve(null);
         }
@@ -942,19 +949,15 @@ export class EosDictService {
 
     fullSearch(data: any, params: ISearchSettings) {
 
-        this.fixSearchSymbols(data, SEARCH_INCORRECT_SYMBOLS);
+        try {
+            this.fixSearchSymbols(data, SEARCH_INCORRECT_SYMBOLS);
+        } catch (e) {
+        }
+
 
         const dictionary = this.currentDictionary;
         if (data.srchMode === 'person') {
             this._srchCriteries = [dictionary.getFullsearchCriteries(data, params, this._treeNode)];
-            // if (data.person['PHONE']) {
-            //     data.person['PHONE_LOCAL'] = data.person['PHONE'];
-            //     delete data.person['PHONE'];
-            // } else {
-            //     if (data.person['PHONE_LOCAL']) {
-            //         delete data.person['PHONE_LOCAL'];
-            //     }
-            // }
             this._srchCriteries.push(dictionary.getFullsearchCriteries(data, params, this._treeNode));
             return this._search(params.deleted);
         } else {
@@ -972,7 +975,7 @@ export class EosDictService {
                 } else {
                     for (const k in list) {
                         if (list.hasOwnProperty(k)) {
-                            const fixed = list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
+                            const fixed = list[k] && list[k].replace(SEARCH_INCORRECT_SYMBOLS, '');
                             list[k] = fixed;
                         }
                     }
@@ -1150,6 +1153,15 @@ export class EosDictService {
         return this.paginationConfig && this.paginationConfig.itemsQty > 10;
     }
 
+    public getStoredSearchSettings(): SearchFormSettings {
+        const res = this._storageSrv.getItem('lastSearchSetting');
+        return res ? res : new SearchFormSettings;
+    }
+
+    public setStoredSearchSettings(data: SearchFormSettings) {
+        this._storageSrv.setItem('lastSearchSetting', data);
+    }
+
     private getDictionaryById(id: string): Promise<EosDictionary> {
         const existDict = this._dictionaries.find((dictionary) => dictionary && dictionary.id === id);
         if (existDict) {
@@ -1160,6 +1172,7 @@ export class EosDictService {
     }
 
     private _fixCurrentPage() {
+        // this.paginationConfig.itemsQty = this._getAllListLength();
         this.paginationConfig.itemsQty = this._getListLength();
         const maxPage = Math.max(1, Math.ceil(this.paginationConfig.itemsQty / this.paginationConfig.length));
         this.paginationConfig.start = Math.min(this.paginationConfig.start, maxPage);
@@ -1194,8 +1207,10 @@ export class EosDictService {
             length: this._storageSrv.getItem(LS_PAGE_LENGTH) || PAGES[0].value,
             itemsQty: this._getListLength()
         });
+
         if (update) {
-            this._fixCurrentPage();
+            this._updateVisibleNodes();
+            // this._fixCurrentPage();
         } else {
             this.paginationConfig.current = 1;
             this.paginationConfig.start = 1;
@@ -1462,14 +1477,14 @@ export class EosDictService {
         let pResult = Promise.resolve([]);
         const dictionary = this.currentDictionary;
         if (dictionary) {
-            if (this._dictMode !== 0) {
-                pResult = dictionary.searchByParentData(this._dictionaries[0], this._treeNode);
-            } else if (this._srchCriteries) {
+            if (this._srchCriteries) {
                 if (!afterAdd) {
                     pResult = dictionary.search(this._srchCriteries);
                 } else {
                     pResult = Promise.resolve(this._currentList);
                 }
+            } else if (this._dictMode !== 0) {
+                pResult = dictionary.searchByParentData(this._dictionaries[0], this._treeNode);
             } else if (this.viewParameters.showAllSubnodes) {
                 pResult = dictionary.getAllChildren(this._treeNode);
             } else {

@@ -1,9 +1,8 @@
-import { Component, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, Output, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { EosDictService } from '../services/eos-dict.service';
 import { E_DICT_TYPE, IRecordModeDescription } from 'eos-dictionaries/interfaces';
-// import { EosMessageService } from '../../eos-common/services/eos-message.service';
 import { FormGroup } from '@angular/forms';
 import { InputBase } from 'eos-common/core/inputs/input-base';
 import { InputControlService } from 'eos-common/services/input-control.service';
@@ -13,19 +12,12 @@ import { DID_NOMENKL_CL, NOMENKL_DICT } from 'eos-dictionaries/consts/dictionari
 import { IBaseInput } from 'eos-common/interfaces';
 import { YEAR_PATTERN } from 'eos-common/consts/common.consts';
 
-/*
-const SEARCH_MODEL = {
-    rec: {},
-    cabinet: {},
-    printInfo: {}
-};
-*/
 
 @Component({
     selector: 'eos-dictionary-filter',
     templateUrl: 'dictionary-filter.component.html'
 })
-export class DictionaryFilterComponent implements OnDestroy {
+export class DictionaryFilterComponent implements OnDestroy, OnInit {
     @Output() setFilter: EventEmitter<any> = new EventEmitter(); // todo add filter type
 
     filterInputs: IBaseInput[] = [
@@ -72,44 +64,48 @@ export class DictionaryFilterComponent implements OnDestroy {
     private dictionary: EosDictionary;
     private subscriptions: Subscription[] = [];
 
-
     constructor(
         private _dictSrv: EosDictService,
-        // private _msgSrv: EosMessageService,
         private inputCtrlSrv: InputControlService,
     ) {
-        // ['department', 'data', 'person', 'cabinet'].forEach((model) => this.clearModel(model));
         this.inputs = this.inputCtrlSrv.generateInputs(this.filterInputs);
         this.searchForm = this.inputCtrlSrv.toFormGroup(this.inputs, false);
+
+    }
+    ngOnInit(): void {
+        this.subscriptions.push(this._dictSrv.dictMode$.subscribe(() => this.initSearchForm()));
+        this.subscriptions.push(this._dictSrv.dictionary$.subscribe((_d) => this.initSearchForm()));
+
+        this.searchForm.valueChanges.subscribe((data) => {
+            this.applyFilters();
+    });
+
+
+    }
+    applyFilters(): any {
         const dateFilter = this.searchForm.controls['filter.stateDate'];
         const yearFilter = this.searchForm.controls['filter.stateYear'];
         const cb1Filter = this.searchForm.controls['filter.CB1'];
-
-        this.searchForm.valueChanges.subscribe((data) => {
-            this._dictSrv.setMarkAllNone();
-            if (this.dictId === NOMENKL_DICT.id) {
-                const nomenklFilt = {};
-                if (yearFilter.valid) {
-                    nomenklFilt['YEAR'] = data['filter.stateYear'];
-                }
-                if (cb1Filter) {
-                    nomenklFilt['CB1'] = data['filter.CB1'];
-                }
-
-                this._dictSrv.setFilter(nomenklFilt);
+        this._dictSrv.setMarkAllNone();
+        if (this.dictId === NOMENKL_DICT.id) {
+            const nomenklFilt = {};
+            if (yearFilter.valid) {
+                nomenklFilt['YEAR'] = yearFilter.value;
+            }
+            if (cb1Filter) {
+                nomenklFilt['CB1'] = cb1Filter.value;
             }
 
-            if (dateFilter.valid) {
-                this.dateFilter(data['filter.stateDate']);
-            } else if (dateFilter.errors.minDate || dateFilter.errors.maxDate) {
-                dateFilter.setValue(new Date());
-            } else {
-                this.dateFilter(new Date());
-            }
-        });
+            this._dictSrv.setFilter(nomenklFilt);
+        }
 
-        this.subscriptions.push(_dictSrv.dictMode$.subscribe(() => this.initSearchForm()));
-        this.subscriptions.push(_dictSrv.dictionary$.subscribe((_d) => this.initSearchForm()));
+        if (dateFilter.valid) {
+            this.dateFilter(dateFilter.value /*data['filter.stateDate']*/);
+        } else if (dateFilter.errors.minDate || dateFilter.errors.maxDate) {
+            dateFilter.setValue(new Date());
+        } else {
+            this.dateFilter(new Date());
+        }
     }
 
     get dictId(): string {
@@ -136,13 +132,10 @@ export class DictionaryFilterComponent implements OnDestroy {
         this.dictionary = this._dictSrv.currentDictionary;
         if (this.dictionary) {
             const dateFilter = this.searchForm.controls['filter.stateDate'];
-            // this.fieldsDescription = this.dictionary.descriptor.record.getFieldDescription(E_FIELD_SET.fullSearch);
             this.type = this.dictionary.descriptor.dictionaryType;
             this.modes = this.dictionary.descriptor.record.getModeList();
             if (this.modes) {
                 this.setTab(this.modes[0].key);
-            } else {
-                // this.searchModel = this.getSearchModel();
             }
 
             const _config = this.dictionary.descriptor.record.getSearchConfig();
@@ -156,11 +149,11 @@ export class DictionaryFilterComponent implements OnDestroy {
                 const cv = this._dictSrv.getFilterValue('CB1');
                 this.hasYear = true;
                 if (yv) {
-                    yearFilter.setValue(yv);
+                    yearFilter.setValue(yv, {emit: false});
                 }
 
                 if (cv) {
-                    cb1.setValue(cv);
+                    cb1.setValue(cv, {emit: false});
                 }
 
             }
@@ -172,6 +165,7 @@ export class DictionaryFilterComponent implements OnDestroy {
                     this.dateFilter(dateFilter.value);
                 }
             }
+            this.applyFilters();
         }
     }
 }
