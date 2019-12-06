@@ -2,7 +2,8 @@ import { E_FIELD_TYPE } from './../../interfaces/dictionary.interfaces';
 import { DIGIT3_PATTERN, DIGIT4_WITH_PERIOD_LIST_SEPARATED } from 'eos-common/consts/common.consts';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 
-export const USER_LIST_ORDERBY = 'WEIGHT';
+const USER_LIST_ORDERBY = 'WEIGHT';
+const LIST_ORDERBY = 'WEIGHT';
 
 const FeaturesRK = Features.cfg.rkdefaults;
 
@@ -273,6 +274,7 @@ export const RKPDDefaultFields: TDefaultField[] = [
                 dictId: 'SECURITY_CL',
                 dictKey: 'SECURLEVEL',
                 dictKeyTitle: 'GRIF_NAME',
+                orderby: LIST_ORDERBY,
             },
             order: 30,
         }, {
@@ -564,6 +566,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictId: 'DELIVERY_CL',
             dictKey: 'ISN_LCLASSIF',
             dictKeyTitle: 'CLASSIF_NAME',
+            orderby: LIST_ORDERBY,
         }
     }, {
         key: 'SECURLEVEL_M',
@@ -586,6 +589,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictId: 'SECURITY_CL',
             dictKey: 'SECURLEVEL',
             dictKeyTitle: 'GRIF_NAME',
+            orderby: LIST_ORDERBY,
         },
         order: 40,
         // classif_id:  111
@@ -603,6 +607,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'SECURLEVEL',
             dictKeyTitle: 'GRIF_NAME',
             version: 1,
+            orderby: LIST_ORDERBY,
         },
         order: 3300,
 
@@ -650,6 +655,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictId: 'DELIVERY_CL',
             dictKey: 'ISN_LCLASSIF',
             dictKeyTitle: 'CLASSIF_NAME',
+            orderby: LIST_ORDERBY,
         },
         order: 50,
     }, {
@@ -1393,7 +1399,8 @@ export const RKDefaultFields: TDefaultField[] = [
             dictId: 'DOC_TEMPLATES',
             dictKey: 'ISN_TEMPLATE',
             dictKeyTitle: 'DESCRIPTION',
-            criteries: { CATEGORY: '%файлы документов%'}
+            criteries: { CATEGORY: '%файлы документов%'},
+            orderby: LIST_ORDERBY,
         },
         order: 100,
         // classif_id: NULL
@@ -1431,6 +1438,7 @@ export const RKDefaultFields: TDefaultField[] = [
             dictKey: 'ISN_NODE',
             dictKeyTitle: 'CARD_NAME',
             criteries: { CARD_FLAG: '1', DELETED: '0', },
+            orderby: LIST_ORDERBY,
         }
         // classif_id:  104
     }, {
