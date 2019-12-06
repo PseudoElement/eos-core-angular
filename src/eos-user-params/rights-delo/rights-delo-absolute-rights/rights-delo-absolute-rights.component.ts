@@ -61,7 +61,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
     private _limCardDisable = [0, 1, 2, 18, 19, 22, 29];
     private _ngUnsubscribe: Subject<any> = new Subject();
     private flagGrifs: boolean = false;
-    private DELETE_RCPD = 'У пользователя назначенно право \'Содзание РКПД\'.Без права \'Исполнение поручений\' оно не работает. Снять это право?';
+    private DELETE_RCPD = 'У пользователя назначено право \'Содзание РКПД\' .Без права \'Исполнение поручений\' оно не работает. Снять это право?';
     private CREATE_RCPD = 'У пользователя нет права \'Исполнения поручений\', добавить его?';
 
     constructor(
@@ -728,7 +728,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
                         title: 'Предупреждение',
-                        msg: 'Не заданны подразделения для права ' + node.label
+                        msg: 'Не заданы подразделения для права ' + node.label
                     });
                 }
                 if (!allowed) {
@@ -761,7 +761,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
                         title: 'Предупреждение',
-                        msg: 'Не заданны подразделения или организации для права ' + node.label
+                        msg: 'Не заданы подразделения для права ' + node.label
                     });
                 }
                 if (!allowed) {
