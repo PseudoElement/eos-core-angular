@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 /* import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal'; */
 
@@ -362,7 +362,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             console.log('error', error);
         });
     }
-    chooseSertificate(template: TemplateRef<any>): void {
+    chooseSertificate(): void {
         this.openSertService();
         // this.modalRef = this._modalService.show(template);
     }
