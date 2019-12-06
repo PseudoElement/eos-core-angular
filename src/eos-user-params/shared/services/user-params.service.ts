@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap';
 import { AppContext } from 'eos-rest/services/appContext.service';
 import { ErrorHelperServices } from './helper-error.services';
+import { BASE_PARAM_REG_EXP } from '../consts/base-param.consts';
 
 @Injectable()
 export class UserParamsService {
@@ -29,6 +30,8 @@ export class UserParamsService {
     private _userContext: IParamUserCl;
     private _userContextDeparnment: DEPARTMENT;
     private _sysParams;
+    private _passCondWords: Array<any>;
+    private _passConditionals: Array<any>;
 
 
     get sysParams() {
@@ -292,6 +295,64 @@ export class UserParamsService {
             });
         });
     }
+
+    getPasswordСonditions(): Promise<any> {
+        return Promise.all([
+            this._pipSrv.getData({'SYS_PARMS(-99)/PASS_STOP_LIST_List': ALL_ROWS}),
+            this._pipSrv.getData({
+                USER_PARMS: PipRX.criteries({'PARM_NAME': 'CHANGE_PASS|PASS_MINLEN|PASS_CASE|PASS_ALF|PASS_NUM|PASS_SPEC|PASS_LIST|PASS_LIST_SUBSTR'})
+            })
+        ]).then((data: any[]) => {
+            this._passCondWords = data[0];
+            this._passConditionals = data[1];
+        });
+    }
+
+    checkPasswordСonditions(pass: string): string {
+        const passNums = pass.replace(BASE_PARAM_REG_EXP[0].passNums, '').length;
+        const passAlph = (pass.match(BASE_PARAM_REG_EXP[1].passAlph) || []);
+        const otherSymb = (pass.match(BASE_PARAM_REG_EXP[2].otherSymb) || []).length;
+        if (this._passConditionals[0].PARM_VALUE === 'YES') { // проверка на запрет смены
+            return 'запрещена смена пароля';
+        }
+        if (this._passConditionals[1].PARM_VALUE > passAlph.length) { // проверка на буквы
+            return `пароль должен содержать не менее ${+this._passConditionals[1].PARM_VALUE} букв`;
+        }
+        if (this._passConditionals[2].PARM_VALUE === 'YES') { // проверка на регситр
+            const isLowerCase = passAlph.filter(symb => symb === symb.toLowerCase());
+            const isUpperCase = passAlph.filter(symb => symb === symb.toUpperCase());
+            if (isLowerCase.length > 0 && isUpperCase.length === 0) {
+                return 'отсутствуют буквы верхнего регистра';
+            }
+            if (isLowerCase.length === 0 && isUpperCase.length > 0) {
+                return 'отсутствуют буквы нижнего регистра';
+            }
+        }
+        if (this._passConditionals[3].PARM_VALUE === 'YES') { // значение из словаря
+            const colWords = this._passCondWords.map(word => word.CLASSIF_NAME);
+            if (this._passConditionals[4].PARM_VALUE === 'YES') { // подстрока или точечное значение
+                const substrWord = colWords.filter(word => pass.indexOf(word) !== -1);
+                if (substrWord.length > 0) {
+                    return 'пароль совпадает с исключением';
+                }
+            } else {
+                if (colWords.indexOf(pass) !== -1) {
+                    return 'пароль совпадает с исключением частично';
+                }
+            }
+        }
+        if (+this._passConditionals[5].PARM_VALUE > pass.length) { // проверка на длинну
+            return 'слишком короткий пароль';
+        }
+        if (+this._passConditionals[6].PARM_VALUE > passNums) { // проверка на цифры
+            return `пароль должен содержать не менее ${+this._passConditionals[6].PARM_VALUE} цифр`;
+        }
+        if (+this._passConditionals[7].PARM_VALUE > otherSymb) { // проверка на другие символы
+            return `пароль должен содержать не менее ${+this._passConditionals[8].PARM_VALUE} других символов`;
+        }
+        return '';
+    }
+
     private _createHash() {
         this._userContext['USER_PARMS_HASH'] = {};
         this._userContext['USER_PARMS_List'].forEach(item => {
