@@ -376,9 +376,18 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             }
         }
     }
+    returnElemListRight(key: string) {
+        let elemReturn;
+        this.listRight.forEach(elem => {
+            if (elem.key === key) {
+                elemReturn = elem;
+            }
+        });
+        return elemReturn;
+    } // '5' '28'
     checkRcpdDelete(flag: boolean) {
         if (!flag) {
-            if (this.listRight[8].value) {
+            if (this.returnElemListRight('28').value) {
                 return new Promise((res) => {
                     if (confirm(this.DELETE_RCPD)) {
                         res(true);
@@ -387,25 +396,25 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     }
                 }).then(f => {
                     if (f) {
-                        this.listRight[8].control.patchValue(false);
-                        this.listRight[8].value = 0;
-                        this._deleteAllDocGroup(this.listRight[8]);
+                        this.returnElemListRight('28').control.patchValue(false);
+                        this.returnElemListRight('28').value = 0;
+                        this._deleteAllDocGroup(this.returnElemListRight('28'));
                     }
                 });
             }
         }
     }
     createRcpdD() {
-        this.listRight[8].control.patchValue(true);
-        this.listRight[8].control.markAsTouched();
-        this.listRight[8].value = 1;
-        this.selectNode(this.listRight[8]);
+        this.returnElemListRight('28').control.patchValue(true);
+        this.returnElemListRight('28').control.markAsTouched();
+        this.returnElemListRight('28').value = 1;
+        this.selectNode(this.returnElemListRight('28'));
     }
     checkExecOrder(flag: boolean) {
         setTimeout(() => {
             return new Promise((res, rej) => {
                 if (flag) {
-                    if (this.listRight[7].control.value) {
+                    if (this.returnElemListRight('5').control.value) {
                         res(false);
                     } else {
                         const f = confirm(this.CREATE_RCPD);
@@ -418,10 +427,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 }
             }).then(answer => {
                 if (answer) {
-                    this.listRight[7].control.patchValue(true);
-                    this.listRight[7].control.markAsTouched();
-                    this.listRight[7].value = 1;
-                    this.selectNode(this.listRight[7]);
+                    this.returnElemListRight('5').control.patchValue(true);
+                    this.returnElemListRight('5').control.markAsTouched();
+                    this.returnElemListRight('5').value = 1;
+                    this.selectNode(this.returnElemListRight('5'));
                 }
             });
         }, 500);

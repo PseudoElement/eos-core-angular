@@ -1,145 +1,110 @@
-import { Component, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChild, OnDestroy, Input, OnInit, OnChanges } from '@angular/core';
 import { Subscription } from 'rxjs';
-
 import { EosDictService } from '../services/eos-dict.service';
-import { E_DICT_TYPE, E_FIELD_SET, IRecordModeDescription, ISearchSettings, SEARCH_MODES } from 'eos-dictionaries/interfaces';
-import { EosMessageService } from '../../eos-common/services/eos-message.service';
-import { SEARCH_NOT_DONE } from '../consts/messages.consts';
+import { E_DICT_TYPE, E_FIELD_SET, IRecordModeDescription, SearchFormSettings, SEARCHTYPE } from 'eos-dictionaries/interfaces';
 import { EosDictionary } from '../core/eos-dictionary';
 import { SEARCH_TYPES } from 'eos-dictionaries/consts/search-types';
-import {BaseCardEditComponent} from '../card-views/base-card-edit.component';
+import { BaseCardEditComponent } from '../card-views/base-card-edit.component';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
-
-export interface IQuickSrchObj {
-    isOpenQuick: boolean;
-}
-
+// export interface IQuickSrchObj {
+//     isOpenQuick: boolean;
+// }
 @Component({
     selector: 'eos-dictionary-search',
     templateUrl: 'dictionary-search.component.html'
 })
 
-export class DictionarySearchComponent implements OnDestroy {
-    // @Output() setFilter: EventEmitter<any> = new EventEmitter(); // todo add filter type
-    @Output() switchFastSrch: EventEmitter<IQuickSrchObj> = new EventEmitter();
-
-    @ViewChild('full') fSearchPop;
-    @ViewChild('quick') qSearchPop;
-
+export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
+    @Input()
+    settings: SearchFormSettings;
+    @Output()
+    searchRun: EventEmitter<SearchFormSettings> = new EventEmitter();
+    @Output()
+    switchFastSrch: EventEmitter<boolean> = new EventEmitter();
+    @ViewChild('full')
+    fSearchPop;
+    @ViewChild('quick')
+    qSearchPop;
     tooltipDelay = TOOLTIP_DELAY_VALUE;
-
-    quickSrchObj: IQuickSrchObj  = {
-        isOpenQuick: false,
-    };
 
     fieldsDescription = {
         rec: {}
     };
-
     data: any;
-    department: any;
-    person: any;
-    cabinet: any;
-
-    settings: ISearchSettings = {
-        mode: SEARCH_MODES.totalDictionary,
-        deleted: false
-    };
     currTab: string;
     modes: IRecordModeDescription[];
-    searchDone = true; // Flag search is done, false while not received data
-
-
-
     dataQuick = null;
-
     hasQuick: boolean;
     hasFull: boolean;
     type: E_DICT_TYPE;
-
     searchModel = {};
-
     public mode = 0;
-
     private dictionary: EosDictionary;
     private subscriptions: Subscription[] = [];
     private searchData = {
         srchMode: ''
     };
+    constructor(private _dictSrv: EosDictService) {
+    }
 
-    constructor(
-        private _dictSrv: EosDictService,
-        private _msgSrv: EosMessageService,
-    ) {
-        ['department', 'data', 'person', 'cabinet'].forEach((model) => this.clearModel(model));
+    ngOnChanges () {
 
-        this.subscriptions.push(_dictSrv.dictMode$.subscribe(() => this.initSearchForm()));
-        this.subscriptions.push(_dictSrv.dictionary$.subscribe((_d) => this.initSearchForm()));
+    }
+    ngOnInit(): void {
+        this.subscriptions.push(this._dictSrv.dictMode$.subscribe(() => this.initSearchForm()));
+        this.subscriptions.push(this._dictSrv.dictionary$.subscribe((_d) => this.initSearchForm()));
     }
     get dictId(): string {
         return this.dictionary.id;
     }
     get noSearchData(): boolean {
-        return Object.keys(this.searchModel).findIndex((prop) =>
-            this.searchModel[prop] && this.searchModel[prop].trim()) === -1;
+        return Object.keys(this.searchModel).findIndex((prop) => this.searchModel[prop] && this.searchModel[prop].trim()) === -1;
     }
-
     get searchActive(): boolean {
         return this._dictSrv.viewParameters.searchResults;
     }
-
     isActiveButton(): boolean {
-        return (this.fSearchPop.isOpen /*|| (!this.noSearchData && this.searchActive) || this.searchActive*/);
+        return (this.fSearchPop.isOpen || this.settings.lastSearch === SEARCHTYPE.full /*|| (!this.noSearchData && this.searchActive) || this.searchActive*/);
     }
-
     setTab(key: string) {
         this.currTab = key;
         this.searchData.srchMode = key;
         this.searchModel = this.getSearchModel();
     }
-
     ngOnDestroy() {
         this.subscriptions.forEach((subscription) => subscription.unsubscribe());
     }
-
     autoFocus() {
         BaseCardEditComponent.autoFocusOnFirstStringElement('popover-container');
     }
-
     fullSearch() {
-        this.settings.mode = this.mode;
-        this.fSearchPop.hide();
-        if (this.searchDone) {
-            this.searchDone = false;
-            const model = (this.dictId === 'departments') ? this.searchData : this.getSearchModel();
-            this._dictSrv.fullSearch(model, this.settings)
-                .then(() => {
-                    this.searchDone = true;
-                });
-        } else {
-            this._msgSrv.addNewMessage(SEARCH_NOT_DONE);
-        }
+        this.settings.entity = this.getModelName();
+        this.settings.entity_dict = this.dictId;
+        this.settings.lastSearch = SEARCHTYPE.full;
+        this.settings.opts.mode = this.mode;
+        const model = (this.dictId === 'departments') ? this.searchData : this.getSearchModel();
+        this.settings.full.data = model;
+        this.searchRun.emit(this.settings);
     }
-
     clearForm() {
         this.clearModel(this.getModelName());
     }
-
     showFastSrch() {
-        this.switchFastSrch.emit(this.quickSrchObj);
+        this.switchFastSrch.emit(this.isQuickOpened);
+    }
+    close() {
     }
 
-    close() {
-        this.quickSrchObj.isOpenQuick = false;
+    get isQuickOpened(): boolean {
+        return this.settings && this.settings.lastSearch === SEARCHTYPE.quick;
     }
 
     public considerDel() {
-        this._dictSrv.updateViewParameters({ showDeleted: this.settings.deleted });
+        this._dictSrv.updateViewParameters({ showDeleted: this.settings.opts.deleted });
     }
-
     private clearModel(modelName: string) {
         this.mode = 0;
-        this.settings.deleted = false;
+        this.settings.opts.deleted = false;
         const model = this.searchData[modelName];
         if (model) {
             Object.keys(model).forEach((prop) => model[prop] = null);
@@ -147,11 +112,9 @@ export class DictionarySearchComponent implements OnDestroy {
             this.searchData[modelName] = {};
         }
     }
-
     private getModelName(): string {
         return (this.dictId === 'departments') ? this.currTab || 'department' : this.dictId;
     }
-
     private getSearchModel() {
         const prop = this.getModelName();
         if (!this.searchData[prop]) {
@@ -159,15 +122,33 @@ export class DictionarySearchComponent implements OnDestroy {
         }
         return this.searchData[prop];
     }
-
     private initSearchForm() {
         this.dictionary = this._dictSrv.currentDictionary;
         if (this.dictionary) {
+            if (this.settings) {
+                if (this.settings.full.data) {
+                    if (this.settings.entity_dict === 'departments') {
+                        this.searchData = this.settings.full.data;
+                        this.setTab(this.searchData.srchMode);
+                    } else {
+                        this.searchData[this.settings.entity] = this.settings.full.data;
+
+                    }
+
+                    this.mode = this.settings.opts.mode;
+                } else {
+                    ['department', 'data', 'person', 'cabinet'].forEach((model) => this.clearModel(model));
+                }
+            }
+
             this.fieldsDescription = this.dictionary.descriptor.record.getFieldDescription(E_FIELD_SET.fullSearch);
             this.type = this.dictionary.descriptor.dictionaryType;
             this.modes = this.dictionary.descriptor.record.getModeList();
+
+
             if (this.modes) {
-                this.setTab(this.modes[0].key);
+                const i = this.modes.findIndex( m => m.key === (this.settings && this.settings.entity));
+                this.setTab(this.modes[i >= 0 ? i : 0].key);
             } else {
                 this.searchModel = this.getSearchModel();
             }
