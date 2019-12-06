@@ -130,7 +130,7 @@
             >
             </eos-dictionary-quick-search>
 
-            <div class="first-line" *ngIf="hasFilter()" [hidden]="params.hideTopMenu || accessDenied">
+            <div class="second-line" *ngIf="hasFilter()" [hidden]="params.hideTopMenu || accessDenied">
                 <div class="">
                     <eos-dictionary-filter (switchFastSrch)="switchFastSearch($event)"></eos-dictionary-filter>
                 </div>
