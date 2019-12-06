@@ -25,6 +25,7 @@ import { ConfirmWindowService } from '../../../eos-common/confirm-window/confirm
 import { CONFIRM_UPDATE_USER } from '../../../eos-user-select/shered/consts/confirm-users.const';
 import { IMessage } from 'eos-common/interfaces';
 import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
+import { CONFIRM_AVSYSTEMS_UNCHECKED } from 'eos-dictionaries/consts/confirm.consts';
 
 @Component({
     selector: 'eos-params-base-param-cb',
@@ -64,6 +65,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     private _newDataformControls: Map<string, any> = new Map();
     private _newDataformAccess: Map<string, any> = new Map();
     private modalRef: BsModalRef;
+    private _uncheckedAvBtn: boolean = false;
 
     get newInfo() {
         if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size) {
@@ -103,11 +105,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 this._userParamSrv.getPasswordСonditions();
                 this.selfLink = this._router.url.split('?')[0];
                 this.init();
-                if (this.curentUser.isTechUser) {
-                    this.title = this.curentUser.CLASSIF_NAME;
-                } else {
-                    this.title = `${this.curentUser['DUE_DEP_SURNAME']} (${this.curentUser['CLASSIF_NAME']})`;
-                }
+                this.getTitle();
                 if (this._snapShot.snapshot.queryParams.is_create && !this.curentUser['IS_PASSWORD']) {
                     this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
                 }
@@ -223,6 +221,14 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
         return true;
     }
+    getTitle(): void {
+        if (this.curentUser.isTechUser) {
+            this.title = this.curentUser.CLASSIF_NAME;
+        } else {
+            this.title = `${this.curentUser['DUE_DEP_SURNAME']} (${this.curentUser['CLASSIF_NAME']})`;
+        }
+    }
+
     cheackCtech(): boolean {
         if (!this.dueDepNameNullUndef(this.form.get('DUE_DEP_NAME').value) && !this.curentUser.isTechUser) {
             this._msgSrv.addNewMessage({
@@ -280,6 +286,67 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             }
         }
     }
+
+    uncheckedAvSystems(): boolean {
+        if (this._newDataformAccess.size) {
+            const accessStr = this._createAccessSystemsString(this.formAccess.controls);
+            if (accessStr === '0000000000000000000000000000') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    submit(meta?: string): Promise<any> {
+        if (this.cheackCtech()) {
+            return;
+        }
+        if (this._newData.get('IS_SECUR_ADM') && this.curentUser.TECH_RIGHTS && this.curentUser.TECH_RIGHTS[0] === '1') {
+            this.messageAlert({ title: 'Предупреждение', msg: `Право 'Cистемный технолог.Пользователи' не может быть назначено одновременно с правом 'Администратор системы'`, type: 'warning' });
+            return;
+        }
+        const id = this._userParamSrv.userContextId;
+        const newD = {};
+        const query = [];
+        const accessStr = '';
+        this.setQueryNewData(accessStr, newD, query);
+        this.setNewDataFormControl(query, id);
+        if (this.uncheckedAvSystems()) {
+            return this._confirmSrv.confirm(CONFIRM_AVSYSTEMS_UNCHECKED).then(res => {
+                if (res) {
+                    return this.saveAfterSystems(newD, accessStr, id, query);
+                } else {
+                    return;
+                }
+            });
+        }
+        return this.saveAfterSystems(newD, accessStr, id, query);
+    }
+
+    saveAfterSystems(newD: any, accessStr: string, id: number, query: any): Promise<any> {
+        this.isLoading = true;
+        if (newD.hasOwnProperty('DUE_DEP') && this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
+            return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
+                if (cab) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }).then(data => {
+                if (!data) {
+                    this.clearMap();
+                    this.messageAlert({ title: 'Предупреждение', msg: `Невозможно присвоить пользователю выбранную роль`, type: 'warning' });
+                    this.isLoading = false;
+                    return;
+                } else {
+                    return this.saveData(newD, accessStr, id, query);
+                }
+            });
+        } else {
+            return this.saveData(newD, accessStr, id, query);
+        }
+    }
+
     saveData(newD: any, accessStr: string, id: number, query: any): Promise<any> {
         const pass = this._newDataformControls.get('pass');
         if (this.inputs.CLASSIF_NAME.value !== this.form.value.CLASSIF_NAME) {
@@ -346,38 +413,6 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
     }
 
-    submit(meta?: string): Promise<any> {
-        if (this.cheackCtech()) {
-            return;
-        }
-        this.isLoading = true;
-        const id = this._userParamSrv.userContextId;
-        const newD = {};
-        const query = [];
-        const accessStr = '';
-        this.setQueryNewData(accessStr, newD, query);
-        this.setNewDataFormControl(query, id);
-        if (newD.hasOwnProperty('DUE_DEP') && this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
-            return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
-                if (cab) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }).then(data => {
-                if (!data) {
-                    this.clearMap();
-                    this.messageAlert({ title: 'Предупреждение', msg: `Невозможно присвоить пользователю выбранную роль`, type: 'warning' });
-                    this.isLoading = false;
-                    return;
-                } else {
-                    return this.saveData(newD, accessStr, id, query);
-                }
-            });
-        } else {
-            return this.saveData(newD, accessStr, id, query);
-        }
-    }
     sendData(query, accessStr): Promise<any> {
         return this._apiSrv.setData(query).then(() => {
             this.AfterSubmit(accessStr);
@@ -405,11 +440,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }).then(() => {
             this.editMode = false;
             this.curentUser = this._userParamSrv.curentUser;
-            if (this.curentUser.isTechUser) {
-                this.title = this.curentUser.CLASSIF_NAME;
-            } else {
-                this.title = `${this.curentUser['DUE_DEP_SURNAME']} (${this.curentUser['CLASSIF_NAME']})`;
-            }
+            this.getTitle();
             this.upform(this.inputs, this.form);
             this.upform(this.controls, this.formControls);
             this.upform(this.accessInputs, this.formAccess);
@@ -469,6 +500,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this._toggleFormControl(this.formAccess.controls['delo_web'], false);
             this._toggleFormControl(this.formAccess.controls['1-27'], true);
         }
+        this.tf();
     }
     tf() {
         const val1 = this.formAccess.controls['0-1'].value;
@@ -578,6 +610,10 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
     }
     checRadioB() {
+        if (this._uncheckedAvBtn === true && (this.gt()['delo'] || this.gt()['delo_web_delo'] || this.gt()['delo_web'])) {
+            this.formAccess.enable({ onlySelf: true, emitEvent: false });
+            this._uncheckedAvBtn = false;
+        }
         if (!this.gt()['delo_web']) {
             this.formAccess.controls['1-27'].patchValue(null, { emitEvent: false });
         } else {
@@ -604,6 +640,15 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         if (!this.gt()['delo'] && !this.gt()['delo_web'] && !this.gt()['delo_web_delo']) {
             this.patchVal();
             this.disableAccessSyst(true);
+        }
+        if (this.uncheckedAvSystems()) {
+            const arrNotBlockAv = ['delo_web', '0-1', '0', '16', '3'];
+            Object.keys(this.formAccess.controls).forEach(key => {
+                if (arrNotBlockAv.indexOf(key) === -1) {
+                    this._toggleFormControl(this.formAccess.controls[key], true);
+                }
+            });
+            this._uncheckedAvBtn = true;
         }
     }
 

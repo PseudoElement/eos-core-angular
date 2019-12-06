@@ -61,7 +61,7 @@
                 [form]="formControls"
                 container="body"
                 [readonly]="curentUser.isTechUser || !editMode"
-                [disabled] = "curentUser.isTechUser"></eos-dynamic-input>
+                [disabled] = "curentUser.isTechUser || formControls.controls['SELECT_ROLE'].disabled"></eos-dynamic-input>
         </div>
         <!-- Примечания -->
         <div>

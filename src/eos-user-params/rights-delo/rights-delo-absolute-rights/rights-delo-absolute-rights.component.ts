@@ -206,16 +206,10 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.isLoading = false;
         return this.GetSysTechUser().then(() => {
             if (this.limitUserTech === false) {
-                if (this._checkCreatePRJNotEmptyAllowed()) {
-                    this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
-                    this.isLoading = true;
-                    return Promise.resolve(true);
-                }
-                if (this._checkCreateNotEmpty()) {
-                    this.isLoading = true;
-                    return Promise.resolve(true);
-                }
-                if (this._checkCreateNotEmptyOrgan()) {
+                if (this._checkCreatePRJNotEmptyAllowed() || this._checkCreateNotEmpty() || this._checkCreateNotEmptyOrgan()) {
+                    if (this._checkCreatePRJNotEmptyAllowed()) {
+                        this._msgSrv.addNewMessage(ENPTY_ALLOWED_CREATE_PRJ);
+                    }
                     this.isLoading = true;
                     return Promise.resolve(true);
                 }
@@ -248,6 +242,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         node.deleteChange();
                     }
                 });
+                if (this.curentUser.IS_SECUR_ADM === 1) {
+                    if (this.queryForSave[0].data.hasOwnProperty('TECH_RIGHTS') && this.queryForSave[0].data.TECH_RIGHTS[0] === '1') {
+                        this._msgSrv.addNewMessage({ title: 'Предупреждение', msg: `Право 'Cистемный технолог.Пользователи' не может быть назначено одновременно с правом 'Администратор системы'`, type: 'warning' });
+                        this.cancel();
+                        return;
+                    }
+                }
                 this.apiSrv.setData(this.queryForSave)
                     .then(() => {
                         this._userParamsSetSrv.ProtocolService(this.curentUser.ISN_LCLASSIF, 5);
