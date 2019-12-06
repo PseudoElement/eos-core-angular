@@ -208,6 +208,7 @@ export class NodeActionsComponent implements OnDestroy {
         const opts: IActionUpdateOptions = {
             // markList: marklist,
             listHasItems: this._markedNodes.length !== 0,
+            listHasOnlyOne: this._markedNodes.length === 1,
             listHasDeleted: listHasDeleted,
             listHasSelected: listHasSelected,
             dictGrant: grant,
@@ -350,7 +351,7 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 }
                 case E_RECORD_ACTIONS.importEDS:
-                    _enabled = _enabled && opts.listHasItems;
+                    _enabled = _enabled && opts.listHasOnlyOne;
                     _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
                     break;
             }
