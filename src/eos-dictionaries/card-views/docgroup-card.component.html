@@ -53,16 +53,16 @@
     <div class="row-wrapper">
         <eos-dynamic-input
             class="rc-type"
-            [ngStyle]="{ 'width.px': 180 }"
+            [ngStyle]="{ 'width.px': 170 }"
             [input]="inputs['rec.RC_TYPE']"
             [form]="form"
-            [dropup]="true"
             [readonly]="!editMode"
         ></eos-dynamic-input>
         <div class="dg-require">
             <div><label>Требуется:</label></div>
             <eos-dynamic-input
                 class="checkbox-inline"
+                [ngStyle]="{ 'width.px': 55 }"
                 [input]="inputs['rec.EDS_FLAG']"
                 [form]="form"
                 [readonly]="!editMode"
@@ -76,13 +76,14 @@
             ></eos-dynamic-input>
             <eos-dynamic-input
                 class="checkbox-inline"
+                [ngStyle]="{ 'width.px': 160 }"
                 [input]="inputs['rec.ACCESS_MODE']"
                 [form]="form"
                 [readonly]="!editMode"
             ></eos-dynamic-input>
             <eos-dynamic-input
                 class="checkbox-inline"
-                [ngStyle]="{ 'width.px': 210, float: 'right' }"
+                [ngStyle]="{ 'width.px': 180 }"
                 [input]="inputs['rec.ACCESS_MODE_FIXED']"
                 [form]="form"
                 [readonly]="!editMode"
