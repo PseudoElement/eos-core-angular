@@ -533,6 +533,7 @@ export const RKPDDefaultFields: TDefaultField[] = [
 
 
 export const RKDefaultFields: TDefaultField[] = [
+    ...FeaturesRK.appendFields,
     {
         key: 'TERM_EXEC_TYPE',
         page: 'D',
@@ -833,13 +834,13 @@ export const RKDefaultFields: TDefaultField[] = [
         order: 200,
         // classif_id: NULL
     }, {
-        key: 'SEND_CB_SENDING_TYPE',
-        page: 'D',
-        type: E_FIELD_TYPE.numberIncrement,
-        // kind_doc '1,2,3',
-        title: 'Отправка Цб через',
-        // classif_id: NULL
-    }, {
+    //     key: 'SEND_CB_SENDING_TYPE',
+    //     page: 'D',
+    //     type: E_FIELD_TYPE.numberIncrement,
+    //     // kind_doc '1,2,3',
+    //     title: 'Отправка Цб через',
+    //     // classif_id: NULL
+    // }, {
         key: 'SEND_DEP_DOC_PARM',
         page: 'D',
         type: E_FIELD_TYPE.numberIncrement,
@@ -1452,5 +1453,6 @@ export const RKDefaultFields: TDefaultField[] = [
         order: 10,
         // classif_id: NULL
     },
+
 
 ];
