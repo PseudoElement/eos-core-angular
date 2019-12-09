@@ -1,6 +1,7 @@
 import { Component, OnChanges, SimpleChanges, } from '@angular/core';
 import { RKNomenkBasePage } from './rk-nomenk-base-page';
 import { Features } from 'eos-dictionaries/features/features-current.const';
+import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
 const FeaturesRK = Features.cfg.rkdefaults;
@@ -18,6 +19,8 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
     flagEn_doc: boolean;
     flagEn_spinnum: boolean;
     dayTypeTitle: string;
+
+    isCB = Features.cfg.variant === EOSDICTS_VARIANT.CB;
 
 
 
@@ -154,6 +157,9 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
                 if (newValue === null) {
                     this.setValue('DOC_DEFAULT_VALUE_List.SEND_ISN_DELIVERY', null);
                     this.setValue('DOC_DEFAULT_VALUE_List.SEND_OUTER_MARKSEND', null);
+                    if (this.isCB) {
+                        this.setValue('DOC_DEFAULT_VALUE_List.SEND_CB_SENDING_TYPE', null);
+                    }
                 }
                 // this.valueSecondarySet('DOC_DEFAULT_VALUE_List.SEND_ISN_DELIVERY', this.flagEn_extAddr);
                 // this.valueSecondarySet('DOC_DEFAULT_VALUE_List.SEND_OUTER_MARKSEND', this.flagEn_extAddr);

@@ -1,8 +1,9 @@
-import { IOESDictsFeatures, IEOSFDocGroups, IEOSFDocGroupsTemplates } from './features.interface';
+import { IOESDictsFeatures, IEOSFDocGroups, IEOSFDocGroupsTemplates, IEOSRKDefaults, EOSDICTS_VARIANT } from './features.interface';
 import { E_FIELD_TYPE } from 'eos-dictionaries/interfaces';
 
 export const FeaturesBase: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatures>{
-    version: 'Base',
+    version: 'ЦБ',
+    variant : EOSDICTS_VARIANT.CB,
     departments: {
         numcreation: false,
         reestr_send: false,
@@ -20,7 +21,25 @@ export const FeaturesBase: IOESDictsFeatures = Object.assign({}, <IOESDictsFeatu
             INVALID_PRJ_TEMPLATE_TEXT: 'Обязательные элементы: {2}, {@}, {@2}',
         },
     },
-    rkdefaults: {
+    rkdefaults: <IEOSRKDefaults>{
+        appendFields: [
+            {
+                key: 'SEND_CB_SENDING_TYPE',
+                page: 'D',
+                type: E_FIELD_TYPE.buttons,
+                title: 'Отправка',
+                options: [
+                    {
+                        value: '1',
+                        title: 'Централизовано',
+                    }, {
+                        value: '2',
+                        title: 'В Департаменте',
+                    },
+                ],
+                default: '1',
+            },
+        ],
         calendarControl: E_FIELD_TYPE.select,
         calendarValues: [
             {
