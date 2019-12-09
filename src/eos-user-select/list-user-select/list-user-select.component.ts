@@ -61,6 +61,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     countcheckedField: number;
     shadow: boolean = false;
     deleteOwnUser: any;
+    deleteUsersIsn: any[] = [];
 
     get showCloseQuickSearch() {
         if (this._storage.getItem('quickSearch') !== undefined && this._storage.getItem('quickSearch').USER_CL.criteries.ORACLE_ID === 'isnull') {
@@ -692,6 +693,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                     this.deleteOwnUser = list.name;
                 } else {
                     names += `${list.name}, `;
+                    this.deleteUsersIsn.push(list.id);
                 }
             }
         });
@@ -717,18 +719,13 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
             this.deleteOwnUser = null;
             this._pipeSrv.read({
-                USER_CL: {
-                    criteries: {
-                        DELO_RIGHTS: '1%',
-                        DELETED: '0',
-                        ISN_LCLASSIF: '1:null'
-                    },
-                },
+                USER_CL: this.deleteUsersIsn,
                 loadmode: 'Table',
                 expand: 'USER_TECH_List'
             }).then((data: any) => {
                 const usersUnlimit = data.filter(user => this._userParamSrv.CheckLimitTech(user.USER_TECH_List) !== true && user.TECH_RIGHTS[0] === '1');
                 let count = 0;
+                this.deleteUsersIsn = [];
                 for (const user of usersUnlimit) {
                     if (names.indexOf(user.SURNAME_PATRON) !== -1) {
                         count++;
