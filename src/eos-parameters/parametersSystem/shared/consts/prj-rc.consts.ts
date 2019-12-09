@@ -78,6 +78,14 @@ export const PRJ_RC_PARAM: IBaseParameters = {
                 {value: 'ALL', title: 'Множеством картотек регистратора'},
                 {value: 'NO', title: 'Не ограничивать'},
             ]
+        },
+        {
+            key: 'PRJ_GROUP_FILE_PROTECTED',
+            type: 'select',
+            title: '',
+            options: [
+                {value: '', title: ''},
+            ]
         }
     ]
 };
