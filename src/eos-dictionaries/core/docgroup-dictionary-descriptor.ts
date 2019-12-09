@@ -13,7 +13,15 @@ import { PipRX } from 'eos-rest';
 const RC_TYPE = 'RC_TYPE';
 const DOCGROUP_INDEX = 'DOCGROUP_INDEX';
 // const ISN_NODE = 'ISN_NODE';
-const inheritFiields = [RC_TYPE, DOCGROUP_INDEX, 'ACCESS_MODE', 'ACCESS_MODE_FIXED', 'SHABLON', 'PRJ_SHABLON'];
+const inheritFiields = [
+    'PRJ_NUM_FLAG',
+    'EDS_FLAG', // ЭП
+    'ENCRYPT_FLAG', // Шифрование
+    'IS_COPYCOUNT', // Нумерация копий
+    'E_DOCUMENT', // Оригинал в эл. виде
+    'PRJ_SHABLON', // Шаблон проекта
+    'PRJ_NUM_FLAG', // Проекты документов (для исходящих)
+    RC_TYPE, DOCGROUP_INDEX, 'ACCESS_MODE', 'ACCESS_MODE_FIXED', 'SHABLON', ];
 
 export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
 
