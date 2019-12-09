@@ -62,7 +62,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         title: 'Вид РК',
         type: 'select',
         options: RK_TYPE_OPTIONS_NODE,
-        default: 3,
+        default: 0, // на самом деле наследование в docgroup-dictionary-descriptor
     }, {
         key: 'DOCGROUP_INDEX',
         title: 'Индекс',
