@@ -73,6 +73,7 @@ export interface IActionButton extends IAction {
 export interface IActionUpdateOptions {
     // markList: EosDictionaryNode[];
     listHasItems: boolean;
+    listHasOnlyOne: boolean;
     listHasDeleted: boolean;
     listHasSelected: boolean;
     dictGrant: APS_DICT_GRANT;
