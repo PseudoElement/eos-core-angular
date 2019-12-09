@@ -11,4 +11,24 @@
     .checkbox-inline {
         padding: 0;
     }
+    .string-inline {
+        display: inline-flex;
+        align-self: center;
+        &.string-padding {
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-bottom: 0;
+            height: 36px;
+        }
+    }
+    .bittable {
+        display: table;
+    }
+    .bittable-row {
+        display: table-row;
+    }
+    .bittable-cell {
+        display: table-cell;
+        min-width: 405px;
+    }
 }

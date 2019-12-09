@@ -91,38 +91,56 @@
         </div>
     </div>
     <div class="clearfix">
-        <eos-dynamic-input
-            class="pull-left"
-            [hidden]="!(rcType == 3)"
-            [input]="inputs['rec.PRJ_NUM_FLAG']"
-            [form]="form"
-            [readonly]="!editMode"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            class="pull-right"
-            [hidden]="!(rcType == 3)"
-            [ngStyle]="{ 'width.px': 210 }"
-            [input]="inputs['rec.INITIATIVE_RESOLUTION']"
-            [form]="form"
-            [readonly]="!editMode"
-        ></eos-dynamic-input>
+        <div class="bittable">
+            <div class="bittable-row">
+                <div class="bittable-cell">
+                    <eos-dynamic-input
+                        class="bittable-cell"
+                        [hidden]="!(rcType == 3)"
+                        [input]="inputs['rec.PRJ_NUM_FLAG']"
+                        [form]="form"
+                        [readonly]="!editMode"
+                    ></eos-dynamic-input>
+                    <eos-dynamic-input
+                        *ngIf="isPrjFlag && !isNode"
+                        [input]="inputs['rec.PRJ_DEL_AFTER_REG']"
+                        [form]="form"
+                        [readonly]="!editMode"
+                    ></eos-dynamic-input>
+                    <eos-dynamic-input
+                        *ngIf="isPrjFlag && !isNode"
+                        [input]="inputs['rec.PRJ_AUTO_REG']"
+                        [form]="form"
+                        [readonly]="!editMode"
+                    ></eos-dynamic-input>
+                    <eos-dynamic-input
+                        *ngIf="isPrjFlag && !isNode"
+                        [input]="inputs['rec.PRJ_TEST_UNIQ_FLAG']"
+                        [form]="form"
+                        [readonly]="!editMode"
+                    ></eos-dynamic-input>
+                </div>
+                <div class="bittable-cell">
+                    <eos-dynamic-input
+                        class="bittable-cell"
+                        [hidden]="!(rcType == 3)"
+                        [ngStyle]="{ 'width.px': 210 }"
+                        [input]="inputs['rec.INITIATIVE_RESOLUTION']"
+                        [form]="form"
+                        [readonly]="!editMode"
+                    ></eos-dynamic-input>
+                    <eos-dynamic-input
+                        [hidden]="!(rcType == 3)"
+                        [ngStyle]="{ 'width.px': 210 }"
+                        [input]="inputs['rec.REG_DATE_PROTECTED']"
+                        [form]="form"
+                        [readonly]="!editMode"
+                    ></eos-dynamic-input>
+                </div>
+            </div>
+        </div>
     </div>
     <ng-container *ngIf="isPrjFlag && !isNode">
-        <eos-dynamic-input
-            [input]="inputs['rec.PRJ_DEL_AFTER_REG']"
-            [form]="form"
-            [readonly]="!editMode"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            [input]="inputs['rec.PRJ_AUTO_REG']"
-            [form]="form"
-            [readonly]="!editMode"
-        ></eos-dynamic-input>
-        <eos-dynamic-input
-            [input]="inputs['rec.PRJ_TEST_UNIQ_FLAG']"
-            [form]="form"
-            [readonly]="!editMode"
-        ></eos-dynamic-input>
         <label>Применять ЭП: </label>
         <div class="row-wrapper">
             <eos-dynamic-input
@@ -140,6 +158,21 @@
                 [form]="form"
                 [readonly]="!editMode"
             ></eos-dynamic-input>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="isPrjFlag && !isNode">
+        <div class="row-wrapper">
+            <label class="string-inline">Запретить удаление РКПД при статусе</label>
+            <eos-dynamic-input
+                class="string-inline string-padding"
+                [input]="inputs['rec.PROTECT_DEL_PRJ_STATUS']"
+                [form]="form"
+                [hideLabel]="true"
+                [dropup]="true"
+                [viewOpts]="selOpts"
+                [readonly]="!editMode"
+            ></eos-dynamic-input>
+            <label class="string-inline">и выше</label>
         </div>
     </ng-container>
 </div>
