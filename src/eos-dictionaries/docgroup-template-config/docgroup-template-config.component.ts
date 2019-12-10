@@ -131,9 +131,9 @@ export class DocgroupTemplateConfigComponent implements OnDestroy {
             // disable complex elements for non empty template
             res = !SINGLE_TEMPLATE_ITEM_EXPR.test(item.key);
         }
-        if (res && this.forProject && item.key === '{7}') {
-            res = this.templateItems.findIndex((elem) => elem.key === '{2}') > -1;
-        }
+        // if (res && this.forProject && item.key === '{7}') {
+        //     res = this.templateItems.findIndex((elem) => elem.key === '{2}') > -1;
+        // }
 
         if (res && this.templateItems.findIndex((elem) => ORDER_NUM_TEMPLATE_ITEM_EXPR.test(elem.key)) !== -1) {
             res = !ORDER_NUM_TEMPLATE_ITEM_EXPR.test(item.key);

@@ -395,7 +395,7 @@ export class EosDictionary {
         if (this.id === 'departments' || this.id === 'rubricator') {
             const _criteries = [];
             const _crit: any = {
-                'CL_SEARCH.Contents': '"*' + search + '*"'
+                'CL_SEARCH.Contents': '*' + search + '*'
             };
             this._extendCritery(_crit, params, selectedNode);
             _criteries.push(_crit);
@@ -404,7 +404,7 @@ export class EosDictionary {
             const _searchFields = this.descriptor.record.getFieldSet(E_FIELD_SET.search);
             const _criteries = _searchFields.map((fld) => {
                 const _crit: any = {
-                    [fld.foreignKey]: '"' + search + '"'
+                    [fld.foreignKey]: '%' + search + '%'
                 };
                 this._extendCritery(_crit, params, selectedNode);
                 return _crit;
