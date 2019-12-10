@@ -41,7 +41,7 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
         if (parentNode) {
             inheritFiields.forEach((f) => this._fillParentField(newPreset, parentNode.data, f));
             if (newPreset['rec']['IS_NODE'] === 1 && parentNode.data.rec['RC_TYPE'] === 0) {
-                newPreset['rec']['RC_TYPE'] = 3;
+                newPreset['rec']['RC_TYPE'] = 1;
             }
         }
         return super.getNewRecord(newPreset, parentNode);
