@@ -84,7 +84,8 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
                 countChanges++;
             }
        }));
-       if ((countChanges > 0) || (changedCabinets.originHomeCabinet !== changedCabinets.homeCabinet)) {
+       if ((countChanges > 0) ||
+       ((changedCabinets.originHomeCabinet !== changedCabinets.homeCabinet) && !(countChanges === 0 && changedCabinets.isEmptyOrigin))) {
         changedCabinets.isChanged = true;
        }    else {
         changedCabinets.isChanged = false;
