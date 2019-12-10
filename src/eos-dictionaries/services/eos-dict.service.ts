@@ -464,7 +464,9 @@ export class EosDictService {
     }
 
     setMarkAllNone(emit: boolean = true): void {
-        this._currentList.forEach( n => n.isMarked = false);
+        if (this._currentList) {
+            this._currentList.forEach( n => n.isMarked = false);
+        }
         this._currentMarkInfo.nodes = [];
 
         if (emit) {
