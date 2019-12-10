@@ -56,6 +56,7 @@
             [ngStyle]="{ 'width.px': 170 }"
             [input]="inputs['rec.RC_TYPE']"
             [form]="form"
+            [dropup]="true"
             [readonly]="!editMode"
         ></eos-dynamic-input>
         <div class="dg-require">
@@ -94,9 +95,7 @@
         <div class="bittable">
             <div class="bittable-row">
                 <div class="bittable-cell">
-                    <eos-dynamic-input
-                        class="bittable-cell"
-                        [hidden]="!(rcType == 3)"
+                    <eos-dynamic-input *ngIf="(rcType == 3)"
                         [input]="inputs['rec.PRJ_NUM_FLAG']"
                         [form]="form"
                         [readonly]="!editMode"
@@ -121,16 +120,13 @@
                     ></eos-dynamic-input>
                 </div>
                 <div class="bittable-cell">
-                    <eos-dynamic-input
-                        class="bittable-cell"
-                        [hidden]="!(rcType == 3)"
+                    <eos-dynamic-input *ngIf="(rcType == 3)"
                         [ngStyle]="{ 'width.px': 210 }"
                         [input]="inputs['rec.INITIATIVE_RESOLUTION']"
                         [form]="form"
                         [readonly]="!editMode"
                     ></eos-dynamic-input>
                     <eos-dynamic-input
-                        [hidden]="!(rcType == 3)"
                         [ngStyle]="{ 'width.px': 210 }"
                         [input]="inputs['rec.REG_DATE_PROTECTED']"
                         [form]="form"
