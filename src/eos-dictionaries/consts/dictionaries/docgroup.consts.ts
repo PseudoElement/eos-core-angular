@@ -16,6 +16,13 @@ export const RK_TYPE_OPTIONS: ISelectOption[] = [
     { value: 3, title: 'Исходящие' },
     { value: 2, title: 'Письма граждан' },
 ];
+export const PROTECT_DEL_PRJ_STATUS_OPTS: ISelectOption[] = [
+    { value: 2, title: 'На визировании' },
+    { value: 3, title: 'Завизирован' },
+    { value: 4, title: 'На подписи' },
+    { value: 5, title: 'Подписан' },
+];
+
 
 export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
     id: 'docgroup',
@@ -62,7 +69,7 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         title: 'Вид РК',
         type: 'select',
         options: RK_TYPE_OPTIONS_NODE,
-        default: 3,
+        default: 0, // на самом деле наследование в docgroup-dictionary-descriptor
     }, {
         key: 'DOCGROUP_INDEX',
         title: 'Индекс',
@@ -148,17 +155,25 @@ export const DOCGROUP_DICT: ITreeDictionaryDescriptor = {
         key: 'REG_DATE_PROTECTED',
         title: 'Запрещено редактировать рег. дату',
         type: 'boolean',
+        default: false,
     }, {
         key: 'INITIATIVE_RESOLUTION',
         title: 'Инициативные поручения',
         type: 'boolean',
         forNode: true,
-    }]),
+    }, {
+        key: 'PROTECT_DEL_PRJ_STATUS',
+        title: 'Запретить удаление РКПД при статусе', // и выше
+        type: 'select',
+        options: PROTECT_DEL_PRJ_STATUS_OPTS,
+        default: null,
+    }
+    ]),
     treeFields: ['CLASSIF_NAME'],
     editFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME', 'NOTE', 'IS_COPYCOUNT', 'ACCESS_MODE_FIXED', 'E_DOCUMENT', 'PRJ_TEST_UNIQ_FLAG',
         'PRJ_DEL_AFTER_REG', 'PRJ_APPLY_EXEC_EDS', 'PRJ_APPLY2_EDS', 'PRJ_APPLY_EDS', 'PRJ_AUTO_REG', 'PRJ_SHABLON', 'PRJ_NUM_FLAG',
         'TEST_UNIQ_FLAG', 'ENCRYPT_FLAG', 'EDS_FLAG', 'SHABLON', 'DOCNUMBER_FLAG', 'DOCGROUP_INDEX', 'RC_TYPE', 'INITIATIVE_RESOLUTION',
-        'ACCESS_MODE', 'REG_DATE_PROTECTED'],
+        'ACCESS_MODE', 'REG_DATE_PROTECTED', 'PROTECT_DEL_PRJ_STATUS'],
     searchFields: ['CODE', 'CLASSIF_NAME', 'FULLNAME'],
     fullSearchFields: ['CLASSIF_NAME', 'FULLNAME', 'DOCGROUP_INDEX', 'NOTE'],
     quickViewFields: ['CLASSIF_NAME', 'FULLNAME', 'NOTE', 'DOCGROUP_INDEX', 'RC_TYPE' ],
