@@ -227,6 +227,7 @@ export class CalendarFormComponent implements OnInit, OnChanges, IDictFormBase {
             if (this.due) {
                 data.forEach( (rec) => {
                     if (this.due !== rec.OWNER_ID) {
+                        rec.ISN_CALENDAR = -1; /* mark as not Inserted */
                         rec.OWNER_ID = this.due;
                         rec.isChanged = true;
                     }

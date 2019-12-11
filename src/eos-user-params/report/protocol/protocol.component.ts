@@ -117,7 +117,7 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
           if (this._user_pagination.totalPages === undefined) {
             const parsePosts = data.TotalRecords;
             if (parsePosts !== undefined) {
-              this._user_pagination.totalPages = this.GetCountPosts(parsePosts);
+              this._user_pagination.totalPages = parsePosts;
             } else {
               this._user_pagination.totalPages = this.usersAudit.length;
             }
@@ -152,16 +152,16 @@ export class EosReportProtocolComponent implements OnInit, OnDestroy {
       });
   }
 
-  GetCountPosts(posts: string): number {
-    if (posts !== undefined) {
-      posts = posts.split('').reverse().join('');
-      posts = posts.split(',')[0];
-      posts = posts.split('').reverse().join('');
-      let data;
-      data = parseInt(posts, 10);
-      return data;
-    }
-  }
+//   GetCountPosts(posts: string): number {
+//     if (posts !== undefined) {
+//       posts = posts.split('').reverse().join('');
+//       posts = posts.split(',')[0];
+//       posts = posts.split('').reverse().join('');
+//       let data;
+//       data = parseInt(posts, 10);
+//       return data;
+//     }
+//   }
   SortPageList(crit: number) {
     if (this._user_pagination.totalPages > 1) {
       let critSearch;

@@ -279,14 +279,14 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 });
             });
         }).catch(error => {
-            if (error.code === 2000) {
-                this._rightsCabinetsSrv.cardsArray = [];
-                this._rightsCabinetsSrv.getUserCard(this._userSrv.curentUser.USERCARD_List, this.userId).then((user_cards: USERCARD[]) => {
-                    this.mainArrayCards = this._rightsCabinetsSrv.cardsArray;
-                });
-            } else {
-                this.cancel();
-            }
+            // if (error.code === 2000) {
+            //     this._rightsCabinetsSrv.cardsArray = [];
+            //     this._rightsCabinetsSrv.getUserCard(this._userSrv.curentUser.USERCARD_List, this.userId).then((user_cards: USERCARD[]) => {
+            //         this.mainArrayCards = this._rightsCabinetsSrv.cardsArray;
+            //     });
+            // } else {
+            // }
+            this.cancel();
             this._errorSrv.errorHandler(error);
             this.isLoading = false;
         });

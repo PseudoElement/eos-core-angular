@@ -233,13 +233,6 @@ export class UserParamApiSrv {
         dbQuery.inlinecount = 'allpages';
         return dbQuery;
     }
-    parseTotalPage(data: string) {
-        const re = /\d+/g;
-        const tAray = data.match(re);
-        if (tAray.length) {
-            return +tAray[tAray.length - 1];
-        }
-    }
     getSkipTo() {
 
     }
@@ -264,7 +257,7 @@ export class UserParamApiSrv {
         return this.getData(q)
             .then(data => {
                 if (data.hasOwnProperty('TotalRecords')) {
-                    this.users_pagination.totalPages = this.parseTotalPage(data['TotalRecords']);
+                    this.users_pagination.totalPages = data['TotalRecords'];
                 } else {
                     this.users_pagination.totalPages = data.length;
                 }
