@@ -91,6 +91,16 @@ export const OTHER_USER_ADDRESSES: IBaseUsers = {
             type: 'text',
             length: 255,
         },
+        {
+            key: 'RS_OUTER_DEFAULT_SENDING_TYPE',
+            title: '',
+            type: 'radio',
+            options: [
+                {value: '1', title: 'Централизовано'},
+                {value: '2', title: 'В департаменте'},
+            ],
+            readonly: false,
+        },
     ]
 };
 export const OTHER_USER_REESTR: IBaseUsers = {
