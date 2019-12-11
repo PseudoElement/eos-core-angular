@@ -59,7 +59,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         }
         return '';
     }
-    private _limCardDisable = [0, 1, 2, 18, 19, 22, 29];
     private _ngUnsubscribe: Subject<any> = new Subject();
     private flagGrifs: boolean = false;
     private DELETE_RCPD = 'У пользователя назначено право \'Содзание РКПД\' .Без права \'Исполнение поручений\' оно не работает. Снять это право?';
@@ -150,7 +149,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
         this.inputAll = { all: new RadioInput(CONTROL_ALL_NOTALL) };
         this.isLoading = true;
         if (this._appContext.limitCardsUser.length > 0) {
-            this._limCardDisable.forEach(i => this.listRight[i].control.disable());
+            let arr;
+            if (this._appContext.cbBase) {
+                arr = [0, 1, 3, 17, 18, 22];
+            } else {
+                arr = [0, 1, 2, 18, 19, 22, 29];
+            }
+            arr.forEach(i => this.listRight[i].control.disable());
         }
     }
     CheckLimitTech(techList): boolean {
