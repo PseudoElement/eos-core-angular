@@ -160,14 +160,14 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
         }
     }
     prepFormForSave() {
-        Object.keys(this.inputs).forEach((key) => {
+        Object.keys(this.inputs).forEach(key => {
             const value = this.form.controls[key].value;
             this.inputs[key].value = value;
         });
     }
 
     prepFormCancel(input, flag) {
-        Object.keys(input).forEach((key) => {
+        Object.keys(input).forEach(key => {
             const val = input[key].value;
             this.form.controls[key].patchValue(val, { emitEvent: flag });
         });
