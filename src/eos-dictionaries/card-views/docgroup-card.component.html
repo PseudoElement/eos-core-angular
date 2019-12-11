@@ -127,7 +127,7 @@
                         [form]="form"
                         [readonly]="!editMode"
                     ></eos-dynamic-input>
-                    <eos-dynamic-input
+                    <eos-dynamic-input *ngIf="isCBBase"
                         [ngStyle]="{ 'width.px': 210 }"
                         [input]="inputs['rec.REG_DATE_PROTECTED']"
                         [form]="form"
