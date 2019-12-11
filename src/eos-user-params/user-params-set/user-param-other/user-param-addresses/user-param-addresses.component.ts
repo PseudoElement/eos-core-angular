@@ -13,6 +13,7 @@ import {IOpenClassifParams} from '../../../../eos-common/interfaces';
 import {WaitClassifService} from '../../../../app/services/waitClassif.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import {PARM_ERROR_SEND_FROM} from '../../shared-user-param/consts/eos-user-params.const';
+import { AppContext } from 'eos-rest/services/appContext.service';
 @Component({
     selector: 'eos-user-param-addresses',
     templateUrl: 'user-param-addresses.component.html',
@@ -27,6 +28,7 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
     public inputs: any;
     public flagBacground: boolean = false;
     public sendFrom: string = '';
+    public cBase: boolean = false;
     private sendFromOrigin: string = '';
     private _ngUnsebscribe: Subject<any> = new Subject();
     private allData: any;
@@ -43,6 +45,7 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
         private remaster: RemasterService,
         private _pipRx: PipRX,
         private _msg: EosMessageService,
+        private _appContext: AppContext,
         private   _waitClassifSrv: WaitClassifService,
         // private _errorSrv: ErrorHelperServices,
     ) {
@@ -107,6 +110,21 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
         });
     }
     inint() {
+        if (this._appContext.cbBase) {
+            this.cBase = true;
+            OTHER_USER_ADDRESSES.fields.push(
+                {
+                    key: 'RS_OUTER_DEFAULT_SENDING_TYPE',
+                    type: 'radio',
+                    title: '',
+                    readonly: false,
+                    options: [
+                        {value: '1', title: 'Централизовано'},
+                        {value: '2', title: 'В департаменте'},
+                    ]
+                }
+            );
+        }
         this.prepareData = this.formHelp.parse_Create(OTHER_USER_ADDRESSES.fields, this.allData);
         this.prepareInputs = this.formHelp.getObjectInputFields(OTHER_USER_ADDRESSES.fields);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
