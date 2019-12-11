@@ -61,7 +61,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     countcheckedField: number;
     shadow: boolean = false;
     deleteOwnUser: any;
-    deleteUsersIsn: any[] = [];
 
     get showCloseQuickSearch() {
         if (this._storage.getItem('quickSearch') !== undefined && this._storage.getItem('quickSearch').USER_CL.criteries.ORACLE_ID === 'isnull') {
@@ -693,7 +692,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                     this.deleteOwnUser = list.name;
                 } else {
                     names += `${list.name}, `;
-                    this.deleteUsersIsn.push(list.id);
                 }
             }
         });
@@ -719,33 +717,37 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
             this.deleteOwnUser = null;
             this._pipeSrv.read({
-                USER_CL: this.deleteUsersIsn,
-                loadmode: 'Table',
+                USER_CL: {
+                    criteries: {
+                        DELO_RIGHTS: '1%',
+                        DELETED: '0',
+                        ISN_LCLASSIF: '1:null'
+                    },
+                },
                 expand: 'USER_TECH_List'
             }).then((data: any) => {
-                const usersUnlimit = data.filter(user => this._userParamSrv.CheckLimitTech(user.USER_TECH_List) !== true && user.TECH_RIGHTS[0] === '1');
-                let count = 0;
-                this.deleteUsersIsn = [];
-                for (const user of usersUnlimit) {
-                    if (names.indexOf(user.SURNAME_PATRON) !== -1) {
-                        count++;
+                    const usersUnlimit = data.filter(user => this._userParamSrv.CheckLimitTech(user.USER_TECH_List) !== true && user.TECH_RIGHTS[0] === '1');
+                    let count = 0;
+                    for (const user of usersUnlimit) {
+                        if (names.indexOf(user.SURNAME_PATRON) !== -1) {
+                            count++;
+                        }
                     }
-                }
-                if (usersUnlimit.length === count) {
-                    this._msgSrv.addNewMessage({
-                        title: 'Предупреждение',
-                        msg: `Ни один из незаблокированных пользователей не имеет права "Системный технолог" с доступом к модулю "Пользователи" без ограничений.`,
-                        type: 'warning'
-                    });
-                    return;
-                }
+                    if (usersUnlimit.length === count) {
+                        this._msgSrv.addNewMessage({
+                            title: 'Предупреждение',
+                            msg: `Ни один из незаблокированных пользователей не имеет права "Системный технолог" с доступом к модулю "Пользователи" без ограничений.`,
+                            type: 'warning'
+                        });
+                        return;
+                    }
                 if (confirmation) {
                     this.isLoading = true;
                     let arrayRequests = [];
                     const deletedUsers = [];
                     const arrayProtocol = [];
                     this.listUsers.forEach((user: UserSelectNode) => {
-                        if ((user.isChecked && !user.deleted) || (user.selectedMark)) {
+                        if (((user.isChecked && !user.deleted) || (user.selectedMark)) && user.id !== this._appContext.CurrentUser.ISN_LCLASSIF) {
                             let url = this._createUrlForSop(user.id);
                             deletedUsers.push(user.id);
                             arrayRequests.push(
