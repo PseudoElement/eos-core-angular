@@ -782,6 +782,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                     this.form.controls['DUE_DEP_NAME'].patchValue(this.inputs.DUE_DEP_NAME.value);
                     this.formControls.controls['SELECT_ROLE'].patchValue('...');
                     this.formControls.controls['SELECT_ROLE'].enable();
+                    this.tf();
                 }
             });
     }
