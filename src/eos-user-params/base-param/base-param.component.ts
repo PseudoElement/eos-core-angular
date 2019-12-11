@@ -55,6 +55,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     /* формы */
     isLoading: Boolean = true;
     selfLink = null;
+    dueDepName: string = '';
     public isShell: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
     public errorPass: boolean = false;
@@ -151,6 +152,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
         this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
+        this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
         this.isLoading = false;
         this.setValidators();
         this.subscribeForms();
@@ -582,6 +584,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             })
             .then((dep: DEPARTMENT) => {
                 this.isShell = false;
+                this.dueDepName = dep['CLASSIF_NAME'];
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
             })
@@ -780,9 +783,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     this.formControls.controls['SELECT_ROLE'].disable();
                 } else {
                     this.curentUser.isTechUser = data;
-                    this.form.controls['DUE_DEP_NAME'].patchValue(this.inputs.DUE_DEP_NAME.value);
+                    this.form.controls['DUE_DEP_NAME'].patchValue(this.dueDepName);
                     this.formControls.controls['SELECT_ROLE'].patchValue('...');
                     this.formControls.controls['SELECT_ROLE'].enable();
+                    this.tf();
                 }
             });
     }
