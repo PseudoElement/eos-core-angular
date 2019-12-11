@@ -651,9 +651,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
     BlockUser() {
         this.isLoading = true;
-        this._apiSrv.blokedUser(this.listUsers).then(user => {
+        const idMain = this._appContext.CurrentUser.ISN_LCLASSIF;
+        this._apiSrv.blokedUser(this.listUsers, idMain).then(user => {
             this.listUsers = this.listUsers.map(users => {
-                if (users.isChecked || users.selectedMark) {
+                if ((users.isChecked || users.selectedMark) && users.id !== +idMain) {
                     if (users.blockedUser) {
                         users.blockedUser = false;
                         this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);

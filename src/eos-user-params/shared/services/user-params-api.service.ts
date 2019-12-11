@@ -314,11 +314,11 @@ export class UserParamApiSrv {
         return this.getData<T>(query);
     }
 
-    blokedUser(users: UserSelectNode[]): Promise<any> {
+    blokedUser(users: UserSelectNode[], mainUser): Promise<any> {
         const ARRAY_QUERY_SET_DELETE = [];
         let data = {};
         users.forEach((user: UserSelectNode) => {
-            if (user.isChecked || user.selectedMark) {
+            if ((user.isChecked || user.selectedMark) && user.id !== +mainUser) {
                 if (user.blockedUser) {
                     data = {
                         DELETED: 0,
