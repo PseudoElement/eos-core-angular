@@ -9,10 +9,11 @@ import { InputControlService } from 'eos-common/services/input-control.service';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
 import { PipRX, DEPARTMENT, DELIVERY_CL } from 'eos-rest';
 import { ALL_ROWS } from 'eos-rest/core/consts';
-import {IOpenClassifParams} from '../../../../eos-common/interfaces';
-import {WaitClassifService} from '../../../../app/services/waitClassif.service';
+import { IOpenClassifParams } from '../../../../eos-common/interfaces';
+import { WaitClassifService } from '../../../../app/services/waitClassif.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
-import {PARM_ERROR_SEND_FROM} from '../../shared-user-param/consts/eos-user-params.const';
+import { PARM_ERROR_SEND_FROM } from '../../shared-user-param/consts/eos-user-params.const';
+import { AppContext } from 'eos-rest/services/appContext.service';
 @Component({
     selector: 'eos-user-param-addresses',
     templateUrl: 'user-param-addresses.component.html',
@@ -43,10 +44,10 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
         private remaster: RemasterService,
         private _pipRx: PipRX,
         private _msg: EosMessageService,
-        private   _waitClassifSrv: WaitClassifService,
+        private _waitClassifSrv: WaitClassifService,
+        public appContext: AppContext,
         // private _errorSrv: ErrorHelperServices,
     ) {
-
         this.remaster.submitEmit.subscribe(() => {
             this.submit();
         });
@@ -234,7 +235,7 @@ export class UserParamAddressesComponent implements OnDestroy, OnInit {
         };
         return this._pipRx.read(query);
     }
-    private  setFillSendFrom(res: DEPARTMENT[]) {
+    private setFillSendFrom(res: DEPARTMENT[]) {
         if (res.length > 0) {
             const depart = res[0];
             if (depart.EXPEDITION_FLAG <= 0) {

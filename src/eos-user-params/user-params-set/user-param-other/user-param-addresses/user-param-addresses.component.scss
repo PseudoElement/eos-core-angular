@@ -1,0 +1,15 @@
+.other-send {
+    display: inline;
+    eos-dynamic-input-radio {
+      > div {
+          display: flex;
+          margin-left: 10px;
+          .elem-input-radio {
+              margin-right: 0;
+          }
+          .radio  {
+              width: 175px;
+          }
+      }
+    }
+}
