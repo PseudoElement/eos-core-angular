@@ -4,6 +4,7 @@ import { USER_CL, SYS_PARMS, SRCH_VIEW } from '../interfaces/structures';
 import { ALL_ROWS } from '../core/consts';
 import { Deferred } from '../core/pipe-utils';
 
+export const CB_FUNCTIONS = 'CB_FUNCTIONS';
 @Injectable()
 export class AppContext {
     /**
@@ -82,6 +83,15 @@ export class AppContext {
 
     reInit() {
         this.init();
+    }
+
+    // --------------------------------------------------------------
+    public getParams(key: string): string {
+
+        if (this.SysParms._more_json && this.SysParms._more_json.ParamsDic) {
+            return this.SysParms._more_json.ParamsDic[key];
+        }
+        return null;
     }
 
 }
