@@ -724,6 +724,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private _restoreItems(): void {
         let hasFolding = false;
 
+        this._dictSrv.getMarkedNodes().filter( n => !n.isDeleted).forEach( n => n.isMarked = false );
+
         const selectedNodes = this._dictSrv.getMarkedNodes().filter( n => n.isDeleted);
 
         for (let i = 0; i < selectedNodes.length; i++) {
