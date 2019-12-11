@@ -70,6 +70,6 @@ export const PRJ_TEMPLATE_ELEMENTS = [
     DG_TPL_SEPARATOR2,
     DG_TPL_MANUAL_NUMBER,
     DG_TPL_COMB1,
-    DG_TPL_NUM_ORG,
-    DG_TPL_INDEX
+    ... FTemplates.E ? [DG_TPL_NUM_ORG] : [],
+    ... FTemplates.F ? [DG_TPL_INDEX] : [],
 ];
