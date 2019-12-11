@@ -3,8 +3,11 @@
         <p class="the-main-recipients-of-the-document-titles ">Внешние адресаты</p>
         <span class="l-font ">При добавлении указывать</span>
         <hr>
-        <div>
-            <span>Вид отправки:</span>
+        <div class="view-send">
+            <div style="float: left;padding-top: 15px;">
+                <span>Вид отправки:</span>
+            </div>
+
             <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.RS_OUTER_DEFAULT_DELIVERY'] " [form]="form " [readonly]="false "></eos-dynamic-input>
             <span></span>
         </div>
@@ -13,10 +16,15 @@
             <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.RS_OUTER_DEFAULT_SENDING_TYPE'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         </div>
     </div>
-    <!-- <div class="user-input-group ">
-        <div class="send-from ">
-            <span class="send-fron-title ">Отправить из:</span>
-            <span class="send-from-input ">
+    <div class="user-input-group">
+        <div *ngIf="cBase" class="send-from">
+            <div class="send-fron-title">
+                <span>Отправка:</span>
+            </div>
+            <div>
+                <eos-dynamic-input [input]="inputs['rec.RS_OUTER_DEFAULT_SENDING_TYPE']" [form]="form"></eos-dynamic-input>
+            </div>
+        <!-- <span class="send-from-input ">
             <input [disabled]='!editFlag' readonly type="text " name="sendFrom " [ngModel]="sendFrom " >
         </span>
             <span class="send-from-btn-choose ">
@@ -40,7 +48,7 @@
                 (click)="clearSendFrom() ">
                 <span class="eos-icon eos-icon-close-blue small "></span>
             </button>
-            </span>
+            </span> -->
         </div>
     </div> -->
     <hr>
