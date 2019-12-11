@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -83,7 +83,6 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     constructor(
         private _router: Router,
-        private _snapShot: ActivatedRoute,
         private _msgSrv: EosMessageService,
         private _apiSrv: UserParamApiSrv,
         private _inputCtrlSrv: InputParamControlService,
@@ -107,7 +106,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                 this.selfLink = this._router.url.split('?')[0];
                 this.init();
                 this.getTitle();
-                if (this._snapShot.snapshot.queryParams.is_create && !this.curentUser['IS_PASSWORD']) {
+                if (!this.curentUser['IS_PASSWORD']) {
                     this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
                 }
                 this.editModeF();

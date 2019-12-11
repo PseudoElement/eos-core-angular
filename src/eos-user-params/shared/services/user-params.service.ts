@@ -353,6 +353,16 @@ export class UserParamsService {
         return '';
     }
 
+    CheckLimitTech(techList): boolean {
+        let limitUser = false;
+        techList.forEach((item) => {
+            if (item.FUNC_NUM === 1) {
+                limitUser = true;
+            }
+        });
+        return limitUser;
+    }
+
     private _createHash() {
         this._userContext['USER_PARMS_HASH'] = {};
         this._userContext['USER_PARMS_List'].forEach(item => {
