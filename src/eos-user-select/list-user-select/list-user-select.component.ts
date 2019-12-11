@@ -714,18 +714,19 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                 return;
             }
         }
-        this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
-            this.deleteOwnUser = null;
-            this._pipeSrv.read({
-                USER_CL: {
-                    criteries: {
-                        DELO_RIGHTS: '1%',
-                        DELETED: '0',
-                        ISN_LCLASSIF: '1:null'
+        if (this._appContext.cbBase) {
+            this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
+                this.deleteOwnUser = null;
+                this._pipeSrv.read({
+                    USER_CL: {
+                        criteries: {
+                            DELO_RIGHTS: '1%',
+                            DELETED: '0',
+                            ISN_LCLASSIF: '1:null'
+                        },
                     },
-                },
-                expand: 'USER_TECH_List'
-            }).then((data: any) => {
+                    expand: 'USER_TECH_List'
+                }).then((data: any) => {
                     const usersUnlimit = data.filter(user => this._userParamSrv.CheckLimitTech(user.USER_TECH_List) !== true && user.TECH_RIGHTS[0] === '1');
                     let count = 0;
                     for (const user of usersUnlimit) {
@@ -741,49 +742,63 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                         });
                         return;
                     }
-                if (confirmation) {
-                    this.isLoading = true;
-                    let arrayRequests = [];
-                    const deletedUsers = [];
-                    const arrayProtocol = [];
-                    this.listUsers.forEach((user: UserSelectNode) => {
-                        if (((user.isChecked && !user.deleted) || (user.selectedMark)) && user.id !== this._appContext.CurrentUser.ISN_LCLASSIF) {
-                            let url = this._createUrlForSop(user.id);
-                            deletedUsers.push(user.id);
-                            arrayRequests.push(
-                                this._pipeSrv.read({
-                                    [url]: ALL_ROWS,
-                                })
-                            );
-                            url = '';
-                        }
-                    });
-                    if (arrayRequests.length > 0) {
-                        return Promise.all([...arrayRequests]).then(result => {
-                            this._msgSrv.addNewMessage({
-                                title: 'Сообщение',
-                                msg: `Пользователи: ${names} \n\r удалены`,
-                                type: 'success'
-                            });
-                            this.initView(this.currentDue);
-                            arrayRequests = [];
-                            deletedUsers.forEach(el => {
-                                arrayProtocol.push(this._userParamSrv.ProtocolService(el, 8));
-                            });
-                            return Promise.all([...arrayProtocol]).then(() => {
-                                this.isLoading = false;
-                            });
-                        });
+                    if (confirmation) {
+                        this.deleteConfirm(names);
                     }
+                });
+            }).catch(error => {
+                    this.isLoading = false;
+                    error.message = error.message ? error.message : 'Не удалось удалить пользователя, обратитесь к системному администратору';
+                    this.cathError(error);
+                });
+        } else {
+            this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
+                this.deleteOwnUser = null;
+                    if (confirmation) {
+                        this.deleteConfirm(names);
+                    }
+                }).catch(error => {
+                    this.isLoading = false;
+                    error.message = error.message ? error.message : 'Не удалось удалить пользователя, обратитесь к системному администратору';
+                    this.cathError(error);
+                });
+        }
+    }
+
+    deleteConfirm(names: string): Promise<any> {
+        this.isLoading = true;
+            let arrayRequests = [];
+            const deletedUsers = [];
+            const arrayProtocol = [];
+            this.listUsers.forEach((user: UserSelectNode) => {
+                if (((user.isChecked && !user.deleted) || (user.selectedMark)) && user.id !== this._appContext.CurrentUser.ISN_LCLASSIF) {
+                    let url = this._createUrlForSop(user.id);
+                    deletedUsers.push(user.id);
+                    arrayRequests.push(
+                        this._pipeSrv.read({
+                            [url]: ALL_ROWS,
+                        })
+                    );
+                    url = '';
                 }
             });
-        })
-            .catch(error => {
-                this.isLoading = false;
-                error.message = error.message ? error.message : 'Не удалось удалить пользователя, обратитесь к системному администратору';
-                this.cathError(error);
-            });
-
+            if (arrayRequests.length > 0) {
+                return Promise.all([...arrayRequests]).then(result => {
+                    this._msgSrv.addNewMessage({
+                        title: 'Сообщение',
+                        msg: `Пользователи: ${names} \n\r удалены`,
+                        type: 'success'
+                    });
+                    this.initView(this.currentDue);
+                    arrayRequests = [];
+                    deletedUsers.forEach(el => {
+                        arrayProtocol.push(this._userParamSrv.ProtocolService(el, 8));
+                    });
+                    return Promise.all([...arrayProtocol]).then(() => {
+                        this.isLoading = false;
+                    });
+                });
+            }
     }
 
     get getflagChecked() {
