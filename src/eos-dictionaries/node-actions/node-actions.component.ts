@@ -49,6 +49,7 @@ export class NodeActionsComponent implements OnDestroy {
     private _viewParams: IDictionaryViewParameters;
     private _dictSrv: EosDictService;
     private _visibleCount: number;
+    private _visibleList: EosDictionaryNode[];
     private _markedNodes: EosDictionaryNode[];
     private _selectedTreeNode: EosDictionaryNode;
 
@@ -100,6 +101,7 @@ export class NodeActionsComponent implements OnDestroy {
         });
         _dictSrv.visibleList$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((list) => {
             this._visibleCount = list.length;
+            this._visibleList = list;
             this._update();
         });
         _dictSrv.markInfo$.pipe(takeUntil(this.ngUnsubscribe)).subscribe((markInfo) => {
@@ -236,9 +238,13 @@ export class NodeActionsComponent implements OnDestroy {
                     _enabled = !_isLDSubTree && !this._viewParams.updatingList;
                     break;
                 case E_RECORD_ACTIONS.moveUp:
+                    _show = _show && this._viewParams.userOrdered && !this._viewParams.searchResults;
+                    _enabled = _enabled && this._visibleCount && opts.listHasItems && !this._visibleList[0].isMarked;
+                    break;
+
                 case E_RECORD_ACTIONS.moveDown:
                     _show = _show && this._viewParams.userOrdered && !this._viewParams.searchResults;
-                    _enabled = _enabled && this._visibleCount > 1 && opts.listHasItems;
+                    _enabled = _enabled && this._visibleCount && opts.listHasItems && !this._visibleList[this._visibleCount - 1].isMarked;
                     break;
                 case E_RECORD_ACTIONS.export:
                 case E_RECORD_ACTIONS.import:

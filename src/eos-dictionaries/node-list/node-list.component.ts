@@ -238,10 +238,10 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         });
     }
 
-    openCopyProperties(node: EosDictionaryNode, fromdue: string) {
+    openCopyProperties(node: EosDictionaryNode, fromdue: string, renewChilds: boolean) {
         this.modalWindow = this._modalSrv.show(CopyPropertiesComponent, {
             class: 'copy-properties-modal moodal-lg'});
-        this.modalWindow.content.init(node.data.rec, fromdue);
+        (<CopyPropertiesComponent>this.modalWindow.content).init(node.data.rec, fromdue, renewChilds);
         this._closeModalWindowSubscribtion();
     }
     // openCopyProperties(node: EosDictionaryNode, fromParent: boolean) {

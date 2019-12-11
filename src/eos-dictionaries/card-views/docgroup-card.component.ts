@@ -4,7 +4,7 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DocgroupTemplateConfigComponent } from '../docgroup-template-config/docgroup-template-config.component';
 import { Validators } from '@angular/forms';
 import { RK_TYPE_OPTIONS } from '../consts/dictionaries/docgroup.consts';
-import { EosAccessPermissionsService, CB_FUNCTIONS } from 'eos-dictionaries/services/eos-access-permissions.service';
+import { AppContext, CB_FUNCTIONS } from 'eos-rest/services/appContext.service';
 
 const AUTO_REG_EXPR = /\{(9|A|B|C|@|1#|2#|3#)\}/;
 const UNIQ_CHECK_EXPR = /\{2|E\}/;
@@ -16,7 +16,7 @@ const UNIQ_CHECK_EXPR = /\{2|E\}/;
 export class DocgroupCardComponent extends BaseCardEditComponent implements OnChanges, OnInit {
     isCBBase: boolean;
     private _prev = {};
-    private _eaps: EosAccessPermissionsService;
+    private _appctx: AppContext;
 
     get isPrjFlag(): boolean {
         return this.getValue('rec.PRJ_NUM_FLAG');
@@ -43,7 +43,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
     ) {
         super(injector);
         this.modalSrv = injector.get(BsModalService);
-        this._eaps = injector.get(EosAccessPermissionsService);
+        this._appctx = injector.get(AppContext);
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -60,7 +60,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         this.updateForm({});
         this._setRequired('rec.SHABLON', !this.isNode);
 
-        this.isCBBase = this._eaps.getParams(CB_FUNCTIONS) === 'YES';
+        this.isCBBase = this._appctx.getParams(CB_FUNCTIONS) === 'YES';
     }
 
     editTemplate(forProject = false) {
