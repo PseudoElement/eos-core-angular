@@ -6,6 +6,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { PARM_SUCCESS_SAVE } from '../../../eos-user-params/user-params-set/shared-user-param/consts/eos-user-params.const';
 import { FormHelperService } from '../../shared/services/form-helper.services';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { AppContext } from 'eos-rest/services/appContext.service';
 @Component({
     selector: 'eos-user-param-other',
     templateUrl: 'user-param-other.component.html',
@@ -25,6 +26,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
     public editFlag: boolean = false;
     public flagIncrementError: boolean = true;
     public currentUser;
+    public cbBase: boolean = false;
     get titleHeader() {
         if (this.currentUser) {
             if (this.currentUser.isTechUser) {
@@ -55,9 +57,12 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
         private _msgSrv: EosMessageService,
         private _formHelper: FormHelperService,
         private _errorSrv: ErrorHelperServices,
-
+        private _appContext: AppContext,
     ) {}
     ngOnInit() {
+        if (this._appContext.cbBase) {
+            this.cbBase = true;
+        }
         if (this.defaultUser) {
             this.currentUser = this.defaultTitle;
         } else {

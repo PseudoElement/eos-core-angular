@@ -159,6 +159,131 @@ export const OTHER_USER_REESTR: IBaseUsers = {
     },
    ]
 };
+export const OTHER_USER_REESTR_CB: IBaseUsers = {
+    id: 'other',
+    title: 'Прочие',
+    apiInstance: 'USER_PARMS',
+   fields: [
+    {
+        key: 'CUR_CABINET',
+        type: 'radio',
+        title: '',
+        readonly: false,
+        options: [
+            {value: '0', title: 'По всему журналу'},
+            {value: '1', title: 'По записям текущего кабинета'}
+        ]
+    },
+    {
+        key: 'PARAM_WINDOW',
+        type: 'boolean',
+        title: 'Показывать окно изменения параметров реестра'
+    },
+    {
+        key: 'SELECT_ITEMS',
+        type: 'boolean',
+        title: 'Давать возможность выбора записей'
+    },
+    {
+        key: 'REESTR_ONE_TO_ONE',
+        type: 'boolean',
+        title: 'Каждый адресат в свой реестр'
+    },
+    {
+        key: 'ORIG_FLAG',
+        type: 'radio',
+        title: '',
+        readonly: false,
+        options: [
+            {value: '0', title: 'Оригиналам'},
+            {value: '1', title: 'Копиям'},
+            {value: '2', title: 'Всем'}
+        ]
+    },
+    {
+        key: 'REESTR_CB_CONTENT',
+        type: 'radio',
+        title: '',
+        readonly: false,
+        options: [
+            {value: '0', title: 'Краткое содержание'},
+            {value: '1', title: 'Корреспондент/адресат'},
+        ]
+    },
+    {
+        key: 'REESTR_FORMAT',
+        type: 'radio',
+        title: '',
+        readonly: false,
+        options: [
+            {value: '1', title: 'Единый реестр'},
+            {value: '2', title: 'Единый реестр с сортировкой по подразделением'},
+            {value: '3', title: 'Каждое подразделение / ДЛ в свой реестр'},
+        ]
+    },
+    {
+        key: 'REESTR_CB_KIND',
+        type: 'radio',
+        title: '',
+        readonly: false,
+        options: [
+            {value: '1', title: 'В экспедицию'},
+            {value: '2', title: 'Нарочным'},
+            {value: '3', title: 'В подразделение'},
+        ]
+    },
+    {
+        key: 'REESTR_TO_PRINTER',
+        type: 'boolean',
+        title: 'Печать на принтер'
+    },
+    {
+        key: 'REESTR_CB_WITHCOM',
+        type: 'boolean',
+        title: 'С примечанием'
+    },
+    {
+        key: 'REESTR_NOT_INCLUDED',
+        type: 'boolean',
+        title: 'Не включенным в реестр'
+    },
+    {
+        key: 'REESTR_NOT_INCLUDED',
+        type: 'boolean',
+        title: 'Не включенным в реестр'
+    },
+    {
+        key: 'REESTR_DATE_INTERVAL',
+        type: 'numberIncrement',
+        title: 'Дата передачи документов не позднее ( дней ):',
+        pattern: REG_MIN_VAL
+    },
+    {
+        key: 'REESTR_COPY_COUNT',
+        type: 'numberIncrement',
+        title: 'Количество копий:',
+        pattern: REG_MIN_VAL
+    },
+    {
+        key: 'REESTR_RESTRACTION_DOCGROUP',
+        title: 'Ограничить группами документов',
+        type: 'text',
+        length: 255,
+    },
+    {
+        key: 'REESTR_RESTRACTION_DEPARTMENT',
+        title: 'Подразделения-адресаты',
+        type: 'text',
+        length: 255,
+    },
+    {
+        key: 'REESTR_CB_SECUR',
+        title: 'Ограничить грифами доступа',
+        type: 'text',
+        length: 255,
+    },
+   ]
+};
 export const OTHER_USER_SHABLONY: IBaseUsers = {
     id: 'other',
     title: 'Прочие',

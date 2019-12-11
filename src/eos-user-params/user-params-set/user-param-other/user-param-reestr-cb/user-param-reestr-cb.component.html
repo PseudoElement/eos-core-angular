@@ -1,0 +1,129 @@
+<div *ngIf="inputs">
+    <div class="user-input-group">
+        <span class="l-font ">Получать реестр:</span>
+        <!-- <hr> -->
+        <div class="in-line-elements">
+            <eos-dynamic-input [input]="inputs[ 'rec.CUR_CABINET'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        </div>
+        
+    </div>
+    <hr>
+    <div class="user-input-group">
+        <span class="l-font ">Получать по:</span>
+        <div class="in-line-elements elements-orig">
+            <eos-dynamic-input [input]="inputs[ 'rec.ORIG_FLAG'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        </div>
+        <eos-dynamic-input [input]="inputs[ 'rec.REESTR_NOT_INCLUDED'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+    </div>
+    <hr>
+    <div>
+        <span>Содержание колонки:</span>
+        <div class="in-line-elements">
+            <eos-dynamic-input [input]="inputs[ 'rec.REESTR_CB_CONTENT'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        </div>
+    </div>
+    <hr>
+    <div class="user-input-group checkbox-in-line-other">
+        <div class="first-checkbox">
+            <eos-dynamic-input class="first-checkbox" [input]="inputs[ 'rec.PARAM_WINDOW'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        </div>
+        
+        <div class="second-checkbox">
+            <eos-dynamic-input class="second-checkbox" [input]="inputs[ 'rec.SELECT_ITEMS'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        </div>
+    </div>
+    <hr>
+    <div>
+        <span>Форма печати реестра:</span>
+        <div class="in-line-elements-width">
+            <eos-dynamic-input [input]="inputs[ 'rec.REESTR_FORMAT'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        </div>
+    </div>
+    <div>
+        <span>Вид реестра:</span>
+        <div class="in-line-elements elements-orig">
+            <eos-dynamic-input [input]="inputs[ 'rec.REESTR_CB_KIND'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        </div>
+        <eos-dynamic-input [input]="inputs[ 'rec.REESTR_CB_WITHCOM'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+    </div>
+    <div *ngIf='errorHidden' class="user-input-group ">
+        <div class="number-increment-wrap ">
+            <span>Дата передачи документов не позднее ( дней ):</span>
+            <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.REESTR_DATE_INTERVAL'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        </div>
+        <div class="number-increment-wrap ">
+            <span>Количество копий:</span>
+            <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.REESTR_COPY_COUNT'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        </div>
+    </div>
+    <!-- печать на принтер -->
+    <div>
+        <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.REESTR_TO_PRINTER'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+    </div>
+    <hr>
+    <div class="user-content-wr ">
+        <span class="title-user-content ">Подразделения-адресаты</span>
+        <div class="user-input-group fl ">
+            <div class="user-input-group-wr ">
+                <div class="user-input-group-hi " *ngIf='listDep && listDep.length > 0'>
+                    <span *ngFor="let node of listDep ">{{node.label}}</span>
+                </div>
+            </div>
+            <div style="display: inline " class="btn-action ">
+                <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover " containerClass="tooltip-info " (click)="selectfromTheDep() " placement="left">
+                    <span class="eos-icon eos-icon-folder-blue small "></span>
+                </button>
+            </div>
+            <div style="display: inline " class=" " *ngIf="listDep">
+                <button [disabled]="listDep.length===0 || !flagEdit " tooltip="Очистить " trigers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteDep() " placement="left">
+                    <span class="eos-icon eos-icon-close-blue small "></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="user-content-wr ">
+        <span class="title-user-content ">Ограничить группами документов:</span>
+        <div class="user-input-group fl ">
+            <div class="user-input-group-wr ">
+                <div class="user-input-group-hi " *ngIf='list && list.length > 0'>
+                    <span *ngFor="let node of list ">{{node.label}}</span>
+                </div>
+            </div>
+            <div style="display: inline " class="btn-action ">
+                <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover " containerClass="tooltip-info " (click)="selectfromTheDirectory() " placement="left">
+                    <span class="eos-icon eos-icon-folder-blue small "></span>
+                </button>
+            </div>
+            <div style="display: inline " class=" " *ngIf="list">
+                <button [disabled]="list.length===0 || !flagEdit " tooltip="Очистить " trigers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteDirectory() " placement="left">
+                    <span class="eos-icon eos-icon-close-blue small "></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="user-content-wr ">
+        <span class="title-user-content ">Ограничить грифами доступа:</span>
+        <div class="user-input-group fl ">
+            <div class="user-input-group-wr ">
+                <div class="user-input-group-hi " *ngIf='listSecur && listSecur.length > 0'>
+                    <span>{{listSecur}}</span>
+                </div>
+            </div>
+            <div style="display: inline " class="btn-action ">
+                <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover " containerClass="tooltip-info " (click)="selectfromTheSecure() " placement="left">
+                    <span class="eos-icon eos-icon-folder-blue small "></span>
+                </button>
+            </div>
+            <div style="display: inline " class=" " ><!-- *ngIf="listSecur" -->
+                <button [disabled]="listSecur.length===0 || !flagEdit " tooltip="Очистить " trigers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteSecure() " placement="left">
+                    <span class="eos-icon eos-icon-close-blue small "></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div *ngIf="flagBacground " class="bacgrFixed "></div> -->

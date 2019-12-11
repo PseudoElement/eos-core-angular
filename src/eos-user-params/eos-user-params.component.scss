@@ -234,3 +234,85 @@
         }
     }
 }
+.in-line-elements{
+    .inline-block {
+        display: inline-block;
+        width: 170px;
+    }
+    .send-fron-title{
+        width: 80px;
+        height: 37px;
+        margin-right: 0;
+        float: left;
+    }
+    .number-increment-wrap {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+    .elem-input-radio {
+        font-size: 14px;
+        display: inline-block;
+        margin-right: 30px;
+    }
+}
+.elements-orig{
+    .inline-block {
+        width: 170px !important;
+    }
+}
+.in-line-elements-width {
+    .inline-block {
+        width: 400px !important;
+    }
+}
+.checkbox-in-line-other{
+    display: flex;
+    .first-checkbox{
+        margin-right: 20px;
+    }
+    .second-checkbox{
+        input{
+            width: 250px;
+        }
+    }
+}
+.add-grifs-modal{
+    .grifs-header{
+        height: 48px;
+        width: 100%;
+        position: relative;
+        border: #dedad6;
+        display: flex;
+        position: relative;
+        .header__text{
+            color: #646464;
+            font-size: 18px;
+        }
+        .header-button-wrap {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            button {
+                margin-left: 10px;
+            }
+        }
+    }
+    .checkbox-size{
+        width: 24px;
+        height: 24px;
+    }
+    .grifs-content{
+        max-height: 500px;
+        overflow: auto;
+        .grifs-row{
+            display: flex;
+            height: 40px;
+            border-bottom: 1px solid #eeeeee;
+            padding-top: 8px;
+            .grifs-element-title{
+                padding-left: 10px;
+            }
+        }
+    }
+}
