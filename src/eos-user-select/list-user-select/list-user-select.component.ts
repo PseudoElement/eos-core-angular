@@ -699,6 +699,54 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
     DeliteUser() {
         const names = this.getLoginDeleted();
+        if (this.checkedOwnDelete(names)) {
+            this._msgSrv.addNewMessage({
+                title: 'Предупреждение',
+                msg: `Нельзя удалить самого себя`,
+                type: 'warning'
+            });
+            this.deleteOwnUser = null;
+            return;
+        }
+        this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
+            this.deleteOwnUser = null;
+                if (confirmation) {
+                    if (this._appContext.cbBase) {
+                    this._pipeSrv.read({
+                        USER_CL: {
+                            criteries: {
+                                DELO_RIGHTS: '1%',
+                                DELETED: '0',
+                                ISN_LCLASSIF: '1:null'
+                            },
+                        },
+                        expand: 'USER_TECH_List'
+                    }).then((data: any) => {
+                        const usersUnlimit = data.filter(user => this._userParamSrv.CheckLimitTech(user.USER_TECH_List) !== true && user.TECH_RIGHTS[0] === '1');
+                        let count = 0;
+                        for (const user of usersUnlimit) {
+                            if (names.indexOf(user.SURNAME_PATRON) !== -1) {
+                                count++;
+                            }
+                        }
+                        if (usersUnlimit.length === count) {
+                            this._msgSrv.addNewMessage({
+                                title: 'Предупреждение',
+                                msg: `Ни один из незаблокированных пользователей не имеет права "Системный технолог" с доступом к модулю "Пользователи" без ограничений.`,
+                                type: 'warning'
+                            });
+                            return;
+                        }
+                        this.deleteConfirm(names);
+                    });
+                } else {
+                    this.deleteConfirm(names);
+                }
+            }
+        });
+    }
+
+    checkedOwnDelete(names: string): boolean {
         if (names) {
             CONFIRM_DELETE.body = 'Удаленных пользователей невозможно будет восстановить. Вы действительно хотите удалить пользователей: ' + '\n\r' + names + ' ?';
         }
@@ -706,63 +754,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
             if (names !== '') {
                 CONFIRM_DELETE.body = CONFIRM_DELETE.body + '\n\r' + `Пользователь ${this.deleteOwnUser} не будет удален. Нельзя удалить самого себя.`;
             } else {
-                this._msgSrv.addNewMessage({
-                    title: 'Предупреждение',
-                    msg: `Нельзя удалить самого себя`,
-                    type: 'warning'
-                });
-                return;
+                return true;
             }
         }
-        if (this._appContext.cbBase) {
-            this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
-                this.deleteOwnUser = null;
-                this._pipeSrv.read({
-                    USER_CL: {
-                        criteries: {
-                            DELO_RIGHTS: '1%',
-                            DELETED: '0',
-                            ISN_LCLASSIF: '1:null'
-                        },
-                    },
-                    expand: 'USER_TECH_List'
-                }).then((data: any) => {
-                    const usersUnlimit = data.filter(user => this._userParamSrv.CheckLimitTech(user.USER_TECH_List) !== true && user.TECH_RIGHTS[0] === '1');
-                    let count = 0;
-                    for (const user of usersUnlimit) {
-                        if (names.indexOf(user.SURNAME_PATRON) !== -1) {
-                            count++;
-                        }
-                    }
-                    if (usersUnlimit.length === count) {
-                        this._msgSrv.addNewMessage({
-                            title: 'Предупреждение',
-                            msg: `Ни один из незаблокированных пользователей не имеет права "Системный технолог" с доступом к модулю "Пользователи" без ограничений.`,
-                            type: 'warning'
-                        });
-                        return;
-                    }
-                    if (confirmation) {
-                        this.deleteConfirm(names);
-                    }
-                });
-            }).catch(error => {
-                    this.isLoading = false;
-                    error.message = error.message ? error.message : 'Не удалось удалить пользователя, обратитесь к системному администратору';
-                    this.cathError(error);
-                });
-        } else {
-            this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
-                this.deleteOwnUser = null;
-                    if (confirmation) {
-                        this.deleteConfirm(names);
-                    }
-                }).catch(error => {
-                    this.isLoading = false;
-                    error.message = error.message ? error.message : 'Не удалось удалить пользователя, обратитесь к системному администратору';
-                    this.cathError(error);
-                });
-        }
+        return false;
     }
 
     deleteConfirm(names: string): Promise<any> {
@@ -797,6 +792,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
                     return Promise.all([...arrayProtocol]).then(() => {
                         this.isLoading = false;
                     });
+                }).catch(error => {
+                    this.isLoading = false;
+                    error.message = error.message ? error.message : 'Не удалось удалить пользователя, обратитесь к системному администратору';
+                    this.cathError(error);
                 });
             }
     }
