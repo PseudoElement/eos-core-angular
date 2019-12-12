@@ -147,7 +147,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         const confUsers = this._storage.getItem('users');
         this._pagSrv.paginationConfig = confUsers;
         this.buttons = Allbuttons;
-        this.rtUserService.flagDeleteScroll = true;
         this.rtUserService.flagDeleteSelectedUser = true;
         //  this.helpersClass = new HelpersSortFunctions();
         this._apiSrv.initSort();
@@ -343,7 +342,6 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         /*  setTimeout(() => { */
         if (this.selectedUser && !this.selectedUser.deleted) {
             this._storage.setItem('selected_user_save', this.selectedUser);
-            this.rtUserService.flagDeleteScroll = false;
             this._router.navigate(['user-params-set'], {
                 queryParams: { isn_cl: this.selectedUser.id }
             });

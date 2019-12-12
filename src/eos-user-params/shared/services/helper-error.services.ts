@@ -30,7 +30,7 @@ export class ErrorHelperServices {
                     break;
             }
         } else {
-            this.sendMessage('danger', 'Ошибка', 'Сервер недоступен');
+            this.sendMessage('danger', 'Ошибка', error.message);
         }
     }
  private   sendMessage(type: string, tittle: string, msg: string) {
