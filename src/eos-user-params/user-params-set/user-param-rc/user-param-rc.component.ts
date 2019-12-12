@@ -77,26 +77,26 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
             this._userParamsSetSrv.getUserIsn({
                 expand: 'USER_PARMS_List'
             })
-            .then(() => {
-                this.allData = this._userParamsSetSrv.hashUserContext;
-                this.currentUser = this._userParamsSetSrv.curentUser;
-                this.cutentTab = 0;
-                this.init();
-                this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
-                    this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
-                    this.checRcShowRes();
-                    this.editMode();
-                }).catch(error => {
-                    this._msg.addNewMessage({
-                        type: 'warning',
-                        title: 'Предупреждение',
-                        msg: 'Некорркетное значение в базе данных, попробуйте сбросить настройки по умолчанию'
+                .then(() => {
+                    this.allData = this._userParamsSetSrv.hashUserContext;
+                    this.currentUser = this._userParamsSetSrv.curentUser;
+                    this.cutentTab = 0;
+                    this.init();
+                    this.getInfoFroCode(this.form.controls['rec.OPEN_AR'].value).then(() => {
+                        this.originDocRc = this.dopRec ? this.dopRec.slice() : null;
+                        this.checRcShowRes();
+                        this.editMode();
+                    }).catch(error => {
+                        this._msg.addNewMessage({
+                            type: 'warning',
+                            title: 'Предупреждение',
+                            msg: 'Некорркетное значение в базе данных, попробуйте сбросить настройки по умолчанию'
+                        });
                     });
-                });
-            })
-            .catch(err => {
+                })
+                .catch(err => {
 
-            });
+                });
         }
     }
     setTab(i: number) {
@@ -108,6 +108,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     }
     disabDefault(flag: boolean): void {
         if (flag) {
+            this.form.controls['rec.SHOW_ALL_RES'].patchValue('YES');
             this.form.controls['rec.SHOW_ALL_RES'].disable({ onlySelf: true, emitEvent: false });
         } else {
             this.form.controls['rec.SHOW_ALL_RES'].enable({ emitEvent: false });
@@ -139,6 +140,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
                 this.dopRec.length > 0 ? this.disabledFlagDelite = false : this.disabledFlagDelite = true;
             });
         } else {
+            this.dopRec = null;
             this.disabledFlagDelite = true;
             return Promise.resolve();
         }
@@ -278,39 +280,21 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     }
     createUrl() {
         const arrayQuery = [];
-        if (this.defaultTitle) {
-            this.mapChanges.forEach((value, key, arr) => {
-                let val;
-                switch (typeof value) {
-                    case 'string':
-                        val = value;
-                        break;
-                    case 'boolean':
-                        value ? val = 'YES' : val = 'NO';
-                        break;
-                    default:
-                        val = value;
-                        break;
-                }
-                arrayQuery.push(this.createReqDefault(key, val));
-            });
-        } else {
-            this.mapChanges.forEach((value, key, arr) => {
-                let val;
-                switch (typeof value) {
-                    case 'string':
-                        val = value;
-                        break;
-                    case 'boolean':
-                        value ? val = 'YES' : val = 'NO';
-                        break;
-                    default:
-                        val = value;
-                        break;
-                }
-                arrayQuery.push(this.createReq(key, val));
-            });
-        }
+        this.mapChanges.forEach((value, key, arr) => {
+            let val;
+            switch (typeof value) {
+                case 'string':
+                    val = value;
+                    break;
+                case 'boolean':
+                    value ? val = 'YES' : val = 'NO';
+                    break;
+                default:
+                    val = value;
+                    break;
+            }
+            arrayQuery.push(this.defaultTitle ? this.createReqDefault(key, val) : this.createReq(key, val));
+        });
         return arrayQuery;
     }
     createReq(name: string, value: any): any {
@@ -333,7 +317,7 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
     }
     ngOnDestroy() {}
     cancel($event?) {
-        if (!this.btnDisabled) {
+        if (this.mapChanges.size) {
             this._msg.addNewMessage(PARM_CANCEL_CHANGE);
         }
         this.mapChanges.clear();
@@ -354,15 +338,15 @@ export class UserParamRCComponent implements OnDestroy, OnInit {
         this.prepareInputs = {};
         const prep = this.formHelp.getObjQueryInputsFieldForDefault(this.formHelp.queryparams(RC_USER, 'fieldsDefaultValue'));
         this._pipRx.read(prep).then((data: any) => {
-            this.disabledFlagDelite = true;
             this.mapChanges.clear();
-            this.getInfoFroCode(data[1].PARM_VALUE);
-            this.creatchesheDefault = this.formHelp.createhash(data);
-            this.prepareData = this.formHelp.parse_Create(RC_USER.fields, this.creatchesheDefault);
-            this.prepareInputs = this.formHelp.getObjectInputFields(RC_USER.fields);
-            this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
-            this.upInputs(this.defoltInputs);
-            this.checRcShowRes();
+            this.getInfoFroCode(data[1].PARM_VALUE).then(() => {
+                this.creatchesheDefault = this.formHelp.createhash(data);
+                this.prepareData = this.formHelp.parse_Create(RC_USER.fields, this.creatchesheDefault);
+                this.prepareInputs = this.formHelp.getObjectInputFields(RC_USER.fields);
+                this.defoltInputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
+                this.upInputs(this.defoltInputs);
+                this.checRcShowRes();
+            });
         });
     }
     private _pushState() {
