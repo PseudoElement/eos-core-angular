@@ -115,7 +115,7 @@ export class CopyNodeComponent implements OnDestroy {
 
         this._apiSrv.batch(this._apiSrv.changeList(recs), '')
             .then(() => {
-                this._dictSrv.selectCustomTreeNode()
+                this._dictSrv.selectCustomTreeNode(null)
                     .then(() => this._msgSrv.addNewMessage(SUCCESS_SAVE));
                 this.hideModal();
             })

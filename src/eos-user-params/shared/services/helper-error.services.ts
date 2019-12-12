@@ -23,14 +23,14 @@ export class ErrorHelperServices {
                     this.razLogin();
                     break;
                 case '500':
-                    this.sendMessage('danger', 'Ошибка', 'ошибка сохранения пароля');
+                    this.sendMessage('danger', 'Ошибка', error.message);
                     break;
                 default:
                     this.sendMessage('danger', 'Ошибка', error.message);
                     break;
             }
         } else {
-            this.sendMessage('danger', 'Ошибка', 'Сервер недоступен');
+            this.sendMessage('danger', 'Ошибка', error.message);
         }
     }
  private   sendMessage(type: string, tittle: string, msg: string) {

@@ -1,5 +1,5 @@
 <div class="input-user-wrapper input-user-directories-wrapper" *ngIf="inputs">
-    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [errorSave] = "MaxIncrement" [disableBtn]="btnDisable" [errorSave] = "!this.getMaxIncrement" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
+    <eos-user-params-header [editMode]="flagEdit" [title]='titleHeader' [errorSave] = "!getMaxIncrement" [disableBtn]="btnDisable" [errorSave] = "!this.getMaxIncrement" [defaultBtn]='true' (submitEmit)='submit($event)' (cancelEmit)='cancel($event)' (editEmit)='edit($event)' (defaultEmit)='default($event)'></eos-user-params-header>
     <div class="input-user-search-wrapper">
         <div>
             <span class="l-font">Результат поиска</span>

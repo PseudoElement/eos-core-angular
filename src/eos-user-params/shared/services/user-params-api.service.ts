@@ -233,13 +233,6 @@ export class UserParamApiSrv {
         dbQuery.inlinecount = 'allpages';
         return dbQuery;
     }
-    parseTotalPage(data: string) {
-        const re = /\d+/g;
-        const tAray = data.match(re);
-        if (tAray.length) {
-            return +tAray[tAray.length - 1];
-        }
-    }
     getSkipTo() {
 
     }
@@ -264,7 +257,7 @@ export class UserParamApiSrv {
         return this.getData(q)
             .then(data => {
                 if (data.hasOwnProperty('TotalRecords')) {
-                    this.users_pagination.totalPages = this.parseTotalPage(data['TotalRecords']);
+                    this.users_pagination.totalPages = data['TotalRecords'];
                 } else {
                     this.users_pagination.totalPages = data.length;
                 }
@@ -321,11 +314,11 @@ export class UserParamApiSrv {
         return this.getData<T>(query);
     }
 
-    blokedUser(users: UserSelectNode[]): Promise<any> {
+    blokedUser(users: UserSelectNode[], mainUser): Promise<any> {
         const ARRAY_QUERY_SET_DELETE = [];
         let data = {};
         users.forEach((user: UserSelectNode) => {
-            if (user.isChecked || user.selectedMark) {
+            if ((user.isChecked || user.selectedMark) && user.id !== +mainUser) {
                 if (user.blockedUser) {
                     data = {
                         DELETED: 0,

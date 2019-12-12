@@ -48,6 +48,7 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 takeUntil(this.ngUnsubscribe)
             )
             .subscribe(param => {
+                this.checkAdmin();
                 this.pageId = param['field-id'];
                 this.codeList = undefined;
                 this.flagEdit = false;
@@ -66,11 +67,6 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 if (qParam['isn_cl']) {
                     this._storageSrv.setItem('userEditableId', qParam['isn_cl'], true);
                 }
-
-                // if (!qParam['isn_cl'] && !this._userParamService.isUserContexst) {
-                //     this._router.navigate(['user_param']);
-                //     return;
-                // }
                 this.isShowAccordion = true;
             });
         this._userParamService.updateUser$
@@ -96,13 +92,13 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 this.isShowAccordion = state;
             });
         this._navSrv.StateSandwichRight$
-        .pipe(
-            takeUntil(this.ngUnsubscribe)
-        )
-        .subscribe((state: boolean) => {
-            this.isShowRightAccordion = state;
-            this.closeRight = this.isShowRightAccordion;
-        });
+            .pipe(
+                takeUntil(this.ngUnsubscribe)
+            )
+            .subscribe((state: boolean) => {
+                this.isShowRightAccordion = state;
+                this.closeRight = this.isShowRightAccordion;
+            });
         this._navSrv.StateScanDelo
             .pipe(
                 takeUntil(this.ngUnsubscribe)
@@ -136,10 +132,10 @@ export class UserParamsComponent implements OnDestroy, OnInit {
         const heightWithoutScrollbar = document.documentElement.clientWidth;
         this.codeList = $event;
         if (this.codeList.length > 0) {
-                this._navSrv.showRightSandwich(true);
-                if (this.closeRight && heightWithoutScrollbar > 1440) {
-                    this._navSrv.changeStateRightSandwich(true);
-                }
+            this._navSrv.showRightSandwich(true);
+            if (this.closeRight && heightWithoutScrollbar > 1440) {
+                this._navSrv.changeStateRightSandwich(true);
+            }
         } else {
             this._navSrv.showRightSandwich(false);
             this._navSrv.changeStateRightSandwich(false);
@@ -173,26 +169,6 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                     return res(false);
                 }
             });
-            // return this._confirmSrv
-            //     .confirm(Object.assign({}, CONFIRM_SAVE_ON_LEAVE, { confirmDisabled: this._disableSave }))
-            //     .then(doSave => {
-            //         if (doSave) {
-            //             this._userParamService.saveChenges();
-            //             return this._userParamService.submitSave.then(() => {
-            //                 this._isChanged = false;
-            //                 return true;
-            //             }).catch((error) => {
-            //                 console.log(error);
-            //                 return false;
-            //             });
-            //         } else {
-            //             this._isChanged = false;
-            //             return true;
-            //         }
-            //     })
-            //     .catch((err) => {
-            //         return false;
-            //     });
         } else {
             return Promise.resolve(true);
         }
@@ -268,5 +244,10 @@ export class UserParamsComponent implements OnDestroy, OnInit {
                 return;
             }
         });
+    }
+    private checkAdmin() {
+        if (this._appContext.CurrentUser.IS_SECUR_ADM) {
+            this._router.navigate(['user_param']);
+        }
     }
 }

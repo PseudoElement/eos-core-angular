@@ -9,11 +9,25 @@ import { CONFIRM_DG_FIXE, BUTTON_RESULT_YES } from 'app/consts/confirms.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { PipRX } from 'eos-rest';
+import { CB_FUNCTIONS, AppContext } from 'eos-rest/services/appContext.service';
 
 const RC_TYPE = 'RC_TYPE';
 const DOCGROUP_INDEX = 'DOCGROUP_INDEX';
 // const ISN_NODE = 'ISN_NODE';
-const inheritFiields = [RC_TYPE, DOCGROUP_INDEX, 'ACCESS_MODE', 'ACCESS_MODE_FIXED', 'SHABLON', 'PRJ_SHABLON'];
+const inheritFiields = [
+    'PRJ_NUM_FLAG',
+    'EDS_FLAG', // ЭП
+    'ENCRYPT_FLAG', // Шифрование
+    'IS_COPYCOUNT', // Нумерация копий
+    'E_DOCUMENT', // Оригинал в эл. виде
+    'PRJ_SHABLON', // Шаблон проекта
+    'PRJ_NUM_FLAG', // Проекты документов (для исходящих)
+    RC_TYPE,
+    DOCGROUP_INDEX,
+    'ACCESS_MODE',
+    'ACCESS_MODE_FIXED',
+    'SHABLON',
+];
 
 export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
 
@@ -25,13 +39,23 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
         private _injector: Injector
     ) {
         super (descriptor, apiSrv);
+
     }
 
     getNewRecord(preSetData: {}, parentNode: EosDictionaryNode): {} {
         const newPreset = {};
         EosUtils.deepUpdate(newPreset, preSetData);
+        const appctx = this._injector.get(AppContext);
+        const isCBFunc = appctx.getParams(CB_FUNCTIONS) === 'YES';
         if (parentNode) {
-            inheritFiields.forEach((f) => this._fillParentField(newPreset, parentNode.data, f));
+            [
+                ... inheritFiields,
+                ... isCBFunc ? ['REG_DATE_PROTECTED'] : [], // 'Запрещено редактировать рег. дату'
+            ]
+            .forEach((f) => this._fillParentField(newPreset, parentNode.data, f));
+            if (newPreset['rec']['IS_NODE'] === 1 && parentNode.data.rec['RC_TYPE'] === 0) {
+                newPreset['rec']['RC_TYPE'] = 1;
+            }
         }
         return super.getNewRecord(newPreset, parentNode);
     }

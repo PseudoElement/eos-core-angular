@@ -136,9 +136,9 @@ export class AdvCardRKDataCtrl {
         if (dict) {
             let query: any;
             if (el.dict.criteries) {
-                query = { criteries: el.dict.criteries};
+                query = { criteries: el.dict.criteries, orderby: 'WEIGHT'};
             } else {
-                query = { criteries: {}};
+                query = { criteries: {}, orderby: 'WEIGHT'};
             }
             query.criteries[dict.dictKey] = value;
 

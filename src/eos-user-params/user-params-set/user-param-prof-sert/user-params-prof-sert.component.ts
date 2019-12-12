@@ -1,9 +1,9 @@
-import { Component, OnInit, TemplateRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+/* import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal'; */
 
-import { of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
 
 import { UserParamsService } from '../../shared/services/user-params.service';
 import { CarmaHttpService } from 'app/services/carmaHttp.service';
@@ -12,6 +12,9 @@ import { PARM_CANCEL_CHANGE, PARM_SUCCESS_SAVE, PARM_ERROR_DB, PARM_ERROR_CARMA 
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { USER_CERT_PROFILE } from 'eos-rest/interfaces/structures';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { SertsBase } from 'eos-user-params/shared/intrfaces/user-parm.intterfaces';
+import { CertificateService } from 'app/services/certificate.service';
+import { ICertificateInit } from 'eos-common/interfaces';
 export interface Istore {
     Location: string;
     Address?: string;
@@ -39,6 +42,17 @@ interface SertInfo {
 
 
 export class UserParamsProfSertComponent implements OnInit, OnDestroy {
+
+    public stateSerts: SertsBase = {
+        sing_mail: null,
+        enc_mail: null,
+        id_sing: null,
+        id_enc: null,
+        id_enc_origin: null,
+        id_sing_origin: null,
+        sing_mail_origin: null,
+        enc_mail_origin: null,
+    };
     public selectedSertificatePopup: SertInfo;
     public listsSertInfo: Array<SertInfo> = [];
     public alllistSertInfo: Array<SertInfo> = [];
@@ -46,7 +60,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     public selectedFromAllList: SertInfo;
     public editFlag = false;
     public btnDisabled: boolean = false;
-    public modalRef: BsModalRef;
+    /* public modalRef: BsModalRef; */
     public currentUser;
     get titleHeader() {
         if (this.currentUser) {
@@ -58,17 +72,23 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         return '';
     }
     public flagHideBtn: boolean = false;
+    public isCarma: boolean = true;
     private DBserts: USER_CERT_PROFILE[] = [];
-    private isCarma: boolean = true;
+    private ngUnsubscribe: Subject<any> = new Subject();
     constructor(
         public certStoresService: CarmaHttpService,
         private _userSrv: UserParamsService,
-        private _modalService: BsModalService,
+        /* private _modalService: BsModalService, */
         private apiSrv: PipRX,
         private _msgSrv: EosMessageService,
-        private _errorSrv: ErrorHelperServices
+        private _errorSrv: ErrorHelperServices,
+        private _certService: CertificateService,
+        private carmaSrv: CarmaHttpService,
     ) { }
-    ngOnDestroy() { }
+    ngOnDestroy() {
+        this.ngUnsubscribe.next();
+        this.ngUnsubscribe.complete();
+    }
     ngOnInit() {
         this._userSrv.getUserIsn({
             expand: 'USER_PARMS_List'
@@ -76,20 +96,15 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
             .then(() => {
                 this.currentUser = this._userSrv.curentUser;
                 this.selectedSertificatePopup = null;
-
                 const store: Istore[] = [{ Location: 'sscu', Address: '', Name: 'My' }];
                 this.certStoresService.init(null, store)
+                    .pipe(
+                        takeUntil(this.ngUnsubscribe)
+                    )
                     .subscribe(
                         (data) => {
                             this.isCarma = true;
-                            this.certStoresService.EnumCertificates('', '', '').subscribe(infoSert => {
                                 this.getSerts();
-                                if (this.checkVersion()) {
-                                    this.waitSerts(infoSert);
-                                } else {
-                                    this.oldWaitSerts(infoSert);
-                                }
-                            });
                         },
                         (error) => {
                             this.isCarma = false;
@@ -112,7 +127,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         }
         return false;
     }
-    oldWaitSerts(data: Array<any>) {
+    /* oldWaitSerts(data: Array<any>) {
         const arrPromise = [];
         data.forEach(sert => {
             arrPromise.push(this.certStoresService.GetCertInfo2(sert));
@@ -125,7 +140,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                 }
             });
         });
-    }
+    } */
 
     objectForSertInfo(infoSert, id, selected, create, del): SertInfo {
         if (infoSert.hasOwnProperty('certInfo')) {
@@ -155,7 +170,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
         }
     }
 
-    waitSerts(data) {
+    /* waitSerts(data) {
         const strQuery = data.join(';');
         this.certStoresService.GetCertInfo2(strQuery).then(arrayInfo => {
             if (Array.isArray(arrayInfo['certInfos'])) {
@@ -168,7 +183,7 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                 this.alllistSertInfo.push(ob);
             }
         });
-    }
+    } */
     parceValid(value: string): boolean {
         if (value === 'VALID') {
             return true;
@@ -184,7 +199,8 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
                 }
             }
         };
-        return this.apiSrv.read(query).then((result: USER_CERT_PROFILE[]) => {
+        return this.apiSrv.read(query)
+        .then((result: USER_CERT_PROFILE[]) => {
             this.DBserts = result;
             this.getInfoForDBSerts().then(() => {
                 if (this.listsSertInfo.length > 0) {
@@ -332,8 +348,23 @@ export class UserParamsProfSertComponent implements OnInit, OnDestroy {
     }
 
 
-    chooseSertificate(template: TemplateRef<any>): void {
-        this.modalRef = this._modalService.show(template);
+    openSertService(): void {
+        const openSerts: ICertificateInit = {
+        };
+        this._certService.openCerts(openSerts).then((data: string) => {
+            if (data) {
+                this.carmaSrv.GetCertInfo2(data).then(result => {
+                    this.selectedSertificatePopup = this.objectForSertInfo(result, data, false, false, false);
+                    this.addSert();
+                });
+            }
+        }).catch(error => {
+            console.log('error', error);
+        });
+    }
+    chooseSertificate(): void {
+        this.openSertService();
+        // this.modalRef = this._modalService.show(template);
     }
     selectCurentListAll(item: SertInfo): void {
         if (this.selectedSertificatePopup) {

@@ -99,3 +99,8 @@ export interface IGetUserCfg {
     isn_cl?: number;
     shortSys?: boolean;
 }
+export interface IPassRegExp {
+    passNums?: RegExp;
+    passAlph?: RegExp;
+    otherSymb?: RegExp;
+}

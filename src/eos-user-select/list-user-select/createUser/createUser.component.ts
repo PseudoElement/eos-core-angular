@@ -103,7 +103,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
     submit() {
         if (this.createUser()) {
             const url = this._createUrlForSop();
-
+            this.btnDisabled = true;
+            this.isLoading = true;
             this._pipeSrv.read({
                 [url]: ALL_ROWS,
             })
@@ -115,6 +116,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                     });
                     this.isn_prot = isnUser;
                     this._userParamSrv.ProtocolService(this.isn_prot, 3);
+                    this.btnDisabled = false;
+                    this.isLoading = false;
                 })
                 .catch(e => {
                     const m: IMessage = {
@@ -136,6 +139,8 @@ export class CreateUserComponent implements OnInit, OnDestroy {
                         m.msg = e.message ? e.message : e;
                     }
                     this._msgSrv.addNewMessage(m);
+                    this.btnDisabled = false;
+                    this.isLoading = false;
                 });
         } else {
             const m: IMessage = {

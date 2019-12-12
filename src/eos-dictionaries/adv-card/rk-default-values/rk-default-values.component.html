@@ -135,11 +135,23 @@
                             [form]="form"
                             [viewOpts]="selOpts"
                             [readonly]="!editMode"></eos-dynamic-input>
+
+        <div [ngStyle]="{ 'width': isCB ? '50%' : '100%', 'display': 'inline-block'}">
+        <!-- вид отправки -->
         <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_ISN_DELIVERY']"
                             [form]="form"
                             [viewOpts]="selOpts"
                             [hidden]="!flagEn_extAddr"
                             [readonly]="!editMode || !flagEn_extAddr"></eos-dynamic-input>
+        </div>
+        <div style="width: 45%; float: right;" *ngIf="isCB">
+            <eos-dynamic-input class="no-margin" [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_CB_SENDING_TYPE']"
+            [form]="form"
+            [viewOpts]="selOpts"
+            [hidden]="!flagEn_extAddr"
+            [readonly]="!editMode || !flagEn_extAddr"></eos-dynamic-input>
+        </div>
+        <!-- с отметкой об отправке -->
         <eos-dynamic-input [input]="inputs['DOC_DEFAULT_VALUE_List.SEND_OUTER_MARKSEND']"
                             [form]="form"
                             [hidden]="!flagEn_extAddr"

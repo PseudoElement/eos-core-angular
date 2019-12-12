@@ -90,6 +90,29 @@
         .send-from-btn-choose {
             margin: 0px 7px;
         }
+        .inline-block {
+            display: inline-block;
+            width: 170px;
+        }
+        .send-fron-title{
+            width: 80px;
+            height: 37px;
+            margin-right: 0;
+            float: left;
+        }
+        .number-increment-wrap {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .elem-input-radio {
+            font-size: 14px;
+            display: inline-block;
+            margin-right: 30px;
+        }
+    }
+    .view-send{
+        height: 62px;
     }
     .the-main-recipients-of-the-document-titles {
         font-weight: bold;
@@ -108,7 +131,6 @@
         width: 100%;
         vertical-align: middle;
         font-size: 0;
-        /* color: */
         .item {
             display: inline-block;
             margin-right: $grid-gutter-width / 2;

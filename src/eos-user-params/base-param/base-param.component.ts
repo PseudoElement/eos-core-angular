@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, TemplateRef } from '@angular/core';
 import { FormGroup, ValidationErrors, AbstractControl } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -24,6 +24,8 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ConfirmWindowService } from '../../eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_UPDATE_USER } from '../../eos-user-select/shered/consts/confirm-users.const';
 import { IMessage } from 'eos-common/interfaces';
+import { RtUserSelectService } from 'eos-user-select/shered/services/rt-user-select.service';
+import { CONFIRM_AVSYSTEMS_UNCHECKED } from 'eos-dictionaries/consts/confirm.consts';
 
 @Component({
     selector: 'eos-params-base-param',
@@ -39,6 +41,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     inputFields: IInputParamControl[];
     controlField: IInputParamControl[];
     accessField: IInputParamControl[];
+    title: string;
     /* инпуты */
     inputs;
     controls;
@@ -52,15 +55,19 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     /* формы */
     isLoading: Boolean = true;
     selfLink = null;
+    dueDepName: string = '';
     public isShell: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
     public errorPass: boolean = false;
+    public checkPass: string = '';
     private _sysParams;
     private _descSrv;
     private _newData: Map<string, any> = new Map();
     private _newDataformControls: Map<string, any> = new Map();
     private _newDataformAccess: Map<string, any> = new Map();
     private modalRef: BsModalRef;
+    private _uncheckedAvBtn: boolean = false;
+
 
     get newInfo() {
         if (this._newDataformAccess.size || this._newData.size || this._newDataformControls.size) {
@@ -75,18 +82,8 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     get stateHeaderSubmit() {
         return this._newData.size > 0 || this._newDataformAccess.size > 0 || this._newDataformControls.size > 0;
     }
-    get title() {
-        if (this.curentUser) {
-            if (this.curentUser.isTechUser) {
-                return this.curentUser.CLASSIF_NAME;
-            }
-            return `${this.curentUser['DUE_DEP_SURNAME']} (${this.curentUser['CLASSIF_NAME']})`;
-        }
-        return '';
-    }
     constructor(
         private _router: Router,
-        private _snapShot: ActivatedRoute,
         private _msgSrv: EosMessageService,
         private _apiSrv: UserParamApiSrv,
         private _inputCtrlSrv: InputParamControlService,
@@ -97,6 +94,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         private modalService: BsModalService,
         private _confirmSrv: ConfirmWindowService,
         private apiSrvRx: PipRX,
+        private _rtUserSel: RtUserSelectService
     ) {
     }
     ngOnInit() {
@@ -105,15 +103,16 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             shortSys: true
         }).then((data) => {
             if (data) {
+                this._userParamSrv.getPasswordСonditions();
                 this.selfLink = this._router.url.split('?')[0];
                 this.init();
-                if (this._snapShot.snapshot.queryParams.is_create && !this.curentUser['IS_PASSWORD']) {
+                this.getTitle();
+                if (!this.curentUser['IS_PASSWORD']) {
                     this.messageAlert({ title: 'Предупреждение', msg: `У пользователя ${this.curentUser['CLASSIF_NAME']} не задан пароль.`, type: 'warning' });
                 }
                 this.editModeF();
                 this._subscribe();
-            }
-        });
+        }});
         // if (localStorage.getItem('lastNodeDue') == null) {
         //     localStorage.setItem('lastNodeDue', JSON.stringify('0.'));
         // }
@@ -153,6 +152,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         this.form = this._inputCtrlSrv.toFormGroup(this.inputs, false);
         this.formControls = this._inputCtrlSrv.toFormGroup(this.controls, false);
         this.formAccess = this._inputCtrlSrv.toFormGroup(this.accessInputs, false);
+        this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
         this.isLoading = false;
         this.setValidators();
         this.subscribeForms();
@@ -280,17 +280,66 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
     }
 
+    uncheckedAvSystems(): boolean {
+        if (this._newDataformAccess.size) {
+            const accessStr = this._createAccessSystemsString(this.formAccess.controls);
+            if (accessStr === '0000000000000000000000000000') {
+                return true;
+            }
+        }
+        return false;
+    }
+
     submit(meta?: string): Promise<any> {
         if (this.cheackCtech()) {
             return;
         }
-        this.isLoading = true;
+        if (this.checkPass !== '') {
+            return;
+        }
         const id = this._userParamSrv.userContextId;
         const newD = {};
         const query = [];
         const accessStr = '';
         this.setQueryNewData(accessStr, newD, query);
         this.setNewDataFormControl(query, id);
+        if (this.uncheckedAvSystems()) {
+            return this._confirmSrv.confirm(CONFIRM_AVSYSTEMS_UNCHECKED).then(res => {
+                if (res) {
+                    return this.saveAfterSystems(newD, accessStr, id, query);
+                } else {
+                    return;
+                }
+            });
+        }
+        return this.saveAfterSystems(newD, accessStr, id, query);
+    }
+
+    saveAfterSystems(newD: any, accessStr: string, id: number, query: any): Promise<any> {
+        this.isLoading = true;
+        if (newD.hasOwnProperty('DUE_DEP') && this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
+            return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
+                if (cab) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }).then(data => {
+                if (!data) {
+                    this.clearMap();
+                    this.messageAlert({ title: 'Предупреждение', msg: `Невозможно присвоить пользователю выбранную роль`, type: 'warning' });
+                    this.isLoading = false;
+                    return;
+                } else {
+                    return this.saveData(newD, accessStr, id, query);
+                }
+            });
+        } else {
+            return this.saveData(newD, accessStr, id, query);
+        }
+    }
+
+    saveData(newD: any, accessStr: string, id: number, query: any): Promise<any> {
         const pass = this._newDataformControls.get('pass');
         if (this.inputs.CLASSIF_NAME.value !== this.form.value.CLASSIF_NAME) {
             if (this.curentUser['IS_PASSWORD'] === 0) {
@@ -355,6 +404,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             }
         }
     }
+
     sendData(query, accessStr): Promise<any> {
         return this._apiSrv.setData(query).then(() => {
             this.AfterSubmit(accessStr);
@@ -382,6 +432,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }).then(() => {
             this.editMode = false;
             this.curentUser = this._userParamSrv.curentUser;
+            this.getTitle();
             this.upform(this.inputs, this.form);
             this.upform(this.controls, this.formControls);
             this.upform(this.accessInputs, this.formAccess);
@@ -391,6 +442,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this._userParamSrv.ProtocolService(this._userParamSrv.curentUser.ISN_LCLASSIF, 4);
         });
     }
+
+    getTitle(): void {
+        if (this.curentUser.isTechUser) {
+            this.title = this.curentUser.CLASSIF_NAME;
+        } else {
+            this.title = `${this.curentUser['DUE_DEP_SURNAME']} (${this.curentUser['CLASSIF_NAME']})`;
+        }
+    }
+
     clearMap() {
         this._newData.clear();
         this._newDataformAccess.clear();
@@ -441,6 +501,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             this._toggleFormControl(this.formAccess.controls['delo_web'], false);
             this._toggleFormControl(this.formAccess.controls['1-27'], true);
         }
+        this.tf();
     }
     tf() {
         const val1 = this.formAccess.controls['0-1'].value;
@@ -522,6 +583,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
             })
             .then((dep: DEPARTMENT) => {
                 this.isShell = false;
+                this.dueDepName = dep['CLASSIF_NAME'];
                 this.form.get('DUE_DEP_NAME').patchValue(dep['CLASSIF_NAME']);
                 this.inputs['DUE_DEP_NAME'].data = dep['DUE'];
             })
@@ -550,6 +612,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         }
     }
     checRadioB() {
+        if (this._uncheckedAvBtn === true && (this.gt()['delo'] || this.gt()['delo_web_delo'] || this.gt()['delo_web'])) {
+            this.formAccess.enable({ onlySelf: true, emitEvent: false });
+            this._uncheckedAvBtn = false;
+        }
         if (!this.gt()['delo_web']) {
             this.formAccess.controls['1-27'].patchValue(null, { emitEvent: false });
         } else {
@@ -576,6 +642,15 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
         if (!this.gt()['delo'] && !this.gt()['delo_web'] && !this.gt()['delo_web_delo']) {
             this.patchVal();
             this.disableAccessSyst(true);
+        }
+        if (this.uncheckedAvSystems()) {
+            const arrNotBlockAv = ['delo_web', '0-1', '0', '16', '3'];
+            Object.keys(this.formAccess.controls).forEach(key => {
+                if (arrNotBlockAv.indexOf(key) === -1) {
+                    this._toggleFormControl(this.formAccess.controls[key], true);
+                }
+            });
+            this._uncheckedAvBtn = true;
         }
     }
 
@@ -657,6 +732,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
 
 
     private checkchangPass(pass, passrepeat) {
+        this.checkPass = pass !== '' ? this._userParamSrv.checkPasswordСonditions(pass) : '';
+        if (this.checkPass !== '') {
+            this.formControls.get('pass').setErrors({ repeat: true });
+        }
         if (pass !== '' && passrepeat !== '') {
             this.errorPass = pass !== passrepeat;
             if (this.errorPass) {
@@ -703,8 +782,10 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
                     this.formControls.controls['SELECT_ROLE'].disable();
                 } else {
                     this.curentUser.isTechUser = data;
+                    this.form.controls['DUE_DEP_NAME'].patchValue(this.dueDepName);
                     this.formControls.controls['SELECT_ROLE'].patchValue('...');
                     this.formControls.controls['SELECT_ROLE'].enable();
+                    this.tf();
                 }
             });
     }

@@ -12,6 +12,7 @@ import { RECENT_URL } from 'app/consts/common.consts';
 import { EosStorageService } from 'app/services/eos-storage.service';
 import { UserSelectNode } from 'eos-user-select/list-user-select/user-node-select';
 import { ErrorHelperServices } from '../../eos-user-params/shared/services/helper-error.services';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     selector: 'eos-right-user-select',
@@ -40,6 +41,7 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
         private _storageSrv: EosStorageService,
         private _router: Router,
         private _errSrv: ErrorHelperServices,
+        private _appContext: AppContext,
     ) {
         this.isPhoto = false;
         this.chooseTemplate = 'preview';
@@ -94,10 +96,15 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
 
     writeRecentUrl() {
         this._storageSrv.setItem(RECENT_URL, this._router.url);
-        this._selectedUser.flagDeleteScroll = false;
     }
     goToLogin() {
-        this._selectedUser.flagDeleteScroll = false;
+        if (this._appContext.CurrentUser.IS_SECUR_ADM) {
+            return;
+        } else {
+            this._router.navigate(['user-params-set/base-param'], {
+                queryParams: { isn_cl: this.CurrentUser.id }
+            });
+        }
     }
 
     getInfo(isnDue?): void {

@@ -37,3 +37,10 @@ export const CONFIRM_LINK_CHECK_CATEGORY: IConfirmWindow = {
     okTitle: 'Да',
     cancelTitle: 'Нет'
 };
+
+export const CONFIRM_AVSYSTEMS_UNCHECKED: IConfirmWindow = {
+    title: 'Подтвердите действие:',
+    body: 'Снять права доступа к системам пользователя?',
+    okTitle: 'Да',
+    cancelTitle: 'Нет'
+};

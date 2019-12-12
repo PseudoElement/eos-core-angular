@@ -105,7 +105,7 @@
                             placement="bottom"
                             container="body"
                             containerClass="tooltip-info"
-                            (click)=resetSearch()><span class="eos-icon eos-icon-close-blue small"></span></button>
+                            (click)="resetSearch()"><span class="eos-icon eos-icon-close-blue small"></span></button>
                         </span>
                     </ng-template>
                 </div>
@@ -115,11 +115,22 @@
                     <eos-node-actions (action)="doAction($event)"></eos-node-actions>
                 </div>
                 <div class="pull-right">
-                    <eos-dictionary-search #searchCtl (switchFastSrch)="switchFastSearch($event)"></eos-dictionary-search>
+                    <eos-dictionary-search #searchCtl
+                        (switchFastSrch)="switchFastSearch($event)"
+                        (searchRun)="onRunFullSrch($event)"
+                        [settings]="searchSettings"
+                    ></eos-dictionary-search>
                 </div>
             </div>
-            <eos-dictionary-quick-search #quickSearchCtl *ngIf="fastSearch" (closeFastSrch)="this.onCloseFastSrch($event)"></eos-dictionary-quick-search>
-            <div class="first-line" *ngIf="hasFilter()" [hidden]="params.hideTopMenu || accessDenied">
+            <eos-dictionary-quick-search #quickSearchCtl
+                *ngIf="fastSearch"
+                (searchClose)="onCloseFastSrch($event)"
+                (searchRun)="onRunFastSrch($event)"
+                [settings]="searchSettings"
+            >
+            </eos-dictionary-quick-search>
+
+            <div class="second-line" *ngIf="hasFilter()" [hidden]="params.hideTopMenu || accessDenied">
                 <div class="">
                     <eos-dictionary-filter (switchFastSrch)="switchFastSearch($event)"></eos-dictionary-filter>
                 </div>

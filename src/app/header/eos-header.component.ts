@@ -5,6 +5,7 @@ import { Subject } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { ExportImportClService } from './../services/export-import-cl.service';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     selector: 'eos-header',
@@ -19,16 +20,24 @@ export class EosHeaderComponent implements OnDestroy {
     width = 0;
     openProtocols: Array<any> = [];
     openWindows: Array<any> = [];
+
     private ngUnsubscribe: Subject<any> = new Subject();
     private windowRemove: Window;
     private windowChange: Window;
     private windowView: Window;
     private windowScan: Window;
-
+    get tooltip() {
+        if (this._appcontext.cbBase) {
+            return 'Вернуться в САДД БР-Web';
+        }   else {
+            return 'Вернуться в Дело-Web';
+        }
+    }
     constructor(
         _router: Router,
         private _route: ActivatedRoute,
         private _eiCl: ExportImportClService,
+        private _appcontext: AppContext,
     ) {
         this.width = window.innerWidth;
         this.update();

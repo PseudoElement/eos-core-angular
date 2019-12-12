@@ -84,9 +84,10 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
                 countChanges++;
             }
        }));
-       if ((countChanges > 0) || (changedCabinets.originHomeCabinet !== changedCabinets.homeCabinet)) {
+       if ((countChanges > 0) ||
+       ((changedCabinets.originHomeCabinet !== changedCabinets.homeCabinet) && !(countChanges === 0 && changedCabinets.isEmptyOrigin))) {
         changedCabinets.isChanged = true;
-       }    else {
+       } else {
         changedCabinets.isChanged = false;
        }
        this.checkDisabled(changedCabinets, arrValues.join(''));
@@ -129,6 +130,10 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         }
     }
     checkDeletedCabinet(changedCabinets: Cabinets): void {
+        changedCabinets.isEmpty = true;
+        if (changedCabinets.isEmpty && changedCabinets.isEmptyOrigin) {
+            changedCabinets.isChanged = false;
+        }
         if (changedCabinets.homeCabinet) {
             this.alertWarning();
             changedCabinets.homeCabinet = false;
@@ -136,7 +141,6 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         if (changedCabinets.isChanged) {
             changedCabinets.deleted = true;
         }
-        changedCabinets.isEmpty = true;
     }
     changeMainCabinet() {
         if (this.Cabinet.homeCabinet) {

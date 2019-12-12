@@ -40,6 +40,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
     }
     private flagGrifs: boolean;
     private userId: number;
+    private indexDeleted: Array<number> = [];
     constructor(
         private _rightsCabinetsSrv: RigthsCabinetsServices,
         private _userSrv: UserParamsService,
@@ -265,6 +266,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             this.reqCreateUpdateAllowed().then((data) => {
                 Promise.all([this._pipSrv.batch(data, '')]).then(() => {
                     this._userSrv.ProtocolService(this.userId, 5);
+                    this.deleteCard(this.indexDeleted);
                     this.UpdateMainArrayAfterSubmit();
                     this.updateCardforAllowed = [];
                     this._rightsCabinetsSrv.submitRequest.next();
@@ -279,14 +281,14 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 });
             });
         }).catch(error => {
-            if (error.code === 2000) {
-                this._rightsCabinetsSrv.cardsArray = [];
-                this._rightsCabinetsSrv.getUserCard(this._userSrv.curentUser.USERCARD_List, this.userId).then((user_cards: USERCARD[]) => {
-                    this.mainArrayCards = this._rightsCabinetsSrv.cardsArray;
-                });
-            } else {
-                this.cancel();
-            }
+            // if (error.code === 2000) {
+            //     this._rightsCabinetsSrv.cardsArray = [];
+            //     this._rightsCabinetsSrv.getUserCard(this._userSrv.curentUser.USERCARD_List, this.userId).then((user_cards: USERCARD[]) => {
+            //         this.mainArrayCards = this._rightsCabinetsSrv.cardsArray;
+            //     });
+            // } else {
+            // }
+            this.cancel();
             this._errorSrv.errorHandler(error);
             this.isLoading = false;
         });
@@ -301,11 +303,11 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         const deleteUrlFolders = [];
         const createUrlsCards = [];
         const createUrlFolders = [];
-        const indexDeleted = [];
+        this.indexDeleted = [];
         this.mainArrayCards.forEach((card: CardsClass, index) => {
             if (card.deleted) {
                 deletedUrlCards.push(this.createUrlDeleteCards(card));
-                indexDeleted.push(index);
+                this.indexDeleted.push(index);
                 deleteUrlFolders.push(...this.createUrlDeleteFoldersCards(card.cabinets, true));
             } else {
                 deleteUrlFolders.push(...this.createUrlDeleteFoldersCards(card.cabinets, false));
@@ -317,7 +319,6 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         if (this.newValueMap.size) {
             createUrlFolders.push(...this.createUrlsNewFolders());
         }
-        this.deleteCard(indexDeleted);
         return [...deletedUrlCards, ...deleteUrlFolders, ...createUrlsCards, ...createUrlFolders];
     }
 

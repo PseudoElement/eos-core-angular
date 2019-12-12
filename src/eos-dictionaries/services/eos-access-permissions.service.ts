@@ -28,8 +28,6 @@ import { RESPRJ_STATUS_DICT } from 'eos-dictionaries/consts/dictionaries/resprj-
 import { Templates } from 'eos-dictionaries/consts/dictionaries/templates.consts';
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 
-
-
 const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean, } [] = [
     // Рубрикатор
     {   id: RUBRICATOR_DICT.id,       tech: E_TECH_RIGHT.Rubrics,
@@ -204,4 +202,6 @@ export class EosAccessPermissionsService {
         }
         return APS_DICT_GRANT.denied;
     }
+
+
 }
