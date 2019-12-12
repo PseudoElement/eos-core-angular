@@ -78,6 +78,7 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
                     });
                 })
                 .catch(err => {
+                    this._errorSrv.errorHandler(err);
                 });
         }
     }
@@ -166,6 +167,22 @@ export class UserParamOtherForwardingComponent implements OnDestroy, OnInit {
             this.editFlag = false;
             this.remaster.submitEmit.next();
             this._pushState();
+            this._userSrv.getUserIsn({
+                expand: 'USER_PARMS_List'
+            })
+            .then(() => {
+                this.currentUser = this._userSrv.curentUser;
+                const prep = this._formHelper.getObjQueryInputsField();
+                this._pipRx.read(prep).then((data) => {
+                    this.defaultValues = this._formHelper.createhash(data);
+                    this.remaster.emitDefaultFalues.next(this.defaultValues);
+                });
+            })
+            .catch(err => {
+                this._errorSrv.errorHandler(err);
+                this.cancel(false);
+                this.remaster.submitEmit.next();
+            });
             // this._userSrv.getUserIsn().then(() => {
             // });
         }).catch(error => {

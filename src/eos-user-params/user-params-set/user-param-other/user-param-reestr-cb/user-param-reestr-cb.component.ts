@@ -16,6 +16,7 @@ import { WaitClassifService } from '../../../../app/services/waitClassif.service
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { AddGrifComponent } from './createUser/addGrif.component';
+import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 // import {PARM_ERROR_SEND_FROM} from '../../shared-user-param/consts/eos-user-params.const';
 @Component({
     selector: 'eos-user-param-reestr-cb',
@@ -57,7 +58,7 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
         private _waitClassifSrv: WaitClassifService,
         private _modalSrv: BsModalService,
         /* private _pipSrv: UserParamApiSrv, */
-        // private _errorSrv: ErrorHelperServices,
+        private _errorSrv: ErrorHelperServices,
     ) {
         this.remaster.submitEmit.subscribe(() => {
             this.submit();
@@ -88,6 +89,9 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
                 }
                 this.allData = this.defaultUser;
                 this.inint();
+            })
+            .catch(err => {
+                this._errorSrv.errorHandler(err);
             });
         } else {
 
@@ -116,6 +120,9 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
                 }
                 this.allData = this._userSrv.hashUserContext;
                 this.inint();
+            })
+            .catch(err => {
+                this._errorSrv.errorHandler(err);
             });
         }
     }
@@ -124,6 +131,9 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
             let answer = str.replace(/isn\(/g, '');
             answer = answer.replace(/name\(/g, ',');
             answer = answer.replace(/\)/g, '');
+            if (answer === ',') {
+                answer = '';
+            }
             return answer;
         }
         return '';
@@ -242,6 +252,9 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
             this.allData = this.defaultValues;
             this.prepFormCancel(this.defoltInputs, true);
             /* this.inint(); */
+        })
+        .catch(err => {
+            this._errorSrv.errorHandler(err);
         });
     }
     cancel($event?) {
@@ -285,6 +298,9 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
             this.prepFormCancel(this.inputs, true);
             this.mapChanges.clear();
             this.editMode();
+        })
+        .catch(err => {
+            this._errorSrv.errorHandler(err);
         });
     }
     deleteDirectory() {
@@ -340,6 +356,9 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
                     });
                     this._createStructure(this.listDocGroup);
                     this.PatchValForm();
+                })
+                .catch(err => {
+                    this._errorSrv.errorHandler(err);
                 });
             }
         }).catch(error => {
@@ -388,6 +407,7 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
                 });
             }
         }).catch(error => {
+            this._errorSrv.errorHandler(error);
             this.flagBacground = false;
         });
     }
@@ -398,6 +418,9 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
         animated: false,
         show: false,
     });
+    if (this.secureData === ',') {
+        this.secureData = '';
+    }
     this.createUserModal.content.data = this.secureData;
     this.createUserModal.content.closedModal.subscribe((data) => {
         if (data) {
