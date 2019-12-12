@@ -306,6 +306,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.messageAlert({ title: 'Предупреждение', msg: `Право 'Cистемный технолог.Пользователи' не может быть назначено одновременно с правом 'Администратор системы'`, type: 'warning' });
             return;
         }
+        if (this.checkPass !== '') {
+            return;
+        }
         const id = this._userParamSrv.userContextId;
         const newD = {};
         const query = [];
