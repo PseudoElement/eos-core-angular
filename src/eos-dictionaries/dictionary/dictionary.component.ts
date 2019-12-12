@@ -53,6 +53,7 @@ import { IMessage } from 'eos-common/interfaces';
 import { WaitClassifService } from 'app/services/waitClassif.service';
 import { EdsImportComponent } from 'eos-dictionaries/eds-import/eds-import.component';
 import { Features } from 'eos-dictionaries/features/features-current.const';
+import { CopyPropertiesComponent } from 'eos-dictionaries/copy-properties/copy-properties.component';
 
 @Component({
     templateUrl: 'dictionary.component.html',
@@ -1022,11 +1023,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 if (renewChilds) {
                     return node.id;
                 } else {
+                    // return '0.2U9.'; // for debug
                     return this._waitClassif.chooseDocGroup();
                 }
             }).then( (from_due) => {
                 if (from_due) {
-                    this.nodeList.openCopyProperties(node, from_due, renewChilds);
+                    this.__openCopyProperties(node, from_due, renewChilds);
                 } else {
                     this._msgSrv.addNewMessage(WARN_SELECT_NODE);
                 }
@@ -1035,6 +1037,24 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this._msgSrv.addNewMessage(WARN_SELECT_NODE);
         }
     }
+
+    private __openCopyProperties(node: EosDictionaryNode, from_due: string, renewChilds: boolean) {
+        this.modalWindow = this._modalSrv.show(CopyPropertiesComponent, {
+            class: 'copy-properties-modal moodal-lg'});
+        (<CopyPropertiesComponent>this.modalWindow.content).init(node.data.rec, from_due, renewChilds);
+        const subscriptionClose = this.modalWindow.content.onClose.subscribe(() => {
+            this.modalWindow = null;
+            if (node) {
+                node.relatedLoaded = false;
+                this._dictSrv.rereadNode(node.id).then( (data) => {
+                    node.relatedLoaded = false;
+                    this._dictSrv.setMarkAllNone();
+                });
+            }
+            subscriptionClose.unsubscribe();
+        });
+    }
+
 
     private _openModalWindow() {
         this.modalWindow = null;
