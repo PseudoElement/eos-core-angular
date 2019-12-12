@@ -257,15 +257,31 @@
     }
 }
 .elements-orig{
-    .inline-block {
-        width: 170px !important;
+    .elem-input-radio {
+        margin-right: 32px !important;
+        .inline-block {
+            width: 170px !important;
+        }
     }
+}
+.two-elem{
+    .elem-input-radio {
+        margin-right: 0 !important;
+        .inline-block {
+            width: 300px !important;
+        }
+    }
+    .elem-input-radio:first-child {
+        margin-right: 105px !important;
+    }
+    
 }
 .in-line-elements-width {
     .inline-block {
         width: 400px !important;
     }
 }
+
 .checkbox-in-line-other{
     display: flex;
     .first-checkbox{
