@@ -39,8 +39,8 @@ export class AddGrifComponent implements OnInit {
 
     clikcBox(isn: number, name: string) {
         if (this.elemCheck(isn)) {
+            this.dataField[1].splice(this.dataField[0].indexOf(String(isn)), 1);
             this.dataField[0].splice(this.dataField[0].indexOf(String(isn)), 1);
-            this.dataField[1].splice(this.dataField[1].indexOf(name), 1);
         } else {
             this.dataField[0].push(String(isn));
             this.dataField[1].push(name);

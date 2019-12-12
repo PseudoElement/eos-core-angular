@@ -298,6 +298,7 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
     }
     deleteSecure() {
         this.listSecur = '';
+        this.secureData = '';
         this.form.controls['rec.REESTR_CB_SECUR'].patchValue('');
     }
     selectfromTheDirectory() {
@@ -401,6 +402,9 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
     this.createUserModal.content.closedModal.subscribe((data) => {
         if (data) {
             this.secureData = data[0].join('|') + ',' + data[1].join('; ');
+            if (this.secureData === ',') {
+                this.secureData = '';
+            }
             this.PatchValFormSecure('isn(' + data[0].join('|') + ')name(' + data[1].join('; ') + ')' );
             this.listSecur = data[1].join('; ');
         }
