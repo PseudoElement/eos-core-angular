@@ -75,7 +75,7 @@
                 </button>
             </div>
             <div style="display: inline " class=" " *ngIf="listDep">
-                <button [disabled]="listDep.length===0 || !flagEdit " tooltip="Очистить " triggers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteDep() " placement="left">
+                <button [disabled]="listDep.length===0 || !flagEdit " #pop3="bs-tooltip" tooltip="Очистить " tooltipAnimation="false" triggers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteDep();pop1.hide()" placement="left">
                     <span class="eos-icon eos-icon-close-blue small "></span>
                 </button>
             </div>
@@ -97,7 +97,7 @@
                 </button>
             </div>
             <div style="display: inline " class=" " *ngIf="list">
-                <button [disabled]="list.length===0 || !flagEdit " tooltip="Очистить " triggers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteDirectory() " placement="left">
+                <button [disabled]="list.length===0 || !flagEdit " #pop3="bs-tooltip" tooltip="Очистить " tooltipAnimation="false" triggers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteDirectory();pop2.hide() " placement="left">
                     <span class="eos-icon eos-icon-close-blue small "></span>
                 </button>
             </div>
@@ -119,7 +119,7 @@
                 </button>
             </div>
             <div style="display: inline " class=" " ><!-- *ngIf="listSecur" -->
-                <button [disabled]="listSecur.length===0 || !flagEdit " tooltip="Очистить" tooltipAnimation="false" trigger='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteSecure() " placement="left">
+                <button [disabled]="listSecur.length===0 || !flagEdit "  #pop3="bs-tooltip" tooltip="Очистить" tooltipAnimation="false" triggers="hover" #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteSecure();pop3.hide()" placement="left">
                     <span class="eos-icon eos-icon-close-blue small "></span>
                 </button>
             </div>
