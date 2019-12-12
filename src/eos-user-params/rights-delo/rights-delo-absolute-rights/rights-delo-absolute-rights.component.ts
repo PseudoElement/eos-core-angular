@@ -239,9 +239,18 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                     }
                 });
                 if (this.curentUser.IS_SECUR_ADM === 1) {
-                    if (this.queryForSave[0].data.hasOwnProperty('TECH_RIGHTS') && this.queryForSave[0].data.TECH_RIGHTS[0] === '1') {
+                    let users = '';
+                    this.queryForSave.forEach(elem => {
+                        if (elem.data['TECH_RIGHTS']) {
+                            users = elem.data.TECH_RIGHTS[0];
+                        }
+                    });
+                    if (users === '1') {
                         this._msgSrv.addNewMessage({ title: 'Предупреждение', msg: `Право 'Cистемный технолог.Пользователи' не может быть назначено одновременно с правом 'Администратор системы'`, type: 'warning' });
-                        this.cancel();
+                        /* this.cancel(); */
+                        this.editMode = true;
+                        this.isLoading = true;
+                        this.btnDisabled = false;
                         return;
                     }
                 }
