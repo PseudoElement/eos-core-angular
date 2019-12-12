@@ -28,9 +28,6 @@ import { RESPRJ_STATUS_DICT } from 'eos-dictionaries/consts/dictionaries/resprj-
 import { Templates } from 'eos-dictionaries/consts/dictionaries/templates.consts';
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
 
-
-export const CB_FUNCTIONS = 'CB_FUNCTIONS';
-
 const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean, } [] = [
     // Рубрикатор
     {   id: RUBRICATOR_DICT.id,       tech: E_TECH_RIGHT.Rubrics,
@@ -161,15 +158,6 @@ export class EosAccessPermissionsService {
                 return this._checkAccessTech(E_TECH_RIGHT.Users);
             });
     }
-    // --------------------------------------------------------------
-    public getParams(key: string): string {
-
-        if (this.appCtx.SysParms._more_json && this.appCtx.SysParms._more_json.ParamsDic) {
-            return this.appCtx.SysParms._more_json.ParamsDic['CB_FUNCTIONS'];
-        }
-        return null;
-    }
-
 
     // --------------------------------------------------------------
     private _checkAccessTech(tr: E_TECH_RIGHT): boolean {

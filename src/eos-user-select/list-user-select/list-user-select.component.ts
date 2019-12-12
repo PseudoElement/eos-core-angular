@@ -30,6 +30,7 @@ import { IOpenClassifParams } from 'eos-common/interfaces';
 import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 import { SearchServices } from 'eos-user-select/shered/services/search.service';
+import { AppContext } from 'eos-rest/services/appContext.service';
 interface TypeBread {
     action: number;
 }
@@ -59,6 +60,7 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     // количество выбранных пользователей
     countcheckedField: number;
     shadow: boolean = false;
+    deleteOwnUser: any;
 
     get showCloseQuickSearch() {
         if (this._storage.getItem('quickSearch') !== undefined && this._storage.getItem('quickSearch').USER_CL.criteries.ORACLE_ID === 'isnull') {
@@ -128,7 +130,8 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         private _errorSrv: ErrorHelperServices,
         private _waitCl: WaitClassifService,
         private _userParamSrv: UserParamsService,
-        private _srhSrv: SearchServices
+        private _srhSrv: SearchServices,
+        private _appContext: AppContext
     ) {
 
     }
@@ -648,9 +651,10 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
     }
     BlockUser() {
         this.isLoading = true;
-        this._apiSrv.blokedUser(this.listUsers).then(user => {
+        const idMain = this._appContext.CurrentUser.ISN_LCLASSIF;
+        this._apiSrv.blokedUser(this.listUsers, idMain).then(user => {
             this.listUsers = this.listUsers.map(users => {
-                if (users.isChecked || users.selectedMark) {
+                if ((users.isChecked || users.selectedMark) && users.id !== +idMain) {
                     if (users.blockedUser) {
                         users.blockedUser = false;
                         this._userParamSrv.ProtocolService(users.data.ISN_LCLASSIF, 2);
@@ -685,60 +689,116 @@ export class ListUserSelectComponent implements OnDestroy, OnInit {
         let names = '';
         this.listUsers.forEach((list: UserSelectNode) => {
             if (list.isChecked || list.isSelected || list.selectedMark) {
-                names += `${list.name}, `;
+                if (list.id === this._appContext.CurrentUser.ISN_LCLASSIF) {
+                    this.deleteOwnUser = list.name;
+                } else {
+                    names += `${list.name}, `;
+                }
             }
         });
         return names.substr(0, names.length - 2);
     }
     DeliteUser() {
         const names = this.getLoginDeleted();
+        if (this.checkedOwnDelete(names)) {
+            this._msgSrv.addNewMessage({
+                title: 'Предупреждение',
+                msg: `Нельзя удалить самого себя`,
+                type: 'warning'
+            });
+            this.deleteOwnUser = null;
+            return;
+        }
+        this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
+            this.deleteOwnUser = null;
+                if (confirmation) {
+                    if (this._appContext.cbBase) {
+                    this._pipeSrv.read({
+                        USER_CL: {
+                            criteries: {
+                                DELO_RIGHTS: '1%',
+                                DELETED: '0',
+                                ISN_LCLASSIF: '1:null'
+                            },
+                        },
+                        expand: 'USER_TECH_List'
+                    }).then((data: any) => {
+                        const usersUnlimit = data.filter(user => this._userParamSrv.CheckLimitTech(user.USER_TECH_List) !== true && user.TECH_RIGHTS[0] === '1');
+                        let count = 0;
+                        for (const user of usersUnlimit) {
+                            if (names.indexOf(user.SURNAME_PATRON) !== -1) {
+                                count++;
+                            }
+                        }
+                        if (usersUnlimit.length === count) {
+                            this._msgSrv.addNewMessage({
+                                title: 'Предупреждение',
+                                msg: `Ни один из незаблокированных пользователей не имеет права "Системный технолог" с доступом к модулю "Пользователи" без ограничений.`,
+                                type: 'warning'
+                            });
+                            return;
+                        }
+                        this.deleteConfirm(names);
+                    });
+                } else {
+                    this.deleteConfirm(names);
+                }
+            }
+        });
+    }
+
+    checkedOwnDelete(names: string): boolean {
         if (names) {
             CONFIRM_DELETE.body = 'Удаленных пользователей невозможно будет восстановить. Вы действительно хотите удалить пользователей: ' + '\n\r' + names + ' ?';
         }
-        this._confirmSrv.confirm(CONFIRM_DELETE).then(confirmation => {
-            if (confirmation) {
-                this.isLoading = true;
-                let arrayRequests = [];
-                const deletedUsers = [];
-                const arrayProtocol = [];
-                this.listUsers.forEach((user: UserSelectNode) => {
-                    if ((user.isChecked && !user.deleted) || (user.selectedMark)) {
-                        let url = this._createUrlForSop(user.id);
-                        deletedUsers.push(user.id);
-                        arrayRequests.push(
-                            this._pipeSrv.read({
-                                [url]: ALL_ROWS,
-                            })
-                        );
-                        url = '';
-                    }
-                });
-
-                if (arrayRequests.length > 0) {
-                    return Promise.all([...arrayRequests]).then(result => {
-                        this._msgSrv.addNewMessage({
-                            title: 'Сообщение',
-                            msg: `Пользователи: ${names} \n\r удалены`,
-                            type: 'success'
-                        });
-                        this.initView(this.currentDue);
-                        arrayRequests = [];
-                        deletedUsers.forEach(el => {
-                            arrayProtocol.push(this._userParamSrv.ProtocolService(el, 8));
-                        });
-                        return Promise.all([...arrayProtocol]).then(() => {
-                            this.isLoading = false;
-                        });
-                    });
-                }
+        if (this.deleteOwnUser) {
+            if (names !== '') {
+                CONFIRM_DELETE.body = CONFIRM_DELETE.body + '\n\r' + `Пользователь ${this.deleteOwnUser} не будет удален. Нельзя удалить самого себя.`;
+            } else {
+                return true;
             }
-        })
-            .catch(error => {
-                this.isLoading = false;
-                error.message = error.message ? error.message : 'Не удалось удалить пользователя, обратитесь к системному администратору';
-                this.cathError(error);
-            });
+        }
+        return false;
+    }
 
+    deleteConfirm(names: string): Promise<any> {
+        this.isLoading = true;
+            let arrayRequests = [];
+            const deletedUsers = [];
+            const arrayProtocol = [];
+            this.listUsers.forEach((user: UserSelectNode) => {
+                if (((user.isChecked && !user.deleted) || (user.selectedMark)) && user.id !== this._appContext.CurrentUser.ISN_LCLASSIF) {
+                    let url = this._createUrlForSop(user.id);
+                    deletedUsers.push(user.id);
+                    arrayRequests.push(
+                        this._pipeSrv.read({
+                            [url]: ALL_ROWS,
+                        })
+                    );
+                    url = '';
+                }
+            });
+            if (arrayRequests.length > 0) {
+                return Promise.all([...arrayRequests]).then(result => {
+                    this._msgSrv.addNewMessage({
+                        title: 'Сообщение',
+                        msg: `Пользователи: ${names} \n\r удалены`,
+                        type: 'success'
+                    });
+                    this.initView(this.currentDue);
+                    arrayRequests = [];
+                    deletedUsers.forEach(el => {
+                        arrayProtocol.push(this._userParamSrv.ProtocolService(el, 8));
+                    });
+                    return Promise.all([...arrayProtocol]).then(() => {
+                        this.isLoading = false;
+                    });
+                }).catch(error => {
+                    this.isLoading = false;
+                    error.message = error.message ? error.message : 'Не удалось удалить пользователя, обратитесь к системному администратору';
+                    this.cathError(error);
+                });
+            }
     }
 
     get getflagChecked() {

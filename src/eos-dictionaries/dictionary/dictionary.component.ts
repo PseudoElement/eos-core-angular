@@ -724,6 +724,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     private _restoreItems(): void {
         let hasFolding = false;
 
+        this._dictSrv.getMarkedNodes().filter( n => !n.isDeleted).forEach( n => n.isMarked = false );
+
         const selectedNodes = this._dictSrv.getMarkedNodes().filter( n => n.isDeleted);
 
         for (let i = 0; i < selectedNodes.length; i++) {
@@ -1013,19 +1015,18 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         // }
     }
 
-    private _openCopyProperties(fromParent = false) {
+    private _openCopyProperties(renewChilds = false) {
         const node = this._dictSrv.listNode;
         if (node) {
             Promise.resolve(null).then (() => {
-                if (fromParent) {
-                    return node.parentId;
+                if (renewChilds) {
+                    return node.id;
                 } else {
-                    // return '0.2EZ9N.';
                     return this._waitClassif.chooseDocGroup();
                 }
             }).then( (from_due) => {
                 if (from_due) {
-                    this.nodeList.openCopyProperties(node, from_due);
+                    this.nodeList.openCopyProperties(node, from_due, renewChilds);
                 } else {
                     this._msgSrv.addNewMessage(WARN_SELECT_NODE);
                 }

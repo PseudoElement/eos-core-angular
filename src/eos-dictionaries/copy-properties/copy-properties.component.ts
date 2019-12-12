@@ -117,20 +117,17 @@ export class CopyPropertiesComponent implements OnDestroy {
     @Output() onClose: EventEmitter<any> = new EventEmitter<any>();
 
 
-    get fromParent (): boolean {
-        return this._fromDue === this._recTo['PARENT_DUE'];
-    }
     isUpdating = true;
     inputs: any = {};
     formValid: boolean;
-    // fromParent: boolean;
     title: string;
     saveButtonLabel: string;
     properties;
 
+
     private _dataControllerRK: AdvCardRKDataCtrl;
     private _recTo: any;
-    private _fromDue: string;
+    private _renewChilds: boolean;
     private _dgFrom: any;
     private properties_for_request = [];
     private formChanges$: Subscription;
@@ -154,36 +151,40 @@ export class CopyPropertiesComponent implements OnDestroy {
     }
 
 
-    public init(toNodeRec: any, fromdue: string) {
+    public init(toNodeRec: any, fromdue: string, renewChilds: boolean) {
         this.isUpdating = true;
         this._recTo = toNodeRec;
-        this._fromDue = fromdue;
+        this._renewChilds = renewChilds;
 
-        if (toNodeRec.DUE.toString() === fromdue) {
-            setTimeout(() => {
-                this._msgSrv.addNewMessage(THE_SAME_GROUP_WARNING_MESSAGE);
-                this.hideModal();
-            }, 300);
-            return null;
+        if (!this._renewChilds) {
+            if (toNodeRec.DUE.toString() === fromdue) {
+                setTimeout(() => {
+                    this._msgSrv.addNewMessage(THE_SAME_GROUP_WARNING_MESSAGE);
+                    this.hideModal();
+                }, 300);
+                return null;
+            }
         }
 
         return this._dataControllerRK.readDGValuesDUE(fromdue).then(([docGroup]) => {
 
             this._dgFrom = Object.assign({}, docGroup);
 
-            if (docGroup.RC_TYPE.toString() !== this._recTo.RC_TYPE.toString()) {
-                setTimeout(() => {
-                    this._msgSrv.addNewMessage(RC_TYPE_IS_DIFFERENT_WARNING_MESSAGE);
-                    this.hideModal();
-                }, 300);
-                return;
+            if (!this._renewChilds) {
+                if (docGroup.RC_TYPE.toString() !== this._recTo.RC_TYPE.toString()) {
+                    setTimeout(() => {
+                        this._msgSrv.addNewMessage(RC_TYPE_IS_DIFFERENT_WARNING_MESSAGE);
+                        this.hideModal();
+                    }, 300);
+                    return;
+                }
             }
 
 
-            if (this.fromParent) {
+            if (this._renewChilds) {
                 this.title = 'Обновить свойства подчиненных групп документов';
                 this.saveButtonLabel = 'Обновить';
-                this._initPropertiesFromParent();
+                this._initPropertiesRenewChilds();
                 this._initInputs();
             } else {
                 this.title = 'Копирование свойств группы документов';
@@ -259,7 +260,7 @@ export class CopyPropertiesComponent implements OnDestroy {
     public save() {
         const changes = [];
         const args = {};
-        const method = this.fromParent ? 'DocGroupCopyFromParent' : 'DocGroupPropCopy';
+        const method = this._renewChilds ? 'DocGroupCopyFromParent' : 'DocGroupPropCopy';
 
         let flagStr = '';
         this.properties_for_request.forEach((prop) => {
@@ -268,7 +269,7 @@ export class CopyPropertiesComponent implements OnDestroy {
 
         this._validateData().then( (result) => {
             if (result) {
-                Object.assign(args, this.fromParent ? {due: this._recTo.DUE} : {due_from: this._dgFrom.DUE,
+                Object.assign(args, this._renewChilds ? {due: this._recTo.DUE} : {due_from: this._dgFrom.DUE,
                     due_to: this._recTo.DUE});
 
                 Object.assign(args, {flags: flagStr});
@@ -389,7 +390,7 @@ export class CopyPropertiesComponent implements OnDestroy {
 
     private _validateData(): Promise<boolean> {
         const dataControllerRK = new AdvCardRKDataCtrl(this.injector);
-        const due = this.fromParent ? this._recTo.DUE : this._dgFrom.DUE;
+        const due = this._renewChilds ? this._recTo.DUE : this._dgFrom.DUE;
 
         return dataControllerRK.readDGValuesDUE(due).then(([docGroup]) => {
             const warnings: CopyPropWarning = new CopyPropWarning();
@@ -543,7 +544,7 @@ export class CopyPropertiesComponent implements OnDestroy {
             'a_default_rek_prj', 'a_mand_rek_prj', 'a_add_rek', 'a_add_rub', 'a_fc_rc', 'a_fc_prj'];
     }
 
-    private _initPropertiesFromParent() {
+    private _initPropertiesRenewChilds() {
         this.properties = [
             {
                 key: 'a_shablon',

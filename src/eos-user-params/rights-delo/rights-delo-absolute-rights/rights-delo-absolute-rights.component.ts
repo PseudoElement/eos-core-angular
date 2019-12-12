@@ -158,15 +158,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             arr.forEach(i => this.listRight[i].control.disable());
         }
     }
-    CheckLimitTech(techList): boolean {
-        let limitUser = false;
-        techList.forEach((item) => {
-            if (item.FUNC_NUM === 1) {
-                limitUser = true;
-            }
-        });
-        return limitUser;
-    }
 
     GetSysTechUser(): Promise<any> {
         return this.pipRx.read({
@@ -195,10 +186,7 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 });
             }
             for (const user of data) {
-                if (this.curentUser.ISN_LCLASSIF === user.ISN_LCLASSIF && sysTechBol && !this.CheckLimitTech(user.USER_TECH_List)) {
-                    count++;
-                }
-                if (this.CheckLimitTech(user.USER_TECH_List)) {
+                if ((this.curentUser.ISN_LCLASSIF === user.ISN_LCLASSIF && sysTechBol && !this._userParamsSetSrv.CheckLimitTech(user.USER_TECH_List)) || this._userParamsSetSrv.CheckLimitTech(user.USER_TECH_List)) {
                     count++;
                 }
             }
