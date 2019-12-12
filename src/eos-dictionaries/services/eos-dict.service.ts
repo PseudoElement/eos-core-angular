@@ -912,6 +912,7 @@ export class EosDictService {
         }
     }
 
+
     resetSearch(): Promise<any> {
         this._srchCriteries = null;
         this.setMarkAllNone();
@@ -1151,6 +1152,25 @@ export class EosDictService {
     isPaginationVisible(): boolean {
         return this.paginationConfig && this.paginationConfig.itemsQty > 10;
     }
+
+    rereadNode(nodeId: any): Promise<any>  {
+        return this._apiSrv
+        .read({
+            DOCGROUP_CL: PipRX.criteries({'DUE': nodeId}),
+            foredit: true,
+        })
+        .then(([docGroup]) => {
+
+
+
+        // return this.descriptor.getRecord(nodeId)
+            // .then((records) => {
+                // this.updateNodes(records, true);
+                // return this._nodes.get(nodeId);
+            // });
+        });
+    }
+
 
     public getStoredSearchSettings(): SearchFormSettings {
         const res = this._storageSrv.getItem('lastSearchSetting');
@@ -1607,6 +1627,7 @@ export class EosDictService {
     private _emitListDictionary() {
         this._listDictionary$.next(this.currentDictionary);
     }
+
 
 }
 

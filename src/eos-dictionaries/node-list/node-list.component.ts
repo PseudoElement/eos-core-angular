@@ -22,7 +22,6 @@ import {HintConfiguration} from '../long-title-hint/hint-configuration.interface
 import {ColumnSettingsComponent} from '../column-settings/column-settings.component';
 import {EosUtils} from 'eos-common/core/utils';
 import { takeUntil } from 'rxjs/operators';
-import {CopyPropertiesComponent} from '../copy-properties/copy-properties.component';
 import { ExportImportClService } from 'app/services/export-import-cl.service';
 import {CopyNodeComponent} from '../copy-node/copy-node.component';
 import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
@@ -238,26 +237,16 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         });
     }
 
-    openCopyProperties(node: EosDictionaryNode, fromdue: string, renewChilds: boolean) {
-        this.modalWindow = this._modalSrv.show(CopyPropertiesComponent, {
-            class: 'copy-properties-modal moodal-lg'});
-        (<CopyPropertiesComponent>this.modalWindow.content).init(node.data.rec, fromdue, renewChilds);
-        this._closeModalWindowSubscribtion();
-    }
-    // openCopyProperties(node: EosDictionaryNode, fromParent: boolean) {
-    //     this.modalWindow = this._modalSrv.show(CopyPropertiesComponent, {
-    //         class: 'copy-properties-modal moodal-lg'});
-    //     this.modalWindow.content.init(node.data.rec, fromParent);
-    //     this._closeModalWindowSubscribtion();
-    // }
-
     openCopyNode(nodes: EosDictionaryNode[]) {
         this.modalWindow = this._modalSrv.show(CopyNodeComponent, {
             class: 'copy-node-modal moodal-lg'});
         this.modalWindow.content.init(nodes);
-        this._closeModalWindowSubscribtion();
-    }
 
+        const subscriptionClose = this.modalWindow.content.onClose.subscribe(() => {
+            this.modalWindow = null;
+            subscriptionClose.unsubscribe();
+        });
+    }
 
     getMarkedTitles(): string[] {
         return this.nodes
@@ -619,10 +608,4 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
         }
     }
 
-    private _closeModalWindowSubscribtion() {
-        const subscriptionClose = this.modalWindow.content.onClose.subscribe(() => {
-            this.modalWindow = null;
-            subscriptionClose.unsubscribe();
-        });
-    }
 }
