@@ -329,6 +329,12 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
                                 data: doc,
                             };
                             this.listDocGroup.push(new NodeDocsTree(cfg));
+                        } else {
+                            this._msg.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение',
+                                msg: 'Группа ' + doc.CLASSIF_NAME + ' уже добавлена',
+                            });
                         }
                     });
                     this._createStructure(this.listDocGroup);
@@ -347,6 +353,7 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
             selectLeafs: false,
             selectNodes: true,
             return_due: true,
+           /*  selected: '0.2SH.', */
         };
         this._waitClassifSrv.openClassif(params).then(isn => {
             this.flagBacground = false;
@@ -368,6 +375,12 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
                                 data: elem,
                             };
                             this.listDep.push(new NodeDocsTree(cfg));
+                        } else {
+                            this._msg.addNewMessage({
+                                type: 'warning',
+                                title: 'Предупреждение',
+                                msg: 'Подразделение ' + elem.CLASSIF_NAME + ' уже добавлено',
+                            });
                         }
                     });
                     this.PatchValFormSecureDep();
@@ -387,8 +400,9 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
     this.createUserModal.content.data = this.secureData;
     this.createUserModal.content.closedModal.subscribe((data) => {
         if (data) {
+            this.secureData = data[0].join('|') + ',' + data[1].join('; ');
             this.PatchValFormSecure('isn(' + data[0].join('|') + ')name(' + data[1].join('; ') + ')' );
-            this.listSecur = data[1];
+            this.listSecur = data[1].join('; ');
         }
         setTimeout(() => {
             this.createUserModal.hide();

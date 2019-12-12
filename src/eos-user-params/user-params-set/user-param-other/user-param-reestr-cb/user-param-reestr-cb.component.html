@@ -51,14 +51,14 @@
             <span>Дата передачи документов не позднее ( дней ):</span>
             <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.REESTR_DATE_INTERVAL'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         </div>
+        <!-- печать на принтер -->
+        <div>
+            <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.REESTR_TO_PRINTER'] " [form]="form " [readonly]="false "></eos-dynamic-input>
+        </div>
         <div class="number-increment-wrap ">
             <span>Количество копий:</span>
             <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.REESTR_COPY_COUNT'] " [form]="form " [readonly]="false "></eos-dynamic-input>
         </div>
-    </div>
-    <!-- печать на принтер -->
-    <div>
-        <eos-dynamic-input class="inline-block " [input]="inputs[ 'rec.REESTR_TO_PRINTER'] " [form]="form " [readonly]="false "></eos-dynamic-input>
     </div>
     <hr>
     <div class="user-content-wr ">
@@ -75,7 +75,7 @@
                 </button>
             </div>
             <div style="display: inline " class=" " *ngIf="listDep">
-                <button [disabled]="listDep.length===0 || !flagEdit " tooltip="Очистить " trigers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteDep() " placement="left">
+                <button [disabled]="listDep.length===0 || !flagEdit " tooltip="Очистить " triggers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteDep() " placement="left">
                     <span class="eos-icon eos-icon-close-blue small "></span>
                 </button>
             </div>
@@ -97,7 +97,7 @@
                 </button>
             </div>
             <div style="display: inline " class=" " *ngIf="list">
-                <button [disabled]="list.length===0 || !flagEdit " tooltip="Очистить " trigers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteDirectory() " placement="left">
+                <button [disabled]="list.length===0 || !flagEdit " tooltip="Очистить " triggers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteDirectory() " placement="left">
                     <span class="eos-icon eos-icon-close-blue small "></span>
                 </button>
             </div>
@@ -114,12 +114,12 @@
                 </div>
             </div>
             <div style="display: inline " class="btn-action ">
-                <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover " containerClass="tooltip-info " (click)="selectfromTheSecure() " placement="left">
+                <button [disabled]="!flagEdit " class="btn btn-primary-light btn-padd " tooltip="Выбор из справочника " triggers="hover" containerClass="tooltip-info " (click)="selectfromTheSecure() " placement="left">
                     <span class="eos-icon eos-icon-folder-blue small "></span>
                 </button>
             </div>
             <div style="display: inline " class=" " ><!-- *ngIf="listSecur" -->
-                <button [disabled]="listSecur.length===0 || !flagEdit " tooltip="Очистить " trigers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteSecure() " placement="left">
+                <button [disabled]="listSecur.length===0 || !flagEdit " tooltip="Очистить" triggers='hover' #tooltipTemp='bs-tooltip' containerClass="tooltip-info " class="btn btn-primary-light add-storage " (click)="deleteSecure() " placement="left">
                     <span class="eos-icon eos-icon-close-blue small "></span>
                 </button>
             </div>

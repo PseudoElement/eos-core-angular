@@ -1,5 +1,6 @@
 import { IBaseUsers } from '../../../shared/intrfaces/user-params.interfaces';
 const REG_MIN_VAL: RegExp = /^([1-9]{1}[0-9]{0,1})$/;
+const REG_MIN_VAL_MORE: RegExp = /^([1-9]{1}[0-9]{0,1}[0-9]{0,1})$/;
 export const OTHER_USER_TRANSFER: IBaseUsers = {
     id: 'other',
     title: 'Прочие',
@@ -192,7 +193,7 @@ export const OTHER_USER_REESTR_CB: IBaseUsers = {
     {
         key: 'SELECT_ITEMS',
         type: 'boolean',
-        title: 'Давать возможность выбора записей'
+        title: 'Дать возможность выбора записей'
     },
     {
         key: 'REESTR_ONE_TO_ONE',
@@ -227,7 +228,7 @@ export const OTHER_USER_REESTR_CB: IBaseUsers = {
         readonly: false,
         options: [
             {value: '1', title: 'Единый реестр'},
-            {value: '2', title: 'Единый реестр с сортировкой по подразделением'},
+            {value: '2', title: 'Единый реестр с сортировкой по подразделением/ДЛ'},
             {value: '3', title: 'Каждое подразделение / ДЛ в свой реестр'},
         ]
     },
@@ -266,7 +267,7 @@ export const OTHER_USER_REESTR_CB: IBaseUsers = {
         key: 'REESTR_DATE_INTERVAL',
         type: 'numberIncrement',
         title: 'Дата передачи документов не позднее ( дней ):',
-        pattern: REG_MIN_VAL
+        pattern: REG_MIN_VAL_MORE
     },
     {
         key: 'REESTR_COPY_COUNT',
