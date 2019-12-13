@@ -62,6 +62,9 @@ export class WaitClassifService {
                 //     this.hideModal();
                 // }
                 // this.isUpdating = false;
+            }).catch(() => {
+                // console.log('window closed');
+                return null;
             });
     }
 
