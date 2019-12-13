@@ -1030,7 +1030,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 if (from_due) {
                     this.__openCopyProperties(node, from_due, renewChilds);
                 } else {
-                    this._msgSrv.addNewMessage(WARN_SELECT_NODE);
+                    // this._msgSrv.addNewMessage(WARN_SELECT_NODE);
                 }
             });
         } else {
