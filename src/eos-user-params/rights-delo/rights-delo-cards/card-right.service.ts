@@ -145,7 +145,25 @@ export class CardRightSrv {
             card.USER_CARD_DOCGROUP_List.splice(-1, 0, ...this._createDGEntity(card, ['0.']));
         }
     }
+    provChech(USER_LIST: USER_CARD_DOCGROUP[], card: USERCARD) {
+        const func_card = card['FUNCLIST'].split('');
+        return USER_LIST.filter(elem => {
+            if (func_card[elem.FUNC_NUM - 1] === '1') {
+                return true;
+            } else {
+                if (elem._State === _ES.Added) {
+                    return false;
+                } else {
+                    elem._State = _ES.Deleted;
+                }
+            }
+        });
+    }
     deleteAllDoc(card: USERCARD) {
+        const FK = this.selectedFuncNum.funcNum;
+        if (FK === 14 || FK === 15 || FK === 16) {
+            card.USER_CARD_DOCGROUP_List = this.provChech(card.USER_CARD_DOCGROUP_List, card);
+        }
         for (let i = 0; card.USER_CARD_DOCGROUP_List.length > i; i++) {
             const dg: USER_CARD_DOCGROUP = card.USER_CARD_DOCGROUP_List[i];
             if (dg.FUNC_NUM !== this.selectedFuncNum.funcNum) {

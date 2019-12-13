@@ -29,13 +29,13 @@ export class CardRight {
             return;
         }
         if (v) {
-            this._srv.createRootEntity(this._card);
             this._setValueEntity();
+            this._srv.createRootEntity(this._card);
             return;
         }
+        this._setValueEntity();
         this._srv.deleteAllDoc(this._card);
         this.isExpanded = false;
-        this._setValueEntity();
     }
     get limit(): boolean { // 0 1 2
         return this._value === 2;
@@ -95,9 +95,46 @@ export class CardRight {
         this.listNodes = this.listNodes.filter((node: NodeDocsTree) => node !== this.curentSelectedNode);
         this.curentSelectedNode = null;
     }
+    updateEditFile(num: number, func_list: string[]) {
+        const inListMes = [];
+        let mes = '';
+        if (func_list[14] === '1') {
+            inListMes.push('\"Редактировать файлы\"');
+        }
+        if (func_list[15] === '1') {
+            inListMes.push('\"Удалять файлы\"');
+        }
+        if (inListMes.length === 1 ) {
+            mes = 'назначено право на выполнение операции';
+        } else {
+            mes = 'назначены права на выполнение операций';
+        }
+        if (num === 13) {
+            const message = 'У пользователя ' + mes + ':' + inListMes.join(', ') + 'в данной картотеке. Снять эти права?';
+            if (func_list[13] === '0' && inListMes.length > 0) {
+                const flag = confirm(message);
+                if (flag) {
+                    func_list[14] = '0';
+                    func_list[15] = '0';
+                }
+            }
+        }
+        if ((num === 14 || num === 15) && func_list[13] === '0') {
+            if (func_list[num] === '1') {
+                const message = 'Назначить пользователю права на выполнение операции \"Читать файлы\"?';
+                const flag = confirm(message);
+                if (flag) {
+                    func_list[13] = '1';
+                }
+            }
+        }
+    }
     private _setValueEntity() {
         const value = this._card.FUNCLIST.split('');
         value[this._funcIndex] = this._value.toString();
+        if (this._funcIndex > 12 && this._funcIndex < 16) {
+            this.updateEditFile(this._funcIndex, value);
+        }
         this._card.FUNCLIST = value.join('');
         this._srv.checkChenge();
     }
