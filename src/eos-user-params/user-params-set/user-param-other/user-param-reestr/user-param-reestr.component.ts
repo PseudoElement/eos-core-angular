@@ -14,6 +14,7 @@ import { INodeDocsTreeCfg } from 'eos-user-params/shared/intrfaces/user-parm.int
 import { IOpenClassifParams } from '../../../../eos-common/interfaces';
 import { WaitClassifService } from '../../../../app/services/waitClassif.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { EosStorageService } from 'app/services/eos-storage.service';
 // import {PARM_ERROR_SEND_FROM} from '../../shared-user-param/consts/eos-user-params.const';
 @Component({
     selector: 'eos-user-param-reestr',
@@ -49,6 +50,7 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
         private _pipRx: PipRX,
         private _msg: EosMessageService,
         private _waitClassifSrv: WaitClassifService,
+        private _storageSrv: EosStorageService,
         // private _errorSrv: ErrorHelperServices,
     ) {
         this.remaster.submitEmit.subscribe(() => {
@@ -66,6 +68,7 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
         });
     }
     ngOnDestroy() {
+        this._storageSrv.removeItem('REESTR_RESTRACTION_DOCGROUP');
         this._ngUnsebscribe.next();
         this._ngUnsebscribe.complete();
     }
@@ -166,6 +169,9 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
             this.form.disable({ emitEvent: false });
         }
     }
+    updateInfo() {
+        this._storageSrv.setItem('REESTR_RESTRACTION_DOCGROUP', String(this.form.controls['rec.REESTR_RESTRACTION_DOCGROUP'].value));
+    }
     submit() {
         this.mapChanges.clear();
         this.prepFormForSave();
@@ -197,6 +203,9 @@ export class UserParamReestrComponent implements OnDestroy, OnInit {
             paramsDoc = this.paramDocDefault;
         } else {
             paramsDoc = String(this._userSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/, '||');
+        }
+        if (this._storageSrv.getItem('REESTR_RESTRACTION_DOCGROUP')) {
+            paramsDoc = this._storageSrv.getItem('REESTR_RESTRACTION_DOCGROUP').replace(/,/g, '||');
         }
         this.getDocGroupName(paramsDoc, true).then(result => {
             if (result.length > 0) {
