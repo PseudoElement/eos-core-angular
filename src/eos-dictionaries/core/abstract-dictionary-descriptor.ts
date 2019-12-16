@@ -459,6 +459,9 @@ export abstract class AbstractDictionaryDescriptor {
                 }
             });
     }
+    combine(nodes: EosDictionaryNode): Promise<any> {
+        return Promise.resolve();
+    }
 
     findTreeParent(data: CustomTreeNode[], id: any): any {
         return null;
@@ -494,6 +497,9 @@ export abstract class AbstractDictionaryDescriptor {
 
     defaultTreePath(data: CustomTreeNode[]): any {
         return null;
+    }
+    updateUncheckCitizen(id?: string): Promise<any> {
+        return Promise.resolve();
     }
 
     protected _postChanges(data: any, updates: any): Promise<any[]> {

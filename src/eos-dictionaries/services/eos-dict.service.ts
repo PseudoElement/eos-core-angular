@@ -296,9 +296,9 @@ export class EosDictService {
                 const value = changeList[id];
                 const key = dict.descriptor.PKForEntity(id);
                 changes.push ({
-                        method: 'MERGE',
-                        data: { [weightField]: String(value) },
-                        requestUri: key,
+                    method: 'MERGE',
+                    data: { [weightField]: String(value) },
+                    requestUri: key,
                 });
             }
         }
@@ -712,7 +712,7 @@ export class EosDictService {
 
     selectTemplateNode() {
         const dictionary = this._dictionaries[0];
-            this._selectTreeNode(dictionary.root);
+        this._selectTreeNode(dictionary.root);
         this._reloadList().then(() => {
             this.updateViewParameters({updatingList: false});
         });
@@ -826,9 +826,9 @@ export class EosDictService {
                     }
                     this._errHandler(err);
                 });
-            } else {
-                return Promise.reject('No selected node');
-            }
+        } else {
+            return Promise.reject('No selected node');
+        }
     }
 
     errHandler(err: RestError | any) {
@@ -1151,6 +1151,32 @@ export class EosDictService {
     isPaginationVisible(): boolean {
         return this.paginationConfig && this.paginationConfig.itemsQty > 10;
     }
+    public cutNode(): any { // справочник граждане - action ВЫРЕЗАТЬ -->
+        if (this.listNode.isSliced) {
+            this.listNode.isSliced = !this.listNode.isSliced;
+        } else {
+            this.currentDictionary.nodes.forEach((node: EosDictionaryNode) => {
+                node.isSliced = false;
+            });
+            this.listNode.isSliced = true;
+        }
+        this.currentDictionary.descriptor['isSlised'] = this.listNode.isSliced;
+    }
+    public combine(marckNodes): Promise<any> {
+        return this.currentDictionary.descriptor.combine(marckNodes).then(() => {
+            this._msgSrv.addNewMessage({ type: 'success', title: 'it`s ok', msg: 'Объединение завершенно' });
+            this.reload();
+        }).catch(e => {
+            this._msgSrv.addNewMessage({ type: 'success', title: 'it`s ok', msg: e.message });
+        });
+    }
+    public uncheckNewEntry() {
+        this.currentDictionary.descriptor.updateUncheckCitizen(this.currentDictionary.id).then(data => {
+            this._reloadList();
+        });
+        //  this._updateVisibleNodes();
+    }
+
 
     public getStoredSearchSettings(): SearchFormSettings {
         const res = this._storageSrv.getItem('lastSearchSetting');
@@ -1159,6 +1185,9 @@ export class EosDictService {
 
     public setStoredSearchSettings(data: SearchFormSettings) {
         this._storageSrv.setItem('lastSearchSetting', data);
+    }
+    public reload() {
+        this._reloadList();
     }
 
     private getDictionaryById(id: string): Promise<EosDictionary> {
@@ -1301,15 +1330,15 @@ export class EosDictService {
                         };
 
                         return this.confirmSrv.confirm(confirmObj)
-                        .then((confirm: boolean) => {
+                            .then((confirm: boolean) => {
 
-                            if (confirm) {
-                                return changes.fixE;
+                                if (confirm) {
+                                    return changes.fixE;
 
-                            } else {
-                                return null;
-                            }
-                        });
+                                } else {
+                                    return null;
+                                }
+                            });
                     }
                     return Promise.resolve(null);
                 }).catch(err => {

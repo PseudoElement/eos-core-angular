@@ -9,6 +9,14 @@ import { TOOLTIP_DELAY_VALUE } from 'eos-common/services/eos-tooltip.service';
 // export interface IQuickSrchObj {
 //     isOpenQuick: boolean;
 // }
+import { WaitClassifService } from 'app/services/waitClassif.service';
+import { IOpenClassifParams } from 'eos-common/interfaces';
+// import { PipRX } from 'eos-rest';
+
+export interface IQuickSrchObj {
+    isOpenQuick: boolean;
+}
+
 @Component({
     selector: 'eos-dictionary-search',
     templateUrl: 'dictionary-search.component.html'
@@ -44,7 +52,10 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
     private searchData = {
         srchMode: ''
     };
-    constructor(private _dictSrv: EosDictService) {
+    constructor(
+        private _dictSrv: EosDictService,
+        private _classif: WaitClassifService
+        ) {
     }
 
     ngOnChanges () {
@@ -101,6 +112,16 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
 
     public considerDel() {
         this._dictSrv.updateViewParameters({ showDeleted: this.settings.opts.deleted });
+    }
+    public openDict() {
+        this.openRubricCL('REGION_CL').then((params: any) => {
+            if (params.data && params.data.length) {
+                this.searchModel['REGION_NAME'] = params.data[0].CLASSIF_NAME;
+                this.searchModel['ISN_REGION'] = params.isnNode;
+            }
+        }).catch((e) => {
+            console.log(e);
+        });
     }
     private clearModel(modelName: string) {
         this.mode = 0;
@@ -159,5 +180,27 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
             // tslint:disable-next-line:no-bitwise
             this.hasFull = !!~_config.findIndex((_t) => _t === SEARCH_TYPES.full);
         }
+    }
+    private openRubricCL(classif: string): Promise<any> {
+        const params: IOpenClassifParams = {
+            classif: classif,
+            selectMulty: false,
+        };
+        return this._classif.openClassif(params, true).then(isnNode => {
+            if (isnNode) {
+                console.log(this);
+                return this.dictionary['dictDescrSrv']['apiSrv'].read({
+                    REGION_CL: {
+                        criteries: {
+                            ISN_NODE: isnNode
+                        }
+                    }
+                }).then(data => {
+                    return { data, isnNode };
+                });
+             }
+        }).catch((e) => {
+            return { data: [], isnNode: null };
+        });
     }
 }

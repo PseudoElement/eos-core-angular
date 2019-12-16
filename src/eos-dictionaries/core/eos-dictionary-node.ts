@@ -35,6 +35,7 @@ export class EosDictionaryNode {
     updating: boolean;
 
     relatedLoaded = false;
+    isSliced = false;
 
     /**
      * marked - node checked in list

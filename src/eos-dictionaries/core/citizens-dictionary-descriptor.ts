@@ -3,7 +3,13 @@ import { ALL_ROWS } from 'eos-rest/core/consts';
 import { AbstractDictionaryDescriptor } from './abstract-dictionary-descriptor';
 import { ITreeDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { EosDictionaryNode } from './eos-dictionary-node';
-
+// interface search {
+//     CITIZEN_SURNAME?: string;
+//     CITIZEN_CITY?: string;
+//     ZIPCODE?: string;
+//     CITIZEN_ADDR?: string;
+//     ISN_REGION?: string;
+// }
 export class CitizenDescriptor extends RecordDescriptor {
     dictionary: CitizensDictionaryDescriptor;
     fullSearchFields: any;
@@ -54,6 +60,25 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
     }
     public cutNode(node?: EosDictionaryNode): void {
         console.log(this);
+    }
+    public search(criteries: any[]): Promise<any[]> {
+        const crit = criteries[0];
+        if (crit.ISN_REGION) {
+            crit.ISN_REGION = crit.ISN_REGION.replace(/"/g, '');
+        }
+        return super.search(criteries);
+    }
+    public getFullSearchCriteries(data) {
+        return super.getFullSearchCriteries(data);
+    }
+    public updateUncheckCitizen(id: string): Promise<any> {
+        return this.apiSrv.batch([{
+            method: 'MERGE',
+            requestUrl: `CITIZEN(${id})`,
+            data: {
+                NEW: 0
+            }
+        }], '');
     }
     protected _initRecord(data: ITreeDictionaryDescriptor) {
         this.record = new CitizenDescriptor(this, data);

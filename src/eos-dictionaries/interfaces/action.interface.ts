@@ -38,6 +38,9 @@ export enum E_RECORD_ACTIONS {
     certifUC,
     downloadFile,
     importEDS,
+    cut,
+    combine,
+    uncheckNewEntry,
     // createRepresentative,
     // slantForForms,
     /* to be extended */

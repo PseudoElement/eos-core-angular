@@ -2,6 +2,7 @@ import {E_DICT_TYPE, IDictionaryDescriptor} from 'eos-dictionaries/interfaces';
 import {NOT_EMPTY_STRING} from '../input-validation';
 import {COMMON_FIELDS} from './_common';
 import {LINEAR_TEMPLATE} from './_linear-template';
+import { SEARCH_TYPES } from '../search-types';
 
 /* tslint:disable:max-line-length */
 export const CITIZENS_DICT: IDictionaryDescriptor = {
@@ -12,9 +13,9 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
     title: 'Граждане',
     visible: true,
     iconName: '',
-    actions: LINEAR_TEMPLATE.actions.concat(['tableCustomization']),
+    actions: LINEAR_TEMPLATE.actions.concat(['tableCustomization', 'cut', 'combine', 'uncheck', 'uncheckNewEntry']),
     keyField: 'ISN_CITIZEN',
-    searchConfig: [],
+    searchConfig: [SEARCH_TYPES.full],
     fields: COMMON_FIELDS.concat([{
         key: 'ISN_CITIZEN',
         title: 'ISN',
@@ -37,9 +38,16 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         key: 'ISN_REGION',
         title: 'ISN_Регион',
         type: 'number',
+        length: 255,
+    },
+    {
+        key: 'REGION_NAME',
+        title: 'Регион',
+        type: 'string',
+        length: 255,
     }, {
         key: 'ZIPCODE',
-        title: 'Фамилия И.О.',
+        title: 'Индекс',
         type: 'string',
         length: 12,
     }, {
@@ -114,9 +122,9 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
     },
     ]),
     treeFields: [],
-    searchFields: ['CITIZEN_SURNAME'],
+    searchFields: ['CITIZEN_SURNAME',   'CITIZEN_CITY',  'ZIPCODE', ],
     listFields: ['CITIZEN_SURNAME', 'CITIZEN_CITY', ],
-    fullSearchFields: [],
+    fullSearchFields: ['CITIZEN_SURNAME',   'CITIZEN_CITY',  'ZIPCODE', 'CITIZEN_ADDR', 'ISN_REGION', 'NEW'],
     quickViewFields: ['CITIZEN_SURNAME', ],
     shortQuickViewFields: [],
     editFields: ['CITIZEN_SURNAME', 'CITIZEN_CITY', 'ISN_REGION', 'ZIPCODE', 'CITIZEN_ADDR',
