@@ -554,6 +554,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
             }
         }
     }
+    changedAll($event) {
+        if ($event && this._appContext.cbBase) {
+            this.returnElemListRight('0').control.patchValue(false);
+            this.returnElemListRight('0').value = 0;
+            this._deleteAllClassif(this.returnElemListRight('0'));
+        }
+    }
     checkChange(event?) {
         if (event && event === 'del') {
             this.flagDel = true;
