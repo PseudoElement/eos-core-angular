@@ -912,6 +912,7 @@ export class EosDictService {
         }
     }
 
+
     resetSearch(): Promise<any> {
         this._srchCriteries = null;
         this.setMarkAllNone();
@@ -1175,6 +1176,25 @@ export class EosDictService {
             this._reloadList();
         });
         //  this._updateVisibleNodes();
+    }
+
+
+    rereadNode(nodeId: any): Promise<any>  {
+        return this._apiSrv
+        .read({
+            DOCGROUP_CL: PipRX.criteries({'DUE': nodeId}),
+            foredit: true,
+        })
+        .then(([docGroup]) => {
+
+
+
+        // return this.descriptor.getRecord(nodeId)
+            // .then((records) => {
+                // this.updateNodes(records, true);
+                // return this._nodes.get(nodeId);
+            // });
+        });
     }
 
 
@@ -1636,6 +1656,7 @@ export class EosDictService {
     private _emitListDictionary() {
         this._listDictionary$.next(this.currentDictionary);
     }
+
 
 }
 

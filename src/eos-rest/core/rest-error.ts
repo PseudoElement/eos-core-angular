@@ -59,8 +59,10 @@ export class RestError {
             if (!odataerr) {
                 const str = JSON.parse(e.error);
                 odataerr = str && str['odata.error'] && str['odata.error'].innererror && str['odata.error'].innererror.message;
-                this.message = odataerr;
             }
+
+            this.message = odataerr;
+
         } catch (err) {
             return;
         }

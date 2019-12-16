@@ -425,7 +425,7 @@ export class CopyPropertiesComponent implements OnDestroy {
             }
 
             if (this.controlChecked('a_prj_rek') || this.controlChecked('a_default_rek_prj') || this.controlChecked('a_fc_prj')) {
-                const list = RKPDDefaultFields.filter ( l => l.DEFAULT_TYPE === E_FIELD_TYPE.select);
+                const list = RKPDDefaultFields.filter ( l => (l.DEFAULT_TYPE === E_FIELD_TYPE.select && l.CLASSIF_ID));
                 const fieldsForCheck = list.map( v => {
                     const dict = RKPDdictionaries.find( d => d.name === v.CLASSIF_ID);
                     let table = '';
