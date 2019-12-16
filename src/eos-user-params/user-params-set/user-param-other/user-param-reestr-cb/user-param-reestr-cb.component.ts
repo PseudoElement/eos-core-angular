@@ -15,7 +15,7 @@ import { IOpenClassifParams } from '../../../../eos-common/interfaces';
 import { WaitClassifService } from '../../../../app/services/waitClassif.service';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
-import { AddGrifComponent } from './createUser/addGrif.component';
+import { AddGrifComponent } from './addGrif/addGrif.component';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
 // import {PARM_ERROR_SEND_FROM} from '../../shared-user-param/consts/eos-user-params.const';
 @Component({

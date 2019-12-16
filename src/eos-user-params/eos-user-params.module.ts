@@ -70,7 +70,7 @@ import { DefaultSettingsComponent } from './default-options/default-settings.com
 import { RightDepertOrganizComponent } from './rights-delo/rights-delo-absolute-rights/right-organiz/right-organiz.component';
 import { RightOrganizDepertComponent } from './rights-delo/rights-delo-absolute-rights/right-dep-org/right-dep-org.component';
 import { ParamsBaseParamCBComponent } from './base-param/base-param-cb/base-param-cb.component';
-import { AddGrifComponent } from './user-params-set/user-param-other/user-param-reestr-cb/createUser/addGrif.component';
+import { AddGrifComponent } from './user-params-set/user-param-other/user-param-reestr-cb/addGrif/addGrif.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
