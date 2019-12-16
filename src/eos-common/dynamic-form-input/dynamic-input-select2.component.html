@@ -25,7 +25,7 @@
                 [ngClass]="{ placeholder: !hasValue(), editable: this.viewOpts?.selectionEditable, 'ng-invalid': !controlIsValid()}"
                 [value]="currentValue"
                 [type]="textType"
-                (keydown)="ignoreKeyDown($event)"
+                (keydown)="filterKeyDown($event)"
                 placeholder="..."
                 (focus)="onFocus()"
                 (blur)="onBlur()"
@@ -38,13 +38,15 @@
             </div>
 
             <div class="inbutton" *ngIf="!form.disabled">
-                <span class="eos-icon eos-icon-arrow-v-blue-bottom small"></span>
+                <span class="eos-icon eos-icon-arrow-v-blue-bottom small" (click)="onButtonClick()"></span>
             </div>
 
             <ul
                 *dropdownMenu
+                #dropdownElement
                 class="dropdown-menu eos-select2"
                 role="menu"
+                autofocus
                 aria-labelledby="button-container"
                 [ngStyle]="getMenuWidthStyle()"
             >
@@ -60,10 +62,13 @@
                     >
                 </li>
 
-                <li role="menuitem" *ngFor="let item of input.options">
+                <li role="menuitem" *ngFor="let item of input.options"
+                    (mouseenter)="elementMouseEnter(item);"
+                    (mouseleave)="elementMouseLeave(item);"
+                >
                     <a
                         class="dropdown-item eos-select2"
-                        [ngClass]="{ disabled: item.disabled }"
+                        [ngClass]="{ disabled: item.disabled, 'hovered' : focusedItem === item }"
                         [ngStyle]="item.style"
                         (click)="!item.disabled ? selectAction($event, item) : null"
                     >
