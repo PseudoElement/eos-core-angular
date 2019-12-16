@@ -74,7 +74,8 @@ export class UserParamVisualizationComponent implements OnDestroy, OnInit {
         const query = {
             EDS_CATEGORY_CL: {
                 criteries: {
-                    DELETED: 0
+                    DELETED: 0,
+                    orderby: 'WEIGHT'
                 }
             }
         };
