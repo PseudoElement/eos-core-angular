@@ -76,7 +76,14 @@ eos-dynamic-input {
         overflow-y: auto;
         overflow-x: hidden;
         max-height: 500px;
+
+        .dropdown-item:hover {
+            background-color: $highlight-color-main-theme;
+        }
         .dropdown-item {
+            &.hovered {
+                background-color: $highlight-color-main-theme;
+            }
             width: 100%;
             font-size: 14px;
             // padding: 0 12px 0 0;

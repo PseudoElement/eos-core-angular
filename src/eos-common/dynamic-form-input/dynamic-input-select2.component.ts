@@ -3,6 +3,7 @@ import { DynamicInputBase } from './dynamic-input-base';
 import { BsDropdownDirective } from 'ngx-bootstrap';
 
 
+const LI_HEIGHT = 20;
 @Component({
     selector: 'eos-dynamic-input-select2',
     templateUrl: 'dynamic-input-select2.component.html'
@@ -15,21 +16,25 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
     @Input() container: string;
     @Input() dropup: boolean;
 
+    public focusedItem: any;
+
+
     @ViewChild('dropdown') private _dropDown: BsDropdownDirective;
+    @ViewChild('dropdownElement') private dropdownElement: ElementRef;
     @ViewChild('textInputSelect') private textInputSelect: ElementRef;
+
+
 
     private _lastWrapperWidth: number;
     private _calcItemWidth: number;
 
+    private _filterString: string = '';
+    private _filterTimer: NodeJS.Timer;
+
+
     constructor() {
         super();
     }
-    // @HostListener('scroll', ['$event'])
-    // private onScroll($event:Event): void {
-    //     this._dropDown.hide();
-    //     console.log($event.srcElement.scrollLeft, $event.srcElement.scrollTop);
-    // }
-
 
     get textType(): string {
         if (this.input.password) {
@@ -64,10 +69,6 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
         return this.control.valid;
     }
 
-    // foo () {
-    //     const res = (this.viewOpts && this.viewOpts.selectionEditable) ? this.input.key : undefined;
-    //     return res;
-    // }
 
     onInput(event) {
         event.stopPropagation();
@@ -100,12 +101,56 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
         }
     }
 
+    filterKeyDown(event) {
+        const code = event.code /* !IE */ || event.key /* IE */;
+
+
+
+        if (this.viewOpts.selectionEditable) {
+
+        } else {
+            event.preventDefault();
+        }
+        if (code === 'ArrowDown' || code === 'Down') {
+            this._hoverNext();
+        } else if (code === 'ArrowUp' || code === 'Up') {
+            this._hoverPrev();
+        } else if (code === 'Enter') {
+            this.selectAction(null, this.focusedItem);
+            this._dropDown.hide();
+        } else if (this.inputCheck(event)) {
+            this._filterString += String(event.key).toLowerCase();
+            if (this._filterTimer) {
+                clearTimeout(this._filterTimer);
+            }
+            this._filterTimer = setTimeout(() => {
+                this._filterTimer = null;
+                this._filterString = '';
+            }, 500);
+
+            const i = this.input.options.findIndex((o) => String(o.title).toLowerCase().indexOf(this._filterString) === 0);
+            if (i !== -1) {
+                this.focusedItem = this.input.options[i];
+                this._scrollTo(this.focusedItem);
+                // this.dropdownElement.nativeElement.scrollTop = i * LI_HEIGHT;
+            }
+        }
+    }
+
+    inputCheck(e) {
+        if (e.metaKey || e.ctrlKey || e.altKey) {
+            return false;
+        }
+        return (/^[А-Яа-яA-Za-z0-9 ]$/.test(e.key));
+    }
+
     ignoreKeyDown(event) { // IE backspace
         if (this.viewOpts.selectionEditable) {
 
         } else {
             event.preventDefault();
         }
+
     }
 
     selectAction (e: MouseEvent, item: any, params?: any) {
@@ -127,5 +172,66 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
         }
         super.ngOnDestroy();
     }
+    elementMouseEnter(item) {
+        this.focusedItem = item;
+    }
+
+    elementMouseLeave(item) {
+        this.focusedItem = null;
+    }
+
+    onButtonClick () {
+        setTimeout(() => this.textInputSelect.nativeElement.focus(), 0);
+    }
+    private _hoverNext(): any {
+        if (!this.input.options || !this.input.options.length) {
+            return;
+        }
+        if (!this.focusedItem) {
+            this.focusedItem = this.input.options[0];
+        } else {
+            const i = this.input.options.findIndex( (o) => o === this.focusedItem);
+            if (i === -1 || i === this.input.options.length - 1) {
+                this.focusedItem = this.input.options[0];
+            } else {
+                this.focusedItem = this.input.options[i + 1];
+            }
+        }
+        this._scrollTo(this.focusedItem);
+    }
+
+    private _hoverPrev(): any {
+        if (!this.input.options || !this.input.options.length) {
+            return;
+        }
+        if (!this.focusedItem) {
+            this.focusedItem = this.input.options[this.input.options.length - 1];
+        } else {
+            const i = this.input.options.findIndex( (o) => o === this.focusedItem);
+            if (i === -1 || i === 0) {
+                this.focusedItem = this.input.options[this.input.options.length - 1];
+            } else {
+                this.focusedItem = this.input.options[i - 1];
+            }
+        }
+
+        this._scrollTo(this.focusedItem);
+
+    }
+
+    private _scrollTo(item: any): any {
+        const i = this.input.options.findIndex( (o) => o === item);
+        if (i !== -1) {
+            const pos = i * LI_HEIGHT;
+            const isVisible = this.dropdownElement.nativeElement.scrollTop < pos
+                && (this.dropdownElement.nativeElement.scrollTop +
+                this.dropdownElement.nativeElement.clientHeight) > pos;
+            if (!isVisible) {
+                this.dropdownElement.nativeElement.scrollTop = i * LI_HEIGHT;
+            }
+        }
+    }
+
+
 
 }
