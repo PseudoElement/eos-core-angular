@@ -2,6 +2,7 @@ import { Component, OnChanges, SimpleChanges, } from '@angular/core';
 import { RKNomenkBasePage } from './rk-nomenk-base-page';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
+import { DictUtils } from 'eos-dictionaries/utils/dict-utils';
 // import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
 
 const FeaturesRK = Features.cfg.rkdefaults;
@@ -27,45 +28,54 @@ export class RKDefaultValuesCardComponent extends RKNomenkBasePage implements On
     static termExecOptsByValue(value: number): any {
         if (RKDefaultValuesCardComponent.rkDaysVariations.length === 0) {
             const opts = FeaturesRK.calendarValues;
-
-            let v = { daysLabel: 'дней', options: Array.from(opts, o => Object.assign({}, o)) } ;
-            v.options.forEach( o => { o.title = o.title.replace('н.', 'ных').replace('ч.', 'чих'); });
-            RKDefaultValuesCardComponent.rkDaysVariations.push(v);
-
-            v = { daysLabel: 'день', options: Array.from(opts, o => Object.assign({}, o)) };
-            v.options.forEach( o => { o.title = o.title.replace('н.', 'ный').replace('ч.', 'чий'); });
-            RKDefaultValuesCardComponent.rkDaysVariations.push(v);
-
-            v = { daysLabel: 'дня', options: Array.from(opts, o => Object.assign({}, o)) };
-            v.options.forEach( o => { o.title = o.title.replace('н.', 'ных').replace('ч.', 'чих'); });
-            RKDefaultValuesCardComponent.rkDaysVariations.push(v);
+            RKDefaultValuesCardComponent.rkDaysVariations = DictUtils.termExecOpts(opts);
         }
-
         const variations = RKDefaultValuesCardComponent.rkDaysVariations;
 
-        const mod100 = value % 100;
+        return variations[DictUtils.termExecOptsVariant(value)];
 
-        if (mod100 >= 10 && mod100 <= 20) {
-            return variations[0];
-        }
 
-        const mod10 = value % 10;
-        switch (mod10) {
-            case 1:
-                return variations[1];
-            case 2:
-            case 3:
-            case 4:
-                return variations[2];
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-            case 0:
-            default:
-                return variations[0];
-        }
+        // if (RKDefaultValuesCardComponent.rkDaysVariations.length === 0) {
+        //     const opts = FeaturesRK.calendarValues;
+
+        //     let v = { daysLabel: 'дней', options: Array.from(opts, o => Object.assign({}, o)) } ;
+        //     v.options.forEach( o => { o.title = o.title.replace('н.', 'ных').replace('ч.', 'чих'); });
+        //     RKDefaultValuesCardComponent.rkDaysVariations.push(v);
+
+        //     v = { daysLabel: 'день', options: Array.from(opts, o => Object.assign({}, o)) };
+        //     v.options.forEach( o => { o.title = o.title.replace('н.', 'ный').replace('ч.', 'чий'); });
+        //     RKDefaultValuesCardComponent.rkDaysVariations.push(v);
+
+        //     v = { daysLabel: 'дня', options: Array.from(opts, o => Object.assign({}, o)) };
+        //     v.options.forEach( o => { o.title = o.title.replace('н.', 'ных').replace('ч.', 'чих'); });
+        //     RKDefaultValuesCardComponent.rkDaysVariations.push(v);
+        // }
+
+        // const variations = RKDefaultValuesCardComponent.rkDaysVariations;
+
+        // const mod100 = value % 100;
+
+        // if (mod100 >= 10 && mod100 <= 20) {
+        //     return variations[0];
+        // }
+
+        // const mod10 = value % 10;
+        // switch (mod10) {
+        //     case 1:
+        //         return variations[1];
+        //     case 2:
+        //     case 3:
+        //     case 4:
+        //         return variations[2];
+        //     case 5:
+        //     case 6:
+        //     case 7:
+        //     case 8:
+        //     case 9:
+        //     case 0:
+        //     default:
+        //         return variations[0];
+        // }
     }
 
     ngOnChanges(changes: SimpleChanges) {
