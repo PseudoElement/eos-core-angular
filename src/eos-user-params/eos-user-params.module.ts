@@ -69,6 +69,8 @@ import { DefaultSettingsComponent } from './default-options/default-settings.com
 import { RightDepertOrganizComponent } from './rights-delo/rights-delo-absolute-rights/right-organiz/right-organiz.component';
 import { RightOrganizDepertComponent } from './rights-delo/rights-delo-absolute-rights/right-dep-org/right-dep-org.component';
 import { ParamsBaseParamCBComponent } from './base-param/base-param-cb/base-param-cb.component';
+import { CbUserRoleComponent } from './base-param/base-param-cb/cb-user-role/cb-user-role.component';
+import { DragulaModule } from 'ng2-dragula';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -123,6 +125,7 @@ import { ParamsBaseParamCBComponent } from './base-param/base-param-cb/base-para
         DefaultSettingsComponent,
         RightDepertOrganizComponent,
         RightOrganizDepertComponent,
+        CbUserRoleComponent
     ],
     imports: [
         BrowserModule,
@@ -135,7 +138,8 @@ import { ParamsBaseParamCBComponent } from './base-param/base-param-cb/base-para
         AccordionModule,
         PopoverModule,
         BsDropdownModule,
-        BsDatepickerModule.forRoot()
+        BsDatepickerModule.forRoot(),
+        DragulaModule
     ],
     providers: [
         UserParamApiSrv,

@@ -56,12 +56,21 @@
                         <span class="icon eos-icon small icon-add-department span-avatar-icon" [ngClass]="{'eos-icon-avatar-blue': !curentUser.isTechUser && editMode, 'eos-icon-avatar-grey': curentUser.isTechUser || !editMode}" (click)="selectDepartment(form.get('DUE_DEP_NAME').enabled)"></span>
                     </div>
                 </div>
-                <eos-dynamic-input class="base-text-input base-input-role"
+            </div>
+            <div>
+                <eos-dynamic-input class="base-text-input-cb base-input-role"
                     [input]="controls['SELECT_ROLE']"
                     [form]="formControls"
                     container="body"
                     [readonly]="curentUser.isTechUser || !editMode"
                     [disabled] = "curentUser.isTechUser || formControls.controls['SELECT_ROLE'].disabled"></eos-dynamic-input>
+                <button
+                    class="btn btn-cb"
+                    [disabled]="!editMode"
+                    (click)="getTemplateUser(cbRole, 'roles')"
+                    [ngClass]="{'btn-primary': editMode, 'btn-light': !editMode}"
+                >Настроить роль</button>
+                <eos-dynamic-input  [input]="inputs['IS_SECUR_ADM']" [form]="form" tooltip="Администратор системы" placement="bottom" containerClass="tooltip-info"></eos-dynamic-input>
             </div>
             <!-- Примечания -->
             <div>
@@ -96,11 +105,10 @@
             <div class="access-syst-part">
                 <eos-dynamic-input [input]="accessInputs['16']" [form]="formAccess" [readonly]="formAccess.get('16').disabled"></eos-dynamic-input>
                 <eos-dynamic-input [input]="accessInputs['5']" [form]="formAccess" [readonly]="formAccess.get('5').disabled"></eos-dynamic-input>
-                <span (click)="getSerts(template)" class="eos-icon small icon-electronic" [ngClass]="{'eos-icon-electronic-signature-blue pointer': editMode, 'eos-icon-electronic-signature-grey': !editMode}" [tooltip]="editMode ? 'Выбор сертификатов пользователя' : null"
+                <span (click)="getTemplateUser(template, 'serts')" class="eos-icon small icon-electronic" [ngClass]="{'eos-icon-electronic-signature-blue pointer': editMode, 'eos-icon-electronic-signature-grey': !editMode}" [tooltip]="editMode ? 'Выбор сертификатов пользователя' : null"
                 placement="bottom" containerClass="tooltip-info"></span>
             </div>
           </div>
-          <eos-dynamic-input [input]="inputs['IS_SECUR_ADM']" [form]="form" tooltip="Администратор системы" placement="bottom" containerClass="tooltip-info"></eos-dynamic-input>
         </div>
     </div>
     
@@ -114,5 +122,9 @@
     
     <ng-template #template>
         <eos-base-serts (closeModal)="closeSerts()"></eos-base-serts>
+    </ng-template>
+
+    <ng-template #cbRole>
+        <eos-cb-user-role (closeModal)="closeSerts()"></eos-cb-user-role>
     </ng-template>
     

@@ -139,6 +139,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     }
 
     init() {
+    //    this.apiSrvRx.read({CBR_USER_ROLE: ALL_ROWS}).then(data => console.log(data));
         this._descSrv = new BaseParamCurentDescriptor(this._userParamSrv);
         this.curentUser = this._userParamSrv.curentUser;
         this.inputFields = this._descSrv.fillValueInputField(BASE_PARAM_INPUTS_CB, !this.editMode);
@@ -657,9 +658,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
     }
 
-    getSerts(template: TemplateRef<any>): void {
+    getTemplateUser(template: TemplateRef<any>, className: string): void {
         if (this.editMode) {
-            this.modalRef = this.modalService.show(template, { class: 'serts', ignoreBackdropClick: true });
+            this.modalRef = this.modalService.show(template, { class: className, ignoreBackdropClick: true });
         }
     }
     closeSerts() {
