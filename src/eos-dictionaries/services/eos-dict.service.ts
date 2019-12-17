@@ -1385,8 +1385,15 @@ export class EosDictService {
                                 return this.confirmSrv.confirm(changeBoss)
                                     .then((confirm: boolean) => {
                                         if (confirm) {
+
                                             boss.data.rec['POST_H'] = 0;
-                                            return dictionary.updateNodeData(boss, boss.data);
+                                            return Promise.resolve(this._apiSrv.changeList([boss.data.rec]));
+                                            // return dictionary.updateNodeData(boss, boss.data).then(
+                                            //     () => {
+
+                                            //         return null;
+                                            //     }
+                                            // );
                                         } else {
                                             data.rec['POST_H'] = 0;
                                             return Promise.reject('cancel');
