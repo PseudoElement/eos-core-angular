@@ -5,8 +5,10 @@ import {EosDictService} from '../services/eos-dict.service';
 import {YEAR_PATTERN, NUMERIC_PATTERN, NOT_EMPTY_STRING} from 'eos-common/consts/common.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { DANGER_NUMCREATION_NP_CHANGE } from 'eos-dictionaries/consts/messages.consts';
-import { CONFIRM_NUMCREATION_CHANGE } from 'app/consts/confirms.const';
+import { CONFIRM_NUMCREATION_CANT, CONFIRM_NUMCREATION_CHANGE } from 'app/consts/confirms.const';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
+import { Features } from 'eos-dictionaries/features/features-current.const';
+import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 
 const NODE_ID_NAME = 'ISN_NODE';
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
@@ -262,27 +264,50 @@ export class CounterNpEditComponent {
             return data;
         }).then((data) => {
             if (isValid) {
-                const old_value = this._getNodeValue(this.editValueYear);
-                if (old_value) {
-                    const _confrm = Object.assign({}, CONFIRM_NUMCREATION_CHANGE);
-                    _confrm.body = _confrm.body
-                        .replace('{{old_value}}', String(old_value))
-                        .replace('{{year}}', String(this.editValueYear))
-                        .replace('{{new_value}}', String(this.editValueNum));
-                    this._confirmSrv.confirm(_confrm)
-                        .then((confirmed: boolean) => {
-                            if (confirmed) {
-                                this._save(this.editValueYear, this.editValueNum);
-                            }
-                            return Promise.resolve(null);
-                        }).catch(err => this._errHandler(err));
-                } else {
-                    this._save(this.editValueYear, this.editValueNum);
-                }
+                this._saveCheckValues().then( (tocontinue) => {
+                    return tocontinue ? this._saveCheckConfirm() : false;
+                }).then ((tocontinue) => {
+                    return tocontinue ? this._save(this.editValueYear, this.editValueNum) : false;
+                }).catch(err => this._errHandler(err));
             } else {
                 this._msgSrv.addNewMessage(DANGER_NUMCREATION_NP_CHANGE);
             }
         }).catch(err => this._errHandler(err));
+    }
+
+    _saveCheckConfirm(): Promise<boolean> {
+        const old_value = this._getNodeValue(this.editValueYear);
+        if (old_value) {
+            const _confrm = Object.assign({}, CONFIRM_NUMCREATION_CHANGE);
+            _confrm.body = _confrm.body
+                .replace('{{old_value}}', String(old_value))
+                .replace('{{year}}', String(this.editValueYear))
+                .replace('{{new_value}}', String(this.editValueNum));
+            return this._confirmSrv.confirm(_confrm)
+                .then((confirmed: boolean) => {
+                    return confirmed;
+                });
+        }
+        return Promise.resolve(true);
+    }
+
+    _saveCheckValues(): Promise<boolean> {
+
+        if (Features.cfg.variant === EOSDICTS_VARIANT.Nadzor) {
+            return Promise.resolve(true);
+        }
+
+        const old_value = this._getNodeValue(this.editValueYear);
+        if (old_value) {
+            if (Number(this.editValueNum) <= Number (old_value)) {
+                return this._confirmSrv.confirm2(CONFIRM_NUMCREATION_CANT)
+                    .then(() => {
+                        return false;
+                    });
+            }
+        }
+
+        return Promise.resolve(true);
     }
 
     public getNodeTitle() {

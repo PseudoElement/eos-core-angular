@@ -329,7 +329,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
 
     saveAfterSystems(newD: any, accessStr: string, id: number, query: any): Promise<any> {
         this.isLoading = true;
-        if (newD.hasOwnProperty('DUE_DEP') && this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
+        if (this.formControls.controls['SELECT_ROLE'].value && this.formControls.controls['SELECT_ROLE'].value !== '...') {
             return this._rtUserSel.getInfoCabinet(this.curentUser.ISN_LCLASSIF).then(cab => {
                 if (cab) {
                     return true;
@@ -448,6 +448,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             this.upform(this.inputs, this.form);
             this.upform(this.controls, this.formControls);
             this.upform(this.accessInputs, this.formAccess);
+            this.dueDepName = this.form.controls['DUE_DEP_NAME'].value;
             this.isLoading = false;
             this.editModeF();
             this._pushState();
@@ -467,6 +468,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     cancel() {
         this.isLoading = false;
         this.editMode = !this.editMode;
+        this.dueDepName = this.inputs['DUE_DEP_NAME'].value;
         this.cancelValues(this.inputs, this.form);
         this.cancelValues(this.controls, this.formControls);
         this.cancelValues(this.accessInputs, this.formAccess);
@@ -574,6 +576,13 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
             })
             .then((data: DEPARTMENT[]) => {
                 // при переназначении ДЛ меняем это поле в бд, для ограниченного технолога
+                if (this.inputs['DUE_DEP_NAME'].value === data[0].CLASSIF_NAME) {
+                    this.form.get('TECH_DUE_DEP').patchValue(data[0]['DEPARTMENT_DUE']);
+                    this.getUserDepartment(data[0].ISN_HIGH_NODE).then(result => {
+                        this.form.get('NOTE').patchValue(result[0].CLASSIF_NAME);
+                    });
+                    return data[0];
+                }
                 return this._userParamSrv.ceckOccupationDueDep(dueDep, data[0], true).then(val => {
                     if (data) {
                         this.form.get('TECH_DUE_DEP').patchValue(data[0]['DEPARTMENT_DUE']);

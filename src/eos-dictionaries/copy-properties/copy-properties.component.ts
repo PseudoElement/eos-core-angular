@@ -1,10 +1,8 @@
 import {Component, EventEmitter, Input, OnDestroy, Output, Injector} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-// import {WaitClassifService} from '../../app/services/waitClassif.service';
 import {BsModalRef} from 'ngx-bootstrap';
 import {PipRX} from '../../eos-rest';
 import {EosMessageService} from '../../eos-common/services/eos-message.service';
-// import {IMessage} from '../../eos-common/core/message.interface';
 import {SUCCESS_SAVE, WARN_SAVE_FAILED} from '../consts/messages.consts';
 import {InputControlService} from '../../eos-common/services/input-control.service';
 import {CheckboxInput} from '../../eos-common/core/inputs/checkbox-input';
@@ -19,6 +17,7 @@ import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.s
 import { RKPDDefaultFields, RKPDdictionaries } from 'eos-dictionaries/prj-default-values/prj-default-values.component';
 import { IMessage } from 'eos-common/interfaces';
 import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-convert.service';
+import { EosUtils } from 'eos-common/core/utils';
 
 const RC_TYPE_IS_DIFFERENT_WARNING_MESSAGE: IMessage = {
     type: 'warning',
@@ -123,11 +122,10 @@ export class CopyPropertiesComponent implements OnDestroy {
     title: string;
     saveButtonLabel: string;
     properties;
-
+    renewChilds: boolean;
 
     private _dataControllerRK: AdvCardRKDataCtrl;
     private _recTo: any;
-    private _renewChilds: boolean;
     private _dgFrom: any;
     private properties_for_request = [];
     private formChanges$: Subscription;
@@ -154,9 +152,9 @@ export class CopyPropertiesComponent implements OnDestroy {
     public init(toNodeRec: any, fromdue: string, renewChilds: boolean) {
         this.isUpdating = true;
         this._recTo = toNodeRec;
-        this._renewChilds = renewChilds;
+        this.renewChilds = renewChilds;
 
-        if (!this._renewChilds) {
+        if (!this.renewChilds) {
             if (toNodeRec.DUE.toString() === fromdue) {
                 setTimeout(() => {
                     this._msgSrv.addNewMessage(THE_SAME_GROUP_WARNING_MESSAGE);
@@ -170,7 +168,7 @@ export class CopyPropertiesComponent implements OnDestroy {
 
             this._dgFrom = Object.assign({}, docGroup);
 
-            if (!this._renewChilds) {
+            if (!this.renewChilds) {
                 if (docGroup.RC_TYPE.toString() !== this._recTo.RC_TYPE.toString()) {
                     setTimeout(() => {
                         this._msgSrv.addNewMessage(RC_TYPE_IS_DIFFERENT_WARNING_MESSAGE);
@@ -180,8 +178,7 @@ export class CopyPropertiesComponent implements OnDestroy {
                 }
             }
 
-
-            if (this._renewChilds) {
+            if (this.renewChilds) {
                 this.title = 'Обновить свойства подчиненных групп документов';
                 this.saveButtonLabel = 'Обновить';
                 this._initPropertiesRenewChilds();
@@ -203,54 +200,6 @@ export class CopyPropertiesComponent implements OnDestroy {
         });
     }
 
-    // public init(rec: any, fromParent: boolean) {
-
-    //     // this.rec_to = rec;
-    //     // this.fromParent = fromParent;
-
-    //     Promise.resolve(null).then (() => {
-    //         if (this.fromParent) {
-    //             return this.rec_to.PARENT_DUE;
-    //         } else {
-    //             return this._waitClassif.chooseDocGroup();
-    //         }
-    //     }).then((due) => {
-    //         console.log("TCL: CopyPropertiesComponent -> init -> due", due)
-    //         // const due = this.fromParent ? this.rec_to.DUE : this.rec_from.DUE;
-    //         return this._dataControllerRK.readDGValuesDUE(due).then(([docGroup]) => {
-    //             console.log("TCL: CopyPropertiesComponent -> init -> docGroup", docGroup)
-    //             if (this.fromParent) {
-    //                 this.title = 'Обновить свойства подчиненных групп документов';
-    //                 this.saveButtonLabel = 'Обновить';
-    //                 this._initPropertiesFromParent();
-    //                 this._initInputs();
-    //             } else {
-    //                 this.title = 'Копирование свойств группы документов';
-    //                 this.saveButtonLabel = 'Копировать';
-    //                 this._initProperties();
-    //                 this._initInputs();
-    //             }
-    //             this.isUpdating = false;
-    //             this.hideModal();
-
-    //         });
-    //     }).catch(() => {
-    //         this.hideModal();
-    //     });
-
-
-
-
-    // }
-    isEmptyObj(object: any) {
-        for (const key in object) {
-            if (object.hasOwnProperty(key)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public hideModal() {
         this._bsModalRef.hide();
         this.onClose.emit();
@@ -260,7 +209,7 @@ export class CopyPropertiesComponent implements OnDestroy {
     public save() {
         const changes = [];
         const args = {};
-        const method = this._renewChilds ? 'DocGroupCopyFromParent' : 'DocGroupPropCopy';
+        const method = this.renewChilds ? 'DocGroupCopyFromParent' : 'DocGroupPropCopy';
 
         let flagStr = '';
         this.properties_for_request.forEach((prop) => {
@@ -269,7 +218,7 @@ export class CopyPropertiesComponent implements OnDestroy {
 
         this._validateData().then( (result) => {
             if (result) {
-                Object.assign(args, this._renewChilds ? {due: this._recTo.DUE} : {due_from: this._dgFrom.DUE,
+                Object.assign(args, this.renewChilds ? {due: this._recTo.DUE} : {due_from: this._dgFrom.DUE,
                     due_to: this._recTo.DUE});
 
                 Object.assign(args, {flags: flagStr});
@@ -360,7 +309,7 @@ export class CopyPropertiesComponent implements OnDestroy {
         }
 
 
-        if ( !this.isEmptyObj(fields)
+        if (EosUtils.isObjEmpty(fields)
         ) {
             this._dataControllerRK.markCacheForDirty('USER_LISTS');
             return this._dataControllerRK.updateDictsOptions(fields, 'USER_LISTS', this._dgFrom, (event: IUpdateDictEvent) => {
@@ -390,7 +339,7 @@ export class CopyPropertiesComponent implements OnDestroy {
 
     private _validateData(): Promise<boolean> {
         const dataControllerRK = new AdvCardRKDataCtrl(this.injector);
-        const due = this._renewChilds ? this._recTo.DUE : this._dgFrom.DUE;
+        const due = this.renewChilds ? this._recTo.DUE : this._dgFrom.DUE;
 
         return dataControllerRK.readDGValuesDUE(due).then(([docGroup]) => {
             const warnings: CopyPropWarning = new CopyPropWarning();
@@ -425,7 +374,7 @@ export class CopyPropertiesComponent implements OnDestroy {
             }
 
             if (this.controlChecked('a_prj_rek') || this.controlChecked('a_default_rek_prj') || this.controlChecked('a_fc_prj')) {
-                const list = RKPDDefaultFields.filter ( l => l.DEFAULT_TYPE === E_FIELD_TYPE.select);
+                const list = RKPDDefaultFields.filter ( l => (l.DEFAULT_TYPE === E_FIELD_TYPE.select && l.CLASSIF_ID));
                 const fieldsForCheck = list.map( v => {
                     const dict = RKPDdictionaries.find( d => d.name === v.CLASSIF_ID);
                     let table = '';
@@ -567,8 +516,11 @@ export class CopyPropertiesComponent implements OnDestroy {
             }, {
                 key: 'a_prj_rek',
                 label: 'Свойства проектов документов',
-                // disabled: !this._recTo.PRJ_NUM_FLAG,
+                hidden: !(this._recTo.PRJ_NUM_FLAG && String(this._recTo.RC_TYPE) === '3'),
+                // disabled: !(this._recTo.PRJ_NUM_FLAG && String(this._recTo.RC_TYPE) === '3'),
             }];
+
+
         this.properties_for_request = ['a_shablon', 'a_add_rek', 'a_default_rek', 'a_mand_rek', 'a_write_rek',
             'a_prj_rek', 'a_fc'];
     }
@@ -594,71 +546,6 @@ export class CopyPropertiesComponent implements OnDestroy {
         this.formChanges$ = this.form.valueChanges.subscribe(() => this._validateForm());
     }
 
-    // private _chooseDocGroup_old() {
-    //     this._waitClassif.openClassif({
-    //         classif: CLASSIF_NAME,
-    //         selectMulty: false,
-    //         skipDeleted: false,
-    //     }, true)
-    //         .then((isn) => {
-    //             if (isn) {
-    //                 if (this.rec_to.ISN_NODE.toString() === isn) {
-    //                     this.hideModal();
-    //                     this._msgSrv.addNewMessage(THE_SAME_GROUP_WARNING_MESSAGE);
-    //                 } else {
-    //                     this._apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries({ISN_NODE: isn})})
-    //                         .then(([docGroup]) => {
-    //                             this.rec_from = {};
-    //                             Object.assign(this.rec_from, docGroup);
-    //                             if (docGroup.RC_TYPE.toString() !== this.rec_to.RC_TYPE.toString()) {
-    //                                 this.hideModal();
-    //                                 this._msgSrv.addNewMessage(RC_TYPE_IS_DIFFERENT_WARNING_MESSAGE);
-    //                             }
-    //                             this.form.controls.NODE_TO_COPY.setValue(docGroup.CLASSIF_NAME);
-    //                         });
-    //                 }
-    //             } else {
-    //                 this.hideModal();
-    //             }
-    //             this.isUpdating = false;
-    //         })
-    //         .catch(() => {
-    //             this.hideModal();
-    //         });
-    // }
-
-    // private _chooseDocGroup(): Promise<string | void> {
-    //     return this._waitClassif.openClassif({
-    //         classif: CLASSIF_NAME,
-    //         selectMulty: false,
-    //         skipDeleted: false,
-    //         return_due: true,
-    //     }, true)
-    //         .then((due: string) => {
-    //             return due;
-    //             // if (isn) {
-    //             //     if (this.rec_to.ISN_NODE.toString() === isn) {
-    //             //         this.hideModal();
-    //             //         this._msgSrv.addNewMessage(THE_SAME_GROUP_WARNING_MESSAGE);
-    //             //         return null;
-    //             //     } else {
-    //             //         this._apiSrv.read<DOCGROUP_CL>({DOCGROUP_CL: PipRX.criteries({ISN_NODE: isn})})
-    //             //             .then(([docGroup]) => {
-    //             //                 this.rec_from = {};
-    //             //                 Object.assign(this.rec_from, docGroup);
-    //             //                 if (docGroup.RC_TYPE.toString() !== this.rec_to.RC_TYPE.toString()) {
-    //             //                     this.hideModal();
-    //             //                     this._msgSrv.addNewMessage(RC_TYPE_IS_DIFFERENT_WARNING_MESSAGE);
-    //             //                 }
-    //             //                 this.form.controls.NODE_TO_COPY.setValue(docGroup.CLASSIF_NAME);
-    //             //             });
-    //             //     }
-    //             // } else {
-    //             //     this.hideModal();
-    //             // }
-    //             // this.isUpdating = false;
-    //         });
-    // }
 
     private _validateForm() {
         this.formValid = false;

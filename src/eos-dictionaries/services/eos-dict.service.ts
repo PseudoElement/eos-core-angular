@@ -912,6 +912,7 @@ export class EosDictService {
         }
     }
 
+
     resetSearch(): Promise<any> {
         this._srchCriteries = null;
         this.setMarkAllNone();
@@ -1152,6 +1153,25 @@ export class EosDictService {
         return this.paginationConfig && this.paginationConfig.itemsQty > 10;
     }
 
+    rereadNode(nodeId: any): Promise<any>  {
+        return this._apiSrv
+        .read({
+            DOCGROUP_CL: PipRX.criteries({'DUE': nodeId}),
+            foredit: true,
+        })
+        .then(([docGroup]) => {
+
+
+
+        // return this.descriptor.getRecord(nodeId)
+            // .then((records) => {
+                // this.updateNodes(records, true);
+                // return this._nodes.get(nodeId);
+            // });
+        });
+    }
+
+
     public getStoredSearchSettings(): SearchFormSettings {
         const res = this._storageSrv.getItem('lastSearchSetting');
         return res ? res : new SearchFormSettings;
@@ -1336,8 +1356,15 @@ export class EosDictService {
                                 return this.confirmSrv.confirm(changeBoss)
                                     .then((confirm: boolean) => {
                                         if (confirm) {
+
                                             boss.data.rec['POST_H'] = 0;
-                                            return dictionary.updateNodeData(boss, boss.data);
+                                            return Promise.resolve(this._apiSrv.changeList([boss.data.rec]));
+                                            // return dictionary.updateNodeData(boss, boss.data).then(
+                                            //     () => {
+
+                                            //         return null;
+                                            //     }
+                                            // );
                                         } else {
                                             data.rec['POST_H'] = 0;
                                             return Promise.reject('cancel');
@@ -1607,6 +1634,7 @@ export class EosDictService {
     private _emitListDictionary() {
         this._listDictionary$.next(this.currentDictionary);
     }
+
 
 }
 
