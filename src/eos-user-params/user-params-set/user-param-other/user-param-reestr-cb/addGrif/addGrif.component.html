@@ -1,0 +1,41 @@
+<div class="add-grifs-modal">
+        <div class="grifs-header">
+                <div style="padding: 10px;">
+                    <span class="header__text">{{titleHeader}}</span>
+                </div>
+                <div class="header-button-wrap">
+                    <button
+                        class="btn btn-primary header__button"
+                        (click)="cancel()"
+                        >ОТМЕНИТЬ
+                    </button>
+                    <button
+                        class="btn btn-primary-full header__button"
+                        (click)="submit()"
+                        >СОХРАНИТЬ
+                    </button>
+                </div>
+        </div>
+        <main *ngIf="!isLoading; else spiner">
+            <div class="grifs-content">
+                <div class="grifs-row" *ngFor='let field of allField'>
+                    <div>
+                        <span 
+                            (click)="clikcBox(field.ISN_LCLASSIF, field.CLASSIF_NAME)" 
+                            class="eos-icon checkbox-size" 
+                            [ngClass]="{'eos-icon-checkbox-square-v-blue' : elemCheck(field.ISN_LCLASSIF), 'eos-icon-checkbox-square-blue': !elemCheck(field.ISN_LCLASSIF)}">
+                        </span>
+                    </div>
+                    <div class="grifs-element-title">
+                        <span>{{field.CLASSIF_NAME}}</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+</div>
+
+<ng-template #spiner>
+    <div class="spiner-div">
+        <eos-spinner size="lg"></eos-spinner>
+    </div>
+</ng-template>

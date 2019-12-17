@@ -22,7 +22,8 @@
         <!--------------------------1--------------------------------------------->
         <!--------------------------2--------------------------------------------->
         <div [hidden]="currTab !==2" class="clearfix ">
-            <eos-user-param-reestr (pushChange)="emitChangesReestr($event)" (pushIncrementError)="emitIncrementError($event)" [defaultUser]="defaultUser" [errorHidden]='currTab===2' [defaultValues]=" defaultValues " #paramReestrErr></eos-user-param-reestr>
+            <eos-user-param-reestr-cb *ngIf='cbBase' (pushChange)="emitChangesReestr($event)" (pushIncrementError)="emitIncrementError($event)" [defaultUser]="defaultUser" [errorHidden]='currTab===2' [defaultValues]=" defaultValues " #paramReestrErr></eos-user-param-reestr-cb>
+            <eos-user-param-reestr *ngIf='!cbBase' (pushChange)="emitChangesReestr($event)" (pushIncrementError)="emitIncrementError($event)" [defaultUser]="defaultUser" [errorHidden]='currTab===2' [defaultValues]=" defaultValues " #paramReestrErr></eos-user-param-reestr>
         </div>
         <!--------------------------2--------------------------------------------->
         <!--------------------------3--------------------------------------------->
