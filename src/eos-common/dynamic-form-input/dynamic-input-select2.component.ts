@@ -159,6 +159,7 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
         } else {
             this.control.setValue(String(item.value));
         }
+        this._dropDown.hide(); /* IE fix */
     }
 
     isItemSelected (item: any): boolean {
