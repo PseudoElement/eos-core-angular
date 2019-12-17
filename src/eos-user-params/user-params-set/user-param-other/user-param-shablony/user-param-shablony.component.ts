@@ -11,6 +11,7 @@ import { EosDataConvertService } from 'eos-dictionaries/services/eos-data-conver
 import { InputControlService } from 'eos-common/services/input-control.service';
 import { RemasterService } from '../../shared-user-param/services/remaster-service';
 // import { EosMessageService } from 'eos-common/services/eos-message.service';
+import { AppContext } from 'eos-rest/services/appContext.service';
 @Component({
     selector: 'eos-user-param-shablony',
     templateUrl: 'user-param-shablony.component.html',
@@ -37,6 +38,7 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
         private dataConv: EosDataConvertService,
         private inpSrv: InputControlService,
         private remaster: RemasterService,
+        private _appContext: AppContext,
         // private _msg: EosMessageService,
         // private _errorSrv: ErrorHelperServices,
     ) {
@@ -106,6 +108,21 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
     }
 
     inint() {
+        if (this._appContext.cbBase) {
+            OTHER_USER_SHABLONY.fields.splice(25, 0,
+            {
+                key: 'Реестр перечня РК',
+                type: 'string',
+                title: ''
+            },
+            {
+                key: 'Реестр РК',
+                type: 'string',
+                title: ''
+            },
+
+            );
+        }
         this.prepareData = this.formHelp.parse_Create(OTHER_USER_SHABLONY.fields, this.allData);
         this.prepareInputs = this.formHelp.getObjectInputFields(OTHER_USER_SHABLONY.fields);
         this.inputs = this.dataConv.getInputs(this.prepareInputs, { rec: this.prepareData });
