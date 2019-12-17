@@ -400,10 +400,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
             case E_RECORD_ACTIONS.moveUp:
                 this.nodeList.moveUp();
+                this.dictionary.treeResort();
                 break;
 
             case E_RECORD_ACTIONS.moveDown:
                 this.nodeList.moveDown();
+                this.dictionary.treeResort();
                 break;
 
             case E_RECORD_ACTIONS.export:
