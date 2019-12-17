@@ -400,10 +400,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
             case E_RECORD_ACTIONS.moveUp:
                 this.nodeList.moveUp();
+                this.dictionary.treeResort();
                 break;
 
             case E_RECORD_ACTIONS.moveDown:
                 this.nodeList.moveDown();
+                this.dictionary.treeResort();
                 break;
 
             case E_RECORD_ACTIONS.export:
@@ -804,6 +806,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     }
 
+
     /**
      * Physical delete marked elements on page
      */
@@ -828,26 +831,27 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         }
 
+        const titleId = selectedNodes[0].nodeTitleid;
         const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_HARDDELETE);
 
         this._confirmMarkedItems(selectedNodes, confirmDelete)
-            .then ((button: IConfirmButton) => {
-                if (button && button.result === 2) {
-                    return this._dictSrv.deleteMarked().then((results: IRecordOperationResult[]) => {
-                        const deletedList = results.filter(r => !r.error)
-                            .map ( r => r.record['CLASSIF_NAME']) ;
-                        if (deletedList && deletedList.length) {
-                            const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
-                            message.msg = message.msg
-                                .replace('{{RECS}}', deletedList.join(', '))
-                                .replace('{{OPERATION}}', 'удалены навсегда.');
+        .then ((button: IConfirmButton) => {
+            if (button && button.result === 2) {
+                return this._dictSrv.deleteMarked().then((results: IRecordOperationResult[]) => {
+                    const deletedList = results.filter(r => !r.error)
+                        .map ( r => r.record[titleId]) ;
+                    if (deletedList && deletedList.length) {
+                        const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
+                        message.msg = message.msg
+                            .replace('{{RECS}}', deletedList.join(', '))
+                            .replace('{{OPERATION}}', 'удалены навсегда.');
 
-                            this._msgSrv.addNewMessage(message);
-                        }
-                    });
-                }
-                return Promise.resolve(null);
-            });
+                        this._msgSrv.addNewMessage(message);
+                    }
+                });
+            }
+            return Promise.resolve(null);
+        });
     }
 
     /**
