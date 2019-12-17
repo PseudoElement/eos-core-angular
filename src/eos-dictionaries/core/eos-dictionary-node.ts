@@ -65,6 +65,15 @@ export class EosDictionaryNode {
         }
     }
 
+    get nodeTitleid(): string {
+        const _rec = this.getTreeView();
+        if (_rec && _rec.length) {
+            return _rec[0].key; // .map((fld) => fld.value).join(' ');
+        } else {
+            return 'CLASSIF_NAME';
+        }
+    }
+
     get title(): string {
         const _rec = this.getTreeView();
         if (_rec && _rec.length) {

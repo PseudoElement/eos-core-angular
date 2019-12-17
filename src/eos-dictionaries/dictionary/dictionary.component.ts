@@ -776,6 +776,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
     }
 
+
     /**
      * Physical delete marked elements on page
      */
@@ -800,6 +801,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             }
         }
 
+        const titleId = selectedNodes[0].nodeTitleid;
         const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_HARDDELETE);
 
         this._confirmMarkedItems(selectedNodes, confirmDelete)
@@ -807,7 +809,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             if (button && button.result === 2) {
                 return this._dictSrv.deleteMarked().then((results: IRecordOperationResult[]) => {
                     const deletedList = results.filter(r => !r.error)
-                        .map ( r => r.record['CLASSIF_NAME']) ;
+                        .map ( r => r.record[titleId]) ;
                     if (deletedList && deletedList.length) {
                         const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
                         message.msg = message.msg

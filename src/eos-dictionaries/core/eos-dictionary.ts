@@ -516,6 +516,7 @@ export class EosDictionary {
         return this.orderNodesByField(nodes);
     }
 
+
     treeResort(): any {
         if (this.nodes) {
 
