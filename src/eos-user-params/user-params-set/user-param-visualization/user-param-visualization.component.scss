@@ -1,4 +1,9 @@
 .input-user-visualization-wrapper {
     padding-left: 20px;
     padding-right: 20px;
+    bs-dropdown-container {
+        z-index: 1051;
+    }
+    position: relative;
+    height: calc(100vh - 220px);
 }
