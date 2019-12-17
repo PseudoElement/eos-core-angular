@@ -26,6 +26,13 @@
             <eos-dynamic-input class="inline-block" [input]="inputs['rec.EMAIL_ISN_DELIVERY']" [form]="form" [readonly]="false" [dropup]="true"></eos-dynamic-input>
             <span></span>
         </div>
+        <div class="param-other" *ngIf="licMedo">
+            <div class="param-elem">
+                <span>МЭДО</span>
+            </div>
+            <eos-dynamic-input class="inline-block" [input]="inputs['rec.MEDO_ISN_DELIVERY']" [form]="form" [readonly]="false" [dropup]="true"></eos-dynamic-input>
+            <span></span>
+        </div>
         <div class="param-other">
             <div class="param-elem">
                 <span>СЭВ</span>
