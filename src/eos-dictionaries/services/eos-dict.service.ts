@@ -5,7 +5,7 @@ import { Injectable, Injector } from '@angular/core';
 // import {Router} from '@angular/router';
 import {BehaviorSubject, Observable} from 'rxjs';
 
-import {EosDictionary} from '../core/eos-dictionary';
+import {EosDictionary, CUSTOM_SORT_FIELD} from '../core/eos-dictionary';
 import {EosDictionaryNode} from '../core/eos-dictionary-node';
 import {
     E_DICT_TYPE,
@@ -46,7 +46,6 @@ import { NADZORDICTIONARIES } from 'eos-dictionaries/consts/dictionaries/nadzor.
 import { STORAGE_WEIGHTORDER } from 'app/consts/common.consts';
 
 export const SORT_USE_WEIGHT = true;
-export const CUSTOM_SORT_FIELD = 'WEIGHT';
 export const SEARCH_INCORRECT_SYMBOLS = new RegExp('["|\']', 'g');
 
 export class MarkedInformation {

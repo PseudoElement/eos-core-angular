@@ -16,8 +16,8 @@ import {DictionaryDescriptorService} from 'eos-dictionaries/core/dictionary-desc
 import {OrganizationDictionaryDescriptor} from 'eos-dictionaries/core/organization-dictionary-descriptor';
 import {EosUtils} from 'eos-common/core/utils';
 import { ISelectOption } from 'eos-common/interfaces';
-import { CUSTOM_SORT_FIELD } from 'eos-dictionaries/services/eos-dict.service';
 
+export const CUSTOM_SORT_FIELD = 'WEIGHT';
 // import { CABINET_FOLDERS } from '../consts/dictionaries/cabinet.consts';
 
 export class EosDictionary {
