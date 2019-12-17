@@ -57,6 +57,7 @@ import { ErrorHelperServices } from '../eos-user-params/shared/services/helper-e
 import {UserParamTransferComponent} from './user-params-set/user-param-other/user-param-transfer/user-param-transfer.component';
 import {UserParamAddressesComponent} from './user-params-set/user-param-other/user-param-addresses/user-param-addresses.component';
 import {UserParamReestrComponent} from './user-params-set/user-param-other/user-param-reestr/user-param-reestr.component';
+import {UserParamReestrCBComponent} from './user-params-set/user-param-other/user-param-reestr-cb/user-param-reestr-cb.component';
 import {UserParamShablonyComponent} from './user-params-set/user-param-other/user-param-shablony/user-param-shablony.component';
 import {BaseSertsComponent} from './base-param/base-serts/base-serts.component';
 import { OrganizEditTypeComponent } from './rights-delo/rights-delo-absolute-rights/organiz-edit-type/organiz-edit-type.component';
@@ -69,6 +70,7 @@ import { DefaultSettingsComponent } from './default-options/default-settings.com
 import { RightDepertOrganizComponent } from './rights-delo/rights-delo-absolute-rights/right-organiz/right-organiz.component';
 import { RightOrganizDepertComponent } from './rights-delo/rights-delo-absolute-rights/right-dep-org/right-dep-org.component';
 import { ParamsBaseParamCBComponent } from './base-param/base-param-cb/base-param-cb.component';
+import { AddGrifComponent } from './user-params-set/user-param-other/user-param-reestr-cb/addGrif/addGrif.component';
 @NgModule({
     declarations: [
         UserParamsComponent,
@@ -112,6 +114,7 @@ import { ParamsBaseParamCBComponent } from './base-param/base-param-cb/base-para
         ListCardRightComponent,
         UserParamTransferComponent,
         UserParamAddressesComponent,
+        UserParamReestrCBComponent,
         UserParamReestrComponent,
         UserParamShablonyComponent,
         BaseSertsComponent,
@@ -122,7 +125,11 @@ import { ParamsBaseParamCBComponent } from './base-param/base-param-cb/base-para
         EosReportProtocolComponent,
         DefaultSettingsComponent,
         RightDepertOrganizComponent,
+        AddGrifComponent,
         RightOrganizDepertComponent,
+    ],
+    entryComponents: [
+        AddGrifComponent
     ],
     imports: [
         BrowserModule,

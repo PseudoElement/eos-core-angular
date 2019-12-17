@@ -22,6 +22,7 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
         label: 'Сервер приложений и сервер «ДелоWEB»',
     };
     formServer: FormGroup;
+    licMedo: boolean = false;
 
 
 
@@ -32,6 +33,11 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
         super(injector, context.cbBase ? OTHER_PARAM_CB : OTHER_PARAM);
     }
     ngOnInit() {
+        this.context.SysParms._more_json.licensed.forEach(elem => {
+            if (elem === 35) {
+                this.licMedo = true;
+            }
+        });
         this.formServer = new FormGroup({
             server: new FormControl({ value: this.context.SysParms._more_json.ParamsDic['СЕРВЕР ПРИЛОЖЕНИЙ'], disabled: true })
         });
@@ -52,7 +58,8 @@ export class ParamOtherComponent extends BaseParamComponent implements OnInit {
                         field.key === 'ASPSD_ISN_DELIVERY' ||
                         field.key === 'SDS_ISN_DELIVERY' ||
                         field.key === 'LK_ISN_DELIVERY' ||
-                        field.key === 'EPVV_ISN_DELIVERY'
+                        field.key === 'EPVV_ISN_DELIVERY' ||
+                        field.key === 'MEDO_ISN_DELIVERY'
                     ) {
                         field.options = opsh;
                     }

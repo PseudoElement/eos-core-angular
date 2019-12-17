@@ -34,6 +34,12 @@ export const OTHER_PARAM: IBaseParameters = {
             title: '',
             options: []
         },
+        {
+            key: 'MEDO_ISN_DELIVERY',
+            type: 'select',
+            title: '',
+            options: []
+        },
     ]
 };
 export const OTHER_PARAM_CB: IBaseParameters = {
@@ -67,6 +73,12 @@ export const OTHER_PARAM_CB: IBaseParameters = {
         },
         {
             key: 'SEV_ISN_DELIVERY',
+            type: 'select',
+            title: '',
+            options: []
+        },
+        {
+            key: 'MEDO_ISN_DELIVERY',
             type: 'select',
             title: '',
             options: []
