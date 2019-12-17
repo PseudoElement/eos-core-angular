@@ -465,7 +465,7 @@ export class EosDictService {
 
     setMarkAllNone(emit: boolean = true): void {
         if (this._currentList) {
-            this._currentList.forEach( n => n.isMarked = false);
+            this._currentList.forEach( n => {n.isMarked = false; n.isSliced = false; } );
         }
         this._currentMarkInfo.nodes = [];
 
@@ -1153,29 +1153,24 @@ export class EosDictService {
         return this.paginationConfig && this.paginationConfig.itemsQty > 10;
     }
     public cutNode(): any { // справочник граждане - action ВЫРЕЗАТЬ -->
-        if (this.listNode.isSliced) {
-            this.listNode.isSliced = !this.listNode.isSliced;
-        } else {
-            this.currentDictionary.nodes.forEach((node: EosDictionaryNode) => {
-                node.isSliced = false;
-            });
-            this.listNode.isSliced = true;
-        }
-        this.currentDictionary.descriptor['isSlised'] = this.listNode.isSliced;
+        const markedNodes: EosDictionaryNode[] =  this.getMarkedNodes();
+        markedNodes.forEach((node: EosDictionaryNode) => {
+            node.isSliced = !node.isSliced;
+        });
     }
-    public combine(marckNodes): Promise<any> {
-        return this.currentDictionary.descriptor.combine(marckNodes).then(() => {
-            this._msgSrv.addNewMessage({ type: 'success', title: 'it`s ok', msg: 'Объединение завершенно' });
+    public combine(slicedNodes, markedNodes): Promise<any> {
+        return this.currentDictionary.descriptor.combine(slicedNodes, markedNodes).then(() => {
+            this._msgSrv.addNewMessage({ type: 'success', title: 'Сообщение', msg: 'Объединение завершенно' });
             this.reload();
         }).catch(e => {
-            this._msgSrv.addNewMessage({ type: 'success', title: 'it`s ok', msg: e.message });
+            this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: e.message });
         });
     }
     public uncheckNewEntry() {
-        this.currentDictionary.descriptor.updateUncheckCitizen(this.currentDictionary.id).then(data => {
+        this.currentDictionary.descriptor.updateUncheckCitizen(this.getMarkedNodes()).then(data => {
             this._reloadList();
         });
-        //  this._updateVisibleNodes();
+
     }
 
 
@@ -1385,15 +1380,8 @@ export class EosDictService {
                                 return this.confirmSrv.confirm(changeBoss)
                                     .then((confirm: boolean) => {
                                         if (confirm) {
-
                                             boss.data.rec['POST_H'] = 0;
-                                            return Promise.resolve(this._apiSrv.changeList([boss.data.rec]));
-                                            // return dictionary.updateNodeData(boss, boss.data).then(
-                                            //     () => {
-
-                                            //         return null;
-                                            //     }
-                                            // );
+                                            return dictionary.updateNodeData(boss, boss.data);
                                         } else {
                                             data.rec['POST_H'] = 0;
                                             return Promise.reject('cancel');

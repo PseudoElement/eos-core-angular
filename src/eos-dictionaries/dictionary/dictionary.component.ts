@@ -5,8 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
-import { CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE, CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE } from 'app/consts/confirms.const';
-import { EosDictService, MarkedInformation } from '../services/eos-dict.service';
+import { CONFIRM_SUBNODES_RESTORE, WARNING_LIST_MAXCOUNT, CONFIRM_OPERATION_LOGICDELETE, CONFIRM_OPERATION_RESTORE, CONFIRM_OPERATION_HARDDELETE, CONFIRM_COMBINE_NODES } from 'app/consts/confirms.const';
+import { EosDictService } from '../services/eos-dict.service';
 import { EosDictionary } from '../core/eos-dictionary';
 import { E_DICT_TYPE, E_RECORD_ACTIONS, IActionEvent, IDictionaryViewParameters, IRecordOperationResult, SearchFormSettings, SEARCHTYPE } from 'eos-dictionaries/interfaces';
 import { EosDictionaryNode } from '../core/eos-dictionary-node';
@@ -1102,11 +1102,16 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this._dictSrv.cutNode();
     }
     private _combine() {
-        const marlNodes: MarkedInformation = this.nodeList.markedInfo;
-        if (marlNodes.nodes.length < 2 || marlNodes.nodes.length > 2 ) {
-            this._msgSrv.addNewMessage({type: 'warning', title: 'Предупреждение', msg: 'Для объединения должна быть выбранна одна запись'});
+            const slicedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) =>  node.isSliced);
+            const markedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) =>  node.isMarked && !node.isSliced);
+        if (slicedNode.length && markedNode.length === 1) {
+            this._confirmSrv.confirm(CONFIRM_COMBINE_NODES).then(resp => {
+                if (resp) {
+                    this._dictSrv.combine(slicedNode, markedNode);
+                }
+            });
         }   else {
-            this._dictSrv.combine(marlNodes.nodes);
+            this._msgSrv.addNewMessage({type: 'warning', title: 'Предупреждение', msg: 'Для объединения должна быть выбранна одна запись'});
         }
     }
     private _uncheckNewEntry() {

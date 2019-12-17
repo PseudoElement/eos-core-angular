@@ -169,3 +169,10 @@ export const CONFIRM_DG_FIXE: IConfirmWindow2 = {
         {title: 'Нет', result: BUTTON_RESULT_NO, },
     ]
 };
+
+export const CONFIRM_COMBINE_NODES: IConfirmWindow = {
+    title: 'Подтверждение объединения',
+    body: 'Вы действительно хотите соединить объекты? ',
+    okTitle: 'Да',
+    cancelTitle: 'Нет'
+};

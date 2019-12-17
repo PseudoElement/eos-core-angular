@@ -58,6 +58,12 @@ export class NodeActionsComponent implements OnDestroy {
         this.moreButtons.forEach((item: IActionButton) => have = have || item.show);
         return have;
     }
+    get slicedInfo(): EosDictionaryNode[] {
+        return this._visibleList.filter(node => node.isSliced);
+    }
+    get checkNewCitizen(): EosDictionaryNode[] {
+        return this._markedNodes.filter(node => node.data.rec.NEW);
+    }
 
     private ngUnsubscribe: Subject<any> = new Subject();
 
@@ -351,11 +357,10 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.pasteNodes:
                     _enabled = (this._dictSrv.bufferNodes) && (!!this._dictSrv.bufferNodes.length);
                     break;
-                case E_RECORD_ACTIONS.downloadFile: {
+                case E_RECORD_ACTIONS.downloadFile:
                     _enabled = _enabled && opts.listHasItems;
                     _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
                     break;
-                }
                 case E_RECORD_ACTIONS.importEDS:
                     _enabled = _enabled && opts.listHasOnlyOne;
                     _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
@@ -367,7 +372,12 @@ export class NodeActionsComponent implements OnDestroy {
                 case E_RECORD_ACTIONS.combine:
                     _enabled = _enabled && opts.listHasItems;
                     _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
-                    _enabled = _enabled && this._dictSrv.currentDictionary.descriptor['isSlised'];
+                    _enabled = _enabled && this.slicedInfo.length > 0;
+                    break;
+                case E_RECORD_ACTIONS.uncheckNewEntry:
+                    _enabled = _enabled && opts.listHasItems;
+                    _enabled = _enabled && this._dictSrv.listNode && !this._dictSrv.listNode.isDeleted;
+                    _enabled = _enabled && this.checkNewCitizen.length > 0;
                     break;
             }
         }

@@ -90,8 +90,8 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         length: 64,
     }, {
         key: 'NEW',
-        title: 'NEW',
-        type: 'number',
+        title: 'Нов.',
+        type: 'new',
     }, {
         key: 'E_MAIL',
         title: 'e-mail',

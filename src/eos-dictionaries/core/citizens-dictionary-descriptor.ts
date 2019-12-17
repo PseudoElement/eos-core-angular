@@ -1,8 +1,9 @@
 import { RecordDescriptor } from './record-descriptor';
-import { ALL_ROWS } from 'eos-rest/core/consts';
+// import { ALL_ROWS } from 'eos-rest/core/consts';
 import { AbstractDictionaryDescriptor } from './abstract-dictionary-descriptor';
 import { ITreeDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { EosDictionaryNode } from './eos-dictionary-node';
+import { PipRX } from 'eos-rest';
 // interface search {
 //     CITIZEN_SURNAME?: string;
 //     CITIZEN_CITY?: string;
@@ -13,7 +14,6 @@ import { EosDictionaryNode } from './eos-dictionary-node';
 export class CitizenDescriptor extends RecordDescriptor {
     dictionary: CitizensDictionaryDescriptor;
     fullSearchFields: any;
-    isSlised: false;
     constructor(dictionary: CitizensDictionaryDescriptor, descriptor: ITreeDictionaryDescriptor, ) {
         super(dictionary, descriptor);
         this.dictionary = dictionary;
@@ -38,9 +38,10 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
     }
 
     public getRoot() {
-        return this.getData({
-            CITIZEN: ALL_ROWS
-        });
+        return Promise.resolve([]);
+        // return this.getData({  вернуть после перевода на нормальную пагинацию
+        //     CITIZEN: ALL_ROWS
+        // });
     }
     public updateRecord(originalData, updates, appendToChanges): Promise<any> {
         return super.updateRecord(originalData, updates, appendToChanges);
@@ -49,7 +50,8 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
         return Promise.resolve([]);
     }
     public getChildren(): Promise<any[]> {
-        return this.getData();
+        return Promise.resolve([]);
+        //  return this.getData();  вернуть после перевода на нормальную пагинацию пагинации
     }
 
     public getSubtree(): Promise<any[]> {
@@ -61,6 +63,27 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
     public cutNode(node?: EosDictionaryNode): void {
         console.log(this);
     }
+    public combine(slicedNodes: EosDictionaryNode[], markedNodes: EosDictionaryNode[]): Promise<any> {
+        const preSave = [];
+        let paramsSop = '';
+        let change: Array<any> = [{
+            method: 'MERGE',
+            requestUri: `CITIZEN(${markedNodes[0].id})`,
+            data: {
+                DELETED: 0
+            }
+        }];
+        slicedNodes.forEach((node, i) => {
+            preSave.push({
+                method: 'DELETE',
+                requestUri: `CITIZEN(${node.id})`
+            });
+            i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
+        });
+        PipRX.invokeSop(change, 'ClassifJoin_TRule', { 'pk': markedNodes[0].id, 'type': 'CITIZEN', 'ids': paramsSop }, 'POST', false);
+        change = change.concat(preSave);
+        return this.apiSrv.batch(change, '');
+    }
     public search(criteries: any[]): Promise<any[]> {
         const crit = criteries[0];
         if (crit.ISN_REGION) {
@@ -71,14 +94,22 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
     public getFullSearchCriteries(data) {
         return super.getFullSearchCriteries(data);
     }
-    public updateUncheckCitizen(id: string): Promise<any> {
-        return this.apiSrv.batch([{
-            method: 'MERGE',
-            requestUrl: `CITIZEN(${id})`,
-            data: {
-                NEW: 0
-            }
-        }], '');
+    public updateUncheckCitizen(nodes: EosDictionaryNode[]): Promise<any> {
+        const change = [];
+        nodes.forEach(node => {
+            if (node.data.rec.NEW === 1) {
+                change.push({
+                    method: 'MERGE',
+                    requestUri: `CITIZEN(${node.id})`,
+                    data: {
+                        NEW: 0
+                    }});
+                }
+        });
+        if (change.length) {
+            return this.apiSrv.batch(change, '');
+        }
+        return Promise.resolve();
     }
     protected _initRecord(data: ITreeDictionaryDescriptor) {
         this.record = new CitizenDescriptor(this, data);
