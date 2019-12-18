@@ -83,6 +83,10 @@ export class RightClassifNode {
                 }
             }
         }
+        const pos_in =  this._curentUser['TECH_RIGHTS'].indexOf('1');
+        if (pos_in === -1 || pos_in >= 37) {
+            this._component.allNotCheck.emit(true);
+        }
     }
     private _value: number;
     private _item: ITechUserClassifConst;

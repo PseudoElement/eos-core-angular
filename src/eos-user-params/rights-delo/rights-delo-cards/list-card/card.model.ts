@@ -29,13 +29,13 @@ export class CardRight {
             return;
         }
         if (v) {
-            this._srv.createRootEntity(this._card);
             this._setValueEntity();
+            this._srv.createRootEntity(this._card);
             return;
         }
+        this._setValueEntity();
         this._srv.deleteAllDoc(this._card);
         this.isExpanded = false;
-        this._setValueEntity();
     }
     get limit(): boolean { // 0 1 2
         return this._value === 2;
@@ -95,9 +95,103 @@ export class CardRight {
         this.listNodes = this.listNodes.filter((node: NodeDocsTree) => node !== this.curentSelectedNode);
         this.curentSelectedNode = null;
     }
+    updateEditFile(num: number, func_list: string[]) {
+        const inListMes = [];
+        let mes = '';
+        let end = '';
+        if (func_list[14] === '1') {
+            inListMes.push('\"Редактировать файлы\"');
+        }
+        if (func_list[15] === '1') {
+            inListMes.push('\"Удалять файлы\"');
+        }
+        if (inListMes.length === 1 ) {
+            mes = 'назначено право на выполнение операции';
+            end = 'это право?';
+        } else {
+            mes = 'назначены права на выполнение операций';
+            end = 'эти права?';
+        }
+        if (num === 13) {
+            const message = 'У пользователя ' + mes + ':\n' + inListMes.join('\n') + '\nв данной картотеке. Снять ' + end;
+            if (func_list[13] === '0' && inListMes.length > 0) {
+                const flag = confirm(message);
+                if (flag) {
+                    func_list[14] = '0';
+                    func_list[15] = '0';
+                }
+            }
+        }
+        if ((num === 14 || num === 15) && func_list[13] === '0') {
+            if (func_list[num] === '1') {
+                const message = 'Назначить пользователю права на выполнение операции \"Читать файлы\"?';
+                const flag = confirm(message);
+                if (flag) {
+                    func_list[13] = '1';
+                }
+            }
+        }
+    }
+    updateFileRk(func_list: string[]) {
+        const inListMes = [];
+        let mes = '';
+        let add = '';
+        if (func_list[2] === '0') {
+            add = '1';
+        } else {
+            add = '0';
+        }
+        if (func_list[12] === add) {
+            inListMes.push('\"Добавлять файлы\"');
+        }
+        if (func_list[13] === add) {
+            inListMes.push('\"Читать файлы\"');
+        }
+        if (func_list[14] === add) {
+            inListMes.push('\"Редактировать файлы\"');
+        }
+        if (func_list[15] === add) {
+            inListMes.push('\"Удалять файлы\"');
+        }
+        if (inListMes.length === 1 ) {
+            mes = 'право на выполнение операции';
+        } else {
+            mes = 'права на выполнение операций';
+        }
+        if (func_list[2] === '1') {
+
+            const message = 'Назначить пользователю ' + mes + ':\n' + inListMes.join('\n') + '\n в данной картотеке?';
+            if (inListMes.length > 0) {
+                const flag = confirm(message);
+                if (flag) {
+                    func_list[12] = '1';
+                    func_list[13] = '1';
+                    func_list[14] = '1';
+                    func_list[15] = '1';
+                }
+            }
+        } else if (inListMes.length > 0 ) {
+            mes = inListMes.length === 1 ? 'назначено ' + mes : 'назначены ' + mes;
+            const end = inListMes.length === 1 ? 'это право?' : 'эти права?';
+            const message = 'У пользователя ' + mes + ':\n' + inListMes.join('\n') + '\n в данной картотеке. Снять ' + end;
+            const flag = confirm(message);
+            if (flag) {
+                func_list[12] = '0';
+                func_list[13] = '0';
+                func_list[14] = '0';
+                func_list[15] = '0';
+            }
+        }
+    }
     private _setValueEntity() {
         const value = this._card.FUNCLIST.split('');
         value[this._funcIndex] = this._value.toString();
+        if (this._funcIndex > 12 && this._funcIndex < 16) {
+           this.updateEditFile(this._funcIndex, value);
+        }
+        if (this._funcIndex === 2) {
+            this.updateFileRk(value);
+        }
         this._card.FUNCLIST = value.join('');
         this._srv.checkChenge();
     }
