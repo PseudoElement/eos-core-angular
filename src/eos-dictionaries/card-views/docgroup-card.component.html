@@ -138,7 +138,7 @@
         </div>
     </div>
     <!-- Применять ЭП -->
-    <ng-container *ngIf="isPrjFlag && !isNode && !isCBBase">
+    <ng-container *ngIf="isPrjFlag && !isNode && ((!isCBBase) || (isCBBase && isSignatura))">
         <label>Применять ЭП: </label>
         <div class="row-wrapper">
             <eos-dynamic-input
