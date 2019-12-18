@@ -279,14 +279,16 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
         } else {
             paramsDoc = String(this._userSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/g, '||');
         }
-        if (this._storageSrv.getItem('REESTR_CB_SECUR')) {
+        if (this._storageSrv.getItem('REESTR_RESTRACTION_DOCGROUP') !== undefined) {
             paramsDoc = this._storageSrv.getItem('REESTR_RESTRACTION_DOCGROUP').replace(/,/g, '||');
+        }
+        if (this._storageSrv.getItem('REESTR_RESTRACTION_DEPARTMENT') !== undefined) {
             paramsDep = this._storageSrv.getItem('REESTR_RESTRACTION_DEPARTMENT').replace(/,/g, '||');
         }
         this.prepFormCancel(this.inputs, true);
         this.mapChanges.clear();
         this.editMode();
-        this.secureData = this._storageSrv.getItem('REESTR_CB_SECUR') ? this._storageSrv.getItem('REESTR_CB_SECUR') : this.updateSecur(this._userSrv.hashUserContext['REESTR_CB_SECUR']);
+        this.secureData = this._storageSrv.getItem('REESTR_CB_SECUR') !== undefined ? this._storageSrv.getItem('REESTR_CB_SECUR') : this.updateSecur(this._userSrv.hashUserContext['REESTR_CB_SECUR']);
         reqs.push(this.getDocGroupName(paramsDoc, true));
         reqs.push(this.getDepName(paramsDep, true));
         Promise.all(reqs).then( result => {
