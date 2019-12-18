@@ -106,9 +106,17 @@ export class UserParamShablonyComponent implements OnDestroy, OnInit {
         });
         return arrayDateMain;
     }
-
+    checkElem() {
+        let flag = true;
+        OTHER_USER_SHABLONY.fields.forEach(element => {
+            if (element.key === 'Реестр перечня РК') {
+                flag = false;
+            }
+        });
+        return flag;
+    }
     inint() {
-        if (this._appContext.cbBase) {
+        if (this._appContext.cbBase && this.checkElem()) {
             OTHER_USER_SHABLONY.fields.splice(25, 0,
             {
                 key: 'Реестр перечня РК',
