@@ -171,7 +171,7 @@ export class CardRight {
                 }
             }
         } else if (inListMes.length > 0 ) {
-            mes = inListMes.length === 1 ? 'назначено' + mes : 'назначены' + mes;
+            mes = inListMes.length === 1 ? 'назначено ' + mes : 'назначены ' + mes;
             const end = inListMes.length === 1 ? 'это право?' : 'эти права?';
             const message = 'У пользователя ' + mes + ':\n' + inListMes.join('\n') + '\n в данной картотеке. Снять ' + end;
             const flag = confirm(message);
