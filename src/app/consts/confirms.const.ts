@@ -2,6 +2,7 @@ import { IConfirmWindow } from '../../eos-common/core/confirm-window.interface';
 import { IConfirmWindow2 } from 'eos-common/confirm-window/confirm-window2.component';
 
 export const BUTTON_RESULT_YES = 1;
+export const BUTTON_RESULT_OK = 1;
 export const BUTTON_RESULT_NO = 2;
 export const BUTTON_RESULT_CANCEL = 3;
 
@@ -167,5 +168,13 @@ export const CONFIRM_DG_FIXE: IConfirmWindow2 = {
     buttons: [
         {title: 'Да', result: BUTTON_RESULT_YES, isDefault: true },
         {title: 'Нет', result: BUTTON_RESULT_NO, },
+    ]
+};
+
+export const CONFIRM_DG_SHABLONRK: IConfirmWindow2 = {
+    title: 'Ведение справочников:',
+    body: 'Шаблон Рег.№ не соответствует указанному Виду РК.',
+    buttons: [
+        {title: 'OK', result: BUTTON_RESULT_OK, isDefault: true },
     ]
 };

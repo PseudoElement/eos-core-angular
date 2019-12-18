@@ -5,11 +5,12 @@ import {ConfirmWindowService} from '../../eos-common/confirm-window/confirm-wind
 import {CONFIRM_DOCGROUP_CHECK_DUPLINDEXES} from '../consts/confirm.consts';
 import { AdvCardRKDataCtrl } from 'eos-dictionaries/adv-card/adv-card-rk-datactrl';
 import { Injector } from '@angular/core';
-import { CONFIRM_DG_FIXE, BUTTON_RESULT_YES } from 'app/consts/confirms.const';
+import { CONFIRM_DG_FIXE, BUTTON_RESULT_YES, CONFIRM_DG_SHABLONRK } from 'app/consts/confirms.const';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { IDictionaryDescriptor } from 'eos-dictionaries/interfaces';
 import { PipRX } from 'eos-rest';
 import { CB_FUNCTIONS, AppContext } from 'eos-rest/services/appContext.service';
+import { DocgroupTemplateChecker } from 'eos-dictionaries/docgroup-template-config/docgroup-template-checker';
 
 const RC_TYPE = 'RC_TYPE';
 const DOCGROUP_INDEX = 'DOCGROUP_INDEX';
@@ -70,6 +71,14 @@ export class DocgroupDictionaryDescriptor extends TreeDictionaryDescriptor {
 
 
     confirmSave(nodeData: any, confirmSrv: ConfirmWindowService, isNewRecord: boolean): Promise<boolean> {
+        const shablonIsCorrect = DocgroupTemplateChecker.shablonIsCorrect(nodeData.rec.SHABLON, nodeData.rec.RC_TYPE);
+        if (!shablonIsCorrect) {
+            return confirmSrv.confirm2(CONFIRM_DG_SHABLONRK)
+                .then((button) => {
+                        return false;
+                });
+        }
+
         let result = Promise.resolve(true);
 
         const index = this._getRecField(nodeData, DOCGROUP_INDEX);

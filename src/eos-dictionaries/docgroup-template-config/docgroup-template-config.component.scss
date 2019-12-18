@@ -35,6 +35,9 @@
             cursor: grab;
             cursor: -moz-grab;
             cursor: -webkit-grab;
+            &.invalid {
+                color: red;
+            }
         }
         .item.gu-transit {
             color: $brand-primary;

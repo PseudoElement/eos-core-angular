@@ -1,6 +1,7 @@
 import { Component, Output, EventEmitter, OnChanges, ViewChild, OnDestroy, ElementRef, Input } from '@angular/core';
 import { DynamicInputBase } from './dynamic-input-base';
 import { BsDropdownDirective } from 'ngx-bootstrap';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 
 const LI_HEIGHT = 20;
@@ -111,6 +112,11 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
         } else {
             event.preventDefault();
         }
+
+        if (!this.dropdownElement) {
+            return;
+        }
+
         if (code === 'ArrowDown' || code === 'Down') {
             this._hoverNext();
         } else if (code === 'ArrowUp' || code === 'Up') {
@@ -159,7 +165,11 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
         } else {
             this.control.setValue(String(item.value));
         }
-        this._dropDown.hide(); /* IE fix */
+
+        if (AppContext.isIE()) {
+            this._dropDown.hide(); /* IE fix */
+        }
+
     }
 
     isItemSelected (item: any): boolean {

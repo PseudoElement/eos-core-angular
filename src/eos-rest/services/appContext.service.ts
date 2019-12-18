@@ -8,6 +8,7 @@ import { IUserParms } from 'eos-rest';
 export const CB_FUNCTIONS = 'CB_FUNCTIONS';
 @Injectable()
 export class AppContext {
+
     /**
      * залогиненый пользователь
      */
@@ -32,6 +33,11 @@ export class AppContext {
     private _ready = new Deferred<any>();
 
     constructor(private pip: PipRX) { }
+
+    static isIE(): boolean {
+        const ua = window.navigator.userAgent;
+        return /MSIE|Trident/.test(ua);
+    }
 
     ready(): Promise<any> {
         return this._ready.promise;
