@@ -44,3 +44,10 @@ export const CONFIRM_AVSYSTEMS_UNCHECKED: IConfirmWindow = {
     okTitle: 'Да',
     cancelTitle: 'Нет'
 };
+
+export const CONFIRM_DELETE_ROLE: IConfirmWindow = {
+    title: 'Подтвердите действие:',
+    body: 'Удалить выбранную роль?',
+    okTitle: 'Да',
+    cancelTitle: 'Нет'
+};

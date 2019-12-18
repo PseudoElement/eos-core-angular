@@ -9,15 +9,18 @@
     <div class="modal-b-cont-role">
         <div class="col-l">
             <span class="long-title xl-font">Выберите роль:</span>
-            <div class="info-block-cb"
-            [dragula]='"bag-one"'
-            [dragulaModel]="basicFields"
-            >
-                <div class="item-cb"
-                    *ngFor="let item of basicFields"
-                    (click)="select(item, 1)"
-                    [ngClass]="{'highlighted': item === selectedBasicRole}">
-                    <span class="text-cb">{{item}}</span>
+            <div class="info-block-cb-l" >
+                <div id="fixed" [dragula]='"fixed-bag"'>
+                    <div class="item-cb" *ngFor="let item of fixedFields" (click)="select(item, 3)" [ngClass]="{'highlighted': item === selectedFixedItem}">
+                        <i class="fa fa-lock unimportant-text lock-r"
+                            aria-hidden="true"></i>
+                        <span class="text-cb">{{item}}</span>
+                    </div>
+                </div>
+                <div id="basic" class="basic-cb" [dragula]='"bag-one"'[dragulaModel]="basicFields">
+                    <div class="item-cb" *ngFor="let item of basicFields" (click)="select(item, 1)" [ngClass]="{'highlighted': item === selectedBasicRole}">
+                        <span class="text-cb">{{item}}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -34,32 +37,21 @@
         <div class="col-r">
                 <span class="long-title xl-font">Назначение роли:</span>
                     <div class="title-dir-role">
-                        <div class="info-block-cb">
+                        <div class="modal-block-cb-r">
                             <span class="inst-role-header"><b>Роль</b></span>
-                            <div [dragula]='"bag-one"'  [dragulaModel]="currentFields">
-                                <div class="item-cb"
-                                    *ngFor="let item of currentFields"
-                                    (click)="select(item, 2)"
-                                    [ngClass]="{'highlighted': item === selectedCurrRole}">
+                            <div class="info-block-cb-r" [dragula]='"bag-one"'  [dragulaModel]="currentFields" id="current">
+                                <div class="item-cb" *ngFor="let item of currentFields" (click)="select(item, 2)" [ngClass]="{'highlighted': item === selectedCurrRole}">
                                     <span class="text-cb">{{item}}</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="info-block-cb">
+                        <div class="modal-block-cb-r">
                             <span class="inst-role-header"><b>ДЛ руководителя</b></span>
                         </div>
-                        <div class="info-block-cb">
+                        <div class="modal-block-cb-r">
                             <span class="inst-role-header"><b>Помощники руководителя</b></span>
                         </div>
                     </div>
-                    <!-- <div class="item-cb"
-                        *ngFor="let item of arrayRole"
-                        (click)="selectRole(item, 2)"
-                        [ngClass]="{'highlighted': item === selectedRole}">
-                        <span class="text-cb">{{item}}</span>
-                    </div> -->
                 </div>
     </div>
 </div>
-<!-- [dragula]='"bag-one"'
-[dragulaModel]="dictionaryFields" -->
