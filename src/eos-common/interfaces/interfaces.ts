@@ -34,6 +34,8 @@ export interface IOpenClassifParams {
     // для STDText
     isn_user?: number;
     curdue?: string;
+    folder_due?: string;
+    due?: string;
     // name?: string;
     // form?: string;
     // id_std?: string;

@@ -441,6 +441,42 @@ export const RECORD_ACTIONS_IMPORT_EDS: IAction = {
     buttonClass: null,
     accessNeed: APS_DICT_GRANT.readwrite,
 };
+export const RECORD_ACTION_CUT: IAction = {
+    type: E_RECORD_ACTIONS.cut,
+    group: E_ACTION_GROUPS.common,
+    title: 'Вырезать',
+    hint: 'Вырезать',
+    iconClass: 'eos-icon eos-icon-scissors-blue small',
+    disabledIconClass: 'eos-icon eos-icon-scissors-grey small',
+    hoverIconClass: 'eos-icon eos-icon-scissors-grey small',
+    activeIconClass: null,
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
+export const RECORD_ACTION_COMBINE: IAction = {
+    type: E_RECORD_ACTIONS.combine,
+    group: E_ACTION_GROUPS.common,
+    title: 'Соеденить',
+    hint: 'Соеденить',
+    iconClass: 'eos-icon eos-icon-combine-blue small',
+    disabledIconClass: 'eos-icon eos-icon-combine-grey small',
+    hoverIconClass: 'eos-icon eos-icon-combine-grey small',
+    activeIconClass: null,
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
+export const RECORD_UNCHECK_NEW_ENTRY: IAction = {
+    type: E_RECORD_ACTIONS.uncheckNewEntry,
+    group: E_ACTION_GROUPS.common,
+    title: 'Снять признак "Новая запись"',
+    hint: 'Снять признак "Новая запись"',
+    iconClass: 'eos-icon eos-icon-new-off-blue small',
+    disabledIconClass: 'eos-icon eos-icon-new-off-grey small',
+    hoverIconClass: 'eos-icon eos-icon-new-off-grey small',
+    activeIconClass: null,
+    buttonClass: null,
+    accessNeed: APS_DICT_GRANT.readwrite,
+};
 
 export const RECORD_ACTIONS: IAction[] = [
     RECORD_ACTION_CREATE,
@@ -468,6 +504,9 @@ export const RECORD_ACTIONS: IAction[] = [
     RECORD_GOTO_CERTIFICATES,
     RECORD_ACTIONS_DOWNLOAD_FILE,
     RECORD_ACTIONS_IMPORT_EDS,
+    RECORD_ACTION_CUT,
+    RECORD_ACTION_COMBINE,
+    RECORD_UNCHECK_NEW_ENTRY,
     // RECORD_ACTION_EXPORT_DIRECTORY,
     // RECORD_ACTION_IMPORT_DIRECTORY,
 ];

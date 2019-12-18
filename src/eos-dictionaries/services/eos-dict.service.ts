@@ -295,9 +295,9 @@ export class EosDictService {
                 const value = changeList[id];
                 const key = dict.descriptor.PKForEntity(id);
                 changes.push ({
-                        method: 'MERGE',
-                        data: { [weightField]: String(value) },
-                        requestUri: key,
+                    method: 'MERGE',
+                    data: { [weightField]: String(value) },
+                    requestUri: key,
                 });
             }
         }
@@ -464,7 +464,7 @@ export class EosDictService {
 
     setMarkAllNone(emit: boolean = true): void {
         if (this._currentList) {
-            this._currentList.forEach( n => n.isMarked = false);
+            this._currentList.forEach( n => {n.isMarked = false; n.isSliced = false; } );
         }
         this._currentMarkInfo.nodes = [];
 
@@ -711,7 +711,7 @@ export class EosDictService {
 
     selectTemplateNode() {
         const dictionary = this._dictionaries[0];
-            this._selectTreeNode(dictionary.root);
+        this._selectTreeNode(dictionary.root);
         this._reloadList().then(() => {
             this.updateViewParameters({updatingList: false});
         });
@@ -825,9 +825,9 @@ export class EosDictService {
                     }
                     this._errHandler(err);
                 });
-            } else {
-                return Promise.reject('No selected node');
-            }
+        } else {
+            return Promise.reject('No selected node');
+        }
     }
 
     errHandler(err: RestError | any) {
@@ -1151,6 +1151,27 @@ export class EosDictService {
     isPaginationVisible(): boolean {
         return this.paginationConfig && this.paginationConfig.itemsQty > 10;
     }
+    public cutNode(): any { // справочник граждане - action ВЫРЕЗАТЬ -->
+        const markedNodes: EosDictionaryNode[] =  this.getMarkedNodes();
+        markedNodes.forEach((node: EosDictionaryNode) => {
+            node.isSliced = !node.isSliced;
+        });
+    }
+    public combine(slicedNodes, markedNodes): Promise<any> {
+        return this.currentDictionary.descriptor.combine(slicedNodes, markedNodes).then(() => {
+            this._msgSrv.addNewMessage({ type: 'success', title: 'Сообщение', msg: 'Объединение завершенно' });
+            this.reload();
+        }).catch(e => {
+            this._msgSrv.addNewMessage({ type: 'danger', title: 'Ошибка', msg: e.message });
+        });
+    }
+    public uncheckNewEntry() {
+        this.currentDictionary.descriptor.updateUncheckCitizen(this.getMarkedNodes()).then(data => {
+            this._reloadList();
+        });
+
+    }
+
 
     rereadNode(nodeId: any): Promise<any>  {
         return this._apiSrv
@@ -1178,6 +1199,9 @@ export class EosDictService {
 
     public setStoredSearchSettings(data: SearchFormSettings) {
         this._storageSrv.setItem('lastSearchSetting', data);
+    }
+    public reload() {
+        this._reloadList();
     }
 
     private getDictionaryById(id: string): Promise<EosDictionary> {
@@ -1320,15 +1344,15 @@ export class EosDictService {
                         };
 
                         return this.confirmSrv.confirm(confirmObj)
-                        .then((confirm: boolean) => {
+                            .then((confirm: boolean) => {
 
-                            if (confirm) {
-                                return changes.fixE;
+                                if (confirm) {
+                                    return changes.fixE;
 
-                            } else {
-                                return null;
-                            }
-                        });
+                                } else {
+                                    return null;
+                                }
+                            });
                     }
                     return Promise.resolve(null);
                 }).catch(err => {
@@ -1355,15 +1379,8 @@ export class EosDictService {
                                 return this.confirmSrv.confirm(changeBoss)
                                     .then((confirm: boolean) => {
                                         if (confirm) {
-
                                             boss.data.rec['POST_H'] = 0;
-                                            return Promise.resolve(this._apiSrv.changeList([boss.data.rec]));
-                                            // return dictionary.updateNodeData(boss, boss.data).then(
-                                            //     () => {
-
-                                            //         return null;
-                                            //     }
-                                            // );
+                                            return dictionary.updateNodeData(boss, boss.data);
                                         } else {
                                             data.rec['POST_H'] = 0;
                                             return Promise.reject('cancel');

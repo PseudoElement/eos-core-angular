@@ -25,6 +25,7 @@ import { CaCategoryDictionaryDescriptor } from './ca-category-dictionary-descrip
 import { CALENDAR_DICT } from 'eos-dictionaries/consts/dictionaries/calendar.consts';
 import { CalendarDictionaryDescriptor } from './calendar-dictionary-descriptor';
 import { TemplateDictionaryDescriptor } from './template-dictionary-descriptor';
+import { CitizensDictionaryDescriptor } from './citizens-dictionary-descriptor';
 // import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 
 @Injectable()
@@ -123,6 +124,9 @@ export class DictionaryDescriptorService {
                         break;
                     case CALENDAR_DICT.id:
                         res = new CalendarDictionaryDescriptor(descr, this.apiSrv);
+                        break;
+                    case 'citizens':
+                        res = new CitizensDictionaryDescriptor(descr, this.apiSrv);
                         break;
                 }
 

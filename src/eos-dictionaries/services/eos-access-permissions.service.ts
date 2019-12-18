@@ -27,6 +27,7 @@ import { RESOL_CATEGORY_DICT as RESOL_CATEGORY_DICT } from 'eos-dictionaries/con
 import { RESPRJ_STATUS_DICT } from 'eos-dictionaries/consts/dictionaries/resprj-status.consts';
 import { Templates } from 'eos-dictionaries/consts/dictionaries/templates.consts';
 import { CA_CATEGORY_CL } from 'eos-dictionaries/consts/dictionaries/ca-category.consts';
+import { CITIZENS_DICT } from 'eos-dictionaries/consts/dictionaries/citizens.const';
 
 const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean, } [] = [
     // Рубрикатор
@@ -106,6 +107,8 @@ const dictsTechs: { id: string,     tech: E_TECH_RIGHT,  listedUT: boolean, } []
         listedUT: false},
     // Шаблоны
     { id: Templates.id,    tech: E_TECH_RIGHT.Templates,
+        listedUT: false },
+    { id: CITIZENS_DICT.id,    tech: E_TECH_RIGHT.Citizens,
         listedUT: false },
 ];
 
