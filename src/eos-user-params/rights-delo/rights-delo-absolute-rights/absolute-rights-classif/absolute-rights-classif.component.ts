@@ -27,6 +27,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
     @Input() cancelMode: boolean;
     @ViewChild('newCards') newCards;
     @Output() Changed = new EventEmitter();
+    @Output() allNotCheck = new EventEmitter();
     userTechList;
     isLoading: boolean = false;
     isShell: Boolean = false;

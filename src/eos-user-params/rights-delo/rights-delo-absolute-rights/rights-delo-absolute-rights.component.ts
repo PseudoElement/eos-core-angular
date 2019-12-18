@@ -200,6 +200,23 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
 
     submit(flag?): Promise<any> {
         this.isLoading = false;
+        if (this.curentUser.IS_SECUR_ADM === 1 && this.returnElemListRight('0').control.value) {
+            let flag_tech = true;
+            this.listRight.forEach(elem => {
+                if (elem.key === '0') {
+                    if (elem['_curentUser']['TECH_RIGHTS'][0] === '1') {
+                        flag_tech = false;
+                    }
+                }
+            });
+            if (!flag_tech) {
+                this._msgSrv.addNewMessage({ title: 'Предупреждение', msg: `Право 'Cистемный технолог.Пользователи' не может быть назначено одновременно с правом 'Администратор системы'`, type: 'warning' });
+                this.editMode = true;
+                this.isLoading = true;
+                this.btnDisabled = false;
+                return Promise.resolve(true);
+            }
+        }
         return this.GetSysTechUser().then(() => {
             if (this.limitUserTech === false) {
                 if (this._checkCreatePRJNotEmptyAllowed() || this._checkCreateNotEmpty() || this._checkCreateNotEmptyOrgan()) {
@@ -238,22 +255,6 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                         node.deleteChange();
                     }
                 });
-                if (this.curentUser.IS_SECUR_ADM === 1) {
-                    let users = '';
-                    this.queryForSave.forEach(elem => {
-                        if (elem.data['TECH_RIGHTS']) {
-                            users = elem.data.TECH_RIGHTS[0];
-                        }
-                    });
-                    if (users === '1') {
-                        this._msgSrv.addNewMessage({ title: 'Предупреждение', msg: `Право 'Cистемный технолог.Пользователи' не может быть назначено одновременно с правом 'Администратор системы'`, type: 'warning' });
-                        /* this.cancel(); */
-                        this.editMode = true;
-                        this.isLoading = true;
-                        this.btnDisabled = false;
-                        return;
-                    }
-                }
                 if (this.groupDelRK.length > 0) {
                     this.groupDelRK.forEach(Rk => {
                         this.queryForSave.push(Rk);
@@ -552,6 +553,13 @@ export class RightsDeloAbsoluteRightsComponent implements OnInit, OnDestroy {
                 this.selectListNode = index;
                 return;
             }
+        }
+    }
+    changedAll($event) {
+        if ($event && this._appContext.cbBase) {
+            this.returnElemListRight('0').control.patchValue(false);
+            this.returnElemListRight('0').value = 0;
+            this._deleteAllClassif(this.returnElemListRight('0'));
         }
     }
     checkChange(event?) {

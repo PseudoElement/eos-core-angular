@@ -132,6 +132,58 @@ export class CardRightSrv {
         userCardDG._State = _ES.Modified;
         this._checkChenge();
     }
+     newDGEntity(card: USERCARD, dues: string[]): USER_CARD_DOCGROUP[] {
+        const newUserCardDG: USER_CARD_DOCGROUP[] = [];
+        let flag = true;
+        card.USER_CARD_DOCGROUP_List.forEach(elem => {
+            if (elem.FUNC_NUM === 14) {
+                flag = false;
+                if (card.FUNCLIST[13] === '1') {
+                    delete elem._State;
+                }
+            }
+        });
+        if (flag) {
+            dues.forEach((due: string) => {
+            const dg = this._pipSrv.entityHelper.prepareAdded<USER_CARD_DOCGROUP>({
+                ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
+                DUE_CARD: card.DUE,
+                DUE: due,
+                FUNC_NUM: 14,
+                ALLOWED: 1,
+            }, 'USER_CARD_DOCGROUP');
+            newUserCardDG.push(dg);
+            });
+        }
+        return newUserCardDG;
+    }
+    newDateRG(card: USERCARD, dues: string[]): USER_CARD_DOCGROUP[] {
+        const newUserCardDG: USER_CARD_DOCGROUP[] = [];
+        let flag = true;
+        const cardADD = [13, 14, 15, 16];
+        card.USER_CARD_DOCGROUP_List.forEach(elem => {
+            if (elem.FUNC_NUM === 13 || elem.FUNC_NUM === 14 ||  elem.FUNC_NUM === 15 || elem.FUNC_NUM === 16) {
+                flag = false;
+                if (card.FUNCLIST[2] === '1') {
+                    delete elem._State;
+                }
+                cardADD.filter(el => el !== elem.FUNC_NUM);
+            }
+        });
+        if (flag) {
+            cardADD.forEach((FUNC: number) => {
+            const dg = this._pipSrv.entityHelper.prepareAdded<USER_CARD_DOCGROUP>({
+                ISN_LCLASSIF: this._userParamsSetSrv.userContextId,
+                DUE_CARD: card.DUE,
+                DUE: '0.',
+                FUNC_NUM: FUNC,
+                ALLOWED: 1,
+            }, 'USER_CARD_DOCGROUP');
+            newUserCardDG.push(dg);
+            });
+        }
+        return newUserCardDG;
+    }
     createRootEntity(card: USERCARD) {
         let exist: boolean = false;
         card.USER_CARD_DOCGROUP_List.forEach((dg: USER_CARD_DOCGROUP) => {
@@ -142,6 +194,12 @@ export class CardRightSrv {
             }
         });
         if (!exist) {
+            if (this.selectedFuncNum.funcNum === 15 || this.selectedFuncNum.funcNum === 16) {
+                card.USER_CARD_DOCGROUP_List.splice(-1, 0, ...this.newDGEntity(card, ['0.']));
+            }
+            if (this.selectedFuncNum.funcNum === 3) {
+                card.USER_CARD_DOCGROUP_List.splice(-1, 0, ...this.newDateRG(card, ['0.']));
+            }
             card.USER_CARD_DOCGROUP_List.splice(-1, 0, ...this._createDGEntity(card, ['0.']));
         }
     }
