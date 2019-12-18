@@ -3,6 +3,9 @@ import { VALID_TEMPLATE_EXPR, DOC_TEMPLATE_ELEMENTS } from './docgroup-template-
 export class DocgroupTemplateChecker {
 
     static shablonIsCorrect(shablon: string, RC_TYPE: number): boolean {
+
+        if (!shablon) { return true; }
+
         if (!VALID_TEMPLATE_EXPR.test(shablon)) {
             return false;
         }
