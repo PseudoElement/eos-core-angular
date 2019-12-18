@@ -91,6 +91,18 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
         }
         return super.search(criteries);
     }
+    public getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode) {
+        const config = {
+            classif: 'gop_rc',
+            id: 'CITIZEN_dict',
+        };
+        if (flag) {
+            config['user_id'] = -1;
+        } else {
+            config['user_id'] = node.id;
+        }
+        return config;
+    }
     public getFullSearchCriteries(data) {
         return super.getFullSearchCriteries(data);
     }

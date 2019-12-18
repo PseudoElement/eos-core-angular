@@ -387,7 +387,11 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
                 break;
 
             case E_RECORD_ACTIONS.edit:
-                this._editNode();
+                if (this._checkDictionaryId()) {
+                    this._openPageCitizens(false);
+                } else {
+                    this._editNode();
+                }
                 break;
 
             case E_RECORD_ACTIONS.showDeleted:
@@ -426,7 +430,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
             case E_RECORD_ACTIONS.add:
                 if (this._checkDictionaryId()) {
-                    this._openPageCitizens();
+                    this._openPageCitizens(true);
                 } else {
                     this._openCreate(evt.params);
                 }
@@ -717,24 +721,15 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this._openCreate(recParams);
         });
     }
-    private _openPageCitizens() {
-        let config: IOpenClassifParams;
-        if (this.dictionaryId === 'organization') {
-            config = {
-                classif: 'ORGANIZ_CL'
-            };
-        }   else {
-            config = {
-                classif: 'ORGANIZ_CL'
-            };
-        }
+    private _openPageCitizens(openEdit: boolean) {
+        const node = this._dictSrv.listNode;
+        const config: IOpenClassifParams = this._dictSrv.currentDictionary.descriptor['getConfigOpenGopRc'](openEdit, node);
         this._waitClassif.openClassif(config).then(() => {
             this._dictSrv.reload();
         }).catch((e) => {
             console.log(e);
         });
     }
-
     private _confirmMarkedItems(selectedNodes: any[], confirm: IConfirmWindow2): Promise<IConfirmButton> {
         const list = [];
         // const selectedNodes = this._dictSrv.getMarkedNodes();
@@ -835,23 +830,23 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         const confirmDelete: IConfirmWindow2 = Object.assign({}, CONFIRM_OPERATION_HARDDELETE);
 
         this._confirmMarkedItems(selectedNodes, confirmDelete)
-        .then ((button: IConfirmButton) => {
-            if (button && button.result === 2) {
-                return this._dictSrv.deleteMarked().then((results: IRecordOperationResult[]) => {
-                    const deletedList = results.filter(r => !r.error)
-                        .map ( r => r.record[titleId]) ;
-                    if (deletedList && deletedList.length) {
-                        const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
-                        message.msg = message.msg
-                            .replace('{{RECS}}', deletedList.join(', '))
-                            .replace('{{OPERATION}}', 'удалены навсегда.');
+            .then ((button: IConfirmButton) => {
+                if (button && button.result === 2) {
+                    return this._dictSrv.deleteMarked().then((results: IRecordOperationResult[]) => {
+                        const deletedList = results.filter(r => !r.error)
+                            .map ( r => r.record[titleId]) ;
+                        if (deletedList && deletedList.length) {
+                            const message: IMessage = Object.assign({}, INFO_OPERATION_COMPLETE);
+                            message.msg = message.msg
+                                .replace('{{RECS}}', deletedList.join(', '))
+                                .replace('{{OPERATION}}', 'удалены навсегда.');
 
-                        this._msgSrv.addNewMessage(message);
-                    }
-                });
-            }
-            return Promise.resolve(null);
-        });
+                            this._msgSrv.addNewMessage(message);
+                        }
+                    });
+                }
+                return Promise.resolve(null);
+            });
     }
 
     /**
@@ -1106,8 +1101,8 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this._dictSrv.cutNode();
     }
     private _combine() {
-            const slicedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) =>  node.isSliced);
-            const markedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) =>  node.isMarked && !node.isSliced);
+        const slicedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) =>  node.isSliced);
+        const markedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) =>  node.isMarked && !node.isSliced);
         if (slicedNode.length && markedNode.length === 1) {
             this._confirmSrv.confirm(CONFIRM_COMBINE_NODES).then(resp => {
                 if (resp) {
@@ -1130,7 +1125,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this.nodeList.openCopyNode(this._dictSrv.bufferNodes);
     }
     private _checkDictionaryId(): boolean {
-        return ['citizens', 'organization'].some(id => {
+        return ['citizens'].some(id => {
             return id === this.dictionaryId;
         });
     }

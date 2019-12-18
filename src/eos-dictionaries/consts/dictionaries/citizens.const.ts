@@ -1,7 +1,6 @@
 import {E_DICT_TYPE, IDictionaryDescriptor} from 'eos-dictionaries/interfaces';
 import {NOT_EMPTY_STRING} from '../input-validation';
 import {COMMON_FIELDS} from './_common';
-import {LINEAR_TEMPLATE} from './_linear-template';
 import { SEARCH_TYPES } from '../search-types';
 
 /* tslint:disable:max-line-length */
@@ -12,8 +11,10 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
     defaultOrder: 'CITIZEN_SURNAME',
     title: 'Граждане',
     visible: true,
-    iconName: '',
-    actions: LINEAR_TEMPLATE.actions.concat(['tableCustomization', 'cut', 'combine', 'uncheck', 'uncheckNewEntry']),
+    iconName: 'eos-icon-citizen-blue',
+    actions: [ 'add', 'markRecords', 'quickSearch', 'fullSearch', 'showDeleted', 'edit',
+     'view', 'restore', 'remove', 'removeHard', 'tableCustomization', 'cut', 'combine', 'uncheck', 'uncheckNewEntry',
+      'export', 'import'],
     keyField: 'ISN_CITIZEN',
     searchConfig: [SEARCH_TYPES.full],
     fields: COMMON_FIELDS.concat([{
@@ -121,7 +122,7 @@ export const CITIZENS_DICT: IDictionaryDescriptor = {
         length: 14,
     },
     ]),
-    treeFields: [],
+    treeFields: ['CITIZEN_SURNAME'],
     searchFields: ['CITIZEN_SURNAME',   'CITIZEN_CITY',  'ZIPCODE', ],
     listFields: ['CITIZEN_SURNAME', 'CITIZEN_CITY', ],
     fullSearchFields: ['CITIZEN_SURNAME',   'CITIZEN_CITY',  'ZIPCODE', 'CITIZEN_ADDR', 'ISN_REGION', 'NEW'],

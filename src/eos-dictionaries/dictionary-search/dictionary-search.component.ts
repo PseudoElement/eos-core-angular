@@ -188,7 +188,6 @@ export class DictionarySearchComponent implements OnDestroy, OnInit, OnChanges {
         };
         return this._classif.openClassif(params, true).then(isnNode => {
             if (isnNode) {
-                console.log(this);
                 return this.dictionary['dictDescrSrv']['apiSrv'].read({
                     REGION_CL: {
                         criteries: {
