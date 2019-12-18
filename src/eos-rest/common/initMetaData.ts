@@ -601,7 +601,10 @@ const commonMeta = {
             ACCESS_MODE: _t.i,
             INITIATIVE_RESOLUTION: _t.i,
             ACCESS_MODE_FIXED: _t.i,
-            REG_DATE_PROTECTED: _t.i
+            REG_DATE_PROTECTED: _t.i,
+            PROTECT_DEL_PRJ_STATUS: _t.i,
+            COPY_NUMBER_FLAG: _t.i,
+            COPY_NUMBER_FLAG_PRJ: _t.i,
         },
         readonly: [
 
