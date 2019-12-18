@@ -518,22 +518,20 @@ export class EosDictionary {
 
 
     treeResort(): any {
-        if (this.nodes) {
+        if (this.nodes && this.root) {
 
-        const order = { fieldKey: CUSTOM_SORT_FIELD, ascend: true };
-        if (this.orderBy.fieldKey !== CUSTOM_SORT_FIELD) {
-            const treeOrderKey = this.root.getTreeView()[0];
-            order.fieldKey = treeOrderKey.foreignKey;
-        }
+            const order = { fieldKey: CUSTOM_SORT_FIELD, ascend: true };
+            if (this.orderBy.fieldKey !== CUSTOM_SORT_FIELD) {
+                const treeOrderKey = this.root.getTreeView()[0];
+                order.fieldKey = treeOrderKey.foreignKey;
+            }
 
-
-
-        // this.treeResort();
-        // this.nodes.forEach((node) => {
-        //     if (treeOrderKey && node.children && node.children.length > 0) {
-        //         node.children = this.orderNodesByField(node.children, { fieldKey: /*treeOrderKey.foreignKey*/ 'WEIGTH', ascend: true });
-        //     }
-        // });
+            // this.treeResort();
+            // this.nodes.forEach((node) => {
+            //     if (treeOrderKey && node.children && node.children.length > 0) {
+            //         node.children = this.orderNodesByField(node.children, { fieldKey: /*treeOrderKey.foreignKey*/ 'WEIGTH', ascend: true });
+            //     }
+            // });
 
             this.nodes.forEach( n => {
                 this.nodeChildResort(n, order);
