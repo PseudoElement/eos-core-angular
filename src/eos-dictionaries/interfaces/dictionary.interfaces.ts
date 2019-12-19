@@ -50,6 +50,7 @@ export enum E_FIELD_TYPE {
     radio,
     dictLink,
     select2, // Select by angular component
+    new,
 }
 
 export interface IDictionaryLink {

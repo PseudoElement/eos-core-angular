@@ -49,12 +49,12 @@
         </div>
     </div>
     <div class="full-search-settings-container usual-border">
-        <div *ngIf="dictId!=='cabinet' && dictId!=='templates'">
+        <div *ngIf="dictId!=='cabinet' && dictId!=='templates' && dictId! == 'citizen'">
             <label class="radio-inline"><input type="radio" name="full-space" [value]="0" [(ngModel)]="mode"><span></span><span class="m-font">Во всём справочнике</span></label>
             <label class="radio-inline"><input type="radio" name="full-space" [value]="1" [(ngModel)]="mode"><span></span><span class="m-font">В текущей ветке</span></label>
             <label class="radio-inline"><input type="radio" name="full-space" [value]="2" [(ngModel)]="mode"><span></span><span class="m-font">Текущая и подчиненные</span></label>
         </div>
-        <div class="line" *ngIf="dictId !== 'templates'">
+        <div class="line" *ngIf="dictId !== 'templates' && dictId! == 'citizen'">
             <label class="checkbox-inline"><input type="checkbox" name="seeDelete" [(ngModel)]="settings.opts.deleted"><span></span><span class="m-font">Учитывать логически удаленные</span></label>
         </div>
     </div>
@@ -733,6 +733,96 @@
                         (click)="searchModel['CATEGORY'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
                 </div>
             </div>
+    </form>
+</div>
+<div class="row full-search-form" [hidden]="dictId !== 'citizens' && dictId !== 'user_param'">
+    <form id="citizen">
+        <div class="form-group unimportant-text">
+            <label class="s-font"
+                for="citizen-surname">{{fieldsDescription.rec['CITIZEN_SURNAME']?.title}}</label>
+            <div class="search-fld">
+                <input id="citizen-surname"
+                    name="citizen-surname"
+                    type="text"
+                    class="form-control light"
+                    [(ngModel)]="searchModel['CITIZEN_SURNAME']"
+                    placeholder="..."
+                    maxlength="{{fieldsDescription.rec['CITIZEN_SURNAME']?.length}}">
+                <a class="clear-btn"
+                    [ngClass]="{'hide': !searchModel['CITIZEN_SURNAME']}"
+                    (click)="searchModel['CITIZEN_SURNAME'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+            </div>
+        </div>
+        <div class="form-group unimportant-text">
+            <label class="s-font"
+                for="citizen-sity">{{fieldsDescription.rec['CITIZEN_CITY']?.title}}</label>
+            <div class="search-fld">
+                <input id="citizen-sity"
+                    name="citizen-sity"
+                    type="text"
+                    class="form-control light"
+                    [(ngModel)]="searchModel['CITIZEN_CITY']"
+                    placeholder="..."
+                    maxlength="{{fieldsDescription.rec['CITIZEN_CITY']?.length}}">
+                <a class="clear-btn"
+                    [ngClass]="{'hide': !searchModel['CITIZEN_CITY']}"
+                    (click)="searchModel['CITIZEN_CITY'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+            </div>
+        </div>
+        <div class="form-group unimportant-text">
+            <label class="s-font"
+                for="citizen-addr">{{fieldsDescription.rec['CITIZEN_ADDR']?.title}}</label>
+            <div class="search-fld">
+                <input id="citizen-addr"
+                    name="citizen-addr"
+                    type="text"
+                    class="form-control light"
+                    [(ngModel)]="searchModel['CITIZEN_ADDR']"
+                    placeholder="..."
+                    maxlength="{{fieldsDescription.rec['CITIZEN_ADDR']?.length}}">
+                <a class="clear-btn"
+                    [ngClass]="{'hide': !searchModel['CITIZEN_ADDR']}"
+                    (click)="searchModel['CITIZEN_ADDR'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+            </div>
+        </div>
+        <div class="form-group unimportant-text">
+            <label class="s-font"
+                for="region-name">{{fieldsDescription.rec['REGION_NAME']?.title}}</label>
+            <div class="search-fld">
+                <input id="region-name"
+                    (click)="openDict()"
+                    readonly
+                    name="region-name"
+                    type="text"
+                    style="cursor:pointer"
+                    class="form-control light"
+                    [(ngModel)]="searchModel['REGION_NAME']"
+                    placeholder="..."
+                    maxlength="{{fieldsDescription.rec['REGION_NAME']?.length}}">
+                <a class="clear-btn"
+                    [ngClass]="{'hide': !searchModel['REGION_NAME']}"
+                    (click)="[searchModel['REGION_NAME'] = '', searchModel['ISN_REGION'] = '']"><span class="eos-icon eos-icon-close-blue"></span></a>
+            </div>
+        </div>
+        <div class="form-group unimportant-text">
+            <label class="s-font"
+                for="zipcode">{{fieldsDescription.rec['ZIPCODE']?.title}}</label>
+            <div class="search-fld">
+                <input id="zipcode"
+                    name="zipcode"
+                    type="text"
+                    class="form-control light"
+                    [(ngModel)]="searchModel['ZIPCODE']"
+                    placeholder="..."
+                    maxlength="{{fieldsDescription.rec['ZIPCODE']?.length}}">
+                <a class="clear-btn"
+                    [ngClass]="{'hide': !searchModel['ZIPCODE']}"
+                    (click)="searchModel['ZIPCODE'] = ''"><span class="eos-icon eos-icon-close-blue"></span></a>
+            </div>
+        </div>
+        <!-- <div class="form-group unimportant-text">
+            <label class="checkbox-inline"><input type="checkbox" name="seeNew" [(ngModel)]="settings.isNew"><span></span><span class="m-font">Только новые</span></label>
+        </div> -->
     </form>
 </div>
 </ng-template>

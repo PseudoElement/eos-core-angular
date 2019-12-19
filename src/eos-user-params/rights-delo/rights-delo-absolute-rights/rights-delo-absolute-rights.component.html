@@ -91,7 +91,7 @@
 
 <ng-template #classif>
     <eos-absolute-rights-classif style="width: 100%;" [editMode]="editMode" [selectedNode]="selectedNode" [curentUser]="curentUser"
-        (Changed)="checkChange()"></eos-absolute-rights-classif>
+        (Changed)="checkChange()" (allNotCheck)="changedAll($event)"></eos-absolute-rights-classif>
 </ng-template>
 
 <ng-template #departOrganiz>

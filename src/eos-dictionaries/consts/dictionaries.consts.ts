@@ -25,6 +25,7 @@ import {EDS_CATEGORY_CL} from './dictionaries/category-eds.consts';
 import { CALENDAR_DICT } from './dictionaries/calendar.consts';
 import {Templates} from './dictionaries/templates.consts';
 import { CA_CATEGORY_CL } from './dictionaries/ca-category.consts';
+import {CITIZENS_DICT} from './dictionaries/citizens.const';
 
 export const DICTIONARIES = [
     /* tree dictionaries */
@@ -53,6 +54,7 @@ export const DICTIONARIES = [
     EDS_CATEGORY_CL,
     LINK_DICT,
     Templates,
+    CITIZENS_DICT,
     // SEV
     // Отключено (В текущей версии Надзора справочники СЭВ не используются, отложим до возврата к работам по дельской ветке проекта.)
     // RULES_SEV_DICT,

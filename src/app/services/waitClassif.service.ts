@@ -14,6 +14,8 @@ const NEW_VIEW_URL: string = 'Eos.Delo.JsControls/Classif/ChooseClassif.aspx?';
 const USER_LISTS: string = '../Pages/User/USER_LISTS.aspx';
 const TECH_LISTS: string = '../Pages/Common/TECH_LISTS.aspx';
 const StdText: string = '../Pages/Common/StdText.aspx';
+const CITIZEN_dict: string = '../GOPRC/CITIZEN/CITIZEN.html';
+const ORGANIZ_dict: string = '../GOPRC/ORGANIZATION/ORGANIZATION.html';
 
 @Injectable()
 export class WaitClassifService {
@@ -80,6 +82,8 @@ export class WaitClassifService {
             url = TECH_LISTS;
         } else if (params.classif === 'StdText') {
             url = this.stdTextUrl(StdText, params);
+        } else if (params.classif === 'gop_rc') {
+            url = this._createUrlDict(url, params);
         } else {
             url = this._prepareUrl(params, flag);
         }
@@ -102,6 +106,22 @@ export class WaitClassifService {
                 }
             }, 500);
         });
+    }
+    private _createUrlDict(url, params: IOpenClassifParams) {
+        if (params.id === 'CITIZEN_dict') {
+            url = CITIZEN_dict;
+            url += `#rc_id=` + params.user_id;
+        } else if (params.id === 'ORGANIZ_dict') {
+            url = ORGANIZ_dict;
+            url += `#rc_id=` + params.user_id;
+            if (params.folder_due) {
+                url += `?folder_due=` + params.folder_due;
+            }
+            if (params.due) {
+                url += `?due=` + params.due;
+            }
+        }
+        return url;
     }
     private stdTextUrl(url, params: IOpenClassifParams) {
         // if (params.id_std !== undefined && params.id_std !== null) {

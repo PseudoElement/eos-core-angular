@@ -39,6 +39,9 @@ export enum E_RECORD_ACTIONS {
     downloadFile,
     departmentCalendar,
     importEDS,
+    cut,
+    combine,
+    uncheckNewEntry,
     // createRepresentative,
     // slantForForms,
     /* to be extended */

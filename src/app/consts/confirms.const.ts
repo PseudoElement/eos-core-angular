@@ -171,6 +171,12 @@ export const CONFIRM_DG_FIXE: IConfirmWindow2 = {
     ]
 };
 
+export const CONFIRM_COMBINE_NODES: IConfirmWindow = {
+    title: 'Подтверждение объединения',
+    body: 'Вы действительно хотите соединить объекты? ',
+    okTitle: 'Да',
+    cancelTitle: 'Нет'
+};
 export const CONFIRM_DG_SHABLONRK: IConfirmWindow2 = {
     title: 'Ведение справочников:',
     body: 'Шаблон Рег.№ не соответствует указанному Виду РК.',
