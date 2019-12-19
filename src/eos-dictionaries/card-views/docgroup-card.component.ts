@@ -46,7 +46,7 @@ export class DocgroupCardComponent extends BaseCardEditComponent implements OnCh
         this.modalSrv = injector.get(BsModalService);
         this._appctx = injector.get(AppContext);
         this._appctx.get99UserParms('ANCUD').then((value) => {
-            this.isSignatura = value && value.PARM_VALUE !== 'NO';
+            this.isSignatura = value && value.PARM_VALUE === 'SIGNATURA';
         });
 
     }
