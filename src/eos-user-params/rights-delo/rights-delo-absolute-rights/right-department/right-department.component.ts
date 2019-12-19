@@ -190,6 +190,9 @@ export class RightDepertmentComponent implements OnInit {
             this.listUserDep = this.listUserDep.concat(newNodes);
             this.selectedNode.isCreate = false;
             this.isShell = false;
+            if (!this.selectedNode.touched && this.selectedNode.change.length > 0) {
+                this.selectedNode.touched = true;
+            }
             this.Changed.emit();
         });
     }
@@ -272,6 +275,9 @@ export class RightDepertmentComponent implements OnInit {
                 this.listUserDep = this.listUserDep.concat(newNodes);
                 this.selectedNode.isCreate = false;
                 this.isShell = false;
+                if (!this.selectedNode.touched && this.selectedNode.change.length > 0) {
+                    this.selectedNode.touched = true;
+                }
                 this.Changed.emit();
             })
             .catch(() => {
