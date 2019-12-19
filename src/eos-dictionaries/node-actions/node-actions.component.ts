@@ -270,11 +270,13 @@ export class NodeActionsComponent implements OnDestroy {
                         break;
                 case E_RECORD_ACTIONS.AdvancedCardRK:
                 case E_RECORD_ACTIONS.additionalFields:
+                    _enabled = _enabled && opts.listHasItems && opts.listHasOnlyOne;
+                    break;
                 case E_RECORD_ACTIONS.removeHard:
                     _enabled = _enabled && opts.listHasItems;
                     break;
                 case E_RECORD_ACTIONS.edit:
-                    _enabled = !_isLDSubTree && !this._viewParams.updatingList;
+                    _enabled = !_isLDSubTree && !this._viewParams.updatingList && opts.listHasOnlyOne;
                     _enabled = _enabled && this._markedNodes.length > 0; /* && (this._dictSrv.listNode.isNode);*/
                     if (this.dictionary.descriptor.editOnlyNodes !== undefined) {
                         if (this._dictSrv && this._dictSrv.listNode) {
@@ -308,10 +310,18 @@ export class NodeActionsComponent implements OnDestroy {
                     _isWriteAction = false;
                     break;
                 case E_RECORD_ACTIONS.counterDocgroup:
-                    _enabled = _enabled && opts.listHasSelected;
+                    _enabled = _enabled && opts.listHasSelected && opts.listHasOnlyOne;
+                    break;
+                case E_RECORD_ACTIONS.departmentCalendar:
+                        if (this._dictSrv && this._dictSrv.listNode) {
+                            _enabled = _enabled && this._dictSrv.listNode.isNode;
+                        } else {
+                            _enabled = false;
+                        }
+                    _enabled = _enabled && opts.listHasSelected && opts.listHasOnlyOne;
                     break;
                 case E_RECORD_ACTIONS.counterDocgroupRKPD:
-                    _enabled = _enabled && opts.listHasSelected;
+                    _enabled = _enabled && opts.listHasSelected && opts.listHasOnlyOne;
                     // RK_TYPE_OPTIONS /* 1 = 'Входящие', 2 title: 'Письма граждан' */
                     const rc_type = this._dictSrv.listNode && this._dictSrv.listNode.data['rec'].RC_TYPE;
                     _enabled = _enabled && !(rc_type === 2 || rc_type === 1);
@@ -320,14 +330,21 @@ export class NodeActionsComponent implements OnDestroy {
                     break;
                 case E_RECORD_ACTIONS.counterDepartmentRK:
                 case E_RECORD_ACTIONS.counterDepartmentRKPD:
+                    _enabled = _enabled && opts.listHasOnlyOne;
                     if (this._dictSrv && this._dictSrv.listNode) {
-                        _enabled = this._dictSrv.listNode.isNode &&
+                        _enabled = _enabled && this._dictSrv.listNode.isNode &&
                             this._dictSrv.listNode.data['rec'].DUE_LINK_ORGANIZ;
                     } else {
                         _enabled = false;
                     }
                     break;
                 case E_RECORD_ACTIONS.counterDepartment:
+                    if (this._dictSrv && this._dictSrv.listNode) {
+                        _enabled = this._dictSrv.listNode.isNode && opts.listHasSelected && opts.listHasOnlyOne;
+                    } else {
+                        _enabled = false;
+                    }
+                    break;
                 case E_RECORD_ACTIONS.copyPropertiesFromParent:
                     if (this._dictSrv && this._dictSrv.listNode) {
                         _enabled = this._dictSrv.listNode.isNode && opts.listHasSelected;
@@ -343,7 +360,7 @@ export class NodeActionsComponent implements OnDestroy {
                     }
                     break;
                 case E_RECORD_ACTIONS.copyProperties:
-                    _enabled = _enabled && opts.listHasSelected;
+                    _enabled = _enabled && opts.listHasSelected && opts.listHasOnlyOne;
                     break;
                 case E_RECORD_ACTIONS.copyNodes:
                     _enabled = _enabled && opts.listHasSelected;
