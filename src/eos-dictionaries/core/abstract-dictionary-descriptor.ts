@@ -462,6 +462,9 @@ export abstract class AbstractDictionaryDescriptor {
     combine(slicedNodes: EosDictionaryNode[], marked: EosDictionaryNode[]): Promise<any> {
         return Promise.resolve();
     }
+    getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode, nodeId?: string) {
+        return null;
+    }
 
     findTreeParent(data: CustomTreeNode[], id: any): any {
         return null;

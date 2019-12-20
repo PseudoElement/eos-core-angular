@@ -388,7 +388,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
             case E_RECORD_ACTIONS.edit:
                 if (this._checkDictionaryId()) {
-                    this._openPageCitizens(false);
+                    this._openPageCitizens(false, null);
                 } else {
                     this._editNode();
                 }
@@ -430,7 +430,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
 
             case E_RECORD_ACTIONS.add:
                 if (this._checkDictionaryId()) {
-                    this._openPageCitizens(true);
+                    this._openPageCitizens(true, evt.params);
                 } else {
                     this._openCreate(evt.params);
                 }
@@ -721,13 +721,36 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             this._openCreate(recParams);
         });
     }
-    private _openPageCitizens(openEdit: boolean) {
+    private _openPageCitizens(openEdit: boolean, params) {
+        if (this.dictionaryId === 'organization') {
+            if (params && params.IS_NODE && openEdit) {
+                this.openClassifGopRc(openEdit);
+                return;
+            } else if (params && !params.IS_NODE && openEdit) {
+                this._openCreate(params);
+                return;
+            } else if (!params && !openEdit) {
+                if (this._dictSrv.listNode.isNode) {
+                    this._editNode();
+                    return;
+                } else {
+                    this.openClassifGopRc(openEdit);
+                    return;
+                }
+                return;
+            }
+        }
+        this.openClassifGopRc(openEdit);
+
+    }
+    private openClassifGopRc(openEdit) {
         const node = this._dictSrv.listNode;
-        const config: IOpenClassifParams = this._dictSrv.currentDictionary.descriptor['getConfigOpenGopRc'](openEdit, node);
-        this._waitClassif.openClassif(config).then(() => {
-            this._dictSrv.reload();
-        }).catch((e) => {
-            console.log(e);
+            const config: IOpenClassifParams = this._dictSrv.currentDictionary.descriptor.getConfigOpenGopRc(openEdit, node, this._nodeId);
+            this._waitClassif.openClassif(config).then(() => {
+                this._dictSrv.reload();
+                this._dictSrv.clearCurrentNode();
+            }).catch((e) => {
+                console.log(e);
         });
     }
     private _confirmMarkedItems(selectedNodes: any[], confirm: IConfirmWindow2): Promise<IConfirmButton> {
@@ -1098,11 +1121,24 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         }
     }
     private _cutNode(): void {
+        // Для объединения можно выбирать только карточки организаций.
+        const checkNode = this._dictSrv.getMarkedNodes().every((node: EosDictionaryNode) => {
+            return !node.isNode;
+        });
+        if (!checkNode) {
+            this._msgSrv.addNewMessage({type: 'warning', title: 'Предупреждение', msg: 'Для объединения можно выбирать только карточки организаций.'});
+            return;
+        }
         this._dictSrv.cutNode();
     }
     private _combine() {
         const slicedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) =>  node.isSliced);
-        const markedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) =>  node.isMarked && !node.isSliced);
+        const markedNode: EosDictionaryNode[] = this.nodeList.nodes.filter((node: EosDictionaryNode) =>  {
+            if (node.isNode) {
+                node.isMarked = false;
+            }
+            return node.isMarked && !node.isSliced && !node.isNode;
+        });
         if (slicedNode.length && markedNode.length === 1) {
             this._confirmSrv.confirm(CONFIRM_COMBINE_NODES).then(resp => {
                 if (resp) {
@@ -1125,7 +1161,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
         this.nodeList.openCopyNode(this._dictSrv.bufferNodes);
     }
     private _checkDictionaryId(): boolean {
-        return ['citizens'].some(id => {
+        return ['citizens', 'organization'].some(id => {
             return id === this.dictionaryId;
         });
     }

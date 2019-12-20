@@ -91,7 +91,7 @@ export class CitizensDictionaryDescriptor extends AbstractDictionaryDescriptor {
         }
         return super.search(criteries);
     }
-    public getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode) {
+    public getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode, nodeId?: string) {
         const config = {
             classif: 'gop_rc',
             id: 'CITIZEN_dict',

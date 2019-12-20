@@ -560,6 +560,10 @@ export const ORGANIZ_ADD_MENU = [
     {
         params: { 'IS_NODE': 0 },
         title: 'Создать группу'
+    },
+    {
+        params: { 'IS_NODE': 1 },
+        title: 'Создать организацию'
     }
 ];
 

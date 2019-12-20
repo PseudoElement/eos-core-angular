@@ -115,10 +115,10 @@ export class WaitClassifService {
             url = ORGANIZ_dict;
             url += `#rc_id=` + params.user_id;
             if (params.folder_due) {
-                url += `?folder_due=` + params.folder_due;
+                url += `&folder_due=` + params.folder_due;
             }
             if (params.due) {
-                url += `?due=` + params.due;
+                url += `&due=` + params.due;
             }
         }
         return url;
