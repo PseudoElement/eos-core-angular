@@ -62,7 +62,7 @@ export class LinkDictionaryDescriptor extends DictionaryDescriptor {
             });
     }
 
-    addRecord(data: any, _useless: any, isProtected = false, isDeleted = false): Promise<any> {
+    addRecord(data: any, _useless: any, appendToChanges: any = null, isProtected = false, isDeleted = false): Promise<any> {
         const results: IRecordOperationResult[] = [];
         let _newRec = this.preCreate(isProtected, isDeleted);
         _newRec = this.apiSrv.entityHelper.prepareAdded<any>(_newRec, this.apiInstance);
