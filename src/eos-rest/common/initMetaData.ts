@@ -283,7 +283,8 @@ const commonMeta = {
         ],
         relations: [
             { name: 'CITIZEN_STATUS_List', __type: 'CITIZEN_STATUS', sf: 'ISN_CITIZEN', tf: 'ISN_CITIZEN' },
-            { name: 'REGION_Ref', __type: 'REGION_CL', sf: 'ISN_REGION', tf: 'ISN_NODE' },
+            // { name: 'REGION_Ref', __type: 'REGION_CL', sf: 'ISN_REGION', tf: 'ISN_NODE' },
+            { name: 'REGION_Ref', __type: 'REGION_CL', sf: 'DUE_REGION', tf: 'DUE' },
             { name: 'ADDR_CATEGORY_Ref', __type: 'ADDR_CATEGORY_CL', sf: 'ISN_ADDR_CATEGORY', tf: 'ISN_LCLASSIF' }
         ]
     },
