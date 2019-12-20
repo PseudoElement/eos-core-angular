@@ -788,8 +788,8 @@ export class EosDictService {
 
         if (this._treeNode) {
             return this.preSave(dictionary, data, true)
-                .then(() => {
-                    return dictionary.descriptor.addRecord(data, this._treeNode.data);
+                .then((appendChanges) => {
+                    return dictionary.descriptor.addRecord(data, this._treeNode.data, appendChanges);
                 })
                 .then((results) => {
                     this.updateViewParameters({updatingList: true});
