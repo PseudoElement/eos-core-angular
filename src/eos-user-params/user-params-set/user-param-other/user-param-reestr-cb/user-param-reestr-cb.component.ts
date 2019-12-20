@@ -16,7 +16,6 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 import { AddGrifComponent } from './addGrif/addGrif.component';
 import { ErrorHelperServices } from 'eos-user-params/shared/services/helper-error.services';
-import { EosStorageService } from 'app/services/eos-storage.service';
 // import {PARM_ERROR_SEND_FROM} from '../../shared-user-param/consts/eos-user-params.const';
 @Component({
     selector: 'eos-user-param-reestr-cb',
@@ -38,6 +37,9 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
     public listSecur: string = '';
     public listDep: NodeDocsTree[] = [];
     public secureData = '';
+    public saveReestrSecur;
+    public saveReestrDocgroup;
+    public saveReestrDep;
     private listDocGroup: NodeDocsTree[] = [];
     private _ngUnsebscribe: Subject<any> = new Subject();
     private allData: any;
@@ -58,7 +60,6 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
         private _waitClassifSrv: WaitClassifService,
         private _modalSrv: BsModalService,
         private _errorSrv: ErrorHelperServices,
-        private _storageSrv: EosStorageService,
     ) {
         this.remaster.submitEmit.subscribe(() => {
             this.submit();
@@ -75,9 +76,6 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
         });
     }
     ngOnDestroy() {
-        this._storageSrv.removeItem('REESTR_CB_SECUR');
-        this._storageSrv.removeItem('REESTR_RESTRACTION_DOCGROUP');
-        this._storageSrv.removeItem('REESTR_RESTRACTION_DEPARTMENT');
         this._ngUnsebscribe.next();
         this._ngUnsebscribe.complete();
     }
@@ -215,9 +213,9 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
         }
     }
     updateInfo() {
-        this._storageSrv.setItem('REESTR_CB_SECUR', this.secureData);
-        this._storageSrv.setItem('REESTR_RESTRACTION_DEPARTMENT', String(this.form.controls['rec.REESTR_RESTRACTION_DEPARTMENT'].value));
-        this._storageSrv.setItem('REESTR_RESTRACTION_DOCGROUP', String(this.form.controls['rec.REESTR_RESTRACTION_DOCGROUP'].value));
+        this.saveReestrSecur = this.secureData;
+        this.saveReestrDocgroup = String(this.form.controls['rec.REESTR_RESTRACTION_DOCGROUP'].value);
+        this.saveReestrDep = String(this.form.controls['rec.REESTR_RESTRACTION_DEPARTMENT'].value);
     }
     submit() {
         this.updateInfo();
@@ -279,14 +277,16 @@ export class UserParamReestrCBComponent implements OnDestroy, OnInit {
         } else {
             paramsDoc = String(this._userSrv.hashUserContext['REESTR_RESTRACTION_DOCGROUP']).replace(/,/g, '||');
         }
-        if (this._storageSrv.getItem('REESTR_CB_SECUR')) {
-            paramsDoc = this._storageSrv.getItem('REESTR_RESTRACTION_DOCGROUP').replace(/,/g, '||');
-            paramsDep = this._storageSrv.getItem('REESTR_RESTRACTION_DEPARTMENT').replace(/,/g, '||');
+        if (this.saveReestrDocgroup !== undefined) {
+            paramsDoc = this.saveReestrDocgroup.replace(/,/g, '||');
+        }
+        if (this.saveReestrDep !== undefined) {
+            paramsDep = this.saveReestrDep.replace(/,/g, '||');
         }
         this.prepFormCancel(this.inputs, true);
         this.mapChanges.clear();
         this.editMode();
-        this.secureData = this._storageSrv.getItem('REESTR_CB_SECUR') ? this._storageSrv.getItem('REESTR_CB_SECUR') : this.updateSecur(this._userSrv.hashUserContext['REESTR_CB_SECUR']);
+        this.secureData = this.saveReestrSecur !== undefined ? this.saveReestrSecur : this.updateSecur(this._userSrv.hashUserContext['REESTR_CB_SECUR']);
         reqs.push(this.getDocGroupName(paramsDoc, true));
         reqs.push(this.getDepName(paramsDep, true));
         Promise.all(reqs).then( result => {
