@@ -26,6 +26,8 @@ import { CALENDAR_DICT } from './dictionaries/calendar.consts';
 import {Templates} from './dictionaries/templates.consts';
 import { CA_CATEGORY_CL } from './dictionaries/ca-category.consts';
 import {CITIZENS_DICT} from './dictionaries/citizens.const';
+import { Features } from 'eos-dictionaries/features/features-current.const';
+import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
 
 export const DICTIONARIES = [
     /* tree dictionaries */
@@ -54,7 +56,7 @@ export const DICTIONARIES = [
     EDS_CATEGORY_CL,
     LINK_DICT,
     Templates,
-    CITIZENS_DICT,
+    ... Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? [] : [CITIZENS_DICT, ],
     // SEV
     // Отключено (В текущей версии Надзора справочники СЭВ не используются, отложим до возврата к работам по дельской ветке проекта.)
     // RULES_SEV_DICT,
