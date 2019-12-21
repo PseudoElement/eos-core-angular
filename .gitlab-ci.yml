@@ -4,7 +4,8 @@ variables:
   SERVER_FOLDER: $TFS_BUILD_DROPS_PATH
   LOCAL_FOLDER: tmp_for_map
   BUILD_DROP_NAME: ${CI_PROJECT_PATH_SLUG}_${CI_BUILD_REF_SLUG}
-  ARTIFACTS_URL: ${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/download
+  #ARTIFACTS_URL: ${CI_PROJECT_URL}/-/jobs/${CI_JOB_ID}/artifacts/download
+  ARTIFACTS_URL: https://git.eos.ru/api/v4/projects/${CI_PROJECT_ID}/jobs/${CI_JOB_ID}/artifacts
   COMMENT_TEXT: "${GITLAB_USER_NAME}: ${CI_COMMIT_MESSAGE}\n${CI_PROJECT_URL}/commit/${CI_COMMIT_SHA}"
 
 
