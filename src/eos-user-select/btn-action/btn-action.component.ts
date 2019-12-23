@@ -41,6 +41,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         'OpenStreamScanSystem',
         'OpenRightsSystemCaseDelo',
         'Protocol',
+        'OpenSumProtocol',
         'UsersInfo',
         'DefaultSettings',
         'DeliteUser'];
