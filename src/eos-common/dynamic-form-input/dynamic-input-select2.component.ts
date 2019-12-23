@@ -1,7 +1,6 @@
 import { Component, Output, EventEmitter, OnChanges, ViewChild, OnDestroy, ElementRef, Input } from '@angular/core';
 import { DynamicInputBase } from './dynamic-input-base';
 import { BsDropdownDirective } from 'ngx-bootstrap';
-import { AppContext } from 'eos-rest/services/appContext.service';
 
 
 const LI_HEIGHT = 20;
@@ -166,9 +165,10 @@ export class DynamicInputSelect2Component extends DynamicInputBase implements On
             this.control.setValue(String(item.value));
         }
 
-        if (AppContext.isIE()) {
-            this._dropDown.hide(); /* IE fix */
-        }
+        // if (AppContext.isIE()) {
+            // console.log("TCL: DynamicInputSelect2Component -> selectAction -> AppContext.isIE", AppContext.isIE())
+            // this._dropDown.hide(); /* IE fix */
+        // }
 
     }
 

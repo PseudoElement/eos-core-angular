@@ -18,7 +18,6 @@ import { STATUS_EXEC_DICT } from './dictionaries/status-exec.consts';
 import { LINK_DICT } from './dictionaries/link.consts';
 import { STATUS_REPLY_DICT } from './dictionaries/status-reply.consts';
 import { VISA_TYPE_DICT } from './dictionaries/visa-type.consts';
-import { NADZOR } from './dictionaries/nadzor.consts';
 import { REESTRTYPE_DICT } from './dictionaries/reestrtype.consts';
 import {NOMENKL_DICT} from './dictionaries/nomenkl.const';
 import {EDS_CATEGORY_CL} from './dictionaries/category-eds.consts';
@@ -28,6 +27,7 @@ import { CA_CATEGORY_CL } from './dictionaries/ca-category.consts';
 import {CITIZENS_DICT} from './dictionaries/citizens.const';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
+import { NADZOR } from './dictionaries/nadzor.consts';
 
 export const DICTIONARIES = [
     /* tree dictionaries */
@@ -56,7 +56,7 @@ export const DICTIONARIES = [
     EDS_CATEGORY_CL,
     LINK_DICT,
     Templates,
-    ... Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? [] : [CITIZENS_DICT, ],
+    ... Features.cfg.variant === EOSDICTS_VARIANT.Nadzor ? [NADZOR, ] : [CITIZENS_DICT, ],
     // SEV
     // Отключено (В текущей версии Надзора справочники СЭВ не используются, отложим до возврата к работам по дельской ветке проекта.)
     // RULES_SEV_DICT,
@@ -66,5 +66,5 @@ export const DICTIONARIES = [
 
     REESTRTYPE_DICT,
 
-    NADZOR,
+
 ];
