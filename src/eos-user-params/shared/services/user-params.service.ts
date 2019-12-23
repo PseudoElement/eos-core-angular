@@ -137,6 +137,7 @@ export class UserParamsService {
                     this._userContextDeparnment = data[0];
                     this._userContext['DUE_DEP_NAME'] = this._userContextDeparnment['CLASSIF_NAME'];
                     this._userContext['DUE_DEP_SURNAME'] = this._userContextDeparnment['SURNAME'];
+                    this._userContext['DEPARTMENT_DUE'] = this._userContextDeparnment['DEPARTMENT_DUE'];
                 }
                 this._userContext = this._pipRx.entityHelper.prepareForEdit(this._userContext);
                 // console.log(this._userContext.USERCARD_List);

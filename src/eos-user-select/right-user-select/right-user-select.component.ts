@@ -35,6 +35,9 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
     departmentInfo: DEPARTMENT;
     destroySubsriber: Subject<any> = new Subject();
     flagFirstGetInfo: boolean = true;
+    get disableLink() {
+        return this._appContext.CurrentUser.IS_SECUR_ADM || !this.CurrentUser.isEditable;
+    }
     constructor(
         //  private _sandwichSrv: EosSandwichService,
         private _selectedUser: RtUserSelectService,
@@ -97,16 +100,6 @@ export class RightUserSelectComponent implements OnInit, OnDestroy {
     writeRecentUrl() {
         this._storageSrv.setItem(RECENT_URL, this._router.url);
     }
-    goToLogin() {
-        if (this._appContext.CurrentUser.IS_SECUR_ADM) {
-            return;
-        } else {
-            this._router.navigate(['user-params-set/base-param'], {
-                queryParams: { isn_cl: this.CurrentUser.id }
-            });
-        }
-    }
-
     getInfo(isnDue?): void {
         let isn_cabinet = null;
         if (!isnDue) {
