@@ -116,6 +116,8 @@ export class NodeAbsoluteRight {
     private _checkTouched() {
         if (!this._change.length) {
             this.touched = false;
+        } else {
+            this.touched = true;
         }
     }
     private _transformChenge(node: IChengeItemAbsolute, index: number) {
