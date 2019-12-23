@@ -29,7 +29,7 @@ export class UserParamSearchComponent implements OnDestroy, OnInit {
             if (this.currentUser.isTechUser) {
                 return this.defaultTitle ? 'Поиск по умолчанию' : this.currentUser.CLASSIF_NAME + '- Поиск';
             }
-            return this.defaultTitle ? 'Поиск подпись по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Поиск`;
+            return this.defaultTitle ? 'Поиск по умолчанию' : `${this.currentUser['DUE_DEP_SURNAME']} - Поиск`;
         }
         return '';
     }
