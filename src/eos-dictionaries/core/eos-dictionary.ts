@@ -522,8 +522,9 @@ export class EosDictionary {
 
             const order = { fieldKey: CUSTOM_SORT_FIELD, ascend: true };
             if (this.orderBy.fieldKey !== CUSTOM_SORT_FIELD) {
-                const treeOrderKey = this.root.getTreeView()[0];
-                order.fieldKey = treeOrderKey.foreignKey;
+                return;
+                // const treeOrderKey = this.root.getTreeView()[0];
+                // order.fieldKey = treeOrderKey.foreignKey;
             }
 
             // this.treeResort();
@@ -540,16 +541,30 @@ export class EosDictionary {
     }
 
     nodeChildResort(n: EosDictionaryNode, orderBy?: IOrderBy): any {
-        n.children = this.orderNodesByField(n.children, orderBy);
-        n.children.forEach( c => this.nodeChildResort(c));
+        if (n.children && n.children.length) {
+            n.children = this.orderNodesByField(n.children, orderBy);
+            n.children.forEach( c => this.nodeChildResort(c));
+        }
     }
 
     public orderNodesByField(nodes: EosDictionaryNode[], orderBy?: IOrderBy): EosDictionaryNode[] {
         const _orderBy = orderBy || this._orderBy; // DON'T USE THIS IN COMPARE FUNC!!! IT'S OTHER THIS!!!
 
         return nodes.sort((a: EosDictionaryNode, b: EosDictionaryNode) => {
-            const _a = a.getFieldValueByName(_orderBy.fieldKey) || Number(a.id) || '';
-            const _b = b.getFieldValueByName(_orderBy.fieldKey) || Number(b.id) || '';
+            let _a = a.getFieldValueByName(_orderBy.fieldKey) || 0; // /*|| Number(a.id)*/ || '';
+            let _b = b.getFieldValueByName(_orderBy.fieldKey) || 0; // /*|| Number(b.id)*/ || '';
+
+
+            // if (_a === null) { _a = ''; }
+            // if (_b === null) { _b = ''; }
+            if (typeof _a !== typeof _b) {
+                _a = _a || '';
+                _b = _b || '';
+            }
+            if (_a === _b) {
+                _a = Number(a.id) || a.id;
+                _b = Number(b.id) || b.id;
+            }
 
             let res = 0;
             switch (typeof _a) {
@@ -571,7 +586,7 @@ export class EosDictionary {
                     break;
             }
 
-            return res * (_orderBy.ascend ? 1 : -1);
+            return (res) * (_orderBy.ascend ? 1 : -1);
         });
     }
     private _updateTree(nodes: EosDictionaryNode[]) {
