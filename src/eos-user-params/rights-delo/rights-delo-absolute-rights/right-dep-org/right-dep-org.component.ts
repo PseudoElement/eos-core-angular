@@ -10,6 +10,7 @@ import { RestError } from 'eos-rest/core/rest-error';
 import { OPEN_CLASSIF_DEPARTMENT_FULL } from 'app/consts/query-classif.consts';
 import { NodeDocsTree } from 'eos-user-params/shared/list-docs-tree/node-docs-tree';
 import { EosStorageService } from 'app/services/eos-storage.service';
+import { AppContext } from 'eos-rest/services/appContext.service';
 
 @Component({
     selector: 'eos-right-absolute-depart-organiz',
@@ -40,6 +41,7 @@ export class RightOrganizDepertComponent implements OnInit {
         private _waitClassifSrv: WaitClassifService,
         private apiSrv: UserParamApiSrv,
         private _storageSrv: EosStorageService,
+        private _appContext: AppContext,
     ) {
     }
     ngOnInit() {
@@ -124,6 +126,9 @@ export class RightOrganizDepertComponent implements OnInit {
                 return this._userParmSrv.getDepartmentFromUser(data.split('|'));
             })
             .then((data: DEPARTMENT[]) => {
+                if (this._appContext.limitCardsUser.length > 0) {
+                    data = this._checkLimitCard(data);
+                }
                 if (this._checkRepeat(data)) {
                     this._msgSrv.addNewMessage({
                         type: 'warning',
@@ -280,6 +285,18 @@ export class RightOrganizDepertComponent implements OnInit {
             }
         });
         return arr;
+    }
+    returnOgrani(): boolean {
+        if (this._appContext.limitCardsUser.length > 0) {
+            return true;
+        }
+        return false;
+    }
+    returnDelTech() {
+        if (this._appContext.limitCardsUser.indexOf(this.selectedDep.data.dep['DEPARTMENT_DUE']) !== -1) {
+            return false;
+        }
+        return true;
     }
     checkForAll(event) {
         this.checkFlag = !this.checkFlag;
@@ -461,5 +478,18 @@ export class RightOrganizDepertComponent implements OnInit {
             return false;
         }
         return true;
+    }
+    private _checkLimitCard(arrDep: DEPARTMENT[]) {
+        return arrDep.filter(elem => {
+            if (this._appContext.limitCardsUser.indexOf(elem['DEPARTMENT_DUE']) === -1) {
+                this._msgSrv.addNewMessage({
+                    type: 'warning',
+                    title: 'Предупреждение',
+                    msg: `Элемент \'${elem.CLASSIF_NAME}\' не будет добавлен\nтак как он не принадлежит вашим картотекам`
+                });
+                return false;
+            }
+            return true;
+        });
     }
 }

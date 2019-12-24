@@ -276,7 +276,7 @@ export class AbsoluteRightsClassifComponent implements OnInit {
 
     private _init () {
         if (this.selectedNode.isCreate || !this.curentUser['TECH_RIGHTS']) {
-            const techRights: string = '1'.repeat(40);
+            const techRights: string = this._appContext.cbBase ? '1'.repeat(40) : '1'.repeat(21) + '0' + '1'.repeat(18);
             const chenge: IChengeItemAbsolute = {
                 method: 'MERGE',
                 user_cl: true,
@@ -296,6 +296,17 @@ export class AbsoluteRightsClassifComponent implements OnInit {
             this.curentUser['TECH_RIGHTS'] = arr.join('');
         }
         const techListLim = this.userTechList.filter((tech) => tech.FUNC_NUM === 1);
+        if (!this._appContext.cbBase) {
+            let delIndex;
+            TECH_USER_CLASSIF.forEach((elem, index) => {
+                if (elem.key === 22) {
+                    delIndex = index;
+                }
+            });
+            if (delIndex) {
+                TECH_USER_CLASSIF.splice(delIndex, 1);
+            }
+        }
         TECH_USER_CLASSIF.forEach((item: ITechUserClassifConst) => {
             if (item.key === 1 && techListLim.length !== 0) {
                 item.label = 'Пользователи (доступ ограничен)';
