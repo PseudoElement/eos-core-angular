@@ -9,6 +9,7 @@ import { CONFIRM_NUMCREATION_CANT, CONFIRM_NUMCREATION_CHANGE } from 'app/consts
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { Features } from 'eos-dictionaries/features/features-current.const';
 import { EOSDICTS_VARIANT } from 'eos-dictionaries/features/features.interface';
+import { SopsHelper } from 'eos-dictionaries/helpers/sops.helper';
 
 const NODE_ID_NAME = 'ISN_NODE';
 const NODE_LABEL_NAME = 'CLASSIF_NAME';
@@ -297,19 +298,57 @@ export class CounterNpEditComponent {
             return Promise.resolve(true);
         }
 
-        const old_value = this._getNodeValue(this.editValueYear);
-        if (old_value) {
-            if (Number(this.editValueNum) <= Number (old_value)) {
+        return SopsHelper.sopExistsDocRcByOrderNum(this._node['DUE'], this.editValueNum, this.editValueYear).then( docsexist => {
+            if (docsexist) {
                 return this._confirmSrv.confirm2(CONFIRM_NUMCREATION_CANT)
                     .then(() => {
                         return false;
                     });
+            } else {
+                return true;
             }
-        }
+        });
 
-        return Promise.resolve(true);
+        // const old_value = this._getNodeValue(this.editValueYear);
+        // if (old_value) {
+        //     if (Number(this.editValueNum) <= Number (old_value)) {
+        //         return this._confirmSrv.confirm2(CONFIRM_NUMCREATION_CANT)
+        //             .then(() => {
+        //                 return false;
+        //             });
+        //     }
+        // }
+
+        // return Promise.resolve(true);
     }
 
+    // _minNumberValidation(due, order_num, year): Promise<boolean> {
+
+
+    //     // Сопы выдают 1, когда что-то есть, начиная с данного номера, для данного года, для данной группы документов (включая дочерние без других нумераторов), 0 - когда ничего нет
+    //     // ExistsDocRcByOrderNum
+    //     // ExistsPrjRcByOrderNum
+    //     // new KeyValuePair<string, Type>("due", typeof(string)),
+    //     // new KeyValuePair<string, Type>("order_num", typeof(int)),
+    //     // new KeyValuePair<string, Type>("year", typeof(int)));
+    //     // const query = { args: { due: due, order_num: order_num, year: year } };
+    //     // const req = { ValidateUserList4DefaultValues: query};
+    //     // this._apiSrv.read(req).then((response) => {
+    //     //         if (String(response) === 'ok') {
+
+    //     //         } else {
+    //     //         const opt = dict.options.find((dopt) => dopt.value === el.value);
+    //     //             if (opt) {
+    //     //                 if (String(response) === 'LIST_IS_EMPTY') {
+    //     //                     opt.isEmpty = true;
+    //     //                 } else if (String(response) === 'LIST_CONTAINS_DELETED') {
+    //     //                     opt.hasDeleted = true;
+    //     //                 }
+    //     //             }
+    //     //         }
+    //     //     })
+    //     // );
+    // }
     public getNodeTitle() {
         return this._node[NODE_LABEL_NAME];
     }
@@ -318,6 +357,8 @@ export class CounterNpEditComponent {
         this.editValueNum = node[NUM_VALUE_NAME];
         this.editValueYear = node[NUM_YEAR_NAME];
     }
+
+
 
     private _readRecords(): Promise<any> {
         const criteries = { [this._decl.dbNumIdName]: String(this._baseId), [FLAG_MAX]: String(1) };
