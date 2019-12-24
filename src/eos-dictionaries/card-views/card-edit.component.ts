@@ -11,6 +11,7 @@ import {EosSevRulesService} from '../services/eos-sev-rules.service';
 import { RUBRICATOR_DICT } from 'eos-dictionaries/consts/dictionaries/rubricator.consts';
 import { PipRX } from 'eos-rest';
 import { MESSAGE_SAVE_ON_LEAVE } from 'eos-dictionaries/consts/confirm.consts';
+import { DOCGROUP_DICT } from 'eos-dictionaries/consts/dictionaries/docgroup.consts';
 
 @Component({
     selector: 'eos-card-edit',
@@ -66,6 +67,10 @@ export class CardEditComponent implements OnChanges, OnDestroy {
             this._rulesSrv.data = newData.rec;
             newData.rec['SCRIPT_CONFIG'] = this._rulesSrv.scriptConfigToXml();
             newData.rec['FILTER_CONFIG'] = this._rulesSrv.filterConfigToXml();
+        } else if (this.dictionaryId === DOCGROUP_DICT.id) {
+            if (newData.rec['PRJ_AUTO_REG'] !== 0 ) {
+                newData.rec['PRJ_AUTO_REG'] = 2;
+            }
         }
         return newData;
     }
