@@ -165,7 +165,7 @@ export class CounterNpEditComponent {
             if (val_number) {
                 val_number.focus();
             }
-        }, 100);
+        }, 200);
     }
 
     /**
@@ -192,9 +192,9 @@ export class CounterNpEditComponent {
             const highId = dndata[NODE_HIGH_NAME];
             if (!this._decl.isCounterRK && !dndata[this._decl.dbNodeName] && highId !== null) {
                 this.isUpdating = false;
-                CounterNpEditComponent._autoFocusOnValNumber();
                 this._dictSrv.currentDictionary.getFullNodeInfo(highId)
                     .then(highNode => {
+                        CounterNpEditComponent._autoFocusOnValNumber();
                         if (highNode) {
                             this.initByNodeData(type, highNode.data.rec);
                         }
@@ -330,9 +330,9 @@ export class CounterNpEditComponent {
         return this._fillDocGroup()
             .then(() => {
                 this.isUpdating = false;
-                CounterNpEditComponent._autoFocusOnValNumber();
                 this.apiSrv.read(req)
                     .then((cnts) => {
+                        CounterNpEditComponent._autoFocusOnValNumber();
                         this.nodes = cnts.filter(d => {
                             let res = String(d[this._decl.dbNumIdName]) === this._baseId;
                             if (res && this._decl.isCounterRK) {
