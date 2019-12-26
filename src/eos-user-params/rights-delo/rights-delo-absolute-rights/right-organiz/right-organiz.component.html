@@ -6,7 +6,7 @@
                 class="btn"
                 tooltip="Добавить организацию"
                 placement="right"
-                [disabled]="checkFlag"
+                [disabled]="checkFlag || returnOgrani()"
                 triggers="hover"
                 containerClass="tooltip-info"
                 (click)="addOrganiz()"
@@ -20,7 +20,7 @@
                 placement="right"
                 triggers="hover"
                 containerClass="tooltip-info"
-                [disabled]="!selectedDep"
+                [disabled]="!selectedDep || returnOgrani()"
                 (click)="itemTooltip.hide(); DeleteDep()"
             >
                 <span class="eos-icon eos-icon-bin-forever-blue small"></span>

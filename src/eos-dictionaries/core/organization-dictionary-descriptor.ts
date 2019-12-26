@@ -5,6 +5,7 @@ import { SevIndexHelper } from 'eos-rest/services/sevIndex-helper';
 import { PipRX } from 'eos-rest/services/pipRX.service';
 import { TreeDictionaryDescriptor } from './tree-dictionary-descriptor';
 import { ALL_ROWS } from 'eos-rest/core/consts';
+import { EosDictionaryNode } from './eos-dictionary-node';
 
 export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
     getRoot(): Promise<any[]> {
@@ -83,6 +84,42 @@ export class OrganizationDictionaryDescriptor extends TreeDictionaryDescriptor {
                 }
                 return results;
             });
+    }
+    public combine(slicedNodes: EosDictionaryNode[], markedNodes: EosDictionaryNode[]): Promise<any> {
+        const preSave = [];
+        let paramsSop = '';
+        let change: Array<any> = [{
+            method: 'MERGE',
+            requestUri: `ORGANIZ_CL('${markedNodes[0].id}')`,
+            data: {
+                DELETED: 0
+            }
+        }];
+        slicedNodes.forEach((node, i) => {
+            preSave.push({
+                method: 'DELETE',
+                requestUri: `ORGANIZ_CL('${node.id}')`
+            });
+            i !== slicedNodes.length - 1 ? paramsSop += `${node.id},` : paramsSop += `${node.id}`;
+        });
+        PipRX.invokeSop(change, 'ClassifJoin_TRule', { 'pk': markedNodes[0].id, 'type': 'ORGANIZ_CL', 'ids': paramsSop }, 'POST', false);
+        change = change.concat(preSave);
+        return this.apiSrv.batch(change, '');
+    }
+    public getConfigOpenGopRc(flag: boolean, node: EosDictionaryNode, nodeId?: string) {
+        const config = {
+            classif: 'gop_rc',
+            id: 'ORGANIZ_dict',
+        };
+        if (flag) {
+            config['user_id'] = -1;
+            config['folder_due'] = nodeId;
+        } else {
+            config['user_id'] = node.getFieldValue(node._descriptor.fieldsMap.get('ISN_NODE') as any);
+            config['folder_due'] = nodeId;
+            config['due'] = node.id;
+        }
+        return config;
     }
 
     /**

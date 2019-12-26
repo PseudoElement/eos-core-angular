@@ -15,7 +15,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     visible: true,
     iconName: 'eos-icon-building-blue',
     defaultOrder: 'CLASSIF_NAME',
-    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder',
+    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'cut', 'combine',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes'],
     keyField: 'DUE',
@@ -225,6 +225,6 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     // allVisibleFields: ['CLASSIF_NAME_SEARCH', 'FULLNAME', 'ZIPCODE', 'CITY', 'ADDRESS', 'MAIL_FOR_ALL', 'NOTE', 'OKPO',
     //     'INN', 'ISN_REGION', 'OKONH', 'LAW_ADRESS', 'ISN_ORGANIZ_TYPE', 'SERTIFICAT', 'ISN_ADDR_CATEGORY', 'CODE',
     //     'OGRN'],
-    editOnlyNodes: true,
+    // editOnlyNodes: false,
     dictType: E_DICT_TYPE.organiz,
 };

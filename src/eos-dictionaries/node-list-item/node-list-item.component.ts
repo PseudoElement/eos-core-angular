@@ -89,7 +89,9 @@ export class NodeListItemComponent implements OnInit, OnChanges {
 
     viewNode(evt: MouseEvent, view = false) {
         evt.stopPropagation();
-        if (this._dictSrv.currentDictionary.id === 'citizens') {
+        const id = this._dictSrv.currentDictionary.id;
+
+        if ((id === 'citizens' || id === 'organization') && !this.node.isNode) {
             this._breadcrumbsSrv.sendAction({action: E_RECORD_ACTIONS.edit});
             return;
         }

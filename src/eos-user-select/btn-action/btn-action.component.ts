@@ -16,7 +16,6 @@ import {
     DefaultSettings,
 } from '../shered/consts/btn-action.consts';
 import { AppContext } from 'eos-rest/services/appContext.service';
-import { USER_TECH } from 'eos-rest';
 import { EosStorageService } from 'app/services/eos-storage.service';
 @Component({
     selector: 'eos-btn-action',
@@ -30,7 +29,6 @@ export class BtnActionComponent implements OnInit, OnDestroy {
     public dropdownMy;
     public listUsers: UserSelectNode[];
     public selectUser: UserSelectNode;
-    public flagTachRigth;
     _unSubscribe: Subject<any> = new Subject();
     tooltipDelay = TOOLTIP_DELAY_VALUE;
     buttonName: Array<string> = [
@@ -43,6 +41,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         'OpenStreamScanSystem',
         'OpenRightsSystemCaseDelo',
         'Protocol',
+        'OpenSumProtocol',
         'UsersInfo',
         'DefaultSettings',
         'DeliteUser'];
@@ -58,21 +57,8 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         private _storage: EosStorageService,
     ) {
     }
-    checkFlagTech() {
-        const arrThech = this._appContext.CurrentUser.USER_TECH_List;
-        const flag = arrThech.some((el: USER_TECH) => {
-            return String(el.FUNC_NUM) === '1';
-        });
-        if (flag) {
-            this.flagTachRigth = true;
-        } else {
-            this.flagTachRigth = false;
-        }
-    }
     ngOnInit() {
-        this.checkFlagTech();
-        this._rtSrv.updateBtn.pipe(takeUntil(this._unSubscribe))
-        .subscribe(({ listUsers, selectedUser }) => {
+        this._rtSrv.updateBtn.pipe(takeUntil(this._unSubscribe)).subscribe(({ listUsers, selectedUser }) => {
             this.listUsers = listUsers;
             this.selectUser = selectedUser;
             if (this.listUsers) {
@@ -173,7 +159,7 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         }
     }
     checkCreateBtn() {
-        if (this.flagTachRigth) {
+        if (this.limitCards.length) {
             CreateUser.disabled = true;
         } else {
             CreateUser.disabled = false;
@@ -214,12 +200,8 @@ export class BtnActionComponent implements OnInit, OnDestroy {
             Protocol.disabled = true;
             Protocol.isActive = false;
         } else {
-            if (this.flagTachRigth) {
-                if (this.checkUresForLimited()) {
-                    Protocol.disabled = true;
-                } else {
-                    Protocol.disabled = false;
-                }
+            if (this.limitCards.length) {
+                Protocol.disabled = !this.selectUser.isEditable;
             } else {
                 Protocol.disabled = false;
             }
@@ -229,14 +211,8 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         if (!this.selectUser) {
             UsersInfo.disabled = true;
         } else {
-            if (this.flagTachRigth) {
-                if (this.checkUresForLimited()) {
-                    UsersInfo.disabled = true;
-                } else {
-                    UsersInfo.disabled = false;
-                }
-            } else {
-                UsersInfo.disabled = false;
+            if (this.limitCards.length) {
+                UsersInfo.disabled = !this.selectUser.isEditable;
             }
         }
         this._rtSrv.usersInfo = UsersInfo;
@@ -245,8 +221,8 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         if (!this.selectUser || this.selectUser.deleted) {
             OpenStreamScanSystem.disabled = true;
         } else {
-            if (this.flagTachRigth) {
-                if (this.checkUresForLimited()) {
+            if (this.limitCards.length) {
+                if (!this.selectUser.isEditable) {
                     OpenStreamScanSystem.disabled = true;
                 } else {
                     if (this.selectUser.data.AV_SYSTEMS.charAt(3) !== '1') {
@@ -283,21 +259,13 @@ export class BtnActionComponent implements OnInit, OnDestroy {
             button.disabled = true;
             button.isActive = false;
         } else {
-            if (this.flagTachRigth) {
-                if (this.checkUresForLimited()) {
-                    button.disabled = true;
-                } else {
-                    button.disabled = false;
-                }
+            if (this.limitCards.length) {
+                button.disabled = !this.selectUser.isEditable;
             } else {
                 button.disabled = false;
             }
         }
     }
-    checkUresForLimited(): boolean {
-        return this.limitCards.indexOf(this.selectUser.data.TECH_DUE_DEP) === -1;
-    }
-
     adminDisabledBtn(admNum: number): void {
         if (admNum === 0) {
             CreateUser.disabled = true;
