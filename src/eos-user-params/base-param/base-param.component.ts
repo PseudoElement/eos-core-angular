@@ -474,7 +474,7 @@ export class ParamsBaseParamComponent implements OnInit, OnDestroy {
     }
     cancelValues(inputs, form: FormGroup) {
         Object.keys(inputs).forEach((key, val, arr) => {
-            form.controls[key].patchValue(inputs[key].value, { emitEvent: true });
+            form.controls[key].patchValue(inputs[key].value, { emitEvent: false });
         });
     }
     gt(): any {
