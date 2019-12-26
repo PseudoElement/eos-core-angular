@@ -1380,7 +1380,7 @@ export class EosDictService {
                                     .then((confirm: boolean) => {
                                         if (confirm) {
                                             boss.data.rec['POST_H'] = 0;
-                                            return dictionary.updateNodeData(boss, boss.data);
+                                            return Promise.resolve(this._apiSrv.changeList([boss.data.rec]));
                                         } else {
                                             data.rec['POST_H'] = 0;
                                             return Promise.reject('cancel');
