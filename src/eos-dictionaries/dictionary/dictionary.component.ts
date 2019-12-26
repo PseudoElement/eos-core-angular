@@ -581,6 +581,7 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     onRunFullSrch(search: SearchFormSettings) {
         if (!this.searchInProgress) {
             this.searchInProgress = true;
+            this._dictSrv.setMarkAllNone();
             this._dictSrv.fullSearch(search.full.data, search.opts)
                 .then(() => {
                     this.searchInProgress = false;
