@@ -3,6 +3,11 @@ import { DragulaService } from 'ng2-dragula';
 import { Subscription } from 'rxjs';
 import { ConfirmWindowService } from 'eos-common/confirm-window/confirm-window.service';
 import { CONFIRM_DELETE_ROLE } from 'eos-dictionaries/consts/confirm.consts';
+import { OPEN_CLASSIF_DEPARTMENT } from 'eos-user-select/shered/consts/create-user.consts';
+import { WaitClassifService } from 'app/services/waitClassif.service';
+import { UserParamsService } from 'eos-user-params/shared/services/user-params.service';
+import { PipRX } from 'eos-rest';
+import { ALL_ROWS } from 'eos-rest/core/consts';
 @Component({
     selector: 'eos-cb-user-role',
     templateUrl: 'cb-user-role.component.html',
@@ -19,10 +24,12 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
     selectedFixedItem: string;
     private _subscriptionDrop: Subscription;
     private _subscriptionDrag: Subscription;
-    constructor(private _dragulaService: DragulaService, private _confirmSrv: ConfirmWindowService) {
+    constructor(private _dragulaService: DragulaService, private _confirmSrv: ConfirmWindowService,
+        private _waitClassifSrv: WaitClassifService, private _userParamSrv: UserParamsService, private _pipRx: PipRX) {
     }
 
     ngOnInit() {
+        this._pipRx.read({CBR_USER_ROLE: ALL_ROWS}).then((data: any) => console.log(data));
         this._subscriptionDrop = this._dragulaService.drop.subscribe((value) => {
             if (value[2].id !== value[3].id) {
                 if (value[3].id === 'current') {
@@ -155,12 +162,14 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                         this.fixedFields = !this.fixedFields.length ? this.basicFields.filter(field => field === 'Председатель' || field === 'Заместитель Председателя') : this.fixedFields;
                         this.basicFields = this.basicFields.filter(field => field !== 'Председатель' && field !== 'Заместитель Председателя');
                     }
+                    this._showDepRole();
                     break;
                 case 'Помощник заместителя предстедателя и директоров':
                     if (this.currentFields.indexOf('Исполнитель') === -1 && this.currentFields.indexOf('Директор департамента и заместитель директора департамента') === -1) {
                         this.fixedFields = !this.fixedFields.length ? this.basicFields.filter(field => field === 'Председатель' || field === 'Заместитель Председателя') : this.fixedFields;
                         this.basicFields = this.basicFields.filter(field => field !== 'Председатель' && field !== 'Заместитель Председателя');
                     }
+                    this._showDepRole();
                     break;
             }
         } else {
@@ -209,5 +218,22 @@ export class CbUserRoleComponent implements OnInit, OnDestroy {
                     break;
             }
         }
+    }
+
+    private _showDepRole() {
+        let dueDep = '';
+        this._waitClassifSrv.openClassif(OPEN_CLASSIF_DEPARTMENT)
+            .then((data: string) => {
+                if (data === '') {
+                    throw new Error();
+                }
+                dueDep = data;
+                return this._userParamSrv.getDepartmentFromUser([dueDep]);
+            })
+            .then((depD: any) => {
+                console.log(depD);
+            })
+            .catch(() => {
+            });
     }
 }

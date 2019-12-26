@@ -56,6 +56,7 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     isLoading: Boolean = true;
     selfLink = null;
     dueDepName: string = '';
+    singleOwnerCab: boolean = true;
     public isShell: boolean = false;
     public userSertsDB: USER_CERTIFICATE;
     public errorPass: boolean = false;
@@ -81,6 +82,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
     get stateHeaderSubmit() {
         return this._newData.size > 0 || this._newDataformAccess.size > 0 || this._newDataformControls.size > 0;
     }
+    // get getCbRole() {
+    //     return this.editMode && !this.singleOwnerCab && (this.gt()['delo_web_delo'] || this.gt()['delo_web']) && !this.curentUser.isTechUser;
+    // }
     constructor(
         private _router: Router,
         private _msgSrv: EosMessageService,
@@ -111,6 +115,9 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
                 }
                 this.editModeF();
                 this._subscribe();
+                if (!this.curentUser.isTechUser) {
+                    this.getCabinetOwnUser();
+                }
             }
         });
         // if (localStorage.getItem('lastNodeDue') == null) {
@@ -223,6 +230,21 @@ export class ParamsBaseParamCBComponent implements OnInit, OnDestroy {
         }
         return true;
     }
+
+    getCabinetOwnUser(): void {
+        this._rtUserSel.getUserCabinets(this.curentUser.ISN_LCLASSIF).then(cab => {
+            if (cab.length > 0) {
+                return this.apiSrvRx.read({
+                    DEPARTMENT: {criteries : {ISN_CABINET: cab[0].ISN_CABINET}}
+                }).then((allCab: any) => {
+                    if (allCab.length === 1) {
+                        this.singleOwnerCab = false;
+                    }
+                });
+            }
+        });
+    }
+
     getTitle(): void {
         if (this.curentUser.isTechUser) {
             this.title = this.curentUser.CLASSIF_NAME;

@@ -104,3 +104,12 @@ export interface IPassRegExp {
     passAlph?: RegExp;
     otherSymb?: RegExp;
 }
+
+export interface IRoleCB {
+    role: string;
+    weight: number;
+    due?: string;
+    dueName?: string;
+    isnRole?: number;
+    asistMan?: string;
+}
