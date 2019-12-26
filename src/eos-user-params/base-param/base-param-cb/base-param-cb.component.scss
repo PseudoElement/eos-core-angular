@@ -112,6 +112,15 @@
             margin-left: 33px;
             display: inline-block;
         }
+        .base-text-input-cb {
+            width: 324px;
+            margin-right: 20px;
+        }
+        .btn-cb {
+            padding: 8px 10px;
+            height: 35px;
+            margin-right: 81px;
+        }
         .mt-ceck {
             margin-top: 30px;
             .form-group{
@@ -209,4 +218,8 @@
 }
 .serts {
     top: 30%;
+}
+.roles {
+    top: 10%;
+    width: 1400px;
 }
