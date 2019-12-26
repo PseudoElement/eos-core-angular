@@ -261,6 +261,9 @@ export class BtnActionComponent implements OnInit, OnDestroy {
         } else {
             if (this.limitCards.length) {
                 button.disabled = !this.selectUser.isEditable;
+                if (button.name === 'DeliteUser') { // запретить огран. тех. удалять пользователей
+                    button.disabled = true;
+                }
             } else {
                 button.disabled = false;
             }

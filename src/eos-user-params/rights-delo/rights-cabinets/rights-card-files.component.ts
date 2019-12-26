@@ -9,6 +9,7 @@ import { WaitClassifService } from 'app/services/waitClassif.service';
 import { OPEN_CLASSIF_CARDINDEX } from 'app/consts/query-classif.consts';
 import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { ErrorHelperServices } from '../../shared/services/helper-error.services';
+import { AppContext } from 'eos-rest/services/appContext.service';
 @Component({
     selector: 'eos-card-files',
     templateUrl: 'rights-card-files.component.html',
@@ -49,6 +50,7 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
         private _msgSrv: EosMessageService,
         private _pipSrv: PipRX,
         private _errorSrv: ErrorHelperServices,
+        private _appContext: AppContext,
     ) {}
     ngOnInit() {
         this._userSrv.getUserIsn({
@@ -90,6 +92,9 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
                 this.flagBacground = false;
                 return;
             }
+            if (this._appContext.limitCardsUser.length > 0) {
+                dueCards = this.prepareLimitCards(dueCards);
+            }
             this.flagBacground = false;
             this.prepareWarnindMessage(dueCards).then(() => {
                 this.selectFromAddedCards();
@@ -101,7 +106,23 @@ export class RightsCardFilesComponent implements OnInit, OnDestroy {
             this.flagBacground = false;
         });
     }
-
+    prepareLimitCards(dueCard: string) {
+        const answer = [];
+        dueCard.split('|').forEach(elem => {
+            if (this._appContext.limitCardsUser.indexOf(elem) !== -1) {
+                answer.push(elem);
+            } else {
+                this.sendMessage('Предупреждение', 'Не были добавлены данные, не принадлежащие вашей картотеке');
+            }
+        });
+        return answer.join('|');
+    }
+    updateCardLimit() {
+        if (this._appContext.limitCardsUser.indexOf(this.currentCard.cardDue) === -1) {
+            return true;
+        }
+        return false;
+    }
     prepareWarnindMessage(dueCards: string): Promise<any> {
         if (!this.mainArrayCards.length) {
             return this.getInfoForNewCards(dueCards.split('|')).then(() => {

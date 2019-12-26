@@ -15,7 +15,7 @@
             <div class="cabinet-main">
                 <label class="checkbox">
                     <input
-                        [disabled]="Cabinet.isEmpty || !flagEdit"
+                        [disabled]="Cabinet.isEmpty || !flagEdit || limitCard"
                         (change)="changeMainCabinet()"
                         type="checkbox"
                         [checked]="Cabinet.homeCabinet"
@@ -30,7 +30,7 @@
                     <label class="checkbox">
                         <input
                             type="checkbox"
-                            [disabled]="folder.disabled || !flagEdit"
+                            [disabled]="folder.disabled || !flagEdit || limitCard"
                             [checked]="folder.selected"
                             (change)="changeFolders(Cabinet, folder)"
                         />

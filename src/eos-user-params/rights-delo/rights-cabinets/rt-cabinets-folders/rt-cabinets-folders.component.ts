@@ -9,6 +9,7 @@ import { EosMessageService } from 'eos-common/services/eos-message.service';
 import { DropdownInput } from 'eos-common/core/inputs/select-input';
 import { FormGroup } from '@angular/forms';
 import { InputControlService } from 'eos-common/services/input-control.service';
+import { AppContext } from 'eos-rest/services/appContext.service';
 @Component({
     selector: 'eos-cabinets-folders',
     templateUrl: 'rt-cabinets-folders.component.html',
@@ -20,7 +21,7 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
     @Input() flagEdit: boolean;
     @Output() sendNewValues: EventEmitter<any> = new EventEmitter<any>();
     public Cabinet: Cabinets;
-
+    public limitCard: boolean = false;
     form: FormGroup;
     selectCabinetInput: DropdownInput = new DropdownInput({
         key: 'selectedCabinet',
@@ -34,10 +35,14 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         private _rtCabintsSrv: RigthsCabinetsServices,
         private _msgSrv: EosMessageService,
         private inputCtrlSrv: InputControlService,
+        private _appContext: AppContext,
     ) {
         this.form = this.inputCtrlSrv.toFormGroup([this.selectCabinetInput], false);
         this.form.valueChanges.subscribe((data) => {
             this.Cabinet = this.card.cabinets[this.form.controls['selectedCabinet'].value];
+            if (this._appContext.limitCardsUser.length > 0) {
+                this.limitCard = this.updateCardLimit(this.Cabinet.parent);
+            }
         });
 
         this._rtCabintsSrv.changeCabinets
@@ -62,7 +67,12 @@ export class RtCabinetsFoldersComponent implements OnInit, OnChanges, OnDestroy 
         this._updateSelect();
     }
     ngOnChanges() {}
-
+    updateCardLimit(newCabinets) {
+        if (this._appContext.limitCardsUser.indexOf(newCabinets.cardDue) === -1) {
+            return true;
+        }
+        return false;
+    }
     changeFolders(changedCabinets: Cabinets, folder): void {
         folder.selected = !folder.selected;
         this.CheckChanges(changedCabinets);
