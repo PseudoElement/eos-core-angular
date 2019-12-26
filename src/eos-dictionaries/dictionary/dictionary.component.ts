@@ -344,6 +344,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     }
 
     ngOnDestroy() {
+        if (this.modalWindow) {
+            this.modalWindow.hide();
+        }
         this._sandwichSrv.treeScrollTop = this._treeScrollTop;
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();

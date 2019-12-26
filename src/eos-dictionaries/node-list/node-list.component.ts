@@ -151,6 +151,9 @@ export class NodeListComponent implements OnInit, OnDestroy, AfterContentInit, A
     }
 
     ngOnDestroy() {
+        if (this.modalWindow) {
+            this.modalWindow.hide();
+        }
         this.ngUnsubscribe.next();
         this.ngUnsubscribe.complete();
         if (!this._cdr['destroyed']) {
