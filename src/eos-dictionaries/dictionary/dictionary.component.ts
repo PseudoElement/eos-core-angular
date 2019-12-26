@@ -517,6 +517,9 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
             case E_RECORD_ACTIONS.uncheckNewEntry:
                 this._uncheckNewEntry();
                 break;
+            case E_RECORD_ACTIONS.dopRequisites:
+                this._openDopRequisetes();
+                break;
             default:
                 console.warn('unhandled action', E_RECORD_ACTIONS[evt.action]);
         }
@@ -1155,6 +1158,12 @@ export class DictionaryComponent implements OnDestroy, DoCheck, AfterViewInit, O
     }
     private _uncheckNewEntry() {
         this._dictSrv.uncheckNewEntry();
+    }
+    private _openDopRequisetes() {
+        const config: IOpenClassifParams = {
+            classif: 'AR_EDITOR',
+        };
+        this._waitClassif.openClassif(config).then(() => {}).catch(e => {console.log(e); } );
     }
 
     private _copyNodesToBuffer() {

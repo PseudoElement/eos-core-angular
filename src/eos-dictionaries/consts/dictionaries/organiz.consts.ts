@@ -15,7 +15,7 @@ export const ORGANIZ_DICT: ITreeDictionaryDescriptor = {
     visible: true,
     iconName: 'eos-icon-building-blue',
     defaultOrder: 'CLASSIF_NAME',
-    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'cut', 'combine',
+    actions: ['add', 'markRecords', 'quickSearch', 'fullSearch', 'order', 'userOrder', 'cut', 'combine', 'dopRequisites',
         'moveUp', 'moveDown', 'navigateUp', 'navigateDown', 'showDeleted', 'tableCustomization',
         'edit', 'view', 'remove', 'removeHard', 'userOrder', 'restore', 'showAllSubnodes'],
     keyField: 'DUE',

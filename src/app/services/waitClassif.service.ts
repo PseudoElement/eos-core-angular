@@ -16,6 +16,7 @@ const TECH_LISTS: string = '../Pages/Common/TECH_LISTS.aspx';
 const StdText: string = '../Pages/Common/StdText.aspx';
 const CITIZEN_dict: string = '../GOPRC/CITIZEN/CITIZEN.html';
 const ORGANIZ_dict: string = '../GOPRC/ORGANIZATION/ORGANIZATION.html';
+const AR_EDITOR: string = '../WebRC/AR_EDITOR/AR_EDITOR.aspx#type=organiz_cl';
 
 @Injectable()
 export class WaitClassifService {
@@ -84,6 +85,8 @@ export class WaitClassifService {
             url = this.stdTextUrl(StdText, params);
         } else if (params.classif === 'gop_rc') {
             url = this._createUrlDict(url, params);
+        } else if (params.classif === 'AR_EDITOR') {
+            url = AR_EDITOR;
         } else {
             url = this._prepareUrl(params, flag);
         }
